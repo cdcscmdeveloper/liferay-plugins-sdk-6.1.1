@@ -1068,15 +1068,17 @@ public class SpecificationBackingBean extends
 
 		List<ScQtCategory> openSelectList = this.getManagedBean()
 				.getSuppCriteriaopenSelectList();
-		if (null == openSelectList) {
-			openSelectList = new ArrayList<ScQtCategory>();
+		if (null == openSelectList || openSelectList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
 		}
 
 		if (openList.size() == openSelectList.size()) {
 			openList.clear();
 		} else {
+
 			for (ScQtCategory category : openSelectList)
 				openList.remove(category);
+
 		}
 
 	}
@@ -9897,6 +9899,7 @@ public class SpecificationBackingBean extends
 
 		PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
 		if (null != tplSpecZoneDtl) {
+			this.getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
 			reqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
 					.getPanelZoneId());
 		}
