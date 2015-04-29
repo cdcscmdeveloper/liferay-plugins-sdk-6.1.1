@@ -1494,7 +1494,10 @@ public class SmPersonnelBackingBean extends
 	 */
 	public void deactivateAdmin() {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		FacesScopes fs = new FacesScopes();
+		reqDTO.setLanguage(fs.getUserLocale().getLanguage());
+		reqDTO.setServerName(fs.getRequest().getServerName());
+		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setAdminPersonnel(getManagedBean().getUpdateSmPersonnel());
 		reqDTO.setSmPersonnel(getManagedBean().getSelectedPersonnelToReassign());
 		reqDTO.setSmSupplierId(SmApplicationUtil.getCurrentSupplier()
