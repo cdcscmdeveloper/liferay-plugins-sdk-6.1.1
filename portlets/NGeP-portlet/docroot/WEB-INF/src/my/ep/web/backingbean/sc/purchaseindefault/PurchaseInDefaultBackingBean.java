@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 // TODO: Auto-generated Javadoc
 package my.ep.web.backingbean.sc.purchaseindefault;
@@ -1034,11 +1034,14 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
 			
 			if(scPurchaseInDefault.isBrandNew()) {
+				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 0 + "");
 				if(getManagedBean().getvCmSupplierItem() != null){
 					itemCode   = getManagedBean().getvCmSupplierItem().getItemCode();
+					
 				}
 
 			} else{
+				paramMap.put(ReportConst.PARAM_IS_SAVED_FLAG, 1 + "");
 				if(scPurchaseInDefault.getPanelItem() != null){
 					requestItem =	scPurchaseInDefault.getPanelItem().getScRequestItem();
 					if(requestItem.getCmItem() != null){
