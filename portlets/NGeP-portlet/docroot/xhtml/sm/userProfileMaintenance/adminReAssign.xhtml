@@ -135,7 +135,7 @@
 			<p:messages id="successDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="true" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.ok']}" onclick="confirmDialog.hide();" action="#{smPersonnelBackingBean.redirectToLogoutUrl()}" 
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{smPersonnelBackingBean.redirectToLogoutUrl()}" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
 		</p:dialog>
