@@ -8,7 +8,7 @@ html{
 }
 
 a {
-    color: #009ae5;
+    color: #ee5408;
 	text-decoration:none;
 }
 
@@ -22,7 +22,220 @@ a:hover {
 	font-size:1em;
 	font-family:Arial, Helvetica, sans-serif;
 	font-weight:bold;	}
+/*
+.clear{
+	width:100%;
+	display:inline-block;
+	height:10px;
+}
 
+.container-content {
+	width:100%;
+	display:inline-block;
+}
+
+.container-content p{
+	line-height:20px;	
+}
+
+#improved{
+	padding:0;	
+}
+
+#improved p{
+	margin:0;	
+}
+
+#improved li {
+	list-style-type:none;
+	margin:0px 0px 30px 0px;
+}
+
+h2.accordian_title{
+	margin:5px 0px 5px 0px;
+	background:#d7d7d7;
+	padding:10px 10px 10px 10px;
+	font-size:13pt;
+	cursor:pointer;	
+	border-radius:2px 2px 2px 2px;
+	-o-border-radius:2px 2px 2px 2px;
+	webkit-border-radius:2px 2px 2px 2px;
+	-moz-border-radius:2px 2px 2px 2px;
+	pointer-events: none;
+	border-bottom: solid 2px #9ab13a;
+}
+
+#lst_row{
+	padding:10px 10px 10px 10px;
+}
+
+#lst_row ul{
+	margin:0px 0px 0px 15px;
+	padding:0;	
+}
+
+#lst_row ul li{
+	padding:2px 0px 2px 0px;
+	list-style-type:disc;
+	margin:0;
+}
+
+
+
+.before-chart{
+	padding:10px 10px 10px 10px;	
+}
+
+.before-chart h2{
+	padding:0;
+	margin:0;
+}
+
+.before-chart p{
+	padding:5px 0px 0px 0px;
+	margin:0;	
+}
+
+
+.big-chartbox{
+	width:230px;
+	height:230px;
+	margin:0 auto;	
+	position:relative;
+	background:#555555;
+	border-radius:50%;
+	border:solid 10px #9ab13a;
+	box-shadow: 0px 0px 0px 20px #b8d24a;
+	margin:100px auto 0 auto;
+	text-align:center;
+}
+
+.big-chartbox img{
+	margin:40px 0px 0px 0px;	
+}
+
+.big-chartbox h2{
+	color:#fff;
+	font-size:15pt;	
+}
+
+.small-chartbox-top{
+	width:220px;
+	position:absolute;
+	top:-90px;
+	left:-15px;
+	border-radius:5px 5px 5px 5px;
+	background:#46909f;
+	padding:0px 20px 0px 20px;
+}
+
+.small-chartbox-top:after{
+	content:"";
+	position: absolute;
+	bottom: -10px;
+	left: 115px;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-top: 10px solid #46909f;	
+}
+
+.small-chartbox-top h3{
+	background-image: url(../images/about2.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding:30px 0px 30px 50px;
+	font-size:15pt;
+	margin:0;
+	text-transform:uppercase;
+	color:#fff;
+}
+
+.small-chartbox-left{
+	width:220px;
+	position:absolute;
+	bottom:-70px;
+	left:-160px;
+	border-radius:5px 5px 5px 5px;
+	background:#46909f;
+	padding:0px 20px 0px 20px;
+}
+
+.small-chartbox-left:before{
+	content:"";
+	position: absolute;
+	top: -10px;
+	right: 20px;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid #46909f;	
+}
+
+.small-chartbox-left h3{
+	background-image: url(../images/about3.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding:30px 0px 30px 50px;
+	font-size:15pt;
+	margin:0;
+	text-transform:uppercase;
+	color:#fff;
+}
+
+.small-chartbox-right{
+	width:220px;
+	position:absolute;
+	bottom:-70px;
+	right:-160px;
+	border-radius:5px 5px 5px 5px;
+	background:#46909f;
+	padding:0px 20px 0px 20px;
+}
+
+.small-chartbox-right:before{
+	content:"";
+	position: absolute;
+	top: -10px;
+	left: 20px;
+	width: 0;
+	height: 0;
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid #46909f;	
+}
+
+.small-chartbox-right h3{
+	background-image: url(../images/about4.png);
+	background-repeat: no-repeat;
+	background-position: left center;
+	padding:30px 0px 30px 50px;
+	font-size:15pt;
+	margin:0;
+	text-transform:uppercase;
+	color:#fff;
+}
+
+
+
+.flow-title{
+	width:500px;
+	padding:10px 10px 10px 10px;	
+	text-align:center;
+	border-radius:15px 15px 15px 15px;
+	border:solid 5px #d3ed66;
+	margin:0 auto;
+}
+
+.flow-title h2{
+	margin:0;
+	color:#323a12;	
+	font-size:14pt;
+}
+
+*/
 
 .flow-chartbox{
 	/*width:1200px*/
@@ -48,8 +261,8 @@ a:hover {
 }
 
 .lst{
-	background:#ffffff;
-	color: #555555;
+	background:#fffe9d;
+	color: #000000;
 	border-radius:8px 0px 0px 8px;
 	border-top: 1px solid #a7a9ac;
 	border-bottom : 1px solid #a7a9ac;
@@ -66,7 +279,7 @@ a:hover {
 	width: 0;
 	height: 0;
 	border-top: 25px solid transparent ;
-	border-left: 12px solid #ffffff;
+	border-left: 12px solid #fffe9d;
 	border-bottom: 25px solid transparent;
 	z-index:2;
 }
@@ -122,8 +335,8 @@ a:hover {
 }
 
 .mid{
-	background:#ffffff;
-	color: #555555;
+	background:#fffe9d;
+	color: #000000;
 	border-top: 1px solid #a7a9ac;
 	border-bottom : 1px solid #a7a9ac;
 	border-left: 1px solid #a7a9ac;
@@ -141,7 +354,7 @@ a:hover {
 	width: 0;
 	height: 0;
 	border-top: 25px solid transparent;
-	border-left: 12px solid #ffffff;
+	border-left: 12px solid #fffe9d;
 	border-bottom: 25px solid transparent;
 	z-index:2;
 }
@@ -194,12 +407,11 @@ a:hover {
 	border-bottom: 25px solid transparent;
 	z-index:1;
 }
-
-/**
+/*
 .last{
-	background:#ffffff;
+	background:#fffe9d;
 	border-radius:0px 8px 8px 0px;
-	color: #555555;
+	color: #000000;
 	border-top: 1px solid #a7a9ac;
 	border-bottom : 1px solid #a7a9ac;
 	border-right: 1px solid #a7a9ac;
@@ -208,7 +420,8 @@ a:hover {
 
 .last p{
 	padding:0px 0px 0px 10px;	
-}*/
+}
+*/
 
 .dlast{
 	background:#f0f0f0;
@@ -223,3 +436,4 @@ a:hover {
 .dlast p{
 	padding:0px 0px 0px 10px;	
 }
+
