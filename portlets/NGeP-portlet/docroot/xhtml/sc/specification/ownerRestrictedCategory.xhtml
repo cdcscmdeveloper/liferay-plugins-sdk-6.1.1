@@ -45,20 +45,30 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this,restrictedPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
+				process="@this,restrictedPnlId" partialSubmit="true"
+				update="@([id$=catCodePopup])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
 				oncomplete="catCodePopup.show();"
 				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this,restrictedPnlId"
-				partialSubmit="true"
-				action="#{specificationBackingBean.deleteCategoryCodes}"
-				update="restrictedPnlId"
+				process="@this,restrictedPnlId" partialSubmit="true"
+				oncomplete="supplierRestrictedcategoryDeletePopUp.show();"
+				update="@([id$=#{supplierRestrictedcategoryDeleteId}])"
 				disabled="#{specificationBackingBean.managedBean.readOnly}" />
 
 		</div>
-		
-		<ac:categoryCodePopup 
+
+		<ui:param name="supplierRestrictedcategoryDeleteId"
+			value="supplierRestrictedcategoryDeleteId"></ui:param>
+		<ui:param name="supplierRestrictedcategoryDeletePopUp"
+			value="supplierRestrictedcategoryDeletePopUp"></ui:param>
+		<ac:confirmationPopup id="#{supplierRestrictedcategoryDeleteId}"
+			widget="supplierRestrictedcategoryDeletePopUp"
+			postSignAction="#{specificationBackingBean.deleteCategoryCodes}"
+			title="#{lbl['lbl.sc.category.code']}"
+			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+			update="@([id$=restrictedPnlId])" />
+		<ac:categoryCodePopup
 			okAction="specificationBackingBean.addNewCategoryAction"
 			update="@([id$=restrictedPnlId])" />
 	</p:panel>
