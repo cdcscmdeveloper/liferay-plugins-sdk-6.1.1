@@ -40,30 +40,30 @@
 				<div class="cover-container-content">
 					<div class="flow-chartbox">
 						<div class="flow-chart">
-							<p class="title">Please proceed to following steps</p>
+							<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
 							<!-- Basic Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType != ParameterConst.newSmApplnForMof}">
 							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 								<div class="flow-chart-left lst">
-									<p><strong>Step 1</strong><br /><p:commandLink value="Upload Catalogue" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.catalogue.upload']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 								</div>
 								<div class="flow-chart-left dmid">
-									<p><strong>Step 2</strong><br /> Request Soft Cert</p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.softcert.request']}</p>
 								</div>
 								<div class="flow-chart-left dlast">
-									<p><strong>Step 3 </strong><br /><nobr>Registration Completed</nobr></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 3 </strong><br /><nobr>#{lbl['lbl.sm.basic.completed']}</nobr></p>
 								</div>
 							</c:if>
 							
 							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
 								<div class="flow-chart-left dlst">
-									<p><strong>Step 1</strong><br /> Upload Caralogue</p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /> #{lbl['lbl.sm.basic.catalogue.upload']}</p>
 								</div>
 								<div class="flow-chart-left mid">
-									<p><strong>Step 2</strong><br /><p:commandLink value="Request Soft Cert" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 								</div>
 								<div class="flow-chart-left dlast">
-									<p><strong>Step 3 </strong><br /><nobr>Completed</nobr></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 3 </strong><br /><nobr>#{lbl['lbl.sm.basic.completed']}</nobr></p>
 								</div>
 							</c:if>
 							</p:outputPanel>
@@ -73,23 +73,23 @@
 								<!-- FLOW STATUS 1 -->
 								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 								<div class="flow-chart-left lst">
-									<p><strong>Step 1</strong><br /><p:commandLink value="Continue MOF Registration" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.cont.mof.reg']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 								</div>
 
 								<div class="flow-chart-left dmid">
-									<p><strong>Step 2</strong><br />Processing Fee</p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.processing.fee']}</p>
 								</div>
 
 								<div class="flow-chart-left dmid">
-									<p><strong>Step 3</strong><br /> Goverment Processing</p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
 								</div>
 
 								<div class="flow-chart-left dmid">
-									<p><strong>Step 4</strong><br /> Registration Fee</p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /> #{lbl['lbl.sm.basic.registration.fee']}</p>
 								</div>
 								
 								<div class="flow-chart-left dlast">
-									<p><strong>Step 5 </strong><br /> Completed</p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
 								</div>
 								</c:if>
 								<!-- FLOW STATUS 1 - END -->
@@ -97,19 +97,19 @@
 								<!-- FLOW STATUS 2 -->
 								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
 									<div class="flow-chart-left dlst">
-										<p><strong>Step 1</strong><br /><nobr>Continue MOF Registration</nobr></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
 									</div>
 									<div class="flow-chart-left mid">
-										<p><strong>Step 2</strong><br /><p:commandLink value="Processing Fee" action="#{postSupplierRegBB.pageNavigate}" /></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.processing.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 									</div>
 									<div class="flow-chart-left dmid">
-										<p><strong>Step 3</strong><br /> Goverment Processing</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
 									</div>
 									<div class="flow-chart-left dmid">
-										<p><strong>Step 4</strong><br /> Registration Fee</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /> #{lbl['lbl.sm.basic.registration.fee']}</p>
 									</div>
 									<div class="flow-chart-left dlast">
-										<p><strong>Step 5 </strong><br /> Completed</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
 									</div>
 								</c:if>
 								<!-- FLOW STATUS 2 - END -->
@@ -117,23 +117,23 @@
 								<!-- FLOW STATUS 3 -->
 								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 3}">
 									<div class="flow-chart-left dlst">
-										<p><strong>Step 1</strong><br /><nobr>Continue MOF Registration</nobr></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
 									</div>
 
 									<div class="flow-chart-left dmid">
-										<p><strong>Step 2</strong><br /> Processing Fee</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.processing.fee']}</p>
 									</div>
 
 									<div class="flow-chart-left mid">
-										<p><strong>Step 3</strong><br />Goverment Processing</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />#{lbl['lbl.sm.basic.gov.process']}</p>
 									</div>
 
 									<div class="flow-chart-left dmid">
-										<p><strong>Step 4</strong><br /> Registration Fee</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /> #{lbl['lbl.sm.basic.registration.fee']}</p>
 									</div>
 
 									<div class="flow-chart-left dlast">
-										<p><strong>Step 5 </strong><br /> Completed</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
 									</div>
 								</c:if>
 								<!-- FLOW STATUS 3 - END -->
@@ -141,23 +141,23 @@
 								<!-- FLOW STATUS 4 -->
 								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 4}">
 									<div class="flow-chart-left dlst">
-										<p><strong>Step 1</strong><br /><nobr>Continue MOF Registration</nobr></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
 									</div>
 
 									<div class="flow-chart-left dmid">
-										<p><strong>Step 2</strong><br /> Processing Fee</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.processing.fee']}</p>
 									</div>
 
 									<div class="flow-chart-left dmid">
-										<p><strong>Step 3</strong><br /> Goverment Processing</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
 									</div>
 
 									<div class="flow-chart-left mid">
-										<p><strong>Step 4</strong><br /><p:commandLink value="Registration Fee" action="#{postSupplierRegBB.pageNavigate}" /></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.registration.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 									</div>
 
 									<div class="flow-chart-left dlast">
-										<p><strong>Step 5 </strong><br /> Completed</p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
 									</div>
 								</c:if>
 								<!-- FLOW STATUS 4 - END -->
@@ -170,12 +170,12 @@
 			<p:outputPanel rendered="#{postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 				<table>
 					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="Application No" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.no']}" /></td>
 						<td><h:outputText value="#{postSupplierRegBB.managedBean.smAppl.applNo}" /></td>
 					</tr>
 					
 					<tr>
-						<td><p:outputLabel styleClass="outputLabel-view-label" value="Application Status" /></td>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
 						<td>
 							<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" />
 							<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
