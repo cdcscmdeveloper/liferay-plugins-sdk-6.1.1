@@ -970,14 +970,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			}
 			// Validation for performance bond
 			if (getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
+				//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
+				//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
 				if (contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
-					if (getManagedBean().getCtContract().getLatestContractVer() != null 
-							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds() != null
-							&& getManagedBean().getCtContract().getLatestContractVer().getCtPerformanceBonds().size() > 0
-							&& (getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null || getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
-						throw new EpException(MessageConst.ERROR_100022, 
-								new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", 
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					if (getManagedBean().getCtContract().getLatestContractVer() != null) {
+						for (CtContractAmount contractAmt : getManagedBean().getCtContract().getLatestContractVer().getCtContractAmounts()) {
+				    		if (getManagedBean().getContractVer().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
+				    				&& getManagedBean().getContractVer().getAsAtDate().getTime() <= contractAmt.getExpDate().getTime()) {
+				    			if (contractAmt.getCtPerformanceBonds().size() > 0 
+				    					&& (getManagedBean().getCtContractAmount().getCtPerformanceBonds() == null 
+				    					|| getManagedBean().getCtContractAmount().getCtPerformanceBonds().isEmpty())) {
+				    				throw new EpException(MessageConst.ERROR_100022, 
+											new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.performance.bond", 
+													ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				    					
+				    			}
+				    		}
+				    	} 
 					}
 				}				
 				if (getManagedBean().getCtContractAmount().getCtPerformanceBonds() != null && getManagedBean().getCtContractAmount().getCtPerformanceBonds().size() > 0) {
