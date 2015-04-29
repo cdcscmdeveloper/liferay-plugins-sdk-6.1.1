@@ -21,7 +21,7 @@
 			</tr>
 		</table>
 		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.sc.instruction']}" rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee}"/>
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.qt.committee.appointment.sc.instruction']}" escape="false" rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee}"/>
 		
 		<p:dataTable id="specificationcommitteeid" styleClass="clonetecid"
 			value="#{committe.scCommitteeMembers}" var="specificationcommittee"
