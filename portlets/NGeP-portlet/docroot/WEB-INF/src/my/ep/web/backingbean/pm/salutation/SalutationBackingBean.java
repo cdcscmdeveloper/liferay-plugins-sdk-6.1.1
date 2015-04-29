@@ -88,7 +88,7 @@ public class SalutationBackingBean extends
 	 */		
 	public String redirectSalSearch() {
 		debugLogger("redirectSalSearch");
-		this.getManagedBean().setLazy(true);
+		//this.getManagedBean().setLazy(true);
 		return NAV_TO_MAIN;
 
 	}	
@@ -101,9 +101,10 @@ public class SalutationBackingBean extends
 		
         this.getManagedBean().setSalutationCodes(new String());
         this.getManagedBean().setSalutationNames(new String());
-        this.getManagedBean().setStatus(1L);
+        this.getManagedBean().setStatus(null);
 
         salutationDataModel = new SalutationPagingDataModel();
+       
 		
 	}
 	
@@ -222,6 +223,7 @@ public class SalutationBackingBean extends
 				
 				ISalutationSO reqSO = (ISalutationSO) BusinessDelegate.getInstance().getServiceObject("pm", ISalutationSO.class);	
 				SalutationResDTO resDTO = reqSO.retrieveSalutationBySearch(reqDTO);
+				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getSalutationSearchResultBean();
 				}
