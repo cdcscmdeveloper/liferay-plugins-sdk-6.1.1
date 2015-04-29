@@ -102,12 +102,27 @@
 								var="committeeMember"
 								widgetVar="committeeMemberWidVar"
 								value="#{suppFinalMeetingBackingBean.managedBean.committeeMembersList}"
-								selection="#{suppFinalMeetingBackingBean.managedBean.selectedCommitteeMembersList}"
-								rowKey="#{committeeMember}" update="@this">
+								rowKey="#{committeeMember}" update="@this" selectionMode="single">
 								<ac:paginator for="memberListTbl" />
+								
+								<p:ajax event="rowSelect" listener="#{suppFinalMeetingBackingBean.selectMemberEvent}" 
+										update="@([id$=memberListTbl])"></p:ajax>								
 					
-								<p:column selectionMode="multiple" style="width:2%;" 
-									disabledSelection="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}"/>
+								<p:column style="width:20px;">
+									<f:facet name="header">
+										<p:selectBooleanCheckbox id="selAllMemChk" value="#{suppFinalMeetingBackingBean.managedBean.selectAllMembers}"
+											disabled="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}">
+											<p:ajax partialSubmit="true" process="@this" update="memberListTbl"  
+													listener="#{suppFinalMeetingBackingBean.selectAllMembers(
+																	suppFinalMeetingBackingBean.managedBean.selectAllMembers)}" />
+										</p:selectBooleanCheckbox>
+									</f:facet>
+									<p:selectBooleanCheckbox id="selectMember" value="#{committeeMember.selected}" 
+									 		disabled="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}">
+										<p:ajax partialSubmit="true" process="@this" update="@this" 
+												listener="#{suppFinalMeetingBackingBean.selectMemberEvent(committeeMember)}"/>
+									</p:selectBooleanCheckbox>
+								</p:column>										
 								
 								<p:column headerText="#{lbl['lbl.sc.name']}">
 									<h:outputText value="#{committeeMember.memberName}"></h:outputText>
