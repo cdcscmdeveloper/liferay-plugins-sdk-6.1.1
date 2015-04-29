@@ -7,12 +7,12 @@ html{
 	font-family:Arial, Helvetica, sans-serif;
 }
 
-a {
+.flowChart-Link {
     color: #ee5408;
 	text-decoration:none;
 }
 
-a:hover {
+.flowChart-Link:hover {
     color: #009ae5;
 	text-decoration:underline;
 }
