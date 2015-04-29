@@ -1802,26 +1802,24 @@ public class LOADetailBackingBean extends
 
 	private void generateNegotiationResultPdf(ScAttachment attachment, Map<Long, List<ScLoiLoa>> suppLoiLoaMap) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
+		ScLoa scLoa = getManagedBean().getScLoa();
 		populateAttachmentDetails(attachment);
 		List<ScLoi> lois = new ArrayList<ScLoi>();
 
-		for (Long key : suppLoiLoaMap.keySet()) {
-			List<ScLoiLoa> loiloas = suppLoiLoaMap.get(key);
-			if(loiloas != null && loiloas.size()>0){
-
-				for (ScLoiLoa scLoiLoa : loiloas) {
-					if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
-						lois.addAll(scLoiLoa.getScLois()) ;
-					}
+		List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+		if(loiloas != null && loiloas.size()>0){
+			for (ScLoiLoa scLoiLoa : loiloas) {
+				if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
+					lois.addAll(scLoiLoa.getScLois()) ;
 				}
 			}
-			VelocityContext context = new VelocityContext();
-			context.put("scLois", lois);
-			context.put("bean", this);
-
-			DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT , 
-					context, new FileOutputStream(getActualFilePath(attachment)));
 		}
+		VelocityContext context = new VelocityContext();
+		context.put("scLois", lois);
+		context.put("bean", this);
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT , 
+				context, new FileOutputStream(getActualFilePath(attachment)));
 	}
 
 	/**
