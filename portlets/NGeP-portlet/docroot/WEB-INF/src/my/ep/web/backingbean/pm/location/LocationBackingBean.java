@@ -82,6 +82,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	}
 
 	public void searchLocation() {
+		this.getManagedBean().setLazy(true);
 		searchLocation.reloadData();
 	}
 
@@ -101,7 +102,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	public String backToSearch() {
 		getManagedBean().setSelectedType(null);
-		getManagedBean().setLazy(true);
+	//	getManagedBean().setLazy(true);
 
 		return NAV_TO_SEARCH;
 	}
