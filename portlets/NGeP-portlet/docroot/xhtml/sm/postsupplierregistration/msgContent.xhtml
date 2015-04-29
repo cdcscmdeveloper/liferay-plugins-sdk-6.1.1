@@ -168,9 +168,20 @@
 			</div>
 			
 			<p:outputPanel rendered="#{postSupplierRegBB.managedBean.flowStatus == 3 and postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-				<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
-				<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}"/> 
-				<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+				<table>
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="Application No" /></td>
+						<td><h:outputText value="#{postSupplierRegBB.managedBean.smAppl.applNo}" /></td>
+					</tr>
+					
+					<tr>
+						<td><p:outputLabel styleClass="outputLabel-view-label" value="Application Status" /></td>
+						<td>
+							<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" />
+							<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
+						</td>
+					</tr>
+				</table>
 			</p:outputPanel>
 		</p:outputPanel>
 		
