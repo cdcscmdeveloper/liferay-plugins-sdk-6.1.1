@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -24,6 +25,7 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 	private Map<String,String> userActionMap;
 	private boolean bannerImage;
 	private int flowStatus;
+	private SmAppl smAppl;
 	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -71,6 +73,14 @@ public class PostSupplierRegistrationManagedBean extends BaseManagedBean{
 
 	public void setFlowStatus(int flowStatus) {
 		this.flowStatus = flowStatus;
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
 	}
 
 }
