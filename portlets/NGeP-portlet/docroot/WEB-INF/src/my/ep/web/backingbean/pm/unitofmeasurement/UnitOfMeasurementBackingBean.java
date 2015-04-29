@@ -83,7 +83,7 @@ public class UnitOfMeasurementBackingBean extends
 	 */		
 	public String redirectMeasurementSearch() {
 		debugLogger("redirectMeasurementSearch");
-		this.getManagedBean().setLazy(true);
+//		this.getManagedBean().setLazy(true); 
 
 		return NAV_TO_SEARCH;
 
@@ -198,7 +198,7 @@ public class UnitOfMeasurementBackingBean extends
 	
 	public void retrieveMeasurement(){
 		debugLogger("retrieveMeasurement");
-		
+		this.getManagedBean().setLazy(true); 
 		unitOfMeasurementDataModel.reloadData();
 		
 	}		
