@@ -54,6 +54,9 @@ import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
 
+/*
+* @ author Ganga prasad
+*/
 public class FileUtility {
 	
 	SFTPUtility sftpUtility = new SFTPUtility();
@@ -1136,10 +1139,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1193,13 +1196,13 @@ public class FileUtility {
 				line.append(formatString(cProfile.getFaxCountryCode(),5));
 				line.append(formatString(cProfile.getFaxAreaCode(),5));
 				line.append(formatString(cProfile.getFaxNo(),20));
-				line.append(formatFloat(cProfile.getAccumulatedCapital()));
-				line.append(formatString(cProfile.getAuthorisedCapital(),20));
-				line.append(formatString(cProfile.getPaidUpCapital(),20));
-				line.append(formatFloat(cProfile.getAccumulatedShare()));
-				line.append(formatFloat(cProfile.getBumiputeraPercentage()));
-				line.append(formatFloat(cProfile.getNonBumiPercentage()));
-				line.append(formatInt(cProfile.getRegStatus()));
+				line.append(formatBigDecimal(cProfile.getAccumulatedCapital()));
+				line.append(formatBigDecimal(cProfile.getAuthorisedCapital()));
+				line.append(formatBigDecimal(cProfile.getPaidUpCapital()));
+				line.append(formatBigDecimal(cProfile.getAccumulatedShare()));
+				line.append(formatBigDecimal(cProfile.getBumiputeraPercentage()));
+				line.append(formatBigDecimal(cProfile.getNonBumiPercentage()));
+				line.append(formatString(cProfile.getRegStatus(),5));
 				line.append(formatDateEperunding(cProfile.getEffectDateTo(),false));
 				line.append(formatDateEperunding(cProfile.getEstablishedDate(),false));
 				line.append(formatDateEperunding(cProfile.getEffectDateFrom(),false));
@@ -1214,14 +1217,14 @@ public class FileUtility {
 				line.append(formatDateEperunding(cProfile.getRegistrationHistory().getDateStart(),false));
 				line.append(formatDateEperunding(cProfile.getRegistrationHistory().getDateEnd(),false));
 
-				line.append(formatString(cProfile.getCapitalProportion().getBumi(),20));
-				line.append(formatString(cProfile.getCapitalProportion().getNonBumi(),20));
-				line.append(formatString(cProfile.getCapitalProportion().getNonMalaysian(),20));
-				line.append(formatString(cProfile.getCapitalProportion().getGovAgency(),20));
-				line.append(formatString(cProfile.getCapitalProportion().getGovEquity(),20));
-				line.append(formatString(cProfile.getCapitalProportion().getLocalCo(),20));
-				line.append(formatString(cProfile.getCapitalProportion().getForeignCo(),20));
-				line.append(formatFloat(cProfile.getCapitalProportion().getTotalMember()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getBumi()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getNonBumi()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getNonMalaysian()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getGovAgency()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getGovEquity()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getLocalCo()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getForeignCo()));
+				line.append(formatBigDecimal(cProfile.getCapitalProportion().getTotalMember()));
 				line.append(String.format("%.0f", cProfile.getCapitalProportion().getTotalShare()));
 
 				writer.write(line.toString());
@@ -1229,10 +1232,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1278,10 +1281,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1329,7 +1332,7 @@ public class FileUtility {
 				line.append(formatInt(mPersonnel.getPersonnel().getCitizenOf()));
 				line.append(formatString(mPersonnel.getPersonnel().getRace(),100));
 				line.append(formatString(mPersonnel.getPersonnel().getDesignation(),50));
-				line.append(formatInt(mPersonnel.getPersonnel().getWorkExperience()));
+				line.append(formatBigDecimal(mPersonnel.getPersonnel().getWorkExperience()));
 
 				line.append(formatString(mPersonnel.getQualification().getMajorIn(),300));
 				line.append(formatString(mPersonnel.getQualification().getQualification(),300));
@@ -1349,10 +1352,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1399,7 +1402,7 @@ public class FileUtility {
 				line.append(formatInt(bDirector.getDirector().getCitizenOf()));
 				line.append(formatString(bDirector.getDirector().getRace(),100));
 				line.append(formatString(bDirector.getDirector().getDesignation(),50));
-				line.append(formatInt(bDirector.getDirector().getWorkExperience()));
+				line.append(formatBigDecimal(bDirector.getDirector().getWorkExperience()));
 
 				line.append(formatString(bDirector.getQualification().getMajorIn(),300));
 				line.append(formatString(bDirector.getQualification().getQualification(),300));
@@ -1419,10 +1422,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1475,10 +1478,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1525,10 +1528,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1583,10 +1586,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1630,10 +1633,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1696,10 +1699,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1761,10 +1764,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1800,19 +1803,16 @@ public class FileUtility {
 				for (PhisVotFund votFund : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
-					line.append(formatStringField(
-							votFund.getCode() + votFund.getPtjCode(), 5, "L"));
-					line.append(formatStringField(votFund.getDescription(),
-							255, "L"));
+					line.append(formatStringField(votFund.getCode() + votFund.getPtjCode(), 5, "L"));
+					line.append(formatStringField(votFund.getDescription(),255, "L"));   //
 					line.append(formatStringField(votFund.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
-						SERVICE_CODE);
+				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1847,11 +1847,11 @@ public class FileUtility {
 					line = new StringBuffer();
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
 					line.append(formatStringField(votFund.getCode(), 4, "L"));
-					line.append(formatStringField(votFund.getDescription(),
-							255, "L"));
+					line.append(formatStringField(votFund.getDescription(),255, "L"));
 					line.append(formatStringField(votFund.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 				Encryption encryption = new Encryption();
@@ -1890,22 +1890,17 @@ public class FileUtility {
 				StringBuffer line;
 				for (PhisProgramActivity prgActivity : content) {
 					line = new StringBuffer();
-					line.append(formatIntegerField(prgActivity.getYear(), 4,
-							"R"));
-					line.append(formatStringField(prgActivity.getVotCode()
-							+ prgActivity.getCode(), 9, "L"));
-					line.append(formatStringField(prgActivity.getDescription(),
-							255, "L"));
-					line.append(formatStringField(prgActivity.getStatus(), 1,
-							"L"));
+					line.append(formatIntegerField(prgActivity.getYear(), 4,"R"));
+					line.append(formatStringField(prgActivity.getVotCode()+ prgActivity.getCode(), 9, "L"));
+					line.append(formatStringField(prgActivity.getDescription(),255, "L"));
+					line.append(formatStringField(prgActivity.getStatus(), 1,"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
-						SERVICE_CODE);
+				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1938,20 +1933,17 @@ public class FileUtility {
 				for (PhisProject project : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(project.getYear(), 4, "R"));
-					line.append(formatStringField(project.getVotCode()
-							+ project.getCode() + project.getSetiaCode()
+					line.append(formatStringField(project.getVotCode()+ project.getCode() + project.getSetiaCode()
 							+ project.getSubSetiaCode(), 16, "L"));
-					line.append(formatStringField(project.getDescription(),
-							255, "L"));
+					line.append(formatStringField(project.getDescription(),255, "L"));
 					line.append(formatStringField(project.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
-						SERVICE_CODE);
+				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1986,19 +1978,16 @@ public class FileUtility {
 					line = new StringBuffer();
 					line.append(formatIntegerField(glAccount.getYear(), 4, "R"));
 					line.append(formatStringField(glAccount.getCode(), 8, "L"));
-					line.append(formatStringField(glAccount.getPtjCode(), 2,
-							"L"));
-					line.append(formatStringField(glAccount.getDescription(),
-							255, "L"));
+					line.append(formatStringField(glAccount.getPtjCode(), 2,"L"));
+					line.append(formatStringField(glAccount.getDescription(),255, "L"));
 					line.append(formatStringField(glAccount.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
+					writer.flush();
 				}
 
 				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
-						SERVICE_CODE);
+				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -2056,7 +2045,10 @@ public class FileUtility {
 	
 	public String formatBigDecimal(BigDecimal value) {
 
-		return value.toString()+"|";
+		if(null!=value)
+			return value.toString()+"|";
+		else
+			return "|";
 //		return String.format("%", value);
 
 	}
@@ -2094,5 +2086,92 @@ public class FileUtility {
 		System.out.println("uomCode :"+uomCode);
 		return uomCode;
 	}
+	
+	// E- teriman Integration
+	
+	/*public void billingInformationFileOutPutStream(List<BillingInformation> content, String filePath) {
+		String PROCESS_ID = "AR501";
+		
+		String fileName = createFileNameGfmas(PROCESS_ID);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath
+							+ fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				StringBuffer subLine;
+				for (BillingInformation billingInformation : content) {
+					line = new StringBuffer();
+				
+					line.append(formatIntegerField(billingInformation.getRecordType(),	1, "R"));
+					line.append(formatStringField(billingInformation.getAgencyId(), 6,	"L"));
+					line.append(formatStringField(billingInformation.getTotalBillCount(), 3,	"L"));
+					
+					if(null!=mDataVendor.getVendorIdCode())
+						line.append(formatStringField(mDataVendor.getVendorIdCode()	.replaceAll("-", ""), 20, "L"));
+					else
+						line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
+					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
+					line.append(formatStringField(mDataVendor.getName(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getName2(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getAddress(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getAddress2(),35, "L"));
+					line.append(formatStringField(mDataVendor.getAddress3(),35, "L"));
+					line.append(formatStringField(mDataVendor.getPostCode(), 5,"L"));
+					line.append(formatStringField(mDataVendor.getCity(), 35,"L"));
+					line.append(formatStringField(mDataVendor.getRegion(), 3,"L"));
+					line.append(formatStringField(mDataVendor.getCountry(), 2,"L"));
+					line.append(formatStringField(mDataVendor.getTelephoneNo(),	15, "L"));
+					line.append(formatStringField(mDataVendor.getFaxNo(), 15,"L"));
+					line.append(formatStringField(mDataVendor.getEmailAddress(), 100, "L"));
+					line.append(formatStringField(mDataVendor.getGlReconAccount(), 10, "L"));
+					line.append(formatStringField(mDataVendor.getCurrency(), 5,"L"));
+					line.append(formatStringField(mDataVendor.getIncoTerm(), 3,"L"));
+					line.append(formatStringField(mDataVendor.getPaymentTerm(),4, "L"));
+					line.append(formatIntegerField(mDataVendor.getBankAccountInfoCount(), 3, "R"));
+					line.append(formatIntegerField(mDataVendor.getStatus(), 1,"R"));
+					line.append(formatStringField(mDataVendor.getMobileNo(), 15,"L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+					if (mDataVendor.getBankAccountInfoList().size() != 0) {
+						for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
+							subLine = new StringBuffer();
+							subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
+							subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
+							subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
+							subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
+							subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
+							subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
+							subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));
+							subLine.append(System.getProperty("line.separator"));
+							writer.write(subLine.toString());
+							writer.flush();
+						}
+						
+					}
+				}
+			}else{
+				System.out.println("content is null");
+			}
+			System.out.println("local fie create....");
+			Encryption encryption = new Encryption();
+			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010");
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}*/
 
 }

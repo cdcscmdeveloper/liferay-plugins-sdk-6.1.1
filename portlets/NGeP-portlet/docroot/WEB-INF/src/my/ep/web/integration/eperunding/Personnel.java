@@ -1,5 +1,7 @@
 package my.ep.web.integration.eperunding;
 
+import java.math.BigDecimal;
+
 public class Personnel {
 
 	private String isManagement;
@@ -13,7 +15,7 @@ public class Personnel {
 	private int citizenOf;
 	private String race;
 	private String designation;
-	private int workExperience;
+	private BigDecimal workExperience;
 
 	public String getIsManagement() {
 		return isManagement;
@@ -103,11 +105,11 @@ public class Personnel {
 		this.designation = designation;
 	}
 
-	public int getWorkExperience() {
+	public BigDecimal getWorkExperience() {
 		return workExperience;
 	}
 
-	public void setWorkExperience(int workExperience) {
+	public void setWorkExperience(BigDecimal workExperience) {
 		this.workExperience = workExperience;
 	}
 

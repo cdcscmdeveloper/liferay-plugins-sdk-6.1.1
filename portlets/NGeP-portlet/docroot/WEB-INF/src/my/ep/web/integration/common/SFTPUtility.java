@@ -77,7 +77,7 @@ public class SFTPUtility {
 			// Copy local file to sftp server
 			remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);
 
-			System.out.println("File upload success");
+			System.out.println("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -321,10 +321,11 @@ public class SFTPUtility {
 					for (int i = 0; i < exists.length; i++) {
 
 						fileName = exists[i].getName().toString();
-						String subFile = fileName.substring(52);
+						String subFile = fileName.substring(53);
 						
-						if(subFile.contains(getDateStringValue())){
-							subFile.contains(serviceId);
+						if(subFile.contains(serviceId )){
+							System.out.println("subFile :"+subFile);
+							subFile.contains(getDateStringValue());
 							return subFile;
 						}
 					}
