@@ -2458,6 +2458,49 @@ public class SmApplicationUtil {
 	}
 
 	/**
+	 * Gets the PO login id, to resubmit or route the application.
+	 * 
+	 * @param managedBean
+	 *            - SmApplicationManagedBean
+	 * 
+	 * @return the PO login id
+	 */
+	public static String getPOLoginId(SmApplicationManagedBean managedBean) {
+		log.info("*** This is resubmit to get po from MOF API ****** ");
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
+		reqDTO.setAppType(managedBean.getSmAppl().getApplType());
+		StringBuilder sb = new StringBuilder();
+		sb.append("(")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_APPROVER)
+				.append(",")
+				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_SYSTEM)
+				.append(")");
+		reqDTO.setWorkflowStatus(sb.toString());
+		IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
+				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+		MofRegistrationResDTO resDTO = reqSO
+				.retrivePoUserIdForRejectedApplication(reqDTO);
+		String poLogin = null;
+		if (resDTO != null && resDTO.getPoUserId() != null) {
+			log.info("******** The po user id from the data ******* "
+					+ resDTO.getPoUserId());
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(Long.parseLong(resDTO.getPoUserId()));
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IUserSO.class);
+			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
+			if (userResDTO != null && userResDTO.getPmUser() != null) {
+				poLogin = userResDTO.getPmUser().getLoginId();
+				log.info("******* After retrieve po details ******** ");
+			}
+		}
+		return poLogin;
+	}
+
+	/**
 	 * Check if there is pending activation of personnels in the supplier
 	 * 
 	 * @param supplierId

@@ -5722,10 +5722,7 @@ public class SmApplicationBackingBean extends
 
 			if (getManagedBean().getSmAppl().isResubmit()) {
 				reqDTO.setPoLoginId(SmApplicationUtil
-						.getPOLoginId(
-								SupplierManagementConst.PM_STATUS_PO_ESCALTED_TO_APPROVER,
-								SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION,
-								getManagedBean().getSmAppl().getApplId()));
+						.getPOLoginId(getManagedBean()));
 			}
 
 			// Set list of users to send to BPM
