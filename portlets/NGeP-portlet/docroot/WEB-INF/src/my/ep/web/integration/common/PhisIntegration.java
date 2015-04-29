@@ -1,5 +1,6 @@
 package my.ep.web.integration.common;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.pm.AddressType;
+import my.ep.util.lookupservice.EpEjbRemoteBusinessDelegate;
 import my.ep.web.integration.phis.ItemType;
 import my.ep.web.integration.phis.MasterDataMaterialInfo;
 import my.ep.web.integration.phis.MaterialBrand;
@@ -63,8 +65,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 */
 public class PhisIntegration {
 	
-//	public static void main(String[] args) throws IOException {
-//		PhisIntegration test = new PhisIntegration();
+	public static void main(String[] args) throws IOException {
+		PhisIntegration test = new PhisIntegration();
 //		test.createFilesforPHIS();
 //		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 //		gfmasIntegration.masterDataVendorGfmasInbound();
@@ -74,7 +76,8 @@ public class PhisIntegration {
 //		gfmasIntegration.sstInformationGfmas();
 //		EperundingIntegration eperundingIntegration = new EperundingIntegration();
 //		eperundingIntegration.createFilesforEperunding();
-//	}
+		test.deliveryAddress();
+	}
 	IVotFundSO votFundSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IVotFundSO.class);
@@ -227,12 +230,13 @@ public class PhisIntegration {
 	public void deliveryAddress() {
 		{
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setOrgProfileId(2207L);
+			reqDTO.setOrgProfileId(254582L);
 			reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
 			
 			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
 			List<PmAddressType> addressTypeLst = resDTO.getAddressTypeList();
 			EPMFRs_Type rs_Type = null;
+			
 			EPMFRq_Type part = new EPMFRq_Type();
 			try {
 
@@ -249,54 +253,55 @@ public class PhisIntegration {
 
 				DeliveryAddressRq_Type deliveryAddressRq_Type = new DeliveryAddressRq_Type();
 				deliveryAddressRq_Type.setAction("CRE");
-				deliveryAddressRq_Type.setNoOfDeliveryAddress(addressTypeLst.size());
 				deliveryAddressRq_Type.setPTJCode("42060401");
-				DeliveryAddress_Type[] address_Type = new DeliveryAddress_Type[addressTypeLst.size()];
+				DeliveryAddress_Type[] address_Type = new DeliveryAddress_Type[1];
 				int i = 0;
 				DeliveryAddress_Type deliveryAddress = null;
+				
 				for (PmAddressType addressType : addressTypeLst) {
+					
 					deliveryAddress= new DeliveryAddress_Type();
 					deliveryAddress.setAddress1(addressType.getPmAddress().getAddress1());
 					deliveryAddress.setAddress2(addressType.getPmAddress().getAddress2());
 					deliveryAddress.setAddress3(addressType.getPmAddress().getAddress3());
 					deliveryAddress.setAddress4(addressType.getPmAddress().getAddress4());
 					deliveryAddress.setCity(addressType.getPmAddress().getPmState().getStateName());
-					deliveryAddress.setDistrict(addressType.getPmAddress().getPmDistrict()
-							.getDistrictName());			
+					deliveryAddress.setDistrict(addressType.getPmAddress().getPmDistrict().getDistrictName());			
 					deliveryAddress.setState(addressType.getPmAddress().getPmState().getStateName());
 					deliveryAddress.setStatus(addressType.getRecordStatusFlg());
 					deliveryAddress.setDeliveryAddressID(addressType.getAddressTypeId().toString());;
-					System.out.println("Address1-->"+addressType.getPmAddress().getAddress1());
-					address_Type[i] = null;
+					address_Type[i] = deliveryAddress;
 					i++;
 				}			
-
-				deliveryAddressRq_Type.setDeliveryAddressArray(address_Type);
 				
+				deliveryAddressRq_Type.setNoOfDeliveryAddress(address_Type.length);
+				deliveryAddressRq_Type.setDeliveryAddressArray(address_Type);
 
 				PHISMasterDataDeliveryAddressPortTypeProxy typeProxy = new PHISMasterDataDeliveryAddressPortTypeProxy();
 				part.setRqHeader(header_Type);
 				part.setDeliveryAddressRq(deliveryAddressRq_Type);	
 
 				rs_Type = typeProxy.inquire(part);
-				System.out.println("No of delivery Addreee:::"+part.getDeliveryAddressRq().getNoOfDeliveryAddress());
-				System.out.println("Action:::"+part.getDeliveryAddressRq().getAction());
-				System.out.println("PTJ CODe:::"+part.getDeliveryAddressRq().getPTJCode());
-				System.out.println("No of delivery Addreee"+part.getDeliveryAddressRq().getDeliveryAddressArray());
+//				System.out.println("No of delivery Addreee:::"+part.getDeliveryAddressRq().getNoOfDeliveryAddress());
+//				System.out.println("Action:::"+part.getDeliveryAddressRq().getAction());
+//				System.out.println("PTJ CODe:::"+part.getDeliveryAddressRq().getPTJCode());
+//				System.out.println("No of delivery Addreee"+part.getDeliveryAddressRq().getDeliveryAddressArray());
 				DeliveryAddress_Type[] address_Type2 = part.getDeliveryAddressRq().getDeliveryAddressArray();
+//				
+//				my.ep.web.integration.phis.ptj.deliveryaddress
+				System.out.println("address_Type2 :"+address_Type2.length);
+				
+				
 				for(DeliveryAddress_Type addr:address_Type2){
 					System.out.println("Address1"+addr.getAddress1());
-					
 				}
 				
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 
-			System.out.println("getStatusCode  :"
-					+ rs_Type.getRsHeader().getStatus().getStatusCode());
-			System.out.println("getStatusDesc :"
-					+ rs_Type.getRsHeader().getStatus().getStatusDesc());
+			System.out.println("getStatusCode  :"+ rs_Type.getRsHeader().getStatus().getStatusCode());
+			System.out.println("getStatusDesc :"+ rs_Type.getRsHeader().getStatus().getStatusDesc());
 
 		}
 	}
@@ -329,7 +334,9 @@ public class PhisIntegration {
 			votFnd.setCode(votFund.getVotFundCode());
 			votFnd.setDescription(votFund.getDescription());
 			if(votFund.getPmPtjGroup()!=null){
-			votFnd.setPtjCode(votFund.getPmPtjGroup().getGroupCode());
+				votFnd.setPtjCode(votFund.getPmPtjGroup().getGroupCode());
+			}else{
+				votFnd.setPtjCode(IntegrationConstants.EMPTY_TRING);
 			}
 			votFnd.setYear(year);
 			votFnd.setStatus("C");
@@ -350,7 +357,7 @@ public class PhisIntegration {
 		
 		Date date = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-09-2014";
+		String dateInString = "31-03-2015";
 		try {
 			date = sdf.parse(dateInString);
 		} catch (ParseException e) {
@@ -484,7 +491,7 @@ public class PhisIntegration {
 		
 		Date date = null;
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "02-07-2014";
+		String dateInString = "31-03-2015";
 		try {
 			date = sdf.parse(dateInString);
 		} catch (ParseException e) {
@@ -513,7 +520,9 @@ public class PhisIntegration {
 			glAccount.setCode(account.getGlAccCode());
 			glAccount.setDescription(account.getDescription());
 			if(account.getPmPtjGroup()!=null){
-			glAccount.setPtjCode(account.getPmPtjGroup().getGroupCode());
+				glAccount.setPtjCode(account.getPmPtjGroup().getGroupCode());
+			}else{
+				glAccount.setPtjCode(IntegrationConstants.EMPTY_TRING);
 			}
 			glAccount.setYear(year);
 			glAccount.setStatus("C");
@@ -545,8 +554,7 @@ public class PhisIntegration {
 
 		reqDTO.setCreateDate(date);
 		//reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
-		CodificationResDTO resDTO = codificationSO
-				.searchItemByCreateDate(reqDTO);
+		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 		
 		List<MasterDataMaterialInfo> materilInfoList = null;
 		FileUtility fileUtility = new FileUtility();
@@ -561,11 +569,11 @@ public class PhisIntegration {
 			
 			rqHeader_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
 			rqHeader_Type.setIpAddress(IntegrationConstants.SERVICE_HOST);
-			rqHeader_Type.setOrgUnit("PHS-220");
+			rqHeader_Type.setOrgUnit("PHS-020");
 			rqHeader_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 			
 			my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type rqUID_Type = new my.ep.web.integration.phis.masterdatamateriainfo.RqUID_Type();
-			rqUID_Type.setAsyncRqUID("PHS-220");
+			rqUID_Type.setAsyncRqUID("PHS-020");
 			rqUID_Type.setRqUID(IntegrationConstants.SEQUENCE_NO);
 		
 			rqHeader_Type.setUID(rqUID_Type);

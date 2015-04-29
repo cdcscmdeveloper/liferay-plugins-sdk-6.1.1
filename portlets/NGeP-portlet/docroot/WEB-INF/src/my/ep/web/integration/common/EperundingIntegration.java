@@ -7,11 +7,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmAssociationBody;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -51,39 +57,41 @@ public class EperundingIntegration {
 	
 	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
-	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.FILE_PATH);;
+	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.FILE_PATH);
+	
+	IParameterSO parameterSO = EpEjbRemoteBusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+	
+	public static void main(String args[]){
+		
+		EperundingIntegration eperundingIntegration = new EperundingIntegration();
+		eperundingIntegration.createFilesforEperunding();
+		
+	}
 	
 	
 	public void createFilesforEperunding(){
 		EperundingIntegration integration = new EperundingIntegration();
 		
-		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate("1");
-		
+		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate("17-07-2013","3","");
+//		
 		if(resDTO.isSuccessful()){
-			integration.createAuthorizedSignatory(resDTO);
-			integration.createEquiytyOwner(resDTO);
-			integration.createBoardOfDirector(resDTO);
-			integration.createManagementPersonnel(resDTO);
-		//	integration.createConsultantProfile(resDTO);  // under development
-			integration.createDeletedCompany(resDTO);
-			integration.createGovernmentProject(resDTO);
-			integration.createRegisteredCategory(resDTO);
+//			integration.createAuthorizedSignatory(resDTO);
+//			integration.createEquiytyOwner(resDTO);
+//			integration.createBoardOfDirector(resDTO);
+//			integration.createManagementPersonnel(resDTO);
+	    }
 			
-		}
-		SupplierSearchResDTO resDTO1 = retriveSmSupplierBycreationDate("2");
-		
-		if(resDTO1.isSuccessful()){
-			integration.createBranchCompany(resDTO1);
-		}
-		
-		SupplierSearchResDTO resDTO2 = retriveSmSupplierBycreationDate("3");
-		
-		if(resDTO2.isSuccessful()){
-			integration.createCompanyOwner(resDTO2);
-			integration.createAssociatedCompany(resDTO2);
-		}
-		
-		
+			integration.createConsultantProfile(retriveSmSupplierBycreationDate("22-08-2013","6",""));   
+//			integration.createDeletedCompany(retriveSmSupplierBycreationDate("09-05-2012","1",""));
+//			integration.createGovernmentProject(retriveSmSupplierBycreationDate("02-10-2010","4",""));
+//			integration.createRegisteredCategory(retriveSmSupplierBycreationDate("17-07-2013","2",""));
+//			
+//			integration.createCompanyOwner(retriveSmSupplierBycreationDate("27-06-2013","5","1"));
+//			integration.createAssociatedCompany(retriveSmSupplierBycreationDate("23-05-2012","5","3"));
+//			integration.createBranchCompany(retriveSmSupplierBycreationDate("17-07-2013","5","2"));
+//		
+//		
 	}
 	
 	public void createEquiytyOwner(SupplierSearchResDTO resDTO) {
@@ -96,80 +104,92 @@ public class EperundingIntegration {
 		Expertise expertise = null;
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-				if (null!=smSupplier.getSmAppl()) {
-					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
-					for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
-						
-						equityOwner = new EquityOwner();
-						profBodyDetail = new ProfBodyDetail();
-						qualification = new Qualification();
-						expertise = new Expertise();
-					
-						if (personnel.isEquityOwner()) {
-							
-							equityOwner.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-							
-							owner = new Owner();
-							owner.setIsEquityOwner(IntegrationConstants.VAVLUE_YES);
-							owner.setName(personnel.getName());
-							owner.setNewICNo(personnel.getIdentificationNo()); // need to confirm
-							owner.setPassport(IntegrationConstants.VAVLUE_NA);   // not known
-							if(personnel.isBumi())
-								owner.setIsBumi(IntegrationConstants.VAVLUE_YES);
-							else
-								owner.setIsBumi(IntegrationConstants.VAVLUE_NO);
-							owner.setCitizenOf(131);
-//							owner.setCitizenOf(personnel.getPmCountry().getCountryId().intValue());
-							owner.setEquityValue(personnel.getShareAmt().toString());
-							owner.setEquityPercentage(personnel.getSharePercentage().toString());
-							owner.setRace(personnel.getPmRace().getRaceName());
-							owner.setDesignation(personnel.getDesignation());
-							equityOwner.setOwner(owner);
-							
-							
-							if(smSupplier.getSmAppl().getSmAssociationBodies().size()!=0){
-							for(SmAssociationBody associationBody:smSupplier.getSmAppl().getSmAssociationBodies()){
-								profBodyDetail.setProfBody(associationBody.getAssociationBodyId().toString());  
-								profBodyDetail.setProfBodyNo(associationBody.getRegNo()); 
-								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
-								equityOwner.setProfBodyDetail(profBodyDetail);
-								break;
-							}}else{
-								profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);  
-								profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING); 
-								profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
-								equityOwner.setProfBodyDetail(profBodyDetail);
-								
-							}
-							
-							if(personnel.getSmStaffAcademics().size()!=0){
-								for(SmStaffAcademic smStaffAcademic :personnel.getSmStaffAcademics()){
-									qualification.setMajorIn(smStaffAcademic.getFieldMajor());
-									qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());   
-									qualification.setQualificationLevel(smStaffAcademic.getQualificationLevelId());
-									qualification.setInstitute(smStaffAcademic.getInstituteName());
-									qualification.setYear(smStaffAcademic.getYear().toString());
-									qualification.setEducationField(smStaffAcademic.getPmEduField().getFieldCode());   
-									equityOwner.setQualification(qualification);
-									break;
-								}}else{
-									qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
-									qualification.setQualification(IntegrationConstants.EMPTY_TRING);   
-									qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
-									qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
-									qualification.setYear(IntegrationConstants.EMPTY_TRING);
-									qualification.setEducationField(IntegrationConstants.EMPTY_TRING);   
-									equityOwner.setQualification(qualification);
+				if (smSupplier.getSmMofAccounts().get(0).getMofNo().equals("465-00002043")) {
+					if (null != smSupplier.getSmAppl()) {
+						if (null != smSupplier.getSmAppl().getSmPersonnels()) {
+							for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
+
+								equityOwner = new EquityOwner();
+								profBodyDetail = new ProfBodyDetail();
+								qualification = new Qualification();
+								expertise = new Expertise();
+
+								if (personnel.isEquityOwner()) {
+
+									equityOwner.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+
+									owner = new Owner();
+									owner.setIsEquityOwner(IntegrationConstants.VAVLUE_YES);
+									owner.setName(personnel.getName());
+									owner.setNewICNo(personnel.getIdentificationNo()); // need to confirm
+									owner.setPassport(IntegrationConstants.VAVLUE_NA); // not known
+									if (personnel.isBumi())
+										owner.setIsBumi(IntegrationConstants.VAVLUE_YES);
+									else
+										owner.setIsBumi(IntegrationConstants.VAVLUE_NO);
+									owner.setCitizenOf(131);
+//									owner.setCitizenOf(personnel.getPmCountry().getCountryId().intValue());
+									owner.setEquityValue(personnel.getShareAmt().toString());
+									owner.setEquityPercentage(personnel.getSharePercentage().toString());
+									owner.setRace(personnel.getPmRace().getRaceName());
+									owner.setDesignation(personnel.getDesignation());
+									equityOwner.setOwner(owner);
+
+									if (smSupplier.getSmAppl()
+											.getSmAssociationBodies().size() != 0) {
+										for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+											profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());
+											profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+											profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
+											equityOwner.setProfBodyDetail(profBodyDetail);
+											break;
+										}
+									} else {
+										profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+										profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+										profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+										equityOwner.setProfBodyDetail(profBodyDetail);
+
+									}
+
+									if (personnel.getSmStaffAcademics().size() != 0) {
+										for (SmStaffAcademic smStaffAcademic : personnel.getSmStaffAcademics()) {
+											qualification.setMajorIn(smStaffAcademic.getFieldMajor());
+											qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());
+											
+
+											ParameterReqDTO reqDTO = new ParameterReqDTO();
+											reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+											ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+											PmParameter pmParameter = paraResDTO.getPmParameter();
+											
+											qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());   //pm_parameter with QL
+//											qualification.setQualificationLevel(smStaffAcademic.getQualificationLevelId());   
+											qualification.setInstitute(smStaffAcademic.getInstituteName());
+											qualification.setYear(smStaffAcademic.getYear().toString());
+											qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId().toString());
+											equityOwner.setQualification(qualification);
+											break;
+										}
+									} else {
+										qualification.setMajorIn(IntegrationConstants.EMPTY_TRING);
+										qualification.setQualification(IntegrationConstants.EMPTY_TRING);
+										qualification.setQualificationLevel(IntegrationConstants.DEFAULT_INT);
+										qualification.setInstitute(IntegrationConstants.EMPTY_TRING);
+										qualification.setYear(IntegrationConstants.EMPTY_TRING);
+										qualification.setEducationField(IntegrationConstants.EMPTY_TRING);
+										equityOwner.setQualification(qualification);
+									}
+
+									expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
+									equityOwner.setExpertise(expertise);
+									if (!equityOwnerList.contains(equityOwner))
+										equityOwnerList.add(equityOwner);
+
 								}
-							
-							expertise.setCategoryClassification(IntegrationConstants.VAVLUE_NA);
-							equityOwner.setExpertise(expertise);
-							if(!equityOwnerList.contains(equityOwner))
-								equityOwnerList.add(equityOwner);
-									
+
+							}
 						}
-						
-					}
 					}
 				}
 		}
@@ -188,6 +208,7 @@ public class EperundingIntegration {
 		Expertise expertise = null;
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (smSupplier.getSmMofAccounts().get(0).getMofNo().equals("465-00002043")) {
 				if (null!=smSupplier.getSmAppl()) {
 					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
 						
@@ -222,7 +243,7 @@ public class EperundingIntegration {
 							
 								if(smSupplier.getSmAppl().getSmAssociationBodies().size()!=0){
 									for(SmAssociationBody associationBody:smSupplier.getSmAppl().getSmAssociationBodies()){
-										profBodyDetail.setProfBody(associationBody.getAssociationBodyId().toString());  
+										profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());  
 										profBodyDetail.setProfBodyNo(associationBody.getRegNo()); 
 										profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
 										boardOfDirector.setProfBodyDetail(profBodyDetail);
@@ -238,11 +259,18 @@ public class EperundingIntegration {
 									if(personnel.getSmStaffAcademics().size()!=0){
 										for(SmStaffAcademic smStaffAcademic :personnel.getSmStaffAcademics()){
 											qualification.setMajorIn(smStaffAcademic.getFieldMajor());
-											qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());   
-											qualification.setQualificationLevel(smStaffAcademic.getQualificationLevelId());
+											qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());  
+
+											ParameterReqDTO reqDTO = new ParameterReqDTO();
+											reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+											ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+											PmParameter pmParameter = paraResDTO.getPmParameter();
+											
+											qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());   //pm_parameter with QL
+//											qualification.setQualificationLevel(smStaffAcademic.getQualificationLevelId());
 											qualification.setInstitute(smStaffAcademic.getInstituteName());
 											qualification.setYear(smStaffAcademic.getYear().toString());
-											qualification.setEducationField(smStaffAcademic.getPmEduField().getFieldCode());   
+											qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId().toString());   
 											boardOfDirector.setQualification(qualification);
 											break;
 										}}else{
@@ -264,7 +292,7 @@ public class EperundingIntegration {
 						}
 					}	
 				}
-				
+		}
 		}
 
 		fileUtility.boardOfDirectorOutPutStream(boardOfDirectorsList, path);
@@ -282,11 +310,12 @@ public class EperundingIntegration {
 		Expertise expertise = null;
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (smSupplier.getSmMofAccounts().get(0).getMofNo().equals("465-00002043")) {
 				if (null!=smSupplier.getSmAppl()) {
 					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
 						
 						for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
-							if (smPersonnel.isManagement()) {
+//							if (smPersonnel.isManagement()) {
 								
 								managementPersonnel = new ManagementPersonnel();
 								personnel = new Personnel();
@@ -327,8 +356,8 @@ public class EperundingIntegration {
 								
 								if(smSupplier.getSmAppl().getSmAssociationBodies().size()!=0){
 									for(SmAssociationBody associationBody:smSupplier.getSmAppl().getSmAssociationBodies()){
-										profBodyDetail.setProfBody(associationBody.getAssociationBodyId().toString());  
-										profBodyDetail.setProfBodyNo(associationBody.getRegNo()); 
+										profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());  // changed to cert body id
+										profBodyDetail.setProfBodyNo(associationBody.getRegNo());  
 										profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
 										managementPersonnel.setProfBodyDetail(profBodyDetail);
 										break;
@@ -343,11 +372,17 @@ public class EperundingIntegration {
 								if(smPersonnel.getSmStaffAcademics().size()!=0){
 									for(SmStaffAcademic smStaffAcademic :smPersonnel.getSmStaffAcademics()){
 										qualification.setMajorIn(smStaffAcademic.getFieldMajor());
-										qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());   
-										qualification.setQualificationLevel(smStaffAcademic.getQualificationLevelId());
+										qualification.setQualification(smStaffAcademic.getPmEduField().getFieldName());  
+									
+										ParameterReqDTO reqDTO = new ParameterReqDTO();
+										reqDTO.setParameterId(new Integer(smStaffAcademic.getQualificationLevelId()).longValue());
+										ParameterResDTO paraResDTO = parameterSO.retrieveParameterById(reqDTO);
+										PmParameter pmParameter = paraResDTO.getPmParameter();
+										
+										qualification.setQualificationLevel(new Integer(pmParameter.getParameterCode()).intValue());   //pm_parameter with QL
 										qualification.setInstitute(smStaffAcademic.getInstituteName());
 										qualification.setYear(smStaffAcademic.getYear().toString());
-										qualification.setEducationField(smStaffAcademic.getPmEduField().getFieldCode());   
+										qualification.setEducationField(smStaffAcademic.getPmEduField().getEduFieldId()+"");   
 										managementPersonnel.setQualification(qualification);
 										break;
 									}}else{
@@ -368,11 +403,10 @@ public class EperundingIntegration {
 								
 							}
 						}
-					}
+//					}
 				}
-				
+			}
 		}
-		
 		
 		fileUtility.managementProfileFileOutPutStream(managementPersonnelsList, path);
 	}
@@ -384,6 +418,7 @@ public class EperundingIntegration {
 		AuthorizedSignatory authorizedSignatory = null;
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
+			if (smSupplier.getSmMofAccounts().get(0).getMofNo().equals("465-00002043")) {
 				if (null!=smSupplier.getSmAppl()) {
 					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
 						for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
@@ -409,106 +444,132 @@ public class EperundingIntegration {
 					}
 				}
 		}
+		}
 		
 		fileUtility.signatoryFileOutPutStream(signatoryList, path);
 	}
 
-	/**
-	 * @return SupplierSearchResDTO
-	 */
-	public SupplierSearchResDTO retriveSmSupplierBycreationDate(String taskId) {
-		ISupplierSearchSO supplierSearchSO = EpEjbRemoteBusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-		
-		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "05-12-2013";
-		Date date = null;
-		try {
-			date = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println("date :"+date);
-		
-		reqDTO.setCreateDate(date);
-		reqDTO.setTaskId(taskId);
-		
-		SupplierSearchResDTO resDTO = supplierSearchSO.getSmSupplierforEperundingByCreatedDate(reqDTO);
-		return resDTO;
-	}
 	
-	public void createConsultantProfile(SupplierSearchResDTO resDTO) {
+	
+	public void createConsultantProfile(SupplierSearchResDTO resDTO) { 
 		
 		List<ConsultantProfile> consultantProfileList = new ArrayList<ConsultantProfile>();
 		ConsultantProfile profile = null;
 		ProfBodyDetail profBodyDetail = null;
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-				if (null!=smSupplier.getSmAppl()) {
+			if (smSupplier.getSmMofAccounts().get(0).getMofNo().equals("465-02004072")) {
+			if (null!=smSupplier.getSmAppl()) {
+				
 					if(smSupplier.getSmAppl().getSupplierType().equalsIgnoreCase(IntegrationConstants.CONSULTANT_PROFILE_CODE)){  // for consultant profiles
+						
 						profile = new ConsultantProfile();
 						
-						profile.setCompanyName("THL CONSULTANTS     ");
-						profile.setSSMNo("1086516-V");
+						profile.setCompanyName(smSupplier.getCompanyName());
+						profile.setSSMNo(smSupplier.getRegNo());
 						profile.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-						profile.setCompanyType("1");
-						profile.setAddress1("2-2-2, JALAN SEMARAK API 3    ");
-						profile.setAddress2("DIAMOND SQUARE");
-						profile.setAddress3("     OFF JALAN GOMBAK");
-						profile.setPostcode("53000");
-						profile.setCity("KUALA LUMPUR");
-						profile.setDistrict("1401");
-						profile.setState("14");
-						profile.setCountry("MY");
-						profile.setTelCountryCode("+6");
-						profile.setTelAreaCode("03");
-						profile.setTelNo("40238289");
-						profile.setFaxCountryCode("+6");
-						profile.setFaxAreaCode("04");
-						profile.setFaxNo("40211289");
-						profile.setAccumulatedCapital(50000);
-						profile.setAuthorisedCapital("0");
-						profile.setPaidUpCapital("0");
-						profile.setAccumulatedShare(0);
-
-						profile.setBumiputeraPercentage(0);
-						profile.setNonBumiPercentage(0);
-						profile.setRegStatus(3);
-						profile.setEffectDateTo(new Date());
-						profile.setEstablishedDate(new Date());
-						profile.setEffectDateFrom(new Date());
-						profile.setDisciplinary(IntegrationConstants.VAVLUE_NO);
+						profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));      
+						
+						String phoneNo = smSupplier.getSmAppl().getSmCompanyBasic().getPhoneNo();
+						if(null!=phoneNo){
+							if(phoneNo.startsWith("+")){
+								profile.setTelCountryCode(phoneNo.substring(0, 2));
+								profile.setTelAreaCode(phoneNo.substring(2, 4));
+								profile.setTelNo(phoneNo.substring(4, phoneNo.length()));
+							}else{
+								profile.setTelCountryCode("+"+phoneNo.substring(0, 1));
+								profile.setTelAreaCode(phoneNo.substring(1, 3));
+								profile.setTelNo(phoneNo.substring(3, phoneNo.length()));
+							}
+							
+						}
+						
+						String faxNo = smSupplier.getSmAppl().getSmCompanyBasic().getFaxNo();
+						if(null!=faxNo){
+							if(phoneNo.startsWith("+")){
+								profile.setFaxCountryCode(faxNo.substring(0, 2));
+								profile.setFaxAreaCode(faxNo.substring(2, 4));
+								profile.setFaxNo(faxNo.substring(4, faxNo.length()));
+							}else{
+								profile.setFaxCountryCode("+"+faxNo.substring(0, 1));
+								profile.setFaxAreaCode(faxNo.substring(1, 3));
+								profile.setFaxNo(faxNo.substring(3, faxNo.length()));
+							}
+							
+						}
+						
+						if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+							
+							for(SmCompanyAddress companyAddress :smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses()){
+								if(null!=companyAddress.getSmAddress()){
+									profile.setAddress1(companyAddress.getSmAddress().getAddress1());
+									profile.setAddress2(companyAddress.getSmAddress().getAddress2());
+									profile.setAddress3(companyAddress.getSmAddress().getAddress3());
+									profile.setPostcode(companyAddress.getSmAddress().getPostcode());
+									profile.setCity(companyAddress.getSmAddress().getPmCity().getCityName());
+									profile.setDistrict(companyAddress.getSmAddress().getPmDistrict().getDistrictCode());
+									profile.setState(companyAddress.getSmAddress().getPmState().getStateCode());
+									profile.setCountry(IntegrationConstants.COUNTRY_CODE_MY);
+									
+								}
+							}
+						}
+					
+						profile.setAccumulatedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());  //accumulated capital not availabele in ng
+						profile.setAuthorisedCapital(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());
+						profile.setPaidUpCapital(smSupplier.getSmAppl().getSmCompanyBasic().getPaidUpCapital());
+						profile.setAccumulatedShare(smSupplier.getSmAppl().getSmCompanyBasic().getAuthorizedCapital());    //accumulated share not available in ng
+						profile.setBumiputeraPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getBumiPercentage());
+						profile.setNonBumiPercentage(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiPercentage());
+					
+						profile.setRegStatus(smSupplier.getSmAppl().getPmRegStatus().getRegStatusId()+"");   // pm_reg_status
+						profile.setEffectDateTo(smSupplier.getSmMofAccounts().get(0).getExpDate());
+						profile.setEstablishedDate(smSupplier.getEstablishDate());         
+						profile.setEffectDateFrom(smSupplier.getSmMofAccounts().get(0).getEffDate());
+						profile.setDisciplinary(IntegrationConstants.VAVLUE_NO);             //sm-complaint
 						profile.setIsAssociatedCompany(IntegrationConstants.VAVLUE_NO);
-						profile.setProfileUpdateDate(new Date());
+						profile.setProfileUpdateDate(smSupplier.getSmAppl().getApplSubmitDate());
+						
 						
 						profBodyDetail = new ProfBodyDetail();
-//						profBodyDetail.setProfBody(associationBody.getAssociationBodyId().toString());  
-//						profBodyDetail.setProfBodyNo(associationBody.getRegNo()); 
-//						profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
-						profile.setProfBodyDetail(profBodyDetail);
+						if (smSupplier.getSmAppl().getSmAssociationBodies().size() != 0) {
+							for (SmAssociationBody associationBody : smSupplier.getSmAppl().getSmAssociationBodies()) {
+								profBodyDetail.setProfBody(associationBody.getPmCertBody().getCertBodyId().toString());   // changed to cert body id
+								profBodyDetail.setProfBodyNo(associationBody.getRegNo());
+								profBodyDetail.setProfBodyExpiry(associationBody.getExpDate());
+								profile.setProfBodyDetail(profBodyDetail);
+								break;
+							}
+						   } else {
+							profBodyDetail.setProfBody(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyNo(IntegrationConstants.EMPTY_TRING);
+							profBodyDetail.setProfBodyExpiry(IntegrationConstants.DEFAULT_DATE);
+							profile.setProfBodyDetail(profBodyDetail);
 
-						RegistrationHistory registrationHistory = new RegistrationHistory();
-						registrationHistory.setDateStart(new Date());
-						registrationHistory.setDateEnd(new Date());
+						}
+						
+
+						RegistrationHistory registrationHistory = new RegistrationHistory();                   // Changed to mof start date and exp date
+						registrationHistory.setDateStart(smSupplier.getSmMofAccounts().get(0).getEffDate());   
+						registrationHistory.setDateEnd(smSupplier.getSmMofAccounts().get(0).getExpDate());    
 						profile.setRegistrationHistory(registrationHistory);
 
 						CapitalProportion capitalProportion = new CapitalProportion();
-						capitalProportion.setBumi("0");
-						capitalProportion.setNonBumi("50000");
-						capitalProportion.setNonMalaysian("0");
-						capitalProportion.setGovAgency("0");
-						capitalProportion.setGovEquity("0");
-						capitalProportion.setLocalCo("0");
-						capitalProportion.setForeignCo("0");
-						capitalProportion.setTotalMember(0);
-						capitalProportion.setTotalShare(0);
+						capitalProportion.setBumi(smSupplier.getSmAppl().getSmCompanyBasic().getBumiEquity());   
+						capitalProportion.setNonBumi(smSupplier.getSmAppl().getSmCompanyBasic().getNonBumiEquity());   
+						capitalProportion.setNonMalaysian(smSupplier.getSmAppl().getSmCompanyBasic().getForeignerEquity());
+						capitalProportion.setGovAgency(smSupplier.getSmAppl().getSmCompanyBasic().getGovtUnitrustEquity());
+						capitalProportion.setGovEquity(smSupplier.getSmAppl().getSmCompanyBasic().getGovtEquity());
+						capitalProportion.setLocalCo(smSupplier.getSmAppl().getSmCompanyBasic().getLocalCompanyEquity());
+						capitalProportion.setForeignCo(smSupplier.getSmAppl().getSmCompanyBasic().getForeignCompanyEquity());
+						capitalProportion.setTotalMember(smSupplier.getSmAppl().getSmCompanyBasic().getTotalMember());
+						capitalProportion.setTotalShare(smSupplier.getSmAppl().getSmCompanyBasic().getTotalShare());
 						profile.setCapitalProportion(capitalProportion);
 						consultantProfileList.add(profile);
 					}
 				}
 		}
-		
+		}
 		fileUtility.consultantProfileFileOutPutStream(consultantProfileList, path);
 	}
 	
@@ -520,21 +581,18 @@ public class EperundingIntegration {
 		System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-				if (null!=smSupplier.getSmAppl()) {
-					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
-						for (SmPersonnel smPersonnel : smSupplier.getSmAppl().getSmPersonnels()) {
-							if (null!=smPersonnel) {
-								deletedCompany = new DeletedCompany();
-								deletedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
-								
-								deletedCompany.setReason(smPersonnel.getName());
-								deletedCompany.setDateDeleted(smPersonnel.getCreatedDate());
-								deletedCompanyList.add(deletedCompany);
-								
-							}
-						}
+			
+			deletedCompany = new DeletedCompany();
+			deletedCompany.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
+			if(null!=smSupplier.getSmAppl()&&null!=smSupplier.getSmAppl().getSmApplRejectReasons()){
+				deletedCompany.setReason(smSupplier.getSmAppl().getSmApplRejectReasons().get(0).
+						 getPmReason().getPmReasonDescs().get(0).getReasonDesc());        // this is currently appl_id is null need to link 
+				}else{
+				deletedCompany.setReason(IntegrationConstants.EMPTY_TRING);	
 					}
-				}
+			deletedCompany.setDateDeleted(smSupplier.getCreatedDate());
+			deletedCompanyList.add(deletedCompany);
+								
 		}
 		
 		fileUtility.deletedCompanyOutPutStream(deletedCompanyList, path);
@@ -558,17 +616,19 @@ public class EperundingIntegration {
 							project = new Project();
 							governmentProject.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 						
-							project.setProjectNo(smCompanyExperience.getRevNo()+"");
+							project.setProjectNo(smCompanyExperience.getRefNo());
 							project.setProjectName(smCompanyExperience.getTitle());
 							project.setProjectLocation(smCompanyExperience.getProjectLocation());
 							project.setClient(smCompanyExperience.getClientName());
-							project.setApppointmentDate(smCompanyExperience.getContractStartDate());
+							project.setApppointmentDate(smCompanyExperience.getProcurementDate());
 							project.setCost(smCompanyExperience.getContractValue().toString());
 							project.setServiceDesc(smCompanyExperience.getWorkServiceDesc());
 							project.setWorkProgress(smCompanyExperience.getProgressStatus());
-							project.setWorkProgressOthers("");
-//							project.setConsultantFee(smCompanyExperience.getConsultantFee().toString());
-//							project.setPaymentMethod(smCompanyExperience.getPaymentMethodId().toString());
+							//project.setWorkProgress(getWorkProgress(smCompanyExperience.getProgressStatus()));    // Need to confirm directly cmng value
+							project.setWorkProgressOthers("");              // this is empty
+							project.setConsultantFee(smCompanyExperience.getConsultantFee().toString());
+//							project.setPaymentMethod(smCompanyExperience.getPaymentMethodId().toString());   // this is empty
+							project.setPaymentMethod(IntegrationConstants.EMPTY_TRING);   // this is empty
 							governmentProject.setProject(project);
 							
 							governmentProjectList.add(governmentProject);
@@ -603,7 +663,7 @@ public class EperundingIntegration {
 									category.setMainCat(smSupplierCategory.getPmCategoryL1().getCategoryL1Code());
 									category.setSubCat(smSupplierCategory.getPmCategoryL2().getCategoryL2Code());
 									category.setSubCatDivision(smSupplierCategory.getPmCategoryL3().getCategoryL3Code());
-									category.setStatus("66"+smSupplierCategory.getRecordStatusFlg());
+									category.setStatus(getCategoryStatus(smSupplierCategory.getRecordStatusFlg())); 
 									registeredCategory.setCategory(category);
 									registeredCategoryList.add(registeredCategory);
 								}
@@ -627,13 +687,12 @@ public class EperundingIntegration {
 		System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-				if (null!=smSupplier.getSmAppl()) {
+			if (smSupplier.getSmMofAccounts().get(0).getMofNo().equals("465-00002043")) {	
 					if(null!=smSupplier.getSmAppl().getSmSupplierBranches()&&!(smSupplier.getSmAppl().getSmSupplierBranches().isEmpty())){
-						System.out.println("getSmSupplierBranches  :"+smSupplier.getSmAppl().getSmSupplierBranches().size());
 						
 						for (SmSupplierBranch smSupplierBranch : smSupplier.getSmAppl().getSmSupplierBranches()) {
 							if (null!=smSupplierBranch) {
-								System.out.println("smSupplierBranch :"+smSupplierBranch.getSupplierBranchId());
+
 								branchCompany = new BranchCompany();
 								branch = new Branch();
 								branchCompany.setMOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
@@ -643,31 +702,38 @@ public class EperundingIntegration {
 								branch.setAddress2(smSupplierBranch.getSmAddress().getAddress2());
 								branch.setAddress3(smSupplierBranch.getSmAddress().getAddress3());
 								branch.setPostcode(smSupplierBranch.getSmAddress().getPostcode());
+								
 								if(null!=smSupplierBranch.getSmAddress().getPmCity())
 									branch.setCity(smSupplierBranch.getSmAddress().getPmCity().getCityName());
 								else
-									branch.setCity(null);
+									branch.setCity(IntegrationConstants.EMPTY_TRING);
+							
 								if(null!=smSupplierBranch.getSmAddress().getPmDistrict())
-									branch.setDistrict(smSupplierBranch.getSmAddress().getPmDistrict().getDistrictName());
+									branch.setDistrict(smSupplierBranch.getSmAddress().getPmDistrict().getDistrictCode());
 								else
-									branch.setDistrict(null);
+									branch.setDistrict(IntegrationConstants.EMPTY_TRING);
+							
 								if(null!=smSupplierBranch.getSmAddress().getPmState())	
-									branch.setState(smSupplierBranch.getSmAddress().getPmState().getStateName());
+									branch.setState(smSupplierBranch.getSmAddress().getPmState().getStateCode());
 								else
-									branch.setState(null);
+									branch.setState(IntegrationConstants.EMPTY_TRING);
+								
 								if(null!=smSupplierBranch.getSmAddress().getPmCountry())
-									branch.setCountry(smSupplierBranch.getSmAddress().getPmCountry().getCountryName());
+									branch.setCountry(smSupplierBranch.getSmAddress().getPmCountry().getCountryCode());
 								else
-									branch.setCountry(null);
+									branch.setCountry(IntegrationConstants.EMPTY_TRING);
 								branchCompany.setBranch(branch);
 								
-								branchCompanyList.add(branchCompany);
+								if(!branchCompanyList.contains(branchCompany))
+									branchCompanyList.add(branchCompany);
 								
 								}
 							}
+
+							
 						}
-					}
-				}
+			}
+		}
 		
 			fileUtility.branchCompanyOutPutStream(branchCompanyList, path);
 		}
@@ -689,7 +755,7 @@ public class EperundingIntegration {
 							companyOwner.setmOFNo(smSupplier.getSmMofAccounts().get(0).getMofNo());
 							companyOwner.setCompanyName(equityCompany.getCompanyName());
 							companyOwner.setsSMNo(equityCompany.getRegNo());
-							companyOwner.setCompanyOwnerMOFNo(IntegrationConstants.EMPTY_TRING);
+							companyOwner.setCompanyOwnerMOFNo(IntegrationConstants.EMPTY_TRING);   // Need to confirm whether column is there or not
 							companyOwner.setShareholdingAmount(equityCompany.getShareAmt());
 							companyOwner.setShareholdingPercentage(equityCompany.getSharePercentage());
 							companyOwner.setAddress1(equityCompany.getSmAddress().getAddress1());
@@ -701,23 +767,47 @@ public class EperundingIntegration {
 							else
 								companyOwner.setCity(null);
 							if(null!=equityCompany.getSmAddress().getPmDistrict())
-								companyOwner.setDistrict(equityCompany.getSmAddress().getPmDistrict().getDistrictName());
+								companyOwner.setDistrict(equityCompany.getSmAddress().getPmDistrict().getDistrictCode());
 							else
 								companyOwner.setDistrict(null);
 							if(null!=equityCompany.getSmAddress().getPmState())	
-								companyOwner.setState(equityCompany.getSmAddress().getPmState().getStateName());
+								companyOwner.setState(equityCompany.getSmAddress().getPmState().getStateCode());
 							else
 								companyOwner.setState(null);
 							if(null!=equityCompany.getSmAddress().getPmCountry())
-								companyOwner.setCountry(equityCompany.getSmAddress().getPmCountry().getCountryName());
+								companyOwner.setCountry(equityCompany.getSmAddress().getPmCountry().getCountryCode());
 							else
 								companyOwner.setCountry(null);
-							companyOwner.setTelCountryCode(equityCompany.getPhoneNo());
-							companyOwner.setTelAreaCode(equityCompany.getPhoneNo());
-							companyOwner.setTelNo(equityCompany.getPhoneNo());
-							companyOwner.setFaxCountryCode(equityCompany.getFaxNo());
-							companyOwner.setFaxAreaCode(equityCompany.getFaxNo());
-							companyOwner.setFaxNo(equityCompany.getFaxNo());
+							
+							
+
+							String phoneNo = equityCompany.getPhoneNo();
+							if(null!=phoneNo){
+								if(phoneNo.startsWith("+")){
+									companyOwner.setTelCountryCode(phoneNo.substring(0, 2));
+									companyOwner.setTelAreaCode(phoneNo.substring(2, 4));
+									companyOwner.setTelNo(phoneNo.substring(4, phoneNo.length()));
+								}else{
+									companyOwner.setTelCountryCode("+"+phoneNo.substring(0, 1));
+									//companyOwner.setTelAreaCode(phoneNo.substring(1, 3));
+//									companyOwner.setTelNo(phoneNo.substring(3, phoneNo.length()));
+								}
+								
+							}
+							
+							String faxNo = equityCompany.getFaxNo();
+							if(null!=faxNo){
+								if(phoneNo.startsWith("+")){
+									companyOwner.setFaxCountryCode(faxNo.substring(0, 2));
+									companyOwner.setFaxAreaCode(faxNo.substring(2, 4));
+									companyOwner.setFaxNo(faxNo.substring(4, faxNo.length()));
+								}else{
+									companyOwner.setFaxCountryCode("+"+faxNo.substring(0, 1));
+//									companyOwner.setFaxAreaCode(faxNo.substring(1, 3));
+//									companyOwner.setFaxNo(faxNo.substring(3, faxNo.length()));
+								}
+								
+							}
 							
 							if(!companyOwnerList.contains(companyOwner))
 								companyOwnerList.add(companyOwner);
@@ -739,9 +829,10 @@ public class EperundingIntegration {
 		AssociatedCompany associatedCompany = null;
 		
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-				if (null!=smSupplier.getSmAppl()) {
-					if(null!=smSupplier.getSmAppl().getSmPersonnels()){
-					for (SmAssociateCompany associateCompany : smSupplier.getSmAppl().getSmAssociateCompanies()) {
+				
+			if (null!=smSupplier.getSmAppl()) {
+				
+				for (SmAssociateCompany associateCompany : smSupplier.getSmAppl().getSmAssociateCompanies()) {
 						
 						if(null!=associateCompany){
 							
@@ -750,41 +841,65 @@ public class EperundingIntegration {
 							associatedCompany.setCompanyName(associateCompany.getCompanyName());
 							associatedCompany.setsSMNO(associateCompany.getRegNo());
 							associatedCompany.setAssociatedCompanyMOFNO(IntegrationConstants.EMPTY_TRING);
-							associatedCompany.setShareholding(associateCompany.getIsShareholding().toString());
+							if(associateCompany.getIsShareholding().intValue()==1)
+								associatedCompany.setShareholding(IntegrationConstants.VAVLUE_YES);
+							else
+								associatedCompany.setShareholding(IntegrationConstants.VAVLUE_NO);
 							associatedCompany.setAddress1(associateCompany.getSmAddress().getAddress1());
 							associatedCompany.setAddress2(associateCompany.getSmAddress().getAddress2());
 							associatedCompany.setAddress3(associateCompany.getSmAddress().getAddress3());
 							associatedCompany.setPostcode(associateCompany.getSmAddress().getPostcode());
+							
 							if(null!=associateCompany.getSmAddress().getPmCity())
 								associatedCompany.setCity(associateCompany.getSmAddress().getPmCity().getCityName());
 							else
 								associatedCompany.setCity(null);
 							if(null!=associateCompany.getSmAddress().getPmDistrict())
-								associatedCompany.setDistrict(associateCompany.getSmAddress().getPmDistrict().getDistrictName());
+								associatedCompany.setDistrict(associateCompany.getSmAddress().getPmDistrict().getDistrictCode());
 							else
 								associatedCompany.setDistrict(null);
 							if(null!=associateCompany.getSmAddress().getPmState())	
-								associatedCompany.setState(associateCompany.getSmAddress().getPmState().getStateName());
+								associatedCompany.setState(associateCompany.getSmAddress().getPmState().getStateCode());
 							else
 								associatedCompany.setState(null);
 							if(null!=associateCompany.getSmAddress().getPmCountry())
-								associatedCompany.setCountry(associateCompany.getSmAddress().getPmCountry().getCountryName());
+								associatedCompany.setCountry(associateCompany.getSmAddress().getPmCountry().getCountryCode());
 							else
 								associatedCompany.setCountry(null);
 							
-							associatedCompany.setTelCountryCode(associateCompany.getPhoneNo());
-							associatedCompany.setTelAreaCode(associateCompany.getPhoneNo());
-							associatedCompany.setTelNo(associateCompany.getPhoneNo());
-							associatedCompany.setFaxCountryCode(associateCompany.getFaxNo());
-							associatedCompany.setFaxAreaCode(associateCompany.getFaxNo());
-							associatedCompany.setFaxNo(associateCompany.getFaxNo());
-						
+							
+							String phoneNo = associateCompany.getPhoneNo();
+							if(null!=phoneNo){
+								if(phoneNo.startsWith("+")){
+									associatedCompany.setTelCountryCode(phoneNo.substring(0, 2));
+									associatedCompany.setTelAreaCode(phoneNo.substring(2, 4));
+									associatedCompany.setTelNo(phoneNo.substring(4, phoneNo.length()));
+								}else{
+									associatedCompany.setTelCountryCode("+"+phoneNo.substring(0, 1));
+									associatedCompany.setTelAreaCode(phoneNo.substring(1, 3));
+									associatedCompany.setTelNo(phoneNo.substring(3, phoneNo.length()));
+								}
+								
+							}
+							
+							String faxNo = associateCompany.getFaxNo();
+							if(null!=faxNo){
+								if(phoneNo.startsWith("+")){
+									associatedCompany.setFaxCountryCode(faxNo.substring(0, 2));
+									associatedCompany.setFaxAreaCode(faxNo.substring(2, 4));
+									associatedCompany.setFaxNo(faxNo.substring(4, faxNo.length()));
+								}else{
+									associatedCompany.setFaxCountryCode("+"+faxNo.substring(0, 1));
+									associatedCompany.setFaxAreaCode(faxNo.substring(1, 3));
+									associatedCompany.setFaxNo(faxNo.substring(3, faxNo.length()));
+								}
+								
+							}
+							
 							if(!associatedCompanyList.contains(associatedCompany))
 								associatedCompanyList.add(associatedCompany);
 						}
 					}
-						
-				}
 			}
 		}
 		fileUtility.AssociatedCompanyOutPutStream(associatedCompanyList, path);
@@ -806,10 +921,127 @@ public class EperundingIntegration {
 		}else{
 			System.out.println("Directory is already exists!");
 		}
-	//	System.out.println("file.getAbsoluteFile() "+file.getAbsolutePath());
 			
 		return file.getAbsolutePath()+"/";
 
+	}
+	
+	public String getCategoryStatus(int statusFlg){
+		
+		String categoryStatus = null;
+		
+		/*660	ACTIVE 		661	SUSPENDED		662	TERMINATED		663	EXPIRED*/
+		
+		if(statusFlg == IntegrationConstants.RECORD_STATUS_ACTIVE){
+			categoryStatus ="660";
+		}else if(statusFlg == IntegrationConstants.RECORD_STATUS_SUSPENDED){
+			categoryStatus ="661";
+		}else if(statusFlg == IntegrationConstants.RECORD_STATUS_CANCELLED){
+			categoryStatus ="662";
+		}else if(statusFlg == IntegrationConstants.RECORD_STATUS_EXPIRED){
+			categoryStatus ="663";
+		}
+
+		return categoryStatus;
+		
+	}
+	
+	public String getWorkProgress(String wrkPrg){
+		String wrkProgress = null;
+		/*1	COMPLETED 		2	IN PROGRESS		3	FAILURE		4	KIV		5	REPEAL*/
+		
+		if(wrkPrg.equals(IntegrationConstants.WORK_PROGRESS_CMPLTD)){
+			wrkProgress ="1";
+		}else if(wrkPrg.equals(IntegrationConstants.WORK_PROGRESS_INPGRS)){
+			wrkProgress ="2";
+		}else if(wrkPrg.equals(IntegrationConstants.WORK_PROGRESS_FAILURE)){
+			wrkProgress ="3";
+		}else {
+			wrkProgress ="4";
+		}
+
+		return wrkProgress;
+		
+	}
+	
+	public String getCompanyType(String businessType){
+		
+		String compType = null; 
+		
+		switch(businessType){
+			case "A":  compType = "1";
+				break;
+			case "B":  compType = "4";
+				break;
+			case "C":  compType = "2";
+				break;
+			case "D":  compType = "2";
+				break;
+			case "E":  compType = "2";
+				break;
+			case "F":  compType = "1";
+				break;
+			case "G":  compType = "1";
+				break;
+			case "H":  compType = "1";
+				break;
+			case "I":  compType = "3";
+				break;
+			case "J": compType = "4";
+				break;
+			case "K": compType = "6";
+				break;
+			case "L": compType = "5";
+				break;
+			case "M": compType = "7";
+				break;
+			case "N": compType = "?";
+				break;
+			case "O": compType = "6";
+				break;
+			default: compType = "?";
+				break;
+		}
+		
+		return compType;
+		
+	}
+	/**
+	 * @return SupplierSearchResDTO
+	 */
+	public SupplierSearchResDTO retriveSmSupplierBycreationDate(String DateString,String methodName,String taskId) {
+		
+	   ISupplierSearchSO supplierSearchSO = EpEjbRemoteBusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+		
+		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		Date date = null;
+		try {
+			date = sdf.parse(DateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("date :"+date);
+		
+		reqDTO.setCreateDate(date);
+		reqDTO.setTaskId(taskId);
+		
+		SupplierSearchResDTO resDTO = null;
+		if(methodName.equals("1"))
+		  resDTO = supplierSearchSO.getDeletedCompanyEperunding(reqDTO);     // deleted company
+		else if(methodName.equals("2"))
+		  resDTO = supplierSearchSO.getRegisteredCategoryEperunding(reqDTO);  // registered category
+		else if(methodName.equals("3"))
+		  resDTO = supplierSearchSO.getEquityBodMgtAuthEperunding(reqDTO);   // equity,mgt,bod,auth
+		else if(methodName.equals("4"))
+		 resDTO = supplierSearchSO.getGovernProjEperunding(reqDTO);        // governament project
+		else if(methodName.equals("5"))
+		 resDTO = supplierSearchSO.getAssociatedBranchComapanyAndCompanyOwnerEperunding(reqDTO);      // associate ,branch company owner 
+		else if(methodName.equals("6"))
+		 resDTO = supplierSearchSO.getConsultantProfileEperunding(reqDTO);   //consultant profile
+		
+		return resDTO;
 	}
 
 }
