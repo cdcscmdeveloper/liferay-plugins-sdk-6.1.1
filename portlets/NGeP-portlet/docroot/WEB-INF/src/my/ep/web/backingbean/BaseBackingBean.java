@@ -27,6 +27,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,6 +56,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -875,5 +877,17 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			filename += "...";
 		}
 		return filename;
+	}
+	
+	/**
+	 * Redirect to liferay logout url
+	 */
+	public void redirectToLogoutUrl(){
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		SmCommonUtil.redirectToExternalUrl(themeDisplay.getURLSignOut());
 	}
 }
