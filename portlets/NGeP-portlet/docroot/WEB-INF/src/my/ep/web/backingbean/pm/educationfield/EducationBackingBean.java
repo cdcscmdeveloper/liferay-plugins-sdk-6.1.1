@@ -102,7 +102,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 */
 	public String redirectEduSearch() {
 		debugLogger("redirectEduSearch");
-		this.getManagedBean().setLazy(true);
+		//this.getManagedBean().setLazy(true);
 		return NAV_TO_MAIN;
 
 	}
@@ -117,6 +117,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		this.getManagedBean().setFieldNames(new String());
 		this.getManagedBean().setStatus(null);
 		educationFieldDataModel = new EducationFieldPagingDataModel();
+		
 
 	}
 
@@ -262,6 +263,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 								IEducationFieldSO.class);
 				EducationFieldResDTO resDTO = reqSO
 						.retrieveEducationBySearch(reqDTO);
+				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getEducationSearchResultBean();
 				}
