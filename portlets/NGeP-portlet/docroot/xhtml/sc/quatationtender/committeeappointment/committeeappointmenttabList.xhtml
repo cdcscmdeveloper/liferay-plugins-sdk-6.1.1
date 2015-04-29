@@ -5,55 +5,50 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<ui:fragment
+		rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeBusinessOwner}">
 
-	<p:panel>
+		<ui:param name="committe"
+			value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
 
+		<ui:include src="businessOwnerCommittee.xhtml" />
 
-		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeBusinessOwner}">
+	</ui:fragment>
 
-			<ui:param name="committe"
-				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+	<ui:fragment
+		rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization and qTDetailBB.managedBean.selectedTabBean.tabType ne ParameterConst.committeeTypeBusinessOwner}">
+		<ui:param name="committe"
+			value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+		<ui:param name="selectedCommittee"
+			value="#{qTDetailBB.managedBean.toBeDelCommitteMemebers}" />
 
-			<ui:include src="businessOwnerCommittee.xhtml" />
+		<ui:include src="specificationCommitteeDetails.xhtml" />
 
-		</ui:fragment>
+		<div class="ppRightBtn">
+			<p:commandButton id="specificationcommitteeadd"
+				value="#{lbl['lbl.btn.add']}" process="@this"
+				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}"
+				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
+				oncomplete="newspecificationcommittee.show();"
+				update="@(.scAddMember)" />
 
-		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization and qTDetailBB.managedBean.selectedTabBean.tabType ne ParameterConst.committeeTypeBusinessOwner}">
-			<ui:param name="committe"
-				value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
-			<ui:param name="selectedCommittee"
-				value="#{qTDetailBB.managedBean.toBeDelCommitteMemebers}" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, specificationcommitteeid"
+				actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
+				update="@(.scMemberDtl)"
+				rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}" />
 
-			<ui:include src="specificationCommitteeDetails.xhtml" />
+			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}"
+				process="@this, specificationcommitteeid"
+				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
+				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
+				actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}" />
+		</div>
+	</ui:fragment>
 
-			<div class="ppRightBtn">
-				<p:commandButton id="specificationcommitteeadd"
-					value="#{lbl['lbl.btn.add']}" process="@this"
-					rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}"
-					actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
-					oncomplete="newspecificationcommittee.show();" update="@(.scAddMember)"/>
-
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					process="@this, specificationcommitteeid"
-					actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-					update="@(.scMemberDtl)" 
-					rendered="#{!qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode) and qTDetailBB.managedBean.selectedTabBean.tabType ne SourcingConstants.committeTypeFinalization}" />
-
-				<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.tec']}"
-					process="@this, specificationcommitteeid"
-					update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
-					rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
-					actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}" />
-			</div>
-		</ui:fragment>
-
-		<ui:fragment
-			rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq SourcingConstants.committeTypeFinalization}">
-			<ui:include src="finalizationSecretaryDetails.xhtml" />
-		</ui:fragment>
-
-	</p:panel>
+	<ui:fragment
+		rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq SourcingConstants.committeTypeFinalization}">
+		<ui:include src="finalizationSecretaryDetails.xhtml" />
+	</ui:fragment>
 
 </ui:composition>
