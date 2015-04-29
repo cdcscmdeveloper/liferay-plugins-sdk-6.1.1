@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.document.list']}" toggleable="true">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.document.list.instruction']}"/>
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.document.list.instruction']}" escape="false" />
 	
 		<p:dataTable var="scQtDocReport" id="doctbl" widgetVar="documentWidget"
 			value="#{qTDocumentsBackingBean.managedBean.scQtDocReportList}"
