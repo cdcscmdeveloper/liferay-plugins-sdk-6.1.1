@@ -8,13 +8,13 @@ html{
 }
 
 .flowChart-Link {
-    color: #ee5408;
-	text-decoration:none;
+    color: #ee5408 !important;
+	text-decoration:none !important;
 }
 
 .flowChart-Link:hover {
-    color: #009ae5;
-	text-decoration:underline;
+    color: #009ae5 !important;
+	text-decoration:underline !important;
 }
 
 .title {
