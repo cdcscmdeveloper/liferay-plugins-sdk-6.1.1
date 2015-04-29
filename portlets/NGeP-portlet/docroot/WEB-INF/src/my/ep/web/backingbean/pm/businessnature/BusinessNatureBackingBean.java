@@ -48,7 +48,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	public BusinessNatureBackingBean() {
 		log.info("inside constructor");
 		
-		resetBusinessNatureSearch();
+		//resetBusinessNatureSearch();
 
 	}
 	
@@ -66,7 +66,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		debugLogger("preLoading");
 		this.resetBusinessNatureSearch();
 		FacesContext fc = FacesContext.getCurrentInstance(); 
-	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/pm/businessnature/businessNatureMaintenance.xhtml");
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "businessNatureMain");
 	}
 	
 	/**
@@ -510,7 +510,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	public void retrieveBusinessNature(){
 		debugLogger("retrieveBusinessNature");
 		
-boolean hasSearchValue = false;
+		boolean hasSearchValue = false;
 		
 		if (getManagedBean().getCategoryLvl() != null && getManagedBean().getCategoryLvl().intValue()>0) {
 			hasSearchValue = true;
