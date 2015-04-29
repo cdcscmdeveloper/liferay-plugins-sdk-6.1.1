@@ -82,7 +82,10 @@
 				$scLoiTerm.termDesc <br/>
 			#end
 		</td>
-		<td class="tdInfoTable"></td>
+		<td class="tdInfoTable">
+		  #foreach( $scLoiTerm in $scLoi.scNegoTerms )
+				$scLoiTerm.negoResult <br/>
+			#end</td>
 	</tr>
 	#end
 </table>
