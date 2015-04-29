@@ -94,6 +94,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
 			this.getManagedBean().setBannerImage(false);
+			getManagedBean().setSmAppl(appl);
+			
 			if(appl != null){
 				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
