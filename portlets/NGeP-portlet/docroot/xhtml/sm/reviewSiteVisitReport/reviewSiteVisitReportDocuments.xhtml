@@ -104,38 +104,36 @@
 							</tr>
 						</table>
 					</p:outputPanel>
-					</p:panel>
-					<br />
-					<br />
+				</p:outputPanel> <br /> <br />
 
-					<table style="width: 100%">
-						<tr>
-							<td><div align="left" style="width: 100%">
-									<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+				<table style="width: 100%">
+					<tr>
+						<td><div align="left" style="width: 100%">
+								<p:commandButton value="#{lbl['lbl.sm.prev.section']}"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
+									action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+									update=":form" />
+							</div></td>
+						<td><c:if test="#{backingBean.managedBean.approverUser}">
+								<div align="right" style="width: 100%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
 										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-										actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_SUPPORTDOCS)}"
+										actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
 										update=":form" />
-								</div></td>
-							<td><c:if test="#{backingBean.managedBean.approverUser}">
-									<div align="right" style="width: 100%">
-										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-											actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_APPRDEC)}"
-											update=":form" />
-									</div>
-								</c:if> <c:if test="#{backingBean.managedBean.poUser}">
-									<div align="right" style="width: 100%">
-										<p:commandButton value="#{lbl['lbl.sm.next.section']}"
-											onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-											actionListener="#{backingBean.assignReviewSupportingNav('next')}"
-											action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
-											update=":form" />
-									</div>
-								</c:if></td>
-						</tr>
-					</table></td>
+								</div>
+							</c:if> <c:if test="#{backingBean.managedBean.poUser}">
+								<div align="right" style="width: 100%">
+									<p:commandButton value="#{lbl['lbl.sm.next.section']}"
+										onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+										actionListener="#{backingBean.assignReviewSupportingNav('next')}"
+										action="#{backingBean.updateSmAppl(backingBean.managedBean.smAppl.applType,SupplierManagementConst.SM_APPL_PAGE_TYPE_SITEVISITREV,SupplierManagementConst.SM_APPL_PAGE_TYPE_PODEC)}"
+										update=":form" />
+								</div>
+							</c:if></td>
+					</tr>
+				</table></td>
 		</tr>
 	</table>
 
