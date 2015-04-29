@@ -45,7 +45,7 @@
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType != ParameterConst.newSmApplnForMof}">
 							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 								<div class="flow-chart-left lst">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.catalogue.upload']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.catalogue.upload']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 								</div>
 								<div class="flow-chart-left dmid">
 									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.softcert.request']}</p>
@@ -60,7 +60,7 @@
 									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /> #{lbl['lbl.sm.basic.catalogue.upload']}</p>
 								</div>
 								<div class="flow-chart-left mid">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.softcert.request']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 								</div>
 								<div class="flow-chart-left dlast">
 									<p><strong>#{lbl['lbl.sm.basic.step']} 3 </strong><br /><nobr>#{lbl['lbl.sm.basic.completed']}</nobr></p>
@@ -73,7 +73,7 @@
 								<!-- FLOW STATUS 1 -->
 								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 								<div class="flow-chart-left lst">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.cont.mof.reg']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.cont.mof.reg']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 								</div>
 
 								<div class="flow-chart-left dmid">
@@ -100,7 +100,7 @@
 										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
 									</div>
 									<div class="flow-chart-left mid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.processing.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.processing.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 									</div>
 									<div class="flow-chart-left dmid">
 										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
@@ -153,7 +153,7 @@
 									</div>
 
 									<div class="flow-chart-left mid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /><p:commandLink value="#{lbl['lbl.sm.basic.registration.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
+										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.registration.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
 									</div>
 
 									<div class="flow-chart-left dlast">
