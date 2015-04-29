@@ -23,6 +23,7 @@ import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BiddingConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
@@ -32,11 +33,13 @@ import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sc.schedulermanager.SchedulerManagerBackingBean;
 import my.ep.web.managedbean.sc.bidding.BiddingManagedBean;
 import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -71,6 +74,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 		log.info(message);
 	}
+	CommonUtils commonUtils = new CommonUtils();
+	DecimalFormat nf = new DecimalFormat(
+			commonUtils
+					.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 	/**
 	 * method to reset search fields
@@ -834,4 +841,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return "/xhtml/sc/bidding/biddingmain.xhtml ? faces-redirect=true";
 	}
 
+	public String formattedTotalAmount(TplSpecQuestion specQuestion,BigDecimal bidPrice,BigDecimal qty){
+		return nf.format(getManagedBean().getTplSpecHelper().calcTotalAmount(specQuestion, bidPrice, qty));
+	}
 }

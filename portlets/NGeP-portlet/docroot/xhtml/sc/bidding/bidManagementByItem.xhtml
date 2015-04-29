@@ -93,7 +93,7 @@
 				<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 					style="align : center; width : 14%">
 					<h:outputText id="supplierCodeVBI"
-						value="#{bidPriceItem.supplierId}" />
+						value="#{bidPriceItem.supplier.supplierId}" />
 				</p:column>
 				<p:column style="align : center; width : 14%"
 					headerText="#{lbl['lbl.sc.bumiputera.status']}">
@@ -113,11 +113,10 @@
 					<div style="align: right">
 						<p:commandLink id="bidPriceVBI"
 							rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) eq '0')}"
-							value="#{biddingBB.managedBean.tplSpecHelper.calcTotalAmount(biddingBB.managedBean.selectedBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.bidPrice,biddingBB.managedBean.selectedBidItem.qty)}"
+							value="#{biddingBB.formattedTotalAmount(biddingBB.managedBean.selectedBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.bidPrice,biddingBB.managedBean.selectedBidItem.qty)}"
 							style="float : right" oncomplete="priceHistory.show();"
 							action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
 							update="@([id$=historyPricePopupPanel])">
-
 						</p:commandLink>
 					</div>
 
