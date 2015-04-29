@@ -17,6 +17,8 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 
 		<ui:param name="isPendingSubmissionStatus"
 			value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingSubmission}" />
+		<ui:param name="isPendingVerification"
+			value="#{purchaseInDefaultBackingBean.managedBean.pidStatus.statusId eq DPStatusConstants.pidPendingVerification}" />
 
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
