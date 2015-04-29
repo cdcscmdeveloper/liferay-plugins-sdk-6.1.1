@@ -301,6 +301,67 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	}
 //End - Meeting Details
 	
+	/**
+	 * Event to handle selection of committee members
+	 */
+	public void selectAllMembers(boolean selectAll) {
+		debugLogger("addToSelectedMemberList");
+		
+		List<ScCommitteeMember> committeeMemberList = 
+				this.getManagedBean().getCommitteeMembersList();
+		
+		if (CollectionUtils.isNotEmpty(committeeMemberList)) {
+			selectAll(selectAll, committeeMemberList);
+			if (this.getManagedBean()
+					.getSelectedCommitteeMembersList() == null) {
+				this.getManagedBean().setSelectedCommitteeMembersList(
+						new ArrayList<ScCommitteeMember>());
+			} 
+			if (selectAll) {
+				this.getManagedBean()
+					.getSelectedCommitteeMembersList().clear();
+				this.getManagedBean()
+					.getSelectedCommitteeMembersList()
+					.addAll(committeeMemberList);
+			} else {
+				this.getManagedBean()
+					.setSelectedCommitteeMembersList(null);
+			}
+		}
+	}
+	
+	/**
+	 * Event to handle selection of committee members
+	 */
+	public void selectMemberEvent(SelectEvent event) {
+		debugLogger("selectMemberEvent");
+		
+		ScCommitteeMember committeeMember = 
+								(ScCommitteeMember) event.getObject();
+		if (committeeMember.getMemberRole().getParameterCode()
+				.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+			committeeMember.setSelected(true);
+		} else {
+			return;
+		}
+		selectMemberEvent(committeeMember);
+	}
+	
+	public void selectMemberEvent(ScCommitteeMember committeeMember) {
+		this.getManagedBean().setSelectAllMembers(false);
+		if (this.getManagedBean()
+				.getSelectedCommitteeMembersList() == null) {
+			this.getManagedBean().setSelectedCommitteeMembersList(
+					new ArrayList<ScCommitteeMember>());
+		}
+		if (committeeMember.isSelected()) {
+			this.getManagedBean().getSelectedCommitteeMembersList()
+				.add(committeeMember);	
+		} else {
+			this.getManagedBean().getSelectedCommitteeMembersList()
+				.remove(committeeMember);
+		}
+	}
 	
 	/**
 	 * Action to add committee members from the popup
@@ -611,11 +672,14 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		try {
 			List<ScCommitteeMember> committeeList = getManagedBean().getCommitteeMembersList();
 			List<ScCommitteeMember> selectedCommitteeList = getManagedBean().getSelectedCommitteeMembersList();
-			if (committeeList.size() == selectedCommitteeList.size()) {
-				committeeList.clear();
-			} else {
-				for (ScCommitteeMember committeeMember : selectedCommitteeList){
-					committeeList.remove(committeeMember);
+			
+			if (committeeList != null && selectedCommitteeList != null) {
+				if (committeeList.size() == selectedCommitteeList.size()) {
+					committeeList.clear();
+				} else {
+					for (ScCommitteeMember committeeMember : selectedCommitteeList){
+						committeeList.remove(committeeMember);
+					}
 				}
 			}
 		} finally {

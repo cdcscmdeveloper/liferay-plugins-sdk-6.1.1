@@ -65,6 +65,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
 	
 	private boolean selectAll;
+	private boolean selectAllMembers;
 	
 	private Date currentDate;
 	
@@ -454,6 +455,18 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 		this.selectAll = selectAll;
 	}
 	
+	/**
+	 * @return the selectAllMembers
+	 */
+	public boolean isSelectAllMembers() {
+		return selectAllMembers;
+	}
+	/**
+	 * @param selectAllMembers the selectAllMembers to set
+	 */
+	public void setSelectAllMembers(boolean selectAllMembers) {
+		this.selectAllMembers = selectAllMembers;
+	}
 	/**
 	 * @return the currentDate
 	 */
