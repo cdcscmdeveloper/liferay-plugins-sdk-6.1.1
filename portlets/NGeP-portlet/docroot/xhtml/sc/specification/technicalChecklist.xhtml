@@ -8,6 +8,8 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<p:panel id="techCommitteeChecklist"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}" escape="false" />
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
@@ -83,8 +85,12 @@
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.type']}"
-				style="width:10%;white-space: normal;">
+			<p:column style="width:10%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.type']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.type.technical.tooltip']}" />
+				</f:facet>
+				
 				<h:panelGroup id="technicalChecklisttypes">
 					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
 						<h:outputText
@@ -153,8 +159,12 @@
 					</ui:fragment>
 				</h:panelGroup>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.supplier.action']}"
-				style="width:8%;white-space: normal;">
+			<p:column style="width:8%;white-space: normal;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.supplier.action.tooltip']}" />
+				</f:facet>
+				
 				<h:panelGroup id="technicalChecklistsupplier">
 					<ui:fragment
 						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">

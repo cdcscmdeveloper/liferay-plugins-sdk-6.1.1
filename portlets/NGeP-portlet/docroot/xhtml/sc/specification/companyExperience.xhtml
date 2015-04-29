@@ -37,22 +37,15 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+		
+		<ui:include src="checklistHeader.xhtml" />
 
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						rows="2" cols="150" disabled="true"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="75"></p:spacer>
-		<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
-			toggleable="true">
+	<p:spacer height="20"></p:spacer>
+		<p:panel toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" />
+				<ac:iconTooltip value="#{lbl['lbl.sc.spec.company.exp.fed.gov.tooltip']}" />
+			</f:facet>
 			<table>
 				<tr>
 					<td><p:outputLabel
@@ -103,7 +96,7 @@
 				</p:column>
 			</p:dataTable>
 
-			<p:spacer height="75"></p:spacer>
+			<p:spacer height="20"></p:spacer>
 			<table>
 				<tr>
 					<td><h:outputText
@@ -123,9 +116,12 @@
 			</table>
 
 		</p:panel>
+		
+		<br />
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}" escape="false" />
 
 
-		<p:spacer height="75"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel id="techCompanyExpContracts"
 			header="#{lbl['lbl.sc.spec.score.total.no.contracts']}"
 			toggleable="true"
@@ -147,6 +143,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techGovNoOfContractsAutoScoreId"
 							for="techGovNoOfContractsAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>
@@ -209,8 +208,6 @@
 			</h:panelGroup>
 		</p:panel>
 
-		<p:spacer height="75"></p:spacer>
-
 		<p:panel id="techGovNumberOfYearsUpdate"
 			header="#{lbl['lbl.sc.spec.score.total.no.years']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -228,6 +225,9 @@
 								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techGovNoOfYearsAutoScoreId"
 							for="techGovNoOfYearsAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>
@@ -275,6 +275,8 @@
 											<h:outputText value="* " styleClass="mandatory" />
 										</ui:fragment>
 										<h:outputText value="#{lbl['lbl.sc.from']}"
+											rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
+										<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"
 											rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
 
 									</f:facet>

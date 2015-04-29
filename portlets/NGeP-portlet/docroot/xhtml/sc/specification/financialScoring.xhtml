@@ -49,7 +49,8 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.score']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.max.score']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
 				</f:facet>
 				<ui:fragment
 					rendered="#{finance.definationType.parameterCode eq 'TS' or finance.definationType.parameterCode eq 'SD' or finance.definationType.parameterCode eq 'WF'}">
@@ -71,9 +72,12 @@
 						display="icon"></p:message>
 				</ui:fragment>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
-				style="width:20%;"
+			<p:column style="width:20%;"
 				rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
+				</f:facet>
 				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					maxlength="5" style="text-align:right"
@@ -97,9 +101,11 @@
 				<tr>
 					<td style="width: 149px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
-					<td><p:inputText readonly="true" disabled="true"
+					<td>
+						<p:inputText readonly="true" disabled="true"
 							style="text-align:right"
-							value="#{specificationBackingBean.managedBean.finPoints}"></p:inputText>
+							value="#{specificationBackingBean.managedBean.finPoints}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.points.tooltip']}" />
 					</td>
 				</tr>
 				<ui:fragment
@@ -107,9 +113,11 @@
 					<tr>
 						<td><h:outputText
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
-						<td><p:inputText readonly="true" disabled="true"
+						<td>
+							<p:inputText readonly="true" disabled="true"
 								style="text-align:right"
-								value="#{specificationBackingBean.managedBean.financialWeightageScore}"></p:inputText>
+								value="#{specificationBackingBean.managedBean.financialWeightageScore}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" />
 						</td>
 					</tr>
 				</ui:fragment>
@@ -131,12 +139,14 @@
 						</p:inputText> <p:spacer width="5"></p:spacer> </td>
 				</tr>
 			</table>
+			
+			<br/>
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.score.variance.instruction']}" escape="false" />
+			
 			<p:panelGrid style="margin-top:5px;width:100%;"
 				styleClass="panelGridBorders tr, panelGridBorders td">
 				<f:facet name="header">
 					<p:row>
-						<p:column styleClass="panelGridHeaders" style="width:20%;"
-							colspan="1">#{lbl['lbl.sc.offered.price']}</p:column>
 						<p:column styleClass="panelGridHeaders" style="width:15%;"
 							colspan="1">#{lbl['lbl.sc.spec.score.from.varience']}</p:column>
 						<p:column styleClass="panelGridHeaders" style="width:15%;"
@@ -148,12 +158,6 @@
 					</p:row>
 				</f:facet>
 				<p:row>
-					<p:column>
-						<ui:fragment
-							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<h:outputText value="* " styleClass="mandatory" />
-						</ui:fragment>
-					#{lbl['lbl.sc.by.package']}</p:column>
 					<p:column>
 						<p:inputText style="text-align:right;" maxlength="18" size="15"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -224,8 +228,14 @@
 			<f:facet name="header">
 
 				<p:row>
-					<p:column colspan="1">#{lbl['lbl.sc.item']}</p:column>
-					<p:column colspan="1">#{lbl['lbl.sc.others']}</p:column>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.item']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.tooltip']}" />
+					</p:column>
+					<p:column colspan="1">
+						#{lbl['lbl.sc.spec.others']}
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.others.tooltip']}" />
+					</p:column>
 					<p:column colspan="1">#{lbl['lbl.sc.spec.score']}</p:column>
 				</p:row>
 			</f:facet>

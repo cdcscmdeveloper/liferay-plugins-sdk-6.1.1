@@ -117,7 +117,7 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.spec.facctory.type']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.factory.type']}" toggleable="true">
 		<p:dataTable id="facility" rowIndexVar="index" rows="10"
 			value="#{supplierProposalDetailBackingBean.managedBean.supplierFacilities}" var="facility">
 			<ac:paginator for="facility"></ac:paginator>
@@ -125,7 +125,7 @@
 				<h:outputText value="#{facility.facilityName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.type']}" style="width : 15%;">
+			<p:column headerText="#{lbl['lbl.sc.spec.factory.facility.type']}" style="width : 15%;">
 				<h:outputText rendered="#{facility.facilityType eq 'F'}" value="FACTORY"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 'D'}" value="DOCKYARD"></h:outputText>
 				<h:outputText rendered="#{facility.facilityType eq 'w'}" value="WORKSHOP"></h:outputText>

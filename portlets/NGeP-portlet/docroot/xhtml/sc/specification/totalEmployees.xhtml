@@ -33,39 +33,33 @@
 
 
 		</div>
-		<p:spacer height="25"></p:spacer>
-		<br />
-		<br />
+		
+		<ui:include src="checklistHeader.xhtml" />
+		
+		<p:spacer height="20" />
 
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea style="width: 100%;"
-						value="#{specificationBackingBean.managedBean.scQtChecklist.title}"
-						disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-			</tr>
-		</table>
-
-		<p:spacer height="75"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}">
-			<h:panelGrid>
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.total.num.employees.instruction']}" escape="false" />
+			
+			<h:panelGrid columns="2">
 				<p:selectOneRadio
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
-					<f:selectItem itemLabel="Employees Involves In This Project"
+					<f:selectItem itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.this.project']}"
 						itemValue="false"></f:selectItem>
-					<f:selectItem itemLabel="All Employees" itemValue="true"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.all.employees']}" itemValue="true"></f:selectItem>
 				</p:selectOneRadio>
+				<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.num.employees.tooltip']}" />
 			</h:panelGrid>
 
-			<p:spacer height="25"></p:spacer>
+			<!-- <p:spacer height="25"></p:spacer>
 
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.total.employees']}"></h:outputLabel>
 				<p:inputText readonly="true"></p:inputText>
-			</h:panelGrid>
+			</h:panelGrid> -->
 		</p:panel>
-		<p:spacer height="75"></p:spacer>
+		
 		<p:panel id="technicalTotalEmployees"
 			header="#{lbl['lbl.sc.scoring.tot.employees']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -87,6 +81,9 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techTotalEmployeeAutoScoreMsg"
 							for="techTotalEmployeeAutoScore" display="icon"></p:message></td>
+					<td>
+						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 			<p:spacer height="5"></p:spacer>

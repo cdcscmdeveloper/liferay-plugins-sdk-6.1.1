@@ -38,14 +38,14 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.bank.name']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.bank.name']}" />
 				</f:facet>
 				<h:outputText value="#{creditfacilities.bankName}"
 					rendered="#{creditfacilities.brandNew eq false}" />
 				<p:inputText id="bankName" value="#{creditfacilities.bankName}"
 					style="width:85%;" rendered="#{creditfacilities.brandNew eq true}"
 					required="true" maxlength="50"
-					label="#{lbl['lbl.sc.bank.name']}">
+					label="#{lbl['lbl.sc.spec.bank.name']}">
 					<p:ajax process="@this" partialSubmit="true"
 						update="@this,bankNameMsg" />
 				</p:inputText>
@@ -108,7 +108,7 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.sp.amt.credit']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.amt.credit']}" />
 				</f:facet>
 				<h:outputText value="#{creditfacilities.creditAmt}"
 					rendered="#{creditfacilities.brandNew eq false}">
@@ -133,7 +133,7 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.sp.amt.paid']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.amt.paid']}" />
 				</f:facet>
 				<h:outputText value="#{creditfacilities.amtPaid}"
 					rendered="#{creditfacilities.brandNew eq false}">

@@ -26,14 +26,10 @@
 
 		</div>
 
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-					<td><p:inputTextarea value="#{specificationBackingBean.managedBean.scQtChecklist.title}" disabled="true" rows="2" cols="150"></p:inputTextarea></td>
-				</tr>
-			</table>
-		</p:panel>
+		<ui:include src="checklistHeader.xhtml" />
+		
+		<p:spacer height="20" />
+		
 		<p:panel header="#{lbl['lbl.sc.spec.warranty']}" toggleable="true">
 			<h:panelGrid columns="2">
 				<h:outputLabel value="#{lbl['lbl.sc.spec.score.num.yrs.warranty']}"></h:outputLabel>
