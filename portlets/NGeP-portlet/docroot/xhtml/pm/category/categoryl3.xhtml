@@ -264,12 +264,11 @@
 					<td><p:selectBooleanCheckbox
 							value="#{categoryBackingBean.managedBean.pmCategoryL3.basicCategoryReqValue}">
 							<p:ajax event="change"
-								listener="#{categoryBackingBean.updateSpecialGroup}"
-								update="groupdetails,@form" />
+								listener="#{categoryBackingBean.updateSpecialGroup}"								
+								update="panelgroupdetails"/>
 						</p:selectBooleanCheckbox></td>
 				</tr>
 				<tr>
-
 					<td><p:outputLabel value="#{lbl['lbl.pm.bumi.percentage']}" />
 						<p:outputLabel value="*" styleClass="mandatory" /></td>
 
@@ -358,7 +357,7 @@
 
 			</table>
 		</p:panel>	
-
+       <p:outputPanel id="panelgroupdetails">
 		<p:panel id="groupdetails" header="#{lbl['lbl.pm.category.grouping']}"
 			toggleable="true"
 			rendered="#{categoryBackingBean.managedBean.displayCategoryGrouping}">
@@ -410,7 +409,7 @@
 					oncomplete="lovPopupCategory.show();" update="lovPopupCategory" />
 			</div>
 		</p:panel>
-
+       </p:outputPanel>
 		<p:panel header="#{lbl['lbl.pm.special.equipment']}"
 			id="machineDetails"
 			rendered="#{!categoryBackingBean.managedBean.checkSpecialCategory}"
@@ -468,7 +467,7 @@
 			</div>
 		</p:panel>
 		<p:remoteCommand name="updateCategory"
-			update="groupdetails,resultPanel"
+			update="panelgroupdetails,resultPanel"
 			action="#{categoryBackingBean.populateToSaveLOV}" />
 		<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
 			modal="true" width="700" position="top">
