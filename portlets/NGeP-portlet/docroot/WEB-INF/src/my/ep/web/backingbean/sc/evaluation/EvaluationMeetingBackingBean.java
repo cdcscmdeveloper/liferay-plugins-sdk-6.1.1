@@ -11,6 +11,7 @@
 package my.ep.web.backingbean.sc.evaluation;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -744,8 +745,11 @@ public class EvaluationMeetingBackingBean extends
 					.getScQtCommittee();
 			List<ScQtMeeting> meetingList = this.getManagedBean()
 					.getScQtMeetings();
-
+			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 			if (meetingList != null && !meetingList.isEmpty()) {
+				for (ScQtMeeting meeting : meetingList) {
+					compareMeetingDates(meeting, localMeetingList);
+				}
 				qtCommittee.setScQtMeetings(meetingList);
 			} else {
 				qtCommittee.setScQtMeetings(null);
@@ -861,10 +865,11 @@ public class EvaluationMeetingBackingBean extends
 	 * Reset.Event handle to reset the values in add popup.
 	 */
 	public void reset() {
-
 		this.getManagedBean().setName(null);
 		this.getManagedBean().setIdentificationType(null);
 		this.getManagedBean().setIdentificationNo(null);
+		//searchQuotatioTender.resetData();
+		//searchExistingUser = new existingUserPagingDataModel();
 	}
 
 	/**
@@ -879,6 +884,8 @@ public class EvaluationMeetingBackingBean extends
 		qtnTenderSearchBean.setFromCreatedDate(null);
 		qtnTenderSearchBean.setToCreatedDate(null);
 		qtnTenderSearchBean.setQtStatus(null);
+		//searchQuotatioTender.resetData();
+		//searchQuotatioTender = new clonePagingDataModel();
 	}
 
 	/**
@@ -1411,6 +1418,37 @@ public class EvaluationMeetingBackingBean extends
 	public void setSearchExistingUser(
 			IPagingDataModel<PmUser> searchExistingUser) {
 		this.searchExistingUser = searchExistingUser;
+	}
+
+	// this method checking two meeting dates or equal or not.
+	private void compareMeetingDates(ScQtMeeting scqtMeeting,
+			List<ScQtMeeting> meetingList) {
+		if (null != meetingList && meetingList.size() >= 1) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+			boolean duplicateDate = false;
+			for (ScQtMeeting meeting : meetingList) {
+
+				String objectDate = sdf.format(scqtMeeting.getMeetingDate());
+				String listDate = sdf.format(meeting.getMeetingDate());
+
+				if (objectDate.equals(listDate)) {
+					duplicateDate = true;
+					break;
+
+				} else {
+					duplicateDate = false;
+				}
+
+			}
+			if (duplicateDate == true) {
+				throw new EpException(MessageConst.ERROR_760271);
+			} else {
+				meetingList.add(scqtMeeting);
+			}
+		} else {
+			meetingList.add(scqtMeeting);
+		}
+
 	}
 
 }
