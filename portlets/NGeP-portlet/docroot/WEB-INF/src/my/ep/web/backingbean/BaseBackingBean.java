@@ -887,7 +887,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
 				.getRequest();
 		ThemeDisplay themeDisplay = (ThemeDisplay) req
-				.getAttribute(WebKeys.THEME_DISPLAY);
+				.getAttribute("LIFERAY_SHARED_THEME_DISPLAY");
+		themeDisplay = themeDisplay==null?(ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY):themeDisplay;
 		String logOutUrl = themeDisplay.getURLSignOut();
 		if (StringUtils.isBlank(logOutUrl)) {
 			log.info(">>>>>>>themedisplay logout is blank..");
