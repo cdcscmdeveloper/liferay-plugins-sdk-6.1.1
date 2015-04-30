@@ -32,7 +32,6 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -50,8 +49,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -69,7 +66,6 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -96,7 +92,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -105,7 +100,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
-import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -653,46 +647,6 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Initializing remarks in loi approval.
-	 *
-	 * @param bean the bean
-	 */
-//	public List<ScLoiRemark> initializeRemarks(ScLoi scLoi) {
-//		IStatusSO iStatusSO = (IStatusSO) BusinessDelegate.getInstance()
-//				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-//						IStatusSO.class);
-//		FacesScopes facesScopes = new FacesScopes();
-//		List<ScLoiRemark> results = scLoi.getScLoiRemarks();
-//		if (results == null) {
-//			results = new ArrayList<ScLoiRemark>();
-//		}
-//		if (results.size() == 0
-//				|| !compareUserName(results.get(0).getCreatedUser()
-//						.getLoginId())) {
-//			ScLoiRemark remark = new ScLoiRemark();
-//			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-//			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//			remark.setChangedBy(remark.getCreatedBy());
-//			remark.setCreatedUser(facesScopes.getUserSessionBean());
-//			remark.setRemark("");
-//			PmStatus status = new PmStatus();
-//			status.setStatusId(DPStatusConstants.PRI_PENDING_SUBMISSION);
-//			StatusReqDTO statusReqDTO = new StatusReqDTO();
-//			if (status != null) {
-//				statusReqDTO.setStatusId(status.getStatusId());
-//				StatusResDTO statusResDTO = iStatusSO
-//						.retrieveStatusByStatusId(statusReqDTO);
-//				remark.setPmStatus(statusResDTO.getPmStatus());
-//			}
-//			remark.setPmStatus(status);
-//
-//			results.add(0, remark);
-//		}
-//		// getManagedBean().setRemarks(results);
-//		return results;
-//	}
-
-	/**
 	 * viewItemDetails method to view item details in loi listing
 	 */
 	public void viewItemDetails(LoiLoaBean bean) {
@@ -1060,170 +1014,7 @@ public class LOIDetailBackingBean extends
 		}
 	}
 
-	/**
-	 * Creates the loi.
-	 * page navigate to loi details page.
-	 * @param scQtEvaluationResult the sc qt evaluation result
-	 * @param docType the doc type
-	 * @return the string
-	 */
-	public String createLOIAction(ScQtEvaluationResult scQtEvaluationResult,
-			String docType) {
-		debugLogger("createLOIAction");
-		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
-		try {
-
-			long id = scQtEvaluationResult.getEvaluationResultId();
-
-			
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-			reqDTO.setDocId(id);
-
-			String language = new FacesScopes().getUserLocale().getLanguage();
-			reqDTO.setLanguageCode(language);
-
-			docType = reqDTO.getDocType();
-
-			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
-
-			ScQt scQt = resDTO.getScQt();
-			if (scQt != null) {
-				System.out.println("Qt Id and Qt No : " + scQt.getQtId() + "|"
-						+ scQt.getQtNo());
-			}
-
-			ScLoi scLoi = resDTO.getScLoi();
-
-			if (scLoi != null) {
-				System.out.println("Loi Id : " + scLoi.getLoiId());
-				scLoi.setLoiNo("12345");
-				getManagedBean().setScLoi(scLoi);
-
-				getManagedBean().setSmMofAccount(new SmMofAccount());
-				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
-
-				getManagedBean().setQt(scQt);
-				getManagedBean().getScLoi().setBrandNew(false);
-				populateParentOrgProfile(getManagedBean().getQt());
-
-				/*
-				 * List<ScQtZoneCriteria> zonelist = scQt.getScQtCriterias()
-				 * .getScQtZoneCriterias();
-				 * 
-				 * 
-				 * List<ScRequestItem> itemList = resDTO.getItemResultBean()
-				 * .getResultList(); System.out.println("itemlist: " +
-				 * itemList.size());
-				 * 
-				 * getManagedBean().setScQtItemList(itemList);
-				 * 
-				 * //getManagedBean().setZonelist(zonelist);
-				 * 
-				 * List<ScLoiNegoLocation> negoLocationList = resDTO
-				 * .getNegoLocResultBean().getResultList();
-				 * System.out.println("list: " + negoLocationList.size());
-				 * 
-				 * List<ScLoiTerm> negoTermList = resDTO.getNegoTermResultBean()
-				 * .getResultList(); System.out.println("negoTermlist: " +
-				 * negoTermList.size());
-				 * 
-				 * getManagedBean().setNegoLocationList(negoLocationList);
-				 * getManagedBean().setNegoTermsList(negoTermList);
-				 */
-
-				getManagedBean().setApproverNames(getApproverNames());
-
-			} else {
-
-				Calendar c = Calendar.getInstance();
-				System.out.println("Current date : "
-						+ (c.get(Calendar.MONTH) + 1) + "-"
-						+ c.get(Calendar.DATE) + "-" + c.get(Calendar.YEAR));
-				c.add(Calendar.DATE, 14);
-				System.out.println("Date (after): "
-						+ (c.get(Calendar.MONTH) + 1) + "-"
-						+ c.get(Calendar.DATE) + "-" + c.get(Calendar.YEAR));
-
-				Date date = new Date();
-				System.out.println("Date : " + date);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(date);
-				cal.add(Calendar.DATE, 14);
-
-				date = cal.getTime();
-				System.out.println("Date : " + cal.getTime());
-
-				getManagedBean().setQt(scQt);
-				/* getManagedBean().setQt(new ScQt()); */
-
-				populateParentOrgProfile(getManagedBean().getQt());
-
-				getManagedBean().setScLoi(new ScLoi());
-
-				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
-
-				/*
-				 * getManagedBean().getScLoi().setSmSupplier(
-				 * getManagedBean().getScQtEvaluationResult() .getScQtProposal()
-				 * .getScQtSupplier().getSmSupplier());
-				 */
-
-				/*
-				 * getManagedBean().getScLoi().setSupplierName(
-				 * getManagedBean().getScQtProposalRanking()
-				 * .getScQtProposalEvaluate().getScQtProposal()
-				 * .getScQtSupplier().getSmSupplier() .getSupplierName());
-				 */
-
-				/*
-				 * getManagedBean().getScLoi().setDocType(
-				 * LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-				 * getManagedBean().getScLoi().setDocId(id);
-				 * getManagedBean().getScLoi().setLoiDuration(14);
-				 */
-				getManagedBean().getScLoi().setLoiNo("12345");
-
-				getManagedBean().setSmMofAccount(new SmMofAccount());
-				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
-
-				showOfficerDetails();
-
-				PmUser pmUser = new PmUser();
-				// getManagedBean().getScLoi().setApproverUser(pmUser);
-				getManagedBean().setApproverNames(getApproverNames());
-
-				/*
-				 * getManagedBean().setScQtItemList(null);
-				 * getManagedBean().setZonelist(null);
-				 */
-
-				getManagedBean().setNegoLocationList(null);
-				getManagedBean().setNegoTermsList(null);
-
-				SmSupplierBranch branch = new SmSupplierBranch();
-				SmSupplierBranch branch1 = new SmSupplierBranch();
-				SmSupplierBranch branch2 = new SmSupplierBranch();
-				branch.setBranchName("HQ");
-				branch1.setBranchName("Putrajaya");
-				branch2.setBranchName("Ampang");
-				bList.add(branch);
-				bList.add(branch1);
-				bList.add(branch2);
-				getManagedBean().setBranchsList(bList);
-
-				branch.setSmAppl(getManagedBean().getScQtProposalRanking()
-						.getScQtProposalEvaluate().getScQtProposal()
-						.getScQtSupplier().getSmSupplier().getSmAppl());
-
-			}
-
-		} finally {
-			//iqtAwardSO = null;
-		}
-		return QTConstants.LOI_PAGE;
-	}
-
+	
 	/**
 	 * Creates the loi.
 	 * page navigate to loi details page.
@@ -1710,54 +1501,6 @@ public class LOIDetailBackingBean extends
 					}
 				}
 		}
-	}
-
-	/**
-	 * Show officer details.
-	 */
-	private void showOfficerDetails() {
-		IAddressSO addressSO;
-		try {
-			PmUser user = new FacesScopes().getUserSessionBean();
-			getManagedBean().setPmUser(user);
-			// getManagedBean().getScLoi().setOfficierName(user.getUserName());
-			/*
-			 * getManagedBean().getScLoi().setOfficerDesignation(
-			 * user.getDesignation());
-			 */
-
-			addressSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-			AddressReqDTO addReqDTO = new AddressReqDTO();
-			addReqDTO.setUserId(user.getUserId());
-			addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-
-			AddressResDTO addResDTO = addressSO
-					.retrieveAddressTypeList(addReqDTO);
-
-			List<PmAddressType> addList = addResDTO.getAddressTypeList();
-
-			/*
-			 * getManagedBean().getScLoi().setOfficerAddress(
-			 * addList.get(0).getPmAddress().getAddress1());
-			 */
-			/*
-			 * getManagedBean().getScLoi().setOfficerFaxNo(
-			 * addList.get(0).getPmAddress().getFaxNo());
-			 * getManagedBean().getScLoi().setOfficerPhoneNo(
-			 * addList.get(0).getPmAddress().getPhoneNo());
-			 */
-			/*
-			 * getManagedBean().getScLoi().setOfficerEmail(
-			 * addList.get(0).getPmAddress().getEmail());
-			 */
-
-			// getManagedBean().getScLoi().setApproverUser(user);
-
-		} finally {
-			addressSO = null;
-		}
-
 	}
 
 	/**
