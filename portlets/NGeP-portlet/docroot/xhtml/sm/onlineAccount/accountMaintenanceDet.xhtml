@@ -46,7 +46,7 @@
 		<p:dialog id="successDialog" header="#{lbl['lbl.sm.success.dialog.header']}" closable="false"
 			widgetVar="successDialog" modal="true" width="400px" height="100px">
 			<p:messages id="successDialogMsg" showSummary="false"
-				showDetail="true" autoUpdate="true" closable="true" />
+				showDetail="true" autoUpdate="true" closable="false" />
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{registrationBackingBean.redirectToLogoutUrl()}" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
