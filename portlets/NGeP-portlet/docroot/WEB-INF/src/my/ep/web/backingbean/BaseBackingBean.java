@@ -903,10 +903,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			logoutUrl = getDefaultLogoutUrl();
 		}
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
-				+ logOutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+				+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
-				+ logOutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		SmCommonUtil.redirectToExternalUrl(logOutUrl);
+				+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+		SmCommonUtil.redirectToExternalUrl(logoutUrl);
 	}
 	
 	private String getDefaultLogoutUrl(){
