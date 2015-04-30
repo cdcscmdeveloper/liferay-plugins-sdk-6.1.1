@@ -23,7 +23,7 @@
 							value="#{amendmentBackingBean.managedBean.ctContract.contractNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
-					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.agreement or 
+					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.agreement or 
 						amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
 					<td class="columnWidth150">
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
@@ -82,7 +82,7 @@
                 	</td>
                 	</h:panelGroup>
                 	<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral 
-                		and !amendmentBackingBean.managedBean.ctContract.agreement}">
+                		and !amendmentBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 					<td class="columnWidth150">
 						<p:outputLabel id="signBy1" value="#{lbl['lbl.ct.signed.date']}" />
 					</td> 
@@ -95,30 +95,30 @@
 					</td>
                 	</h:panelGroup>
 				</tr>
-				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.agreement}">
+				<h:panelGroup rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 				<tr rowspan="2">
-					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
-						amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
+						amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.saComplete}">
 					<td class="columnWidth150">
 						<p:outputLabel for="astatus" value="#{lbl['lbl.ct.agreement.status']}" />
 					</td>
 					<td>
 						<p:inputTextarea id="astatus" autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:160px;margin-bottom:5px;"
-							value="#{amendmentBackingBean.getStatusDescById(amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
+							value="#{amendmentBackingBean.getStatusDescById(amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId)}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
 					</h:panelGroup>
-					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
-						amendmentBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.acComplete or
+						amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.saComplete}">
 					<td styleClass="columnWidth150">
 						<p:outputLabel id="agreement" value="#{lbl['lbl.ct.agreement']}" />
 					</td>
 					<td>
 						<h:commandLink for="agreement" styleClass="blue_font"
-							value="#{amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName}"
-							action="#{amendmentBackingBean.downloadFile(amendmentBackingBean.managedBean.ctContract.currentAgreement.filePath,
-							amendmentBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
+							value="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName}"
+							action="#{amendmentBackingBean.downloadFile(amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.filePath,
+							amendmentBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}" />
 					</td>
 					</h:panelGroup>
 					<td class="columnWidth150">
@@ -166,7 +166,7 @@
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
-			  value="#{amendmentBackingBean.managedBean.ctContract.agreement}" disabled="true" />
+			  value="#{amendmentBackingBean.managedBean.contractVer.ctContractAmount.agreement}" disabled="true" />
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
 			     <h:outputText value="#{lbl['lbl.ct.agreement']}" />
@@ -178,7 +178,7 @@
 	          	and amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 			  <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.ctContract.mto}"
 				 disabled="true" style="text-align:top;" />
-			  <p:spacer width="2" />	
+			  <p:spacer width="2" />
 			  <h:panelGrid columns="2">
 				  <h:outputText value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
