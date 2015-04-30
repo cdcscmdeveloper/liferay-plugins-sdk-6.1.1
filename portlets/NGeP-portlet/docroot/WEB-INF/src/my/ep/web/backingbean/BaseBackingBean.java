@@ -531,17 +531,18 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return ParameterHelper.getInstance().getParameterByTypeAndCode(
 				parameterType, parameterCode);
 	}
-	
+
 	/**
 	 * Check if the given procurement category is medical or not
 	 * 
-	 * @param pmProcCategory  the pmProcCategory type
-	 * @return  procurement category is medical or not
+	 * @param pmProcCategory
+	 *            the pmProcCategory type
+	 * @return procurement category is medical or not
 	 */
 	public boolean isMedicalProcurementCategory(PmParameter pmProcCategory) {
-		if ( (pmProcCategory != null) && 
-				(ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA.equals(
-						pmProcCategory.getParameterCode())) ) {
+		if ((pmProcCategory != null)
+				&& (ParameterConst.PROCUREMENT_CATEGORY_UBATAN_DAN_BAHAN_KIMIA
+						.equals(pmProcCategory.getParameterCode()))) {
 			return true;
 		}
 		return false;
@@ -676,7 +677,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		UploadedFile file = event.getFile();
 
-//		uploadDir = tempDir + StringUtils.replace(" ", file.getFileName(), "-");
+		// uploadDir = tempDir + StringUtils.replace(" ", file.getFileName(),
+		// "-");
 
 		// genFile(uploadDir, file.getContents());
 		genFile(tempDir, file);
@@ -704,8 +706,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		InputStream docInputStream = null;
 		try {
-			URLConnection uc = new URL(filePath)
-					.openConnection();
+			URLConnection uc = new URL(filePath).openConnection();
 			docInputStream = new BufferedInputStream(uc.getInputStream());
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
@@ -756,9 +757,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 
 		try {
-			String finalFileName = StringUtils.replace(file.getFileName(), " ", "-");
+			String finalFileName = StringUtils.replace(file.getFileName(), " ",
+					"-");
 			log.info("finalFileName: " + finalFileName);
-			
+
 			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
 					new FileOutputStream(uploadDir + "/" + finalFileName));
 
@@ -845,7 +847,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public String getFullAddress(SmAddress smAddress) {
 		return AddressUtils.getFullAddress(smAddress);
 	}
-	
+
 	public String getSMFullAddress(SmAddress smAddress) {
 		return AddressUtils.getSmFullFormattedAddress(smAddress);
 	}
@@ -869,7 +871,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return output;
 	}
-	
+
 	public String getShortFileName(String filename) {
 		if (filename != null && filename.length() > 15) {
 			filename = filename.substring(0, 15);
@@ -877,39 +879,47 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		return filename;
 	}
-	
+
 	/**
 	 * Redirect to liferay logout url
 	 */
 	public void redirectToLogoutUrl() {
-		FacesContext fCtx = FacesContext.getCurrentInstance();
-		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
-				.getRequest();
-		ThemeDisplay themeDisplay = (ThemeDisplay) req
-				.getAttribute("LIFERAY_SHARED_THEME_DISPLAY");
-		themeDisplay = themeDisplay==null?(ThemeDisplay) req
-				.getAttribute(WebKeys.THEME_DISPLAY):themeDisplay;
-		String logoutUrl = "";		
-		if(themeDisplay!=null){
-			logoutUrl = themeDisplay.getURLSignOut();
-			if (StringUtils.isBlank(logoutUrl)) {
-				log.info(">>>>>>>themedisplay logout url is blank!!!!");
-				System.out.println(">>>>>>>themedisplay logout url is blank!!!!");
+		try {
+			FacesContext fCtx = FacesContext.getCurrentInstance();
+			PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+					.getRequest();
+			ThemeDisplay themeDisplay = (ThemeDisplay) req
+					.getAttribute("LIFERAY_SHARED_THEME_DISPLAY");
+			themeDisplay = themeDisplay == null ? (ThemeDisplay) req
+					.getAttribute(WebKeys.THEME_DISPLAY) : themeDisplay;
+			String logoutUrl = "";
+			if (themeDisplay != null) {
+				logoutUrl = themeDisplay.getURLSignOut();
+				if (StringUtils.isBlank(logoutUrl)) {
+					log.info(">>>>>>>themedisplay logout url is blank!!!!");
+					System.out
+							.println(">>>>>>>themedisplay logout url is blank!!!!");
+					logoutUrl = getDefaultLogoutUrl();
+				}
+			} else {
+				log.info(">>>>>>>themedisplay is null!!!!");
+				System.out.println(">>>>>>>themedisplay is null!!!!");
 				logoutUrl = getDefaultLogoutUrl();
 			}
-		}else{
-			log.info(">>>>>>>themedisplay is null!!!!");
-			System.out.println(">>>>>>>themedisplay is null!!!!");
-			logoutUrl = getDefaultLogoutUrl();
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
+					+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+			System.out
+					.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
+							+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+			SmCommonUtil.redirectToExternalUrl(logoutUrl);
+		} catch (Exception ex) {
+			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR TO LOGOUT:"
+					+ ex.getMessage() + "<<<<<<<<<<<<<<<<<<<");
+			SmCommonUtil.redirectToExternalUrl(getDefaultLogoutUrl());
 		}
-		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
-				+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
-				+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-		SmCommonUtil.redirectToExternalUrl(logoutUrl);
 	}
-	
-	private String getDefaultLogoutUrl(){
+
+	private String getDefaultLogoutUrl() {
 		FacesScopes fs = new FacesScopes();
 		String logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
 				+ fs.getRequest().getServerPort() + "/c/portal/logout";
