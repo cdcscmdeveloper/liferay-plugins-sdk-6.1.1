@@ -7851,6 +7851,11 @@ public class EvaluationBackingBean extends
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD_FIN.equals(docDefinitionKey)) {
+				filename.append(".pdf");
+				scQtEvaluationReportAttachment.setFileName(filename.toString());
+				generateFinancialKaedah2Pdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
+				
 			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_TECH_FIN_EVALUATION
 					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
@@ -7913,6 +7918,33 @@ public class EvaluationBackingBean extends
 					.setScQtEvaluationReportAttachment(scQtEvaluationReportAttachment);
 		}
 		return scQtEvaluationReportAttachment;
+	}
+
+	/**
+	 * @param scQtEvaluationReportAttachment
+	 * @param scQt
+	 */
+	private void generateFinancialKaedah2Pdf(ScAttachment attachment, ScQt qt) throws Exception {
+		debugLogger("generateFinancialKaedah2Pdf");
+		populateAttachmentDetails(attachment);
+
+		FacesScopes facesScopes = new FacesScopes();
+		long qtId = qt.getQtId();
+		String reportId = "";
+		String reportName = "";
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_EC_GEN_SPEC_FIN_4D;
+			reportId = ReportConst.TECSPEC_EC_RPT_VAL; // SC_027
+		}
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
+		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
+				.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+
+		generatePdfFromOracle(reportName, paramMap, attachment, this
+				.getManagedBean().isCheckReportDownload());
 	}
 
 	/**
