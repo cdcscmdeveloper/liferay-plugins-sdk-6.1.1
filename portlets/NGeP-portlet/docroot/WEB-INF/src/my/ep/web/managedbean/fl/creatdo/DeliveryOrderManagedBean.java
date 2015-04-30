@@ -202,6 +202,9 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
+    private boolean gfmasError=false;
+    private String gfmasErrorContent;
+    
 	/**
 	 * Gets the item selected for cal.
 	 *
@@ -1118,6 +1121,34 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
 		this.spkiBackingBean = spkiBackingBean;
+	}
+
+	/**
+	 * @return the gfmasError
+	 */
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	/**
+	 * @param gfmasError the gfmasError to set
+	 */
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	/**
+	 * @return the gfmasErrorContent
+	 */
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	/**
+	 * @param gfmasErrorContent the gfmasErrorContent to set
+	 */
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 
 	

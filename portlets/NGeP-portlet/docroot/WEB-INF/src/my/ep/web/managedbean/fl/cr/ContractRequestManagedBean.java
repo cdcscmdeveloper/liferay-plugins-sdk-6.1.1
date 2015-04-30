@@ -249,6 +249,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean queryDisplay=false;
 
 	private PmVotFund feeVoteFund;
+	private boolean gfmasError=false;
+	private String gfmasErrorContent;
 	
 	//getFactoring address details
 	private String facSupplierAddress;
@@ -2504,6 +2506,34 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setGstRegistrationDate(Date gstRegistrationDate) {
 		this.gstRegistrationDate = gstRegistrationDate;
+	}
+
+	/**
+	 * @return the gfmasError
+	 */
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	/**
+	 * @param gfmasError the gfmasError to set
+	 */
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	/**
+	 * @return the gfmasErrorContent
+	 */
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	/**
+	 * @param gfmasErrorContent the gfmasErrorContent to set
+	 */
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 
 }

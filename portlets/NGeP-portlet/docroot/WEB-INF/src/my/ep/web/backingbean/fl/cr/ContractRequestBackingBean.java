@@ -1064,6 +1064,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(!getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
 				updateDeliveryDate();
 			}
+			if(coObj.getOrderDetails().getErrorId() != null && coObj.getOrderDetails().getErrorId() > 0){
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().setGfmasError(true);
+				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+				errReq.setErrorId(coObj.getOrderDetails().getErrorId());
+				FulfilmentResDTO errRes = requestSO.retrieveErrorContent(errReq);
+				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+			}
 		}else if(contractId != null){
 			renewSesionObject();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
@@ -3938,5 +3946,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
      */
 	public String getDeliveryAddressType() {
 		return AddressType.DELIVERY_ADDRESS.value();
+	}
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 }

@@ -118,6 +118,9 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	
 	/** The back to document. */
 	private String backToDocument;
+	private boolean autoUpdate=true;
+	private boolean gfmasError=false;
+	private String gfmasErrorContent;
 	
 	
 	/**
@@ -604,6 +607,48 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setBackToDocument(String backToDocument) {
 		this.backToDocument = backToDocument;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the gfmasError
+	 */
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	/**
+	 * @param gfmasError the gfmasError to set
+	 */
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	/**
+	 * @return the gfmasErrorContent
+	 */
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	/**
+	 * @param gfmasErrorContent the gfmasErrorContent to set
+	 */
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 	
 }
