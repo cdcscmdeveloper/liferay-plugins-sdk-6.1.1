@@ -626,6 +626,8 @@ public class ReportConst {
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
 	public static final String PLZ_SEL_ONE_RPT_SEARCH = "lbl.rpt.search.PLZ_SEL_ONE_RPT_SEARCH";
 	public static final String PLZ_SEL_ONE_RPT_CRITERIA_SEARCH = "lbl.rpt.search.criteria.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH";
+	public static final String PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH = "lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH";
+	public static final String PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH_MALAY = "Sila masukkan sekurang-kurangnya satu kriteria untuk penjanaan";
 	public static final String CATLOG_ADMIN = "Catalogue Administrator";
 	public static final String SUPPL = "Supplier";
 	public static final String CODIF_ADMIN = "Codification Administrator";
