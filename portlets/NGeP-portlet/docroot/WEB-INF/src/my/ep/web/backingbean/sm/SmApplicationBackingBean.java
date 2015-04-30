@@ -6266,7 +6266,7 @@ public class SmApplicationBackingBean extends
 					.getStateId());
 			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
 			if (zone != null && zone.getZoneName() != null) {
-				reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase());
+				reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase().trim());
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_722568);
