@@ -868,8 +868,8 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setName(null);
 		this.getManagedBean().setIdentificationType(null);
 		this.getManagedBean().setIdentificationNo(null);
-		//searchQuotatioTender.resetData();
-		//searchExistingUser = new existingUserPagingDataModel();
+		searchExistingUser = new existingUserPagingDataModel();
+		searchExistingUser.reloadData();
 	}
 
 	/**
@@ -884,12 +884,14 @@ public class EvaluationMeetingBackingBean extends
 		qtnTenderSearchBean.setFromCreatedDate(null);
 		qtnTenderSearchBean.setToCreatedDate(null);
 		qtnTenderSearchBean.setQtStatus(null);
-		//searchQuotatioTender.resetData();
-		//searchQuotatioTender = new clonePagingDataModel();
 		qtnTenderSearchBean.setFromPublishDate(null);
 		qtnTenderSearchBean.setToPublishDate(null);
 		qtnTenderSearchBean.setFromClosingDate(null);
 		qtnTenderSearchBean.setToClosingDate(null);
+		this.getManagedBean().setCloneCommitteMemebers(
+				new ArrayList<ScCommitteeMember>());
+		searchQuotatioTender = new clonePagingDataModel();
+		searchQuotatioTender.reloadData();
 	}
 
 	/**
@@ -1112,7 +1114,7 @@ public class EvaluationMeetingBackingBean extends
 					searchBean.getDataFilterBeans().add(bean);
 					// searchFilterBean.add(bean);
 				}
-				
+
 				Date fromPublishDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getFromPublishDate();
 				Date toPublishDate = getManagedBean()
@@ -1120,12 +1122,14 @@ public class EvaluationMeetingBackingBean extends
 				if (null != fromPublishDate || null != toPublishDate) {
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField(QTConstants.PUBLISH_DATE);
-					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(fromPublishDate, toPublishDate);
+					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
+							.value());
+					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+							fromPublishDate, toPublishDate);
 					bean.setSearchValue(betweenVal);
 					searchBean.getDataFilterBeans().add(bean);
 				}
-				
+
 				Date fromClosingDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getFromClosingDate();
 				Date toClosingDate = getManagedBean()
@@ -1133,8 +1137,10 @@ public class EvaluationMeetingBackingBean extends
 				if (null != fromClosingDate || null != toClosingDate) {
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField(QTConstants.CLOSED_DATE);
-					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(fromClosingDate, toClosingDate);
+					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
+							.value());
+					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+							fromClosingDate, toClosingDate);
 					bean.setSearchValue(betweenVal);
 					searchBean.getDataFilterBeans().add(bean);
 				}
