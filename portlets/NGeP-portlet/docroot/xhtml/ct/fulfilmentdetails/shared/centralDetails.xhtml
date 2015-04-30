@@ -65,7 +65,7 @@
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
                 	</td>                	
                 	</h:panelGroup>   
-                	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.agreement
+                	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContractAmount.agreement
                 		and contractDetailsBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractCreation}">
                 	<td class="columnWidth150">
 						<p:outputLabel id="centralSignDate1" value="#{lbl['lbl.ct.signed.date']}" />
@@ -80,31 +80,31 @@
 					</td>					
 					</h:panelGroup>
 				</tr>
-				<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.agreement}">
+				<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContractAmount.agreement}">
 				<tr rowspan="2">
-					<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
-						contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
+						contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.saComplete}">
 					<td class="columnWidth150">
 						<p:outputLabel for="centralAstatus" value="#{lbl['lbl.ct.agreement.status']}" />
 					</td>
 					<td>
 						<p:inputTextarea id="centralAstatus" autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:160px;margin-bottom:5px;"
-							value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
+							value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId)}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
 					</h:panelGroup>
-					<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
-						contractDetailsBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.acComplete or
+						contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.saComplete}">
 					<td styleClass="columnWidth150">
 						<p:outputLabel id="centralAgreement" value="#{lbl['lbl.ct.agreement']}" />
 					</td>
 					<td>
 						<h:commandLink for="centralAgreement" styleClass="blue_font"
-							title="#{contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName}"
-							value="#{contractDetailsBackingBean.getShortFileName(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}"
-							action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContract.currentAgreement.filePath,
-							contractDetailsBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
+							title="#{contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.fileName}"
+							value="#{contractDetailsBackingBean.getShortFileName(contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.fileName)}"
+							action="#{contractDetailsBackingBean.downloadFile(contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.filePath,
+							contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.fileName)}" />
 					</td>
 					</h:panelGroup>
 					<td class="columnWidth150">
@@ -160,7 +160,7 @@
 	         </h:panelGrid>	
 	         <h:panelGrid columns="3">  
 			   <p:selectBooleanCheckbox 
-			      value="#{contractDetailsBackingBean.managedBean.ctContract.agreement}" disabled="true" />
+			      value="#{contractDetailsBackingBean.managedBean.ctContractAmount.agreement}" disabled="true" />
 		       <p:spacer width="2" />
 		       <h:panelGrid columns="2">
 		       		<h:outputText value="#{lbl['lbl.ct.agreement']}" />

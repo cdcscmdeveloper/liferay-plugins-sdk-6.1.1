@@ -24,7 +24,7 @@
 							value="#{terminationBackingBean.managedBean.ctContract.contractNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
-					<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.agreement or 
+					<h:panelGroup rendered="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.agreement or 
 						terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">
 					<td class="columnWidth200">
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
@@ -83,7 +83,7 @@
                 	</td>
                 	</h:panelGroup>
                 	<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral 
-                		and !terminationBackingBean.managedBean.ctContract.agreement}">
+                		and !terminationBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 					<td class="columnWidth200">
 						<p:outputLabel id="signBy1" value="#{lbl['lbl.ct.signed.date']}" />
 					</td> 
@@ -96,31 +96,31 @@
 					</td>
                 	</h:panelGroup>
 				</tr>
-				<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.agreement}">
+				<h:panelGroup rendered="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 				<tr rowspan="2">
-					<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.acComplete and
-						terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId != CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
+						terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.saComplete}">
 					<td class="columnWidth200">
 						<p:outputLabel for="astatus" value="#{lbl['lbl.ct.agreement.status']}" />
 					</td>
 					<td>
 						<p:inputTextarea id="astatus" autoResize="false" maxlength="1000" 
 							disabled="true" rows="2" style="width:160px;margin-bottom:5px;"
-							value="#{terminationBackingBean.getStatusDescById(terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId)}" />
+							value="#{terminationBackingBean.getStatusDescById(terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId)}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
 					</h:panelGroup>
-					<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.acComplete or
-						terminationBackingBean.managedBean.ctContract.currentAgreement.status.statusId eq CtStatusConst.saComplete}">
+					<h:panelGroup rendered="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.acComplete or
+						terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId eq CtStatusConst.saComplete}">
 					<td styleClass="columnWidth200">
 						<p:outputLabel id="agreement" value="#{lbl['lbl.ct.agreement']}" />
 					</td>
 					<td>
 						<h:commandLink for="agreement" styleClass="blue_font"
-							title="#{terminationBackingBean.managedBean.ctContract.currentAgreement.fileName}"
-							value="#{terminationBackingBean.getShortFileName(terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}"
-							action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.ctContract.currentAgreement.filePath,
-							terminationBackingBean.managedBean.ctContract.currentAgreement.fileName)}" />
+							title="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName}"
+							value="#{terminationBackingBean.getShortFileName(terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}"
+							action="#{terminationBackingBean.downloadFile(terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.filePath,
+							terminationBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.fileName)}" />
 					</td>
 					</h:panelGroup>
 					<td class="columnWidth200">
@@ -167,7 +167,7 @@
 			 </h:panelGrid>
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
-		     <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.ctContract.agreement}" disabled="true" />
+		     <p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.agreement}" disabled="true" />
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
 			     <h:outputText value="#{lbl['lbl.ct.agreement']}" />
