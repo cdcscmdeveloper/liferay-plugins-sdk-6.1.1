@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.committee.endorsement']}"
+	<p:panel header="#{lbl['lbl.sc.committee.endorsement.specification']}"
 		toggleable="true">
 
 		<p:dataTable id="scEndorsement" var="committeActivity" rows="10"
@@ -54,7 +54,7 @@
 
 			</p:column>
 
-			<p:column headerText="Action" style="width:10%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;white-space: normal;">
 
 
 				<h:outputText

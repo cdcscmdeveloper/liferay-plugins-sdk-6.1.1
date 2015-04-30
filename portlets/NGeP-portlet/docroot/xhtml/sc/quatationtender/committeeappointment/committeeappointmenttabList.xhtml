@@ -42,7 +42,15 @@
 				process="@this, specificationcommitteeid"
 				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
 				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 2 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
-				actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}" />
+				actionListener="#{qTCommitteBackingBean.addCloneToTecDtl}"
+				title="#{lbl['lbl.sc.qt.clone.to.tec.tooltip']}" />
+				
+			<p:commandButton value="#{lbl['lbl.sc.qt.clone.to.ec']}"
+				process="@this, specificationcommitteeid"
+				update="@(.clonetecid),@([id$=committeTabMenu]),@([id$=committeMenus])"
+				rendered="#{qTDetailBB.managedBean.selectedTabBean.tabType eq ParameterConst.committeeTypeSpecificationCommittee and qTDetailBB.managedBean.qt.evaluationType eq 1 and !qTCommitteBackingBean.isCommitteInfoEditable(committe.committeStatus.statusId,committe.committeeType.parameterCode)}"
+				actionListener="#{qTCommitteBackingBean.addCloneToEcDtl}"
+				title="#{lbl['lbl.sc.qt.clone.to.ec.tooltip']}" />
 		</div>
 	</ui:fragment>
 

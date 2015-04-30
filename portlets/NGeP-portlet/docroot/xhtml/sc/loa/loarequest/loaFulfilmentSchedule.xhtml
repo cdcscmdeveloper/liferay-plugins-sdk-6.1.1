@@ -38,7 +38,7 @@
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
 						style="width:15%">
 						<p:selectOneMenu id="startMonth" style="width:100px;"  disabled="#{!isEditableStatus}"
-							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.spec.start.month']}">
+							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />						
@@ -85,7 +85,7 @@
 						</h:panelGroup>
 					</p:column>
 
-					<p:column style="width:30%" headerText="#{lbl['lbl.sc.loiloa.loa.ful.type']}">
+					<p:column style="width:30%" headerText="#{lbl['lbl.sc.schedule.type']}">
 						#{lOADetailBackingBean.getParameterDesc(frequency.scheduleType)}
 					</p:column>
 				</p:dataTable>
@@ -173,11 +173,11 @@
 					<p:column style="width:10%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.Percentage']}" />
+							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							id="progressivePercentage" styleClass="ppNumericAlign"
-							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
+							label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 							<p:ajax event="blur" partialSubmit="true" process="@this" />
 						</p:inputText>
