@@ -73,7 +73,7 @@
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;" 
 					  rendered="#{!amendmentBackingBean.managedBean.prepareLOA or !amendmentBackingBean.managedBean.disableFinalAmendDetails}">
 						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
+						<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
 					</p:commandLink>
 				</p:column>
 				
@@ -124,7 +124,7 @@
 						           process="@form" disabled="#{itemMaxQtiesVar.chkIndexOfRow}" 
 						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
 							       <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							       <p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+							       <p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 						        </p:commandLink>
 					    	    <p:commandLink rendered="#{itemMaxQtiesVar.changeQuantity}" oncomplete="dlgDelItemMaxQty.show();return false;">
 							        <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
@@ -261,7 +261,7 @@
 										disabled="#{itemPriceVar.chkIndexOfRow}"
 									   	rendered="#{!itemPriceVar.changePrice and itemPriceVar.editable}" action="#{amendmentBackingBean.editItemPriceOnIndexs()}">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
-										<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+										<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 									</p:commandLink>
 									<p:commandLink rendered="#{itemPriceVar.changePrice}" oncomplete="dlgItemPrices.show();return false;">
 										<f:setPropertyActionListener value="#{itemPriceVar}" target="#{amendmentBackingBean.managedBean.ctItemPrices}" />
@@ -331,7 +331,7 @@
 						   	rendered="#{!itemCeilingQtiesVar.changeCeilQuantity and itemCeilingQtiesVar.editable}"
 							action="#{amendmentBackingBean.editCeilingQuantityOnIndexs()}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+							<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
 						<p:commandLink oncomplete="dlgCeilQuantity.show();return false;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 							<f:setPropertyActionListener value="#{itemCeilingQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemCeilingQtys}" />
@@ -444,7 +444,7 @@
 							action="#{amendmentBackingBean.editServiceItemPriceOnIndexs()}"
 							 disabled="#{ItemPricesVar.chkIndexOfRow}">
 							<f:setPropertyActionListener value="#{ItemPricesVar}" target="#{amendmentBackingBean.managedBean.ctServiceItemPrices}" />
-							<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.ct.edit']}" />
+							<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
 						</p:commandLink>
 						<p:commandLink rendered="#{ItemPricesVar.changePrice}" oncomplete="dlgSvcItemPrices.show();return false;"
 						 disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >

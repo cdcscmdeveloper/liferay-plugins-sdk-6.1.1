@@ -57,7 +57,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
                   	<p:spacer width="3" />
                   	<p:commandLink id="spec" update=":form:itemSpecDlg" action="#{panelBackingBean.panelItemSpecDlg(panelItemsVar)}" 
                   		disabled="#{panelItemsVar.categoryParameterId == null or panelBackingBean.getItemGeneralCode(panelItemsVar.categoryParameterId) == ParameterConst.itemCategoryTypeGeneral}">
-						<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.ct.specification']}" />
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.specification']}" />
 					</p:commandLink>
               </p:column>
 			  <p:column>
@@ -251,7 +251,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						actionListener="#{panelBackingBean.editPanelZoneLocation(panelZoneVar,index)}"
 						process="@this" update="@([id$=zonePopupGeneral])"
 						oncomplete="ZoneGeneral.show();">
-						<p:graphicImage value="/css/images/design/edit.png" />
+						<p:graphicImage value="/css/images/design/ico-viewnedit.png" />
 					  </p:commandLink>
 					</p:column>
 			</p:dataTable>
