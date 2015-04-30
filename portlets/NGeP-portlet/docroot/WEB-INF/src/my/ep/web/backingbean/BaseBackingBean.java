@@ -890,6 +890,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				.getAttribute(WebKeys.THEME_DISPLAY);
 		String logOutUrl = themeDisplay.getURLSignOut();
 		if (StringUtils.isBlank(logOutUrl)) {
+			log.info(">>>>>>>themedisplay logout is blank..");
 			FacesScopes fs = new FacesScopes();
 			logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
 					+ fs.getRequest().getServerPort() + "/c/portal/logout";
