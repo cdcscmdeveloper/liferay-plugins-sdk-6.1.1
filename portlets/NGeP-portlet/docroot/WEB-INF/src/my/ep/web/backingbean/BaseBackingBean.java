@@ -885,6 +885,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	 * Redirect to liferay logout url
 	 */
 	public void redirectToLogoutUrl() {
+		System.out
+				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		String logoutUrl = getDefaultLogoutUrl();
+		System.out.println(">>>>>>>>>>>>>>>1)logout url:" + logoutUrl
+				+ "<<<<<<<<<<<<<<<");
 		try {
 			FacesContext fCtx = FacesContext.getCurrentInstance();
 			PortletRequest req = (PortletRequest) fCtx.getExternalContext()
@@ -893,30 +898,24 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 					.getAttribute("LIFERAY_SHARED_THEME_DISPLAY");
 			themeDisplay = themeDisplay == null ? (ThemeDisplay) req
 					.getAttribute(WebKeys.THEME_DISPLAY) : themeDisplay;
-			String logoutUrl = "";
+			System.out.println(">>>>>>>>>>>>>>>2)logout url:" + logoutUrl
+					+ "<<<<<<<<<<<<<<<");
 			if (themeDisplay != null) {
-				logoutUrl = themeDisplay.getURLSignOut();
+				logoutUrl = themeDisplay.getURLPortal()
+						+ themeDisplay.getURLSignOut();
+				System.out.println(">>>>>>>>>>>>>>>3)logout url:" + logoutUrl
+						+ "<<<<<<<<<<<<<<<");
 				if (StringUtils.isBlank(logoutUrl)) {
-					log.info(">>>>>>>themedisplay logout url is blank!!!!");
-					System.out
-							.println(">>>>>>>themedisplay logout url is blank!!!!");
 					logoutUrl = getDefaultLogoutUrl();
+					System.out.println(">>>>>>>>>>>>>>>4)logout url:"
+							+ logoutUrl + "<<<<<<<<<<<<<<<");
 				}
-			} else {
-				log.info(">>>>>>>themedisplay is null!!!!");
-				System.out.println(">>>>>>>themedisplay is null!!!!");
-				logoutUrl = getDefaultLogoutUrl();
 			}
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
-					+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-			System.out
-					.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
-							+ logoutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
-			SmCommonUtil.redirectToExternalUrl(logoutUrl);
 		} catch (Exception ex) {
-			log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR TO LOGOUT:"
+			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR TO LOGOUT:"
 					+ ex.getMessage() + "<<<<<<<<<<<<<<<<<<<");
-			SmCommonUtil.redirectToExternalUrl(getDefaultLogoutUrl());
+		} finally {
+			SmCommonUtil.redirectToExternalUrl(logoutUrl);
 		}
 	}
 
