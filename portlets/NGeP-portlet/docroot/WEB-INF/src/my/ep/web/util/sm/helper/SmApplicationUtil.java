@@ -2442,7 +2442,7 @@ public class SmApplicationUtil {
 		String poLogin = null;
 		if (resDTO != null && resDTO.getWorkflowStatus() != null
 				&& resDTO.getWorkflowStatus().getCreatedBy() != null) {
-			log.info("******** The user id from the data ******* "
+			log.info("******** The user id for PO from the data ******* "
 					+ resDTO.getWorkflowStatus().getCreatedBy());
 			UserReqDTO userReqDTO = new UserReqDTO();
 			userReqDTO.setUserId(resDTO.getWorkflowStatus().getCreatedBy());
@@ -2482,20 +2482,15 @@ public class SmApplicationUtil {
 		IMofRegistrationSO reqSO = (IMofRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
 		MofRegistrationResDTO resDTO = reqSO
-				.retrivePoUserIdForRejectedApplication(reqDTO);
+				.retriveApplIdForLastRejectedApplicationByApplType(reqDTO);
 		String poLogin = null;
-		if (resDTO != null && resDTO.getPoUserId() != null) {
-			log.info("******** The po user id from the data ******* "
-					+ resDTO.getPoUserId());
-			UserReqDTO userReqDTO = new UserReqDTO();
-			userReqDTO.setUserId(Long.parseLong(resDTO.getPoUserId()));
-			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", IUserSO.class);
-			UserResDTO userResDTO = userSO.retrieveUserByUserId(userReqDTO);
-			if (userResDTO != null && userResDTO.getPmUser() != null) {
-				poLogin = userResDTO.getPmUser().getLoginId();
-				log.info("******* After retrieve po details ******** ");
-			}
+		if (resDTO != null && resDTO.getApplId() != null) {
+
+			return getPOLoginId(
+					SupplierManagementConst.PM_STATUS_PO_ESCALTED_TO_APPROVER,
+					SupplierManagementConst.PM_STATUS_PO_REJECTED_APPLICATION,
+					resDTO.getApplId());
+
 		}
 		return poLogin;
 	}
