@@ -5269,13 +5269,22 @@ public class SmApplicationUtil {
 							currPersonnel.setSoftcertFlg(0);
 							currPersonnel.setContractSignerFlg(0);
 						} else {
-							currPersonnel
-									.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-											: prevPersonnel.getSoftcertFlg());
-							currPersonnel
-									.setContractSignerFlg(prevPersonnel == null ? 0
-											: prevPersonnel
-													.getContractSignerFlg());
+							if (prevPersonnel == null) {
+								currPersonnel
+										.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+								currPersonnel.setContractSignerFlg(0);
+							} else {
+								if (prevPersonnel.getSoftcertFlg() == 0) {
+									currPersonnel
+											.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
+								} else {
+									currPersonnel.setSoftcertFlg(prevPersonnel
+											.getSoftcertFlg());
+								}
+								currPersonnel
+										.setContractSignerFlg(prevPersonnel
+												.getContractSignerFlg());
+							}
 
 							// if epRole blank set back to prev approved role if
 							// exist
@@ -5309,8 +5318,7 @@ public class SmApplicationUtil {
 							currPersonnel.setContractSignerFlg(0);
 						} else {
 							currPersonnel
-									.setSoftcertFlg(prevPersonnel == null ? SupplierManagementConst.SOFT_CERT_PENDING_REQ
-											: prevPersonnel.getSoftcertFlg());
+									.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 							currPersonnel
 									.setContractSignerFlg(prevPersonnel == null ? 0
 											: prevPersonnel
