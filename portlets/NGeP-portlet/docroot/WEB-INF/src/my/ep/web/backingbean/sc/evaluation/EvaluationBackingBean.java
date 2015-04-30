@@ -6912,8 +6912,13 @@ public class EvaluationBackingBean extends
 
 			ScQtCommittee qtCommittee = this.getManagedBean()
 					.getScQtCommittee();
+			List<ScQtMeeting> localMeetingList = new ArrayList<ScQtMeeting>();
 			if (null != this.getManagedBean().getScQtMeetings()
 					&& !this.getManagedBean().getScQtMeetings().isEmpty()) {
+				for (ScQtMeeting meeting : this.getManagedBean()
+						.getScQtMeetings()) {
+					compareMeetingDates(meeting, localMeetingList);
+				}
 				qtCommittee.setScQtMeetings(this.getManagedBean()
 						.getScQtMeetings());
 			} else {
@@ -9697,5 +9702,36 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().setMeetingRemoveList(toBeRemovedList);
 			list.removeAll(toBeRemovedList);
 		}
+	}
+
+	// this method checking two meeting dates or equal or not.
+	private void compareMeetingDates(ScQtMeeting scqtMeeting,
+			List<ScQtMeeting> meetingList) {
+		if (null != meetingList && meetingList.size() >= 1) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+			boolean duplicateDate = false;
+			for (ScQtMeeting meeting : meetingList) {
+
+				String objectDate = sdf.format(scqtMeeting.getMeetingDate());
+				String listDate = sdf.format(meeting.getMeetingDate());
+
+				if (objectDate.equals(listDate)) {
+					duplicateDate = true;
+					break;
+
+				} else {
+					duplicateDate = false;
+				}
+
+			}
+			if (duplicateDate == true) {
+				throw new EpException(MessageConst.ERROR_760271);
+			} else {
+				meetingList.add(scqtMeeting);
+			}
+		} else {
+			meetingList.add(scqtMeeting);
+		}
+
 	}
 }
