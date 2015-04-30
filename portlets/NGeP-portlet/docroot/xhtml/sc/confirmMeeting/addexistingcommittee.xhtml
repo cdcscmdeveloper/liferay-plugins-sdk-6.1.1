@@ -11,14 +11,15 @@
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember" width="950" height="600">
 
-		<p:panel id="addexistingNewId">
+		<h:panelGroup id="addexistingNewId">
 			<p:messages id="existingNewid" autoUpdate="true" showDetail="true"
 				showSummary="false" closable="true" />
 
-			<p:panel id="newCommitteeProfile" style="width:100%;margin-top:10px;">
+			<h:panelGroup id="newCommitteeProfile"
+				style="width:100%;margin-top:10px;">
 				<c:if
 					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'E' }">
-					<p:panel header="Search" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /></td>
@@ -122,7 +123,7 @@
 				</c:if>
 				<c:if
 					test="#{evaluationMeetingBackingBean.managedBean.committeMember.userSelection eq 'N'}">
-					<p:panel header="New user" toggleable="true">
+					<p:panel header="#{lbl['lbl.sc.new.user']}" toggleable="true">
 						<table>
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sc.name']}" /> <p:outputLabel
@@ -268,7 +269,7 @@
 						</table>
 					</p:panel>
 				</c:if>
-			</p:panel>
+			</h:panelGroup>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
 					oncomplete="prepareCommittee.paginator.endLink.click();"
@@ -279,7 +280,7 @@
 					styleClass="apply_button" process="@this"
 					oncomplete="newspecificationcommittee.hide();" />
 			</div>
-		</p:panel>
+		</h:panelGroup>
 
 	</p:dialog>
 </ui:composition>
