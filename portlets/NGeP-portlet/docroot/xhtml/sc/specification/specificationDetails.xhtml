@@ -89,7 +89,7 @@
 						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE' or specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
-						style="text-align:right;">
+						style="text-align:right;margin-bottom: 5px;">
 					</p:inputMask></td>
 			</tr>
 			<tr>
@@ -106,7 +106,7 @@
 									id="fulfilId" label="#{lbl['lbl.sc.fullfillent.type']}"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									value="#{specificationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
-									style="width: 178px;margin-bottom: 10px;">
+									style="width: 178px;margin-bottom: 5px;">
 
 									<f:selectItems
 										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
@@ -141,7 +141,7 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 94px"><p:outputLabel
+				<td style="width: 96px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /></td>
 				<td><p:selectOneMenu id="locationLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
