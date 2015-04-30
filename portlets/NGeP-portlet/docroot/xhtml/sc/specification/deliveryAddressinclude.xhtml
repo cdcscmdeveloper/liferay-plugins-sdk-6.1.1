@@ -8,6 +8,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.delivery.service.address']}"
 		toggleable="true" styleClass="deliveryUpdate">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.delivery.service.address.instruction']}" escape="false" />
 
 		<p:dataTable id="pjtDelivered" var="delivery" editable="true"
 			rows="10" style="width:100%" widgetVar="deliveryService"

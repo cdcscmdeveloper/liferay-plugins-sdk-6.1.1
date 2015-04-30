@@ -189,11 +189,11 @@
 					<p:column style="width:10%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.Percentage']}" />
+							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							id="progressivePercentage" style="width:100px;"
-							label="#{lbl['lbl.sc.spec.weight.percent']}" maxlength="18">
+							label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 							<p:ajax event="blur" partialSubmit="true" process="@this" />
 						</p:inputText>
