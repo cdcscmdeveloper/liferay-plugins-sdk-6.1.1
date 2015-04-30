@@ -894,9 +894,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			logoutUrl = themeDisplay.getURLSignOut();
 			if (StringUtils.isBlank(logOutUrl)) {
 				log.info(">>>>>>>themedisplay logout url is blank!!!!");
-				FacesScopes fs = new FacesScopes();
-				logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
-						+ fs.getRequest().getServerPort() + "/c/portal/logout";
+				logoutUrl = getDefaultLogoutUrl();
 			}
 		}else{
 			log.info(">>>>>>>themedisplay is null!!!!");
