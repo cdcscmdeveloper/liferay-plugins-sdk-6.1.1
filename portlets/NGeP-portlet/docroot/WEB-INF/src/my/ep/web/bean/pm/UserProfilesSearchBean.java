@@ -13,7 +13,8 @@ public class UserProfilesSearchBean {
 	private String userName;
 	private String userRole;	
 	private String userOrganizationName;	
-	private Long userStatus;
+	private Long userOrgStatus;
+	private Long selectedOrgProfileId;
 	/**
 	 * @return the userName
 	 */
@@ -51,16 +52,16 @@ public class UserProfilesSearchBean {
 		this.userOrganizationName = userOrganizationName;
 	}
 	/**
-	 * @return the userStatus
+	 * @return the userOrgStatus
 	 */
-	public Long getUserStatus() {
-		return userStatus;
+	public Long getUserOrgStatus() {
+		return userOrgStatus;
 	}
 	/**
-	 * @param userStatus the userStatus to set
+	 * @param userOrgStatus the userOrgStatus to set
 	 */
-	public void setUserStatus(Long userStatus) {
-		this.userStatus = userStatus;
+	public void setUserOrgStatus(Long userOrgStatus) {
+		this.userOrgStatus = userOrgStatus;
 	}
 	/**
 	 * @return the loginId
@@ -86,5 +87,14 @@ public class UserProfilesSearchBean {
 	public void setIdentificationNo(String identificationNo) {
 		this.identificationNo = identificationNo;
 	}
+	public Long getSelectedOrgProfileId() {
+		return selectedOrgProfileId;
+	}
+	public void setSelectedOrgProfileId(Long selectedOrgProfileId) {
+		this.selectedOrgProfileId = selectedOrgProfileId;
+	}
+	
+	
+	
 	
 }

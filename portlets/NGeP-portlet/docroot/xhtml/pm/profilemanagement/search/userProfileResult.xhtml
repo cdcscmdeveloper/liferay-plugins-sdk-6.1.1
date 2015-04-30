@@ -11,29 +11,29 @@
 	<p:panel id="pUserResult" header="#{lbl['lbl.pm.user.result']}" toggleable="true">
 		<p:dataTable id="dtUserResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 			rowIndexVar="rowIndex"  lazy="true" rows="10"
-			value="#{profileManagementBackingBean.userProfileDataModel}"
-			var="userprofile">
+			value="#{profileManagementBackingBean.userOrgDataModel}"
+			var="userOrg">
 			<ac:paginator for="dtUserResult" />
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.idno']}" width="15%">
-				#{userprofile.identificationNo}
+				#{userOrg.pmUser.identificationNo}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.username']}" width="15%">
-				#{userprofile.userName}
+				#{userOrg.pmUser.userName}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.designation']}" width="15%">
-				#{userprofile.designation}
+				#{userOrg.pmUser.designation}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.result.status']}" width="10%">
-				#{(userprofile.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+				#{(userOrg.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.profiles.search.role']}" width="5%">
-				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedActiveRoles(userprofile.userId)}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
+				<p:commandLink  action="#{profileManagementBackingBean.getListOfAssignedActiveRoles(userOrg.pmUser.userId)}" oncomplete="dlRoleList.show();" update=":form:opRoleList" >
 					<p:graphicImage value="/css/images/design/user.png"/>
 				</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" width="5%">
-				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userprofile.userId)}" >
+				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userOrg.pmUser.userId)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 			</p:column>
