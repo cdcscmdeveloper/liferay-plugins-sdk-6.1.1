@@ -1693,23 +1693,21 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				null,
 				requestNote.getRemarks(),
 				ScRequestNoteRemark.class));
-		
+
 		getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		fulfilmentTypeEvent(scRequestNoteDtl);
 		getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 		getManagedBean().setRequestNote(requestNote);
-		
+
 		//clear the selected price type
 		getManagedBean().setPriceType("");
-		
+
 		// request note counter
 		RequestContext.getCurrentInstance().execute("addToCartPopup.hide()");
-		
-		// compare screen add to cart - page navigation to request note screen
-		if(cartFlag){
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
-		} 
+
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
