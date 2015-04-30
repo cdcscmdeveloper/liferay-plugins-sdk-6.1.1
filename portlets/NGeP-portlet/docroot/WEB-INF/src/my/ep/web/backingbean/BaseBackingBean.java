@@ -892,15 +892,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		String logoutUrl = "";		
 		if(themeDisplay!=null){
 			logoutUrl = themeDisplay.getURLSignOut();
-			if (StringUtils.isBlank(logOutUrl)) {
+			if (StringUtils.isBlank(logoutUrl)) {
 				log.info(">>>>>>>themedisplay logout url is blank!!!!");
+				System.out.println(">>>>>>>themedisplay logout url is blank!!!!");
 				logoutUrl = getDefaultLogoutUrl();
 			}
 		}else{
 			log.info(">>>>>>>themedisplay is null!!!!");
+			System.out.println(">>>>>>>themedisplay is null!!!!");
 			logoutUrl = getDefaultLogoutUrl();
 		}
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
+				+ logOutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
 				+ logOutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		SmCommonUtil.redirectToExternalUrl(logOutUrl);
 	}
