@@ -60,7 +60,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.ss.formula.functions.T;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
@@ -890,15 +889,28 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				.getAttribute("LIFERAY_SHARED_THEME_DISPLAY");
 		themeDisplay = themeDisplay==null?(ThemeDisplay) req
 				.getAttribute(WebKeys.THEME_DISPLAY):themeDisplay;
-		String logOutUrl = themeDisplay.getURLSignOut();
-		if (StringUtils.isBlank(logOutUrl)) {
-			log.info(">>>>>>>themedisplay logout is blank..");
-			FacesScopes fs = new FacesScopes();
-			logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
-					+ fs.getRequest().getServerPort() + "/c/portal/logout";
+		String logoutUrl = "";		
+		if(themeDisplay!=null){
+			logoutUrl = themeDisplay.getURLSignOut();
+			if (StringUtils.isBlank(logOutUrl)) {
+				log.info(">>>>>>>themedisplay logout url is blank!!!!");
+				FacesScopes fs = new FacesScopes();
+				logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
+						+ fs.getRequest().getServerPort() + "/c/portal/logout";
+			}
+		}else{
+			log.info(">>>>>>>themedisplay is null!!!!");
+			logoutUrl = getDefaultLogoutUrl();
 		}
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>redirect to logout:"
 				+ logOutUrl + "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 		SmCommonUtil.redirectToExternalUrl(logOutUrl);
+	}
+	
+	private String getDefaultLogoutUrl(){
+		FacesScopes fs = new FacesScopes();
+		String logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort() + "/c/portal/logout";
+		return logOutUrl;
 	}
 }
