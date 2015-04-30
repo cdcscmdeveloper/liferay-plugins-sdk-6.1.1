@@ -65,6 +65,7 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -920,9 +921,14 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	}
 
 	private String getDefaultLogoutUrl() {
-		FacesScopes fs = new FacesScopes();
-		String logOutUrl = "http://" + fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort() + "/c/portal/logout";
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+
+		String portalUrl = themeDisplay.getURLPortal();
+		String logOutUrl = portalUrl + "/c/portal/logout";
 		return logOutUrl;
 	}
 }
