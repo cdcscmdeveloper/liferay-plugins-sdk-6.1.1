@@ -2271,7 +2271,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public boolean getConditionalValue() {
     	if (getManagedBean().isViewContract()) {
     		return true;
-    	} else if (!getManagedBean().getCtContract().isAgreement() 
+    	} else if (!getManagedBean().getCtContractAmount().isAgreement() 
     			&& getManagedBean().getContractVer().getContractPhysicalNo() == null) {
     		if (getManagedBean().getContractVer().getCtContractValue().isConcession()) {
     			return false;
