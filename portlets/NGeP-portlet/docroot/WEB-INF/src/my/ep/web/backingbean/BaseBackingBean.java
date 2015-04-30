@@ -929,6 +929,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 
 		String portalUrl = themeDisplay.getURLPortal();
 		String logOutUrl = portalUrl + "/c/portal/logout";
+		System.out.println(">>>>>>>>>>>>logout url default:" + logOutUrl
+				+ "<<<<<<<<<<<<<<");
 		return logOutUrl;
 	}
 }
