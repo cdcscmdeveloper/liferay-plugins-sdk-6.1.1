@@ -854,6 +854,98 @@ public class QTCommitteBackingBean extends
 
 		}
 	}
+	
+	/**
+	 * Adds the clone to ec dtl.
+	 */
+	public void addCloneToEcDtl() {
+		debugLogger("addCloneToEcDtl");
+		checkIsSpecCommitteFormOrNot();
+		// TabBean bean = getManagedBean().getSelectedTabBean();
+		List<ScCommitteeMember> selectedList = this.getManagedBean()
+				.getToBeDelCommitteMemebers();
+		if (null != selectedList && !selectedList.isEmpty()) {
+			List<TabBean> tabs = this.getManagedBean()
+					.getScCommitteeMemberTabList();
+			for (int i = 0; i < tabs.size(); i++) {
+				TabBean tabBean = tabs.get(i);
+				log.debug("Title Name : " + tabBean.getTabType());
+				if (tabBean
+						.getTabType()
+						.equalsIgnoreCase(
+								ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE)) {
+					List<ScCommitteeMember> existingMembers = tabBean
+							.getScQtCommittee().getScCommittee()
+							.getScCommitteeMembers();
+					if (isMemberExists(existingMembers, selectedList)) {
+						throw new EpException(
+								MessageConst.ERROR_760048,
+								new String[] { ParameterHelper
+										.getInstance()
+										.getParameterDesc(
+												ParameterTypeConst.SC_COMMITTEE_TYPE,
+												ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE) });
+					}
+					List<ScCommitteeMember> committeeMembersList = new ArrayList<ScCommitteeMember>();
+
+					for (int memebersList = 0; memebersList < selectedList
+							.size(); memebersList++) {
+						ScCommitteeMember member1 = new ScCommitteeMember();
+						try {
+							member1 = (ScCommitteeMember) BeanUtils
+									.cloneBean(selectedList.get(memebersList));
+
+						} catch (IllegalAccessException
+								| InstantiationException
+								| InvocationTargetException
+								| NoSuchMethodException e) {
+							e.printStackTrace();
+						}
+						if (null != member1) {
+							member1.setCommitteeMemberId(null);
+							member1.setChangedDate(null);
+							member1.setCreatedBy(null);
+							member1.setCreatedDate(null);
+							member1.setChangedBy(null);
+							member1.setScCommittee(null);
+							member1.setScCommittee(tabBean.getScQtCommittee()
+									.getScCommittee());
+							committeeMembersList.add(member1);
+						}
+					}
+					if (null != tabBean.getScQtCommittee().getScCommittee()
+							.getScCommitteeMembers()) {
+						tabBean.getScQtCommittee().getScCommittee()
+								.getScCommitteeMembers()
+								.addAll(committeeMembersList);
+					} else {
+						tabBean.getScQtCommittee().getScCommittee()
+								.setScCommitteeMembers(committeeMembersList);
+					}
+					this.getManagedBean().setSelectedTabIndex(i);
+					this.getManagedBean().setSelectedTabBean(tabBean);
+					this.getManagedBean().setToBeDelCommitteMemebers(null);
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.ERROR_760150,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+					break;
+				}
+			}
+
+		} else {
+			throw new EpException("No members to clone to EC");
+		}
+	}
 
 	/**
 	 * Adds the clone to tec dtl.
