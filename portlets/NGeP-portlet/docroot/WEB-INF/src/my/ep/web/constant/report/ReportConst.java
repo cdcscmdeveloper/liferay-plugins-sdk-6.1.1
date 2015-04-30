@@ -116,7 +116,8 @@ public class ReportConst {
 		// EC
 		public static final String SC_SPPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_SHORTLIST_ASSES_4A.jsp";
 		public static final String SC_KPP1_PEMATUHAN_EC_RPT_JSP = "SC_EC_METHOD_OF_ASSES_4B.jsp";
-		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_4D.jsp";
+		public static final String SC_KPSAP2_PEMARKAHAN_EC_RPT_JSP = "SC_EC_GEN_SPEC_TECH_4D.jsp";
+		public static final String SC_EC_GEN_SPEC_FIN_4D = "SC_EC_GEN_SPEC_FIN_4D.jsp";
 		public static final String SC_AKPTPH_EC_RPT_JSP = "SC_EC_PRICE_EVAL_4E.jsp";
 		public static final String SC_EC_OVERALLTECH_WITH_WEI_4H = "SC_EC_OVERALLTECH_WITH_WEI_4H.jsp";
 		public static final String SC_EC_OVERALL_FIN_4I = "SC_EC_OVERALL_FIN_4I.jsp";
