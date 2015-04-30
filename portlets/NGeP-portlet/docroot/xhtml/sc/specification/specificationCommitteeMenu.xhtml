@@ -64,7 +64,7 @@
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement']}"
+							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
 								update="@form" />
 						</c:if>
@@ -73,7 +73,7 @@
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement']}"
+							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
 						</c:if>
@@ -201,7 +201,7 @@
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement']}"
+							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
 						</c:if>
@@ -209,7 +209,7 @@
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement']}"
+							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 						</c:if>

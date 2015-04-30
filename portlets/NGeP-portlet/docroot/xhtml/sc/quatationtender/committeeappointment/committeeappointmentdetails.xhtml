@@ -25,7 +25,8 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.clone']}" disabled="#{qTCommitteBackingBean.isEnableCloneButton()}"
 				action="#{qTCommitteBackingBean.cloneCommitteePopupAction}"
-				update="@all" />
+				update="@all"
+				title="#{lbl['lbl.sc.qt.committee.btn.clone.tooltip']}" />
 		</div>
 		
 		<p:remoteCommand name="committeTabChangeAction" update="@form" partialSubmit="true" process="@form" action="#{qTDetailBB.committeTabChangeAction}" />

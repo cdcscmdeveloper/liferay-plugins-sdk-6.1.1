@@ -26,7 +26,7 @@
 						</ui:fragment>
 					</ui:repeat> <ui:fragment
 						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION)) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION)))}">
-						<p:commandButton value="Save" update="@all" style="float:right;"
+						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all" style="float:right;"
 							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}">
 							<f:setPropertyActionListener
 								target="#{specificationBackingBean.managedBean.buttonOutCome}"
