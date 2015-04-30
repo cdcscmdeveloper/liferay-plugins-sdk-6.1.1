@@ -652,7 +652,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;//240508; 220152;
+	//private Long lngUserId = (long)61410;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 147038; 125254,20854,240526--FL and CM//213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4280,7 +4280,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			throw new EpException(
 					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 
@@ -4671,7 +4671,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			throw new EpException(
 					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 
@@ -5029,7 +5029,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			throw new EpException(
 					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 	/*
@@ -5212,7 +5212,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			throw new EpException(
 					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 
@@ -5582,7 +5582,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			throw new EpException(
 					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 	/*
@@ -5627,7 +5627,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			throw new EpException(
 					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_CRITERIA_SEARCH));
+							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
 		}
 	}
 	/*
