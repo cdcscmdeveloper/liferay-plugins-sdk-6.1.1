@@ -886,6 +886,10 @@ public class EvaluationMeetingBackingBean extends
 		qtnTenderSearchBean.setQtStatus(null);
 		//searchQuotatioTender.resetData();
 		//searchQuotatioTender = new clonePagingDataModel();
+		qtnTenderSearchBean.setFromPublishDate(null);
+		qtnTenderSearchBean.setToPublishDate(null);
+		qtnTenderSearchBean.setFromClosingDate(null);
+		qtnTenderSearchBean.setToClosingDate(null);
 	}
 
 	/**
@@ -1107,6 +1111,32 @@ public class EvaluationMeetingBackingBean extends
 					bean.setSearchValue(betweenVal);
 					searchBean.getDataFilterBeans().add(bean);
 					// searchFilterBean.add(bean);
+				}
+				
+				Date fromPublishDate = getManagedBean()
+						.getCloneQtnTenderSearchBean().getFromPublishDate();
+				Date toPublishDate = getManagedBean()
+						.getCloneQtnTenderSearchBean().getToPublishDate();
+				if (null != fromPublishDate || null != toPublishDate) {
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField(QTConstants.PUBLISH_DATE);
+					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(fromPublishDate, toPublishDate);
+					bean.setSearchValue(betweenVal);
+					searchBean.getDataFilterBeans().add(bean);
+				}
+				
+				Date fromClosingDate = getManagedBean()
+						.getCloneQtnTenderSearchBean().getFromClosingDate();
+				Date toClosingDate = getManagedBean()
+						.getCloneQtnTenderSearchBean().getToClosingDate();
+				if (null != fromClosingDate || null != toClosingDate) {
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField(QTConstants.CLOSED_DATE);
+					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(fromClosingDate, toClosingDate);
+					bean.setSearchValue(betweenVal);
+					searchBean.getDataFilterBeans().add(bean);
 				}
 
 				String procurementMode = getManagedBean()
