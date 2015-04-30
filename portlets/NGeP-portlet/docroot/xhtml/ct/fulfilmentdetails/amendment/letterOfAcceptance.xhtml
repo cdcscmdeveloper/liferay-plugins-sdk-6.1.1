@@ -39,12 +39,12 @@
 			 <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;">
 			    <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeUpload}">
 			       <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadFile(loaReportVar.scLoaReportAttachment.filePath, loaReportVar.scLoaReportAttachment.fileName)}">
-				       <p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+				       <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 				   </h:commandLink>
 			    </h:panelGroup>
 			     <h:panelGroup  rendered="#{loaReportVar.definationType.parameterCode == ParameterConst.documentDefinitionTypeSystemDefined}">
 			         <h:commandLink icon="ui-icon-download" action="#{amendmentBackingBean.downloadDocFile(loaReportVar)}">
-					    <p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+					    <p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 				     </h:commandLink>
 			    </h:panelGroup>
 			  </p:column>

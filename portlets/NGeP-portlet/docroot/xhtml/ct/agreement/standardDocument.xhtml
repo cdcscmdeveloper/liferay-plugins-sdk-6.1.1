@@ -10,7 +10,7 @@
 			  <h:panelGrid columns="2">
 				<p:outputLabel value="#{lbl['lbl.ct.sample.contract']}" />
 				<h:commandLink action="#{agreementBackingBean.downloadFile('', 'sample')}">
-					<p:graphicImage value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+					<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 				</h:commandLink>				
 			</h:panelGrid>
 			
@@ -45,19 +45,17 @@
 				  	</f:facet>
 				  	<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementTemplateDoc}">
 						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
-							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+							<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
-					 <p:spacer width="2"/>
+					 <p:spacer width="5"/>
 					 <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
-							<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.ct.view.document']}" />
+							<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.view.document']}" />
 					</p:commandLink>	
 					</h:panelGroup>
 					<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementSystemDefineDoc}">
 						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
-							<p:graphicImage library="ep/images/design" name="download.png"
-								value="/css/images/design/download.png" title="#{lbl['lbl.txt.file.download']}" />
+							<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
 						</h:commandLink>
 					</h:panelGroup>
 					<h:panelGroup id="uploadUserDefinePg" rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementUserUploadDoc}">
