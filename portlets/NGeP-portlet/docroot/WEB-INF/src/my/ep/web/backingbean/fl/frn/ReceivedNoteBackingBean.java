@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -248,6 +249,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();		
 		if(taskId != null){
 			renewSesionObject();
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO bpmRequestDTO = new BpmRequestDTO();
@@ -298,6 +300,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().setFrnCancellationProcess(true);
 				getManagedBean().setDocMaintainRemarks(true);
+				if(fulfillmentCancelReqType.getErrorId() != null && fulfillmentCancelReqType.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(fulfillmentCancelReqType.getErrorId());
+					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
 			}else{
 				FLFulFillmentRecievedNoteDataType fulFillmentRecievedNoteDataType = (FLFulFillmentRecievedNoteDataType)obj;
 				reqDTO.setDeliveryOrderId(fulFillmentRecievedNoteDataType.getDoId());
@@ -360,6 +370,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				}
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(outcome);
+				if(fulFillmentRecievedNoteDataType.getErrorId() != null && fulFillmentRecievedNoteDataType.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(fulFillmentRecievedNoteDataType.getErrorId());
+					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
 			}
 			
 			getManagedBean().setSelectedTabIndex(0);
@@ -719,6 +737,16 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 */
 	public String backAction() {
 		return getManagedBean().getFromPageUrl()+"?faces-rediret=true";
+	}
+	
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
 }

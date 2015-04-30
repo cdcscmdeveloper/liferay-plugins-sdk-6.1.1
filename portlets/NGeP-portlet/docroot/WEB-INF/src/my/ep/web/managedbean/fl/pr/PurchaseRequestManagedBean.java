@@ -498,6 +498,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private String gstRegistrationNo;
 	private Date gstRegistrationDate;
+	private boolean gfmasError=false;
+	private String gfmasErrorContent;
 	
 /**
  * Gets the charge line item root.
@@ -3119,6 +3121,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setGstRegistrationNo(String gstRegistrationNo) {
 		this.gstRegistrationNo = gstRegistrationNo;
+	}
+
+	/**
+	 * @return the gfmasError
+	 */
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	/**
+	 * @param gfmasError the gfmasError to set
+	 */
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	/**
+	 * @return the gfmasErrorContent
+	 */
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	/**
+	 * @param gfmasErrorContent the gfmasErrorContent to set
+	 */
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 
 }

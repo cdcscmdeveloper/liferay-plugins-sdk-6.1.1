@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
@@ -39,6 +40,7 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
+import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -62,6 +64,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -110,6 +113,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlAdjustment adjustment = getManagedBean().getAdjustment();
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			reqDTO.setAdjustment(adjustment);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -168,6 +172,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		String taskId = originalServletRequest.getParameter("taskId");
 
 		if(taskId != null){
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -175,6 +180,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
+			FLDanDataType danDataType = (FLDanDataType)obj;
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
@@ -192,6 +198,14 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
 			setAdjustmentNote(resDTO);
 			getManagedBean().setSelectedTabIndex(0);
+			if(danDataType.getErrorId() != null && danDataType.getErrorId() > 0){
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().setGfmasError(true);
+				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+				errReq.setErrorId(danDataType.getErrorId());
+				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+			}
 		}
 	}
 	
@@ -439,5 +453,15 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			return RoleCode.FL_APPROVER.value();
 		else 
 			return null;
+	}
+	
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 }

@@ -234,6 +234,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	
 	private List<FlDeliveryOrder> delOrderList;
 	private List<FlFulfilmentNote> fulfilmentNoteList;
+	private boolean gfmasError=false;
+	private String gfmasErrorContent;
 
 	/**
 	 * Gets the doc type.
@@ -1382,5 +1384,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentNoteList(List<FlFulfilmentNote> fulfilmentNoteList) {
 		this.fulfilmentNoteList = fulfilmentNoteList;
+	}
+
+	/**
+	 * @return the gfmasError
+	 */
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	/**
+	 * @param gfmasError the gfmasError to set
+	 */
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	/**
+	 * @return the gfmasErrorContent
+	 */
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	/**
+	 * @param gfmasErrorContent the gfmasErrorContent to set
+	 */
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 }

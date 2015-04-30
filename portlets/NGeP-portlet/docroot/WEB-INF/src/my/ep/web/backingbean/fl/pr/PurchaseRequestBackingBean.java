@@ -1333,13 +1333,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
-			
 			if(flPurchaseOrd.getOrderDetails().getErrorId() != null && flPurchaseOrd.getOrderDetails().getErrorId() > 0){
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().setGfmasError(true);
 				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
 				errReq.setErrorId(flPurchaseOrd.getOrderDetails().getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
-				errRes.getFlErrorContent();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,errRes.getFlErrorContent()));
+				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 			}
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
@@ -3150,4 +3150,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public String getDeliveryAddressType() {
 		return AddressType.DELIVERY_ADDRESS.value();
 	}
+	
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
+	
 }
