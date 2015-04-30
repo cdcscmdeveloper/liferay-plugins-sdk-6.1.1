@@ -19,6 +19,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -150,6 +151,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		if(taskId != null) {
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -178,6 +180,14 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				new FulfilmentBackingBean(ParameterConst.DOCTYPE_STOP_DELIVERY, resDTO.getFlStopInstr().getFlRequest().getCtContract().getContractNo());
 			}
 			flBB.initializeRemarkAndAttachement(resDTO.getFlStopInstr().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
+			if(stopFlData.getErrorId() != null && stopFlData.getErrorId() > 0){
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().setGfmasError(true);
+				FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+				errReq.setErrorId(stopFlData.getErrorId());
+				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+			}
 		}
 	}
 	
@@ -529,5 +539,13 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 
 		return NAV_ORDERNO;
 	}
-	
+	/**
+	 * Show 1GFMAS error
+	 *
+	 */
+	public void show1GFMASError(){
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		RequestContext.getCurrentInstance().update("@form");
+		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
 }

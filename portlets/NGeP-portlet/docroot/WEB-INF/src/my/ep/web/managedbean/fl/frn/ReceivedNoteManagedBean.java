@@ -106,6 +106,10 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	/** The validated. */
 	private boolean validated = false;
 	
+	
+	private boolean gfmasError=false;
+	private String gfmasErrorContent;
+	
 	/** The from page url. */
 	private String fromPageUrl;
 	
@@ -551,6 +555,34 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setFromPageUrl(String fromPageUrl) {
 		this.fromPageUrl = fromPageUrl;
+	}
+
+	/**
+	 * @return the gfmasError
+	 */
+	public boolean isGfmasError() {
+		return gfmasError;
+	}
+
+	/**
+	 * @param gfmasError the gfmasError to set
+	 */
+	public void setGfmasError(boolean gfmasError) {
+		this.gfmasError = gfmasError;
+	}
+
+	/**
+	 * @return the gfmasErrorContent
+	 */
+	public String getGfmasErrorContent() {
+		return gfmasErrorContent;
+	}
+
+	/**
+	 * @param gfmasErrorContent the gfmasErrorContent to set
+	 */
+	public void setGfmasErrorContent(String gfmasErrorContent) {
+		this.gfmasErrorContent = gfmasErrorContent;
 	}
 
 
