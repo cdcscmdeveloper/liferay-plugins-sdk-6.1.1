@@ -5263,21 +5263,28 @@ public class SmApplicationUtil {
 				}
 				// already exist in db
 				else {
+					//already activated
 					if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						if (currPersonnel.getEpRole().equals(
 								RoleCode.CM_USER.value())) {
 							currPersonnel.setSoftcertFlg(0);
 							currPersonnel.setContractSignerFlg(0);
 						} else {
+							//if dont have prev approved directly set softcert to pending request and contract to 0
 							if (prevPersonnel == null) {
 								currPersonnel
 										.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 								currPersonnel.setContractSignerFlg(0);
-							} else {
+							}
+							//if have prev approved
+							else {
+								//if prev approved softcert is 0, directly set to pending request
 								if (prevPersonnel.getSoftcertFlg() == 0) {
 									currPersonnel
 											.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-								} else {
+								} 
+								//if prev approved softcert is not 0, directly get prev approved softcert
+								else {
 									currPersonnel.setSoftcertFlg(prevPersonnel
 											.getSoftcertFlg());
 								}
@@ -5311,7 +5318,9 @@ public class SmApplicationUtil {
 								currPersonnel.setEpRole(epRole);
 							}
 						}
-					} else {
+					} 
+					//pending activation
+					else {
 						if (currPersonnel.getEpRole().equals(
 								RoleCode.CM_USER.value())) {
 							currPersonnel.setSoftcertFlg(0);
