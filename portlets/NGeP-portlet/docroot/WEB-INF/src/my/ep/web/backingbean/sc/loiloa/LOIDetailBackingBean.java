@@ -2389,12 +2389,13 @@ public class LOIDetailBackingBean extends
 		}
 
 		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)){
-			if(("P").equals(getManagedBean().getScQt().getScheduleType())){
-				this.saveProgressivePaymntList();
-			}else if(("F").equals(getManagedBean().getScQt().getScheduleType())){
-				this.saveScheduleList();
+			if(getManagedBean().getScQt() != null){
+				if(("P").equals(getManagedBean().getScQt().getScheduleType())){
+					this.saveProgressivePaymntList();
+				}else if(("F").equals(getManagedBean().getScQt().getScheduleType())){
+					this.saveScheduleList();
+				}
 			}
-			
 		}
 	}
 
