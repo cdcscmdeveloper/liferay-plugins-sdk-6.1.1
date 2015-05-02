@@ -845,7 +845,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setQualified(true);
 				for (SupplierQualificationBean qualificationBean : resDTO
 						.getQualificationBean()) {
-					if ((!SourcingConstants.SOFT_CERTIFICATE
+					if ((!SourcingConstants.SUPPLIER_CRITERIA_TYPE_SOFT_CERTIFICATE
 							.equalsIgnoreCase(qualificationBean
 									.getQtRequirement()))
 							&& !qualificationBean.isSupplierStatus()) {

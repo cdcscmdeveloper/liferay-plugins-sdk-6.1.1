@@ -33,7 +33,7 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}"
+			<p:column headerText="#{lbl['lbl.sc.closing.date']}"
 				style="width:11%;white-space: normal;">
 				<h:outputText value="#{scqt[4]}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
@@ -66,7 +66,7 @@
 						value="/resources/ep/images/design/register.png" />
 				</p:commandLink>
 				<p:tooltip for="supRegIcon"
-					value="#{lbl['lbl.sc.notice.board.self.registration']}" />
+					value="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.action']}"

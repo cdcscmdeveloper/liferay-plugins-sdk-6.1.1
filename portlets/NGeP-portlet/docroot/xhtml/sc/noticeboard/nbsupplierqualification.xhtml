@@ -59,7 +59,8 @@
 				var="qulificationBean" styleClass="test" tyle="width:70%;">
 
 				<p:column headerText="#{lbl['lbl.sc.notice.board.criteria']}" style="width:30%;">
-					<h:outputText value="#{qulificationBean.criteria}" />
+					<ui:param name="criteriaLbL" value="lbl.sc.notice.board.criteria.#{qulificationBean.criteria}" />
+					<h:outputText value="#{lbl[criteriaLbL]}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.notice.board.requirement']}" style="width:50%;">
 					<h:outputText
