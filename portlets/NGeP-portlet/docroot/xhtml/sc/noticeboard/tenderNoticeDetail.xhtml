@@ -21,7 +21,7 @@
 		</div>
 		
 		<p:panel
-			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.qtn' : 'lbl.sc.notice.board.qtn']}"
+			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}"
 			toggleable="true">
 
 			<h:panelGrid border="0" width="100%" columns="3"
@@ -46,7 +46,7 @@
 					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}" />
 				<h:outputLabel value="" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.npdate']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" />
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
 					<f:convertDateTime
@@ -54,12 +54,12 @@
 				</h:outputText>
 				<h:outputLabel value="" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.publish.period']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" />
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
 				<h:outputLabel value="" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.clsdate']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" />
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
 					<f:convertDateTime
@@ -67,12 +67,12 @@
 				</h:outputText>
 				<h:outputLabel value="" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.proposalValidity']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" />
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
 				<h:outputLabel value="" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.proposalValidityUntil']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" />
 				<h:outputText
 					value="#{DateUtils.addDays(noticeBoardBackingBean.managedBean.scQt.closingDate,noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod)}">
 					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
@@ -94,15 +94,15 @@
 			<h:panelGrid border="0" width="100%" columns="3"
 				columnClasses="columnWidth20,columnWidth50,columnWidth30">
 				<h:outputLabel value="#{lbl['lbl.sc.supplier.status']}" />
-				<h:outputText value="Open"
+				<h:outputText value="#{lbl['lbl.sc.supplier.status.open']}"
 					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'A'}" />
-				<h:outputText value="Bumiputra"
+				<h:outputText value="#{lbl['lbl.sc.supplier.status.bumiputra']}"
 					rendered="#{noticeBoardBackingBean.managedBean.scQt.openFor eq 'B'}" />
 				<h:outputLabel value="" />
 
 				<c:if
 					test="#{null ne noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}">
-					<h:outputLabel value="#{lbl['lbl.sc.notice.board.minPaidUpCaptial']}" />
+					<h:outputLabel value="#{lbl['lbl.sc.paidup']}" />
 					<h:outputText
 						value="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}" />
 					<h:outputLabel value="" />
@@ -117,7 +117,7 @@
 			</h:panelGrid>
 			<p:spacer height="30px" />
 
-			<h:outputText value="#{lbl['lbl.sc.category.code']}"
+			<h:outputText value="#{lbl['lbl.sc.category.code.list']}"
 				style="font-weight:bold;text-align: left;font-size: 14px;" />
 			<p:spacer height="30px" />
 
