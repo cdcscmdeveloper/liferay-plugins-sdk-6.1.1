@@ -1620,7 +1620,7 @@ public class SPDetailBackingBean extends
 					.getParameterId(), parameterDesc);
 		}
 
-		int totalYearsExp = 0;
+		//int totalYearsExp = 0;
 		for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
 				.getSmPersonnels()) {
 			TechnicalStaffBean technicalStaffBean = new TechnicalStaffBean(
@@ -1646,11 +1646,12 @@ public class SPDetailBackingBean extends
 
 			smPersonnelsList.add(technicalStaffBean);
 
-			totalYearsExp += smPersonnel.getWorkExperienceYear().intValue();
+			//totalYearsExp += smPersonnel.getWorkExperienceYear().intValue();
 		}
 		getManagedBean().setSmPersonnelList(smPersonnelsList);
-		getManagedBean().setTotalNoOfYearsExperience(totalYearsExp);
-		log.info("Total No of Years Experience : " + totalYearsExp);
+		getManagedBean().setTotalNoOfYearsExperience(smPersonnelsList.size());
+		//getManagedBean().setTotalNoOfYearsExperience(totalYearsExp);
+		//log.info("Total No of Years Experience : " + totalYearsExp);
 
 		return NAV_TO_TECHNICAL_EMPL_LIST_PAGE;
 	}
