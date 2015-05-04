@@ -11,7 +11,7 @@
 		<ui:fragment
 			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypeItem}">
 			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.award.type']}" style="width:130px"></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.award.type']}" style="width:130px"></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
 			</h:panelGrid>
@@ -21,8 +21,8 @@
 				rowIndexVar="index">
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column rowspan="2" headerText="No" />
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.notice.board.item.name']}" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.no']}" />
+						<p:column rowspan="2" headerText="#{lbl['lbl.sc.item']}" />
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
 						<p:column colspan="3" style="text-align:center" headerText="#{lbl['lbl.sc.offered.price']}" />
 					</p:row>
@@ -68,7 +68,7 @@
 			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypePackage}">
 			
 			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="#{lbl['lbl.sc.notice.board.award.type']}" ></p:outputLabel>
+				<p:outputLabel value="#{lbl['lbl.sc.award.type']}" ></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
 				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" style="width:130px"></p:outputLabel>

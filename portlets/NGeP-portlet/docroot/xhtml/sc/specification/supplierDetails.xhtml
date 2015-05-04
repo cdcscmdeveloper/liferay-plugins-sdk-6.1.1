@@ -46,14 +46,14 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.eff.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
 				<td><p:inputText
 						value="#{smSupplier.smMofAccounts[0].effDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expiry.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
 				<td><p:inputText
 						value="#{smSupplier.smMofAccounts[0].expDate}"
 						size="30" readonly="true" disabled="true">
@@ -79,7 +79,7 @@
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30" /></td>

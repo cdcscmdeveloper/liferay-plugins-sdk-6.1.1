@@ -7,6 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.spec.supplier.info']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.supplier.info.instruction']}" escape="false" />
+		
 		<table style="width: 100%">
 			<tr style="width: 200px;">
 
@@ -46,13 +48,13 @@
 						disabled="true" readonly="true" size="30" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.mof.eff.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.eff.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].effDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expiry.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.mof.expired.date']}" /></td>
 				<td><p:inputText value="#{smSupplier.smMofAccounts[0].expDate}"
 						size="30" readonly="true" disabled="true">
 						<f:convertDateTime
@@ -74,7 +76,7 @@
 						style="width: 171px;margin-bottom: 5px;" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.phn.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.tel.no']}" /></td>
 				<td><p:inputText disabled="true" readonly="true" size="30"
 						value="#{smAppl.smCompanyBasic.phoneNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sc.fax.no']}" /></td>

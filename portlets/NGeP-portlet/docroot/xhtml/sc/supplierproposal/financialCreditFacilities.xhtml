@@ -8,7 +8,11 @@
 
 
 	<p:panel id="creditFacilitiesPanel"
-		header="#{lbl['lbl.sc.sp.credit.facilities']}" toggleable="true">
+		header="#{lbl['lbl.sc.spec.credit.facility']}" toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
@@ -76,7 +80,7 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.sp.credit.type']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.credit.type']}" />
 				</f:facet>
 				<p:outputLabel style="float : left"
 					value="#{supplierProposalDetailBackingBean.getParameterDesc(creditfacilities.creditType)}"
@@ -84,7 +88,7 @@
 				<p:selectOneMenu id="creditType"
 					value="#{creditfacilities.creditType.parameterId}"
 					style="width:95%;margin-bottom: 5px;" required="true"
-					label="#{lbl['lbl.sc.sp.credit.type']}"
+					label="#{lbl['lbl.sc.spec.credit.type']}"
 					rendered="#{creditfacilities.brandNew eq true}">
 					<f:selectItems
 						value="#{supplierProposalDetailBackingBean.getDropdownValues(ParameterTypeConst.creditType)}" />
@@ -172,8 +176,8 @@
 		<h:panelGroup id="totalSummaryPG">
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 140px"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.ttl.credit']} " /></td>
+					<td style="width: 165px"><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.credit']} " /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							id="totalcredit"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalAmountCredit}"
@@ -183,8 +187,8 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td style="width: 140px"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.ttl.paid']} " /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.credit.amount.paid']} " /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							id="totalamtpaid"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalAmountPaid}"
@@ -194,8 +198,8 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td style="width: 140px"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.percentage.paid']}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							id="percentagePaidID"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalPercentagePaid}"

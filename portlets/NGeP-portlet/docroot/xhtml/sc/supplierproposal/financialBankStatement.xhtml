@@ -7,12 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.sp.bankstatement']}" toggleable="true">
-		<table>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note4']}" /></td>
-			</tr>
-		</table>
+	<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="1. #{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+		<h:outputText  styleClass="instruction" value="2. #{lbl['lbl.sc.spec.bank.statement.supplier.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+		
 		<p:dataTable id="bankstatmentsid" var="bankstmt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"
 			rowKey="#{bankstmt}" rowIndexVar="rowIndex">
@@ -26,12 +26,12 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.sp.amount']}" />
+					<h:outputText value="#{lbl['lbl.sc.amount']}" />
 				</f:facet>
 				<p:inputText id="balanceAmt" value="#{bankstmt.balanceAmt}"
 					disabled="#{statusHide}" size="30" style="text-align:right"
 					maxlength="19" required="true"
-					label="#{bankstmt.month} #{lbl['lbl.sc.sp.amount']}">
+					label="#{bankstmt.month} #{lbl['lbl.sc.amount']}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax event="blur" process="@this"
@@ -49,7 +49,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 190px"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.total']}" /></td>
+							value="#{lbl['lbl.sc.total.amount']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalAmount}"
 							readonly="true" disabled="true" size="30">

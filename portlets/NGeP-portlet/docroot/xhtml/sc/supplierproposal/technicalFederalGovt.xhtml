@@ -8,10 +8,10 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.sp.fed.gov']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']}" /></td>
 				<td>#{supplierProposalDetailBackingBean.managedBean.year}</td>
 			</tr>
 		</table>
@@ -21,17 +21,17 @@
 
 			<ac:paginator for="techgovtid" />
 
-			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}"
 				style="white-space : normal; width : 22%; ">
 				<h:outputText value="#{techgovt.scLoiLoa.pmOrgProfile.orgName}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}"
 				style="white-space : normal; width : 30%; ">
 				<h:outputText value="#{techgovt.scLoiLoa.title}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}"
 				style="width : 12%; ">
 				<h:outputText value="#{techgovt.loaNo}" />
 			</p:column>
@@ -52,7 +52,7 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}"
 				style=" width : 12%; ">
 				<h:outputText style="float : right"
 					value="#{techgovt.contractDuration.intValue()/12}">
@@ -65,8 +65,8 @@
 		<p:spacer height="5" />
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 140px"><p:outputLabel
-						value="#{lbl['lbl.sc.sp.ttlnoofcontracts']}" /></td>
+				<td style="width: 150px"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
 				<td colspan="3"><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.contractSize}"
 						readonly="true" disabled="true" size="15" /></td>
@@ -100,7 +100,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.ttlnoofyears']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
 				<td colspan="3"><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.noOfYears /12}"
 						readonly="true" disabled="true" size="15">

@@ -8,7 +8,7 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.sp.technicalstafflist']}"
+	<p:panel header="#{lbl['lbl.sc.spec.tech.staff.list']}"
 		toggleable="true">
 
 		<p:dataTable id="techEmployeeList" var="techEmployee"
@@ -36,7 +36,7 @@
 				</ui:repeat>
 			</p:column>
 			<!-- value="#{supplierProposalDetailBackingBean.getParameterDesc('QL',techEmployee.getSmStaffAcademics().get(0).getQualificationLevelId)}" -->
-			<p:column headerText="#{lbl['lbl.sc.sp.noofyrsexp']}">
+			<p:column headerText="#{lbl['lbl.sc.spec.no.of.yrs.exp']}">
 				<h:outputText style="float : right"
 					value="#{techEmployee.smPersonnel.workExperienceYear}" />
 			</p:column>
@@ -46,7 +46,7 @@
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 171px"><p:outputLabel
-						value="#{lbl['lbl.sc.sp.ttlnoofyrsexp']}" /></td>
+						value="#{lbl['lbl.sc.spec.total.staff']}" /></td>
 				<td colspan="3"><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.totalNoOfYearsExperience}"
 						readonly="true" disabled="true" size="30">

@@ -89,7 +89,8 @@
 
 		<ac:templateSpec
 			editable="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION ) or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}" />
+			templateSpecBean="#{specificationBackingBean.managedBean.templateSpecBean}"
+			title="#{lbl['lbl.sc.spec.financial.title']}" />
 
 
 

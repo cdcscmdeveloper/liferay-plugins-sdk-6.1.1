@@ -14,7 +14,7 @@
 					style="font-weight:bold;text-align: left;" />
 
 				<h:outputText
-					value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing.sv']}"
+					value="#{lbl['lbl.sc.qt.atleast']} #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing.sv']}"
 					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -84,7 +84,7 @@
 
 
 				<h:outputText
-					value="At Least #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing']}"
+					value="#{lbl['lbl.sc.qt.atleast']} #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing']}"
 					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -148,7 +148,7 @@
 
 
 				<h:outputText
-					value="At Least #{bsvDetails.scQtBsv.minSiteVisitAttend} #{lbl['lbl.sc.attendance.required.for.sv']}"
+					value="#{lbl['lbl.sc.qt.atleast']} #{bsvDetails.scQtBsv.minSiteVisitAttend} #{lbl['lbl.sc.attendance.required.for.sv']}"
 					rendered="#{!bsvDetails.scQtBsv.allSiteVisitReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -207,7 +207,7 @@
 		</p:panel>
 	</ui:fragment>
 
-	<p:panel header="Remarks" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
 				<td class="TableFieldLeft" width="24%"><h:outputLabel
