@@ -31,7 +31,7 @@
 				<br/>
 				<br/>
 				
-				<p:panel header="#{lbl['lbl.sc.document.title']}">
+				<p:panel header="#{lbl['lbl.sc.spec.checklist.title']}">
 					<table>
 						<tr>
 							<td style="font-weight:bold; font-size:16px;">
@@ -52,6 +52,7 @@
 
 			<h:panelGroup>
 				<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.document.instruction']}" escape="false" />
 
 					<p:dataTable var="complianceTechnicalSupplier" rows="10"
 						value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
@@ -86,7 +87,7 @@
 						<p:column headerText="#{lbl['lbl.sc.submission.status']}"
 							style="width:20%">
 							<h:outputText
-								value="#{complianceTechnicalSupplier.scQtProposal.submitted ? 'Submitted' : 'Not Submitted'}"></h:outputText>
+								value="#{complianceTechnicalSupplier.scQtProposal.submitted ? lbl['lbl.txt.submitted']:lbl['lbl.txt.not.submitted']}"></h:outputText>
 						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.compliance.status']}"
