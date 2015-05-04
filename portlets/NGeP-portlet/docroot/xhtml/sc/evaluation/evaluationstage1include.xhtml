@@ -103,9 +103,9 @@
 
 
 						<li><h:outputText
-								value="#{lbl['lbl.sc.commitee.endorsment']}"
+								value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								rendered="#{evaluationBackingBean.managedBean.tempTab lt 5}" />
-							<p:commandLink value="#{lbl['lbl.sc.commitee.endorsment']}"
+							<p:commandLink value="#{lbl['lbl.sc.committee.endorsement.evaluation']}"
 								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tempTab ge 5}"

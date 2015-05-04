@@ -12,6 +12,7 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.meeting.details.instruction']}" escape="false" />
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
 			widgetVar="evaluationMeeting"
@@ -64,13 +65,13 @@
 						rendered="#{!evaluationBackingBean.managedBean.readOnly }">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.location']}" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					maxlength="255" cols="40" id="evaluationMeetingLocation"
-					required="true" label="#{lbl['lbl.sc.location']}"></p:inputTextarea>
+					required="true" label="#{lbl['lbl.sc.meeting.location']}"></p:inputTextarea>
 				<p:message id="meetingEvaluationLocationid"
 					for="evaluationMeetingLocation" display="icon"></p:message>
 			</p:column>

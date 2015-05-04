@@ -10,8 +10,10 @@
 
 	
 
-	<p:panel header="#{lbl['lbl.sc.turut.hadir']}"
+	<p:panel header="#{lbl['lbl.sc.join.in']}"
 		toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.join.in.instruction']}" escape="false" />
 
 		<p:dataTable var="meetingAttendance" id="turuthadir" rows="10"
 			widgetVar="tirutWidget"
