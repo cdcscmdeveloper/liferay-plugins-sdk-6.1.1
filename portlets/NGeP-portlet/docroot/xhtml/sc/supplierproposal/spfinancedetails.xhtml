@@ -59,7 +59,7 @@
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'TS' or financeList.scQtCheckList.definationType.parameterCode eq 'WF'}">
 					<p:commandButton
 						action="#{supplierProposalDetailBackingBean.prepareFinancialAction(financeList)}"
-						value="Prepare" style="width:101px;" />
+						value="#{lbl['lbl.btn.prepare']}" style="width:101px;" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{financeList.scQtCheckList.definationType.parameterCode eq 'SP' or financeList.scQtCheckList.definationType.parameterCode eq 'SD'}">

@@ -61,12 +61,11 @@
 						&#160;
 						<p:commandLink id="supRegIcon"
 					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
-					rendered="#{scqt[5] eq '1'}">
+					rendered="#{scqt[5] eq '1'}"
+					title="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}">
 					<p:graphicImage library="ep/images/design" name="register.png"
 						value="/resources/ep/images/design/register.png" />
 				</p:commandLink>
-				<p:tooltip for="supRegIcon"
-					value="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.action']}"
@@ -74,12 +73,11 @@
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"
-						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}">
+						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}"
+						title="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}">
 						<p:graphicImage library="ep/images/design" name="tick.png"
 							value="/resources/ep/images/design/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
 					</p:commandLink>
-					<p:tooltip for="chkQualIcon"
-						value="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}" />
 					<p:commandButton id="downloadIcon" icon="ui-icon-download"
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false"

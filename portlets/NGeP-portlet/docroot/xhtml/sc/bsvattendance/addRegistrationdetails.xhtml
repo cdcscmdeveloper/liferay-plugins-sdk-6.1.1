@@ -62,6 +62,8 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.supplier.attendene.list']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.supplier.attendene.list.instruction']}" escape="false" />
+		
 		<p:dataTable id="attendanceDetailstbl" var="scQtBriefAttendace"
 			value="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.bsvAttendance}"
 			rows="10" rowKey="#{scQtBriefAttendace}" rowIndexVar="rowIndex"

@@ -12,6 +12,9 @@
 	margin-bottom: -310px !important;
 }
 </style>
+	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			
 	<table style="width: 100%">
 		<tr>
 			<TD style="width: 16%; vertical-align: baseline;" class="sidemenutd">
@@ -25,7 +28,8 @@
 				</p:tabMenu></TD>
 			<td style="width: 84%;vertical-align: top;"><p:outputPanel id="zoneSpecAnswers">
 					<ac:templateSpec
-						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" />
+						templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}"
+						title="#{lbl['lbl.sc.spec.financial.title']}" />
 				</p:outputPanel></td>
 		</tr>
 	</table>

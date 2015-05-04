@@ -23,7 +23,8 @@
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 					style="float:right;" process="@all" partialSubmit="true"
-					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}" />
+					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}"
+					title="#{lbl['lbl.sc.eva.btn.submit.meeting.tooltip']}" />
 			</ui:fragment>
 		</ui:repeat>
 	</div>
@@ -69,12 +70,12 @@
 			<p:column style="width:73%">
 				<f:facet name="header">
 					<h:outputText value="* " styleClass="mandatory" />
-					<h:outputText value="#{lbl['lbl.sc.location']}" />
+					<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
 				</f:facet>
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					style="width:75%;" maxlength="255"
-					label="#{lbl['lbl.sc.location']}" id="locationId" required="true"
+					label="#{lbl['lbl.sc.meeting.location']}" id="locationId" required="true"
 					cols="140"></p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
@@ -105,6 +106,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.committee.member.list.instruction']}" escape="false" />
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
 			widgetVar="prepareCommittee" rows="10" rowIndexVar="index"

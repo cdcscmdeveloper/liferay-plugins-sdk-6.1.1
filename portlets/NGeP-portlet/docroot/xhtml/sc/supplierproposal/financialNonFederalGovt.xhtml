@@ -7,10 +7,13 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.sp.non.gov']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.company.exp.fed.private']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+		
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.note1']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']}" /></td>
 				<td>#{supplierProposalDetailBackingBean.managedBean.year}</td>
 			</tr>
 		</table>
@@ -18,17 +21,17 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPExperiences}"
 			rowKey="#{financenongovt}" rowIndexVar="rowIndex">
 
-			<p:column headerText="#{lbl['lbl.sc.sp.agencyname']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.customer.name']}"
 				style="white-space : normal ; width : 15%;">
 					#{financenongovt.clientName}
 				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contracttitle']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.contract.title']}"
 				style="white-space : normal; width : 20%;">
 					#{financenongovt.contractTitle}
 				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractno']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.loa.no']}"
 				style=" width : 10%;">
 					#{financenongovt.contractNo}
 				</p:column>
@@ -49,7 +52,7 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.sp.contractperiod']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.contarct.period']}"
 				style=" width : 10%;">
 				<h:outputText value="#{financenongovt.contractPeriod/12}">
 					<f:convertNumber
@@ -62,12 +65,12 @@
 					<ui:fragment rendered="#{!statusHide}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.sp.contract.amt']}" />
+					<h:outputText value="#{lbl['lbl.sc.spec.contarct.amount']}" />
 				</f:facet>
 				<p:inputText id="contractAmt" value="#{financenongovt.contractAmt}"
 					size="15" style="text-align: right;" disabled="#{statusHide}"
 					maxlength="19" required="true"
-					label="#{lbl['lbl.sc.sp.contract.amt']}">
+					label="#{lbl['lbl.sc.spec.contarct.amount']}">
 					<f:validateLongRange minimum="1" maximum="99999999999" />
 					<p:ajax event="blur" process="@this"
 						listener="#{supplierProposalDetailBackingBean.totalContractAmount}"
@@ -90,7 +93,7 @@
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 170px"><p:outputLabel
-							value="#{lbl['lbl.sc.sp.ttl.cotract.amt']}" /></td>
+							value="#{lbl['lbl.sc.spec.total.contract.amount']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalContractAmount}"
 							readonly="true" disabled="true" size="15">
