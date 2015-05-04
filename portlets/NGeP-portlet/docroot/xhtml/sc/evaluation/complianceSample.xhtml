@@ -43,6 +43,8 @@
 		rendered="#{evaluationBackingBean.managedBean.countDays le 0}">
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}"
 			toggleable="true">
+			
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
 
 			<p:dataTable var="complianceSample" id="complianceSample" rows="10"
 				rowIndexVar="index" style="width:100%"
