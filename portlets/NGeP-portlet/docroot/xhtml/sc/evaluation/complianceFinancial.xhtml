@@ -13,6 +13,8 @@
 
 	<p:panel header="#{lbl['lbl.sc.financial.proposal']}"
 		toggleable="true">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.compliance.stage.instruction']}" escape="false" />
 
 		<p:dataTable var="complianceFinancial"
 			id="complianceFinancialProposal" editable="true" rowIndexVar="index"
@@ -22,7 +24,7 @@
 			<!-- 	<ac:paginator for="complianceFinancialProposal" /> -->
 
 
-			<p:column headerText="#{lbl['lbl.sc.title']}"
+			<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
 				style="width:55%;white-space: normal;">
 
 				<h:outputText value="#{complianceFinancial.title}"></h:outputText>
