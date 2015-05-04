@@ -31,7 +31,7 @@
 
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.title']}"></h:outputLabel></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
 					<td><p:inputTextarea style="width:100%"
 							value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
 							rows="2" cols="150" disabled="true"></p:inputTextarea></td>
@@ -41,7 +41,6 @@
 
 
 			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
-
 				<p:dataTable var="evaFinSupplier" rows="10"
 					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 					id="evaluateFinSupplier" editable="true" rowIndexVar="index"
@@ -70,7 +69,7 @@
 					<p:column headerText="#{lbl['lbl.sc.submission.status']}"
 						style="width:15%">
 						<h:outputText
-							value="#{evaFinSupplier.submitted ? lbl['lbl.sc.submitted']:lbl['lbl.sc.not.submitted']}"></h:outputText>
+							value="#{evaFinSupplier.submitted ? lbl['lbl.txt.submitted']:lbl['lbl.txt.not.submitted']}"></h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.compliance.status']}"

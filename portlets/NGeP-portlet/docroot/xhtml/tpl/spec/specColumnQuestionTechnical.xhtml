@@ -219,11 +219,11 @@
 	<p:column style="width:125px;" rendered="#{isSpecificationReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
-			<h:outputText value="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}"/>
+			<h:outputText value="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}"/>
 		</f:facet>
 		<h:selectOneMenu id="answerTypeId" value="#{question.answerTypeCode.parameterId}" style="width:100px;"
 			required="#{!question.selected}"
-			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer']}"
+			label="#{lbl[isSpecTypeFinancial ? 'lbl.tpl.spec.content.total.amount' : 'lbl.tpl.spec.content.answer.schema']}"
 			rendered="#{!isQuestionTypeItem}">
 			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" 
