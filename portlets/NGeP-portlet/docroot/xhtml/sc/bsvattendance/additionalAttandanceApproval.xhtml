@@ -70,7 +70,7 @@
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.retriveUserName(qTScheduleDetailBackingBean.managedBean.qt.createdBy)}"
 							disabled="true" readonly="true" size="80" /></td>
-					<td style="width: 250px;"><p:outputLabel value="Request Date" /></td>
+					<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.sc.request.date']}" /></td>
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.scQtApproval.requestDate}"
 							disabled="true" readonly="true" size="30">
@@ -83,7 +83,7 @@
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.managedBean.qt.qtNo}"
 							disabled="true" readonly="true" size="30" /></td>
-					<td><p:outputLabel value="Procurement Mode" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 					<td><p:inputText
 							value="#{qTScheduleDetailBackingBean.getParameterDesc(qTScheduleDetailBackingBean.managedBean.qt.procurementMode)}"
 							disabled="true" readonly="true" size="30" /></td>
@@ -117,7 +117,7 @@
 					style="font-weight:bold;text-align: left;" />
 
 				<h:outputText
-					value="At Least #{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
+					value="#{lbl['lbl.sc.qt.atleast']} #{qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.minBriefingAttend} Attandence required for Briefing and SiteVisit"
 					rendered="#{!qTScheduleDetailBackingBean.managedBean.qtBriefing.scQtBsv.allBriefingReq}"
 					style="font-weight:bold;text-align: left;" />
 
@@ -178,7 +178,7 @@
 
 			</p:dataTable>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.remark.supporting.doc']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.remarks']}" toggleable="true"
 			id="bpkremarksupDtls">
 			<table style="width: 100%" id="bpkremarksupDtlslist">
 				<tr>

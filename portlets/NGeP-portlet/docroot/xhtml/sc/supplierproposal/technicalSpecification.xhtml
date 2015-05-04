@@ -9,6 +9,9 @@
 
 
 	<p:panel id="techspecificationid">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
+			
 		<ac:templateSpec
 			templateSpecBean="#{supplierProposalDetailBackingBean.managedBean.templateSpecBean}" />
 	</p:panel>

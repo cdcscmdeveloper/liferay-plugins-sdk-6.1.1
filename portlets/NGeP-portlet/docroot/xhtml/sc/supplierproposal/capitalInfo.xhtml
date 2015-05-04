@@ -21,7 +21,7 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
 					<td style="width: 160px;"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.paid.capital']}" /></td>
+							value="#{lbl['lbl.sc.paid.up.capital.ringgit']}" /></td>
 					<td><p:inputText disabled="true" readonly="true" size="30"
 							value="#{smAppl.smCompanyBasic.paidUpCapital}">
 							<f:convertNumber
@@ -63,7 +63,7 @@
 				<p:row>
 					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.composition.capital.distribution']}</p:column>
 					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.spec.no.of.members']}</p:column>
-					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.planned.amount']}</p:column>
+					<p:column styleClass="panelGridHeaders" colspan="1">#{lbl['lbl.sc.amount']}</p:column>
 					<p:column styleClass="panelGridHeaders">(%)</p:column>
 				</p:row>
 			</f:facet>
@@ -150,7 +150,7 @@
 					<p:outputLabel style="float : left;"
 						value="#{(sharePerson.pmCountry.countryCode eq 'MY') ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.planned.amount']}" style="width : 15%;">
+				<p:column headerText="#{lbl['lbl.sc.amount']}" style="width : 15%;">
 					<p:outputLabel value="#{sharePerson.shareAmt}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}" style="width : 15%;">
@@ -173,7 +173,7 @@
 				<p:column headerText="#{lbl['lbl.sc.spec.roc.num']}" style="width : 25%;">
 					<p:outputLabel value="#{shareCompany.regNo}"></p:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.planned.amount']}" style="width : 25%;">
+				<p:column headerText="#{lbl['lbl.sc.amount']}" style="width : 25%;">
 					<p:outputLabel value="#{shareCompany.shareAmt}"></p:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.spec.share.holding']}" style="width : 25%;">

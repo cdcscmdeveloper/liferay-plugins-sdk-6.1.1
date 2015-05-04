@@ -28,12 +28,12 @@
 			</tr>
 			<tr>
 				<td>
-				<p:outputLabel value="#{lbl['lbl.sc.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
+				<p:outputLabel value="#{lbl['lbl.sc.document.title']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td colspan="3">
 					<table>
 						<tr>
 							<td><p:inputText size="95" id="title" required="true" maxlength="100"
-									label="#{lbl['lbl.sc.title']}"
+									label="#{lbl['lbl.sc.document.title']}"
 									disabled="#{!isPendingSubmissionStatus}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
 									style="margin-bottom: 5px;" /></td>

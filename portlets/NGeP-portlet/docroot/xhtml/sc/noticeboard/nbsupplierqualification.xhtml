@@ -65,7 +65,13 @@
 				<p:column headerText="#{lbl['lbl.sc.notice.board.requirement']}" style="width:50%;">
 					<h:outputText
 						value="#{fn:replace(qulificationBean.qtRequirement,':','&lt;/br&gt;')}"
-						size="50" escape="false" />
+						escape="false"
+						rendered="#{!qulificationBean.qtRequirementLabel}" />
+						
+					<ui:param name="requirementLbL" value="lbl.sc.notice.board.requirement.#{qulificationBean.qtRequirement}" />
+					<h:outputText
+						value="#{lbl[requirementLbL]}"
+						rendered="#{qulificationBean.qtRequirementLabel}" />
 				</p:column>
 				
 				
@@ -97,12 +103,20 @@
 			</p:dataTable>
 
 			<p:spacer height="20px"></p:spacer>
-			<div style="text-align: center;">
-				<h:outputText value="#{lbl['lbl.sc.notice.board.supplier.criteria.qualify']}"
+			<div style="text-align: center;" title="#{lbl['lbl.sc.notice.board.supplier.criteria.tooltip']}">
+				<h:outputText value="#{lbl['lbl.sc.notice.board.supplier.criteria.checking.date']} "
+					style="font-size:18px;" />
+					
+				<h:outputText value="#{DateUtils.getCurrentDate()}"
+					style="font-size:18px;">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
+				</h:outputText>
+					
+				<h:outputText value=", #{lbl['lbl.sc.notice.board.supplier.criteria.qualified']}"
 					style="font-size:18px;" escape="false"
 					rendered="#{noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 
-				<h:outputText value="#{lbl['lbl.sc.notice.board.supplier.criteria.disqualify']}"
+				<h:outputText value=", #{lbl['lbl.sc.notice.board.supplier.criteria.disqualified']}"
 					style="font-size:18px;" escape="false"
 					rendered="#{!noticeBoardBackingBean.managedBean.qualified}"></h:outputText>
 			</div>

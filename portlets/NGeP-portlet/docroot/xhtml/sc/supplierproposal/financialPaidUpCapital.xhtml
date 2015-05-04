@@ -12,7 +12,7 @@
 		toggleable="true">
 		<table>
 			<tr>
-				<td><h:outputLabel
+				<td style="width: 150px;"><h:outputLabel
 						value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
 				</td>
 				<td><p:inputText style="text-align:right"
@@ -23,7 +23,7 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td style="width: 80px;"><h:outputText
+				<td><h:outputText
 						value="#{lbl['lbl.sc.auto.score']}"
 						rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
 						rendered="#{checklistScoreType eq '2' and !pageDisable}">

@@ -9,13 +9,13 @@
 
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal eq 'true'}">
-			
-			#{lbl['lbl.sc.sp.note2']} 
-			<br />
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.reqforsample.instruction']}" escape="false" />
+		<br />
 
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.qt.sampleClosingDate}"
 						size="30" disabled="true" readonly="true">
@@ -29,7 +29,7 @@
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtSampleSubmissionList}"
 			styleClass="submissionlist" rowKey="#{samplesubmissiondtl}">
 
-			<p:column headerText="#{lbl['lbl.sc.sp.zone']}">
+			<p:column headerText="#{lbl['lbl.sc.qt.zone.location']}">
 				<h:outputText value="#{samplesubmissiondtl.tplSpecZoneDtl.zoneName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.address']}">
@@ -40,8 +40,7 @@
 
 		<br />
 			
-			#{lbl['lbl.sc.sp.note3']}
-			
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
 			<br />
 
 		<table>
@@ -57,12 +56,12 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.sp.reqforsample']}" toggleable="true"
 		rendered="#{supplierProposalDetailBackingBean.managedBean.qt.zonal ne 'true'}">
+		
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.reqforsample.instruction']}" escape="false" />
+		
 		<table>
 			<tr>
-				<td colspan="4">#{lbl['lbl.sc.sp.note2']}</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.sp.sampleclosingdt']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sample.closingdate']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{supplierProposalDetailBackingBean.managedBean.qt.closingDate}"
 						size="30" disabled="true" readonly="true">
@@ -79,7 +78,10 @@
 				<td />
 			</tr>
 			<tr>
-				<td colspan="4"><br />#{lbl['lbl.sc.sp.note3']}</td>
+				<td colspan="4">
+					<br />
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.printlabel.instruction']}" escape="false" />
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.label.no']}" /></td>
