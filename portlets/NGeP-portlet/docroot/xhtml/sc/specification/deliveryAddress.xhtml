@@ -12,6 +12,8 @@
 			<p:accordionPanel id="panelNoaccordpnllist" dynamic="true"
 				value="#{specificationBackingBean.managedBean.deliveryLocBean}"
 				var="zonePnlList">
+				<p:ajax event="tabChange"
+					listener="#{specificationBackingBean.deliveryDetailsZonesTabChange}" />
 				<c:if
 					test="#{specificationBackingBean.managedBean.scQt.panel ne 'false'}">
 					<ui:param name="zoneName"
