@@ -3493,3 +3493,11 @@ table.rptTbl {
 	font-weight: bold;
 	float: left
 }
+
+.columnWidth10 {
+	width: 10%;
+}
+
+.columnWidth40 {
+	width: 40%;
+}
