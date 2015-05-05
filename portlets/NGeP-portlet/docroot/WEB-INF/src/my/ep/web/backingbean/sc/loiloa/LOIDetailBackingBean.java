@@ -1105,32 +1105,6 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * Edits the loi action.
-	 * page navigate to loi details page.
-	 * @param scLoi the sc loi
-	 * @return the string
-	 */
-	public String editLOIAction(ScLoi scLoi) {
-		debugLogger("editLOIAction");
-		try {
-			String language = new FacesScopes().getUserLocale().getLanguage();
-
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setScLoi(scLoi);
-			reqDTO.setLanguageCode(language);
-
-			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
-
-			populateLOIDetails(resDTO);
-
-		} finally {
-			//qtAwardSO = null;
-		}
-
-		return QTConstants.LOI_PAGE;
-	}
-
-	/**
 	 * Populate loi details.
 	 *
 	 * @param resDTO the res dto
@@ -1880,6 +1854,16 @@ public class LOIDetailBackingBean extends
 				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_INTENT, 
 						scLoi.getLoiId(), scLoi.getLoiNo());
 			}
+			
+			// spki 
+			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
+				String originalText = prepareOriginalText(scLoi.getScLoiLoa().getSmSupplier());
+				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+				pmDigiSign.setSignedData(signedData);
+			}
+			awardSupplierReqDTO.setPmDigiSign(pmDigiSign);
 
 			 awardSupplierResDTO = getQtAwardSO()
 					.saveLOIDtl(awardSupplierReqDTO);
@@ -1934,15 +1918,71 @@ public class LOIDetailBackingBean extends
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
+			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value()) || isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} 
+		}  else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 
-			} else if(isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}
 		} else {
 			updateBPMTask(outcome, null);
 		}	
+	}
+
+	
+	  /**
+  	 * Prepare original text.
+  	 *
+  	 * @param smSupplier the sm supplier
+  	 * @return the string
+  	 */
+  	private String prepareOriginalText(SmSupplier  smSupplier) {
+		  FacesScopes facesScopes = new FacesScopes();
+		  StringBuilder sb = new StringBuilder();
+		  String countryCode ="";
+		  String orginalText = "";
+
+		  if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
+				  && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+			  List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+			  for (SmCompanyAddress compaAddress : companyAddress) {
+				  if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					  countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+					  break;
+				  }
+			  }
+		  }
+		  sb.append(getManagedBean().getScLoi().getLoiNo())
+		  .append("|")
+		  .append(facesScopes.getUserSessionBean().getIdentificationNo())
+		  .append("|")
+		  .append(smSupplier.getRegNo())
+		  .append("|")
+		  .append(countryCode);
+		  orginalText  = sb.toString();
+		  return orginalText;
+	  }
+	/**
+	 * The method used to verify the login user is supplier.
+	 * 
+	 * @return true, if login user is supplier
+	 *         false, if login user is not supplier
+     */
+	public boolean isSupplierRole() {
+		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()));
+	}
+	
+	/**
+     * This method used to retrieve login user information.
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 	
 	/**
@@ -3709,6 +3749,14 @@ public class LOIDetailBackingBean extends
 		updateBPMTask(this.getManagedBean().getAction(), digiSign);
 	}
 	
+	
+	/**
+	 * Spki sign action.
+	 * @param digiSign the digi sign
+	 */
+	public void spkiSignAction(PmDigiSign digiSign) {
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
 	/**
 	 * Gpki sign multi loi action.
 	 * Authenticating gpki before update bpm.
@@ -3759,7 +3807,8 @@ public class LOIDetailBackingBean extends
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
 	}
-
+	
+	
 	/**
 	 * Checks if is flag.
 	 *

@@ -60,6 +60,7 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
@@ -82,6 +83,7 @@ import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperienceNCheckList;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalScore;
 import my.ep.persistence.entity.sc.supplierproposal.ScSlAttachment;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
@@ -90,6 +92,7 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.type.pm.AddressType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
@@ -318,7 +321,7 @@ public class SPDetailBackingBean extends
 	/**
 	 * Method to submit the Supplier Proposal details
 	 */
-	public void submitSupplierProposal() {
+	public void submitSupplierProposal(PmDigiSign digiSign) {
 		debugLogger("submitSupplierProposal");
 
 		IQTProposalSO proposalSO = null;
@@ -344,6 +347,18 @@ public class SPDetailBackingBean extends
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
+			
+			
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
+						scQtProposal.getQtProposalId(), scQtProposal.getProposalNo());
+			}
+			// spki 
+			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
+			String originalText = prepareOriginalText(scQtProposal.getScQtSupplier().getSmSupplier());
+			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+			digiSign.setSignedData(signedData);
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
@@ -358,6 +373,7 @@ public class SPDetailBackingBean extends
 					.isAgreeWithIntegrityPact());
 			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
 					.isAgreeWithOthersTermsConditions());
+			reqDTO.setDigiSignData(digiSign);
 
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -372,6 +388,40 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 	}
+	
+	/**
+	 * Prepare original text.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
+	private String prepareOriginalText(SmSupplier  smSupplier) {
+		  FacesScopes facesScopes = new FacesScopes();
+		  StringBuilder sb = new StringBuilder();
+		  String countryCode ="";
+		  String orginalText = "";
+
+		  if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
+				  && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+			  List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+			  for (SmCompanyAddress compaAddress : companyAddress) {
+				  if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					  countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+					  break;
+				  }
+			  }
+		  }
+		  sb.append(getManagedBean().getQtProposal().getProposalNo())
+		  .append("|")
+		  .append(facesScopes.getUserSessionBean().getIdentificationNo())
+		  .append("|")
+		  .append(smSupplier.getRegNo())
+		  .append("|")
+		  .append(countryCode);
+		  orginalText  = sb.toString();
+		  return orginalText;
+	  }
 
 	private void commonMessageAcknowledmentPage(String messageId,
 			String variable1, String variable2) {
@@ -3645,6 +3695,13 @@ public class SPDetailBackingBean extends
 			}
 			downloadAllFiles("NGeP-QT-Documents", scAttachments);
 		}
+	}
+
+	/**
+	 * Spki sign action.
+	 */
+	public void spkiSignAction() {
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 
 	
