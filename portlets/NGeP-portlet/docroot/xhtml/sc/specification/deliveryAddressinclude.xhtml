@@ -8,15 +8,33 @@
 
 	<p:panel header="#{lbl['lbl.sc.spec.delivery.service.address']}"
 		toggleable="true" styleClass="deliveryUpdate">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.delivery.service.address.instruction']}" escape="false" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.delivery.service.address.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="pjtDelivered" var="delivery" editable="true"
 			rows="10" style="width:100%" widgetVar="deliveryService"
 			rowIndexVar="index" value="#{deliveryList}"
 			selection="#{selectDeliveryList}" rowKey="#{delivery}">
 			<ac:paginator for="pjtDelivered" />
-			<p:column selectionMode="multiple" style="width:2%" />
+
+			<p:column style="width:2px;">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
+						<p:ajax partialSubmit="true" process="@this" update="pjtDelivered"
+							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, deliveryList)}" />
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{delivery.selected}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}">
+					<p:ajax partialSubmit="true" process="@this" update="@this" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+
+
 			<p:column headerText="#{lbl['lbl.sc.ptj']}"
 				style="width:25%;white-space: normal;">
 				<ui:fragment
@@ -38,9 +56,23 @@
 				action="#{specificationBackingBean.deliveryList(zonePnlList.tplSpecZoneDtl)}"
 				oncomplete="deliveryAddress.show();" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this,pjtDelivered" partialSubmit="true" update="@form"
+				process="@this,pjtDelivered" partialSubmit="true"
 				disabled="#{specificationBackingBean.managedBean.readOnly}"
-				actionListener="#{specificationBackingBean.deleteDeliveryZone(zoneName)}" />
+				oncomplete="deliveryAddressDeletePopUp.show();"
+				update="@([id$=#{deliveryAddressDeleteId}])">
+				<f:setPropertyActionListener
+					target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
+					value="#{false}" />
+			</p:commandButton>
 		</div>
+
+		<ui:param name="deliveryAddressDeleteId"
+			value="deliveryAddressDeleteId"></ui:param>
+
+		<ac:confirmationPopup id="#{deliveryAddressDeleteId}"
+			widget="deliveryAddressDeletePopUp" width="400" height="200"
+			okAction="specificationBackingBean.deleteDeliveryZone"
+			title="#{lbl['lbl.sc.spec.delivery.service.address']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}" update="@form" />
 	</p:panel>
 </ui:composition>
