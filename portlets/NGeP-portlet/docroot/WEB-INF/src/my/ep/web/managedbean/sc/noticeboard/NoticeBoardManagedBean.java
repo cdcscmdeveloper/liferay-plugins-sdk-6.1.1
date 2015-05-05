@@ -1,11 +1,13 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.managedbean.sc.noticeboard;
 
+
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.constant.pm.ParameterConst;
@@ -156,6 +158,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String mofNo = null;
 	private String supplierMofNo;
 	private boolean validMofNo;
+	private QtAmendMentBean qtAmendMentBean;
+	private String changedDate;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1079,6 +1083,33 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.validMofNo = validMofNo;
 	}
 
-	
+	/**
+	 * @return the qtAmendMentBean
+	 */
+	public QtAmendMentBean getQtAmendMentBean() {
+		return qtAmendMentBean;
+	}
+
+	/**
+	 * @param qtAmendMentBean the qtAmendMentBean to set
+	 */
+	public void setQtAmendMentBean(QtAmendMentBean qtAmendMentBean) {
+		this.qtAmendMentBean = qtAmendMentBean;
+	}
+
+	/**
+	 * @return the changedDate
+	 */
+	public String getChangedDate() {
+		return changedDate;
+	}
+
+	/**
+	 * @param changedDate the changedDate to set
+	 */
+	public void setChangedDate(String changedDate) {
+		this.changedDate = changedDate;
+	}
+
 
 }

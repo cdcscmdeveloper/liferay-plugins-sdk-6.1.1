@@ -1,6 +1,9 @@
 /* Copyright © 2014 Archisoft. All rights reserved. */
 package my.ep.web.backingbean.sc.noticeboard;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -76,6 +80,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
@@ -103,6 +108,7 @@ import my.ep.web.bean.tree.EpDefaultTreeNode;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.noticeboard.NoticeBoardManagedBean;
 import my.ep.web.type.sc.quationtender.NoticeBoardSection;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -263,7 +269,18 @@ public class NoticeBoardBackingBean extends
 			}
 
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
-
+			String selectedTab = getManagedBean().getSelectedTab();
+			this.getManagedBean().setChangedDate(null);
+			this.getManagedBean().setQtAmendMentBean(null);
+			if (ParameterConst.NOTICE_BOARD_STATUS_CHANGES.equals(selectedTab)) {
+				CommonUtils commonUtils = new CommonUtils();
+				this.getManagedBean().setChangedDate(
+						resDTO.getScQtAmend() != null ? commonUtils.getFormattedDate(new Date(resDTO
+								.getScQtAmend().getChangedDate().getTime()),CommonConstants.DEFAULT_12HR_DATETIME_FORMAT)
+								: null);
+				this.getManagedBean().setQtAmendMentBean(
+						getAmendMentDtls(resDTO));
+			}
 		} finally {
 			qtNoticeBoardSO = null;
 		}
@@ -2268,5 +2285,30 @@ public class NoticeBoardBackingBean extends
 			supplierSearchSO = null;
 		}
 		
+	}
+	
+	private QtAmendMentBean getAmendMentDtls(NoticeBoardResDTO resDTO) {
+
+		ByteArrayInputStream byteArrayInputStream = null;
+		ObjectInputStream objectInputStream = null;
+		QtAmendMentBean amendMentBean = null;
+		ScQtAmend scQtAmend = resDTO.getScQtAmend();
+
+		if (scQtAmend != null) {
+			byteArrayInputStream = new ByteArrayInputStream(
+					scQtAmend.getAmendContent());
+			try {
+				objectInputStream = new ObjectInputStream(byteArrayInputStream);
+				amendMentBean = (QtAmendMentBean) objectInputStream
+						.readObject();
+			} catch (IOException e) {
+				log.error("Problem while doing deserialization"
+						+ e.getMessage());
+			} catch (ClassNotFoundException e) {
+				log.error("Problem while doing deserialization"
+						+ e.getMessage());
+			}
+		}
+		return amendMentBean;
 	}
 }
