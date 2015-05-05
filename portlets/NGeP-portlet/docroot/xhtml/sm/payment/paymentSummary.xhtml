@@ -26,13 +26,17 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 	
 	<p:outputPanel rendered="#{paymentBackingBean.managedBean.softcertPayment}">
-		<div align="left" class="header-info">
-			<br />
+		<div align="left">
 			<table style="width: 100%">
-				<tr><td><p:outputLabel value="#{lbl['lbl.sm.gst.disclaimer']}" styleClass="outputLabel-view" /></td></tr>
+				<tr>
+					<td>
+						<p:outputLabel value="** #{lbl['lbl.sm.gst.disclaimer']}" 
+							style="background-color:whitesmoke;text-align: left !important;float: left;"/>
+					</td>
+				</tr>
 			</table>
-			<br />
 		</div>
+		<br />
 	</p:outputPanel>
 	
 	<p:panel header="#{paymentBackingBean.managedBean.softcertPayment?lbl['lbl.sm.soft.cert']:lbl['lbl.sm.payment.item']}">
