@@ -45,7 +45,7 @@ public class ReactivateBasicBackingBean extends
 
 		try {
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
-					.reactivateBasicAccount(reqDTO);
+					.requestToReactivateBasicAccount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				SmCommonUtil.redirectToPage(
