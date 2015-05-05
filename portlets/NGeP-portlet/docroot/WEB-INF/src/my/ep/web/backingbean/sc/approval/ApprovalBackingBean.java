@@ -511,6 +511,14 @@ public class ApprovalBackingBean extends
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
 			
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
+			
+			if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+					.equalsIgnoreCase(this.getManagedBean().getQt().getQtType())) {
+				if (null != this.getManagedBean().getQt().getScQtSuppliers()) {
+					this.getManagedBean().setQtSupplierList(
+							this.getManagedBean().getQt().getScQtSuppliers());
+				}
+			}
 
 		} else if (SCProcessNameConst.APPROVE_CANCELATION
 				.equalsIgnoreCase(taskName)) {
