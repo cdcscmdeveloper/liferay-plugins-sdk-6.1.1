@@ -47,8 +47,8 @@
 				
 				<p:selectOneMenu id="decisiontypeids" value="#{requestdetails.approverAction.parameterId}" required="true"
 					label="#{lbl['lbl.sc.decision']}"
-					style="width: 178px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode eq 'RT'}">
-					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.approvalDecisionType)}" />
+					style="width: 250px;margin-bottom: 5px;" rendered="#{requestdetails.approvalType.parameterCode eq 'RT'}">
+					<f:selectItems value="#{approvalBackingBean.getDropdownValues(ParameterTypeConst.restrictedApprovalDecisionType)}" />
 					<p:ajax event="change" listener="#{approvalBackingBean.updatePmParameter(requestdetails)}" />
 				</p:selectOneMenu><p:message id="decisiontypeidsMsg" for="decisiontypeids"
 										display="icon" />
