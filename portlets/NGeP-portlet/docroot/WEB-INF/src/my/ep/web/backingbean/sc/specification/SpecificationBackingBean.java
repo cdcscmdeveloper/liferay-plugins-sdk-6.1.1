@@ -3499,8 +3499,13 @@ public class SpecificationBackingBean extends
 				} else {
 					this.getManagedBean().setDeliveryZones(
 							resDTO.getSpecZoneDtls());
+
 					for (TplSpecZoneDtl tplSpecZoneDtl : this.getManagedBean()
 							.getDeliveryZones()) {
+						this.getManagedBean()
+								.setTplSpecZoneDtl(
+										this.getManagedBean()
+												.getDeliveryZones().get(0));
 						reqDTO.setQtId(this.getManagedBean().getScQt()
 								.getQtId());
 						reqDTO.setZoneId(tplSpecZoneDtl.getSpecZoneId());
@@ -8151,9 +8156,14 @@ public class SpecificationBackingBean extends
 	 * @param deliveryZoneName
 	 *            the delivery zone name
 	 */
-	public void deleteDeliveryZone(String deliveryZoneName) {
+	public void deleteDeliveryZone() {
 		log.info("deleteDeliveryZone - START");
 		if (getManagedBean().getScQt().isZonal()) {
+			String deliveryZoneName = "";
+			if (null != this.getManagedBean().getTplSpecZoneDtl()) {
+				deliveryZoneName = this.getManagedBean().getTplSpecZoneDtl()
+						.getZoneName();
+			}
 			List<BriefingZoneBean> deliveryBean = this.getManagedBean()
 					.getDeliveryLocBean();
 			List<ScQtDeliveryLoc> locationRemoveList = this.getManagedBean()
@@ -8162,50 +8172,55 @@ public class SpecificationBackingBean extends
 				locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
 			}
 			if (!this.getManagedBean().getScQt().isPanel()) {
+				List<ScQtDeliveryLoc> selectRemoveList = new ArrayList<ScQtDeliveryLoc>();
 				for (BriefingZoneBean zonebean : deliveryBean) {
 					if (zonebean.getTplSpecZoneDtl().getZoneName()
 							.equalsIgnoreCase(deliveryZoneName)) {
 						List<ScQtDeliveryLoc> deliveryList = zonebean
 								.getDeliveryLocList();
-						List<ScQtDeliveryLoc> selectdeliveryList = this
-								.getManagedBean().getSelectDeliveryList();
-						if (null == selectdeliveryList
-								|| selectdeliveryList.isEmpty()) {
-							throw new EpException(MessageConst.ERROR_760146);
-						}
-						locationRemoveList.addAll(selectdeliveryList);
-						if (deliveryList.size() == selectdeliveryList.size()) {
-							deliveryList.clear();
-						} else {
-							for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
-								delLoc.setDeleted(true);
-								deliveryList.remove(delLoc);
+						for (ScQtDeliveryLoc entity : deliveryList) {
+							if (entity.isSelected()) {
+								entity.setDeleted(true);
+								selectRemoveList.add(entity);
 							}
 						}
+
+						if (null == selectRemoveList
+								|| selectRemoveList.isEmpty()) {
+							throw new EpException(MessageConst.ERROR_760146);
+						}
+						locationRemoveList.addAll(selectRemoveList);
+						for (ScQtDeliveryLoc delLoc : selectRemoveList) {
+							delLoc.setDeleted(true);
+							deliveryList.remove(delLoc);
+						}
+
 					}
 					this.getManagedBean().setDeliveryLocRemoveList(
 							locationRemoveList);
 				}
 			} else {
+				List<ScQtDeliveryLoc> selectRemoveList = new ArrayList<ScQtDeliveryLoc>();
 				for (BriefingZoneBean zonebean : deliveryBean) {
 					if (zonebean.getTplSpecZoneDtl().getPanelZone().getName()
 							.equalsIgnoreCase(deliveryZoneName)) {
 						List<ScQtDeliveryLoc> deliveryList = zonebean
 								.getDeliveryLocList();
-						List<ScQtDeliveryLoc> selectdeliveryList = this
-								.getManagedBean().getSelectDeliveryList();
-						if (null == selectdeliveryList
-								|| selectdeliveryList.isEmpty()) {
+						for (ScQtDeliveryLoc entity : deliveryList) {
+							if (entity.isSelected()) {
+								entity.setDeleted(true);
+								selectRemoveList.add(entity);
+							}
+						}
+
+						if (null == selectRemoveList
+								|| selectRemoveList.isEmpty()) {
 							throw new EpException(MessageConst.ERROR_760146);
 						}
-						locationRemoveList.addAll(selectdeliveryList);
-						if (deliveryList.size() == selectdeliveryList.size()) {
-							deliveryList.clear();
-						} else {
-							for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
-								delLoc.setDeleted(true);
-								deliveryList.remove(delLoc);
-							}
+						locationRemoveList.addAll(selectRemoveList);
+						for (ScQtDeliveryLoc delLoc : selectRemoveList) {
+							delLoc.setDeleted(true);
+							deliveryList.remove(delLoc);
 						}
 					}
 					this.getManagedBean().setDeliveryLocRemoveList(
@@ -8213,6 +8228,7 @@ public class SpecificationBackingBean extends
 				}
 			}
 		} else {
+			List<ScQtDeliveryLoc> selectRemoveList = new ArrayList<ScQtDeliveryLoc>();
 			List<ScQtDeliveryLoc> nonzone = this.getManagedBean()
 					.getDeliveryNonZoneList();
 			if (null == nonzone) {
@@ -8223,22 +8239,24 @@ public class SpecificationBackingBean extends
 			if (null == locationRemoveList) {
 				locationRemoveList = new ArrayList<ScQtDeliveryLoc>();
 			}
-			List<ScQtDeliveryLoc> selectdeliveryList = this.getManagedBean()
-					.getSelectDeliveryList();
-			if (null == selectdeliveryList || selectdeliveryList.isEmpty()) {
+			for (ScQtDeliveryLoc entity : nonzone) {
+				if (entity.isSelected()) {
+					entity.setDeleted(true);
+					selectRemoveList.add(entity);
+				}
+			}
+
+			if (null == selectRemoveList || selectRemoveList.isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760146);
 			}
-			locationRemoveList.addAll(selectdeliveryList);
-			if (nonzone.size() == selectdeliveryList.size()) {
-				nonzone.clear();
-			} else {
-				for (ScQtDeliveryLoc delLoc : selectdeliveryList) {
-					delLoc.setDeleted(true);
-					nonzone.remove(delLoc);
-				}
+			locationRemoveList.addAll(selectRemoveList);
+			for (ScQtDeliveryLoc delLoc : selectRemoveList) {
+				delLoc.setDeleted(true);
+				nonzone.remove(delLoc);
 			}
 			this.getManagedBean().setDeliveryLocRemoveList(locationRemoveList);
 		}
+
 		log.info("deleteDeliveryZone - END");
 	}
 
@@ -15252,12 +15270,18 @@ public class SpecificationBackingBean extends
 				.getMarkDeletedTechChecklist());
 
 	}
-	
-	// delete Financial Checklist List
-		public void deleteFinancialCheckList() {
-			markDeleteSelectedRowsActionById(this.getManagedBean()
-					.getScQtCheckSt2financeProposalList(), this.getManagedBean()
-					.getMarkDeletedFinChecklist());
 
-		}
+	// delete Financial Checklist List
+	public void deleteFinancialCheckList() {
+		markDeleteSelectedRowsActionById(this.getManagedBean()
+				.getScQtCheckSt2financeProposalList(), this.getManagedBean()
+				.getMarkDeletedFinChecklist());
+
+	}
+
+	//changed delivery details tabs
+	public void deliveryDetailsZonesTabChange(TabChangeEvent event) {
+		BriefingZoneBean specZoneDtl = (BriefingZoneBean) event.getData();
+		this.getManagedBean().setTplSpecZoneDtl(specZoneDtl.getTplSpecZoneDtl());
+	}
 }
