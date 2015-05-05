@@ -11,17 +11,21 @@
 		<cc:attribute name="update" required="true" default="@this" />
 		<cc:attribute name="title" default="" />
 		<cc:attribute name="content" default="" />
-		<cc:attribute name="postSignAction" method-signature="void action()" />
+		<!-- <cc:attribute name="postSignAction" method-signature="void action()" /> -->
 		<cc:attribute name="widget" default="" />
+		<cc:attribute name="okAction" required="true" default="" />
+		<cc:attribute name="width" default="400" />
+		<cc:attribute name="height" default="200" />
 	</cc:interface>
 
 	<cc:implementation>
 		<ui:param name="confirmationheader" value="#{cc.attrs.title}" />
 		<ui:param name="confirmationContent" value="#{cc.attrs.content}" />
-		<ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" />
+		<!-- <ui:param name="confirmationMethod" value="#{cc.attrs.postSignAction}" /> -->
 		<p:dialog id="#{cc.attrs.id}" widgetVar="#{cc.attrs.widget}"
-			header="#{confirmationheader}" resizable="false" width="400"
-			height="200" closable="false">
+			header="#{confirmationheader}" resizable="false"
+			width="#{cc.attrs.width}" height="#{cc.attrs.height}"
+			closable="false">
 			<table>
 				<tr>
 					<td align="center"><p:outputLabel
@@ -31,8 +35,8 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" process="@form"
-					action="#{confirmationMethod}" update="#{cc.attrs.update}"
-					oncomplete="#{cc.attrs.widget}.hide();" />
+					action="#{cofirmationPopUpBackingBean.okAction(cc.attrs.okAction)}"
+					oncomplete="#{cc.attrs.widget}.hide();" update="#{cc.attrs.update}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					oncomplete="#{cc.attrs.widget}.hide();" />
 			</div>
