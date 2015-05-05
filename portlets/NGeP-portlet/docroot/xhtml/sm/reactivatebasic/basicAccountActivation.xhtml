@@ -21,6 +21,17 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	
+	<div align="left">
+		<table style="width: 100%">
+			<tr>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.proceedmsg']}" 
+						style="background-color:whitesmoke;text-align: left !important;float: left;"/>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
 	<table>
 		<tr>
 			<td>
@@ -37,7 +48,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.reactivate.basicacc.loginid']}" /></td>
+			<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.loginid']} :" /></td>
 			<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.loginId}" /></td>
 		</tr>
 		
