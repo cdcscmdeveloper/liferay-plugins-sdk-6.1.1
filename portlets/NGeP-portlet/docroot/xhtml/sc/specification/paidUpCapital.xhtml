@@ -14,7 +14,9 @@
 
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
-
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="financialPaidUpCapitalsScore" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"></p:messages>
 
@@ -25,7 +27,8 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;"
+				style="float:right;" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
@@ -36,6 +39,9 @@
 
 
 		</div>
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
 
 		<ui:include src="checklistHeader.xhtml" />
 
@@ -45,12 +51,14 @@
 			<h:panelGrid columns="3">
 				<h:outputLabel value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
 				<p:inputText disabled="true"></p:inputText>
-				<ac:iconTooltip value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" />
+				<ac:iconTooltip
+					value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" />
 			</h:panelGrid>
 		</p:panel>
 		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialPaidUpCapitalScore"
-			header="#{lbl['lbl.sc.spec.score.paid.up.capital']}" toggleable="true"
+			header="#{lbl['lbl.sc.spec.score.paid.up.capital']}"
+			toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
@@ -70,8 +78,8 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="paidUpCapitalAutoScoreId"
 							for="paidUpCapitalAutoScore" display="icon"></p:message></td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 					</td>
 				</tr>
 			</table>
@@ -100,14 +108,24 @@
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
-								update="#{scoringPnlId}">
+								oncomplete="financialPaidUpCapitalDeletePopUp.show();"
+								update="@([id$=#{financialPaidupCapitalDeleteId}])">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 									value="#{false}" />
 							</p:commandButton>
 
 						</div>
+						<ui:param name="financialPaidupCapitalDeleteId"
+							value="financialPaidupCapitalDeleteId"></ui:param>
+
+						<ac:confirmationPopup id="#{financialPaidupCapitalDeleteId}"
+							widget="financialPaidUpCapitalDeletePopUp" width="400"
+							height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreContrats"
+							title="#{lbl['lbl.sc.spec.paid.up.capital']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 
 				</h:panelGroup>

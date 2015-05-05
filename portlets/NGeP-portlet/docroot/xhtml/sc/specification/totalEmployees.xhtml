@@ -14,6 +14,9 @@
 
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="TotalEmployees" showDetail="true" showSummary="false"
 			autoUpdate="true" closable="true"></p:messages>
 		<div>
@@ -23,7 +26,8 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;"
+				style="float:right;" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
@@ -33,23 +37,31 @@
 
 
 		</div>
-		
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
 		<ui:include src="checklistHeader.xhtml" />
-		
+
 		<p:spacer height="20" />
 
 		<p:panel header="#{lbl['lbl.sc.spec.total.num.employees']}">
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.total.num.employees.instruction']}" escape="false" />
-			
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.total.num.employees.instruction']}"
+				escape="false" />
+
 			<h:panelGrid columns="2">
 				<p:selectOneRadio
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					value="#{specificationBackingBean.managedBean.scQtChecklist.scQtCheckListValue.allEmployee}">
-					<f:selectItem itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.this.project']}"
+					<f:selectItem
+						itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.this.project']}"
 						itemValue="false"></f:selectItem>
-					<f:selectItem itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.all.employees']}" itemValue="true"></f:selectItem>
+					<f:selectItem
+						itemLabel="#{lbl['lbl.sc.spec.total.num.employees.for.all.employees']}"
+						itemValue="true"></f:selectItem>
 				</p:selectOneRadio>
-				<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.num.employees.tooltip']}" />
+				<ac:iconTooltip
+					value="#{lbl['lbl.sc.spec.total.num.employees.tooltip']}" />
 			</h:panelGrid>
 
 			<!-- <p:spacer height="25"></p:spacer>
@@ -59,7 +71,7 @@
 				<p:inputText readonly="true"></p:inputText>
 			</h:panelGrid> -->
 		</p:panel>
-		
+
 		<p:panel id="technicalTotalEmployees"
 			header="#{lbl['lbl.sc.scoring.tot.employees']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
@@ -81,8 +93,8 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techTotalEmployeeAutoScoreMsg"
 							for="techTotalEmployeeAutoScore" display="icon"></p:message></td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 					</td>
 				</tr>
 			</table>
@@ -108,16 +120,26 @@
 								oncomplete="scoreWidget.paginator.endLink.click();"
 								update="#{scoringPnlId}"
 								actionListener="#{specificationBackingBean.addScoring(21)}" />
-							<p:commandButton value="#{lbl['lbl.btn.delete']}"
-								process="@this" partialSubmit="true"
+							<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+								partialSubmit="true"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
-								update="#{scoringPnlId}">
+								oncomplete="technicalNumberOfEmployeesDeletePopUp.show();"
+								update="@([id$=#{technicalNumberofEmployeesDeleteId}])">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 									value="#{false}" />
 							</p:commandButton>
 						</div>
+						<ui:param name="technicalNumberofEmployeesDeleteId"
+							value="technicalNumberofEmployeesDeleteId"></ui:param>
+
+						<ac:confirmationPopup id="#{technicalNumberofEmployeesDeleteId}"
+							widget="technicalNumberOfEmployeesDeletePopUp" width="400"
+							height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreContrats"
+							title="#{lbl['lbl.sc.spec.total.num.employees']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
 				<p:spacer height="5"></p:spacer>

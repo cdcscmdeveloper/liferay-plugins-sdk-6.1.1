@@ -8,8 +8,11 @@
 
 	<table style="border: 0px; width: 100%">
 		<tr>
-			<td width="100%"><p:messages id="speccreatemessages"
-					showDetail="true" showSummary="false"
+			<td width="100%"><p:blockUI block=":form"
+					widgetVar="blockWidget">
+					<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+				</p:blockUI> <p:messages id="speccreatemessages" showDetail="true"
+					showSummary="false"
 					autoUpdate="#{specificationBackingBean.managedBean.autoUpdate}"
 					closable="true" /> <ui:include
 					src="/xhtml/sc/specification/specificationCommitteeButtons.xhtml" />

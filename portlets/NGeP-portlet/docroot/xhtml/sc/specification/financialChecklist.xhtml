@@ -10,10 +10,13 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.spec.finance.check.list']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.spec.finance.check.list.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.spec.finance.check.list.tooltip']}" />
 		</f:facet>
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}" escape="false" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
@@ -360,8 +363,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
-				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2financeProposalList, specificationBackingBean.managedBean.markDeletedFinChecklist)}"
-				update="financeProposaltwo">
+				oncomplete="financialCheckListDeletePopUp.show();"
+				update="@([id$=#{financialCheckListDeleteId}])">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.finStandaraChecklist}"
 					value="#{true}" />
@@ -372,6 +375,14 @@
 
 
 		</div>
+		<ui:param name="financialCheckListDeleteId"
+			value="financialCheckListDeleteId"></ui:param>
+		<ac:confirmationPopup id="#{financialCheckListDeleteId}"
+			widget="financialCheckListDeletePopUp" width="400" height="200"
+			okAction="specificationBackingBean.deleteFinancialCheckList"
+			title="#{lbl['lbl.sc.spec.finance.check.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=financeProposaltwo])" />
 		<ui:include src="stageTwoFinancial.xhtml" />
 	</p:panel>
 </ui:composition>

@@ -14,6 +14,9 @@
 
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="financialCreditFacility" autoUpdate="true"
 			showDetail="true" showSummary="false" closable="true"></p:messages>
 		<div>
@@ -23,7 +26,8 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.scQtChecklist.scoringReq and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;"
+				style="float:right;" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
@@ -34,7 +38,9 @@
 
 
 		</div>
-		
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
 		<ui:include src="checklistHeader.xhtml" />
 
 		<p:spacer height="20"></p:spacer>
@@ -84,9 +90,9 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.total.credit.percentage.paid']}"></h:outputLabel></td>
-				<td>
-					<p:inputText readonly="true" disabled="true"></p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.credit.percentage.paid.tooltip']}" />
+				<td><p:inputText readonly="true" disabled="true"></p:inputText>
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.spec.total.credit.percentage.paid.tooltip']}" />
 				</td>
 			</tr>
 		</table>
@@ -113,8 +119,8 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="fincreditFacilityAutoScoreId"
 							for="fincreditFacilityAutoScore" display="icon"></p:message></td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 					</td>
 				</tr>
 			</table>
@@ -143,14 +149,24 @@
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
-								update="#{scoringPnlId}">
+								oncomplete="financialCreditFacilityDeletePopUp.show();"
+								update="@([id$=#{financialCreditFacilityDeleteId}])">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 									value="#{false}" />
 							</p:commandButton>
 
 						</div>
+						<ui:param name="financialCreditFacilityDeleteId"
+							value="financialCreditFacilityDeleteId"></ui:param>
+
+						<ac:confirmationPopup id="#{financialCreditFacilityDeleteId}"
+							widget="financialCreditFacilityDeletePopUp" width="400"
+							height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreContrats"
+							title="#{lbl['lbl.sc.spec.credit.facility']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 
 				</h:panelGroup>
