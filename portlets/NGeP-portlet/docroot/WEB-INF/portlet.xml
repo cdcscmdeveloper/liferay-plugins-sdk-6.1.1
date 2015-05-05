@@ -2825,7 +2825,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml
+				/xhtml/sm/reactivatebasic/preRenderReactivateBasicAccount.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -2860,7 +2860,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml
+				/xhtml/sm/reactivatebasic/preRenderBasicAccountActivation.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
