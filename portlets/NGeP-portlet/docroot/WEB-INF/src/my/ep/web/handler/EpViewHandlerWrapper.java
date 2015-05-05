@@ -1,10 +1,13 @@
 package my.ep.web.handler;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.faces.FacesException;
 import javax.faces.application.ViewHandler;
 import javax.faces.application.ViewHandlerWrapper;
+import javax.faces.component.UIComponent;
+import javax.faces.component.UIInput;
 import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
@@ -53,10 +56,30 @@ public class EpViewHandlerWrapper extends ViewHandlerWrapper {
 			new LogKey(userId);
 		}
 		
+		highlightInputRecursively(viewToRender.getChildren());
+		
 		// apply security filters.
 		SecurityFilterUtil.applyScreenFilters(viewToRender,
 				userId, EpPortletUtil.getDisplayPortletId());
 
 		super.renderView(context, viewToRender);
+	}
+	
+	/**
+	 * highlight 
+	 * @param childrenList
+	 */
+	private void highlightInputRecursively(List<UIComponent> childrenList) {
+		for(UIComponent component : childrenList) {
+			if(component.getChildCount() > 0) {
+				highlightInputRecursively(component.getChildren());
+			} else {
+				if(component instanceof UIInput) {
+					if(((UIInput) component).isRequired()) {
+						component.getAttributes().put("styleClass", "ui-input-required");
+					}
+				}
+			}
+		}
 	}
 }
