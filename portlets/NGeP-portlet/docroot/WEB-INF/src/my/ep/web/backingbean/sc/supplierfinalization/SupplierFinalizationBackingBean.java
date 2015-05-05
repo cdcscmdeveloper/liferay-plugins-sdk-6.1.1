@@ -1213,6 +1213,8 @@ public class SupplierFinalizationBackingBean extends
 				.getQtEvaluationResult().getScQtProposal().getProposalAmount());
 		recommendDtl.setShortlistedSupplier(scQtEvaluationResultDtl);
 		recommendDtl.setScQtRecommend(scQtRecommend);
+		recommendDtl.setScQtProposalItem(scQtEvaluationResultDtl
+				.getQtEvaluationResult().getScQtProposalItem());
 
 		return recommendDtl;
 	}
