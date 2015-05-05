@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+
+	<div class="ppRightBtn">
+
+		<c:choose>
+			<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+				<ui:repeat var="bpmAction"
+					value="#{lOADetailBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel"
+						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+
+					<h:panelGroup rendered="#{bpmAction == 'ACCEPT'}">
+						<p:outputPanel id="spkiOutputPanel">
+							<ac:spkiPopup id="spkiPopup"
+								password="#{lOADetailBackingBean.managedBean.spkiBackingBean.password}"
+								challengeAns1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+								challengeQues1="#{lOADetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+								postSignAction="#{lOADetailBackingBean.spkiSignAction(spkiBackingBean.pmDigiSign)}" />
+						</p:outputPanel>
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button" update="spkiOutputPanel"
+							partialSubmit="true" process="@form"
+							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+							actionListener="#{lOADetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
+							<f:setPropertyActionListener value="#{bpmAction}"
+								target="#{lOADetailBackingBean.managedBean.action}" />
+						</p:commandButton>
+					</h:panelGroup>
+
+					<h:panelGroup rendered="#{bpmAction == 'REJECT'}">
+						<p:commandButton value="#{lbl[buttonLabel]}"
+							styleClass="ui-button" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
+							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+							partialSubmit="true" process="@this" update="@this" />
+					</h:panelGroup>
+				</ui:repeat>
+			</c:when>
+		</c:choose>
+	</div>
+	<p:spacer height="2px"></p:spacer>
+</ui:composition>

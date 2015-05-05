@@ -70,17 +70,19 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 										value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 									<c:if test="#{isPendingSupplierRespStatus}">
-
-										<ac:spkiPopup id="spkiPopup"
-											password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
-											challengeAns1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-											challengeQues1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-											postSignAction="#{purchaseInquiryBackingBean.submitPrInquiryPrice(spkiBackingBean.pmDigiSign)}" />
-
+										<p:outputPanel id="spkiPopup">
+											<ac:spkiPopup
+												password="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.password}"
+												challengeAns1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+												challengeQues1="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+												postSignAction="#{purchaseInquiryBackingBean.submitPrInquiryPrice(spkiBackingBean.pmDigiSign)}" />
+										</p:outputPanel>
 										<p:commandButton value="#{lbl[buttonLabel]}"
 											styleClass="ui-button" update="spkiPopup"
-											action="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-											oncomplete="spki_dlg.show();">
+											action="#{purchaseInquiryBackingBean.spkiSignAction}"
+											actionListener="#{purchaseInquiryBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
+											onstart="blockWidget.show();"
+											oncomplete="blockWidget.hide();">
 											<f:setPropertyActionListener value="#{bpmAction}"
 												target="#{purchaseInquiryBackingBean.managedBean.action}" />
 										</p:commandButton>

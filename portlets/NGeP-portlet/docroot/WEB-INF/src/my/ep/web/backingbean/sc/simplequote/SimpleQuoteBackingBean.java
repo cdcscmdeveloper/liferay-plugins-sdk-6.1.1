@@ -3718,8 +3718,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
 			}
-			// hide loader
-			RequestContext.getCurrentInstance().execute("blockWidget.hide()");
+			
 			
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
@@ -3732,18 +3731,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// spki 
-			//SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-			//String signedData =  spkiBackingBean.spkiSignTransaction(prepareOriginalText());
+			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText());
-
+			pmDigiSign.setSignedData(signedData);
+			
 			// remarks
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
-			
-		
-			pmDigiSign.setSignedData(signedData);
 			reqDTO.setPmDigiSign(pmDigiSign);
 			
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -4467,6 +4464,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		}
 		return root;
+	}
+	
+	
+	/**
+	 * Spki sign action.
+	 */
+	public void spkiSignAction() {
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
 
 	/**
