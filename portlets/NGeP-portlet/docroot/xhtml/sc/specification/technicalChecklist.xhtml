@@ -8,8 +8,10 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<p:panel id="techCommitteeChecklist"
 		header="#{lbl['lbl.sc.spec.tech.check.list']}" toggleable="true">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}" escape="false" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.tech.check.list.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
@@ -90,7 +92,7 @@
 					<h:outputText value="#{lbl['lbl.sc.type']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.type.technical.tooltip']}" />
 				</f:facet>
-				
+
 				<h:panelGroup id="technicalChecklisttypes">
 					<ui:fragment rendered="#{stageTwoTechnical.qtChecklistId ne null}">
 						<h:outputText
@@ -162,9 +164,10 @@
 			<p:column style="width:8%;white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.supplier.action.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.spec.supplier.action.tooltip']}" />
 				</f:facet>
-				
+
 				<h:panelGroup id="technicalChecklistsupplier">
 					<ui:fragment
 						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
@@ -337,8 +340,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 				process="@this" partialSubmit="true"
-				action="#{specificationBackingBean.markDeleteSelectedRowsActionById(specificationBackingBean.managedBean.scQtCheckSt2techProposal, specificationBackingBean.managedBean.markDeletedTechChecklist)}"
-				update="stageTwotechProposal">
+				oncomplete="technicalCheckListDeletePopUp.show();"
+				update="@([id$=#{technicalCheckListDeleteId}])">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.techStandaraChecklist}"
 					value="#{true}" />
@@ -349,7 +352,15 @@
 
 
 		</div>
+		<ui:param name="technicalCheckListDeleteId"
+			value="technicalCheckListDeleteId"></ui:param>
 
+		<ac:confirmationPopup id="#{technicalCheckListDeleteId}"
+			widget="technicalCheckListDeletePopUp" width="400" height="200"
+			okAction="specificationBackingBean.deleteTechnicalCheckList"
+			title="#{lbl['lbl.sc.spec.tech.check.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=stageTwotechProposal])" />
 		<ui:include src="stageTwoTechnical.xhtml" />
 	</p:panel>
 

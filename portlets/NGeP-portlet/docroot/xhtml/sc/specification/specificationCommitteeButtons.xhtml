@@ -22,11 +22,14 @@
 
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" style="float:right;"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat> <ui:fragment
 						rendered="#{((((!specificationBackingBean.managedBean.readOnly) and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION)) or (specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION)))}">
-						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all" style="float:right;"
+						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
+							style="float:right;" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
 							action="#{specificationBackingBean.saveSpecificationCommitteeDtls}">
 							<f:setPropertyActionListener
 								target="#{specificationBackingBean.managedBean.buttonOutCome}"
@@ -37,7 +40,7 @@
 		</table>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
-			header="Revice Confirmation" resizable="false" width="325"
+			header="Revise Confirmation" resizable="false" width="325"
 			height="75" closable="false">
 			<table>
 				<tr>

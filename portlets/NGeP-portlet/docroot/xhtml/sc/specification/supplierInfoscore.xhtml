@@ -13,7 +13,9 @@
 
 
 	<ui:define name="contentSection">
-
+		<p:spacer height="25" />
+		<br />
+		<br />
 		<ui:include src="checklistHeader.xhtml" />
 
 		<p:spacer height="20" />
@@ -29,6 +31,9 @@
 							<f:selectItems value="#{specificationBackingBean.scoreDetails}"></f:selectItems>
 
 						</p:selectOneMenu></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					</td>
 				</tr>
 			</table>
 

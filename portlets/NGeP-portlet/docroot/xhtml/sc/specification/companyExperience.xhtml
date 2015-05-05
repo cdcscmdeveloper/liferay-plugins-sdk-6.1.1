@@ -13,6 +13,9 @@
 
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="conpamyExpGovernment" showDetail="true"
 			autoUpdate="true" showSummary="false" closable="true">
 		</p:messages>
@@ -23,7 +26,8 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all"
+				style="float:right;" update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.saveCheckListScores}">
 				<f:setPropertyActionListener
 					target="#{specificationBackingBean.managedBean.criteriaType}"
@@ -37,7 +41,9 @@
 
 
 		</div>
-
+		<p:spacer height="25"></p:spacer>
+		<br />
+		<br />
 		<ui:include src="checklistHeader.xhtml" />
 
 		<p:spacer height="20"></p:spacer>
