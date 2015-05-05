@@ -4,6 +4,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
+
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
@@ -23,9 +25,16 @@ public class ReactivateBasicBackingBean extends
 		BaseBackingBean<BaseManagedBean> {
 
 	private ReactivateSupplierVO reactivateBasic;
+	private SmSupplier basicSupplier;
+	private Long basicSupplierAdminId;
+	private String loginId;
+	private String activationKey;
+	private String password;
+	private String confirmPassword;
+	private String encryptActivationKey;
 
 	/**
-	 * Reactivate basic account
+	 * Request to reactivate basic account
 	 */
 	public void reactivateBasic() {
 		reactivateBasic = new ReactivateSupplierVO();
@@ -43,7 +52,7 @@ public class ReactivateBasicBackingBean extends
 					.requestToReactivateBasicAccount(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				renewSesionObject();
+				renewObject();
 				SmCommonUtil.redirectToPage(
 						"/xhtml/sm/userProfileMaintenance/outputMsg",
 						MessageConst.INFO_721028);
@@ -53,19 +62,25 @@ public class ReactivateBasicBackingBean extends
 		}
 	}
 
+	/**
+	 * Basic account activation
+	 */
 	public void basicAccountReactivation() {
-		renewSesionObject();
+		renewObject();
 		try {
 			HttpServletRequest originalServletRequest = new FacesScopes()
 					.getOriginalServletRequest();
-			String personnelId = originalServletRequest.getParameter("pr");
 
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-			reqDTO.setPersonnelId(Long.parseLong(personnelId));
-			SmSupplier basicSupplierToReactivate = SmServiceLookup
-					.getRegistrationSO()
+			reqDTO.setPersonnelId(Long.parseLong(originalServletRequest
+					.getParameter("pr")));
+			encryptActivationKey = originalServletRequest.getParameter("kp");
+			basicSupplierAdminId = reqDTO.getPersonnelId();
+			basicSupplier = SmServiceLookup.getRegistrationSO()
 					.retrieveValidReactivateBasicSupplier(reqDTO).getSmSupp();
-			if (basicSupplierToReactivate == null) {
+			if (basicSupplier == null
+					|| StringUtils.isBlank(encryptActivationKey)
+					|| basicSupplierAdminId == null) {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721212);
@@ -77,11 +92,107 @@ public class ReactivateBasicBackingBean extends
 		}
 	}
 
+	/**
+	 * Process basic account activation
+	 */
+	public void activateAccount() {
+		String keyStr = basicSupplier.getSupplierId() + basicSupplierAdminId
+				+ activationKey;
+		String hashStr = SmCommonUtil.hashString(keyStr);
+		if (password.equalsIgnoreCase(loginId)) {
+			throw new EpException(MessageConst.ERROR_721038);
+		} else if (!password.equalsIgnoreCase(confirmPassword)) {
+			throw new EpException(MessageConst.ERROR_721039);
+		} else if (!hashStr.equals(encryptActivationKey)) {
+			throw new EpException(MessageConst.ERROR_721040);
+		} else {
+			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+			FacesScopes fs = new FacesScopes();
+			reqDTO.setServerName(fs.getRequest().getServerName());
+			reqDTO.setServerPort(fs.getRequest().getServerPort());
+			reqDTO.setSmSupp(basicSupplier);
+			try {
+				SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
+						reqDTO);
+			} catch (Exception ex) {
+				throw new EpException(ex.getMessage());
+			}
+		}
+
+	}
+
+	private void renewObject() {
+		basicSupplier = null;
+		loginId = "";
+		activationKey = "";
+		password = "";
+		confirmPassword = "";
+		reactivateBasic = null;
+		basicSupplierAdminId = null;
+		encryptActivationKey = "";
+	}
+
 	public ReactivateSupplierVO getReactivateBasic() {
 		return reactivateBasic;
 	}
 
 	public void setReactivateBasic(ReactivateSupplierVO reactivateBasic) {
 		this.reactivateBasic = reactivateBasic;
+	}
+
+	public SmSupplier getBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(SmSupplier basicSupplier) {
+		this.basicSupplier = basicSupplier;
+	}
+
+	public String getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+
+	public String getActivationKey() {
+		return activationKey;
+	}
+
+	public void setActivationKey(String activationKey) {
+		this.activationKey = activationKey;
+	}
+
+	public Long getBasicSupplierAdminId() {
+		return basicSupplierAdminId;
+	}
+
+	public void setBasicSupplierAdminId(Long basicSupplierAdminId) {
+		this.basicSupplierAdminId = basicSupplierAdminId;
+	}
+
+	public String getEncryptActivationKey() {
+		return encryptActivationKey;
+	}
+
+	public void setEncryptActivationKey(String encryptActivationKey) {
+		this.encryptActivationKey = encryptActivationKey;
 	}
 }
