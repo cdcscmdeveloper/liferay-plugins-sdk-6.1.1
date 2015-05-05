@@ -15,7 +15,8 @@
 					</p:commandButton>
 				</td>
 				<td style="text-align: right;">
-					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					<p:commandLink onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						rendered="#{viewSmApplBackingBean.managedBean.mofSupplier}"
 						action="#{viewSmApplBackingBean.redirectToSupplierProfileOrHistoryPage()}" 
 						process="@this" partialSubmit="true" update=":form" 
 						value="#{viewSmApplBackingBean.managedBean.portletUrlLabel}"/>&#160;&#160;
