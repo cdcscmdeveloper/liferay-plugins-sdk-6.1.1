@@ -793,6 +793,16 @@
 			</footer-portlet-javascript>
 			<css-class-wrapper>reactivatebasicaccount-portlet</css-class-wrapper>
 		</portlet>
+		<portlet>
+			<portlet-name>basicAccountActivation</portlet-name>
+			<icon>/icon.png</icon>
+			<instanceable>false</instanceable>
+			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+			<footer-portlet-javascript>
+				/js/main.js
+			</footer-portlet-javascript>
+			<css-class-wrapper>activatebasicaccount-portlet</css-class-wrapper>
+		</portlet>
 	<!-- Supplier Management Syazwan -->
 
 	<!-- Supplier Management - Andrew -->
