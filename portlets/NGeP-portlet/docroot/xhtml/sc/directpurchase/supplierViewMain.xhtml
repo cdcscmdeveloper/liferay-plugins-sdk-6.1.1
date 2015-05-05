@@ -12,19 +12,21 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
-
-		<ac:spkiPopup id="spkiPopup"
-			password="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.password}"
-			challengeAns1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-			challengeQues1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-			postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
-
+		<p:outputPanel id="spkiOutputPanel">
+			<ac:spkiPopup id="spkiPopup"
+				password="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.password}"
+				challengeAns1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+				challengeQues1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+				postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
+		</p:outputPanel>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				action="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-				update="spkiPopup" oncomplete="spki_dlg.show();"
+				action="#{simpleQuoteBackingBean.spkiSignAction}"
+				actionListener="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
+				update="spkiOutputPanel" 
+				onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}" />
-
 		</div>
 		<ui:include src="/xhtml/sc/directpurchase/supplierViewHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -35,6 +36,7 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -302,6 +304,29 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The button flag. */
 	private boolean buttonFlag;
+	
+    
+    /** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    
+    /**
+     * Gets the spki backing bean.
+     *
+     * @return the spki backing bean
+     */
+    public SpkiBackingBean getSpkiBackingBean() {
+    	return spkiBackingBean;
+    }
+
+    /**
+     * Sets the spki backing bean.
+     *
+     * @param spkiBackingBean the new spki backing bean
+     */
+    public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+    	this.spkiBackingBean = spkiBackingBean;
+    }
 	
 	/**
 	 * Gets the sc qt evaluation result.

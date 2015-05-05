@@ -203,10 +203,10 @@
 			<table style="width: 100%; margin-top: 8px;">
 				<tr>
 					<td style="width: 22.5%;"><p:outputLabel
-							value="Tempoh Pengeluaran RN" /> <p:outputLabel
+							value="#{lbl['lbl.sc.purchase.in.default.approval.valid.period']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 					<td><p:inputText id="pidvalidDays" maxlength="14" required="true"
-					        label="Tempoh Pengeluaran RN"
+					        label="#{lbl['lbl.sc.purchase.in.default.approval.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
 							styleClass="ppRightBtn" size="32"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}"> 

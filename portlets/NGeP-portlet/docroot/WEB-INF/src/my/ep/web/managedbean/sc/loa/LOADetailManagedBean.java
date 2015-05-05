@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -227,6 +229,28 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private long itemTypeId = 1;// Item type Id
 	
 	private TplSpecMaster tplSpecMaster  = new TplSpecMaster(); // temp
+	
+    /** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    
+    /**
+     * Gets the spki backing bean.
+     *
+     * @return the spki backing bean
+     */
+    public SpkiBackingBean getSpkiBackingBean() {
+    	return spkiBackingBean;
+    }
+
+    /**
+     * Sets the spki backing bean.
+     *
+     * @param spkiBackingBean the new spki backing bean
+     */
+    public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+    	this.spkiBackingBean = spkiBackingBean;
+    }
 
 	/**
 	 * Instantiates a new LOA detail managed bean.

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.factory.EpLogger;
@@ -34,6 +35,7 @@ import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -185,6 +187,28 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	private Map<Long, TemplateSpecBean> zoneTplSpecBeanMap;
 	private StreamedContent sampleLabelStreamContent;
+	
+	/** The spki backing bean. */
+    @ManagedProperty(value="#{spkiBackingBean}")
+    private SpkiBackingBean spkiBackingBean;
+    
+    /**
+     * Gets the spki backing bean.
+     *
+     * @return the spki backing bean
+     */
+    public SpkiBackingBean getSpkiBackingBean() {
+    	return spkiBackingBean;
+    }
+
+    /**
+     * Sets the spki backing bean.
+     *
+     * @param spkiBackingBean the new spki backing bean
+     */
+    public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+    	this.spkiBackingBean = spkiBackingBean;
+    }
 
 	/**
 	 * 

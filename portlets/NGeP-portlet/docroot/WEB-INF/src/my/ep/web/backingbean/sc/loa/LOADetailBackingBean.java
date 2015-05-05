@@ -2306,8 +2306,6 @@ public class LOADetailBackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			validateLOADetails(scLoa, outcome);
-
 			parseLOADetails(scLoa, outcome);
 
 			// if reject, remove the new witness
@@ -2327,6 +2325,17 @@ public class LOADetailBackingBean extends
 				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
 						scLoa.getLoaId(), scLoa.getLoaNo());
 			}
+			// spki 
+			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
+				String originalText = prepareOriginalText(scLoa.getScLoiLoa().getSmSupplier());
+				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+				pmDigiSign.setSignedData(signedData);
+			}
+			
+			validateLOADetails(scLoa, outcome);
+			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
@@ -2397,18 +2406,51 @@ public class LOADetailBackingBean extends
 		debugLogger("updateBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
 		if(BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)){
-			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value())) {
+			if(isDigiSigningRequired(RoleCode.RN_APPROVER.value()) || isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
 				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			} 
+		} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 
-			} else if(isDigiSigningRequired(RoleCode.PUBLICATION_APPROVER.value())) {
-				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			}
 		} else {
 			updateBPMTask(outcome, null);
 		}	
 	}
 
 
+	 /**
+	 * Prepare original text.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the string
+	 */
+	private String prepareOriginalText(SmSupplier  smSupplier) {
+		  FacesScopes facesScopes = new FacesScopes();
+		  StringBuilder sb = new StringBuilder();
+		  String countryCode ="";
+		  String orginalText = "";
+
+		  if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
+				  && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
+			  List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+
+			  for (SmCompanyAddress compaAddress : companyAddress) {
+				  if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
+					  countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
+					  break;
+				  }
+			  }
+		  }
+		  sb.append(getManagedBean().getScLoa().getLoaNo())
+		  .append("|")
+		  .append(facesScopes.getUserSessionBean().getIdentificationNo())
+		  .append("|")
+		  .append(smSupplier.getRegNo())
+		  .append("|")
+		  .append(countryCode);
+		  orginalText  = sb.toString();
+		  return orginalText;
+	  }
 	/**
 	 * Validate loa details.
 	 *
@@ -3920,6 +3962,13 @@ public class LOADetailBackingBean extends
 		return totalAmount;
 	}
 	
+	/**
+	 * Spki sign action.
+	 * @param digiSign the digi sign
+	 */
+	public void spkiSignAction(PmDigiSign digiSign) {
+		updateBPMTask(this.getManagedBean().getAction(), digiSign);
+	}
 	
 	/**
 	 * Gpki sign action.
