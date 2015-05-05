@@ -5,6 +5,8 @@ package my.ep.web.managedbean;
 
 import java.io.Serializable;
 
+import my.ep.persistence.entity.sm.SmSupplier;
+
 /**
  * @author siew mei
  * 
@@ -19,6 +21,7 @@ public abstract class BaseManagedBean implements Serializable {
 	private String title;
 	private Long currentStatusId;
 	private String taskName;
+	private SmSupplier basicSupplier;
 
 	public String getTaskName() {
 		return taskName;
@@ -80,6 +83,14 @@ public abstract class BaseManagedBean implements Serializable {
 	 */
 	public void setCurrentStatusId(Long currentStatusId) {
 		this.currentStatusId = currentStatusId;
+	}
+
+	public SmSupplier getBasicSupplier() {
+		return basicSupplier;
+	}
+
+	public void setBasicSupplier(SmSupplier basicSupplier) {
+		this.basicSupplier = basicSupplier;
 	}
 
 }
