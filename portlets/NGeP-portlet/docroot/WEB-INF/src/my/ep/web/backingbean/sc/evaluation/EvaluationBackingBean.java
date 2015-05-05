@@ -991,7 +991,13 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
-		return "technicalComplianceStage.xhtml";
+		
+		if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {
+			return "technicalComplianceStage.xhtml";	
+		} else {
+			return "financialComplianceStage.xhtml";
+		}
+		
 	}
 
 	/**

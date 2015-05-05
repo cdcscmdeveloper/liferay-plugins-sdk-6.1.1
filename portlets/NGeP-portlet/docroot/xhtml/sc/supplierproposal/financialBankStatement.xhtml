@@ -66,19 +66,19 @@
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText></td>
 					<td style="width: 80px;"><h:outputText
-							value="#{lbl['lbl.sc.auto.score']}"
+							value="#{lbl['lbl.tpl.spec.content.system.score']}"
 							rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
 							rendered="#{checklistScoreType eq '2' and !pageDisable}">
 							<h:outputText value="* " styleClass="mandatory" />
 
 
-						</ui:fragment> <h:outputText value="#{lbl['lbl.sc.user.score']}"
+						</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
 							rendered="#{ checklistScoreType eq '2'}" /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							value="#{noOfContracts.autoScore}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '1'}"></p:inputText> <p:inputText
 							id="financialBankStatementsUserScoreId"
-							label="#{lbl['lbl.sc.user.score']}"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}"
 							value="#{noOfContracts.userScore}" maxlength="18" required="true"
 							disabled="#{pageDisable}" style="text-align:right"
 							rendered="#{ checklistScoreType eq '2'}">
