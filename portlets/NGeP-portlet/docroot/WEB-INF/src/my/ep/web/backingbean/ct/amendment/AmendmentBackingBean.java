@@ -143,6 +143,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.CommonUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
@@ -623,6 +624,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		IContractSO contractSO = null;
 		ContractReqDTO reqDTO = null;
 		ContractResDTO extResDTO = null;
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		
 		try {
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
@@ -665,17 +667,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		  	}
 		  	// Retrieve agencies
 		  	if (getManagedBean().getContractVer().getCtAgencies() != null 
-		  			&& this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {         
+		  			&& this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 		  		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 		  			// If effective date is after current date, status is still display old status
 		  			if (ctAgency.getRecordStatusFlg() == 0) {
-		  				if (ctAgency.getEffDate().after(getCurrentDate())) {
+		  				if (ctAgency.getEffDate().after(currentDate)) {
 		  					ctAgency.setChkStatus(true);
 		  				} else {
 			  	    		ctAgency.setChkStatus(false);
 		  				}
 		  			} else {
-			  	    	if (ctAgency.getEffDate().after(getCurrentDate())) {
+			  	    	if (ctAgency.getEffDate().after(currentDate)) {
 			  	    		ctAgency.setChkStatus(false);
 			  	    	} else {
 			  	    		ctAgency.setChkStatus(true);
@@ -689,17 +691,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			getManagedBean().setItemProductExist(false);
 			getManagedBean().setItemServiceExist(false);
 			if (resDTO.getCtContractVer().getCtContractItems() != null 
-					&& resDTO.getCtContractVer().getCtContractItems().size() > 0) {
+					&& resDTO.getCtContractVer().getCtContractItems().size() > 0) {				
 				for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 					// If effective date is after current date, status is still display old status
 					if (item.getRecordStatusFlg() == 0) {				       		
-						if (item.getEffDate().after(getCurrentDate())) {
+						if (item.getEffDate().after(currentDate)) {
 							item.setChkStatus(true);
 						} else {
 							item.setChkStatus(false);
 						}
 			      	} else {
-			      		if (item.getEffDate().after(getCurrentDate())) {
+			      		if (item.getEffDate().after(currentDate)) {
 			      			item.setChkStatus(false);
 			      		} else {
 			      			item.setChkStatus(true);		        		   
@@ -1698,20 +1700,17 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 * @return amendment effective date.
 	 */
 	public Date retrieveNewEffDate() {
+		Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		if (getManagedBean().getAmendHistoryList() != null && !getManagedBean().getAmendHistoryList().isEmpty()) {
-			if (getManagedBean().getContractVer().getCtContractValue().getExpDate().before(getCurrentDate())) {
-				return new Date();
+			if (getManagedBean().getContractVer().getCtContractValue().getExpDate().before(currentDate)) {
+				return currentDate;
 			} else {				
 				int index = getManagedBean().getAmendHistoryList().size() - 1;
-				CtContractVer contractVer = getManagedBean().getAmendHistoryList().get(index);
-				Calendar effDate = Calendar.getInstance();
-				effDate.setTime(contractVer.getCtAmendment().getAmendmentEffDate());
-				effDate.add(Calendar.DATE, +1);
-				
-				return effDate.getTime();
+				CtContractVer contractVer = getManagedBean().getAmendHistoryList().get(index);				
+				return DateUtils.addDays(contractVer.getCtAmendment().getAmendmentEffDate(), 1);
 			}
 		} else {
-			return new Date();
+			return currentDate;
 		}
 	}
 	
@@ -4246,15 +4245,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		return portletTitle;
 	}
-	
-	/**
-   	 * The method used to retrieve current date from system.
-   	 *  
-   	 * @return  current date
-   	 */
-    public Date getCurrentDate() {
-        return new Date();
-    }
     
     /**
    	 * The method used to retrieve yesterday date from system.

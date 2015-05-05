@@ -29,7 +29,7 @@
 			   	   </f:facet>
 		           <p:calendar id="agencyDateActive" value="#{data.effDate}" styleClass="calanderWidth"
 			            disabled="#{(data.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}"  showOn="button" 
-			             mindate="#{suspensionBackingBean.currentDate}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			             mindate="#{DateUtils.getCurrentDateWithoutTime()}" maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			              readonlyInput="true" navigator="true"
 			             pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			             <p:ajax event="dateSelect" process="@this" 

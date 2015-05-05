@@ -94,6 +94,7 @@ import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.util.AddressUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -1307,7 +1308,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				context.put("telNo", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierPhoneNo());
 				context.put("faxNo", getManagedBean().getCtContract().getCurrentContractVer().getCtContractValue().getSupplierFaxNo());				
 				context.put("refNo", getManagedBean().getFactoring().getAuthRefNo());
-				context.put("currentDate", df.format(new Date()));
+				context.put("currentDate", df.format(DateUtils.getCurrentDateWithoutTime()));
 				context.put("ptjName",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
 				
 				if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() == null) {
@@ -1407,15 +1408,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		}
 		return " ";
 	}
-    
-    /**
-   	 * The method used to retrieve current date from system.
-   	 *  
-   	 * @return  current date
-   	 */
-    public Date getCurrentDate() {
-        return new Date();
-    }
     
     /**
 	 * The method used to retrieve the contract administrator list.

@@ -667,13 +667,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	for (CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
 	    		// If effective date is after current date, status is still display old status
 	    		if (item.getRecordStatusFlg() == 0) {				       		
-	    			if (item.getEffDate().after(getCurrentDate())) {
+	    			if (item.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
 	    				item.setChkStatus(true);
 	    			} else {
 	    				item.setChkStatus(false);
 	    			}
 	    		} else {
-	    			if (item.getEffDate().after(getCurrentDate())) {
+	    			if (item.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
 	    				item.setChkStatus(false);
 	    			} else {
 	    				item.setChkStatus(true);
@@ -1843,13 +1843,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void checkAgencyStatus(CtAgency ctAgency) {
 		// If effective date is after current date, status is still display old status
  	   	if (ctAgency.getRecordStatusFlg() == 0) {
- 	   		if (ctAgency.getEffDate().after(getCurrentDate())) {
+ 	   		if (ctAgency.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
  	   			ctAgency.setChkStatus(true);
  	   		} else {
  	   			ctAgency.setChkStatus(false);
  	   		}
  	   	} else {
- 	   		if (ctAgency.getEffDate().after(getCurrentDate())) {
+ 	   		if (ctAgency.getEffDate().after(DateUtils.getCurrentDateWithoutTime())) {
  	   			ctAgency.setChkStatus(false);
  	   		} else {
  	   			ctAgency.setChkStatus(true);
@@ -2405,8 +2405,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  	}
 			
 			CtAgency ctAgency = new CtAgency();
-			if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(getCurrentDate())) {
-				ctAgency.setEffDate(getCurrentDate());
+			if (getManagedBean().getContractVer().getCtContractValue().getEffDate().before(DateUtils.getCurrentDateWithoutTime())) {
+				ctAgency.setEffDate(DateUtils.getCurrentDateWithoutTime());
 			} else {
 				ctAgency.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
 			}
@@ -3439,15 +3439,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			return false;
 		}
 	}
-	
-	/**
-   	 * The method used to retrieve current date from system.
-   	 *  
-   	 * @return  current date
-   	 */
-    public Date getCurrentDate() {
-        return new Date();
-    }
 	
 	/**
    	 * The method to used auto update of request.
