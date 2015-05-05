@@ -17,7 +17,7 @@
                 <p:column style="width:25%;white-space:normal;" headerText="#{lbl['lbl.ct.date.of.meeting']}">
 			          <p:calendar value="#{ctMeetingsVar.meetingDate}" size="25" id="calMeeting" navigator="true"
 			              maxdate="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-				   		  mindate="#{amendmentBackingBean.getCurrentDate()}"
+				   		  mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 			              readonlyInput="true"  showOn="button" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 			          </p:calendar>
 			    </p:column> 

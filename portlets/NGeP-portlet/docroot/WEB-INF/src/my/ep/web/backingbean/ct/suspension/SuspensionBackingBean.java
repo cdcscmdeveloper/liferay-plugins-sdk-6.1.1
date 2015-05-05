@@ -57,6 +57,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -326,7 +327,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 * This  method used to set contract item status value for suspension
 		 * Status set to zero is suspension of item
 	 */
-	 public void setSuspensionStatusValue(CtContractItem item) {		 
+	 public void setSuspensionStatusValue(CtContractItem item) {
+		 Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		 for(CtContractItem ctItem :this.getManagedBean().getContractVer().getCtContractItems()) {
 			 if(ctItem.equals(item)) {		
 				 CtContractItem latestVerItem = getManagedBean().getItemMap().get(ctItem.getScRequestItem().getRequestNoteItemId());
@@ -334,12 +336,12 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				 Date expDate = null;
 				 
 				 if(item.getRecordStatusFlg().intValue() == 1) {					 
-					 effDate = (latestVerItem.getRecordStatusFlg() == 0) ? getCurrentDate() : latestVerItem.getEffDate();
+					 effDate = (latestVerItem.getRecordStatusFlg() == 0) ? currentDate : latestVerItem.getEffDate();
 					 expDate = (latestVerItem.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : latestVerItem.getExpDate();
 					 item.setEffDate(effDate);
 					 item.setExpDate(expDate);					
 			     } else {
-					 effDate = (latestVerItem.getRecordStatusFlg() == 0) ? latestVerItem.getEffDate() : getCurrentDate();
+					 effDate = (latestVerItem.getRecordStatusFlg() == 0) ? latestVerItem.getEffDate() : currentDate;
 					 expDate = (latestVerItem.getRecordStatusFlg() == 0) ?  latestVerItem.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
 					 item.setEffDate(effDate);
 					 item.setExpDate(expDate);		
@@ -352,7 +354,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 * This  method used to set agency status  for suspension
 		 * Status set to 0 is suspension of item
 	 */
-	 public void setSuspensionAgencyStatusValue(CtAgency agency){	
+	 public void setSuspensionAgencyStatusValue(CtAgency agency){
+		 Date currentDate = DateUtils.getCurrentDateWithoutTime();
 		 for(CtAgency ctAgency  : getManagedBean().getContractVer().getCtAgencies()) {
 			 if(ctAgency.equals(agency)) {
 				 CtAgency latestAgency = getManagedBean().getAgencyMap().get(agency.getOrgProfile().getOrgProfileId());
@@ -360,12 +363,12 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 				 Date expDate = null;
 				 
 				 if(ctAgency.getRecordStatusFlg().intValue() == 1) {
-					 effDate = (latestAgency.getRecordStatusFlg() == 0) ? getCurrentDate() : latestAgency.getEffDate();
+					 effDate = (latestAgency.getRecordStatusFlg() == 0) ? currentDate : latestAgency.getEffDate();
 					 expDate = (latestAgency.getRecordStatusFlg() == 0) ? getManagedBean().getContractVer().getCtContractValue().getExpDate() : latestAgency.getExpDate();
 					 ctAgency.setEffDate(effDate);
 					 ctAgency.setExpDate(expDate);					
 			     } else {
-			    	 effDate = (latestAgency.getRecordStatusFlg() == 0) ? latestAgency.getEffDate() : getCurrentDate();
+			    	 effDate = (latestAgency.getRecordStatusFlg() == 0) ? latestAgency.getEffDate() : currentDate;
 					 expDate = (latestAgency.getRecordStatusFlg() == 0) ? latestAgency.getExpDate() : getManagedBean().getContractVer().getCtContractValue().getExpDate();
 					 ctAgency.setEffDate(effDate);
 					 ctAgency.setExpDate(expDate);		
@@ -528,13 +531,6 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
 	}
-	
-	 /**
-	 * Method to retrieve current date from system
-	 */
-	public Date getCurrentDate() {
-		 return new Date();
-	 }
 	
 	 /**
 		 * Method to used auto update of contract

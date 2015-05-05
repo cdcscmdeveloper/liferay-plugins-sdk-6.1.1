@@ -28,7 +28,7 @@
 			   	  </f:facet>
 			      <p:calendar id="effDateActive" value="#{itemData.effDate}" readonlyInput="true" 
 			         disabled="#{(itemData.recordStatusFlg == 1 ? true : false) or (suspensionBackingBean.managedBean.viewOnly)}" styleClass="calanderWidth"  showOn="button"  navigator="true"
-			         mindate="#{suspensionBackingBean.currentDate}"  maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
+			         mindate="#{DateUtils.getCurrentDateWithoutTime()}"  maxdate="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 			         pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 			         <p:ajax event="dateSelect" process="@this" update="expDateActive"
 			          onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
