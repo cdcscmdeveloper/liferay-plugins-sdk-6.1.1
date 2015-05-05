@@ -37,14 +37,15 @@
 
 
 		</div>
-		
+
 		<ui:include src="checklistHeader.xhtml" />
 
-	<p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.sc.spec.company.exp.fed.gov']}" />
-				<ac:iconTooltip value="#{lbl['lbl.sc.spec.company.exp.fed.gov.tooltip']}" />
+				<ac:iconTooltip
+					value="#{lbl['lbl.sc.spec.company.exp.fed.gov.tooltip']}" />
 			</f:facet>
 			<table>
 				<tr>
@@ -116,9 +117,11 @@
 			</table>
 
 		</p:panel>
-		
+
 		<br />
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.score.company.exp.intruction']}"
+			escape="false" />
 
 
 		<p:spacer height="20"></p:spacer>
@@ -143,8 +146,8 @@
 								listener="#{specificationBackingBean.scoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techGovNoOfContractsAutoScoreId"
 							for="techGovNoOfContractsAutoScore" display="icon"></p:message></td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 					</td>
 				</tr>
 			</table>
@@ -173,13 +176,24 @@
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
-								update="#{scoringPnlId}">
+								oncomplete="technicalGovCompanyExperienceNoOfContractsDeletePopUp.show();"
+								update="@([id$=#{technicalGovCompanyExperienceNoOfContractsId}])">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 									value="#{false}" />
 							</p:commandButton>
 						</div>
+						<ui:param name="technicalGovCompanyExperienceNoOfContractsId"
+							value="technicalGovCompanyExperienceNoOfContractsId"></ui:param>
+
+						<ac:confirmationPopup
+							id="#{technicalGovCompanyExperienceNoOfContractsId}"
+							widget="technicalGovCompanyExperienceNoOfContractsDeletePopUp"
+							width="400" height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreContrats"
+							title="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
 				<p:spacer height="5"></p:spacer>
@@ -225,8 +239,8 @@
 								listener="#{specificationBackingBean.companyscoreTypeChange}"></p:ajax>
 						</p:selectOneMenu> <p:message id="techGovNoOfYearsAutoScoreId"
 							for="techGovNoOfYearsAutoScore" display="icon"></p:message></td>
-					<td>
-						<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.tpl.spec.content.scoring.settings.score.type.tooltip']}" />
 					</td>
 				</tr>
 			</table>
@@ -276,7 +290,8 @@
 										</ui:fragment>
 										<h:outputText value="#{lbl['lbl.sc.from']}"
 											rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
-										<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"
+										<ac:iconTooltip
+											value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"
 											rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
 
 									</f:facet>
@@ -285,9 +300,8 @@
 									<p:inputText id="#{scoringPnlId}_fromRangeyears"
 										style="text-align:right"
 										disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-										label="#{lbl['lbl.sc.from']}"
-										required="true" value="#{checkListScoring.rangeFrom}"
-										maxlength="18">
+										label="#{lbl['lbl.sc.from']}" required="true"
+										value="#{checkListScoring.rangeFrom}" maxlength="18">
 										<p:ajax process="@this" partialSubmit="true"
 											update="@this,#{scoringPnlId}_fromRangeyears" />
 										<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
@@ -355,14 +369,25 @@
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 								process="@this" partialSubmit="true"
-								action="#{specificationBackingBean.markDeleteSelectedRowsAction(scoringList, specificationBackingBean.managedBean.toBeRemoveList)}"
-								update="#{scoringPnlId}">
+								oncomplete="technicalGovCompanyExperienceNoOfYearsDeletePopUp.show();"
+								update="@([id$=#{technicalGovCompanyExperienceNoOfYearsDeleteId}])">
 								<f:setPropertyActionListener
 									target="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}"
 									value="#{false}" />
 							</p:commandButton>
 
 						</div>
+						<ui:param name="technicalGovCompanyExperienceNoOfYearsDeleteId"
+							value="technicalGovCompanyExperienceNoOfYearsDeleteId"></ui:param>
+
+						<ac:confirmationPopup
+							id="#{technicalGovCompanyExperienceNoOfYearsDeleteId}"
+							widget="technicalGovCompanyExperienceNoOfYearsDeletePopUp"
+							width="400" height="200"
+							okAction="specificationBackingBean.deleteCheckListScoreYears"
+							title="#{lbl['lbl.sc.spec.company.exp.fed.gov']}"
+							content="#{lbl['lbl.sc.dialog.confirm.message']}"
+							update="@([id$=#{scoringPnlId}])" />
 					</h:panelGroup>
 				</h:panelGroup>
 				<p:spacer height="5"></p:spacer>

@@ -335,12 +335,10 @@
 					update="@([id$=#{zonesNonpanelDeleteId}])" />
 			</div>
 			<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
-			<ui:param name="zonesNonpanelDeletePopUp"
-				value="zonesNonpanelDeletePopUp"></ui:param>
 			<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
 				widget="zonesNonpanelDeletePopUp"
-				postSignAction="#{specificationBackingBean.deleteTreeNode}"
-				title="#{lbl['lbl.sc.qt.zone.location.info']}"
+				okAction="specificationBackingBean.deleteTreeNode" width="400"
+				height="200" title="#{lbl['lbl.sc.qt.zone.location.info']}"
 				content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
 				update="@([id$=zoneGeneralDataTable])" />
 		</h:panelGroup>
