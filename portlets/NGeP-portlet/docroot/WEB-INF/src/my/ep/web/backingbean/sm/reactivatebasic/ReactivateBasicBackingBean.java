@@ -65,6 +65,7 @@ public class ReactivateBasicBackingBean extends
 					.retrievePersonnelById(personnelReqDTO).getSmPersonnel();
 			basicSupplier = SmServiceLookup.getRegistrationSO()
 					.retrieveValidReactivateBasicSupplier(reqDTO).getSmSupp();
+			loginId = basicSupplierAdmin.getPmUser().getLoginId();
 			if (basicSupplier == null
 					|| StringUtils.isBlank(encryptActivationKey)
 					|| basicSupplierAdmin == null) {
