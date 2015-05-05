@@ -99,7 +99,7 @@
 						value="#{lbl['lbl.pm.organisation.orgName']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				
-						<td><p:inputText id="orgName" disabled="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}"
+						<td><p:inputText id="orgName" disabled="#{organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FJA'}"
 								label="#{lbl['lbl.pm.organisation.orgName']}"
 								value="#{organisationBackingBean.managedBean.orgProfile.pmOrgValidity.orgName}"
 								required="#{!empty param['disableValidation']}" size="50" styleClass="ppDisplayTextL"
@@ -132,7 +132,7 @@
 				<td><p:selectOneMenu id="orgStatus"
 						styleClass="ppDropDownWidthM"
 						label="#{lbl['lbl.pm.organisation.status']}"
-						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgType eq 'FPJ'}"
+						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FJA'}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
 						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;">
 						<f:selectItems
