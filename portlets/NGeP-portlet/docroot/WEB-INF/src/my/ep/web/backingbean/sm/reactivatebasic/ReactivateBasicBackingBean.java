@@ -130,6 +130,7 @@ public class ReactivateBasicBackingBean extends
 			reqDTO.setServerName(fs.getRequest().getServerName());
 			reqDTO.setServerPort(fs.getRequest().getServerPort());
 			reqDTO.setSmSupp(basicSupplier);
+			reqDTO.setPassword(password);
 			try {
 				SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 						reqDTO);
