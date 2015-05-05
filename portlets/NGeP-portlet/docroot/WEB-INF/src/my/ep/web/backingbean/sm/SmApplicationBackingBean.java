@@ -557,7 +557,6 @@ public class SmApplicationBackingBean extends
 							SupplierManagementConst.SM_SUPPLIER_CERT_TYPE_GLP));
 			getManagedBean().setAcadQualifications(
 					SmApplicationUtil.getAcademicQualifications());
-
 		}
 
 		getManagedBean()
@@ -715,13 +714,15 @@ public class SmApplicationBackingBean extends
 
 			getManagedBean().setSmAppl(smAppl);
 
-			if (fromBpm
-					&& !(getManagedBean().isApproverUser() || getManagedBean()
-							.isPoUser())) {
-				boolean updateNeeded = SmApplicationUtil
-						.resetDeactivatedPersonnel(getManagedBean());
-				if (updateNeeded)
-					saveOrUpdateAppl();
+			if (fromBpm) {
+				SmApplicationUtil.checkOverLappingCategories(getManagedBean());
+				if (!(getManagedBean().isApproverUser() || getManagedBean()
+						.isPoUser())) {
+					boolean updateNeeded = SmApplicationUtil
+							.resetDeactivatedPersonnel(getManagedBean());
+					if (updateNeeded)
+						saveOrUpdateAppl();
+				}
 			}
 
 			if (getManagedBean().getSmAppl().getSmStaffTotals().isEmpty()) {
