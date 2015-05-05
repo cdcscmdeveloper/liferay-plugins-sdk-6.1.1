@@ -50,6 +50,8 @@
 
 			<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
 				collapsed="true">
+				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}" escape="false" />
+				
 				<p:dataTable var="cashHand" id="complianceTech" rows="10"
 					value="#{evaluationBackingBean.managedBean.technicalComplinaceList}"
 					rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">

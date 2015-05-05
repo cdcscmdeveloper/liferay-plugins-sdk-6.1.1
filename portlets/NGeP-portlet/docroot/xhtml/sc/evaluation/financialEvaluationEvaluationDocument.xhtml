@@ -35,6 +35,9 @@
 			<br />
 		
 			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+				<h:outputText  styleClass="instruction" value="1. #{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}" escape="false" />
+				<h:outputText  styleClass="instruction" value="2. #{lbl['lbl.sc.eva.evaluation.stage.document.score.instruction']}" escape="false" />
+				
 				<p:dataTable var="evaFinSupplier" rows="10"
 					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
 					id="evaluateFinSupplier" editable="true" rowIndexVar="index"
