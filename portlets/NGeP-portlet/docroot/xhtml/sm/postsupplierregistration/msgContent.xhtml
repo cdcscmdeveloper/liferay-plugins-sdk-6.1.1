@@ -30,7 +30,7 @@
 		
 			<p:outputPanel rendered="#{!postSupplierRegBB.managedBean.bannerImage}">
 				<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
-				<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}"/> 
+				<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}" /> 
 				<p:commandLink  value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 			</p:outputPanel>
 			</ui:remove>
@@ -178,6 +178,7 @@
 						<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.application.status']}" /></td>
 						<td>
 							<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" />
+							<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}" /> 
 							<p:commandLink value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
 						</td>
 					</tr>
