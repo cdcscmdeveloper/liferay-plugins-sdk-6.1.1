@@ -8,11 +8,11 @@ import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean(name = "trackingDiaryManagedBean")
 @SessionScoped
-public class TrackingDiaryManagedBean extends BaseManagedBean { 
+public class TrackingDiaryManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String moduleSelected;
-	private String moduleChanged;
+	private String previousSelectedModule;
 
 	public String getModuleSelected() {
 		return moduleSelected;
@@ -20,11 +20,11 @@ public class TrackingDiaryManagedBean extends BaseManagedBean {
 	public void setModuleSelected(String moduleSelected) {
 		this.moduleSelected = moduleSelected;
 	}
-	public String getModuleChanged() {
-		return moduleChanged;
+	public String getPreviousSelectedModule() {
+		return previousSelectedModule;
 	}
-	public void setModuleChanged(String moduleChanged) {
-		this.moduleChanged = moduleChanged;
+	public void setPreviousSelectedModule(String previousSelectedModule) {
+		this.previousSelectedModule = previousSelectedModule;
 	}
 
 
