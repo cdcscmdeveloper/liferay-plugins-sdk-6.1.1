@@ -5707,6 +5707,13 @@ public class SmApplicationBackingBean extends
 			} else {
 				s = SupplierManagementConst.SUPP_SUBMIT_NORM_APPL;
 			}
+			for (SmSupplierBranch br : getManagedBean().getSmAppl()
+					.getSmSupplierBranches()) {
+				if (br.getBranchCode() == null) {
+					br.setBranchCode(br.getSupplierBranchId());
+				}
+			}
+
 			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
 					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
 			log.info(" ****** The task list id ss *********"
@@ -6266,7 +6273,8 @@ public class SmApplicationBackingBean extends
 					.getStateId());
 			log.info("*** ZONE SENT TO BPM ***** " + zone.getZoneName());
 			if (zone != null && zone.getZoneName() != null) {
-				reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase().trim());
+				reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase()
+						.trim());
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_722568);
