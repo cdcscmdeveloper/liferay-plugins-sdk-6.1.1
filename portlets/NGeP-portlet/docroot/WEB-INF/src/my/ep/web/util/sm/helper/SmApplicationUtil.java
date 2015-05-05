@@ -2182,6 +2182,7 @@ public class SmApplicationUtil {
 		StringBuffer sb = new StringBuffer();
 		sb.append(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg",
 				null));
+		sb.append("<table>");
 		for (SmSupplierCategory cat : managedBean.getSmAppl()
 				.getSmSupplierCategories()) {
 			if (cat.isOverLapCategory()
@@ -2190,12 +2191,14 @@ public class SmApplicationUtil {
 							.getRecordStatusFlg().compareTo(
 									SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
 				managedBean.setOverLappedCategoryExists(true);
-				sb.append("<br/>").append(++i).append(".) ")
+				sb.append("<tr><td>").append(++i).append(".) ")
 						.append(cat.getPmCategoryL1().getCategoryL1Code())
 						.append(cat.getPmCategoryL2().getCategoryL2Code())
-						.append(cat.getPmCategoryL3().getCategoryL3Code());
+						.append(cat.getPmCategoryL3().getCategoryL3Code())
+						.append("</tr></td>");
 			}
 		}
+		sb.append("</table>");
 		if (managedBean.isOverLappedCategoryExists()) {
 			managedBean.setOverLappedCategoryMsg(sb.toString());
 		}
@@ -5258,27 +5261,30 @@ public class SmApplicationUtil {
 				}
 				// already exist in db
 				else {
-					//already activated
+					// already activated
 					if (currPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 						if (currPersonnel.getEpRole().equals(
 								RoleCode.CM_USER.value())) {
 							currPersonnel.setSoftcertFlg(0);
 							currPersonnel.setContractSignerFlg(0);
 						} else {
-							//if dont have prev approved directly set softcert to pending request and contract to 0
+							// if dont have prev approved directly set softcert
+							// to pending request and contract to 0
 							if (prevPersonnel == null) {
 								currPersonnel
 										.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
 								currPersonnel.setContractSignerFlg(0);
 							}
-							//if have prev approved
+							// if have prev approved
 							else {
-								//if prev approved softcert is 0, directly set to pending request
+								// if prev approved softcert is 0, directly set
+								// to pending request
 								if (prevPersonnel.getSoftcertFlg() == 0) {
 									currPersonnel
 											.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_PENDING_REQ);
-								} 
-								//if prev approved softcert is not 0, directly get prev approved softcert
+								}
+								// if prev approved softcert is not 0, directly
+								// get prev approved softcert
 								else {
 									currPersonnel.setSoftcertFlg(prevPersonnel
 											.getSoftcertFlg());
@@ -5313,8 +5319,8 @@ public class SmApplicationUtil {
 								currPersonnel.setEpRole(epRole);
 							}
 						}
-					} 
-					//pending activation
+					}
+					// pending activation
 					else {
 						if (currPersonnel.getEpRole().equals(
 								RoleCode.CM_USER.value())) {
