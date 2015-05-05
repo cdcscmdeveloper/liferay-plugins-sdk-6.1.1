@@ -887,6 +887,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public void redirectToLogoutUrl() {
 		System.out
 				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
 		FacesContext fCtx = FacesContext.getCurrentInstance();
 		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
 				.getRequest();
@@ -896,6 +897,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		String portalUrl = themeDisplay.getURLPortal();
 		String logOutUrl = portalUrl + "/c/portal/logout";
 		System.out.println(">>>>>>>>>>>>logout url default:" + logOutUrl
+				+ "<<<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>logout url default:" + logOutUrl
 				+ "<<<<<<<<<<<<<<");
 		SmCommonUtil.redirectToExternalUrl(logOutUrl);
 	}
