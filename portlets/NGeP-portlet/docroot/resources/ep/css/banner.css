@@ -28,7 +28,7 @@ a:hover {
 	border-radius:8px;
 	border: 1px solid #d1d3d4;
 	background-image:url(#{resource['ep/images/supplierregistration/upload-catalogue-bg.png']}) !important;
-	background-size:336px 80px;
+	/*background-size:336px 80px;*/
     background-repeat: no-repeat;
 	height: 80px;
 	}
@@ -49,9 +49,9 @@ a:hover {
 	border-radius:8px;
 	border: 1px solid #d1d3d4;
 	background-image:url(#{resource['ep/images/supplierregistration/request-softcert-bg.png']})!important;
-	background-size:336px 80px;
+	/*background-size:336px 80px;*/
     background-repeat: no-repeat;
-	background-position:right;
+	/*background-position:right;*/
 	height: 80px;
 	}
 .banner2-text{
