@@ -1894,4 +1894,26 @@ public class SmCommonUtil {
 		String url = portalUrl + currentUrl;
 		return url;
 	}
+
+	/**
+	 * Redirect to liferay logout url
+	 */
+	public static void redirectToLogoutUrl() {
+		System.out
+				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+
+		String portalUrl = themeDisplay.getURLPortal();
+		String logOutUrl = portalUrl + "/c/portal/logout";
+		System.out.println(">>>>>>>>>>>>logout url default:" + logOutUrl
+				+ "<<<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>logout url default:" + logOutUrl
+				+ "<<<<<<<<<<<<<<");
+		redirectToExternalUrl(logOutUrl);
+	}
 }

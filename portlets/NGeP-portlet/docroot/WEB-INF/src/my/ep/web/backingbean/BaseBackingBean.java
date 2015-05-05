@@ -27,7 +27,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,7 +55,6 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.SecurityFilterUtil;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -65,7 +63,6 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -879,27 +876,5 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			filename += "...";
 		}
 		return filename;
-	}
-
-	/**
-	 * Redirect to liferay logout url
-	 */
-	public void redirectToLogoutUrl() {
-		System.out
-				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
-		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
-		FacesContext fCtx = FacesContext.getCurrentInstance();
-		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
-				.getRequest();
-		ThemeDisplay themeDisplay = (ThemeDisplay) req
-				.getAttribute(WebKeys.THEME_DISPLAY);
-
-		String portalUrl = themeDisplay.getURLPortal();
-		String logOutUrl = portalUrl + "/c/portal/logout";
-		System.out.println(">>>>>>>>>>>>logout url default:" + logOutUrl
-				+ "<<<<<<<<<<<<<<");
-		log.info(">>>>>>>>>>>>logout url default:" + logOutUrl
-				+ "<<<<<<<<<<<<<<");
-		SmCommonUtil.redirectToExternalUrl(logOutUrl);
 	}
 }
