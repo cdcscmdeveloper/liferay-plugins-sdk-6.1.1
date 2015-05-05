@@ -13,6 +13,9 @@
 
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="committeeFinancialmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
@@ -23,12 +26,14 @@
 
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all"
+				style="float:right;" update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',2)}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				rendered="#{((specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or(!specificationBackingBean.managedBean.readOnly and  specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
-				style="float:right;" update="@all"
+				style="float:right;" update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',2)}" />
 
 
@@ -69,8 +74,7 @@
 
 				<tr>
 
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.status']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<!-- 	<td><h:outputLabel
