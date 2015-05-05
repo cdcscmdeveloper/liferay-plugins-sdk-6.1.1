@@ -24,7 +24,7 @@
 						<h:panelGrid columns="3">
 							<p:commandLink value="#{agreementBackingBean.managedBean.ctContract.contractNo}"
 								styleClass="blue_font" action="#{agreementBackingBean.goToContractView}">
-								<f:param name="contractVerId" value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.contractVerId}" />
+								<f:param name="contractVerId" value="#{agreementBackingBean.managedBean.contractVer.contractVerId}" />
 							</p:commandLink>
 							<p:spacer width="1" />
 							<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
@@ -39,7 +39,7 @@
 					</td> 
 					<td>
 						<p:inputText id="contractPhysicalNo" for="physicalNo"
-							value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.contractPhysicalNo}"
+							value="#{agreementBackingBean.managedBean.particularContractVer.contractPhysicalNo}"
 							style="width:160px;" maxlength="30" required="true" label="#{lbl['lbl.ct.physical.no']}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 					</td>
@@ -79,7 +79,7 @@
 					</td> 
 					<td>
 						<p:inputText for="edate" disabled="true" style="width:160px;"
-							value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.expDate}">
+							value="#{agreementBackingBean.managedBean.ctAgreement.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
@@ -92,7 +92,7 @@
 					</td>
 					<td>
 						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
-			   				value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"  disabled="true">
+			   				value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>	
@@ -131,7 +131,7 @@
 		   </h:panelGrid>
 		   <h:panelGrid columns="3">
 		     <p:selectBooleanCheckbox 
-			  value="#{agreementBackingBean.managedBean.ctContract.agreement}" disabled="true" />
+			  value="#{agreementBackingBean.managedBean.contractVer.ctContractAmount.agreement}" disabled="true" />
 		     <p:spacer width="2" />	
 		     <h:panelGrid columns="2">
 			     <h:outputText value="#{lbl['lbl.ct.agreement']}" />
