@@ -36,38 +36,19 @@ public class ReactivateBasicBackingBean extends
 	private String encryptActivationKey;
 
 	/**
-	 * Request to reactivate basic account
+	 * Pre-render reactivate basic account
 	 */
-	public void reactivateBasic() {
+	public void preRenderReactivateBasic() {
+		renewObject();
 		reactivateBasic = new ReactivateSupplierVO();
-		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		FacesScopes fs = new FacesScopes();
-		reqDTO.setServerName(fs.getRequest().getServerName());
-		reqDTO.setServerPort(fs.getRequest().getServerPort());
-		reqDTO.setIdentificationNo(reactivateBasic.getIdentificationNo());
-		reqDTO.setEmail(reactivateBasic.getEmail());
-		reqDTO.setEstablishDate(reactivateBasic.getEstablishDate());
-		reqDTO.setRegNo(reactivateBasic.getRegNo());
-
-		try {
-			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
-					.requestToReactivateBasicAccount(reqDTO);
-
-			if (resDTO.isSuccessful()) {
-				renewObject();
-				SmCommonUtil.redirectToPage(
-						"/xhtml/sm/userProfileMaintenance/outputMsg",
-						MessageConst.INFO_721028);
-			}
-		} catch (Exception e) {
-			throw new EpException(e.getMessage());
-		}
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/reactivatebasic/reactivateBasicAccount.xhtml", "");
 	}
 
 	/**
-	 * Basic account activation
+	 * Pre-render basic account activation
 	 */
-	public void basicAccountReactivation() {
+	public void preRenderBasicAccountReactivation() {
 		renewObject();
 		try {
 			HttpServletRequest originalServletRequest = new FacesScopes()
@@ -91,10 +72,41 @@ public class ReactivateBasicBackingBean extends
 						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721212);
 			}
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
+					"");
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.INFO_721212);
+		}
+	}
+
+	/**
+	 * Request to reactivate basic account
+	 */
+	public void reactivateBasic() {
+		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
+		FacesScopes fs = new FacesScopes();
+		reqDTO.setServerName(fs.getRequest().getServerName());
+		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		reqDTO.setIdentificationNo(reactivateBasic.getIdentificationNo());
+		reqDTO.setEmail(reactivateBasic.getEmail());
+		reqDTO.setEstablishDate(reactivateBasic.getEstablishDate());
+		reqDTO.setRegNo(reactivateBasic.getRegNo());
+
+		try {
+			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
+					.requestToReactivateBasicAccount(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				renewObject();
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/userProfileMaintenance/outputMsg",
+						MessageConst.INFO_721028);
+			}
+		} catch (Exception e) {
+			throw new EpException(e.getMessage());
 		}
 	}
 
