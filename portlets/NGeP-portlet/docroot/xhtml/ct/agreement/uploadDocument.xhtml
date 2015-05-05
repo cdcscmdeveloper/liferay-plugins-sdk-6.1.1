@@ -15,7 +15,7 @@
 			</h:panelGrid>
 			<h:panelGrid columns="5" styleClass="top-aligned-columns">
 				<p:calendar	value="#{agreementBackingBean.managedBean.ctContract.currentContractVer.signedDate}" id="popupButtonCal4" 
-					showOn="button" size="17" required="true" label="Signed Date" readonlyInput="true"
+					showOn="button" size="17" required="true" label="#{lbl['lbl.ct.signed.date']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.dated']}" />
