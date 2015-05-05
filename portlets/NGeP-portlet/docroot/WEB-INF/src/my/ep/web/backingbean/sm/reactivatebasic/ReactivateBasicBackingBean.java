@@ -4,12 +4,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.constant.MessageConst;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -19,6 +19,8 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.ReactivateSupplierVO;
 
+import org.apache.commons.lang3.StringUtils;
+
 @ManagedBean(name = "reactivateBasicBackingBean")
 @SessionScoped
 public class ReactivateBasicBackingBean extends
@@ -26,7 +28,7 @@ public class ReactivateBasicBackingBean extends
 
 	private ReactivateSupplierVO reactivateBasic;
 	private SmSupplier basicSupplier;
-	private Long basicSupplierAdminId;
+	private SmPersonnel basicSupplierAdmin;
 	private String loginId;
 	private String activationKey;
 	private String password;
@@ -75,12 +77,16 @@ public class ReactivateBasicBackingBean extends
 			reqDTO.setPersonnelId(Long.parseLong(originalServletRequest
 					.getParameter("pr")));
 			encryptActivationKey = originalServletRequest.getParameter("kp");
-			basicSupplierAdminId = reqDTO.getPersonnelId();
+
+			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
+			personnelReqDTO.setPersonnelId(reqDTO.getPersonnelId());
+			basicSupplierAdmin = SmServiceLookup.getPersonnelSO()
+					.retrievePersonnelById(personnelReqDTO).getSmPersonnel();
 			basicSupplier = SmServiceLookup.getRegistrationSO()
 					.retrieveValidReactivateBasicSupplier(reqDTO).getSmSupp();
 			if (basicSupplier == null
 					|| StringUtils.isBlank(encryptActivationKey)
-					|| basicSupplierAdminId == null) {
+					|| basicSupplierAdmin == null) {
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721212);
@@ -96,8 +102,8 @@ public class ReactivateBasicBackingBean extends
 	 * Process basic account activation
 	 */
 	public void activateAccount() {
-		String keyStr = basicSupplier.getSupplierId() + basicSupplierAdminId
-				+ activationKey;
+		String keyStr = basicSupplier.getSupplierId()
+				+ basicSupplierAdmin.getPersonnelId() + activationKey;
 		String hashStr = SmCommonUtil.hashString(keyStr);
 		if (password.equalsIgnoreCase(loginId)) {
 			throw new EpException(MessageConst.ERROR_721038);
@@ -132,7 +138,7 @@ public class ReactivateBasicBackingBean extends
 		password = "";
 		confirmPassword = "";
 		reactivateBasic = null;
-		basicSupplierAdminId = null;
+		basicSupplierAdmin = null;
 		encryptActivationKey = "";
 	}
 
@@ -184,19 +190,19 @@ public class ReactivateBasicBackingBean extends
 		this.activationKey = activationKey;
 	}
 
-	public Long getBasicSupplierAdminId() {
-		return basicSupplierAdminId;
-	}
-
-	public void setBasicSupplierAdminId(Long basicSupplierAdminId) {
-		this.basicSupplierAdminId = basicSupplierAdminId;
-	}
-
 	public String getEncryptActivationKey() {
 		return encryptActivationKey;
 	}
 
 	public void setEncryptActivationKey(String encryptActivationKey) {
 		this.encryptActivationKey = encryptActivationKey;
+	}
+
+	public SmPersonnel getBasicSupplierAdmin() {
+		return basicSupplierAdmin;
+	}
+
+	public void setBasicSupplierAdmin(SmPersonnel basicSupplierAdmin) {
+		this.basicSupplierAdmin = basicSupplierAdmin;
 	}
 }
