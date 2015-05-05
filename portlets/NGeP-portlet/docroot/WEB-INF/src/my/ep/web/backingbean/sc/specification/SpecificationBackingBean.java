@@ -15244,4 +15244,20 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScoringForYears(), this
 						.getManagedBean().getToBeRemoveList());
 	}
+
+	// delete technical Checklist List
+	public void deleteTechnicalCheckList() {
+		markDeleteSelectedRowsActionById(this.getManagedBean()
+				.getScQtCheckSt2techProposal(), this.getManagedBean()
+				.getMarkDeletedTechChecklist());
+
+	}
+	
+	// delete Financial Checklist List
+		public void deleteFinancialCheckList() {
+			markDeleteSelectedRowsActionById(this.getManagedBean()
+					.getScQtCheckSt2financeProposalList(), this.getManagedBean()
+					.getMarkDeletedFinChecklist());
+
+		}
 }
