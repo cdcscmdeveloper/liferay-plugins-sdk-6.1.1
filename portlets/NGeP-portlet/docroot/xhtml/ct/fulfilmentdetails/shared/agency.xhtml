@@ -83,7 +83,7 @@
 		   	     <p:column>
 			      	<p:calendar id="agencyDateActive" value="#{agencyData.effDate}"  navigator="true" size="8"
 		               readonlyInput="true" 
-		               mindate="#{(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate gt contractDetailsBackingBean.currentDate) ? contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate : contractDetailsBackingBean.currentDate}" 
+		               mindate="#{(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate gt DateUtils.getCurrentDateWithoutTime()) ? contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate : DateUtils.getCurrentDateWithoutTime()}" 
 		               maxdate="#{agencyData.expDate}"			             
 		               showOn="button"  disabled="#{contractDetailsBackingBean.managedBean.viewContract}"
 		               pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
