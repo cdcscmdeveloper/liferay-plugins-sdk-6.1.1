@@ -529,8 +529,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(companyBasic.isWithFederal() && supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.STYPE_CONTRACTOR)){
 			if(checkPendingSoftCertRequest(supplier.getSupplierId())){
 				//String msg = getLabelFromProperties("lbl.sm.basic.softcert.request"); 
-				String softCertImg = getLabelFromProperties("lbl.sm.softcert.request.image");
-				mofActionMap.put(softCertImg, MOF_SOFTCERT_REQUEST);
+				//String softCertImg = getLabelFromProperties("lbl.sm.softcert.request.image");
+				
+				mofActionMap.put("SC", MOF_SOFTCERT_REQUEST);
 			}
 			
 			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
@@ -546,8 +547,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			
 			if(!publishedStatus){
 				//String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
-				String catUploadImg = getLabelFromProperties("lbl.sm.catalogue.upload.image");
-				mofActionMap.put(catUploadImg, MOF_CODIFICATION_SEARCH);
+				//String catUploadImg = getLabelFromProperties("lbl.sm.catalogue.upload.image");
+				mofActionMap.put("CU", MOF_CODIFICATION_SEARCH);
 			}
 		}
 		
@@ -625,8 +626,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		Map<String,String> basicActionMap = new HashMap<String, String>();
 		
 		//String msg = "Upgrade to MOF Account to enjoys more benefits.";
-		String msg = getLabelFromProperties("lbl.sm.mof.upgrade.image");
-		basicActionMap.put(msg, UPGRADE_TO_MOF);
+		//String msg = getLabelFromProperties("lbl.sm.mof.upgrade.image");
+		basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
 		
 		getManagedBean().setUserActionMap(basicActionMap);
 	}
