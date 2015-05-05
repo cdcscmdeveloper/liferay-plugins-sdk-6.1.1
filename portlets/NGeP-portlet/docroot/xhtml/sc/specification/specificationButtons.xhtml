@@ -29,12 +29,14 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
 								styleClass="ui-button" style="float:right;"
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 								action="#{specificationBackingBean.updateBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat> <c:if
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
-							style="float:right;"
+							style="float:right;" onstart="blockWidget.show();"
+							oncomplete="blockWidget.hide();"
 							action="#{specificationBackingBean.saveSpecificationDtls}">
 
 						</p:commandButton>
