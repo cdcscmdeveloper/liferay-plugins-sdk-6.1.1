@@ -114,6 +114,10 @@ public class ReactivateBasicBackingBean extends
 			try {
 				SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 						reqDTO);
+				renewObject();
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.INFO_721029);
 			} catch (Exception ex) {
 				throw new EpException(ex.getMessage());
 			}
