@@ -85,12 +85,12 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
-				<td><p:inputMask id="proposalId" size="24" mask="9"
+				<td><p:inputText id="proposalId" size="24"
 						disabled="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterCode ne 'CHE' or specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;margin-bottom: 5px;">
-					</p:inputMask></td>
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
