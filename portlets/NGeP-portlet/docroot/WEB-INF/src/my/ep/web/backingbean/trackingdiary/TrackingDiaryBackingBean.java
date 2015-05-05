@@ -20,6 +20,7 @@ import my.ep.web.util.pm.helper.RoleHelper;
 public class TrackingDiaryBackingBean extends
 		BaseBackingBean<TrackingDiaryManagedBean> {
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
+	public static final String SC_TRACKING_DIARY_MANAGED_BEAN = "scTrackingDiaryManagedBean";
 
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
@@ -34,12 +35,20 @@ public class TrackingDiaryBackingBean extends
 	 * Page navigation 
 	 */
 	 public void onModuleSelect() {
-//			renewSesionObject();
-//			FacesContext fc=FacesContext.getCurrentInstance();
-//			fc.getApplication().getNavigationHandler()
-//			.handleNavigation(fc, null, "flDocSearch?faces-redirect=true");
-	 }		
-	
+		FacesContext fc=FacesContext.getCurrentInstance();
+		if(getManagedBean().getModuleSelected()==getManagedBean().getPreviousSelectedModule()){
+			System.out.println("1onModuleSelect");
+//			getManagedBean().setModuleSelected("");
+//			if (fc.getExternalContext().getSessionMap().containsKey(SC_TRACKING_DIARY_MANAGED_BEAN)) {
+//				fc.getExternalContext().getSessionMap().remove(SC_TRACKING_DIARY_MANAGED_BEAN);
+//				System.out.println(SC_TRACKING_DIARY_MANAGED_BEAN);
+//			}   	 	
+		}else{
+			getManagedBean().setPreviousSelectedModule(getManagedBean().getModuleSelected());
+			System.out.println("2onModuleSelect");
+
+		}
+	 }	
 	public String getUserName(Long userId) {
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);

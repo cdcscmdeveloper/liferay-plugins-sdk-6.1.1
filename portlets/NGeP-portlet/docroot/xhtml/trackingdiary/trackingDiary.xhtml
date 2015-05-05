@@ -22,7 +22,7 @@
 						value="*" styleClass="mandatory" />
 				</h:column>
 				<h:column>
-					<p:selectOneMenu id="functionMOD" value="#{trackingDiaryBackingBean.managedBean.moduleChanged}">
+					<p:selectOneMenu id="functionMOD" value="#{trackingDiaryBackingBean.managedBean.moduleSelected}">
 						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" />
 			        	<p:ajax event="change" onstart="#{trackingDiaryBackingBean.onModuleSelect()}" partialSubmit="true" update="trackingDiary"/>
 					</p:selectOneMenu>
@@ -31,28 +31,28 @@
 			</h:panelGrid>
 					
 			<h:panelGroup id="TrackingDiary">
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'SM'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'SM'}">
 					<ui:include src="/xhtml/trackingdiary/smTrackingDiarySearch.xhtml" />
 				</c:if>
-<!-- 				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'PP'}"> -->
+<!-- 				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'PP'}"> -->
 <!-- 					<ui:include src="/xhtml/trackingdiary/ppTrackingDiarySearch.xhtml" /> -->
 <!-- 				</c:if> -->
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'CT'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'CT'}">
 					<ui:include src="/xhtml/trackingdiary/ctTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'FL'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'FL'}">
 					<ui:include src="/xhtml/trackingdiary/flTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'CM'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'CM'}">
 					<ui:include src="/xhtml/trackingdiary/cmTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'SC'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'SC'}">
 					<ui:include src="/xhtml/trackingdiary/scTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'DP'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'DP'}">
 					<ui:include src="/xhtml/trackingdiary/dpTrackingDiarySearch.xhtml" />
 				</c:if>
-				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleChanged == 'CD'}">
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'CD'}">
 					<ui:include src="/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml" />
 				</c:if>
 			</h:panelGroup>
