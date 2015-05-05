@@ -13,25 +13,30 @@
 
 	<ui:define name="contentSection">
 		<!-- <ac:title value="#{lbl['lbl.sc.spec.specification.committee']}"></ac:title> -->
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="committeeTechnicalmessages" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true"
 			severity="error, info" />
 
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;"  immediate="true"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
+				immediate="true"
 				action="#{specificationBackingBean.committeeBackAction}" />
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-				style="float:right;"  immediate="true"
+				style="float:right;" immediate="true"
 				onclick="createTechnicalDialog.show();"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				style="float:right;" 
+				style="float:right;" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{specificationBackingBean.completeTemplateSpecDetails('SC',1)}"
 				update="@all" />
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				style="float:right;" update="@all"
-				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}"/>
+			<p:commandButton value="#{lbl['lbl.btn.save']}" style="float:right;"
+				update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
+				action="#{specificationBackingBean.saveTemplateSpecDetails('SC',1)}" />
 
 		</div>
 		<div class="clear"></div>
@@ -60,7 +65,8 @@
 							value="#{lbl['lbl.sc.item.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemTypeCode)}" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
+					<td><h:outputLabel
+							value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
 					<td><p:inputText disabled="true" size="30"
 							value="#{specificationBackingBean.getParameterDesc(specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.specTypeCode)}" /></td>
 
@@ -78,8 +84,7 @@
 
 				<tr>
 
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.status']}" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{specificationBackingBean.getStatusDescById(specificationBackingBean.managedBean.scQtChecklist.pmStatus.statusId)}"></p:inputText></td>
 					<td><h:outputLabel
@@ -101,8 +106,9 @@
 			</table>
 
 			<p:dialog id="speccommitteecreateTechnicalDialog"
-				widgetVar="createTechnicalDialog" header="#{lbl['lbl.sc.cancel.confirm']}"
-				resizable="false" width="325" height="75" closable="false">
+				widgetVar="createTechnicalDialog"
+				header="#{lbl['lbl.sc.cancel.confirm']}" resizable="false"
+				width="325" height="75" closable="false">
 				<table>
 					<tr>
 						<td align="center"><p:outputLabel
