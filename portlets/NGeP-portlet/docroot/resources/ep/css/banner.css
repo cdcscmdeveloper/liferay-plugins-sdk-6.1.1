@@ -1,0 +1,84 @@
+@charset "utf-8";
+/* CSS Document */
+/*
+html{
+	max-width:336px;
+	font-family:Arial, Helvetica, sans-serif;
+}*/
+
+/*
+a {
+    color: #ee5408;
+	text-decoration:none;
+}
+
+a:hover {
+    color: #009ae5;
+	text-decoration:underline;
+}
+*/
+
+.banner1-container p{
+	font-size:15pt;
+	margin-top:0;	
+}
+
+.banner1{
+	color: #000000;
+	border-radius:8px;
+	border: 1px solid #d1d3d4;
+	background-image:url(#{resource['ep/images/supplierregistration/upload-catalogue-bg.png']}) !important;
+	background-size:336px 80px;
+    background-repeat: no-repeat;
+	height: 80px;
+	}
+.banner1-text{
+	padding-left: 90px;
+	padding-top: 17px;
+	padding-bottom: 17px;
+	}
+
+.banner2-container p{
+	font-size:17pt;
+	margin:0;	
+}
+
+
+.banner2{
+	color: #ffffff;
+	border-radius:8px;
+	border: 1px solid #d1d3d4;
+	background-image:url(#{resource['ep/images/supplierregistration/request-softcert-bg.png']})!important;
+	background-size:336px 80px;
+    background-repeat: no-repeat;
+	background-position:right;
+	height: 80px;
+	}
+.banner2-text{
+	padding-left: 20px;
+	padding-top: 26px;
+	padding-bottom: 26px;
+	}
+	
+	
+.banner3-container p{
+	font-size:15pt;
+	margin:0;	
+}
+
+
+.banner3{
+	color: #000000;
+	border-radius:8px;
+	border: 1px solid #41320e;
+	background-image:url(#{resource['ep/images/supplierregistration/upgrade-mof-bg.png']}) !important;
+	background-size:336px 80px;
+    background-repeat: no-repeat;
+	background-position:left;
+	height: 80px;
+	}
+.banner3-text{
+	padding-left: 75px;
+	padding-top: 28px;
+	padding-bottom: 28px;
+	}
