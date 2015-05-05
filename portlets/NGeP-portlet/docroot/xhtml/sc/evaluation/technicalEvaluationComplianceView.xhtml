@@ -28,6 +28,8 @@
 
 
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}" escape="false" />
+			
 			<p:dataTable var="complianceTechnicalSupplier" rows="10"
 				id="complianceTechnicalSupplier" editable="true" rowIndexVar="index"
 				style="width:100%" rowKey="#{complianceTechnicalSupplier}">
