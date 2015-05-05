@@ -227,6 +227,7 @@
 		<portlet id="smRequestActivation"></portlet>
 		<portlet id="forceReplaceSupplierAdmin"></portlet>
 		<portlet id="reactivateBasicAccount"></portlet>
+		<portlet id="basicAccountActivation"></portlet>
 		<portlet id="supplierBusinessNature"></portlet>
 		<portlet id="postsupplierregistration"></portlet>
 		<portlet id="supplierRegistrationCont"></portlet>
