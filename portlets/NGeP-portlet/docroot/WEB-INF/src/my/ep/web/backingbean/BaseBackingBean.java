@@ -887,39 +887,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public void redirectToLogoutUrl() {
 		System.out
 				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
-		String logoutUrl = getDefaultLogoutUrl();
-		System.out.println(">>>>>>>>>>>>>>>1)logout url:" + logoutUrl
-				+ "<<<<<<<<<<<<<<<");
-		try {
-			FacesContext fCtx = FacesContext.getCurrentInstance();
-			PortletRequest req = (PortletRequest) fCtx.getExternalContext()
-					.getRequest();
-			ThemeDisplay themeDisplay = (ThemeDisplay) req
-					.getAttribute("LIFERAY_SHARED_THEME_DISPLAY");
-			themeDisplay = themeDisplay == null ? (ThemeDisplay) req
-					.getAttribute(WebKeys.THEME_DISPLAY) : themeDisplay;
-			System.out.println(">>>>>>>>>>>>>>>2)logout url:" + logoutUrl
-					+ "<<<<<<<<<<<<<<<");
-			if (themeDisplay != null) {
-				logoutUrl = themeDisplay.getURLPortal()
-						+ themeDisplay.getURLSignOut();
-				System.out.println(">>>>>>>>>>>>>>>3)logout url:" + logoutUrl
-						+ "<<<<<<<<<<<<<<<");
-				if (StringUtils.isBlank(logoutUrl)) {
-					logoutUrl = getDefaultLogoutUrl();
-					System.out.println(">>>>>>>>>>>>>>>4)logout url:"
-							+ logoutUrl + "<<<<<<<<<<<<<<<");
-				}
-			}
-		} catch (Exception ex) {
-			System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>ERROR TO LOGOUT:"
-					+ ex.getMessage() + "<<<<<<<<<<<<<<<<<<<");
-		} finally {
-			SmCommonUtil.redirectToExternalUrl(logoutUrl);
-		}
-	}
-
-	private String getDefaultLogoutUrl() {
 		FacesContext fCtx = FacesContext.getCurrentInstance();
 		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
 				.getRequest();
@@ -930,6 +897,6 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		String logOutUrl = portalUrl + "/c/portal/logout";
 		System.out.println(">>>>>>>>>>>>logout url default:" + logOutUrl
 				+ "<<<<<<<<<<<<<<");
-		return logOutUrl;
+		SmCommonUtil.redirectToExternalUrl(logOutUrl);
 	}
 }
