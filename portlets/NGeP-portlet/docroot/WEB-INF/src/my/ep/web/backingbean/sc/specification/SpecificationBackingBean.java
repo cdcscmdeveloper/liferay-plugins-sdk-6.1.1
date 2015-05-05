@@ -9537,7 +9537,7 @@ public class SpecificationBackingBean extends
 		}
 		return this.getManagedBean().getScoreTypeList();
 	}
-	
+
 	/**
 	 * Populate values for Clone Template radio button(s)
 	 * 
@@ -9546,7 +9546,7 @@ public class SpecificationBackingBean extends
 	public SelectItem[] getCloneTemplateRadioBtn() {
 		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.TEMPLATE_CLONE);
 		return items;
-	}	
+	}
 
 	/**
 	 * Check list file upload.Event handle to upload technical and financial
@@ -15228,5 +15228,20 @@ public class SpecificationBackingBean extends
 
 		}
 
+	}
+
+	// delete checklist scores
+	public void deleteCheckListScoreContrats() {
+
+		markDeleteSelectedRowsAction(this.getManagedBean().getCheckListScore(),
+				this.getManagedBean().getToBeRemoveList());
+
+	}
+
+	// delete checklist scores
+	public void deleteCheckListScoreYears() {
+		markDeleteSelectedRowsAction(
+				this.getManagedBean().getScoringForYears(), this
+						.getManagedBean().getToBeRemoveList());
 	}
 }
