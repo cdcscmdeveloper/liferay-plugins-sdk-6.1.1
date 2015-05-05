@@ -1899,9 +1899,6 @@ public class SmCommonUtil {
 	 * Redirect to liferay logout url
 	 */
 	public static void redirectToLogoutUrl() {
-		System.out
-				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
-		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
 		FacesContext fCtx = FacesContext.getCurrentInstance();
 		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
 				.getRequest();

@@ -1528,6 +1528,16 @@ public class SmPersonnelBackingBean extends
 	public void onChangeAccntStatus(AjaxBehaviorEvent e) {
 
 	}
+	
+	/**
+	 * Redirect to liferay logout url
+	 */
+	public void redirectToLogoutUrl() {
+		System.out
+				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		SmCommonUtil.redirectToLogoutUrl();
+	}
 
 	/**
 	 * Get current active application by supplier

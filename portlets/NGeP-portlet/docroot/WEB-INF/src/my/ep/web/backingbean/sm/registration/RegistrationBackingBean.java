@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
@@ -103,6 +104,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -2234,6 +2237,16 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 
 	}*/
+	
+	/**
+	 * Redirect to liferay logout url
+	 */
+	public void redirectToLogoutUrl() {
+		System.out
+				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+		SmCommonUtil.redirectToLogoutUrl();
+	}
 
 }
 
