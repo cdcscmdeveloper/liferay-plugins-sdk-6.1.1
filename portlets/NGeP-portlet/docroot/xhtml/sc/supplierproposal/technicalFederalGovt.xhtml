@@ -71,19 +71,19 @@
 						value="#{supplierProposalDetailBackingBean.managedBean.contractSize}"
 						readonly="true" disabled="true" size="15" /></td>
 				<td style="width: 80px;"><h:outputText
-						value="#{lbl['lbl.sc.auto.score']}"
+						value="#{lbl['lbl.tpl.spec.content.system.score']}"
 						rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
 						rendered="#{checklistScoreType eq '2' and !pageDisable}">
 						<h:outputText value="* " styleClass="mandatory" />
 
 
-					</ui:fragment> <h:outputText value="#{lbl['lbl.sc.user.score']}"
+					</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
 						rendered="#{ checklistScoreType eq '2'}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfContracts.autoScore}" style="text-align:right"
 						rendered="#{checklistScoreType eq '1'}"></p:inputText> <p:inputText
 						id="technicalGovernmentNoofContractsUserScoreId"
-						label="#{lbl['lbl.sc.user.score']}"
+						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						disabled="#{pageDisable}" value="#{noOfContracts.userScore}"
 						required="true" maxlength="18" style="text-align:right"
 						rendered="#{ checklistScoreType eq '2'}">
@@ -108,19 +108,19 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</p:inputText></td>
 				<td style="width: 80px;"><h:outputText
-						value="#{lbl['lbl.sc.auto.score']}"
+						value="#{lbl['lbl.tpl.spec.content.system.score']}"
 						rendered="#{companyScoreType eq '1'}" /> <ui:fragment
 						rendered="#{companyScoreType eq '2' and !pageDisable}">
 						<h:outputText value="* " styleClass="mandatory" />
 
 
-					</ui:fragment> <h:outputText value="#{lbl['lbl.sc.user.score']}"
+					</ui:fragment> <h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
 						rendered="#{companyScoreType eq '2'}" /></td>
 				<td><p:inputText readonly="true" disabled="true"
 						value="#{noOfYears.autoScore}" style="text-align:right"
 						rendered="#{companyScoreType eq '1'}"></p:inputText> <p:inputText
 						id="technicalGovernmentNoofYearsUserScoreId" maxlength="18"
-						label="#{lbl['lbl.sc.user.score']}"
+						label="#{lbl['lbl.tpl.spec.content.user.score']}"
 						style="text-align:right" disabled="#{pageDisable}"
 						value="#{noOfYears.userScore}" required="true"
 						rendered="#{companyScoreType eq '2'}">

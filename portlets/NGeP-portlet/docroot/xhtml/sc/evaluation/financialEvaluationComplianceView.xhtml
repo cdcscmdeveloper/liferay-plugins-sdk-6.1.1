@@ -21,16 +21,10 @@
 				style="float:right;"/>
 		</div>
 
-		<p:panel>
-			<table>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
-						</p:selectOneMenu></td>
-				</tr>
-			</table>
+		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
+			<ui:include src="checklistHeader.xhtml" />
 		</p:panel>
+		<br />
 
 
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">

@@ -31,19 +31,8 @@
 				<br/>
 				<br/>
 				
-				<p:panel header="#{lbl['lbl.sc.spec.checklist.title']}">
-					<table>
-						<tr>
-							<td style="font-weight:bold; font-size:16px;">
-								 #{lbl['lbl.sc.title']} :<p:spacer width="15px"></p:spacer>
-							</td>
-							<td>
-								<h:outputText style="width:100%;font-size:16px;"
-									value="#{evaluationBackingBean.managedBean.scQtChecklist.title}"
-									rows="2" cols="150" disabled="true"></h:outputText>
-							</td>
-						</tr>
-					</table>				
+				<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.compliance']}">
+					<ui:include src="checklistHeader.xhtml" />
 				</p:panel>
 				<br/>
 			</h:panelGroup>
