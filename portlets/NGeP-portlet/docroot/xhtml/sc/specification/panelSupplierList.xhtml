@@ -53,11 +53,10 @@
 
 				<ui:param name="businessOwnerPanleZonesDeleteId"
 					value="businessOwnerPanleZonesDeleteId"></ui:param>
-				<ui:param name="businessOwnerPanelZonesDeletePopUp"
-					value="businessOwnerPanelZonesDeletePopUp"></ui:param>
 				<ac:confirmationPopup id="#{businessOwnerPanleZonesDeleteId}"
-					widget="businessOwnerPanelZonesDeletePopUp"
-					postSignAction="#{specificationBackingBean.deletePanelTreeNode}"
+					widget="businessOwnerPanelZonesDeletePopUp" width="400"
+					height="200"
+					okAction="specificationBackingBean.deletePanelTreeNode"
 					title="#{lbl['lbl.sc.location.details']}"
 					content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
 					update="@([id$=ctZoneList])" />

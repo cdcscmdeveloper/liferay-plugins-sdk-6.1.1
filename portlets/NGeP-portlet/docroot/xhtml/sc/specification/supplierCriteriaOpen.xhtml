@@ -58,12 +58,10 @@
 		</div>
 		<ui:param name="supplierOpencategoryDeleteId"
 			value="supplierOpencategoryDeleteId"></ui:param>
-		<ui:param name="supplierOpencategoryDeletePopUp"
-			value="supplierOpencategoryDeletePopUp"></ui:param>
 		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
 			widget="supplierOpencategoryDeletePopUp"
-			postSignAction="#{specificationBackingBean.deleteCategoryCodes}"
-			title="#{lbl['lbl.sc.category.code']}"
+			okAction="specificationBackingBean.deleteCategoryCodes" width="400"
+			height="200" title="#{lbl['lbl.sc.category.code']}"
 			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
 			update="@([id$=openPnlId])" />
 
@@ -144,9 +142,8 @@
 							</p:inputText></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.location.level']}"
@@ -232,11 +229,10 @@
 				</div>
 				<ui:param name="supplierNonZoneDeleteId"
 					value="supplierNonZoneDeleteId"></ui:param>
-				<ui:param name="supplierNonZoneDeletePopUp"
-					value="supplierNonZoneDeletePopUp"></ui:param>
 				<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
 					widget="supplierNonZoneDeletePopUp"
-					postSignAction="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
+					okAction="specificationBackingBean.deleteSupplierQualificationTreeNode"
+					width="400" height="200"
 					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
 					update="@([id$=zoneLocationDataTable])" />
@@ -262,9 +258,8 @@
 					</tr>
 
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="locZoneLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
@@ -354,11 +349,10 @@
 
 				</div>
 				<ui:param name="supplierZonalDeleteId" value="supplierZonalDeleteId"></ui:param>
-				<ui:param name="supplierZonalDeletePopUp"
-					value="supplierZonalDeletePopUp"></ui:param>
 				<ac:confirmationPopup id="#{supplierZonalDeleteId}"
 					widget="supplierZonalDeletePopUp"
-					postSignAction="#{specificationBackingBean.deleteSupplierQualificationTreeNode}"
+					okAction="specificationBackingBean.deleteSupplierQualificationTreeNode"
+					width="400" height="200"
 					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
 					update="@([id$=zoneyesDataTable])" />
