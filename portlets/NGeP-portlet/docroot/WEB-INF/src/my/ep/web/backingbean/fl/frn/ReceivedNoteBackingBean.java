@@ -51,9 +51,11 @@ import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.frn.FlSupplierEvaluation;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -516,6 +518,16 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				|| fulfilmentNote.getReceivedDate().before(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate()))){
 			throw new EpException(MessageConst.ERROR_700020);
 		}
+		
+		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+			IDeliveryOrderSO orderSO = (IDeliveryOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IDeliveryOrderSO.class);
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			reqDTO.setDeliveryOrderId(getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			PmStatus status = orderSO.retrieveDelOrderStatus(reqDTO).getPmStatus();
+			if(status==null || status.getStatusId().longValue()!=FulfilmentStatusConst.DO_PENDING_ACKNOWLEDGEMENT) {
+				throw new EpException(MessageConst.ERROR_745068, new String[]{getManagedBean().getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderNo()});
+			}
+		}
 	}
 	
 	/**
@@ -672,7 +684,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
-		
+			// Set DO status
+			doBB.getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder());
+			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
+			
 			return NAV_DELIVERYORDER_PAGE;
 		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
