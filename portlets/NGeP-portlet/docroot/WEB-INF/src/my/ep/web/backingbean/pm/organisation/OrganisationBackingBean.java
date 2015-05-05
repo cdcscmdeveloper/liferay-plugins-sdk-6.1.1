@@ -91,6 +91,7 @@ import my.ep.web.managedbean.pm.organisation.OrganisationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -282,57 +283,74 @@ public class OrganisationBackingBean extends
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgTypeCode()));
 			
+			PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
+			PmOrgProfile orgProfile = null;
+			if(user != null){
+				orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+			}
+			
 			PmParameter orgTypeParameter = 
-					getParameterByTypeAndCode(ParameterTypeConst.ORGANISATION_TYPES,OrganizationType.DIVISION.value());
-			if(orgTypeParameter != null && orgTypeParameter.getParameterId().toString().equals(oSearchBean.getOrgTypeCode())){			
-				PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
-				PmOrgProfile orgProfile = null;
-				if(user != null){
-					orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
-				}
-				
-				if(orgProfile !=null){
-					Set<Long> orgProfileSet = null;
+					ParameterHelper.getInstance().getPmParameterById(Long.valueOf(oSearchBean.getOrgTypeCode()));
+			Set<Long> orgProfileSet = null;			
+			if(orgTypeParameter != null && orgProfile != null
+					&& ParameterTypeConst.ORGANISATION_TYPES.equals(orgTypeParameter.getParameterType())){
+			   if(OrganizationType.MINISTRY.value().equals(orgTypeParameter.getParameterCode())){
+				   if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+					   searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("orgProfileId",
+										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+				   }
+				   
+			   }else if(OrganizationType.DEPARTMENT.value().equals(orgTypeParameter.getParameterCode())){
+				   if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+					   searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("parentOrgProfile.orgProfileId",
+										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+						
+				   }else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+					   searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("orgProfileId",
+										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+				   }
+				   
+			   }else if(OrganizationType.DIVISION.value().equals(orgTypeParameter.getParameterCode())){				   
 					if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
 						orgProfileSet = new HashSet<Long>(); 
 						for(PmOrgProfile childOrgProfile : orgProfile.getChildOrgProfiles()){
 							orgProfileSet.add(childOrgProfile.getOrgProfileId());
 						}
 						searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("parentOrgProfile.orgProfileId",
-									SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
-						
+								new SearchFilterBean("parentOrgProfile.orgProfileId",
+										SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
+							
 					}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
 						searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("parentOrgProfile.orgProfileId",
-									SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
-						
+								new SearchFilterBean("parentOrgProfile.orgProfileId",
+										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+							
 					}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {						
-							// Naik Taraf / Group Org.
-							if(orgProfile.isGroupOrg()){
-								orgProfileSet = new HashSet<Long>(); 							
-								//add current org profile
-								orgProfileSet.add(orgProfile.getOrgProfileId());
-								//loop and add authorized profile (child list)
-								for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
-									orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
-								}	
-								searchBean.getDataFilterBeans().add(
-										new SearchFilterBean("orgProfileId",
+						// Naik Taraf / Group Org.
+						if(orgProfile.isGroupOrg()){
+							orgProfileSet = new HashSet<Long>(); 							
+							//add current org profile
+							orgProfileSet.add(orgProfile.getOrgProfileId());
+							//loop and add authorized profile (child list)
+							for(PmProfileGroup profileGroup : orgProfile.getMainProfileGroups()){
+								orgProfileSet.add(profileGroup.getAuthorizedOrgProfile().getOrgProfileId());
+							}	
+							searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("orgProfileId",
 												SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
-							}else{
-								searchBean.getDataFilterBeans().add(
-										new SearchFilterBean("orgProfileId",
-												SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
-							}
-						
+						}else{
+							searchBean.getDataFilterBeans().add(
+											new SearchFilterBean("orgProfileId",
+													SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+						}
 					}
-					
-				}
-				
-			}
-			
+			   }
+			}	
 		}
+		
 
 		if (oSearchBean.getOrgCode() != null
 				&& oSearchBean.getOrgCode().trim().length() > 0) {
