@@ -348,17 +348,17 @@ public class SPDetailBackingBean extends
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
 			
-			
-			if (null != digiSign) {
-				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
-						scQtProposal.getQtProposalId(), scQtProposal.getProposalNo());
-			}
 			// spki 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 			String originalText = prepareOriginalText(scQtProposal.getScQtSupplier().getSmSupplier());
 			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
 			digiSign.setSignedData(signedData);
+			
+			if (null != digiSign) {
+				updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
+						scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(), originalText);
+			}
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
@@ -3703,6 +3703,5 @@ public class SPDetailBackingBean extends
 	public void spkiSignAction() {
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
-
 	
 }

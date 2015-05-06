@@ -2321,19 +2321,27 @@ public class LOADetailBackingBean extends
 					}
 				}
 			}
-			if (null != digiSign) {
-				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
-						scLoa.getLoaId(), scLoa.getLoaNo());
-			}
+
 			// spki 
 			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 				String originalText = prepareOriginalText(scLoa.getScLoiLoa().getSmSupplier());
 				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
-				pmDigiSign.setSignedData(signedData);
+				digiSign.setSignedData(signedData);
+
+				if (null != digiSign) {
+					updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+							scLoa.getLoaId(), scLoa.getLoaNo(), originalText);
+				}
+			} else{
+				// gpki
+				if (null != digiSign) {
+					updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+							scLoa.getLoaId(), scLoa.getLoaNo());
+				}
 			}
-			
+
 			validateLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();

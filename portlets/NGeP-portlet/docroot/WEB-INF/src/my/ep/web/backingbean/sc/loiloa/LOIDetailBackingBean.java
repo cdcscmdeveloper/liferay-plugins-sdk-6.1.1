@@ -1850,20 +1850,26 @@ public class LOIDetailBackingBean extends
 			awardSupplierReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			awardSupplierReqDTO.setRoleCode(getUserRoleCode());
 			
-			if (null != digiSign) {
-				updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_INTENT, 
-						scLoi.getLoiId(), scLoi.getLoiNo());
-			}
-			
 			// spki 
 			if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
 				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 				String originalText = prepareOriginalText(scLoi.getScLoiLoa().getSmSupplier());
 				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
-				pmDigiSign.setSignedData(signedData);
+				digiSign.setSignedData(signedData);
+				if (null != digiSign) {
+					updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_INTENT, 
+							scLoi.getLoiId(), scLoi.getLoiNo(), originalText);
+				}
+			} else{
+				//gpki
+				if (null != digiSign) {
+					updatePmDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_INTENT, 
+							scLoi.getLoiId(), scLoi.getLoiNo());
+				}
 			}
-			awardSupplierReqDTO.setPmDigiSign(pmDigiSign);
+			
+			awardSupplierReqDTO.setPmDigiSign(digiSign);
 
 			 awardSupplierResDTO = getQtAwardSO()
 					.saveLOIDtl(awardSupplierReqDTO);

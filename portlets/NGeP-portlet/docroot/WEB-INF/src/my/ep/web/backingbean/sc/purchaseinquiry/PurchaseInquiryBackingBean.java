@@ -90,6 +90,7 @@ import my.ep.web.util.sc.helper.SourcingZoneHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+import org.primefaces.context.RequestContext;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -632,8 +633,9 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 					prInquiry.getPrInquiryId(), prInquiry.getPrInquiryNo() , originalText);
 		}
 
-		//SpkiBackingBean spkiBackingBean  = new SpkiBackingBean();
-		//String signedData =  spkiBackingBean.spkiSignTransaction(originalText);
+		// spki 
+		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+		RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 		String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
 
 		// updating price 
@@ -1293,6 +1295,13 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			}
 			return items;
 		}
+		/**
+		 * Spki sign action.
+		 */
+		public void spkiSignAction() {
+			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		}
+
 		
 		/**
 		 * Checks if is supplier user.
