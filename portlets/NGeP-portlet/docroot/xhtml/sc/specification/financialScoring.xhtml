@@ -60,9 +60,8 @@
 					rendered="#{((finance.definationType.parameterCode eq 'UP' or finance.definationType.parameterCode eq 'NA') and finance.scoringReq)}">
 					<p:inputText value="#{finance.qtScoreWeightage.score}"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-						maxlength="18" required="true"
-						label="#{lbl['lbl.sc.score']}" id="finScoreWeightage"
-						style="text-align:right">
+						maxlength="18" required="true" label="#{lbl['lbl.sc.score']}"
+						id="finScoreWeightage" style="text-align:right">
 						<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 						<p:ajax event="blur" process="@this"
 							listener="#{specificationBackingBean.finScoringCheckList(finance)}"
@@ -101,48 +100,46 @@
 				<tr>
 					<td style="width: 149px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
-					<td>
-						<p:inputText readonly="true" disabled="true"
+					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
-							value="#{specificationBackingBean.managedBean.finPoints}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.points.tooltip']}" />
-					</td>
+							value="#{specificationBackingBean.managedBean.finPoints}" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.spec.total.points.tooltip']}" /></td>
 				</tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 					<tr>
 						<td><h:outputText
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
-						<td>
-							<p:inputText readonly="true" disabled="true"
+						<td><p:inputText readonly="true" disabled="true"
 								style="text-align:right"
 								value="#{specificationBackingBean.managedBean.financialWeightageScore}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" />
-						</td>
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" /></td>
 					</tr>
 				</ui:fragment>
 			</table>
 		</h:panelGroup>
 	</p:panel>
 	<h:panelGroup id="offeredPrice">
-		<p:panel header="#{lbl['lbl.sc.by.package']}"
-			toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.by.package']}" toggleable="true">
 			<table>
 				<tr>
-					<td style="width: 100px;"><h:outputText
+					<td style="width: 150px;"><h:outputText
 							value="#{lbl['lbl.sc.passing.score']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.financialScoreSetting.passingScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.checkFinancialPassingScore(specificationBackingBean.managedBean.financialScoreSetting)}" />
-						</p:inputText> <p:spacer width="5"></p:spacer> </td>
+						</p:inputText> <p:spacer width="5"></p:spacer></td>
 				</tr>
 			</table>
-			
-			<br/>
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.score.variance.instruction']}" escape="false" />
-			
+
+			<br />
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.spec.score.variance.instruction']}"
+				escape="false" />
+
 			<p:panelGrid style="margin-top:5px;width:100%;"
 				styleClass="panelGridBorders tr, panelGridBorders td">
 				<f:facet name="header">
@@ -209,7 +206,7 @@
 
 		<table>
 			<tr>
-				<td style="width: 100px;"><h:outputText
+				<td style="width: 150px;"><h:outputText
 						value="#{lbl['lbl.sc.passing.score']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -219,7 +216,7 @@
 							maxIntegerDigits="5" integerOnly="true" />
 						<f:attribute name="min" value="0"></f:attribute>
 						<f:attribute name="max" value="100"></f:attribute>
-					</p:inputText> <p:spacer width="5"></p:spacer> </td>
+					</p:inputText> <p:spacer width="5"></p:spacer></td>
 			</tr>
 		</table>
 

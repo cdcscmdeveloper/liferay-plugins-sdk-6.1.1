@@ -31,8 +31,9 @@
 			</tr>
 
 		</table>
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.max.score.instruction']}" escape="false" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.spec.max.score.instruction']}" escape="false" />
 
 		<p:dataTable id="technicalWeigtage" var="tech"
 			value="#{specificationBackingBean.managedBean.technicalScoring}"
@@ -103,12 +104,10 @@
 					<td style="width: 149px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 
-					<td>
-						<p:inputText readonly="true" disabled="true"
+					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
-							value="#{specificationBackingBean.managedBean.techPoints}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.points.tooltip']}" />
-					</td>
+							value="#{specificationBackingBean.managedBean.techPoints}" /> <ac:iconTooltip
+							value="#{lbl['lbl.sc.spec.total.points.tooltip']}" /></td>
 				</tr>
 				<ui:fragment
 					rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
@@ -116,12 +115,11 @@
 					<tr>
 						<td><h:outputText
 								value="#{lbl['lbl.sc.spec.total.weightage']}" /></td>
-						<td>
-							<p:inputText readonly="true" disabled="true"
+						<td><p:inputText readonly="true" disabled="true"
 								style="text-align:right"
 								value="#{specificationBackingBean.managedBean.technicalWeightageScore}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" />
-						</td>
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.total.weightage.tooltip']}" /></td>
 					</tr>
 
 				</ui:fragment>
@@ -134,35 +132,36 @@
 	<p:panel toggleable="true">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.passing.score']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.passing.score.technical.tooltip']}" />
 		</f:facet>
 
 		<table>
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.scQt.demoRequired eq 'true'}">
 				<tr>
-					<td><h:outputText
+					<td style="width: 150px;"><h:outputText
 							value=" #{lbl['lbl.sc.spec.qual.present.demo']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.checkDemoPassingScore(specificationBackingBean.managedBean.demoScoreSetting)}" />
-						</p:inputText> <p:spacer width="5"></p:spacer> </td>
+						</p:inputText> <p:spacer width="5"></p:spacer></td>
 				</tr>
 			</ui:fragment>
 
 
 
 			<tr>
-				<td><h:outputText
+				<td style="width: 150px;"><h:outputText
 						value="#{lbl['lbl.sc.spec.technical']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
 						<p:ajax event="blur" process="@all" partialSubmit="true"
 							listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />
-					</p:inputText> <p:spacer width="5"></p:spacer> </td>
+					</p:inputText> <p:spacer width="5"></p:spacer></td>
 			</tr>
 		</table>
 
