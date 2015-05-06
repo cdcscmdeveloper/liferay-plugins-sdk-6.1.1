@@ -15,7 +15,10 @@
 						<p:selectBooleanCheckbox id="chkTcId" value="#{forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}">
 							<p:ajax update="btnYes" partialSubmit="true" process="@this" />
 						</p:selectBooleanCheckbox>
-						<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.tnc.msg']}" escape="false"/>
+						#{lbl['lbl.sm.forcereplaceadmin.tnc.msg.agreed']}&#160;
+						<h:commandLink
+							action="#{forceReplaceSuppAdminBackingBean.viewTnc}" target="_blank"
+							process="@this" partialSubmit="true" value="#{lbl['lbl.sm.forcereplaceadmin.tnc.msg.tnc']}" />
 					</td>
 				</tr>
 				<tr>
