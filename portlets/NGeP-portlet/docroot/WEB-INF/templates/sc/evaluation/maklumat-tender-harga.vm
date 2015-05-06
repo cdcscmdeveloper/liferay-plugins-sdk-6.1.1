@@ -1,73 +1,97 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
+	<style>
+		#wrapper {
+			width:660px;
+			margin:0px auto;
+			padding:10px;
+		}
+		#header {
+			height:80px;
+			padding:10px;
+		}
+		#content {
+			margin-top:10px;
+			padding-bottom:10px;
+		}
+		#content div {
+			padding:10px;
+			float:left;
+		}
+		#footer {
+			float:left;
+			margin-top:10px;
+			margin-bottom:10px;
+			padding:10px;
+			width:630px;
+		}
+		#bottom {
+			clear:both;
+			text-align:right;
+		}
+		body{
+			font-family: "Helvetica";
+			font-size: 8pt;
+		}
+		.table2 {
+			border-collapse: collapse;
+			width:100%;
+		}		
 		.table2 th, .table2 td {
 			border: 1px solid black;
-		}
-		 th{
+		}		
+		th{
 			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		}
+	</style>
 </head>
 <body>
-	<table width="100%">
-		<tr>
-			<td>
-				<br />
-			</td>
-		</tr>
-		<tr>
-			<td>
-	    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Maklumat Tender/Sebut Harga</span>
-	    		<br /><br />
-			</td>
-		</tr>
-		<tr>
-			<td>#if ( $ec == "true")
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Jenis Tender/Sebut Harga :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$qtType</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Anggaran Kementerian :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$estimatedPrice</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Iklan Tender/Sebut Harga :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$publishDate</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Tutup Tender/Sebut Harga :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$closingDate</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Bilangan Pembekal :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$totalSuppliers</span>
-				#end
-			</td>
-		</tr>
-		<tr>
-			<td>#if ( $tec == "true")
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Jenis Tender/Sebut Harga :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$qtType</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Iklan Tender/Sebut Harga :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$publishDate</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Tutup Tender/Sebut Harga :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$closingDate</span><br/>
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Bilangan Pembekal :</span>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$totalSuppliers</span>
-				#end
-			</td>
-		</tr>
-	</table>
+	<div id="wrapper">
+		<div id="header">
+			#parse("sc/shared/header.vm")
+		</div>
+		<div id="content" style="height:740px;">
+			<table width="100%">
+				<tr>
+					<td align='center' valign="top">
+						<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Maklumat Tender/Sebut Harga</span>
+						<br /><br />
+					</td>
+				</tr>
+				<tr>
+					<td>#if ( $ec == "true")
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Jenis Tender/Sebut Harga :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$qtType</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Anggaran Kementerian :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$estimatedPrice</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Iklan Tender/Sebut Harga :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$publishDate</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Tutup Tender/Sebut Harga :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$closingDate</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Bilangan Pembekal :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$totalSuppliers</span>
+						#end
+					</td>
+				</tr>
+				<tr>
+					<td>#if ( $tec == "true")
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Jenis Tender/Sebut Harga :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$qtType</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Iklan Tender/Sebut Harga :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$publishDate</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tarikh Tutup Tender/Sebut Harga :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$closingDate</span><br/>
+							<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Bilangan Pembekal :</span>
+							<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$totalSuppliers</span>
+						#end
+					</td>
+				</tr>
+			</table>
+		</div>
+		<div id="footer">
+			#parse("sc/shared/footer.vm")
+		</div>
+		<div id="bottom"></div>
+	</div>
 </body>
 </html>
