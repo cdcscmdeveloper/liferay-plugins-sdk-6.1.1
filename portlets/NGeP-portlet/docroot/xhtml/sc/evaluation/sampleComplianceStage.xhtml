@@ -50,6 +50,9 @@
 
 		<p:panel header="#{lbl['lbl.sc.item.list']}"
 			toggleable="true">
+			
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.sample.proposal.item.instruction']}" escape="false" />
+			
 			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
 				rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
@@ -109,7 +112,10 @@
 
 				<p:column headerText="#{lbl['lbl.sc.specification']}"
 					style="width:50%">
-
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.specification']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.eva.sample.proposal.item.specification.tooltip']}" />
+					</f:facet>
 					<h:outputText
 						value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
 				</p:column>

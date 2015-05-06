@@ -48,8 +48,11 @@
 				<h:outputText value="#{committeemember.grade}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.pnp']}"
-				style="width: 5%">
+			<p:column style="width: 5%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+				</f:facet>
 				<h:outputText
 					value="#{lbl[committeemember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 			</p:column>

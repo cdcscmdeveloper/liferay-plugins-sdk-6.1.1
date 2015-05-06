@@ -10,8 +10,11 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.qualified.supplier.list']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage.tooltip']}" />
+		</f:facet>
 
 		<p:dataTable var="qualifiedSupplier" id="oneTierQualifiedSupplier"
 			rows="10" editable="true" rowIndexVar="index"
@@ -69,8 +72,11 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.tooltip']}" />
+		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
 			value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"

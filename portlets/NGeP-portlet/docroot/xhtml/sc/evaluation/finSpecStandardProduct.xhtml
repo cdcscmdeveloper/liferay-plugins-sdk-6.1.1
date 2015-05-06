@@ -59,7 +59,9 @@
 
 		
 
-	<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price.package']}">
+	<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}" escape="false" />
+		
 			<p:panelGrid style="margin-top:5px;width:100%;" styleClass="panelGridBorders tr, panelGridBorders td">
 				<f:facet name="header">
 					<p:row>

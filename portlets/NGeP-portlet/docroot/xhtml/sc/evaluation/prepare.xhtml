@@ -18,34 +18,11 @@
 					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
 						action="#{evaluationBackingBean.retriveMeetingDtls(null,evaluationBackingBean.managedBean.committeeType,0)}"
 						update="@form" />
+						
+					<p:menuitem value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, evaluationBackingBean.managedBean.committeeType)}"
+						action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
+						update="@form" />
 
-					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'EC'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.evaluation.committee']}"
-							action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
-							update="@form" />
-					</c:if>
-					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
-						<p:menuitem value="#{lbl['lbl.sc.eva.opn.committee']}"
-							action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
-							update="@form" />
-					</c:if>
-					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'TEC'}">
-						<p:menuitem
-							value="#{lbl['lbl.sc.eva.technical.evaluation.committee']}"
-							action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
-							update="@form" />
-					</c:if>
-
-					<c:if
-						test="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-						<p:menuitem
-							value="#{lbl['lbl.sc.eva.financial.evaluation.committee']}"
-							action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
-							update="@form" />
-					</c:if>
 					<p:menuitem value="#{lbl['lbl.sc.join.in']}"
 						action="#{evaluationBackingBean.retriveTurutHadirDtls(2)}"
 						update="@form" />

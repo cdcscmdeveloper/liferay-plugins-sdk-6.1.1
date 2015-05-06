@@ -15,7 +15,7 @@
 
 					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
 						action="#{evaluationBackingBean.retriveDetails}" update="@form" />
-					<p:menuitem value="#{lbl['lbl.sc.eva.opn.committee']}"
+					<p:menuitem value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, evaluationBackingBean.managedBean.committeeType)}"
 						action="#{evaluationBackingBean.retriveOpeningCommitteeDtls}"
 						update="@form" />
 					<p:menuitem value="#{lbl['lbl.sc.join.in']}"

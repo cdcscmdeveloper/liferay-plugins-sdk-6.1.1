@@ -18,7 +18,7 @@
 			rowIndexVar="rowIndex">
 			<ac:paginator for="reportTbl" />
 
-			<p:column headerText="#{lbl['lbl.sc.contents']}" style="width:78%">
+			<p:column headerText="#{lbl['lbl.sc.content']}" style="width:78%">
 				<h:inputText style="width:96%" value="#{report.title}" rendered="#{empty report.pmDocument}" />
 				<h:outputText value="#{report.title}" rendered="#{!empty report.pmDocument}" />
 			</p:column>

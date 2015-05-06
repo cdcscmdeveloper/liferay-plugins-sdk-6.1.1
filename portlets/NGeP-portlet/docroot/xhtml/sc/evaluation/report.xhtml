@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="#{lbl['lbl.sc.contents']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.content']}" toggleable="true">
 		<p:dataTable var="scQtEvaluationReport" id="evaluationreport"
 			widgetVar="documentWidget"
 			value="#{evaluationBackingBean.managedBean.scQtEvaluationReportList}"
@@ -14,7 +14,7 @@
 
 			<ac:paginator for="evaluationreport" />
 
-			<p:column headerText="#{lbl['lbl.sc.contents']}"
+			<p:column headerText="#{lbl['lbl.sc.content']}"
 				style="width:58%;white-space: normal;">
 				<h:outputText value="#{scQtEvaluationReport.title}" />
 			</p:column>
