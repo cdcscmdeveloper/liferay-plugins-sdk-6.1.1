@@ -1806,7 +1806,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		TerminationBackingBean trBB =  new TerminationBackingBean();
 		trBB.getManagedBean().setViewContract(true);
-		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		
 		resDTO = contractSO.retrieveTerminationHistoryList(ctReqDTO);

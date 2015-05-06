@@ -70,7 +70,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private SelectItem[] supplierSignerDropdown;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	private CtContractVer particularContractVer;
+	private CtContractVer agreementContractVer;
 	private CtAgreement ctAgreement;
 	private CtAgreementContent selectedAgreementContent;
 	private PmDigiSign pmDigiSign;	
@@ -522,17 +522,17 @@ public class AgreementManagedBean extends BaseManagedBean {
 	}
 	
 	/**
-	 * @return the particularContractVer
+	 * @return the agreementContractVer
 	 */
-	public CtContractVer getParticularContractVer() {
-		return particularContractVer;
+	public CtContractVer getAgreementContractVer() {
+		return agreementContractVer;
 	}
 
 	/**
-	 * @param particularContractVer the particularContractVer to set
+	 * @param agreementContractVer the agreementContractVer to set
 	 */
-	public void setParticularContractVer(CtContractVer particularContractVer) {
-		this.particularContractVer = particularContractVer;
+	public void setAgreementContractVer(CtContractVer agreementContractVer) {
+		this.agreementContractVer = agreementContractVer;
 	}
 
 	/**

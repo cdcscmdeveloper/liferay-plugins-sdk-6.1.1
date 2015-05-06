@@ -357,7 +357,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
 					resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
 					getManagedBean().setContractVer(conResDTO.getCtContractVer());
-					getManagedBean().setParticularContractVer(conResDTO.getCtContractVer());
+					getManagedBean().setAgreementContractVer(conResDTO.getCtContractVer());
 				} else {  
 					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
 		     	}
@@ -402,8 +402,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			if (getManagedBean().getContractVer() == null) {
 				getManagedBean().setContractVer(resDTO.getCtContractVer());
 			}			
-			if (getManagedBean().getParticularContractVer() == null) {
-					getManagedBean().setParticularContractVer(resDTO.getParticularContractVer());
+			if (getManagedBean().getAgreementContractVer() == null) {
+					getManagedBean().setAgreementContractVer(resDTO.getAgreementContractVer());
 			}
 			if (getManagedBean().getCtContract().getFulfillmentType() == null) {
 				getManagedBean().getCtContract().setFulfillmentType(new PmParameter());
@@ -520,7 +520,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO.setUserMap(getManagedBean().getUserMap());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-			reqDTO.setCtContractVer(getManagedBean().getParticularContractVer());
+			reqDTO.setCtContractVer(getManagedBean().getAgreementContractVer());
 			reqDTO.setAgreement(getManagedBean().getCtAgreement());
 			
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
@@ -1385,10 +1385,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 			context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			context.put("supplierRegistrationNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
-			context.put("physicalContactNo", getManagedBean().getParticularContractVer().getContractPhysicalNo());
+			context.put("physicalContactNo", getManagedBean().getAgreementContractVer().getContractPhysicalNo());
 			context.put("contractStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
 			context.put("contractEndDate", df.format(getManagedBean().getCtAgreement().getExpDate()));
-			context.put("contractPeriod", getManagedBean().getParticularContractVer().getCtContractValue().getContractPeriod() + "");
+			context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");
 			context.put("contractValue", nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount()) + "");
 			context.put("contractValueText", NumberWordUtil.convert(getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString()));
 			context.put("isBondReq", getManagedBean().getCtContract().isBondReq());
