@@ -7,6 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
+
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+	</p:blockUI>
 	<p:messages id="evaluationMeeting" showDetail="true" autoUpdate="true"
 		closable="true" severity="error,info" showSummary="false" />
 	<!-- <ac:title value="#{lbl['lbl.sc.eva.evaluation.Meeting']}"></ac:title> -->
@@ -14,7 +18,8 @@
 
 		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@all"
 			action="#{evaluationMeetingBackingBean.saveCommitteeAction}"
-			update="@all" />
+			update="@all" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();" />
 
 		<ui:repeat var="bpmAction"
 			value="#{evaluationMeetingBackingBean.managedBean.outComes}">
@@ -22,6 +27,7 @@
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@all" partialSubmit="true"
 					action="#{evaluationMeetingBackingBean.submitMettingDetails(bpmAction)}"
 					title="#{lbl['lbl.sc.eva.btn.submit.meeting.tooltip']}" />
@@ -75,8 +81,8 @@
 
 				<p:inputTextarea value="#{meeting.meetingLocation}" rows="2"
 					style="width:75%;" maxlength="255"
-					label="#{lbl['lbl.sc.meeting.location']}" id="locationId" required="true"
-					cols="140"></p:inputTextarea>
+					label="#{lbl['lbl.sc.meeting.location']}" id="locationId"
+					required="true" cols="140"></p:inputTextarea>
 				<p:message id="meetingLocationId" for="locationId" display="icon"></p:message>
 			</p:column>
 
@@ -90,13 +96,20 @@
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
-				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.scQtMeetings,evaluationMeetingBackingBean.managedBean.meetingRemoveList)}"
-				update="evaluationmeetingDetails">
+				oncomplete="confirmMeetingDtlsDeletePopUp.show();"
+				update="@([id$=#{confirmmeetingdtlsDeleteId}])">
 				<f:setPropertyActionListener
 					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
 			</p:commandButton>
-
+			<ui:param name="confirmmeetingdtlsDeleteId"
+				value="confirmmeetingdtlsDeleteId"></ui:param>
+			<ac:confirmationPopup id="#{confirmmeetingdtlsDeleteId}"
+				widget="confirmMeetingDtlsDeletePopUp" width="400" height="100"
+				okAction="evaluationMeetingBackingBean.deleteMeetingDtls"
+				title="#{lbl['lbl.sc.meeting.details']}"
+				content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
+				update="@([id$=evaluationmeetingDetails])" />
 
 
 		</div>
@@ -106,8 +119,10 @@
 
 	<p:panel header="#{lbl['lbl.sc.committee.member.list']}"
 		toggleable="true">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.committee.member.list.instruction']}" escape="false" />
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.committee.member.list.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
 			widgetVar="prepareCommittee" rows="10" rowIndexVar="index"
@@ -209,16 +224,26 @@
 				oncomplete="newspecificationcommittee.show();" />
 
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
-				partialSubmit="true"
-				action="#{evaluationMeetingBackingBean.markDeleteSelectedRowsAction(evaluationMeetingBackingBean.managedBean.committeeMemberActivity,evaluationMeetingBackingBean.managedBean.removeCommitteeList)}"
-				update="evaluationpreparecommittee">
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this,evaluationpreparecommittee" partialSubmit="true"
+				oncomplete="confirmMeetingCommitteemembersDeletePopUp.show();"
+				update="@([id$=#{confirmmeetingCommitteemembersDeleteId}])">
 				<f:setPropertyActionListener
 					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
 			</p:commandButton>
 
 		</div>
+		<ui:param name="confirmmeetingCommitteemembersDeleteId"
+			value="confirmmeetingCommitteemembersDeleteId"></ui:param>
+		<ac:confirmationPopup id="#{confirmmeetingCommitteemembersDeleteId}"
+			widget="confirmMeetingCommitteemembersDeletePopUp" width="450"
+			height="100"
+			okAction="evaluationMeetingBackingBean.deleteCommitteemembersDtls"
+			title="#{lbl['lbl.sc.committee.member.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
+			update="@([id$=evaluationpreparecommittee])" />
+
 
 	</p:panel>
 
