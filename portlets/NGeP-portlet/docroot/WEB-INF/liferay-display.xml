@@ -152,6 +152,7 @@
 			<portlet id="flDebitAdjustmentNote" />
 			<portlet id="flAp59Search" />
 			<portlet id="flRemoveFactoringComp" />
+			<portlet id="flViewReceivedNote" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
