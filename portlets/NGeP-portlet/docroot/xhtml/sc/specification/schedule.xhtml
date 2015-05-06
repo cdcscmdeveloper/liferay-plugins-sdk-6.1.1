@@ -8,47 +8,50 @@
 
 	<h:panelGroup id="frequency">
 
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="280px">
-				<h:outputLabel value="#{lbl['lbl.sc.periodic.fullfillent.type']}" />
-			</td>
-			<td>
-				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
+		<table border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<h:panelGroup
 					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS'}">
-					<p:selectOneRadio
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
-						<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
-						<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
-						<p:ajax event="change" update="progressive,schedule"
-							listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
-					</p:selectOneRadio>
-					<ac:iconTooltip value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" />
-				</h:panelGrid>
-			</td>
-		</tr>
+					<td width="150px"><h:outputLabel
+							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
+					<td><p:selectOneRadio
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
+							<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
+							<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
+							<p:ajax event="change" update="progressive,schedule"
+								listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
+						</p:selectOneRadio></td>
+					<td style="margin-top: -3px"><ac:iconTooltip
+							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
+				</h:panelGroup>
+			</tr>
 		</table>
-		
+
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
 				rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
 
-				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.freq.schedule.instruction']}" escape="false" />
-
-				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50"
-					rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
-					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
-					<p:inputText
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						value="#{specificationBackingBean.managedBean.totalFrequency}">
-						<p:ajax event="blur" update="frequencySchedule"
-							partialSubmit="true" process="@this"
-							listener="#{specificationBackingBean.addScheduleDetails}" />
-					</p:inputText>
-
-				</h:panelGrid>
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.freq.schedule.instruction']}"
+					escape="false" />
+				<table>
+					<tr>
+						<h:panelGroup
+							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' and  specificationBackingBean.managedBean.scQt.scheduleType eq 'F'}">
+							<td><h:outputLabel
+									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
+							<td><p:inputText style="text-align:right;"
+									disabled="#{specificationBackingBean.managedBean.readOnly}"
+									value="#{specificationBackingBean.managedBean.totalFrequency}">
+									<p:ajax event="blur" update="frequencySchedule"
+										partialSubmit="true" process="@this"
+										listener="#{specificationBackingBean.addScheduleDetails}" />
+								</p:inputText></td>
+						</h:panelGroup>
+					</tr>
+				</table>
 
 
 
@@ -91,8 +94,7 @@
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
 					</p:column>
-					<p:column
-						headerText="#{lbl['lbl.sc.start.year']}"
+					<p:column headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
@@ -107,8 +109,7 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.end.month']}"
-						style="width:25%">
+					<p:column headerText="#{lbl['lbl.sc.end.month']}" style="width:25%">
 						<p:selectOneMenu style="width:100px;" id="scheduleendMonth"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{frequency.endMonth}">
@@ -121,8 +122,7 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.end.year']}"
-						style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
 						<p:selectOneMenu value="#{frequency.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							style="width:100px;">
@@ -135,8 +135,7 @@
 
 
 					</p:column>
-					<p:column
-						headerText="#{lbl['lbl.sc.total.months']}"
+					<p:column headerText="#{lbl['lbl.sc.total.months']}"
 						style="width:10%">
 						<h:panelGroup id="scheduleDetails">
 							<h:outputText value="#{frequency.totalMonths}"></h:outputText>
@@ -168,8 +167,6 @@
 				</p:dataTable>
 
 				<p:spacer height="20"></p:spacer>
-
-
 			</p:panel>
 		</h:panelGroup>
 	</h:panelGroup>
@@ -178,20 +175,25 @@
 			test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.scQt.scheduleType eq 'P'}">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true">
-				
-				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.progressive.payment.instruction']}" escape="false" />
 
-				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
-					<p:inputText
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
-						<p:ajax event="blur" update="progressivePayment"
-							partialSubmit="true" process="@this"
-							listener="#{specificationBackingBean.addProgressiveDetails}" />
-					</p:inputText>
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.spec.progressive.payment.instruction']}"
+					escape="false" />
 
-				</h:panelGrid>
+				<table>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
+						</td>
+						<td><p:inputText style="text-align:right;"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
+								<p:ajax event="blur" update="progressivePayment"
+									partialSubmit="true" process="@this"
+									listener="#{specificationBackingBean.addProgressiveDetails}" />
+							</p:inputText></td>
+					</tr>
+
+				</table>
 
 
 				<p:dataTable id="progressivePayment" var="payment"
@@ -245,8 +247,7 @@
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column
-						headerText="#{lbl['lbl.sc.start.year']}"
+					<p:column headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
 
 						<p:selectOneMenu value="#{payment.startYear}"
@@ -260,8 +261,7 @@
 
 
 					</p:column>
-					<p:column
-						headerText="
+					<p:column headerText="
 								#{lbl['lbl.sc.end.month']}"
 						style="width:15%">
 						<p:selectOneMenu style="width:100px;" id="paymentEndMonth"
@@ -275,8 +275,7 @@
 								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.end.year']}"
-						style="width:15%">
+					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
 						<p:selectOneMenu value="#{payment.endYear}"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							style="width:100px;">
