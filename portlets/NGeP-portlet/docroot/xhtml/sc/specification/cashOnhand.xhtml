@@ -69,22 +69,28 @@
 
 		</p:panel>
 
-		<h:panelGrid columns="2">
-			<h:outputLabel value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel>
-			<p:inputText readonly="true" disabled="true"></p:inputText>
-		</h:panelGrid>
+		<table>
+			<tr>
+				<td style="width: 150px;"><h:outputLabel
+						value="#{lbl['lbl.sc.spec.total.cash']}"></h:outputLabel></td>
+				<td><p:inputText readonly="true" disabled="true"></p:inputText>
+				</td>
+			</tr>
+		</table>
+
 		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialCashOnhandScore"
 			header="#{lbl['lbl.sc.spec.score.total.cash']}" toggleable="true"
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <ui:fragment
+					<td style="width: 150px;"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</ui:fragment></td>
-					<td><p:selectOneMenu required="true"
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="float : left"></p:outputLabel>
+						</ui:fragment> <p:outputLabel style="float : left"
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true" style="width: 160px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="cashOnHandAutoScore"
@@ -150,11 +156,12 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<ui:fragment
+							<td style="width: 150px;"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-								</ui:fragment></td>
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left"></p:outputLabel>
+								</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
+									style="float : left"></p:outputLabel></td>
 							<td><p:inputText id="finCashScore" maxlength="18"
 									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
