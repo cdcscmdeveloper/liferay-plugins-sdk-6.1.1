@@ -48,12 +48,16 @@
 		<p:spacer height="20"></p:spacer>
 		<p:panel header="#{lbl['lbl.sc.spec.paid.up.capital']}"
 			toggleable="true">
-			<h:panelGrid columns="3">
-				<h:outputLabel value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
-				<p:inputText disabled="true"></p:inputText>
-				<ac:iconTooltip
-					value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" />
-			</h:panelGrid>
+			<table>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.paid.up.capital.ringgit']}"></h:outputLabel>
+					</td>
+					<td><p:inputText disabled="true"></p:inputText></td>
+					<td><ac:iconTooltip
+							value="#{lbl['lbl.sc.paid.up.capital.ringgit.tooltip']}" /></td>
+				</tr>
+			</table>
 		</p:panel>
 		<p:spacer height="20"></p:spacer>
 		<p:panel id="financialPaidUpCapitalScore"
@@ -62,12 +66,13 @@
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <ui:fragment
+					<td style="width: 105px;"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</ui:fragment></td>
-					<td><p:selectOneMenu required="true"
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="float : left"></p:outputLabel>
+						</ui:fragment> <p:outputLabel style="float : left"
+							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
+					<td><p:selectOneMenu required="true" style="width: 160px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							id="paidUpCapitalAutoScore"
@@ -134,11 +139,12 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<ui:fragment
+							<td style="width: 105px;"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-								</ui:fragment></td>
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left"></p:outputLabel>
+								</ui:fragment> <p:outputLabel style="float : left"
+									value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel></td>
 							<td><p:inputText maxlength="18" required="true"
 									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
