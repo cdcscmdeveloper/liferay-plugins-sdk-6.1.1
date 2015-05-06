@@ -22,60 +22,51 @@
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 	
-	<div align="left">
-		<table style="width: 100%">
+	<p:panel header="#{lbl['lbl.sm.reactivate.basicacc.panelheader']}" toggleable="true" id="reactivateBasicAccPanelId">
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.name']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplier.companyName}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.regno']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplier.regNo}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.establishdate']}" styleClass="outputLabel-view-label"/></td>
+				<td><ac:labelDate styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplier.establishDate}" /></td>
+			</tr>
+			
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.admin.name']}" styleClass="outputLabel-view-label"/></td>
+				<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplierAdmin.name}" /></td>
+			</tr>
+			
 			<tr>
 				<td>
-					<p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.proceedmsg']}" 
-						style="background-color:whitesmoke;text-align: left !important;float: left;"/>
+					<p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.activationkey']}" /> 
+					<p:outputLabel value="*" styleClass="mandatory" />
+				</td>
+				<td>
+					<p:inputText id="activationKeyId"
+						label="#{lbl['lbl.sm.reactivate.basicacc.activationkey']}"
+						value="#{reactivateBasicBackingBean.activationKey}"
+						size="35" maxlength="40" required="true"  />
+					<p:message id="activationKeyIdMsg" for="activationKeyId"
+						showSummary="true" showDetail="false" display="icon" />
 				</td>
 			</tr>
-		</table>
-	</div>
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
+						action="#{reactivateBasicBackingBean.activateAccount}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				</td>
+			</tr>
 	
-	<table>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.name']}" styleClass="outputLabel-view-label"/></td>
-			<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplier.companyName}" /></td>
-		</tr>
-		
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.regno']}" styleClass="outputLabel-view-label"/></td>
-			<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplier.regNo}" /></td>
-		</tr>
-		
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.supp.establishdate']}" styleClass="outputLabel-view-label"/></td>
-			<td><ac:labelDate styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplier.establishDate}" /></td>
-		</tr>
-		
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.admin.name']}" styleClass="outputLabel-view-label"/></td>
-			<td><p:outputLabel styleClass="outputLabel-view" value="#{reactivateBasicBackingBean.basicSupplierAdmin.name}" /></td>
-		</tr>
-		
-		<tr>
-			<td>
-				<p:outputLabel value="#{lbl['lbl.sm.reactivate.basicacc.activationkey']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory" />
-			</td>
-			<td>
-				<p:inputText id="activationKeyId"
-					label="#{lbl['lbl.sm.reactivate.basicacc.activationkey']}"
-					value="#{reactivateBasicBackingBean.activationKey}"
-					size="35" maxlength="40" required="true"  />
-				<p:message id="activationKeyIdMsg" for="activationKeyId"
-					showSummary="true" showDetail="false" display="icon" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
-					action="#{reactivateBasicBackingBean.activateAccount}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-			</td>
-		</tr>
-
-	</table>
+		</table>
+	</p:panel>
 
 	</ui:define>
 
