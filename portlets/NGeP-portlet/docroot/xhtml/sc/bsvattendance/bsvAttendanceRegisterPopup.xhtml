@@ -13,7 +13,10 @@
 
 		<p:messages id="bsvattanadance" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
-
+			
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
 		<p:panel>
 			<p:panelGrid style="width:100%;"
@@ -27,10 +30,12 @@
 					<p:column width="100%" style="text-align:right" >
 						<p:commandButton value="#{lbl['lbl.btn.save']}"
 							process="@form" 
-							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}" />
+							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('save')}" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"/>
 						<p:commandButton value="#{lbl['lbl.btn.complete']}"
 							process="@form" 
-							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" />
+							action="#{bsvAttendanceBackingBean.saveBriefingRegAttendance('complete')}" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"/>
 					</p:column>
 					<!-- <p:column width="100%" style="text-align:right" rendered="#{!empty bsvAttendanceBackingBean.managedBean.outComes}">
 					<ui:repeat var="bpmAction"
