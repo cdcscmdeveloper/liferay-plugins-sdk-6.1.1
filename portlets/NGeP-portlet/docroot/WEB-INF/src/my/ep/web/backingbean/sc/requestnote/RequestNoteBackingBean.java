@@ -577,9 +577,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				dpId = Long.valueOf(directPurchaseDataType.getRnId());
 			}
 			
-			if(directPurchaseDataType.getPid() != null && directPurchaseDataType.getPid().size() > 0) {
+			if(directPurchaseDataType.getPidId() != null) {
 				getManagedBean().setPurchaseInDefaultId(
-						Long.valueOf(directPurchaseDataType.getPid().get(0)));
+						Long.valueOf(directPurchaseDataType.getPidId()));
 			}
 			
 			requestNoteReqDTO.setRequestNoteId(dpId);
