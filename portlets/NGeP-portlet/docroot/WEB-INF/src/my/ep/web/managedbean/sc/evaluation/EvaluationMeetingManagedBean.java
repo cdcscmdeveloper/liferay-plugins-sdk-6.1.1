@@ -133,6 +133,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
+	private ScQt cloneSelectQt;
+
 	/** The today. */
 	private Date today = new Date();
 
@@ -559,7 +561,6 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 		this.cloneCommitteMemebersSelect = cloneCommitteMemebersSelect;
 	}
 
-
 	/**
 	 * Gets the sc qt committee.
 	 * 
@@ -703,7 +704,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeMemberActivity the committeeMemberActivity to set
+	 * @param committeeMemberActivity
+	 *            the committeeMemberActivity to set
 	 */
 	public void setCommitteeMemberActivity(
 			List<ScCommitteeMember> committeeMemberActivity) {
@@ -718,7 +720,8 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param committeeActivitySelect the committeeActivitySelect to set
+	 * @param committeeActivitySelect
+	 *            the committeeActivitySelect to set
 	 */
 	public void setCommitteeActivitySelect(
 			List<ScCommitteeMember> committeeActivitySelect) {
@@ -733,10 +736,27 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param removeCommitteeList the removeCommitteeList to set
+	 * @param removeCommitteeList
+	 *            the removeCommitteeList to set
 	 */
-	public void setRemoveCommitteeList(List<ScCommitteeMember> removeCommitteeList) {
+	public void setRemoveCommitteeList(
+			List<ScCommitteeMember> removeCommitteeList) {
 		this.removeCommitteeList = removeCommitteeList;
+	}
+
+	/**
+	 * @return the cloneSelectQt
+	 */
+	public ScQt getCloneSelectQt() {
+		return cloneSelectQt;
+	}
+
+	/**
+	 * @param cloneSelectQt
+	 *            the cloneSelectQt to set
+	 */
+	public void setCloneSelectQt(ScQt cloneSelectQt) {
+		this.cloneSelectQt = cloneSelectQt;
 	}
 
 }
