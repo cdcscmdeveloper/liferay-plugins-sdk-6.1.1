@@ -31,8 +31,11 @@
 
 	<h:panelGroup id="summaryItemQualified">
 
-		<p:panel header="#{lbl['lbl.sc.eva.qualified.supplier.list']}"
-			toggleable="true">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{qualifiedSupplierListHeader}" />
+				<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
+			</f:facet>
 
 			<p:dataTable var="summaryqualSup"
 				id="evaluationSummaryItemQualifiedSuppliers" rows="10"
@@ -92,8 +95,11 @@
 	</h:panelGroup>
 
 	<h:panelGroup id="summaryItemDisQualified">
-		<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
-			toggleable="true">
+		<p:panel toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{disQualifiedSupplierListHeader}" />
+				<ac:iconTooltip value="#{disQualifiedSupplierListTooltip}" />
+			</f:facet>
 
 			<p:dataTable var="disQualifiedSupplier"
 				id="evaluationSummaryItemDisQualifiedSuppliers" rows="10"

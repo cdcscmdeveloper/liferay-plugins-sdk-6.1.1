@@ -9,8 +9,11 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.qualified.supplier.list']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{qualifiedSupplierListHeader}" />
+			<ac:iconTooltip value="#{qualifiedSupplierListTooltip}" />
+		</f:facet>
 
 		<p:dataTable var="prefQualSupplier"
 			id="evaluationSummaryPreferencemarginQualifiedSuppliers"
@@ -67,9 +70,11 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.difference.rm']}"
-				style="width:15%">
-
+			<p:column style="width:15%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
+				</f:facet>
 				<h:outputLabel
 					value="#{prefQualSupplier.priceDifference}"
 					style="text-align:right">
@@ -82,7 +87,10 @@
 
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
 				style="width:15%">
-
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
+				</f:facet>
 				<h:outputLabel
 					value="#{prefQualSupplier.percentageDifference}"
 					style="text-align:right">
@@ -135,8 +143,11 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{disQualifiedSupplierListHeader}" />
+			<ac:iconTooltip value="#{disQualifiedSupplierListTooltip}" />
+		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier"
 			id="evaluationSummaryPreferencemarginDisQualifiedSuppliers"

@@ -144,7 +144,11 @@
 									<h:outputText value="#{committeeMember.grade}"></h:outputText>
 								</p:column>
 					
-								<p:column headerText="#{lbl['lbl.sc.pnp']}">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+										<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+									</f:facet>
 									<h:outputText value="#{committeeMember.PNP ? lbl['lbl.txt.yes'] : lbl['lbl.txt.no']}"></h:outputText>
 								</p:column>
 								

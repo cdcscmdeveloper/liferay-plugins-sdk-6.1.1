@@ -6,6 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:param name="qualifiedSupplierListHeader" value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage']}" />
+	<ui:param name="qualifiedSupplierListTooltip" value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage.tooltip']}" />
+	<ui:param name="disQualifiedSupplierListHeader" value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage']}" />
+	<ui:param name="disQualifiedSupplierListTooltip" value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage.tooltip']}" />
 
 	<table>
 		<tr>
@@ -26,8 +30,6 @@
 
 
 	<h:panelGroup id="financialviewSummary">
-
-
 		<ui:fragment
 			rendered="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FI'}">
 			<ui:fragment

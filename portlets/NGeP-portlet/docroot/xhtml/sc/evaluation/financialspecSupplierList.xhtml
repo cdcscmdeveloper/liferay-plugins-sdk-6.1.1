@@ -56,8 +56,11 @@
 						style="text-align:right"></h:outputLabel>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.difference.rm']}"
-					style="width:15%">
+				<p:column style="width:15%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
+					</f:facet>
 					<h:outputLabel
 						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}"
 						style="text-align:right">
@@ -67,8 +70,11 @@
 
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.difference.perc']}"
-					style="width:15%">
+				<p:column style="width:15%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
+					</f:facet>
 					<h:outputLabel
 						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}"
 						style="text-align:right">
