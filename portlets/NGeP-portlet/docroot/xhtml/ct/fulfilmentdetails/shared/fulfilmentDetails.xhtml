@@ -27,7 +27,7 @@
 					<td>
 						<p:inputText for="physicalNo" maxlength="30" style="width:160px;"
 						disabled="#{contractDetailsBackingBean.getConditionalValue()}"
-		 	    		value="#{contractDetailsBackingBean.managedBean.contractVer.contractPhysicalNo}" />
+		 	    		value="#{contractDetailsBackingBean.managedBean.agreementContractVer.contractPhysicalNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 					</td>
 					</h:panelGroup>
@@ -109,7 +109,7 @@
 					</td> 
 					<td>
 						<p:inputText for="signBy" disabled="true" style="width:160px;"
-							value="#{contractDetailsBackingBean.managedBean.contractVer.signedDate}">
+							value="#{contractDetailsBackingBean.managedBean.agreementContractVer.signedDate}">
 			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
