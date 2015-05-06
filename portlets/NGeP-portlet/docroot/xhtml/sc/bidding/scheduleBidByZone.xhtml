@@ -24,8 +24,9 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
-				<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button" label="#{lbl['lbl.sc.bidding.start']}"
-					required="true" readonlyInput="true" id="zoneBidStartDate"
+				<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button"
+					label="#{lbl['lbl.sc.bidding.start']}" required="true"
+					readonlyInput="true" id="zoneBidStartDate"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}">
 					<p:ajax event="dateSelect" process="zoneBidStartDate"
@@ -43,7 +44,8 @@
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
 
 				<p:calendar value="#{scheduleZoneBid.endDate}" showOn="button"
-					id="zoneBidEndDate" required="true" label="#{lbl['lbl.sc.bidding.end']}"
+					id="zoneBidEndDate" required="true"
+					label="#{lbl['lbl.sc.bidding.end']}"
 					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -72,19 +74,19 @@
 			var="item">
 
 			<ac:paginator for="bidScheduleByZoneBidItems"></ac:paginator>
-			<p:column headerText="#{lbl['lbl.sc.item.name']}">
+			<p:column style="width : 30%; white-space : normal;" headerText="#{lbl['lbl.sc.item.name']}">
 				<h:outputText id="itemNameByZone"
 					value="#{item.scRequestItem.itemName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.description']}">
+			<p:column style="width : 35%; white-space : normal;" headerText="#{lbl['lbl.sc.item.description']}">
 				<h:outputText id="itemDescByZone"
 					value="#{item.scRequestItem.itemDesc}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.uom']}">
+			<p:column style="width : 10%;" headerText="#{lbl['lbl.sc.uom']}">
 				<h:outputText id="uomNameByZone"
 					value="#{item.scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.quantity']}">
+			<p:column style="width : 10%;" headerText="#{lbl['lbl.sc.quantity']}">
 				<h:outputText id="quantityByZone" style="float : right"
 					value="#{item.scRequestItem.quantity}">
 					<f:convertNumber
@@ -92,12 +94,13 @@
 
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<h:outputText id="decrementAmtByZone" style="float : right"
+			<p:column style="width : 15%;" headerText="#{lbl['lbl.sc.min.decrement.block']}">
+				<p:inputText style="text-align : right" id="decrementAmtByZone"
 					value="#{item.decrementAmt}">
+					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<f:convertNumber for="decrementAmt"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
+				</p:inputText>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
