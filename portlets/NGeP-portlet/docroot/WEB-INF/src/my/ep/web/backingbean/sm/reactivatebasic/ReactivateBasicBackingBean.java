@@ -31,8 +31,6 @@ public class ReactivateBasicBackingBean extends
 	private SmPersonnel basicSupplierAdmin;
 	private String loginId;
 	private String activationKey;
-	private String password;
-	private String confirmPassword;
 	private String encryptActivationKey;
 
 	/**
@@ -118,11 +116,7 @@ public class ReactivateBasicBackingBean extends
 		String keyStr = basicSupplier.getSupplierId()
 				+ basicSupplierAdmin.getPersonnelId() + activationKey;
 		String hashStr = SmCommonUtil.hashString(keyStr);
-		if (password.equalsIgnoreCase(loginId)) {
-			throw new EpException(MessageConst.ERROR_721038);
-		} else if (!password.equalsIgnoreCase(confirmPassword)) {
-			throw new EpException(MessageConst.ERROR_721039);
-		} else if (!hashStr.equals(encryptActivationKey)) {
+		if (!hashStr.equals(encryptActivationKey)) {
 			throw new EpException(MessageConst.ERROR_721040);
 		} else {
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
@@ -130,7 +124,6 @@ public class ReactivateBasicBackingBean extends
 			reqDTO.setServerName(fs.getRequest().getServerName());
 			reqDTO.setServerPort(fs.getRequest().getServerPort());
 			reqDTO.setSmSupp(basicSupplier);
-			reqDTO.setPassword(password);
 			try {
 				SmServiceLookup.getRegistrationSO().reactivateBasicAccount(
 						reqDTO);
@@ -149,8 +142,6 @@ public class ReactivateBasicBackingBean extends
 		basicSupplier = null;
 		loginId = "";
 		activationKey = "";
-		password = "";
-		confirmPassword = "";
 		reactivateBasic = null;
 		basicSupplierAdmin = null;
 		encryptActivationKey = "";
@@ -178,22 +169,6 @@ public class ReactivateBasicBackingBean extends
 
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
 	}
 
 	public String getActivationKey() {
