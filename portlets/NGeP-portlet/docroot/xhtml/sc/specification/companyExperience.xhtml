@@ -106,7 +106,7 @@
 			<p:spacer height="20"></p:spacer>
 			<table>
 				<tr>
-					<td><h:outputText
+					<td width="150px"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.no.contracts']}" /></td>
 
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
@@ -114,8 +114,8 @@
 				</tr>
 				<p:spacer height="10"></p:spacer>
 				<tr>
-					<td><h:outputText value="#{lbl['lbl.sc.spec.total.no.years']}" />
-					</td>
+					<td width="150px"><h:outputText
+							value="#{lbl['lbl.sc.spec.total.no.years']}" /></td>
 					<td><p:inputText readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
@@ -137,12 +137,14 @@
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel> <ui:fragment
+					<td width="150px"><ui:fragment
 							rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-							<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-						</ui:fragment></td>
+							<p:outputLabel value="*" styleClass="mandatory"
+								style="float : left" />
+						</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.asset.score.type']}"
+							style="float : left" /></td>
 					<td><p:selectOneMenu id="techGovNoOfContractsAutoScore"
+							style="width:160px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.checklistScoreType}">
@@ -207,11 +209,12 @@
 					rendered="#{specificationBackingBean.managedBean.checklistScoreType eq '2'}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<ui:fragment
+							<td width="150px"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-								</ui:fragment></td>
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left" />
+								</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
+									style="float : left" /></td>
 							<td><p:inputText required="true" maxlength="18"
 									style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -233,9 +236,10 @@
 			rendered="#{specificationBackingBean.managedBean.scQtChecklist.scoringReq}">
 			<table>
 				<tr>
-					<td><p:outputLabel
+					<td width="150px"><p:outputLabel style="float : left"
 							value="#{lbl['lbl.sc.spec.asset.score.type']}"></p:outputLabel></td>
 					<td><p:selectOneMenu id="techGovNoOfYearsAutoScore"
+							style="width:160px;"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 							label="#{lbl['lbl.sc.spec.asset.score.type']}"
 							value="#{specificationBackingBean.managedBean.companyScoreType}">
@@ -401,11 +405,12 @@
 					rendered="#{specificationBackingBean.managedBean.companyScoreType eq '2'}">
 					<table>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"></p:outputLabel>
-								<ui:fragment
+							<td width="150px"><ui:fragment
 									rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
-									<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel>
-								</ui:fragment></td>
+									<p:outputLabel value="*" styleClass="mandatory"
+										style="float : left"></p:outputLabel>
+								</ui:fragment> <p:outputLabel value="#{lbl['lbl.sc.spec.max.score']}"
+									style="float : left"></p:outputLabel></td>
 							<td><p:inputText style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 									value="#{specificationBackingBean.managedBean.scQtContractScore.score}"
