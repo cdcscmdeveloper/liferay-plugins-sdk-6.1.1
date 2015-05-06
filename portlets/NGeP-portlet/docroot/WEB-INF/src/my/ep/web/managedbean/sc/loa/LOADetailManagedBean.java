@@ -230,6 +230,14 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	private TplSpecMaster tplSpecMaster  = new TplSpecMaster(); // temp
 	
+
+	/** The agreement Required Flag */
+	private boolean agreementMandatory = false;
+	
+	/** The performance bond required flag */
+	private boolean performanceBondMandatory = false;
+	
+
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
@@ -1333,6 +1341,34 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSuppLoiLoaMap(Map<Long, List<ScLoiLoa>> suppLoiLoaMap) {
 		this.suppLoiLoaMap = suppLoiLoaMap;
+	}
+
+	/**
+	 * @return the agreementMandatory
+	 */
+	public boolean isAgreementMandatory() {
+		return agreementMandatory;
+	}
+
+	/**
+	 * @param agreementMandatory the agreementMandatory to set
+	 */
+	public void setAgreementMandatory(boolean agreementMandatory) {
+		this.agreementMandatory = agreementMandatory;
+	}
+
+	/**
+	 * @return the performanceBondMandatory
+	 */
+	public boolean isPerformanceBondMandatory() {
+		return performanceBondMandatory;
+	}
+
+	/**
+	 * @param performanceBondMandatory the performanceBondMandatory to set
+	 */
+	public void setPerformanceBondMandatory(boolean performanceBondMandatory) {
+		this.performanceBondMandatory = performanceBondMandatory;
 	}
 	
 	

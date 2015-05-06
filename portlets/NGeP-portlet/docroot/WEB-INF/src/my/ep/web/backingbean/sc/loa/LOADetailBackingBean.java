@@ -37,6 +37,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -62,6 +63,7 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -71,10 +73,14 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
@@ -90,6 +96,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -123,6 +130,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
@@ -930,6 +938,7 @@ public class LOADetailBackingBean extends
 			getManagedBean().setBondAmountWord(
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
+		checkPerformanceBondMandatory();
 		/*
 		 * branch.setSmAppl(getManagedBean().getScQtProposalRanking()
 		 * .getScQtProposalEvaluate().getScQtProposal()
@@ -2341,7 +2350,7 @@ public class LOADetailBackingBean extends
 							scLoa.getLoaId(), scLoa.getLoaNo());
 				}
 			}
-
+			
 			validateLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -2626,6 +2635,7 @@ public class LOADetailBackingBean extends
 		}
 
 		contractAgencyChanged();
+		checkAgreementMandatory();
 	}
 
 	/**
@@ -4276,6 +4286,96 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
+	 * To check is performance bond required
+	 * @return boolean isPerformanceBondRequired
+	 */
+	public void checkPerformanceBondMandatory() {
+		boolean isPerformanceBondMandatory = false;
+		ScLoa loa = getManagedBean().getScLoa();
+		BigDecimal loaAmt = loa.getLoaAmt();
+		
+		if(loaAmt.compareTo(new BigDecimal(200000)) > 0 && !isbondExceptionCategory(loa)) {
+			isPerformanceBondMandatory = true;
+			getManagedBean().getScLoa().setBondReq(true);
+		}
+		else if(loaAmt.compareTo(new BigDecimal(200000)) <= 0) {
+			isPerformanceBondMandatory = true;
+			getManagedBean().getScLoa().setBondReq(false);
+		}
+		
+		getManagedBean().setPerformanceBondMandatory(isPerformanceBondMandatory);
+	}
+	
+	/**
+	 * To check is agreement required
+	 * @return boolean isRequirementRequired
+	 */
+	public void checkAgreementMandatory() {
+		boolean isAgreementMandatory = false;
+		ScLoa loa = getManagedBean().getScLoa();
+		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
+		BigDecimal loaAmt = loa.getLoaAmt();
+		
+		boolean isOneOffFulfilment = fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		if(!isOneOffFulfilment) {
+			isAgreementMandatory = true;
+		} else {
+			if(loaAmt.compareTo(new BigDecimal(500000)) > 0) {
+				isAgreementMandatory = true;
+			}
+		}
+		
+		getManagedBean().setAgreementMandatory(isAgreementMandatory);
+		if(isAgreementMandatory) {
+			getManagedBean().getScLoa().setAgreementReq(true);
+		}
+	}
+	
+	private boolean isbondExceptionCategory(ScLoa loa) {
+		ScQt scQt = null;
+		if(loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setQtId(loa.getScLoiLoa().getDocId());
+			scQt = getQtSuppFinalizationSO().retrieveQTDtls(reqDTO).getScQt();
+			List<String> excepCategoryCodes = getBondExceptionCategory();
+			if(!CollectionUtils.isEmpty(scQt.getScQtCategorys())) {
+				for(ScQtCategory category : scQt.getScQtCategorys()) {
+					String categoryCode = null;
+					categoryCode = category.getPmCategoryL1().getCategoryL1Code().
+							concat(category.getPmCategoryL2().getCategoryL2Code()).
+							concat(category.getPmCategoryL3().getCategoryL3Code());
+					if(excepCategoryCodes.contains(categoryCode)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+	
+	private List<String> getBondExceptionCategory() {
+		// Get performance bond exception category
+		IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+		RuleReqDTO ruleReqDTO = new RuleReqDTO();
+		ruleReqDTO.setRuleType(ParameterTypeConst.RULE_BOND_CATEGORY);
+		List<PmConfigRuleValue> ruleValueList = ruleSO.getRuleValuesByRuleType(ruleReqDTO).getRuleValueList();
+		List<String> categoryCodes = new ArrayList<String>();
+		for(PmConfigRuleValue ruleValue : ruleValueList) {
+			StringBuilder sb = new StringBuilder();
+			PmCategoryL3 l3 = ruleValue.getCategoryL3Id();
+			PmCategoryL2 l2 = l3.getPmCategoryL2();
+			PmCategoryL1 l1 = l2.getPmCategoryL1();
+			String l3Code = l3.getCategoryL3Code();
+			String l2Code = l2.getCategoryL2Code();
+			String l1Code = l1.getCategoryL1Code();
+			sb.append(l1Code).append(l2Code).append(l3Code);
+			categoryCodes.add(sb.toString());
+		}
+		return categoryCodes;
+	}
+	
+	/**
 	 * Gets the qt award so.
 	 *
 	 * @return the qt award so
@@ -4283,5 +4383,15 @@ public class LOADetailBackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+	
+	/**
+	 * Gets the qtDetail so.
+	 *
+	 * @return the qtDetail so
+	 */
+	private IQTSuppFinalizationSO getQtSuppFinalizationSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 	}
 }
