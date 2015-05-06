@@ -215,7 +215,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}"
-					disabled="#{!isEditableStatus}">
+					disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.performanceBondMandatory}">
 					<f:selectItems value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					<p:ajax partialSubmit="true" process="@this" update="menuTab" />
 				</p:selectOneRadio>
@@ -408,7 +408,7 @@
 					<td><p:selectOneRadio id="agreementReq"
 							value="#{lOADetailBackingBean.managedBean.scLoa.agreementReq}"
 							required="true" label="#{lbl['lbl.sc.loiloa.loa.req.agree']}"
-							disabled="#{!isEditableStatus}">
+							disabled="#{!isEditableStatus or lOADetailBackingBean.managedBean.agreementMandatory}">
 							<f:selectItems
 								value="#{lOADetailBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 						</p:selectOneRadio> <p:message id="agreementReqMsg" for="agreementReq" display="icon" />
