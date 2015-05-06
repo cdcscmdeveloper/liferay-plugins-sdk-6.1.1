@@ -24,12 +24,21 @@
 							<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 						</h:column>
 						<h:column>
-							<p:selectOneRadio id="itemBiddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
-								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-								<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
-								<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
-				   			</p:selectOneRadio>
+							<table>
+								<tr>
+									<td>
+										<p:selectOneRadio id="itemBiddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
+											value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+											disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+											<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
+											<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
+							   			</p:selectOneRadio>
+									</td>
+									<td style="margin-top: -3px">
+										<ac:iconTooltip value="#{lbl['lbl.sc.online.bidding.endorsement.tooltip']}" />
+									</td>
+								</tr>
+							</table>
 						</h:column>
 				</h:panelGrid>
 				<p:spacer height="10px" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}"/>
@@ -81,9 +90,9 @@
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.recommend.by']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.recommend.by.item.tooltip']}" />
 				</f:facet>
-				<h:column>
-					<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
+				<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
 						required="false" label="#{lbl['lbl.sc.recommend.by']}" 
 						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled or item.awardedItem}">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
@@ -91,11 +100,14 @@
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=itemOnlineBiddingPanel])" 
 								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
 								process="@this" partialSubmit="true"/>
-	   				</p:selectOneMenu>	
-				</h:column>
+	   			</p:selectOneMenu>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
+				</f:facet>
 				<p:outputPanel id="selectedSupplierListTbl" rendered="#{!empty item.recommendDtls}">
 								
 					<div class="datalist-noborder">
@@ -113,7 +125,11 @@
 				</p:outputPanel>	
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.quantity']}" style="text-align: right;">
+			<p:column style="text-align: right;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.quantity']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
+				</f:facet>
 				<p:outputPanel id="quantityListTbl"  rendered="#{ (item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard or
 										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) and 
 										item.recommendByStr == ParameterConst.recommendByMultipleAward }">
@@ -175,7 +191,7 @@
 					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" process="@this" update="@this"/>
 	   			</p:selectOneMenu>
 				
-				<p:commandButton value="#{lbl['lbl.btn.apply']}" 
+				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}" 
 					process="@this"
 					partialSubmit="true"
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
