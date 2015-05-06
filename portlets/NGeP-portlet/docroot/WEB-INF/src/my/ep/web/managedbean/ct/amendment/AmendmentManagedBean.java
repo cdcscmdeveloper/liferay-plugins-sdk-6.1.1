@@ -105,6 +105,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
     private CtContractItem selectedServiceItem;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
+	private CtContractVer agreementContractVer;
 	private CtPerformanceBond ctPerformanceBond;
 	private CtItemMaxQty ctItemMaxQty;
 	private CtItemPrice ctItemPrices;
@@ -936,6 +937,20 @@ public class AmendmentManagedBean extends BaseManagedBean {
 		this.contractVer = contractVer;
 	}
 	
+	/**
+	 * @return the agreementContractVer
+	 */
+	public CtContractVer getAgreementContractVer() {
+		return agreementContractVer;
+	}
+
+	/**
+	 * @param agreementContractVer the agreementContractVer to set
+	 */
+	public void setAgreementContractVer(CtContractVer agreementContractVer) {
+		this.agreementContractVer = agreementContractVer;
+	}
+
 	/**
 	 * @return the ctPerformanceBond
 	 */
