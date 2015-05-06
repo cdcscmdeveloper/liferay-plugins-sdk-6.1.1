@@ -181,6 +181,9 @@ public class BSVAttendanceBackingBean extends
 					.getSelectedbriefRegistration());
 			briefingAttendance.setAttended(true);
 			briefingAttendance.setBrandNew(false);
+			briefingAttendance.setName(StringUtils.EMPTY);
+			briefingAttendance.setIcPassPort(StringUtils.EMPTY);
+			
 			if (null == attandances || attandances.isEmpty()) {
 				attandances = new ArrayList<ScQtBsvAttendance>();
 				attandances.add(briefingAttendance);
