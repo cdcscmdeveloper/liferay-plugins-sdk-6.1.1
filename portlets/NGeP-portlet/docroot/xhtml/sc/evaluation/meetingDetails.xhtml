@@ -12,7 +12,8 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.meeting.details.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.meeting.details.instruction']}" escape="false" />
 
 		<p:dataTable var="meeting" id="evaluationmeetingDetails" rows="10"
 			widgetVar="evaluationMeeting"
@@ -122,14 +123,22 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
-				update="evaluationmeetingDetails"
-				action="#{evaluationBackingBean.markDeleteSelectedEvaluationRowsAction(evaluationBackingBean.managedBean.scQtMeetings,evaluationBackingBean.managedBean.meetingRemoveList)}">
+				oncomplete="evaluationMeetingDtlsDeletePopUp.show();"
+				update="@([id$=#{evaluationmeetingdtlsDeleteId}])">
 				<f:setPropertyActionListener
 					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
 			</p:commandButton>
 
 		</div>
+		<ui:param name="evaluationmeetingdtlsDeleteId"
+			value="evaluationmeetingdtlsDeleteId"></ui:param>
+		<ac:confirmationPopup id="#{evaluationmeetingdtlsDeleteId}"
+			widget="evaluationMeetingDtlsDeletePopUp" width="400" height="100"
+			okAction="evaluationBackingBean.deleteMeetingDtls"
+			title="#{lbl['lbl.sc.meeting.details']}"
+			content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
+			update="@([id$=evaluationmeetingDetails])" />
 
 	</p:panel>
 
