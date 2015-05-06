@@ -12,16 +12,19 @@
 
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+		</p:blockUI>
 		<p:messages id="sampleCompliance" showDetail="true" autoUpdate="true"
 			closable="true" severity="error,info" showSummary="false" />
 		<div>
-			<p:commandButton value="#{lbl['lbl.btn.back']}"
-				style="float:left;"
+			<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 				action="#{evaluationBackingBean.evaluationBackaction}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
-				style="float:right;" update="@all"
+				style="float:right;" update="@all" onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"
 				action="#{evaluationBackingBean.saveComplianceSample}" />
 		</div>
 		<p:spacer height="25" />
@@ -48,11 +51,12 @@
 
 
 
-		<p:panel header="#{lbl['lbl.sc.item.list']}"
-			toggleable="true">
-			
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.sample.proposal.item.instruction']}" escape="false" />
-			
+		<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.eva.sample.proposal.item.instruction']}"
+				escape="false" />
+
 			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
 				rows="10"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
@@ -60,8 +64,7 @@
 				<ac:paginator for="sampleItemId" />
 
 
-				<p:column headerText="#{lbl['lbl.sc.item']}"
-					style="width:35%">
+				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%">
 
 					<h:outputText value="#{sampleItem.scRequestItem.itemName}"></h:outputText>
 
@@ -92,8 +95,7 @@
 						display="icon"></p:message>
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.remarks']}"
-					style="width:35%">
+				<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:35%">
 					<p:inputTextarea rows="2" cols="40" maxlength="100"
 						disabled="#{evaluationBackingBean.managedBean.readOnly and evaluationBackingBean.managedBean.statusOnly}"
 						value="#{sampleItem.remark}"></p:inputTextarea>
@@ -114,7 +116,8 @@
 					style="width:50%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.specification']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.eva.sample.proposal.item.specification.tooltip']}" />
+						<ac:iconTooltip
+							value="#{lbl['lbl.sc.eva.sample.proposal.item.specification.tooltip']}" />
 					</f:facet>
 					<h:outputText
 						value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
