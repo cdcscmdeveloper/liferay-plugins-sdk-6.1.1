@@ -13,6 +13,9 @@
 
 	<ui:define name="contentSection">
 		<h:panelGroup>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+			</p:blockUI>
 			<p:messages id="financialSpecEvaluationmsgId" autoUpdate="true"
 				closable="true" showDetail="true" showSummary="false"
 				severity="error,info"></p:messages>
@@ -28,10 +31,11 @@
 				title="#{lbl['lbl.sc.spec.financial.title']}" />
 
 			<h:panelGroup>
-				<p:panel
-					header="#{lbl['lbl.sc.spec.scoring.offered.price']}"
+				<p:panel header="#{lbl['lbl.sc.spec.scoring.offered.price']}"
 					toggleable="true">
-					<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}" escape="false" />
+					<h:outputText styleClass="instruction"
+						value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}"
+						escape="false" />
 
 					<p:dataTable var="itemofferPricelist" id="itemOfferpriceId"
 						rows="10"
@@ -53,7 +57,8 @@
 								style="text-align:right"></h:outputLabel>
 						</p:column>
 
-						<p:column headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}"
+						<p:column
+							headerText="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}"
 							style="width:10%">
 							<h:outputLabel value="#{itemofferPricelist.rangeTo}"
 								style="text-align:right"></h:outputLabel>
