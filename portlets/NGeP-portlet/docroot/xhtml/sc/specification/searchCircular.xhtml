@@ -42,12 +42,14 @@
 			</tr>
 		</table>
 		<p:dialog id="revicepanelDlgs" widgetVar="panelApprovalDlgs"
-			header="Panel Confirmation" resizable="false" width="325"
+			header="#{lbl['lbl.sc.dialog.confirm.header.panelNonPanel']}"  resizable="false" width="400"
 			height="200" closable="false">
 			<table>
 				<tr>
-					<td align="center"><p:outputLabel
-							value="All data you have entered will be clear, are you sure to proceed?" /></td>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" />
+						<p:outputLabel 
+							value="#{lbl['lbl.sc.dialog.confirm.business.owner.panelNonpanel']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
