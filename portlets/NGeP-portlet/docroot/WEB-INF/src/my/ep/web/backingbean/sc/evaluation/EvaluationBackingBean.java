@@ -8556,19 +8556,22 @@ public class EvaluationBackingBean extends
 
 		VelocityContext context = new VelocityContext();
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(commonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-		
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+
 		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		String hostUrl = fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort();
 		String userName = fs.getUserSessionBean().getUserName();
 		context.put("hostUrl", hostUrl);
 		context.put("userName", userName);
-		
+
 		Date newDate = new Date();
 		String date = "";
-    	if (newDate != null) {
-    		date = dateSDF.format(newDate);	
-    	}
+		if (newDate != null) {
+			date = dateSDF.format(newDate);
+		}
 		context.put("date", date);
 
 		String committeType = getManagedBean().getCommitteeType();
@@ -8710,18 +8713,19 @@ public class EvaluationBackingBean extends
 				commonUtils
 						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
-		
+
 		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		String hostUrl = fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort();
 		String userName = fs.getUserSessionBean().getUserName();
 		context.put("hostUrl", hostUrl);
 		context.put("userName", userName);
-		
+
 		Date newDate = new Date();
 		String date = "";
-    	if (newDate != null) {
-    		date = dateSDF.format(newDate);	
-    	}
+		if (newDate != null) {
+			date = dateSDF.format(newDate);
+		}
 		context.put("date", date);
 
 		List<ScQtMeeting> scQtMeetings = new ArrayList<ScQtMeeting>();
@@ -8795,18 +8799,19 @@ public class EvaluationBackingBean extends
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		
+
 		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		String hostUrl = fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort();
 		String userName = fs.getUserSessionBean().getUserName();
 		context.put("hostUrl", hostUrl);
 		context.put("userName", userName);
-		
+
 		Date newDate = new Date();
 		String date = "";
-    	if (newDate != null) {
-    		date = dateSDF.format(newDate);	
-    	}
+		if (newDate != null) {
+			date = dateSDF.format(newDate);
+		}
 		context.put("date", date);
 
 		StringBuilder openType = new StringBuilder();
@@ -9823,6 +9828,14 @@ public class EvaluationBackingBean extends
 		markDeleteSelectedEvaluationRowsAction(this.getManagedBean()
 				.getScQtMeetings(), this.getManagedBean()
 				.getMeetingRemoveList());
+
+	}
+
+	// delete existing meeting attendance details records from database.
+	public void deleteMeetingAttendanceDtls() {
+		markDeleteSelectedRowsAction(getManagedBean()
+				.getMeetingAttendanceList(), getManagedBean()
+				.getMeetingAttendanceRemoveList());
 
 	}
 }
