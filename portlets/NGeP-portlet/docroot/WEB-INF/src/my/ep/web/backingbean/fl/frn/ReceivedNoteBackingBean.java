@@ -763,5 +763,55 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
+	public void viewReceivedNote() {
+		IReceivedNoteSO receivedNoteSO =(IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String fulNoteId = originalServletRequest.getParameter("fulNoteId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		if(fulNoteId!=null) {
+			reqDTO.setFulfilmentNoteId(Long.valueOf(fulNoteId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+			reqDTO.setFrnLink(Boolean.TRUE);
+			renewSesionObject();
+			try {
+				resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+//			getManagedBean().setDocProcess(FulfilmentConst.DOC_TYPE_DO);
+			getManagedBean().setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+			getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
+			getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());
+			getManagedBean().getFulfilmentNote().setFlRequest(resDTO.getFulfilmentNote().getFlRequest());
+			
+			reqDTO.setDeliveryOrderId(resDTO.getFulfilmentNote().getFlDeliveryOrder().getDeliveryOrderId());
+			getManagedBean().setPmUser(reqDTO.getPmUser());
+			for(FlFulfilmentNoteItem fulfilmentNoteItem: resDTO.getFulfilmentNote().getFlFulfilmentNoteItem()){
+				getManagedBean().setSelectedItem(fulfilmentNoteItem);
+				fulfilmentNoteItem.setTotalRecvAmount(fulfilmentNoteItem.getReceivedAmt());
+				fulfilmentNoteItem.setTotalRecvQty(fulfilmentNoteItem.getReceivedQty());
+			}
+			getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+			getManagedBean().setDocMaintainRemarks(true);
+			
+			
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.initializeRemarkAndAttachement(resDTO.getFulfilmentNote().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
+		}
+	}	
 	
 }
