@@ -16,7 +16,7 @@
 			<p:ajax event="rowSelect"
 				listener="#{bsvAttendanceBackingBean.onRowSelect}"
 				update="@([id$=attandanceDeleteBtn],[id$=attendanceDetailstbl],[id$=attandanceaddBtn],[id$=regDelteBtn])"
-				process1="@this :form:attendanceDetailstbl" />
+				process="@this :form:attendanceDetailstbl" />
 
 
 
@@ -47,15 +47,23 @@
 								<td><p:commandButton id="regDelteBtn"
 										value="#{lbl['lbl.btn.delete']}"
 										disabled="#{bsvAttendanceBackingBean.managedBean.maintanceFlow and !bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew}"
-										process="@this,complisttbl" partialSubmit="true" update="@all"
-										action="#{bsvAttendanceBackingBean.deleteSupplierDetails}" /></td>
+										process="@this,complisttbl" partialSubmit="true" 
+										oncomplete="supplierListDeleteIdPopUp.show();"
+										update="@([id$=#{supplierListDeleteId}])" /></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 			</table>
 		</div>
+		<ui:param name="supplierListDeleteId" value="supplierListDeleteId"></ui:param>
 
+		<ac:confirmationPopup id="supplierListDeleteId"
+			widget="supplierListDeleteIdPopUp" width="400" height="100"
+			okAction="bsvAttendanceBackingBean.deleteSupplierDetails"
+			title="#{lbl['lbl.sc.supplier.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.supplier']}"
+			update="@all" />
 
 
 	</p:panel>
@@ -110,7 +118,7 @@
 			</p:column>
 			<p:column style="width:6%;white-space: normal;">
 				<h:outputLabel
-					value="#{scQtBriefAttendace.authorized ? 'Yes': 'No'}" />
+					value="#{scQtBriefAttendace.authorized ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 
 			</p:column>
 			<p:column style="width:22%;white-space: normal;">
@@ -156,7 +164,7 @@
 			<p:commandButton id="attandanceaddBtn"
 				value="#{lbl['lbl.btn.add']}"
 				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow}"
-				process="@this,attendanceDetailstbl" partialSubmit="true"
+				partialSubmit="true"
 				update="attendanceDetailstbl"
 				action="#{bsvAttendanceBackingBean.addAttendanceForBSV}" />
 
@@ -164,11 +172,20 @@
 				value="#{lbl['lbl.btn.delete']}"
 				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow}"
 				process="@this,attendanceDetailstbl" partialSubmit="true"
-				update="attendanceDetailstbl"
-				action="#{bsvAttendanceBackingBean.deleteBsvAttandances}" />
+				oncomplete="supplierDeleteIdPopUp.show();"
+				update="@([id$=#{supplierDeleteId}])" />
 		</div>
-
-
+		
+		<ui:param name="supplierDeleteId"
+			value="supplierDeleteId"></ui:param>
+			
+		<ac:confirmationPopup id="#{supplierDeleteId}"
+			widget="supplierDeleteIdPopUp" width="450"
+			height="100" okAction="bsvAttendanceBackingBean.deleteBsvAttandances"
+			title="#{lbl['lbl.sc.supplier.attendene.list']}"
+			content="#{lbl['lbl.sc.dialog.confirm.supplier.attendence.record']}"
+			update="@([id$=attendanceDetailstbl])" />
+			
 	</p:panel>
 
 </ui:composition>
