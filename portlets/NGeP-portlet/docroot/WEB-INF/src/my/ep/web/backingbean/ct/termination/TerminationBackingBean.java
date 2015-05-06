@@ -35,6 +35,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -54,6 +55,8 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -267,12 +270,61 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		return navigateUrl;
 	}
 	
+	/**
+	 * The method used for retrieving the contract version 
+	 * for agreement or non-agreement contract.
+	 * If it's original agreement, return the first contract version.
+	 * If it's supplementary agreement, return the amended contract version.
+	 */
+	public void retrieveContractVerOfAgreement() {
+		IContractSO contractSO = null;
+		IContractAmendmentSO amendmentSO = null;
+		ContractResDTO resDTO = null;
+		ContractAmendmentResDTO amendmentResDTO = null;
+		try {
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+			
+			if (this.getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
+				//Retrieve amendment
+				amendmentReqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
+				amendmentReqDTO.setAmendmentEffectiveDate(this.getManagedBean().getContractVer().getCtContractAmount().getEffDate());
+				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
+				
+				if (amendmentResDTO.getCtAmendment() != null) {
+					this.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+				} else {
+					reqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
+					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+					
+					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
+					this.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+				}				
+			} else {
+				this.getManagedBean().setAgreementContractVer(this.getManagedBean().getContractVer());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			contractSO = null;
+			amendmentSO = null;
+		}
+	}
+	
 	   /**
 			 * This  method used to set retrieve value from BPM or contract maintenance
 		 */
 	public void setTerminationContractVer(ContractResDTO resDTO) {
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 		getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		
+		//Retrieve agreement contract version for physical no & signed date
+		retrieveContractVerOfAgreement();
 		
 		if(getManagedBean().getContractVer().getCtTermination() == null){
 			getManagedBean().getContractVer().setCtTermination(new CtTermination());
