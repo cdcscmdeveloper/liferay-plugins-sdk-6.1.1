@@ -14,15 +14,21 @@
 			<ac:paginator for="negoloctbl" />
 			<p:column selectionMode="multiple" style="width:2%" rendered="#{isEditableStatus}" />
 
-			<p:column headerText="#{lbl['lbl.sc.location']}"
-				style="width:40%">
+			<p:column style="width:40%">
+				<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.location']}"/>
+				</f:facet>
 				<p:inputText value="#{negoloc.negoLocation}" id="negLocId" label="#{lbl['lbl.sc.location']}"
 				size="30" disabled="#{!isEditableStatus or afterNegotiation}" required="true"/>
 				<p:message id="negLocIdMsg" for="negLocId" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.date']}"
-				style="width:10%">
+			<p:column style="width:10%">
+				<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.date']}"/>
+				</f:facet>
 				<p:calendar id="date" disabled="#{!isEditableStatus or afterNegotiation}" required="true" label="#{lbl['lbl.sc.date']}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 					size="12" value="#{negoloc.negoDate}" />
@@ -32,7 +38,7 @@
 			<p:column headerText="#{lbl['lbl.sc.remarks']}"
 				style="width:40%">
 				<p:inputText id="remarksId" value="#{negoloc.remark}" label="#{lbl['lbl.sc.remarks']}"
-				  size="30" disabled="#{!isEditableStatus or afterNegotiation}" required="true"/>
+				  size="30" disabled="#{!isEditableStatus or afterNegotiation}"/>
 				<p:message id="remarksIdMsg" for="remarksId" display="icon" />
 			</p:column>
 
