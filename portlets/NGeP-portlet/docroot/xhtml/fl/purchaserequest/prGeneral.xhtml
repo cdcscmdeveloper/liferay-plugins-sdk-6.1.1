@@ -144,6 +144,7 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.pr.submission.date']}"/>	
 				</td>
 			</tr>
+			<ui:remove>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
 				<td><p:calendar mode="popup" readonlyInput="true"
@@ -170,6 +171,7 @@
 							listener="#{purchaseRequestBackingBean.updateDeliveryEndDate}" />
 					</p:calendar></td>
 			</tr>
+			</ui:remove>
 		</table>
 	</p:panel>
 	<p:panel id="supplierPnl" header="#{lbl['lbl.fl.supp.details']}" toggleable="true">

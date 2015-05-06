@@ -47,6 +47,7 @@
 				<p:outputLabel style="text-align:right"
 					value="#{address.deliveryTerm} #{purchaseRequestBackingBean.getParameterDesc(address.pmUom)}" />
 			</p:column>
+			<ui:remove>
 			<p:column headerText="#{lbl['lbl.fl.delivery.start']}" style="white-space:normal;">
 				<h:outputText value="#{address.startDate}" style="text-align:right">
 					<f:convertDateTime
@@ -59,6 +60,7 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
+			</ui:remove>
 			<p:column style="white-space:normal;">
 				<f:facet name="header" style="white-space:normal;">
 					<h:outputText value="#{lbl['lbl.fl.receiving.officer']}"/>
