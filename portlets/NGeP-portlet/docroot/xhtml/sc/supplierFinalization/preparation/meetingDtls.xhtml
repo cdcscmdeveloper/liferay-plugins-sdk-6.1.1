@@ -22,9 +22,9 @@
 						<p:column style="width:18%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
+								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 							</f:facet>
-							<p:calendar label="#{lbl['lbl.sc.meeting.location']}" required="true" showOn="button" 
+							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
 								mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
 								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" 
@@ -37,9 +37,9 @@
 						<p:column style="width:30%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.sc.location']}" />
+								<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
 							</f:facet>
-							<p:inputTextarea label="#{lbl['lbl.sc.location']}" required="true" rows="2" cols="50" maxlength="255"
+							<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}" required="true" rows="2" cols="50" maxlength="255"
 								value="#{meetingDtl.meetingLocation}" id="meetingLocation" 
 								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 								<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc"/>

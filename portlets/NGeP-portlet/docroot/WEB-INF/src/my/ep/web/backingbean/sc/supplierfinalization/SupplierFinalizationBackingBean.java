@@ -431,43 +431,11 @@ public class SupplierFinalizationBackingBean extends
 							scQtCommittee.getMeetingAttendances());
 				}
 			}
-			retrieveCommitteeType(committeeType);
+			
+			this.getManagedBean().setCommitteeTabLabel(
+					getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE, committeeType));
 		} finally {
 			meetingSO = null;
-		}
-	}
-
-	private void retrieveCommitteeType(String committeeType) {
-		try {
-			String label = "";
-
-			if (committeeType
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
-				label = getMessageCommon("lbl.sc.committee.qca");
-
-			} else if (committeeType
-					.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-				label = getMessageCommon("lbl.sc.committee.qcb");
-
-			} else if (committeeType
-					.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A)) {
-				label = getMessageCommon("lbl.sc.committee.pba");
-
-			} else if (committeeType
-					.equals(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B)) {
-				label = getMessageCommon("lbl.sc.committee.pbb");
-
-			} else if (committeeType
-					.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH)) {
-				label = getMessageCommon("lbl.sc.committee.fpb.sbh");
-
-			} else if (committeeType
-					.equals(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK)) {
-				label = getMessageCommon("lbl.sc.committee.fpb.swk");
-			}
-			this.getManagedBean().setCommitteeTabLabel(label);
-
-		} finally {
 		}
 	}
 
@@ -3589,15 +3557,7 @@ public class SupplierFinalizationBackingBean extends
 	 * @return an array of user type(s) for re-evaluation
 	 */
 	public SelectItem[] getReEvaluateByRadioBtn() {
-		SelectionType[] type = SelectionType.values();
-		SelectItem[] items = null;
-
-		items = new SelectItem[type.length];
-		int i = 0;
-		for (SelectionType selectionType : type) {
-			items[i++] = new SelectItem(selectionType.value(),
-					selectionType.name());
-		}
+		SelectItem[] items = getRadioButtonCodeValues(ParameterTypeConst.REEVALUATION_COMMITTEE_MEMBERS);
 		return items;
 	}
 

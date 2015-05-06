@@ -20,13 +20,22 @@
 				<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 			</h:column>
 			<h:column>
-				<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
-					value="#{suppFinalizationBackingBean.managedBean.recommendBy}"
-					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-					<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
-					<p:ajax event="change" update="@([id$=recommendBy],[id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
-						listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
-	   			</p:selectOneMenu>
+				<table>
+					<tr>
+						<td>
+							<p:selectOneMenu id="recommendBy" label="#{lbl['lbl.sc.recommend.by']}"
+								value="#{suppFinalizationBackingBean.managedBean.recommendBy}"
+								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+								<f:selectItems value="#{suppFinalizationBackingBean.getPackageRecommendByDropDown()}" />
+								<p:ajax event="change" update="@([id$=recommendBy],[id$=onlineBiddingPanel],[id$=supplierListTblPanel])" 
+									listener="#{suppFinalizationBackingBean.packageRecommendByEvent}" process="@this" />
+				   			</p:selectOneMenu>
+						</td>
+						<td style="margin-top: -3px">
+							<ac:iconTooltip value="#{lbl['lbl.sc.recommend.by.package.tooltip']}" />
+						</td>
+					</tr>
+				</table>
 			</h:column>
 		</h:panelGrid>
 		
@@ -40,12 +49,21 @@
 						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
 					</h:column>
 					<h:column>
-						<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
-							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
-							disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-							<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
-							<p:ajax partialSubmit="true" process="@this" update="@this"/>
-			   			</p:selectOneRadio>
+						<table>
+							<tr>
+								<td>
+									<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
+										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
+										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+										<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
+										<p:ajax partialSubmit="true" process="@this" update="@this"/>
+						   			</p:selectOneRadio>
+								</td>
+								<td style="margin-top: -3px">
+									<ac:iconTooltip value="#{lbl['lbl.sc.online.bidding.endorsement.tooltip']}" />
+								</td>
+							</tr>
+						</table>
 					</h:column>
 			</h:panelGrid>
 		</p:outputPanel>
@@ -75,12 +93,12 @@
 		        	<p:row>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
-		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.supplier.status']}" style="text-align: center;"/>
+		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="text-align: center;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
 		           	</p:row>
 		           	<p:row>
@@ -147,8 +165,7 @@
 											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
 						<p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png"
-							title="#{lbl['lbl.sc.sf.view.bod']}"/>
+							value="/resources/ep/images/design/document.png" />
 	         		</p:commandLink> 
 				</p:column>
 								
@@ -170,12 +187,12 @@
 		        	<p:row>
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumi.status']}" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" />
 		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
-		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.supplier.status']}" style="text-align: center;"/>
+		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="text-align: center;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
 		           	</p:row>
 		           	<p:row>
@@ -246,8 +263,7 @@
 											 shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier)}" 
 		         		update="@([id$=bodDetails])" oncomplete="bodDetailsDialog.show();">
 						<p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png"
-							title="#{lbl['lbl.sc.sf.view.bod']}"/>
+							value="/resources/ep/images/design/document.png" />
 	         		</p:commandLink> 
 				</p:column>
 				

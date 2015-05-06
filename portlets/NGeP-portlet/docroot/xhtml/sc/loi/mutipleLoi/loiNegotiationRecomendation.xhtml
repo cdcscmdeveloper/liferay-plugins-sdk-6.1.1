@@ -30,7 +30,11 @@
 				<h:outputText value="#{item.requestItem.itemName}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.recommended.supplier']}">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
+				</f:facet>
 				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none">
 					<p:column>
 						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}"  rendered="#{isPendingNegotiationStatus}">
@@ -48,7 +52,7 @@
 				</p:dataList>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.proposal.id']}">
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 				<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}">
 					<h:outputText
 						value="#{scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo}" />
@@ -56,7 +60,7 @@
 				</ui:repeat>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.bumi.status']}">
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
 				<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}">
 					<h:outputText
 						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, fn:toUpperCase(scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
@@ -95,7 +99,11 @@
 				</ui:repeat>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.quantity']}" style="text-align: right;">
+			<p:column style="text-align: right;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.quantity']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
+				</f:facet>
 				<h:panelGroup id="qtyPG">
 					<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none" rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 						<p:column>
@@ -134,7 +142,7 @@
 					<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
 	   			</p:selectOneMenu>
 				
-				<p:commandButton value="#{lbl['lbl.btn.apply']}" 
+				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}" 
 					process="@this"
 					partialSubmit="true"
 					action="#{lOIDetailBackingBean.awardSupplierEvent}" 
