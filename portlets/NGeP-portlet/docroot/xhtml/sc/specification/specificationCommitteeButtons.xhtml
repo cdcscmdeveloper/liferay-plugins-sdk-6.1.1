@@ -40,12 +40,13 @@
 		</table>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
-			header="Revise Confirmation" resizable="false" width="325"
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}" resizable="false" width="400"
 			height="75" closable="false">
 			<table>
 				<tr>
-					<td align="center"><p:outputLabel
-							value="Are you sure to send for Revise?" /></td>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.spec.dialog.yesbtn.message']}" /></td>
 				</tr>
 			</table>
 			<p:spacer height="1" />
