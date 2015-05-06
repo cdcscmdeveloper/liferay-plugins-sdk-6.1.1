@@ -14,7 +14,7 @@
 				<p:outputLabel value="#{lbl['lbl.ct.signed.date']}" />
 			</h:panelGrid>
 			<h:panelGrid columns="5" styleClass="top-aligned-columns">
-				<p:calendar	value="#{agreementBackingBean.managedBean.particularContractVer.signedDate}" id="popupButtonCal4" 
+				<p:calendar	value="#{agreementBackingBean.managedBean.agreementContractVer.signedDate}" id="popupButtonCal4" 
 					showOn="button" size="17" required="true" label="#{lbl['lbl.ct.signed.date']}" readonlyInput="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				<p:spacer width="1"/>

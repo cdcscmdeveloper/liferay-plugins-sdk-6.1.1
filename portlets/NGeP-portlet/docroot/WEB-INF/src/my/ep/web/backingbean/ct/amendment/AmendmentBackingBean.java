@@ -629,7 +629,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		try {
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		  	    
+		  	
+			//Retrieve agreement contract version for physical no & signed date
+			retrieveContractVerOfAgreement();
+			
 		 	reqDTO = new ContractReqDTO();
 		 	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
 		 			ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
@@ -1460,6 +1463,52 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			if (outputValue.equalsIgnoreCase("SDEC")) {
 				getManagedBean().setSelectedTabIndex(3);
 			}		 
+		}
+	}
+	
+	/**
+	 * The method used for retrieving the contract version 
+	 * for agreement or non-agreement contract.
+	 * If it's original agreement, return the first contract version.
+	 * If it's supplementary agreement, return the amended contract version.
+     */
+	private void retrieveContractVerOfAgreement() {
+		IContractSO contractSO = null;
+		IContractAmendmentSO amendmentSO = null;
+		ContractResDTO resDTO = null;
+		ContractAmendmentResDTO amendmentResDTO = null;
+		try {
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+			
+			if (getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
+				//Retrieve amendment
+				amendmentReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				amendmentReqDTO.setAmendmentEffectiveDate(getManagedBean().getContractVer().getCtContractAmount().getEffDate());
+				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
+				
+				if (amendmentResDTO.getCtAmendment() != null) {
+					getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+				} else {
+					reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+					
+					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
+					getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+				}				
+			} else {
+				getManagedBean().setAgreementContractVer(getManagedBean().getContractVer());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			 contractSO = null;
+			 amendmentSO = null;
 		}
 	}
 	
@@ -3835,8 +3884,8 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			
 			context.put("contractTitle",getManagedBean().getCtContract().getContractName());
 			context.put("contractNo",getManagedBean().getCtContract().getContractNo());
-			if (getManagedBean().getContractVer().getContractPhysicalNo() != null) {
-				context.put("contractPhysicalNo",getManagedBean().getContractVer().getContractPhysicalNo());
+			if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() != null) {
+				context.put("contractPhysicalNo",getManagedBean().getAgreementContractVer().getContractPhysicalNo());
 			} else {
 				context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
 			}
