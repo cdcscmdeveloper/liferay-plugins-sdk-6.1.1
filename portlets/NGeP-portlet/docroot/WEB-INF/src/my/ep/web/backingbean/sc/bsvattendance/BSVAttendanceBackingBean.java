@@ -22,7 +22,6 @@ import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtBSVRemark;
@@ -69,15 +68,14 @@ public class BSVAttendanceBackingBean extends
 
 	}
 
-	
 	/**
 	 * retrieving Briefing SiteVisit List
 	 * 
-	 * @param qtId 
-	 * 			the Long variable
+	 * @param qtId
+	 *            the Long variable
 	 */
 	public void retrieveBriefingSiteVisitList(Long qtId) {
-		
+
 		log.info("** retrieveBriefingSiteVisitList **");
 		IQTBriefingSO qTBriefingSO = null;
 
@@ -168,7 +166,7 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 *  Add the attendance on click of 'Add' button.
+	 * Add the attendance on click of 'Add' button.
 	 * 
 	 */
 	public void addAttendanceForBSV() {
@@ -203,13 +201,12 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * Show registration details when user clicks register button
 	 * 
-	 * @param briefing 
-	 * 				the instance of ScQtBsvDtl
-	 * @return navigationPath 
-	 *              the String variable. 
+	 * @param briefing
+	 *            the instance of ScQtBsvDtl
+	 * @return navigationPath the String variable.
 	 */
 	public String registerSupplier(ScQtBsvDtl briefing) {
-		
+
 		log.info("** attendanceRegistration **");
 		this.getManagedBean().setPreviousPage("bsvAttendanceRegisterMain");
 		getregistrationDetails(briefing);
@@ -217,17 +214,15 @@ public class BSVAttendanceBackingBean extends
 		return NAV_TO_BSV_REG_PAGE + "?faces-redirect=true";
 	}
 
-	
 	/**
 	 * Save Briefing Site Visit Details on click of 'Save' button.
 	 * 
 	 * @param outCome
 	 *            the String variable
-	 * @return navigationPath
-	 *           the String variable
+	 * @return navigationPath the String variable
 	 */
 	public String submitBsvDetails(String outCome) {
-		
+
 		List<ScQtBsv> bsvs = new ArrayList<ScQtBsv>();
 		Date closeDate = this.getManagedBean().getScQt().getClosingDate();
 		if (DateUtils.getDaysDifference(closeDate, new Date()) > 0) {
@@ -331,17 +326,15 @@ public class BSVAttendanceBackingBean extends
 
 	}
 
-	
 	/**
 	 * Save Briefing Registration and attendance details
 	 * 
-	 * @param flowType 
-	 * 			the String variable	
-	 * @return navigationUrl
-	 *          the String Variable
+	 * @param flowType
+	 *            the String variable
+	 * @return navigationUrl the String Variable
 	 */
 	public String saveBriefingRegAttendance(String flowType) {
-		
+
 		IQTBriefingSO qTBriefingSO = null;
 		String url = null;
 		try {
@@ -444,7 +437,7 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	private void renewSessionWithPreviousValues() {
-		
+
 		String taskId = getManagedBean().getTaskId();
 		String[] outcomes = getManagedBean().getOutComes();
 		Long currentStatusId = getManagedBean().getCurrentStatusId();
@@ -458,15 +451,14 @@ public class BSVAttendanceBackingBean extends
 		getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
 	}
 
-	
 	/**
 	 * @param bsvAttandance
-	 *        the instance of ScQtBsvAttendance 
+	 *            the instance of ScQtBsvAttendance
 	 * @return true/false
 	 */
 	private boolean isOneAuthorizedPersonal(
 			List<ScQtBsvAttendance> bsvAttandance) {
-		
+
 		if (null == bsvAttandance || bsvAttandance.isEmpty()) {
 			return false;
 		}
@@ -480,7 +472,7 @@ public class BSVAttendanceBackingBean extends
 		return false;
 	}
 
-	/** 
+	/**
 	 * Override from SourcingBaseBackingBean#preRenderView()
 	 */
 	public void preRenderView() {
@@ -499,15 +491,14 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * Update info into BPM 
+	 * Update info into BPM
 	 * 
 	 * @param action
-	 *         the String variable
-	 * @return navigateUrl if success else will
-	 * throw exception by BPM
+	 *            the String variable
+	 * @return navigateUrl if success else will throw exception by BPM
 	 */
 	public String updateBpmTask(String action) {
-		
+
 		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 		briefingReqDTO.setOutcome(action);
 		briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -548,7 +539,7 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	private IQTBriefingSO getBriefingSO() {
-		
+
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 
@@ -557,10 +548,10 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * Display previous screen on click of 'Back' button.
 	 * 
-	 * @return navigateUrl 
+	 * @return navigateUrl
 	 */
 	public String backBtn() {
-		
+
 		log.info("** Back Button **");
 		retrieveBriefingSiteVisitList(this.getManagedBean().getScQt().getQtId());
 		return this.getManagedBean().getPreviousPage()
@@ -569,13 +560,13 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * Method will execute on row select  in data table.
+	 * Method will execute on row select in data table.
 	 * 
 	 * @param event
-	 * 			the instance of SelectEvent	
+	 *            the instance of SelectEvent
 	 */
 	public void onRowSelect(SelectEvent event) {
-		
+
 		this.getManagedBean().setBriefingAttendanceList(null);
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
@@ -587,7 +578,7 @@ public class BSVAttendanceBackingBean extends
 	 * Method to delete the registrations
 	 */
 	public void deleteSupplierDetails() {
-		
+
 		List<ScQtBsvRegistration> registrations = this.getManagedBean()
 				.getBriefingRegistrationList();
 		// List<ScQtBsvRegistration> toBeDeletedRegistration = new
@@ -631,10 +622,10 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * Set location, address info into Managed bean 
+	 * Set location, address info into Managed bean
 	 * 
 	 * @param briefing
-	 * 			the instance of ScQtBsvDtl
+	 *            the instance of ScQtBsvDtl
 	 */
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
@@ -664,10 +655,10 @@ public class BSVAttendanceBackingBean extends
 	 * Get attandanceDtls by SelectedRegistartion.
 	 * 
 	 * @param mofAccounts
-	 *         the instance of SmMofAccount list
+	 *            the instance of SmMofAccount list
 	 */
 	public void bsvRegistationListner(List<SmMofAccount> mofAccounts) {
-		
+
 		log.debug("businessNatureListener");
 		if (getManagedBean().getBriefingRegistrationList() == null
 				|| getManagedBean().getBriefingRegistrationList().isEmpty()) {
@@ -702,7 +693,7 @@ public class BSVAttendanceBackingBean extends
 	 * Method to delete the registrations
 	 */
 	public void deleteBsvAttandances() {
-		
+
 		List<ScQtBsvAttendance> attandances = null;
 		if (null != this.getManagedBean().getSelectedbriefRegistration()) {
 			attandances = this.getManagedBean().getSelectedbriefRegistration()
@@ -733,11 +724,11 @@ public class BSVAttendanceBackingBean extends
 	 * Method will notify whether BSvs completed or not.
 	 * 
 	 * @param zoneBean
-	 *         the instance of BriefingZoneBean
+	 *            the instance of BriefingZoneBean
 	 * @return true if completes
 	 */
 	public boolean isAllBsvsComplete(BriefingZoneBean zoneBean) {
-		
+
 		ScQtBsv bsv = zoneBean.getScQtBsv();
 		if (null != bsv && null != bsv.getQtBsvId()) {
 			if (bsv.isSameBsv()) {
@@ -754,7 +745,7 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	private boolean isBsvStatusComplete(List<ScQtBsvDtl> bsvDetails) {
-		
+
 		for (ScQtBsvDtl bsvDtl : bsvDetails) {
 			if (!QTStatusConst.BSV_COMPLETED.equals(bsvDtl.getBsvStatus()
 					.getStatusId())) {
@@ -766,7 +757,7 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	private void getregistrationDetails(ScQtBsvDtl briefing) {
-		
+
 		this.getManagedBean().setBriefingAttendanceList(null);
 		IQTBriefingSO qTBriefingSO = null;
 		this.getManagedBean().setSelectedbriefRegistration(null);
@@ -806,7 +797,7 @@ public class BSVAttendanceBackingBean extends
 	 * Method will be executed by Ajax call.
 	 * 
 	 * @param event
-	 *        the instance of AjaxBehaviorEvent
+	 *            the instance of AjaxBehaviorEvent
 	 */
 	public void updateAttandanceToSelectedBsvReg(AjaxBehaviorEvent event) {
 
@@ -821,10 +812,10 @@ public class BSVAttendanceBackingBean extends
 	 * Will be called on change of accordian panel..
 	 * 
 	 * @param event
-	 *          the instance of TabChangeEvent
+	 *            the instance of TabChangeEvent
 	 */
 	public void onZoneTabChange(TabChangeEvent event) {
-		
+
 		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
 		// this.getManagedBean().setBsvZoneindx(1);
 		this.getManagedBean().setNormalBsvBean(zoneBean);
@@ -833,11 +824,11 @@ public class BSVAttendanceBackingBean extends
 	/**
 	 * Update the attendance flag based on Icpassport number
 	 * 
-	 * @param attandance 
-	 * 			the instance of ScQtBsvAttendance
+	 * @param attandance
+	 *            the instance of ScQtBsvAttendance
 	 */
 	public void updateIsAttandedFlag(ScQtBsvAttendance attandance) {
-		
+
 		List<ScQtBsvAttendance> attandanceList = this.getManagedBean()
 				.getBriefingAttendanceList();
 		for (int i = 0; i < attandanceList.size(); i++) {
@@ -915,11 +906,11 @@ public class BSVAttendanceBackingBean extends
 	 * Return true if bsv date is greater or equal to Today date
 	 * 
 	 * @param bsvDtl
-	 *        the instance of ScQtBsvDtl
+	 *            the instance of ScQtBsvDtl
 	 * @return true/false
 	 */
 	public boolean showRegistrationIcon(ScQtBsvDtl bsvDtl) {
-		
+
 		if (null != bsvDtl) {
 			return DateUtils.isDateGreaterOrEqual(new Date(),
 					bsvDtl.getBsvDate());
@@ -947,16 +938,16 @@ public class BSVAttendanceBackingBean extends
 	 * Method is used to save Bsv registration details from maintenance flow.
 	 */
 	public String saveBsvRegistarionFromMaintanceFlow() {
-		
+
 		IQTBriefingSO qTBriefingSO = null;
-		
+
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 
 			ScQtBsvDtl scQtBrief = this.getManagedBean().getScQtBriefing();
-
+			boolean invokeBPM = false;
 			for (ScQtBsvRegistration registration : this.getManagedBean()
 					.getBriefingRegistrationList()) {
 
@@ -975,7 +966,7 @@ public class BSVAttendanceBackingBean extends
 				if (flag) {
 					registration.setAttended(true);
 					if (null == registration.getBsvRegistrationId()) {
-						
+						invokeBPM = true;
 						registration.setPostRegistered(true);
 					}
 				} else {
@@ -992,7 +983,7 @@ public class BSVAttendanceBackingBean extends
 			reqDTO.setScQt(this.getManagedBean().getScQt());
 			reqDTO.setToBeDeletedRegistations(this.getManagedBean()
 					.getToBeDeletedRegistartions());
-			reqDTO.setInvokeBpm(true);
+			reqDTO.setInvokeBpm(invokeBPM);
 			BriefingResDTO resDTO = qTBriefingSO.saveQTDtl(reqDTO);
 
 			if (resDTO.isSuccessful()) {
