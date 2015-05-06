@@ -84,7 +84,7 @@
 			<tr>		
 				<td><p:outputLabel value="#{lbl['lbl.fl.approved.date']}" /></td>
 				<td><p:inputText size="25" disabled="true"
-						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.approvedDate}">
+						value="#{flOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.agApprovedDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/></td>
