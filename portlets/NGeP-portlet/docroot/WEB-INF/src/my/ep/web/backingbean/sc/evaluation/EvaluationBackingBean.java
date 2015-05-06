@@ -991,13 +991,13 @@ public class EvaluationBackingBean extends
 		} finally {
 
 		}
-		
+
 		if (SourcingConstants.TECHINICAL_STAGE.equals(checkListType)) {
-			return "technicalComplianceStage.xhtml";	
+			return "technicalComplianceStage.xhtml";
 		} else {
 			return "financialComplianceStage.xhtml";
 		}
-		
+
 	}
 
 	/**
@@ -7857,11 +7857,14 @@ public class EvaluationBackingBean extends
 						(ScAttachment) scQtEvaluationReportAttachment,
 						getManagedBean().getScQt());
 
-			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD_FIN.equals(docDefinitionKey)) {
+			} else if (SourcingConstants.DOC_DEF_KEY_EVALUATION_ASSESSMENT_METHOD_FIN
+					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				scQtEvaluationReportAttachment.setFileName(filename.toString());
-				generateFinancialKaedah2Pdf((ScAttachment) scQtEvaluationReportAttachment, getManagedBean().getScQt());
-				
+				generateFinancialKaedah2Pdf(
+						(ScAttachment) scQtEvaluationReportAttachment,
+						getManagedBean().getScQt());
+
 			} else if (SourcingConstants.DOC_DEF_KEY_ANALYSIS_TECH_FIN_EVALUATION
 					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
@@ -7930,7 +7933,8 @@ public class EvaluationBackingBean extends
 	 * @param scQtEvaluationReportAttachment
 	 * @param scQt
 	 */
-	private void generateFinancialKaedah2Pdf(ScAttachment attachment, ScQt qt) throws Exception {
+	private void generateFinancialKaedah2Pdf(ScAttachment attachment, ScQt qt)
+			throws Exception {
 		debugLogger("generateFinancialKaedah2Pdf");
 		populateAttachmentDetails(attachment);
 
@@ -9770,6 +9774,14 @@ public class EvaluationBackingBean extends
 		} else {
 			meetingList.add(scqtMeeting);
 		}
+
+	}
+
+	// delete existing meeting details records from database.
+	public void deleteMeetingDtls() {
+		markDeleteSelectedEvaluationRowsAction(this.getManagedBean()
+				.getScQtMeetings(), this.getManagedBean()
+				.getMeetingRemoveList());
 
 	}
 }
