@@ -3325,8 +3325,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType) obj;
 			Long quoteId = Long.valueOf(directPurchaseDataType.getDpId());
 			Long purchaseInDefaultId = null;
-			if(directPurchaseDataType.getPid() != null && directPurchaseDataType.getPid().size() > 0) {
-				purchaseInDefaultId = Long.valueOf(directPurchaseDataType.getPid().get(0));
+			if(directPurchaseDataType.getPidId() != null) {
+				purchaseInDefaultId = Long.valueOf(directPurchaseDataType.getPidId());
 			}
 			
 			quoteReqDTO.setQuoteId(quoteId);
