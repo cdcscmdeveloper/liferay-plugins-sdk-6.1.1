@@ -26,21 +26,24 @@
 				<ui:param name="buttonLabel"
 					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					style="float:right;" process="@all" partialSubmit="true"
 					action="#{evaluationBackingBean.submitPrepareEvaluationDetails(bpmAction)}" />
 			</ui:repeat>
 		</ui:fragment>
 		<p:commandButton value="#{lbl['lbl.btn.save']}"
+			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			disabled="#{evaluationBackingBean.managedBean.readOnly}"
 			style="float:right;" process="@form" update="@form"
 			action="#{evaluationBackingBean.saveMeetingDtls(true)}" />
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
-			header="Revice Confirmation" resizable="false" width="325"
-			height="75" closable="false">
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
 			<table>
 				<tr>
-					<td align="center"><p:outputLabel
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
 							value="#{lbl['lbl.sc.spec.dialog.yesbtn.message']}" /></td>
 				</tr>
 			</table>
