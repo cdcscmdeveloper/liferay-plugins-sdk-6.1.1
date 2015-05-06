@@ -2241,17 +2241,10 @@ public class EvaluationBackingBean extends
 			else if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 
-				if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-						&& !this.getManagedBean().isReadOnly()
-						&& this.getManagedBean()
-								.getScQt()
-								.getEvaluationType()
-								.equalsIgnoreCase(
-										QTConstants.EVALUATION_ONE_TIER)
+				if (this.getManagedBean().getScQt().getEvaluationType()
+						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
-					evaluationStageStatusCheck();
 					EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 					summaryReqDTO.setQtId(this.getManagedBean().getScQt()
 							.getQtId());
@@ -2262,21 +2255,21 @@ public class EvaluationBackingBean extends
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE);
 					resultStg2.add(QTConstants.FINANCIAL_EVALUATION_BY_ITEM);
 					summaryReqDTO.setResultStages(resultStg2);
-					evaluationSo
-							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					if (this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
+							&& !this.getManagedBean().isReadOnly()) {
+						evaluationStageStatusCheck();
+						evaluationSo
+								.prepareFinancialEvaluationSummary(summaryReqDTO);
+					}
 
 					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 					reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 					reqDTO.setSettingType(getSettingType(QTConstants.FINANCIAL_EVALUATION_BY_PACKAGE));
 					resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);
-				} else if (this.getManagedBean().getCurrentStatusId()
-						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-						&& !this.getManagedBean().isReadOnly()
-						&& this.getManagedBean()
-								.getScQt()
-								.getEvaluationType()
-								.equalsIgnoreCase(
-										QTConstants.EVALUATION_ONE_TIER)
+				} else if (this.getManagedBean().getScQt().getEvaluationType()
+						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
 						&& this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
 					// evaluationStageStatusCheck();
