@@ -3303,7 +3303,9 @@ public class ReportBackingBean extends
 		if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value()))))  {	
 				 getLtstMinistryList();
 				 //getLtstPTJList();
-				 //retrieveFPJPTJList();
+				 if(this.getCommonMinistry()==null){
+				   retrieveFPJPTJList();
+				 }	 
 			}else{
 				retrieveParameterCodeType();
 			}
