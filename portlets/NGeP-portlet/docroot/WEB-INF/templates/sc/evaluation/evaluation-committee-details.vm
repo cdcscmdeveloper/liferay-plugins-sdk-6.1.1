@@ -1,126 +1,150 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
+	<style>
+		#wrapper {
+			width:660px;
+			margin:0px auto;
+			padding:10px;
+		}
+		#header {
+			height:80px;
+			padding:10px;
+		}
+		#content {
+			margin-top:10px;
+			padding-bottom:10px;
+		}
+		#content div {
+			padding:10px;
+			float:left;
+		}
+		#footer {
+			float:left;
+			margin-top:10px;
+			margin-bottom:10px;
+			padding:10px;
+			width:630px;
+		}
+		#bottom {
+			clear:both;
+			text-align:right;
+		}
+		body{
+			font-family: "Helvetica";
+			font-size: 8pt;
+		}
+		.table2 {
+			border-collapse: collapse;
+			width:100%;
+		}
 		.table2 th, .table2 td {
 			border: 1px solid black;
 		}
-		 th{
+		th{
 			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		}
+	</style>
 </head>
 <body>
-	<table width="100%">
-	<tr>
-		<td>
-			<br />
-		</td>
-	</tr>
-	<tr>
-		<td>
-    		<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Perlantikan Jawatankuasa</span>
-    		<br /><br />
-		</td>
-	</tr>
-	<tr>
-		<td>#if ( $ec == "true")
-			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-			<table class="table2" width='100%'>
-				<tr>
-					<td>Nama</td>
-					<td>Jawatan</td>
-					<td>Gred</td>
-					<td>Kad Pengenalan No.</td>
-					<td>PTJ</td>
-					<td>Peranan</td>
-				</tr>
-				#foreach( $committeeMember in $committeeActivities )
-				<tr>
-					<td>$committeeMember.scCommitteeMember.memberName</td>
-					<td>$committeeMember.scCommitteeMember.designation</td>
-					<td>$committeeMember.scCommitteeMember.grade</td>
-					<td>$committeeMember.scCommitteeMember.icPassport</td>
-					<td>$committeeMember.scCommitteeMember.pmOrgProfile.orgName</td>
-					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
-				</tr>
+<div id="wrapper">
+	<div id="header">
+		#parse("sc/shared/header.vm")
+	</div>
+	<div id="content" style="height:740px;">
+		<table width="100%">
+		<tr>
+			<td align='center' valign="top">
+				<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Keahlian Jawankuasa</span>
+				<br /><br />
+			</td>
+		</tr>
+		<tr>
+			<td>#if ( $ec == "true")
+				<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+				<table class="table2" width='100%'>
+					<tr>
+						<td>Nama</td>
+						<td>Jawatan</td>
+						<td>Gred</td>
+						<td>Kad Pengenalan No.</td>
+						<td>PTJ</td>
+						<td>Peranan</td>
+					</tr>
+					#foreach( $committeeMember in $committeeActivities )
+					<tr>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.memberName</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.designation</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.grade</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.icPassport</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.pmOrgProfile.orgName</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</span></td>
+					</tr>
+					#end
+				</table>
+				<p><b>Turut Hadir</b></p>
+				<table class="table2" width='100%'>
+					<tr>
+						<td>Nama</td>
+						<td>Kad Pengenalan No.</td>
+					</tr>
+					#foreach( $memberAttendance in $meetingAttendances )
+					<tr>
+						<td><span style="font-family:Arial;font-size:9px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$memberAttendance.name</span></td>
+						<td><span style="font-family:Arial;font-size:9px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$memberAttendance.icPassport</span></td>
+					</tr>
+					#end
+				</table>
+				</span>
 				#end
-			</table>
-			<p><b>Turut Hadir</b></p>
-			<table class="table2" width='100%'>
-				<tr>
-					<td>Nama</td>
-					<td>Kad Pengenalan No.</td>
-				</tr>
-				#foreach( $memberAttendance in $meetingAttendances )
-				<tr>
-					<td>$memberAttendance.name</td>
-					<td>$memberAttendance.icPassport</td>
-				</tr>
-				#end
-			</table>
-			</span>
-            #end
-        </td>
-    </tr>
-	<tr>
-		<td>#if ( $oc == "true")
-			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-			<table class="table2" width='100%'>
-				<tr>
-					<td>Nama</td>
-					<td>Jawatan</td>
-					<td>Gred</td>
-					<td>Kad Pengenalan No.</td>
-					<td>PTJ</td>
-					<td>Peranan</td>
-				</tr>
-				#foreach( $committeeMember in $committeeActivities )
-				<tr>
-					<td>$committeeMember.scCommitteeMember.memberName</td>
-					<td>$committeeMember.scCommitteeMember.designation</td>
-					<td>$committeeMember.scCommitteeMember.grade</td>
-					<td>$committeeMember.scCommitteeMember.icPassport</td>
-					<td>$committeeMember.scCommitteeMember.pmOrgProfile.orgName</td>
-					<td>$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</td>
-				</tr>
-				#end
-			</table>
-			<p><b>Turut Hadir</b></p>
-			<table class="table2" width='100%'>
-				<tr>
-					<td>Nama</td>
-					<td>Kad Pengenalan No.</td>
-				</tr>
-				#foreach( $memberAttendance in $meetingAttendances )
-				<tr>
-					<td>$memberAttendance.name</td>
-					<td>$memberAttendance.icPassport</td>
-				</tr>
-				#end
-			</table>
-			</span>
-			 #end
-        </td>
-    </tr>
-	</table>
+			</td>
+		</tr>
+		<tr>
+			<td>#if ( $oc == "true")
+				<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+				<table class="table2" width='100%'>
+					<tr>
+						<td>Nama</td>
+						<td>Jawatan</td>
+						<td>Gred</td>
+						<td>Kad Pengenalan No.</td>
+						<td>PTJ</td>
+						<td>Peranan</td>
+					</tr>
+					#foreach( $committeeMember in $committeeActivities )
+					<tr>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.memberName</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.designation</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.grade</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.icPassport</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$committeeMember.scCommitteeMember.pmOrgProfile.orgName</span></td>
+						<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$bean.getParameterDesc($committeeMember.scCommitteeMember.memberRole)</span></td>
+					</tr>
+					#end
+				</table>
+				<p><b>Turut Hadir</b></p>
+				<table class="table2" width='100%'>
+					<tr>
+						<td>Nama</td>
+						<td>Kad Pengenalan No.</td>
+					</tr>
+					#foreach( $memberAttendance in $meetingAttendances )
+					<tr>
+						<td><span style="font-family:Arial;font-size:9px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$memberAttendance.name</span></td>
+						<td><span style="font-family:Arial;font-size:9px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$memberAttendance.icPassport</span></td>
+					</tr>
+					#end
+				</table>
+				</span>
+				 #end
+			</td>
+		</tr>
+		</table>
+	</div>
+
+	<div id="footer">
+		#parse("sc/shared/footer.vm")
+	</div>
+	<div id="bottom"></div>
+</div>
 </body>
 </html>
-	
