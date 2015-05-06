@@ -3567,9 +3567,9 @@ public class LOADetailBackingBean extends
 			}
 		} else if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_DROPDOWN)){
 			if(answer.getAnswerCompliance()){
-				answerType  = SourcingConstants.YES;
+				answerType  = SourcingConstants.SUPPLIER_REQUIREMENT_YES;
 			} else{
-				answerType  = SourcingConstants.NO;
+				answerType  = SourcingConstants.SUPPLIER_REQUIREMENT_NO;
 			}
 		} 
 		return answerType;
