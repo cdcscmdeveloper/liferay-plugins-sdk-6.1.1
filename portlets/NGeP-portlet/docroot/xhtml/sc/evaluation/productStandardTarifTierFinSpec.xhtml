@@ -24,14 +24,14 @@
 
 
 			<ac:templateSpec
-				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}" />
+				templateSpecBean="#{evaluationBackingBean.managedBean.templateSpecBean}"
+				title="#{lbl['lbl.sc.spec.financial.title']}" />
 
 			<h:panelGroup>
 				<p:panel
-					header="#{lbl['lbl.sc.spec.scoring.offered.price.item']}"
+					header="#{lbl['lbl.sc.spec.scoring.offered.price']}"
 					toggleable="true">
-
-
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.spec.scoring.offered.price.instruction']}" escape="false" />
 
 					<p:dataTable var="itemofferPricelist" id="itemOfferpriceId"
 						rows="10"

@@ -7,9 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.qualified.supplier.list']}"
-		toggleable="true">
-
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.eva.qualified.supplier.list.tec.evaluation.stage.tooltip']}" />
+		</f:facet>
+		
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
 			editable="true" rowIndexVar="index" style="width:100%" rows="10"
 			rowKey="#{qualifiedSupplier}">
@@ -44,8 +47,11 @@
 
 
 
-	<p:panel header="#{lbl['lbl.sc.eva.disqualified.supplier.list']}"
-		toggleable="true">
+	<p:panel toggleable="true">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.eva.disqualified.supplier.list.tec.evaluation.stage.tooltip']}" />
+		</f:facet>
 
 		<p:dataTable var="disQualifiedSupplier"
 			id="complianceDisQualifiedSupplier" editable="true"

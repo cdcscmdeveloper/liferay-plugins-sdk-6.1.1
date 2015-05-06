@@ -90,7 +90,11 @@
 								<h:outputText value="#{existuser.grade}" />
 							</p:column>
 
-							<p:column headerText="#{lbl['lbl.sc.pnp']}" style="width : 6%; white-space: normal;">
+							<p:column style="width : 6%;">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+								</f:facet>
 								<h:outputText
 									value="#{lbl[existuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>

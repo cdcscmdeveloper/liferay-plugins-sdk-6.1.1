@@ -13,8 +13,10 @@
 		
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']}" /></td>
-				<td>#{supplierProposalDetailBackingBean.managedBean.year}</td>
+				<td>
+					<p:outputLabel style="font-weight: bold;" value="#{supplierProposalDetailBackingBean.managedBean.year}" />
+					<p:outputLabel value="#{lbl['lbl.sc.spec.company.exp.since.year']} " />
+				</td>
 			</tr>
 		</table>
 		<p:dataTable id="financenongovtid" var="financenongovt"

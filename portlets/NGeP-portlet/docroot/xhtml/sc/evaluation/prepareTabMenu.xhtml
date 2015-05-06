@@ -12,10 +12,8 @@
 
 		<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"		
 			action="#{evaluationBackingBean.retriveDetails}"  />
-		<p:menuitem value="#{lbl['lbl.sc.eva.opn.committee']}"
-			
-			action="#{evaluationBackingBean.retriveOpeningCommitteeDtls}"
-			 />
+		<p:menuitem value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, evaluationBackingBean.managedBean.committeeType)}"
+			action="#{evaluationBackingBean.retriveOpeningCommitteeDtls}" />
 		<p:menuitem value="#{lbl['lbl.sc.join.in']}"
 		
 			action="#{evaluationBackingBean.retriveTurutHadirDtls}"

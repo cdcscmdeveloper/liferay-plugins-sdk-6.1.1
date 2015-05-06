@@ -79,7 +79,11 @@
 							<p:column headerText="#{lbl['lbl.sc.grade']}">
 								<h:outputText value="#{existcommitteeuser.grade}" />
 							</p:column>
-							<p:column headerText="#{lbl['lbl.sc.pnp']}">
+							<p:column>
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+								</f:facet>
 								<h:outputText
 									value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 							</p:column>

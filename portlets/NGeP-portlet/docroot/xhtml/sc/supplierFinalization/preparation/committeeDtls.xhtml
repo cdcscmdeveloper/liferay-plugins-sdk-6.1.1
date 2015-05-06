@@ -35,7 +35,11 @@
 							<h:outputText value="#{committeeDtl.scCommitteeMember.grade}"></h:outputText>
 						</p:column>
 			
-						<p:column headerText="#{lbl['lbl.sc.pnp']}">
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+							</f:facet>
 							<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
 								fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}" />
 						</p:column>
