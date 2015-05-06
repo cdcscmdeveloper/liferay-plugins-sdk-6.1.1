@@ -11,8 +11,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class TrackingDiaryManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
-	private String moduleSelected;
-	private String previousSelectedModule;
+	private String moduleSelected="";
+	private String previousSelectedModule="";
 
 	public String getModuleSelected() {
 		return moduleSelected;
