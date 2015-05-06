@@ -8,8 +8,10 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -37,6 +39,9 @@ import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
+
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -469,6 +474,14 @@ public class ForceReplaceSuppAdminBackingBean extends
 					SmApplicationUtil.retrievePmParameterById(getManagedBean()
 							.getReactivateBasic().getNewIdentificationType()));
 		}
+	}
+
+	/**
+	 * Redirect to Terms And Condition Details Page
+	 */
+	public void viewTnc() {
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/forcereplaceadmin/tncDetails.xhtml", "");
 	}
 
 }
