@@ -141,6 +141,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Map<String,Object> radioButtonSchedule;
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private CtContractVer contractVer;
+	private CtContractVer agreementContractVer;
 	private CtContract ctContract;
 	private CtContractItem selectedItem;
 	private CtContractItem selectedServiceItem;
@@ -1194,6 +1195,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
+	}
+
+	/**
+	 * @return the agreementContractVer
+	 */
+	public CtContractVer getAgreementContractVer() {
+		return agreementContractVer;
+	}
+
+	/**
+	 * @param agreementContractVer the agreementContractVer to set
+	 */
+	public void setAgreementContractVer(CtContractVer agreementContractVer) {
+		this.agreementContractVer = agreementContractVer;
 	}
 
 	/**

@@ -862,6 +862,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
          		ctContractVer.getCtContractValue().setSupplierAddress(getManagedBean().getSmAddress());
          	}         	
             reqDTO.setCtContractVer(ctContractVer);
+            reqDTO.setAgreementContractVer(getManagedBean().getAgreementContractVer());
             reqDTO.setUserRole(getUserRole());
             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
 	        reqDTO.setAttachments(getManagedBean().getAttachmentList());
@@ -3433,8 +3434,67 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     			break;
     		}
     	}
+    	// Skip for central contract because central contract always is off line agreement
+    	// Thus physical no and signed date always refer to the current contract version
+    	if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
+				ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+	    	//Retrieve agreement contract version for physical no & signed date
+			retrieveContractVerOfAgreement();
+    	}
 	}
 	
+	/**
+	 * The method used for retrieving the contract version 
+	 * for agreement or non-agreement contract.
+	 * If it's original agreement, return the first contract version.
+	 * If it's supplementary agreement, return the amended contract version.
+     */
+	private void retrieveContractVerOfAgreement() {
+		IContractSO contractSO = null;
+		IContractAmendmentSO amendmentSO = null;
+		ContractResDTO resDTO = null;
+		ContractAmendmentResDTO amendmentResDTO = null;
+		try {
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+			
+			if (getManagedBean().getCtContractAmount().isAgreement()) {
+				//Retrieve amendment
+				amendmentReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				amendmentReqDTO.setAmendmentEffectiveDate(getManagedBean().getCtContractAmount().getEffDate());
+				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
+				
+				if (amendmentResDTO.getCtAmendment() != null) {
+					getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+				} else {
+					reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+					
+					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
+					getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+				}				
+			} else {
+				getManagedBean().setAgreementContractVer(getManagedBean().getContractVer());
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			 contractSO = null;
+			 amendmentSO = null;
+		}
+	}
+	
+	/**
+	 * The method used to check whether current process is contract creation.
+	 * 
+	 * @return true, if current process is contract creation
+	 *         false, if current process is not contract creation
+     */
 	public boolean contractCreationProcess() {
 		if (getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_SUBMISSION.longValue()
 				|| getManagedBean().getContractVer().getStatus().getStatusId().longValue() == ContractStatusConst.FD_PENDING_CONTRACT_CREATION.longValue()
