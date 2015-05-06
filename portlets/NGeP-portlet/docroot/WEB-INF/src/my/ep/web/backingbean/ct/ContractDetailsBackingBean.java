@@ -67,6 +67,7 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.dtl.ContractZoneReqDTO;
 import my.ep.dto.ct.dtl.ContractZoneResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -2345,14 +2346,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * This method will generate a new record in performance bond
 	 * list, user allow to enter the bond details and attachment. 
 	 */
-    public void addBondDetails() {    	
+    public void addBondDetails() {
 		CtPerformanceBond newBond = new CtPerformanceBond();
 		newBond.setFinancialOrg(new PmFinancialOrg());
 		newBond.setEffDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
-	    Calendar cal = Calendar.getInstance();
-        cal.setTime(getManagedBean().getContractVer().getCtContractValue().getExpDate());
-        cal.add(Calendar.YEAR, 1); 
-        newBond.setExpDate(cal.getTime());
+		
+		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);		
+		ContractAmendmentReqDTO amendReqDTO = new ContractAmendmentReqDTO();
+		amendReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+		amendReqDTO.setAmendmentEffectiveDate(getManagedBean().getCtContractAmount().getEffDate());		
+		ContractAmendmentResDTO resAmendDto = amendSO.retrieveContractEndDateByAmendmentEffectiveDate(amendReqDTO);
+		
+        newBond.setExpDate(resAmendDto.getPerformanceBondExpDate());
      	getManagedBean().getCtContractAmount().getCtPerformanceBonds().add(newBond);
 	}
 	
