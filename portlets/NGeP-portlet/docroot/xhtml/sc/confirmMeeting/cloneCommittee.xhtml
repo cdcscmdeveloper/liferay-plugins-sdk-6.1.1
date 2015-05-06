@@ -117,7 +117,7 @@
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						style="float:right;"
 						action="#{evaluationMeetingBackingBean.cloneSearchCommitteAction}"
-						update="clonesearchCommitteid" partialSubmit="true"
+						update="clonesearchpnlid" partialSubmit="true"
 						process="@parent" />
 				</div>
 				<br />
@@ -132,7 +132,7 @@
 
 					<ac:paginator for="clonesearchCommitteid" />
 
-					<p:ajax event="rowSelect" update=":form:cloneCommittee"
+					<p:ajax event="rowSelect" update=":form:clonesearchpnlid"
 						listener="#{evaluationMeetingBackingBean.onRowCloneAction}" />
 
 					<p:column style="width:17%;white-space: normal;"
@@ -179,12 +179,17 @@
 							value="#{evaluationMeetingBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>
 				</p:dataTable>
-			</p:panel>
 
 
+				<p:spacer height="20"></p:spacer>
+				<br />
+				<br />
 
-			<p:panel id="committeedtlsid"
-				header="#{lbl['lbl.sc.committee.details']}" toggleable="true">
+
+				<ui:fragment
+					rendered="#{evaluationMeetingBackingBean.managedBean.cloneSelectQt ne null}">
+				#{evaluationMeetingBackingBean.managedBean.cloneSelectQt.qtNo}>#{lbl['lbl.sc.committee.details']}
+				</ui:fragment>
 
 				<p:dataTable id="cloneCommittee" var="committeeMember" rows="10"
 					value="#{evaluationMeetingBackingBean.managedBean.cloneCommitteMemebers}"
@@ -238,8 +243,8 @@
 				<div align="right">
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						style="float:right;" onclick="screen2.hide();" />
-					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						process="@this,committeedtlsid" partialSubmit="true"
+					<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this"
+						partialSubmit="true"
 						actionListener="#{evaluationMeetingBackingBean.cloneCommitteeDtls}"
 						oncomplete="prepareCommittee.paginator.endLink.click();"
 						update="evaluationpreparecommittee" />
