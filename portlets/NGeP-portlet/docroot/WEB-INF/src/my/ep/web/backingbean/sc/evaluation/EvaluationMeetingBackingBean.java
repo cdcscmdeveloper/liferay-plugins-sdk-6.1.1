@@ -802,6 +802,7 @@ public class EvaluationMeetingBackingBean extends
 	 * popup.
 	 */
 	public void addCloneCommittee() {
+		this.getManagedBean().setCloneSelectQt(null);
 		this.getManagedBean().setCloneQtnTenderSearchBean(
 				new QtnTenderSearchBean());
 		this.getManagedBean().setCloneCommitteMemebers(
@@ -815,6 +816,10 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void cloneSearchCommitteAction() {
 		try {
+			this.getManagedBean().setCloneSelectQt(null);
+			this.getManagedBean().setCloneCommitteMemebers(
+					new ArrayList<ScCommitteeMember>());
+			//searchQuotatioTender = new clonePagingDataModel();
 			searchQuotatioTender.reloadData();
 
 		} finally {
@@ -832,6 +837,7 @@ public class EvaluationMeetingBackingBean extends
 	public void onRowCloneAction(SelectEvent event) {
 		// debugLogger("onRowCloneAction");
 		ScQt scQt = (ScQt) event.getObject();
+		this.getManagedBean().setCloneSelectQt(scQt);
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 
@@ -888,6 +894,7 @@ public class EvaluationMeetingBackingBean extends
 		qtnTenderSearchBean.setToPublishDate(null);
 		qtnTenderSearchBean.setFromClosingDate(null);
 		qtnTenderSearchBean.setToClosingDate(null);
+		this.getManagedBean().setCloneSelectQt(null);
 		this.getManagedBean().setCloneCommitteMemebers(
 				new ArrayList<ScCommitteeMember>());
 		searchQuotatioTender = new clonePagingDataModel();
@@ -1484,6 +1491,21 @@ public class EvaluationMeetingBackingBean extends
 		} else {
 			meetingList.add(scqtMeeting);
 		}
+
+	}
+
+	// delete existing meeting details records from database.
+	public void deleteMeetingDtls() {
+		markDeleteSelectedRowsAction(this.getManagedBean().getScQtMeetings(),
+				this.getManagedBean().getMeetingRemoveList());
+
+	}
+
+	// delete existing meeting details records from database.
+	public void deleteCommitteemembersDtls() {
+		markDeleteSelectedRowsAction(this.getManagedBean()
+				.getCommitteeMemberActivity(), this.getManagedBean()
+				.getRemoveCommitteeList());
 
 	}
 
