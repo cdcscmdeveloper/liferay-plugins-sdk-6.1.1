@@ -13,6 +13,9 @@
 
 	<ui:define name="contentSection">
 		<h:panelGroup>
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
+			</p:blockUI>
 			<p:messages id="technicalEvaluationmsgId" autoUpdate="true"
 				closable="true" showDetail="true" showSummary="false"></p:messages>
 			<h:panelGroup>
@@ -41,15 +44,18 @@
 
 			<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true"
 				collapsed="true">
-				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}" escape="false" />
-				
+				<h:outputText styleClass="instruction"
+					value="#{lbl['lbl.sc.eva.evaluation.stage.document.instruction']}"
+					escape="false" />
+
 				<p:dataTable var="cashHand" id="complianceTech" rows="10"
 					value="#{evaluationBackingBean.managedBean.technicalComplinaceList}"
 					rowIndexVar="index" style="width:100%" rowKey="#{cashHand}">
 					<ac:paginator for="complianceTech" />
 
 
-					<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}" style="width:90%">
+					<p:column headerText="#{lbl['lbl.sc.spec.checklist.title']}"
+						style="width:90%">
 						<h:outputText value="#{cashHand.scQtCheckList.title}"></h:outputText>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.document']}" style="width:10%">

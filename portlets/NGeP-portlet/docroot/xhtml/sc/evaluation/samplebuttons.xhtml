@@ -20,7 +20,8 @@
 					rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}">
 					<p:commandButton value="#{lbl['lbl.btn.save']}"
 						disabled="#{evaluationBackingBean.managedBean.readOnly}"
-						style="float:right;" update="@all"
+						style="float:right;" update="@all" onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();"
 						action="#{evaluationBackingBean.saveProposalScoreDtls}" />
 				</ui:fragment>
 			</div>
@@ -34,5 +35,6 @@
 			<ui:include src="supplierChecklistHeader.xhtml" />
 		</p:panel>
 		<br />
+	</h:panelGroup>
 
 </ui:composition>
