@@ -22,9 +22,9 @@
 						<p:column style="width:18%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
-								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
+								<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
 							</f:facet>
-							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
+							<p:calendar label="#{lbl['lbl.sc.meeting.location']}" required="true" showOn="button" 
 								mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
 								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" 
