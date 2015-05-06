@@ -29,22 +29,23 @@
 		<br />
 		<ui:include src="evaluationHeader.xhtml" />
 		<br />
-		
+
 		<table>
-				<tr>
-					<td><h:outputLabel
-							value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
-					<td><p:inputText size="50"
-							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.scQtProposal.supplierNo}"
-							disabled="true"></p:inputText></td>
-					<td style="width: 100px;"><h:outputLabel
-							value="#{lbl['lbl.sc.label.no']}"></h:outputLabel></td>
-					<td><p:inputText size="50"
-							value="#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo}"
-							disabled="true"></p:inputText></td>
-				</tr>
-			</table>
-		
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
+				<td><p:inputText size="50"
+						value="#{evaluationBackingBean.managedBean.scQtSampleLbl.scQtProposal.supplierNo}"
+						disabled="true"></p:inputText></td>
+			</tr>
+			<tr>
+				<td style="width: 100px;"><h:outputLabel
+						value="#{lbl['lbl.sc.label.no']}"></h:outputLabel></td>
+				<td><p:inputText size="50"
+						value="#{evaluationBackingBean.managedBean.scQtSampleLbl.lableNo}"
+						disabled="true"></p:inputText></td>
+			</tr>
+		</table>
+
 
 
 		<p:panel header="#{lbl['lbl.sc.item.list']}"

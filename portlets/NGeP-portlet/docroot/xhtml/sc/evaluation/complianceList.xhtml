@@ -18,21 +18,10 @@
 	<br />
 	<ui:include src="evaluationHeader.xhtml" />
 	<br />
-	<p:panel>
-		<table>
-			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.sc.supplier.code']}"></h:outputLabel></td>
-				<td><p:inputText disabled="true"
-						value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtProposal.supplierNo}"></p:inputText></td>
-				<td style="width: 100px;"><h:outputLabel
-						value="#{lbl['lbl.sc.spec.checklist.title']}"></h:outputLabel></td>
-				<td><p:inputTextarea rows="2" cols="100" disabled="true"
-						style="width:90%"
-						value="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.title}"></p:inputTextarea></td>
-			</tr>
-		</table>
+	<p:panel header="#{lbl['lbl.sc.eva.technical.proposal.evaluation']}">
+		<ui:include src="supplierChecklistHeader.xhtml" />
 	</p:panel>
-
+	<br />
 
 
 	<p:panel header="#{lbl['lbl.sc.compliance.list']}" toggleable="true">
