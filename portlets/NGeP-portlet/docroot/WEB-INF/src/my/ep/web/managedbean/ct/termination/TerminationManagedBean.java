@@ -65,7 +65,7 @@ public class TerminationManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-
+	private CtContractVer agreementContractVer;
 	private double performanceBondRuleAmt;
 
 	/**
@@ -136,6 +136,20 @@ public class TerminationManagedBean extends BaseManagedBean {
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
+	}
+	
+	/**
+	 * @return the agreementContractVer
+	 */
+	public CtContractVer getAgreementContractVer() {
+		return agreementContractVer;
+	}
+
+	/**
+	 * @param agreementContractVer the agreementContractVer to set
+	 */
+	public void setAgreementContractVer(CtContractVer agreementContractVer) {
+		this.agreementContractVer = agreementContractVer;
 	}
 
 	/**

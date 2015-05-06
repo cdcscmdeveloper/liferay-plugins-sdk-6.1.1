@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -39,6 +40,8 @@ import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
+import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
@@ -258,6 +261,9 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		 
 		    getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			
+			//Retrieve agreement contract version for physical no & signed date
+			retrieveContractVerOfAgreement();
 		
 			/*If statement  for check contact item start*/
 			if(getManagedBean().getContractVer().getCtContractItems() != null && getManagedBean().getContractVer().getCtContractItems().size() > 0 ) {
@@ -321,6 +327,52 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 	 */
 	 public String backAction() {
 			return CONTRACT_MAINT_PAGE;
+	 }
+	 
+	 /**
+	  * The method used for retrieving the contract version 
+	  * for agreement or non-agreement contract.
+	  * If it's original agreement, return the first contract version.
+	  * If it's supplementary agreement, return the amended contract version.
+	  */
+	 private void retrieveContractVerOfAgreement() {
+		 IContractSO contractSO = null;
+		 IContractAmendmentSO amendmentSO = null;
+		 ContractResDTO resDTO = null;
+		 ContractAmendmentResDTO amendmentResDTO = null;
+		 try {
+			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+					 ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			 amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+					 ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+			 ContractReqDTO reqDTO = new ContractReqDTO();
+			 ContractAmendmentReqDTO amendmentReqDTO = new ContractAmendmentReqDTO();
+			
+			 if (getManagedBean().getContractVer().getCtContractAmount().isAgreement()) {
+				 //Retrieve amendment
+				 amendmentReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				 amendmentReqDTO.setAmendmentEffectiveDate(getManagedBean().getContractVer().getCtContractAmount().getEffDate());
+				 amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
+				
+				 if (amendmentResDTO.getCtAmendment() != null) {
+					 getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+				 } else {
+					 reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+					 reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+					
+					 resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
+					 getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+				 }				
+			 } else {
+				 getManagedBean().setAgreementContractVer(getManagedBean().getContractVer());
+			 }
+		 } catch(Exception e) {
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		 } finally {
+			 contractSO = null;
+			 amendmentSO = null;
+		 }
 	 }
 	 
 	 /**

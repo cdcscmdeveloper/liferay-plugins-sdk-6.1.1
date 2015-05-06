@@ -49,7 +49,7 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
-	
+	private CtContractVer agreementContractVer;
 	private String[] action;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -113,6 +113,20 @@ public class SuspensionManagedBean extends BaseManagedBean {
 	 */
 	public void setContractVer(CtContractVer contractVer) {
 		this.contractVer = contractVer;
+	}
+	
+	/**
+	 * @return the agreementContractVer
+	 */
+	public CtContractVer getAgreementContractVer() {
+		return agreementContractVer;
+	}
+
+	/**
+	 * @param agreementContractVer the agreementContractVer to set
+	 */
+	public void setAgreementContractVer(CtContractVer agreementContractVer) {
+		this.agreementContractVer = agreementContractVer;
 	}
 
 	/**

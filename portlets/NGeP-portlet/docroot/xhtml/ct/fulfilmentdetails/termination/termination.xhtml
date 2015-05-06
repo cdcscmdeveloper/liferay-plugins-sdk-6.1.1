@@ -31,7 +31,7 @@
 					</td> 
 					<td>
 						<p:inputText for="physicalNo" maxlength="30" style="width:160px;" disabled="true"
-		 	    		value="#{terminationBackingBean.managedBean.contractVer.contractPhysicalNo}" />
+		 	    		value="#{terminationBackingBean.managedBean.agreementContractVer.contractPhysicalNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
 					</td>
 					</h:panelGroup>
@@ -89,7 +89,7 @@
 					</td> 
 					<td>
 						<p:inputText for="signBy1" disabled="true" style="width:160px;"
-							value="#{terminationBackingBean.managedBean.contractVer.signedDate}">
+							value="#{terminationBackingBean.managedBean.agreementContractVer.signedDate}">
 			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
@@ -128,7 +128,7 @@
 					</td> 
 					<td>
 						<p:inputText for="signBy" disabled="true" style="width:160px;"
-							value="#{terminationBackingBean.managedBean.contractVer.signedDate}">
+							value="#{terminationBackingBean.managedBean.agreementContractVer.signedDate}">
 			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.signed.date']}" />
