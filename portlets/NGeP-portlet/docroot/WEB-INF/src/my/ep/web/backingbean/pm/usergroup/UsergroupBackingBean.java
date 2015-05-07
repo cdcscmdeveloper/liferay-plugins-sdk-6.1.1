@@ -4,7 +4,9 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -30,6 +32,8 @@ import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -200,28 +204,54 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
-			
+			PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
+			PmOrgProfile orgProfile = null;
+			if(user != null){
+				orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+			}
+			if(orgProfile != null){
+				Set<Long> orgProfileSet = null;
+				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+					orgProfileSet = new HashSet<Long>(); 
+					for(PmOrgProfile childOrgProfile : orgProfile.getChildOrgProfiles()){
+						orgProfileSet.add(childOrgProfile.getOrgProfileId());
+					}
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmOrgProfile.parentOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
+					
+				}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmOrgProfile.parentOrgProfile.orgProfileId",
+									SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+					
+				}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+					searchBean.getDataFilterBeans().add(
+									new SearchFilterBean("pmOrgProfile.orgProfileId",
+											SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+				}
+			}
 						
-		if (null!=new FacesScopes().getUserSessionBean()) {
-			
-			UserReqDTO reqDTO = new UserReqDTO();
-			IUserSO reqSO  =  (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			PmUser pmUser = new FacesScopes().getUserSessionBean();
-			
-			UserReqDTO reqDTO1 = new UserReqDTO();
-			reqDTO1.setLoginId(pmUser.getLoginId());
-			UserResDTO resDTO = reqSO.retrieveOrgprofilebyUserId(reqDTO1);
-			if(resDTO.isSuccessful()){
-				SearchFilterBean orgProfileSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-				orgProfileSearchBean.setSearchField("pmOrgProfile.orgProfileId");
-				orgProfileSearchBean.setSearchValue(resDTO.getPmOrgProfile().getOrgProfileId().toString());
-				orgProfileSearchBean.setCaseInsensitive(true);
-				searchBean.getDataFilterBeans().add(orgProfileSearchBean);
-			}
-			
-			}
+//		if (null!=new FacesScopes().getUserSessionBean()) {
+//			
+//			UserReqDTO reqDTO = new UserReqDTO();
+//			IUserSO reqSO  =  (IUserSO) BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+//			PmUser pmUser = new FacesScopes().getUserSessionBean();
+//			
+//			UserReqDTO reqDTO1 = new UserReqDTO();
+//			reqDTO1.setLoginId(pmUser.getLoginId());
+//			UserResDTO resDTO = reqSO.retrieveOrgprofilebyUserId(reqDTO1);
+//			if(resDTO.isSuccessful()){
+//				SearchFilterBean orgProfileSearchBean = new SearchFilterBean(
+//					SearchOperator.OPERATOR_EQUALS.value());
+//				orgProfileSearchBean.setSearchField("pmOrgProfile.orgProfileId");
+//				orgProfileSearchBean.setSearchValue(resDTO.getPmOrgProfile().getOrgProfileId().toString());
+//				orgProfileSearchBean.setCaseInsensitive(true);
+//				searchBean.getDataFilterBeans().add(orgProfileSearchBean);
+//			}
+//			
+//			}
 			SearchFilterBean codesSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
 			codesSearchBean.setSearchField("roleCode");
@@ -594,5 +624,13 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		     .setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		  }
 		  baseObject.setChangedBy(1L);
+	}
+	
+	/**
+     * This method used to retrieve login user information.
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
 	}
 }
