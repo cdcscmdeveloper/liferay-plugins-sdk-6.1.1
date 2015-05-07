@@ -1013,6 +1013,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private QTRuleDataBean ruleDataBean;
 	private List<TplSpecZoneDtl> templateSpecZoneDtls;
+	private ScQtBsvDtl tempScQtBsvDtl;
 	
 	/**
 	 * Sets the panel suppliers.
@@ -6389,6 +6390,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setTemplateSpecZoneDtls(List<TplSpecZoneDtl> templateSpecZoneDtls) {
 		this.templateSpecZoneDtls = templateSpecZoneDtls;
+	}
+
+	/**
+	 * @return the tempScQtBsvDtl
+	 */
+	public ScQtBsvDtl getTempScQtBsvDtl() {
+		return tempScQtBsvDtl;
+	}
+
+	/**
+	 * @param tempScQtBsvDtl the tempScQtBsvDtl to set
+	 */
+	public void setTempScQtBsvDtl(ScQtBsvDtl tempScQtBsvDtl) {
+		this.tempScQtBsvDtl = tempScQtBsvDtl;
 	}
 
 }
