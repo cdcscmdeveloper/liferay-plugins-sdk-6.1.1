@@ -8,6 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
 		id="scheduleByItemPanel">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
 
 		<p:dataTable id="bidScheduleByItem" var="bidItem" rowKey="#{bidItem}"
 			rowIndexVar="index"
@@ -28,8 +29,11 @@
 						listener="#{scheduleBiddingBB.selected(index)}" />
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.item.name']}"
-				style="white-space : normal; width : 20%;">
+			<p:column style="white-space : normal; width : 20%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.item.name']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+				</f:facet>
 				<p:commandLink id="itemNameByItem" partialSubmit="true"
 					value="#{bidItem.scRequestItem.itemName}" process="@this"
 					oncomplete="participants.show();" update="@([id$=participants])"
@@ -100,8 +104,11 @@
 				<p:outputLabel id="bidDurationByItem"
 					value="#{bidItem.scBidSchedule.duration}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}"
-				style="white-space : normal; width : 10%;">
+			<p:column style="width : 10%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
+				</f:facet>
 				<p:inputText style="text-align : right" id="decrementAmtByItem" 
 					value="#{bidItem.decrementAmt }">
 					<p:ajax event="change" process="@this"
@@ -153,12 +160,13 @@
 
 						</p:calendar></td>
 
-					<TD><p:commandButton value="#{lbl['lbl.btn.apply']}"
+					<TD><p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 							id="applyDates"
 							process="@this,multiSelectStartDateByItem,multiSelectEndDateByItem"
 							partialSubmit="true" style="float:center;"
 							action="#{scheduleBiddingBB.applyBidDates}"
-							update="@([id$=bidScheduleByItem])" /></TD>
+							update="@([id$=bidScheduleByItem])"
+							title="#{lbl['lbl.sc.bidding.item.btn.apply.to.all.tooltip']}" /></TD>
 
 				</tr>
 

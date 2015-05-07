@@ -2,11 +2,12 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
-	<p:panel id="BidCompletedPanel" header="#{lbl['lbl.sc.bid.price']}"
+	<p:panel id="BidCompletedPanel" header="#{lbl['lbl.sc.bidding.bid.price.details']}"
 		toggleable="true">
 
 		<p:spacer height="5"></p:spacer>
@@ -28,11 +29,11 @@
 					<tr>
 						<td style="width: 40%;"></td>
 						<td style="width: 20%;"><p:outputLabel
-								value="#{lbl['lbl.sc.hours']}" /></td>
+								value="#{lbl['lbl.sc.bidding.hours']}" /></td>
 						<td style="width: 20%;"><p:outputLabel
-								value="#{lbl['lbl.sc.minutes']}" /></td>
+								value="#{lbl['lbl.sc.bidding.minutes']}" /></td>
 						<td style="width: 20%;"><p:outputLabel
-								value="#{lbl['lbl.sc.seconds']}" /></td>
+								value="#{lbl['lbl.sc.bidding.seconds']}" /></td>
 					</tr>
 				</table>
 
@@ -52,14 +53,22 @@
 
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"
-						width="22%" />
+					<p:column rowspan="2" width="22%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.item.name']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+						</f:facet>
+					</p:column>
 
 					<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
 						width="7%" />
 
-					<p:column rowspan="2" style="white-space : normal"
-						headerText="#{lbl['lbl.sc.min.decrement.block']}" width="4%" />
+					<p:column rowspan="2" style="white-space : normal" width="4%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.supplier.tooltip']}" />
+						</f:facet>
+					</p:column>
 
 					<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
 						width="19%" style="text-align:center" />
