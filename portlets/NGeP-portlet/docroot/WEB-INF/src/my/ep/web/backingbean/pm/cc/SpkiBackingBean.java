@@ -128,10 +128,6 @@ public class SpkiBackingBean {
 					setChallengeQues1(challs.get(0));
 					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				}
-//				for(int i = 0 ; i < challs.size() ; i ++)
-//				{
-//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
-//				}
 				
 				break;
 
@@ -177,43 +173,12 @@ public class SpkiBackingBean {
 	
 	public String spkiSignTransaction(String originalText) {
 		try{
-//			String signedData ;
 			KMCClient client = getClient();
-
-//			// Request service for user selected question for authentication
-//			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
-//			List<String> challs = null;
-//			switch(res.getStatusCode())
-//			{
-//			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-//				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-//				// show to the user to allow user answer the challenge
-//				for(int i = 0 ; i < challs.size() ; i ++)
-//				{
-//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
-//				}
-//				
-//				break;
-//
-//				default:
-//				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-//				return;
-//			}
-//
-//			if(challs.size() == 0)
-//			{IKMCAPIResponse
-//				System.err.println("No challanges found for the user! Data signing failed!");
-//				return;
-//			}
-//			
-			// Simulate user selected the question and answer accordingly
 			Map<Object, Object> challenges = new HashMap<Object, Object>();
 			challenges.put(challengeQues1, challengeAns1);
 
-			// Simulate the data ready to sign
 			String dataForSigning = originalText;
 			
-			// Simulate usel expression that maps to a server side
  
 			String pin = getPassword();
 	
@@ -225,13 +190,6 @@ public class SpkiBackingBean {
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				// application take over from here for the digital signature handling
-				// Here is sample to write the signature to file...
-//				FileOutputStream fos = new FileOutputStream("sign.bin");
-//				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
-//				fos.flush();
-//				fos.close();
-//				fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
 				
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				signedData = new String(Base64.encode(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE))));
