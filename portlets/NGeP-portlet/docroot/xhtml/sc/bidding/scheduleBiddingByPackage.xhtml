@@ -9,6 +9,7 @@
 	<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
 		rendered="#{scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'}"
 		id="scheduleBidPackageNonZonePanel">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
 		<div align="left">
 			<table style="align: left">
 				<tr>
@@ -66,8 +67,11 @@
 			rowKey="#{bidItem}" rowIndexVar="index"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">
 
-			<p:column headerText="#{lbl['lbl.sc.item.name']}"
-				style="white-space : normal; width : 25%;">
+			<p:column style="white-space : normal; width : 25%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.item.name']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.item.name.tooltip']}" />
+				</f:facet>
 				<p:commandLink id="itemNameByPackage"
 					value="#{bidItem.scRequestItem.itemName}"
 					oncomplete="participants.show();" process="@this"
@@ -95,8 +99,11 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.min.decrement.block']}"
-				style="white-space : normal; width :15%;">
+			<p:column style="white-space : normal; width :15%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
+				</f:facet>
 				<p:inputText id="decrementAmtByPackage" style="text-align : right" 
 					value="#{bidItem.decrementAmt }">
 					<p:ajax event="change" process="@this"

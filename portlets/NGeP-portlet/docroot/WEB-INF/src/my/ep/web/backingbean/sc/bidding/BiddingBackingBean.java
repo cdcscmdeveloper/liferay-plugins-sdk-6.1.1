@@ -42,6 +42,7 @@ import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -552,7 +553,10 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		LineChartSeries chartSeries = new LineChartSeries();
 
-		chartSeries.setLabel("Bid Price");
+		chartSeries.setLabel(ResourceBundleUtils.getMessage(
+				"lbl.sc.bid.price", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				new FacesScopes().getUserLocale()));
 
 		for (BidPackageBean bidPackage : bidPackageList) {
 

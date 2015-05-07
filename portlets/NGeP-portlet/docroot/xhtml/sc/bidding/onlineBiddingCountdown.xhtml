@@ -3,10 +3,11 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	
-		<p:panel id="pendingBiddingPanel" header="#{lbl['lbl.sc.bid.price']}" toggleable="true">
+		<p:panel id="pendingBiddingPanel" header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
 			<p:spacer height="5"></p:spacer>
 			<div style="align: left">
 				<table style="width: 100%;">
@@ -18,7 +19,17 @@
 							
 							
 						
-			var myCountdownPreBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "day",rangeLo: "second",width: 250,height: 70}); 
+			var myCountdownPreBidding = new Countdown({time:"#{onlineBiddingBB.remainingBidTime}",hideLine: true,rangeHi: "day",rangeLo: "second",width: 250,height: 70,
+				labelText : {
+	                ms     : "MS",
+	                second : "#{lbl['lbl.sc.bidding.seconds']}",
+	                minute : "#{lbl['lbl.sc.bidding.minutes']}",
+	                hour   : "#{lbl['lbl.sc.bidding.hours']}",
+	                day    : "#{lbl['lbl.sc.bidding.days']}",
+	                month  : "MONTHS",
+	                year   : "YEARS"
+	            }
+			}); 
 						
 						
 						
@@ -36,13 +47,20 @@
 
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"
-								style="width: 53%" />
+							<p:column rowspan="2" style="width: 53%">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.item.name']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+								</f:facet>
+							</p:column>
 							<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
 								style="width: 7%" />
-							<p:column rowspan="2"
-								headerText="#{lbl['lbl.sc.min.decrement.block']}"
-								style="width: 10%" />
+							<p:column rowspan="2" style="width: 10%">
+								<f:facet name="header">
+									<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+									<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.supplier.tooltip']}" />
+								</f:facet>
+							</p:column>
 							<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
 								style="width: 30%;text-align:center" />
 						</p:row>

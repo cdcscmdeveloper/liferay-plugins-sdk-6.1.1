@@ -8,6 +8,7 @@
 
 	<p:panel id="scheduleBidByZonePanel"
 		header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.bidding.schedule.by.zone.instruction']}" escape="false" />
 
 		<p:dataTable id="bidScheduleByZonal" rows="10"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
@@ -17,6 +18,10 @@
 			<p:ajax event="rowSelect" update="@([id$=bidScheduleByZoneBidItems])" />
 
 			<p:column headerText="#{lbl['lbl.sc.zone.name']}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.zone.name']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.bidding.zone.name.supplier.tooltip']}" />
+				</f:facet>
 				<p:commandLink id="zoneNameByZone"
 					value="#{scheduleZoneBid.tplSpecZoneDtl.zoneName}"
 					onclick="participants.show();"
@@ -94,7 +99,11 @@
 
 				</h:outputText>
 			</p:column>
-			<p:column style="width : 15%;" headerText="#{lbl['lbl.sc.min.decrement.block']}">
+			<p:column style="width : 15%;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
+				</f:facet>
 				<p:inputText style="text-align : right" id="decrementAmtByZone"
 					value="#{item.decrementAmt}">
 					<p:ajax event="change" process="@this" partialSubmit="true" />
