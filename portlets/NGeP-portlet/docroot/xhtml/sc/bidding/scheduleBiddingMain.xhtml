@@ -72,9 +72,11 @@
 		</c:if>
 		<p:spacer id="spacer1Main" height="5"></p:spacer>
 
-		<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
-			id="contactDetailsPanelMain" toggleable="true">
-
+		<p:panel id="contactDetailsPanelMain" toggleable="true">
+			<f:facet name="header">
+				<h:outputText value="#{lbl['lbl.sc.contact.person.details']}" />
+				<ac:iconTooltip value="#{lbl['lbl.sc.contact.person.details.schedule.bidding.tooltip']}" />
+			</f:facet>
 
 			<p:dataTable var="contact" id="contactPersonDetails"
 				Var="contact"

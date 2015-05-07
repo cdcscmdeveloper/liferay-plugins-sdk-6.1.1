@@ -4,7 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 		<script src="#{resource['js/countdown.js']}" />
@@ -24,7 +25,7 @@
 
 
 
-		<p:panel id="onLineBiddingPanel" header="#{lbl['lbl.sc.bid.price']}"
+		<p:panel id="onLineBiddingPanel" header="#{lbl['lbl.sc.bidding.bid.price.details']}"
 			toggleable="true">
 			<p:spacer height="5" />
 			<ui:include src="/xhtml/sc/bidding/onlineBiddingTimers.xhtml" />
@@ -41,14 +42,22 @@
 
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column rowspan="2" headerText="#{lbl['lbl.sc.item.name']}"
-							width="22%" />
+						<p:column rowspan="2" width="22%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.item.name']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+							</f:facet>
+						</p:column>
 
 						<p:column rowspan="2" headerText="#{lbl['lbl.sc.quantity']}"
 							width="7%" />
 
-						<p:column rowspan="2" style="white-space : normal"
-							headerText="#{lbl['lbl.sc.min.decrement.block']}" width="4%" />
+						<p:column rowspan="2" style="white-space : normal" width="4%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.supplier.tooltip']}" />
+							</f:facet>
+						</p:column>
 
 						<p:column colspan="2" headerText="#{lbl['lbl.sc.starting']}"
 							width="19%" style="text-align:center" />
@@ -77,8 +86,13 @@
 						<p:column headerText="#{lbl['lbl.sc.sub.total']}" width="10%"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId ne onlineBiddingBB.pendingBidding}" />
 
-						<p:column headerText="#{lbl['lbl.sc.decrement']}" width="7%"
-							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}" />
+						<p:column width="7%"
+							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.decrement']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.decrement.tooltip']}" />
+							</f:facet>
+						</p:column>
 
 						<p:column headerText="#{lbl['lbl.sc.unit.price']}" width="8%"
 							rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}" />
