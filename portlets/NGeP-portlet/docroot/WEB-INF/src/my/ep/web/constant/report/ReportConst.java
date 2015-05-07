@@ -422,7 +422,7 @@ public class ReportConst {
 	public static final String AMP_SM_ROLE_EQ = "&PROLE=";
 	public static final String AMP_SM_EP_NO_EQ = "&PEPNO=";
 	public static final String AMP_SM_SUPP_DOC_MODE_EQ = "&PSUPPDOCMODE=";
-	public static final String AMP_SM_SUPP_DOC_STATUS_EQ = "&PSUPPDOC =";
+	public static final String AMP_SM_SUPP_DOC_STATUS_EQ = "&PSUPPDOC=";
 	public static final String AMP_SM_REG_NO_EQ = "&PREGNO=";
 	public static final String AMP_SM_MOF_REG_NO_FRM_EQ = "&PFROMMOFNO=";
 	public static final String AMP_SM_MOF_REG_NO_TO_EQ = "&PTOMOFNO=";
