@@ -14,7 +14,11 @@
 		
 		<table style="border: 0px; width: 100%">
 			<tr>
-				<td width="100%"><p:messages id="specmessages"
+				<td width="100%">
+				<p:blockUI block=":form" widgetVar="blockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
+				<p:messages id="specmessages"
 						showDetail="true" autoUpdate="true" closable="true"
 						showSummary="false" /> <ui:include
 						src="businessownerbuttons.xhtml" /> <ui:include

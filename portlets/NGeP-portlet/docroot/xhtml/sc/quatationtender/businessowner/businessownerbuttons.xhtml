@@ -15,22 +15,30 @@
 				process="@this"
 				update="@this"
 				style="float:left;"
-				rendered="#{!qTDetailBB.managedBean.qt.brandNew}" />
+				rendered="#{!qTDetailBB.managedBean.qt.brandNew}" 
+				onstart="blockWidget.show();"
+				oncomplete="blockWidget.hide();"/>
 			<c:if
 				test="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}">
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{qTBusinessOwnerBackingBean.saveBusinessOwnerAction}"
-					process="@all" update="@all" />
+					process="@all" update="@all" 
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{qTBusinessOwnerBackingBean.submitBusinessOwnerAction}"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId eq QTStatusConst.QT_PENDING_APPOINT_BO}"
-					process="@all" update="@all" />
+					process="@all" update="@all" 
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
 
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" process="@all"
 					style="float:right;margin-right: 12px;" 
 					rendered="#{!qTDetailBB.managedBean.qt.brandNew}"
-					onclick="cancelBODlg.show()" />
+					onclick="cancelBODlg.show()" 
+					onstart="blockWidget.show();"
+					oncomplete="blockWidget.hide();"/>
 			</c:if>
 		</td>
 	</tr>
