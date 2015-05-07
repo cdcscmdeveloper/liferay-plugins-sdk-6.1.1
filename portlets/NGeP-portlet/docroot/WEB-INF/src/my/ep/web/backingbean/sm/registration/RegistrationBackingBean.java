@@ -2241,9 +2241,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Redirect to liferay logout url
 	 */
-	public void redirectToLogoutUrl() {
-		System.out
-				.println(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
+	public void proceedToLogout() {
 		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
 		RequestContext.getCurrentInstance().execute("successDialog.hide()");
 		SmCommonUtil.redirectToLogoutUrl();
