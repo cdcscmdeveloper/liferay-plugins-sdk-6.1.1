@@ -775,15 +775,21 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvType(bsvType);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.show();");
 		retrievePmStateList();
-		ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
-		try {
-			BeanUtils.copyProperties(tempScQtBsvDtl, bsvDtl);
-		} catch (IllegalAccessException e) {
-			log.error("Exception occured while copying properties"+e.getMessage());
-		} catch (InvocationTargetException e) {
-			log.error("Exception occured while copying properties"+e.getMessage());
+		
+		if (QTStatusConst.QT_BRIEFING_SITE_VISIT.equals(this
+				.getManagedBean().getCurrentStatusId())){
+			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
+			try {
+				BeanUtils.copyProperties(tempScQtBsvDtl, bsvDtl);
+			} catch (IllegalAccessException e) {
+				log.error("Exception occured while copying properties"
+						+ e.getMessage());
+			} catch (InvocationTargetException e) {
+				log.error("Exception occured while copying properties"
+						+ e.getMessage());
+			}
+			this.getManagedBean().setTempScQtBsvDtl(tempScQtBsvDtl);
 		}
-		this.getManagedBean().setTempScQtBsvDtl(tempScQtBsvDtl);
 	}
 
 	/**
