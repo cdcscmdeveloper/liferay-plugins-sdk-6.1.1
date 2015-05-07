@@ -5095,12 +5095,6 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				if ((this.getScRequisenerId() != null)
 						&& (this.getScRequisenerId() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
-							.setScRequisenerIdVar("");
-				}
-			}else{
-				if ((this.getScRequisenerId() != null)
-						&& (this.getScRequisenerId() != ReportConst.EMPTY_VAL)) {
-					rptGenBean
 							.setScRequisenerIdVar(ReportConst.SC_AMP_REQUISENER_EQ
 									+ this.getScRequisenerId());
 				}
