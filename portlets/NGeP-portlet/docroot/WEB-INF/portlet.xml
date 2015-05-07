@@ -7,8 +7,8 @@
 
 	<!-- Audit - START -->
 	<portlet>
-		<portlet-name>auSearch</portlet-name>
-		<display-name>Audit Search</display-name>
+		<portlet-name>trackingDiary</portlet-name>
+		<display-name>Tracking Diary</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
