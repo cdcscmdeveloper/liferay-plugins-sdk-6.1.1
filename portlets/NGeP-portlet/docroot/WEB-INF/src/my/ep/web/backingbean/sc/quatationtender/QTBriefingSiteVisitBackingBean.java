@@ -10,6 +10,8 @@
 */
 package my.ep.web.backingbean.sc.quatationtender;
 
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,6 +21,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -346,6 +349,12 @@ public class QTBriefingSiteVisitBackingBean extends
 		// facesmgs error hide..
 		RequestContext.getCurrentInstance().execute("addbsvdtls.hide()");
 		this.getManagedBean().setRequired(Boolean.FALSE);
+		
+		ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
+		if (null != tempScQtBsvDtl) {
+			updateQtAmmendMentDtls(bsvType, bsvDetail, tempScQtBsvDtl);
+		}
+		
 	}
 
 	/**
@@ -766,6 +775,15 @@ public class QTBriefingSiteVisitBackingBean extends
 		this.getManagedBean().setBsvType(bsvType);
 		RequestContext.getCurrentInstance().execute("addbsvdtls.show();");
 		retrievePmStateList();
+		ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
+		try {
+			BeanUtils.copyProperties(tempScQtBsvDtl, bsvDtl);
+		} catch (IllegalAccessException e) {
+			log.error("Exception occured while copying properties"+e.getMessage());
+		} catch (InvocationTargetException e) {
+			log.error("Exception occured while copying properties"+e.getMessage());
+		}
+		this.getManagedBean().setTempScQtBsvDtl(tempScQtBsvDtl);
 	}
 
 	/**
@@ -814,4 +832,36 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 
 	}
+	
+	/** 
+	 * Update time stamp value into SCQTAMEND table if any changes occurs 
+	 * in Briefing/Visit.
+	 * 
+	 * @param bsvType
+	 * @param bsvDetail
+	 * @param tempScQtBsvDtl
+	 */
+	private void updateQtAmmendMentDtls(String bsvType, ScQtBsvDtl bsvDetail,
+			ScQtBsvDtl tempScQtBsvDtl) {
+
+		if (!(tempScQtBsvDtl.equals(bsvDetail))) {
+			QtAmendMentBean amendMentBean = this.getManagedBean()
+					.getAmendMentBean();
+			if (null == amendMentBean) {
+				amendMentBean = new QtAmendMentBean();
+			}
+			java.util.Date today = new java.util.Date();
+			if (SourcingConstants.BSV_TYPE_BRIEFING.equalsIgnoreCase(bsvType)) {
+				amendMentBean.setBriefingChangedDate(new Timestamp(today
+						.getTime()));
+			} else {
+				amendMentBean.setSiteVisitChangedDate(new Timestamp(today
+						.getTime()));
+			}
+			this.getManagedBean().setAmendMentBean(amendMentBean);
+		}
+		 this.getManagedBean().setTempScQtBsvDtl(null);
+
+	}
+	
 }
