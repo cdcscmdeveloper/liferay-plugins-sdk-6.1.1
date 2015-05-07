@@ -615,7 +615,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}else{
+		} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			return submitAction(outcome);
+		} else{
 			getManagedBean().setValidated(Boolean.TRUE);
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			return submitAction(outcome);
