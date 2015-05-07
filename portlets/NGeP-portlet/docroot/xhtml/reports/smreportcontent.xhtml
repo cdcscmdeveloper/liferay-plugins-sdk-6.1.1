@@ -377,8 +377,14 @@
 							<p:selectOneMenu value="#{reportBackingBean.smApplicationStatus}"
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.pendSuppDocAppl']}"
+													itemValue="#{lbl['lbl.rpt.pendSuppDocAppl']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.pendEnqAppl']}"
 													itemValue="#{lbl['lbl.rpt.pendEnqAppl']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.pendingSiteVisit']}"
+													itemValue="#{lbl['lbl.rpt.pendingSiteVisit']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.registered']}"
+													itemValue="#{lbl['lbl.rpt.registered']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.pendPayAppl']}"
 													itemValue="#{lbl['lbl.rpt.pendPayAppl']}"></f:selectItem>
 							</p:selectOneMenu>
