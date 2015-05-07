@@ -756,6 +756,12 @@ public class EvaluationMeetingBackingBean extends
 			}
 			List<ScCommitteeMember> scQtCommitteeActivity = this
 					.getManagedBean().getCommitteeMemberActivity();
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getQt().getEvaluationType())) {
+				retriveExistOtherCommittee();
+				checkCommitteeMembersExistOtherCommittees(this.getManagedBean()
+						.getOtherCommitteeMembersList(), scQtCommitteeActivity);
+			}
 
 			if (scQtCommitteeActivity != null
 					&& !scQtCommitteeActivity.isEmpty()) {
@@ -819,7 +825,7 @@ public class EvaluationMeetingBackingBean extends
 			this.getManagedBean().setCloneSelectQt(null);
 			this.getManagedBean().setCloneCommitteMemebers(
 					new ArrayList<ScCommitteeMember>());
-			//searchQuotatioTender = new clonePagingDataModel();
+			// searchQuotatioTender = new clonePagingDataModel();
 			searchQuotatioTender.reloadData();
 
 		} finally {
@@ -1506,6 +1512,116 @@ public class EvaluationMeetingBackingBean extends
 		markDeleteSelectedRowsAction(this.getManagedBean()
 				.getCommitteeMemberActivity(), this.getManagedBean()
 				.getRemoveCommitteeList());
+
+	}
+
+	// retrive otherCommittee information from db.
+	private void retriveExistOtherCommittee() {
+		ICommitteSO committeSO = null;
+		CommitteResDTO resDTO = null;
+		try {
+			if (null == this.getManagedBean().getOtherCommitteeMembersList()
+					|| !this.getManagedBean().getOtherCommitteeMembersList()
+							.isEmpty()) {
+				this.getManagedBean().setOtherCommitteeMembersList(
+						new ArrayList<ScCommitteeMember>());
+				committeSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					this.getManagedBean().setCheckOtherCommitteeType(
+							ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+					this.getManagedBean()
+							.setCheckOtherCommitteeTypes(
+									ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+				} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					this.getManagedBean()
+							.setCheckOtherCommitteeType(
+									ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE);
+					this.getManagedBean()
+							.setCheckOtherCommitteeTypes(
+									ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+				} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equalsIgnoreCase(this.getManagedBean()
+								.getCommitteeType())) {
+					this.getManagedBean()
+							.setCheckOtherCommitteeType(
+									ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE);
+					this.getManagedBean().setCheckOtherCommitteeTypes(
+							ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE);
+				}
+
+				CommitteReqDTO type1reqDTO = new CommitteReqDTO();
+				type1reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				type1reqDTO.setCommitteeType(this.getManagedBean()
+						.getCheckOtherCommitteeType());
+				resDTO = committeSO
+						.retrieveCommitteMembersByQtIdAndCommType(type1reqDTO);
+				if (null != resDTO
+						&& null != resDTO.getCommMemberResultBean()
+						&& null != resDTO.getCommMemberResultBean()
+								.getResultList()
+						&& !resDTO.getCommMemberResultBean().getResultList()
+								.isEmpty()) {
+					this.getManagedBean()
+							.getOtherCommitteeMembersList()
+							.addAll(resDTO.getCommMemberResultBean()
+									.getResultList());
+				}
+
+				CommitteReqDTO type2reqDTO = new CommitteReqDTO();
+				type2reqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				type2reqDTO.setCommitteeType(this.getManagedBean()
+						.getCheckOtherCommitteeTypes());
+				resDTO = committeSO
+						.retrieveCommitteMembersByQtIdAndCommType(type2reqDTO);
+				if (null != resDTO
+						&& null != resDTO.getCommMemberResultBean()
+						&& null != resDTO.getCommMemberResultBean()
+								.getResultList()
+						&& !resDTO.getCommMemberResultBean().getResultList()
+								.isEmpty()) {
+					this.getManagedBean()
+							.getOtherCommitteeMembersList()
+							.addAll(resDTO.getCommMemberResultBean()
+									.getResultList());
+				}
+			}
+
+		} finally {
+
+		}
+
+	}
+
+	// check existing committeemebers in otherCommittee in TEC,OC,FEC
+	private void checkCommitteeMembersExistOtherCommittees(
+			List<ScCommitteeMember> otherCommitteemembers,
+			List<ScCommitteeMember> existingCommitteemembers) {
+		if (null != otherCommitteemembers && !otherCommitteemembers.isEmpty()
+				&& null != existingCommitteemembers
+				&& !existingCommitteemembers.isEmpty()) {
+			for (ScCommitteeMember currentCommitteeMember : existingCommitteemembers) {
+				for (ScCommitteeMember otherCommitteeMember : otherCommitteemembers) {
+					if (otherCommitteeMember.getIcPassport().equalsIgnoreCase(
+							currentCommitteeMember.getIcPassport())) {
+						throw new EpException(
+								MessageConst.ERROR_760272,
+								new String[] {
+										currentCommitteeMember.getMemberName(),
+										this.getManagedBean()
+												.getCheckOtherCommitteeType(),
+										this.getManagedBean()
+												.getCheckOtherCommitteeTypes() });
+					}
+
+				}
+
+			}
+		}
 
 	}
 
