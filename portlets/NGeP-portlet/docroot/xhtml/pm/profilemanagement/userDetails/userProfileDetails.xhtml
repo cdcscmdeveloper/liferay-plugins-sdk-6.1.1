@@ -20,7 +20,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td><p:selectOneRadio
 								value="#{profileManagementBackingBean.managedBean.searchOrgCategory}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
 								<f:selectItem
 									itemLabel="#{lbl['lbl.pm.org.federal.government']}"
 									itemValue="#{profileManagementBackingBean.federalGovt}" />
@@ -38,7 +38,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td><p:selectOneMenu id="orgTypeFederalList"
 								rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.federalGovt}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
 								styleClass="ppDropDownWidthL" required="true"
 								label="#{lbl['lbl.pm.organisation.orgType']}"
 								style="margin-bottom: 5px;"
@@ -46,13 +46,13 @@
 								<f:selectItems
 									value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
 									<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType()}" 
-			     	update="lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+			     	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
 			     			"/> 
 							</p:selectOneMenu><p:message id="orgTypeFederalListMsg" for="orgTypeFederalList"
 								display="icon" /> <p:selectOneMenu id="orgTypeOthersList"
 								rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.others}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
 								styleClass="ppDropDownWidthL" required="true"
 								label="#{lbl['lbl.pm.organisation.orgType']}"
 								style="margin-bottom: 5px;"
@@ -60,7 +60,7 @@
 								<f:selectItems
 									value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
 									<p:ajax event="change" listener="#{profileManagementBackingBean.changeResOrgType()}" 
-			     		update="lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+			     		update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
 			     			"/> 
 							</p:selectOneMenu><p:message id="orgTypeOthersListMsg" for="orgTypeOthersList"
@@ -76,7 +76,7 @@
 								required="true" update="@form" readonly="true"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
 								headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgCode}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 								saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 								conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}" />
 							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" /></td>
@@ -98,7 +98,7 @@
 
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
-									partialSubmit="true" process="@this" update="itIdentityNo" />
+									partialSubmit="true" process="@this" update="@form" />
 							</p:selectOneMenu> <p:message id="somIdTypeMsg" for="somIdType" display="icon" />
 						</td>
 						<th></th>
@@ -123,7 +123,7 @@
 										<f:validateLength minimum="12" />
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
-											partialSubmit="true" process="@this" update="itIdentityNo" />
+											partialSubmit="true" process="@this" update="@form" />
 									</p:inputText>
 								</c:when>
 
@@ -136,7 +136,7 @@
 										size="30" maxlength="12">
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
-											partialSubmit="true" process="@this" update="itIdentityNo" />
+											partialSubmit="true" process="@this" update="@form" />
 									</p:inputText>
 								</c:otherwise>
 							</c:choose> <p:message id="itIdentityNoMsg" for="itIdentityNo"
@@ -249,7 +249,7 @@
 								id="itDesignation"
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.designation}" />
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.designation}" />
 							<p:message id="itDesignationMsg" for="itDesignation"
 								display="icon" /></td>
 						<th></th>
@@ -261,7 +261,7 @@
 								value="#{lbl['lbl.pm.profiles.userdetails.promanagement']}" />
 						</th>
 						<td><p:selectOneRadio
-								value="#{profileManagementBackingBean.managedBean.selectedUser.PMP}">
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.PMP}">
 								<f:selectItems
 									value="#{profileManagementBackingBean.getYesNoOptions()}" />
 							</p:selectOneRadio></td>
@@ -273,7 +273,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.grade']}" /></th>
 						<td><p:inputText styleClass="ppDisplayTextL"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.grade}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.grade}"
 								maxlength="10" /> &#160;&#160; <p:graphicImage id="giUserGrade"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserGrade"
@@ -289,7 +289,7 @@
 						<td><p:inputText id="itEmail"
 								required="#{!empty param['disableValidation']}" maxlength="80"
 								label="#{lbl['lbl.pm.profiles.userdetails.email']}"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.email}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.email}"
 								styleClass="ppDisplayTextL"
 								validatorMessage="#{lbl['lbl.pm.profiles.invalidEmail']}">
 								<f:validateRegex disabled="#{empty param['disableValidation']}"
@@ -307,7 +307,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.telno']}" /></th>
 						<td><p:inputText id="itTelNo"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.phoneNo}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.phoneNo}"
 								styleClass="ppDisplayTextL" maxlength="12"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
@@ -319,7 +319,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.faxno']}" /></th>
 						<td><p:inputText id="itFaxNo"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.faxNo}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.faxNo}"
 								styleClass="ppDisplayTextL" maxlength="12"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
@@ -331,7 +331,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.mobileno']}" /></th>
 						<td><p:inputText id="itMobileNo"
-								value="#{profileManagementBackingBean.managedBean.selectedUser.mobileNo}"
+								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.mobileNo}"
 								maxlength="12" styleClass="ppDisplayTextL"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
@@ -352,9 +352,9 @@
 									itemValue="0" />
 								<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 								<p:ajax event="change"
-									listener="#{profileManagementBackingBean.userStatusChange()}"
+									listener="#{profileManagementBackingBean.orgUnitStatusChange()}"
 									partialSubmit="true" process="@this"
-									update="@this, :form:tvRoleReceivingAddr" />
+									update="@this, :form:tvRoleReceivingAddr, :form:pUserProfileHeader" />
 
 							</p:selectOneMenu> &#160;&#160; <p:graphicImage id="giUserStatus"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
