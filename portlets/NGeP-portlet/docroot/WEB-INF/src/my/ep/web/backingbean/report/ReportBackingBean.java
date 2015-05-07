@@ -654,7 +654,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)20854;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)220152;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -5092,6 +5092,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				userRoleLogin = ReportConst.REQUISITIONER;
 			}
 			if (!userRoleLogin.equals(ReportConst.REQUISITIONER)) {
+				if ((this.getScRequisenerId() != null)
+						&& (this.getScRequisenerId() != ReportConst.EMPTY_VAL)) {
+					rptGenBean
+							.setScRequisenerIdVar("");
+				}
+			}else{
 				if ((this.getScRequisenerId() != null)
 						&& (this.getScRequisenerId() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
