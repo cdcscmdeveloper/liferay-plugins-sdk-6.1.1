@@ -23,6 +23,7 @@
 				  		</c:when>
 				  		<c:otherwise>
 				  			<p:commandButton value="#{lbl['lbl.btn.update']}" update="@form"
+				  			disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew and profileManagementBackingBean.managedBean.selectedUser.hasActiveOrg}"
 				  				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				  				action="#{profileManagementBackingBean.saveUserProfile()}">
 				  				<f:param name="disableValidation" value="true" />     

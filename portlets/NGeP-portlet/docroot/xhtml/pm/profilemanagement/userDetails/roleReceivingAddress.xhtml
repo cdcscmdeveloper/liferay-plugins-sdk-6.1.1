@@ -57,7 +57,7 @@
 						width="8%">
 
 						<p:selectOneMenu value="#{role.recordStatusFlg}"
-							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[0].recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
+							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change"
@@ -104,7 +104,7 @@
 					<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}">
 						
 						<p:selectOneMenu value="#{receivAddrType.recordStatusFlg}"
-							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUser.pmUserOrgs[0].recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
+							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 						</p:selectOneMenu>

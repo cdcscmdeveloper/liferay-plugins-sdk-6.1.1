@@ -39,6 +39,8 @@ import my.ep.dto.pm.authorization.role.RoleReqDTO;
 import my.ep.dto.pm.authorization.role.RoleResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
+import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -283,9 +285,9 @@ public class PmCommonUtil {
 			if(pmUser.getPreferredLanguage()==null){
 				pmUser.setPreferredLanguage(configGeneral.getPreferredLanguage());
 			}
-			if(pmUser.getNotifyRemovalDay()==null){
-				pmUser.setNotifyRemovalDay(configGeneral.getNotifyFreq());
-			}
+//			if(pmUser.getNotifyRemovalDay()==null){
+//				pmUser.setNotifyRemovalDay(configGeneral.getNotifyFreq());
+//			}
 		}finally{
 			configGeneralSO = null;
 		}
@@ -636,6 +638,36 @@ public class PmCommonUtil {
 			userSO = null;
 		}		
 		return pmUserOrgs;
+	}
+	
+	/**
+	 * retrieve PmUserOrg
+	 * @param userId
+	 *  @param orgId
+	 * @return PmUserOrg 
+	 */
+	public static PmUserOrg retrieveUserOrgByUserIdAndOrgId(Long id, Long userOrgId){
+		PmUserOrg pmUserOrg = null;
+		IUserSO userSO = null;
+		try {
+			UserOrgReqDTO reqDTO = new UserOrgReqDTO();
+			UserOrgResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			reqDTO.setUserOrgId(userOrgId);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			resDTO = userSO.retrieveUserOrgDtByUserIdAndOrgId(reqDTO);
+			
+			if(resDTO.isSuccessful()){
+				pmUserOrg = resDTO.getPmUserOrg();
+			}
+				
+		} catch (Exception e) {
+			throw new EpException(MessageConst.ERROR_770058 , new String[]{id.toString(), e.getMessage()}); 
+		}finally{
+			userSO = null;
+		}		
+		return pmUserOrg;
 	}
 	
 	/**

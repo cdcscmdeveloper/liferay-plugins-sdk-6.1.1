@@ -63,6 +63,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private int searchOrgCategory = 0;
 	
 	
+	
 
 
 	/**
@@ -383,6 +384,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	public void setSearchOrgCategory(int searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
 	}
+	
 
 
 }	

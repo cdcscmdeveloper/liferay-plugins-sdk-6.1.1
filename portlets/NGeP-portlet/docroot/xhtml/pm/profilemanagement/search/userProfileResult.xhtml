@@ -33,7 +33,7 @@
 				</p:commandLink>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.action']}" width="5%">
-				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userOrg.pmUser.userId)}" >
+				<p:commandLink  action="#{profileManagementBackingBean.redirectToMaintainUser(userOrg.pmUser.userId, userOrg)}" >
 					<p:graphicImage value="/css/images/design/edit.png"/>
 				</p:commandLink>
 			</p:column>
@@ -42,7 +42,7 @@
 	</p:panel>
 	<br/>
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profileManagementBackingBean.redirectToMaintainUser(null)}" ajax="false"/>
+		<p:commandButton value="#{lbl['lbl.btn.create']}" action="#{profileManagementBackingBean.redirectToMaintainUser(null,null)}" partialSubmit="true" process="@this"/>
 	</div>
 	<br/>
     <!-- Role list Popup -->
