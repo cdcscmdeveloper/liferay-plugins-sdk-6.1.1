@@ -85,11 +85,20 @@
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					action="#{qTBusinessOwnerBackingBean.deleteBusinessOwner}"
-					update="businessownerId"
+					process="@this, businessownerId" partialSubmit="true"
+					oncomplete="businessOwnerDeletePopUp.show();"
+					update="@([id$=#{businessOwnerDeleteId}])"
 					rendered="#{qTDetailBB.managedBean.qt.qtStatus.statusId ne QTStatusConst.QT_CANCELLED}" />
 			</c:if>
 		</div>
+		<ui:param name="businessOwnerDeleteId" value="businessOwnerDeleteId" />
+		<ac:confirmationPopup id="#{businessOwnerDeleteId}"
+			widget="businessOwnerDeletePopUp"
+			okAction="qTBusinessOwnerBackingBean.deleteBusinessOwner"
+			width="400" height="200"
+			title="#{lbl['lbl.sc.qt.business.owner']}"
+			content="#{lbl['lbl.sc.dialog.confirm.business.owner.dtls']}"
+			update="@([id$=businessownerId])" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.qt.specification.approval']}" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="2"
