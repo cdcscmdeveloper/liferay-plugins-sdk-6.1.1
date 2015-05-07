@@ -344,6 +344,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
 					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
+					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
 			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}
@@ -474,12 +477,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				reqDTO.setRoleCodeList(getManagedBean().getRoleCodes());
 			}
 			
-			
-			IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			StatusResDTO resDTO = statusSO.retrieveStatusRoleListByRoleCode(reqDTO);
-			if(resDTO.isSuccessful()){
-				for(int i=0; i<resDTO.getStatusRoleList().size(); i++){
-					statusIds.add(resDTO.getStatusRoleList().get(i).getPmStatus().getStatusId().intValue());
+			if(reqDTO.getRoleCodeList() != null && !reqDTO.getRoleCodeList().isEmpty()){
+				IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+				StatusResDTO resDTO = statusSO.retrieveStatusRoleListByRoleCode(reqDTO);
+				if(resDTO.isSuccessful()){
+					for(int i=0; i<resDTO.getStatusRoleList().size(); i++){
+						statusIds.add(resDTO.getStatusRoleList().get(i).getPmStatus().getStatusId().intValue());
+					}
 				}
 			}
 			
@@ -911,57 +915,58 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				
 				if(loginId!=null && loginId.length() > 0){
 					statusIds = retrieveAvailableStatusId();
-//					token = getFacesScopes().getBPMAuthenticationCtxToken();
-					
-					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-					token = bpmSO.authenticate("weblogic","welcome1"); //TODO
-					  
-					reqDTO = new BpmRequestDTO();
-
-					log.info("BPM pageNo******"+getPageNo());
-					log.info("BPM pageSize*****"+getPageSize());
-					log.info("BPM loginId******"+loginId);
-					log.info("BPM statusIds******"+statusIds.size());
-								
-					if(token==null){
-						throw new EpException(MessageConst.ERROR_770099);
-					}
-					log.info("BPM auth******" + token);
-					
-					// set useful info
-					reqDTO.setCtxToken(token);
-					reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
-					reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
-			        reqDTO.setStatusList(statusIds);
-			        reqDTO.setUserId(loginId);
-			        reqDTO.setDocNumber(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
-			        
-			        if(getManagedBean().getTaskAssignmentSearchBean().getDocType() !=null && getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter() !=null ){
-			        	reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
-			        }
-			        
-
-					// Invoke BPM 
-					responseDTO = bpmSO.getReassignedItems(reqDTO);
-					
-					// Set resultBean for UI
-					resultBean = new SearchResultBean<WorklistItemVO>();
-					resultBean.setTotalRecord(0);
-					resultBean.setResultList(null);
-					
-					if (responseDTO.getWorklistVO() != null) {
-						log.info("BPM size******" + responseDTO.getWorklistVO().getWorklistItem().size());
-						log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
-						/*
-						if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
-							// markup data
-							markupWorklistItem(responseDTO.getWorklistVO().getWorklistItem());
-						}*/
-						resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
-						resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
+					if(statusIds != null && !statusIds.isEmpty()){
+	//					token = getFacesScopes().getBPMAuthenticationCtxToken();
+						
+						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+						token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+						  
+						reqDTO = new BpmRequestDTO();
+	
+						log.info("BPM pageNo******"+getPageNo());
+						log.info("BPM pageSize*****"+getPageSize());
+						log.info("BPM loginId******"+loginId);
+						log.info("BPM statusIds******"+statusIds.size());
+									
+						if(token==null){
+							throw new EpException(MessageConst.ERROR_770099);
+						}
+						log.info("BPM auth******" + token);
+						
+						// set useful info
+						reqDTO.setCtxToken(token);
+						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
+				        reqDTO.setStatusList(statusIds);
+				        reqDTO.setUserId(loginId);
+				        reqDTO.setDocNumber(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				        
+				        if(getManagedBean().getTaskAssignmentSearchBean().getDocType() !=null && getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter() !=null ){
+				        	reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
+				        }
+				        
+	
+						// Invoke BPM 
+						responseDTO = bpmSO.getReassignedItems(reqDTO);
+						
+						// Set resultBean for UI
+						resultBean = new SearchResultBean<WorklistItemVO>();
+						resultBean.setTotalRecord(0);
+						resultBean.setResultList(null);
+						
+						if (responseDTO.getWorklistVO() != null) {
+							log.info("BPM size******" + responseDTO.getWorklistVO().getWorklistItem().size());
+							log.info("BPM total******"+ responseDTO.getWorklistVO().getTotal());
+							/*
+							if(responseDTO.getWorklistVO().getWorklistItem()!=null) {
+								// markup data
+								markupWorklistItem(responseDTO.getWorklistVO().getWorklistItem());
+							}*/
+							resultBean.setTotalRecord(responseDTO.getWorklistVO().getTotal());
+							resultBean.setResultList(responseDTO.getWorklistVO().getWorklistItem());
+						}
 					}
 				}
-				
 			}catch(Exception e){
 				e.printStackTrace();
 			} finally {
