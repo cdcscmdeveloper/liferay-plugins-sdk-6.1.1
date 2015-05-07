@@ -8,23 +8,25 @@
 
 	<p:dialog id="tncDialog" header="#{lbl['lbl.sm.forcereplaceadmin.headerpanel.tnc']}"
 		widgetVar="tncDialog" modal="true" width="400" height="100">
-		<p:panel id="dPanel" style="width:100%">
+		<p:outputPanel id="dPanel">
 			<table>
 				<tr>
 					<td>
 						<p:selectBooleanCheckbox id="chkTcId" value="#{forceReplaceSuppAdminBackingBean.managedBean.agreeTnc}">
 							<p:ajax update="btnYes" partialSubmit="true" process="@this" />
 						</p:selectBooleanCheckbox>
-						#{lbl['lbl.sm.forcereplaceadmin.tnc.msg.agreed']}&#160;
+					</td>
+					<td>
+						<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.tnc.msg.agreed']}" styleClass="outputLabel-view" />
 						<h:commandLink
 							action="#{forceReplaceSuppAdminBackingBean.viewTnc}" target="_blank"
 							process="@this" partialSubmit="true" >
-							#{lbl['lbl.sm.forcereplaceadmin.tnc.msg.tnc']}
+							<p:outputLabel value="#{lbl['lbl.sm.forcereplaceadmin.tnc.msg.tnc']}" styleClass="outputLabel-view" />
 						</h:commandLink>
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td colspan="2">
 						<div align="center">
 							<p:commandButton value="#{lbl['lbl.btn.yes']}" id="btnYes" onclick="tncDialog.hide();" 
 								action="#{forceReplaceSuppAdminBackingBean.replaceWithExistingUser}" 
@@ -35,7 +37,7 @@
 					</td>
 				</tr>
 			</table>
-		</p:panel>
+		</p:outputPanel>
 	</p:dialog>
 
 </ui:composition>
