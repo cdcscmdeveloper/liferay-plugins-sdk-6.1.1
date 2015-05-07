@@ -7,12 +7,12 @@
 
 	<!-- Audit - START -->
 	<portlet>
-		<portlet-name>trackingDiary</portlet-name>
-		<display-name>Tracking Diary</display-name>
+		<portlet-name>auSearch</portlet-name>
+		<display-name>Audit Search</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/trackingdiary/trackingDiary.xhtml</value>
+			<value>/xhtml/trackingdiary/preRenderTrackingDiary.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
