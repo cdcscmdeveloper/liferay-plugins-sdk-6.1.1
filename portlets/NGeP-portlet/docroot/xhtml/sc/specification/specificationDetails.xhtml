@@ -15,7 +15,7 @@
 				<td colspan="3"><p:inputTextarea label="#{lbl['lbl.sc.title']}"
 						value="#{specificationBackingBean.managedBean.scQt.qtTitle}"
 						required="true" cols="130" rows="2" disabled="true"
-						readonly="true" style=" margin-bottom:5px;width: 100%;"
+						readonly="true" style=" margin-bottom:5px;width: 98%;"
 						maxlength="100" /></td>
 			</tr>
 			<tr>
@@ -50,9 +50,9 @@
 				<td><p:inputText readonly="true" size="24"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
-				<td style="width: 267px;"><h:outputLabel
+				<td style="width: 275px;"><h:outputLabel
 						value="#{lbl['lbl.sc.open.for']}" /></td>
-				<td><p:inputText readonly="true" size="24"
+				<td><p:inputText readonly="true" size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, specificationBackingBean.managedBean.scQt.openFor)}"
 						disabled="true" /></td>
 			</tr>
@@ -67,7 +67,7 @@
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 					</p:selectOneMenu></td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td><p:inputText readonly="true" disabled="true" size="24"
+				<td><p:inputText readonly="true" disabled="true" size="30"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</td>
 			</tr>
@@ -79,7 +79,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
 
-				<td><p:inputText size="24"
+				<td><p:inputText size="30"
 						value="#{lbl[specificationBackingBean.managedBean.scQt.techEvaluationReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						readonly="true" disabled="true"></p:inputText></td>
 			</tr>
@@ -126,7 +126,7 @@
 					</ui:fragment></td>
 				<td><p:inputMask id="contract"
 						required="#{!specificationBackingBean.managedBean.readOnly}"
-						size="24" mask="9?99" placeHolder="" maxlength="3"
+						size="30" mask="9?99" placeHolder="" maxlength="3"
 						disabled="#{specificationBackingBean.managedBean.readOnly}"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{specificationBackingBean.managedBean.scQt.contractDuration}"
@@ -141,7 +141,7 @@
 		rendered="#{specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.panel eq 'false'}">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 96px"><p:outputLabel
+				<td style="width: 200px"><p:outputLabel
 						value="#{lbl['lbl.sc.zone.location.level']}" /></td>
 				<td><p:selectOneMenu id="locationLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
