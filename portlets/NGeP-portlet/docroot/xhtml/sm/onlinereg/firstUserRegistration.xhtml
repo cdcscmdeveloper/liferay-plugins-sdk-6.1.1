@@ -9,6 +9,9 @@
 	
 	<ui:define name="resourceSection">
 		<script type="application/javascript">
+			
+			var $jq = jQuery.noConflict(true);
+		
 			$(document).ready(function(e){
 				  $("input[id$=txtPermAdd1]").keydown(function(e){
 					if(e.which==9 || e.keycode==9){
