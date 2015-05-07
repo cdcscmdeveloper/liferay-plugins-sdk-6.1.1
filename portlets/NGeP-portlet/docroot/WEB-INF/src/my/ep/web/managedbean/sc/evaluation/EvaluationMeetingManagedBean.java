@@ -137,6 +137,9 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 
 	/** The today. */
 	private Date today = new Date();
+	private List<ScCommitteeMember> otherCommitteeMembersList;
+	private String checkOtherCommitteeType;
+	private String checkOtherCommitteeTypes;
 
 	/**
 	 * Gets the today.
@@ -757,6 +760,50 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setCloneSelectQt(ScQt cloneSelectQt) {
 		this.cloneSelectQt = cloneSelectQt;
+	}
+
+	/**
+	 * @return the otherCommitteeMembersList
+	 */
+	public List<ScCommitteeMember> getOtherCommitteeMembersList() {
+		return otherCommitteeMembersList;
+	}
+
+	/**
+	 * @param otherCommitteeMembersList
+	 *            the otherCommitteeMembersList to set
+	 */
+	public void setOtherCommitteeMembersList(
+			List<ScCommitteeMember> otherCommitteeMembersList) {
+		this.otherCommitteeMembersList = otherCommitteeMembersList;
+	}
+
+	/**
+	 * @return the checkOtherCommitteeType
+	 */
+	public String getCheckOtherCommitteeType() {
+		return checkOtherCommitteeType;
+	}
+
+	/**
+	 * @param checkOtherCommitteeType the checkOtherCommitteeType to set
+	 */
+	public void setCheckOtherCommitteeType(String checkOtherCommitteeType) {
+		this.checkOtherCommitteeType = checkOtherCommitteeType;
+	}
+
+	/**
+	 * @return the checkOtherCommitteeTypes
+	 */
+	public String getCheckOtherCommitteeTypes() {
+		return checkOtherCommitteeTypes;
+	}
+
+	/**
+	 * @param checkOtherCommitteeTypes the checkOtherCommitteeTypes to set
+	 */
+	public void setCheckOtherCommitteeTypes(String checkOtherCommitteeTypes) {
+		this.checkOtherCommitteeTypes = checkOtherCommitteeTypes;
 	}
 
 }
