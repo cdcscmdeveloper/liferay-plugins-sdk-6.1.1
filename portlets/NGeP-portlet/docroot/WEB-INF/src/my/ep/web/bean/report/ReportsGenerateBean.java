@@ -43,6 +43,7 @@ public class ReportsGenerateBean {
 	private long lngUserId;
 	private List<SelectItem> levOneCatLst1 = new ArrayList<SelectItem>();
 	private boolean madatoryIndicatorView = false;
+	private boolean cmMadatoryIndicatorView= false;
 	private boolean enableCriteriaMenuView = false;
 		//sc module
 		private boolean extraTwoColumnView = false;		
@@ -447,6 +448,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isCmMadatoryIndicatorView() {
+			return cmMadatoryIndicatorView;
+		}
+		public void setCmMadatoryIndicatorView(boolean cmMadatoryIndicatorView) {
+			this.cmMadatoryIndicatorView = cmMadatoryIndicatorView;
+		}
 		public boolean isSmActSubmisAllDateView() {
 			return smActSubmisAllDateView;
 		}
