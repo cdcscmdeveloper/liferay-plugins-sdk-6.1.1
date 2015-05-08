@@ -654,7 +654,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)220152;//20854;//--CM 122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)240573;//20854;//--CM 220152,122768- SC//72799;//--ct 241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4720,7 +4720,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 									.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
 									|| (getManagedBean().getReportValue() != null)
 									&& (getManagedBean().getReportValue().trim()
-											.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))) {
+											.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))
+											|| (getManagedBean().getReportValue() != null)
+											&& (getManagedBean().getReportValue().trim()
+													.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {
 				maincategory.append(ReportConst.AMP_SM_MAIN_CATEGORY_EQ);
 				subcategory.append(ReportConst.AMP_SM_SUB_CATEGORY_EQ);
 				subcategorydivision.append(ReportConst.AMP_SM_SUB_DIV_CATEGORY_EQ);
