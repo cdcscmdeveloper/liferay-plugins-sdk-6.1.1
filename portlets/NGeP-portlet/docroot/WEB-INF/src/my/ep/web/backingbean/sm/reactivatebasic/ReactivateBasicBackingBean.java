@@ -113,8 +113,8 @@ public class ReactivateBasicBackingBean extends
 	 * Process basic account activation
 	 */
 	public void activateAccount() {
-		String keyStr = basicSupplier.getSupplierId()
-				+ basicSupplierAdmin.getPersonnelId() + activationKey;
+		String keyStr = basicSupplier.getSupplierId().toString()
+				+ basicSupplierAdmin.getPersonnelId().toString() + activationKey;
 		String hashStr = SmCommonUtil.hashString(keyStr);
 		if (!hashStr.equals(encryptActivationKey)) {
 			throw new EpException(MessageConst.ERROR_721040);
