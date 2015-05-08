@@ -89,6 +89,13 @@
 							    </td>
 						  </tr>
 						  </c:if>
+						  <c:if test="#{reportBackingBean.managedBean.rptGenBean.cmMadatoryIndicatorView}">
+						  <tr>
+						    <td width="100%">
+								<p:outputLabel styleClass="instruction" style="float:left;margin-left:20px;" value="#{lbl['lbl.rpt.search.criteria.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH']}"/>
+							    </td>
+						  </tr>
+						  </c:if>
 						  <tr>
 						  <td>
 						  <ui:include src="smreportcontent.xhtml"></ui:include>
