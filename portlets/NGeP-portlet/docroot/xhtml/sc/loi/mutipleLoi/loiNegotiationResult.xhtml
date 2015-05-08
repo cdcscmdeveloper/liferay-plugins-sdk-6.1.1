@@ -182,7 +182,7 @@
 
 				<p:column style="width:10%; text-align:right;"
 					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<p:inputText size="4" value="#{loiloaItem.unitPrice}" disabled="{!isPendingNegotiationStatus}"
+					<p:inputText size="4" value="#{loiloaItem.unitPrice}" disabled="#{!isPendingNegotiationStatus}"
 						style="text-align:right;">
 						<p:ajax event="blur" partialSubmit="true" process="@form"
 							update="@all"

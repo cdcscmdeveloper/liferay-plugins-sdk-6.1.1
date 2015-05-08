@@ -208,7 +208,8 @@
 					<td><p:inputText id="pidvalidDays" maxlength="14" required="true"
 					        label="#{lbl['lbl.sc.purchase.in.default.approval.valid.period']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.pidValidDays}"
-							styleClass="ppRightBtn" size="32"
+							size="32"
+							style="text-align:right;"
 							disabled="#{!(isPendingSubmissionStatus or isPendingVerification)}"> 
 						</p:inputText>#{lbl['lbl.sc.days']} <p:message id="pidvalidDaysMsg" for="pidvalidDays" display="icon" /></td>
 				</tr>
@@ -257,7 +258,7 @@
 							validatorMessage="* Order Qty: must be a decimal number between 0.0 and 9999999999.999"
 							label="#{lbl['lbl.sc.purchase.in.default.order.qty']}"
 							value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.quantity}"
-							styleClass="ppRightBtn" size="32"
+							style="text-align:right;" size="32"
 							disabled="#{!isPendingSubmissionStatus}">
 						</p:inputText> <p:message id="ordqtyMsg" for="ordqty" display="icon" /></td>
 				</tr>
