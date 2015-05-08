@@ -18,7 +18,7 @@
 				postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}" />
 		</p:outputPanel>
 		<p:commandButton 
-			update="spkiOutputPanel" partialSubmit="true" process="@form"
+			update="spkiOutputPanel" partialSubmit="true" process="@form" value="#{lbl['lbl.btn.submit']}"
 			action="#{supplierProposalDetailBackingBean.spkiSignAction}"
 			actionListener="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();">

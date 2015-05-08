@@ -323,6 +323,8 @@ public class SPDetailBackingBean extends
 	 */
 	public void submitSupplierProposal(PmDigiSign digiSign) {
 		debugLogger("submitSupplierProposal");
+		
+		retrievePaidUpCapitalNdDeclarationDtls();
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -351,7 +353,7 @@ public class SPDetailBackingBean extends
 			// spki 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-			String originalText = prepareOriginalText(scQtProposal.getScQtSupplier().getSmSupplier());
+			String originalText = prepareOriginalText(getManagedBean().getSmSupplier());
 			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
 			digiSign.setSignedData(signedData);
 			
