@@ -61,6 +61,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
@@ -352,7 +353,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		
 		ScQtBsvDtl tempScQtBsvDtl = this.getManagedBean().getTempScQtBsvDtl();
 		if (null != tempScQtBsvDtl) {
-			updateQtAmmendMentDtls(bsvType, bsvDetail, tempScQtBsvDtl);
+			updateQtAmmendMentDtls(bsvType, tempScQtBsvDtl,bsvDetail);
 		}
 		
 	}
@@ -847,10 +848,10 @@ public class QTBriefingSiteVisitBackingBean extends
 	 * @param bsvDetail
 	 * @param tempScQtBsvDtl
 	 */
-	private void updateQtAmmendMentDtls(String bsvType, ScQtBsvDtl bsvDetail,
-			ScQtBsvDtl tempScQtBsvDtl) {
+	private void updateQtAmmendMentDtls(String bsvType, ScQtBsvDtl tempScQtBsvDtl,
+			ScQtBsvDtl bsvDetail ) {
 
-		if (!(tempScQtBsvDtl.equals(bsvDetail))) {
+		if (!(compareScQTBsvDtlObjs(tempScQtBsvDtl,bsvDetail))) {
 			QtAmendMentBean amendMentBean = this.getManagedBean()
 					.getAmendMentBean();
 			if (null == amendMentBean) {
@@ -868,6 +869,43 @@ public class QTBriefingSiteVisitBackingBean extends
 		}
 		 this.getManagedBean().setTempScQtBsvDtl(null);
 
+	}
+	
+	private boolean compareScQTBsvDtlObjs(ScQtBsvDtl bsvDtl1,ScQtBsvDtl bsvDtl2){
+		
+		PmAddress addr = bsvDtl2.getAddress();
+		PmAddress thisAddr = bsvDtl1.getAddress();
+		if (StringUtils.equalsIgnoreCase(bsvDtl1.getBsvDesc(),bsvDtl2.getBsvDesc())
+				&& StringUtils.equalsIgnoreCase(bsvDtl1.getBsvType(),bsvDtl2.getBsvType())
+				&& bsvDtl1.getBsvDate().equals(bsvDtl2.getBsvDate())
+				&& StringUtils.equalsIgnoreCase(bsvDtl1.getLocation(),bsvDtl2.getLocation())
+				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress1(), addr.getAddress1())
+				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress2(),addr.getAddress2())
+				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress3(),addr.getAddress3())
+				&& StringUtils.equalsIgnoreCase(thisAddr.getAddress4(),addr.getAddress4())
+				&& StringUtils.equalsIgnoreCase(thisAddr.getPostcode(),addr.getPostcode())
+				&& equalForLong(thisAddr.getPmState().getStateId(),addr.getPmState().getStateId())
+				&& equalForLong(thisAddr.getPmCity().getCityId(),addr.getPmCity().getCityId())
+				&& equalForLong(thisAddr.getPmDistrict().getDistrictId(),addr.getPmDistrict().getDistrictId())
+				&& equalForLong(thisAddr.getPmDivision().getDivisionId(),addr.getPmDivision().getDivisionId())
+				&& StringUtils.equalsIgnoreCase(bsvDtl1.getCoordinatingOfficer(),bsvDtl2.getCoordinatingOfficer())
+				&& (bsvDtl1.getMaxNoOfAttendance()==bsvDtl2.getMaxNoOfAttendance())){
+			
+			return true;
+			
+		}
+		return false;
+	}
+	
+	private boolean equalForLong(Long l1,Long l2){
+		
+		boolean isEqual = false;
+		if(l1== null && l2 == null){
+			isEqual = true;
+		} else if(l1 != null){
+			isEqual = l1.equals(l2);
+		}
+		return isEqual;
 	}
 	
 }
