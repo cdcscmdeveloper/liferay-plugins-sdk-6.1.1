@@ -29,7 +29,7 @@
 				<h:outputLabel value="#{lbl['lbl.sc.title']}" />
 				<h:outputText style="white-space: normal;word-wrap: break-word;"
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
-				<h:outputText value="'('#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate}')'" styleClass="lastUpdated"
+				<h:outputText value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})" styleClass="lastUpdated"
 				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle ne null ? 'true':'false'}"/>
 				<h:outputLabel value="" 
 				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle eq null ? 'true':'false'}"/>
@@ -211,7 +211,7 @@
 				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
 		</c:if>
 		<c:if
-			test="#{noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState and noticeBoardBackingBean.managedBean.scQt.zonal}">
+			test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
 			<ui:include src="nbZones.xhtml" />
 		</c:if>
 
