@@ -32,7 +32,7 @@
 	</p:panel>
 	<br />
 	<h:panelGroup id="ItemDetAndNegoTerm">
-		<p:panel header="Item Details" id="itemDetailsId" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.item.details']}" id="itemDetailsId" toggleable="true"
 			rendered="#{lOIDetailBackingBean.managedBean.itemDetailsFlag}">
 			<p:dataTable id="itemDtlID" var="loiloaItem"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
