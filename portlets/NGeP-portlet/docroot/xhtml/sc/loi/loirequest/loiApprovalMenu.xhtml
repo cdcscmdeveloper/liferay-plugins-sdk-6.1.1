@@ -10,11 +10,11 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="18%"><p:outputLabel
+				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td width="82%">
+				<td width="79%">
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:selectOneMenu id="contractSigner" 
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
@@ -74,8 +74,8 @@
 		toggleSpeed="500">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td class="TableFieldLeft" width="11%"></td>
-				<td class="TableFieldRight" width="89%"><p:dataGrid id="catatan"
+				<td class="TableFieldLeft" width="14%"></td>
+				<td class="TableFieldRight" width="86%"><p:dataGrid id="catatan"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
