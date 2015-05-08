@@ -269,7 +269,9 @@
 			 <tr>
 			    <td width="22.5%" style="vertical-align: top;padding-right: 1px;text-align: right;"><h:outputLabel value="#{lbl['lbl.sc.purchase.in.default.remark']}"/><p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}"
+				    styleClass="noBorder"
+				    var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 			     <table>
 				   <tr>
 					  <td rowspan="2" style="vertical-align: top;" align="left">
@@ -311,6 +313,7 @@
 		</tr>
 		 <tr><td/>
 			<td><p:dataGrid id="attachId" value="#{purchaseInDefaultBackingBean.managedBean.attachments}"
+			         styleClass="noBorder"
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1" 
 					style="width:100%">
 			    <table>
