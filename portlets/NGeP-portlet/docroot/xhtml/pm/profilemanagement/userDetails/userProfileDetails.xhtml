@@ -74,7 +74,7 @@
 								value="*" styleClass="mandatory" /></th>
 						<td><ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="29"
 								required="true" update="@form" readonly="true"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
 								headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 								saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
@@ -345,7 +345,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.profiles.userdetails.status']}" /></th>
 						<td><p:selectOneMenu
-								disabled="#{profileManagementBackingBean.managedBean.selectedUser.brandNew}"
+								disabled="#{profileManagementBackingBean.managedBean.selectedUser.brandNew or (!profileManagementBackingBean.managedBean.selectedUser.brandNew and profileManagementBackingBean.managedBean.selectedUserOrg.brandNew)}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg}"
 								styleClass="ppDropDownWidthL">
 								<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}"
@@ -354,7 +354,7 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.orgUnitStatusChange()}"
 									partialSubmit="true" process="@this"
-									update="@this, :form:tvRoleReceivingAddr, :form:pUserProfileHeader" />
+									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
 
 							</p:selectOneMenu> &#160;&#160; <p:graphicImage id="giUserStatus"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
