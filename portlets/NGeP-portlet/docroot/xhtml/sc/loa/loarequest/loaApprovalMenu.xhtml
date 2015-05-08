@@ -10,11 +10,11 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="18%">
+			<td width="25%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="82%">
+			<td width="75%">
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractSigner" 
 						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userId}"
@@ -39,9 +39,10 @@
 			</td>
 		</tr>
 			<tr>
-				<td><p:outputLabel value="*" styleClass="mandatory"
-						rendered="#{isEditableStatus}" /> <p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" /></td>
+				<td>
+					<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" />
+					<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
+				</td>
 				<td><p:inputText id="loaSignerDesigId"
 						disabled="#{!isEditableStatus}"
 						value="#{lOADetailBackingBean.managedBean.scLoa.loaSignerDesig}"
@@ -82,8 +83,8 @@
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="11%"></td>
-			<td width="89%">
+			<td width="18%"></td>
+			<td width="82%">
 				<p:dataGrid value="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}" var="scLoaRemark" rowIndexVar="rowIndex" columns="1" >
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
