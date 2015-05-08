@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -353,7 +354,7 @@ public class LOIDetailBackingBean extends
 	/**
 	 * Generate declaration from velocity.
 	 *
-	 * @param scLoa the sc loa
+	 * @param scLoi the sc loi
 	 * @param scQt the sc qt
 	 * @return the string
 	 * @throws Exception the exception
@@ -547,6 +548,9 @@ public class LOIDetailBackingBean extends
 
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
+			
+			// loiLoaList Title
+			getLoiLoaListTitle(null);
 
 //			populateUserMinistryList();
 //			initializeRemarks(new ScLoi());
@@ -611,6 +615,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
 			reqDTO.setDocId(scLoiLoa.getDocId());
+			getLoiLoaListTitle(scLoiLoa.getSmSupplier());
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			reqDTO.setViewSupplierLoiLoa(true);
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
@@ -647,7 +652,9 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
-	 * viewItemDetails method to view item details in loi listing
+	 * viewItemDetails method to view item details in loi listing.
+	 *
+	 * @param bean the bean
 	 */
 	public void viewItemDetails(LoiLoaBean bean) {
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -673,42 +680,38 @@ public class LOIDetailBackingBean extends
 	 */
 	public void onSupplierSelectEvent() {
 		ScLoi scLoi = getManagedBean().getScLoi();
-		boolean termPriceFound = false;
+		boolean isTermPriceFound = false;
 		getManagedBean().setItemDetailsFlag(true);
-		termPriceFound = checkNegoTermPrice(scLoi);
-		getManagedBean().setHideColumnFlag(termPriceFound);
-		
+		isTermPriceFound = checkNegoTermPrice(scLoi);
+		// calc total items in award details
 		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
 			BigDecimal subTotal = null;
-			BigDecimal afterNegoSubTotal = null;
 			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
-			BigDecimal  afterNegoTotal = BigDecimal.valueOf(0d);
 			BigDecimal  offerPrice = BigDecimal.valueOf(0d);
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
-			if(termPriceFound){
-				for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-
+			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+				if(isTermPriceFound ){
+					getManagedBean().setHideColumnFlag(Boolean.TRUE);
 					if(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null){
 						offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
 					}
 					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 							offerPrice, scLoiLoaItem.getQty());
-
-					afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+				} else{
+					getManagedBean().setHideColumnFlag(Boolean.FALSE);
+					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 							scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
-
-					scLoiLoaItem.setSubTotal(subTotal);
-					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-					totalAmount = totalAmount.add(subTotal);
-					afterNegoTotal = afterNegoTotal.add(afterNegoSubTotal);
 				}
-				scLoi.setLoiAmt(totalAmount);
-				scLoi.setAfterNegoTotal(afterNegoTotal);
+
+				scLoiLoaItem.setSubTotal(subTotal);
+				totalAmount = totalAmount.add(subTotal);
 			}
+			scLoi.setLoiAmt(totalAmount);
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
+			priceKeyInEvent();
 		}
 	}
-	
+
 	/**
 	 * Gets the qt award so.
 	 *
@@ -1116,12 +1119,15 @@ public class LOIDetailBackingBean extends
 		boolean isBiddingAward = Boolean.FALSE;
 		
 		// check nego term price
-		isTermPriceFound = checkNegoTermPrice(scLoi);
-		
-       // online bidding
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
+		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)){
+			isTermPriceFound = checkNegoTermPrice(scLoi);
+		}
+
+		  // online bidding
 		if(scLoi.getScLoiLoa().getRecommendBy() != null){
 			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
-			if(recommendedBy.getParameterCode().equals(ParameterConst.REC_TYPE_ONLINE_BIDDING)){
+			if(recommendedBy.getParameterCode().equals(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)){
                isBiddingAward = Boolean.TRUE;
 			}
 		}
@@ -2529,6 +2535,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			getClausesTitle(scQtDeduction);
 			ScQtDeductionClause deductionClause = null;
 			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
 			if (!ParameterConst.DEDUCTION_TYPE_OTHERS
@@ -2562,6 +2569,52 @@ public class LOIDetailBackingBean extends
 			parameterSO = null;
 		}
 	}
+	
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @param deduction the deduction
+	 * @return the clauses title
+	 */
+	private void getClausesTitle(ScQtDeduction deduction){
+		StringBuilder title  = new StringBuilder();
+		title.append("Title");
+		title.append(":");
+		title.append(" ");
+		if(deduction != null && deduction.getDeductionType() != null){
+			title.append(getParameterDesc(deduction.getDeductionType()));
+			title.append(">"); 
+			title.append(" ");
+		}
+
+		Locale locale = new FacesScopes().getUserLocale();
+		title.append(ResourceBundleUtils.getMessage("lbl.sc.deduction.clauses",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		getManagedBean().setClausesTitle(title.toString());
+	}
+
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @param deduction the deduction
+	 * @return the clauses title
+	 */
+	private void getLoiLoaListTitle(SmSupplier smSupplier){
+		StringBuilder title  = new StringBuilder();
+		title.append("Title");
+		title.append(":");
+		title.append(" ");
+		if(smSupplier != null){
+			title.append(smSupplier.getCompanyName());
+			title.append(">"); 
+			title.append(" ");
+		}
+		Locale locale = new FacesScopes().getUserLocale();
+		title.append(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loiloalist",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		getManagedBean().setLoiLoaListTitle(title.toString());
+	}
+
 
 	/**
 	 * Adds the deduction payment action.
@@ -3605,6 +3658,12 @@ public class LOIDetailBackingBean extends
 	}
 
 
+	/**
+	 * Check nego term price.
+	 *
+	 * @param scLoi the sc loi
+	 * @return true, if successful
+	 */
 	private boolean checkNegoTermPrice(ScLoi scLoi) {
 		boolean termPriceFound = false;
 		//ScLoi scLoi = getManagedBean().getScLoi();

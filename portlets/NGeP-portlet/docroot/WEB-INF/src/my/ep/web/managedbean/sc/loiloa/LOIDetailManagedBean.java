@@ -305,7 +305,13 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The button flag. */
 	private boolean buttonFlag;
 	
-    
+	
+	/** The clauses title. */
+	private String clausesTitle;
+	
+	/** The loi loa list title. */
+	private String loiLoaListTitle;
+	    
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
@@ -1821,6 +1827,42 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonFlag(boolean buttonFlag) {
 		this.buttonFlag = buttonFlag;
+	}
+
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @return the clauses title
+	 */
+	public String getClausesTitle() {
+		return clausesTitle;
+	}
+
+	/**
+	 * Sets the clauses title.
+	 *
+	 * @param clausesTitle the new clauses title
+	 */
+	public void setClausesTitle(String clausesTitle) {
+		this.clausesTitle = clausesTitle;
+	}
+
+	/**
+	 * Gets the loi loa list title.
+	 *
+	 * @return the loi loa list title
+	 */
+	public String getLoiLoaListTitle() {
+		return loiLoaListTitle;
+	}
+
+	/**
+	 * Sets the loi loa list title.
+	 *
+	 * @param loiLoaListTitle the new loi loa list title
+	 */
+	public void setLoiLoaListTitle(String loiLoaListTitle) {
+		this.loiLoaListTitle = loiLoaListTitle;
 	}
 	
 }
