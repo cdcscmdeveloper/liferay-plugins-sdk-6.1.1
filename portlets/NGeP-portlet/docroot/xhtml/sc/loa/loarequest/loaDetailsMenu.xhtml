@@ -133,13 +133,13 @@
 		<c:if test="#{!isDocTypeQuotation}">
 		<tr>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.title']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td>
 				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="60"
 					required="true"
-					label="#{lbl['lbl.sc.loiloa.loa.title']}"
+					label="#{lbl['lbl.sc.title']}"
 					disabled="#{!isEditableStatus}"
 					maxlength="100" />
 				<p:message id="titleMsg" for="title" display="icon" />
@@ -148,7 +148,7 @@
 		</c:if>
 		<tr>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.file.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
@@ -449,14 +449,14 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.ic.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
 				<p:inputText id="identificationNo" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
 					required="true"
-					label="#{lbl['lbl.sc.loiloa.witness.ic.no']}"
+					label="#{lbl['lbl.sc.identification.no']}"
 					maxlength="15"
 					disabled="#{!isEditableStatus}" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />

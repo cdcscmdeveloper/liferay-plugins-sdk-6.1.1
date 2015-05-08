@@ -47,7 +47,7 @@
 				</p:column>
 	
 				<p:column style="width:7%;white-space:normal;text-align:right;"
-					headerText="#{lbl['lbl.sc.loiloa.duration.month']}">
+					headerText="#{lbl['lbl.tpl.spec.duration.month']}">
 					<h:outputText
 						value="#{scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth}">
 						<f:convertNumber
@@ -57,7 +57,7 @@
 			
 			
 			<p:column style="width:10%; text-align:right;"
-				headerText="#{lbl['lbl.sc.loiloa.item.quantity']}">
+				headerText="#{lbl['lbl.sc.quantity']}">
 				<h:outputText value="#{scLoiLoaItem.qty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />

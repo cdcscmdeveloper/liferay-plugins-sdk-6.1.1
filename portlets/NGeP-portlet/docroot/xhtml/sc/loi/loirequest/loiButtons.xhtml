@@ -12,7 +12,7 @@
 			style="float:left;"
 			action="#{lOIDetailBackingBean.backToPrevious}" />
 
-		<p:commandButton value="Preview Letter" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
+		<p:commandButton value="#{lbl['lbl.sc.loiloa.preview.letter']}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 			update="@all" 
 			action="#{lOIDetailBackingBean.previewLetter}"/>
 			

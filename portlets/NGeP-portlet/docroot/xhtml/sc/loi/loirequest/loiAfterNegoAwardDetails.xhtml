@@ -21,7 +21,7 @@
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
-						value="#{lbl['lbl.sc.loiloa.recommended.by']}" /></td>
+						value="#{lbl['lbl.sc.recommend.by']}" /></td>
 				<td><p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType ne ParameterConst.directAward}"
 						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy)}"
 						size="30" />
@@ -61,7 +61,7 @@
 					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 
-					<p:column headerText="#{lbl['lbl.sc.loiloa.qty']}" />
+					<p:column headerText="#{lbl['lbl.sc.quantity']}" />
 					<p:column headerText="#{lbl['lbl.sc.uom']}" />
 				</p:row>
 			

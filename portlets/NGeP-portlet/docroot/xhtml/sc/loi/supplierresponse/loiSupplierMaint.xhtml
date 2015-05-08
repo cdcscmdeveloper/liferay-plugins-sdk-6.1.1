@@ -38,6 +38,8 @@
 
 					</p:tabMenu></td>
 				<td width="80%">
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.loiloa.supplier.response.instruction']}" escape="false" />
+					
 						<c:if
 							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 0}">
 							<ui:include src="loiDetailsSupplierMenu.xhtml" />

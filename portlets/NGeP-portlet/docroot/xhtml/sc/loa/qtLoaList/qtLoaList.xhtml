@@ -59,18 +59,22 @@
 					<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}">
 					#{loiloa.type}
 				</p:column>
-					<p:column headerText="#{lbl['lbl.sc.item']}">
-						<p:commandLink
-							actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
-							oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
-							process="@this">
-							<p:graphicImage library="ep/images/design" name="document.png"
-								title="Item Detail"
-								value="/resources/ep/images/design/document.png"
-								style="margin-right:2px;" />
-						</p:commandLink>
-					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.status']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.item']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
+					</f:facet>
+					<p:commandLink
+						actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
+						oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
+						process="@this">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							title="Item Detail"
+							value="/resources/ep/images/design/document.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.status']}">
 					#{qtLOABackingBean.getStatusDescById(loiloa.status.statusId)}
 				</p:column>
 					<p:column headerText="#{lbl['lbl.sc.action']}">
