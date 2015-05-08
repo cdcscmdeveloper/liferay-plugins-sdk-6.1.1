@@ -77,7 +77,7 @@
 					</p:dataTable>
 			</p:panel>
 
-			<p:panel>
+			<p:panel style="border: none;">
 				<table style="width: 100%">
 					<tr><td><p:commandButton value="#{lbl['lbl.sm.button.resend.activation']}" oncomplete="confirmDialog.show();" 
 								style="float:right;" disabled="#{empty bb.expiredActivationPersonnels}"/></td></tr>
@@ -87,13 +87,13 @@
 
 		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
 			widgetVar="confirmDialog" modal="true" width="550px" height="100px" >
-			<p:panel id="dPanel">
+			<p:outputPanel id="dPanel">
 				<table style="width:100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.req.reactivation.confirmation.msg']}" /></td>
 					</tr>
 				</table>
-			</p:panel>
+			</p:outputPanel>
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();"
 					action="#{bb.resendActivation}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
