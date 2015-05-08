@@ -32,7 +32,7 @@
 				</ui:fragment>
 			</p:column>
 
-			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.download']}">				
+			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">				
 				<p:commandButton id="download" icon="ui-icon-download" style="background-color:transparent !important; border:0px none;"
 					action="#{lOADetailBackingBean.downloadReport(scLoaReport)}"
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoaReport.scLoaReportAttachment.fileName : true}" />
