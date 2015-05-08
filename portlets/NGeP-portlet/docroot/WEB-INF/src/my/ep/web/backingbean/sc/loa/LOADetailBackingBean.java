@@ -17,6 +17,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -968,6 +969,10 @@ public class LOADetailBackingBean extends
 		 */
 
 		// getManagedBean().setBondAmount(amt);
+		
+		// clauses title
+		getClausesTitle(null);
+		
 	}
 
 	/**
@@ -993,6 +998,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			getClausesTitle(scQtDeduction);
 			ScQtDeductionClause deductionClause = null;
 			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
 			if (!ParameterConst.DEDUCTION_TYPE_OTHERS
@@ -1025,6 +1031,30 @@ public class LOADetailBackingBean extends
 		} finally {
 			parameterSO = null;
 		}
+	}
+	
+
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @param deduction the deduction
+	 * @return the clauses title
+	 */
+	private void getClausesTitle(ScQtDeduction deduction){
+		StringBuilder title  = new StringBuilder();
+		title.append("Title");
+		title.append(":");
+		title.append(" ");
+		if(deduction != null && deduction.getDeductionType() != null){
+			title.append(getParameterDesc(deduction.getDeductionType()));
+			title.append(">"); 
+			title.append(" ");
+		}
+
+		Locale locale = new FacesScopes().getUserLocale();
+		title.append(ResourceBundleUtils.getMessage("lbl.sc.deduction.clauses",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		getManagedBean().setClausesTitle(title.toString());
 	}
 
 	/**
