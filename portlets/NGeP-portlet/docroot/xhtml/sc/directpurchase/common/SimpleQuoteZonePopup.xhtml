@@ -4,27 +4,29 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:dialog header="#{lbl['lbl.sc.add.location']}" widgetVar="ZoneLocation" modal="true" 
-		width="470" height="410">
+	<p:dialog header="#{lbl['lbl.sc.add.location']}"
+		widgetVar="ZoneLocation" modal="true" closable="false" width="460"
+		height="450">
 		<p:panel id="zonePopupPanel">
-		<p:messages id="zoneMsgId" showDetail="true" autoUpdate="#{!simpleQuoteBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false"  severity="error, info"/>
-			<table styleClass="noBorders tr,noBorders td" >
+			<p:messages id="zoneMsgId" showDetail="true"
+				autoUpdate="#{!simpleQuoteBackingBean.managedBean.autoUpdate}"
+				closable="true" showSummary="false" severity="error, info" />
+			<table styleClass="noBorders tr,noBorders td">
 				<TR>
-					<TD width="30%" valign="top">
-					 <p:outputLabel	value="*" styleClass="mandatory" />
-					 <p:outputLabel value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel>
-				    
-					</TD>
-					<TD width="70%"><p:inputText id="zoneNameId" size="44" label="#{lbl['lbl.sc.zone.name']}"
+					<TD width="30%" valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.zone.name']}" /> <p:outputLabel value="*"
+							styleClass="mandatory" /></TD>
+					<TD width="70%"><p:inputText id="zoneNameId" size="44"
+							label="#{lbl['lbl.sc.zone.name']}"
 							value="#{simpleQuoteBackingBean.managedBean.zoneName}"
 							required="#{simpleQuoteBackingBean.managedBean.required}">
-						</p:inputText> <p:message id="zoneNameMsg" for="zoneNameId" display="icon" /> </TD>
+						</p:inputText> <p:message id="zoneNameMsg" for="zoneNameId" display="icon" /></TD>
 				</TR>
 				<TR>
-					<TD valign="top"><p:outputLabel value="#{lbl['lbl.sc.location.name']}" ></p:outputLabel>
-					</TD>
+					<TD valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.location.name']}"></p:outputLabel></TD>
 					<TD>
-						<div style="height: 300px; overflow-y: scroll;">
+						<div style="height: 320px; overflow-y: scroll; width: 323px;">
 							<p:tree id="treeZoneLocationPopup"
 								value="#{simpleQuoteBackingBean.managedBean.rootZoneTree}"
 								var="location"
@@ -39,7 +41,6 @@
 								<p:treeNode type="district">
 									<h:outputText value="#{location.pmDistrict.districtName}" />
 								</p:treeNode>
-
 							</p:tree>
 						</div>
 					</TD>
@@ -48,13 +49,14 @@
 		</p:panel>
 		<p:spacer height="3px" />
 		<div class="ppRightBtn" style="width: 100%">
-			<p:commandButton id="proceedBtn"
-				value="#{lbl['lbl.btn.proceed']}" process="@all"
-				update="@this, zoneLocationDataTable" partialSubmit="true"
+			<p:commandButton id="proceedBtn" value="#{lbl['lbl.btn.proceed']}"
+				process="@all" update="@this, zoneLocationDataTable"
+				partialSubmit="true"
 				actionListener="#{simpleQuoteBackingBean.updateZone}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" partialSubmit="true"
-				process="@this" action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+				partialSubmit="true" process="@this"
+				action="#{simpleQuoteBackingBean.cancelZonePopUp}" />
 
 		</div>
 		<p:defaultCommand target="proceedBtn"></p:defaultCommand>
