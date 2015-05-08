@@ -861,10 +861,11 @@
 			autoUpdate="true" closable="true" />
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 30%"><p:outputLabel value="#{lbl['lbl.sc.spec.contrat.year']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:inputText style="margin-bottom : 5px;" maxlength="4"
-						required="#{backingBean.managedBean.valueReqd}"
+				<td style="width: 30%"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.contrat.year']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="2"><p:inputText style="margin-bottom : 5px;"
+						maxlength="4" required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sc.spec.contrat.year']}" id="equiStfAcaYr"
 						value="#{backingBean.managedBean.selectedStaffAcademic.year}"
 						size="35">
@@ -887,10 +888,11 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.qualification.level']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td style="width:40%"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<td style="width: 40%"><p:selectOneMenu
+						style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.qualification.level']}" id="equiStfAcaQl"
-						value="#{backingBean.managedBean.selectedStaffAcademic.qualificationLevelId}">
+						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduLevel.eduLevelId}">
 						<f:selectItems value="#{backingBean.getAcademicQualifications()}" />
 					</p:selectOneMenu> <p:message id="equiStfAcaQlMsg" for="equiStfAcaQl"
 						showSummary="true" showDetail="false" display="icon" /></td>
@@ -904,7 +906,8 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.education.field']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td colspan="2"><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+				<td colspan="2"><p:selectOneMenu
+						style="width: 207px;margin-bottom: 5px;"
 						required="#{backingBean.managedBean.valueReqd}"
 						label="#{lbl['lbl.sm.education.field']}" id="equiStfAcaEduFld"
 						value="#{backingBean.managedBean.selectedStaffAcademic.pmEduField.eduFieldId}">
