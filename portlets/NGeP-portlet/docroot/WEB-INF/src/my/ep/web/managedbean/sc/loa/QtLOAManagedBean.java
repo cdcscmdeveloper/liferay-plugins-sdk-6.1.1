@@ -72,6 +72,9 @@ public class QtLOAManagedBean extends BaseManagedBean {
 	/** The supp loi loa list. */
 	private List<SuppLoiLoaBean> suppLoiLoaList;
 	
+	/** The loi loa list title. */
+	private String loiLoaListTitle;
+	
 	/** The map supp scloiloa list */
 	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
 
@@ -350,4 +353,23 @@ public class QtLOAManagedBean extends BaseManagedBean {
 		this.suppLoiLoaMap = suppLoiLoaMap;
 	}
 
+	/**
+	 * Gets the loi loa list title.
+	 *
+	 * @return the loi loa list title
+	 */
+	public String getLoiLoaListTitle() {
+		return loiLoaListTitle;
+	}
+
+	/**
+	 * Sets the loi loa list title.
+	 *
+	 * @param loiLoaListTitle the new loi loa list title
+	 */
+	public void setLoiLoaListTitle(String loiLoaListTitle) {
+		this.loiLoaListTitle = loiLoaListTitle;
+	}
+
+	
 }

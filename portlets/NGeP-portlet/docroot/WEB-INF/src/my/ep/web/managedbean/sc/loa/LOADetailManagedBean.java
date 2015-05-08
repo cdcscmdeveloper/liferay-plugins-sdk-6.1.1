@@ -237,8 +237,11 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The performance bond required flag */
 	private boolean performanceBondMandatory = false;
 	
-
-    /** The spki backing bean. */
+  
+	/** The clauses title. */
+	private String clausesTitle;
+	
+	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
@@ -1371,6 +1374,21 @@ public class LOADetailManagedBean extends BaseManagedBean {
 		this.performanceBondMandatory = performanceBondMandatory;
 	}
 	
-	
-	
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @return the clauses title
+	 */
+	public String getClausesTitle() {
+		return clausesTitle;
+	}
+
+	/**
+	 * Sets the clauses title.
+	 *
+	 * @param clausesTitle the new clauses title
+	 */
+	public void setClausesTitle(String clausesTitle) {
+		this.clausesTitle = clausesTitle;
+	}
 }
