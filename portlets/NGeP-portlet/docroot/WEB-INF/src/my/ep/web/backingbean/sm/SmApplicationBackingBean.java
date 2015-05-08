@@ -79,6 +79,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -545,18 +546,23 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setRacesList(
 					SmApplicationUtil.retrievePmRaceList());
 
-			getManagedBean().setCertificate(
-					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
-							"5"));
-			getManagedBean().setDiploma(
-					SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
-							"4"));
+			// getManagedBean().setCertificate(
+			// SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
+			// "5"));
+			// getManagedBean().setDiploma(
+			// SmApplicationUtil.retrievePmParameterByTypeAndCode("QL",
+			// "4"));
+			getManagedBean().setDiplomaEduLevel(
+					SmApplicationUtil.retrievePmEduLevelByCode("80"));
+			getManagedBean().setCertEduLevel(
+					SmApplicationUtil.retrievePmEduLevelByCode("60"));
 			getManagedBean().setGlpCert(
 					SmApplicationUtil.retrievePmParameterByTypeAndCode(
 							SupplierManagementConst.SM_SUPPLIER_PARAM_TYPE_CRT,
 							SupplierManagementConst.SM_SUPPLIER_CERT_TYPE_GLP));
 			getManagedBean().setAcadQualifications(
-					SmApplicationUtil.getAcademicQualifications());
+					SmApplicationUtil
+							.getAcademicQualifications(getManagedBean()));
 		}
 
 		getManagedBean()
@@ -4975,6 +4981,7 @@ public class SmApplicationBackingBean extends
 
 		SmStaffAcademic aca = new SmStaffAcademic();
 		aca.setPmEduField(new PmEduField());
+		aca.setPmEduLevel(new PmEduLevel());
 
 		aca.setSmPersonnel(getManagedBean().getSelectedShareHolder());
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -4990,6 +4997,9 @@ public class SmApplicationBackingBean extends
 	 *            -SmStaffAcademic
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
+		if (aca.getPmEduLevel() == null) {
+			aca.setPmEduLevel(new PmEduLevel());
+		}
 		getManagedBean().setSelectedStaffAcademic(aca);
 		RequestContext.getCurrentInstance().execute("equiAcadInfo.show()");
 		if (getManagedBean().isShowPersonnelViewOnly()) {
@@ -5042,20 +5052,25 @@ public class SmApplicationBackingBean extends
 				break;
 			}
 		}
+		for (PmEduLevel lvl : getManagedBean().getEduLevelList()) {
+			if (getManagedBean().getSelectedStaffAcademic().getPmEduLevel()
+					.getEduLevelId().equals(lvl.getEduLevelId())) {
+				getManagedBean().getSelectedStaffAcademic().setPmEduLevel(lvl);
+				break;
+			}
+		}
 
-		if (getManagedBean().getSelectedStaffAcademic()
-				.getQualificationLevelId() != null) {
-			PmParameter param = SmApplicationUtil
-					.retrievePmParameterById(getManagedBean()
-							.getSelectedStaffAcademic()
-							.getQualificationLevelId().longValue());
+		if (getManagedBean().getSelectedStaffAcademic().getPmEduLevel() != null) {
+
 			String qual = "";
-			if (param != null && param.getParameterCode() != null) {
-				qual = param.getParameterCode();
+			if (getManagedBean().getSelectedStaffAcademic().getPmEduLevel()
+					.getLevelCode() != null) {
+				qual = getManagedBean().getSelectedStaffAcademic()
+						.getPmEduLevel().getLevelCode();
 				if (getManagedBean().getSelectedShareHolder().isProf()) {
 					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
-							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)
-							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_DIPLOMA)) {
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_DIPLOMA)) {
 						throw new EpException(MessageConst.ERROR_722574,
 								new String[] { "Professional Staff",
 										"BACHELOR'S DEGREE" });
@@ -5063,7 +5078,7 @@ public class SmApplicationBackingBean extends
 				} else if (getManagedBean().getSelectedShareHolder()
 						.isSemiProf()) {
 					if (qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_NOTDEFINED)
-							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_CERTIFIED)) {
+							|| qual.equalsIgnoreCase(SupplierManagementConst.SUPPLIER_EDU_LEVEL_CERT)) {
 						throw new EpException(MessageConst.ERROR_722574,
 								new String[] { "Semi-Professional Staff",
 										"DIPLOMA" });
@@ -9007,8 +9022,8 @@ public class SmApplicationBackingBean extends
 
 		if (getManagedBean().getSelectedShareHolder() != null
 				&& StringUtils.isNotBlank(suppType) && suppType.equals("J")) {
-			if (getManagedBean().getCertificate() != null
-					&& getManagedBean().getDiploma() != null
+			if (getManagedBean().getCertEduLevel() != null
+					&& getManagedBean().getDiplomaEduLevel() != null
 					&& (getManagedBean().getSelectedShareHolder().isProf()
 							|| getManagedBean().getSelectedShareHolder()
 									.isSemiProf() || getManagedBean()
@@ -9018,8 +9033,8 @@ public class SmApplicationBackingBean extends
 						.getAcadQualifications()) {
 					if (tempItem.getValue() != null) {
 						if (getManagedBean()
-								.getCertificate()
-								.getParameterId()
+								.getCertEduLevel()
+								.getEduLevelId()
 								.compareTo(
 										Long.parseLong(tempItem.getValue()
 												.toString())) == 0) {
@@ -9028,8 +9043,8 @@ public class SmApplicationBackingBean extends
 								finalList.add(tempItem);
 							}
 						} else if (getManagedBean()
-								.getDiploma()
-								.getParameterId()
+								.getDiplomaEduLevel()
+								.getEduLevelId()
 								.compareTo(
 										Long.parseLong(tempItem.getValue()
 												.toString())) == 0) {

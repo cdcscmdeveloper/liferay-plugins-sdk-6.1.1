@@ -399,6 +399,13 @@ public class SupplierManagementConst {
 	public static final String SUPPLIER_EDU_DIPLOMA = "4";
 	public static final String SUPPLIER_EDU_CERTIFIED = "5";
 	public static final String SUPPLIER_EDU_NOTDEFINED = "6";
+	
+	//Pm Edu Level Codes 
+	public static final String SUPPLIER_EDU_LEVEL_CERT = "60";
+	public static final String SUPPLIER_EDU_LEVEL_DIPLOMA = "80";
+	public static final long SUPPLIER_EDU_LEVEL_MIN_FOR_STF = 30;
+	public static final long SUPPLIER_EDU_LEVEL_MIN_FOR_PRFSNL = 91;
+	public static final long SUPPLIER_EDU_LEVEL_MIN_FOR_SEMIPRF = 80;
 
 	// PO BPM Task names
 	public static final String BPM_TASK_REVIEW_APPL_ESCALATED = "Review Application (Escalated)";

@@ -23,6 +23,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmRace;
@@ -189,6 +190,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplSupportDoc supportDoc;
 	// Address fields for all the forms
 	private List<PmEduField> eduFieldList;
+	private List<PmEduLevel> eduLevelList;
 	private List<PmCountry> countryLs;
 	private List<PmState> basicCompanyStates;
 	private List<PmDistrict> basicCompanyDistricts;
@@ -344,6 +346,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private PmParameter certificate;
 	private PmParameter diploma;
 	private PmParameter glpCert;
+	private PmEduLevel certEduLevel;
+	private PmEduLevel diplomaEduLevel;
 	private List<SelectItem> acadQualifications;
 	private Long prevBasicStateId;
 	private SmApplStatusInfoVO applStatusInfo;
@@ -540,6 +544,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedRelatedCompany = new SmRelatedCompany();
 		selectedStaffAcademic = new SmStaffAcademic();
 		selectedStaffAcademic.setPmEduField(new PmEduField());
+		selectedStaffAcademic.setPmEduLevel(new PmEduLevel());
 		selectedStfPrfBdy = new SmAssociationBody();
 		selectedStfPrfBdy.setPmCertBody(new PmCertBody());
 		perIdTypeParam = new PmParameter();
@@ -2719,6 +2724,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRejectionOtherReasonId(Long rejectionOtherReasonId) {
 		this.rejectionOtherReasonId = rejectionOtherReasonId;
+	}
+
+	public PmEduLevel getCertEduLevel() {
+		return certEduLevel;
+	}
+
+	public void setCertEduLevel(PmEduLevel certEduLevel) {
+		this.certEduLevel = certEduLevel;
+	}
+
+	public PmEduLevel getDiplomaEduLevel() {
+		return diplomaEduLevel;
+	}
+
+	public void setDiplomaEduLevel(PmEduLevel diplomaEduLevel) {
+		this.diplomaEduLevel = diplomaEduLevel;
+	}
+
+	public List<PmEduLevel> getEduLevelList() {
+		return eduLevelList;
+	}
+
+	public void setEduLevelList(List<PmEduLevel> eduLevelList) {
+		this.eduLevelList = eduLevelList;
 	}
 
 }
