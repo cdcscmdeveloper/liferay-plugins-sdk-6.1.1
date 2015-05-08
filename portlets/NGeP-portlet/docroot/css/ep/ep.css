@@ -3464,7 +3464,14 @@ table.rptTbl {
 }
 
 .lastUpdated {
-	color: red;
+	
+	font-family: Arial;
+	font-size: 12px;
+	font-weight: bold;
+	font-style: normal;
+	text-decoration: none;
+	color: #F00;
+	
 }
 
 
