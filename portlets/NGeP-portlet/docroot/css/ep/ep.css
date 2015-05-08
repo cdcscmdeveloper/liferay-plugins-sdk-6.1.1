@@ -3508,3 +3508,6 @@ table.rptTbl {
 .columnWidth40 {
 	width: 40%;
 }
+.noBorder{
+	border:none;
+}
