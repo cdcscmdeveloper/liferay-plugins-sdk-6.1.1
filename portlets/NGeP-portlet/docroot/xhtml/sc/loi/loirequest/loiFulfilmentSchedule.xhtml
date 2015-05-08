@@ -12,12 +12,12 @@
 		value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.docType == ParameterConst.doctypePurchaseRequest}" />
 	<h:panelGroup id="frequency">
 		<h:panelGroup id="schedule">
-			<p:panel header="#{lbl['lbl.sc.loiloa.freq.schedule']} "
+			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
 				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOIDetailBackingBean.managedBean.scQt.scheduleType == 'F')}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-					<h:outputLabel value="#{lbl['lbl.sc.loiloa.total.frequency']}"></h:outputLabel>
+					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
 					<p:inputText disabled="#{!isEditableStatus}" styleClass="ppNumericAlign"
 						value="#{lOIDetailBackingBean.managedBean.totalFrequency}">
 						<p:ajax event="blur" update="frequencySchedule"
@@ -30,7 +30,7 @@
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scQtSchedules}">
 					<ac:paginator for="frequencySchedule" />
 
-					<p:column headerText="#{lbl['lbl.sc.loiloa.schedule.no']}" style="width:25%">
+					<p:column headerText="#{lbl['lbl.sc.spec.schedule.no']}" style="width:25%">
 						<h:outputText value="#{frequency.scheduleNo}"  id="scheduleNum">
 						</h:outputText>
 					</p:column>
@@ -91,11 +91,12 @@
 					<p:column style="width:15%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
-							<h:outputText value="#{lbl['lbl.sc.loiloa.loa.ful.type']}" />
+							<h:outputText value="#{lbl['lbl.sc.schedule.type']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
 
 						<p:selectOneMenu style="width:120px;" required="true" disabled="#{!isEditableStatus}"
-							id="scheduledTypeId" label="#{lbl['lbl.sc.loiloa.loa.ful.type']}"
+							id="scheduledTypeId" label="#{lbl['lbl.sc.schedule.type']}"
 							value="#{frequency.scheduleType.parameterId}">
 
 							<f:selectItems
@@ -111,18 +112,23 @@
 	</h:panelGroup>
 
 	<h:panelGroup id="progressive">
-			<p:panel header="#{lbl['lbl.sc.loiloa.progressive.payment']}"
+			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true"
 				rendered="#{isDocTypeQuotation and lOIDetailBackingBean.managedBean.scQt.scheduleType == 'P'}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-					<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
-					<p:inputText
-						value="#{lOIDetailBackingBean.managedBean.totalProgressivePayment}">
-						<p:ajax event="blur" update="progressivePayment"
-							partialSubmit="true" process="@this"
-							listener="#{lOIDetailBackingBean.addProgressiveDetails}" />
-					</p:inputText>
+					<h:column>
+						<h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
+					</h:column>
+					<h:column>
+						<p:inputText
+							value="#{lOIDetailBackingBean.managedBean.totalProgressivePayment}">
+							<p:ajax event="blur" update="progressivePayment"
+								partialSubmit="true" process="@this"
+								listener="#{lOIDetailBackingBean.addProgressiveDetails}" />
+						</p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" />
+					</h:column>
 				</h:panelGrid>
 				<p:dataTable id="progressivePayment" var="payment"
 					rowIndexVar="index"
@@ -190,6 +196,7 @@
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							id="progressivePercentage" style="width:100px;"

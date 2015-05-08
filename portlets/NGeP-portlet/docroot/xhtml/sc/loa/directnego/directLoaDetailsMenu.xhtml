@@ -151,19 +151,19 @@
 			</tr>
 			<tr>
 			<td width="18%">
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.title']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.title']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 			<td colspan="3" width="82%">
 				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="90"
-					label="#{lbl['lbl.sc.loiloa.loa.title']}"
+					label="#{lbl['lbl.sc.title']}"
 					maxlength="100" />
 				<p:message id="titleMsg" for="title" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.file.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 			<td colspan="3">
@@ -209,7 +209,7 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.est.price']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
 			</td>
 			<td colspan="3">
 				<p:inputText styleClass="ppNumericAlign"
@@ -411,27 +411,27 @@
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.ic.no']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 			<td colspan="3">
 				<p:inputText id="identificationNo" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
-					label="#{lbl['lbl.sc.loiloa.witness.ic.no']}"
+					label="#{lbl['lbl.sc.identification.no']}"
 					maxlength="15" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.designation']}" />
+				<p:outputLabel value="#{lbl['lbl.sc.designation']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 			<td colspan="3">
 				<p:inputText id="designation" size="50"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
 					maxlength="30"
-					label="#{lbl['lbl.sc.loiloa.witness.designation']}" />
+					label="#{lbl['lbl.sc.designation']}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
 			</td>
 		</tr>

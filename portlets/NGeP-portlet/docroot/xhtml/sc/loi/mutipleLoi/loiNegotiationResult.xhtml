@@ -56,7 +56,7 @@
 						<p:column rowspan="3" style="white-space:normal;text-align:right;"
 							headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 
-						<p:column rowspan="3" headerText="#{lbl['lbl.sc.loiloa.qty']}" />
+						<p:column rowspan="3" headerText="#{lbl['lbl.sc.quantity']}" />
 						<p:column rowspan="3" headerText="#{lbl['lbl.sc.uom']}" />
 
 						<p:column rowspan="3"
@@ -217,7 +217,7 @@
 		<p:panel toggleable="true">
 			<f:facet name="header">
 				<h:outputText
-					value="#{lbl['lbl.sc.loiloa.result.of.negotiation']}" />
+					value="#{lbl['lbl.sc.negotiation.result']}" />
 			</f:facet>
 
 			<p:dataTable id="negoTermList" var="scLoiTerm"
@@ -238,7 +238,11 @@
 						rendered="#{!scLoiTerm.brandNew}" />
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.results']}">
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" rendered="#{isPendingNegotiationStatus}" />
+						<h:outputText value="#{lbl['lbl.sc.loiloa.nego.results']}" />
+					</f:facet>
 					<p:inputTextarea value="#{scLoiTerm.negoResult}" rows="2"
 						maxlength="500" rendered="#{isPendingNegotiationStatus}"
 						style=" margin-bottom:5px; width:92%">
