@@ -5,6 +5,7 @@ package my.ep.web.backingbean.sc.loa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -22,11 +23,13 @@ import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.loiloa.LOIDetailBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.QtLOAManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -91,6 +94,8 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				loaDetailBackingBean.getManagedBean().setSuppLoiLoaMap(getManagedBean().getSuppLoiLoaMap());
 			}
 
+			generateSuppLoiLoaList();
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, QTConstants.QT_LOA_LIST_PAGE);
@@ -125,6 +130,8 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 				if (loiLoaList != null && loiLoaList.size() > 0) {
 					getManagedBean().setScLoiLoaList(loiLoaList);
 					getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
+					
+					getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());
 				}	
 			}
 
@@ -167,16 +174,38 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 						suppLoaLoi.setScLoa(resDTO.getScLoa());
 						suppLoiLoaList.add(suppLoaLoi);
 					}
-
 				}
 
 				getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
+				getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());
 			}
 		} catch (Exception e) {
 			throw new EpException(e.toString());
 		} finally {
 			qtAwardSO = null;
 		}
+	}
+	
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @param deduction the deduction
+	 * @return the clauses title
+	 */
+	private void getLoiLoaListTitle(SmSupplier smSupplier){
+		StringBuilder title  = new StringBuilder();
+		title.append("Title");
+		title.append(":");
+		title.append(" ");
+		if(smSupplier != null){
+			title.append(smSupplier.getCompanyName());
+			title.append(">"); 
+			title.append(" ");
+		}
+		Locale locale = new FacesScopes().getUserLocale();
+		title.append(ResourceBundleUtils.getMessage("lbl.sc.loiloa.loiloalist",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		getManagedBean().setLoiLoaListTitle(title.toString());
 	}
 	
 	/**

@@ -15,7 +15,7 @@
 		<ui:include src="loiListHeader.xhtml" />
 
 		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
-			toggleable="true">
+			id="recSupplierListId" toggleable="true">
 			<table>
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
@@ -25,20 +25,19 @@
 					lOIDetailBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode)}"
 							size="30" /></td>
 				</tr>
-
 				<tr>
 					<td style="width: 200px;"><p:outputLabel
 							value="#{lbl['lbl.sc.loiloa.recommended.by']}" /></td>
 					<td><p:inputText disabled="true"
 							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,
 					lOIDetailBackingBean.managedBean.docType)}"
-					 		size="30" /></td>
+							size="30" /></td>
 				</tr>
 			</table>
 
 			<p:spacer height="20px"></p:spacer>
 
-			<p:dataTable id="loiLoaDtl" var="loiLoa" 
+			<p:dataTable id="loiLoaDtl" var="loiLoa"
 				value="#{lOIDetailBackingBean.managedBean.recSupplierList}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedLoiLoa}"
 				selectionMode="single" rowKey="#{loiLoa}" rows="10"
@@ -46,93 +45,95 @@
 
 				<p:ajax event="rowSelect"
 					listener="#{lOIDetailBackingBean.onRowRecSupplierAction}"
-					update=":form:loiLoaId" />
+					update=":form:recSupplierListId" />
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 
-	            <p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:30%">
-					<p:commandButton  value="#{lbl['lbl.sc.loiloa.create.loi']}" rendered="#{!loiLoa.loiCreated}" 
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%">
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+						rendered="#{!loiLoa.loiCreated}"
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 				</p:column>
 			</p:dataTable>
-		</p:panel>
 
-		<p:panel header="#{lbl['lbl.sc.loiloa.loiloalist']}"  toggleable="true">
+            <br />
+			<h:outputText value="#{lbl['lbl.sc.loiloa.recom.supp.list']} >" />
+			<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']} " />
+			<h:outputText style="margin-left: 140px;"
+				value="#{lOIDetailBackingBean.managedBean.loiLoaListTitle}" />
+			<h:panelGroup>
+				<p:dataTable id="loiLoaId" var="loiloaBean"
+					value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
+					rowIndexVar="rowIndex">
 
-			<p:dataTable id="loiLoaId" var="loiloaBean" 
-				value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
-				rowIndexVar="rowIndex">
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
+						<h:outputText value="#{loiloaBean.scLoi.loiNo}"
+							rendered="#{loiloaBean.scLoi ne null}" />
+						<h:outputText value="#{loiloaBean.scLoa.loaNo}"
+							rendered="#{loiloaBean.scLoa ne null}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
-					<h:outputText value="#{loiloaBean.scLoi.loiNo}"
-						rendered="#{loiloaBean.scLoi ne null}" />
-					<h:outputText value="#{loiloaBean.scLoa.loaNo}"
-						rendered="#{loiloaBean.scLoa ne null}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}"
+						style="width:20%">
+						<h:outputText
+							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}" style="width:20%">
-					<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.sc.item']}" style="width:15%">
+						<p:commandButton value="view" partialSubmit="true" process="@this"
+							action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
+							update=":form:ItemDetailsPopup"
+							oncomplete="ItemDetailsPopup.show();">
+						</p:commandButton>
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:15%">
-					<p:commandButton  value="view"
-						partialSubmit="true" process="@this"
-						action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
-						update=":form:ItemDetailsPopup"
-						oncomplete="ItemDetailsPopup.show();">
-					</p:commandButton>
-				</p:column>
+					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:15%">
+						<h:outputText value="#{loiloaBean.loiLoaStatus}" />
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:15%">
-					<h:outputText value="#{loiloaBean.loiLoaStatus}" />
-				</p:column>
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%">
 
-				<p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:15%">
+						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">
 
-					<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LI'}">
+							<p:commandButton title="edit" icon="ui-icon-edit"
+								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
+								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, true)}" />
 
-						<p:commandButton title="edit" icon="ui-icon-edit"
-							rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
-							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-							action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, true)}" />
+							<p:commandLink
+								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
+								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
+								process="@this">
 
-						<p:commandLink
-							rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
-							action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
-							process="@this">
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/css/images/design/document.png" />
+								<p:spacer width="5"></p:spacer>
+							</p:commandLink>
 
-							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/css/images/design/document.png" />
-							<p:spacer width="5"></p:spacer>
-						</p:commandLink>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LA'}">
+							<p:commandButton title="edit" icon="ui-icon-edit"
+								rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"
+								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+								action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}" />
 
-					</h:panelGroup>
+							<p:commandLink
+								rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
+								action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}"
+								process="@this">
 
-					<h:panelGroup rendered="#{loiloaBean.loiLoaType eq 'LA'}">
-						<p:commandButton title="edit" icon="ui-icon-edit"
-							rendered="#{loiloaBean.pmStatus.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"
-							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-							action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}" />
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/css/images/design/document.png" />
+								<p:spacer width="5"></p:spacer>
+							</p:commandLink>
+						</h:panelGroup>
 
-						<p:commandLink
-							rendered="#{loiloaBean.pmStatus.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
-							action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}"
-							process="@this">
+					</p:column>
 
-							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/css/images/design/document.png" />
-							<p:spacer width="5"></p:spacer>
-						</p:commandLink>
-					</h:panelGroup>
-
-				</p:column>
-
-			</p:dataTable>
-
+				</p:dataTable>
+			</h:panelGroup>
 		</p:panel>
 		<ui:include src="loiItemDetailPopup.xhtml" />
 
