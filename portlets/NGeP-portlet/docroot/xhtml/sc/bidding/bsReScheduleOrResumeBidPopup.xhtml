@@ -15,8 +15,7 @@
 				<TD style="width : 25%"><h:outputLabel value="#{lbl['lbl.sc.action']}"  /></TD>
 				<TD colspan="3" style="width : 75%" ><p:selectOneRadio id="bidAction" 
 						value="#{biddingBB.managedBean.bidAction.actionType}">
-						<f:selectItem itemLabel="Resume Bid" itemValue="R"></f:selectItem>
-						<f:selectItem itemLabel="Re-Bidding" itemValue="B"></f:selectItem>
+						<f:selectItems value="#{biddingBB.getRadioButtonCodeValues(ParameterTypeConst.bidActionTypes)}" />
 
 						<p:ajax event="change" process="@this,bidAction" partialSubmit="true"
 							listener="#{biddingBB.bidActionTypeChangeListener}"

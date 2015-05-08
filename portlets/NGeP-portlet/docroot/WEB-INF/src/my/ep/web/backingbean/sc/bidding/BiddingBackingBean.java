@@ -282,7 +282,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewEndDate(null);
 		getManagedBean().setNewBidDuration("");
 
-		if (type.equalsIgnoreCase("B")) {
+		if (type.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
 			Calendar c = Calendar.getInstance();
 			c.setTime(DateUtils.getCurrentDateWithoutTime());
 			c.add(Calendar.DATE, 1);
@@ -302,7 +302,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewStartDate(startDate);
 
 		if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase("R")) {
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)) {
 
 			final long ONE_MINUTE_IN_MILLIS = 60000;
 
@@ -319,7 +319,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			getManagedBean().setNewBidDuration(getManagedBean().getDuration());
 
 		} else if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase("B")) {
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
 
 			getManagedBean().getBidAction().setNewEndDate(null);
 			getManagedBean().setMindate(startDate);
@@ -342,7 +342,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		getManagedBean().getBidAction().setNewEndDate(endDate);
 
 		if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase("B")) {
+				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_REBIDDING)) {
 
 			getManagedBean().setNewBidDuration(
 					durationCalculator(getManagedBean().getBidAction()
