@@ -61,19 +61,19 @@
 
 						<p:column rowspan="3"
 							headerText="#{lbl['lbl.sc.unit.price']}"
-							rendered="#{!isPendingNegotiationStatus}" />
+							rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}" />
 						<p:column rowspan="3"
 							headerText="#{lbl['lbl.sc.sub.total']}"
-							rendered="#{!isPendingNegotiationStatus}" />
+							rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}" />
 
 						<p:column colspan="2" style="white-space:normal;text-align:left;"
 							headerText="#{lbl['lbl.sc.loiloa.original.offer.price']}"
-							rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}" />
+							rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}" />
 						<p:column colspan="2" style="white-space:normal;text-align:left;"
-							rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}"
+							rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}"
 							headerText="#{lbl['lbl.sc.loiloa.after.nego.offer.price']}" />
 					</p:row>
-					<p:row rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}">
+					<p:row rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
 						<p:column headerText="#{lbl['lbl.sc.loiloa.per.unit']}"
 							style="white-space:normal;text-align:right;" />
 						<p:column headerText="#{lbl['lbl.sc.loiloa.total.price']}"
@@ -127,7 +127,7 @@
             </p:column>
 
 				<p:column style="width:10%;text-align:right;"
-					rendered="#{!isPendingNegotiationStatus}">
+					rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
 					<h:outputText value="#{loiloaItem.unitPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -138,7 +138,7 @@
 				</p:column>
 
 				<p:column style="width:7%;text-align:right;"
-					rendered="#{!isPendingNegotiationStatus}">
+					rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
 					<h:outputText value="#{loiloaItem.subTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -155,7 +155,7 @@
 
 
 				<p:column style="width:10%; text-align:right;"
-					rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}">
+					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
 					<h:outputText
 						value="#{loiloaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" />
 
@@ -165,7 +165,7 @@
 				</p:column>
 
 				<p:column style="width:10%; text-align:right;"
-					rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}">
+					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
 					<h:outputText value="#{loiloaItem.subTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -181,8 +181,8 @@
 				</p:column>
 
 				<p:column style="width:10%; text-align:right;"
-					rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<p:inputText size="4" value="#{loiloaItem.unitPrice}"
+					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
+					<p:inputText size="4" value="#{loiloaItem.unitPrice}" disabled="{!isPendingNegotiationStatus}"
 						style="text-align:right;">
 						<p:ajax event="blur" partialSubmit="true" process="@form"
 							update="@all"
@@ -197,7 +197,7 @@
 				</p:column>
 
 				<p:column style="width:10%; text-align:right;"
-					rendered="#{isPendingNegotiationStatus and lOIDetailBackingBean.managedBean.hideColumnFlag}">
+					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
 					<h:outputText value="#{loiloaItem.afterNegoSubTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -220,7 +220,6 @@
 					value="#{lbl['lbl.sc.loiloa.result.of.negotiation']}" />
 			</f:facet>
 
-
 			<p:dataTable id="negoTermList" var="scLoiTerm"
 				value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
 				selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
@@ -238,7 +237,6 @@
 					<h:outputText value="#{scLoiTerm.termDesc}"
 						rendered="#{!scLoiTerm.brandNew}" />
 
-
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.results']}">
 					<p:inputTextarea value="#{scLoiTerm.negoResult}" rows="2"
@@ -248,7 +246,7 @@
 					</p:inputTextarea>
 
 					<h:outputText value="#{scLoiTerm.negoResult}"
-						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+						rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
