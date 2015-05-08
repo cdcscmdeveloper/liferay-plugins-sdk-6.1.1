@@ -9,7 +9,7 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<c:if test="#{!isDocTypeQuotation}">
 		<tr>
-			<td width="21%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 			</td>
 			<td colspan="3">
@@ -20,7 +20,7 @@
 		</tr>
 		</c:if>
 		<tr>
-			<td width="21%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
 			<td colspan="3">
@@ -69,7 +69,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="18%">
+			<td rowspan="3" valign="top" width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</td>
 			<td rowspan="3" width="32%">
@@ -78,7 +78,7 @@
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
 					style=" margin-bottom:5px;" disabled="true" />
 			</td>
-			<td width="18%">
+			<td width="15%">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td width="32%">
@@ -128,15 +128,15 @@
 		</table>
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.details.section']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<c:if test="#{!isDocTypeQuotation}">
 		<tr>
-			<td width="18%">
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.title']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td>
+			<td colspan="3">
 				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="60"
 					required="true"
 					label="#{lbl['lbl.sc.title']}"
@@ -147,7 +147,7 @@
 		</tr>
 		</c:if>
 		<tr>
-			<td width="18%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.qt.fileno']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -192,11 +192,11 @@
 		</tr>
 		<c:if test="#{isDocTypeQuotation}">
 		<tr>
-			<td>
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td>
+			<td width="32%">
 				<p:selectOneRadio id="insWarranty"
 					value="#{lOADetailBackingBean.managedBean.scLoa.insWarrantyReq}"
 					required="true"
@@ -206,11 +206,11 @@
 				</p:selectOneRadio>
 				<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 			</td>
-			<td>
+			<td width="15%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td>
+			<td width="32%">
 				<p:selectOneRadio id="bondReq"
 					value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 					required="true"
@@ -271,7 +271,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td width="18%">
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -323,7 +323,7 @@
 						disabled="true" size="30" />
 				</c:if>
 			</td>
-			<td width="18%">
+			<td width="15%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -433,7 +433,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="19%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -478,7 +478,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="18%">
+			<td rowspan="3" valign="top" width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -493,7 +493,7 @@
 					disabled="#{!isEditableStatus}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
-			<td width="18%">
+			<td width="15%">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
