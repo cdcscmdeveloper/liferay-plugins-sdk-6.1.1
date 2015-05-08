@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="21%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
 			<td colspan="3">
@@ -57,7 +57,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="18%">
+			<td rowspan="3" valign="top" width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
 			</td>
 			<td rowspan="3" width="32%">
@@ -66,7 +66,7 @@
 					value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.supplierAddress)}"
 					style=" margin-bottom:5px;" disabled="true" />
 			</td>
-			<td width="18%">
+			<td width="15%">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td width="32%">
@@ -119,7 +119,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.loi.details.section']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td width="18%"><p:outputLabel
+				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.title']}" /></td>
 				<td><c:if
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
