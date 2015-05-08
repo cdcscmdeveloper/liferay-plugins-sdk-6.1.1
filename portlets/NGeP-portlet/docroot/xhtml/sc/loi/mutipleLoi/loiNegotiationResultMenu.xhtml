@@ -11,7 +11,7 @@
 	<ui:define name="contentSection">
 		<ui:param name="isPendingNegotiationStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
-			<ui:param name="isEditableStatus"
+	   <ui:param name="isEditableStatus"
 			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
 			
 		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
