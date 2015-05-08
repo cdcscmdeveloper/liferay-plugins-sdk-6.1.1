@@ -3792,8 +3792,7 @@ public class QTDetailBackingBean extends
 			 */
 			if (!scQtBsv.isAllSiteVisitReq()) {
 				if (scQtBsv.getMinSiteVisitAttend() < 1) {
-					throw new EpException(
-							"Min sitevisit Attendance is greater than 0");
+					throw new EpException(MessageConst.ERROR_760273);
 				}
 			}
 			scQtBsv.setScQtBsvDtls(bsvDetils);
