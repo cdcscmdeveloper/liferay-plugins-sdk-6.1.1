@@ -109,10 +109,10 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						action="#{qTBusinessOwnerBackingBean.cloneSearchBOAction}"
-						update="clonesearchboid" process="@parent, searchpnlid" />
+						update="clonepnlid" process="@parent" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTBusinessOwnerBackingBean.resetClone}"
-						update="searchpnlid" resetValues="true"
+						update="clonepnlid" resetValues="true"
 						partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
@@ -125,7 +125,7 @@
 
 					<ac:paginator for="clonesearchboid" />
 
-					<p:ajax event="rowSelect" update=":form:businessownerlistid"
+					<p:ajax event="rowSelect" update=":form:clonepnlid"
 						listener="#{qTBusinessOwnerBackingBean.onRowCloneAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
@@ -167,15 +167,18 @@
 							value="#{qTBusinessOwnerBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
 					</p:column>
 				</p:dataTable>
-			</p:panel>
-			<p:spacer height="3" />
-			<p:panel id="cloneCommitteMembers"
-				header="#{lbl['lbl.sc.qt.business.owner']}" toggleable="true">
+				
+				<br />
+				<ui:fragment rendered="#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessSelectQt ne null}">
+					#{qTBusinessOwnerBackingBean.managedBean.cloneBusinessSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
+				</ui:fragment>
+				<br />
+				
 				<p:dataTable id="businessownerlistid"
 					value="#{qTBusinessOwnerBackingBean.managedBean.cloneCommitteMemebers}"
 					var="member" rowKey="#{member}"
 					selection="#{qTBusinessOwnerBackingBean.managedBean.selectedCommitteMemebers}"
-					styleClass="cloneResults,cloneCommitteMembers">
+					styleClass="cloneResults">
 
 					<p:column selectionMode="multiple" style="width:2%" />
 

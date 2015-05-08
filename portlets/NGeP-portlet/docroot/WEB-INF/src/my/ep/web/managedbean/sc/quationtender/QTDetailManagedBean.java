@@ -1015,6 +1015,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<TplSpecZoneDtl> templateSpecZoneDtls;
 	private ScQtBsvDtl tempScQtBsvDtl;
 	
+	private ScQt cloneCommitteeSelectQt;
+	private ScQt cloneBusinessSelectQt;
+	
+	 /** The auto update. */
+    private boolean autoUpdate = Boolean.TRUE;
+    
 	/**
 	 * Sets the panel suppliers.
 	 *
@@ -6404,6 +6410,48 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setTempScQtBsvDtl(ScQtBsvDtl tempScQtBsvDtl) {
 		this.tempScQtBsvDtl = tempScQtBsvDtl;
+	}
+
+	/**
+	 * @return the cloneCommitteeSelectQt
+	 */
+	public ScQt getCloneCommitteeSelectQt() {
+		return cloneCommitteeSelectQt;
+	}
+
+	/**
+	 * @param cloneCommitteeSelectQt the cloneCommitteeSelectQt to set
+	 */
+	public void setCloneCommitteeSelectQt(ScQt cloneCommitteeSelectQt) {
+		this.cloneCommitteeSelectQt = cloneCommitteeSelectQt;
+	}
+
+	/**
+	 * @return the cloneBusinessSelectQt
+	 */
+	public ScQt getCloneBusinessSelectQt() {
+		return cloneBusinessSelectQt;
+	}
+
+	/**
+	 * @param cloneBusinessSelectQt the cloneBusinessSelectQt to set
+	 */
+	public void setCloneBusinessSelectQt(ScQt cloneBusinessSelectQt) {
+		this.cloneBusinessSelectQt = cloneBusinessSelectQt;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 }
