@@ -472,6 +472,7 @@ public class QTCommitteBackingBean extends
 	 * Clone search qt action.
 	 */
 	public void cloneSearchQtAction() {
+		getManagedBean().setCloneCommitteeSelectQt(null);
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 	}
 
@@ -542,6 +543,7 @@ public class QTCommitteBackingBean extends
 		debugLogger("onRowCloneAction");
 		this.getManagedBean().setSearchcommitteeNode(null);
 		ScQt scQt = (ScQt) event.getObject();
+		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		// reqDTO.setCommitteeType(getManagedBean().getCommType());
@@ -750,6 +752,7 @@ public class QTCommitteBackingBean extends
 		debugLogger("cloneCommitteePopupAction");
 		// logic to check whether committe will allow for clone or not..
 		// checkIsSpecCommitteFormOrNot();
+		getManagedBean().setCloneCommitteeSelectQt(null);
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
@@ -1324,6 +1327,7 @@ public class QTCommitteBackingBean extends
 				.setToPublishDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setFromClosingDate(null);
+		getManagedBean().setCloneCommitteeSelectQt(null);
 	}
 
 	/**

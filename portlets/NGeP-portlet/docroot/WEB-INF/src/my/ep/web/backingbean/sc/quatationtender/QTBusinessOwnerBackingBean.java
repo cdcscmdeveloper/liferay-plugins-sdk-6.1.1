@@ -461,6 +461,7 @@ public class QTBusinessOwnerBackingBean extends
 	 * Clone search bo action.
 	 */
 	public void cloneSearchBOAction() {
+		getManagedBean().setCloneBusinessSelectQt(null);
 		getManagedBean().getCloneBusinessOwnerDataModel().reloadData();
 	}
 
@@ -498,6 +499,7 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		getManagedBean().getCommitteMember().setUserSelection("E");
 		getSelectionTypes();
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
@@ -581,6 +583,7 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public void onRowCloneAction(SelectEvent event) {
 		ScQt scQt = (ScQt) event.getObject();
+		getManagedBean().setCloneBusinessSelectQt(scQt);
 		// ScQtCommittee scQtCommittee = (ScQtCommittee) event.getObject();
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		reqDTO.setCommitteeType(ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER);
@@ -798,6 +801,7 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public void cloneBusinessOwnerPopupAction() {
 		debugLogger("cloneBusinessOwnerPopupAction");
+		getManagedBean().setCloneBusinessSelectQt(null);
 		getManagedBean().getCloneBusinessOwnerDataModel().reloadData();
 		getManagedBean().getCloneBusinessOwnerSearchBean().setQtTitle(null);
 		getManagedBean().getCloneBusinessOwnerSearchBean().setQtNo(null);
@@ -811,6 +815,7 @@ public class QTBusinessOwnerBackingBean extends
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setCloneBusinessTenderList(null);
 		getManagedBean().setSelectedCommitteMemebers(null);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
@@ -1033,6 +1038,7 @@ public class QTBusinessOwnerBackingBean extends
 		this.getManagedBean().getCloneBusinessOwnerSearchBean().setToPublishDate(null);
 		this.getManagedBean().getCloneBusinessOwnerSearchBean().setFromClosingDate(null);
 		this.getManagedBean().getCloneBusinessOwnerSearchBean().setToClosingDate(null);
+		getManagedBean().setCloneBusinessSelectQt(null);
 	}
 
 	/**

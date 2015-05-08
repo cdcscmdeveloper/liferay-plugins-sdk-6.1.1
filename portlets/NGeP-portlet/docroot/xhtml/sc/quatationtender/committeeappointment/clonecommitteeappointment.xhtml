@@ -111,7 +111,7 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
-						update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
+						update="pnlid" process="@parent" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
 						resetValues="true" partialSubmit="true"
@@ -127,7 +127,7 @@
 
 					<ac:paginator for="clonesearchCommitteid" />
 
-					<p:ajax event="rowSelect" update=":form:committeeTbl"
+					<p:ajax event="rowSelect" update=":form:pnlid"
 						listener="#{qTCommitteBackingBean.onRowCloneAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
@@ -170,9 +170,12 @@
 					</p:column>
 
 				</p:dataTable>
-			</p:panel>
-			<p:panel id="cloneCommitteMembersid" header="#{lbl['lbl.sc.committe.list']}"
-				toggleable="true">
+				
+				<br />
+				<ui:fragment rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
+					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
+				</ui:fragment>
+				<br />
 
 				<p:treeTable id="committeeTbl" var="committeeNode"
 					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"

@@ -19,7 +19,7 @@
 					<p:graphicImage value="/css/images/ajax-loader.gif" />
 				</p:blockUI>
 				<p:messages id="specmessages"
-						showDetail="true" autoUpdate="true" closable="true"
+						showDetail="true" autoUpdate="#{qTBusinessOwnerBackingBean.managedBean.autoUpdate}" closable="true"
 						showSummary="false" /> <ui:include
 						src="businessownerbuttons.xhtml" /> <ui:include
 						src="/xhtml/sc/quatationtender/qtntenderheader.xhtml" /></td>
