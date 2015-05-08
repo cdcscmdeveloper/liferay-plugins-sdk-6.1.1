@@ -48,7 +48,8 @@
 			<p:messages id="successDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="false" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.proceed']}" action="#{registrationBackingBean.proceedToLogout()}" />
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" action="#{registrationBackingBean.proceedToLogout}" 
+					onclick="successDialog.hide();" ajax="false" />
 			</div>
 		</p:dialog>
 	</ui:define>
