@@ -126,8 +126,8 @@
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>			
 		</h:panelGrid>
-		<h:panelGroup rendered="#{amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeB or 
-				  		        amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeA and
+		<h:panelGroup rendered="#{(amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeB or 
+				  		        amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeA) and
 				  		        amendmentBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego and
 				  		        !amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt and
 				  		        !amendmentBackingBean.managedBean.disableAmendDetails}">
