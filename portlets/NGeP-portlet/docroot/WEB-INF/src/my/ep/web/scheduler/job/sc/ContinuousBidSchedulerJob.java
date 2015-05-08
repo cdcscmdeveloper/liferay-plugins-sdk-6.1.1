@@ -87,6 +87,9 @@ public class ContinuousBidSchedulerJob implements Job {
 				} else if (currentSchedule.getEndDate()
 						.equals(getCompareTime())) {
 					// TODO check what if paused bid is not resumed
+					debugLogger("currentScheduleEndDate : " + currentSchedule.getEndDate());
+					debugLogger("comparecurrentTime : " + getCompareTime());
+					debugLogger("Is schedule end : " + currentSchedule.getEndDate().equals(getCompareTime()));
 					if (currentSchedule.getPmStatus().getStatusId()
 							.equals(BidStatusConst.BID_IN_PROGRESS)
 							|| currentSchedule.getPmStatus().getStatusId()
