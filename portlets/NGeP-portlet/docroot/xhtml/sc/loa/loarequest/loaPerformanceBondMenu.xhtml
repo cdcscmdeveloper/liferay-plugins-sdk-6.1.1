@@ -11,7 +11,8 @@
 		<p:commandLink value="#{lbl['lbl.sc.loiloa.bond.letter']}"
 			process="@this" style="float:left;" styleClass="blue_font"
 			action="#{lOADetailBackingBean.getBondLetterStreamContent}"
-			oncomplete="bdLetterDlg.show();">
+			oncomplete="bdLetterDlg.show();"
+			title="#{lbl['lbl.sc.loiloa.bond.letter.tooltip']}">
 		</p:commandLink>
 		<table style="width: 100%">
 			<tr>

@@ -190,7 +190,9 @@
 								<p:ajax event="blur" update="progressivePayment"
 									partialSubmit="true" process="@this"
 									listener="#{specificationBackingBean.addProgressiveDetails}" />
-							</p:inputText></td>
+							</p:inputText>
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" />
+						</td>
 					</tr>
 
 				</table>
@@ -290,6 +292,7 @@
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
