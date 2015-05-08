@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.deduction.payment']}"  id="deductionPayid" toggleable="true">
 
 		<p:dataTable id="deductTbl" widgetVar="deductTblWidget"
 			var="scQtDeduction"
@@ -35,7 +35,7 @@
 						<f:selectItems
 							value="#{lOIDetailBackingBean.getDeductionItemTypeDropdownList()}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
-							update=":form:clausePnl"
+							update=":form:deductionPayid"
 							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
 							listener="#{lOIDetailBackingBean.deductionTypeChange(scQtDeduction)}" />
 					</p:selectOneMenu>
@@ -65,9 +65,10 @@
 		<c:if test="#{!isEditableStatus}">
 			<br />
 		</c:if>
-
-		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}"
-			toggleable="true">
+		<h:outputText value="#{lbl['lbl.sc.deduction.payment']} >" /> 
+	    <h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
+	    <h:outputText style="margin-left: 140px;" value="#{lOIDetailBackingBean.managedBean.clausesTitle}" />
+		<h:panelGroup id="clausePnl">
 
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
@@ -78,26 +79,28 @@
 				<ac:paginator for="deductClauseTbl" />
 
 				<p:column selectionMode="multiple" style="width:2%" />
-				
+
 				<p:column style="white-space:normal;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory"
 							rendered="#{isEditableStatus}" />
 						<h:outputText value="#{lbl['lbl.sc.deduction.clause']}" />
 					</f:facet>
-					
+
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
-						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}" cols="150" rows="2"
-							maxlength="500" 
-							style=" margin-bottom:5px;"
+						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
+							cols="150" rows="2" maxlength="500" style=" margin-bottom:5px;"
 							rendered="#{isEditableStatus}">
 							<p:ajax event="keyup" />
-							</p:inputTextarea>
-						
-						<h:outputText value="#{scQtDeductionClause.clauseDesc}" rendered="#{!isEditableStatus}" />
+						</p:inputTextarea>
+
+						<h:outputText value="#{scQtDeductionClause.clauseDesc}"
+							rendered="#{!isEditableStatus}" />
 					</h:panelGroup>
-					
-					<h:outputText  escape="false" value="#{scQtDeductionClause.pmClause.clauseDesc}" rendered="#{!empty scQtDeductionClause.pmClause}" />
+
+					<h:outputText escape="false"
+						value="#{scQtDeductionClause.pmClause.clauseDesc}"
+						rendered="#{!empty scQtDeductionClause.pmClause}" />
 
 				</p:column>
 
@@ -117,6 +120,6 @@
 						update="deductClauseTbl" />
 				</h:panelGroup>
 			</div>
-		</p:panel>
+	</h:panelGroup>
 	</p:panel>
 </ui:composition>

@@ -21,99 +21,101 @@
 					disabled="true" size="30" readonly="true" />
 			</h:panelGrid>
 			<p:dataTable id="qtLoaTbl" var="scLoiLoa"
-				value="#{qtLOABackingBean.managedBean.scLoiLoaList}"
-				rows="10"
+				value="#{qtLOABackingBean.managedBean.scLoiLoaList}" rows="10"
 				selection="#{qtLOABackingBean.managedBean.selectedLoiLoa}"
-				rowKey="#{scLoiLoa}" rowIndexVar="rowIndex"
-				selectionMode="single">
+				rowKey="#{scLoiLoa}" rowIndexVar="rowIndex" selectionMode="single">
 				<ac:paginator for="qtLoaTbl" />
 				<p:ajax event="rowSelect"
 					listener="#{qtLOABackingBean.generateSuppLoiLoaList}"
-					process="@this" update=":form:supploaloalistPnl,:form:awardType" />
+					process="@this" update=":form:suppListPanel" />
 				<p:ajax event="rowUnselect"
 					listener="#{qtLOABackingBean.generateSuppLoiLoaList}"
-					process="@this" update=":form:supploaloalistPnl,:form:awardType" />
+					process="@this" update=":form:suppListPanel" />
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					#{scLoiLoa.supplierName}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}">
-					<p:commandButton  value="#{lbl['lbl.sc.loiloa.create.loa']}" 
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loa']}"
 						rendered="#{!scLoiLoa.loaCreated}"
 						action="#{lOADetailBackingBean.createQtLOAAction(scLoiLoa)}" />
 				</p:column>
 			</p:dataTable>
-		</p:panel>
-		<br />
-		 <p:panel id="supploaloalistPnl" toggleable="true" toggleSpeed="500">
-			<f:facet name="header">
-				<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']}" />
-			</f:facet>
-			<p:dataTable id="qtLoiLoaList" var="loiloa" rows="10"
-				value="#{qtLOABackingBean.managedBean.suppLoiLoaList}"
-				rowIndexVar="rowIndex">
-				<ac:paginator for="qtLoiLoaList" />
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
+
+			<br />
+
+			<h:outputText value="#{lbl['lbl.sc.loiloa.recom.supp.list']} >" />
+			<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']} " />
+			<h:outputText style="margin-left: 140px;"
+				value="#{qtLOABackingBean.managedBean.loiLoaListTitle}" />
+			<h:panelGroup id="supploaloalistPnl">
+				<p:dataTable id="qtLoiLoaList" var="loiloa" rows="10"
+					value="#{qtLOABackingBean.managedBean.suppLoiLoaList}"
+					rowIndexVar="rowIndex">
+					<ac:paginator for="qtLoiLoaList" />
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loiloano']}">
 					#{loiloa.loiLoaNo}
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}">
+					<p:column headerText="#{lbl['lbl.sc.loiloa.loa.type']}">
 					#{loiloa.type}
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.item']}">
-					<p:commandLink
-						actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
-						oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
-						process="@this">
-						<p:graphicImage library="ep/images/design" name="document.png" title="Item Detail" 
-							value="/resources/ep/images/design/document.png"
-							style="margin-right:2px;" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.status']}">
+					<p:column headerText="#{lbl['lbl.sc.item']}">
+						<p:commandLink
+							actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
+							oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
+							process="@this">
+							<p:graphicImage library="ep/images/design" name="document.png"
+								title="Item Detail"
+								value="/resources/ep/images/design/document.png"
+								style="margin-right:2px;" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.status']}">
 					#{qtLOABackingBean.getStatusDescById(loiloa.status.statusId)}
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.action']}">
-										
-					<h:panelGroup rendered="#{loiloa.type eq 'LOI'}">
+					<p:column headerText="#{lbl['lbl.sc.action']}">
 
-						<p:commandButton title="edit" icon="ui-icon-edit"
-							rendered="#{loiloa.status.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
-							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi,true)}" />
+						<h:panelGroup rendered="#{loiloa.type eq 'LOI'}">
 
-						<p:commandLink
-							rendered="#{loiloa.status.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
-							action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi,false)}"
-							process="@this">
+							<p:commandButton title="edit" icon="ui-icon-edit"
+								rendered="#{loiloa.status.statusId eq QTStatusConst.LOI_PENDING_SUBMISSION}"
+								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+								action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi,true)}" />
 
-							<p:graphicImage  library="ep/images/design"
-								name="document.png" value="/css/images/design/document.png" />
-							<p:spacer width="5"></p:spacer>
-						</p:commandLink>
+							<p:commandLink
+								rendered="#{loiloa.status.statusId ne QTStatusConst.LOI_PENDING_SUBMISSION}"
+								action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi,false)}"
+								process="@this">
 
-					</h:panelGroup>
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/css/images/design/document.png" />
+								<p:spacer width="5"></p:spacer>
+							</p:commandLink>
 
-					<h:panelGroup rendered="#{loiloa.type eq 'LOA'}">
-						<p:commandButton title="edit" icon="ui-icon-edit"
-							rendered="#{loiloa.status.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"
-							style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
-							action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
+						</h:panelGroup>
 
-						<p:commandLink
-							rendered="#{loiloa.status.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
-							action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}"
-							process="@this">
+						<h:panelGroup rendered="#{loiloa.type eq 'LOA'}">
+							<p:commandButton title="edit" icon="ui-icon-edit"
+								rendered="#{loiloa.status.statusId eq QTStatusConst.LOA_PENDING_SUBMISSION}"
+								style="background-color:transparent !important; border:0px none; width:10px; height:10px !important;"
+								action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}" />
 
-							<p:graphicImage  library="ep/images/design"
-								name="document.png" value="/css/images/design/document.png" />
-							<p:spacer width="5"></p:spacer>
-						</p:commandLink>
-					</h:panelGroup>
+							<p:commandLink
+								rendered="#{loiloa.status.statusId ne QTStatusConst.LOA_PENDING_SUBMISSION}"
+								action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}"
+								process="@this">
 
-				</p:column>
-			</p:dataTable>
+								<p:graphicImage library="ep/images/design" name="document.png"
+									value="/css/images/design/document.png" />
+								<p:spacer width="5"></p:spacer>
+							</p:commandLink>
+						</h:panelGroup>
+
+					</p:column>
+				</p:dataTable>
+			</h:panelGroup>
 		</p:panel>
-		<ui:include src="qtItemDetailPopUp.xhtml" /> 
+		<ui:include src="qtItemDetailPopUp.xhtml" />
 	</ui:define>
 
 </ui:composition>
