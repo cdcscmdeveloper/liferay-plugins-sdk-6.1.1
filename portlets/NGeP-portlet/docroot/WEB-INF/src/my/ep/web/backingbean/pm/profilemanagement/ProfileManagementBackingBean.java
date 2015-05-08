@@ -524,6 +524,7 @@ public class ProfileManagementBackingBean extends
 				if (pmUserOrg != null) {// set the active org and disable edit
 					pmUserOrg.setPMP(pmUserOrg.isPMP() ? true : false);
 					pmUser.setHasActiveOrg(true);
+					clearUserOrgInfo(pmUserOrg);
 					this.getManagedBean().setSelectedUserOrg(pmUserOrg);
 				} else {// if no active userOrg initial it
 					pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
@@ -564,7 +565,14 @@ public class ProfileManagementBackingBean extends
 		}
 		logger.info("loadUserInfo - End");
 	}
-
+    private void clearUserOrgInfo(PmUserOrg userOrg){
+    	userOrg.setDesignation(null);
+    	userOrg.setGrade(null);
+    	userOrg.setEmail(null);
+    	userOrg.setPhoneNo(null);
+    	userOrg.setFaxNo(null);
+    	userOrg.setMobileNo(null);
+    }
 	/**
 	 * initial new pmUser object
 	 */
@@ -2642,6 +2650,8 @@ public class ProfileManagementBackingBean extends
 			List<PmUserRole> deleteRoleList = reqDTO.getRemoveRoleList();
 			long activeUserOrgId = 0;
 			boolean isChanged = false;
+			System.out.println("......user.getPmUserOrgs()="+user.getPmUserOrgs());
+			System.out.println("......user.getPmUserOrgs().size()="+user.getPmUserOrgs().size());
 			for (PmUserOrg pmUserOrg : user.getPmUserOrgs()) {
 				if (pmUserOrg.isBrandNew()) {
 					isChanged = true;
@@ -2674,7 +2684,7 @@ public class ProfileManagementBackingBean extends
 				// .retrieveActiveOrg(user.getUserId());
 				System.out.println("size " + user.getPmUserOrgs().size());
 				for (PmUserOrg pmUserOrg : user.getPmUserOrgs()) {
-					if (pmUserOrg.getUserOrgId() != activeUserOrgId) {
+					if (pmUserOrg.getUserOrgId() != null && pmUserOrg.getUserOrgId() != activeUserOrgId) {
 						for (PmUserRole pmUserRole : pmUserOrg.getPmUserRoles()) {
 							if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 								deleteRoleList.add(pmUserRole);
