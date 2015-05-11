@@ -434,11 +434,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	public void searchCircularVer() throws Exception {
 		try {
-			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().length() == 0) && 
-				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().length() == 0) &&
-				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().length() == 0) && 
-				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().length() == 0) &&
-				(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().length() == 0) &&
+			if ((getManagedBean().getSearchCircularNo() == null || getManagedBean().getSearchCircularNo().trim().length() == 0) && 
+				(getManagedBean().getSearchCircularName() == null || getManagedBean().getSearchCircularName().trim().length() == 0) &&
+				(getManagedBean().getSearchSupplierName() == null || getManagedBean().getSearchSupplierName().trim().length() == 0) && 
+				(getManagedBean().getSearchPhysicalCircularNo() == null || getManagedBean().getSearchPhysicalCircularNo().trim().length() == 0) &&
+				(getManagedBean().getSearchItemName() == null || getManagedBean().getSearchItemName().trim().length() == 0) &&
 				getManagedBean().getSearchStartDate() == null &&
 				getManagedBean().getSearchEndDate() == null &&
 				getManagedBean().getSearchStatusId() == null) {
