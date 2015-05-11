@@ -102,7 +102,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	 */
 	public SelectItem[] getUserGroupStatus() {
 
-		return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	/**
@@ -632,5 +632,43 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+	
+	public String constructConditionFields(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("recordStatus^1");
+		PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
+		PmOrgProfile orgProfile = null;
+		if(user != null){
+			orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+		}
+		if(orgProfile != null){
+			List<Long> orgProfileList = null;
+			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+				orgProfileList = new ArrayList<Long>(); 
+				for(PmOrgProfile childOrgProfile : orgProfile.getChildOrgProfiles()){
+					orgProfileList.add(childOrgProfile.getOrgProfileId());
+				}
+				sb.append("|parentOrgProfile.orgProfileId^");
+				for(int i = 0; i<orgProfileList.size();i++){
+					Long id = orgProfileList.get(i);
+					if(i != 0){
+						sb.append(",");
+					}
+					sb.append(id);				
+				}
+				sb.append("^9");
+								
+			}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+				sb.append("|parentOrgProfile.orgProfileId^");
+				sb.append(orgProfile.getOrgProfileId());
+				
+			}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+				sb.append("|orgProfileId^");
+				sb.append(orgProfile.getOrgProfileId());
+			}
+		}
+		
+		return sb.toString();
 	}
 }
