@@ -31,26 +31,6 @@
 			</tr>
 			<tr>
 				<th width="40%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}"/>
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</th>
-				<td>
-					<p:inputText id="itPreNotifyDay" required="#{!empty param['disableValidation']}"
-						value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyRemovalDay}"
-						label="#{lbl['lbl.pm.profiles.preferences.notificationremoval']}" 
-						size="5" maxlength="2">
-						<f:validateLongRange minimum="1"  disabled="#{empty param['disableValidation']}"/>
-					</p:inputText>
-					&#160;
-					<h:outputText value="#{lbl['lbl.pm.profiles.preferences.notification.day']}" />&#160;
-                	<p:graphicImage id="giDay" 
-								value="/css/images/design/tooltips.png" />
-					<p:tooltip for="giDay" value="#{lbl['lbl.pm.profiles.preferences.notificationremoval.tooltip']}" showEffect="fade" hideEffect="fade" />
-					<p:message id="itPreNotifyDayMsg" for="itPreNotifyDay" display="icon" />
-				</td>
-			</tr>
-			<tr>
-				<th width="40%">
 					<p:outputLabel value="#{lbl['lbl.pm.profiles.preferences.preferred']} #{lbl['lbl.pm.profiles.userdetails.email']}"/>
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
