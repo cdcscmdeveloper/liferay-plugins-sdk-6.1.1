@@ -812,6 +812,7 @@ public class QTCommitteBackingBean extends
 		getSelectionTypes();
 		getManagedBean().setScQtCommittee(committee);
 		getManagedBean().setTabTitle(titleName);
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
