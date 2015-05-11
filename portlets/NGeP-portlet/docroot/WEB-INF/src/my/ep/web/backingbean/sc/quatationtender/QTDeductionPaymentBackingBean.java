@@ -12,6 +12,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -40,6 +41,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -102,6 +105,7 @@ public class QTDeductionPaymentBackingBean extends
 				reqDTO.setParameterId(parameterId);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				scQtDeduction.setDeductionType(resDTO.getPmParameter());
+				getClausesTitle(scQtDeduction);
 				ScQtDeductionClause deductionClause = null;
 				List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
 				if (!ParameterConst.DEDUCTION_TYPE_OTHERS
@@ -134,6 +138,7 @@ public class QTDeductionPaymentBackingBean extends
 			} else {
 				scQtDeduction.setDeductionType(new PmParameter());
 				scQtDeduction.setScQtDeductionClauses(null);
+				getClausesTitle(scQtDeduction);
 				this.getManagedBean().setSelectedScQtDeduction(scQtDeduction);
 			}
 			this.getManagedBean().getScQtDeductionList().remove(index);
@@ -141,6 +146,29 @@ public class QTDeductionPaymentBackingBean extends
 		} finally {
 			parameterSO = null;
 		}
+	}
+
+	/**
+	 * Gets the clauses title.
+	 *
+	 * @param deduction the deduction
+	 * @return the clauses title
+	 */
+	private void getClausesTitle(ScQtDeduction deduction){
+		StringBuilder title  = new StringBuilder();
+		title.append("Title");
+		title.append(":");
+		title.append(" ");
+		if(deduction != null && deduction.getDeductionType() != null){
+			title.append(getParameterDesc(deduction.getDeductionType()));
+			title.append(" > "); 
+			title.append(" ");
+		}
+
+		Locale locale = new FacesScopes().getUserLocale();
+		title.append(ResourceBundleUtils.getMessage("lbl.sc.deduction.clauses",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		getManagedBean().setClausesTitle(title.toString());
 	}
 
 	/**
