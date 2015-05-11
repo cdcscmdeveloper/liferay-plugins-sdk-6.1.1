@@ -304,8 +304,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		List<ScQtCategory> openSelectList = this.getManagedBean()
 				.getSelectedCategoryList();
-		if (null == openSelectList) {
-			openSelectList = new ArrayList<ScQtCategory>();
+		if (null == openSelectList || openSelectList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
 		}
 		if (openList.size() == openSelectList.size()) {
 			openList.clear();
@@ -313,6 +313,30 @@ public class QTSupplierQulCriteriaBackingBean extends
 			for (ScQtCategory category : openSelectList)
 				openList.remove(category);
 		}
+	}
+
+	/**
+	 * Select zone tree node.Event handle check non panel Treenodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode)
+	 */
+	public void selectZoneTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(true);
+	}
+
+	/**
+	 * Un select zone tree node.Event handle uncheck Nonpanel treeNodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
+	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(false);
 	}
 
 	/**
