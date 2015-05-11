@@ -385,7 +385,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setSelectedTabIndex(0);
 			
 			// Set evaluation
-			if(getUserRole().equalsIgnoreCase(RoleCode.FL_APPROVER.toString())){
+			if(res.getTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				getManagedBean().setDisableEvaluation(Boolean.TRUE);
 			}
 			if(getManagedBean().getFulfilmentNote().getFlSupplierEvaluation().size()==0) {
