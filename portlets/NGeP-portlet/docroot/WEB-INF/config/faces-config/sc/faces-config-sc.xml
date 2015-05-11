@@ -119,7 +119,7 @@
 	</managed-bean>
 	<managed-bean>
 		<description>Bid Status Constants</description>
-		<managed-bean-name>BidStatusConstants</managed-bean-name>
+		<managed-bean-name>BidStatusConst</managed-bean-name>
 		<managed-bean-class>my.ep.constant.sc.BidStatusConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
