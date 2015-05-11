@@ -33,7 +33,10 @@ public class TrackingDiaryBackingBean extends
 	public static final String DP_TRACKING_DIARY_MANAGED_BEAN = "dpTrackingDiaryManagedBean";
 	public static final String FL_TRACKING_DIARY_MANAGED_BEAN = "flTrackingDiaryManagedBean";
 	public static final String CT_TRACKING_DIARY_MANAGED_BEAN = "ctTrackingDiaryManagedBean";
+	public static final String CM_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
+	public static final String CD_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
 	public static final String SM_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
+	public static final String PP_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
 
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
@@ -72,6 +75,22 @@ public class TrackingDiaryBackingBean extends
 			if (fc.getExternalContext().getSessionMap().containsKey(CT_TRACKING_DIARY_MANAGED_BEAN)) {
 				fc.getExternalContext().getSessionMap().remove(CT_TRACKING_DIARY_MANAGED_BEAN);
 				System.out.println("remove ModuleSelect" +CT_TRACKING_DIARY_MANAGED_BEAN);
+			}   	 	
+			if (fc.getExternalContext().getSessionMap().containsKey(CM_TRACKING_DIARY_MANAGED_BEAN)) {
+				fc.getExternalContext().getSessionMap().remove(CM_TRACKING_DIARY_MANAGED_BEAN);
+				System.out.println("remove ModuleSelect" +CM_TRACKING_DIARY_MANAGED_BEAN);
+			}   	 	
+			if (fc.getExternalContext().getSessionMap().containsKey(CD_TRACKING_DIARY_MANAGED_BEAN)) {
+				fc.getExternalContext().getSessionMap().remove(CD_TRACKING_DIARY_MANAGED_BEAN);
+				System.out.println("remove ModuleSelect" +CD_TRACKING_DIARY_MANAGED_BEAN);
+			}   	 	
+			if (fc.getExternalContext().getSessionMap().containsKey(SM_TRACKING_DIARY_MANAGED_BEAN)) {
+				fc.getExternalContext().getSessionMap().remove(SM_TRACKING_DIARY_MANAGED_BEAN);
+				System.out.println("remove ModuleSelect" +SM_TRACKING_DIARY_MANAGED_BEAN);
+			}   	 	
+			if (fc.getExternalContext().getSessionMap().containsKey(PP_TRACKING_DIARY_MANAGED_BEAN)) {
+				fc.getExternalContext().getSessionMap().remove(PP_TRACKING_DIARY_MANAGED_BEAN);
+				System.out.println("remove ModuleSelect" +PP_TRACKING_DIARY_MANAGED_BEAN);
 			}   	 	
 //			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "trackingDiary");
 		}else{
