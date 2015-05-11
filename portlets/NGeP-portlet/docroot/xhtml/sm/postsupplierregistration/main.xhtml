@@ -9,10 +9,9 @@
 
 
 	<ui:define name="contentSection">
-		<p:outputPanel rendered="#{postSupplierRegBB.validBasicSupplier() or postSupplierRegBB.validSupplierTemp() or postSupplierRegBB.validMofUser()}">
-		<f:event listener="#{postSupplierRegBB.preRender}" type="preRenderView" />
-	
-		</p:outputPanel>
+		<c:if test="#{postSupplierRegBB.validBasicSupplier() or postSupplierRegBB.validSupplierTemp() or postSupplierRegBB.validMofUser()}">
+			<f:event listener="#{postSupplierRegBB.preRender}" type="preRenderView" />
+		</c:if>
 	</ui:define>
 
 </ui:composition>
