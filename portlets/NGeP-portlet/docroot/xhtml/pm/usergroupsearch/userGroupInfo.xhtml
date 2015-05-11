@@ -44,7 +44,7 @@
 							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
 							postUpdateListener="usergroupBackingBean.userListner()"
-							readonly="true" conditionField="recordStatus^1">
+							readonly="true" conditionField="#{usergroupBackingBean.constructConditionFields()}">
 						</ac:lov>
 						<ac:lovPopup />
 					</p:columnGroup></td>
