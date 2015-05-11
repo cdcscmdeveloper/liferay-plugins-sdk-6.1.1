@@ -1021,6 +1021,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 /** The auto update. */
     private boolean autoUpdate = Boolean.TRUE;
     
+    /** The clauses title. */
+	private String clausesTitle;
+    
 	/**
 	 * Sets the panel suppliers.
 	 *
@@ -6452,6 +6455,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the clausesTitle
+	 */
+	public String getClausesTitle() {
+		return clausesTitle;
+	}
+
+	/**
+	 * @param clausesTitle the clausesTitle to set
+	 */
+	public void setClausesTitle(String clausesTitle) {
+		this.clausesTitle = clausesTitle;
 	}
 
 }

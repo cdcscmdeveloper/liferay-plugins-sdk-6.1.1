@@ -6,19 +6,18 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" toggleable="true">
-
-		<p:dataTable id="deductPaymentTblId"
-			widgetVar="deductPaymentTblWidget" var="scQtDeduction"
+	<p:panel header="#{lbl['lbl.sc.deduction.payment']}" id="deductionPayid" toggleable="true">
+		<p:dataTable id="deductPaymentTblId" widgetVar="deductPaymentTblWidget" 
+			var="scQtDeduction"
 			value="#{qTDeductionPaymentBackingBean.managedBean.scQtDeductionList}"
 			selection="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction}"
 			rowKey="#{scQtDeduction}" rowIndexVar="rowIndex" rows="10"
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update="@form" />
+				update=":form:clausePnl" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update="@form" />
+				update=":form:clausePnl" />
 
 			<ac:paginator for="deductPaymentTblId" />
 
@@ -32,7 +31,7 @@
 					<f:selectItems
 						value="#{qTDeductionPaymentBackingBean.getDeductionTypes()}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
-						update=":form:clausePnl, deductionamountid"
+						update=":form:deductionPayid, deductionamountid"
 						oncomplete="deductPaymentTblWidget.unselectAllRows(); deductPaymentTblWidget.selectRow(#{rowIndex}, true);"
 						listener="#{qTDeductionPaymentBackingBean.deductionTypeChange(rowIndex,scQtDeduction)}" />
 				</h:selectOneMenu>
@@ -67,19 +66,22 @@
 				action="#{qTDeductionPaymentBackingBean.deleteDeductionPaymentAction}"
 				update="deductPaymentTblId,deductClauseTblId" />
 		</div>
-		<p:panel id="clausePnl" header="#{lbl['lbl.sc.deduction.clauses']}"
-			toggleable="true">
+		
+		<h:outputText value="#{lbl['lbl.sc.deduction.payment']} > " /> 
+	    <h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
+	    <h:outputText style="margin-left: 140px;" value="#{qTDeductionPaymentBackingBean.managedBean.clausesTitle}" />
+	    <h:panelGroup id="clausePnl">
 			<p:dataTable id="deductClauseTblId" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
 				value="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
 				selection="#{qTDeductionPaymentBackingBean.managedBean.selectedDeductionClauses}"
 				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
-
+				
 				<ac:paginator for="deductClauseTbl" />
 
 				<p:column selectionMode="multiple" style="width:2%"
 					disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}" />
-
+				
 				<p:column style="white-space:normal">
 					<ui:fragment
 						rendered="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeOthers}">
@@ -110,6 +112,6 @@
 						update="deductClauseTblId" />
 				</h:panelGroup>
 			</div>
-		</p:panel>
+	    </h:panelGroup>
 	</p:panel>
 </ui:composition>
