@@ -168,7 +168,7 @@
 					value="View" />
 
 				<p:commandLink id="pauseButton"
-					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress'}"
+					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
@@ -180,7 +180,7 @@
 				<p:tooltip id="pauseToolTip" for="pauseButton" value="Pause Bid" />
 
 				<p:commandLink id="cancelButton" onmouseover="Cancel"
-					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'In Progress' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Pending Bidding' or biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Paused'}"
+					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress or bid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding or bid.pmStatus.statusId eq biddingBB.managedBean.bidPaused}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.bidCancelPopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
@@ -193,7 +193,7 @@
 				<p:tooltip id="cancelButtonToolTip" for="cancelButton"
 					value="Cancel Bid" />
 				<p:commandLink id="resumeButton"
-					rendered="#{biddingBB.getStatusDescById(bid.pmStatus.statusId) eq 'Paused'}"
+					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidPaused}"
 					process="@this" partialSubmit="true"
 					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
 					update="@([id$=rescheduleRebidPopUp])"
