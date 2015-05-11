@@ -68,10 +68,10 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 
 	public void search(){
 		if ((null == getManagedBean().getSearchTrasactionType()) 
-				&& (getManagedBean().getSearchContractNo() != null && getManagedBean().getSearchContractNo().isEmpty()) 
-				&& (getManagedBean().getSearchPhysContractNo() != null && getManagedBean().getSearchPhysContractNo().isEmpty())
-				&& (getManagedBean().getSearchLoaNo() != null && getManagedBean().getSearchLoaNo().isEmpty()) 
-				&& (getManagedBean().getSearchPhysLoaNo() != null && getManagedBean().getSearchPhysLoaNo().isEmpty())
+				&& (getManagedBean().getSearchContractNo() != null && getManagedBean().getSearchContractNo().trim().isEmpty()) 
+				&& (getManagedBean().getSearchPhysContractNo() != null && getManagedBean().getSearchPhysContractNo().trim().isEmpty())
+				&& (getManagedBean().getSearchLoaNo() != null && getManagedBean().getSearchLoaNo().trim().isEmpty()) 
+				&& (getManagedBean().getSearchPhysLoaNo() != null && getManagedBean().getSearchPhysLoaNo().trim().isEmpty())
 				&& (getManagedBean().getSearchStatusId() == null)) {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
@@ -101,10 +101,18 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					face.getUserLocale()));
-			items[1] = new SelectItem(new String("CC"), new String("Central Contract"));
-			items[2] = new SelectItem(new String("MC"), new String("Ministry Contract"));
-			items[3] = new SelectItem(new String("CQ"), new String("Central Circular"));
-			items[4] = new SelectItem(new String("PQ"), new String("Panel Circular"));
+			items[1] = new SelectItem(new String(ParameterConst.CONTRACT_TYPE_CENTRAL), ResourceBundleUtils.getMessage(
+					"lbl.ct.central.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			items[2] = new SelectItem(new String(ParameterConst.CONTRACT_TYPE_MINISTRY), ResourceBundleUtils.getMessage(
+					"lbl.ct.ministry.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));					
+			items[3] = new SelectItem(new String(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR), ResourceBundleUtils.getMessage(
+					"lbl.ct.central.contract.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
+			items[4] = new SelectItem(new String(ParameterConst.DOCTYPE_PANEL_CIRCULAR), ResourceBundleUtils.getMessage(
+					"lbl.ct.panel.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					face.getUserLocale()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -118,7 +126,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 
 	public SelectItem[] getContractViewType() {
 		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
+		//FacesScopes face = new FacesScopes();
 
 		try {
 
@@ -181,18 +189,18 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 //		this.getManagedBean().setCheckDoDocType(true);
 //	}else if(id.equals(ParameterConst.DOCTYPE_INVOICE)){
 //		this.getManagedBean().setCheckInDocType(true);
-		docTypeList.add("FD");
-		docTypeList.add("FA");
-		docTypeList.add("FT");
-		docTypeList.add("FS");
-		docTypeList.add("FU");
-		docTypeList.add("RF");
-		docTypeList.add("CB");
-		docTypeList.add("AC");
-		docTypeList.add("SA");
-		docTypeList.add("PQ");
-		docTypeList.add("CQ");
-		docTypeList.add("RC");
+		docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+		docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+		docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+		docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+		docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+		docTypeList.add(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+		docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+		docTypeList.add(ParameterConst.DOCTYPE_AGREEMENT);
+		docTypeList.add(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+		docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+		docTypeList.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+		docTypeList.add(ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"pmStatus.docType",
 				SearchOperator.OPERATOR_IN.value(),
@@ -200,14 +208,13 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		searchBean.getDataFilterBeans().add(new SearchFilterBean(
 				"languageCode",
 				SearchOperator.OPERATOR_EQUALS.value(),
-				"en"));
+				getFacesScopes().getUserLocale().getLanguage()));
 		
 		reqDTO.setStatusDescSearchBean(searchBean);
 		StatusResDTO resDTO = statusSO.searchStatusDesc(reqDTO);
 		
-		List<PmStatusDesc> list = resDTO.getStatusDescList();
+		//List<PmStatusDesc> list = resDTO.getStatusDescList();
 		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
 
 		try {
 			List<PmStatusDesc> statusDescs = resDTO.getStatusDescList();
@@ -215,7 +222,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 			items = new SelectItem[statusDescs.size() + 1];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+					getFacesScopes().getUserLocale()));
 			int i = 1;
 			for (PmStatusDesc statusDesc : statusDescs) {
 				items[i++] = new SelectItem(statusDesc.getPmStatus()
