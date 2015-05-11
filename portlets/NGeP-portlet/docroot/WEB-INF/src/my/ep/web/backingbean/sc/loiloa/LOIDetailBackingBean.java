@@ -38,6 +38,7 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -60,6 +61,8 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
@@ -72,6 +75,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
+import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiApproval;
@@ -93,17 +97,20 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -125,6 +132,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -3740,8 +3748,100 @@ public class LOIDetailBackingBean extends
 				activeCount++;
 			}
 		}
-		scQtRecommend.setRecommendByStr(activeCount > 1 ? ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD : ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
+		scQtRecommend.setRecommendByStr(activeCount > 1 ? ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD 
+				: ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
+		
+		setAwardSupplierListByItem(scQtRecommend);
 	}
+	
+	private void setAwardSupplierListByItem(ScQtRecommend scQtRecommend) {
+		List<ScQtEvaluationResultDtl> shortlistedSupplierList = null;
+		boolean isSuccessful = false;
+		if (CollectionUtils.isEmpty(
+				scQtRecommend.getShortListedSupplierList())) {
+			// Retrieve the suppliers short listed for the selected item
+			SuppFinalizationResDTO resDTO = this.getShortListedSuppliersByItem(scQtRecommend);
+			isSuccessful = resDTO.isSuccessful();
+			shortlistedSupplierList = resDTO.getQualifiedByItemSuppliers();
+			scQtRecommend.setShortListedSupplierList(shortlistedSupplierList);
+		} else {
+			isSuccessful = true;
+			shortlistedSupplierList = scQtRecommend
+					.getShortListedSupplierList();
+		}
+		if (isSuccessful) {
+			if (CollectionUtils.isNotEmpty(shortlistedSupplierList)) {
+				for (ScQtEvaluationResultDtl evalResultDtl : shortlistedSupplierList) {
+					calculateOfferedPrice(evalResultDtl,
+							scQtRecommend.getRequestItem());
+				}
+			}
+		}	
+		PmParameter recommendBy = scQtRecommend.getRecommendBy();
+		scQtRecommend.setRecommendByStr(recommendBy
+				.getParameterCode());
+
+		// set the checkbox or radio button of supplier selected
+		// Multiple LOI or Online Bidding
+		List<Long> supplierIdList = new ArrayList<Long>();
+		for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend
+				.getRecommendDtls()) {
+			supplierIdList.add(scQtRecommendDtl.getSupplier().getSupplierId());
+		}
+
+		scQtRecommend.setAwardSupplierList(new ArrayList<ScQtEvaluationResultDtl>());
+		for (ScQtEvaluationResultDtl scQtEvaluationResultDtl 
+											: shortlistedSupplierList) {
+			Long supplierId = scQtEvaluationResultDtl
+									.getQtEvaluationResult().getScQtProposal()
+									.getScQtSupplier().getSmSupplier()
+									.getSupplierId();
+			if (supplierIdList.contains(supplierId)) {
+				scQtRecommend.getAwardSupplierList().add(
+						scQtEvaluationResultDtl);
+			}
+		}	
+	}
+	
+	private void calculateOfferedPrice(ScQtEvaluationResultDtl evalResultDtl,
+			ScRequestItem requestItem) {
+		ScQtProposalItem proposalItem = evalResultDtl.getQtEvaluationResult()
+				.getScQtProposalItem();
+		if (proposalItem != null) {
+			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
+					.calcTotalAmount(requestItem.getTplSpecQuestion(),
+							new BigDecimal(proposalItem.getOfferPrice()),
+							new BigDecimal(proposalItem.getOfferQuantity()));
+			evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
+		}
+	}
+	
+	private SuppFinalizationResDTO getShortListedSuppliersByItem(
+			ScQtRecommend scQtRecommend) {
+		SuppFinalizationResDTO resDTO = new SuppFinalizationResDTO();
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+		try {
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			if (scQtRecommend.getTplSpecZoneDtl() != null) {
+				reqDTO.setQtZoneCriteriaId(scQtRecommend.getTplSpecZoneDtl()
+						.getSpecZoneId());
+			}
+			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
+					.getRequestNoteItemId());
+			reqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
+
+			resDTO = qtSuppFinalizationSO
+					.retrieveEvaluationResultsByItem(reqDTO);
+		} finally {
+			qtSuppFinalizationSO = null;
+		}
+
+		return resDTO;
+	}	
 	
 	/**
 	 * Award supplier event.
