@@ -8088,8 +8088,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @return string(publicCatalogueView)
 	 */
 	public String backToPublicCatalogue(){
-		 System.out.println("..................cancelToPublicSearch..............");
-			return "publicCatalogueView";
+		 log.debug("..................cancelToPublicSearch..............");
+			return "publicCatalogueView?faces-redirect=true";
 	}
 	
 	/**
