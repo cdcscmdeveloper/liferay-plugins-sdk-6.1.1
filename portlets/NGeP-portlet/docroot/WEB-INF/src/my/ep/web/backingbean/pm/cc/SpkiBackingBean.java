@@ -6,12 +6,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-
 import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 import org.primefaces.context.RequestContext;
@@ -23,12 +19,13 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.util.EpPropertiesUtils;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
-import com.augtech.kmc.client.InvalidKMCAPIFieldException;
 import com.augtech.kmc.client.KMCAPIException;
 import com.augtech.kmc.client.KMCClient;
 import com.augtech.kmc.client.KMCClientFactory;
@@ -40,7 +37,7 @@ import com.augtech.kmc.client.KMCRequestBuilder;
  */
 @ManagedBean(name = "spkiBackingBean")
 @SessionScoped
-public class SpkiBackingBean {
+public class SpkiBackingBean  extends BaseBackingBean{
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
 //	public static final int OPERATION_FAILED  = 0;
 //	public static final int OPERATION_SUCCESSFUL = 1;
@@ -105,7 +102,13 @@ public class SpkiBackingBean {
 		KMCClient client = KMCClientFactory.getInstance(f);
 		return client;
 	}
-	
+
+	public String getSpkiEnabledProperty() {
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+		System.out.println("getSpkiEnabledProperty :"+ prop.getProperty("spki.enabled"));
+		return prop.getProperty("spki.enabled");
+	}
+
 	public void getChallengeQuestions() { 
 	try{
 			KMCClient client = getClient();
@@ -170,8 +173,8 @@ public class SpkiBackingBean {
 		}
 		return tok;
 	}
-	
-	public String spkiSignTransaction(String originalText) {
+
+	public String spkiEnabledSignTransaction(String originalText) {
 		try{
 			KMCClient client = getClient();
 			Map<Object, Object> challenges = new HashMap<Object, Object>();
@@ -210,6 +213,11 @@ public class SpkiBackingBean {
 			throw new EpException(MessageConst.ERROR_776052);
 
 		}
+		return signedData;
+	}
+
+	public String spkiSignTransaction(String originalText) {
+	
 		return signedData;
 	}
 
