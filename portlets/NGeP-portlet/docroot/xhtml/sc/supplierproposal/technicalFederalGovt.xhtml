@@ -72,7 +72,7 @@
 				<td colspan="3"><p:inputText style="text-align:right"
 						value="#{supplierProposalDetailBackingBean.managedBean.contractSize}"
 						readonly="true" disabled="true" size="15" /></td>
-				<td style="width: 80px;"><h:outputText
+				<td style="width: 90px;"><h:outputText
 						value="#{lbl['lbl.tpl.spec.content.system.score']}"
 						rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
 						rendered="#{checklistScoreType eq '2' and !pageDisable}">
@@ -109,7 +109,7 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</p:inputText></td>
-				<td style="width: 80px;"><h:outputText
+				<td style="width: 90px;"><h:outputText
 						value="#{lbl['lbl.tpl.spec.content.system.score']}"
 						rendered="#{companyScoreType eq '1'}" /> <ui:fragment
 						rendered="#{companyScoreType eq '2' and !pageDisable}">

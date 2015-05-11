@@ -7,13 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}" toggleable="true">
-		<h:outputText  styleClass="instruction" value="1. #{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+	<p:panel header="#{lbl['lbl.sc.spec.bank.statement']}"
+		toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="1. #{lbl['lbl.sc.sp.btn.complete.instruction']}"
+			escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
-			<br></br>
-		<h:outputText  styleClass="instruction" value="2. #{lbl['lbl.sc.spec.bank.statement.supplier.instruction']}" escape="false"
+		<br></br>
+		<h:outputText styleClass="instruction"
+			value="2. #{lbl['lbl.sc.spec.bank.statement.supplier.instruction']}"
+			escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
-		
+
 		<p:dataTable id="bankstatmentsid" var="bankstmt"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPBankStmts}"
 			rowKey="#{bankstmt}" rowIndexVar="rowIndex">
@@ -49,7 +54,7 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td style="width: 190px"><p:outputLabel
+					<td style="width: 300px"><p:outputLabel style="float:left;"
 							value="#{lbl['lbl.sc.total.amount']}" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.totalAmount}"
@@ -59,16 +64,16 @@
 						</p:inputText></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.sp.avgogbankst']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sc.sp.avgogbankst']}"
+							style="float:left;" /></td>
 					<td colspan="3"><p:inputText style="text-align:right"
 							value="#{supplierProposalDetailBackingBean.managedBean.avgAmount}"
 							readonly="true" disabled="true" size="30">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.sc.sp.avgogbankst.tooltip']}" />
+						</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.sp.avgogbankst.tooltip']}" />
 					</td>
-					<td style="width: 80px;"><h:outputText
+					<td style="width: 90px;"><h:outputText
 							value="#{lbl['lbl.tpl.spec.content.system.score']}"
 							rendered="#{checklistScoreType eq '1'}" /> <ui:fragment
 							rendered="#{checklistScoreType eq '2' and !pageDisable}">
