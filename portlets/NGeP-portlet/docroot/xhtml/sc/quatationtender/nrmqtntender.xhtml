@@ -9,9 +9,9 @@
 	<p:panel header="#{lbl['lbl.sc.category.code']}"
 		toggleable="true">
 
-		<p:dataTable id="openPnlId" var="cateGory" widgetVar="categoryCodes"
+		<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
-			rowIndexVar="index" styleClass="openPnlId" rows="10"
+			rowIndexVar="index" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedCategoryList}"
 			rowKey="#{cateGory}">
 
@@ -44,14 +44,23 @@
 		</p:dataTable>
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
-				process="@this, openPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
-				oncomplete="catCodePopup.show();"
-				action="#{categoryCodeSearchBackingBean.renewSesionObject}" rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+				process="@this, openPnlId" partialSubmit="true"
+				update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, openPnlId" partialSubmit="true"
-				action="#{qTSupplierQulCriteriaBackingBean.deleteCategoryCodes}"
-				update="openPnlId"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
+				oncomplete="supplierOpencategoryDeletePopUp.show();"
+				update="@([id$=#{supplierOpencategoryDeleteId}])"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 		</div>
+		<ui:param name="supplierOpencategoryDeleteId" value="supplierOpencategoryDeleteId" />
+		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
+			widget="supplierOpencategoryDeletePopUp"
+			okAction="qTSupplierQulCriteriaBackingBean.deleteCategoryCodes" width="400"
+			height="200" title="#{lbl['lbl.sc.category.code']}"
+			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+			update="@([id$=openPnlId])" />
 		
 		<ac:categoryCodePopup 
 			okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
@@ -191,9 +200,20 @@
 						update="@([id$=zonePopupPanel])"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						update="zoneLocationDataTable"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
-						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}" />
+						process="@this,zoneLocationDataTable" partialSubmit="true"
+						oncomplete="supplierNonZoneDeletePopUp.show();"
+						update="@([id$=#{supplierNonZoneDeleteId}])"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 				</div>
+				<ui:param name="supplierNonZoneDeleteId" value="supplierNonZoneDeleteId" />
+				<ac:confirmationPopup id="#{supplierNonZoneDeleteId}"
+					widget="supplierNonZoneDeletePopUp"
+					okAction="qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode"
+					width="400" height="200"
+					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
+					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
+					update="@([id$=zoneLocationDataTable])" />
+					
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}" toggleable="true"
@@ -202,7 +222,7 @@
 					<tr>
 						<td style="width: 185px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}" /></td>
-						<td><p:inputText size="30" maxlength="18"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<td><p:inputText size="30" maxlength="18" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
@@ -213,10 +233,10 @@
 					</tr>
 
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.location.level']}" /> <p:outputLabel
-								value="*" styleClass="mandatory" /></td>
-						<td><p:selectOneMenu id="locZoneLevels"  disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneMenu id="locZoneLevels"
+								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.locationLevel.parameterId}"
 								style="width: 178px;">
 
@@ -246,9 +266,9 @@
 							<p:tree value="#{zoneTree}" var="location"
 								selectionMode="checkbox">
 								<p:ajax event="select"
-									listener="#{specificationBackingBean.selectZoneTreeNode}" />
+									listener="#{qTSupplierQulCriteriaBackingBean.selectZoneTreeNode}" />
 								<p:ajax event="unselect"
-									listener="#{specificationBackingBean.unSelectZoneTreeNode}" />
+									listener="#{qTSupplierQulCriteriaBackingBean.unSelectZoneTreeNode}" />
 
 								<p:treeNode type="zone">
 									<h:outputText value="#{location.zoneName}" />
@@ -280,10 +300,21 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 						update="@([id$=zonePopupPanel])"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.showZoneLocationPopup}" />
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"  rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
-						action="#{qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode}"
-						update="zoneyesDataTable" />
+					
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+						process="@this,zoneyesDataTable" partialSubmit="true"
+						oncomplete="supplierZonalDeletePopUp.show();"
+						update="@([id$=#{supplierZonalDeleteId}])" />
 				</div>
+				<ui:param name="supplierZonalDeleteId" value="supplierZonalDeleteId" />
+				<ac:confirmationPopup id="#{supplierZonalDeleteId}"
+					widget="supplierZonalDeletePopUp"
+					okAction="qTSupplierQulCriteriaBackingBean.deleteSupplierQualificationTreeNode"
+					width="400" height="200"
+					title="#{lbl['lbl.sc.location.list.paidup.capital']}"
+					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
+					update="@([id$=zoneyesDataTable])" />
 			</p:panel>
 
 			<p:dialog header="#{lbl['lbl.sc.add.location']}"
