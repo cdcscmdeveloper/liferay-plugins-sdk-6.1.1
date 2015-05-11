@@ -479,16 +479,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 */
 	public void searchContract() throws Exception {
 		try { 
-			if ((getManagedBean().getCtNumber() == null || getManagedBean().getCtNumber().length() == 0)
-					&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().length() == 0) 
-					&& (getManagedBean().getCtCircularNo() == null || getManagedBean().getCtCircularNo().length() == 0) 
-					&& (getManagedBean().getCtCircularName() == null || getManagedBean().getCtCircularName().length() == 0) 
-					&& (getManagedBean().getCtSupplierId() == null || getManagedBean().getCtSupplierId().length() == 0) 
-					&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().length() == 0) 
+			if ((getManagedBean().getCtNumber() == null || getManagedBean().getCtNumber().trim().length() == 0)
+					&& (getManagedBean().getCtName() == null || getManagedBean().getCtName().trim().length() == 0) 
+					&& (getManagedBean().getCtCircularNo() == null || getManagedBean().getCtCircularNo().trim().length() == 0) 
+					&& (getManagedBean().getCtCircularName() == null || getManagedBean().getCtCircularName().trim().length() == 0) 
+					&& (getManagedBean().getCtSupplierId() == null || getManagedBean().getCtSupplierId().trim().length() == 0) 
+					&& (getManagedBean().getCtSupplierName() == null || getManagedBean().getCtSupplierName().trim().length() == 0) 
 					&& getManagedBean().getCtDateStart() == null
 					&& getManagedBean().getCtDateEnd() == null 
-					&& (getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().length() == 0) 
-					&& (getManagedBean().getCtLOANo() == null || getManagedBean().getCtLOANo().length() == 0) 
+					&& (getManagedBean().getCtPhysicalNo() == null || getManagedBean().getCtPhysicalNo().trim().length() == 0) 
+					&& (getManagedBean().getCtLOANo() == null || getManagedBean().getCtLOANo().trim().length() == 0) 
 					&& getManagedBean().getCtStatus() == 0 
 					&& getManagedBean().getTerminationTypeId() == null 
 					&& getManagedBean().getCtContractStatus() == null) {
@@ -3476,7 +3476,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 					
 					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
 					getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
-				}				
+				}
+				// Display the contract physical no of the agreement version during contract update
+				if (getManagedBean().getTaskId() == null) {
+					getManagedBean().getContractVer().setContractPhysicalNo(getManagedBean().getAgreementContractVer().getContractPhysicalNo());
+				}
 			} else {
 				getManagedBean().setAgreementContractVer(getManagedBean().getContractVer());
 			}

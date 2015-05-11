@@ -1553,7 +1553,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				}
 				if (getCtPhysicalNo() != null && getCtPhysicalNo().length() > 0) {
 				   	SearchFilterBean filterBean = new SearchFilterBean("contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
-				   									getCtPhysicalNo());
+				   									getCtPhysicalNo().trim());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
