@@ -17,6 +17,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.sc.BidStatusConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -106,6 +107,12 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	private TemplateSpecHelper tplSpecHelper;
 	
+	private Long pendingBidding = BidStatusConst.BID_PENDING_BIDDING;
+	private Long bidInProgress = BidStatusConst.BID_IN_PROGRESS;
+	private Long bidPaused = BidStatusConst.BID_PAUSED;
+	private Long bidCancelled = BidStatusConst.BID_CANCELLED;
+	private Long bidCompleted = BidStatusConst.BID_COMPLETED;
+	
 	/**
 	 * Default Constructor
 	 */
@@ -116,6 +123,96 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	
 	
+	/**
+	 * @return the pendingBidding
+	 */
+	public Long getPendingBidding() {
+		return pendingBidding;
+	}
+
+
+
+	/**
+	 * @param pendingBidding the pendingBidding to set
+	 */
+	public void setPendingBidding(Long pendingBidding) {
+		this.pendingBidding = pendingBidding;
+	}
+
+
+
+	/**
+	 * @return the bidInProgress
+	 */
+	public Long getBidInProgress() {
+		return bidInProgress;
+	}
+
+
+
+	/**
+	 * @param bidInProgress the bidInProgress to set
+	 */
+	public void setBidInProgress(Long bidInProgress) {
+		this.bidInProgress = bidInProgress;
+	}
+
+
+
+	/**
+	 * @return the bidPaused
+	 */
+	public Long getBidPaused() {
+		return bidPaused;
+	}
+
+
+
+	/**
+	 * @param bidPaused the bidPaused to set
+	 */
+	public void setBidPaused(Long bidPaused) {
+		this.bidPaused = bidPaused;
+	}
+
+
+
+	/**
+	 * @return the bidCancelled
+	 */
+	public Long getBidCancelled() {
+		return bidCancelled;
+	}
+
+
+
+	/**
+	 * @param bidCancelled the bidCancelled to set
+	 */
+	public void setBidCancelled(Long bidCancelled) {
+		this.bidCancelled = bidCancelled;
+	}
+
+
+
+	/**
+	 * @return the bidCompleted
+	 */
+	public Long getBidCompleted() {
+		return bidCompleted;
+	}
+
+
+
+	/**
+	 * @param bidCompleted the bidCompleted to set
+	 */
+	public void setBidCompleted(Long bidCompleted) {
+		this.bidCompleted = bidCompleted;
+	}
+
+
+
 	/**
 	 * @return the bidPriceItems
 	 */
