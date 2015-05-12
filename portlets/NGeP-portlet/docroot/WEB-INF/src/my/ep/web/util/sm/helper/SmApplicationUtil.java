@@ -104,7 +104,6 @@ import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmEduLevel;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmRace;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -154,7 +153,6 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.vo.SmApplStatusInfoVO;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
@@ -878,12 +876,14 @@ public class SmApplicationUtil {
 	}
 
 	public static void validateBasicInfoGstData(boolean validSave,
-			SmApplicationManagedBean managedBean, int currentTab) {
+			SmApplicationManagedBean managedBean, int currentTab,
+			SmRuleHelper ruleHelper) {
 		Locale locale = new FacesScopes().getUserLocale();
 		SmAppl appl = managedBean.getSmAppl();
 		if (!StringUtils.isEmpty(appl.getSmCompanyBasic()
 				.getGstRegistrationNo())
-				&& appl.getSmCompanyBasic().getGstRegistrationNo().length() != 12) {
+				&& appl.getSmCompanyBasic().getGstRegistrationNo().length() != ruleHelper
+						.getGstRegNumLength()) {
 			validSave = false;
 			setNavigationBackToCurrentPage(currentTab, managedBean);
 			throw new EpException(MessageConst.ERROR_722603,
@@ -1547,7 +1547,8 @@ public class SmApplicationUtil {
 	 * @return true, if successful
 	 */
 	public static boolean validateEquityOwnerAmount(
-			SmApplicationManagedBean managedBean, int currentTab) {
+			SmApplicationManagedBean managedBean, int currentTab,
+			SmRuleHelper ruleHelper) {
 		Locale locale = new FacesScopes().getUserLocale();
 		boolean validAmt = true;
 		String s = "";
@@ -1577,24 +1578,35 @@ public class SmApplicationUtil {
 
 		if (managedBean.getSmAppl().getSmCompanyBasic().getPaidUpCapital() != null) {
 			boolean validPaidUp = true;
-			String amt = "";
+			// String amt = "";
 			String supType = "";
+			StringBuilder sb = new StringBuilder();
+			sb.append("RM.");
 			if (managedBean.getSmAppl().getSupplierType()
 					.equals(SupplierManagementConst.STYPE_CONSULTANT)
-					&& managedBean.getSmAppl().getSmCompanyBasic()
+					&& managedBean
+							.getSmAppl()
+							.getSmCompanyBasic()
 							.getPaidUpCapital()
-							.compareTo(new BigDecimal(50000)) < 0) {
+							.compareTo(
+									new BigDecimal(ruleHelper
+											.getMinPaidUpCapitalForConsultant())) < 0) {
 				validPaidUp = false;
-				amt = "RM50,000";
+				sb.append(ruleHelper.getMinPaidUpCapitalForConsultant());
 				supType = ResourceBundleUtils.getMessage(
 						"lbl.sm.consultant.lowercaps",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 			} else if (managedBean.getSmAppl().getSupplierType()
 					.equals(SupplierManagementConst.STYPE_CONTRACTOR)
-					&& managedBean.getSmAppl().getSmCompanyBasic()
-							.getPaidUpCapital().compareTo(new BigDecimal(2500)) < 0) {
+					&& managedBean
+							.getSmAppl()
+							.getSmCompanyBasic()
+							.getPaidUpCapital()
+							.compareTo(
+									new BigDecimal(ruleHelper
+											.getMinPaidUpCapitalForContractor())) < 0) {
 				validPaidUp = false;
-				amt = "RM2,500";
+				sb.append(ruleHelper.getMinPaidUpCapitalForContractor());
 				supType = ResourceBundleUtils.getMessage(
 						"lbl.sm.contractor.lowercaps",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
@@ -1603,7 +1615,7 @@ public class SmApplicationUtil {
 				validAmt = false;
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				throw new EpException(MessageConst.ERROR_722555, new String[] {
-						s, amt, supType });
+						s, sb.toString(), supType });
 			}
 		}
 		if (managedBean.getBusinessTypeVal() != null
