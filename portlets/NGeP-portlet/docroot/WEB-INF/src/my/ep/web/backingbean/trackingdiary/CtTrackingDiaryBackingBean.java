@@ -36,6 +36,7 @@ import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -90,29 +91,40 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 //		return flDocTypes;
 //	}
 
-	public SelectItem[] getContractType() {
-		SelectItem[] items = null;
+	public List<SelectItem> getContractType() {
+		List<SelectItem> items = null;
 		FacesScopes face = new FacesScopes();
 
 		try {
 
-			items = new SelectItem[5];
+			items = new ArrayList<SelectItem>();
+			
 
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			items[1] = new SelectItem(new String(ParameterConst.CONTRACT_TYPE_CENTRAL), ResourceBundleUtils.getMessage(
-					"lbl.ct.central.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			items[2] = new SelectItem(new String(ParameterConst.CONTRACT_TYPE_MINISTRY), ResourceBundleUtils.getMessage(
-					"lbl.ct.ministry.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));					
-			items[3] = new SelectItem(new String(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR), ResourceBundleUtils.getMessage(
-					"lbl.ct.central.contract.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			items[4] = new SelectItem(new String(ParameterConst.DOCTYPE_PANEL_CIRCULAR), ResourceBundleUtils.getMessage(
+					face.getUserLocale())));
+			
+			// Contract Administrator
+			if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
+				items.add(new SelectItem(new String(ParameterConst.CONTRACT_TYPE_MINISTRY), ResourceBundleUtils.getMessage(
+						"lbl.ct.ministry.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale())));				
+			}
+			// Central Contract Administrator
+			if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
+				items.add(new SelectItem(new String(ParameterConst.CONTRACT_TYPE_CENTRAL), ResourceBundleUtils.getMessage(
+						"lbl.ct.central.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale())));
+				items.add(new SelectItem(new String(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR), ResourceBundleUtils.getMessage(
+						"lbl.ct.central.contract.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						face.getUserLocale())));
+			}
+			// Panel Contract Administrator
+			if (getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) {			
+				items.add(new SelectItem(new String(ParameterConst.DOCTYPE_PANEL_CIRCULAR), ResourceBundleUtils.getMessage(
 					"lbl.ct.panel.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
+					face.getUserLocale())));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
