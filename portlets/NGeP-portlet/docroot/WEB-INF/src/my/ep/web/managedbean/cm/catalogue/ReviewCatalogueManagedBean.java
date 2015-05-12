@@ -87,6 +87,7 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 				
 				
 				reqDTO.setItemStatus("P");
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
