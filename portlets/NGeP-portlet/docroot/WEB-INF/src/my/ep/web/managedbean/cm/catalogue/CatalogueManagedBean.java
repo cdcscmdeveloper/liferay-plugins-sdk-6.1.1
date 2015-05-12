@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
@@ -476,6 +477,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
 				reqDTO.setItemStatus("E");
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
@@ -538,6 +540,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
 				reqDTO.setItemStatus("U");
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
@@ -601,6 +604,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
 				reqDTO.setItemStatus("R");
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
@@ -663,6 +667,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
 				reqDTO.setItemStatus("A");
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
@@ -725,6 +730,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
 				reqDTO.setItemStatus("P");
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
@@ -789,7 +795,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
+				
+				
+				
+				
 				reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
+				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
