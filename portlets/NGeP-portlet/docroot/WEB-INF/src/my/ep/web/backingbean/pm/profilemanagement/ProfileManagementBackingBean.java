@@ -462,6 +462,7 @@ public class ProfileManagementBackingBean extends
 
 			// load attachment
 			if (pmUser.getPmUserAttachments() == null) {
+				logger.info("...........attachment list is empty");
 				pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
 			}
 
@@ -506,7 +507,7 @@ public class ProfileManagementBackingBean extends
 	 * 
 	 * @param id
 	 */
-	private void loadUserInfo(Long id, PmUserOrg pmUserOrg) {
+	private void loadUserInfo(Long id) {
 		logger.info("loadUserInfo - Start");
 		try {
 
@@ -521,28 +522,11 @@ public class ProfileManagementBackingBean extends
 				// PmParameter()
 				// : pmUser.getOrgTypeCode());
 				// // for the initial load
-				if (pmUserOrg != null) {// set the active org and disable edit
-					pmUserOrg.setPMP(pmUserOrg.isPMP() ? true : false);
-					pmUser.setHasActiveOrg(true);
-					clearUserOrgInfo(pmUserOrg);
-					this.getManagedBean().setSelectedUserOrg(pmUserOrg);
-				} else {// if no active userOrg initial it
-					pmUser.setPmUserOrgs(new ArrayList<PmUserOrg>());
-
-					// ////////////////////fill up relations to PmUser
-					PmUserOrg newUserOrg = new PmUserOrg();
-					newUserOrg.setPMP(false);
-					PmOrgProfile pmOrgProfile = new PmOrgProfile();
-					pmOrgProfile.setOrgTypeCode(new PmParameter());
-					pmOrgProfile.setPmOrgValidity(new PmOrgValidity());
-					newUserOrg.setPmOrgProfile(pmOrgProfile);
-					newUserOrg.setEffDate(new Timestamp(System
-							.currentTimeMillis()));
-					newUserOrg.setPmUser(pmUser);
-					pmUser.getPmUserOrgs().add(newUserOrg);
-					this.getManagedBean().setSelectedUserOrg(newUserOrg);
-
-				}
+				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
+				pmUserOrg.setPmUser(pmUser);
+				pmUser.getPmUserOrgs().add(pmUserOrg);
+				this.getManagedBean().setSelectedUserOrg(pmUserOrg);
+				
 
 			}
 
@@ -608,7 +592,7 @@ public class ProfileManagementBackingBean extends
 				+ this.getManagedBean().getSelectedUserOrg());
 
 		// pmUser.setOrgTypeCode(new PmParameter());
-		pmUser.setOrgAddress(ProfileManagementConst.DEFAULT_IS_SAME_ORG_ADDR);
+//		pmUser.setOrgAddress(ProfileManagementConst.DEFAULT_IS_SAME_ORG_ADDR);
 		pmUser.setNotifyByEmail(ProfileManagementConst.DEFAULT_IS_NOTIFY_BY_EMAIL);
 
 		// initial preference
@@ -3126,7 +3110,7 @@ public class ProfileManagementBackingBean extends
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
 
-				// loadUserProfile(resDTO.getPmUser().getUserId());
+				 loadUserProfile(resDTO.getPmUser().getUserId() , userOrg);
 
 				if (!StringUtils.isBlank(resDTO.getRemarks())) {
 					// OIM user creation successfully, problem with roles.
@@ -3528,11 +3512,12 @@ public class ProfileManagementBackingBean extends
 							.retrieveActiveOrg(user.getUserId());
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
-						loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
+//						loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
+						this.getManagedBean().getSelectedUser().setHasActiveOrg(true);
 						throw new EpException(MessageConst.ERROR_770155);
 					} else {
-						loadUserInfo(user.getUserId(), null);
+						loadUserInfo(user.getUserId());
 						// assign new pmUserOrg object to the current user
 					}
 
