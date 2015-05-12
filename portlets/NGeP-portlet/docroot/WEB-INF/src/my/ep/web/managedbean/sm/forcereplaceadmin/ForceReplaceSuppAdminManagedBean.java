@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.sm.forcereplaceadmin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,7 +11,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.ReactivateSupplierVO;
 
 @ManagedBean(name = "forceReplaceSuppAdminMb")
