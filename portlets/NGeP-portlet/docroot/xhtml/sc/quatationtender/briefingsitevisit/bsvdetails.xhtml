@@ -103,9 +103,17 @@
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this,briefingdtlid" partialSubmit="true"
 						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
-						update="@form" />
+						oncomplete="briefingDetailsDeletePopUp.show();"
+						update="@([id$=#{briefingDetailsDeleteId}])" />
 				</div>
+				<ui:param name="briefingDetailsDeleteId" value="briefingDetailsDeleteId" />
+				<ac:confirmationPopup id="#{briefingDetailsDeleteId}"
+					widget="briefingDetailsDeletePopUp"
+					okAction="qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')"
+					width="450" height="200"
+					title="#{lbl['lbl.sc.briefing.dtls']}"
+					content="#{lbl['lbl.sc.dialog.confirm.briefing.details.dtls']}"
+					update="@form" />
 			</f:facet>
 		</p:panelGrid>
 	</p:panel>
@@ -191,36 +199,46 @@
 							<p:commandButton value="#{lbl['lbl.btn.delete']}"
 								rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
 								process="@this, sitevisitdtlid" partialSubmit="true"
-								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
-								update="@([id$=sitevisitdtlid])" />
+								oncomplete="sitevisitDetailsDeletePopUp.show();"
+								update="@([id$=#{sitevistDetailsDeleteId}])" />
 						</div>
+						<ui:param name="sitevistDetailsDeleteId" value="sitevistDetailsDeleteId" />
+						<ac:confirmationPopup id="#{sitevistDetailsDeleteId}"
+							widget="sitevisitDetailsDeletePopUp"
+							okAction="qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')"
+							width="450" height="200"
+							title="#{lbl['lbl.sc.briefing.dtls']}"
+							content="#{lbl['lbl.sc.dialog.confirm.sitevisit.details.dtls']}"
+							update="@form" />
 					</f:facet>
 				</p:panelGrid>
-				<table style="width: 100%" border="0">
-					<tr>
-						<td style="width: 140px;"><p:outputLabel
-								value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
-						<td style="width: 130px;white-space:nowrap;"><p:selectOneRadio
-								disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-								value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
-								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
-								<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
-								<p:ajax event="click"
-									listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
-									update="@([id$=minSiteVisitAtt])" />
-							</p:selectOneRadio></td>
-						<td><h:panelGroup id="minSiteVisitAtt">
-								<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
-									<p:inputText id="minSiteVisitAttss" size="5"
-										value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
-										readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" />
-								</ui:fragment>
-							</h:panelGroup></td>
-						<td>
-							<ac:iconTooltip value="#{lbl['lbl.sc.qt.attendance.tooltip']}" />
-						</td>
-					</tr>
-				</table>
+				<h:panelGroup rendered="#{bsvdtlbean.sitevisitList.size() eq 1}">
+					<table style="width: 100%" border="0">
+						<tr>
+							<td style="width: 140px;"><p:outputLabel
+									value="#{lbl['lbl.sc.qt.attendance.site']}" /></td>
+							<td style="width: 130px;white-space:nowrap;"><p:selectOneRadio
+									disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+									value="#{bsvdtlbean.scQtBsv.allSiteVisitReq}">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.all']}" itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.qt.atleast']}" itemValue="false" />
+									<p:ajax event="click"
+										listener="#{qTBriefingSiteVisitBackingBean.siteVisitClickEvent}"
+										update="@([id$=minSiteVisitAtt])" />
+								</p:selectOneRadio></td>
+							<td style="width: 60px;"><h:panelGroup id="minSiteVisitAtt">
+									<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
+										<p:inputText id="minSiteVisitAttss" size="5" style="width: 30px;"
+											value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
+											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" />
+									</ui:fragment>
+								</h:panelGroup></td>
+							<td>
+								<ac:iconTooltip value="#{lbl['lbl.sc.qt.attendance.tooltip']}" />
+							</td>
+						</tr>
+					</table>
+				</h:panelGroup>
 			</p:panel>
 		</h:panelGroup>
 	</h:panelGroup>
