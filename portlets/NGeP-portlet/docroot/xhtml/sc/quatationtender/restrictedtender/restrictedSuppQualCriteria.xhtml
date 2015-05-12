@@ -12,7 +12,7 @@
 		<p:dataTable id="restrictedPnlId" var="restrcitedCateGory"
 			widgetVar="restrictedCategoryCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.suppCriteriarestrictedList}"
-			rowIndexVar="index" styleClass="restrictedPnlId" rows="10"
+			rowIndexVar="index" rows="10"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedRestrictedCategoryList}"
 			rowKey="#{restrcitedCateGory}">
 
@@ -50,13 +50,22 @@
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, restrictedPnlId" partialSubmit="true" update="@([id$=catCodePopup])"
 				oncomplete="catCodePopup.show();"
-				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}" 
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, restrictedPnlId" 
-				action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction}"
-				update="restrictedPnlId" />
+				process="@this, restrictedPnlId" partialSubmit="true"
+				oncomplete="supplierRestrictedCategoryDeletePopUp.show();"
+				update="@([id$=#{supplierRestrictedCategoryDeleteId}])"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}" />
 		</div>
-		
+		<ui:param name="supplierRestrictedCategoryDeleteId" value="supplierRestrictedCategoryDeleteId" />
+		<ac:confirmationPopup id="#{supplierRestrictedCategoryDeleteId}"
+			widget="supplierRestrictedCategoryDeletePopUp"
+			okAction="qTSupplierQulCriteriaBackingBean.deleteRestrictedCategoryAction" width="400"
+			height="200" title="#{lbl['lbl.sc.category.code']}"
+			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+			update="@([id$=restrictedPnlId])" />
+			
 		<ac:categoryCodePopup 
 			okAction="qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryAction"
 			update="@([id$=restrictedPnlId])" />

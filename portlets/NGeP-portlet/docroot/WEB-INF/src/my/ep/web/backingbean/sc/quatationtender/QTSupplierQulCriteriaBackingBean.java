@@ -13,6 +13,7 @@ package my.ep.web.backingbean.sc.quatationtender;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -97,6 +98,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.SupplierSearchBean;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.quationtender.QTDetailManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -282,8 +284,8 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		List<ScQtCategory> restrictedSelectList = this.getManagedBean()
 				.getSelectedRestrictedCategoryList();
-		if (null == restrictedSelectList) {
-			restrictedSelectList = new ArrayList<ScQtCategory>();
+		if (null == restrictedSelectList || restrictedSelectList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
 		}
 		if (restrictedList.size() == restrictedSelectList.size()) {
 			restrictedList.clear();
@@ -413,6 +415,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			getManagedBean().setSearchSupplierDataModel(new SupplierPagingDataModel("ressupplier", getManagedBean().getSupplierSearchBean()));
 		}
 		getManagedBean().getSearchSupplierDataModel().resetData();
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 	
 	/**
@@ -502,27 +505,34 @@ public class QTSupplierQulCriteriaBackingBean extends
 		List<String> itemIds = new ArrayList<String>();
 		if (!selectedSupplierList.isEmpty()) {
 			for (SmSupplier smSupplier : selectedSupplierList) {
-				ScQtSupplier scQtSupplier = new ScQtSupplier();
-				scQtSupplier.setSmSupplier(smSupplier);
-				scQtSupplier.setScQt(scQt);
-				scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
-				
-				if (this.getManagedBean().getQtSupplierList().isEmpty()) {
-					this.getManagedBean().getQtSupplierList().add(scQtSupplier);
-					getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
-				} else {
-					for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
-						itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
-					}
-					if (itemIds.size() > 0) {
-						if (itemIds.contains(smSupplier.getSupplierId().toString())) {
-							throw new EpException(MessageConst.ERROR_760197);
-						} else {
-							qtSupplierList.add(scQtSupplier);
-							this.getManagedBean().setQtSupplierList(qtSupplierList);	
-							getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+				Date presentDate = new Date();
+				Date expDate = smSupplier.getSmMofAccount().getExpDate();
+				long days = DateUtils.getDaysDifference(presentDate, expDate);
+				int day = (int) days;
+				if (day > 0) {
+					ScQtSupplier scQtSupplier = new ScQtSupplier();
+					scQtSupplier.setSmSupplier(smSupplier);
+					scQtSupplier.setScQt(scQt);
+					scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
+					if (this.getManagedBean().getQtSupplierList().isEmpty()) {
+						this.getManagedBean().getQtSupplierList().add(scQtSupplier);
+						getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+					} else {
+						for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
+							itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
+						}
+						if (itemIds.size() > 0) {
+							if (itemIds.contains(smSupplier.getSupplierId().toString())) {
+								throw new EpException(MessageConst.ERROR_760197);
+							} else {
+								qtSupplierList.add(scQtSupplier);
+								this.getManagedBean().setQtSupplierList(qtSupplierList);	
+								getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+							}
 						}
 					}
+				} else {
+					log.info("before present date.");
 				}
 			}
 		} else {
