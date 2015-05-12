@@ -41,11 +41,18 @@
 			border: 1px solid black;
 		}
 		.tdInfoTable {
-			border: 1px solid black;
+			border: 0px solid black;
 			font-family: Verdana;
-			font-size: 12px;
+			font-size: 8px;
 			font-weight: normal;
 			font-style: inherit;
+		}
+		.table2 {
+			border-collapse: collapse;
+			width:100%;
+			marigin-left: 2px;
+			margin-right: 2px;
+			margin-bottom: -1px;
 		}
 	</style>
 </head>
@@ -63,7 +70,7 @@
 	<tr>
 		<td class="tdInfoTable" width='200'>Item</td>
 		<td class="tdInfoTable" width='750'>
-			<table class="infoTable">
+			<table class="table2">
 				<tr>
 					<td width='200'>Recommended Supplier</td>
 					<td width='50'>Proposal ID</td>
@@ -81,7 +88,7 @@
 		<td class="tdInfoTable" width='200'>$item.requestItem.itemName</td>
 		<td class="tdInfoTable" width='750'>
 			#foreach( $scQtRecommendDtl in $item.recommendDtls )
-			<table class="infoTable">
+				<table class="table2">
 					<tr>
 						#if ($scQtRecommendDtl.recordStatus)
 						<td width='200'>$scQtRecommendDtl.supplier.companyName</td>
@@ -98,7 +105,7 @@
 						<td width='50'></td>
 						#end
 					</tr>
-			</table>
+				</table>
 			#end
 		</td>
 		<td class="tdInfoTable" width='50'>$item.requestItem.quantity</td>
