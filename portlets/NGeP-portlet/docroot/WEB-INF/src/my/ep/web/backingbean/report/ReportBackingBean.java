@@ -151,6 +151,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
 	private List<SelectItem> identificationTypeList = new ArrayList<SelectItem>();
 	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
+	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -414,6 +415,14 @@ public class ReportBackingBean extends
 		this.selectedCatList = selectedCatList;
 	}
 
+	public List<SelectItem> getRegistrationStatusList() {
+		return registrationStatusList;
+	}
+
+	public void setRegistrationStatusList(List<SelectItem> registrationStatusList) {
+		this.registrationStatusList = registrationStatusList;
+	}
+
 	public boolean isValueReqd() {
 		return valueReqd;
 	}
@@ -653,8 +662,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	private Long lngUserId = (long)25;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2409,6 +2418,23 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	public List<SelectItem> retrieveRegStatusList(){
+		registrationStatusList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+			
+					List<Object[]> regStatusList = reportSO.retrieveRegStatusList("en");			
+					for (Object[] object : regStatusList) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[1].toString());
+						selectItem.setLabel(object[0].toString());
+						registrationStatusList.add(selectItem);
+					}
+			}
+		return registrationStatusList;
+	}
 	public List<SelectItem> getAllModuleList(){
 		 moduleList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3797,6 +3823,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				retrieveUPSSVOUser();
 				retrieveIdentificationType();
 				retrieveAccumulatedPaidUpCptl();
+				retrieveRegStatusList();
 				smReportBackingBean.enableCriteriaVariablesByReportBySM(
 						rptGenBean, authoriztionList);
 			} else if ((this.getModuleValue()
