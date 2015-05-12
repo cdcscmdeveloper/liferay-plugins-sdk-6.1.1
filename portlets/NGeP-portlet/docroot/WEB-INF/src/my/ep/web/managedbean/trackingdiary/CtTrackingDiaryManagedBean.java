@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
@@ -36,7 +37,7 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 	
 	private String searchTrasactionType; 
 	private String searchViewType;
-	private String searchContractNo;
+	private String searchDocNo;
 	private String searchLoaNo;
 	private String searchPhysLoaNo;
 	private String searchPhysContractNo;
@@ -74,21 +75,32 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 				// Contract always is search by group
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
 //				}
-				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
-					System.out.println("docNo" + getSearchContractNo() );
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchContractNo()));
+				if(getSearchDocNo()!=null && getSearchDocNo()!="") {
+					System.out.println("docNo" + getSearchDocNo() );
+					SearchFilterBean filterBean = new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
+					// Order by document number
+					searchBean.getSortColumns().add(
+							new SearchOrderBean("docNo", true));
 				}
 				if(getSearchPhysContractNo()!=null && getSearchPhysContractNo()!="") {
 					System.out.println("physicalDocNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo()));
+					SearchFilterBean filterBean = new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysContractNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSearchLoaNo()!=null && getSearchLoaNo()!="") {
 					System.out.println("loaNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo()));
+					SearchFilterBean filterBean = new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if(getSearchPhysLoaNo()!=null && getSearchPhysLoaNo()!="") {
 					System.out.println("loaPhysicalNo");
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo()));
+					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysLoaNo());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);
 				}	
 //				if(getSearchContractFromDuration()!=null) {
 //					System.out.println("searchContractFromDuration");
@@ -133,12 +145,12 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 		this.searchViewType = searchViewType;
 	}
 
-	public String getSearchContractNo() {
-		return searchContractNo;
+	public String getSearchDocNo() {
+		return searchDocNo;
 	}
 
-	public void setSearchContractNo(String searchContractNo) {
-		this.searchContractNo = searchContractNo;
+	public void setSearchDocNo(String searchDocNo) {
+		this.searchDocNo = searchDocNo;
 	}
 
 	public String getSearchLoaNo() {
