@@ -10,13 +10,15 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.FLProcessNameConst;
-import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -24,12 +26,13 @@ import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
-import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 @ManagedBean(name = "bpmTasklistMB")
 @SessionScoped
 public class BPMTaskListManagedBean extends BaseManagedBean {
-
 	private List<WorklistItemVO> taskList;
 	private List<FlFulfilmentOrder> flFulfilmentOrderList;
 	private Map bpmMap = new HashMap();
@@ -242,7 +245,18 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 							//worklistItemVO.setTitle(SmCommonUtil.getSmBpmTaskTitle(worklistItemVO.getTitle(),worklistItemVO.getProcess()));
 							//sm module
 						       if(worklistItemVO.getTitle().startsWith("lbl.sm")) {
-						        worklistItemVO.setTitle(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    		MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+						    		System.out.println("***** The document Id for the workflow is ****** "+worklistItemVO.getDocId());
+									mofResDto = retriveCompanyNameByApplicationId(worklistItemVO.getDocId());
+						    	   StringBuilder sb = new StringBuilder();
+						    	   sb.append(ResourceBundleUtils.getMessage(worklistItemVO.getTitle(), ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+						    	   if(mofResDto.getCompanyName() != null){
+						    		   	   sb.append(" ( ");
+								    	   sb.append(mofResDto.getCompanyName());
+								    	   sb.append(" ) ");					    	   
+						    	   }
+						    	   
+						        worklistItemVO.setTitle(sb.toString());
 						       }
 						}
 					}
@@ -263,6 +277,30 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	}
 
+	private MofRegistrationResDTO retriveCompanyNameByApplicationId(long applId) {
+
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setApplId(applId);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveCompanyNameByApplId(reqDto);
+			return resDTO;
+
+		} catch (Exception e) {
+			System.out.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			resDTO.setErrorCaued(Boolean.TRUE);
+			return resDTO;
+		} finally {
+			mofRegistrationSO = null;
+		}
+
+	}
 	private int calculateFinalOffSet(int currentPage) {
 
 		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
