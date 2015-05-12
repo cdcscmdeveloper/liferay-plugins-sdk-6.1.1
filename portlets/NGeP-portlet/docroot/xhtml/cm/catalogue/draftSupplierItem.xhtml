@@ -41,7 +41,7 @@
 	<p:dataTable id="draftSupplierItemID" lazy="true"
 		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
-		rowKey="#{selectedSuppCat.supplierItemId}" rows="10"
+		rowKey="#{selectedSuppCat.supplierItemId}"
 		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
 
 		<ac:paginator for="draftSupplierItemID"></ac:paginator>
@@ -58,7 +58,7 @@
 		<p:ajax event="toggleSelect"
 			update=":form:downloadLink,:form:submitLink" />
 
-		<p:column width="5%" >
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.code']}
 			</f:facet>
@@ -66,7 +66,7 @@
 				style="white-space: normal" />
 		</p:column>
 
-		<p:column width="30%" >
+		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
@@ -74,8 +74,7 @@
 				style="white-space: normal" />
 
 		</p:column>
-		<p:column width="5%"
-			>
+		<p:column width="5%">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.price']}" />
