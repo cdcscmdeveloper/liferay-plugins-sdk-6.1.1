@@ -10,21 +10,25 @@
 */
 package my.ep.web.managedbean.cm.catalogue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.persistence.entity.cm.catalog.CmWishlist;
-import my.ep.persistence.entity.cm.catalog.CmWishlistDtl;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.vo.AdvanceSearchVO;
-import my.ep.web.vo.PricingVO;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 
 /**
@@ -35,8 +39,7 @@ import my.ep.web.vo.PricingVO;
 @SessionScoped
 public class ReviewCatalogueManagedBean extends BaseManagedBean {
 	
-	/** The review supplier items. */
-	private List<CmSupplierItem> reviewSupplierItems;
+	
 	
 	/** The selected review cat. */
 	private CmSupplierItem selectedReviewCat;
@@ -48,7 +51,58 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 	private Integer catDetTabActiveIndex = 0;
 	
 	
+	private IPagingDataModel<CmSupplierItem> approvalSearchDataModel = new ApprovalSearchPagingDataModel();
 	
+	
+	private class ApprovalSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new search paging data model.
+		 */
+		public ApprovalSearchPagingDataModel() {
+			super("catalogueTableId");
+			// TODO Auto-generated constructor stub
+		}
+
+		/**
+		 * page Change Listener.
+		 * @param  searchBean 
+		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * @return ISearchBean<CmSupplierItem>
+		 */
+		@Override
+		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
+				ISearchBean<CmSupplierItem> searchBean) {
+
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
+					.getInstance().getServiceObject("cm", ICatalogueSO.class);
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+			
+			try {
+				
+				
+				reqDTO.setItemStatus("P");
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				System.out.println("resDTO.getSupplierItemList():"
+						+ resDTO.getSupplierItemList().size());
+
+				return resDTO.getSuppItemResultBean();
+
+			}catch(Exception e){
+				e.printStackTrace();
+				return new SearchResultBean();
+			} finally {
+				catalogueSO = null;
+				
+			}
+		}
+
+	}
 	
 	
 
@@ -71,26 +125,6 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 		this.selectedReviewCat = selectedReviewCat;
 	}
 
-	/**
-	 * Gets the review supplier items.
-	 * 
-	 * @return the review supplier items
-	 */
-	public List<CmSupplierItem> getReviewSupplierItems() {
-		if(reviewSupplierItems==null)
-			reviewSupplierItems = new ArrayList<CmSupplierItem>();
-		return reviewSupplierItems;
-	}
-
-	/**
-	 * Sets the review supplier items.
-	 * 
-	 * @param reviewSupplierItems
-	 *            the new review supplier items
-	 */
-	public void setReviewSupplierItems(List<CmSupplierItem> reviewSupplierItems) {
-		this.reviewSupplierItems = reviewSupplierItems;
-	}
 
 	/**
 	 * Checks if is reject reason.
@@ -129,6 +163,17 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 	public void setCatDetTabActiveIndex(Integer catDetTabActiveIndex) {
 		this.catDetTabActiveIndex = catDetTabActiveIndex;
 	}
+
+	public IPagingDataModel<CmSupplierItem> getApprovalSearchDataModel() {
+		return approvalSearchDataModel;
+	}
+
+	public void setApprovalSearchDataModel(
+			IPagingDataModel<CmSupplierItem> approvalSearchDataModel) {
+		this.approvalSearchDataModel = approvalSearchDataModel;
+	}
+	
+	
 	
 	
 	

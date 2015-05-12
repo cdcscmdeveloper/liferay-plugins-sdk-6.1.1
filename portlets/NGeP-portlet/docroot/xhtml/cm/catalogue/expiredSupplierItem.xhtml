@@ -8,8 +8,8 @@
 
 
 
-	<p:dataTable id="expiredSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.expiredItemList}"
+	<p:dataTable id="expiredSupplierItemID" lazy="true"
+		value="#{catalogueBackingBean.managedBean.expiredSearchDataModel}"
 		rowIndexVar="rowIndex" var="expired"
 		rowKey="#{expired.supplierItemId}"
 		rows="10">

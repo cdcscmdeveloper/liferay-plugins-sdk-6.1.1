@@ -24,8 +24,8 @@
 		<p:remoteCommand name="reviewCat"
 			action="#{reviewCatBackingBean.navigateToCatalogDet}" />
 
-		<p:dataTable rowKey="#{review.supplierItemId}" id="catalogueTableId"
-			value="#{reviewCatBackingBean.managedBean.reviewSupplierItems}"
+		<p:dataTable rowKey="#{review.supplierItemId}" id="catalogueTableId" lazy="true"
+			value="#{reviewCatBackingBean.managedBean.approvalSearchDataModel}"
 			var="review" selectionMode="single"
 			selection="#{reviewCatBackingBean.managedBean.selectedReviewCat}"
 			rows="10">
