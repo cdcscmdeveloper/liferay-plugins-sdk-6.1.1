@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 136px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td style="width: 378px;"><p:inputText size="59" id="ministry"
-						value="#{receivedNoteBackingBean.retrieveMinistryByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId)}"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td style="width: 150px;" rowspan="3" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
@@ -24,7 +24,7 @@
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="59" id="ptjGroup"
-						value="#{receivedNoteBackingBean.retrieveJabatanByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmPtjGroup.groupName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -144,7 +144,7 @@
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
 				<td style="width:274px;"><p:inputText size="15" disabled="true" 
-									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>		
+									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>			
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
