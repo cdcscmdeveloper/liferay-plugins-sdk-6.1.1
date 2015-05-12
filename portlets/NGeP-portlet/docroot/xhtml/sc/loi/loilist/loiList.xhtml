@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
 		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
@@ -81,12 +82,20 @@
 							value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, loiloaBean.loiLoaType)}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.item']}" style="width:15%">
-						<p:commandButton value="view" partialSubmit="true" process="@this"
-							action="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
-							update=":form:ItemDetailsPopup"
-							oncomplete="ItemDetailsPopup.show();">
-						</p:commandButton>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.item']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
+						</f:facet>
+						<p:commandLink
+							actionListener="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
+							oncomplete="ItemDetailsPopup.show()" update=":form:ItemDetailsPopup"
+							process="@this">
+							<p:graphicImage library="ep/images/design" name="document.png"
+								title="Item Detail"
+								value="/resources/ep/images/design/document.png"
+								style="margin-right:2px;" />
+						</p:commandLink>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.status']}" style="width:15%">

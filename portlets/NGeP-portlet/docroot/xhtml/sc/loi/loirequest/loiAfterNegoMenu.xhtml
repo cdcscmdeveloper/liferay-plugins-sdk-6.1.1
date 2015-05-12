@@ -5,58 +5,66 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:include src="loiNegotiationDetailsMenu.xhtml" />
 	
-	<p:panel header="#{lbl['lbl.sc.supporting.document']}" toggleable="false">
+	<ui:include src="loiNegotiationDetailsMenu.xhtml" />
+
+	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
+		toggleable="false">
 		<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"
 			widgetVar="suppDocTblWidget"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
 			rows="10" rowKey="#{scLoiSuppDoc}"
 			selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}">
-			
+
 			<ac:paginator for="suppDocTbl" />
 
-			<p:column selectionMode="multiple" style="width:2%" rendered="#{isEditableStatus}" />
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{isEditableStatus}" />
 
 			<p:column headerText="#{lbl['lbl.sc.document.title']}">
-				<h:inputText style="width:96%" value="#{scLoiSuppDoc.title}"/>
+				<h:inputText style="width:96%" value="#{scLoiSuppDoc.title}" />
 			</p:column>
 
 
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment>
-					<h:outputText value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" />
+					<h:outputText
+						value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" />
 					<p:commandButton oncomplete="loiSuppAttmPopupDlg.show();"
-						value="#{lbl['lbl.txt.attachment']}"
-						partialSubmit="true" process="@this"
-						update="@([id$=loiSuppAttmPopup])">
+						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
+						process="@this" update="@([id$=loiSuppAttmPopup])">
 						<f:setPropertyActionListener
 							target="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDoc}"
 							value="#{scLoiSuppDoc}" />
 					</p:commandButton>
 				</ui:fragment>
 			</p:column>
-			
+
 		</p:dataTable>
-		
+
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, suppDocTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
-				update="suppDocTbl"
-				rendered="#{isEditableStatus}" />
+				update="suppDocTbl" rendered="#{isEditableStatus}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, suppDocTbl" partialSubmit="true"
-				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs, lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs)}"
-				update="suppDocTbl"
-				rendered="#{isEditableStatus}" />
+				rendered="#{isEditableStatus}"
+				oncomplete="supporingDocDeletePopUp.show();"
+				update="@([id$=#{supporingDocDeleteId}])" />
+
 		</div>
+		<ac:confirmationPopup id="supporingDocDeleteId"
+			widget="supporingDocDeletePopUp"
+			okAction="lOIDetailBackingBean.deleteSupporingDocs" width="400"
+			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 	</p:panel>
-	
+
 	<ui:include src="loiAwardDetailsMenu.xhtml" />
-	
+
 
 </ui:composition>
