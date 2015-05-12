@@ -8,74 +8,82 @@
 
 
 	<script type="text/javascript">
-  
-
-    function clearInvalidFileMsg() {
-    	fileUploadWidget.uploadContent.find("tr.ui-state-error").remove();
-    }
-</script>
+		function clearInvalidFileMsg() {
+			fileUploadWidget.uploadContent.find("tr.ui-state-error").remove();
+		}
+	</script>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.upload']}" 
-			onclick="excelDialog.show(); clearInvalidFileMsg();"  />
+		<p:commandButton value="#{lbl['lbl.cm.upload']}"
+			onclick="excelDialog.show(); clearInvalidFileMsg();" />
 
-		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}" disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
 			update=":form" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
-		
+
 		<ui:remove>
-		<p:commandButton id="reportLink" value="#{lbl['lbl.cm.download']} Report"
-			update=":form"  ajax="false">
-			<p:fileDownload value="#{reportBackingBean.reportPdf}" />
-		</p:commandButton>		
+			<p:commandButton id="reportLink"
+				value="#{lbl['lbl.cm.download']} Report" update=":form" ajax="false">
+				<p:fileDownload value="#{reportBackingBean.reportPdf}" />
+			</p:commandButton>
 		</ui:remove>
 
 
-		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"  disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
+		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
 
 	<ac:lovPopup />
 
-	<p:dataTable id="draftSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.maintainItemList}"
+	<p:dataTable id="draftSupplierItemID" lazy="true"
+		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
-		rowKey="#{selectedSuppCat.supplierItemId}"
-		rows="10"
+		rowKey="#{selectedSuppCat.supplierItemId}" rows="10"
 		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
 
 		<ac:paginator for="draftSupplierItemID"></ac:paginator>
 
 		<p:column selectionMode="multiple" style="width:2%" />
 
-		<p:ajax event="rowSelectCheckbox" update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="rowUnselectCheckbox" update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="rowUnselect" update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="rowSelectCheckbox"
+			update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="rowUnselectCheckbox"
+			update=":form:downloadLink,:form:submitLink"></p:ajax>
+		<p:ajax event="rowUnselect"
+			update=":form:downloadLink,:form:submitLink"></p:ajax>
 		<p:ajax event="rowSelect" update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="toggleSelect" update=":form:downloadLink,:form:submitLink" />
+		<p:ajax event="toggleSelect"
+			update=":form:downloadLink,:form:submitLink" />
 
-		<p:column width="5%">
+		<p:column width="5%" sortBy="#{selectedSuppCat.cmItem.extensionCode}">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.code']}
 			</f:facet>
-			<h:outputText value="#{selectedSuppCat.cmItem.extensionCode}" style="white-space: normal"/>
+			<h:outputText value="#{selectedSuppCat.cmItem.extensionCode}"
+				style="white-space: normal" />
 		</p:column>
 
-		<p:column width="30%">
+		<p:column width="30%" sortBy="#{selectedSuppCat.cmItem.itemName}">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
-			<h:outputText value="#{selectedSuppCat.cmItem.itemName}" style="white-space: normal"/>
+			<h:outputText value="#{selectedSuppCat.cmItem.itemName}"
+				style="white-space: normal" />
 
 		</p:column>
-		<p:column width="5%">
+		<p:column width="5%"
+			sortBy="#{selectedSuppCat.cmStandardPricing.price}">
 			<f:facet name="header">
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.price']}" />
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" size="10" style="text-align:right">
-			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"
+				size="10" style="text-align:right">
+				<f:convertNumber
+					pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 			</p:inputText>
 
 		</p:column>
@@ -84,8 +92,9 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM" readonly="true"
-				saveObject="catalogueBackingBean.managedBean.maintainItemList[#{rowIndex}].pmUom"
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM"
+				readonly="true"
+				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{rowIndex}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
 			</ac:lov>
@@ -96,7 +105,8 @@
 				<h:outputText value="#{lbl['lbl.cm.start.date']}" />
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
-				showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				showOn="button" size="10"
+				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
@@ -106,7 +116,8 @@
 				<h:outputText value="#{lbl['lbl.cm.end.date']}" />
 			</f:facet>
 			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
-				showOn="button" size="10" mindate="#{catalogueBackingBean.managedBean.currentDate}"
+				showOn="button" size="10"
+				mindate="#{catalogueBackingBean.managedBean.currentDate}"
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
@@ -115,25 +126,24 @@
 				#{lbl['lbl.cm.action']}
 			</f:facet>
 
-			<p:commandLink title="#{lbl['lbl.cm.zm.edit']}" 
+			<p:commandLink title="#{lbl['lbl.cm.zm.edit']}"
 				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
 				<p:graphicImage value="/css/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-			<p:commandLink style="margin-left: 10px;" 
-				title="#{lbl['lbl.btn.delete']}" 
-				oncomplete="confirmation1.show();" 
-				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId)}" >
+			<p:commandLink style="margin-left: 10px;"
+				title="#{lbl['lbl.btn.delete']}" oncomplete="confirmation1.show();"
+				action="#{catalogueBackingBean.setItemToDelete(selectedSuppCat.supplierItemId)}">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 				<f:param name="index" value="#{rowIndex}"></f:param>
 			</p:commandLink>
-			 
+
 		</p:column>
 	</p:dataTable>
 
 	<div class="clear"></div>
 
 	<div style="text-align: right;">
-		<p:commandButton value="#{lbl['lbl.cm.add.new.item']}" 
+		<p:commandButton value="#{lbl['lbl.cm.add.new.item']}"
 			action="#{catalogueBackingBean.navigateToSearchCode}" />
 
 	</div>
@@ -143,11 +153,12 @@
 		resizable="false" styleClass="pop_up_top">
 
 
-		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}" 
-			cancelLabel="#{lbl['lbl.btn.cancel']}" uploadLabel="#{lbl['lbl.btn.upload']}" label="#{lbl['lbl.btn.choose']}"
-			widgetVar="fileUploadWidget" mode="advanced" id="upload"
-			allowTypes="/(\.|\/)(xls|flv|xlsx)$/" update="@form"
-			invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
+		<p:fileUpload fileUploadListener="#{catalogueBackingBean.uploadExcel}"
+			cancelLabel="#{lbl['lbl.btn.cancel']}"
+			uploadLabel="#{lbl['lbl.btn.upload']}"
+			label="#{lbl['lbl.btn.choose']}" widgetVar="fileUploadWidget"
+			mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
+			update="@form" invalidFileMessage="#{lbl['lbl.cm.only.xls']}">
 		</p:fileUpload>
 
 	</p:dialog>

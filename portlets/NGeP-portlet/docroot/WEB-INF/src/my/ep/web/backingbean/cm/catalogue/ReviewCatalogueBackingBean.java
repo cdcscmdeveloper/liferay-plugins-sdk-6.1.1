@@ -45,7 +45,7 @@ import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 
 /**
  * Class ReviewCatalogueBackingBean.
- * @author hketan
+ * @author hktan
  */
 @ManagedBean(name = "reviewCatBackingBean")
 @RequestScoped
@@ -80,14 +80,10 @@ public class ReviewCatalogueBackingBean extends
 public void refreshCatalogueList() {
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		reqDTO.setItemStatus("P");
-		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-		this.getManagedBean().setReviewSupplierItems(
-				resDTO.getSupplierItemList());
+		
+		System.out.println("******************refreshCatalogueList ********************");
+		
+		this.getManagedBean().getApprovalSearchDataModel().reloadData();
 
 	}
 
@@ -184,7 +180,9 @@ public void refreshCatalogueList() {
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("error:"+e.getMessage());
+			System.out.println("error e:"+e);
+			//e.printStackTrace();
 		}
 		refreshCatalogueList();
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -193,6 +191,8 @@ public void refreshCatalogueList() {
 				"", MessageUtils.getMessage(MessageConst.ERROR_715055,
 						MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));
+		
+		System.out.println("*************end*******************");
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
 
 	}
@@ -286,7 +286,10 @@ public void refreshCatalogueList() {
 				"", MessageUtils.getMessage(MessageConst.ERROR_715058,
 						MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));
+		
+		System.out.println("*************end*******************");
 		return "/xhtml/cm/catalogue/catalogueTaskList.xhtml";
+		
 
 	}
 
@@ -307,16 +310,8 @@ public void refreshCatalogueList() {
 		
 		renewSesionObject();
 		
-		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
-				.getInstance().getServiceObject("cm", ICatalogueSO.class);
-
-		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-		reqDTO.setItemStatus("P");
-		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
-		this.getManagedBean().setReviewSupplierItems(
-				resDTO.getSupplierItemList());
+		System.out.println("***********preRenderCatalogueTaskList**************");
+		this.getManagedBean().getApprovalSearchDataModel().reloadData();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
