@@ -69,15 +69,15 @@
 								</p:inputTextarea>
 											
 								<p:selectOneRadio id="answerId" value="#{ques.smAnswer.answerId}" 
+								disabled="#{ques.smQuestion.smAnswerCategory.answerCategoryId == 5 or ques.smQuestion.smAnswerCategory.answerCategoryId == 4}"
 								required="true" label="#{lbl['lbl.sm.questionnaire.question']} #{status.index+1}"
 								rendered="#{ques.smQuestion.smAnswerCategory.answerCategoryId != 2}">
 									<f:selectItems
 										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
-										var="ans" itemLabel="#{ans.answerValue}"
+										var="ans" itemLabel="#{ans.answerDesc}"
 										itemValue="#{ans.answerId}">
 									</f:selectItems>
 								</p:selectOneRadio>
-
 							</td>
 						</tr>
 						<tr>

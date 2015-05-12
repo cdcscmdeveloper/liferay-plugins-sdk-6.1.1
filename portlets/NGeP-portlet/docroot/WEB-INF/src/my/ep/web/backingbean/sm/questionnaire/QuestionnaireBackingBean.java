@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.questionnaire;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -16,7 +17,9 @@ import my.ep.dto.sm.questionnaire.QuestionnaireResDTO;
 import my.ep.persistence.entity.sm.SmAnswer;
 import my.ep.persistence.entity.sm.SmQuestion;
 import my.ep.persistence.entity.sm.SmSupplierAnswer;
+import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.questionnaire.QuestionnaireManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -27,6 +30,8 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManagedBean> {
 	public static Logger log = Logger.getLogger(QuestionnaireBackingBean.class);
+	private List<String> approvedStatus = Arrays.asList(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED+"");
+	private List<String> rejectedStatus = Arrays.asList("20112","20113");
 
 	public QuestionnaireBackingBean() {
 //		if (MDC.get(LogKey.USER_ID) == null) {
@@ -61,7 +66,8 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 			SmSupplierAnswer smSuppAns = new SmSupplierAnswer();
 			smSuppAns.setSmSupplier(this.getManagedBean().getSmSupp());
 			smSuppAns.setSmQuestion(smQues);
-			smSuppAns.setSmAnswer(new SmAnswer());
+			smSuppAns.setSmAnswer(getApplicationTypeAnswer(smQues));
+			smSuppAns.setSmAnswer(getApplicationStatus(smQues,smSuppAns.getSmAnswer()));
 			smSuppAnswerLs.add(smSuppAns);
 			
 			if(smQues.getSmAnswerCategory().getAnswerCategoryId() == 2){
@@ -116,6 +122,64 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		if(resDTO.getMofAccount() != null){
 			this.getManagedBean().setMofAccountNo(resDTO.getMofAccount().getMofNo());
 		}
+	}
+	
+	/**
+	 * Default answer for Jenis Permohonan based on Application Type
+	 * @param smQues
+	 * @return SmAnswer
+	 */
+	private SmAnswer getApplicationTypeAnswer(SmQuestion smQues) {
+		SmAnswer smAnswer = new SmAnswer();
+		if (smQues.getSmAnswerCategory().getAnswerCategoryId() == 5) {
+			for (SmAnswer smAnswerTmp : smQues.getSmAnswerCategory()
+					.getSmAnswers()) {
+				if (smAnswerTmp.getAnswerValue().equals(
+						getManagedBean().getSmAppl().getApplType())) {
+					smAnswer = smAnswerTmp;
+					break;
+				}
+			}
+		}
+		return smAnswer;
+	}
+
+	/**
+	 * Default answer for Status Permohonan based on SmWorkFlowStatus
+	 * 
+	 * @param smQues
+	 * @param smAnswer
+	 * @return SmAnswer
+	 */
+	private SmAnswer getApplicationStatus(SmQuestion smQues, SmAnswer smAnswer) {
+		String answerStatus = "Ditolak";
+		if (smQues.getSmAnswerCategory().getAnswerCategoryId() == 4) {
+			SmWorkflowStatus sts = SmCommonUtil
+					.getCurrentActiveWokFlowStatus(getManagedBean().getSmAppl()
+							.getApplId());
+
+			if (sts != null
+					&& sts.getPmStatus() != null
+					&& sts.getPmStatus().getStatusId() != null
+					&& (sts.getPmStatus()
+							.getStatusId()
+							.compareTo(
+									SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED) == 0 || sts
+							.getPmStatus()
+							.getStatusId()
+							.compareTo(
+									SupplierManagementConst.PM_STATUS_MOF_ACCT_MAINTAIN_APPROVED) == 0)) {
+				answerStatus = "Diluluskan";
+			}
+			for (SmAnswer smAnswerTmp : smQues.getSmAnswerCategory()
+					.getSmAnswers()) {
+				if (smAnswerTmp.getAnswerValue().equals(answerStatus)) {
+					smAnswer = smAnswerTmp;
+					break;
+				}
+			}
+		}
+		return smAnswer;
 	}
 	
 }
