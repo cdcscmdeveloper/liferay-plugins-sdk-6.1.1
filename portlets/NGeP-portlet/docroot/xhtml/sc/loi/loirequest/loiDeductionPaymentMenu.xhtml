@@ -55,12 +55,17 @@
 					process="@this, deductTbl" partialSubmit="true"
 					action="#{lOIDetailBackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
-					update="deductTbl"/>
+					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, deductTbl" partialSubmit="true"
-					action="#{lOIDetailBackingBean.deleteRowAction(lOIDetailBackingBean.managedBean.scLoi.scQtDeductions, lOIDetailBackingBean.managedBean.selectedScQtDeduction)}"
-					update="deductTbl" />
+					oncomplete="deductionPayDeletePopUp.show();"
+					update="@([id$=#{deductionPayDeleteId}])" />
 			</div>
+			<ac:confirmationPopup id="deductionPayDeleteId"
+				widget="deductionPayDeletePopUp"
+				okAction="lOIDetailBackingBean.deleteDeductionPayment" width="400"
+				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 		</c:if>
 
 		<c:if test="#{!isEditableStatus}">
@@ -117,10 +122,18 @@
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, deductClauseTbl" partialSubmit="true"
-						action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses, lOIDetailBackingBean.managedBean.selectedDeductionClauses)}"
-						update="deductClauseTbl" />
+						oncomplete="deductionClauseDeletePopUp.show();"
+						update="@([id$=#{deductionClauseDeleteId}])" />
+
 				</h:panelGroup>
+			
 			</div>
+			<ac:confirmationPopup id="deductionClauseDeleteId"
+				widget="deductionClauseDeletePopUp"
+				okAction="lOIDetailBackingBean.deleteDeductionClause" width="400"
+				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+			
 	</h:panelGroup>
 	</p:panel>
 </ui:composition>
