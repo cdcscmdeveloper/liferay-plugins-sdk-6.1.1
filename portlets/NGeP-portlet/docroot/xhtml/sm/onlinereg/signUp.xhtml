@@ -92,6 +92,7 @@
 		</p:panel>
 		<div align="right">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 			disabled="#{(!registrationBackingBean.managedBean.agreeTC || registrationBackingBean.managedBean.applType == null)}"
 				action="#{registrationBackingBean.proceedToCompanyInfo}" />
 		</div>
