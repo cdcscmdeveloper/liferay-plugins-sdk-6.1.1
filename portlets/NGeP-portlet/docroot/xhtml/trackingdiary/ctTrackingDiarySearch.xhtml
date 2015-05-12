@@ -15,13 +15,14 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:blockUI>		
 
-		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
+		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false"></p:messages>
 			
 		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
 			<table>
 				<tr>
-					<td width="35%"><p:outputLabel value="#{lbl['lbl.td.transaction.type']}" /></td>
-					<td width="35%"><p:selectOneMenu
+					<td width="35%"><p:outputLabel value="#{lbl['lbl.td.transaction.type']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+					<td width="35%"><p:selectOneMenu required="true" label="#{lbl['lbl.td.transaction.type']}"
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchTrasactionType}"
 							style="width: 314px;">
 							<f:selectItems
@@ -37,10 +38,9 @@
 <!-- 							</p:selectOneMenu></td> -->
 <!-- 				</tr> -->
 				<tr>
-					<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.contract.no']}" /></td>
+					<td width="35%"><p:outputLabel value="#{lbl['lbl.td.doc.no']}" /></td>
 					<td width="35%"><p:inputText size="28"
-							value="#{ctTrackingDiaryBackingBean.managedBean.searchContractNo}"></p:inputText>
-							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.doc.maintain.contr.no']}"/></td>
+							value="#{ctTrackingDiaryBackingBean.managedBean.searchDocNo}"></p:inputText></td>
 				</tr>
 				<tr>
 					<td width="35%"><p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}" /></td>
@@ -98,13 +98,14 @@
 				var="ctDocument" rowIndexVar="rowIndex" rowKey="#{ctDocument.docId}"
 				width="100%" rows="10">
 				<ac:paginator for="ctDocListDt" />
-
+				<!--  
 				<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
 					</f:facet>
 				<ac:labelDateTime value="#{ctDocument.createdDate}" /> 
 				</p:column>
+				-->
 				<p:column width="15%">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.doc.no']}"/>
@@ -117,12 +118,14 @@
 					</f:facet>
 				#{ctDocument.title}
 				</p:column>
+				<!-- 
 				<p:column>
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.doc.type']}"/>
 					</f:facet>
-				#{ctTrackingDiaryBackingBean.getParameterDesc("DT",ctDocument.docType)}
+				#{ctTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ctDocument.docType)}
 				</p:column>
+				 -->
 				<p:column>
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.status']}"/>
@@ -131,12 +134,11 @@
 				</p:column>				
 				<p:column width="5%">
 					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.action']}"/>
+					<h:outputText value="#{lbl['lbl.ct.action']}"/>
 					</f:facet>
 					<p:commandLink
 						action="#{ctTrackingDiaryBackingBean.goToTrackingDiarySearch(ctDocument)}">
-							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/resources/ep/images/design/document.png" />
+							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
 						</p:commandLink>
 
 				</p:column>
