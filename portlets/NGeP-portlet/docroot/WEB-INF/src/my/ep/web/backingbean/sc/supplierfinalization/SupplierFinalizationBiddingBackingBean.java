@@ -223,8 +223,16 @@ public class SupplierFinalizationBiddingBackingBean extends
 						BiddingReqDTO bidReqDTO = new BiddingReqDTO();
 						Long bidScheduleId = bidScheduleList.get(0)
 								.getBidScheduleId();
+						BigDecimal estimatedCost = new BigDecimal(0);
+						if (CollectionUtils.isNotEmpty(
+								bidScheduleList.get(0).getScBidItems())) {
+							ScBidItem bidItem = bidScheduleList.get(0).getScBidItems().get(0);
+							estimatedCost = bidItem.getEstimatedCost();
+						}
+						
 						bidReqDTO.setBidScheduleId(bidScheduleId);
 						getManagedBean().setScheduledBid(bidScheduleList.get(0));
+						getManagedBean().setEstimatedCost(estimatedCost);
 
 						BiddingResDTO bidResDTO = biddingSO
 								.retrieveBidScheduleDtl(bidReqDTO);
@@ -241,9 +249,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 								List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
 								for (BidPackageBean packageBean : biddingPackagePriceList) {
 									if (packageBean.getScBidSupplier().getSmSupplier().isBumi()) {
-										bumiPriceList.add(packageBean.getBidPrice());
+										bumiPriceList.add(packageBean.getBidPriceTotal());
 									}
-									packageBean.getScBidSupplier().getScBidSupplierItems();
+//									packageBean.getScBidSupplier().getScBidSupplierItems();
 								}
 								if (CollectionUtils.isNotEmpty(bumiPriceList)) {
 									Collections.sort(bumiPriceList);

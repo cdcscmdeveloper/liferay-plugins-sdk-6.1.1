@@ -84,6 +84,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private String supplierBranch;
 	private SmAddress supplierAddress;
 	
+	private BigDecimal estimatedCost;
+	
 	/**
 	 * @return the onlineBiddingActiveIndex
 	 */
@@ -513,6 +515,21 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setSupplierAddress(SmAddress supplierAddress) {
 		this.supplierAddress = supplierAddress;
+	}
+	
+	/**
+	 * @return the estimatedCost
+	 */
+	public BigDecimal getEstimatedCost() {
+		return estimatedCost;
+	}
+	
+	/**
+	 * @param estimatedCost 
+	 * 				the estimatedCost to set
+	 */
+	public void setEstimatedCost(BigDecimal estimatedCost) {
+		this.estimatedCost = estimatedCost;
 	}
 	
 }
