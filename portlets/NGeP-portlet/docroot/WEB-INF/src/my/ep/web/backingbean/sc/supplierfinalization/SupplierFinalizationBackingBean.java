@@ -1855,11 +1855,11 @@ public class SupplierFinalizationBackingBean extends
 		VelocityContext context = new VelocityContext();
 
 		// TODO
-		String committeeType = "";
-		for (ScQtCommittee scQtCommittee : scQt.getScQtCommittees()) {
+		String committeeType = this.getManagedBean().getCommitteeType();
+/*		for (ScQtCommittee scQtCommittee : scQt.getScQtCommittees()) {
 			committeeType = scQtCommittee.getScCommittee().getCommitteeType()
 					.getParameterCode();
-		}
+		}*/
 		log.info("committeeType : " + committeeType);
 		StringBuilder commType = new StringBuilder();
 		if (commType != null) {
@@ -2071,61 +2071,29 @@ public class SupplierFinalizationBackingBean extends
 				scQtCommittee = new ScQtCommittee();
 			}
 			if (null != scQtCommittee) {
-				if (null != scQtCommittee.getCommitteeActivities()
-						&& !scQtCommittee.getCommitteeActivities().isEmpty()) {
-					committeeActivitiesList = scQtCommittee
-							.getCommitteeActivities();
+				committeeActivitiesList = scQtCommittee.getCommitteeActivities();
+				
+				if (CollectionUtils.isNotEmpty(committeeActivitiesList)) {
 					for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
-						if (committeeActivity.getScCommitteeMember() != null) {
-							if (committeeActivity.getScCommitteeMember()
-									.getMemberName() == null) {
-								committeeActivity.getScCommitteeMember()
-										.setMemberName("");
-							}
-						} else {
-							committeeActivity
-									.setScCommitteeMember(new ScCommitteeMember());
-							committeeActivity.getScCommitteeMember()
-									.setMemberName("");
-						}
-						if (committeeActivity.getScCommitteeMember() != null) {
-							if (committeeActivity.getScCommitteeMember()
-									.getDesignation() == null) {
-								committeeActivity.getScCommitteeMember()
-										.setDesignation("");
-							}
-						} else {
-							committeeActivity
-									.setScCommitteeMember(new ScCommitteeMember());
-							committeeActivity.getScCommitteeMember()
-									.setDesignation("");
-						}
-						if (committeeActivity.getScCommitteeMember() != null) {
-							if (committeeActivity.getScCommitteeMember()
-									.getGrade() == null) {
-								committeeActivity.getScCommitteeMember()
-										.setGrade("");
-							}
-						} else {
-							committeeActivity
-									.setScCommitteeMember(new ScCommitteeMember());
-							committeeActivity.getScCommitteeMember().setGrade(
-									"");
-						}
-						if (committeeActivity.getScCommitteeMember() != null) {
-							if (committeeActivity.getScCommitteeMember()
-									.getIcPassport() == null) {
-								committeeActivity.getScCommitteeMember()
-										.setIcPassport("");
-							}
-						} else {
-							committeeActivity
-									.setScCommitteeMember(new ScCommitteeMember());
-							committeeActivity.getScCommitteeMember()
-									.setIcPassport("");
-						}
+						setDefaultValueForCommitteeActivityIfNull(committeeActivity);
 						committeeActivities.add(committeeActivity);
 					}
+				} else {
+					ScCommittee sccommittee = resDTO.getQtCommittee()
+							.getScCommittee();
+					committeeActivities = new ArrayList<ScQtCommitteeActivity>();
+					if (CollectionUtils.isNotEmpty(sccommittee.getScCommitteeMembers())) {
+						for (ScCommitteeMember scCommitteeMember : sccommittee
+								.getScCommitteeMembers()) {
+							ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+							activity.setScQtCommittee(this.getManagedBean()
+									.getScQtCommittee());
+							activity.setScCommitteeMember(scCommitteeMember);
+							setDefaultValueForCommitteeActivityIfNull(activity);
+							committeeActivities.add(activity);
+						}
+					}
+					Collections.sort(committeeActivities);
 				}
 			}
 		} finally {
@@ -2452,6 +2420,57 @@ public class SupplierFinalizationBackingBean extends
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
+	private void setDefaultValueForCommitteeActivityIfNull(ScQtCommitteeActivity committeeActivity) {
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getMemberName() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setMemberName("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember()
+					.setMemberName("");
+		}
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getDesignation() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setDesignation("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember()
+					.setDesignation("");
+		}
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getGrade() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setGrade("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember().setGrade(
+					"");
+		}
+		if (committeeActivity.getScCommitteeMember() != null) {
+			if (committeeActivity.getScCommitteeMember()
+					.getIcPassport() == null) {
+				committeeActivity.getScCommitteeMember()
+						.setIcPassport("");
+			}
+		} else {
+			committeeActivity
+					.setScCommitteeMember(new ScCommitteeMember());
+			committeeActivity.getScCommitteeMember()
+					.setIcPassport("");
+		}		
+	}
+	
 	// Kertas Taklimat
 	/*
 	 * private ScQtDocReport retrieveBriefingPaperByDocId(PmDocument pmDocument)
