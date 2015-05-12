@@ -79,10 +79,7 @@
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptr']}"
-													itemValue="#{lbl['lbl.rpt.bumiptr']}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptrfrmhome']}"
-													itemValue="#{lbl['lbl.rpt.bumiptrfrmhome']}"></f:selectItem>
+												<f:selectItems value="#{reportBackingBean.registrationStatusList}"></f:selectItems>
 											</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -106,10 +103,7 @@
 												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptr']}"
-													itemValue="#{lbl['lbl.rpt.bumiptr']}"></f:selectItem>
-												<f:selectItem itemLabel="#{lbl['lbl.rpt.bumiptrfrmhome']}"
-													itemValue="#{lbl['lbl.rpt.bumiptrfrmhome']}"></f:selectItem>
+												<f:selectItems value="#{reportBackingBean.registrationStatusList}"></f:selectItems>
 													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu>
 										</td>
