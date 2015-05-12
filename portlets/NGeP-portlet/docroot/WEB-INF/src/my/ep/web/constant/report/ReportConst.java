@@ -366,6 +366,8 @@ public class ReportConst {
 		public static final String SM_COMPANY_ADDRESS_LIST_RPT_VAL = "SM_052";
 		public static final String SM_BPK_USER_PROFILE_RPT_VAL = "SM_053";
 		public static final String SM_BPK_ADMIN_PROFILE_RPT_VAL = "SM_054";
+		public static final String SM_DAILY_EARNING_RECEIPT = "SM_055";
+		public static final String SM_DELETE_PENDING_APPL = "SM_056";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
@@ -417,6 +419,10 @@ public class ReportConst {
 	public static final String AMP_SM_YEAR_EQ = "&PYEAR=";
 	public static final String AMP_SM_APPL_TYPE_EQ = "&PAPPLTYPE=";
 	public static final String AMP_SM_REPORT_TYPE_EQ = "&PREPORTTYPE=";
+	public static final String AMP_SM_PRO_OFFICERNAME_EQ = "&PPROOFFICERNAME=";
+	public static final String AMP_SM_RECEIPT_NO_EQ = "&PRECEIPTNO=";
+	public static final String AMP_SM_PAYMENT_MENTHOD_EQ = "&PPAYMENTMENTHOD=";
+	public static final String AMP_SM_PRO_TYPE_EQ = "&PPROCESSINGTYPE =";
 	public static final String AMP_SM_APPLICATION_NO_EQ = "&PAPPLNO=";
 	public static final String AMP_SM_SVO_NAME_EQ = "&PSVOUSERID=";
 	public static final String AMP_SM_MOF_CERTIFICATE_SERIAL_NUMBER_EQ = "";

@@ -654,7 +654,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)20854;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)25;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -786,7 +786,7 @@ public class ReportBackingBean extends
 	private String smApplicationType;
 	private String smState;
 	private String smDistrict;
-	private String smReportType;
+	
 	private String smCompanyName;
 	private String smRegistrationType;
 	private String smYearText;
@@ -796,6 +796,11 @@ public class ReportBackingBean extends
 	private String smPaidUpCapitalFrm;
 	private String smPaidUpCapitalTo;
 	private String smPaidUpCapitalNaccum;
+	private String smPaymentMethod;
+	private String smProcessingType;
+	private String smReceiptNo;
+	private String smReportType;
+	private String smProcessingOfficerName;
 	
 	private String smRole;
 	private String smEpNo;
@@ -830,6 +835,38 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getSmPaymentMethod() {
+		return smPaymentMethod;
+	}
+
+	public void setSmPaymentMethod(String smPaymentMethod) {
+		this.smPaymentMethod = smPaymentMethod;
+	}
+
+	public String getSmProcessingType() {
+		return smProcessingType;
+	}
+
+	public void setSmProcessingType(String smProcessingType) {
+		this.smProcessingType = smProcessingType;
+	}
+
+	public String getSmReceiptNo() {
+		return smReceiptNo;
+	}
+
+	public void setSmReceiptNo(String smReceiptNo) {
+		this.smReceiptNo = smReceiptNo;
+	}
+
+	public String getSmProcessingOfficerName() {
+		return smProcessingOfficerName;
+	}
+
+	public void setSmProcessingOfficerName(String smProcessingOfficerName) {
+		this.smProcessingOfficerName = smProcessingOfficerName;
+	}
 
 	public String getSmIdentificationType() {
 		return smIdentificationType;
@@ -4605,6 +4642,33 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						.setReportTypeTotVar(ReportConst.AMP_SM_REPORT_TYPE_EQ
 								+ this.getSmReportType());
 			}
+			
+			if ((this.getSmPaymentMethod() != null)
+					&& (this.getSmPaymentMethod() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmPaymentMethodVar(ReportConst.AMP_SM_PAYMENT_MENTHOD_EQ
+								+ this.getSmPaymentMethod());
+			}
+			if ((this.getSmProcessingType() != null)
+					&& (this.getSmProcessingType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmProcessingTypeVar(ReportConst.AMP_SM_PRO_TYPE_EQ
+								+ this.getSmProcessingType());
+			}
+			if ((this.getSmReceiptNo() != null)
+					&& (this.getSmReceiptNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmReceiptNoVar(ReportConst.AMP_SM_RECEIPT_NO_EQ
+								+ this.getSmReceiptNo());
+			}
+			if ((this.getSmProcessingOfficerName() != null)
+					&& (this.getSmProcessingOfficerName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmProcessingOfficerNameVar(ReportConst.AMP_SM_PRO_OFFICERNAME_EQ
+								+ this.getSmProcessingOfficerName());
+			}
+			
+			
 			if ((this.getSmApplicationNo() != null)
 					&& (this.getSmApplicationNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -4783,6 +4847,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSmYearTextVar()
 						+ rptGenBean.getSmMonthlyRptByYearVar()
 						+ rptGenBean.getPaymentTypeTotVar()
+						+ rptGenBean.getSmPaymentMethodVar()
+						+ rptGenBean.getSmProcessingTypeVar()
+						+ rptGenBean.getSmReceiptNoVar()
+						+ rptGenBean.getSmProcessingOfficerNameVar()						
 						+ rptGenBean.getApplicationTypeTotVar()
 						+ rptGenBean.getStateTotVar()
 						+ rptGenBean.getDistrictTotVar()
@@ -5905,6 +5973,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setSmSVOUser(null);
 		this.setSmDistrict(null);
 		this.setSmReportType(null);
+		this.setSmProcessingType(null);
+		this.setSmReceiptNo(null);
+		this.setSmProcessingOfficerName(null);
+		this.setSmPaymentMethod(null);
+		
 		this.setSmCompanyName(null);
 		this.setSmRegistrationType(null);
 		this.setSmCreatedFromYear(null);
