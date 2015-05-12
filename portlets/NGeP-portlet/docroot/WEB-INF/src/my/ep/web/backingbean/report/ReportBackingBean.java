@@ -662,8 +662,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	private Long lngUserId = (long)25;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	//private Long lngUserId = (long)25;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
