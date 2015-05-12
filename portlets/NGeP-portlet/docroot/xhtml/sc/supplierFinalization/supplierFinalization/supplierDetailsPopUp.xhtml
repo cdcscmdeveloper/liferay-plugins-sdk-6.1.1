@@ -70,7 +70,10 @@
 			<h:column>
 				<p:inputText size="30"
 					value="#{suppFinalizationBackingBean.managedBean.smSupplier.establishDate}"
-					readonly="true" />
+					readonly="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</h:column>
 			
 			<h:column>
@@ -88,7 +91,10 @@
 			<h:column>
 				<p:inputText size="30"
 					value="#{suppFinalizationBackingBean.managedBean.smMofAccount.expDate}"
-					readonly="true" />
+					readonly="true">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</p:inputText>
 			</h:column>
 			
 			<h:column>
