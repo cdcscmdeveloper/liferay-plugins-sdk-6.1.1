@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	
 		<script type='text/javascript'>
-			var $jq = jQuery.noConflict(true);
+			//var $jq = jQuery.noConflict(true);
 		</script>
 	
 	</ui:define>
@@ -22,8 +22,10 @@
 	
 <!-- 		<p:inputText id="textInt1" value="" required="true" /> -->
 <!-- 	<p:message id="testtextMsg" for="textInt1" display="icon"  update="@([id$=Msg])" /> -->
-
 		
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>		
 
 		<p:panel header="#{lbl['lbl.sm.account.type.header']}">
 			<table>
@@ -33,7 +35,7 @@
 							value="#{registrationBackingBean.managedBean.applType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.basic']}" itemValue="#{SupplierManagementConst.ACC_BASIC}" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.basic.account.mof']}" itemValue="#{SupplierManagementConst.ACC_MOF}" />
-							<p:ajax event="change" update="agreementId,btnProceed" />
+							<p:ajax event="change" update="agreementId,btnProceed" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio></td>
 						<td>&#160;
 						<p:graphicImage id="regType" library="ep/images/design" name="tooltips.png" />
@@ -82,8 +84,9 @@
 				</c:choose>
 			</p:scrollPanel>
 			<br />
-			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}">
-				<p:ajax update="btnProceed" partialSubmit="true" process="@this" />
+			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" 
+				disabled="#{empty registrationBackingBean.managedBean.applType}">
+				<p:ajax update="btnProceed" partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 			</p:selectBooleanCheckbox>
 			#{lbl['lbl.sm.have.agreed']} #{lbl['lbl.sm.term.and.condition']}
 		</p:panel>
