@@ -8,8 +8,8 @@
 
 
 
-	<p:dataTable id="rejectedSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.rejectedItemList}"
+	<p:dataTable id="rejectedSupplierItemID" lazy="true"
+		value="#{catalogueBackingBean.managedBean.rejectSearchDataModel}"
 		rowIndexVar="rowIndex" var="rejected"
 		rowKey="#{rejected.supplierItemId}"
 		rows="10">

@@ -8,8 +8,8 @@
 
 
 
-	<p:dataTable id="publishSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.publishedItemList}"
+	<p:dataTable id="publishSupplierItemID" lazy="true"
+		value="#{catalogueBackingBean.managedBean.publishSearchDataModel}"
 		rowIndexVar="rowIndex" var="publish"
 		rowKey="#{publish.supplierItemId}"
 		rows="10">

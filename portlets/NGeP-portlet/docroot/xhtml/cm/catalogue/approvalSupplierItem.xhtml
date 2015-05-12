@@ -8,8 +8,8 @@
 
 
 
-	<p:dataTable id="approvalSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.approvalItemList}"
+	<p:dataTable id="approvalSupplierItemID" lazy="true"
+		value="#{catalogueBackingBean.managedBean.approvalSearchDataModel}"
 		rowIndexVar="rowIndex" var="approval"
 		rowKey="#{approval.supplierItemId}">
 
