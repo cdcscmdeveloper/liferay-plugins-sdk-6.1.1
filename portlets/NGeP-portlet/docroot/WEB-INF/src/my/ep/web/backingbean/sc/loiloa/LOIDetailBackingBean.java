@@ -110,7 +110,6 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -2645,6 +2644,21 @@ public class LOIDetailBackingBean extends
 
 		scQtDeductions.add(scQtDeduction);
 	}
+	
+	
+	/**
+	 * Delete deduction payment.
+	 */
+	public void deleteDeductionPayment() {
+		ScLoi scLoi = getManagedBean().getScLoi();
+		ScQtDeduction qtDeduction = getManagedBean().getSelectedScQtDeduction();
+		if(qtDeduction != null){
+			deleteRowAction(scLoi.getScQtDeductions(), qtDeduction);
+			getManagedBean().setSelectedScQtDeduction(null);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
 
 	/**
 	 * Adds the deduction clause action.
@@ -2666,6 +2680,20 @@ public class LOIDetailBackingBean extends
 		ScQtDeductionClause scQtDeductionClause = new ScQtDeductionClause();
 		scQtDeductionClause.setScQtDeduction(selectedScQtDeduction);
 		scQtDeductionClauses.add(scQtDeductionClause);
+	}
+
+	
+	/**
+	 * Delete deduction clause.
+	 */
+	public void deleteDeductionClause() {
+		ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
+		if(clauses != null && clauses.size()>0){
+			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
 	}
 
 	/**
@@ -3303,6 +3331,20 @@ public class LOIDetailBackingBean extends
 		scLoiSuppDocs.add(scLoiSuppDoc);
 	}
 	
+	/**
+	 * Delete supporing docs in negotiation details.
+	 */
+	public void deleteSupporingDocs() {
+		ScLoi scLoi = getManagedBean().getScLoi();
+		List<ScLoiSupportingDoc> selectedScLoiSuppDocs = getManagedBean().getSelectedScLoiSuppDocs();
+
+		if(selectedScLoiSuppDocs != null && selectedScLoiSuppDocs.size()>0){
+			deleteRowsAction(scLoi.getScLoiSupportingDocs(), selectedScLoiSuppDocs);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
+
 	/**
 	 * Handle supp doc file upload.
 	 *

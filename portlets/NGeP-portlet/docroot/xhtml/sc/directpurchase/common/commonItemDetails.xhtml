@@ -313,41 +313,35 @@
 				 <c:if test="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
 					<p:commandButton
 						value="#{lbl['lbl.btn.delete']}"
-						process="@this" partialSubmit="true" onsuccess="sqConformDlg.show();"
+						process="@this" partialSubmit="true" onsuccess="deleteConformDlg.show();"
 						update="@([id$=requestListDataTable])" />
 				</c:if>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
-	
-	<p:confirmDialog message="#{lbl['lbl.sc.request.note.delete.conform.msg']}"
-			id="promptId" width="350px" height="50px" widgetVar="sqConformDlg"
-			severity="alert" closable="false"
-			header="#{lbl['lbl.sc.request.note.delete.conform.dlg.header']}">
 
-			<p:blockUI block="conformDlgId" widgetVar="promptWidget"
-				id="conformDlg">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
+	<p:dialog id="i" widgetVar="deleteConformDlg"
+		header="#{lbl['lbl.msg.confirm.delete.header']}" resizable="false"
+		width="400" height="100" closable="false" modal="true">
+		<table>
+			<tr>
+				<td align="center"><h:graphicImage
+						value="/css/images/design/exclamation.png" /> <p:outputLabel
+						value="#{lbl['lbl.msg.confirm.delete']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				update="@([id$=requestListDataTable])"
+				onsuccess="deleteConformDlg.hide();" partialSubmit="true"
+				process="@this"
+				actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
 
-			<p:panel id="conformDlgId">
-				<p:panelGrid styleClass="noBorders tr,noBorders td">
-					<p:row>
-						<p:column width="100%" style="text-align:right">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@([id$=requestListDataTable])" 
-								onstart="promptWidget.show()" onsuccess="sqConformDlg.hide();" partialSubmit="true" process="@this"
-								oncomplete="promptWidget.hide();"
-								actionListener="#{requestNoteBackingBean.deleteRequestNoteDtl}" />
-						 
-						  <p:commandButton value="#{lbl['lbl.btn.no']}" 
-								partialSubmit="true" process="@this"
-								onclick="sqConformDlg.hide();" type="button" />
-								
-						</p:column>
-					</p:row>
-				</p:panelGrid>
-			</p:panel>
-		</p:confirmDialog>
-	
+			<p:commandButton value="#{lbl['lbl.btn.no']}" partialSubmit="true"
+				process="@this" onclick="deleteConformDlg.hide();" type="button" />
+		</div>
+	</p:dialog>
+
 </ui:composition>
