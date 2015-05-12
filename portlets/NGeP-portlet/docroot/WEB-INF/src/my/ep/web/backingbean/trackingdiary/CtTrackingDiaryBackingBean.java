@@ -69,7 +69,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 
 	public void search(){
 		if ((null == getManagedBean().getSearchTrasactionType()) 
-				&& (getManagedBean().getSearchContractNo() != null && getManagedBean().getSearchContractNo().trim().isEmpty()) 
+				&& (getManagedBean().getSearchDocNo() != null && getManagedBean().getSearchDocNo().trim().isEmpty()) 
 				&& (getManagedBean().getSearchPhysContractNo() != null && getManagedBean().getSearchPhysContractNo().trim().isEmpty())
 				&& (getManagedBean().getSearchLoaNo() != null && getManagedBean().getSearchLoaNo().trim().isEmpty()) 
 				&& (getManagedBean().getSearchPhysLoaNo() != null && getManagedBean().getSearchPhysLoaNo().trim().isEmpty())
@@ -265,7 +265,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	public void reset(){
 		this.getManagedBean().setSearchTrasactionType(null);
 		this.getManagedBean().setSearchViewType(null);
-		this.getManagedBean().setSearchContractNo(null);
+		this.getManagedBean().setSearchDocNo(null);
 		this.getManagedBean().setSearchLoaNo(null);
 		this.getManagedBean().setSearchPhysContractNo(null);
 		this.getManagedBean().setSearchPhysLoaNo(null);
