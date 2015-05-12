@@ -1329,9 +1329,14 @@ public class QTDetailBackingBean extends
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-							if (scQtBsv.getQtBsvId() == null) {
-								// scQtBsv.setAllBriefingReq(true);
-								scQtBsv.setAllSiteVisitReq(true);
+							if (null != scQtBsv.getScQtBsvDtls()) {
+								for (ScQtBsvDtl bsvDtl : scQtBsv.getScQtBsvDtls()) {
+									if (bsvDtl.getBsvType().equalsIgnoreCase("S")) {
+										if (scQtBsv.getQtBsvId() == null) {
+											scQtBsv.setAllSiteVisitReq(true);
+										}
+									}
+								}
 							}
 							scQtBsv.setBsvRemarks(initializeRemarks(scQtBsv,
 									this.getManagedBean().getQt()
@@ -1350,9 +1355,14 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setBsvDtlBean(zoneBeans.get(0));
 				} else {
 					ScQtBsv qtBsv = resDTO.getScQtBsv();
-					if (qtBsv.getQtBsvId() == null) {
-						// qtBsv.setAllBriefingReq(true);
-						qtBsv.setAllSiteVisitReq(true);
+					if (null != qtBsv.getScQtBsvDtls()) {
+						for (ScQtBsvDtl bsvDtl : qtBsv.getScQtBsvDtls()) {
+							if (bsvDtl.getBsvType().equalsIgnoreCase("S")) {
+								if (qtBsv.getQtBsvId() == null) {
+									qtBsv.setAllSiteVisitReq(true);
+								}
+							}
+						}
 					}
 					qtBsv.setBsvRemarks(initializeRemarks(qtBsv, this
 							.getManagedBean().getQt()
@@ -3777,6 +3787,11 @@ public class QTDetailBackingBean extends
 				}
 				if (!siteVisit.isEmpty()) {
 					bsvDetils.addAll(siteVisit);
+					if (!scQtBsv.isAllSiteVisitReq()) {
+						if (scQtBsv.getMinSiteVisitAttend() < 1) {
+							throw new EpException(MessageConst.ERROR_760273);
+						}
+					}
 				}
 			} else {
 				if (!briefings.isEmpty()) {
@@ -3790,11 +3805,7 @@ public class QTDetailBackingBean extends
 			 * (scQtBsv.getMinBriefingAttend() < 1) { throw new EpException(
 			 * "Min Briefing Attendance is greater than 0"); } }
 			 */
-			if (!scQtBsv.isAllSiteVisitReq()) {
-				if (scQtBsv.getMinSiteVisitAttend() < 1) {
-					throw new EpException(MessageConst.ERROR_760273);
-				}
-			}
+			
 			scQtBsv.setScQtBsvDtls(bsvDetils);
 		}
 		return scQtBsv;

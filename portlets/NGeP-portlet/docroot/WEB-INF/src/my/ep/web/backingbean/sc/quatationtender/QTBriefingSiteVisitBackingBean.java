@@ -243,8 +243,8 @@ public class QTBriefingSiteVisitBackingBean extends
 				.get("value");
 		BriefingZoneBean zoneBean = this.getManagedBean().getBsvDtlBean();
 		if (selectedValue) {
-			zoneBean.getScQtBsv().setAllSiteVisitReq(false);
-			zoneBean.getScQtBsv().setMinSiteVisitAttend(1);
+			zoneBean.getScQtBsv().setAllSiteVisitReq(true);
+			zoneBean.getScQtBsv().setMinSiteVisitAttend(0);
 		}
 		this.getManagedBean().setBsvDtlBean(zoneBean);
 
@@ -257,7 +257,7 @@ public class QTBriefingSiteVisitBackingBean extends
 	 */
 	public void addBsvDetails(String bsvType) {
 		debugLogger("addBriefingDetails");
-		this.getManagedBean().setRequired(true);
+		this.getManagedBean().setRequired(Boolean.TRUE);
 		this.getManagedBean().setBsvType(bsvType);
 		ScQtBsvDtl bsvDtl = new ScQtBsvDtl();
 		bsvDtl.setBsvType(bsvType);
@@ -274,6 +274,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		bsvDtl.setBsvStatus(pmStatus);
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		retrievePmStateList();
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
@@ -326,6 +327,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			if (!siteVisitDetails.contains(bsvDetail)) {
 				siteVisitDetails.add(bsvDetail);
 			}
+			briefingBean.getScQtBsv().setAllSiteVisitReq(true);
 			briefingBean.setSitevisitList(siteVisitDetails);
 		}
 		if (this.getManagedBean().getQt().isZonal()) {

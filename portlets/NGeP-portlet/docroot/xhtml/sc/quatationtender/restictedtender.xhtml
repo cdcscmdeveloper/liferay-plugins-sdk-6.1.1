@@ -8,17 +8,24 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:include src="supplierlist.xhtml" />
-
 	<div class="ppRightBtn">
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
 			partialSubmit="true" process="@this"
 			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierPopupAction}"
 			update="suppPopup" oncomplete="suppdlg.show();" />
-
 		<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			action="#{qTSupplierQulCriteriaBackingBean.deleteRestrictedSupplierList}"
-			update="supplierlist" />
+			process="@this, supplierlist" partialSubmit="true"
+			oncomplete="restrictedSupplierDeletePopUp.show();"
+			update="@([id$=#{restrictedSupplierDeleteId}])" />
 	</div>
+	<ui:param name="restrictedSupplierDeleteId" value="restrictedSupplierDeleteId" />
+	<ac:confirmationPopup id="#{restrictedSupplierDeleteId}"
+		widget="restrictedSupplierDeletePopUp"
+		okAction="qTSupplierQulCriteriaBackingBean.deleteRestrictedSupplierList"
+		width="450" height="200"
+		title="#{lbl['lbl.sc.supplier.list']}"
+		content="#{lbl['lbl.sc.dialog.confirm.restricted.supplier.dtls']}"
+		update="@([id$=supplierlist])" />
 
 
 	<p:dialog id="suppPopup" header="#{lbl['lbl.sc.qt.search.supplier']}" widgetVar="suppdlg"
@@ -26,13 +33,11 @@
 		<p:messages id="supplierSearchMessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
 		<ui:include src="restrictedSupplierSearch.xhtml" />
-
 		<br />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
 				action="#{qTSupplierQulCriteriaBackingBean.addRestrictedToSupplierListAction}"
 				update="supplierlist" />
-
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 				 oncomplete="suppdlg.hide()" />
 		</div>
