@@ -79,13 +79,23 @@
 		<td class="tdInfoTable">$scLoi.scLoiLoa.supplierName</td>
 		<td class="tdInfoTable">
 			#foreach( $scLoiTerm in $scLoi.scNegoTerms )
-				$scLoiTerm.termDesc <br/>
+				#if (! $scLoiTerm.termDesc)
+					<br/>
+				#else
+					$scLoiTerm.termDesc <br/>
+				#end
 			#end
 		</td>
 		<td class="tdInfoTable">
-		  #foreach( $scLoiTerm in $scLoi.scNegoTerms )
-				$scLoiTerm.negoResult <br/>
-			#end</td>
+			#foreach( $scLoiTerm in $scLoi.scNegoTerms )
+				#if (! $scLoiTerm.negoResult )
+					<br/>
+				#else
+					$scLoiTerm.negoResult <br/>
+				#end
+
+			#end
+		</td>
 	</tr>
 	#end
 </table>
