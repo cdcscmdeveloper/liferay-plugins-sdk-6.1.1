@@ -48,7 +48,7 @@
 <body>
 <div id="wrapper">
 	<div id="header">
-		#parse("sc/shared/header.vm")
+		#parse("templates/sc/shared/header.vm")
 	</div>
 	<div id="content" style="height:740px;">
 		<table width="100%">
@@ -142,7 +142,7 @@
 	</div>
 
 	<div id="footer">
-		#parse("sc/shared/footer.vm")
+		#parse("templates/sc/shared/footer.vm")
 	</div>
 	<div id="bottom"></div>
 </div>
