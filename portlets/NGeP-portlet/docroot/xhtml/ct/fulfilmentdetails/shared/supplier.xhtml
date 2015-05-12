@@ -71,7 +71,7 @@
                    </div>
                 </h:panelGroup>
                 <h:panelGrid columns="3">
-                    <p:inputTextarea id="supplierAddress" disabled="true" rows="3"   maxlength="200"   autoResize="false"
+                    <p:inputTextarea id="supplierAddress" disabled="true" rows="5"   maxlength="200"   autoResize="false"
                         value="#{contractDetailsBackingBean.managedBean.supplierAddress}"  style="width:170px; margin-bottom: 5px;" />
                      <p:spacer width="5"/>
                      <h:panelGrid columns="4" 
@@ -111,7 +111,7 @@
                                 </div>
                           </h:panelGroup>
 	                      <h:panelGrid>
-                                <p:inputTextarea id="bankAddress" disabled="true" rows="3"  autoResize="false" style="width:170px; margin-bottom: 5px;"
+                                <p:inputTextarea id="bankAddress" disabled="true" rows="5"  autoResize="false" style="width:170px; margin-bottom: 5px;"
                                  value="#{contractDetailsBackingBean.getFullAddress(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.bankAddress)}" />
 	                      </h:panelGrid>
 	
