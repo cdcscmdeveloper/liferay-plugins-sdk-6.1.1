@@ -1,9 +1,8 @@
 
 <table width='100%'>
 	<tr align='center'>
-		<td align='left'><img src='http://$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='100' height='70' /></td>
+		<td align='left'><img id='lamba' src='http://$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='100' height='70' /></td>
 		<td align='center' valign="top"><span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>KERAJAAN MALAYSIA</span></td>
-		<td align='right'><img src='http://$hostUrl/NGeP-portlet/css/images/eperolehan.png' width='100' height='70' /></td>
 	</tr>
 </table>
 	
