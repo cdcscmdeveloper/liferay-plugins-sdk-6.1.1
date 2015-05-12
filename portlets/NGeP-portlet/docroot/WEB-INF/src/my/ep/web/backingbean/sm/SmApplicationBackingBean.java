@@ -27,7 +27,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -137,6 +136,7 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationNotificationUtil;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
@@ -149,9 +149,6 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
 
 // TODO: Auto-generated Javadoc
 @ManagedBean(name = "backingBean")
@@ -166,6 +163,7 @@ public class SmApplicationBackingBean extends
 	private String buttonType = "";
 	private StreamedContent file;
 	NumberFormat formatter = new DecimalFormat("#0.00");
+	SmRuleHelper ruleHelper = new SmRuleHelper();
 
 	/**
 	 * Instantiates a new sm application backing bean.
@@ -226,7 +224,7 @@ public class SmApplicationBackingBean extends
 					long diff = currentDate.getTime()
 							- rejAppl.getApplSubmitDate().getTime();
 					long diffDays = diff / (24 * 60 * 60 * 1000);
-					if (diffDays > 60) {
+					if (diffDays > ruleHelper.getApplicationResubmissionDays()) {
 						getManagedBean().setResubmitInValidMsg(
 								SmCommonUtil.getMessage(
 										"lbl.sm.resubmitExpired", null));
@@ -395,7 +393,7 @@ public class SmApplicationBackingBean extends
 					supplierProfile);
 			getManagedBean().getSmAppl().setResubmit(true);
 			Calendar c = new GregorianCalendar();
-			c.add(Calendar.DATE, 60);
+			c.add(Calendar.DATE, ruleHelper.getApplicationSubmissionDays());
 			Date d = c.getTime();
 			getManagedBean().getSmAppl().setDraftExpiryDate(d);
 			// String newApplNum = SmApplicationUtil.generateApplicationNum(
@@ -1160,7 +1158,7 @@ public class SmApplicationBackingBean extends
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 				&& getManagedBean().isSupplierUser()) {
 			SmApplicationUtil.validateBasicInfoGstData(true, getManagedBean(),
-					currentTab);
+					currentTab,ruleHelper);
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		saveSupplierBusinesType(currentPageType);
@@ -1645,7 +1643,7 @@ public class SmApplicationBackingBean extends
 			validSave = SmApplicationUtil.validateEquityOwnerCount(
 					getManagedBean(), currentTab, currentPageType);
 			validSave = SmApplicationUtil.validateEquityOwnerAmount(
-					getManagedBean(), currentTab);
+					getManagedBean(), currentTab,ruleHelper);
 			validSave = SmApplicationUtil.validateEquityCompanyAmount(
 					getManagedBean(), currentTab);
 			if (getManagedBean().getSmAppl().getSupplierType()
@@ -2273,12 +2271,12 @@ public class SmApplicationBackingBean extends
 		if (!StringUtils.isEmpty(getManagedBean().getSelectedBranch()
 				.getGstRegistrationNo())
 				&& getManagedBean().getSelectedBranch().getGstRegistrationNo()
-						.length() != 12) {
-			throw new EpException(MessageConst.ERROR_722603,
-					new String[] { ResourceBundleUtils.getMessage(
-							"lbl.sm.gstNo",
+						.length() != ruleHelper.getGstRegNumLength()) {
+			throw new EpException(MessageConst.ERROR_722603, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sm.gstNo",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()) });
+							new FacesScopes().getUserLocale()),
+					String.valueOf(ruleHelper.getGstRegNumLength()) });
 		}
 		if (!StringUtils.isEmpty(getManagedBean().getSelectedBranch()
 				.getGstRegistrationNo())
@@ -3206,7 +3204,8 @@ public class SmApplicationBackingBean extends
 	 */
 	public void assignNewCategoryCode() {
 		boolean validCatCode = true;
-		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == 30) {
+		if (getManagedBean().getSmAppl().getSmSupplierCategories().size() == ruleHelper
+				.getMaxCategoryAllowed()) {
 			validCatCode = false;
 			throw new EpException(MessageConst.ERROR_722517);
 		}
@@ -4108,8 +4107,12 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setIdentificationTypes(getPmIdTypeDropdownValues());
 		if (getManagedBean().getSmAppl().getSupplierType()
 				.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)
-				&& getManagedBean().getSelectedShareHolder()
-						.getWorkExperienceYear().compareTo(new BigDecimal(5)) < 0
+				&& getManagedBean()
+						.getSelectedShareHolder()
+						.getWorkExperienceYear()
+						.compareTo(
+								new BigDecimal(ruleHelper
+										.getConsutantPersonnelMinExp())) < 0
 				&& getManagedBean().getSelectedShareHolder().isEquityOwner()) {
 
 			validShrHldr = false;
@@ -4667,11 +4670,15 @@ public class SmApplicationBackingBean extends
 						.getBusinessTypeVal()
 						.equalsIgnoreCase(
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT)) {
-					throw new EpException(MessageConst.ERROR_722547,
-							new String[] { "1" });
+					throw new EpException(
+							MessageConst.ERROR_722547,
+							new String[] { String.valueOf(ruleHelper
+									.getMaxEquityOwnerCountForROBIndividual()) });
 				} else {
-					throw new EpException(MessageConst.ERROR_722547,
-							new String[] { "20" });
+					throw new EpException(
+							MessageConst.ERROR_722547,
+							new String[] { String.valueOf(ruleHelper
+									.getMaxEquityOwnerCountForOtherThanROBIndividaul()) });
 				}
 
 			}
