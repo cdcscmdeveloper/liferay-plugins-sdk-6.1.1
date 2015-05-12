@@ -71,7 +71,8 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 				}
 //				if(getSearchViewType()!=null) {
 //					System.out.println("group");
-//					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
+				// Contract always is search by group
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
 //				}
 				if(getSearchContractNo()!=null && getSearchContractNo()!="") {
 					System.out.println("docNo" + getSearchContractNo() );
