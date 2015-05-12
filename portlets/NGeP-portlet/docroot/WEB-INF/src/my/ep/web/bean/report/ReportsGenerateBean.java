@@ -188,6 +188,14 @@ public class ReportsGenerateBean {
 		private boolean smRegistrationTypeTwoView = false;
 		private boolean smActiveSubmissiveFromDateView = false;
 		private boolean smActSubmisAllDateView = false;
+		private boolean smProcessingOfficerNameView = false;
+		private boolean smReportTypeTwoView = false;
+		private boolean smBothSupplierTypeView = false;
+		
+		private boolean smReceiptNoView = false;
+		private boolean smProcessingTypeView = false;
+		private boolean smPaymentMethodView = false;
+		
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -365,6 +373,11 @@ public class ReportsGenerateBean {
 		private String smIdentificationTypeVar=ReportConst.EMPTY_VAL;
 		private String smIdentificationNumberVar=ReportConst.EMPTY_VAL;
 		private String smCancellationByVar=ReportConst.EMPTY_VAL;
+		private String smProcessingOfficerNameVar=ReportConst.EMPTY_VAL;
+		private String smReportTypeVar=ReportConst.EMPTY_VAL;
+		private String smReceiptNoVar=ReportConst.EMPTY_VAL;
+		private String smProcessingTypeVar=ReportConst.EMPTY_VAL;
+		private String smPaymentMethodVar=ReportConst.EMPTY_VAL;
 		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
@@ -448,6 +461,73 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmBothSupplierTypeView() {
+			return smBothSupplierTypeView;
+		}
+		public void setSmBothSupplierTypeView(boolean smBothSupplierTypeView) {
+			this.smBothSupplierTypeView = smBothSupplierTypeView;
+		}
+		public boolean isSmReportTypeTwoView() {
+			return smReportTypeTwoView;
+		}
+		public void setSmReportTypeTwoView(boolean smReportTypeTwoView) {
+			this.smReportTypeTwoView = smReportTypeTwoView;
+		}
+		
+		public boolean isSmProcessingOfficerNameView() {
+			return smProcessingOfficerNameView;
+		}
+		public void setSmProcessingOfficerNameView(boolean smProcessingOfficerNameView) {
+			this.smProcessingOfficerNameView = smProcessingOfficerNameView;
+		}
+		public boolean isSmReceiptNoView() {
+			return smReceiptNoView;
+		}
+		public void setSmReceiptNoView(boolean smReceiptNoView) {
+			this.smReceiptNoView = smReceiptNoView;
+		}
+		public boolean isSmProcessingTypeView() {
+			return smProcessingTypeView;
+		}
+		public void setSmProcessingTypeView(boolean smProcessingTypeView) {
+			this.smProcessingTypeView = smProcessingTypeView;
+		}
+		public boolean isSmPaymentMethodView() {
+			return smPaymentMethodView;
+		}
+		public void setSmPaymentMethodView(boolean smPaymentMethodView) {
+			this.smPaymentMethodView = smPaymentMethodView;
+		}
+		public String getSmProcessingOfficerNameVar() {
+			return smProcessingOfficerNameVar;
+		}
+		public void setSmProcessingOfficerNameVar(String smProcessingOfficerNameVar) {
+			this.smProcessingOfficerNameVar = smProcessingOfficerNameVar;
+		}
+		public String getSmReportTypeVar() {
+			return smReportTypeVar;
+		}
+		public void setSmReportTypeVar(String smReportTypeVar) {
+			this.smReportTypeVar = smReportTypeVar;
+		}
+		public String getSmReceiptNoVar() {
+			return smReceiptNoVar;
+		}
+		public void setSmReceiptNoVar(String smReceiptNoVar) {
+			this.smReceiptNoVar = smReceiptNoVar;
+		}
+		public String getSmProcessingTypeVar() {
+			return smProcessingTypeVar;
+		}
+		public void setSmProcessingTypeVar(String smProcessingTypeVar) {
+			this.smProcessingTypeVar = smProcessingTypeVar;
+		}
+		public String getSmPaymentMethodVar() {
+			return smPaymentMethodVar;
+		}
+		public void setSmPaymentMethodVar(String smPaymentMethodVar) {
+			this.smPaymentMethodVar = smPaymentMethodVar;
+		}
 		public boolean isCmMadatoryIndicatorView() {
 			return cmMadatoryIndicatorView;
 		}

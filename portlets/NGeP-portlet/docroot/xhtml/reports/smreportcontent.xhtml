@@ -134,6 +134,22 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smBothSupplierTypeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smSupplierType}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
+									itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
+									itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.both']}"
+									itemValue="#{lbl['lbl.rpt.both']}"></f:selectItem>
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatorySupplierTypeView}">
 							<p:column >
 								<table style="width: 180px;">
@@ -1004,6 +1020,88 @@
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
 						</c:if>
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentMethodView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.paymentmethod']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu 
+								value="#{reportBackingBean.smPaymentMethod}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.fpx']}"
+									itemValue="#{lbl['lbl.rpt.fpx']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.creditcard']}"
+									itemValue="#{lbl['lbl.rpt.creditcard']}"></f:selectItem>								
+							</p:selectOneMenu>
+						</c:if>
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smProcessingTypeView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.processingtype']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu 
+								value="#{reportBackingBean.smProcessingType}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.processing']}"
+									itemValue="#{lbl['lbl.rpt.processing']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.registrationfee']}"
+									itemValue="#{lbl['lbl.rpt.registrationfee']}"></f:selectItem>									
+							</p:selectOneMenu>
+						</c:if>						
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smReceiptNoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.receiptno']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100" value="#{reportBackingBean.smReceiptNo}"
+								style="margin-top:5px;width:290px;">
+							</p:inputText>
+						</c:if>						
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smReportTypeTwoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.reportType']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu 
+								value="#{reportBackingBean.smReportType}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.deletependingapplverifi']}"
+									itemValue="V"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.deletependingapplapprove']}"
+									itemValue="A"></f:selectItem>	
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.deletependingapplreject']}"
+									itemValue="R"></f:selectItem>
+							</p:selectOneMenu>
+						</c:if>						
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smProcessingOfficerNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.processingofficername']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="1000" value="#{reportBackingBean.smProcessingOfficerName}"
+								style="margin-top:5px;width:290px;">
+							</p:inputText>
+						</c:if>
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smExtraTwoColumnView}">
 							<p:outputLabel value="" style="margin-top:5px;width:160px;" />

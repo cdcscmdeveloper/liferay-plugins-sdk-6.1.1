@@ -352,7 +352,22 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	//rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmMandatoryZoneView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
-	            break;    
+	            break; 
+		 case ReportConst.SM_DAILY_EARNING_RECEIPT: 				
+			    rptGenBean.setFromDateView(true);
+			    rptGenBean.setSmPaymentMethodView(true);
+			    rptGenBean.setSmProcessingTypeView(true);
+			    rptGenBean.setSmReceiptNoView(true);
+	            break;
+		 case ReportConst.SM_DELETE_PENDING_APPL: 				
+			    rptGenBean.setFromDateView(true);
+			    rptGenBean.setSmCompanyNameView(true);
+			    rptGenBean.setSmBothSupplierTypeView(true);
+			    rptGenBean.setSmZoneView(true);
+			    rptGenBean.setSmApplicationNoView(true);
+			    rptGenBean.setSmReportTypeTwoView(true);
+			    rptGenBean.setSmProcessingOfficerNameView(true);
+	            break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
