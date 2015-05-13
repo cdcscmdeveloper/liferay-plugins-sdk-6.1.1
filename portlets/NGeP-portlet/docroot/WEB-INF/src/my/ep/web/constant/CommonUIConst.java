@@ -16,5 +16,7 @@ public class CommonUIConst {
 	public static String ACKNOWLEDGE_REPORT_PAGE = "/xhtml/common/acknowledgeReport.xhtml";
 	public static final String DECIMAL_REG_EX_PATTERN="^\\-{0,1}\\d+(.\\d+){0,1}$";
 	public static final String NUMBER_REG_EX_PATTERN="^[0-9]*$";
+	public static final String IMAGE_PATH = "/css/images";
+	public static final String IMAGE_PATH_UPTO_DESIGN = "/css/images/design";
 	
 }
