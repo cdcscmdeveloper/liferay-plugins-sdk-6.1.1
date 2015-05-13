@@ -138,6 +138,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 								}
 							}
 						}else{
+							path = MOF_REG_PATH;
 							getManagedBean().setFlowStatus(1);
 						}
 					}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONSULTANT)){	
