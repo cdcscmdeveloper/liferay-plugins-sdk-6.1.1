@@ -127,7 +127,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 								String catalogueStat = checkCatalogueUpload(supplier.getSupplierId());
 								if(catalogueStat == null){
 									path = CATALOGUE_UPLOAD_PATH;
-									getManagedBean().setFlowStatus(5);
+									getManagedBean().setFlowStatus(6);
 								}else{
 									if(catalogueStat.equalsIgnoreCase("U")){
 										getManagedBean().setFlowStatus(0);
