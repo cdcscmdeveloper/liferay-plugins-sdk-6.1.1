@@ -9,10 +9,7 @@
 	<p:panel id="ccc" header="#{lbl['lbl.ct.panel.central.contract.circular']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 			 
-			   <h:panelGrid columns="2" style="float:right;">
-			    	 <p:outputLabel value="*" styleClass="mandatory" />
-				     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
-				</h:panelGrid>
+			       <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
 				 <h:panelGrid columns="2">
 				     <p:inputTextarea id="circularNoUpTxt" style="width:170px; margin-top:2px;margin-bottom:2px" rows="5"
 					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
@@ -20,11 +17,8 @@
 				      <p:message for="circularNoUpTxt" display="icon"/>
 				  </h:panelGrid>
 				   
-				    <h:panelGrid columns="2" style="float:right;">
-				        <p:outputLabel value="*" styleClass="mandatory" />
-			        	<p:outputLabel  value="#{lbl['lbl.ct.circular.name']}" />
-				    </h:panelGrid>
-		            <h:panelGrid columns="3">
+				    <p:outputLabel  value="#{lbl['lbl.ct.circular.name']}" />
+				    <h:panelGrid columns="3">
 				        <p:inputTextarea id="circularNameUpTxt" rows="5" style="width:230px;" 
 				              maxlength="200" required="true" 
 						      disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
@@ -70,11 +64,8 @@
 			             style="width:115px;" disabled="true">
 			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 		   </h:panelGrid>
-		   <h:panelGrid columns="2">
-				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
-		        	<p:outputLabel value="*" styleClass="mandatory" />
-		         	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
-		       	</h:panelGrid> 
+		   <h:panelGrid columns="2" class="columnWidth200">
+			  	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
 		       	 	styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />

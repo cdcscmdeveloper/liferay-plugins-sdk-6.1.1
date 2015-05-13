@@ -8,10 +8,7 @@
 	
 	<h:panelGrid id="panelCircularId" columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 				
-					<h:panelGrid columns="2" style="float:right;">
-					     <p:outputLabel value="*" styleClass="mandatory" />
-					     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
-				   </h:panelGrid>
+				     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required" />
 				   <h:panelGrid columns="2">
 					<p:inputTextarea id="circularNoTxt" style="width:170px; margin-top:2px;margin-bottom:2px" rows="5"
 					 	required="true" maxlength="60"  disabled="#{panelBackingBean.managedBean.viewContract}"
@@ -19,10 +16,7 @@
 					<p:message for="circularNoTxt" display="icon" />
 				   </h:panelGrid>
 				
-				   <h:panelGrid columns="2" style="float:right;">
-				        <p:outputLabel value="*" styleClass="mandatory" />
-				        <h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
-				   </h:panelGrid>
+				    <p:outputLabel value="#{lbl['lbl.ct.circular.name']}"  styleClass="required"/>
 				    <h:panelGrid columns="2">
 				       <p:inputTextarea id="circularNameTxt" rows="5" style="width:230px;" maxlength="200" required="true" 
 						   disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
@@ -34,10 +28,7 @@
 				    <p:inputText  style="width:170px;" maxlength="60" disabled="#{panelBackingBean.managedBean.viewContract}"
 						value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />
 					<f:verbatim/><f:verbatim/>
-						 <h:panelGrid columns="2" style="float:right;">
-						    <p:outputLabel value="*" styleClass="mandatory" />
-							<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
-			   	         </h:panelGrid>
+						<p:outputLabel value="#{lbl['lbl.ct.start.date']}" styleClass="required"/>
 			   	         <h:panelGrid columns="2">
 			   	            <p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 			   			          navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
@@ -48,11 +39,8 @@
 			                <p:message for="popupButtonCal" display="icon" />
 			              </h:panelGrid>
 			              
-		               <h:panelGrid columns="2" style="float:right;">
-		                    <p:outputLabel value="*" styleClass="mandatory" />
-		              	    <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
-	                   </h:panelGrid>
-	                   <h:panelGrid columns="2">
+		            	    <h:outputLabel value="#{lbl['lbl.ct.end.date']}"  styleClass="required"/>
+	                    <h:panelGrid columns="2">
 		   		           <p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 		   		            	pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 		         	            mindate="#{panelBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
@@ -65,9 +53,8 @@
 		         	</h:panelGrid>			        
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
-			     	<p:outputLabel value="*" styleClass="mandatory" />
-				 	<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				<h:panelGrid class="columnWidth200">
+			    	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" styleClass="required" />
 				</h:panelGrid>
 		
 		        <h:panelGroup id="uploadCircularPg">
@@ -79,8 +66,8 @@
 			  	</h:panelGroup>	
 			</h:panelGrid>
 	
-	 
-	   <p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+	   <p:dialog id="uploadCircularDlg" widgetVar="uploadCircularDlg" 
+	        modal="true" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;" mode="advanced" 
 		    sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
@@ -90,5 +77,4 @@
 			update="uploadCircularPg" >
 		</p:fileUpload> 
 	</p:dialog>
-	
 </ui:composition>
