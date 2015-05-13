@@ -580,6 +580,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())) {
+			this.getManagedBean().getDraftSearchDataModel().reloadData();
 			return navigateToCatalogDet(0);
 		}
 		
