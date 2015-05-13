@@ -81,9 +81,8 @@
 					<p:commandButton id="downloadIcon" icon="ui-icon-download"
 						style="background-color:transparent !important; border:0px none;"
 						ajax="false"
-						action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}" />
-					<p:tooltip for="downloadIcon"
-						value="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
+						action="#{noticeBoardBackingBean.downloadAllQTDocuments(scqt[0])}"
+						title="#{lbl['lbl.sc.notice.board.download.quotation.tender.documents']}" />
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusClosed}">
