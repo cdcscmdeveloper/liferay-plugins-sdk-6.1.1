@@ -67,7 +67,7 @@
 					styleClass="bsvDtls">
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
-						update=":form:attendanceDetailstbl"  />
+						update=":form:attendanceDetailstbl :form:attendanceNavInfo"  />
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:25%;white-space: normal;">
@@ -115,7 +115,7 @@
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
-						update=":form:attendanceDetailstbl" />
+						update=":form:attendanceDetailstbl :form:attendanceNavInfo" />
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:25%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
@@ -154,11 +154,7 @@
 
 			</p:panel>
 		</ui:fragment>
-
-
-		<p:panel header="#{lbl['lbl.sc.notice.board.supplierregistration']}"
-			toggleable="true">
-
+			
 			<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0"
 				width="100%">
 				<p:column>
@@ -180,9 +176,23 @@
 						readonly="true" size="29"></p:inputText>
 				</p:column>
 			</h:panelGrid>
+		
+		<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0"
+			width="100%">
+			<p:column>
+				<h:outputText id="attendanceNavInfo" 
+								value="#{noticeBoardBackingBean.slectedHeaderName}" styleClass="subHeader" style="padding-left: 5px;" escape="flase">
+				</h:outputText>
 
+				<h:outputText
+					value="#{lbl['lbl.sc.notice.board.supplierregistration']}" styleClass="subHeader" style="padding-left: 5px;">
+				</h:outputText>
 
-			<p:dataTable id="attendanceDetailstbl" var="bsvAttandance"
+			</p:column>
+		</h:panelGrid>
+		<p:spacer height="5px"></p:spacer>
+
+		<p:dataTable id="attendanceDetailstbl" var="bsvAttandance"
 				value="#{noticeBoardBackingBean.managedBean.briefingDtls.tempRegistration.bsvAttendance}"
 				rows="10">
 
@@ -237,7 +247,7 @@
 
 
 			</p:dataTable>
-		</p:panel>
+		
 
 	</p:panel>
 
