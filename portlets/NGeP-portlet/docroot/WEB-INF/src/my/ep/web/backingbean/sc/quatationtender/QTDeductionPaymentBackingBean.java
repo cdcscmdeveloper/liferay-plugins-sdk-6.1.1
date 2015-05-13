@@ -195,6 +195,9 @@ public class QTDeductionPaymentBackingBean extends
 		List<ScQtDeduction> deductionList = this.getManagedBean().getScQtDeductionList();
 		List<ScQtDeduction> selectedList = new ArrayList<ScQtDeduction>();
 		ScQtDeduction selectedDeduction = this.getManagedBean().getSelectedScQtDeduction();
+		if (null == selectedDeduction) {
+			throw new EpException("Please select At least one Item");
+		}
 		selectedList.add(selectedDeduction);
 		List<ScQtDeduction> removeDeductionList = this.getManagedBean().getRemoveDeductions();
 		if (null == removeDeductionList) {
@@ -228,6 +231,19 @@ public class QTDeductionPaymentBackingBean extends
 		scQtDeductionClauses.add(scQtDeductionClause);
 		this.getManagedBean().getSelectedScQtDeduction()
 				.setScQtDeductionClauses(scQtDeductionClauses);
+	}
+	
+	/**
+	 * Delete deduction clause.
+	 */
+	public void deleteDeductionClause() {
+		ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
+		if(clauses != null && clauses.size()>0){
+			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
 	}
 
 	/**
