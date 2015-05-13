@@ -3518,3 +3518,7 @@ table.rptTbl {
 	font-size: 14px;
 	font-family: Arial;
 }
+
+ .required:before { 
+    content:"* ";color: red; 
+  }
