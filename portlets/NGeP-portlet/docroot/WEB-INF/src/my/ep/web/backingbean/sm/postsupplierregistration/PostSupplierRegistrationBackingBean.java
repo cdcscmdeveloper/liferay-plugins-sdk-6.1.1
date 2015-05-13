@@ -72,6 +72,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	//private static final String DASHBOARD_PATH = "welcome";
 	private static final String SUPPLIER_TYPE_SELECTION_XHTML = "/xhtml/sm/supplierregistrationcont/supplierTypeSelection.xhtml";
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
+	private static final String PROMO_PAGE = "/xhtml/sm/postsupplierregistration/supplierPromo.xhtml";
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
 	private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
@@ -82,12 +83,19 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 
 	}
 	
-	public String currentStatusAndPath(boolean isPath){
-		SmSupplier supplier = getSupplierProfile();
+	public String currentStatusAndPath(){
+		SmSupplier userSupplier = getSupplierProfileByUserId();
 		String path = null;
 		String desc = null;
-		
-		if(supplier != null){
+
+		if(userSupplier != null){
+			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+			suppSearchReqDTO.setSupplierId(userSupplier.getSupplierId());
+			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
+
+			SmSupplier supplier = suppSearchResDTO.getSmSupplier();
+
 			log.info("Supplier is not null===>" + supplier.getSupplierId());
 			this.getManagedBean().setSmSupplier(supplier);
 			getManagedBean().setFlowStatus(0);
@@ -95,106 +103,81 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			SmAppl appl = retrieveInProcessAppl(supplier.getSupplierId());
 			this.getManagedBean().setBannerImage(false);
 			getManagedBean().setSmAppl(appl);
-			
+
 			if(appl != null){
 				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
-				desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
+				//desc = this.getStatusDescById(workFlowStatus.getPmStatus().getStatusId());
+				this.getManagedBean().setStatusDesc(getStatusDescById(workFlowStatus.getPmStatus().getStatusId()));
 				showHyperlink(workFlowStatus.getPmStatus().getStatusId());
 				path = TASK_LIST_PATH;
-				
-			}else{
-				if(new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
-					log.info("MOF_SUPPLIER_ADMIN>>>>");
-					//getManagedBean().setMofUserFlag(true);
-					mofUserAction(supplier);
-					
-				}else if(validBasicSupplier()){
-					basicSupplierAction(supplier);
-			
-				}else{
-					this.getManagedBean().setHyperlink(true);
-					/*				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
-						supplier.getSmAppl().getSupplierType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE)){
-					path = SUPPLIER_TYPE_SELECTION_PATH;
-					desc = getLabelFromProperties("lbl.sm.basic.supplier.selection");
-					}else{*/
-					log.info("Supplier appl type===>" + supplier.getSmAppl().getApplType());
-					if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
-						path = MOF_REG_PATH;
-						desc = getLabelFromProperties("lbl.sm.mof.upgrade.image"); 
-						this.getManagedBean().setBannerImage(true);
-						this.getManagedBean().setFlowStatus(1);
-					}else{
-						log.info("****Basic********");
-						List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
-						log.info("*****SUPP ITEMS LIST******" + suppItems.size());
 
-						if(suppItems.size() < 1){
-							path = CATALOGUE_UPLOAD_PATH;							
-							desc = getLabelFromProperties("lbl.sm.catalogue.upload.image");
-							this.getManagedBean().setBannerImage(true);
-							this.getManagedBean().setFlowStatus(1);
-						}else{
-							/*
-							 * check the supplier item status
-							 */
-							this.getManagedBean().setFlowStatus(1);
-							boolean publishedStatus = false;
-							boolean pending = false;
-							for(CmSupplierItem cmSuppItem : suppItems){
-								log.info("****Supplier Item*****" + cmSuppItem.getItemStatus());
-								if(cmSuppItem.getItemStatus().equalsIgnoreCase("U")){
-									publishedStatus = true;
+			}else{			
+				//MOF APPL
+				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
+					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
+					//Transact with Federal and supplier type is CONTRACTOR
+					if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal() && 
+							supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
+						if(workFlowStatus != null && workFlowStatus.getPmStatus().getStatusId() == 20199){
+							if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+								path = SOFT_CERT_PATH;
+								getManagedBean().setFlowStatus(5);
+							}else{
+								String catalogueStat = checkCatalogueUpload(supplier.getSupplierId());
+								if(catalogueStat == null){
+									path = CATALOGUE_UPLOAD_PATH;
+									getManagedBean().setFlowStatus(5);
 								}else{
-									if(cmSuppItem.getItemStatus().equalsIgnoreCase("P")){
-										pending = true;
+									if(catalogueStat.equalsIgnoreCase("U")){
+										getManagedBean().setFlowStatus(0);
+									}else{
+										path = CATALOGUE_MAINT;
+										getManagedBean().setFlowStatus(6);
 									}
 								}
 							}
-
-							if(!publishedStatus){
-								log.info("********is Not Published******");
-								if(pending){
-									path = CATALOGUE_MAINT;
-									desc = getLabelFromProperties("lbl.sm.basic.catalogue.pending.approval"); 
-								}else{
-									path = CATALOGUE_MAINT;
-									//desc = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
-									desc = getLabelFromProperties("lbl.sm.catalogue.upload.image"); 
-									this.getManagedBean().setBannerImage(true);
-								}
-							}else{
-								this.getManagedBean().setFlowStatus(2);
-								log.info("********Published Catalogue******");
-								path = SOFT_CERT_PATH;
-								desc = getLabelFromProperties("lbl.sm.softcert.request.image"); 
-								this.getManagedBean().setBannerImage(true);
-							}
+						}else{
+							getManagedBean().setFlowStatus(1);
+						}
+					}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONSULTANT)){	
+							getManagedBean().setFlowStatus(1);
+					}
+					
+					log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
+				}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
+					//Basic Applcation
+					String catStatus = checkCatalogueUpload(supplier.getSupplierId());
+					if(catStatus == null){
+						path = CATALOGUE_UPLOAD_PATH;
+						getManagedBean().setFlowStatus(1);
+					}else{
+						if(catStatus.equalsIgnoreCase("U")){
+							path = SOFT_CERT_PATH;
+							getManagedBean().setFlowStatus(2);
+						}else{
+							path = CATALOGUE_MAINT;
+							getManagedBean().setFlowStatus(1);
 						}
 					}
-					//}
-
 				}
 			}
-			//RequestContext.getCurrentInstance().update("msgPanelId");
-			//RequestContext.getCurrentInstance().update("basicPanelId");
+		}
 
-			if(isPath){
+		/*			if(isPath){
 				return path;
 			}else{
 				return desc;
-			}
-			
-		}
+			}*/
 
-		return null;
+		return path;
+
 	}
 	
 	public void preRender(){
-		String currStatus = currentStatusAndPath(false);
+		String currStatus = currentStatusAndPath();
 		log.info("******PreRender****" + currStatus);
-		this.getManagedBean().setStatusDesc(currStatus);
+		//this.getManagedBean().setStatusDesc(currStatus);
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CONTENT_PAGE);
@@ -205,7 +188,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			pageRedirect(TASK_LIST_PATH);
 			
 		}else{
-			String path = currentStatusAndPath(true);
+			String path = currentStatusAndPath();
 			log.info("******xhtml*******" + path);
 			
 			/*if(path.equalsIgnoreCase(SUPPLIER_TYPE_SELECTION_PATH)){
@@ -224,9 +207,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	
-	public String getStatusDesc(){
+/*	public String getStatusDesc(){
 		return getManagedBean().getStatusDesc();
-	}
+	}*/
 	
 	/**
 	 * Save supplier upon user selected supplier and account type
@@ -279,7 +262,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * get user's supplier profile
 	 * @return SmSupplier
 	 */
-	private SmSupplier getSupplierProfile(){
+	private SmSupplier getSupplierProfileByUserId(){
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		log.info("***pmUser name***" + pmUser.getUserName());
 		log.info("***pmUser id***" + pmUser.getUserId());
@@ -408,7 +391,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @throws IOException
 	 */
 	public void proceedToSupplierSelection() throws PortalException, SystemException, IOException{
-		SmSupplier supplier = getSupplierProfile();
+		SmSupplier supplier = getSupplierProfileByUserId();
 		if(supplier != null){
 			this.getManagedBean().setSmSupplier(supplier);
 			if(!supplier.getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.TEMP_TYPE) || 
@@ -622,7 +605,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	/**
 	 * Action for basic supplier admin
 	 */
-	private void basicSupplierAction(SmSupplier supplier){
+	private void basicSupplierAction(){
 		Map<String,String> basicActionMap = new HashMap<String, String>();
 		
 		//String msg = "Upgrade to MOF Account to enjoys more benefits.";
@@ -652,6 +635,51 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public void supplierPromotion(){
+		SmSupplier userSupplier = getSupplierProfileByUserId();
+		if(userSupplier != null){
+			ISupplierSearchSO supplierSearchSO = SmServiceLookup.getSupplierSearchSO();
+			SupplierSearchReqDTO suppSearchReqDTO = new SupplierSearchReqDTO();
+			suppSearchReqDTO.setSupplierId(userSupplier.getSupplierId());
+			SupplierSearchResDTO suppSearchResDTO = supplierSearchSO.retriveSupplierById(suppSearchReqDTO);
+			
+			if(validMofUser()){
+				log.info("MOF_SUPPLIER_ADMIN>>>>");
+				mofUserAction(suppSearchResDTO.getSmSupplier());
+
+			}else if(validBasicSupplier()){
+				basicSupplierAction();
+
+			}
+		}
+		
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROMO_PAGE);
+	}
+	
+	private String checkCatalogueUpload(Long supplierId){
+		List<CmSupplierItem> suppItems = getCmSupplierItems(supplierId);
+		log.info("SupplierItems size:>>>>> " + suppItems);
+		String catalogueStatus = null;
+				
+		
+		if(suppItems.size() > 0){
+			for(CmSupplierItem cmSuppItem : suppItems){
+				if(cmSuppItem.getItemStatus().equalsIgnoreCase("U")){
+					catalogueStatus = "U";
+					break;
+				}
+				
+				if(cmSuppItem.getItemStatus().equalsIgnoreCase("P")){
+					catalogueStatus = "P";
+				}
+			}
+		}
+		
+		return catalogueStatus;
 	}
 	
 /*	private void initCatalogueBackingBean(){
