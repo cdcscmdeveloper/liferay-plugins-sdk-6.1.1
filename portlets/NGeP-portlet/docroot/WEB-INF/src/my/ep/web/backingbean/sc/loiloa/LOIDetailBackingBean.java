@@ -822,7 +822,6 @@ public class LOIDetailBackingBean extends
 		scNegoTerms.add(negoTerm);
 
 		getManagedBean().getScLoi().setScNegoTerms(scNegoTerms);
-		// this.getManagedBean().setNegoTermsList(scNegoTerms);
 	}
 
 	/**
@@ -901,7 +900,19 @@ public class LOIDetailBackingBean extends
 		}
 		getManagedBean().getScLoi().setScNegoTerms(negoTermsList);
 	}
-
+	
+	/**
+	 * Delete multiple loi nego term.
+	 */
+	public void deleteMultipleLoiNegoTerm() {
+		ScLoi scLoi = getManagedBean().getScLoi();
+		List<ScLoiTerm> scLoiTerms = getManagedBean().getSelectedNegoTermsList();
+		if(scLoiTerms != null && scLoiTerms.size()>0){
+			deleteRowsAction(scLoi.getScNegoTerms(), scLoiTerms);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
 	/**
 	 * Delete nego locations in negotiation details.
 	 */
@@ -2224,6 +2235,19 @@ public class LOIDetailBackingBean extends
 
 		}
 	}
+	
+	/**
+	 * Delete meeting attendance.
+	 */
+	public void deleteMeetingAttendance() {
+		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
+		List<ScQtMeetingAttendance> selectedMeetingAttendances = getManagedBean().getSelectedMeetingAttList();
+		if(selectedMeetingAttendances != null && selectedMeetingAttendances.size()>0){
+			deleteRowsAction(scQtCommittee.getMeetingAttendances(), selectedMeetingAttendances);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
 
 	/**
 	 * Generate loi letter from velocity to pdf.
@@ -3256,6 +3280,20 @@ public class LOIDetailBackingBean extends
 		scLoiReports.add(scLoiReport);
 	}
 	
+	/**
+	 * Delete loi report.
+	 */
+	public void deleteLoiReport() {
+		ScLoi scLoi = getManagedBean().getRecommendedLoi();
+		List<ScLoiReport> selectedScLoiReports = getManagedBean().getSelectedScLoiReports();
+
+		if(selectedScLoiReports != null && selectedScLoiReports.size()>0){
+			deleteRowsAction(scLoi.getScLoiReports(), selectedScLoiReports);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
+
 	/**
 	 * Download report.
 	 *

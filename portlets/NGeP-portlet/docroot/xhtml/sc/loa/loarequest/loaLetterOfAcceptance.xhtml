@@ -59,10 +59,12 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton rendered="#{!isPendingVerification}"
-				value="#{lbl['lbl.btn.download.all']}" ajax="false" styleClass="ui-button"
+				value="#{lbl['lbl.btn.download.all']}" ajax="false"
+				styleClass="ui-button"
 				action="#{lOADetailBackingBean.downloadAllReports}" />
 
-			<p:commandButton value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
+			<p:commandButton
+				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
 				styleClass="ui-button" update="@([id$=loaButtonsId])"
 				onclick="printBtn.jq.click();"
 				actionListener="#{lOADetailBackingBean.showVeriryButton()}"
@@ -70,10 +72,9 @@
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
-				partialSubmit="true" process="@form" styleClass="ui-button" widgetVar="printBtn"
-				style="display:none;"
+				partialSubmit="true" process="@form" styleClass="ui-button"
+				widgetVar="printBtn" style="display:none;"
 				actionListener="#{lOADetailBackingBean.downloadAllReports}" />
-
 
 			<c:if test="#{isEditableStatus}">
 				<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -84,9 +85,16 @@
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, contentsTbl" partialSubmit="true"
-					action="#{lOADetailBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.scLoa.scLoaReports, lOADetailBackingBean.managedBean.selectedScLoaReports)}"
-					update="contentsTbl" />
+					oncomplete="loaReportDeletePopUp.show();"
+					update="@([id$=#{loaReportDeleteId}])" />
 			</c:if>
+
 		</div>
+		<ac:confirmationPopup id="loaReportDeleteId"
+			widget="loaReportDeletePopUp"
+			okAction="lOADetailBackingBean.deleteLoaContentAction" width="400"
+			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+
 	</p:panel>
 </ui:composition>
