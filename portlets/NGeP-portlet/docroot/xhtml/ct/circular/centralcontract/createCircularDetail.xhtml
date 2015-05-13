@@ -8,21 +8,15 @@
 	
 	<h:panelGrid id="centralCircularId" columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 				
-					<h:panelGrid columns="2" style="float:right;">
-					    <p:outputLabel value="*" styleClass="mandatory" />
-					    <h:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
-				   </h:panelGrid>
-				   <h:panelGrid columns="2">
+			      <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}"  styleClass="required" />
+				  <h:panelGrid columns="2">
 				      <p:inputTextarea id="circularNoTxt" style="width:170px;margin-bottom:2px" rows="4"
 					 	required="true" maxlength="60"  disabled="#{centralContractBackingBean.managedBean.viewContract}"
 						value="#{centralContractBackingBean.managedBean.circularVer.circularNo}" label="#{lbl['lbl.ct.physical.circular.no']}"  autoResize="false"/>
 					<p:message for="circularNoTxt" display="icon" />
 				    </h:panelGrid>
 						
-					<h:panelGrid columns="2" style="float:right;">
-				        <p:outputLabel value="*" styleClass="mandatory" />
-				        <h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
-				   </h:panelGrid>
+					 <h:outputLabel value="#{lbl['lbl.ct.circular.name']}"   styleClass="required"/>
 				    <h:panelGrid columns="2">
 				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:250px;" maxlength="200" required="true" 
 						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
@@ -30,11 +24,8 @@
 				         	<p:message for="circularNameTxt" display="icon" />
 				    </h:panelGrid>
 				    
-					<h:panelGrid columns="2" style="float:right;">
-						<p:outputLabel value="*" styleClass="mandatory" />
-						<p:outputLabel value="#{lbl['lbl.ct.start.date']}" />
-					</h:panelGrid>
-		   	   		<h:panelGrid columns="2">
+					<p:outputLabel value="#{lbl['lbl.ct.start.date']}"  styleClass="required" />
+					<h:panelGrid columns="2">
 		   				<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" 
 							navigator="true" size="17" showOn="button" required="true" readonlyInput="true" label="#{lbl['lbl.ct.start.date']}"
 		      				disabled="#{centralContractBackingBean.managedBean.viewContract}" 
@@ -44,11 +35,8 @@
 		                <p:message for="popupButtonCal" display="icon" />
 		 			</h:panelGrid>
 		 			
-		 			<h:panelGrid columns="2" style="float:right;">
-	              		<p:outputLabel value="*" styleClass="mandatory" />
-	              	    <h:outputLabel value="#{lbl['lbl.ct.end.date']}" />
-              		</h:panelGrid>
-               		<h:panelGrid columns="2">
+		 		      <h:outputLabel value="#{lbl['lbl.ct.end.date']}"   styleClass="required"/>
+              		  <h:panelGrid columns="2">
 	   					<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" 
 	   						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" 
 	         	            mindate="#{centralContractBackingBean.managedBean.circularVer.startDate}" size="17" navigator="true"
@@ -75,9 +63,8 @@
 					</h:panelGroup>
 			</h:panelGrid>
 			<h:panelGrid columns="2">
-				<h:panelGrid columns="2" style="float:right;" class="columnWidth200">
-					<p:outputLabel value="*" styleClass="mandatory" />
-					<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+				<h:panelGrid class="columnWidth200">
+					<h:outputLabel value="#{lbl['lbl.ct.circular.letter']}"  styleClass="required"/>
 				</h:panelGrid>
 		             
 		 		<h:panelGroup id="uploadCircularPg">
