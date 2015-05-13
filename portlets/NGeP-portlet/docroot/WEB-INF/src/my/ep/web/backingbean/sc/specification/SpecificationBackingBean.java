@@ -10272,16 +10272,27 @@ public class SpecificationBackingBean extends
 				checklist = new ArrayList<ScQtCheckList>();
 			}
 			Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
+			List<ScQtScoreWeightage> finscoreWeightage = new ArrayList<ScQtScoreWeightage>();
 			int financialWeightage = 0;
 			for (ScQtCheckList checklistlocal : checklist) {
-				if (null != checklistlocal.getQtScoreWeightage()) {
-					map.put(checklistlocal.getQtScoreWeightage()
-							.getQtScoreWeightageId(), checklistlocal
-							.getQtScoreWeightage());
+				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_TEMPLATE_SPECIFICATION
+						.equalsIgnoreCase(checklistlocal.getDefinationType()
+								.getParameterCode())) {
+					if (null != checklistlocal.getQtScoreWeightage()) {
+						map.put(checklistlocal.getQtScoreWeightage()
+								.getQtScoreWeightageId(), checklistlocal
+								.getQtScoreWeightage());
+					}
+				} else {
+					if (null != checklistlocal.getQtScoreWeightage()) {
+						finscoreWeightage.add(checklistlocal
+								.getQtScoreWeightage());
+					}
 				}
 			}
 			List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
 					map.values());
+			list.addAll(finscoreWeightage);
 			if (null != list && !list.isEmpty()) {
 				for (ScQtScoreWeightage weightage : list) {
 					if (null == weightage.getWeightage()) {
@@ -10320,29 +10331,25 @@ public class SpecificationBackingBean extends
 			if (null == checklist) {
 				checklist = new ArrayList<ScQtCheckList>();
 			}
-			Map<Long, ScQtScoreWeightage> map = new HashMap<Long, ScQtScoreWeightage>();
-			int financialWeightage = 0;
+			// Map <ScQtScoreWeightage> map = new HashMap<ScQtScoreWeightage>();
+			int technicalWeightage = 0;
 			for (ScQtCheckList checklistlocal : checklist) {
 				if (null != checklistlocal.getQtScoreWeightage()) {
-					map.put(checklistlocal.getQtScoreWeightage()
-							.getQtScoreWeightageId(), checklistlocal
-							.getQtScoreWeightage());
+					if (null == checklistlocal.getQtScoreWeightage()
+							.getWeightage()) {
+						checklistlocal.getQtScoreWeightage().setWeightage(
+								new BigDecimal(0));
+					}
+
+					technicalWeightage = technicalWeightage
+							+ checklistlocal.getQtScoreWeightage()
+									.getWeightage().intValue();
 				}
 			}
-			List<ScQtScoreWeightage> list = new ArrayList<ScQtScoreWeightage>(
-					map.values());
-			if (null != list && !list.isEmpty()) {
-				for (ScQtScoreWeightage weightage : list) {
-					if (null == weightage.getWeightage()) {
-						weightage.setWeightage(new BigDecimal(0));
-					}
-					financialWeightage = financialWeightage
-							+ weightage.getWeightage().intValue();
-				}
-				if (financialWeightage < 100) {
-					this.getManagedBean().setActiveIndex(4);
-					throw new EpException(MessageConst.ERROR_760220);
-				}
+
+			if (technicalWeightage < 100) {
+				this.getManagedBean().setActiveIndex(4);
+				throw new EpException(MessageConst.ERROR_760220);
 			}
 		}
 
@@ -15279,9 +15286,10 @@ public class SpecificationBackingBean extends
 
 	}
 
-	//changed delivery details tabs
+	// changed delivery details tabs
 	public void deliveryDetailsZonesTabChange(TabChangeEvent event) {
 		BriefingZoneBean specZoneDtl = (BriefingZoneBean) event.getData();
-		this.getManagedBean().setTplSpecZoneDtl(specZoneDtl.getTplSpecZoneDtl());
+		this.getManagedBean()
+				.setTplSpecZoneDtl(specZoneDtl.getTplSpecZoneDtl());
 	}
 }
