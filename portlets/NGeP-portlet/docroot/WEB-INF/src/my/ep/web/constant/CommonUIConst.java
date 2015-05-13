@@ -19,4 +19,18 @@ public class CommonUIConst {
 	public static final String IMAGE_PATH = "/css/images";
 	public static final String IMAGE_PATH_UPTO_DESIGN = "/css/images/design";
 	
+	/**
+	 * @return the imagePath
+	 */
+	public static String getImagePath() {
+		return IMAGE_PATH;
+	}
+
+	/**
+	 * @return the imagePathUptoDesign
+	 */
+	public static String getImagePathUptoDesign() {
+		return IMAGE_PATH_UPTO_DESIGN;
+	}
+	
 }
