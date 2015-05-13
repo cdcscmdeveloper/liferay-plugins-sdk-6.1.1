@@ -99,12 +99,17 @@
 				update="doctbl" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, doctbl" partialSubmit="true"
-				action="#{qTDocumentsBackingBean.markDeleteSelectedRowsAction(qTDocumentsBackingBean.managedBean.scQtDocReportList, qTDocumentsBackingBean.managedBean.markDeletedScQtDocReportList)}"
-				update="doctbl"
+				update="@([id$=#{documentDeleteId}])"
+				oncomplete="documentDeletePopUp.show();"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DOCUMENTS)}">
 				<f:setPropertyActionListener
 					target="#{qTDocumentsBackingBean.selectAll}" value="#{false}" />
 			</p:commandButton>
 		</div>
+		<ac:confirmationPopup id="documentDeleteId"
+				widget="documentDeletePopUp"
+				okAction="qTDocumentsBackingBean.markDeleteSelectedRowsAction(qTDocumentsBackingBean.managedBean.scQtDocReportList, qTDocumentsBackingBean.managedBean.markDeletedScQtDocReportList)" width="400"
+				height="100" title="#{lbl['lbl.sc.document.list']}"
+				content="#{lbl['lbl.sc.dialog.confirm.document.dtls']}" update="@form" />
 	</p:panel>
 </ui:composition>

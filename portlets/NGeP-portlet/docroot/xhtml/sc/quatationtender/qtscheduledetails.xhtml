@@ -349,14 +349,23 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-				process="@this,cpersondetailsid" partialSubmit="true"
+				process="@this, cpersondetailsid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addContactPerson}"
 				update="cpersondetailsid" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, cpersondetailsid" partialSubmit="true"
+				oncomplete="contactPersonDeletePopUp.show();"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-				action="#{qTScheduleDetailBackingBean.deleteContactPerson}"
-				update="cpersondetailsid" />
+				update="@([id$=#{contactPersonDeleteId}])" />
 		</div>
+		<ui:param name="contactPersonDeleteId" value="contactPersonDeleteId" />
+		<ac:confirmationPopup id="#{contactPersonDeleteId}"
+			widget="contactPersonDeletePopUp"
+			okAction="qTScheduleDetailBackingBean.deleteContactPerson"
+			width="450" height="200"
+			title="#{lbl['lbl.sc.contact.person.details']}"
+			content="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}"
+			update="@([id$=cpersondetailsid])" />
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" toggleable="true">
 		<p:dataTable id="doaaid" var="deskofficeradmin"
@@ -388,9 +397,19 @@
 				process="@this, doaaid" partialSubmit="true"
 				action="#{qTScheduleDetailBackingBean.addDeskOfficerAdminAssistant}"
 				update="doaaid" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}" update="doaaid"
-				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
-				action="#{qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant}" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, doaaid" partialSubmit="true"
+				oncomplete="doaaDeletePopUp.show()"
+				update="@([id$=#{doaaDeleteId}])"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 		</div>
+		<ui:param name="doaaDeleteId" value="doaaDeleteId" />
+		<ac:confirmationPopup id="#{doaaDeleteId}"
+			widget="doaaDeletePopUp"
+			okAction="qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant"
+			width="450" height="200"
+			title="#{lbl['lbl.sc.qt.desk.officer.admin']}"
+			content="#{lbl['lbl.sc.dialog.confirm.doaa.dtls']}"
+			update="@([id$=doaaid])" />
 	</p:panel>
 </ui:composition>
