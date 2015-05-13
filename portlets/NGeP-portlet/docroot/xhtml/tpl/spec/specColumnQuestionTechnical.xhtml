@@ -273,14 +273,13 @@
 		<f:facet name="header">
 			<p:commandButton id="addTopBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,-1,TplSpecConst.questionTypeItem)}"  
-				update="questionTbl" partialSubmit="true" process="questionTbl" />
-			<p:tooltip id="addTopTtp" for="addTopBtn">
-				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}"  />
-			</p:tooltip>
+				update="questionTbl" partialSubmit="true" process="questionTbl"
+				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</f:facet>
 		<c:if test="#{isSpecificationReq}">
 			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-				partialSubmit="true" process="@this" />
+				partialSubmit="true" process="@this"
+				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 			<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
 				<p:menuitem value="#{lbl['lbl.tpl.spec.content.item']}" action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
 					update="questionTbl" partialSubmit="true" process="@this">
@@ -293,19 +292,15 @@
 		<c:if test="#{!isSpecificationReq}">
 			<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
 				action="#{templateSpecBackingBean.addQuestion(templateSpecBean.specMaster, templateSpecBean.specMaster.tplSpecQuestions,row,TplSpecConst.questionTypeItem)}"  
-				update="questionTbl" partialSubmit="true" process="questionTbl" />
+				update="questionTbl" partialSubmit="true" process="questionTbl"
+				title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
 		</c:if>
-		<p:tooltip id="addTtp" for="addBtn">
-			<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}"  />
-		</p:tooltip>
 		<p:commandButton id="delBtn" icon="ui-icon-delete" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
-			partialSubmit="true" process="@this" oncomplete="#{delConfirmPopup}.show();">
+			partialSubmit="true" process="@this" oncomplete="#{delConfirmPopup}.show();"
+			title="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}">
 			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion.selected}" value="#{true}" />
 		</p:commandButton>
-		<p:tooltip id="delTtp" for="delBtn">
-			<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.btn.delete.tooltip']}"  />
-		</p:tooltip>
 	</p:column>
 </ui:composition>
