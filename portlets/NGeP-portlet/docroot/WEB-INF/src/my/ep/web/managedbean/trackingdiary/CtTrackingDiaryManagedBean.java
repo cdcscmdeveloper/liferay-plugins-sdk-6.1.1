@@ -65,20 +65,19 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			try {
-				// Contract always is search by group
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
-				
+			try {				
 				if (getSearchTransactionType() != null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_EQUALS.value(),getSearchTransactionType()));
 				}				
 				if (getSearchDocNo() != null && getSearchDocNo().trim() != "") {
 					SearchFilterBean filterBean = new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo());
 					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
-					// Order by document number
-					searchBean.getSortColumns().add(
-							new SearchOrderBean("docNo", true));
+					searchBean.getDataFilterBeans().add(filterBean);					
+				}
+				if (getSearchDocType() != null) {
+					SearchFilterBean filterBean = new SearchFilterBean("docTypeList",SearchOperator.OPERATOR_LIKE.value(),getSearchDocType());
+					filterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (getSearchPhysicalDocNo() != null && getSearchPhysicalDocNo().trim() != "") {
 					SearchFilterBean filterBean = new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalDocNo());
@@ -95,6 +94,10 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+				// Contract always is search by group
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
+				// Order by document number
+				searchBean.getSortColumns().add(new SearchOrderBean("docNo", true));
 				
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
 				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
