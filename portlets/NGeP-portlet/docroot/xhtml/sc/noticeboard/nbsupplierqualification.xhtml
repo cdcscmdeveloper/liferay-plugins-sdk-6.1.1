@@ -9,7 +9,7 @@
 		showSummary="false" autoUpdate="true" closable="true" />
 	<p:blockUI block=":form" trigger="nbCheckSupplierQualification"
 		widgetVar="blockWidget">
-		<p:graphicImage value="/css/images/design/ajax-loader.gif"></p:graphicImage>
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
 
 	<div align="left" class="header-info">
@@ -77,21 +77,21 @@
 				
 				<p:column headerText="#{lbl['lbl.sc.notice.board.qualification.status']}" style="width:20%;">
 				<ui:fragment rendered="#{qulificationBean.categoryCodeStatus eq null}">
-					<p:graphicImage library="ep/images/design" name="tick.png"
+					<p:graphicImage 
 						value="/css/images/design/tick.png"
 						rendered="#{qulificationBean.supplierStatus}"></p:graphicImage>
 
-					<p:graphicImage library="ep/images/design" name="cancel.png"
+					<p:graphicImage 
 						value="/css/images/design/cancel.png"
 						rendered="#{!qulificationBean.supplierStatus}"></p:graphicImage>
 				</ui:fragment>
 					<ui:repeat var="status" value="#{qulificationBean.categoryCodeStatus}">
 					<ui:fragment rendered="#{status ne 'optional'}">
-						<p:graphicImage library="ep/images/design" name="tick.png"
+						<p:graphicImage 
 							value="/css/images/design/tick.png"
 							rendered="#{status}"></p:graphicImage>
 
-						<p:graphicImage library="ep/images/design" name="cancel.png"
+						<p:graphicImage 
 							value="/css/images/design/cancel.png"
 							rendered="#{!status}"></p:graphicImage>
 					</ui:fragment>
