@@ -87,8 +87,7 @@
 							<p:ajax process="@this" partialSubmit="true" update="@this"
 								listener="#{backingBean.trimPersonnelPassportValue}" />
 						</p:inputText>
-						   &#160; <p:graphicImage id="tooltip1" library="ep/images/design"
-							name="tooltips.png" />
+						   &#160; <p:graphicImage id="tooltip1" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="toolinfo1" for="tooltip1">
 							<p:outputLabel escape="false"
 								value="#{lbl['tt.sm.registration.identification.no']}" />
@@ -163,8 +162,7 @@
 						size="35">
 						<f:validateRegex
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
-					</p:inputText> &#160; <p:graphicImage id="tooltip2" library="ep/images/design"
-						name="tooltips.png" /> <p:tooltip id="toolinfo2" for="tooltip2">
+					</p:inputText> &#160; <p:graphicImage id="tooltip2" value="/css/images/design/tooltips.png" /> <p:tooltip id="toolinfo2" for="tooltip2">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.email']}" />
 					</p:tooltip>&#160; <p:message id="equiEmailMsg" for="equiEmail"
@@ -263,8 +261,8 @@
 							update=":form:tt:shareHolderAddrDialog,:form:tt:equiPerMobMsgOutputPanel,shrPrivPanel, @([id$=mobileOutputPanel]),tooltip5"
 							listener="#{backingBean.assignShareHolderPrivilege}" />
 					</p:selectOneRadio></td>
-				<td><p:graphicImage id="tooltip3" library="ep/images/design"
-						style="padding-bottom : 7px;" name="tooltips.png" /> <p:tooltip
+				<td><p:graphicImage id="tooltip3" value="/css/images/design/tooltips.png"
+						style="padding-bottom : 7px;" /> <p:tooltip
 						id="toolinfo3" for="tooltip3">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.authorized.personal']}" />
@@ -338,11 +336,11 @@
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
 					</p:selectOneRadio></td>
-				<td><p:graphicImage id="tooltip5" library="ep/images/design"
+				<td><p:graphicImage id="tooltip5" value="/css/images/design/tooltips.png"
 						style="padding-bottom : 7px;"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}"
-						name="tooltips.png" /> <p:tooltip id="toolinfo5" for="tooltip5">
+						 /> <p:tooltip id="toolinfo5" for="tooltip5">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
 					</p:tooltip></td>
