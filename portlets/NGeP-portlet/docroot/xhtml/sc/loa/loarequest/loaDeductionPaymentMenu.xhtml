@@ -58,9 +58,15 @@
 					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, deductTbl" partialSubmit="true"
-					action="#{lOADetailBackingBean.deleteDeductionPaymentAction()}"
-					update="deductTbl,deductClauseTbl" />
+					oncomplete="deductionPayDeletePopUp.show();"
+					update="@([id$=#{deductionPayDeleteId}])" />
 			</div>
+			<ac:confirmationPopup id="deductionPayDeleteId"
+				widget="deductionPayDeletePopUp"
+				okAction="lOADetailBackingBean.deleteDeductionPaymentAction"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 		</c:if>
 
 		<br />
@@ -90,7 +96,7 @@
 
 					<h:panelGroup rendered="#{empty scQtDeductionClause.pmClause}">
 						<p:inputTextarea value="#{scQtDeductionClause.clauseDesc}"
-							cols="170" rows="2" maxlength="500" style=" margin-bottom:5px;"
+							cols="129" rows="2" maxlength="500" style=" margin-bottom:5px;"
 							rendered="#{isEditableStatus}">
 							<p:ajax event="keyup" />
 						</p:inputTextarea>
@@ -117,10 +123,17 @@
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, deductClauseTbl" partialSubmit="true"
-						action="#{lOADetailBackingBean.deleteRowsAction(lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses, lOADetailBackingBean.managedBean.selectedDeductionClauses)}"
-						update="deductClauseTbl" />
-				</h:panelGroup>
+						oncomplete="deductionClauseDeletePopUp.show();"
+						update="@([id$=#{deductionClauseDeleteId}])" />
+				
+				</h:panelGroup>	
 			</div>
+			<ac:confirmationPopup id="deductionClauseDeleteId"
+				widget="deductionClauseDeletePopUp"
+				okAction="lOADetailBackingBean.deleteDeductionClause" width="400"
+				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+			
 		</h:panelGroup>
 	</p:panel>
 </ui:composition>

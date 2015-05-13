@@ -58,8 +58,7 @@
 		</p:dataTable>
 		<p:spacer height="2" />
 		<div class="ppRightBtn">
-			<p:commandButton 
-				value="#{lbl['lbl.btn.download.all']}" ajax="false"
+			<p:commandButton value="#{lbl['lbl.btn.download.all']}" ajax="false"
 				rendered="#{isPendingNegotiationStatus}"
 				action="#{lOIDetailBackingBean.downloadAllReports}" />
 
@@ -67,15 +66,19 @@
 				process="@this, reportContentsTbl" partialSubmit="true"
 				action="#{lOIDetailBackingBean.addLoiReportAction}"
 				oncomplete="reportContentsTblWidget.paginator.endLink.click();"
-				rendered="#{isPendingNegotiationStatus}"
-				update="reportContentsTbl" />
+				rendered="#{isPendingNegotiationStatus}" update="reportContentsTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-			    rendered="#{isPendingNegotiationStatus}"
+				rendered="#{isPendingNegotiationStatus}"
 				process="@this, reportContentsTbl" partialSubmit="true"
-				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.recommendedLoi.scLoiReports, lOIDetailBackingBean.managedBean.selectedScLoiReports)}"
-				update="reportContentsTbl" />
-
+				oncomplete="loiReportDeletePopUp.show();"
+				update="@([id$=#{loiReportDeleteId}])" />
 		</div>
+		<ac:confirmationPopup id="loiReportDeleteId"
+			widget="loiReportDeletePopUp"
+			okAction="lOIDetailBackingBean.deleteLoiReport" width="400"
+			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+
 	</p:panel>
 </ui:composition>
