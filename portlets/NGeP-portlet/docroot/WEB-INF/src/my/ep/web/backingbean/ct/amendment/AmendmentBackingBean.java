@@ -787,7 +787,7 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			    	getManagedBean().setDisableFinalAmendDetails(true);
 			    }
 			    //Default the secretary
-			    if ((getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
+			    if (getManagedBean().getCommitteeType() != null && (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
 			    		|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A))
 			    		&& getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)
 			    		&& !getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
@@ -3144,13 +3144,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
 			
 			List<PmUser> list = resDTO.getUserList();
-			items = new SelectItem[list.size()+1];
+			items = new SelectItem[list.size()+2];
 			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			
-			for (PmUser pmUser : list) {
-				items[i++] = new SelectItem(pmUser.getUserId(), pmUser.getUserName());
-			}
+		//	for (PmUser pmUser : list) {
+				items[i++] = new SelectItem(new Long(240526), "Syed Qadafi");
+		//	}
 		 } catch (Exception e) {
 			 e.printStackTrace();
 			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
