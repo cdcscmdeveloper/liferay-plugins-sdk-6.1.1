@@ -80,16 +80,13 @@
 					<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
 						partialSubmit="true" process="@this" update=":form:tt:sfieldset"
 						style="padding-right :5px;">
-						<p:graphicImage library="ep/images/design"
-							name="seller_detail.png"
-							value="/css/images/design/seller_detail.png"
+						<p:graphicImage value="/css/images/design/seller_detail.png"
 							title="View Signatories" />
 					</p:commandLink>
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelBank(bankBean)}"
 						update=":form:tt:bankDialog" style="padding-right :5px;">
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/css/images/design/edit.png" />
+						<p:graphicImage value="/css/images/design/edit.png" />
 					</p:commandLink>
 
 					<!-- oncomplete="updateSignatory();" /> -->

@@ -66,7 +66,7 @@
 						<p:commandLink title="#{lbl['lbl.sm.userprofile.edit']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 							action="#{smPersonnelBackingBean.navigateToUpdateUserPage(personnel.personnelId)}" update="@form">
 							<p:graphicImage value="/css/images/design/edit.png" rendered="#{personnel.recordStatusFlg eq 1}"></p:graphicImage>
-							<p:graphicImage library="ep/images/design" name="document.png" value="/css/images/design/document.png" rendered="#{personnel.recordStatusFlg eq 8}"/>
+							<p:graphicImage value="/css/images/design/document.png" rendered="#{personnel.recordStatusFlg eq 8}"/>
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
