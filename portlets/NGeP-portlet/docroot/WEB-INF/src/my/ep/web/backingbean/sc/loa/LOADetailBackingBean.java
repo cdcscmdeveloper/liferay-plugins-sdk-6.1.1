@@ -1115,6 +1115,19 @@ public class LOADetailBackingBean extends
 	}
 
 	/**
+	 * Delete deduction clause.
+	 */
+	public void deleteDeductionClause() {
+		ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
+		if(clauses != null && clauses.size()>0){
+			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
+
+	/**
 	 * Adds the loa content action.
 	 */
 	public void addLoaContentAction() {
@@ -1151,6 +1164,23 @@ public class LOADetailBackingBean extends
 
 		scLoaReports.add(scLoaReport);
 	}
+	
+	
+	/**
+	 * Delete loa content action.
+	 */
+	public void deleteLoaContentAction() {
+		debugLogger("deleteLoaContentAction");
+		ScLoa scLoa = getManagedBean().getScLoa();
+		List<ScLoaReport> selectedScLoaReports = getManagedBean().getSelectedScLoaReports();
+
+		if(selectedScLoaReports != null && selectedScLoaReports.size()>0){
+			deleteRowsAction(scLoa.getScLoaReports(), selectedScLoaReports);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
+
 
 	/**
 	 * Handle file upload.

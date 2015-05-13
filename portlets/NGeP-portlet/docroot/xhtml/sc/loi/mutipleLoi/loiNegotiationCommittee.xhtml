@@ -201,7 +201,7 @@
 	
 	<br />
 	
-	<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.join.in']}" toggleable="true" id="meetingAttDetailsId">
 		<p:dataTable id="meetingAttDtlTbl" var="meetingAttDtl"
 			value="#{lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances}" rows="10"
 			rowKey="#{meetingAttDtl}" rowIndexVar="rowIndex"
@@ -223,21 +223,27 @@
 						
 		</p:dataTable>
 					
-		<p:spacer height="10px"></p:spacer>
-		<div align="right">
+		<p:spacer height="5px"></p:spacer>
+		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this,meetingAttDtlTbl" 
 				partialSubmit="true"
 				action="#{lOIDetailBackingBean.addMeetingAttendance}"
 				update="meetingAttDtlTbl" 
 				rendered="#{isPendingNegotiationStatus}" />
-							
+
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, meetingAttDtlTbl" partialSubmit="true"
-				action="#{lOIDetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scQtCommittee.meetingAttendances, lOIDetailBackingBean.managedBean.selectedMeetingAttList)}"
 				rendered="#{isPendingNegotiationStatus}"
-				update="meetingAttDtlTbl" />
-	
-		</div>
+				oncomplete="alsoPresentDeletePopUp.show();"
+				update="@([id$=#{alsoPresentDeleteId}])" />
+
+			</div>
+			<ac:confirmationPopup id="alsoPresentDeleteId"
+				widget="alsoPresentDeletePopUp"
+				okAction="lOIDetailBackingBean.deleteMeetingAttendance" width="400"
+				height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" update=":form:meetingAttDetailsId" />
+		
 	</p:panel> 
 </ui:composition>

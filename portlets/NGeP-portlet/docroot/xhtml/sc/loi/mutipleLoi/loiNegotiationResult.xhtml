@@ -264,10 +264,17 @@
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, negoTermList" partialSubmit="true"
-					action="#{lOADetailBackingBean.deleteRowsAction(lOIDetailBackingBean.managedBean.scLoi.scNegoTerms, lOIDetailBackingBean.managedBean.selectedNegoTermsList)}"
-					update="negoTermList"
-					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}" />
+					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}"
+					oncomplete="negoTermDeletePopUp.show();"
+					update="@([id$=#{negoTermDeleteId}])" />
 			</div>
+			<ac:confirmationPopup id="negoTermDeleteId"
+				widget="negoTermDeletePopUp"
+				okAction="lOIDetailBackingBean.deleteMultipleLoiNegoTerm"
+				width="400" height="100"
+				title="#{lbl['lbl.msg.confirm.delete.header']}"
+				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+
 		</p:panel>
 	</h:panelGroup>
 </ui:composition>
