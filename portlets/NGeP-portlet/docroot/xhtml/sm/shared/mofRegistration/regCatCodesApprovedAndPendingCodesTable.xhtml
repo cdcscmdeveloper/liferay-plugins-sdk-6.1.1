@@ -93,8 +93,8 @@
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
 				</p:inputTextarea>
-				<p:graphicImage id="prevOtherDesc" library="ep/images/design"
-					name="icon_alert.png" style="padding-left : 3px;"
+				<p:graphicImage id="prevOtherDesc" value="/css/images/design/icon_alert.png"
+					style="padding-left : 3px;"
 					rendered="#{not empty catBean.approvedDate and catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and not empty catBean.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
 				<p:tooltip for="prevOtherDesc">
 					<p:inputTextarea readonly="true" disabled="true" rows="5" cols="20"
