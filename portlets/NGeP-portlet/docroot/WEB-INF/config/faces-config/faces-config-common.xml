@@ -71,6 +71,13 @@
 		<managed-bean-class>my.ep.web.util.DateUtils</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	
+	<managed-bean>
+		<description>Common UI Constants</description>
+		<managed-bean-name>CommonUIConstants</managed-bean-name>
+		<managed-bean-class>my.ep.web.constant.CommonUIConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 
 	<render-kit>
 		<renderer>
