@@ -1,0 +1,42 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<p:outputPanel rendered="#{postSupplierRegBB.validMofUser() or postSupplierRegBB.validBasicSupplier()}" id="mofPanelId">
+			<h:outputStylesheet library="ep/css" name="banner.css"  />
+
+			<c:forEach items="#{postSupplierRegBB.managedBean.userActionMap}" var="entry">
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'SC'}">
+					<div class="banner2-container">
+					<div class="banner2">
+					<div class="banner2-text">
+					  <p>Request Soft Cert</p>
+					</div></div></div>
+				</p:commandLink>
+				
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'CU'}">
+					<div class="banner1-container">
+					<div class="banner1">
+					<div class="banner1-text">
+					   <p>Upload a catalogue</p><p>item now</p>
+					</div></div></div>
+				</p:commandLink>
+				
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'UPMOF'}">
+					<div class="banner3-container">
+					<div class="banner3">
+					<div class="banner3-text">
+					  <p>Upgrade to MOF Account</p>
+					</div></div></div>
+				</p:commandLink><br />
+			</c:forEach>
+
+		</p:outputPanel>
+	</ui:define>
+</ui:composition>
