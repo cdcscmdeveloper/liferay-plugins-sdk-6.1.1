@@ -42,7 +42,7 @@
 				</tr>							
 				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeMinistry
 					or ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral}">
-				<!-- <tr>
+				<tr>
 					<td width="35%">
 						<p:outputLabel value="#{lbl['lbl.td.doc.type']}" />
 					</td>
@@ -51,7 +51,7 @@
 							<f:selectItems value="#{ctTrackingDiaryBackingBean.getContractDocType()}" />
 						</p:selectOneMenu>
 					</td>
-				</tr> -->
+				</tr>
 				<tr>
 					<td width="35%">
 						<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
@@ -112,7 +112,7 @@
 					</f:facet>
 					#{ctDocument.docNo}
 				</p:column>
-				<p:column width="white-space:normal;">
+				<p:column width="width=55%, white-space:normal;">
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.doc.title']}"/>
 					</f:facet>
