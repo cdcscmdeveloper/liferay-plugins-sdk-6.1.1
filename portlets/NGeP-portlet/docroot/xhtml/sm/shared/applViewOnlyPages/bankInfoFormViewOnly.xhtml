@@ -44,14 +44,14 @@
 						style="padding-right :5px;">
 						<p:graphicImage library="ep/images/design"
 							name="seller_detail.png"
-							value="/resources/ep/images/design/seller_detail.png"
+							value="/css/images/design/seller_detail.png"
 							title="View Signatories" />
 					</p:commandLink>
 					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelBank(bankBean)}" oncomplete="bankDialog.show()"
 						update=":form:tt:bankDialog" style="padding-right :5px;">
 						<p:graphicImage library="ep/images/design" name="document.png"
-							value="/resources/ep/images/design/document.png" />
+							value="/css/images/design/document.png" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
