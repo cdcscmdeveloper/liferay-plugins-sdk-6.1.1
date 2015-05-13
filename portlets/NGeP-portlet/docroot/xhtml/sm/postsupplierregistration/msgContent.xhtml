@@ -45,17 +45,13 @@
 							
 							<!-- MOF Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-								#{postSupplierRegBB.managedBean.smSupplier.smAppl.applId}<br />
-								#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType}	
 								<c:choose>
 									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal and 
 									postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.getSupplierTypeContractor()}">						
-										1111111111
 										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
 									</c:when>
 									
 									<c:otherwise>
-										2222222222
 										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
 									</c:otherwise>
 								</c:choose>
