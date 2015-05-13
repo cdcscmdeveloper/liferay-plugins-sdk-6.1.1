@@ -570,7 +570,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void onRowSelect(SelectEvent event) {
 
-		this.getManagedBean().setBriefingAttendanceList(null);
+		this.getManagedBean().setScQtBriefingAttendance(null);
 		ScQtBsvRegistration briefingRegistration = (ScQtBsvRegistration) event
 				.getObject();
 

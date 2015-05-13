@@ -721,7 +721,7 @@ public class QTScheduleDetailBackingBean extends
 												.getMessage(
 														getMsgCodeByOutCome(outcome),
 														new String[] {
-																"BSV additional attandance For",
+																"Additional attandance For Briefing And SiteVisit",
 																"" },
 														MessageUtils.BUNDLE_COMMON_MESSAGES,
 														new FacesScopes()

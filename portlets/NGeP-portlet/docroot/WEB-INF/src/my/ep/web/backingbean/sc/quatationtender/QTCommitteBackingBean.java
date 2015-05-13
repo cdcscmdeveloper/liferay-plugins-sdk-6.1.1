@@ -699,6 +699,7 @@ public class QTCommitteBackingBean extends
 							}
 						}
 					}
+					cloneCommitte.setApprovalReq(true);
 					tabs.get(beanCount).getMembers().addAll(memberList);
 				}
 			}
