@@ -3511,3 +3511,10 @@ table.rptTbl {
 .noBorder{
 	border:none;
 }
+
+.subHeader {	
+	font-weight:bold;
+	text-align: left;
+	font-size: 14px;
+	font-family: Arial;
+}
