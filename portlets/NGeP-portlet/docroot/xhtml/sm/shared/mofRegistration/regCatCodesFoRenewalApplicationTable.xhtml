@@ -60,8 +60,8 @@
 					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
 					update=":form:tt:catCodeInfPan" />
 			</p:inputTextarea>
-			<p:graphicImage id="prevOtherDescR" library="ep/images/design"
-				name="icon_alert.png" style="padding-left : 3px;"
+			<p:graphicImage id="prevOtherDescR" value="/css/images/design/icon_alert.png" 
+				style="padding-left : 3px;"
 				rendered="#{not empty catBeanR.approvedDate and (catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) and not empty catBeanR.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
 			<p:tooltip for="prevOtherDescR">
 				<p:inputTextarea readonly="true" disabled="true" rows="5" cols="20"
@@ -83,8 +83,8 @@
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 			<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
-			<p:graphicImage id="pendReApprvImg" library="ep/images/design"
-				name="icon_alert.png" style="padding-left : 3px;"
+			<p:graphicImage id="pendReApprvImg" value="/css/images/design/icon_alert.png" 
+				style="padding-left : 3px;"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
 			<p:tooltip for="pendReApprvImg">
 				<h:outputText value="#{lbl['lbl.sm.catCodes.prevAppvd.toolTip']}" />
