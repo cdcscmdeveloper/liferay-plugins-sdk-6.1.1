@@ -83,7 +83,7 @@
 							<f:validator validatorId="busRegNoValidator" />
 							</p:inputText>
 						&#160;
-						<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
+						<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="regNott" for="regNoti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.no']}"  />
 						</p:tooltip>&#160;
@@ -96,7 +96,7 @@
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"
 						size="40" maxlength="50" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}"/>
 					&#160;
-					<p:graphicImage id="ownNmti" library="ep/images/design" name="tooltips.png" />
+					<p:graphicImage id="ownNmti" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="ownNmtt" for="ownNmti">
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.name']}"  />
 					</p:tooltip>
@@ -196,7 +196,7 @@
 					</c:choose>
 					
 					&#160;
-					<p:graphicImage id="icti" library="ep/images/design" name="tooltips.png" />
+					<p:graphicImage id="icti" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="ictt" for="icti">
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.owner.ic']}"  />
 					</p:tooltip>
@@ -383,7 +383,7 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}" />
 					</p:inputText>
 					 &#160; <p:graphicImage id="teleno"
-						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						value=/css/images/design/tooltips.png" /> <p:tooltip
 						id="tfno" for="teleno">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.company.telephoneno']}" />
