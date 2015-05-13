@@ -3109,9 +3109,9 @@ public class ProfileManagementBackingBean extends
 				 * if(user.getPortrait()!=null){
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
-
-				 loadUserProfile(resDTO.getPmUser().getUserId() , userOrg);
-
+  if(!isNewUser){
+	  loadUserProfile(resDTO.getPmUser().getUserId(), userOrg);
+   }
 				if (!StringUtils.isBlank(resDTO.getRemarks())) {
 					// OIM user creation successfully, problem with roles.
 					FacesContext.getCurrentInstance().addMessage(
