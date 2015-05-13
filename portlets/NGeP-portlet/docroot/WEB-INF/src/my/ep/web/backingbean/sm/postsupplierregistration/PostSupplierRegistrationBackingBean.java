@@ -338,6 +338,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 		String commonUrl = themeDisplay.getURLCurrent().substring(0,themeDisplay.getURLCurrent().indexOf(
 						themeDisplay.getLayout().getGroup().getFriendlyURL())+ themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+		
+		log.info("Postregistration Common url>>>>>>>>>>>" + commonUrl);
+		
 		externalContext.redirect(commonUrl + "/" + url);
 	}
 	
