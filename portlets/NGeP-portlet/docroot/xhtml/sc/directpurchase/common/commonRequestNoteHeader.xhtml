@@ -32,10 +32,8 @@
 				                onstart="blockWidget.show();"
 								oncomplete="blockWidget.hide();"
 								action="#{requestNoteBackingBean.showSimpleQuote}">
-								<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
-								<p:tooltip for="viewSimpleQuote">
-									<h:outputText value="#{lbl['lbl.sc.rn.simple.quote.tooltip']}" escape="false" />
-								</p:tooltip>
+								<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"
+									title="#{lbl['lbl.sc.rn.simple.quote.tooltip']}" />
 							</p:commandLink>
 						</h:panelGroup></td>
 

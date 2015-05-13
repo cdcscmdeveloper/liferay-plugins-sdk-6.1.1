@@ -7,10 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div style="float: right">
-		<p:commandLink id="updateProfileId" value="Update Profile"> </p:commandLink>
-			<p:tooltip for="updateProfileId"
-				value="Please follow path 'My Application/Supplier Management/Apply MOF Profile Update' to Update your profile" />
-		
+		<p:commandLink id="updateProfileId" value="#{lbl['lbl.sc.sp.update.profile']}"
+			title="#{lbl['lbl.sc.sp.update.profile.tooltip']}" />
 	</div>
 
 	<ui:include src="financialSupplierInformationTabList.xhtml" />
