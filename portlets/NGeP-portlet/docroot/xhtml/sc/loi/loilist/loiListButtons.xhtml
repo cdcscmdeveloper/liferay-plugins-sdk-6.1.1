@@ -7,9 +7,15 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.submit']}" 
-			action="#{lOIDetailBackingBean.submitLoiListAction}" 
-			process="@form" update="@form"
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			action="#{lOIDetailBackingBean.submitLoiListAction}" process="@form"
+			update="@form"
+			onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();"
 			rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}" />
 	</div>
 </ui:composition>

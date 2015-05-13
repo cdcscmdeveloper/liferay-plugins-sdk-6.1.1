@@ -6,37 +6,46 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-
 	<div class="ppRightBtn">
-		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}" rendered="#{lOIDetailBackingBean.managedBean.editFlag}"
-			style="float:left;"
-			action="#{lOIDetailBackingBean.backToPrevious}" />
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
-		<p:commandButton value="#{lbl['lbl.sc.loiloa.preview.letter']}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
-			update="@all" 
-			action="#{lOIDetailBackingBean.previewLetter}"/>
-			
-					
+		<p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
+			rendered="#{lOIDetailBackingBean.managedBean.editFlag}"
+			style="float:left;" action="#{lOIDetailBackingBean.backToPrevious}" />
+
+		<p:commandButton value="#{lbl['lbl.sc.loiloa.preview.letter']}"
+			rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
+			update="@all" onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();"
+			action="#{lOIDetailBackingBean.previewLetter}" />
+
+
 		<p:commandButton value="#{lbl['lbl.btn.save']}"
-			action="#{lOIDetailBackingBean.saveAction}" rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
+			action="#{lOIDetailBackingBean.saveAction}"
+			rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
+			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			process="@form" update="@form" />
-			
+
 		<c:choose>
 			<c:when test="#{isPendingSubmissionStatus}">
-				<p:commandButton value="#{lbl['lbl.btn.submit']}" 
-					action="#{lOIDetailBackingBean.submitAction}" 
-					process="@form" update="@form"  />
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+					action="#{lOIDetailBackingBean.submitAction}" process="@form"
+					update="@form" />
 			</c:when>
 			<c:when test="#{!empty lOIDetailBackingBean.managedBean.taskId}">
-				<ui:repeat var="bpmAction" value="#{lOIDetailBackingBean.managedBean.outComes}">
-					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+				<ui:repeat var="bpmAction"
+					value="#{lOIDetailBackingBean.managedBean.outComes}">
+					<ui:param name="buttonLabel"
+						value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 					<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
-					
-					<p:commandButton value="#{lbl[buttonLabel]}"  
+
+					<p:commandButton value="#{lbl[buttonLabel]}"
+						onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 						styleClass="ui-button"
 						action="#{lOIDetailBackingBean.updateBpmTaskAction(bpmAction)}"
-						partialSubmit="true"
-						process="#{isReject ? '@this' : '@form'}"
+						partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 						update="#{isReject ? '@this' : '@form'}" />
 				</ui:repeat>
 			</c:when>
@@ -44,8 +53,3 @@
 	</div>
 	<p:spacer height="2px"></p:spacer>
 </ui:composition>
-
-
-
-
-
