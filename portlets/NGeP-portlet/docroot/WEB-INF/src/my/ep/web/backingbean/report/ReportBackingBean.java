@@ -663,7 +663,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//20854;//--CM 220152,122768- SC//72799;//--ct 240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)221747;//20854;//--CM 220152,122768- SC//221747,72799;//--ct 25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3432,11 +3432,33 @@ public class ReportBackingBean extends
 				ptjList.add(ptjLst.get(i));
 			}			
 		}
+		/*IOrgProfileSO orgProfileSO = null;
+		try {
+			if (null !=this.getCommonMinistry()) {
+				Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);	
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(lngorgprflid);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrievePTJListByMinistry(reqDTO);
+				resDTO.getOrgProfileList();	
+				for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
+					//SelectItem selectItem1 = new SelectItem();
+					//selectItem1.setLabel(orgProfile.getOrgName());
+					//selectItem1.setValue(orgProfile.getOrgProfileId());
+					//ptjList.add(selectItem1);					
+				}					
+			}		
+		} finally {
+			orgProfileSO = null;
+		}*/			
 		return ptjList;
 	}
 	public List<SelectItem>  retrieveFPJMinistryList() {
     	ministryList = new ArrayList<SelectItem>();
-if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
