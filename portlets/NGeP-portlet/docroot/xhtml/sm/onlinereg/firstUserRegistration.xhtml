@@ -77,7 +77,7 @@
 
 		<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
 			closable="false" resizable="false" showHeader="false">
-			<p:graphicImage library="ep/images/" name="ajax-loader.gif" />
+			<p:graphicImage value="/css/images/ajax-loader.gif" />
 		</p:dialog>
 
 		<!-- 	<p:messages id="messages" showDetail="true" autoUpdate="true" />   -->
@@ -106,7 +106,7 @@
 						<p:inputText readonly="true" disabled="true" value="" size="35" 
 							rendered="#{registrationBackingBean.managedBean.sameAsOwner}"/>
 						&#160;
-						<p:graphicImage id="fNmti" library="ep/images/design" name="tooltips.png" />
+						<p:graphicImage id="fNmti" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="fNmtt" for="fNmti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.full.name']}"  />
 						</p:tooltip>
@@ -226,7 +226,7 @@
 					</c:choose>
 						<p:inputText readonly="true" disabled="true" value="" size="35" rendered="#{registrationBackingBean.managedBean.sameAsOwner}"/>
 						&#160;
-						<p:graphicImage id="uidti" library="ep/images/design" name="tooltips.png" />
+						<p:graphicImage id="uidti" value="/css/images/design/tooltips.png" />
 						<p:tooltip id="uidtt" for="uidti">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.user.user.info.id.no']}"  />
 						</p:tooltip>
@@ -245,7 +245,7 @@
 							required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 							value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}"
 							id="txtPermAdd1" /> &#160; <p:graphicImage id="addti"
-							library="ep/images/design" name="tooltips.png" /> <p:tooltip
+							value="/css/images/design/tooltips.png" /> <p:tooltip
 							id="addtt" for="addti">
 							<p:outputLabel escape="false"
 								value="#{lbl['tt.sm.user.address']}" />

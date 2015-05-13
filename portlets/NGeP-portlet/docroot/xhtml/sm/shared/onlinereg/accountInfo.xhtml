@@ -18,7 +18,7 @@
 				
 				<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
 					closable="false" resizable="false" showHeader="false">
-					<p:graphicImage library="ep/images/" name="ajax-loader.gif" />
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
 				</p:dialog>
 			</c:if>
 		</c:if>
@@ -44,7 +44,7 @@
 							<p:ajax event="change" update="busTypeId,outPnlRegForm" process="@form" />
 						</p:selectOneMenu>
 						 &#160; <p:graphicImage id="mofsupp"
-						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						value="/css/images/design/tooltips.png" /> <p:tooltip
 						id="mofsupplier" for="mofsupp">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.business.mof.supplier.type']}" />
@@ -72,7 +72,7 @@
 					value="#{registrationBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,registrationBackingBean.managedBean.smSupp.businessType)}" 
 					rendered="#{registrationBackingBean.managedBean.disabledBusinessTypeInMaintenance}" />
 					&#160;
-					<p:graphicImage id="typeofbusiness" library="ep/images/design" name="tooltips.png" />
+					<p:graphicImage id="typeofbusiness" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="businesscomtype" for="typeofbusiness">
 						<p:outputLabel escape="false" rendered="#{registrationBackingBean.managedBean.smAppl.applType eq SupplierManagementConst.ACC_BASIC}"
 							value="#{lbl['tt.sm.registration.business.basic.company.type']}" />
