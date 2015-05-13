@@ -9,50 +9,7 @@
 
 
 	<ui:define name="contentSection">
-		<p:outputPanel rendered="#{postSupplierRegBB.validMofUser() or postSupplierRegBB.validBasicSupplier()}" id="mofPanelId">
-			<h:outputStylesheet library="ep/css" name="banner.css"  />
-
-			<c:forEach items="#{postSupplierRegBB.managedBean.userActionMap}" var="entry">
-				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'SC'}">
-					<div class="banner2-container">
-					<div class="banner2">
-					<div class="banner2-text">
-					  <p>Request Soft Cert</p>
-					</div></div></div>
-				</p:commandLink>
-				
-				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'CU'}">
-					<div class="banner1-container">
-					<div class="banner1">
-					<div class="banner1-text">
-					   <p>Upload a catalogue</p><p>item now</p>
-					</div></div></div>
-				</p:commandLink>
-				
-				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'UPMOF'}">
-					<div class="banner3-container">
-					<div class="banner3">
-					<div class="banner3-text">
-					  <p>Upgrade to MOF Account</p>
-					</div></div></div>
-				</p:commandLink><br />
-			</c:forEach>
-
-		</p:outputPanel>
-		
-		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp()}"  id="basicPanelId">
-			<ui:remove>
-			<p:commandLink  action="#{postSupplierRegBB.pageNavigate}" rendered="#{postSupplierRegBB.managedBean.bannerImage}">
-				<p:graphicImage value="#{postSupplierRegBB.managedBean.statusDesc}"></p:graphicImage>
-			</p:commandLink>
-		
-			<p:outputPanel rendered="#{!postSupplierRegBB.managedBean.bannerImage}">
-				<h:outputText value="#{postSupplierRegBB.managedBean.statusDesc}" /> 
-				<h:outputText value=" - " rendered="#{postSupplierRegBB.managedBean.hyperlink}" /> 
-				<p:commandLink  value="#{lbl['lbl.sm.basic.click.to.continue']}"  rendered="#{postSupplierRegBB.managedBean.hyperlink}" action="#{postSupplierRegBB.pageNavigate}"></p:commandLink>
-			</p:outputPanel>
-			</ui:remove>
-			
+		<p:outputPanel rendered="#{postSupplierRegBB.validSupplierTemp() || postSupplierRegBB.validMofUser()}"  id="basicPanelId">
 			<h:outputStylesheet library="ep/css" name="tab.css"  />
 			<div class="container-content">
 				<div class="cover-container-content">
@@ -60,7 +17,7 @@
 						<div class="flow-chart">
 							<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
 							<!-- Basic Account-->
-							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType != ParameterConst.newSmApplnForMof}">
+							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.getSupplierTypeBasicWithoutMof()}">
 							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
 								<div class="flow-chart-left lst">
 									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.catalogue.upload']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
@@ -88,97 +45,20 @@
 							
 							<!-- MOF Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
-								<!-- FLOW STATUS 1 -->
-								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
-								<div class="flow-chart-left lst">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.cont.mof.reg']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
-								</div>
-
-								<div class="flow-chart-left dmid">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.processing.fee']}</p>
-								</div>
-
-								<div class="flow-chart-left dmid">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
-								</div>
-
-								<div class="flow-chart-left dmid">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /> #{lbl['lbl.sm.basic.registration.fee']}</p>
-								</div>
-								
-								<div class="flow-chart-left dlast">
-									<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
-								</div>
-								</c:if>
-								<!-- FLOW STATUS 1 - END -->
-								
-								<!-- FLOW STATUS 2 -->
-								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 2}">
-									<div class="flow-chart-left dlst">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
-									</div>
-									<div class="flow-chart-left mid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.processing.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
-									</div>
-									<div class="flow-chart-left dmid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
-									</div>
-									<div class="flow-chart-left dmid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /> #{lbl['lbl.sm.basic.registration.fee']}</p>
-									</div>
-									<div class="flow-chart-left dlast">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
-									</div>
-								</c:if>
-								<!-- FLOW STATUS 2 - END -->
-								
-								<!-- FLOW STATUS 3 -->
-								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 3}">
-									<div class="flow-chart-left dlst">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
-									</div>
-
-									<div class="flow-chart-left dmid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.processing.fee']}</p>
-									</div>
-
-									<div class="flow-chart-left mid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br />#{lbl['lbl.sm.basic.gov.process']}</p>
-									</div>
-
-									<div class="flow-chart-left dmid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /> #{lbl['lbl.sm.basic.registration.fee']}</p>
-									</div>
-
-									<div class="flow-chart-left dlast">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
-									</div>
-								</c:if>
-								<!-- FLOW STATUS 3 - END -->
-								
-								<!-- FLOW STATUS 4 -->
-								<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 4}">
-									<div class="flow-chart-left dlst">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 1</strong><br /><nobr>#{lbl['lbl.sm.basic.cont.mof.reg']}</nobr></p>
-									</div>
-
-									<div class="flow-chart-left dmid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 2</strong><br /> #{lbl['lbl.sm.basic.processing.fee']}</p>
-									</div>
-
-									<div class="flow-chart-left dmid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 3</strong><br /> #{lbl['lbl.sm.basic.gov.process']}</p>
-									</div>
-
-									<div class="flow-chart-left mid">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 4</strong><br /><p:commandLink styleClass="flowChart-Link" value="#{lbl['lbl.sm.basic.registration.fee']}" action="#{postSupplierRegBB.pageNavigate}" /></p>
-									</div>
-
-									<div class="flow-chart-left dlast">
-										<p><strong>#{lbl['lbl.sm.basic.step']} 5 </strong><br /> #{lbl['lbl.sm.basic.completed']}</p>
-									</div>
-								</c:if>
-								<!-- FLOW STATUS 4 - END -->
+								#{postSupplierRegBB.managedBean.smSupplier.smAppl.applId}<br />
+								#{postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType}	
+								<c:choose>
+									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal and 
+									postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.getSupplierTypeContractor()}">						
+										1111111111
+										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
+									</c:when>
+									
+									<c:otherwise>
+										2222222222
+										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofCommon.xhtml"></ui:include>
+									</c:otherwise>
+								</c:choose>
 							</p:outputPanel>
 						</div>
 					</div>
