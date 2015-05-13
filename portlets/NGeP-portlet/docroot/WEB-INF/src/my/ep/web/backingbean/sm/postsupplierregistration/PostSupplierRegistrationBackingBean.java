@@ -333,6 +333,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 * @throws SystemException
 	 */
 	public void pageRedirect(String url)  throws IOException,PortalException, SystemException {
+		log.info("**********pageRedirect*********" + url);
 		FacesScopes facesScope = new FacesScopes();
 		ThemeDisplay themeDisplay = (ThemeDisplay) facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
