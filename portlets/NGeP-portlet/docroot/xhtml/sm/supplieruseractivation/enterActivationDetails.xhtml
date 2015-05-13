@@ -39,7 +39,7 @@
 					<f:validator validatorId="loginIdValidator" />
 				</p:inputText>
 				&#160;
-				<p:graphicImage id="regNoti" library="ep/images/design" name="tooltips.png" />
+				<p:graphicImage id="regNoti" value="/css/images/design/tooltips.png" />
 				<p:tooltip id="regNott" for="regNoti">
 					<p:outputLabel escape="false" value="#{lbl['tt.sm.supplieractivation.login.id']}"  />
 				</p:tooltip>&#160;
@@ -56,7 +56,7 @@
 					<f:validateLength minimum="8" maximum="20"></f:validateLength>
 				</p:password>
 				
-				<p:graphicImage id="regPassTT" library="ep/images/design" name="tooltips.png" />
+				<p:graphicImage id="regPassTT" value="/css/images/design/tooltips.png" />
 				<p:tooltip id="regPass" for="regPassTT">
 					<p:outputLabel escape="false" value="#{lbl['tt.sm.supplieractivation.password']}"  />
 				</p:tooltip>&#160;
@@ -84,7 +84,7 @@
 
 			<p:dialog widgetVar="submissionDialog" modal="true" draggable="false"
 				closable="false" resizable="false" showHeader="false">
-				<p:graphicImage library="ep/images/" name="ajax-loader.gif" />
+				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:dialog>
 
 	</ui:define>
