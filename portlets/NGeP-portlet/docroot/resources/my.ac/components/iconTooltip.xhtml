@@ -15,7 +15,7 @@
 		<ui:param name="imgId" value="#{cc.attrs.id}Img" />
 		
 		&#160;
-		<p:graphicImage id="#{imgId}" library="ep/images/design" name="tooltips.png" />
+		<p:graphicImage id="#{imgId}" value="/css/images/design/tooltips.png" />
 		<p:tooltip id="#{cc.attrs.id}tt" for="#{imgId}">
 			<p:outputLabel escape="false" value="#{cc.attrs.value}"  />
 		</p:tooltip>
