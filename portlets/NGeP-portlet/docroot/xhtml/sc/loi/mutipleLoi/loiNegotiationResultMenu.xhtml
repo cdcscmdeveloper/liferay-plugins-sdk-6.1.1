@@ -7,8 +7,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+
 		<ui:param name="isPendingNegotiationStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
 	   <ui:param name="isEditableStatus"
@@ -19,12 +22,13 @@
 	   <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
 		   postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" />
 		
-		
-		<div align="right">
+		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
 				process="@all"
 				partialSubmit="true"
 				update="@form"
+				onstart="blockWidget.show();"
+			    oncomplete="blockWidget.hide();"
 				rendered="#{isPendingNegotiationStatus}"
 				action="#{lOIDetailBackingBean.saveMultipleLoiAction}" />
 					
@@ -35,6 +39,8 @@
 					styleClass="ui-button"
 					action="#{lOIDetailBackingBean.updateMultiLoiBpmTaskAction(bpmAction)}"
 					partialSubmit="true"
+					onstart="blockWidget.show();"
+			        oncomplete="blockWidget.hide();"
 					process="@form"
 					update="@form" />
 			</ui:repeat>
