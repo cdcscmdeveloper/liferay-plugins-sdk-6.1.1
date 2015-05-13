@@ -79,10 +79,8 @@
 				action="#{templateSpecBackingBean.addTierQtyAction(templateSpecBean.selectedSpecQuestion)}"
 				oncomplete="tierQtyWidget.paginator.endLink.click();"
 				update="tierQtyTbl" 
-				rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}" />
-			<p:tooltip id="addTierTtp" for="addTierBtn">
-				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}"  />
-			</p:tooltip>
+				rendered="#{editable and ((isSpecificationReq and isSpecTypeTechnical) or !isSpecificationReq)}"
+				title="#{lbl['lbl.tpl.spec.content.tier.btn.add.tooltip']}" />
 			
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this" partialSubmit="true"

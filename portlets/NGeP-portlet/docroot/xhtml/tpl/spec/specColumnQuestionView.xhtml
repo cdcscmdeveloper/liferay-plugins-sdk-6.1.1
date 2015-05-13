@@ -59,12 +59,10 @@
 				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
 				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
-				rendered="#{isQuestionTypeItem and !isPriceTypeAllStandard}">
+				rendered="#{isQuestionTypeItem and !isPriceTypeAllStandard}"
+				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
-			<p:tooltip id="tierQtyTtp" for="tierQtyBtn">
-				<p:outputLabel escape="false" value="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}"  />
-			</p:tooltip>
 		</p:column>
 	</ui:insert>
 </ui:composition>
