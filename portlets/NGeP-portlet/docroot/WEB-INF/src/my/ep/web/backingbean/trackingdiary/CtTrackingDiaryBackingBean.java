@@ -23,7 +23,6 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
-import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -119,8 +118,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 					getFacesScopes().getUserLocale())));
 			
 			// Document type list for MC & CC
-			if (getManagedBean().getSearchTransactionType() != null && getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
-					|| getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+			//if (getManagedBean().getSearchTransactionType() != null && getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
+			//		|| getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
 				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
@@ -130,14 +129,14 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 				docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 				docTypeList.add(ParameterConst.DOCTYPE_AGREEMENT);
 				docTypeList.add(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
-			}
+			//}
 			// Document type list for CQ & PQ
-			else if (getManagedBean().getSearchTransactionType() != null && getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)
-					|| getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-				docTypeList.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-				docTypeList.add(ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-			}
+//			else if (getManagedBean().getSearchTransactionType() != null && getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)
+//					|| getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
+//				docTypeList.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
+//				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
+//				docTypeList.add(ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
+//			}
 			
 			for (String docType : docTypeList) {
 				items.add(new SelectItem(docType, ResourceBundleUtils.getMessage(
@@ -221,16 +220,22 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
+			SearchFilterBean searchFilterBean1 = null;
+			SearchFilterBean searchFilterBean2 = null;
+			SearchFilterBean searchFilterBean3 = null;			
+			BaseSearchFilterBean multiFilterBean1 = null;
 			
-			SearchFilterBean searchFilterBean1 = new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocType());
-			SearchFilterBean searchFilterBean2 = new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocId());
-			SearchFilterBean searchFilterBean3 = new SearchFilterBean("groupDocType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocType());
-			SearchFilterBean searchFilterBean4 = new SearchFilterBean("groupId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getvCtDocument().getDocId());
+			searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getDocType());
+			searchFilterBean2 = new SearchFilterBean("groupId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getDocId());
 			
-			BaseSearchFilterBean multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);
-			BaseSearchFilterBean multiFilterBean2 = new SearchMultiFilterBean(searchFilterBean3, SearchCondition.CONDITION_OR.value(), searchFilterBean4);
-			BaseSearchFilterBean multiFilterBean3 = new SearchMultiFilterBean(multiFilterBean1, SearchCondition.CONDITION_OR.value(), multiFilterBean2);
-			searchBean.getDataFilterBeans().add(multiFilterBean3);
+			multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
+			
+			if (getManagedBean().getSearchDocType() != null) {
+				searchFilterBean3 = new SearchFilterBean("docType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getSearchDocType());
+				multiFilterBean1 = new SearchMultiFilterBean(multiFilterBean1, searchFilterBean3);				
+							
+			}
+			searchBean.getDataFilterBeans().add(multiFilterBean1);
 			
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
