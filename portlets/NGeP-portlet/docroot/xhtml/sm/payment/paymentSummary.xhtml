@@ -79,14 +79,31 @@
 					<p:commandButton value="#{lbl['lbl.sm.prev']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
 						action="#{paymentBackingBean.back}" update=":form"/>
 				</div></td>
-			<td><div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="btnProceed" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-							action="#{paymentBackingBean.tempPaymentSuccess}" />
-					<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-						action="#{paymentBackingBean.submitPayment}" />
-				</div></td>
+			<td>
+				
+				<div align="right" style="width: 100%">
+					<p:outputPanel rendered="#{paymentBackingBean.getPaymentGatewayOnOff() == null or paymentBackingBean.getPaymentGatewayOnOff() != '2'}">
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="btnProceed" 
+						rendered="#{paymentBackingBean.getPaymentGatewayOnOff() == null or paymentBackingBean.getPaymentGatewayOnOff() != '1'}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{paymentBackingBean.tempPaymentSuccess}" />
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit" 
+						rendered="#{paymentBackingBean.getPaymentGatewayOnOff() != null and paymentBackingBean.getPaymentGatewayOnOff() == '1'}"
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{paymentBackingBean.submitPayment}" />
+					</p:outputPanel>
+				
+					<p:outputPanel rendered="#{paymentBackingBean.getPaymentGatewayOnOff() != null and paymentBackingBean.getPaymentGatewayOnOff() == '2'}">
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed']}" id="btnProceed1" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+								action="#{paymentBackingBean.tempPaymentSuccess}" />
+						<p:commandButton value="#{lbl['lbl.sm.button.proceed.to.pymnt']}" id="btnSubmit1" 
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+							action="#{paymentBackingBean.submitPayment}" />
+					</p:outputPanel>
+				</div>
+				
+			</td>
 		</tr>
 	</table>
 
