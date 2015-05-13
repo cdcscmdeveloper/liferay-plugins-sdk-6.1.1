@@ -62,8 +62,7 @@
 						size="40" maxlength="12"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}">
 					</p:inputText>
-					&#160; <p:graphicImage id="uidti" library="ep/images/design"
-						name="tooltips.png" /> <p:tooltip id="uidtt" for="uidti">
+					&#160; <p:graphicImage id="uidti" value="/css/images/design/tooltips.png" /> <p:tooltip id="uidtt" for="uidti">
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.id.no']}" />
 					</p:tooltip> <p:message id="individualRegNoIdMsg" for="individualRegNoId"
 						display="icon" /></td>
@@ -77,8 +76,7 @@
 						id="individualNameId" required="#{!empty param['disableValidation']}"
 						label="#{lbl['lbl.sm.individual.nameasperic']}"
 						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" />
-					&#160; <p:graphicImage id="fNmti" library="ep/images/design"
-						name="tooltips.png" /> <p:tooltip id="fNmtt" for="fNmti">
+					&#160; <p:graphicImage id="fNmti" value=/css/images/design/tooltips.png" /> <p:tooltip id="fNmtt" for="fNmti">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.user.full.name']}" />
 					</p:tooltip> <p:message id="individualNameIdMsg" for="individualNameId"
@@ -106,8 +104,7 @@
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.permenantaddress']}"
 						id="txtPermAdd1" maxlength="35"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}" />
-					&#160; <p:graphicImage id="addti" library="ep/images/design"
-						name="tooltips.png" /> <p:tooltip id="addtt" for="addti">
+					&#160; <p:graphicImage id="addti" value="/css/images/design/tooltips.png" /> <p:tooltip id="addtt" for="addti">
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.address']}" />
 					</p:tooltip> <p:message id="txtPermAdd1Msg" for="txtPermAdd1" display="icon" /></td>
 
