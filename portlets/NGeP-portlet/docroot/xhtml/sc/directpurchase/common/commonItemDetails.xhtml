@@ -60,11 +60,9 @@
 					  <p:commandLink partialSubmit="true" process="@this"
 						id="prInquiryResponse"
 						actionListener="#{requestNoteBackingBean.showPurchaseInquiry(requestNoteDtl)}">
-							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
-						<p:tooltip for="prInquiryResponse">
-							<h:outputText value="#{lbl['lbl.sc.pi.summary.tooltip']}" escape="false" />
-						</p:tooltip>
-					   </p:commandLink>
+							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"
+								title="#{lbl['lbl.sc.pi.summary.tooltip']}" />
+						</p:commandLink>
 					</h:panelGroup>
 					
 				</p:column>
@@ -100,23 +98,16 @@
 				<p:column headerText="#{lbl['lbl.sc.request.note.summary']}" style="width:6%; white-space: normal;">
 				    <p:commandLink immediate="true" ajax="false" partialSubmit="true" process="@this" action="#{requestNoteBackingBean.viewMarketResearch(requestNoteDtl)}"
 				    	id="marketSummaryIcon">
-				      <p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
-						<p:tooltip for="marketSummaryIcon">
-							<h:outputText rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" 
-							value="#{lbl['lbl.sc.summary.searchresult.tooltip']}" escape="false" />
-							<h:outputText rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}" 
-							value="#{lbl['lbl.sc.summary.simple.quote.tooltip']}" escape="false" />
-						</p:tooltip>
+				      <p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"
+				      	title="#{lbl[requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' ? 'lbl.sc.summary.searchresult.tooltip' : 'lbl.sc.summary.simple.quote.tooltip']}" />
 				  </p:commandLink> 
 				    <p:spacer width="2px;"/>
 				   <h:panelGroup rendered="#{requestNoteDtl.showPurchaseInquiry}">
 				   <h:commandLink immediate="true" 
 						action="#{requestNoteBackingBean.downloadPurchaseInqReport(requestNoteDtl)}"
 						id="prInquirySummaryIcon">
-							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"></p:graphicImage>
-						<p:tooltip for="prInquirySummaryIcon">
-							<h:outputText value="#{lbl['lbl.sc.summary.item.tooltip']}" escape="false" />
-						</p:tooltip>
+							<p:graphicImage value="/css/images/design/ico-view.png" style="vertical-align:middle"
+								title="#{lbl['lbl.sc.summary.item.tooltip']}" />
 					</h:commandLink> 
 					</h:panelGroup>
 				</p:column>

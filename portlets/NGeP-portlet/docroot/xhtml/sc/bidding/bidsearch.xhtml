@@ -161,11 +161,10 @@
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
 					<p:graphicImage id="viewBtnImage" library="ep/images/design"
-						name="document.png" value="/css/images/design/document.png" />
+						name="document.png" value="/css/images/design/document.png"
+						title="#{lbl['lbl.txt.view']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
-				<p:tooltip id="toolTipNavigate" for="bidManagementNavigationBtn"
-					value="View" />
 
 				<p:commandLink id="pauseButton"
 					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress}"
@@ -174,10 +173,10 @@
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
 					<p:graphicImage id="pauseBtnImage" library="ep/images/design"
-						name="pause.png" value="/css/images/design/pause.png" />
+						name="pause.png" value="/css/images/design/pause.png"
+						title="#{lbl['lbl.sc.pause.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
-				<p:tooltip id="pauseToolTip" for="pauseButton" value="Pause Bid" />
 
 				<p:commandLink id="cancelButton" onmouseover="Cancel"
 					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidInProgress or bid.pmStatus.statusId eq biddingBB.managedBean.pendingBidding or bid.pmStatus.statusId eq biddingBB.managedBean.bidPaused}"
@@ -187,11 +186,10 @@
 					oncomplete="bidPauseOrCancel.show();" size="5">
 
 					<p:graphicImage id="cancelBtnImage" library="ep/images/design"
-						name="cancel.png" value="/css/images/design/cancel.png" />
+						name="cancel.png" value="/css/images/design/cancel.png"
+						title="#{lbl['lbl.sc.cancel.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
-				<p:tooltip id="cancelButtonToolTip" for="cancelButton"
-					value="Cancel Bid" />
 				<p:commandLink id="resumeButton"
 					rendered="#{bid.pmStatus.statusId eq biddingBB.managedBean.bidPaused}"
 					process="@this" partialSubmit="true"
@@ -199,11 +197,9 @@
 					update="@([id$=rescheduleRebidPopUp])"
 					oncomplete="bidRescheduleOrResume.show();" size="5">
 					<p:graphicImage id="resumeBtnImage" library="ep/images/design"
-						name="play.png" value="/css/images/design/play.png" />
+						name="play.png" value="/css/images/design/play.png"
+						title="#{lbl['lbl.sc.resume.bid']}" />
 				</p:commandLink>
-				<p:tooltip id="resumeButtonToolTip" for="resumeButton"
-					value="Resume Bid" />
-
 
 			</p:column>
 
