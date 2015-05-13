@@ -188,7 +188,7 @@
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}"/>
 					</p:inputText>
 					 &#160; <p:graphicImage id="teleno"
-						library="ep/images/design" name="tooltips.png" /> <p:tooltip
+						value="/css/images/design/tooltips.png" /> <p:tooltip
 						id="tfno" for="teleno">
 						<p:outputLabel escape="false"
 							value="#{lbl['tt.sm.registration.user.telephoneno']}" />
@@ -222,7 +222,7 @@
 						<f:validateRegex disabled="#{empty param['disableValidation']}"
 							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 					</p:inputText> &#160;
-					<p:graphicImage id="emailti" library="ep/images/design" name="tooltips.png" />
+					<p:graphicImage id="emailti" value="/css/images/design/tooltips.png" />
 					<p:tooltip id="emailtt" for="emailti">
 						<p:outputLabel escape="false" value="#{lbl['tt.sm.user.email']}"  />
 					</p:tooltip>
