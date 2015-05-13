@@ -1518,17 +1518,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
      */
 	private String retrieveCommitteeType() {	    
 		IContractSO contractSO = null;
+		String committeName = null;
 		
 		try {
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			return contractSO.getCommitteeType(getManagedBean().getContractVer());
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			committeName = contractSO.getCommitteeType(getManagedBean().getContractVer());
+			if(committeName == null)
+				committeName = " ";
 		} catch (Exception ex) {
 			   
 		}finally {
 			contractSO = null;
 		}
-		return null;
+		return committeName;
 	}
 	
 	/**
