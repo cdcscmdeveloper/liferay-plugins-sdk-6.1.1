@@ -30,8 +30,6 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManagedBean> {
 	public static Logger log = Logger.getLogger(QuestionnaireBackingBean.class);
-	private List<String> approvedStatus = Arrays.asList(SupplierManagementConst.PM_STATUS_MOF_ACCT_REG_APPROVED+"");
-	private List<String> rejectedStatus = Arrays.asList("20112","20113");
 
 	public QuestionnaireBackingBean() {
 //		if (MDC.get(LogKey.USER_ID) == null) {
