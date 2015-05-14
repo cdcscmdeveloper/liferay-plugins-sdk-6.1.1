@@ -71,11 +71,11 @@
 				<TD style="width : 25%"><p:inputText id="newResumeBidEndDate" 
 						disabled="true" size="20"
 						value="#{biddingBB.managedBean.bidAction.newEndDate}"
-						rendered="#{biddingBB.managedBean.bidAction.actionType eq 'R'}" >
+						rendered="#{biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.resume}" >
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"  />
 						</p:inputText>
 					<p:calendar id="newReBidEndDate" showOn="button" required="true" mindate="#{biddingBB.managedBean.mindate}" maxdate="#{biddingBB.managedBean.maxdate}"
-						rendered="#{biddingBB.managedBean.bidAction.actionType eq 'B'}" size="16"
+						rendered="#{biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.reBidding}" size="16"
 						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" label="#{lbl['lbl.sc.new.bidding.end']}"
 						value="#{biddingBB.managedBean.bidAction.newEndDate}">
 						<p:ajax event="dateSelect" process="@this"
