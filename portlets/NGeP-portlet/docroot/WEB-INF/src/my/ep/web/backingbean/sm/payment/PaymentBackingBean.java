@@ -69,6 +69,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	private final String molIpnUrl = EpPropertiesUtils.getInstance()
 			.getProperty("molpay.ipnurl");
 	private String vCode;
+	private final String paymentGatewayOnOff = EpPropertiesUtils.getInstance().getProperty("paymentgateway.molpay.onoff");
 
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 
@@ -117,6 +118,17 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 */
 	public void setvCode(String vCode) {
 		this.vCode = vCode;
+	}
+	
+	/**
+	 * @return the paymentGatewayOnOff
+	 */
+	public String getPaymentGatewayOnOff() {
+		if(paymentGatewayOnOff != null){
+			return paymentGatewayOnOff.trim();
+		}else{
+			return null;
+		}
 	}
 
 	/**
