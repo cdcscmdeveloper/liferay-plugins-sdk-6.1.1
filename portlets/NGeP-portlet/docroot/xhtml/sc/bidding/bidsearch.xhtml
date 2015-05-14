@@ -210,7 +210,7 @@
 	<h:panelGrid id="pauseCancelPopUp">
 
 		<p:dialog
-			header="#{(biddingBB.managedBean.bidAction.actionType eq 'P') ? lbl['lbl.sc.pause.bid'] : lbl['lbl.sc.cancel.bid']}"
+			header="#{(biddingBB.managedBean.bidAction.actionType eq biddingBB.managedBean.paused) ? lbl['lbl.sc.pause.bid'] : lbl['lbl.sc.cancel.bid']}"
 			widgetVar="bidPauseOrCancel" showEffect="fade" hideEffect="fade"
 			draggable="false" resizable="false" modal="false"
 			id="bidPauseOrCancel">
