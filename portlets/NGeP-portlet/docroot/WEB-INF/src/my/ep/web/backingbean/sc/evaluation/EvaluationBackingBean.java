@@ -761,6 +761,10 @@ public class EvaluationBackingBean extends
 
 		}
 	}
+	
+	public void retrieveGeneralInfo() {
+		this.getManagedBean().setPrepareActiveIndex(0);
+	}
 
 	/**
 	 * Retrieve meeting dtls.to retrieve all the meeting details information for
@@ -6343,7 +6347,7 @@ public class EvaluationBackingBean extends
 			} else if (outputTab == 0) {
 				this.getManagedBean().setCheckReportDownload(false);
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
-						this.getManagedBean().getCommitteeType(), 0);
+						this.getManagedBean().getCommitteeType(), 1);
 			}
 
 			if (getManagedBean().getTempTab() < outputTab) {
@@ -7843,7 +7847,7 @@ public class EvaluationBackingBean extends
 		FacesContext fc = FacesContext.getCurrentInstance();
 
 		retriveMeetingDtls(evaluationDataType.getQtId().longValue(),
-				evaluationDataType.getCommitteeType(), 0);
+				evaluationDataType.getCommitteeType(), 1);
 		String taskName = this.getManagedBean().getTaskName();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -7888,6 +7892,8 @@ public class EvaluationBackingBean extends
 		} else {
 			this.getManagedBean().setStatusOnly(true);
 		}
+		
+		this.getManagedBean().setPrepareActiveIndex(0);
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
 				|| SCProcessNameConst.UPDATE_EC_EVALUATION
