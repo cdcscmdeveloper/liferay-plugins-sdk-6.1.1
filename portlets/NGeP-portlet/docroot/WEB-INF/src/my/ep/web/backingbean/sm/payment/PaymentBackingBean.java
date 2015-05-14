@@ -628,6 +628,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				FacesScopes fs = new FacesScopes();
 				pymtReqDTO.setServerName(fs.getRequest().getServerName());
 				pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
+				pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
@@ -953,6 +954,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			FacesScopes fs = new FacesScopes();
 			pymtReqDTO.setServerName(fs.getRequest().getServerName());
 			pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
+			pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 

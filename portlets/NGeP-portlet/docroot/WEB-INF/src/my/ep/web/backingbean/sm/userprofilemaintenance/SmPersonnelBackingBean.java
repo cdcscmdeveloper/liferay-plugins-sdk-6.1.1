@@ -1116,6 +1116,7 @@ public class SmPersonnelBackingBean extends
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setSmPersonnel(smPersonnel);
 		reqDTO.setHasActiveAppl(getManagedBean().isUpgradeMofDraftAppl());
 		reqDTO.setApplId(getManagedBean().getBasicSmAppl().getApplId());
