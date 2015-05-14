@@ -127,7 +127,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationManagedBean;
-import my.ep.web.type.sc.quationtender.SelectionType;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1643,10 +1642,11 @@ public class SupplierFinalizationBackingBean extends
 	public void downloadReport(ScQtFinalizationReport scQtFinalizationReport)
 			throws Exception {
 		debugLogger("downloadReport");
-
+		
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
 				.getScQtFinalizationReportAttachment();
-		if (reportAttachment == null) {
+		if (reportAttachment == null || 
+				this.getManagedBean().isSecretaryUser()) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
@@ -1671,7 +1671,8 @@ public class SupplierFinalizationBackingBean extends
 		for (ScQtFinalizationReport report : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment = report
 					.getScQtFinalizationReportAttachment();
-			if (attachment == null) {
+			if (attachment == null || 
+					this.getManagedBean().isSecretaryUser()) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
@@ -1791,19 +1792,20 @@ public class SupplierFinalizationBackingBean extends
 		context.put("qtNo", scQt.getQtNo());
 		context.put("year", year);
 		// context.put("fileNo", scQt.getFileNo());
-		context.put("jabatan", scQt.getPmOrgProfile().getParentOrgProfile()
-				.getOrgName());
+		String departmentOrgName = null;
+		if (scQt.getDepartmentOrgProfile() != null) {
+			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
+		} else {
+			departmentOrgName = StringUtils.EMPTY;
+		}
+		context.put("jabatan", departmentOrgName);
 		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
 		context.put("title", scQt.getQtTitle());
 
 		context.put("procurementMode", scQt.getProcurementMode()
 				.getParameterCode());
 
-		String committeeType = "";
-		for (ScQtCommittee scQtCommittee : scQt.getScQtCommittees()) {
-			committeeType = scQtCommittee.getScCommittee().getCommitteeType()
-					.getParameterCode();
-		}
+		String committeeType = this.getManagedBean().getCommitteeType();
 		log.info("committeeType : " + committeeType);
 		StringBuilder commType = new StringBuilder();
 		if (commType != null) {
@@ -1854,12 +1856,7 @@ public class SupplierFinalizationBackingBean extends
 		// DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 
-		// TODO
 		String committeeType = this.getManagedBean().getCommitteeType();
-/*		for (ScQtCommittee scQtCommittee : scQt.getScQtCommittees()) {
-			committeeType = scQtCommittee.getScCommittee().getCommitteeType()
-					.getParameterCode();
-		}*/
 		log.info("committeeType : " + committeeType);
 		StringBuilder commType = new StringBuilder();
 		if (commType != null) {
@@ -1868,8 +1865,13 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("commType", commType);
 		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
-		context.put("jabatan", scQt.getPmOrgProfile().getParentOrgProfile()
-				.getOrgName());
+		String departmentOrgName = null;
+		if (scQt.getDepartmentOrgProfile() != null) {
+			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
+		} else {
+			departmentOrgName = StringUtils.EMPTY;
+		}
+		context.put("jabatan", departmentOrgName);		
 		context.put("title", scQt.getQtTitle());
 		context.put("estimatedAmount", scQt.getEstimatedAmount());
 
@@ -2124,10 +2126,22 @@ public class SupplierFinalizationBackingBean extends
 
 		context.put("title", scQt.getQtTitle());
 		context.put("qtNo", scQt.getQtNo());
-		context.put("ministry", scQt.getPmOrgProfile().getParentOrgProfile()
-				.getOrgName());
-		context.put("jabatan", scQt.getPmOrgProfile().getParentOrgProfile()
-				.getOrgName());
+		
+		String ministryOrgName = null;
+		if (scQt.getDepartmentOrgProfile() != null) {
+			ministryOrgName = scQt.getMinistryOrgProfile().getOrgName();
+		} else {
+			ministryOrgName = StringUtils.EMPTY;
+		}
+		context.put("ministry", ministryOrgName);		
+		
+		String departmentOrgName = null;
+		if (scQt.getDepartmentOrgProfile() != null) {
+			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
+		} else {
+			departmentOrgName = StringUtils.EMPTY;
+		}
+		context.put("jabatan", departmentOrgName);
 		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
 		String publishDate = "";
 		if (scQt.getPublishDate() != null) {
