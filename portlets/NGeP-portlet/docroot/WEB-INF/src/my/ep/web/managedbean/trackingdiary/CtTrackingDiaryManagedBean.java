@@ -95,8 +95,9 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
+				
 				// Order by document number
-				searchBean.getSortColumns().add(new SearchOrderBean("docNo", true));
+				searchBean.getSortColumns().add(new SearchOrderBean("docNo"));
 				
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
