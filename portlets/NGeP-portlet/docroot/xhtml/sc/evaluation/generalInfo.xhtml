@@ -1,0 +1,124 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:panel header="#{lbl['lbl.sc.general.info']}" toggleable="true">
+
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td colspan="3"><p:inputTextarea label="#{lbl['lbl.sc.title']}"
+						value="#{evaluationBackingBean.managedBean.scQt.qtTitle}"
+						required="true" cols="130" rows="2" disabled="true"
+						readonly="true" style=" margin-bottom:5px;width: 100%;"
+						maxlength="100" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.panel']}" /></td>
+				<td colspan="3"><p:inputText
+						value="#{lbl[evaluationBackingBean.managedBean.scQt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+						readonly="true" disabled="true" size="24" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.spec.est.price']}" />
+				</td>
+				<td><p:inputText readonly="true" style="text-align: right;"
+						value="#{evaluationBackingBean.managedBean.scQt.estimatedAmount}"
+						disabled="true" size="24">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
+					<td><h:outputLabel value=" #{lbl['lbl.sc.justification']}" /></td>
+					<td colspan="3"><p:inputTextarea rows="3" cols="30"
+							style="margin-bottom:5px;"
+							value="#{evaluationBackingBean.managedBean.scQt.justificationRemark}"
+							readonly="true" disabled="true" /></td>
+				</ui:fragment>
+			</tr>
+			<tr>
+				<td style="width: 200px;"><h:outputLabel
+						value="#{lbl['lbl.sc.qttentype']}" /></td>
+				<td><p:inputText readonly="true" size="24"
+						value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, evaluationBackingBean.managedBean.scQt.qtType)}"
+						disabled="true" /></td>
+				<td style="width: 267px;"><h:outputLabel
+						value="#{lbl['lbl.sc.open.for']}" /></td>
+				<td><p:inputText readonly="true" size="24"
+						value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, evaluationBackingBean.managedBean.scQt.openFor)}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.procurement.category']}" /></td>
+				<td><p:inputText disabled="true"
+						style="width: 178px;margin-bottom: 5px;"
+						label="#{lbl['lbl.sc.procurement.category']}"
+						value="#{evaluationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
+					</p:inputText></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+				<td><p:inputText readonly="true" disabled="true" size="24"
+						value="#{lbl[evaluationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
+				</td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" /></td>
+				<td><p:inputText size="24"
+						value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scEvaluationType, evaluationBackingBean.managedBean.scQt.evaluationType)}"
+						readonly="true" disabled="true" /></td>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /></td>
+
+				<td><p:inputText size="24"
+						value="#{lbl[evaluationBackingBean.managedBean.scQt.techEvaluationReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+						readonly="true" disabled="true"></p:inputText></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
+				<td><p:inputText id="proposalId" size="24" disabled="true" readonly="true"
+						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
+						value="#{evaluationBackingBean.managedBean.scQt.maxProposal}"
+						style="text-align:right;margin-bottom: 5px;">
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td>
+					<p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
+				</td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="fulfilId" 
+									label="#{lbl['lbl.sc.fullfillent.type']}" disabled="true" readonly="true"
+									value="#{evaluationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
+									style="width: 178px;margin-bottom: 5px;">
+								</p:inputText> <p:message id="fulfilType" for="fulfilId" display="icon" /></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.fullfillent.type.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+				<td style="white-space: nowrap;">
+					<p:outputLabel
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> 
+				</td>
+				<td><p:inputMask id="contract"
+						size="24" mask="9?99" placeHolder="" maxlength="3"
+						disabled="true"
+						label="#{lbl['lbl.sc.spec.complete.period']}"
+						value="#{evaluationBackingBean.managedBean.scQt.contractDuration}"
+						style="text-align:right;">
+					</p:inputMask> </td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>
