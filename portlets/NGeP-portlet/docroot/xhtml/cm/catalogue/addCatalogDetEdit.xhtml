@@ -147,12 +147,12 @@
 					 
 						<p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="#{lbl['lbl.cm.upload']}"
-							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							onclick="imageDialog.show()">
 							<p:graphicImage value="/css/images/design/upload.png" style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> 
 						<p:commandLink
-							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
+							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							title="Delete" oncomplete="deleteImage.show()">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 						</p:commandLink>
@@ -215,7 +215,7 @@
 					<td colspan="3"><p:inputTextarea
 							style="width:660px !important;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" /></td>
+							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue or unspscCodeBackingBean.supplierTemp}" /></td>
 
 				</tr>
 
@@ -261,7 +261,7 @@
 							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="pricingTab.xhtml" />
 							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}">
+							<p:tab title="#{lbl['lbl.cm.promotion']}" rendered="#{!unspscCodeBackingBean.supplierTemp}">
 								<ui:include src="promotionTab.xhtml" />
 							</p:tab>
 
@@ -271,7 +271,7 @@
 
 					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70}">
+					<p:tab title="#{lbl['lbl.cm.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and !unspscCodeBackingBean.supplierTemp}">
 
 						<p:tabView id="tierId"
 							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
@@ -292,7 +292,7 @@
 					</p:tab>
 
 
-					<p:tab title="#{lbl['lbl.cm.zonal']}">
+					<p:tab title="#{lbl['lbl.cm.zonal']}" rendered="#{!unspscCodeBackingBean.supplierTemp}">
 
 						<p:tabView id="zonalId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
@@ -312,7 +312,7 @@
 
 					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.zonal.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70}">
+					<p:tab title="#{lbl['lbl.cm.zonal.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and !unspscCodeBackingBean.supplierTemp}">
 
 						<p:tabView id="zonalTierId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
