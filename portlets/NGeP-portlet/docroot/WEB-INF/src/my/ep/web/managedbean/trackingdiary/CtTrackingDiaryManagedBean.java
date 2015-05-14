@@ -11,6 +11,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.persistence.entity.ct.VCtDocument;
@@ -75,7 +76,7 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (getSearchDocType() != null) {
-					SearchFilterBean filterBean = new SearchFilterBean("docTypeList",SearchOperator.OPERATOR_LIKE.value(),getSearchDocType());
+					SearchFilterBean filterBean = new SearchFilterBean("docType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocType());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
@@ -94,12 +95,11 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
-				// Contract always is search by group
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("group",SearchOperator.OPERATOR_EQUALS.value(),true));
 				// Order by document number
 				searchBean.getSortColumns().add(new SearchOrderBean("docNo", true));
 				
-				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject("ct", IContractIntegrationSO.class);
+				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
 				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 				
 				reqDTO.setCtDocumentSearchBean(searchBean);

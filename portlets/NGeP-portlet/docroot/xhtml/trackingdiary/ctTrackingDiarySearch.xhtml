@@ -32,6 +32,7 @@
 						</p:selectOneMenu>
 					</td>
 				</tr>
+				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != null}">
 				<tr>
 					<td width="35%">
 						<p:outputLabel value="#{lbl['lbl.td.doc.no']}" />
@@ -39,7 +40,8 @@
 					<td width="35%">
 						<p:inputText size="28" value="#{ctTrackingDiaryBackingBean.managedBean.searchDocNo}"></p:inputText>
 					</td>
-				</tr>							
+				</tr>
+				</h:panelGroup>						
 				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeMinistry
 					or ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral}">
 				<tr>
