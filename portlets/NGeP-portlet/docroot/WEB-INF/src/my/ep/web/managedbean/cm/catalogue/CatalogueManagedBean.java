@@ -432,6 +432,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private IPagingDataModel<CmSupplierItem> expiredSearchDataModel = new ExpiredSearchPagingDataModel();
 	
+	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	
 	
 	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
@@ -783,8 +785,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			try {
 				
-				System.out.println("***************test*****************");
-				
+			
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -856,6 +857,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					&&StringUtils.isBlank((String)mofNoFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)bizRegNoFilterBean.getSearchValue())
+					&&StringUtils.isBlank((String)keyWordFilterBean.getSearchValue())
 					&&districtId == null) {
 				log.debug("******SearchResultBean******");
 				return new SearchResultBean();
@@ -878,6 +880,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					itemNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 				}
+				
+				if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
+					System.out.println("(String)keyWordFilterBean.getSearchValue()"+(String)keyWordFilterBean.getSearchValue());
+					keyWordFilterBean.setSearchField("keyword");
+					keyWordFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(keyWordFilterBean);
+				}
+				
+				
 
 				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
 					itemCodeFilterBean.setSearchField("itemCode");
@@ -1124,6 +1135,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 		if(this.getStateId() != null && this.getStateId().length > 0) {
+			hasSearchValue = true;
+		}
+		
+		if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
@@ -3465,6 +3480,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setExpiredSearchDataModel(
 			IPagingDataModel<CmSupplierItem> expiredSearchDataModel) {
 		this.expiredSearchDataModel = expiredSearchDataModel;
+	}
+
+	public SearchFilterBean getKeyWordFilterBean() {
+		return keyWordFilterBean;
+	}
+
+	public void setKeyWordFilterBean(SearchFilterBean keyWordFilterBean) {
+		this.keyWordFilterBean = keyWordFilterBean;
 	}
 	
 	
