@@ -50,9 +50,9 @@
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
 				<p:graphicImage rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue == 'Y' }"
-					value="/css/images/design/tick.png" title="#{chargeLineNode.coaValue}" />		
+					value="/css/images/design/ico-check.png" title="#{chargeLineNode.coaValue}" />		
 				<p:graphicImage name="reject.png" rendered="#{chargeLineNode.parent == 'true' and chargeLineNode.coaValue != 'Y' }"
-					value="/css/images/design/reject.png" title="#{chargeLineNode.coaValue}" />								
+					value="/css/images/design/ico-reject.png" title="#{chargeLineNode.coaValue}" />								
 			</p:column>
 			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}">
 				<f:facet name="header" style="width:8%;">
