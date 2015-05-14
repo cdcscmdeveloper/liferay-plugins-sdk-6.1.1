@@ -3283,7 +3283,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				supplierCriteria.append(scQuoteSupplier.getSmSupplier().getSupplierId())
 				.append(",");
 			}
-
+			
+			// add in rejected Supplier Id
+			for (Long rejectedSupplierId : getManagedBean().getScQuote().getRejectedSupplierList()) {
+				supplierCriteria.append(rejectedSupplierId)
+				.append(",");
+			}
+			
 			if(supplierCriteria.length() > 0){
 				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
 				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
