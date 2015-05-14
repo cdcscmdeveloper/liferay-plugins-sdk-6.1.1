@@ -14,7 +14,8 @@
 							    	 <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ppMinistryView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.ministry']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="ppMinistry" value="#{reportBackingBean.commonMinistry}" style="margin-top:5px;width:300px;">										
-										<f:selectItems value="#{reportBackingBean.pmMinistryList}"></f:selectItems>	
+										<f:selectItems value="#{reportBackingBean.ministryList}"></f:selectItems>	
+										<p:ajax event="change" listener="#{reportBackingBean.retrieveFMIPTJList}" process="@this" partialSubmit="true" update="@all" />	
 										
 																																																																			
 									</p:selectOneMenu>	
@@ -23,7 +24,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="ppPtj" value="#{reportBackingBean.commonPtj}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.pmPtjList}"></f:selectItems>																																										
+										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>																																										
 									</p:selectOneMenu>		
 								  </c:if> 
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ppYearView}">

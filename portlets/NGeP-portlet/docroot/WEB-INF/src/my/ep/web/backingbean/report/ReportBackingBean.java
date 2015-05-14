@@ -663,13 +663,14 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)221747;//20854;//--CM 220152,122768- SC//221747,72799;//--ct 25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)4925;//20854;//--CM 220152,122768- SC//221747,72799;//--ct 25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
 	private String subModule;
 	private String commonPtj;
 	private String commonMinistry;
+	private String ministryName;
 	// sc
 	private String scQuotationId;
 	private String scQuotationNo;
@@ -844,6 +845,14 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getMinistryName() {
+		return ministryName;
+	}
+
+	public void setMinistryName(String ministryName) {
+		this.ministryName = ministryName;
+	}
 
 	public String getSmPaymentMethod() {
 		return smPaymentMethod;
@@ -2418,6 +2427,21 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	//ministryName  
+	public String retrieveMinistryName(Long orgprofileid){
+		ministryName =null;
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<String> ministryNameLst = reportSO.retrieveMinistryNameByOrgprofileid(orgprofileid);			
+					if (ministryNameLst.size()>0) {
+					
+						ministryName=ministryNameLst.get(0);
+					}        	    
+        }
+		return ministryName;
+	}
 	public List<SelectItem> retrieveRegStatusList(){
 		registrationStatusList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3386,6 +3410,7 @@ public class ReportBackingBean extends
 			List<Object[]> paramcodeLst = reportSO.retrieveParameterCodeByUserid(lngUserId);			
 			for (Object[] object : paramcodeLst) {
 				parameterCodeType = object[0].toString();
+				//parameterCodeType = "FMI";
 			}
 			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
 				retrieveFPJMinistryList();
@@ -3462,13 +3487,19 @@ public class ReportBackingBean extends
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<String> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
-			for (int i = 0; i < minstryLst.size(); i++) {
+			List<Object[]> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
+			for (Object[] object : minstryLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1].toString());
+				ministryList.add(selectItem);
+			}
+			/*for (int i = 0; i < minstryLst.size(); i++) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(minstryLst.get(i).toString());
 				selectItem.setValue(minstryLst.get(i));
 				ministryList.add(selectItem);
-			}			
+			}*/			
 		}
 		return ministryList;	
 	}
@@ -3749,13 +3780,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		getManagedBean().getRptGenBean().setSmActivationDateView(false);
 		getManagedBean().getRptGenBean().setSmSubmissionDateView(false);
 		getManagedBean().getRptGenBean().setSmActSubmisAllDateView(false);
-		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_BASIC))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+		if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_BASIC))&&(this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))){
 			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
 			getManagedBean().getRptGenBean().setSmActivationDateView(true);
-		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_MOF))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_MOF))&&(this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))){
 			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
 			getManagedBean().getRptGenBean().setSmSubmissionDateView(true);
-		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_ALL))&&this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL))){
+		}else if(((this.getSmRegistrationType()!=null)&&(this.getSmRegistrationType().equals(ReportConst.RPT_REG_ALL))&&(this.getReportValue().equals(ReportConst.SM_LST_DAILY_NEW_APPL_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)))){
 			getManagedBean().getRptGenBean().setSmActiveSubmissiveFromDateView(true);
 			getManagedBean().getRptGenBean().setSmActSubmisAllDateView(true);
 		}
@@ -4436,8 +4467,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
+				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
-						+ this.getCommonMinistry());
+						+ retrieveMinistryName(orgprofileid));
 			}
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
@@ -5516,8 +5548,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
+				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				
 				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ this.getCommonMinistry());
+						+ retrieveMinistryName(orgprofileid));
 			}
 			if ((this.getFlSupplier() != null)
 					&& (this.getFlSupplier() != ReportConst.EMPTY_VAL)) {
@@ -5843,9 +5877,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
+				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				
 				rptGenBean
 						.setPpMinistryVar(ReportConst.FL_AMP_MINISTRY_EQ
-								+ this.getCommonMinistry());
+								+ retrieveMinistryName(orgprofileid));
 			}
 			if ((this.getPpYear() != null)
 					&& (this.getPpYear() != ReportConst.EMPTY_VAL)) {
