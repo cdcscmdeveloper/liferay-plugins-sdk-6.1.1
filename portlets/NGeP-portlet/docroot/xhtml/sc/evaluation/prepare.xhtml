@@ -15,29 +15,37 @@
 					activeIndex="#{evaluationBackingBean.managedBean.prepareActiveIndex}"
 					style="display : table-caption;">
 
+					<p:menuitem value="#{lbl['lbl.sc.general.info']}"
+						action="#{evaluationBackingBean.retrieveGeneralInfo}" update="@form" />
+						
 					<p:menuitem value="#{lbl['lbl.sc.meeting.details']}"
-						action="#{evaluationBackingBean.retriveMeetingDtls(null,evaluationBackingBean.managedBean.committeeType,0)}"
+						action="#{evaluationBackingBean.retriveMeetingDtls(null,evaluationBackingBean.managedBean.committeeType,1)}"
 						update="@form" />
 						
-					<p:menuitem value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, evaluationBackingBean.managedBean.committeeType)}"
-						action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(1)}"
+					<p:menuitem value="#{evaluationBackingBean.getParameterDesc(ParameterTypeConst.scCommitteeType, 
+											evaluationBackingBean.managedBean.committeeType)}"
+						action="#{evaluationBackingBean.retriveOpeningCommitteeDtls(2)}"
 						update="@form" />
 
 					<p:menuitem value="#{lbl['lbl.sc.join.in']}"
-						action="#{evaluationBackingBean.retriveTurutHadirDtls(2)}"
+						action="#{evaluationBackingBean.retriveTurutHadirDtls(3)}"
 						update="@form" />
 				</p:tabMenu>
 			</td>
-			<td width="80%" valign="top"><c:if
-					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '0'}">
+			<td width="80%" valign="top">
+				<c:if test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '0'}">
+					<ui:include src="generalInfo.xhtml"></ui:include>
+				</c:if>
+				<c:if
+					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '1'}">
 
 					<ui:include src="meetingDetails.xhtml"></ui:include>
 				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '1'}">
+					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '2'}">
 
 					<ui:include src="openCommittee.xhtml"></ui:include>
 				</c:if> <c:if
-					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '2'}">
+					test="#{evaluationBackingBean.managedBean.prepareActiveIndex eq '3'}">
 
 					<ui:include src="turuthadir.xhtml"></ui:include>
 				</c:if></td>
