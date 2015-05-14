@@ -6865,6 +6865,7 @@ public class SmApplicationBackingBean extends
 					FacesScopes fs = new FacesScopes();
 					reqDTO.setServerName(fs.getRequest().getServerName());
 					reqDTO.setServerPort(fs.getRequest().getServerPort());
+					reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 					reqSO.submitPOorApproverReviewToBPM(reqDTO);
 					FacesContext

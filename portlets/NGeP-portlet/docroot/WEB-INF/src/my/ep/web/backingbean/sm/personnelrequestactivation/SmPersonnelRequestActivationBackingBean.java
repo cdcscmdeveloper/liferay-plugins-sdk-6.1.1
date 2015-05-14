@@ -47,6 +47,7 @@ public class SmPersonnelRequestActivationBackingBean {
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 		reqDTO.setSmPersonnelList(selectedExpiredActivationPersonnels);
 		SmServiceLookup.getPersonnelSO().resendPersonnelActivationEmail(reqDTO);
 		SmCommonUtil.redirectToPage(
