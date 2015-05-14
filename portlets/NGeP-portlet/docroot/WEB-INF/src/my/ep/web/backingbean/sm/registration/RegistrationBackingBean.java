@@ -588,7 +588,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			renewSesionObject();
 			this.getManagedBean().setSmAppl(null);
 			this.getManagedBean().setSmSupp(null);
-			return "/xhtml/sm/onlinereg/outputMsg";
+			return "/xhtml/sm/onlinereg/outputMsg?faces-redirect=true";
 		} else {
 			log.info("-------------------Error SubmitRegistration----------------");
 			throw new EpException(MessageConst.ERROR_721006);
