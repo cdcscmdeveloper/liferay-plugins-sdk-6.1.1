@@ -52,6 +52,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -125,6 +126,13 @@ public class UnspscCodeBackingBean extends
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("CD_COMMITTEE");
 	}
+	
+	public boolean isSupplierTemp() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value());
+	}
+	
+	
 
 	public boolean isSupplierUserOrTempSupplierAdmin() {
 		FacesScopes fs = new FacesScopes();
