@@ -194,35 +194,25 @@ public class ProfileManagementBackingBean extends
 
 		return this.orgTypeSearchBean;
 	}
-
+	
 	private void generateAdditionalFilter() {
 		logger.info("generateAdditionalFilter");
 		this.getManagedBean().setAdditionalOrgFilter("");
 		// generate additional filter
 		if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-			this.getManagedBean().setAdditionalOrgFilter(
-					"|orgProfileId^"
-							+ this.getManagedBean().getCurrentActiveOrg()
-									.getOrgProfileId()
-							+ "*parentOrgProfile.orgProfileId^"
-							+ this.getManagedBean().getCurrentActiveOrg()
-									.getOrgProfileId());
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
+							+ "*parentOrgProfile.orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
+					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-			this.getManagedBean().setAdditionalOrgFilter(
-					"|orgProfileId^"
-							+ this.getManagedBean().getCurrentActiveOrg()
-									.getOrgProfileId());
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		} else if (getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())) {
-			this.getManagedBean().setAdditionalOrgFilter(
-					"|orgProfileId^"
-							+ this.getManagedBean().getCurrentActiveOrg()
-									.getOrgProfileId());
+			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		} else if (getFacesScopes().hasRoleUser(
 				RoleCode.FACTORING_ADMIN.value())) {
 			this.getManagedBean().setAdditionalOrgFilter(
-					"orgProfileId^"
-							+ this.getManagedBean().getCurrentActiveOrg()
-									.getOrgProfileId());
+					"orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}
 	}
 
@@ -492,6 +482,14 @@ public class ProfileManagementBackingBean extends
 																// relations
 																// again
 			showReceivingAddress();
+			// set org category
+			if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT)
+					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+				getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
+			} else if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS)
+					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+				getManagedBean().setSearchOrgCategory(OTHERS);
+			}
 			// }
 			// addressEntered();
 		} catch (Exception e) {
@@ -606,7 +604,8 @@ public class ProfileManagementBackingBean extends
 		// pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
 		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
-
+		
+		getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 		this.getManagedBean().setAddressEntered(false);
 		this.getManagedBean().setSelectedUser(pmUser);
 		this.getManagedBean().setSelectedRoles(null);
@@ -2082,12 +2081,14 @@ public class ProfileManagementBackingBean extends
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
 				roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
 						.getLanguage());
-				List<Role> roles = getFacesScopes().getUserRoleList();
-				for (Role role : roles) {
-					System.out
-							.println(".........testttttt....role.getDescription()="
-									+ role.getName());
-				}
+				roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				System.out.println("..getFacesScopes().getUserSessionBean().getUserId()="+getFacesScopes().getUserSessionBean().getUserId());
+//				List<Role> roles = getFacesScopes().getUserRoleList();
+//				for (Role role : roles) {
+//					System.out
+//							.println(".........testttttt....role.getDescription()="
+//									+ role.getName());
+//				}
 				roleReqDTO.setSearchRoleBean(searchBeanData);
 				IRoleSO roleSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -3088,12 +3089,22 @@ public class ProfileManagementBackingBean extends
 																		// for
 																		// each
 																		// user
+			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			userOrg.setChangedBy(loginSessionUserId);
+			userOrg.setCreatedBy(loginSessionUserId);
+			
+			
+			
 			userOrgList.add(userOrg);
 			user.setPmUserOrgs(userOrgList);
 			if (!user.isBrandNew()) {
 				reqDTO.setNewRoleList(new ArrayList<PmUserRole>());
 				reqDTO.setRemoveRoleList(new ArrayList<PmUserRole>());
 				loadUserRoles(user, reqDTO);
+				user.setChangedBy(loginSessionUserId);
+			}else{
+				user.setChangedBy(loginSessionUserId);
+				user.setCreatedBy(loginSessionUserId);
 			}
 
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
@@ -3466,6 +3477,7 @@ public class ProfileManagementBackingBean extends
 
 	public void checkIdentificationNumber() {
 		System.out.println(".............checkIdentificationNumber...........");
+		this.getManagedBean().getSelectedUser().setHasActiveOrg(false);
 		SearchBean<PmUser> searchBean = new SearchBean<PmUser>();
 		if (getManagedBean().getSelectedUser().getIdentificationNo() != null
 				&& !"".equalsIgnoreCase(getManagedBean().getSelectedUser()
