@@ -24,6 +24,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
+import sun.util.logging.resources.logging;
+
 
 /**
  * @author DK
@@ -339,13 +341,24 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 		this.selectedRole = selectedRole;
 	}
 	public PmRoleDesc getSelectedPmRoleDesc() {
-		if(selectedPmRoleDesc == null){
-			this.selectedPmRoleDesc = new PmRoleDesc();
+		log.info("...........getSelectedPmRoleDesc..........");
+		if(selectedPmRoleDesc!=null){
+		log.info("...........getSelectedPmRoleDesc.getRoleName="+selectedPmRoleDesc.getRoleName());
+		log.info("...........getSelectedPmRoleDesc.getRoleDescId="+selectedPmRoleDesc.getRoleDescId());
 		}
+//		if(selectedPmRoleDesc == null){
+//			this.selectedPmRoleDesc = new PmRoleDesc();
+//		}
 		return selectedPmRoleDesc;
 	}
 	public void setSelectedPmRoleDesc(PmRoleDesc selectedPmRoleDesc) {
+		log.info("...........setSelectedPmRoleDesc..........");
+		if(selectedPmRoleDesc!=null){
+		log.info("...........selectedPmRoleDesc.getRoleName="+selectedPmRoleDesc.getRoleName());
+		log.info("...........selectedPmRoleDesc.getRoleDescId="+selectedPmRoleDesc.getRoleDescId());
+		}
 		this.selectedPmRoleDesc = selectedPmRoleDesc;
+		
 	}
 	public PmOrgProfile getSelectedOrgProfile() {
 		if(selectedOrgProfile == null){

@@ -38,7 +38,9 @@
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
-						conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}"/>
+						conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}">
+						
+				     		</ac:lov>
 		         	<p:message id="lovMinistryMsg" for="lovMinistry" display="icon" />
 			</td>
 			</tr>
@@ -70,8 +72,8 @@
 				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="29" 
 		            	update=":form:opDefinedSearch" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity == null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
-						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
+						value="#{profileManagementBackingBean.roleNameVal}" 
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForRole()}"
 						conditionField="recordStatus^1|pmRole.pmOrgRoles.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgProfile.orgTypeCode.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
 						/>
