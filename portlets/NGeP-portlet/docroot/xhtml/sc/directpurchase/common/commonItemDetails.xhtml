@@ -294,7 +294,7 @@
 						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
 					</h:selectOneMenu>
 					<p:spacer width="5px;"/>
-					<p:commandButton value="#{lbl['lbl.sc.btn.apply.all']}"
+					<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 					    partialSubmit="true"  process="@this prepareBy"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
 						update="@([id$=requestListDataTable])" />
