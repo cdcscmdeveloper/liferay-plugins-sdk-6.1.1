@@ -601,24 +601,33 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param scQt
 	 */
 	public void populateParentOrgProfile(ScQt scQt) {
-		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
-				.getParentOrgProfile();
-
-		while (parentOrgProfile != null) {
-			// Ministry
-			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
-				scQt.setMinistryOrgProfile(parentOrgProfile);
-				break;
-			}
-			// Department
-			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
-				scQt.setDepartmentOrgProfile(parentOrgProfile);
-				break;
-			}
-
-			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
+		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
+		
+		PmOrgProfile departmentOrgProfile = null;
+		PmOrgProfile ministryOrgProfile = null;
+		if (pmOrgProfile != null) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			
+			try {
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);	
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+				departmentOrgProfile = resDTO.getPmOrgProfile();
+				
+				resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
+				ministryOrgProfile = resDTO.getPmOrgProfile();
+			} finally {
+				
+			}			
+		}
+		
+		if (departmentOrgProfile != null) {
+			scQt.setDepartmentOrgProfile(departmentOrgProfile);
+		}
+		if (ministryOrgProfile != null) {
+			scQt.setMinistryOrgProfile(ministryOrgProfile);
 		}
 	}
 
