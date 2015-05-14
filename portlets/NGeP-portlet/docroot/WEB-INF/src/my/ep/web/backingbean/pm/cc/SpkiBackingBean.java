@@ -218,7 +218,7 @@ public class SpkiBackingBean  extends BaseBackingBean{
 
 	public String spkiSignTransaction(String originalText) {
 	
-		return spkiEnabledSignTransaction(originalText);
+		return "DEFAULT SIGNED TEXT";
 	}
 
 	public void setChallengeQues1(String challengeQues1) {
