@@ -217,7 +217,8 @@ public class SpkiBackingBean  extends BaseBackingBean{
 	}
 
 	public String spkiSignTransaction(String originalText) {
-	
+		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
+
 		return "DEFAULT SIGNED TEXT";
 	}
 
