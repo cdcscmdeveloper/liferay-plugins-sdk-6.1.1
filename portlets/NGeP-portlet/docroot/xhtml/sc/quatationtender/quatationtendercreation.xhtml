@@ -8,11 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:define name="contentSection">
-		<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
-			<ac:title value="#{lbl['lbl.sc.qtn.dtl']}" />
-		</c:if>
-		
+	<ui:define name="contentSection">		
 		<table style="border: 0px; width: 100%">
 			<tr>
 				<td width="100%">

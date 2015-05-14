@@ -192,7 +192,7 @@
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
-					<h:outputText value="#{lbl['lbl.sc.secretary']}"
+					<h:outputText value="#{evaluationMeetingBackingBean.getParameterDesc(ParamterTypeConst.committeeRole, ParamterConst.committeeRoleSecretary)}"
 						rendered="#{committeeMember.memberRole.parameterCode eq 'S'}" />
 				</ui:fragment>
 				<ui:fragment

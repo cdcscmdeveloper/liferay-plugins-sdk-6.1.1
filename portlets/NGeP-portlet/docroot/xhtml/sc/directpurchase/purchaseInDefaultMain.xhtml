@@ -9,7 +9,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 	<ui:define name="contentSection">
 		<c:if test="#{purchaseInDefaultBackingBean.managedBean.titleChecker}">
-			<ac:title value="#{lbl['lbl.sc.pid']}" />
+			<ac:title value="#{lbl['lbl.sc.purchase.in.default']}" />
 		</c:if>
 		<p:messages showDetail="true"
 			autoUpdate="#{purchaseInDefaultBackingBean.managedBean.autoUpdate}"

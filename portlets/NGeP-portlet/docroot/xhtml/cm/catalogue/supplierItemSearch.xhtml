@@ -449,7 +449,7 @@
 																	action="#{purchaseInDefaultBackingBean.pidAction(supplierItem)}"
 																	disabled="#{!supplierItem.pidRequired}"
 																	rendered="#{supplierItem.contractNo ne null or supplierItem.circularNo ne null }">
-																</p:commandButton> <p:tooltip for="pidId" value="#{lbl['lbl.sc.pid']}" />
+																</p:commandButton> <p:tooltip for="pidId" value="#{lbl['lbl.sc.purchase.in.default']}" />
 																<p:commandButton value="#{lbl['lbl.sc.simple.quote']}"
 																	id="sqId"
 																	action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.docId , false)}"

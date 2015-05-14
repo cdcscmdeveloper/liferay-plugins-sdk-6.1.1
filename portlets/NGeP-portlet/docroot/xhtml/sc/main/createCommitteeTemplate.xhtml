@@ -83,7 +83,7 @@
 
 						<tr>
 							<td valign="top"><h:outputLabel
-									value="#{lbl['lbl.sc.tpl.title']}"></h:outputLabel></td>
+									value="#{lbl['lbl.tpl.spec.title']}"></h:outputLabel></td>
 							<td colspan="3"><p:inputText 
 									style="width:670px; margin-bottom:5px;" maxlength="100"
 									value="#{specificationBackingBean.managedBean.specName}" /></td>
@@ -99,7 +99,7 @@
 
 						<tr>
 							<td><h:outputLabel
-									value="#{lbl['lbl.sc.qtn.tender.no']}"></h:outputLabel></td>
+									value="#{lbl['lbl.sc.qtn.no']}"></h:outputLabel></td>
 							<td><p:inputText style="width:210px; margin-bottom:5px;" maxlength="21"
 									value="#{specificationBackingBean.managedBean.qtnTendertemplateSearchBean.qtNo}" /></td>
 
@@ -221,7 +221,7 @@
 					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 					<ac:paginator for="createList"></ac:paginator>
 
-					<p:column headerText="#{lbl['lbl.sc.qtn.tender.no']}"
+					<p:column headerText="#{lbl['lbl.sc.qtn.no']}"
 						style="width:10%;white-space: normal;"
 						rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}">
 						<h:outputText value="#{tplSpecMaster.scQtDoc.scQt.qtNo}" />
@@ -235,7 +235,7 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.tpl.title']}"
+					<p:column headerText="#{lbl['lbl.tpl.spec.title']}"
 						style="width:20%;white-space: normal;">
 						<h:outputText value="#{tplSpecMaster.specName}"></h:outputText>
 					</p:column>
