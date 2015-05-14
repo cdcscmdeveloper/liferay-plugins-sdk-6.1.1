@@ -17,6 +17,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
@@ -158,7 +159,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	 * A warning message will display on screen when searching
 	 * with empty search criteria.
 	 */
-	public void search(){
+	public void search() {
 		getManagedBean().getCtDocumentDataModel().reloadData();
 	}
 	
@@ -177,7 +178,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	/**
 	 * The method used to reset all search criteria and search result.
 	 */
-	public void reset(){
+	public void reset() {
 		this.getManagedBean().setSearchTransactionType(null);
 		resetSearchCriteria();
 		this.getManagedBean().resetCtDocumentDataModel();
@@ -225,7 +226,7 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 			SearchFilterBean searchFilterBean3 = null;			
 			BaseSearchFilterBean multiFilterBean1 = null;
 			
-			searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getDocType());
+			searchFilterBean1 = new SearchFilterBean("groupDocType", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getTransactionType());
 			searchFilterBean2 = new SearchFilterBean("groupId", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getvCtDocument().getDocId());
 			
 			multiFilterBean1 = new SearchMultiFilterBean(searchFilterBean1, searchFilterBean2);			
@@ -240,7 +241,8 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
 			try {
-				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject("cc", ITrackingDiarySO.class);
+				ITrackingDiarySO trackingDiarySO = (ITrackingDiarySO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.COMMON_COMPONENT, ITrackingDiarySO.class);
 				resDTO = trackingDiarySO.retrieveTrackingDiaryBySearchBean(reqDTO);
 			} catch (Exception e) {
 				e.printStackTrace();
