@@ -220,23 +220,10 @@
 												<c:choose>
 													<c:when
 														test="#{backingBean.managedBean.overLappedCategoryExists}">
-														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-															action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
-															update="spkiOutPanel,@([id$=Msg])" />
-														<p:outputPanel id="spkiOutPanel">
-															<ac:spkiPopup id="spkiPopup"
-																password="#{backingBean.managedBean.spkiBackingBean.password}"
-																challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
-																challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
-																postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
-														</p:outputPanel>
+														<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
 													</c:when>
 													<c:otherwise>
-														<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-															onstart="blockWidget.show()"
-															oncomplete="blockWidget.hide()"
-															action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
-															style="margin-bottom:5px;" />
+														<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 													</c:otherwise>
 												</c:choose>
 
@@ -270,23 +257,10 @@
 													<c:choose>
 														<c:when
 															test="#{backingBean.managedBean.overLappedCategoryExists}">
-															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-																action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
-																update="spkiOutPanel,@([id$=Msg])" />
-															<p:outputPanel id="spkiOutPanel">
-																<ac:spkiPopup id="spkiPopup"
-																	password="#{backingBean.managedBean.spkiBackingBean.password}"
-																	challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
-																	challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
-																	postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
-															</p:outputPanel>
+															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
 														</c:when>
 														<c:otherwise>
-															<p:commandButton value="#{lbl['lbl.sm.submitForPay']}"
-																onstart="blockWidget.show()"
-																oncomplete="blockWidget.hide()"
-																action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}"
-																style="margin-bottom:5px;" />
+															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 														</c:otherwise>
 													</c:choose>
 
