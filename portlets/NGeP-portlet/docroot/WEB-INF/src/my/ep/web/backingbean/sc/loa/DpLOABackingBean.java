@@ -186,6 +186,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			ScRequestNote scRequestNote  = resDTO.getRequestNoteDetail();
 
 			if(scRequestNote != null){
+				requestNoteBackingBean.renewSesionObject();
 				requestNoteBackingBean.getManagedBean().setRequestNote(scRequestNote);
 				requestNoteBackingBean.getManagedBean().setEndLoaTaskId(getManagedBean().getTaskId());
 				requestNoteBackingBean.getManagedBean().setEndLoaToken(token);
@@ -201,6 +202,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 			ScQuote scQuote  = resDTO.getScQuote();
 
 			if(scQuote != null){
+				simpleQuoteBackingBean.renewSesionObject();
 				simpleQuoteBackingBean.getManagedBean().setScQuote(scQuote);
 				simpleQuoteBackingBean.getManagedBean().setEndLoaTaskId(getManagedBean().getTaskId());
 				simpleQuoteBackingBean.getManagedBean().setEndLoaToken(token);
