@@ -1012,28 +1012,28 @@ public class LOIDetailBackingBean extends
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
 	}
 
-	/**
-	 * Method to populate parent orgprofiles for scqt.
-	 */
-	public void populateParentOrgProfile(ScQt scQt) {
-		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
-				.getParentOrgProfile();
-
-		while (parentOrgProfile != null) {
-			// Ministry
-			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
-				scQt.setMinistryOrgProfile(parentOrgProfile);
-			}
-			// Department
-			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
-				scQt.setDepartmentOrgProfile(parentOrgProfile);
-			}
-
-			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
-		}
-	}
+//	/**
+//	 * Method to populate parent orgprofiles for scqt.
+//	 */
+//	public void populateParentOrgProfile(ScQt scQt) {
+//		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
+//				.getParentOrgProfile();
+//
+//		while (parentOrgProfile != null) {
+//			// Ministry
+//			if (OrganizationType.MINISTRY.value().equals(
+//					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
+//				scQt.setMinistryOrgProfile(parentOrgProfile);
+//			}
+//			// Department
+//			else if (OrganizationType.DEPARTMENT.value().equals(
+//					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
+//				scQt.setDepartmentOrgProfile(parentOrgProfile);
+//			}
+//
+//			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
+//		}
+//	}
 
 	
 	/**
