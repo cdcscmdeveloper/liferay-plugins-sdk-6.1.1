@@ -12,7 +12,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.epNo}"
 					disabled="true" />
@@ -23,7 +23,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
@@ -33,7 +33,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 					disabled="true" />
@@ -44,7 +44,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="branch"
 						value="#{lOADetailBackingBean.managedBean.selectedSupplierBranchName}"
@@ -78,10 +78,10 @@
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
 					style=" margin-bottom:5px;" disabled="true" />
 			</td>
-			<td width="15%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
-			<td width="32%">
+			<td>
 				<p:inputText id="suppPhoneNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.scLoa.supplierPhoneNo}"
 					disabled="true" />
@@ -196,7 +196,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="32%">
+			<td width="39%">
 				<p:selectOneRadio id="insWarranty"
 					value="#{lOADetailBackingBean.managedBean.scLoa.insWarrantyReq}"
 					required="true"
@@ -206,11 +206,11 @@
 				</p:selectOneRadio>
 				<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 			</td>
-			<td width="15%">
+			<td width="20%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="32%">
+			<td width="20%">
 				<p:selectOneRadio id="bondReq"
 					value="#{lOADetailBackingBean.managedBean.scLoa.bondReq}"
 					required="true"
@@ -243,7 +243,7 @@
 	    id="contractDetailsId">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.type']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -271,11 +271,11 @@
 			</td>
 		</tr>
 		<tr>
-			<td width="21%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="32%">
+			<td>
 				<c:if test="#{isEditableStatus}">
 					<h:panelGroup id="contractAgencyPG">
 					<p:selectOneMenu id="contractAgencyProf"
@@ -299,7 +299,7 @@
 					
 					<p:selectOneMenu id="contractAgency"
 						value="#{lOADetailBackingBean.managedBean.selectedContractAgency}"
-						style="width: 280px;margin-bottom: 5px;"
+						style="width: 200px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
 						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode != ParameterConst.contractTypeMinistry}">
@@ -323,15 +323,15 @@
 						disabled="true" size="30" />
 				</c:if>
 			</td>
-			<td width="15%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="32%">
+			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 280px;margin-bottom: 5px;"
+						style="width: 200px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
@@ -433,12 +433,12 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td  width="23%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="witnessName" size="50"
+				<p:inputText id="witnessName" size="46"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
@@ -453,7 +453,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="identificationNo" size="50"
+				<p:inputText id="identificationNo" size="46"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
 					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
@@ -468,7 +468,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="designation" size="50"
+				<p:inputText id="designation" size="46"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
 					required="true"
 					maxlength="30"
@@ -484,7 +484,7 @@
 			</td>
 			<td rowspan="3" width="32%">
 				<p:inputTextarea id="address"
-					cols="50" rows="5"
+					cols="47" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
 					style=" margin-bottom:5px;"
 					required="true"
@@ -543,7 +543,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
+				<p:inputText id="email" size="46" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"

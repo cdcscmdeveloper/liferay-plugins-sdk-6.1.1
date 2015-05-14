@@ -68,12 +68,10 @@
 				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 		</c:if>
 
-		<c:if test="#{!isEditableStatus}">
-			<br />
-		</c:if>
-		<h:outputText value="#{lbl['lbl.sc.deduction.payment']} >" /> 
-	    <h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
-	    <h:outputText style="margin-left: 140px;" value="#{lOIDetailBackingBean.managedBean.clausesTitle}" />
+		<br />
+		<h:outputText value="#{lbl['lbl.sc.deduction.payment']} >" />
+		<h:outputText value="#{lbl['lbl.sc.deduction.clauses']} " />
+		<h:outputText style="margin-left: 140px;" value="#{lOIDetailBackingBean.managedBean.clausesTitle}" />
 		<h:panelGroup id="clausePnl">
 
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
