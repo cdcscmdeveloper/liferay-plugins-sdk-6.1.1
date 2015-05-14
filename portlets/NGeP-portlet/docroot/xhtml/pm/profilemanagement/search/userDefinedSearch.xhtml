@@ -30,9 +30,10 @@
 					
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/><p:outputLabel
 								value="*" styleClass="mandatory" /></th>
+							
 				<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="29" required="true"
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
-		            	update=":form:opDefinedSearch" readonly="true" label="error for test"
+		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"

@@ -68,15 +68,19 @@
 			     			" />
 							</p:selectOneMenu> <p:message id="orgTypeOthersListMsg" for="orgTypeOthersList"
 								display="icon" /></td>
-						<td colspan="2"><div align="left"><ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="40"
-								required="true" update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
-			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr" readonly="true"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
-								headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
-								saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
-								conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}" />
-							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" /></div></td>
+						<td colspan="2"><div align="left">
+								<ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="40"
+									required="true"
+									update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
+									readonly="true"
+									disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
+									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
+									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
+									conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}" />
+								<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
+							</div></td>
 
 					</tr>
 				</table>
@@ -109,17 +113,20 @@
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9"><p:outputPanel id="opPortrait"
 								rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
-								<h:graphicImage id="giUserImage"
-									value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
-									style="margin-left:25px;" width="140" height="160" />
 								<div align="center">
-									<p:commandButton
-										value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
-										oncomplete="dlImageUpload.show();" immediate="true" />
-									<p:commandButton
-										value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
-										action="#{profileManagementBackingBean.deletePortrait}"
-										immediate="true" update="giUserImage" />
+									<h:graphicImage id="giUserImage"
+										value="#{profileManagementBackingBean.userImagePathWithDefaultImage(profileManagementBackingBean.managedBean.selectedUser.loginId)}"
+										style="margin-left:25px;" width="140" height="160" />
+
+									<div align="center">
+										<p:commandButton
+											value="#{lbl['lbl.pm.profiles.userdetails.changepic']}"
+											oncomplete="dlImageUpload.show();" immediate="true" />
+										<p:commandButton
+											value="#{lbl['lbl.pm.profiles.userdetails.deletepic']}"
+											action="#{profileManagementBackingBean.deletePortrait}"
+											immediate="true" update="giUserImage" />
+									</div>
 								</div>
 							</p:outputPanel></td>
 					</tr>
