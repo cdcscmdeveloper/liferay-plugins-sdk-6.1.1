@@ -2166,6 +2166,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 			
 			reqDTO.setDocTypeList(docTypeList);
 			reqDTO.setLanguageCode(languageCode);
