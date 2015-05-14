@@ -435,6 +435,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	
 	
+	private List<CmSupplierItem> draftSupplierItemList;
+	
+	
 	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -3488,6 +3491,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setKeyWordFilterBean(SearchFilterBean keyWordFilterBean) {
 		this.keyWordFilterBean = keyWordFilterBean;
+	}
+
+	public List<CmSupplierItem> getDraftSupplierItemList() {
+		if(draftSupplierItemList==null)
+			draftSupplierItemList = new ArrayList<CmSupplierItem>();
+		return draftSupplierItemList;
+	}
+
+	public void setDraftSupplierItemList(List<CmSupplierItem> draftSupplierItemList) {
+		this.draftSupplierItemList = draftSupplierItemList;
 	}
 	
 	
