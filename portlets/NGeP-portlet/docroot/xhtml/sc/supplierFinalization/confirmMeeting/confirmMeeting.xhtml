@@ -157,10 +157,10 @@
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.sc.role']}">
-									<h:outputText value="#{lbl['lbl.sc.chairperson']}" 
+									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ParamterTypeConst.committeeRole, ParamterConst.committeeRoleChairperson)}" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleChairperson}" />
 										
-									<h:outputText value="#{lbl['lbl.sc.secretary']}" 
+									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ParamterTypeConst.committeeRole, ParamterConst.committeeRoleSecretary)}" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />	
 																	
 									<p:selectOneMenu id="meetingRoleId" required="true" 

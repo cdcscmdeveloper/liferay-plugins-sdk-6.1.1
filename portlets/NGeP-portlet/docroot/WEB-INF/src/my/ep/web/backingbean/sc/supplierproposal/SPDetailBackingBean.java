@@ -379,7 +379,7 @@ public class SPDetailBackingBean extends
 
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
-				String variable1 = getMessageCommon("lbl.sc.sp.pplno");
+				String variable1 = getMessageCommon("lbl.sc.proposal.no");
 				String variable2 = scQtProposal.getProposalNo();
 				commonMessageAcknowledmentPage(MessageConst.INFO_700026,
 						variable1, variable2);

@@ -997,7 +997,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pr.inquiry", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
 				if(worklistItemVO.getTitle().equalsIgnoreCase(SourcingConstants.PD_TITLE)) {
-					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.pid", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
+					worklistItemVO.setTitle(ResourceBundleUtils.getMessage("lbl.sc.purchase.in.default", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 				}
 			}
 		}

@@ -89,11 +89,11 @@
 							value="#{complianceTechnicalSupplier.compliance ? lbl['lbl.sc.compliance']:lbl['lbl.sc.not.compliance']}"></h:outputText>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.user.scoring']}"
+					<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
 						style="width:15%">
 						<p:inputText value="#{complianceTechnicalSupplier.totalUserScore}"
 							id="technicaluploadNoActionUserScoreId"
-							label="#{lbl['lbl.sc.user.scoring']}" style="text-align:right;"
+							label="#{lbl['lbl.tpl.spec.content.user.score']}" style="text-align:right;"
 							size="40" maxlength="18" required="true"
 							disabled="#{evaluationBackingBean.managedBean.readOnly}">
 							<ac:validateNumber
