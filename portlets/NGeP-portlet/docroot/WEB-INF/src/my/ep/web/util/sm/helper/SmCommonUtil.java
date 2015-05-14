@@ -1913,4 +1913,18 @@ public class SmCommonUtil {
 				+ "<<<<<<<<<<<<<<");
 		redirectToExternalUrl(logOutUrl);
 	}
+
+	/**
+	 * Get Liferay Portal Base URL
+	 * 
+	 * @return String
+	 */
+	public static String getBasePortalUrl() {
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		return themeDisplay.getURLPortal();
+	}
 }
