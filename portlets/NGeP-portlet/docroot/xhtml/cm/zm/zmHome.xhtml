@@ -55,13 +55,13 @@
 					<p:commandLink
 						actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
 						process="@this" update=":form:ZL" oncomplete="ZL.show();">
-						<p:graphicImage library="ep/images/design" name="edit.png"
+						<p:graphicImage
 							value="/css/images/design/edit.png" />
 					</p:commandLink>
 					<p:commandLink process="@this"
 						update="zoneDetailsDataTable, @([id$=zmMsgs])"
 						actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
-						<p:graphicImage library="ep/images/design" name="trash.png"
+						<p:graphicImage 
 							value="/css/images/design/trash.png" />
 					</p:commandLink>
 				</p:column>
