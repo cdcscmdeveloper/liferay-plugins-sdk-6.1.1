@@ -70,10 +70,11 @@ public class ReactivateBasicBackingBean extends
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721031);
+			}else{
+				SmCommonUtil.redirectToPage(
+						"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
+						"");
 			}
-			SmCommonUtil.redirectToPage(
-					"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
-					"");
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
