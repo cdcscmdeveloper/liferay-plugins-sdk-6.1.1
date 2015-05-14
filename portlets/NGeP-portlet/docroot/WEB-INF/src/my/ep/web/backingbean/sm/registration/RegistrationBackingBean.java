@@ -115,9 +115,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 
 	public static Logger log = Logger.getLogger(RegistrationBackingBean.class);
 	public static String newICMasking = "999999999999";
-	private static String accountRegistration = "registrationInfo";
-	private static String signUp = "signUp";
-	private static String firstUserRegistration = "firstUserRegistration";
+	private static String accountRegistration = "/xhtml/sm/onlinereg/registrationInfo.xhtml";
+	private static String signUp = "/xhtml/sm/onlinereg/signUp.xhtml";
+	private static String firstUserRegistration = "/xhtml/sm/onlinereg/firstUserRegistration.xhtml";
 	
 	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
@@ -152,7 +152,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 *
 	 * @return String
 	 */
-	public String proceedToCompanyInfo() {
+	public void proceedToCompanyInfo() {
 		log.info("---------proceedToCompanyInfo-------" + new Date());
 		if (this.getManagedBean().getSmSupp() == null) {
 			log.info("-------RegistrationBackingBean is NUll-------------");
@@ -226,7 +226,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		getIndividualServiceType();
 		log.info("-------onlineAccountAgreement end-------------");
 		
-		return accountRegistration;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, accountRegistration);
 	}
 
 	/**
@@ -234,7 +235,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 *
 	 * @return String
 	 */
-	public String proceedToFirstUserRegistration() {
+	public void proceedToFirstUserRegistration() {
 		log.info("****proceedToFirstUserRegistration******");
 		
 		//Validate GST No
@@ -306,7 +307,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			compBasic.setWithFederal(true);
 		} 
 		
-		return firstUserRegistration;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, firstUserRegistration);
 	}
 
 	/**
@@ -314,8 +316,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 *
 	 * @return String
 	 */
-	public String returnToSignUp() {
-		return signUp;
+	public void returnToSignUp() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, signUp);
 	}
 
 	/**
@@ -323,8 +326,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 *
 	 * @return String
 	 */
-	public String returnToCompanyInfo() {
-		return accountRegistration;
+	public void returnToCompanyInfo() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, accountRegistration);
 	}
 	
 	/**
