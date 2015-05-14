@@ -127,6 +127,7 @@ import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.questionnaire.QuestionnaireBackingBean;
 import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.CommonUIConst;
+import my.ep.web.constant.report.ReportConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -8576,6 +8577,17 @@ public class SmApplicationBackingBean extends
 			e.printStackTrace();
 		}
 		finalFilePath = null;
+	}
+	
+	/**
+	 * Print Supplier Profile
+	 * 
+	 * @throws IOException
+	 */
+	public void printSupplierProfile() throws IOException {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("PAPPLNO", getManagedBean().getSmAppl().getApplNo());
+		generateReport(ReportConst.SM_SUPPLIER_PROFILE_REPORT, paramMap);
 	}
 
 	/**
