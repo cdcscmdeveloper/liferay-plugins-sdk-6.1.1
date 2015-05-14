@@ -8,10 +8,10 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText size="50"
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.mofNo}"
 					disabled="true" />
@@ -21,7 +21,7 @@
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<p:inputText size="50"
 					value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.supplierName}"
 					disabled="true" />
@@ -32,7 +32,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td colspan="3">
+			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="branch"
 						value="#{lOIDetailBackingBean.managedBean.branchName}"
@@ -66,10 +66,10 @@
 					value="#{lOIDetailBackingBean.getFullAddress(lOIDetailBackingBean.managedBean.scLoi.supplierAddress)}"
 					style=" margin-bottom:5px;" disabled="true" />
 			</td>
-			<td width="15%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
-			<td width="32%">
+			<td>
 				<p:inputText id="suppPhoneNo" size="30"
 					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierPhoneNo}"
 					disabled="true" />
@@ -125,9 +125,9 @@
 						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
 						<p:inputText
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}"
-							size="70" maxlength="100" />
+							size="50" maxlength="100" />
 					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
-						<p:inputText size="70" readonly="true" disabled="true"
+						<p:inputText size="50" readonly="true" disabled="true"
 							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.title}" />
 					</c:if></td>
 			</tr>
