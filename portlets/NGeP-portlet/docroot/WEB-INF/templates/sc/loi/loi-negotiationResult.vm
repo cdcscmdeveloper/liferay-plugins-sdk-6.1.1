@@ -139,7 +139,7 @@
 						<td class="tdInfoTable">$loiLoaItem.qty</td>
 						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
 						<td class="tdInfoTable">$offer</td>
-						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice</td>
+						<td class="tdInfoTable">$loiLoaItem.unitPrice</td>
 						<td class="tdInfoTable">$final</td>
 					</tr>
 					#end
