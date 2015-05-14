@@ -104,6 +104,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			this.getManagedBean().setBannerImage(false);
 			getManagedBean().setSmAppl(appl);
 
+			//Active Appl
 			if(appl != null){
 				log.info("*****In Progress*********");			
 				SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(appl);
@@ -634,6 +635,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		return false;
 	}
 	
+	/**
+	 * Navi to softcert Request
+	 */
 	public void naviToSoftCertRequest(){
 		try {
 			pageRedirect(SOFT_CERT_PATH);
@@ -643,6 +647,9 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		}
 	}
 	
+	/**
+	 * preRender of supplier promotion banner
+	 */
 	public void supplierPromotion(){
 		SmSupplier userSupplier = getSupplierProfileByUserId();
 		if(userSupplier != null){
@@ -666,6 +673,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, PROMO_PAGE);
 	}
 	
+	/**
+	 * check supplier's catalogue
+	 * @param supplierId
+	 * @return String
+	 */
 	private String checkCatalogueUpload(Long supplierId){
 		List<CmSupplierItem> suppItems = getCmSupplierItems(supplierId);
 		log.info("SupplierItems size:>>>>> " + suppItems);
