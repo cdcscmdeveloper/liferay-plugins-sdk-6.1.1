@@ -24,8 +24,7 @@
 									     style="width:10px;"  rendered="#{!contractDetailsBackingBean.managedBean.viewContract}" />
 									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 
 									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}"/> 						
-									<p:column rowspan="2" style="width:10%;white-space:normal;"
-									  >
+									<p:column rowspan="2" style="width:10%;white-space:normal;">
 									      <f:facet name="header">
 					                          <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
                		                          <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
@@ -33,7 +32,7 @@
 									</p:column>
 									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" />
 									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"/>
-									<p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}"> 
+									<p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;"> 
 									 <f:facet name="header">
 					                       <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
                		                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
@@ -45,14 +44,14 @@
 									<p:column/>	
 									<p:column>
 									  <f:facet name="header">
-									     <h:outputText value="*" styleClass="mandatory" />
-									     <h:outputText value="Attachment"/>
+									     <h:outputText value="* " styleClass="mandatory" />
+									     <h:outputText value="#{lbl['lbl.txt.attachment']}"/>
 									  </f:facet>
 									</p:column>  
 									<p:column>
 									  <f:facet name="header">
-									       <h:outputText value="*" styleClass="mandatory" />
-									       <h:outputText value="File Ref. No"/>
+									       <h:outputText value="* " styleClass="mandatory" />
+									       <h:outputText value="#{lbl['lbl.ct.file.ref.no']}"/>
 									   </f:facet>
 									 </p:column>
 								</p:row>
@@ -302,6 +301,7 @@
 						</tr>
 					</table>    					
 				</td>
+				<td width="50%" valign="top"></td>
 		</tr>
 	</table>
 
