@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.sc.BidStatusConst;
+import my.ep.constant.sc.BiddingConst;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -112,6 +113,10 @@ public class BiddingManagedBean extends BaseManagedBean {
 	private Long bidPaused = BidStatusConst.BID_PAUSED;
 	private Long bidCancelled = BidStatusConst.BID_CANCELLED;
 	private Long bidCompleted = BidStatusConst.BID_COMPLETED;
+	private String paused = BiddingConst.BID_ACTION_TYPE_PAUSED;
+	private String cancelled = BiddingConst.BID_ACTION_TYPE_CANCELLED;
+	private String resume = BiddingConst.BID_ACTION_TYPE_RESUME;
+	private String reBidding = BiddingConst.BID_ACTION_TYPE_REBIDDING;
 	
 	/**
 	 * Default Constructor
@@ -123,6 +128,78 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	
 	
+	/**
+	 * @return the paused
+	 */
+	public String getPaused() {
+		return paused;
+	}
+
+
+
+	/**
+	 * @param paused the paused to set
+	 */
+	public void setPaused(String paused) {
+		this.paused = paused;
+	}
+
+
+
+	/**
+	 * @return the cancelled
+	 */
+	public String getCancelled() {
+		return cancelled;
+	}
+
+
+
+	/**
+	 * @param cancelled the cancelled to set
+	 */
+	public void setCancelled(String cancelled) {
+		this.cancelled = cancelled;
+	}
+
+
+
+	/**
+	 * @return the resume
+	 */
+	public String getResume() {
+		return resume;
+	}
+
+
+
+	/**
+	 * @param resume the resume to set
+	 */
+	public void setResume(String resume) {
+		this.resume = resume;
+	}
+
+
+
+	/**
+	 * @return the reBidding
+	 */
+	public String getReBidding() {
+		return reBidding;
+	}
+
+
+
+	/**
+	 * @param reBidding the reBidding to set
+	 */
+	public void setReBidding(String reBidding) {
+		this.reBidding = reBidding;
+	}
+
+
+
 	/**
 	 * @return the pendingBidding
 	 */
