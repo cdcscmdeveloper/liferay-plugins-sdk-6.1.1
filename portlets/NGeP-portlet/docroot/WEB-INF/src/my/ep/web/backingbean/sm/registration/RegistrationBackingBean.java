@@ -562,6 +562,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		FacesScopes fs = new FacesScopes();
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
+		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 		/*
 		 * Gst FIle Upload
