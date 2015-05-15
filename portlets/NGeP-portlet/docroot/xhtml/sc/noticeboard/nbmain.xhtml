@@ -54,6 +54,19 @@
 
 
 			</tr>
+			
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.ptj.group']}" /></td>
+
+				<td><ac:lov id="PtjGropup" lovId="PM_ORG_PROFILE_PTJ_GROUP"
+						headerText="PTJGroupOrgProfile Lov" update="@form"
+						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
+						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
+						size="25" readonly="true" 
+						conditionField="#{noticeBoardBackingBean.constuctConditionFields()}"/></td>
+			</tr>
+			
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 				<td><ac:lov id="openPtj" lovId="PM_ORG_PROFILE_PTJ"
