@@ -107,6 +107,10 @@
 							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+							<p:ajax event="change"
+									listener="#{profileManagementBackingBean.receivAddStatusChange(receivAddrType)}"
+									partialSubmit="true" process="@this"
+									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>
