@@ -148,7 +148,7 @@
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								label="#{lbl['lbl.sc.location.level']}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-								style="width: 178px;">
+								style="width:215px;">
 
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
@@ -263,7 +263,7 @@
 						<td><p:selectOneMenu id="locZoneLevels"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-								style="width: 178px;">
+								style="width:215px;">
 								<f:selectItems
 									value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 								<p:ajax event="change" update="zoneyesDataTable" process="@this"
@@ -361,7 +361,7 @@
 			<p:dialog header="#{lbl['lbl.sc.add.location']}"
 				widgetVar="ZoneLocation" modal="true" width="490" position="top"
 				height="410">
-				<p:panel id="zonePopupPanel">
+				<h:panelGroup id="zonePopupPanel">
 					<table border="0">
 						<tr>
 							<td>#{lbl['lbl.sc.location']}</td>
@@ -417,7 +417,7 @@
 							</td>
 						</tr>
 					</table>
-				</p:panel>
+				</h:panelGroup>
 			</p:dialog>
 		</h:panelGroup>
 	</h:panelGroup>
