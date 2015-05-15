@@ -1,0 +1,58 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+			<p:blockUI block=":form" widgetVar="blockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>	
+	
+			<p:panel header="#{lbl['lbl.sm.term.and.condition.header']}">
+			<p:scrollPanel style="height:300px;" mode="native">
+				<c:choose>
+					<c:when
+						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
+						<b>#{lbl['lbl.sm.basic.mof.tnc.header']}</b>
+						<br />
+						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mof.tnc']}" /></p>
+					</c:when>
+
+					<c:otherwise>
+						<b>#{lbl['lbl.sm.basic.basic.tnc.header']}</b>
+						<br />
+						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basic.tnc']}" /></p>
+					</c:otherwise>
+				</c:choose>
+			</p:scrollPanel>
+			</p:panel>
+			<br />
+			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" 
+				disabled="#{empty registrationBackingBean.managedBean.applType}">
+				<p:ajax update="btnProceed" partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+			</p:selectBooleanCheckbox>
+			#{lbl['lbl.sm.have.agreed']} #{lbl['lbl.sm.term.and.condition']}
+			
+			<div align="right">
+			
+			</div>
+			
+			<div class="nav-wrapper" align="justify">
+				<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}"  style="float:right;"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				disabled="#{!registrationBackingBean.managedBean.agreeTC}" action="#{registrationBackingBean.proceedToCompanyInfo}" />
+				
+				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
+					action="#{registrationBackingBean.returnToSignUp}">
+				</p:commandButton>
+			</div>
+			<div style="clear: both;"></div>
+	</ui:define>
+
+</ui:composition>
+			
+			

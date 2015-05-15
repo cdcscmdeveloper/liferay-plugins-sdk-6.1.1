@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
+	
 	<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 	<p:outputPanel id="outPnlProfCert">
@@ -17,12 +17,14 @@
 
 	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
 		<div class="nav-wrapper" align="justify">
-
 				<p:commandButton value="#{lbl['lbl.sm.next']}" style="float:right;"
 					action="#{registrationBackingBean.proceedToFirstUserRegistration}" update="@([id$=Msg])">
 					<f:param name="disableValidation" value="true" />
 				</p:commandButton>
-				<!-- 			<p:commandButton value="Ajax" update="pnlCompInfo"  validateClient="true" /> -->
+				
+				<p:commandButton value="#{lbl['lbl.sm.prev']}" style="left;"
+					action="#{registrationBackingBean.returnToTermAndCondition}">
+				</p:commandButton>
 		</div>
 		<div style="clear: both;"></div>
 	</c:if>
