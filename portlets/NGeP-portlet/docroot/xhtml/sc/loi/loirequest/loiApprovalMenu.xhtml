@@ -10,15 +10,15 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td width="21%"><p:outputLabel
+				<td width="20%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loi.signer']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				<td width="79%">
+				<td>
 					<c:if test="#{isEditableStatus and (isPendingSubmissionStatus or isPendingApprovalStatus or isPendingRevisionStatus)}">
 						<p:selectOneMenu id="contractSigner" 
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userId}"
-							style="width: 280px;margin-bottom: 5px;"
+							style="width: 240px;margin-bottom: 5px;"
 							required="true"
 							label="#{lbl['lbl.sc.loiloa.loi.signer']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -31,7 +31,7 @@
 						<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
 					</c:if>
 					<c:if test="#{!isEditableStatus or (!isPendingSubmissionStatus and !isPendingApprovalStatus and !isPendingRevisionStatus)}">
-						<p:inputText size="40"
+						<p:inputText size="34"
 							value="#{lOIDetailBackingBean.managedBean.contractSignerUser.userName}"
 							disabled="true" />
 					</c:if>
@@ -43,7 +43,7 @@
 				</td>
 				<td><p:inputText id="loiSignerDesigId" disabled="#{!isEditableStatus}"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.loiSignerDesig}"
-						size="30" required="true" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
+						size="34" required="true" label="#{lbl['lbl.sc.loiloa.loi.signer.desig']}">
 					</p:inputText><p:message id="loiSignerDesigIdMsg" for="loiSignerDesigId"
 										display="icon" /></td>
 			</tr>
@@ -54,11 +54,11 @@
 		id="approvalId" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.approver']}" /></td>
+				<td width="20%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" /></td>
 				<td><p:selectOneMenu id="approversId"
 						value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
 						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
-						style="width: 178px;margin-bottom: 5px;">
+						style="width: 240px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
@@ -70,23 +70,23 @@
 		</table>
 	</p:panel>
 
-	<p:panel label="#{lbl['lbl.sc.remark']}" header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		toggleSpeed="500">
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+		<table style="width: 100%">
 			<tr>
-				<td class="TableFieldLeft" width="14%"></td>
-				<td class="TableFieldRight" width="86%"><p:dataGrid id="catatan"
+				<td class="TableFieldLeft" width="15%"></td>
+
+				<td class="TableFieldRight"><p:dataGrid id="catatan"
 						value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiRemarks}"
 						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
-						<table border="0" cellspacing="0" cellpadding="0" width="100%">
+						<table>
 							<tr>
 								<td rowspan="2" style="vertical-align: top;" align="left">
 									<h:graphicImage
-										value="#{lOIDetailBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
 										height="30" width="30" />
 								</td>
-								<td width="5"></td>
-								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+								<td width="6"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
 									<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
@@ -94,19 +94,20 @@
 							</tr>
 							<tr>
 								<td></td>
-								<td><p:inputTextarea style="width:350px;" id="remarks"
+								<td><p:inputTextarea style="width:350px;" maxlength="1000"
 										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
-										maxlength="1000" /> <h:outputText value="#{remarkVar.remark}"
+										id="remark" /> <h:outputText value="#{remarkVar.remark}"
 										rendered="#{remarkIndex>0}"
 										style="display: inline-block; width:220px;word-wrap: break-word;" />
 								</td>
+
 							</tr>
 						</table>
 					</p:dataGrid></td>
 			</tr>
 		</table>
 	</p:panel>
-	
+
 	<p:panel header="#{lbl['lbl.sc.history']}" toggleable="true">
 		<p:dataTable id="apprHistTbl" var="scLoiApproval"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiApproval}">
