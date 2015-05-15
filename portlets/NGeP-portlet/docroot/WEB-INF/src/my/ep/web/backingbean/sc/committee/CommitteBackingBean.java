@@ -587,8 +587,7 @@ public class CommitteBackingBean extends
 						ParameterTypeConst.SC_COMMITTEE_TYPE,
 						scQtCommittee.getScCommittee().getCommitteeType().getParameterCode()));
 		log.info("Title : " + getManagedBean().getHeaderTitle());
-		this.getManagedBean().setScCommittee(scQtCommittee.getScCommittee());
-		String committeeType = getManagedBean().getScCommittee()
+		String committeeType = scQtCommittee.getScCommittee()
 				.getCommitteeType().getParameterCode();
 		log.info("Committee Type : " + committeeType);
 		if (committeeType.equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE)
@@ -627,6 +626,7 @@ public class CommitteBackingBean extends
 					qtCommitte.setScCommittee(committee);
 				}
 				this.getManagedBean().setQtCommittee(qtCommitte);
+				this.getManagedBean().setScCommittee(qtCommitte.getScCommittee());
 
 				ScCommittee committee = resDTO.getCommittee();
 				if (null == committee) {
@@ -714,6 +714,7 @@ public class CommitteBackingBean extends
 					}
 				}
 				this.getManagedBean().setQtCommittee(qtCommitte);
+				this.getManagedBean().setScCommittee(qtCommitte.getScCommittee());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -754,6 +755,7 @@ public class CommitteBackingBean extends
 					qtCommitte.setScCommittee(committee);
 				}
 				this.getManagedBean().setQtCommittee(qtCommitte);
+				this.getManagedBean().setScCommittee(qtCommitte.getScCommittee());
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
@@ -1054,7 +1056,7 @@ public class CommitteBackingBean extends
 		getManagedBean().setHeaderTitle(titleName);
 		String commType = getManagedBean().getQtCommittee().getScCommittee()
 				.getCommitteeType().getParameterCode();
-		if ("PBB".equalsIgnoreCase(commType)) {
+		if (ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B.equalsIgnoreCase(commType)) {
 			SelectItem[] pbbItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
 			this.getManagedBean().setAddRepresentativesTypeslist(
 					Arrays.asList(pbbItems));
