@@ -6,8 +6,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
 import org.apache.log4j.Logger;
 import org.bouncycastle.util.encoders.Base64;
 import org.primefaces.context.RequestContext;
@@ -200,12 +204,12 @@ public class SpkiBackingBean  extends BaseBackingBean{
 				break;
 
 			default:
-//				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
 				//TODO Please remove this line if want to turn on the SPKI
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-				signedData = "DEFAULT SIGNED TEXT1";
-//				break;
+//				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
+//				signedData = "DEFAULT SIGNED TEXT1";
+				break;
 		}
 			
 		} catch (Exception ex)
@@ -217,9 +221,12 @@ public class SpkiBackingBean  extends BaseBackingBean{
 	}
 
 	public String spkiSignTransaction(String originalText) {
+		if(getSpkiEnabledProperty().equalsIgnoreCase("true")){
+			return 	spkiEnabledSignTransaction(originalText);
+		}else{		
 		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-
 		return "DEFAULT SIGNED TEXT";
+		}
 	}
 
 	public void setChallengeQues1(String challengeQues1) {
