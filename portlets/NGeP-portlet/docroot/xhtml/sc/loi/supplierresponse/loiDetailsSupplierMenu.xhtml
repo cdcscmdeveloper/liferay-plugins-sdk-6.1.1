@@ -41,7 +41,7 @@
 				<p:commandLink oncomplete="suppDetailsPopup.show();return false;" process="@this" 
 					update="@([id$=suppDetailsPopup])">
 					
-					<p:graphicImage library="ep/images/design" name="evaluate.png" title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
+					<p:graphicImage library="/css/images/design/evaluate.png" title="#{lbl['lbl.sc.view.companyinfo']}" style="vertical-align:middle" />
 					
 					<f:setPropertyActionListener value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier}" 
 						target="#{supplierDetailBackingBean.smSupplier}" />
