@@ -3076,7 +3076,7 @@ public class SupplierFinalizationBackingBean extends
 
 		// The data has been hardcoded. Once the SM API to get the list of board
 		// of directors is implemented,
-		// removed the data below and call the API to fetch board of directors
+		// remove the data below and call the API to fetch board of directors
 		// corresponding to the company selected.
 		List<SmPersonnel> boardofDirectors = new ArrayList<SmPersonnel>();
 		List<SmSupplier> smSuppliers = new ArrayList<SmSupplier>();
