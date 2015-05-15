@@ -67,34 +67,12 @@
 				</c:choose>
 			</p:scrollPanel>
 			<br />
-			<p:scrollPanel style="height:300px;" mode="native">
-				<c:choose>
-					<c:when
-						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
-						<b>#{lbl['lbl.sm.basic.mof.tnc.header']}</b>
-						<br />
-						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.mof.tnc']}" /></p>
-					</c:when>
-
-					<c:otherwise>
-						<b>#{lbl['lbl.sm.basic.basic.tnc.header']}</b>
-						<br />
-						<p><h:outputText escape="false" value="#{lbl['lbl.sm.basic.account.basic.tnc']}" /></p>
-					</c:otherwise>
-				</c:choose>
-			</p:scrollPanel>
-			<br />
-			<p:selectBooleanCheckbox id="chkTcId" value="#{registrationBackingBean.managedBean.agreeTC}" 
-				disabled="#{empty registrationBackingBean.managedBean.applType}">
-				<p:ajax update="btnProceed" partialSubmit="true" process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-			</p:selectBooleanCheckbox>
-			#{lbl['lbl.sm.have.agreed']} #{lbl['lbl.sm.term.and.condition']}
 		</p:panel>
 		<div align="right">
 			<p:commandButton id="btnProceed" value="#{lbl['lbl.sm.next']}" 
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			disabled="#{(!registrationBackingBean.managedBean.agreeTC || registrationBackingBean.managedBean.applType == null)}"
-				action="#{registrationBackingBean.proceedToCompanyInfo}" />
+			disabled="#{registrationBackingBean.managedBean.applType == null}"
+				action="#{registrationBackingBean.proceedToTermAndCondition}" />
 		</div>
 		
 	</ui:define>
