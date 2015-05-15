@@ -68,9 +68,9 @@
 						actionListener="#{qtLOABackingBean.showItemDetailsPopUps(loiloa)}"
 						oncomplete="qtItemDtlDlg.show()" update=":form:qtItemDtlDialog"
 						process="@this">
-						<p:graphicImage library="ep/images/design" name="document.png"
+						<p:graphicImage
 							title="Item Detail"
-							value="/resources/ep/images/design/document.png"
+							value="/css/images/design/document.png"
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
@@ -91,8 +91,7 @@
 								action="#{lOIDetailBackingBean.editLOI(loiloa.scLoi,false)}"
 								process="@this">
 
-								<p:graphicImage library="ep/images/design" name="document.png"
-									value="/css/images/design/document.png" />
+								<p:graphicImage value="/css/images/design/document.png" />
 								<p:spacer width="5"></p:spacer>
 							</p:commandLink>
 
@@ -109,8 +108,7 @@
 								action="#{lOADetailBackingBean.goQtEditLoaAction(loiloa)}"
 								process="@this">
 
-								<p:graphicImage library="ep/images/design" name="document.png"
-									value="/css/images/design/document.png" />
+								<p:graphicImage value="/css/images/design/document.png" />
 								<p:spacer width="5"></p:spacer>
 							</p:commandLink>
 						</h:panelGroup>
