@@ -69,11 +69,10 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.location.level']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locZoneLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-						style="width: 178px;margin-bottom: 5px;">
+						style="width:215px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 					</p:selectOneMenu></td>
@@ -124,8 +123,7 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.paidup']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
 				<td><p:inputText size="30" maxlength="18" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
@@ -134,11 +132,10 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.location.level']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" /></td>
 				<td><p:selectOneMenu id="locLevels" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.locationLevel.parameterId}"
-						style="width: 178px;">
+						style="width: 215px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
 					</p:selectOneMenu></td>
@@ -178,13 +175,13 @@
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}" /></td>
-				<td><p:inputText
+				<td><p:inputText 
 						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						disabled="true" style="margin-right:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
-				<td><p:inputText maxlength="18" disabled="true"
+				<td><p:inputText maxlength="18" disabled="true" 
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
