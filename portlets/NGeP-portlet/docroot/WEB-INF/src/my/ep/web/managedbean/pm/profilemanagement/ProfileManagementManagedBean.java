@@ -342,13 +342,9 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	public PmRoleDesc getSelectedPmRoleDesc() {
 		log.info("...........getSelectedPmRoleDesc..........");
-		if(selectedPmRoleDesc!=null){
-		log.info("...........getSelectedPmRoleDesc.getRoleName="+selectedPmRoleDesc.getRoleName());
-		log.info("...........getSelectedPmRoleDesc.getRoleDescId="+selectedPmRoleDesc.getRoleDescId());
+		if(selectedPmRoleDesc == null){
+			this.selectedPmRoleDesc = new PmRoleDesc();
 		}
-//		if(selectedPmRoleDesc == null){
-//			this.selectedPmRoleDesc = new PmRoleDesc();
-//		}
 		return selectedPmRoleDesc;
 	}
 	public void setSelectedPmRoleDesc(PmRoleDesc selectedPmRoleDesc) {

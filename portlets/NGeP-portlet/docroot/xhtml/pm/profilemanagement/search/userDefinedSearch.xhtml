@@ -73,7 +73,7 @@
 		            	update=":form:opDefinedSearch" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity == null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
-						value="#{profileManagementBackingBean.roleNameVal}" 
+						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForRole()}"
 						conditionField="recordStatus^1|pmRole.pmOrgRoles.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgProfile.orgTypeCode.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
 						/>
