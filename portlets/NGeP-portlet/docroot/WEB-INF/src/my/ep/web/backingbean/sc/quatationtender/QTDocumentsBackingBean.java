@@ -1199,8 +1199,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			for (ScQtCheckList qtCheckList : techSpecList) {
 				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
 						|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
-					uploadTechSpecList.add(qtCheckList);
-					isTechOff = true;
+					if (!qtCheckList.getAction().getParameterCode().equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
+						uploadTechSpecList.add(qtCheckList);
+						isTechOff = true;
+					}
 				}
 			}
 			context.put("isTechOff", isTechOff);
