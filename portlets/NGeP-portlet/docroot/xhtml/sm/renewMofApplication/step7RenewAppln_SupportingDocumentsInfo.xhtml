@@ -23,24 +23,11 @@
 							action="#{backingBean.saveApplicationAsDraft(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
 						<c:choose>
-							<c:when
-								test="#{backingBean.managedBean.overLappedCategoryExists}">
-								<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
-									action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
-									update="spkiOutPanel,@([id$=Msg])" />
-								<p:outputPanel id="spkiOutPanel">
-									<ac:spkiPopup id="spkiPopup"
-										password="#{backingBean.managedBean.spkiBackingBean.password}"
-										challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
-										challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
-										postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
-								</p:outputPanel>
+							<c:when test="#{backingBean.managedBean.overLappedCategoryExists}">
+								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
 							</c:when>
 							<c:otherwise>
-								<p:commandButton value="#{lbl['lbl.sm.submitPayment']}"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-									action="#{backingBean.submitSmApplToBpm(backingBean.managedBean.smAppl.applType)}"
-									style="margin-bottom:5px;" />
+								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 							</c:otherwise>
 						</c:choose>
 					</div>
