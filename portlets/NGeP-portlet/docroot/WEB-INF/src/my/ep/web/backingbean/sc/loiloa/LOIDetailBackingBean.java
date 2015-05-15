@@ -2442,6 +2442,11 @@ public class LOIDetailBackingBean extends
 					scLoi.setScLoiApproval(null);
 				}
 			}
+			
+			// validate negotiation location
+			if(scLoi.getScNegoLocations()  == null || scLoi.getScNegoLocations().isEmpty()){
+				throw new EpException(MessageConst.ERROR_760274);
+			}
 		}
 
 		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
