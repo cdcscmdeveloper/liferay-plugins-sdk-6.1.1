@@ -138,8 +138,8 @@ public class ProfileManagementBackingBean extends
 	// Org Category values
 	public static final int FEDERAL_GOVT = 0;
 	public static final int OTHERS = 1;
-    String roleNameVal;
-    
+	String roleNameVal;
+
 	public String getRoleNameVal() {
 		return roleNameVal;
 	}
@@ -204,34 +204,53 @@ public class ProfileManagementBackingBean extends
 
 		return this.orgTypeSearchBean;
 	}
-	
+
 	private void generateAdditionalFilter() {
 		logger.info("generateAdditionalFilter");
 		this.getManagedBean().setAdditionalOrgFilter("");
 		// generate additional filter
 		if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
-							+ "*parentOrgProfile.orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
-		}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
-			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
-					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			this.getManagedBean().setAdditionalOrgFilter(
+					"|orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId()
+							+ "*parentOrgProfile.orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId());
+		} else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+			this.getManagedBean().setAdditionalOrgFilter(
+					"|orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId()
+							+ "*parentOrgProfile.orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId());
 		} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
-			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			this.getManagedBean().setAdditionalOrgFilter(
+					"|orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId());
 		} else if (getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())) {
-			this.getManagedBean().setAdditionalOrgFilter("|orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			this.getManagedBean().setAdditionalOrgFilter(
+					"|orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId());
 		} else if (getFacesScopes().hasRoleUser(
 				RoleCode.FACTORING_ADMIN.value())) {
 			this.getManagedBean().setAdditionalOrgFilter(
-					"orgProfileId^"+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+					"orgProfileId^"
+							+ this.getManagedBean().getCurrentActiveOrg()
+									.getOrgProfileId());
 		}
 	}
 
 	public void updateSearchCriteriaForRole() {
 		logger.info("...............updateSearchCriteriaForRole...............");
-		if(this.getManagedBean().getSelectedPmRoleDesc()!= null){
-		String userRole = this.getManagedBean().getSelectedPmRoleDesc()
-				.getRoleName();
-		this.getManagedBean().getUserProfileSearchBean().setUserRole(userRole);
+		if (this.getManagedBean().getSelectedPmRoleDesc() != null) {
+			String userRole = this.getManagedBean().getSelectedPmRoleDesc()
+					.getRoleName();
+			this.getManagedBean().getUserProfileSearchBean()
+					.setUserRole(userRole);
 		}
 	}
 
@@ -252,9 +271,10 @@ public class ProfileManagementBackingBean extends
 			// this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
 			// .getParameterId();
 		}
-		
+
 	}
-	public void clearRoleLOV(){
+
+	public void clearRoleLOV() {
 		logger.info("clearRoleLOV");
 		this.getManagedBean().setSelectedPmRoleDesc(null);
 	}
@@ -262,15 +282,20 @@ public class ProfileManagementBackingBean extends
 	public void getListOfAssignedRoles(Long userId) {
 		// find the userOrg
 		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveAllUserOrg(userId);
-		if(pmUserOrgs != null && !pmUserOrgs.isEmpty()){
-		this.getManagedBean().setActiveUserOrg(pmUserOrgs.get(0));//not active only TODO
-		this.getManagedBean().setActiveUserRoleFor(new ArrayList<PmUserRole>());
-		for (PmUserRole pmUserRole : this.getManagedBean().getActiveUserOrg()
-				.getPmUserRoles()) {
-//			if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+		if (pmUserOrgs != null && !pmUserOrgs.isEmpty()) {
+			this.getManagedBean().setActiveUserOrg(pmUserOrgs.get(0));// not
+																		// active
+																		// only
+																		// TODO
+			this.getManagedBean().setActiveUserRoleFor(
+					new ArrayList<PmUserRole>());
+			for (PmUserRole pmUserRole : this.getManagedBean()
+					.getActiveUserOrg().getPmUserRoles()) {
+				// if (pmUserRole.getRecordStatusFlg() ==
+				// DbValueConst.RECORD_STATUS_ACTIVE) {
 				this.getManagedBean().getActiveUserRoleFor().add(pmUserRole);
-//			}
-		}
+				// }
+			}
 		}
 
 	}
@@ -505,10 +530,15 @@ public class ProfileManagementBackingBean extends
 			showReceivingAddress();
 			// set org category
 			if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT)
-					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+					.contains(
+							pmUserOrg.getPmOrgProfile().getOrgTypeCode()
+									.getParameterCode())) {
 				getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
-			} else if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS)
-					.contains(pmUserOrg.getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+			} else if (Arrays
+					.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS)
+					.contains(
+							pmUserOrg.getPmOrgProfile().getOrgTypeCode()
+									.getParameterCode())) {
 				getManagedBean().setSearchOrgCategory(OTHERS);
 			}
 			// }
@@ -541,11 +571,11 @@ public class ProfileManagementBackingBean extends
 				// PmParameter()
 				// : pmUser.getOrgTypeCode());
 				// // for the initial load
-				PmUserOrg pmUserOrg = this.getManagedBean().getSelectedUserOrg();
+				PmUserOrg pmUserOrg = this.getManagedBean()
+						.getSelectedUserOrg();
 				pmUserOrg.setPmUser(pmUser);
 				pmUser.getPmUserOrgs().add(pmUserOrg);
 				this.getManagedBean().setSelectedUserOrg(pmUserOrg);
-				
 
 			}
 
@@ -568,14 +598,16 @@ public class ProfileManagementBackingBean extends
 		}
 		logger.info("loadUserInfo - End");
 	}
-    private void clearUserOrgInfo(PmUserOrg userOrg){
-    	userOrg.setDesignation(null);
-    	userOrg.setGrade(null);
-    	userOrg.setEmail(null);
-    	userOrg.setPhoneNo(null);
-    	userOrg.setFaxNo(null);
-    	userOrg.setMobileNo(null);
-    }
+
+	private void clearUserOrgInfo(PmUserOrg userOrg) {
+		userOrg.setDesignation(null);
+		userOrg.setGrade(null);
+		userOrg.setEmail(null);
+		userOrg.setPhoneNo(null);
+		userOrg.setFaxNo(null);
+		userOrg.setMobileNo(null);
+	}
+
 	/**
 	 * initial new pmUser object
 	 */
@@ -611,7 +643,7 @@ public class ProfileManagementBackingBean extends
 				+ this.getManagedBean().getSelectedUserOrg());
 
 		// pmUser.setOrgTypeCode(new PmParameter());
-//		pmUser.setOrgAddress(ProfileManagementConst.DEFAULT_IS_SAME_ORG_ADDR);
+		// pmUser.setOrgAddress(ProfileManagementConst.DEFAULT_IS_SAME_ORG_ADDR);
 		pmUser.setNotifyByEmail(ProfileManagementConst.DEFAULT_IS_NOTIFY_BY_EMAIL);
 
 		// initial preference
@@ -625,7 +657,7 @@ public class ProfileManagementBackingBean extends
 		// pmUser.setOldPassword(null);
 		pmUser.setConfirmPassword(null);
 		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
-		
+
 		getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 		this.getManagedBean().setAddressEntered(false);
 		this.getManagedBean().setSelectedUser(pmUser);
@@ -1068,27 +1100,28 @@ public class ProfileManagementBackingBean extends
 			}
 		}
 	}
-	public void receivAddStatusChange(PmAddressType addressType){
+
+	public void receivAddStatusChange(PmAddressType addressType) {
 		logger.info("receivAddStatusChange");
 		if (addressType != null) {
 
 			int status = addressType.getRecordStatusFlg();
 			if (status == DbValueConst.RECORD_STATUS_SUSPENDED) {
 
-				if (isAnyPendingTaskForAdressType(addressType,this.getManagedBean()
-						.getSelectedUser().getLoginId())) {
+				if (isAnyPendingTaskForAdressType(addressType, this
+						.getManagedBean().getSelectedUser().getLoginId())) {
 					// revert it to active
-					addressType.setRecordStatusFlg(
-									DbValueConst.RECORD_STATUS_ACTIVE);
+					addressType
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770170);
 				}
 			}
-			
-			
+
 		}
-	
+
 	}
+
 	public void orgUnitStatusChange() {
 		logger.info("orgUnitStatusChange");
 		if (this.getManagedBean().getSelectedUserOrg() != null
@@ -1221,7 +1254,7 @@ public class ProfileManagementBackingBean extends
 	}
 
 	public void clearOrgNameAndRoleLovSearchFields() {
-     logger.info("clearOrgNameAndRoleLovSearchFields");
+		logger.info("clearOrgNameAndRoleLovSearchFields");
 		if (this.getManagedBean().getSelectedOrgProfile() != null) {
 			this.getManagedBean().getSelectedOrgProfile()
 					.setPmOrgValidity(new PmOrgValidity());
@@ -1581,81 +1614,91 @@ public class ProfileManagementBackingBean extends
 		}
 	}
 
-	private boolean isAnyPendingTaskForAdressType(PmAddressType addressType, String loginId) {
+	private boolean isAnyPendingTaskForAdressType(PmAddressType addressType,
+			String loginId) {
 		logger.info("isAnyPendingTaskForAdressType");
 		boolean anyPendingTask = false;
 		List<Long> statusIds = new ArrayList<Long>();
 		statusIds.add(43000L);
 		statusIds.add(43004L);
-		
-		    IFulfilmentSO fulfilmentSO = null;
-			IBpmSO bpmSO = null;
-			BpmRequestDTO reqDTO = null;
-			BpmResponseDTO responseDTO = null;
-			String token = null;
-			TaskAssignmentSearchBean taskSearchBean = null;
-			SearchResultBean<WorklistItemVO> resultBean = null;
 
-			try {
-				fulfilmentSO = (IFulfilmentSO) EpBpmBusinessDelegate.getInstance()
-						.getServiceObject(IFulfilmentSO.class);
-				List<String> noteNumberList= fulfilmentSO.getNumberOfFRNByAddressAndStatus(addressType.getPmAddress().getAddressId(),statusIds);
-//				
-//				if (loginId != null && loginId.length() > 0) {
-					// token = getFacesScopes().getBPMAuthenticationCtxToken();
+		List<Integer> intStatusIds = new ArrayList<Integer>();
+		intStatusIds.add(43000);
+		intStatusIds.add(43004);
 
-					bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-							.getServiceObject(IBpmSO.class);
-					// token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+		IFulfilmentSO fulfilmentSO = null;
+		IBpmSO bpmSO = null;
+		BpmRequestDTO reqDTO = null;
+		BpmResponseDTO responseDTO = null;
+		String token = null;
+		TaskAssignmentSearchBean taskSearchBean = null;
+		SearchResultBean<WorklistItemVO> resultBean = null;
 
-					reqDTO = new BpmRequestDTO();
+		try {
+			
+			fulfilmentSO = (IFulfilmentSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentSO.class);
+			List<String> noteNumberList = fulfilmentSO
+					.getNumberOfFRNByAddressAndStatus(addressType
+							.getPmAddress().getAddressId(), statusIds);
+			System.out.println("noteNumberList******" + noteNumberList.size());
+			if (noteNumberList!= null && noteNumberList.size()>0 && loginId != null && loginId.length() > 0) {
+				// token = getFacesScopes().getBPMAuthenticationCtxToken();
 
-//					logger.info("BPM loginId******" + loginId);
-					System.out
-							.println("BPM statusIds******" + statusIds.size());
+				bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+				// token = bpmSO.authenticate("weblogic","welcome1"); //TODO
 
-					// if(token==null){
-					// throw new EpException(MessageConst.ERROR_770099);
-					// }
-					// logger.info("BPM auth******" + token);
+				reqDTO = new BpmRequestDTO();
 
-					// set useful info
-					// reqDTO.setCtxToken(token);
-//					reqDTO.setStatusList(statusIds);
-//					reqDTO.setUserId(loginId);
-					// reqDTO.setDocNumber(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				// logger.info("BPM loginId******" + loginId);
+				System.out.println("BPM statusIds******" + intStatusIds.size());
 
-					// if(getManagedBean().getTaskAssignmentSearchBean().getDocType()
-					// !=null &&
-					// getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter()
-					// !=null ){
-					// reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
-					// }
-					//
+				// if(token==null){
+				// throw new EpException(MessageConst.ERROR_770099);
+				// }
+				// logger.info("BPM auth******" + token);
 
-					// Invoke BPM
-//					responseDTO = bpmSO.getReassignedItems(reqDTO);
+				// set useful info
+				// reqDTO.setCtxToken(token);
+				reqDTO.setStatusList(intStatusIds);
+				reqDTO.setUserId(loginId);
+				for (String docNum : noteNumberList) {
+					System.out.println("docNum******" + docNum);
+					reqDTO.getDocNumberList().add(docNum);
+				}
+				// if(getManagedBean().getTaskAssignmentSearchBean().getDocType()
+				// !=null &&
+				// getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter()
+				// !=null ){
+				// reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
+				// }
+				//
 
-//					if (responseDTO.getWorklistVO() != null) {
-//						logger.info("BPM size******"
-//								+ responseDTO.getWorklistVO().getWorklistItem()
-//										.size());
-//						logger.info("BPM total******"
-//								+ responseDTO.getWorklistVO().getTotal());
-//						if (responseDTO.getWorklistVO().getTotal() > 0) {
-//							anyPendingTask = true;
-//						}
-//					}
-//				}
+				// Invoke BPM
+				responseDTO = bpmSO.getReassignedItems(reqDTO);
 
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				bpmSO = null;
+				if (responseDTO.getWorklistVO() != null) {
+					logger.info("BPM size******"
+							+ responseDTO.getWorklistVO().getWorklistItem()
+									.size());
+					logger.info("BPM total******"
+							+ responseDTO.getWorklistVO().getTotal());
+					if (responseDTO.getWorklistVO().getTotal() > 0) {
+						anyPendingTask = true;
+					}
+				}
 			}
-		
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			bpmSO = null;
+		}
+
 		return anyPendingTask;
 	}
+
 	private boolean isAnyPendingTaskForUserRole(PmUserRole pmUserRole,
 			String loginId) {
 		logger.info("isAnyPendingTaskForUserRole");
@@ -2125,15 +2168,15 @@ public class ProfileManagementBackingBean extends
 				if (getManagedBean().getSelectedUserOrg() != null
 						&& getManagedBean().getSelectedUserOrg()
 								.getPmUserRoles() != null) {
-				
+
 					for (PmUserRole obj : getManagedBean().getSelectedUserOrg()
 							.getPmUserRoles()) {
 						if (obj.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-							selectedRolesToExclude.add(obj.getPmRole().getRoleCode());
+							selectedRolesToExclude.add(obj.getPmRole()
+									.getRoleCode());
 						}
 					}
-					
-				
+
 				}
 
 			}
@@ -2144,24 +2187,23 @@ public class ProfileManagementBackingBean extends
 			statusBean.setSearchValue(null);
 			searchBean.getDataFilterBeans().add(statusBean);
 		}
-		//remove admin user role from list if current user had the role
+		// remove admin user role from list if current user had the role
 		List<Role> roles = getFacesScopes().getUserRoleList();
 		List<String> rolesStr = new ArrayList<String>();
 		for (Role role : roles) {
 			rolesStr.add(role.getName());
-			System.out
-					.println(".........testttttt....role.getDescription()="
-							+ role.getName());
+			System.out.println(".........testttttt....role.getDescription()="
+					+ role.getName());
 		}
-		if(rolesStr.contains(RoleCode.MINISTRY_ADMIN)){
+		if (rolesStr.contains(RoleCode.MINISTRY_ADMIN)) {
 			selectedRolesToExclude.add(RoleCode.MINISTRY_ADMIN.toString());
-		}else if(rolesStr.contains(RoleCode.PTJ_ADMIN)){
+		} else if (rolesStr.contains(RoleCode.PTJ_ADMIN)) {
 			selectedRolesToExclude.add(RoleCode.PTJ_ADMIN.toString());
-		}else if(rolesStr.contains(RoleCode.UPS_ADMIN)){
+		} else if (rolesStr.contains(RoleCode.UPS_ADMIN)) {
 			selectedRolesToExclude.add(RoleCode.UPS_ADMIN.toString());
-		}else if(rolesStr.contains(RoleCode.BPK_ADMIN)){
+		} else if (rolesStr.contains(RoleCode.BPK_ADMIN)) {
 			selectedRolesToExclude.add(RoleCode.BPK_ADMIN.toString());
-		}else if(rolesStr.contains(RoleCode.SUPPORT_ADMIN)){
+		} else if (rolesStr.contains(RoleCode.SUPPORT_ADMIN)) {
 			selectedRolesToExclude.add(RoleCode.SUPPORT_ADMIN.toString());
 		}
 		if (!selectedRolesToExclude.isEmpty()) {
@@ -2219,8 +2261,11 @@ public class ProfileManagementBackingBean extends
 				RoleReqDTO roleReqDTO = new RoleReqDTO();
 				roleReqDTO.setLanguage(getFacesScopes().getUserLocale()
 						.getLanguage());
-//				roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				System.out.println("..getFacesScopes().getUserSessionBean().getUserId()="+getFacesScopes().getUserSessionBean().getUserId());
+				// roleReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				System.out
+						.println("..getFacesScopes().getUserSessionBean().getUserId()="
+								+ getFacesScopes().getUserSessionBean()
+										.getUserId());
 				List<Role> roles = getFacesScopes().getUserRoleList();
 				for (Role role : roles) {
 					System.out
@@ -2748,12 +2793,13 @@ public class ProfileManagementBackingBean extends
 		if (userOrg != null
 				&& userOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode() != null) {
 			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
-//			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
-				// if (checkEffDate(userOrg)) {
-				user.setOrgTypeCode(userOrg.getPmOrgProfile().getOrgTypeCode());
-				// break;
-				// }
-//			}
+			// if (userOrg.getRecordStatusFlg() ==
+			// DbValueConst.RECORD_STATUS_ACTIVE) {
+			// if (checkEffDate(userOrg)) {
+			user.setOrgTypeCode(userOrg.getPmOrgProfile().getOrgTypeCode());
+			// break;
+			// }
+			// }
 			// }
 		} else {
 			throw new EpException(MessageConst.ERROR_770026);
@@ -2773,8 +2819,10 @@ public class ProfileManagementBackingBean extends
 			List<PmUserRole> deleteRoleList = reqDTO.getRemoveRoleList();
 			long activeUserOrgId = 0;
 			boolean isChanged = false;
-			System.out.println("......user.getPmUserOrgs()="+user.getPmUserOrgs());
-			System.out.println("......user.getPmUserOrgs().size()="+user.getPmUserOrgs().size());
+			System.out.println("......user.getPmUserOrgs()="
+					+ user.getPmUserOrgs());
+			System.out.println("......user.getPmUserOrgs().size()="
+					+ user.getPmUserOrgs().size());
 			for (PmUserOrg pmUserOrg : user.getPmUserOrgs()) {
 				if (pmUserOrg.isBrandNew()) {
 					isChanged = true;
@@ -2807,7 +2855,8 @@ public class ProfileManagementBackingBean extends
 				// .retrieveActiveOrg(user.getUserId());
 				System.out.println("size " + user.getPmUserOrgs().size());
 				for (PmUserOrg pmUserOrg : user.getPmUserOrgs()) {
-					if (pmUserOrg.getUserOrgId() != null && pmUserOrg.getUserOrgId() != activeUserOrgId) {
+					if (pmUserOrg.getUserOrgId() != null
+							&& pmUserOrg.getUserOrgId() != activeUserOrgId) {
 						for (PmUserRole pmUserRole : pmUserOrg.getPmUserRoles()) {
 							if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 								deleteRoleList.add(pmUserRole);
@@ -3227,12 +3276,11 @@ public class ProfileManagementBackingBean extends
 																		// for
 																		// each
 																		// user
-			Long loginSessionUserId = getFacesScopes().getUserSessionBean().getUserId();
+			Long loginSessionUserId = getFacesScopes().getUserSessionBean()
+					.getUserId();
 			userOrg.setChangedBy(loginSessionUserId);
 			userOrg.setCreatedBy(loginSessionUserId);
-			
-			
-			
+
 			userOrgList.add(userOrg);
 			user.setPmUserOrgs(userOrgList);
 			if (!user.isBrandNew()) {
@@ -3240,7 +3288,7 @@ public class ProfileManagementBackingBean extends
 				reqDTO.setRemoveRoleList(new ArrayList<PmUserRole>());
 				loadUserRoles(user, reqDTO);
 				user.setChangedBy(loginSessionUserId);
-			}else{
+			} else {
 				user.setChangedBy(loginSessionUserId);
 				user.setCreatedBy(loginSessionUserId);
 			}
@@ -3248,7 +3296,7 @@ public class ProfileManagementBackingBean extends
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
-			UserResDTO resDTO = userSO.saveUser(reqDTO);
+			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {
 
@@ -3258,9 +3306,9 @@ public class ProfileManagementBackingBean extends
 				 * if(user.getPortrait()!=null){
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
-  if(!isNewUser){
-	  loadUserProfile(resDTO.getPmUser().getUserId(), userOrg);
-   }
+				if (!isNewUser) {
+					loadUserProfile(resDTO.getPmUser().getUserId(), userOrg);
+				}
 				if (!StringUtils.isBlank(resDTO.getRemarks())) {
 					// OIM user creation successfully, problem with roles.
 					FacesContext.getCurrentInstance().addMessage(
@@ -3662,9 +3710,10 @@ public class ProfileManagementBackingBean extends
 							.retrieveActiveOrg(user.getUserId());
 
 					if (pmUserOrgs != null && pmUserOrgs.size() > 0) {
-//						loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
+						// loadUserInfo(user.getUserId(), pmUserOrgs.get(0));
 						// the identification Number already in DB
-						this.getManagedBean().getSelectedUser().setHasActiveOrg(true);
+						this.getManagedBean().getSelectedUser()
+								.setHasActiveOrg(true);
 						throw new EpException(MessageConst.ERROR_770155);
 					} else {
 						loadUserInfo(user.getUserId());
