@@ -37,7 +37,7 @@
     </tr>
     <tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $jabatan <br/> $ptj</span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> <!-- $jabatan <br/> --> $ptj</span>
 			<br/><br/>
         </td>
     </tr>

@@ -59,7 +59,7 @@
     </tr>
     <tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $ptj <br/> $jabatan </span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> $ptj <!-- <br/> $jabatan --> </span>
 			<br/>
         </td>
     </tr>
