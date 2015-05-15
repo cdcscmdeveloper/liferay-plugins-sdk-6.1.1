@@ -1733,6 +1733,7 @@ public class SupplierFinalizationBackingBean extends
 					.equals(docDefinitionKey)) {
 				filename.append(".pdf");
 				reportAttachment.setFileName(filename.toString());
+				populateAttachmentDetails(reportAttachment);
 
 			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
 					.equals(docDefinitionKey)) {
@@ -1792,13 +1793,15 @@ public class SupplierFinalizationBackingBean extends
 		context.put("qtNo", scQt.getQtNo());
 		context.put("year", year);
 		// context.put("fileNo", scQt.getFileNo());
-		String departmentOrgName = null;
-		if (scQt.getDepartmentOrgProfile() != null) {
-			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
-		} else {
-			departmentOrgName = StringUtils.EMPTY;
-		}
-		context.put("jabatan", departmentOrgName);
+		
+//		String departmentOrgName = null;
+//		if (scQt.getDepartmentOrgProfile() != null) {
+//			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
+//		} else {
+//			departmentOrgName = StringUtils.EMPTY;
+//		}
+//		context.put("jabatan", departmentOrgName);
+		
 		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
 		context.put("title", scQt.getQtTitle());
 
@@ -1865,13 +1868,15 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("commType", commType);
 		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
-		String departmentOrgName = null;
-		if (scQt.getDepartmentOrgProfile() != null) {
-			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
-		} else {
-			departmentOrgName = StringUtils.EMPTY;
-		}
-		context.put("jabatan", departmentOrgName);		
+		
+//		String departmentOrgName = null;
+//		if (scQt.getDepartmentOrgProfile() != null) {
+//			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
+//		} else {
+//			departmentOrgName = StringUtils.EMPTY;
+//		}
+//		context.put("jabatan", departmentOrgName);	
+		
 		context.put("title", scQt.getQtTitle());
 		context.put("estimatedAmount", scQt.getEstimatedAmount());
 
@@ -2135,13 +2140,14 @@ public class SupplierFinalizationBackingBean extends
 		}
 		context.put("ministry", ministryOrgName);		
 		
-		String departmentOrgName = null;
-		if (scQt.getDepartmentOrgProfile() != null) {
-			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
-		} else {
-			departmentOrgName = StringUtils.EMPTY;
-		}
-		context.put("jabatan", departmentOrgName);
+//		String departmentOrgName = null;
+//		if (scQt.getDepartmentOrgProfile() != null) {
+//			departmentOrgName = scQt.getDepartmentOrgProfile().getOrgName();
+//		} else {
+//			departmentOrgName = StringUtils.EMPTY;
+//		}
+//		context.put("jabatan", departmentOrgName);
+		
 		context.put("ptj", scQt.getPmOrgProfile().getOrgName());
 		String publishDate = "";
 		if (scQt.getPublishDate() != null) {
