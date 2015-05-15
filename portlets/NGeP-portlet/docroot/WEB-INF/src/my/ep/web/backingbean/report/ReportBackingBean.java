@@ -663,7 +663,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)4925;//20854;//--CM 220152,122768- SC//221747,72799;//--ct 25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)240575;//4925,20854;//--CM 220152,122768- SC//221747,72799;//--ct 25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4195,7 +4195,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 									.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
 				}
 			}
-			if (((getManagedBean().getReportValue() != null)
+			/*if (((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL))&&(((getManagedBean().getReportValue() == ReportConst.TECSPEC_TEC_RPT_VAL)
 							&& (getManagedBean().getReportValue().equals(ReportConst.TECSPEC_TEC_RPT_VAL)))||((getManagedBean().getReportValue() == ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL)
 									&& (getManagedBean().getReportValue().equals(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL))))) {
@@ -4230,7 +4230,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						}
 					}
 					}
-			}else if ((getManagedBean().getReportValue() != null)
+			}else*/ if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
 						+ getManagedBean().getReportValue());
@@ -4634,7 +4634,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmCancellationBy()!= null) && (this.getSmCancellationBy() != ReportConst.EMPTY_VAL))
 				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))) {
-
+//SM_APPLICATION_APPROVED_RPT_VAL
+			if ((getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL))){
+				if (((this.getSmCompanyName() == null) || (this.getSmCompanyName().equals(ReportConst.EMPTY_VAL)))
+				&& ((this.getSmMofRegNo() == null) || (this.getSmMofRegNo().equals(ReportConst.EMPTY_VAL)))
+				&& ((this.getFromDate() == null) || (this.getFromDate().toString().equals(ReportConst.EMPTY_VAL)))
+				&& ((this.getToDate() == null) || (this.getToDate().toString().equals(ReportConst.EMPTY_VAL)))){
+					throw new EpException(
+							CommonMethod
+									.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+				}		
+			}
+							
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			if ((this.getFromDate() != null)
@@ -6156,6 +6169,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setPpMinistry(null);
 		this.setPpPTJ(null);
 		this.setPpYear(null);
+		this.setMinistryName(null);
 	}
 
 	protected void fileGenerateReport(String reportFile,
