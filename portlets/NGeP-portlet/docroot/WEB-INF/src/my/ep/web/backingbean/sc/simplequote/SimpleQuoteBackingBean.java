@@ -3285,9 +3285,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			
 			// add in rejected Supplier Id
-			for (Long rejectedSupplierId : getManagedBean().getScQuote().getRejectedSupplierList()) {
-				supplierCriteria.append(rejectedSupplierId)
-				.append(",");
+			if(getManagedBean().getScQuote().getRejectedSupplierList() != null && getManagedBean().getScQuote().getRejectedSupplierList().size()>0){
+				for (Long rejectedSupplierId : getManagedBean().getScQuote().getRejectedSupplierList()) {
+					supplierCriteria.append(rejectedSupplierId)
+					.append(",");
+				}
 			}
 			
 			if(supplierCriteria.length() > 0){
