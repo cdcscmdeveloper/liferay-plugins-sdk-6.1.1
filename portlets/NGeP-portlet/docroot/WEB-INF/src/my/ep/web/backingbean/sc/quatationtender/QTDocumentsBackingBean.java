@@ -1148,6 +1148,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		
 		VelocityContext context = new VelocityContext();
 		
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
+		
 		List<ScQtCheckList> uploadFinanceSpecList = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> financeSpecList = new ArrayList<ScQtCheckList>();
 		IQTSpecSO specSO;
@@ -1184,6 +1188,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
+		
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
 		
 		boolean isTechOff = false;
 		List<ScQtCheckList> uploadTechSpecList = new ArrayList<ScQtCheckList>();
