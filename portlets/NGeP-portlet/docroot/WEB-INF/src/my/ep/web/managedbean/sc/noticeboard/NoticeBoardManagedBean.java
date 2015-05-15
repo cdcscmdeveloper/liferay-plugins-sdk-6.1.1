@@ -62,6 +62,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String qtNo;
 	private PmOrgProfile ministryProfile= new PmOrgProfile();
 	private PmOrgProfile ptjProfile = new PmOrgProfile();
+	private PmOrgProfile ptjGroupProfile = new PmOrgProfile();
 	private PmCategoryL3 categoryL3 =  new PmCategoryL3();
 
 	// Fields for hide and show in noticeboard screen
@@ -1109,6 +1110,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setChangedDate(String changedDate) {
 		this.changedDate = changedDate;
+	}
+
+	/**
+	 * @return the ptjGroupProfile
+	 */
+	public PmOrgProfile getPtjGroupProfile() {
+		return ptjGroupProfile;
+	}
+
+	/**
+	 * @param ptjGroupProfile the ptjGroupProfile to set
+	 */
+	public void setPtjGroupProfile(PmOrgProfile ptjGroupProfile) {
+		this.ptjGroupProfile = ptjGroupProfile;
 	}
 
 
