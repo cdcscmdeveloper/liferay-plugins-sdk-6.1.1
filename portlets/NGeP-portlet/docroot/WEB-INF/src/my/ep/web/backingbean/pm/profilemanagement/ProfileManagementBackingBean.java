@@ -228,19 +228,10 @@ public class ProfileManagementBackingBean extends
 
 	public void updateSearchCriteriaForRole() {
 		logger.info("...............updateSearchCriteriaForRole...............");
-		logger.info("...............this.getManagedBean().getSelectedPmRoleDesc()="+this.getManagedBean().getSelectedPmRoleDesc());
 		if(this.getManagedBean().getSelectedPmRoleDesc()!= null){
 		String userRole = this.getManagedBean().getSelectedPmRoleDesc()
 				.getRoleName();
-		logger.info(".........this.getManagedBean().getSelectedPmRoleDesc()="+this.getManagedBean().getSelectedPmRoleDesc());
-		logger.info(".........this.getManagedBean().getSelectedPmRoleDesc().getRoleName()="+this.getManagedBean().getSelectedPmRoleDesc()
-				.getRoleName());
-		logger.info(".........this.getManagedBean().getSelectedPmRoleDesc().getRoleDescId="+this.getManagedBean().getSelectedPmRoleDesc().getRoleDescId());
-		logger.info(".........this.getManagedBean().getSelectedPmRoleDesc().getLanguageCode="+this.getManagedBean().getSelectedPmRoleDesc().getLanguageCode());
-		logger.info(".........this.getManagedBean().getSelectedPmRoleDesc().getPmRole="+this.getManagedBean().getSelectedPmRoleDesc().getPmRole());
-			
 		this.getManagedBean().getUserProfileSearchBean().setUserRole(userRole);
-			this.setRoleNameVal(this.getManagedBean().getSelectedPmRoleDesc().getRoleName());
 		}
 	}
 
