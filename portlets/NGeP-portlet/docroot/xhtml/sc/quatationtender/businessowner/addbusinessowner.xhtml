@@ -13,7 +13,6 @@
 			<p:messages id="bomessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
 			
-			<p:panel id="newProfile">
 				<c:if
 					test="#{qTBusinessOwnerBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 					<p:panel id="usersearchpnlids" header="#{lbl['lbl.sc.search']}"
@@ -200,10 +199,9 @@
 						</table>
 					</p:panel>
 				</c:if>
-			</p:panel>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.ok']}"
-					process="@this, newProfile, bopanel"
+					process="@this, bopanel"
 					action="#{qTBusinessOwnerBackingBean.okBusinessOwnerAction}"
 					ajax="true" update="businessownerId, bopanel" />
 
