@@ -81,7 +81,8 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{suppFinalBiddingBackingBean.managedBean.smSupplier.businessType}"
+					value="#{suppFinalBiddingBackingBean.getParameterDesc(
+					SupplierManagementConst.supplierBusinessType,suppFinalBiddingBackingBean.managedBean.smSupplier.businessType)}"
 					readonly="true" />
 			</h:column>
 			
