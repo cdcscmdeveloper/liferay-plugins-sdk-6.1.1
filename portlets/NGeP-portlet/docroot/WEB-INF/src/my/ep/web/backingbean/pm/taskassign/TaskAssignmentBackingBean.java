@@ -69,6 +69,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -343,13 +344,45 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 		//generate additional filter
 		if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
 			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
-					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
+					+"*parentOrgProfile.parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
 			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()
 					+"*parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
 			this.getManagedBean().setFilterOrgCondition("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
 		}
+	}
+	
+	public String constructConditionFields(){
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterId^");
+		sb.append(getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterId());
+		sb.append("|recordStatus^1");
+		if(OrganizationType.MINISTRY.value()
+				.equals(getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterCode())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}
+		}else if(OrganizationType.DEPARTMENT.value()
+				.equals(getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterCode())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				sb.append("|parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+				sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}
+		}else if(OrganizationType.DIVISION.value()
+				.equals(getManagedBean().getTaskAssignmentSearchBean().getOrgType().getParameterCode())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				sb.append("|parentOrgProfile.parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+				sb.append("|parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+				sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}
+		}
+		
+		return sb.toString();
 	}
 
 	
@@ -939,7 +972,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				        reqDTO.setStatusList(statusIds);
 				        reqDTO.setUserId(loginId);
-				        reqDTO.setDocNumber(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				        List<String> docNumberList =  new ArrayList<String>();
+				        docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				        reqDTO.setDocNumberList(docNumberList);
 				        
 				        if(getManagedBean().getTaskAssignmentSearchBean().getDocType() !=null && getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter() !=null ){
 				        	reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());

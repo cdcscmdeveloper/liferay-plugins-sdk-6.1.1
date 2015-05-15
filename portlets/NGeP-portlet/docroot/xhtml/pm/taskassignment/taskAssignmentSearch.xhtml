@@ -48,7 +48,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.pmOrgValidity.orgName}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile"
-						conditionField="orgTypeCode.parameterId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgType.parameterId}|recordStatus^1#{taskAssignBackingBean.managedBean.filterOrgCondition}"/>
+						conditionField="#{taskAssignBackingBean.constructConditionFields()}"/>
 				</td>
 				<td width="30%">
 					
