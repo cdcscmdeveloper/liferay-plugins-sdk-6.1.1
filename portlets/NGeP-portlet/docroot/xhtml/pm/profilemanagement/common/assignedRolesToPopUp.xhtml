@@ -21,17 +21,14 @@
 						     	<h:outputText value="#{lbl['lbl.pm.profiles.authorisation.role.name']}" />
 						    </f:facet>
 					    </p:column>
-				 	</p:row>
-			 	</p:columnGroup>
-			 	<p:columnGroup type="header">
-					<p:row>
-					 	<p:column>
+					    <p:column>
 						    <f:facet name="header">
 						     	<h:outputText value="#{lbl['lbl.pm.profiles.authorisation.Status']}" />
 						    </f:facet>
 					    </p:column>
 				 	</p:row>
 			 	</p:columnGroup>
+			 	
 		        <p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}"
 						width="20%">
 			          	#{profileManagementBackingBean.getRoleDescByRoleCode(role.pmRole.roleCode)}
