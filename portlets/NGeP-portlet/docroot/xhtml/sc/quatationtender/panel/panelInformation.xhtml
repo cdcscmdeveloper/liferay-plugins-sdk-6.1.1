@@ -16,9 +16,9 @@
 				<h:column>
 					<p:inputText
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
-						disabled="true" size="50" />
+						disabled="true" size="75" />
 					<p:spacer width="5" />
-					<p:commandLink value="#{lbl['lbl.sc.circular.attach']}" ajax="false"
+					<p:commandLink value="#{lbl['lbl.sc.circular.attach']}" 
 						style="margin-right:20px;" process="@all,yesmainpanel"
 						partialSubmit="true" update="circularItemDetails"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments}" />
@@ -28,9 +28,9 @@
 					<h:outputLabel value="#{lbl['lbl.sc.circular.name']}" />
 				</h:column>
 				<h:column>
-					<p:inputText
+					<p:inputTextarea rows="3" cols="75" style="margin-bottom:5px;"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularName}"
-						disabled="true" size="30" />
+						disabled="true" />
 				</h:column>
 
 				<h:column>
