@@ -267,15 +267,15 @@
 			</td>
 		</tr>
 		<tr>
-			<td width="18%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.agency']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
-			<td width="32%">
+			<td>
 					<h:panelGroup id="contractAgencyPG">
 					<p:selectOneMenu id="contractAgencyProf"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgProfileId}"
-						style="width: 280px;margin-bottom: 5px;"
+						style="width: 200px;margin-bottom: 5px;"
 						
 						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
 						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
@@ -313,14 +313,14 @@
 					</h:panelGroup>
 				
 			</td>
-			<td width="18%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
-			<td width="32%">
+			<td>
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 280px;margin-bottom: 5px;"
+						style="width: 200px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -397,83 +397,94 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td  width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
-				<p:outputLabel value="*" styleClass="mandatory"  />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="witnessName" size="50"
+				<p:inputText id="witnessName" size="46"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
+					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
-					maxlength="50" />
+					maxlength="50"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="witnessNameMsg" for="witnessName" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.identification.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory"  />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="identificationNo" size="50"
+				<p:inputText id="identificationNo" size="46"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
+					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
-					maxlength="15" />
+					maxlength="15"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="identificationNoMsg" for="identificationNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.designation']}" />
-				<p:outputLabel value="*" styleClass="mandatory"  />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="designation" size="50"
+				<p:inputText id="designation" size="46"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
+					required="true"
 					maxlength="30"
-					label="#{lbl['lbl.sc.designation']}" />
+					label="#{lbl['lbl.sc.designation']}"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="designationMsg" for="designation" display="icon" />
 			</td>
 		</tr>
 		<tr>
-			<td rowspan="3" valign="top" width="18%">
+			<td rowspan="3" valign="top" width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.address']}" />
-				<p:outputLabel value="*" styleClass="mandatory"  />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td rowspan="3" width="32%">
 				<p:inputTextarea id="address"
-					cols="52" rows="5"
+					cols="47" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
 					style=" margin-bottom:5px;"
-					
+					required="true"
 					maxlength="200"
-					label="#{lbl['lbl.sc.address']}" />
+					label="#{lbl['lbl.sc.address']}"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="addressMsg" for="address" display="icon" />
 			</td>
-			<td width="18%">
+			<td width="15%">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory"  />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td width="32%">
 				<p:inputText id="phoneNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.phoneNo}"
+					required="true"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.tel.no']}"/>
+					label="#{lbl['lbl.sc.tel.no']}"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="phoneNoMsg" for="phoneNo" display="icon" />
 			</td>
 		</tr>
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.fax.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory"  />
+				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td>
 				<p:inputText id="faxNo" size="30"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.faxNo}"
+					required="true"
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.fax.no']}" />
+					label="#{lbl['lbl.sc.fax.no']}"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="faxNoMsg" for="faxNo" display="icon" />
 			</td>
 		</tr>
@@ -486,7 +497,8 @@
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.mobileNo}"			
 					maxlength="20"
 					validator="#{webappBean.checkPhoneNumber}"
-					label="#{lbl['lbl.sc.mobile.no']}" />
+					label="#{lbl['lbl.sc.mobile.no']}"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="mobileNoMsg" for="mobileNo" display="icon" />
 			</td>
 		</tr>
@@ -495,11 +507,12 @@
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="email" size="50" style=" margin-bottom:5px;"
+				<p:inputText id="email" size="46" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
-					label="#{lbl['lbl.sc.email']}" />
+					label="#{lbl['lbl.sc.email']}"
+					disabled="#{!isEditableStatus}" />
 				<p:message id="emailMsg" for="email" display="icon" />
 			</td>
 		</tr>
