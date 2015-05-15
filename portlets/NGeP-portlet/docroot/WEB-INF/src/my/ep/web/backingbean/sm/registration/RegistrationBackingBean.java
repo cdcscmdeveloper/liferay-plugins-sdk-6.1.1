@@ -115,6 +115,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static String accountRegistration = "/xhtml/sm/onlinereg/registrationInfo.xhtml?faces-redirect=true";
 	private static String signUp = "/xhtml/sm/onlinereg/signUp.xhtml?faces-redirect=true";
 	private static String firstUserRegistration = "/xhtml/sm/onlinereg/firstUserRegistration.xhtml?faces-redirect=true";
+	private static String termAndCondition = "/xhtml/sm/onlinereg/signUpTermCondition.xhtml?faces-redirect=true";
 	
 	private static String defaultAccPurpose = "P";
 	private static Map<Long, Object> bizNatureL5Map;
@@ -1345,7 +1346,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 						}else if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 							//log.info("****IS CONSULTANT*************"); 
 							if(selectItem.getValue() == null || (!selectItem.getValue().equals("K") 
-									&& !selectItem.getValue().equals("L") && !selectItem.getValue().equals("M"))){ 
+									&& !selectItem.getValue().equals("L") && !selectItem.getValue().equals("M") && !selectItem.getValue().equals("A"))){ 
 								itemList.add(selectItem);
 							}
 						}
@@ -2247,6 +2248,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public void testRedirect() {
 		SmCommonUtil.redirectToPage(
 				SmApplicationUtil.getApplicationErrorPage(), "");
+	}
+	
+	
+	public String proceedToTermAndCondition(){
+		if(getManagedBean().getApplType() != null){
+			return termAndCondition;
+		}else{
+			return signUp;
+		}
+	}
+	
+	public String returnToTermAndCondition(){
+		return termAndCondition;
+
 	}
 
 }
