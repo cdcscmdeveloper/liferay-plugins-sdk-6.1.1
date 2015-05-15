@@ -25,6 +25,11 @@
 					test="#{registrationBackingBean.managedBean.smSupp.businessType == SupplierManagementConst.INDIVIDUAL_FLAG}">
 					<ui:include
 						src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
+					<div align="left">
+						<p:commandButton value="#{lbl['lbl.sm.prev']}" 
+						action="#{registrationBackingBean.returnToTermAndCondition}">
+						</p:commandButton>
+					</div>
 				</c:when>
 
 				<c:otherwise>
@@ -32,5 +37,6 @@
 				</c:otherwise>
 			</c:choose>
 		</p:outputPanel>
+	
 	</ui:define>
 </ui:composition>
