@@ -81,8 +81,9 @@
 			</h:column>
 			<h:column>
 				<p:inputText size="30" style=" margin-bottom:5px;"
-					value="#{suppFinalizationBackingBean.managedBean.smSupplier.businessType}"
-					readonly="true" />
+				value="#{suppFinalizationBackingBean.getParameterDesc(
+				SupplierManagementConst.supplierBusinessType,suppFinalizationBackingBean.managedBean.smSupplier.businessType)}"
+				readonly="true" />
 			</h:column>
 			
 			<h:column>
