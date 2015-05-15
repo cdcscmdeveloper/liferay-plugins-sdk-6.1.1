@@ -636,7 +636,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	}
 	
 	/**
-	 * Navi to softcert Request
+	 * Navigate to softcert Request
 	 */
 	public void naviToSoftCertRequest(){
 		try {
@@ -689,10 +689,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(cmSuppItem.getItemStatus().equalsIgnoreCase("U")){
 					catalogueStatus = "U";
 					break;
-				}
-				
-				if(cmSuppItem.getItemStatus().equalsIgnoreCase("P")){
-					catalogueStatus = "P";
+				}else{
+					catalogueStatus = cmSuppItem.getItemStatus();
 				}
 			}
 		}
