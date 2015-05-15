@@ -259,16 +259,18 @@ public class ProfileManagementBackingBean extends
 		this.getManagedBean().setSelectedPmRoleDesc(null);
 	}
 
-	public void getListOfAssignedActiveRoles(Long userId) {
-		// find the active userOrg
-		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveActiveOrg(userId);
-		this.getManagedBean().setActiveUserOrg(pmUserOrgs.get(0));
+	public void getListOfAssignedRoles(Long userId) {
+		// find the userOrg
+		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveAllUserOrg(userId);
+		if(pmUserOrgs != null && !pmUserOrgs.isEmpty()){
+		this.getManagedBean().setActiveUserOrg(pmUserOrgs.get(0));//not active only TODO
 		this.getManagedBean().setActiveUserRoleFor(new ArrayList<PmUserRole>());
 		for (PmUserRole pmUserRole : this.getManagedBean().getActiveUserOrg()
 				.getPmUserRoles()) {
-			if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+//			if (pmUserRole.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				this.getManagedBean().getActiveUserRoleFor().add(pmUserRole);
-			}
+//			}
+		}
 		}
 
 	}
