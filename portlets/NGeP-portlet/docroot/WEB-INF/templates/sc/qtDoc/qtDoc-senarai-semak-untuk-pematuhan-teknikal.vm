@@ -1,63 +1,92 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
+	<style>
+		#wrapper {
+			width:660px;
+			margin:0px auto;
+			padding:10px;
+		}
+		#header {
+			height:80px;
+			padding:10px;
+		}
+		#content {
+			margin-top:10px;
+			padding-bottom:10px;
+		}
+		#content div {
+			padding:10px;
+			float:left;
+		}
+		#footer {
+			float:left;
+			margin-top:10px;
+			margin-bottom:10px;
+			padding:10px;
+			width:630px;
+		}
+		#bottom {
+			clear:both;
+			text-align:right;
+		}
+		body{
+			font-family: "Helvetica";
+			font-size: 8pt;
+		}
+		.table2 {
+			border-collapse: collapse;
+			width:100%;
+		}
 		.table2 th, .table2 td {
 			border: 1px solid black;
 		}
 		 th{
 			background-color: #BCE18A;
 		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+	</style>
 </head>
 <body>
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-        <td>
-            <span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Senarai Semak Pematuhan Teknikal</span>
-            <br/> <br/>
-        </td>
-    </tr>
-    #if ($isTechOff == "true")
-    	<tr align='left'>
-	        <td>
-	            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-	            	<table class="table2" width='100%'>
-						<tr>
-							<td>Title</td>
-							<td>Type</td>
-						</tr>
-						#foreach( $techList in $uploadTechSpecList )
-						<tr>
-	            			<td>$techList.title</td>
-	            			<td>$bean.getParameterDesc($techList.definationType)</td>
-	            		</tr>
-						#end
-					</table>
-	            </span>
-	        </td>
-	    </tr>
-    #end
-	#if ($isTechOff == "false")
-		<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tiada dokumen untuk pematuhan</span>
-	#end
-    </table>
+	<div id="wrapper">
+	</div>
+	<div id="header">
+		#parse("templates/sc/shared/header.vm")
+	</div>
+	<div id="content" style="height:740px;">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tr>
+				<td>
+					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Senarai Semak Pematuhan Teknikal</span>
+					<br/> <br/>
+				</td>
+			</tr>
+			#if ($isTechOff == "true")
+				<tr align='left'>
+					<td>
+						<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+							<table class="table2" width='100%'>
+								<tr>
+									<td>Title</td>
+									<td>Type</td>
+								</tr>
+								#foreach( $techList in $uploadTechSpecList )
+								<tr>
+									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$techList.title</span></td>
+									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$bean.getParameterDesc($techList.definationType)</span></td>
+								</tr>
+								#end
+							</table>
+						</span>
+					</td>
+				</tr>
+			#end
+			#if ($isTechOff == "false")
+				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Tiada dokumen untuk pematuhan</span>
+			#end
+		</table>
+	</div>
+	<div id="footer">
+		#parse("templates/sc/shared/footer.vm")
+	</div>
+	<div id="bottom"></div>
 </body>
 </html>
