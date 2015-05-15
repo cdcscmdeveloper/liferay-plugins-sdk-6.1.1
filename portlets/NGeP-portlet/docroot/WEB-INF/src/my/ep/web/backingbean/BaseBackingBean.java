@@ -41,6 +41,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -901,5 +902,12 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
 		return profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile().getOrgName();
+	}
+	
+	public PmOrgProfile retrieveMinistryOrgProfile(Long orgProfileId){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		return profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
 	}
 }
