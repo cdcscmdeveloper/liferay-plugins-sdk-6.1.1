@@ -123,7 +123,7 @@
                   #{loiloaItem.scRequestItem.uom.uomName}
             </p:column>
             
-            <p:column  style="width:10%;text-align:right;" rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
+            <p:column  style="width:10%;text-align:right;">
 				<h:outputText value="#{loiloaItem.unitPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -132,7 +132,7 @@
 				</f:facet>	
 			</p:column>
 
-			<p:column style="width:7%;text-align:right;" rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
+			<p:column style="width:7%;text-align:right;">
 				<h:outputText value="#{loiloaItem.subTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
