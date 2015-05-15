@@ -1794,6 +1794,9 @@ public class QTDetailBackingBean extends
 					qt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 				}
+				if (null == this.getManagedBean().getScQtSampleSubmissionList()) {
+					retrieveScheduleTabDtl();
+				}
 			}
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
