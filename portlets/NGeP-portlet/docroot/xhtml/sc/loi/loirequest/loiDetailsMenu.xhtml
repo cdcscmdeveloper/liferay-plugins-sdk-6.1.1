@@ -156,9 +156,9 @@
 						value="#{lOIDetailBackingBean.managedBean.scLoi.ackDueDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <p:spacer width="10px" /> <p:inputText
+					</p:inputText> <p:spacer width="10px" /> <p:inputText styleClass="ppRightBtn"
 						value="#{!empty lOIDetailBackingBean.managedBean.scLoi.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOIDetailBackingBean.managedBean.scLoi.ackDueDate) : ''}"
-						disabled="true" size="8" readonly="true" /> #{lbl['lbl.sc.days']}</td>
+						disabled="true" size="4" readonly="true" /> #{lbl['lbl.sc.days']}</td>
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel
