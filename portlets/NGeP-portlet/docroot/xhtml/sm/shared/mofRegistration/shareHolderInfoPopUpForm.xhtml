@@ -76,8 +76,6 @@
 							validatorMessage="#{lbl['lbl.sm.person.icNum']} - #{lbl['lbl.sm.invalidNo']}">
 							<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 						</p:inputText>
-						<p:message id="equiPerIcNumMsg" for="equiPerIcNum"
-							showSummary="true" showDetail="false" display="icon" />
 						<p:inputText label="#{lbl['lbl.sm.shrHldrInfo.idNo']}"
 							required="true" id="equiPerPasptNum"
 							disabled="#{backingBean.managedBean.disableIcEmail}"
@@ -92,7 +90,11 @@
 							<p:outputLabel escape="false"
 								value="#{lbl['tt.sm.registration.identification.no']}" />
 						</p:tooltip>&#160;
-						<p:message id="equiPerPasptNumMsg" for="equiPerPasptNum"
+						<p:message id="equiPerIcNumMsg" for="equiPerIcNum" 
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq 'I'}"
+							showSummary="true" showDetail="false" display="icon" />
+						<p:message id="equiPerPasptNumMsg" for="equiPerPasptNum" 
+							rendered="#{backingBean.managedBean.selectedShareHolder.identificationType.parameterCode ne 'I'}"
 							showSummary="true" showDetail="false" display="icon" />
 					</p:outputPanel></td>
 
@@ -329,21 +331,24 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.person.isContrSign']}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" /></td>
-				<td><p:selectOneRadio
+				<td>
+					<p:selectOneRadio
 						value="#{backingBean.managedBean.selectedShareHolder.contractSignerFlg}"
 						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
 									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.yes']}" itemValue="1" />
 						<f:selectItem itemLabel="#{lbl['lbl.txt.no']}" itemValue="0" />
-					</p:selectOneRadio></td>
-				<td><p:graphicImage id="tooltip5" value="/css/images/design/tooltips.png"
-						style="padding-bottom : 7px;"
-						rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
-									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}"
-						 /> <p:tooltip id="toolinfo5" for="tooltip5">
-						<p:outputLabel escape="false"
-							value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
-					</p:tooltip></td>
+					</p:selectOneRadio>
+				</td>
+				<td>
+					<p:graphicImage id="tooltip5" value="/css/images/design/tooltips.png" 
+						style="padding-bottom : 7px;" 
+					    rendered="#{backingBean.managedBean.smAppl.supplierType eq SupplierManagementConst.STYPE_CONTRACTOR 
+									and backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and backingBean.managedBean.selectedShareHolder.epRole eq 'MOF_SUPPLIER_USER' and (backingBean.managedBean.selectedShareHolder.softcertFlg ne '0')}" /> 
+					<p:tooltip id="toolinfo5" for="tooltip5">
+						<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.equity.owner.authorized.contract.sign']}" />
+					</p:tooltip>
+				</td>
 			</tr>
 			<p:outputPanel
 				rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1' and not empty backingBean.managedBean.selectedShareHolder.epRole}">
