@@ -118,25 +118,29 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
 					//Transact with Federal and supplier type is CONTRACTOR
-					if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal() && 
-							supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
+					if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
 						if(workFlowStatus != null && workFlowStatus.getPmStatus().getStatusId() == 20199){
-							if(checkPendingSoftCertRequest(supplier.getSupplierId())){
-								path = SOFT_CERT_PATH;
-								getManagedBean().setFlowStatus(5);
-							}else{
-								String catalogueStat = checkCatalogueUpload(supplier.getSupplierId());
-								if(catalogueStat == null){
-									path = CATALOGUE_UPLOAD_PATH;
-									getManagedBean().setFlowStatus(6);
+							if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
+								if(checkPendingSoftCertRequest(supplier.getSupplierId())){
+									path = SOFT_CERT_PATH;
+									getManagedBean().setFlowStatus(5);
 								}else{
-									if(catalogueStat.equalsIgnoreCase("U")){
-										getManagedBean().setFlowStatus(0);
-									}else{
-										path = CATALOGUE_MAINT;
+									String catalogueStat = checkCatalogueUpload(supplier.getSupplierId());
+									if(catalogueStat == null){
+										path = CATALOGUE_UPLOAD_PATH;
 										getManagedBean().setFlowStatus(6);
+									}else{
+										if(catalogueStat.equalsIgnoreCase("U")){
+											getManagedBean().setFlowStatus(0);
+										}else{
+											path = CATALOGUE_MAINT;
+											getManagedBean().setFlowStatus(6);
+										}
 									}
 								}
+							}else{
+								path = MOF_REG_PATH;
+								getManagedBean().setFlowStatus(1);
 							}
 						}else{
 							path = MOF_REG_PATH;
