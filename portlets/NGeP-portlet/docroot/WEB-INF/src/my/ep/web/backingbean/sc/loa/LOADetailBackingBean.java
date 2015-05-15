@@ -3672,6 +3672,7 @@ public class LOADetailBackingBean extends
 			StatusResDTO statusResDTO = statusSO
 					.retrieveStatusByStatusId(statusReqDTO);
 			scLoa.setPmStatus(statusResDTO.getPmStatus());
+			scLoa.setLoaNo(getQtAwardSO().generateDirectLoaNo());
 
 		} catch (Exception e) {
 			throw new EpException(e.toString());
