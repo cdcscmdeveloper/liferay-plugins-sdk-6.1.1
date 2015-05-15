@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="yesmainpanel">
-		<p:panel>
+	<h:panelGroup id="yesmainpanel">
+		<h:panelGroup>
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 				columns="2" columnClasses="columnWidth20">
 
@@ -45,7 +45,7 @@
 					</p:inputText>
 				</h:column>
 			</h:panelGrid>
-		</p:panel>
+		</h:panelGroup>
 
 		<p:panel id="circularItemDetails"
 			header="#{lbl['lbl.sc.qt.circular.item.details']}" toggleable="true">
@@ -57,12 +57,12 @@
 				<ac:paginator for="itemdtlid" />
 
 				<p:column headerText="#{lbl['lbl.sc.spec.panel.item']}"
-					style="width:20%">
+					style="width:20%;white-space: normal;">
 					<h:outputText value="#{panelItem.itemName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.specification']}"
-					style="width:15%">
+					style="width:15%;white-space: normal;">
 					<h:outputText value="#{panelItem.specification}" style="white-space: normal;word-wrap: break-word;" />
 				</p:column>
 
@@ -78,7 +78,7 @@
 						value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(panelItem.panelCoverageId)}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.tpl.spec.content.uom']}"
+				<p:column headerText="#{lbl['lbl.sc.uom']}"
 					style="width:15%">
 					<h:outputText value="#{panelItem.pmUom.uomName}" />
 				</p:column>
@@ -94,5 +94,5 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-	</p:panel>
+	</h:panelGroup>
 </ui:composition>
