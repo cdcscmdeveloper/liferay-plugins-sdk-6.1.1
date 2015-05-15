@@ -91,10 +91,8 @@
 							actionListener="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
 							oncomplete="ItemDetailsPopup.show()" update=":form:ItemDetailsPopup"
 							process="@this">
-							<p:graphicImage library="ep/images/design" name="document.png"
-								title="Item Detail"
-								value="/resources/ep/images/design/document.png"
-								style="margin-right:2px;" />
+							<p:graphicImage title="Item Detail" value="/css/images/design/document.png"
+											style="margin-right:2px;" />
 						</p:commandLink>
 					</p:column>
 
@@ -116,8 +114,7 @@
 								action="#{lOIDetailBackingBean.editLOI(loiloaBean.scLoi, false)}"
 								process="@this">
 
-								<p:graphicImage library="ep/images/design" name="document.png"
-									value="/css/images/design/document.png" />
+								<p:graphicImage value="/css/images/design/document.png" />
 								<p:spacer width="5"></p:spacer>
 							</p:commandLink>
 
@@ -133,8 +130,7 @@
 								action="#{lOADetailBackingBean.editLOAAction(loiloaBean.scLoa)}"
 								process="@this">
 
-								<p:graphicImage library="ep/images/design" name="document.png"
-									value="/css/images/design/document.png" />
+								<p:graphicImage value="/css/images/design/document.png" />
 								<p:spacer width="5"></p:spacer>
 							</p:commandLink>
 						</h:panelGroup>
