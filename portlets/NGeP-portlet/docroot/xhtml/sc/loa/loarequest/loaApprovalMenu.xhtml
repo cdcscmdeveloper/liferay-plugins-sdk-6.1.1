@@ -10,15 +10,15 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td width="25%">
+			<td width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="75%">
+			<td>
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractSigner" 
 						value="#{lOADetailBackingBean.managedBean.contractSignerUser.userId}"
-						style="width: 280px;margin-bottom: 5px;"
+						style="width: 240px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -32,7 +32,7 @@
 					<p:message id="contractSignerMsg" for="contractSigner" display="icon" />
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
-					<p:inputText size="40"
+					<p:inputText size="34"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractSigner.userName}"
 						disabled="true" />
 				</c:if>
@@ -47,7 +47,7 @@
 						disabled="#{!isEditableStatus}"
 						value="#{lOADetailBackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
-						size="30">
+						size="34">
 					</p:inputText>
 					<p:message id="loaSignerDesigIdIdMsg" for="loaSignerDesigId"
 						display="icon" /></td>
@@ -60,12 +60,12 @@
 		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.approver']}" />
+				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" />
 				</td>
 				<td><p:selectOneMenu id="approver"
 						value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
 						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
-						style="width: 280px;margin-bottom: 5px;">
+						style="width: 240px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
 						<f:selectItems
@@ -80,34 +80,41 @@
 		</table>
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="18%"></td>
-			<td width="82%">
-				<p:dataGrid value="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}" var="scLoaRemark" rowIndexVar="rowIndex" columns="1" >
-					<table border="0" cellspacing="0" cellpadding="0" width="100%">
-					<tr>
-						<td rowspan="2" style="vertical-align: top;" align="left">
-							<h:graphicImage value="#{ctBackingBean.userImagePath(scLoaRemark.createdUser.loginId)}" height="30" width="30" />
-						</td>
-						<td>
-							<h:outputText value="#{scLoaRemark.createdUser.userName}"/>,
-							<h:outputText id="remarkDate" value="#{scLoaRemark.createdDate}">
-								<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
-							</h:outputText>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<p:inputTextarea style="width:350px;" id="remarks" value="#{scLoaRemark.remark}" rendered="#{scLoaRemark.brandNew}"  maxlength="1000"/>
-							<h:outputText value="#{scLoaRemark.remark}" rendered="#{!scLoaRemark.brandNew}" style="display: inline-block; width:350px;word-wrap: break-word;"/>
-						</td>
-					</tr>
-					</table>
-				</p:dataGrid>
-			</td>
-		</tr>
+     <p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td class="TableFieldLeft" width="16%"></td>
+
+				<td class="TableFieldRight"><p:dataGrid id="catatan"
+						value="#{lOADetailBackingBean.managedBean.scLoa.scLoaRemarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage
+										value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" />
+								</td>
+								<td width="6"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+									<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea style="width:350px;" maxlength="1000"
+										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}"
+										id="remark" /> <h:outputText value="#{remarkVar.remark}"
+										rendered="#{remarkIndex>0}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
 		</table>
 	</p:panel>
 	
