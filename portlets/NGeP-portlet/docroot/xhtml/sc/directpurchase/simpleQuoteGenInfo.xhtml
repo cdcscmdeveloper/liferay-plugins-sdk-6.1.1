@@ -32,7 +32,7 @@
 				<td colspan="3">
 					<table>
 						<tr>
-							<td><p:inputText size="95" id="title" required="true" maxlength="100"
+							<td><p:inputText size="80" id="title" required="true" maxlength="100"
 									label="#{lbl['lbl.sc.document.title']}"
 									disabled="#{!isPendingSubmissionStatus}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
@@ -100,7 +100,7 @@
 					           disabled="#{!isPendingSubmissionStatus}"
 					          required="#{simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'A' or 
 						             simpleQuoteBackingBean.managedBean.scQuote.procurementType.parameterCode eq 'E'}"
-							rows="3" cols="122" style="margin-bottom: 5px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
+							rows="3" cols="58" style="margin-bottom: 5px; width: 305px;" /> <p:message id="justRmksMsg" for="justificationRmk" display="icon" /></td>
 				 </ui:fragment>
 			    </tr>
 				</table>
