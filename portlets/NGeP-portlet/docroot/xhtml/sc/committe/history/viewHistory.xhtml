@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
@@ -17,6 +18,17 @@
 				action="#{committeBackingBean.viewHistoryBackAction}" />
 		</div>
 		<br />
-		<ui:include src="quotationcommitteeheader.xhtml" />
+		<ui:include src="../quotationcommitteeheader.xhtml" />
+		
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+		<tr>
+			<td width="20%" valign="top" class="sidemenutd">
+				<ui:include src="historyVersion.xhtml" />
+			</td>
+			<td width="80%" valign="top">
+				<ui:include src="historyDetails.xhtml" />
+			</td>
+		</tr>
+		</table>
 	</ui:define>
 </ui:composition>

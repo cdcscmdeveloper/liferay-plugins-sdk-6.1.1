@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.history']}">
+		<p:dataTable id="hisVersion" var="scCommittee" 
+			rowIndexVar="rowIndex" rowKey="#{scCommittee}"
+			value="#{committeBackingBean.managedBean.historyCommittees}"
+			selection="#{committeBackingBean.managedBean.selectedHistoryCommittee}"
+			selectionMode="single">
+			
+			<p:ajax event="rowSelect" 
+				partialSubmit="true" process="@this" update=":form:hisMembers :form:hisDtlPG"
+				listener="#{committeBackingBean.viewCommitteeHistoryDtlAction}" />
+			
+			<p:column style="width:5%;" headerText="#{lbl['lbl.sc.no']}">
+				#{rowIndex+1}
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sc.created.date']}">
+				<h:outputText value="#{scCommittee.createdDate}">
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>
