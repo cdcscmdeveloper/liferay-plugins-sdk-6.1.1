@@ -114,7 +114,7 @@ public class CommitteBackingBean extends
 	private static final String NAV_TO_COMMITTEE_MAINTENANACE = "/xhtml/sc/committe/committeemaintanancepage.xhtml";
 	
 	/** The Constant NAV_TO_VIEW_HISTORY. */
-	private static final String NAV_TO_VIEW_HISTORY = "/xhtml/sc/committe/viewHistory.xhtml";
+	private static final String NAV_TO_VIEW_HISTORY = "/xhtml/sc/committe//history/viewHistory.xhtml";
 
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
@@ -766,17 +766,70 @@ public class CommitteBackingBean extends
 	}
 
 	/**
-	 * View history action.
+	 * View Committee history action.
 	 *
 	 * @param scQtCommittee the sc qt committee
 	 * @return the string
 	 */
 	public String viewHistoryAction(ScQtCommittee scQtCommittee) {
 		debugLogger("viewHistoryAction");
-		String committeeType = scQtCommittee.getScCommittee()
-				.getCommitteeType().getParameterCode();
+		ScCommittee scCommittee = scQtCommittee.getScCommittee();
+		String committeeType = scCommittee.getCommitteeType().getParameterCode();
 		log.info("Committee Type : " + committeeType);
+		
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setCommitteeType(committeeType);
+			
+			PmUser fcSecretaryUser = null;
+			for (ScCommitteeMember scCommitteeMember : scCommittee.getScCommitteeMembers()) {
+				if (ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(scCommitteeMember.getMemberRole().getParameterCode())) {
+					fcSecretaryUser = scCommitteeMember.getPmUser();
+				}
+			}
+			reqDTO.setFcSecretaryUser(fcSecretaryUser);
+			
+			CommitteResDTO resDTO = committeSO.retrieveFCCommitteHistoryDetails(reqDTO);
+			if (resDTO.isSuccessful()) {
+				this.getManagedBean().setHistoryCommittees(resDTO.getCommittes());
+				this.getManagedBean().setSelectedHistoryCommittee(null);
+			}			
+
+		} finally {
+			committeSO = null;
+		}
+		
 		return NAV_TO_VIEW_HISTORY + "?faces-redirect=true";
+	}
+	
+	/**
+	 * View Committee History Details action.
+	 *
+	 */
+	public void viewCommitteeHistoryDtlAction() {
+		debugLogger("viewCommitteeHistoryDtlAction");
+		ScCommittee selectedHistoryCommittee = this.getManagedBean().getSelectedHistoryCommittee();
+		
+		ICommitteSO committeSO;
+		try {
+			committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			
+			CommitteReqDTO reqDTO = new CommitteReqDTO();
+			reqDTO.setScCommitteeId(selectedHistoryCommittee.getCommitteeId());
+			
+			CommitteResDTO resDTO = committeSO.retrieveCommitteDetailsByCommitteeId(reqDTO);
+			if (resDTO.isSuccessful()) {
+				this.getManagedBean().setSelectedHistoryCommittee(resDTO.getCommittee());
+			}			
+
+		} finally {
+			committeSO = null;
+		}
 	}
 
 	/**
