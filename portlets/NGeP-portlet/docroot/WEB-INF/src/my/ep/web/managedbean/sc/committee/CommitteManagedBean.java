@@ -242,6 +242,12 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	/** The pay load. */
 	private Object payLoad;
+	
+	/** The selected history committee. */
+	private ScCommittee selectedHistoryCommittee;
+
+	/** The history committees. */
+	private List<ScCommittee> historyCommittees;
 
 	/**
 	 * Instantiates a new committe managed bean.
@@ -1386,6 +1392,34 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
+	}
+
+	/**
+	 * @return the selectedHistoryCommittee
+	 */
+	public ScCommittee getSelectedHistoryCommittee() {
+		return selectedHistoryCommittee;
+	}
+
+	/**
+	 * @param selectedHistoryCommittee the selectedHistoryCommittee to set
+	 */
+	public void setSelectedHistoryCommittee(ScCommittee selectedHistoryCommittee) {
+		this.selectedHistoryCommittee = selectedHistoryCommittee;
+	}
+
+	/**
+	 * @return the historyCommittees
+	 */
+	public List<ScCommittee> getHistoryCommittees() {
+		return historyCommittees;
+	}
+
+	/**
+	 * @param historyCommittees the historyCommittees to set
+	 */
+	public void setHistoryCommittees(List<ScCommittee> historyCommittees) {
+		this.historyCommittees = historyCommittees;
 	}
 
 	
