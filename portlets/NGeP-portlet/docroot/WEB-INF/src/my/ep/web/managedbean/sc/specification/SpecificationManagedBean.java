@@ -761,6 +761,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
     /** The auto update. */
     private boolean autoUpdate = Boolean.TRUE;
+    
+    private Long ptjGroupId;
 	
 	/**
 	 * Checks if is spec complete.
@@ -5053,6 +5055,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the ptjGroupId
+	 */
+	public Long getPtjGroupId() {
+		return ptjGroupId;
+	}
+
+	/**
+	 * @param ptjGroupId the ptjGroupId to set
+	 */
+	public void setPtjGroupId(Long ptjGroupId) {
+		this.ptjGroupId = ptjGroupId;
 	}
 
 }
