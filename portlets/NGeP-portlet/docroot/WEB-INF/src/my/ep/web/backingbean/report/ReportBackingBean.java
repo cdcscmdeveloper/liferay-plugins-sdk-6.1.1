@@ -3388,7 +3388,7 @@ public class ReportBackingBean extends
 		ministryList = new ArrayList<SelectItem>();
 		new FacesScopes().getUserRoleList();
 			//if(authoriztionList.contains(RoleCode.BPK_PCA.value()))  {	
-		if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value()))))  {	
+		if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
 				 getLtstMinistryList();
 				 //getLtstPTJList();
 				 /*if(this.getCommonMinistry()==null){
