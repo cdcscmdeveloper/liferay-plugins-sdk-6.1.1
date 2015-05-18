@@ -8,7 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-		<ac:title value="Award Supplier" />
+		<!-- <ac:title value="Award Supplier" /> -->
 		<p:messages id="awardSupplier" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 		
 		<div class="clear"></div>
@@ -19,7 +19,7 @@
 		</div>
 
 		<p:panel header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+			<h:panelGrid columns="2" width="100%" border = "0" columnClasses="columnWidth20">
 
 				<h:outputLabel value="#{lbl['lbl.sc.ministry']}"></h:outputLabel>
 				
@@ -60,7 +60,8 @@
 					readonly="true" />
 
 			</h:panelGrid>
-			
+		</p:panel>
+		
 			<c:if test="#{null ne noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId}">
 				<ui:include src="/xhtml/sc/noticeboard/awarddetails.xhtml"></ui:include>
 			</c:if>
@@ -79,7 +80,5 @@
 
 				</p:tabView>
 			</c:if>
-		</p:panel>
-
 	</ui:define>
 </ui:composition>
