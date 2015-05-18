@@ -56,7 +56,6 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -3358,14 +3357,14 @@ public class ReportBackingBean extends
 					}
 				}
 			}*/
-			String roleCode = ReportConst.EMPTY_VAL;
+			/*String roleCode = ReportConst.EMPTY_VAL;
 			if (approverNayakTarafList.size()>0) {
 				roleCode = ReportConst.APPROVER_NAIK_TARAF;
 			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
 				roleCode = ReportConst.RN_APPROVER;
 			}else if (authoriztionList.contains(ReportConst.BPK_APPROVER)) {
 				roleCode = ReportConst.BPK_APPROVER;
-			}
+			}*/
 			/*if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
 				for (int i = 0; i < orgProfileList.size(); i++) {
 					reqDTO.setUserId(lngUserId);
