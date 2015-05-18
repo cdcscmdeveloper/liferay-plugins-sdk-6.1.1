@@ -8,9 +8,11 @@
 
 	<div class="ppRightBtn">
 
-		<!-- <p:commandButton value="#{lbl['lbl.btn.save']}"
-				action="#{committeBackingBean.updateCommitteDetails(null)}"
-				process="@all" /> -->
+		<p:commandButton value="#{lbl['lbl.btn.save']}"
+			action="#{committeBackingBean.updateCommitteDetails(null)}"
+			process="@all"
+			rendered="#{isCommitteeRecordStatusActive}" />
+		
 		<ui:repeat var="bpmAction"
 			value="#{committeBackingBean.managedBean.outComes}">
 			<ui:param name="buttonLabel"
