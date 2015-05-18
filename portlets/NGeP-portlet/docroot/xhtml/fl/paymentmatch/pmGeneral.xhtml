@@ -93,21 +93,35 @@
 									value="#{paymentMatchBackingBean.managedBean.paymentAdvice.fulfilmentOrder.factored}" />
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>		
 			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.frn.do.no']}" /></td>
-				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.delOrderList}" var="doList" type="definition">
-        				<p:commandLink value="#{doList.deliveryOrderNo}" rendered="#{doList.recordStatusFlg==1}" immediate="true"
-					 		action="#{paymentMatchBackingBean.navigateDelOrder(doList)}" />
-    				</p:dataList></td>
-    			<td><p:outputLabel value="#{lbl['lbl.fl.frn.no']}" /></td>
-				<td><p:dataList value="#{paymentMatchBackingBean.managedBean.fulfilmentNoteList}" var="frnList" type="unordered" itemType="none">
-        				<p:commandLink value="#{frnList.fulfilmentNoteNo}" rendered="#{frnList.recordStatusFlg==1}"
-					 		action="#{paymentMatchBackingBean.navigateFulfilmentNote(frnList)}" immediate="true"/>
-    				</p:dataList></td>	
-			</tr>
 		</table>
-			
-	</p:panel>		
+	</p:panel>
+	<p:panel id="recvNoteListPanel"
+		header="#{lbl['lbl.fl.goods.received.note.list']}" toggleable="true">
+		<p:dataTable id="addressDataTable" var="delOrder"
+			value="#{paymentMatchBackingBean.managedBean.delOrderList}"
+			rowIndexVar="index" rowKey="#{delOrder}">
+			<ac:paginator for="delOrderDataTable" />
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}"
+				style="white-space:normal;width:480px;">
+				<h:outputText
+					rendered="#{delOrder.flDeliveryAddress.addressType != null}"
+					value="#{paymentMatchBackingBean.getFullAddress(delOrder.flDeliveryAddress.addressType.pmAddress)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}"
+				style="white-space:normal;">
+				<p:commandLink value="#{delOrder.deliveryOrderNo}"
+					rendered="#{delOrder.recordStatusFlg==1}" immediate="true"
+					action="#{paymentMatchBackingBean.navigateDelOrder(delOrder)}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.frn.no']}">
+				<p:commandLink
+					value="#{delOrder.flFulfilmentNote.get(0).fulfilmentNoteNo}"
+					rendered="#{delOrder.flFulfilmentNote.get(0).recordStatusFlg==1}"
+					immediate="true"
+					action="#{paymentMatchBackingBean.navigateFulfilmentNote(delOrder)}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.payment.match.payment.desc']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
