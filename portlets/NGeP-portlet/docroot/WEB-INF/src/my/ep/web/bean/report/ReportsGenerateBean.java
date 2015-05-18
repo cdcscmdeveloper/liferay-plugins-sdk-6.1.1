@@ -166,7 +166,7 @@ public class ReportsGenerateBean {
 		private boolean smApplicationDateView = false;
 		private boolean smMandatoryDateView = false;
 		private boolean smNonMandatoryDateView = false;
-		
+		private boolean smApplicationReceivedDateView = false;
 		
 		private boolean smRoleView = false;
 		private boolean smEpNoView = false;
@@ -461,6 +461,13 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmApplicationReceivedDateView() {
+			return smApplicationReceivedDateView;
+		}
+		public void setSmApplicationReceivedDateView(
+				boolean smApplicationReceivedDateView) {
+			this.smApplicationReceivedDateView = smApplicationReceivedDateView;
+		}
 		public boolean isSmBothSupplierTypeView() {
 			return smBothSupplierTypeView;
 		}
