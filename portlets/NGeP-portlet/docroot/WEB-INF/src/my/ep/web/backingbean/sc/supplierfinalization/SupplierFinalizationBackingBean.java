@@ -2411,7 +2411,7 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setQtId(scQt.getQtId());
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveOfferedPriceDtls(reqDTO);
-			this.getManagedBean().setScQt(resDTO.getScQt());
+//			this.getManagedBean().setScQt(resDTO.getScQt());
 			if (resDTO.getScQt().isZonal()) {
 				List<TplSpecZoneDtl> zones = resDTO.getZones();
 				if (null != zones) {
