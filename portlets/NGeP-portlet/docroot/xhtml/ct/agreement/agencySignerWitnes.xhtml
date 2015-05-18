@@ -22,20 +22,26 @@
 		          
 		               <ac:paginator for="AgSignerTable"/>
 		               <p:column selectionMode="multiple" style="width:5%;"/>  
+		               
+		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}"
+		                      rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
+		                   <h:outputText value="#{agreementBackingBean.retrieveMinistryByOrgProfileId(agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId)}"/>
+		               </p:column>
 		        
-		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}">
-		                   <h:outputText value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName}"/>
+		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}"
+		                       rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+		                   <h:outputText value="#{agreementBackingBean.retrieveMinistryByOrgProfileId(agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId)}"/>
 		               </p:column>
         
-                        <p:column style="width:30%;" headerText="#{lbl['lbl.ct.ptj']}" >
+                        <p:column style="width:30%;" headerText="#{lbl['lbl.ct.ptj']}" 
+                             rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
                               <h:panelGroup 
                                    rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null}">
                                    <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}" 
                                      saveObject="agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile"
                                      postUpdateListener="agreementBackingBean.validateDuplicateAgencyPtj(#{index},agreementBackingBean.managedBean.ctAgencySigner,agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile)"
 						             value="#{agSignerVar.orgProfile.orgName}" readonly="true" size="35" 
-						            conditionField="recordStatusFlg^1|parentOrgProfile.orgProfileId^#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile}"
-						             update="@form" >
+						            conditionField="#{agreementBackingBean.retrievePtjBylovCondition()}" update="@form">
 					              </ac:lov>
 					         </h:panelGroup>
 					         <h:panelGroup  rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile == null}">
