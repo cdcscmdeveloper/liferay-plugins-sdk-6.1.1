@@ -3301,14 +3301,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				supplierCriteria.append(rejectedSupplierId)
 				.append(",");
 			}
+			if(supplierCriteria.length() > 0){
+				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
+				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
+				criteria.append("supplierId").append("^").append(supplierCriteria.toString())
+				.append("|");
+			} 
 		}
-
-		if(supplierCriteria.length() > 0){
-			supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
-			supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
-			criteria.append("supplierId").append("^").append(supplierCriteria.toString())
-			.append("|");
-		} 
 		
 		criteria.append("recordStatus^1");
 		return criteria.toString();
