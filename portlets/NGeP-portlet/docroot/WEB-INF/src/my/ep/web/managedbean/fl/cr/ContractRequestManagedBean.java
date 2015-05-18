@@ -104,6 +104,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String searchItemName;
 	private boolean isFlRequestLink = false;
 	private boolean agencyAddress = false;
+	private PmOrgProfile currentChargePtjGroup;
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -2534,6 +2535,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	/**
+	 * @return the currentChargePtjGroup
+	 */
+	public PmOrgProfile getCurrentChargePtjGroup() {
+		return currentChargePtjGroup;
+	}
+
+	/**
+	 * @param currentChargePtjGroup the currentChargePtjGroup to set
+	 */
+	public void setCurrentChargePtjGroup(PmOrgProfile currentChargePtjGroup) {
+		this.currentChargePtjGroup = currentChargePtjGroup;
 	}
 
 }
