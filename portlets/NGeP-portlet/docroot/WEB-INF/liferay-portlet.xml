@@ -369,6 +369,13 @@
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flviewfrn-portlet</css-class-wrapper>
 	</portlet>	
+	<portlet>
+		<portlet-name>flViewPurchaseOrder</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>flviewpo-portlet</css-class-wrapper>
+	</portlet>	
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
