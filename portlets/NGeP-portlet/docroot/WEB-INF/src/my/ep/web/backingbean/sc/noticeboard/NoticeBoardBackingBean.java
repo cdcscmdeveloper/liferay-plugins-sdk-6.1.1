@@ -147,8 +147,6 @@ public class NoticeBoardBackingBean extends
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 	private static final String MOF_INVALID_MSG_KEY = "lbl.sc.mof.invalid.orinactive";
-	private static final String SITE_VISIT_KEY = "lbl.sc.site.visit.dtls";
-	private static final String BRIEFING_KEY = "lbl.sc.briefing.dtls";
 	
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private boolean visible;
@@ -1948,23 +1946,18 @@ public class NoticeBoardBackingBean extends
 			bsvRegistration.setBsvAttendance(bsvAttandances);
 			scQtBsvDtl.setTempRegistration(bsvRegistration);
 		}
-
+		setSlectedHeaderName(null);
 		this.getManagedBean().setBriefingDtls(scQtBsvDtl);
 		List<ScQtBsvDtl> bsvDetails = zoneBean.getBriefingList();
 		if(null != bsvDetails && bsvDetails.contains(scQtBsvDtl)){
 		bsvDetails.set(bsvDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
-		setSlectedHeaderName(ResourceBundleUtils.getMessage(
-				BRIEFING_KEY , 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()).concat("  ").concat(">"));
+		setSlectedHeaderName(scQtBsvDtl.getBsvDesc().concat("  ").concat(">"));
+				
 		}
 		List<ScQtBsvDtl> svDetails = zoneBean.getSitevisitList();
 		if(null != svDetails && svDetails.contains(scQtBsvDtl)){
 		    svDetails.set(svDetails.indexOf(scQtBsvDtl), scQtBsvDtl);
-		    setSlectedHeaderName(ResourceBundleUtils.getMessage(
-		    		SITE_VISIT_KEY , 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					new FacesScopes().getUserLocale()).concat("  ").concat(">"));
+		    setSlectedHeaderName(scQtBsvDtl.getBsvDesc().concat("  ").concat(">"));
 		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 	}
