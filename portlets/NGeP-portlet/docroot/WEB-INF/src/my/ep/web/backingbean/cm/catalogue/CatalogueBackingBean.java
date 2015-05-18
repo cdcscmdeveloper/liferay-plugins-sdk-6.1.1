@@ -3737,7 +3737,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return supplierTempUploadedMsg();
+			if(!new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				log.info("********SUPPLIER_TEMP ONLY******");
+				return supplierTempUploadedMsg();
+			}
 		}
 
 		log.info("Exit saveCatalogItem");
@@ -4182,7 +4185,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return supplierTempUploadedMsg();
+			if(!new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				log.info("********SUPPLIER_TEMP ONLY******");
+				return supplierTempUploadedMsg();
+			}
 		}
 
 		return "catalogMaintenanceFile";
@@ -4561,7 +4567,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return supplierTempUploadedMsg();
+			if(!new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				log.info("********SUPPLIER_TEMP ONLY******");
+				return supplierTempUploadedMsg();
+			}
 		}
 		return "catalogMaintenanceFile";
 	}
@@ -4679,7 +4688,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		if(new FacesScopes().hasRoleUser(RoleCode.SUPPLIER_TEMP.value())){
 			log.info("******IS Supplier Temp*******");
-			return supplierTempUploadedMsg();
+			if(!new FacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())){
+				log.info("********SUPPLIER_TEMP ONLY******");
+				return supplierTempUploadedMsg();
+			}
 		}
 
 		return "catalogMaintenanceFile";
