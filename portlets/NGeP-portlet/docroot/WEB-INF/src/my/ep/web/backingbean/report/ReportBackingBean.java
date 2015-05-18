@@ -663,7 +663,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)240575;//4925,20854;//--CM 220152,122768- SC//221747,72799;//--ct 25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)242716;//4925,20854;//--CM 220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2587,7 +2587,7 @@ public class ReportBackingBean extends
 		}
 		return items;
 	}*/
-	private void retrieveMinistryList() {
+	/*private void retrieveMinistryList() {
 		pmMinistryList =new ArrayList<SelectItem>();
 		pmPtjList =new ArrayList<String>();		
 		UserReqDTO userReqDTO = new UserReqDTO();
@@ -2612,7 +2612,7 @@ public class ReportBackingBean extends
 						pmPtjList.add(pmOrgProfile.getOrgName());				
 					}
 			}
-			/*if(userResDTO.getUserOrgList()!=null&&userResDTO.getUserOrgList().size()>0){
+			if(userResDTO.getUserOrgList()!=null&&userResDTO.getUserOrgList().size()>0){
 				List<PmUserOrg> userOrgList= userResDTO.getUserOrgList();
 				PmOrgProfile pmOrgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
 				for (PmUserOrg userOrg : userOrgList) {
@@ -2632,9 +2632,9 @@ public class ReportBackingBean extends
 				if(pmOrgProfile!=null) {				
 				    pmPtjList.add(pmOrgProfile.getOrgName());				
 			    }
-			}*/
+			}
 			
-		}
+		}*/
 	public void retrievePtjListByMinistryId() {		
 		pmPtjList =new ArrayList<String>();		
 		if(ministryId!=null){
@@ -3337,7 +3337,7 @@ public class ReportBackingBean extends
 					}
 				}
 			}
-			userResDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			/*userResDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 			if (userResDTO.getUserOrgList() != null
 					&& userResDTO.getUserOrgList().size() > 0) {
 				List<PmUserOrg> userOrg = userResDTO.getUserOrgList();
@@ -3357,7 +3357,7 @@ public class ReportBackingBean extends
 						}
 					}
 				}
-			}
+			}*/
 			String roleCode = ReportConst.EMPTY_VAL;
 			if (approverNayakTarafList.size()>0) {
 				roleCode = ReportConst.APPROVER_NAIK_TARAF;
@@ -3366,7 +3366,7 @@ public class ReportBackingBean extends
 			}else if (authoriztionList.contains(ReportConst.BPK_APPROVER)) {
 				roleCode = ReportConst.BPK_APPROVER;
 			}
-			if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
+			/*if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
 				for (int i = 0; i < orgProfileList.size(); i++) {
 					reqDTO.setUserId(lngUserId);
 					reqDTO.setRoleCode(roleCode);
@@ -3380,7 +3380,7 @@ public class ReportBackingBean extends
 						userListbyprofileRole.add(selectItem);
 					}
 				}
-			}
+			}*/
 		}
 		return authoriztionList;
 	}
@@ -3843,7 +3843,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			retrieveHighRoleCodeByUser();
 			
-			retrieveMinistryList();
+			//retrieveMinistryList();
 			retriveUserrloeByUserId(this.getModuleValue());			
 			retrieveParamCodeByUser();
 			
