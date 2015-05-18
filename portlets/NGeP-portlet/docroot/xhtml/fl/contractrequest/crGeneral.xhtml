@@ -12,14 +12,14 @@
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="66" id="ministry"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
 				<td><p:inputText size="66" id="ptjGroup"
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						value="#{contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -68,6 +68,7 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" 
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						update=":form:chargeOrgProfileId" size="50"
+						postUpdateListener="contractRequestBackingBean.comparePtjGroup()"
 						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
 					</ac:lov></td>
 				<td>

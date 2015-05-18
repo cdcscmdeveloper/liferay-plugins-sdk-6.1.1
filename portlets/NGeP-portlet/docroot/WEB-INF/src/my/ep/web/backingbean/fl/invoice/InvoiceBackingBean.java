@@ -1153,12 +1153,17 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 * @return the string
 	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
-		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
-			return resDTO.getMofAccount().getMofNo();
+		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+			return ctSupplierSO.retrieveSupplierMOFNoByContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+		}else{
+			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+			MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+			if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+				return resDTO.getMofAccount().getMofNo();
+			}
 		}
 		return null;
 	}
