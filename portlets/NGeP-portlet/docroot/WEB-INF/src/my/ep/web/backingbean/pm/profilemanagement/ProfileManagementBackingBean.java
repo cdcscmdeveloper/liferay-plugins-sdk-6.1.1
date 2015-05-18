@@ -78,6 +78,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -204,6 +205,41 @@ public class ProfileManagementBackingBean extends
 
 		return this.orgTypeSearchBean;
 	}
+	public String constructConditionFields(){
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterId^");
+		sb.append(getManagedBean().getSelectedOrgType().getParameterId());
+		sb.append("|recordStatus^1");
+		logger.info("....getManagedBean().getSelectedOrgType().getParameterCode()="+getManagedBean().getSelectedOrgType().getParameterCode());
+		logger.info("....this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()="+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		logger.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="+getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
+		
+		if(OrganizationType.MINISTRY.value()
+				.equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}
+		}else if(OrganizationType.DEPARTMENT.value()
+				.equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				sb.append("|parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+				sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}
+		}else if(OrganizationType.DIVISION.value()
+				.equals(getManagedBean().getSelectedOrgType().getParameterCode())){
+			if(getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())){
+				sb.append("|parentOrgProfile.parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())){
+				sb.append("|parentOrgProfile.orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}else if(getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())){
+				sb.append("|orgProfileId^"+this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+			}
+		}
+		
+		return sb.toString();
+	}
 
 	private void generateAdditionalFilter() {
 		logger.info("generateAdditionalFilter");
@@ -279,11 +315,11 @@ public class ProfileManagementBackingBean extends
 		this.getManagedBean().setSelectedPmRoleDesc(null);
 	}
 
-	public void getListOfAssignedRoles(Long userId) {
+	public void getListOfAssignedRoles(PmUserOrg org) {
 		// find the userOrg
-		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveAllUserOrg(userId);
-		if (pmUserOrgs != null && !pmUserOrgs.isEmpty()) {
-			this.getManagedBean().setActiveUserOrg(pmUserOrgs.get(0));// not
+//		List<PmUserOrg> pmUserOrgs = PmCommonUtil.retrieveAllUserOrg(userId);
+		if (org != null) {
+			this.getManagedBean().setActiveUserOrg(org);// not
 																		// active
 																		// only
 																		// TODO
@@ -365,6 +401,7 @@ public class ProfileManagementBackingBean extends
 		logger.info("preLoadingUserProfile");
 		this.setCurrentActiveOrg();
 		this.resetUserProfileSearchBean();
+		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -884,7 +921,7 @@ public class ProfileManagementBackingBean extends
 	 * retrieve all org type into mapper
 	 */
 	private void retrieveOrgTypeMap() {
-
+     logger.info("....retrieveOrgTypeMap....");
 		List<PmParameterDesc> parameterDescs = PmCommonUtil
 				.retrieveFilteredParamDesc(
 						ParameterTypeConst.ORGANISATION_TYPES,
@@ -1262,6 +1299,12 @@ public class ProfileManagementBackingBean extends
 			// .setPmUserRoles(new ArrayList<PmUserRole>());
 		}
 		this.getManagedBean().setSelectedPmRoleDesc(null);
+		
+		if(this.getManagedBean().getSelectedOrgType().getParameterId()!=null){
+			PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this.getManagedBean().getSelectedOrgType().getParameterId());
+			this.getManagedBean().getSelectedOrgType().setParameterCode(pmParameter.getParameterCode());
+	
+		}
 
 	}
 
