@@ -639,7 +639,35 @@ public class PmCommonUtil {
 		}		
 		return pmUserOrgs;
 	}
-	
+	/**
+	 * retrieve active PmUserOrgs
+	 * @param id
+	 * @param isDetail
+	 * @return List<PmUserOrg> 
+	 */
+	public static List<PmUserOrg> retrieveAllUserOrg(Long id){
+		List <PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			resDTO = userSO.retrieveAllUserOrgDtlListByUserId(reqDTO);
+			
+			if(resDTO.isSuccessful()){
+				pmUserOrgs = resDTO.getUserOrgList();
+			}
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770058 , new String[]{id.toString(), e.getMessage()}); 
+		}finally{
+			userSO = null;
+		}		
+		return pmUserOrgs;
+	}
 	/**
 	 * retrieve PmUserOrg
 	 * @param userId

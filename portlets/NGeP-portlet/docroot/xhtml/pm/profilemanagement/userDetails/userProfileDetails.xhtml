@@ -37,7 +37,7 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
-						<td><p:selectOneMenu id="orgTypeFederalList"
+						<td width="30%"><p:selectOneMenu id="orgTypeFederalList"
 								rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.federalGovt}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
 								styleClass="ppDropDownWidthL" required="true"
@@ -68,7 +68,7 @@
 			     			" />
 							</p:selectOneMenu> <p:message id="orgTypeOthersListMsg" for="orgTypeOthersList"
 								display="icon" /></td>
-						<td colspan="2"><div align="left">
+						<td colspan="2" align="left"><div style="float: left">
 								<ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="40"
 									required="true"
 									update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
@@ -78,7 +78,7 @@
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
-									conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}" />
+									conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
 								<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
 							</div></td>
 

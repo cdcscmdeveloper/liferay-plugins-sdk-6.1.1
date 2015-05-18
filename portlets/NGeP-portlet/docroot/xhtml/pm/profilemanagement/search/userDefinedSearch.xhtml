@@ -15,6 +15,7 @@
 								value="*" styleClass="mandatory" />
 				</th>
 				<td width="55%" style="white-space:nowrap;">
+				
 					<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}" required="true"
 						styleClass="ppDropDownWidthM" id="somOrgType"   
 						label="#{lbl['lbl.pm.ta.org.type.name']}">  
@@ -31,17 +32,16 @@
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/><p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 							
-				<td><ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="29" required="true"
+				<td><ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" required="true"
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
-						conditionField="orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}|recordStatus^1#{profileManagementBackingBean.managedBean.additionalOrgFilter}">
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}"/>
 						
-				     		</ac:lov>
-		         	<p:message id="lovMinistryMsg" for="lovMinistry" display="icon" />
+		         	<p:message id="lovMinistryMsg" for="lovMinistry1" display="icon" />
 			</td>
 			</tr>
 			<tr>
