@@ -153,6 +153,7 @@
 			<portlet id="flAp59Search" />
 			<portlet id="flRemoveFactoringComp" />
 			<portlet id="flViewReceivedNote" />
+			<portlet id="flViewPurchaseOrder" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
