@@ -5,26 +5,25 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
-		<div align="left" class="header-info">
-			<table style="width: 100%">
-				<tr>
-					<td style="width: 10%"><h:outputLabel
-							value="#{lbl['lbl.sc.qtn.no']}" /></td>
-					<td style="width: 10%" class="header-info-text">
-						#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}</td>
-					<td style="width: 5%"><h:outputLabel
-							value="#{lbl['lbl.sc.ptj']}" /></td>
-					<td style="width: 30%" class="header-info-text">
-						#{committeBackingBean.managedBean.qtCommittee.scQt.pmOrgProfile.orgName}</td>
-					<td style="width: 5%"><h:outputLabel
-							value="#{lbl['lbl.sc.status']}" /></td>
-					<td style="width: 12%" class="header-info-text">
-						#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId)}
-					</td>
-				</tr>
-			</table>
-		</div>
-	</p:panel>
+	<div align="left" class="header-info">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td style="width: 10%" class="header-info-text">
+					#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}</td>
+				<td style="width: 5%"><h:outputLabel
+						value="#{lbl['lbl.sc.ptj']}" /></td>
+				<td style="width: 30%" class="header-info-text">
+					#{committeBackingBean.managedBean.qtCommittee.scQt.pmOrgProfile.orgName}</td>
+				<td style="width: 5%"><h:outputLabel
+						value="#{lbl['lbl.sc.status']}" /></td>
+				<td style="width: 12%" class="header-info-text">
+					#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId)}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<p:spacer height="10px" />
 
 </ui:composition>

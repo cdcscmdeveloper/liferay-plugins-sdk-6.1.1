@@ -6,22 +6,20 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
-		<div class="ppRightBtn">
+	<div class="ppRightBtn">
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}"
+		<!-- <p:commandButton value="#{lbl['lbl.btn.save']}"
 				action="#{committeBackingBean.updateCommitteDetails(null)}"
-				process="@all" />
-			<ui:repeat var="bpmAction"
-				value="#{committeBackingBean.managedBean.outComes}">
-				<ui:param name="buttonLabel"
-					value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-				<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
-					action="#{committeBackingBean.updateCommitteDetails(bpmAction)}" />
-			</ui:repeat>
+				process="@all" /> -->
+		<ui:repeat var="bpmAction"
+			value="#{committeBackingBean.managedBean.outComes}">
+			<ui:param name="buttonLabel"
+				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+				action="#{committeBackingBean.updateCommitteDetails(bpmAction)}" />
+		</ui:repeat>
 
-			<!-- <p:button value="#{lbl['lbl.btn.cancel']}" style="float:right;margin-right: 12px;" /> -->
+		<!-- <p:button value="#{lbl['lbl.btn.cancel']}" style="float:right;margin-right: 12px;" /> -->
 
-		</div>
-	</p:panel>
+	</div>
 </ui:composition>
