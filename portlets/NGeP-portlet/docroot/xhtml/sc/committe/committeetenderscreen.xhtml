@@ -38,15 +38,13 @@
 			</p:column>
 
 		</p:dataTable>
-		<p:spacer height="3" />
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 2px"><p:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{committeBackingBean.managedBean.scCommittee.scQtCommittees.size()}"
-						readonly="true" /></td>
+						readonly="true" style="text-align: right;" /></td>
 			</tr>
 		</table>
-
 	</p:panel>
 </ui:composition>
