@@ -4,13 +4,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:param name="isCommitteeRecordStatusActive" value="#{committeBackingBean.managedBean.scCommittee.recordStatusFlg == 1}" />
 
 	<ui:fragment
 		rendered="#{committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeOpeningCommittee or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeEvaluationCommittee or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeTechnicalEvaluationCommittee or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFinancialEvaluationCommittee}">
-		<ui:fragment rendered="#{committeBackingBean.managedBean.scCommittee.committeStatus.statusId eq '60202'}">
+		<ui:fragment rendered="#{committeBackingBean.managedBean.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
 			<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
 		</ui:fragment>
 		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
@@ -24,8 +26,7 @@
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardA or
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSbh or 
 			committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeFederalProcurementBoardSwk}">
-		
-			<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
+		<ui:include src="/xhtml/sc/committe/committenavbutton.xhtml" />
 	
 		<ui:include src="/xhtml/sc/committe/committeeheader.xhtml" />
 		<ui:include src="committeefcselection.xhtml" />
