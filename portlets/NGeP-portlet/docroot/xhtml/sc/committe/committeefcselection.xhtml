@@ -17,7 +17,7 @@
 			var="committeemember" rowIndexVar="index" editable="true" rows="10"
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
-			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column selectionMode="multiple" rendered="#{isCommitteeRecordStatusActive}" style="width:2%"   />
 
 			<ac:paginator for="fcMembers" />
 
@@ -59,29 +59,37 @@
 
 			<p:column headerText="#{lbl['lbl.sc.role']}"
 				style="width: 10%">
+
 				<h:outputText
 					value="#{committeBackingBean.getParameterDesc(committeemember.memberRole)}" />
+
 			</p:column>
+
 
 			<p:column style="width: 15%">
 				<f:facet name="header">
-					<h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="* " styleClass="mandatory" rendered="#{isCommitteeRecordStatusActive}" />
 					<h:outputText value="#{lbl['lbl.sc.representative.type']}" />
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeemember.memberRole.parameterCode eq 'M'}">
-					<p:selectOneMenu required="true" id="representativeType"
-						value="#{committeemember.representativeType.parameterId}"
-						label="#{lbl['lbl.sc.representative.type']}"
-						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{committeBackingBean.managedBean.representativesTypeslist}" />
-						<p:ajax event="change"
-							listener="#{committeBackingBean.representiveTypeChange(committeemember)}"
-							partialSubmit="true" process="@this"></p:ajax>
-					</p:selectOneMenu>
-					<p:message id="representiveMsg" for="representativeType"
-						display="icon"></p:message>
+					<c:if test="#{isCommitteeRecordStatusActive}">
+						<p:selectOneMenu required="true" id="representativeType"
+							value="#{committeemember.representativeType.parameterId}"
+							label="#{lbl['lbl.sc.representative.type']}"
+							style="width: 178px;margin-bottom: 5px;">
+							<f:selectItems
+								value="#{committeBackingBean.managedBean.representativesTypeslist}" />
+							<p:ajax event="change"
+								listener="#{committeBackingBean.representiveTypeChange(committeemember)}"
+								partialSubmit="true" process="@this"></p:ajax>
+						</p:selectOneMenu>
+						<p:message id="representiveMsg" for="representativeType"
+							display="icon"></p:message>
+					</c:if>
+					<c:if test="#{!isCommitteeRecordStatusActive}">
+						<h:outputText value="#{committeBackingBean.getParameterDesc(committeemember.representativeType)}" />
+					</c:if>
 
 				</ui:fragment>
 
@@ -92,12 +100,14 @@
 			<p:commandButton id="quotationcommitteeadd"
 				value="#{lbl['lbl.btn.add']}" process="@this"
 				action="#{committeBackingBean.addCommitteMember(committeBackingBean.managedBean.headerTitle)}"
-				oncomplete="screen3.show();" update="@(.addQCMember)" />
+				oncomplete="screen3.show();" update="@(.addQCMember)"
+				rendered="#{isCommitteeRecordStatusActive}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, fcMembers"
 				action="#{committeBackingBean.deleteCommitteeAction}"
-				update="fcMembers" />
+				update="fcMembers"
+				rendered="#{isCommitteeRecordStatusActive}" />
 		</div>
 	</p:panel>
 	<ui:include src="/xhtml/sc/committe/committeetenderscreen.xhtml" />

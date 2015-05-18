@@ -138,11 +138,11 @@ public class CommitteBackingBean extends
 	public CommitteBackingBean() {
 		getManagedBean().setRoleTypes(getRoleTypeDropdownValues());
 
-		if (this.getManagedBean().getOutComes() == null) {
+		/*if (this.getManagedBean().getOutComes() == null) {
 			this.getManagedBean().setOutComes(
 					new String[] { BpmOutcomeConst.BPM_SAVE,
 							BpmOutcomeConst.BPM_SUBMIT });
-		}
+		}*/
 
 		/*
 		 * IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
@@ -474,8 +474,13 @@ public class CommitteBackingBean extends
 	 */
 	public String updateCommitteDetails(String outCome) {
 		debugLogger("submitCommitteDetails");
+		ScQtCommittee scQtCommittee = getManagedBean().getQtCommittee();
+		String committeeType = getManagedBean().getScCommittee().getCommitteeType().getParameterCode();
+		
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		committeReqDTO.setOutcome(outCome);
+		committeReqDTO.setScQtCommittee(scQtCommittee);
+		
 		CommitteResDTO resDTO = null;
 
 		try {
