@@ -662,7 +662,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)242716;//4925,20854;//--CM 220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)240575;//4925,20854;//--CM 220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3391,9 +3391,9 @@ public class ReportBackingBean extends
 		if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value()))))  {	
 				 getLtstMinistryList();
 				 //getLtstPTJList();
-				 if(this.getCommonMinistry()==null){
+				 /*if(this.getCommonMinistry()==null){
 				   retrieveFPJPTJList();
-				 }	 
+				 }*/	 
 			}else{
 				retrieveParameterCodeType();
 			}

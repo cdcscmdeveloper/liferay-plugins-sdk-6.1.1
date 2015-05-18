@@ -1230,7 +1230,10 @@
 					<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>		
-					
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationReceivedDateView}">
+					<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationreceiveddatefrom']}"
+							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
+					</c:if>
 
 					<TD><p:calendar label="#{lbl['lbl.rpt.frmdate']}"
 							id="MandatoryFromDate" showOn="button" navigator="true"

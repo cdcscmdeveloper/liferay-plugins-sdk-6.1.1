@@ -88,7 +88,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:		        	
 			 	//rptGenBean.setSmReceiveDateView(true);
 			 	rptGenBean.setSmMandatoryFromDateView(true);
-			 	rptGenBean.setSmMandatoryDateView(true);
+			 	rptGenBean.setSmApplicationReceivedDateView(true);
             break;
 		 case ReportConst.SM_APPLICATION_APPROVED_RPT_VAL:		        	
 	        	rptGenBean.setSmCompanyNameView(true);
