@@ -7,98 +7,100 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<h:panelGroup id="hisDtlPG">
-	<p:panel header="#{committeBackingBean.managedBean.headerTitle}" toggleable="true">
-		<p:dataTable id="hisMembers" 
-			value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scCommitteeMembers}"
-			var="scCommitteeMember">
+		<p:panel header="#{committeBackingBean.managedBean.headerTitle}"
+			toggleable="true">
+			<p:dataTable id="hisMembers" var="scCommitteeMember"
+				value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scCommitteeMembers}">
 
-			<ac:paginator for="hisMembers" />
+				<ac:paginator for="hisMembers" />
 
-			<p:column headerText="#{lbl['lbl.sc.name']}">
-				#{scCommitteeMember.memberName}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.name']}" style="width: 15%">
+					<h:outputText value="#{scCommitteeMember.memberName}"
+						style="white-space: normal;" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.identification.no']}"
-				style="width: 10%">
-				#{scCommitteeMember.icPassport}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.identification.no']}"
+					style="width: 5%">
+					#{scCommitteeMember.icPassport}
+				</p:column>
 
-			<p:column
-				headerText="#{lbl['lbl.sc.designation']}"
-				style="width: 30%">
-				#{scCommitteeMember.designation}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.designation']}"
+					style="width: 30%">
+					<h:outputText value="#{scCommitteeMember.designation}"
+						style="white-space: normal;" />
+				</p:column>
 
-			<p:column
-				headerText="#{lbl['lbl.sc.email']}"
-				style="width: 15%">
-				#{scCommitteeMember.email}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.email']}" style="width: 15%">
+					<h:outputText value="#{scCommitteeMember.email}"
+						style="white-space: normal;" />
+				</p:column>
 
-			<p:column
-				headerText="#{lbl['lbl.sc.grade']}"
-				style="width: 8%">
-				#{scCommitteeMember.grade}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.grade']}" style="width: 8%">
+					#{scCommitteeMember.grade}
+				</p:column>
 
-			<p:column style="width: 5%">
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
-				</f:facet>
-				#{lbl[scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}
-			</p:column>
+				<p:column style="width: 5%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					</f:facet>
+					#{lbl[scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.role']}"
-				style="width: 10%">
-				#{committeBackingBean.getParameterDesc(scCommitteeMember.memberRole)}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.role']}" style="width: 5%">
+					#{committeBackingBean.getParameterDesc(scCommitteeMember.memberRole)}
+				</p:column>
 
+				<p:column style="width: 15%"
+					headerText="#{lbl['lbl.sc.representative.type']}">
+					#{committeBackingBean.getParameterDesc(scCommitteeMember.representativeType)}
+				</p:column>
+			</p:dataTable>
+		</p:panel>
 
-			<p:column style="width: 15%" headerText="#{lbl['lbl.sc.representative.type']}">
-				#{committeBackingBean.getParameterDesc(scCommitteeMember.representativeType)}
-			</p:column>
-		</p:dataTable>
-	</p:panel>
-	
-	<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
-		<p:dataTable
-			value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scQtCommittees}"
-			var="scQtCommittee">
+		<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
+			<p:dataTable
+				value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scQtCommittees}"
+				var="scQtCommittee">
 
-			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:15%">
-				#{scQtCommittee.scQt.qtNo}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:15%">
+					#{scQtCommittee.scQt.qtNo}
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:10px;">
-				#{scQtCommittee.scQt.qtTitle}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.title']}" style="width:10px;">
+					#{scQtCommittee.scQt.qtTitle}
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.procurement.mode']}" style="width:10%">
-				#{committeBackingBean.getParameterDesc(scQtCommittee.scQt.procurementMode)}
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.procurement.mode']}"
+					style="width:10%">
+					#{committeBackingBean.getParameterDesc(scQtCommittee.scQt.procurementMode)}
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:10%">
-				<h:outputText value="#{scQtCommittee.scQt.createdDate}">
-					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.created.date']}"
+					style="width:10%">
+					<h:outputText value="#{scQtCommittee.scQt.createdDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:10%">
-				<h:outputText value="#{committeBackingBean.getStatusDescById(scQtCommittee.scQt.qtStatus.statusId)}" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.sc.status']}" style="width:10%">
+					<h:outputText
+						value="#{committeBackingBean.getStatusDescById(scQtCommittee.scQt.qtStatus.statusId)}" />
+				</p:column>
 
-		</p:dataTable>
-		<p:spacer height="3" />
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 2px"><p:outputLabel value="#{lbl['lbl.sc.total']}" /></td>
-				<td colspan="3"><p:inputText
-						value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scQtCommittees.size()}"
-						readonly="true" /></td>
-			</tr>
-		</table>
-	</p:panel>
+			</p:dataTable>
+			<br />
+			<table style="width: 100%">
+				<tr>
+					<td style="width: 2px"><p:outputLabel
+							value="#{lbl['lbl.sc.total']}" /></td>
+					<td colspan="3"><p:inputText
+							value="#{committeBackingBean.managedBean.selectedHistoryCommittee.scQtCommittees.size()}"
+							readonly="true" style="text-align: right;" /></td>
+				</tr>
+			</table>
+		</p:panel>
 	</h:panelGroup>
 
 </ui:composition>
