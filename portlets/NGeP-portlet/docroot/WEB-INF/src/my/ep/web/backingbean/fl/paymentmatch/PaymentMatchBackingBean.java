@@ -332,16 +332,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 
 			getManagedBean().setPaymentAdvice(paymentAdvice);
 			getManagedBean().setDelOrderList(paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders());
-			for(FlDeliveryOrder deliveryOrder : paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders()){
-				for(FlFulfilmentNote flNnote : deliveryOrder.getFlFulfilmentNote()){
-					if(flNnote.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
-						if(getManagedBean().getFulfilmentNoteList() == null){
-							getManagedBean().setFulfilmentNoteList(new ArrayList<FlFulfilmentNote>());
-						}
-						getManagedBean().getFulfilmentNoteList().add(flNnote);
-					}
-				}
-			}
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			// For PO No Deduction Panel 
@@ -1448,10 +1438,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 * @return the string
 	 */
 	
-	public String navigateFulfilmentNote(FlFulfilmentNote fulfilmentNote){
+	public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setFulfilmentNoteId(fulfilmentNote.getFulfilmentNoteId());
+			reqDTO.setFulfilmentNoteId(delOrder.getFlFulfilmentNote().get(0).getFulfilmentNoteId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
