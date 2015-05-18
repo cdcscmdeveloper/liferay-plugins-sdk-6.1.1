@@ -79,6 +79,23 @@
 				<p:message id="amountValueMsg" for="amountValueId" display="icon" />
 			</p:column>
 			<p:column width="20%"
+				rendered="#{(ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'N')}">
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" />
+					                 #{lbl['lbl.pm.value']}
+				           </f:facet>
+
+				<p:inputText value="#{typeValueObj.ruleValue}" size="20"
+					maxlength="20" id="numberValueId"
+					disabled="#{!(typeValueObj.brandNew)}" required="true"
+					requiredMessage="#{lbl['lbl.pm.settings.value.required']}"
+					validator="#{webappBean.checkIntegerField}"
+					validatorMessage="Value Of Number Type should be a Digit!">
+					<p:ajax partialSubmit="true" process="@this" update="@this, numberValueMsg" />
+				</p:inputText>
+				<p:message id="numberValueMsg" for="numberValueId" display="icon" />
+			</p:column>
+			<p:column width="20%"
 				rendered="#{ruleCatalogueBackingBean.managedBean.selectedRuleType.ruleDataTypeId.parameterCode== 'M'}">
 				<f:facet name="header">
 					<h:outputText value="*" styleClass="mandatory" />
