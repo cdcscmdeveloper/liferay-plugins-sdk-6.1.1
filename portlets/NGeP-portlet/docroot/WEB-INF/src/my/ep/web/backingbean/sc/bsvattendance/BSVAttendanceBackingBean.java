@@ -41,7 +41,6 @@ import my.ep.web.managedbean.sc.bsvattendance.BSVAttendanceManagedBean;
 import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -64,7 +63,6 @@ public class BSVAttendanceBackingBean extends
 	private static final String NAV_TO_BSV_REG_PAGE = "bsvAttendanceRegisterPopup.xhtml";
 
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
-	private static final String SUPPLIER_LIST_KEY = "lbl.sc.supplier.list";
 	private String slectedHeaderName;
 	
 	public BSVAttendanceBackingBean() {
@@ -575,11 +573,7 @@ public class BSVAttendanceBackingBean extends
 				.getObject();
 
 		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
-		
-		setSlectedHeaderName(ResourceBundleUtils.getMessage(
-				SUPPLIER_LIST_KEY , 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale()).concat("  ").concat(">"));
+		setSlectedHeaderName(briefingRegistration.getSupplier().getCompanyName().concat("  ").concat(">"));
 	}
 
 	/**
