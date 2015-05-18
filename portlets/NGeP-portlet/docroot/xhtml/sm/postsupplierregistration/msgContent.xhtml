@@ -15,7 +15,9 @@
 				<div class="cover-container-content">
 					<div class="flow-chartbox">
 						<div class="flow-chart">
-							<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
+							<c:if test="#{postSupplierRegBB.managedBean.flowStatus > 0}">
+								<p class="title">#{lbl['lbl.sm.basic.pls.proceed']}</p>
+							</c:if>
 							<!-- Basic Account-->
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.getSupplierTypeBasicWithoutMof()}">
 							<c:if test="#{postSupplierRegBB.managedBean.flowStatus == 1}">
@@ -47,7 +49,7 @@
 							<p:outputPanel rendered="#{postSupplierRegBB.managedBean.smSupplier.smAppl.applType == ParameterConst.newSmApplnForMof}">
 								<c:choose>
 									<c:when test="#{postSupplierRegBB.managedBean.smSupplier.smAppl.smCompanyBasic.withFederal and 
-									postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.getSupplierTypeContractor()}">						
+									postSupplierRegBB.managedBean.smSupplier.smAppl.supplierType == ParameterConst.getSupplierTypeContractor()}">		
 										<ui:include src="/xhtml/sm/postsupplierregistration/flowMofContractorFederal.xhtml"></ui:include>
 									</c:when>
 									
