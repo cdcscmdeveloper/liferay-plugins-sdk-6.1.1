@@ -1270,6 +1270,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 		
+		getSupplierListCriteria();
+		
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(
 				scQuote, 
@@ -3284,14 +3286,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				.append(",");
 			}
 			
-			// add in rejected Supplier Id
-			if(getManagedBean().getScQuote().getRejectedSupplierList() != null && getManagedBean().getScQuote().getRejectedSupplierList().size()>0){
-				for (Long rejectedSupplierId : getManagedBean().getScQuote().getRejectedSupplierList()) {
-					supplierCriteria.append(rejectedSupplierId)
-					.append(",");
-				}
-			}
-			
 			if(supplierCriteria.length() > 0){
 				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
 				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
@@ -3300,6 +3294,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} 
 
 		}
+		
+		// add in rejected Supplier Id
+		if(getManagedBean().getScQuote().getRejectedSupplierList() != null && getManagedBean().getScQuote().getRejectedSupplierList().size()>0){
+			for (Long rejectedSupplierId : getManagedBean().getScQuote().getRejectedSupplierList()) {
+				supplierCriteria.append(rejectedSupplierId)
+				.append(",");
+			}
+		}
+
+		if(supplierCriteria.length() > 0){
+			supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
+			supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
+			criteria.append("supplierId").append("^").append(supplierCriteria.toString())
+			.append("|");
+		} 
 		
 		criteria.append("recordStatus^1");
 		return criteria.toString();
