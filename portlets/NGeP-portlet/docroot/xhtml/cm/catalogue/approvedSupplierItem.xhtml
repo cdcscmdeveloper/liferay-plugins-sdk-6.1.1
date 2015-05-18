@@ -7,10 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
+
 	<div style="text-align: right;">
 		<p:commandButton value="#{lbl['lbl.cm.publish']}"
 			action="#{catalogueBackingBean.publishApprovedItems}"
-			update="approvedSupplierItemID" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedItemList) > 0 }"></p:commandButton>
+			update="approvedSupplierItemID" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedSearchDataModel.list) > 0 }"></p:commandButton>
 		<p:remoteCommand name="updateApproveItems" update="approvedSupplierItemID" />
 		
 	</div>
@@ -21,7 +22,7 @@
 		rows="10"
 		selection="#{catalogueBackingBean.managedBean.selectedApprovedItems}">
 
-		<p:column selectionMode="multiple" style="width:2%" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedItemList) > 0 }"/>
+		<p:column selectionMode="multiple" style="width:2%" rendered="#{fn:length(catalogueBackingBean.managedBean.approvedSearchDataModel.list) > 0 }"/>
 		
 		<ac:paginator for="approvedSupplierItemID"></ac:paginator>
 
