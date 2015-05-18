@@ -8,7 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<ui:define name="contentSection">
-		<ac:title value="Offered Price" />
+		<!-- <ac:title value="Offered Price" /> -->
 		<p:messages id="offeredPrices" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 		
 		<div class="clear"></div>
@@ -60,6 +60,7 @@
 					readonly="true" />
 
 			</h:panelGrid>
+		</p:panel>
 			<p:spacer height="5" />
 			<!-- Committee Members table -->
 			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true">
@@ -107,7 +108,7 @@
 
 				</p:tabView>
 			</c:if>
-		</p:panel>
+		
 
 	</ui:define>
 </ui:composition>
