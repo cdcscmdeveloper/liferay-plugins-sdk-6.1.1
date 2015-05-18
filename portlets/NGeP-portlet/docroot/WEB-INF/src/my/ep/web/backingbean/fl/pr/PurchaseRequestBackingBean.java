@@ -481,7 +481,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 		//initialize all the COA map
 		getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
-		
+		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+		orgReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
+		getManagedBean().setCurrentChargePtjGroup(profileSO.retrieveJabatanByOrgProfileId(orgReqDTO).getPmOrgProfile());
 		if(getManagedBean().getFulfilmentRequest().getStartDate() == null){
 			getManagedBean().getFulfilmentRequest().setStartDate(new Timestamp(System.currentTimeMillis()));
 			Date startDate = getManagedBean().getFulfilmentRequest().getStartDate();
@@ -2330,17 +2333,28 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * Check ptj group and initialize.
 	 */
 	private void checkPtjGroupAndInitialize() {
-		getManagedBean().setCurrentPtjGroupId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getPmPtjGroup().getPtjGroupId());
-		if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getPmPtjGroup().getPtjGroupId() != getManagedBean().getCurrentPtjGroupId()){
-			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses() != null && !getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().isEmpty()){
-				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
-					for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
-						itemAddr.setPmVotFund(null);
-						itemAddr.setPmGlAccount(null);
-						itemAddr.setPmSubSetia(null);
-						itemAddr.setPmPrgActivity(null);
-						itemAddr.setAssetInd(null);
-						itemAddr.setCoaValue("N");
+		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+		OrgProfileResDTO resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		Long orgId = null;
+		if(resDTO.getPmOrgProfile() != null){
+			orgId = resDTO.getPmOrgProfile().getOrgProfileId();
+		}
+		getManagedBean().setCurrentPtjGroupId(orgId);
+		if(getManagedBean().getCurrentPtjGroupId() != null){
+			reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+			if(profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPtjGroupId()){
+				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses() != null && !getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().isEmpty()){
+					for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+						for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+							itemAddr.setPmVotFund(null);
+							itemAddr.setPmGlAccount(null);
+							itemAddr.setPmSubSetia(null);
+							itemAddr.setPmPrgActivity(null);
+							itemAddr.setAssetInd(null);
+							itemAddr.setCoaValue("N");
+						}
 					}
 				}
 			}
@@ -3161,4 +3175,28 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
+	public void comparePtjGroup(){
+		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
+		OrgProfileResDTO resDTO = profileSO.retrieveJabatanByOrgProfileId(reqDTO);
+		Long newKumpOrgId = 0L;//TODO remove after data are all pacthed
+		if(resDTO.getPmOrgProfile() != null){
+			newKumpOrgId = resDTO.getPmOrgProfile().getOrgProfileId();
+		}
+		if(newKumpOrgId != getManagedBean().getCurrentChargePtjGroup().getOrgProfileId()){
+			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses() != null && !getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().isEmpty()){
+				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+					for(FlFulfilmentItemAddr itemAddr : flDeliveryAddress.getFlFulfilmentItemAddr()){
+						itemAddr.setPmVotFund(null);
+						itemAddr.setPmGlAccount(null);
+						itemAddr.setPmSubSetia(null);
+						itemAddr.setPmPrgActivity(null);
+						itemAddr.setAssetInd(null);
+						itemAddr.setCoaValue("N");
+					}
+				}
+			}
+		}
+	}
 }

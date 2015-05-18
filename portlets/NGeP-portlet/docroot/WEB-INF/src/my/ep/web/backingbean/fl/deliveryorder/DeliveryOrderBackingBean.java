@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -751,12 +752,17 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 * @return the string
 	 */
 	public String retrieveMofNo(SmSupplier smSupplier) {
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
-		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
-			return resDTO.getMofAccount().getMofNo();
+		if(getManagedBean().getFulfilmentRequest().getCtContract() != null){
+			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+			return ctSupplierSO.retrieveSupplierMOFNoByContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
+		}else{
+			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+			MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
+			if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
+				return resDTO.getMofAccount().getMofNo();
+			}
 		}
 		return null;
 	}

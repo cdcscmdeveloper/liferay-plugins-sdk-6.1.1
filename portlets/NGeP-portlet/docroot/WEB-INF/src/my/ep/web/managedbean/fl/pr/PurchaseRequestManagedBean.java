@@ -21,6 +21,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -500,6 +501,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private Date gstRegistrationDate;
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private PmOrgProfile currentChargePtjGroup;
 	
 /**
  * Gets the charge line item root.
@@ -3149,6 +3151,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	/**
+	 * @return the currentChargePtjGroup
+	 */
+	public PmOrgProfile getCurrentChargePtjGroup() {
+		return currentChargePtjGroup;
+	}
+
+	/**
+	 * @param currentChargePtjGroup the currentChargePtjGroup to set
+	 */
+	public void setCurrentChargePtjGroup(PmOrgProfile currentChargePtjGroup) {
+		this.currentChargePtjGroup = currentChargePtjGroup;
 	}
 
 }
