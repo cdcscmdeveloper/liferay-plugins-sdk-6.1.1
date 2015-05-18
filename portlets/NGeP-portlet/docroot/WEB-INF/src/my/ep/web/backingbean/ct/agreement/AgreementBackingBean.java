@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -61,6 +62,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -487,8 +490,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 	         
 			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
 				reqDTO.setAgreementType(ContractConst.SUP_AGREEMENT);
@@ -880,19 +882,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		UserResDTO resDTO = null;
 		
 		try {
+		
 			int i = 1;
-		 	userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-		 			ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		 	userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		 	reqDTO = new UserReqDTO();
 		 	reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 		     
 		 	if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
-		 		reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
-		 	} else if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getParentOrgProfile() != null
-		 			&& agreementParty.getOrgProfile().getParentOrgProfile().getOrgProfileId() != null) { // Department
-		 		reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getParentOrgProfile().getOrgProfileId());
+		 		 reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 		 	} else { // default to ministry
-		 		reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		 		reqDTO.setOrgProfileId(retrieveMinistryDetails().getPmOrgProfile().getOrgProfileId());
 		 	}
 		 	reqDTO.setApprovalLimit(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
 		 	resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -1376,7 +1375,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		VelocityContext context = null;
 		String vmFile = null;
 		String content = null;
-
 		if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
 			String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
 			context = new VelocityContext();
@@ -1423,12 +1421,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("userInputDate", c.get(Calendar.DATE) + "");
 			context.put("userInputMonth", c.get(Calendar.MONTH) + "");
 			context.put("currentYear", c.get(Calendar.YEAR) + "");
-			context.put("jabatanName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-			if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null) {
-				context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
-			} else {
-				context.put("ministryName", "");
-			}
+			context.put("ministryName", retrieveMinistryByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+			context.put("jabatanName", retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+			
 			if (pmAddressType != null) {
 				context.put("jabatanAddress", AddressUtils.getFullAddress(pmAddressType.getPmAddress()));
 			} else {
@@ -1448,12 +1443,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("ctSupplierWitnessList", getManagedBean().getCtSupplierWitness());
 
 			context.put("currentYear", c.get(Calendar.YEAR) + "");
-			if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null) {
-				context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
-			} else {
-				context.put("ministryName", "");
-
-			}
+			context.put("ministryName", retrieveMinistryByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
+				
 			context.put("companyName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			context.put("companyRegNo", getManagedBean().getCtContract().getSmSupplier().getRegNo());
 		}
@@ -1962,12 +1953,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return newText;
 	}
 
-public static void getDocSectionList(int level,TreeNode node,List<TplDocSection> inputStreamList){
-	if(node != null && node.getData() != null){
-		for(TreeNode parent : node.getChildren()){
-			TplDocSection docSec = (TplDocSection) parent.getData();
-			docSec.setSectionLevel(level);
-			inputStreamList.add(docSec);
+  public static void getDocSectionList(int level,TreeNode node,List<TplDocSection> inputStreamList){
+	 if(node != null && node.getData() != null){
+		 for(TreeNode parent : node.getChildren()){
+			  TplDocSection docSec = (TplDocSection) parent.getData();
+			  docSec.setSectionLevel(level);
+			  inputStreamList.add(docSec);
 			if(!parent.isLeaf()){
 				getDocSectionList(level+1,parent,inputStreamList);
 				
@@ -1975,4 +1966,24 @@ public static void getDocSectionList(int level,TreeNode node,List<TplDocSection>
 		}
 	}
 }
+  
+  public String retrievePtjBylovCondition() {
+	  
+	     OrgProfileResDTO resDTO =  retrieveMinistryDetails();
+	 	 String condition = "recordStatusFlg^1|";
+		
+	 	 for(int i =0; i< resDTO.getLevels(); i++) {
+				  condition = condition + "parentOrgProfile.";
+			  }
+			  condition = condition + "orgProfileId^"+resDTO.getPmOrgProfile().getOrgProfileId();
+			  return condition;
+      }
+  
+  public OrgProfileResDTO retrieveMinistryDetails() {
+	  
+	    IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		return profileSO.retrieveMinistryByOrgProfileId(reqDTO);
+  }
 }
