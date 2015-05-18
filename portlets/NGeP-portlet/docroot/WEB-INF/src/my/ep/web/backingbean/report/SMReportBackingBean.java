@@ -368,14 +368,14 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmReportTypeTwoView(true);
 			    rptGenBean.setSmProcessingOfficerNameView(true);
 	            break;
-		 /*case ReportConst.SM_SUPPLIER_PERFORMANCE:	
+		 case ReportConst.SM_SUPPLIER_PERFORMANCE:	
 			    rptGenBean.setSmCompanyNameView(true);
 				rptGenBean.setSmMofRegNoTwoView(true);
 				rptGenBean.setSmRegistrationTypeTwoView(true);
 				rptGenBean.setSmActiveSubmissiveFromDateView(true);
 				rptGenBean.setSmActSubmisAllDateView(true);
 				
-	            break;*/
+	            break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
