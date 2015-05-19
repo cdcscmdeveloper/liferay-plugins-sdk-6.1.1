@@ -117,59 +117,35 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				//MOF APPL
 				if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)){
 					SmWorkflowStatus workFlowStatus = getSmWorkflowStatus(supplier.getSmAppl());
-					//Transact with Federal and supplier type is CONTRACTOR
-					if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
-						if(workFlowStatus != null && workFlowStatus.getPmStatus().getStatusId() == 20199){
+					if(workFlowStatus != null && workFlowStatus.getPmStatus().getStatusId() == 20199){
+						if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONTRACTOR)){
 							if(supplier.getSmAppl().getSmCompanyBasic().isWithFederal()){
 								if(checkPendingSoftCertRequest(supplier.getSupplierId())){
 									path = SOFT_CERT_PATH;
 									getManagedBean().setFlowStatus(5);
 								}else{
-									String catalogueStat = checkCatalogueUpload(supplier.getSupplierId());
-									if(catalogueStat == null){
-										path = CATALOGUE_UPLOAD_PATH;
-										getManagedBean().setFlowStatus(6);
-									}else{
-										if(catalogueStat.equalsIgnoreCase("U")){
-											getManagedBean().setFlowStatus(0);
-										}else{
-											path = CATALOGUE_MAINT;
-											getManagedBean().setFlowStatus(6);
-										}
-									}
+									getManagedBean().setFlowStatus(0);
 								}
 							}else{
-								path = MOF_REG_PATH;
-								getManagedBean().setFlowStatus(1);
+								getManagedBean().setFlowStatus(0);
 							}
-						}else{
-							path = MOF_REG_PATH;
-							getManagedBean().setFlowStatus(1);
+						}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONSULTANT)){	
+							//path = MOF_REG_PATH;
+							getManagedBean().setFlowStatus(0);
 						}
-					}else if(supplier.getSmAppl().getSupplierType().equalsIgnoreCase(ParameterConst.SUPPLIER_TYPE_CONSULTANT)){	
-							path = MOF_REG_PATH;
-							getManagedBean().setFlowStatus(1);
+					}else{
+						path = MOF_REG_PATH;
+						getManagedBean().setFlowStatus(1);
 					}
-					
 					log.info("********FLOW STATUS**********" +  getManagedBean().getFlowStatus());
 				}else if(supplier.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.BASIC_ACCOUNT)){
 					//Basic Applcation
-					String catStatus = checkCatalogueUpload(supplier.getSupplierId());
-					if(catStatus == null){
-						path = CATALOGUE_UPLOAD_PATH;
-						getManagedBean().setFlowStatus(1);
-					}else{
-						if(catStatus.equalsIgnoreCase("U")){
-							path = SOFT_CERT_PATH;
-							getManagedBean().setFlowStatus(2);
-						}else{
-							path = CATALOGUE_MAINT;
-							getManagedBean().setFlowStatus(1);
-						}
-					}
+					path = SOFT_CERT_PATH;
+					getManagedBean().setFlowStatus(1);
 				}
 			}
 		}
+
 
 		/*			if(isPath){
 				return path;
