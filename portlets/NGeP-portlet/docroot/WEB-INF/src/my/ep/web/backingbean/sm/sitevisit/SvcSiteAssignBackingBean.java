@@ -1,6 +1,9 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -52,7 +55,7 @@ public class SvcSiteAssignBackingBean extends
 	 * and populate on screen
 	 */
 	public void retrieveSiteAssignInfo() {
-		//		this.getManagedBean().setAppId(1257118);
+		//this.getManagedBean().setAppId(1259020L);
 		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
@@ -202,11 +205,11 @@ public class SvcSiteAssignBackingBean extends
 	}
 
 	//for local testing purpose
-/*	public void preRenderView(){
+	public void preRenderView(){
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteAssignInfo();
 		}
-	}*/
+	}
 	
 	/**
 	 * to get User Role - SVC
@@ -238,8 +241,48 @@ public class SvcSiteAssignBackingBean extends
 							.getSmFacility();
 					svAddress.setFacilityName(smFacility == null ? ""
 							: smFacility.getFacilityName());
+					if(smFacility != null && smFacility.getFacilityType() != null){
+						svAddress.setFacilityType(smFacility.getFacilityType());
+					}
 				}
 			}
+			
+			sortSmSvAddressByFacilityType();
+		}
+	}
+	
+	/**
+	 * Sort smSvAddress by facility type
+	 */
+	private void sortSmSvAddressByFacilityType(){
+		if(getManagedBean().getSmSvTask().getSmSvAddresses().size() > 0){
+			 Collections.sort(getManagedBean().getSmSvTask().getSmSvAddresses(), new Comparator<SmSvAddress>(){
+				@Override
+				public int compare(SmSvAddress arg0, SmSvAddress arg1) {
+					List<String> orderLs = Arrays.asList("B", "H", "D", "F","S","W");
+					
+					int result = 0;
+					int argIndex0 = orderLs.indexOf(arg0.getFacilityType());
+					int argIndex1 = orderLs.indexOf(arg1.getFacilityType());
+					
+				    //if neither are found in the order list, then do natural sort
+				    //if only one is found in the order list, float it above the other
+				    //if both are found in the order list, then do the index compare
+					
+					if (argIndex0 < 0 && argIndex1 < 0){ 
+						if(arg0.getFacilityType() != null && arg1.getFacilityType() != null){
+							result = arg0.getFacilityType().compareTo(arg1.getFacilityType());
+						}
+					}else if (argIndex0 < 0){ 
+						result = 1;
+					}else if (argIndex1 < 0){ 
+						result = -1;
+					}else{ 
+						result = argIndex0 - argIndex1;
+					}
+				    return result;
+				}
+			 });
 		}
 	}
 }
