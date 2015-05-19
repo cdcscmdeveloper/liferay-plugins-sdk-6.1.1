@@ -45,16 +45,20 @@
 			<p:dataTable var="svc"
 				value="#{svcSiteAssignBackingBean.managedBean.smSvTask.smSvAddresses}"
 				rowIndexVar="rowIndex">
+				
+				<p:column headerText="#{lbl['lbl.sm.facility.type']}">
+					#{svcSiteAssignBackingBean.getParameterDesc(ParameterTypeConst.supplierFacilityType, svc.facilityType)}
+				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.facility.name']}"
 					style="width: 30%;white-space: normal;">
-				#{svc.facilityName}
+					#{svc.facilityName}
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sm.address']}"
 					style="width: 40%;white-space: normal;">
 					<h:outputText
-						value="#{backingBean.getSMFullAddress(svc.smAddress)}"
+						value="#{svcSiteAssignBackingBean.getSMFullAddress(svc.smAddress)}"
 						escape="false" style="float : left" />
 				</p:column>
 
