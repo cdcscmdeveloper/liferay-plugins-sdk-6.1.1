@@ -115,6 +115,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -2241,31 +2242,11 @@ public class NoticeBoardBackingBean extends
 	private Long getSupplierId() {
 
 		Long supplierId = null;
-		OrgProfileResDTO profileResDTO = getOrgProfile();
-		if (CollectionUtils.isNotEmpty(profileResDTO.getOrgProfileList())
-				&& profileResDTO.getOrgProfileList().size() > 0) {
-			supplierId = profileResDTO.getOrgProfileList().get(0)
-					.getOrgProfileId();
+		SmSupplier currSupp = SmApplicationUtil.getCurrentSupplier();
+		if(currSupp != null){
+			supplierId = currSupp.getSupplierId();
 		}
 		return supplierId;
-	}
-	
-	private OrgProfileResDTO getOrgProfile(){
-		
-		IOrgProfileSO orgProfileSO = null;
-		try {
-			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-			OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
-			profileReqDTO.setUserId(new FacesScopes().getUserSessionBean()
-					.getUserId());
-			profileReqDTO.setOrgType(OrganizationType.SUPPLIER.value());
-			OrgProfileResDTO profileResDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(profileReqDTO);
-			return profileResDTO;
-		} finally {
-			orgProfileSO = null;
-		}
 	}
 	
 	/**
