@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	<ui:param name="isCommitteeRecordStatusActive" value="#{committeBackingBean.managedBean.scCommittee.recordStatusFlg == 1}" />
+	<ui:param name="isCommitteeRecordStatusActive" value="#{committeBackingBean.managedBean.scCommittee.recordStatus}" />
 
 	<ui:fragment
 		rendered="#{committeBackingBean.managedBean.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeOpeningCommittee or 
