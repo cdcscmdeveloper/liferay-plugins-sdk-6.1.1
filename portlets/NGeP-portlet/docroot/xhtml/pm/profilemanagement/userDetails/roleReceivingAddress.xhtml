@@ -10,15 +10,32 @@
 		<p:tabView widgetVar="tvRoleReceivingAddr" id="tvRoleReceivingAddr"
 			dynamic="false" cache="false" orientation="top">
 			<!-- Roles -->
-			<p:tab title="#{lbl['lbl.pm.profiles.authorisation.roles']}">
+			<p:tab title="#{lbl['lbl.pm.profiles.authorisation.roles']}"
+				id="dtRoleTabId">
 				<p:dataTable id="dtRoles" var="role" styleClass="dtRoles" rows="10"
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 					value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmUserRoles}"
 					selection="#{profileManagementBackingBean.managedBean.deleteUserRoles}"
 					rowIndexVar="index" rowKey="#{role}">
 					<ac:paginator for="dtRoles" />
-					<p:ajax event="toggleSelect" update="@this" process="@this" />
-					<p:ajax event="rowSelectCheckbox" update="@this" />
+					<p:ajax event="rowSelect"
+						listener="#{profileManagementBackingBean.unSelectRole}"
+						update=":form:tvRoleReceivingAddr:dtRoles,@([id$=roleDeleteBtn])"></p:ajax>
+					<p:ajax event="rowUnselect"
+						listener="#{profileManagementBackingBean.unSelectRole}"
+						update=":form:tvRoleReceivingAddr:dtRoles,@([id$=roleDeleteBtn])"></p:ajax>
+					<p:ajax event="rowSelectCheckbox"
+						listener="#{profileManagementBackingBean.unSelectRole}"
+						update=":form:tvRoleReceivingAddr:dtRoles,@([id$=roleDeleteBtn])"></p:ajax>
+					<p:ajax event="rowUnselectCheckbox"
+						listener="#{profileManagementBackingBean.unSelectRole}"
+						update=":form:tvRoleReceivingAddr:dtRoles,@([id$=roleDeleteBtn])"></p:ajax>
+					<p:ajax event="rowDblselect"
+						listener="#{profileManagementBackingBean.unSelectRole}"
+						update=":form:tvRoleReceivingAddr:dtRoles,@([id$=roleDeleteBtn])"></p:ajax>
+					<p:ajax event="toggleSelect"
+						listener="#{profileManagementBackingBean.unSelectRole}"
+						update=":form:tvRoleReceivingAddr:dtRoles,@([id$=roleDeleteBtn])"></p:ajax>
 					<p:column selectionMode="multiple"
 						disabledSelection="#{!role.brandNew}" style="width:2%" />
 					<p:column headerText="#{lbl['lbl.pm.profiles.authorisation.role']}"
@@ -38,16 +55,17 @@
 						</p:inputText>
 						<p:message id="itAppLimitMsg" for="itAppLimit" display="icon" />
 					</p:column>
-					
+
 					<p:column
 						headerText="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
 						width="25%">
-						
+
 						<p:inputText id="auLetterNo" styleClass="ppDisplayTextS"
 							value="#{role.letterNo}"
 							required="#{role.pmRole.roleCode eq 'FL_APPROVER'}"
 							label="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
-							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}" maxlength="30">
+							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}"
+							maxlength="30">
 							<p:ajax event="change" process="@this" />
 						</p:inputText>
 						<p:message id="auLetterNoMsg" for="auLetterNo" display="icon" />
@@ -62,7 +80,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change"
 								listener="#{profileManagementBackingBean.userRoleStatusChange(role)}"
-								partialSubmit="true" process="@this" update=":form:tvRoleReceivingAddr" />
+								partialSubmit="true" process="@this"
+								update=":form:tvRoleReceivingAddr" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>
@@ -71,10 +90,13 @@
 				<div class="ppRightBtn">
 					<p:commandButton
 						action="#{profileManagementBackingBean.getAvailbleUserRole}"
-						immediate="true" value="#{lbl['lbl.btn.add']}"  disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
+						immediate="true" value="#{lbl['lbl.btn.add']}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
 						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions" />
 					&#160;
-					<p:commandButton value="#{lbl['lbl.btn.delete']}" disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
+					<p:commandButton id="roleDeleteBtn"
+						value="#{lbl['lbl.btn.delete']}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or profileManagementBackingBean.disableDeleteRole}"
 						action="#{profileManagementBackingBean.deleteRole}"
 						update=":form:tvRoleReceivingAddr" />
 
@@ -102,42 +124,45 @@
 				    	#{profileManagementBackingBean.getFullAddress(receivAddrType.pmAddress)}
 			        </p:column>
 					<p:column headerText="#{lbl['lbl.pm.profiles.userdetails.status']}">
-						
+
 						<p:selectOneMenu value="#{receivAddrType.recordStatusFlg}"
 							disabled="#{receivAddrType.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change"
-									listener="#{profileManagementBackingBean.receivAddStatusChange(receivAddrType)}"
-									partialSubmit="true" process="@this"
-									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
+								listener="#{profileManagementBackingBean.receivAddStatusChange(receivAddrType)}"
+								partialSubmit="true" process="@this"
+								update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
 						</p:selectOneMenu>
 					</p:column>
 				</p:dataTable>
 				<br />
 				<br />
 				<div class="ppRightBtn">
-				
+
 					<div style="float: right">
-							<p:commandButton value="#{lbl['lbl.btn.delete']}" disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
-									action="#{profileManagementBackingBean.deleteReceivingAddr}"
-									update=":form:tvRoleReceivingAddr:dtReceiveAddr" />
-				     </div>
-							<div >	<!-- Receiving Address Selection Popup --> <ac:lov
-									id="lovAddrType" lovId="PM_ADDRESS_TYPE"
-									styleClass="ppDisplayCalS" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
-									selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
-									headerText="#{lbl['lbl.pm.profiles.authorisation.select.address']}"
-									update=":form:tvRoleReceivingAddr:dtReceiveAddr"
-									saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes"
-									postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes)"
-									conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|pmOrgProfile.orgProfileId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgProfileId}|addressType^D|recordStatus^1" />
-							</div>
-							
+						<p:commandButton value="#{lbl['lbl.btn.delete']}"
+							disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
+							action="#{profileManagementBackingBean.deleteReceivingAddr}"
+							update=":form:tvRoleReceivingAddr:dtReceiveAddr" />
+					</div>
+					<div>
+						<!-- Receiving Address Selection Popup -->
+						<ac:lov id="lovAddrType" lovId="PM_ADDRESS_TYPE"
+							styleClass="ppDisplayCalS" readonly="true"
+							disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
+							selectionMode="multiple" buttonLabel="#{lbl['lbl.btn.add']}"
+							headerText="#{lbl['lbl.pm.profiles.authorisation.select.address']}"
+							update=":form:tvRoleReceivingAddr:dtReceiveAddr"
+							saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes"
+							postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes)"
+							conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|pmOrgProfile.orgProfileId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgProfileId}|addressType^D|recordStatus^1" />
+					</div>
+
 				</div>
 			</p:tab>
 		</p:tabView>
-<ac:lovPopup /> 
+		<ac:lovPopup />
 	</p:outputPanel>
 
 	<!-- Role Selection Popup -->
