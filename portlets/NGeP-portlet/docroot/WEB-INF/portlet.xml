@@ -5304,6 +5304,39 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
+		<portlet-name>pmCalenderSchedule</portlet-name>
+		<display-name>Calender</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pm/settings/general/calenderScheduler.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Calender</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
 		<portlet-name>factoring-Companies</portlet-name>
 		<display-name>Factoring Companies</display-name>
 		<portlet-class>
@@ -5772,8 +5805,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Profile Management Search</title>
-			<short-title>Profile Management Search</short-title>
+			<title>User Profile</title>
+			<short-title>User Profile</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
