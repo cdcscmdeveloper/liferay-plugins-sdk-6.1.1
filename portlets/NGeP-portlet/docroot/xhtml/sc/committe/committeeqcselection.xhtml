@@ -14,7 +14,7 @@
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
 			<p:column selectionMode="multiple" style="width:2%"
-				rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}" />
+				rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}" />
 
 			<ac:paginator for="committeMembersListId" />
 
@@ -54,7 +54,7 @@
 			</p:column>
 
 			<c:if
-				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() ne 60202}">
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId ne QTStatusConst.CMT_COMPLETED}">
 
 				<p:column headerText="#{lbl['lbl.sc.role']}"
 					style="width: 10%">
@@ -63,7 +63,7 @@
 				</p:column>
 			</c:if>
 			<c:if
-				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId.intValue() eq 60202}">
+				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
 				<p:column headerText="#{lbl['lbl.sc.role']}"
 					style="width: 10%">
 					<ui:fragment rendered="#{committeemember.PNP}">
@@ -81,7 +81,7 @@
 			</c:if>
 		</p:dataTable>
 		<h:panelGroup
-			rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
+			rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.clone']}"
 					action="#{committeBackingBean.cloneCommitteMembersAcition(committeBackingBean.managedBean.headerTitle)}"
@@ -100,7 +100,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
-		rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq '60202'}">
+		rendered="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
