@@ -482,12 +482,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		this.getManagedBean().setTaskId(paymentTaskId);
 		this.getManagedBean().setBpmPojo(paymentBpmPojo);
 
-		try {
-			curlIPN(httpServletRequest);
-		} catch (Exception ex) {
-			log.error("curlIPN: " + ex.getMessage());
-		}
-
 		log.info("orderId: " + orderId);
 		log.info("tranID: " + tranID);
 		log.info("status:" + status);
@@ -631,7 +625,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-
+				
+				try {
+					curlIPN(httpServletRequest);
+				} catch (Exception ex) {
+					log.error("curlIPN: " + ex.getMessage());
+				}
+				
 				showPaymentResponse(status, paymentId);
 				this.renewSesionObject();
 			} else {
