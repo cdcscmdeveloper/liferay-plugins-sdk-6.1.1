@@ -4,7 +4,8 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core"
    	xmlns:p="http://primefaces.org/ui"
-   	xmlns:c="http://java.sun.com/jsp/jstl/core">
+   	xmlns:c="http://java.sun.com/jsp/jstl/core"
+   	xmlns:ac="http://ac.my/jsf/composite/cc" >
     
 <cc:interface>
 	<cc:attribute name="id" />
@@ -24,6 +25,7 @@
 	<cc:attribute name="uiMode" default="" />
 	<cc:attribute name="buttonLabel" default="" />
 	<cc:attribute name="buttonIcon" default="ui-icon-lov" />
+	<cc:attribute name="tooltip" default="" />
 	<cc:actionSource name="actionEvent" targets="#{cc.attrs.id}#{cc.attrs.selectionMode eq 'multiple' ? 'lovBtn' : (cc.attrs.uiMode eq 'button' ? 'lovSingleBtn' : 'lovLink')}" />
 </cc:interface>
 
@@ -130,6 +132,10 @@
 			</c:if>
 					
 		</p:commandButton>
+	</h:panelGroup>
+	
+	<h:panelGroup rendered="#{cc.attrs.tooltip != ''}">
+		<ac:iconTooltip value="#{cc.attrs.tooltip}"/>
 	</h:panelGroup>
 	
 	<h:panelGroup id="msgpg" rendered="#{cc.attrs.selectionMode ne 'multiple'}">
