@@ -8,10 +8,7 @@
 	
 	<h:panelGrid  columns="4" columnClasses="columnWidth200,columnWidth230,columnWidth180,columnWidth300">
 				
-					<h:panelGrid columns="2" style="float:right;">
-					     <p:outputLabel value="*" styleClass="mandatory" />
-					     <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" />
-				   </h:panelGrid>
+					    <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" styleClass="required"/>
 				   <h:panelGrid columns="2">
 					 <p:inputTextarea id="circularNoTxt1" style="width:170px;margin-top:2px;margin-bottom:2px"  
 						required="true" maxlength="60" disabled="#{panelBackingBean.managedBean.viewContract}" rows="5" 
@@ -19,11 +16,7 @@
 					 <p:message for="circularNoTxt1" display="icon" />
 				   </h:panelGrid>
 				   
-				   <h:panelGrid columns="2" style="float:right;">
-					     <p:outputLabel value="*" styleClass="mandatory" />
-					     	<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" />
-					</h:panelGrid>
-					
+				      	<h:outputLabel value="#{lbl['lbl.ct.circular.name']}" styleClass="required"/>
 					<h:panelGrid columns="2">
 					    <p:inputTextarea id="circularNameTxt1" rows="5"  style="width:230px;" maxlength="200"
 					        disabled="#{panelBackingBean.managedBean.viewContract}" autoResize="false"
@@ -84,7 +77,7 @@
 				</p:calendar>
 		 </h:panelGrid>
 		 <h:panelGrid columns="2">
-				<h:panelGrid style="float:right;" class="columnWidth200">
+				<h:panelGrid class="columnWidth200">
 		        	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
 		    	</h:panelGrid> 
 		        <h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" 
