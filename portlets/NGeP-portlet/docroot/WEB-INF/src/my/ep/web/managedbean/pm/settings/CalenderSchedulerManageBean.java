@@ -20,12 +20,14 @@ import org.primefaces.model.LazyScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "calenderSchedulerMB")
 @SessionScoped
 public class CalenderSchedulerManageBean extends BaseManagedBean{
 	 private ScheduleModel eventModel;
+	 private Long selectedStateId;
      
 	 private ScheduleEvent event = new DefaultScheduleEvent();
 	 
@@ -66,7 +68,10 @@ public class CalenderSchedulerManageBean extends BaseManagedBean{
 //	        return calendar;
 //	    }
 	     
-//	    private Date previousDay8Pm() {
+
+
+
+		//	    private Date previousDay8Pm() {
 //	        Calendar t = (Calendar) today().clone();
 //	        t.set(Calendar.AM_PM, Calendar.PM);
 //	        t.set(Calendar.DATE, t.get(Calendar.DATE) - 1);
@@ -140,7 +145,17 @@ public class CalenderSchedulerManageBean extends BaseManagedBean{
 	        return event;
 	    }
 	 
-	    public void setEvent(ScheduleEvent event) {
+	    public Long getSelectedStateId() {
+			return selectedStateId;
+		}
+
+
+		public void setSelectedStateId(Long selectedStateId) {
+			this.selectedStateId = selectedStateId;
+		}
+
+
+		public void setEvent(ScheduleEvent event) {
 	        this.event = event;
 	    }
 	     

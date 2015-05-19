@@ -18,9 +18,10 @@
 						<th width="20%"><p:outputLabel
 								value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
+								
 						<td><p:selectOneRadio
 								value="#{profileManagementBackingBean.managedBean.searchOrgCategory}"
-								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}">
+								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or !profileManagementBackingBean.isNotEpOrSupportAdmin()}">
 								<f:selectItem
 									itemLabel="#{lbl['lbl.pm.org.federal.government']}"
 									itemValue="#{profileManagementBackingBean.federalGovt}" />
