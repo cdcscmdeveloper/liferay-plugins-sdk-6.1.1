@@ -26,12 +26,14 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.persistence.criteria.JoinType;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -82,7 +84,6 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
-import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.committee.CommitteManagedBean;
@@ -361,7 +362,7 @@ public class CommitteBackingBean extends
 				populateQTSearchCriteria(qtnTenderSearchBean, searchBean);
 				committeReqDTO.setCommSearchBean(searchBean);
 				CommitteResDTO resDTO = committeSO
-						.retriveQtCommitteDtls(committeReqDTO);
+						.searchQtCommittes(committeReqDTO);
 				return resDTO.getQtCommitteResultBean();
 			} finally {
 				committeSO = null;
@@ -419,8 +420,64 @@ public class CommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(),
 								committeeType));
 			}
+			
+			// Filter by FC Committee only
+			qtSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"scCommittee.committeeType.parameterCode",
+							SearchOperator.OPERATOR_IN.value(),
+							getFCCommitteeTypes()));
+			
+			// Filter by login user
+			qtSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"scCommittee.scCommitteeMembers.pmUser.userId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							new FacesScopes().getUserSessionBean().getUserId(),
+							JoinType.LEFT));
+			
+			// Filter by secretary role
+			qtSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"scCommittee.scCommitteeMembers.memberRole.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							ParameterConst.COMMITTEE_ROLE_SECRETARY,
+							JoinType.LEFT));
+			
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+			
+			qtSearchBean.getSortColumns().add(new SearchOrderBean("qtCommitteeId", false));
 		}
+	}
+	
+	/**
+	 * Populate FC committee type(s) in drop down
+	 * 
+	 * @return an array of FC committee type values
+	 */
+	public SelectItem[] getFCCommitteesDropDown() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(),
+						getFCCommitteeTypes()));
+
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.SC_COMMITTEE_TYPE, searchBean);
+	}
+	
+	private List<String> getFCCommitteeTypes() {
+		List<String> committeeTypes = new ArrayList<String>();
+		
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B);
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A);
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_B);
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_PROCUREMENT_BOARD_A);
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH);
+		committeeTypes.add(ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK);
+		
+		return committeeTypes;
 	}
 
 	/*
@@ -475,7 +532,6 @@ public class CommitteBackingBean extends
 	public String updateCommitteDetails(String outCome) {
 		debugLogger("submitCommitteDetails");
 		ScQtCommittee scQtCommittee = getManagedBean().getQtCommittee();
-		String committeeType = getManagedBean().getScCommittee().getCommitteeType().getParameterCode();
 		
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		committeReqDTO.setOutcome(outCome);
