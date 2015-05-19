@@ -205,6 +205,12 @@ public class ProfileManagementBackingBean extends
 
 		return this.orgTypeSearchBean;
 	}
+	public boolean isNotEpOrSupportAdmin(){
+		if(getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value()) || getFacesScopes().hasRoleUser(RoleCode.SUPPORT_ADMIN.value())){
+			return true;
+		}
+		return false;
+	}
 	public String constructConditionFields(){
 		
 		StringBuilder sb = new StringBuilder();
