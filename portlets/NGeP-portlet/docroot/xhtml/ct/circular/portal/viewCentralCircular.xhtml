@@ -64,8 +64,10 @@
 			             style="width:115px;" disabled="true">
 			              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></p:inputText>
 		   </h:panelGrid>
-		   <h:panelGrid columns="2" class="columnWidth200">
+		   <h:panelGrid columns="2">
+		     <h:panelGrid  class="columnWidth200">
 			  	<p:outputLabel value="#{lbl['lbl.ct.circular.letter']}" />
+			  </h:panelGrid>
 		        <h:commandLink value="#{centralContractBackingBean.managedBean.circularVer.circularFileName}" 
 		       	 	styleClass="blue_font" 
 					action="#{centralContractBackingBean.downloadFile(1)}" />
