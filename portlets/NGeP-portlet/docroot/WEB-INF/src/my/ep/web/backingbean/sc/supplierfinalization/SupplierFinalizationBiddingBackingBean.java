@@ -251,6 +251,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 									if (packageBean.getScBidSupplier().getSmSupplier().isBumi()) {
 										bumiPriceList.add(packageBean.getBidPriceTotal());
 									}
+									String supplierName = getSupplierNameById(
+											packageBean.getScBidSupplier().getSmSupplier().getSupplierId());
+									packageBean.setSupplierName(supplierName);
 //									packageBean.getScBidSupplier().getScBidSupplierItems();
 								}
 								if (CollectionUtils.isNotEmpty(bumiPriceList)) {
