@@ -31,10 +31,10 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td style="width: 146px;"><p:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td style="width: 460px;"><p:inputText size="8" id="preparedOrgProfileId"
+				<td style="width: 560px;"><p:inputText size="8" id="preparedOrgProfileId"
 						readonly="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
 					<p:spacer width="5" /> <ac:lov id="preparedPtj"
@@ -44,12 +44,10 @@
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View' or purchaseRequestBackingBean.isFlFulfilmentApprover()}"
 						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true" size="50"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
-						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}"
+						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
 					</ac:lov>
-				</td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
-				</td>	
+				</td>				
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
@@ -75,11 +73,10 @@
 						update=":form:chargeOrgProfileId" size="50"
 						disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						postUpdateListener="purchaseRequestBackingBean.comparePtjGroup()"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
-					</ac:lov></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
-				</td>					
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
+						tooltip="#{lbl['lbl.fl.tooltip.charge.ptj']}" >
+					</ac:lov>
+				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
