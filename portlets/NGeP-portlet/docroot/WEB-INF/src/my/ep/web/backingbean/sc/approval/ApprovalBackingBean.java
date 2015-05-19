@@ -329,7 +329,8 @@ public class ApprovalBackingBean extends
 					.getXflagCommittee());
 		} else if (obj instanceof SCEvaluationDataType) {
 			qtId = ((SCEvaluationDataType) obj).getQtId().longValue();
-
+			paramTypes = getRequestTypes(((SCEvaluationDataType) obj)
+					.getXflagCommittee());
 		} else {
 			qtId = ((SCQuotationTenderDataType) obj).getQtId().longValue();
 

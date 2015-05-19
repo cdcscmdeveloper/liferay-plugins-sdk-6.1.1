@@ -1675,7 +1675,7 @@ public class QTCommitteBackingBean extends
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 
-		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(currentQtStatus) < 0) {
+		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(currentQtStatus) <= 0) {
 			return true;
 		}
 
@@ -1709,6 +1709,9 @@ public class QTCommitteBackingBean extends
 					isChairpersonRequired(committee.getScCommitteeMembers());
 					isSecretaryRequired(committee.getScCommitteeMembers());
 					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
+				}else{
+					committee.setApprovalReq(false);
+					throw new EpException(MessageConst.ERROR_760275);
 				}
 			}
 		}

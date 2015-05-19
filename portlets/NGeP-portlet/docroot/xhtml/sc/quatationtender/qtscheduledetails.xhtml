@@ -38,35 +38,35 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.qt.bsv.date']}" /></td>
 					<td><p:inputText id="bsvDate"
-						value="#{qTScheduleDetailBackingBean.managedBean.bsvDate}"
-						readonly="true" disabled="true" style="width: 111px;margin-top:5px" >
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+							value="#{qTScheduleDetailBackingBean.managedBean.bsvDate}"
+							readonly="true" disabled="true"
+							style="width: 111px;margin-top:5px">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
 				</tr>
 			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" /></td>
-				<td>
-					<p:inputText
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.publishing.period']}" /></td>
+				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.publishPeriod}"
-						readonly="true" id="publishingperiod" disabled="true" 
-						style="width: 111px;margin-top:5px; text-align:right" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" />
-				</td>
+						readonly="true" id="publishingperiod" disabled="true"
+						style="width: 111px;margin-top:5px; text-align:right" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.qt.publishing.period.tooltip']}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
 				<td><p:inputText id="closingDate"
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
-						readonly="true" disabled="true" style="width: 111px;margin-top:5px" >
+						readonly="true" disabled="true"
+						style="width: 111px;margin-top:5px">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText
 						value="12:00 PM" disabled="true" size="4"
-						style="width: 60px;margin-top: 5px;margin-bottom: 0px;" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.closing.date.tooltip']}" />
-				</td>
+						style="width: 60px;margin-top: 5px;margin-bottom: 0px;" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.closing.date.tooltip']}" /></td>
 			</tr>
 			<c:if
 				test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
@@ -86,19 +86,19 @@
 										disabled="true" size="4" style="width: 52px" /></td>
 								<td><p:message id="sampledate" for="sampleclsdate"
 										display="icon" /></td>
-								<td>
-									<ac:iconTooltip value="#{lbl['lbl.sc.sample.closingdate.tooltip']}" />
-								</td>
+								<td><ac:iconTooltip
+										value="#{lbl['lbl.sc.sample.closingdate.tooltip']}" /></td>
 							</tr>
 						</table>
 					</td>
 				</tr>
 			</c:if>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.qt.proposal.validity']}" /></td>
 				<td><p:inputText
 						value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
-						readonly="true" disabled="true" 
+						readonly="true" disabled="true"
 						style="width: 111px;margin-top:5px;text-align:right" /></td>
 			</tr>
 			<tr>
@@ -106,7 +106,8 @@
 						value="#{lbl['lbl.sc.proposal.validity.until']}" /></td>
 				<td><p:inputText id="proposalvalidityid"
 						value="#{qTScheduleDetailBackingBean.managedBean.proposalValidityUntil}"
-						readonly="true" disabled="true" style="width: 111px;margin-top:5px;" >
+						readonly="true" disabled="true"
+						style="width: 111px;margin-top:5px;">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -125,8 +126,8 @@
 	</p:panel>
 	<c:if
 		test="#{qTScheduleDetailBackingBean.managedBean.qt.sampleReq eq 'true'}">
-		<p:panel id="samplezoneid" header="#{lbl['lbl.sc.qt.sample.submission']}"
-			toggleable="true"
+		<p:panel id="samplezoneid"
+			header="#{lbl['lbl.sc.qt.sample.submission']}" toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal eq 'true'}"
 			styleClass="sampleSubmitionUpdate">
 			<p:dataTable id="sampleid" var="samplesubmissiondtl" editable="true"
@@ -153,7 +154,8 @@
 						action="#{qTScheduleDetailBackingBean.editAddress(samplesubmissiondtl,rowIndex)}"
 						style="margin-right:20px;" partialSubmit="true" process="@this"
 						update="@(.sampleSubmitionUpdate)">
-						<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
+						<h:graphicImage value="/css/images/design/edit.png"
+							styleClass="tasklist_title1" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
@@ -165,13 +167,14 @@
 					update="@(.sampleSubmitionUpdate)" />
 			</div>
 		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.qt.sample.submission']}" toggleable="true"
+		<p:panel header="#{lbl['lbl.sc.qt.sample.submission']}"
+			toggleable="true"
 			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.zonal ne 'true'}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 82px;"><p:outputLabel
-							value="#{lbl['lbl.sc.qt.address.one']}" /> <p:outputLabel value="*"
-							styleClass="mandatory" /></td>
+							value="#{lbl['lbl.sc.qt.address.one']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
 					<td>
 						<table>
 							<tr>
@@ -314,7 +317,8 @@
 			</table>
 		</p:panel>
 	</c:if>
-	<p:panel header="#{lbl['lbl.sc.contact.person.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.contact.person.details']}"
+		toggleable="true">
 		<p:dataTable var="contactpersondetails" id="cpersondetailsid"
 			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
@@ -328,21 +332,25 @@
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:inputText value="#{contactpersondetails.name}"
-					style="width: 200px;" />
+					style="width: 200px;"
+					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.tel.no']}">
 				<h:inputText value="#{contactpersondetails.phoneNo}"
-					style="width: 120px;" />
+					style="width: 120px;"
+					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.fax.no']}">
 				<h:inputText value="#{contactpersondetails.faxNo}"
-					style="width: 120px;" />
+					style="width: 120px;"
+					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.email']}">
-				<h:inputText value="#{contactpersondetails.email}" />
+				<h:inputText value="#{contactpersondetails.email}"
+					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="1" />
@@ -367,7 +375,8 @@
 			content="#{lbl['lbl.sc.dialog.confirm.contact.person.dtls']}"
 			update="@([id$=cpersondetailsid])" />
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.qt.desk.officer.admin']}"
+		toggleable="true">
 		<p:dataTable id="doaaid" var="deskofficeradmin"
 			value="#{qTScheduleDetailBackingBean.managedBean.pmuserContactpersonList}"
 			selection="#{qTScheduleDetailBackingBean.managedBean.selectedpmuserContactpersonList}"
@@ -379,7 +388,8 @@
 			<ac:paginator for="doaaid" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
-				<p:selectOneMenu value="#{deskofficeradmin.user.userId}">
+				<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
+					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
@@ -404,8 +414,7 @@
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 		</div>
 		<ui:param name="doaaDeleteId" value="doaaDeleteId" />
-		<ac:confirmationPopup id="#{doaaDeleteId}"
-			widget="doaaDeletePopUp"
+		<ac:confirmationPopup id="#{doaaDeleteId}" widget="doaaDeletePopUp"
 			okAction="qTScheduleDetailBackingBean.deleteDeskOfficerAdminAssistant"
 			width="450" height="200"
 			title="#{lbl['lbl.sc.qt.desk.officer.admin']}"
