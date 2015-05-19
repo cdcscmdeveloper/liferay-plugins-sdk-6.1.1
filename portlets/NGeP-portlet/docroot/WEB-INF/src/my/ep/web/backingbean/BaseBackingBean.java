@@ -897,6 +897,19 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return jabatan;
 	}
 	
+	public String retrievePegawaiPengawalByOrgProfileId(Long orgProfileId){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		resDTO = profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
+		String pagawaiPengawal = "";
+		if(resDTO.getPmOrgProfile() != null){
+			pagawaiPengawal = resDTO.getPmOrgProfile().getOrgName();
+		}
+		return pagawaiPengawal;
+	}
+	
 	public String retrieveMinistryByOrgProfileId(Long orgProfileId){
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
