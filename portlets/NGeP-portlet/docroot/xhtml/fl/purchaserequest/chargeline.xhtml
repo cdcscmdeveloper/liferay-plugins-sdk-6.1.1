@@ -224,10 +224,10 @@
 						size="7"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
 						conditionField="pmPtjGroup.ptjGroupId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}*pmPtjGroup^1^11"
-						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}"	>
+						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}"	
+						tooltip="#{lbl['lbl.fl.tooltip.gosodo']}" >
 					</ac:lov></h:panelGroup>
 					</td>
-					<td><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.gosodo']}"/></td>
 				</tr>
 			</table>	
 			<table style="width: 100%;">
