@@ -29,6 +29,7 @@ import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -57,6 +58,8 @@ import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteReqDTO;
 import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -149,6 +152,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	
 	/** The log. */
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
+	
+	/** The text before sign. */
+	private String textBeforeSign;
 	
 	/**
 	 * Instantiates a new simple quote backing bean.
@@ -3039,7 +3045,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			for (SmSupplier supplier : suppliers) {
 				ScQuoteSupplier quoteSupplier = new ScQuoteSupplier();
 				quoteSupplier.setSmSupplier(supplier);
-				//quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
+				quoteSupplier.setMofNumber(getMofNor(supplier.getSupplierId()));
 				quoteSupplier.setQuote(quote);
 
 				if(getManagedBean().getSupplierList().isEmpty()){
@@ -3715,6 +3721,71 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return scQuoteZone;
 	}
 	
+
+	/**
+	 * save supplier response details.
+	 * 
+	 * save - save data into database supplier response details
+	 */	
+	public String supplierSave() {
+		debugLogger("supplierSave");
+		try {
+			FacesScopes facesScopes = new FacesScopes();
+			QuoteReqDTO reqDTO = new QuoteReqDTO();
+			ScQuote quote = getManagedBean().getScQuote();
+
+			// tpl spec - product
+			List<TplSpecAnswer> specAnswers  = new ArrayList<TplSpecAnswer>();
+			if(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList() != null){
+				specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
+			}
+
+			// tpl spec - service
+			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
+				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
+			}
+			
+			// update is submitted by supplier
+			if(quote.getScQuoteSuppliers() != null && quote.getScQuoteSuppliers().size()>0){
+				for (ScQuoteSupplier scQuoteSupplier : quote.getScQuoteSuppliers() ) {
+					scQuoteSupplier.setSubmitted(Boolean.FALSE);
+				}
+			}
+
+			// remarks
+			finalizeRemarks(quote.getRemarks());
+			reqDTO.setSpecAnswers(specAnswers);
+			reqDTO.setQuoteBidDtl(quote);
+			reqDTO.setRoleCode(getUserRoleCode());
+
+			reqDTO.setPmUser(facesScopes.getUserSessionBean());
+			reqDTO.setSupplier(getManagedBean().getSmSupplier());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
+			if (quoteResDTO.isSuccessful()) {
+				ScQuote scQuote = getManagedBean().getScQuote();
+
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
+						FacesMessage.SEVERITY_INFO, 
+						null,
+						MessageUtils.getMessage(MessageConst.INFO_700026, 
+								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, 
+								new FacesScopes().getUserLocale())));
+
+				FacesContext fc = FacesContext.getCurrentInstance();
+				retrieveSupplierView(scQuote);
+				fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "supplerView");	
+
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
+		}  finally {
+			//quoteSO = null;
+		}
+		return null;
+	}
+
 	/**
 	 * submit supplier response details.
 	 * submit - save data into database and BPM process will route to the next respective user.
@@ -3722,7 +3793,28 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * @param pmDigiSign the pm digi sign
 	 * if quote is single, page navigate to acknowledge page otherwise remains.
 	 */	
-	public String supplierSubmit(PmDigiSign  pmDigiSign) {
+	public void supplierSubmit() {
+		debugLogger("supplierSubmit");
+		//ScQuote quote = getManagedBean().getScQuote();
+
+		/*if(quote.getProcurementType() != null && 
+				quote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
+			//gpki
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+
+		} else {*/
+			// spki
+			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		//}
+	}
+	
+	/**
+	 * Update supplier response.
+	 * and also authenticating gpki and spki before submit price details
+	 * @param pmDigiSign the pm digi sign
+	 * @return the string
+	 */
+	public String updateSupplierResponse(PmDigiSign  pmDigiSign) {
 		debugLogger("supplierSubmit");
 		try {
 			FacesScopes facesScopes = new FacesScopes();
@@ -3734,24 +3826,42 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getProductTemplateSpecBean().getSpecAnswerList());
 			}
+
+			// gpki
+			/*if(quote.getProcurementType() != null && 
+					quote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
+				
+				if (null != pmDigiSign) {
+					updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
+							quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.TRUE));
+				}
+				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");	
+			} else {*/
 			
-			
+				// spki
+				if (null != pmDigiSign) {
+					updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
+							quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.FALSE));
+				}
+				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
+				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
+				pmDigiSign.setSignedData(signedData);
+			//}
+				
+			// hide blcok ui
+			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
+		
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
-
-			if (null != pmDigiSign) {
-				updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
-						quote.getQuoteId(), quote.getQuoteNo() , prepareOriginalText());
+			
+			// update is submitted by supplier
+			if(quote.getScQuoteSuppliers() != null && quote.getScQuoteSuppliers().size()>0){
+				for (ScQuoteSupplier scQuoteSupplier : quote.getScQuoteSuppliers() ) {
+					scQuoteSupplier.setSubmitted(Boolean.TRUE);
+				}
 			}
-			
-			// spki 
-			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText());
-			pmDigiSign.setSignedData(signedData);
-			
 			// remarks
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
@@ -3761,6 +3871,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setSupplier(getManagedBean().getSmSupplier());
+			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = getManagedBean().getScQuote();
@@ -3797,7 +3908,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 *
 	 * @return the string
 	 */
-	private String prepareOriginalText() {
+	private String prepareOriginalText(boolean isG2GSupplier) {
+		/*The first one is the Government user, it is the combination of IC.No,
+		> Organization Code and Country Code.
+		> 0000000081102813580400000000000211602001MY
+		> IC No. , Organization code, Country code
+		> 
+		> The second one is for Supplier, it is the combination of IC. No, Reg No and
+		> Country Code.
+		> 00000000680427115037000000000KT0143162-VMY
+		> IC No. , Registration No., Country code*/
+		
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
 		SmSupplier smSupplier = null;
@@ -3822,9 +3943,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		sb.append(getManagedBean().getScQuote().getQuoteNo())
 		.append("|")
 		.append(facesScopes.getUserSessionBean().getIdentificationNo())
-		.append("|")
-		.append(smSupplier.getRegNo())
-		.append("|")
+		.append("|");
+
+		if(isG2GSupplier){
+			sb.append(facesScopes.getUserSessionBean().getOrgTypeCode());
+		} else{
+			sb.append(smSupplier.getRegNo());
+		}
+		sb.append("|")
 		.append(countryCode);
 		orginalText  = sb.toString();
 		return orginalText;
@@ -4168,19 +4294,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return userName;
 	}
+
+	private String getMofNor(Long supplierId) {
+		String mofNo = "";
+		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
+				.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						IMofAccountSO.class);
+		MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+		accountReqDTO.setSupplierId(supplierId);
+		MofAccountResDTO mofAccountResDTO = mofAccountSO
+				.retrieveMofNoBySupplierId(accountReqDTO);
+		if (mofAccountResDTO.getMofAccount() != null) {
+			mofNo = mofAccountResDTO.getMofAccount().getMofNo();
+		}
+		return mofNo;
+	}
 	
-	/*
-	 * private String getMofNor(Long supplierId) { String mofNo ="";
-	 * IMofAccountSO mofAccountSO =
-	 * (IMofAccountSO)BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-	 * IMofAccountSO.class); MofAccountReqDTO accountReqDTO = new
-	 * MofAccountReqDTO(); accountReqDTO.setSupplierId(supplierId);
-	 * MofAccountResDTO mofAccountResDTO =
-	 * mofAccountSO.retrieveMofNoBySupplierId(accountReqDTO);
-	 * if(mofAccountResDTO.getMofAccount() != null){ mofNo =
-	 * mofAccountResDTO.getMofAccount().getMofNo(); } return mofNo; }
-	 */
 	/**
 	 * On tab change.
 	 *
@@ -4482,13 +4612,54 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return root;
 	}
 	
+	public boolean isSupplierUser() {
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("SUPPLIER_USER")
+				|| fs.hasRoleUser("MOF_SUPPLIER_USER")
+				|| fs.hasRoleUser("MOF_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("BASIC_SUPPLIER_USER")
+				|| fs.hasRoleUser("BASIC_SUPPLIER_ADMIN")
+				|| fs.hasRoleUser("SUPPLIER_TEMP");
+	}
+
+	public boolean isG2GSeller() {
+		FacesScopes fs = new FacesScopes();
+		return  fs.hasRoleUser("GOVT_SELLER");
+	}
 	
 	/**
-	 * Spki sign action.
+	 * Gpki sign action.
+	 * Authenticating gpki before update bpm.
+	 * @param digiSign the digi sign
 	 */
-	public void spkiSignAction() {
-		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+	public void gpkiSignAction(PmDigiSign digiSign) {
+		updateSupplierResponse(digiSign);
 	}
+
+	/**
+	 * Gets the text before sign.
+	 * prepare sign in data for gpki authentication.
+	 * @return the text before sign
+	 */
+	public String getTextBeforeSign() {
+		StringBuilder sb = new StringBuilder();
+		if(getManagedBean().getScQuote() != null){
+			sb.append(getManagedBean().getScQuote().getQuoteNo());
+		}
+		sb.append(new FacesScopes().getUserSessionBean().getUserId());
+		textBeforeSign = sb.toString();
+		return textBeforeSign;
+	}
+
+	/**
+	 * Sets the text before sign.
+	 *
+	 * @param textBeforeSign the new text before sign
+	 */
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}	
 
 	/**
 	 * Gets the quote so.
