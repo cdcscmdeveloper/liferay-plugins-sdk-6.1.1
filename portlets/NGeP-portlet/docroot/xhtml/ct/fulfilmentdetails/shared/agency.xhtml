@@ -244,8 +244,7 @@
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
-       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" process="@this"
-       		                onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
+       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" process="@this" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 			            action="#{contractDetailsBackingBean.resetAgencyDetails}" update=":form:agencyies"   />
 		       </div>
@@ -264,11 +263,7 @@
                     <p:column headerText="#{lbl['lbl.ct.ptj.name']}" >
                       	#{pmVar.orgName}
 					</p:column>
-			 </p:dataTable>
-			  <p:blockUI widgetVar="blkAgencyTable" trigger="agencySearchId"  block=":form:agencyies">  
-			      <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
-		      </p:blockUI> 
-           
+			 </p:dataTable>           
 			  <h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{contractDetailsBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
