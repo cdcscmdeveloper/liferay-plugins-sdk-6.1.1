@@ -2551,9 +2551,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	font-family: Arial, Helvetica, Verdana, sans-serif;
 	font-weight: bold;
 	font-size: 14px;
-	color: #808080;
-	padding: 3px 3px 10px 3px;
-	border: none;
+	color: #0054A6;
 }
 
 .section-title {
