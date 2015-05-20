@@ -278,6 +278,59 @@ public class ProfileManagementBackingBean extends
 
 		return sb.toString();
 	}
+	
+	public String constructConditionFieldsForCreate() {
+	
+		StringBuilder sb = new StringBuilder();
+		sb.append("orgTypeCode.parameterId^");
+		sb.append(getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId());
+		sb.append("|recordStatus^1");
+		logger.info("....getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId()="
+				+ getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterId());
+		logger.info("....this.getManagedBean().getCurrentActiveOrg().getOrgProfileId()="
+				+ this.getManagedBean().getCurrentActiveOrg().getOrgProfileId());
+		logger.info("....getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()="
+				+ getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value()));
+
+		if (OrganizationType.MINISTRY.value().equals(
+				getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+				sb.append("|orgProfileId^"
+						+ this.getManagedBean().getCurrentActiveOrg()
+								.getOrgProfileId());
+			}
+		} else if (OrganizationType.DEPARTMENT.value().equals(
+				getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+				sb.append("|parentOrgProfile.orgProfileId^"
+						+ this.getManagedBean().getCurrentActiveOrg()
+								.getOrgProfileId());
+			} else if (getFacesScopes().hasRoleUser(
+					RoleCode.JABATAN_ADMIN.value())) {
+				sb.append("|orgProfileId^"
+						+ this.getManagedBean().getCurrentActiveOrg()
+								.getOrgProfileId());
+			}
+		} else if (OrganizationType.DIVISION.value().equals(
+				getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgTypeCode().getParameterCode())) {
+			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+				sb.append("|parentOrgProfile.parentOrgProfile.orgProfileId^"
+						+ this.getManagedBean().getCurrentActiveOrg()
+								.getOrgProfileId());
+			} else if (getFacesScopes().hasRoleUser(
+					RoleCode.JABATAN_ADMIN.value())) {
+				sb.append("|parentOrgProfile.orgProfileId^"
+						+ this.getManagedBean().getCurrentActiveOrg()
+								.getOrgProfileId());
+			} else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+				sb.append("|orgProfileId^"
+						+ this.getManagedBean().getCurrentActiveOrg()
+								.getOrgProfileId());
+			}
+		}
+
+		return sb.toString();
+	}
 
 	private void generateAdditionalFilter() {
 		logger.info("generateAdditionalFilter");

@@ -79,7 +79,7 @@
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
-									conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
+									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" />
 								<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
 							</div></td>
 
