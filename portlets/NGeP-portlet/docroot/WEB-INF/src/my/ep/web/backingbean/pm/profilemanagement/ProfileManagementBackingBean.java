@@ -3437,9 +3437,12 @@ public class ProfileManagementBackingBean extends
 																		// user
 			Long loginSessionUserId = getFacesScopes().getUserSessionBean()
 					.getUserId();
-			userOrg.setChangedBy(loginSessionUserId);
-			userOrg.setCreatedBy(loginSessionUserId);
-
+			if(!userOrg.isBrandNew()){
+			    userOrg.setChangedBy(loginSessionUserId);
+			}else{
+				userOrg.setChangedBy(loginSessionUserId);
+				userOrg.setCreatedBy(loginSessionUserId);
+			}
 			userOrgList.add(userOrg);
 			user.setPmUserOrgs(userOrgList);
 			if (!user.isBrandNew()) {
@@ -3466,7 +3469,11 @@ public class ProfileManagementBackingBean extends
 				 * uploadPortrait(resDTO.getPmUser()); }
 				 */
 				if (!isNewUser) {
-					loadUserProfile(resDTO.getPmUser().getUserId(), userOrg);
+					if(!userOrg.isBrandNew()){
+						loadUserProfile(resDTO.getPmUser().getUserId(), userOrg);
+					}else{
+			     		loadUserProfile(resDTO.getPmUser().getUserId(),resDTO.getPmUser().getActiveUserOrgs().get(0));
+					}
 				}
 				if (!StringUtils.isBlank(resDTO.getRemarks())) {
 					// OIM user creation successfully, problem with roles.
