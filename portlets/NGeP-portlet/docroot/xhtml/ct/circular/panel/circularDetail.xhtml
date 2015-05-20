@@ -89,7 +89,6 @@
 	
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
 		styleClass="pop_up_top" modal="true" width="550" height="350">
-		<p:panel id="circular">
 			<p:dataTable id="cancelledCclDt" var="data" rowKey="#{data}" 
 			    rowIndexVar="index" value="#{panelBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
@@ -108,7 +107,6 @@
 					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}"  type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
-		</p:panel>
 	</p:dialog>
 
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">

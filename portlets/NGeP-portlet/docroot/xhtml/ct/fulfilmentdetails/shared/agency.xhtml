@@ -210,7 +210,7 @@
 			styleClass="pop_up_top" modal="true" width="700" height="500">
 			<p:messages id="agencyMsg" showSummary="false" showDetail="true"  autoUpdate="true" closable="true" severity="error, info" />
 		   <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
-		   <p:panel  id="agencyies">
+		   <h:panelGroup  id="agencyies">
               <h:panelGrid columns="3">
                  <p:selectOneMenu for="ministry"  style="width:150px" disabled="true" >
             	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
@@ -256,13 +256,12 @@
 			  <p:blockUI widgetVar="blkAgencyTable" trigger="agencySearchId"  block=":form:agencyies">  
 			      <p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
 		      </p:blockUI> 
-             <f:facet name="footer">
+           
 			  <h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
 				<p:commandButton value="#{lbl['lbl.btn.select']}" process="@form" update=":form:tableAgencyDetails,:form:itemId,:form:messages,:form:agencyRemarksAttachmentPnl" 
 				    action="#{contractDetailsBackingBean.addAgencyDetails()}" onclick="dlgAgency.hide();"/>
 			  </h:panelGrid>
-			</f:facet>
-           </p:panel>
+           </h:panelGroup>
 	</p:dialog>
 	<p:panel id="agencyRemarksAttachmentPnl" header="#{lbl['lbl.txt.remarks']}" toggleable="true">
 		<table style="width: 100%">
