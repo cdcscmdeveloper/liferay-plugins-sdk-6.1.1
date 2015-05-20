@@ -315,7 +315,7 @@
 		</p:panel>
 		<p:dialog id="contractLoaDlg"  header="#{lbl['lbl.lov.listing']} - #{lbl['lbl.ct.contract.no']}" widgetVar="contractLoaDlg" 
 			styleClass="pop_up_top" modal="true" width="700" height="500">
-			<p:panel  id="contractLoa">
+			<h:panelGroup  id="contractLoa">
 			<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
 	 			<h:panelGrid columns="3">
 	         		<p:selectOneMenu id="contractLoaSelectMenu"
@@ -359,7 +359,6 @@
 			  	<p:blockUI widgetVar="blkContratLoaTable" trigger="contractLoaSearchId"  block=":form:contractLoa">  
 			      	<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
 		      	</p:blockUI> 
-             	<f:facet name="footer">
 			  	<h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
 					<p:commandButton id="selectBtn" value="#{lbl['lbl.btn.select']}" 
 						disabled="#{supplierBackingBean.managedBean.selectedContract == null}"
@@ -368,9 +367,8 @@
 						oncomplete="blockWidget.hide();" 
 						onclick="contractLoaDlg.hide();"/>
 			  	</h:panelGrid>
-				</f:facet>
        		</p:panel>
-       		</p:panel>
+       		</h:panelGroup>
 		</p:dialog>
 		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	</ui:define>
