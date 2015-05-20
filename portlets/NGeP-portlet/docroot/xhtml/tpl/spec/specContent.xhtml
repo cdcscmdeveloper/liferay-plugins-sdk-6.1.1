@@ -153,8 +153,7 @@
 			<p:ajax event="close" listener="#{templateSpecBean.setSelectedSpecQuestion(null)}" update="delConfirmPopup"/>
 			
 			<h:panelGrid columns="3">
-                   <p:graphicImage library="ep/images/design" 
-                        name="exclamation.png" value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+                   <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
 			       <p:spacer width="10"/>
                    <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
             </h:panelGrid>
