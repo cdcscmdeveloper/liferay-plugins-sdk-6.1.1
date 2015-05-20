@@ -64,7 +64,7 @@
 						disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == 'View'}"
 						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
-						conditionField="pmPtjGroup^1^11"
+						conditionField="pmOrgProfile^1^11"
 						readonly="true" size="10"
 						value="#{deduction.pmGlAccount.glAccCode}">
 					</ac:lov>
