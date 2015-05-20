@@ -996,7 +996,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setRnToSQFlag(true);
 		getManagedBean().setPanelItemFlag(true);
 		getManagedBean().setEditableFlag(true);
-		getManagedBean().setSupplierViewBtn(true);
 		getManagedBean().setActiveIndex(0);
 		
 		if(scQuote.getCurrentStatus() == null){
@@ -3610,10 +3609,29 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				} 
 
 				if(quoteResDTO.getScQuoteSupplier() != null){
-					getManagedBean().setScQuoteSupplier(quoteResDTO.getScQuoteSupplier());
-				}
-				getManagedBean().setScQuote(scQuote);
+					ScQuoteSupplier sQuoteSupplier = quoteResDTO.getScQuoteSupplier();
 
+					if (scQuote.getMultipleQuote()){ // for multiple quote
+						if(sQuoteSupplier.isSubmitted()){
+							getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+							getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+						}else{
+							getManagedBean().setSaveButtonFlg(Boolean.TRUE);
+							getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+						}
+					} else{ // for single quote
+						if(sQuoteSupplier.isSubmitted()){
+							getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+							getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+						}else{
+							getManagedBean().setSaveButtonFlg(Boolean.TRUE);
+							getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+						}
+					}
+					getManagedBean().setScQuoteSupplier(sQuoteSupplier);
+				}
+
+				getManagedBean().setScQuote(scQuote);
 				quoteReqDTO.setQuoteBidDtl(scQuote);
 				quoteReqDTO.setSpecAnswers(specAnswers);
 				quoteReqDTO.setQuoteSupplier(quoteResDTO.getScQuoteSupplier());
@@ -3642,11 +3660,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							new FacesMessage(FacesMessage.SEVERITY_INFO, 
 									null,
 									message));
-					// hide the submit button in supplier view when sq is closed
-					getManagedBean().setSupplierViewBtn(Boolean.FALSE);
+					// hide the save & submit button when Simple quote is closed in supplier view
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
 				} else if (MessageConst.ERROR_760033.equals(message)) {
-					// hide the submit button in supplier view when sq is closed
-					getManagedBean().setSupplierViewBtn(Boolean.FALSE);
+					// hide the save & submit button when Quote has been submitted previously. You are not allowed to submit twice in supplier view
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
 
 				} else {
 					handleException(e);	
@@ -3749,7 +3769,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// update is submitted by supplier
 			if(quote.getScQuoteSuppliers() != null && quote.getScQuoteSuppliers().size()>0){
 				for (ScQuoteSupplier scQuoteSupplier : quote.getScQuoteSuppliers() ) {
-					scQuoteSupplier.setSubmitted(Boolean.FALSE);
+					if(getManagedBean().getScQuoteSupplier() != null){
+						ScQuoteSupplier selectedQuoteSupplier = getManagedBean().getScQuoteSupplier();
+						if(selectedQuoteSupplier.getQuoteSupplierId().equals(scQuoteSupplier.getQuoteSupplierId())){
+							scQuoteSupplier.setSubmitted(Boolean.FALSE);	
+						}
+					}
 				}
 			}
 
@@ -3856,13 +3881,19 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
-			
+
 			// update is submitted by supplier
 			if(quote.getScQuoteSuppliers() != null && quote.getScQuoteSuppliers().size()>0){
 				for (ScQuoteSupplier scQuoteSupplier : quote.getScQuoteSuppliers() ) {
-					scQuoteSupplier.setSubmitted(Boolean.TRUE);
+					if(getManagedBean().getScQuoteSupplier() != null){
+						ScQuoteSupplier selectedQuoteSupplier = getManagedBean().getScQuoteSupplier();
+						if(selectedQuoteSupplier.getQuoteSupplierId().equals(scQuoteSupplier.getQuoteSupplierId())){
+							scQuoteSupplier.setSubmitted(Boolean.TRUE);	
+						}
+					}
 				}
 			}
+			
 			// remarks
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
@@ -3993,10 +4024,30 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 			getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 		} 
-
+		
 		if(quoteResDTO.getScQuoteSupplier() != null){
-			getManagedBean().setScQuoteSupplier(quoteResDTO.getScQuoteSupplier());
+			ScQuoteSupplier sQuoteSupplier = quoteResDTO.getScQuoteSupplier();
+
+			if (scQuote.getMultipleQuote()){ // for multiple quote
+				if(sQuoteSupplier.isSubmitted()){
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+				}else{
+					getManagedBean().setSaveButtonFlg(Boolean.TRUE);
+					getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+				}
+			} else{
+				if(sQuoteSupplier.isSubmitted()){
+					getManagedBean().setSaveButtonFlg(Boolean.FALSE);
+					getManagedBean().setSubmitButtonFlg(Boolean.FALSE);
+				}else{
+					getManagedBean().setSaveButtonFlg(Boolean.TRUE);
+					getManagedBean().setSubmitButtonFlg(Boolean.TRUE);
+				}
+			}
+			getManagedBean().setScQuoteSupplier(sQuoteSupplier);
 		}
+		
 		getManagedBean().setScQuote(scQuote);
 		
 		// remarks

@@ -27,16 +27,17 @@
 		</p:outputPanel>
 		<div class="ppRightBtn">
 
-			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@this"
+			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" partialSubmit="true"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				rendered="#{simpleQuoteBackingBean.managedBean.saveButtonFlg}"
 				action="#{simpleQuoteBackingBean.supplierSave}" />
 
-			<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@form" partialSubmit="true"
 				action="#{simpleQuoteBackingBean.supplierSubmit}"
 				actionListener="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 				update="spkiOutputPanel" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
-				rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}" />
+				rendered="#{simpleQuoteBackingBean.managedBean.submitButtonFlg}" />
 		</div>
 		<ui:include src="/xhtml/sc/directpurchase/supplierViewHeader.xhtml" />
 		<ui:include src="/xhtml/sc/directpurchase/supplierView.xhtml" />
