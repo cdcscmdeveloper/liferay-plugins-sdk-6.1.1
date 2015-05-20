@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
+				<td style="width: 19%;"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="46" id="title" required="true"
 						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}" disabled="#{!isPendingSubmissionStatus}"
@@ -34,7 +34,7 @@
 						value="#{lbl['lbl.sc.price.inquiry.item.name']}" /></td>
 				<td><p:inputText disabled="true"
 						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.cmItem.itemName}"
-						size="46" /></td>
+						size="50" /></td>
 			</tr>
 			<tr>
 				<td style="vertical-align:top; text-align:left;"><p:outputLabel
@@ -53,8 +53,8 @@
 			<tr>
 				<td style="width: 18%;"><p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.min.qty']}" /></td>
-				<td><p:inputText disabled="true" 
-						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}" style="text-align:right;"
+				<td><p:inputText disabled="true"  styleClass="ppRightBtn"
+						value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.supplierItemPrice.pricing.cmSupplierItem.minOrder}"
 						size="25">
 						  <f:convertNumber  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</p:inputText>
@@ -212,7 +212,7 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}" toggleable="true">
 		 <table style="width: 100%">
 			<tr>
-				<td style="width: 16%;">
+				<td style="width: 17%;">
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 					<p:outputLabel value="*" styleClass="mandatory"  rendered="#{isPendingSupplierRespStatus}"/>
 				</td>
