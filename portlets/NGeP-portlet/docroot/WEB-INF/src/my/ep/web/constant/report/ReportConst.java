@@ -376,6 +376,7 @@ public class ReportConst {
 	
 	// SM - Supplier Profile
 	public static final String SM_SUPPLIER_PROFILE_REPORT = "SM_APPLICATION_DETAILS.jsp";
+	public static final String SM_SUPPLIER_UNREGIS_REPORT = "SM_APPL_DETAILS_UNREGIS.jsp";
 	
 	//CT Module reports start	
 	public static final String CT_LST_OF_CONTRACT_USERS_ALL_RPT_VAL = "CT_001";
