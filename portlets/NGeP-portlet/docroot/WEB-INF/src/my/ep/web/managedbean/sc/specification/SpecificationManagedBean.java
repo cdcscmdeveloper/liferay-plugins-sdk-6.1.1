@@ -763,7 +763,12 @@ public class SpecificationManagedBean extends BaseManagedBean {
     private boolean autoUpdate = Boolean.TRUE;
     
     private Long ptjGroupId;
+    private int checkListYesIndex;
+    private boolean technicalOtherChecklistSubmit;
+    private boolean financialOtherChecklistSubmit;
 	
+	
+
 	/**
 	 * Checks if is spec complete.
 	 * 
@@ -5069,6 +5074,50 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setPtjGroupId(Long ptjGroupId) {
 		this.ptjGroupId = ptjGroupId;
+	}
+
+	/**
+	 * @return the checkListYesIndex
+	 */
+	public int getCheckListYesIndex() {
+		return checkListYesIndex;
+	}
+
+	/**
+	 * @param checkListYesIndex the checkListYesIndex to set
+	 */
+	public void setCheckListYesIndex(int checkListYesIndex) {
+		this.checkListYesIndex = checkListYesIndex;
+	}
+
+	/**
+	 * @return the technicalOtherChecklistSubmit
+	 */
+	public boolean isTechnicalOtherChecklistSubmit() {
+		return technicalOtherChecklistSubmit;
+	}
+
+	/**
+	 * @param technicalOtherChecklistSubmit the technicalOtherChecklistSubmit to set
+	 */
+	public void setTechnicalOtherChecklistSubmit(
+			boolean technicalOtherChecklistSubmit) {
+		this.technicalOtherChecklistSubmit = technicalOtherChecklistSubmit;
+	}
+
+	/**
+	 * @return the financialOtherChecklistSubmit
+	 */
+	public boolean isFinancialOtherChecklistSubmit() {
+		return financialOtherChecklistSubmit;
+	}
+
+	/**
+	 * @param financialOtherChecklistSubmit the financialOtherChecklistSubmit to set
+	 */
+	public void setFinancialOtherChecklistSubmit(
+			boolean financialOtherChecklistSubmit) {
+		this.financialOtherChecklistSubmit = financialOtherChecklistSubmit;
 	}
 
 }
