@@ -13,21 +13,21 @@
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="66" id="ministry"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						value="#{purchaseRequestBackingBean.retrieveMinistryByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputText size="66" id="controlOff"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						value="#{purchaseRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="66" id="ptjGroup"
+						value="#{purchaseRequestBackingBean.retrieveJabatanByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -47,12 +47,10 @@
 						disabled="true"
 						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:preparedOrgText" readonly="true" size="50"
 						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
-						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}"
+						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
 					</ac:lov>
 				</td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
-				</td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
@@ -79,11 +77,9 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" 
 						update=":form:chargeOrgProfileId,:form:issuedOrgText" size="50"
 						disabled="true"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
+						tooltip="#{lbl['lbl.fl.tooltip.charge.ptj']}"	>
 					</ac:lov></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
-				</td>					
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
