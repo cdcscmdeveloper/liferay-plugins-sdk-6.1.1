@@ -12,21 +12,21 @@
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="66" id="ministry"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile eq null ? '' : contractRequestBackingBean.retrieveMinistryByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputText size="66" id="controlOff"
-						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						value="#{contractRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="66" id="ptjGroup"
+						value="#{contractRequestBackingBean.retrieveJabatanByOrgProfileId(contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -41,11 +41,9 @@
 						disabled="true"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
-						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}">
+						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
+						tooltip="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"	>
 					</ac:lov></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"/>
-				</td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
@@ -68,11 +66,9 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" 
 						disabled="true"
 						update=":form:chargeOrgProfileId" size="50"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1">
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
+						tooltip="#{lbl['lbl.fl.tooltip.charge.ptj']}"	>
 					</ac:lov></td>
-				<td>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/>
-				</td>		
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>

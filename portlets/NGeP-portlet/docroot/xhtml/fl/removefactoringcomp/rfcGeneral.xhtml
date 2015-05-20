@@ -11,7 +11,7 @@
 				<td style="width: 117px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="66" id="ministry"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						value="#{flOrderBB.retrieveMinistryByOrgProfileId(flOrderBB.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>

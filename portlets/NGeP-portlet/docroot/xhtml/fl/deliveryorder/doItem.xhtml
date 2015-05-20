@@ -193,8 +193,7 @@
 							<f:setPropertyActionListener
 								target="#{createDOBackingBean.managedBean.selectedItemRow}"
 								value="#{doItems}" />
-							<p:graphicImage library="ep/images/design" name="document.png"
-								value="/resources/ep/images/design/document.png" />
+							<p:graphicImage value="/css/images/design/document.png"  styleClass="tasklist_title1"/>
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
@@ -244,8 +243,7 @@
 										<table>
 											<tr>
 												<td rowspan="2"><h:graphicImage
-														library="ep/images/design"
-														name="#{fulfilmentBackingBean.determineIcon(attachFile)}"
+														value="/css/images/design/#{fulfilmentBackingBean.determineIcon(attachFile)}"
 														height="30" width="30" /></td>
 												<td width="5"></td>
 												<td><h:outputText
@@ -264,8 +262,7 @@
 														immediate="true"
 														rendered="#{fulfilmentBackingBean.compareAttachmentUserName(attachFile.createdUsername)}"
 														update="lampiran">
-														<h:graphicImage library="ep/images/design"
-															name="icon_trash.png" styleClass="tasklist_title1" />
+														<h:graphicImage value="/css/images/design/delete.png" styleClass="tasklist_title1" />
 													</p:commandLink></td>
 											</tr>
 										</table>
