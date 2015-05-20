@@ -722,6 +722,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setSvShow(false);
 		this.getManagedBean().setCategoryL3(new PmCategoryL3());
 		this.getManagedBean().setMinistryProfile(new PmOrgProfile());
+		this.getManagedBean().setPtjGroupProfile(new PmOrgProfile());
 		this.getManagedBean().setPtjProfile(new PmOrgProfile());
 		this.getManagedBean().setPublishSearchDataBean(
 				new NoticeBoardSearchDataBean());
@@ -1045,12 +1046,23 @@ public class NoticeBoardBackingBean extends
 				if (ministryProfile != null
 						&& ministryProfile.getOrgProfileId() != null) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("parentOrg.ORG_PROFILE_ID",
+							new SearchFilterBean("parentOrg1.ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ministryProfile.getOrgProfileId()));
 
 				}
+				
+				// Filter By - PTJ Group
+				PmOrgProfile ptjGroupProfile = getManagedBean()
+						.getPtjGroupProfile();
+				if (ptjGroupProfile != null
+						&& ptjGroupProfile.getOrgProfileId() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("parentOrg2.ORG_PROFILE_ID",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ptjGroupProfile.getOrgProfileId()));
 
+				}
 				// Filter By - PTJ
 				PmOrgProfile ptjProfile = getManagedBean().getPtjProfile();
 				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {
@@ -1602,17 +1614,53 @@ public class NoticeBoardBackingBean extends
 	 */
 	public String constuctConditionFields() {
 		
-		if (null != this.getManagedBean().getMinistryProfile()) {
-			Long orgProfileId = this.getManagedBean().getMinistryProfile()
-					.getOrgProfileId();
-			if (null != orgProfileId) {
-				return "parentOrgProfile.orgProfileId^" + orgProfileId;
-			}
+		String parentOrgProfile = null;
+		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
+				.getOrgProfileId();
+		Long PTJGroupOrgProfileId = this.getManagedBean().getPtjGroupProfile()
+				.getOrgProfileId();
+		if (null != PTJGroupOrgProfileId) {
+			parentOrgProfile = constuctConditionFields(ParameterConst.ORG_PROFILE_PTJ_GROPUP_LEVEL)
+					+ PTJGroupOrgProfileId;
+		} else if (null != MinistryOrgProfileId) {
+			parentOrgProfile = constuctConditionFields(ParameterConst.ORG_PROFILE_MINISTRY_LEVEL)
+					+ MinistryOrgProfileId;
+		} else {
+			parentOrgProfile = "";
 		}
-		return "";
+		return parentOrgProfile;
+	}
+	/**
+	 * @param levelcode
+	 * @return
+	 */
+	private String constuctConditionFields(int levelcode){
+		
+		String parentOrgProfile = null;
+		if(levelcode == 2){
+			parentOrgProfile = "parentOrgProfile.parentOrgProfile.orgProfileId^";
+		} else if (levelcode == 1) {
+			parentOrgProfile = "parentOrgProfile.orgProfileId^";
+		} else {
+			parentOrgProfile = "";
+		}
+		
+		return  parentOrgProfile;
 	}
 
+	public String constuctConditionFieldsForPTJGroup() {
 
+		String parentOrgProfile = null;
+		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
+				.getOrgProfileId();
+		 if (null != MinistryOrgProfileId) {
+			parentOrgProfile = constuctConditionFields(ParameterConst.ORG_PROFILE_PTJ_GROPUP_LEVEL)
+					+ MinistryOrgProfileId;
+		} else {
+			parentOrgProfile = "";
+		}
+		return parentOrgProfile;
+	}
 	/**
 	 * Method will return 0 days if clsDate is after Today date else
 	 * number of days.
