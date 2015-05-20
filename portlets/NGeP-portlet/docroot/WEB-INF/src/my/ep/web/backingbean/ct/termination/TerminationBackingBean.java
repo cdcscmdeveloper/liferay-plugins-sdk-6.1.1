@@ -70,6 +70,7 @@ import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -728,33 +729,31 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					   context.put("imgUrl",imgUrl);
 					}
 					context.put("ptjName", getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-					if(getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup() != null) {
-					      ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup().getGroupName());
+					String jabtanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					if(!jabtanName.isEmpty()) {
+					      ministryJabatan.append(jabtanName);
 					      ministryJabatan.append(" / ");
 					}
 				
-					if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()!=null) {
-						ministryJabatan.append(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
-					}
-					context.put("ministryJabatanName", ministryJabatan );
-					
-					if(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile()!=null) {
-					      context.put("ministryName", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
+					PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+					if(ministryOrgProfile!=null) {
+						ministryJabatan.append(ministryOrgProfile.getOrgName());
+						context.put("ministryName", ministryOrgProfile.getOrgName());
 					}
 					
+					context.put("ministryJabatanName", ministryJabatan );					
 					context.put("decisionDate", getManagedBean().getContractVer().getCtTermination().getDecisionDate());
 					
-					context.put("jabatanName",getManagedBean().getCtContract().getOwnerOrgProfile().getPmPtjGroup().getGroupName());
+					
 					
 					if(pmAddressType!=null) {
 						context.put("ptjAddress", formAddress(pmAddressType.getPmAddress().getAddress1(), pmAddressType.getPmAddress().getAddress2(), pmAddressType.getPmAddress().getAddress3(), pmAddressType.getPmAddress().getAddress4()));
 						context.put("telNo", pmAddressType.getPmAddress().getPhoneNo());
-						context.put("faxNo", pmAddressType.getPmAddress().getFaxNo());
-						if(pmAddressType.getPmContacts()!=null && pmAddressType.getPmContacts().size()>0) {
-							context.put("email", pmAddressType.getPmContacts().get(0).getEmail());	
-						} else {
-							context.put("email","-");
-						}
+						context.put("faxNo", pmAddressType.getPmAddress().getFaxNo());						
+					} else {
+						context.put("ptjAddress", "");
+						context.put("telNo", "");
+						context.put("faxNo", "");
 					}
 					if(getManagedBean().getContractVer().getCtTermination().getFileRefNo()!=null && getManagedBean().getContractVer().getCtTermination().getFileRefNo().length()>0) {
 						context.put("fileRefNo", getManagedBean().getContractVer().getCtTermination().getFileRefNo());
