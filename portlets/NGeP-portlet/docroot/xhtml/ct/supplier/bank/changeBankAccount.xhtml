@@ -98,8 +98,7 @@
 				</tr>
 			</table>
 		</div>
-		<br/>
-
+		
 		<p:panel id="fulfilmentDetail"
 			header="#{lbl['lbl.ct.panel.contract']}" toggleable="true"
 			toggleSpeed="500">
@@ -155,7 +154,7 @@
 
 				<p:outputLabel value="#{lbl['lbl.ct.ministry.name']}" />
 				<p:inputText style="width:350px;" disabled="true"
-					value="#{supplierBackingBean.getMinistryAndPtjName(1)}" />
+					value="#{supplierBackingBean.retrieveMinistryOrgProfile(supplierBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId).orgName}" />
 
 				<p:outputLabel value="#{lbl['lbl.ct.physical.no']}" />
 				<h:panelGrid columns="3">
@@ -185,7 +184,7 @@
 				<h:panelGrid>
 					<p:inputTextarea id="ptjName" rows="3" style="width:200px;"
 						disabled="true"
-						value="#{supplierBackingBean.getMinistryAndPtjName(2)}"
+						value="#{supplierBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}"
 						autoResize="false" />
 				</h:panelGrid>
 			</h:panelGrid>
