@@ -1207,18 +1207,6 @@
 					<property name="bundleKey" value="lbl.pm.org.ministryName" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmPtjGroup.groupCode" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.ug.result.groupcode" />
-				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="pmPtjGroup.groupName" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.pm.ug.result.groupname" />
-				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
 					<property name="columnName" value="pmOrgValidity.orgCode" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
