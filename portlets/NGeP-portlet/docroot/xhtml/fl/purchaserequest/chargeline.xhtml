@@ -223,7 +223,7 @@
 						readonly="true"
 						size="7"
 						disabled="#{!purchaseRequestBackingBean.managedBean.chargeLinePanel}"
-						conditionField="pmPtjGroup.ptjGroupId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}*pmPtjGroup^1^11"
+						conditionField="pmOrgProfile^1^11"
 						value="#{purchaseRequestBackingBean.managedBean.gosodo.glAccCode}"	
 						tooltip="#{lbl['lbl.fl.tooltip.gosodo']}">
 					</ac:lov></h:panelGroup>
