@@ -15,7 +15,7 @@
 				<tr>
 					<td style="width: 139px"><p:outputLabel
 							value="#{lbl['lbl.fl.ministry']}" /></td>
-					<td style="width: 389px;"><p:inputText size="50"
+					<td style="width: 389px;"><p:inputText size="66"
 							value="#{danBackingBean.retrieveMinistryByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgProfileId)}"
 							disabled="true" /></td>
 					<td rowspan="3" valign="top" style="width: 140px;"><p:outputLabel
@@ -28,22 +28,22 @@
 				<tr>
 					<td style="width: 106px;"><p:outputLabel
 							value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-					<td><p:inputText size="50" id="controlOff"
+					<td><p:inputText size="66" id="controlOff"
 							value="#{danBackingBean.retrievePegawaiPengawalByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgProfileId)}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td style="width: 106px;"><p:outputLabel
 							value="#{lbl['lbl.fl.jabatan']}" /></td>
-					<td><p:inputText size="50" id="ptjGroup"
+					<td><p:inputText size="66" id="ptjGroup"
 							value="#{danBackingBean.retrieveJabatanByOrgProfileId(danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgProfileId)}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-					<td><p:inputText size="5" disabled="true"
+					<td><p:inputText size="8" disabled="true"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" /> <p:inputText size="39"
+						<p:spacer width="5" /> <p:inputText size="45"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"
 							disabled="true" /> <ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" /></td>
@@ -55,9 +55,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-					<td><p:inputText size="5" disabled="true"
+					<td><p:inputText size="8" disabled="true"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" /> <p:inputText size="39"
+						<p:spacer width="5" /> <p:inputText size="45"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"
 							disabled="true" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
@@ -69,11 +69,11 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-					<td><p:inputText size="5" disabled="true"
+					<td><p:inputText size="8" disabled="true"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
 						<p:spacer width="5" /> <p:inputText
 							value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"
-							size="39" disabled="true" />
+							size="45" disabled="true" />
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
 					<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flOrder.factored}" disabled="true" />
@@ -81,7 +81,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
-					<td><p:inputText size="50"
+					<td><p:inputText size="66"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.requistioner.userName}"
 							disabled="true" /></td>
 				</tr>
@@ -101,13 +101,13 @@
 							value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
 					<td colspan="2"><table style="width: 100%">
 							<tr>
-								<td style="width: 155px;"><p:inputText size="15"
+								<td style="width: 155px;"><p:inputText size="16"
 										disabled="true"
 										value="#{danBackingBean.managedBean.adjustment.flRequest.smSupplier.regNo}" />
 										<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>								
 								<td style="width: 55px;white-space:nowrap;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
-								<td style="width: 120px;"><p:inputText size="9" disabled="true" value="#{danBackingBean.retrieveMofNo(danBackingBean.managedBean.adjustment.flRequest.smSupplier)}"/>
+								<td style="width: 120px;"><p:inputText size="15" disabled="true" value="#{danBackingBean.retrieveMofNo(danBackingBean.managedBean.adjustment.flRequest.smSupplier)}"/>
 								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/>
 								</td>
 							</tr>
@@ -116,7 +116,7 @@
 					<td style="width: 134px;white-space:nowrap;"><p:outputLabel
 							value="#{lbl['lbl.fl.payment.match.paymentbankname']}"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
-					<td><p:inputText size="45"
+					<td><p:inputText size="50"
 							value="#{danBackingBean.managedBean.accountNoName}"
 							disabled="true"
 							rendered="#{!danBackingBean.managedBean.adjustment.flOrder.factored}" /></td>
