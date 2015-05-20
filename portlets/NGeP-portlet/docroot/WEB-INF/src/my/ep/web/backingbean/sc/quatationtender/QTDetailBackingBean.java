@@ -1330,8 +1330,11 @@ public class QTDetailBackingBean extends
 									.retrieveBriefingSiteVisitDtls(briefingReqDTO);
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 							if (null != scQtBsv.getScQtBsvDtls()) {
-								for (ScQtBsvDtl bsvDtl : scQtBsv.getScQtBsvDtls()) {
-									if (bsvDtl.getBsvType().equalsIgnoreCase("S")) {
+								for (ScQtBsvDtl bsvDtl : scQtBsv
+										.getScQtBsvDtls()) {
+									if (QTConstants.BSV_TYPE_SITEVISIT
+											.equalsIgnoreCase(bsvDtl
+													.getBsvType())) {
 										if (scQtBsv.getQtBsvId() == null) {
 											scQtBsv.setAllSiteVisitReq(true);
 										}
