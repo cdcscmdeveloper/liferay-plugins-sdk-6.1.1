@@ -2501,6 +2501,9 @@ public class SpecificationBackingBean extends
 					.setClPriceTypeCode(PriceTyperesDTO.getPmParameter());
 			setUserDetails(tplSpecQuestion);
 			// questionsList.add(tplSpecQuestion);
+			specMaster.setScoringReq(this.getManagedBean().getScQt()
+					.isTechEvaluationReq());
+			
 			if (null != panelItem.getCtPanelItemSpecs()
 					&& !panelItem.getCtPanelItemSpecs().isEmpty()) {
 				for (int i = 0; i < panelItem.getCtPanelItemSpecs().size(); i++) {
@@ -2517,15 +2520,18 @@ public class SpecificationBackingBean extends
 					tplSpecSpecifications.setClSpecDetail(itemSpec
 							.getSpecification());
 					tplSpecSpecifications.setAnswerTypeCode(pmParameter);
-					PmParameter scoreType = getParameterByTypeAndCode(
-							ParameterTypeConst.SCORE_TYPE,
-							ParameterConst.SCORE_TYPE_USER);
-					tplSpecSpecifications.setScoreTypeCode(scoreType);
+					if (specMaster.isScoringReq()) {
+						PmParameter scoreType = getParameterByTypeAndCode(
+								ParameterTypeConst.SCORE_TYPE,
+								ParameterConst.SCORE_TYPE_USER);
+						tplSpecSpecifications.setScoreTypeCode(scoreType);	
+					} else {
+						tplSpecSpecifications.setScoreTypeCode(null);	
+					}
+					
 					setUserDetails(tplSpecSpecifications);
 				}
 			}
-			specMaster.setScoringReq(this.getManagedBean().getScQt()
-					.isTechEvaluationReq());
 			specMaster.setTplSpecQuestions(questionsList);
 
 			this.getManagedBean().getScQt().setZoneLocationLevel(null);
