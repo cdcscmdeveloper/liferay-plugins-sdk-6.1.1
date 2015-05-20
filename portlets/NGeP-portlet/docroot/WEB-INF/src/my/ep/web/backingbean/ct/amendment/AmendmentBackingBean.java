@@ -133,8 +133,8 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.backingbean.ct.LocationDTO;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -175,7 +175,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean (name = "amendmentBackingBean")
 @ViewScoped
-public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> {
+public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManagedBean> {
     
 	private static Logger log = Logger.getLogger(AmendmentBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
@@ -713,8 +713,9 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			      		if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 			      			getManagedBean().setItemProductExist(true);
 			      			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
-					    	if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0 ) {
-					    		Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+					    	if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0 ) {					    		
+					    		//Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+					    		sortItemCeilingQtyList(item.getCtItemCeilingQties());
 					    	}
 					    	Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 					    	getManagedBean().getCtItemList().add(item);
@@ -1548,8 +1549,10 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	    			if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
 	    					&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
 	   			   	  	userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");	
-	   			   	  	if (getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null) {
-	   			   	  		userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
+	   			   	  	
+	   			   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+	   			   	  	if (ministryOrgProfile != null) {
+	   			   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
 	   			   	  	} else {
 	   			   	  		userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
 	   			   	  	}
@@ -3799,7 +3802,6 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			PmOrgProfile pmOrgProfile = getManagedBean().getCtContract().getOwnerOrgProfile();
 			IAddressSO addressSO = null;
 			PmAddressType pmAddressType = null;
-			IOrgProfileSO orgProfileSO = null;
 			
 			try {
 				addressSO = BusinessDelegate.getInstance().getServiceObject(
@@ -3812,44 +3814,46 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 				if (resDTO.getAddressTypeList().size() > 0) {
 					pmAddressType = resDTO.getAddressTypeList().get(0);
 				}
-
-				orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
-
-				if (orgProfileResDTO.getPmOrgProfile() != null) {
-					context.put("agency", orgProfileResDTO.getPmOrgProfile().getOrgName());
-					context.put("ministry", orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgName());
+				
+				context.put("ptjName", pmOrgProfile.getOrgName());
+				String jabtanName = retrieveJabatanByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				StringBuffer  ministryJabatan = new StringBuffer();
+				if(!jabtanName.isEmpty()) {
+				      ministryJabatan.append(jabtanName);
+				      ministryJabatan.append(" / ");
 				}
+			
+				PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+				if(ministryOrgProfile!=null) {
+					ministryJabatan.append(ministryOrgProfile.getOrgName());
+				}				
+				context.put("ministryJabatanName", ministryJabatan );
 			} finally {
 				addressSO = null;
-				orgProfileSO = null;
 			}
 			context.put("hostUrl", hostUrl);
-			StringBuilder agencyAddress = new StringBuilder();
-			String agencyPhoneNo = "";
-			String agencyFaxNo = "";
+			StringBuilder ptjAddress = new StringBuilder();
+			String phoneNo = "";
+			String faxNo = "";
 				
 			if (pmAddressType != null) {
 				PmAddress pmAddress = pmAddressType.getPmAddress();
-				agencyAddress.append(pmAddress.getAddress1());
-				agencyAddress.append(",<br />");
-				agencyAddress.append(pmAddress.getAddress2());
-				agencyAddress.append(",<br />");
-				agencyAddress.append(pmAddress.getPostcode());
-				agencyAddress.append(" ");
-				agencyAddress.append(pmAddress.getPmCity() != null ? pmAddress.getPmCity().getCityName() : "");
-				agencyAddress.append(",<br />");
-				agencyAddress.append(pmAddress.getPmState() != null ? pmAddress.getPmState().getStateName() : "");
+				ptjAddress.append(pmAddress.getAddress1());
+				ptjAddress.append(",<br />");
+				ptjAddress.append(pmAddress.getAddress2());
+				ptjAddress.append(",<br />");
+				ptjAddress.append(pmAddress.getPostcode());
+				ptjAddress.append(" ");
+				ptjAddress.append(pmAddress.getPmCity() != null ? pmAddress.getPmCity().getCityName() : "");
+				ptjAddress.append(",<br />");
+				ptjAddress.append(pmAddress.getPmState() != null ? pmAddress.getPmState().getStateName() : "");
 				
-				agencyPhoneNo = pmAddress.getPhoneNo();
-				agencyFaxNo = pmAddress.getFaxNo();
+				phoneNo = pmAddress.getPhoneNo();
+				faxNo = pmAddress.getFaxNo();
 			}
-			context.put("agencyAddress", agencyAddress.toString());
-			context.put("agencyPhoneNo", agencyPhoneNo);
-			context.put("agencyFaxNo", agencyFaxNo);
+			context.put("ptjAddress", ptjAddress.toString());
+			context.put("phoneNo", phoneNo);
+			context.put("faxNo", faxNo);
 			context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
 			context.put("loaNo", scLoa.getLoaNo());
 				

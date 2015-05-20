@@ -351,7 +351,7 @@
 				     <ac:paginator for="ceilingTable"/>
 				
 				     <p:column headerText="#{lbl['lbl.ct.ministry']}" style="white-space:normal;">
-				          <p:outputLabel value="#{itemCeilingQtiesVar.ctAgency.orgProfile.parentOrgProfile.orgName}" style="float:left;" />
+				          <p:outputLabel value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" style="float:left;" />
 			    	 </p:column>     
 				
 				     <p:column headerText="#{lbl['lbl.ct.ptj']}" style="white-space:normal;">

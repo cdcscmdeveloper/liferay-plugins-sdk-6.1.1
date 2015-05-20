@@ -9,8 +9,8 @@
 	<p:panel id="terRecord" header="#{lbl['lbl.ct.panel.record']}" toggleable="true" collapsed="false" toggleSpeed="500" 
 		 rendered="#{terminationBackingBean.managedBean.contractVer.status.statusId==CtStatusConst.ftPendingLetterPrintAndUpdate}" >
 	       
-	       <h:panelGrid columns="4" style="width:1050px;" 
-	            columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth20">
+	       <h:panelGrid columns="4" style="width:1050px;" styleClass="top-aligned-columns"
+	            columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 	            
 	            <h:panelGrid columns="2" style="float:right;">
 				      <p:outputLabel value="*" styleClass="mandatory" />

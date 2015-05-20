@@ -18,7 +18,7 @@
        			<p:ajax event="rowSelect"   update=":form:agencyDeliveryAddress"  process="@this" />	
      
                <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:26%;white-space:normal;">
-				    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
+				    <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
 			   </p:column>
 			
 			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:32%;white-space:normal;">
@@ -52,7 +52,9 @@
                		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
                	   </f:facet>
 		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:50px;float:center;" disabled="true"
-		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != agencyData.orgProfile.parentOrgProfile.orgName}"/>
+		   	          rendered="#{contractDetailsBackingBean.retrieveMinistryOrgProfile(
+		   	          	contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId).getOrgProfileId() != 
+		   	          	contractDetailsBackingBean.retrieveMinistryOrgProfile(agencyData.orgProfile.orgProfileId).getOrgProfileId()}"/>
 		       </p:column>
 		        
 		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;">

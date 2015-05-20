@@ -56,8 +56,8 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.DateUtils;
@@ -80,7 +80,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean (name = "suspensionBackingBean")
 @RequestScoped
-public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean> {
+public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionManagedBean> {
 	
 	    private ContractBackingBean ctBB = null;
 	    private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
@@ -282,8 +282,8 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 		    
 			/*If statement  to check agency start*/
 			if(getManagedBean().getContractVer().getCtAgencies() != null && getManagedBean().getContractVer().getCtAgencies().size() > 0 )  {
-			 	 Collections.sort(getManagedBean().getContractVer().getCtAgencies(), new CtAgency());			 	
-			 
+			 	 //Collections.sort(getManagedBean().getContractVer().getCtAgencies(), new CtAgency());			 	
+				 sortAgencyList(getManagedBean().getContractVer().getCtAgencies());
 			 	 for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 			 		 /*Get latest agency and map with the org profile*/
 			 		 for (CtAgency latestAgency : getManagedBean().getCtContract().getLatestContractVer().getCtAgencies()) {

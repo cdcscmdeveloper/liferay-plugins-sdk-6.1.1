@@ -294,7 +294,7 @@
 					value="#{amendmentBackingBean.getActiveItemCeilingQty()}" >
 					<ac:paginator for="ceilingTable" />
 					<p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:25%; white-space:normal;">
-						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.parentOrgProfile.orgName}" />
+						<p:outputLabel style="float:left;" value="#{amendmentBackingBean.retrieveMinistryByOrgProfileId(itemCeilingQtiesVar.ctAgency.orgProfile.orgProfileId)}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.ptj']}"	style="width:30%; white-space:normal;">
 						<p:outputLabel style="float:left;" value="#{itemCeilingQtiesVar.ctAgency.orgProfile.orgName}" />

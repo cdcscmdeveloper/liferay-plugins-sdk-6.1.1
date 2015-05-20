@@ -97,6 +97,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Long ctContractStatus;
 	private Long terminationTypeId;
 	private Long ministryProfileId;
+	private Long jabatanProfileId;
     private BigDecimal paidAdvancePaymentAmt;
     private BigDecimal paidInvoiceAmt;
     private Date ctDateStart;
@@ -555,6 +556,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistryProfileId(Long ministryProfileId) {
 		this.ministryProfileId = ministryProfileId;
+	}
+	
+	/**
+	 * @return the jabatanProfileId
+	 */
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
 	}
 
 	/**

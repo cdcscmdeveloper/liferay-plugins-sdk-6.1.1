@@ -15,7 +15,7 @@
 		     <ac:paginator for="agencyDetailsTable"/>
 		
 		      <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:20%;white-space:normal;">
-		             <h:outputText value="#{data.orgProfile.parentOrgProfile.orgName}"/>
+		             <h:outputText value="#{suspensionBackingBean.retrieveMinistryByOrgProfileId(data.orgProfile.orgProfileId)}"/>
 	           </p:column>
 	  
 	           <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:40%;white-space:normal;">
