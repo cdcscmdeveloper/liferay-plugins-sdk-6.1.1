@@ -154,6 +154,7 @@
 			<portlet id="flRemoveFactoringComp" />
 			<portlet id="flViewReceivedNote" />
 			<portlet id="flViewPurchaseOrder" />
+			<portlet id="flViewPaymentMatch" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
