@@ -9,8 +9,8 @@
     <p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}"
          rendered="#{contractDetailsBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
   	     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/> -->
-  	     <h:panelGrid  style="width:100%;">
-  	       
+  	     <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
+             <h:panelGrid  style="width:100%;">  
   	        <p:dataTable id="serviceTable" var="data"  widgetVar="serviceItemObj" 
   	           value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
                selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}">
