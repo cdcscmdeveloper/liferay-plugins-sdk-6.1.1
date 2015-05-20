@@ -1,7 +1,6 @@
 package my.ep.web.managedbean.pm.profilepersonalization;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -11,25 +10,11 @@ import javax.faces.model.SelectItem;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
-import my.ep.persistence.entity.pm.authorization.PmRole;
-import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserGroup;
-import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
-import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmCriteria;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmDivision;
-import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.web.bean.pm.AddressList;
-import my.ep.web.bean.pm.PreferenceList;
-import my.ep.web.bean.pm.RoleList;
-import my.ep.web.bean.pm.UserProfilesSearchBean;
+import my.ep.web.bean.pm.ChallengeQAList;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -57,6 +42,9 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	private PmOrgProfile currentProfile;
 	private PmUserOrg currentUserOrg;
 	private List<PmUserRole> userActiveRoles;
+	private List<ChallengeQAList> challengeQAList;
+	private SelectItem[] challengeQADDList;
+	private String currentPassword;
 	
 	
 /**
@@ -186,6 +174,50 @@ public class ProfilePersonalizationManagedBean extends BaseManagedBean {
 	public void setUserActiveRoles(List<PmUserRole> userActiveRoles) {
 		this.userActiveRoles = userActiveRoles;
 	}
+
+	/**
+	 * @return the challengeQADDList
+	 */
+	public SelectItem[] getChallengeQADDList() {
+		return challengeQADDList;
+	}
+
+	/**
+	 * @param challengeQADDList the challengeQADDList to set
+	 */
+	public void setChallengeQADDList(SelectItem[] challengeQADDList) {
+		this.challengeQADDList = challengeQADDList;
+	}
+
+	/**
+	 * @return the challengeQAList
+	 */
+	public List<ChallengeQAList> getChallengeQAList() {
+		return challengeQAList;
+	}
+
+	/**
+	 * @param challengeQAList the challengeQAList to set
+	 */
+	public void setChallengeQAList(List<ChallengeQAList> challengeQAList) {
+		this.challengeQAList = challengeQAList;
+	}
+
+	/**
+	 * @return the currentPassword
+	 */
+	public String getCurrentPassword() {
+		return currentPassword;
+	}
+
+	/**
+	 * @param currentPassword the currentPassword to set
+	 */
+	public void setCurrentPassword(String currentPassword) {
+		this.currentPassword = currentPassword;
+	}
+
+	
 
 
 }	
