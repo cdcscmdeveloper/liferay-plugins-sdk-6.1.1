@@ -109,8 +109,8 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.status']}"  style="width:8%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:14%; white-space:normal;">
-						<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
+					 	<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; white-space:normal;">
+					 	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
 							onclick="gotoSuspendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
 							onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.ct.suspend.contract']}" />
