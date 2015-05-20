@@ -28,36 +28,38 @@
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
 								itemValue="#{orgProfile.orgProfileId}" />
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="ptjProf"
-								listener="#{specificationBackingBean.ptjByDepartMent(specificationBackingBean.managedBean.ministryId)}" />
+								update="ptjProf,ptj"
+								listener="#{specificationBackingBean.retrievePTJGroupListByMinistry(specificationBackingBean.managedBean.ministryId)}" />
 						</p:selectOneMenu></td>
 				</tr>
-				<!-- <tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.ptj.group']}"
+							style="width:75px;" /></td>
 					<td colspan="3"><p:selectOneMenu id="ptj"
 							style="width:500px;margin-bottom:5px;"
-							value="#{specificationBackingBean.managedBean.ptjId}">
+							value="#{specificationBackingBean.managedBean.ptjGroupId}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems
-								value="#{specificationBackingBean.managedBean.ptjtList}"
+								value="#{specificationBackingBean.managedBean.departmentList}"
 								var="orgProfile" itemLabel="#{orgProfile.orgName}"
 								itemValue="#{orgProfile.orgProfileId}" />
-							<p:ajax event="change" process="@this" partialSubmit="true" />
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="ptjProf"
+								listener="#{specificationBackingBean.retrivePTJByPTJGroup(specificationBackingBean.managedBean.ptjGroupId)}" />
 						</p:selectOneMenu></td>
-				</tr> -->
+				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.ptj']}" /></td>
 					<td colspan="3"><p:selectOneMenu id="ptjProf"
 							value="#{specificationBackingBean.managedBean.ptjId}"
 							style="width: 500px;margin-bottom: 5px;">
-
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems
-								value="#{specificationBackingBean.managedBean.ptjProfileDDList}"
-								var="pmOrgProfile" itemLabel="#{pmOrgProfile[1]}"
-								itemValue="#{pmOrgProfile[0]}" />
+								value="#{specificationBackingBean.managedBean.ptjtList}"
+								var="orgProfile" itemLabel="#{orgProfile.orgName}"
+								itemValue="#{orgProfile.orgProfileId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true" />
 						</p:selectOneMenu></td>
 				</tr>
