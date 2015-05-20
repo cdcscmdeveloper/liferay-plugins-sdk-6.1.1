@@ -19,14 +19,12 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
   <ui:param name="isPendingSubmissionStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSubmission}" />
   <ui:param name="isPendingSupplierRespStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq DPStatusConstants.priPendingSupplierResponse}" />
   <ui:param name="isPendingRnCreationStatus" value="#{purchaseInquiryBackingBean.managedBean.priStatus.statusId eq  DPStatusConstants.priPendingRnCreation}" />
-  
 
 		<div class="ppRightBtn">
-			<c:if
-				test="#{isPendingSubmissionStatus}">
+			<c:if test="#{isPendingSubmissionStatus}">
 				<p:commandButton immediate="true"
-					value="#{lbl['lbl.btn.item.search']}"
-					partialSubmit="true" process="@this" style="float:left;"
+					value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
+					process="@this" style="float:left;"
 					action="#{purchaseInquiryBackingBean.backToPrevious}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
@@ -44,15 +42,15 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 							rendered="#{purchaseInquiryBackingBean.managedBean.rnToPIFlag}"
 							value="#{lbl['lbl.btn.back']}" style="float:left;"
 							action="#{purchaseInquiryBackingBean.backToPrevious}" /> <c:choose>
-							<c:when test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
+							<c:when
+								test="#{!empty purchaseInquiryBackingBean.managedBean.taskId}">
 								<c:if test="#{isPendingRnCreationStatus}">
 									<c:if
 										test="#{!purchaseInquiryBackingBean.managedBean.rnToPIFlag}">
 										<p:commandButton
 											rendered="#{purchaseInquiryBackingBean.managedBean.scPrInquiry.isStockAvailable eq 1}"
-											value="#{lbl['lbl.btn.proceed']}"
-											partialSubmit="true" process="@form"
-											onstart="blockWidget.show();"
+											value="#{lbl['lbl.btn.proceed']}" partialSubmit="true"
+											process="@form" onstart="blockWidget.show();"
 											oncomplete="blockWidget.hide();"
 											action="#{purchaseInquiryBackingBean.requisitionerAction('Processed')}" />
 
@@ -96,7 +94,6 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 				</tr>
 			</table>
 		</div>
-		<br />
 		<table style="border: 0px;align:center;width:100%;">
 			<tr>
 				<td> <td width="100%" align="left" valign="top">
