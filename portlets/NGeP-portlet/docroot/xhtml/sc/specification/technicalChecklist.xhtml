@@ -329,6 +329,7 @@
 				update="compilencestageTwo" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.create.specification']}"
 				process="@this"
+				actionListener="#{specificationBackingBean.technicalSpecBoValidate}"
 				disabled="#{((specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION) or (specificationBackingBean.managedBean.panelItemCategory eq 'S' and specificationBackingBean.managedBean.scQt.panel))}"
 				partialSubmit="true" oncomplete="createOwnerSpec.show();" />
 
@@ -365,5 +366,7 @@
 	</p:panel>
 
 	<ui:include src="/xhtml/sc/main/createCommitteeTemplate.xhtml"></ui:include>
+
+
 
 </ui:composition>

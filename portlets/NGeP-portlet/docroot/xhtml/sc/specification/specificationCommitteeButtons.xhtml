@@ -21,8 +21,8 @@
 								value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 
 							<p:commandButton value="#{lbl[buttonLabel]}" update="@form"
-								styleClass="ui-button" style="float:right;"
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+								styleClass="ui-button" style="float:right;"
 								action="#{specificationBackingBean.specCommitteBpmTask(bpmAction)}" />
 						</ui:fragment>
 					</ui:repeat> <ui:fragment
@@ -40,8 +40,8 @@
 		</table>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
-			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}" resizable="false" width="400"
-			height="75" closable="false">
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
 			<table>
 				<tr>
 					<td align="center"><h:graphicImage
@@ -56,6 +56,53 @@
 					action="#{specificationBackingBean.reviseSpecificationCommittee}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}"
 					onclick="reviceApprovalDlgs.hide();" type="button" />
+			</div>
+		</p:dialog>
+
+
+		<p:dialog id="technicalStandardDlgsSubmit"
+			widgetVar="technicalStandardChecklistDlgsSubmit"
+			header="#{lbl['lbl.sc.spec.tech.check.list']}" resizable="false"
+			width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.spec.checklist']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="technicalStandardChecklistDlgsSubmit.hide();"
+					update="@form"
+					action="#{specificationBackingBean.checkListYesConfirmationSubmit('T')}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
+					actionListener="#{specificationBackingBean.checkListNoConfirmationSubmit('T')}"
+					oncomplete="technicalStandardChecklistDlgsSubmit.hide();" />
+			</div>
+		</p:dialog>
+
+		<p:dialog id="financialStandardDlgsSubmit"
+			widgetVar="financialStandardChecklistDlgsSubmit"
+			header="#{lbl['lbl.sc.spec.finance.check.list']}" resizable="false"
+			width="400" height="75" closable="false">
+			<table>
+				<tr>
+					<td align="center"><h:graphicImage
+							value="/css/images/design/exclamation.png" /> <p:outputLabel
+							value="#{lbl['lbl.sc.dialog.confirm.spec.checklist']}" /></td>
+				</tr>
+			</table>
+			<p:spacer height="1" />
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}"
+					oncomplete="financialStandardChecklistDlgsSubmit.hide();"
+					update="@form"
+					action="#{specificationBackingBean.checkListYesConfirmationSubmit('F')}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
+					actionListener="#{specificationBackingBean.checkListNoConfirmationSubmit('F')}"
+					oncomplete="financialStandardChecklistDlgsSubmit.hide();" />
 			</div>
 		</p:dialog>
 

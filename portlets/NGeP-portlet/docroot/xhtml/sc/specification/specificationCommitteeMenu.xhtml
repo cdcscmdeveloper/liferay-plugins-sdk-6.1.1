@@ -64,7 +64,8 @@
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
+							<p:menuitem
+								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
 								update="@form" />
 						</c:if>
@@ -73,7 +74,8 @@
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
+							<p:menuitem
+								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
 						</c:if>
@@ -201,7 +203,8 @@
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
+							<p:menuitem
+								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
 						</c:if>
@@ -209,7 +212,8 @@
 
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-							<p:menuitem value="#{lbl['lbl.sc.committee.endorsement.specification']}"
+							<p:menuitem
+								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 						</c:if>
@@ -278,4 +282,50 @@
 
 	</c:if>
 	<ui:include src="/xhtml/sc/specification/upload.xhtml" />
+	<p:dialog id="technicalStandardDlgs"
+		widgetVar="technicalStandardChecklistDlgs"
+		header="#{lbl['lbl.sc.spec.tech.check.list']}" resizable="false"
+		width="400" height="75" closable="false">
+		<table>
+			<tr>
+				<td align="center"><h:graphicImage
+						value="/css/images/design/exclamation.png" /> <p:outputLabel
+						value="#{lbl['lbl.sc.dialog.confirm.spec.checklist']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				oncomplete="technicalStandardChecklistDlgs.hide();" update="@form"
+				action="#{specificationBackingBean.checkListYesConfirmation('T')}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
+				actionListener="#{specificationBackingBean.checkListNoConfirmation('T')}"
+				oncomplete="technicalStandardChecklistDlgs.hide();" />
+		</div>
+	</p:dialog>
+
+	<p:dialog id="financialStandardDlgs"
+		widgetVar="financialStandardChecklistDlgs"
+		header="#{lbl['lbl.sc.spec.finance.check.list']}" resizable="false"
+		width="400" height="75" closable="false">
+		<table>
+			<tr>
+				<td align="center"><h:graphicImage
+						value="/css/images/design/exclamation.png" /> <p:outputLabel
+						value="#{lbl['lbl.sc.dialog.confirm.spec.checklist']}" /></td>
+			</tr>
+		</table>
+		<p:spacer height="1" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}"
+				oncomplete="financialStandardChecklistDlgs.hide();" update="@form"
+				action="#{specificationBackingBean.checkListYesConfirmation('F')}" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
+				actionListener="#{specificationBackingBean.checkListNoConfirmation('F')}"
+				oncomplete="financialStandardChecklistDlgs.hide();" />
+		</div>
+	</p:dialog>
+	
+	
+	
 </ui:composition>
