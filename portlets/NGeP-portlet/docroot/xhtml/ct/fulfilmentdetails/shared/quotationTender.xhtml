@@ -30,13 +30,9 @@
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
 			</h:panelGrid>
 			
-			<p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
-			<h:panelGrid columns="3">				
-				<p:inputTextarea id="ctLoaNo" rows="3" style="width:170px;margin-bottom: 5px;" disabled="true" maxlength="30" autoResize="false"
-				   value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}" />
-				<p:spacer width="1"/>
-			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
-			</h:panelGrid>
+			  <p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
+		    <p:inputText  style="width:170px;" disabled="true" maxlength="50"
+		       value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.contractType)}" />
 			
 			<p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
 			<p:inputText style="width:170px;" disabled="true"
@@ -46,23 +42,27 @@
 			
 			<p:outputLabel value="#{lbl['lbl.ct.pub.date']}" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/>
 			<p:inputText  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"
-				style="width:170px;" disabled="true" value="#{contractDetailsBackingBean.managedBean.ctContract.publishDate}">
+				style="width:80px;" disabled="true" value="#{contractDetailsBackingBean.managedBean.ctContract.publishDate}">
 				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 		    </p:inputText>			
-			
-			<p:outputLabel value="#{lbl['lbl.ct.service.fee']}" />
+		    
+		    <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+			<h:panelGrid columns="3">				
+				<p:inputTextarea id="ctLoaNo" rows="3" style="width:170px;margin-bottom: 5px;" disabled="true" maxlength="30" autoResize="false"
+				   value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+			</h:panelGrid>
+		    
+		    <p:outputLabel value="#{lbl['lbl.ct.service.fee']}" />
 			<h:panelGrid columns="4">
-			   <p:inputText styleClass="ppRightBtn" style="width:160px;" disabled="true" 
+			   <p:inputText styleClass="ppRightBtn" style="width:80px;" disabled="true" 
 			    maxlength="5"  value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"/>	
 				<p:outputLabel value="%" />
 				<p:spacer width="1" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.fee']}" />
 		    </h:panelGrid>
 		    
-		    <p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
-		    <p:inputText  style="width:170px;" disabled="true" maxlength="50"
-		       value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.contractType)}" />
-	 
 	 </h:panelGrid>
    </p:panel>
 </ui:composition>
