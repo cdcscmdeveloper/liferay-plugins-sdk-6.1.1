@@ -268,10 +268,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	/** The selected govt sellers. */
 	private List<ScQuoteSupplier> selectedGovtSellers;
-	
-	// supplier view
-	/** The sm supplier. */
-	private SmSupplier smSupplier;
+		
+	/** The ScQuoteSupplier */
+	private ScQuoteSupplier scQuoteSupplier;
 	
 	/** The today. */
 	private Date  today = new Date();
@@ -357,6 +356,9 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	/** The end loa rn. */
 	private ScRequestNote endLoaRN;
+	
+	/** The scQuoteSupplier response SQ. */
+	private ScQuoteSupplier requestedSupplier;
     
     /**
      * Gets the spki backing bean.
@@ -1660,25 +1662,19 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 			List<ScQuoteSupplier> selectedPanelSuppliers) {
 		this.selectedPanelSuppliers = selectedPanelSuppliers;
 	}
+	
+	
+	public ScQuoteSupplier getScQuoteSupplier() {
+		return scQuoteSupplier;
+	}
 
 	/**
-	 * Gets the sm supplier.
-	 *
-	 * @return the smSupplier
+	 * @param scQuoteSupplier the scQuoteSupplier to set
 	 */
-	public SmSupplier getSmSupplier() {
-		return smSupplier;
+	public void setScQuoteSupplier(ScQuoteSupplier scQuoteSupplier) {
+		this.scQuoteSupplier = scQuoteSupplier;
 	}
-	
-	/**
-	 * Sets the sm supplier.
-	 *
-	 * @param smSupplier the smSupplier to set
-	 */
-	public void setSmSupplier(SmSupplier smSupplier) {
-		this.smSupplier = smSupplier;
-	}
-	
+
 	/**
 	 * Gets the compare suppliers.
 	 *
@@ -2217,5 +2213,19 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 */
 	public void setEndLoaRN(ScRequestNote endLoaRN) {
 		this.endLoaRN = endLoaRN;
+	}
+
+	/**
+	 * @return the requestedSupplier
+	 */
+	public ScQuoteSupplier getRequestedSupplier() {
+		return requestedSupplier;
+	}
+
+	/**
+	 * @param requestedSupplier the requestedSupplier to set
+	 */
+	public void setRequestedSupplier(ScQuoteSupplier requestedSupplier) {
+		this.requestedSupplier = requestedSupplier;
 	}
 }
