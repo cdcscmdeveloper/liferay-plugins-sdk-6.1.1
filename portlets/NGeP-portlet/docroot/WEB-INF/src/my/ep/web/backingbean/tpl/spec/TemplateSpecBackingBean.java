@@ -1212,8 +1212,12 @@ public class TemplateSpecBackingBean extends
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
 				.getSelectedSpecQuestion();
 
-		selectedSpecQuestion.setScoreTypeCode(oriSpecQuestion
-				.getScoreTypeCode());
+		if (oriSpecQuestion.getScoreTypeCode() != null && oriSpecQuestion.getScoreTypeCode().getParameterId() != null) {
+			selectedSpecQuestion.setScoreTypeCode(oriSpecQuestion.getScoreTypeCode());	
+		} else {
+			selectedSpecQuestion.setScoreTypeCode(null);
+		}
+		
 		selectedSpecQuestion.setMaxScore(oriSpecQuestion.getMaxScore());
 		selectedSpecQuestion.setWeightageReq(oriSpecQuestion.isWeightageReq());
 		selectedSpecQuestion.setWeightage(oriSpecQuestion.getWeightage());
