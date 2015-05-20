@@ -160,8 +160,7 @@
 				<p:commandLink id="bidManagementNavigationBtn" size="5"
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
-					<p:graphicImage id="viewBtnImage" library="ep/images/design"
-						name="document.png" value="/css/images/design/document.png"
+					<p:graphicImage id="viewBtnImage"  value="/css/images/design/document.png"
 						title="#{lbl['lbl.txt.view']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -172,8 +171,8 @@
 					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
-					<p:graphicImage id="pauseBtnImage" library="ep/images/design"
-						name="pause.png" value="/css/images/design/pause.png"
+					<p:graphicImage id="pauseBtnImage" 
+						 value="/css/images/design/pause.png"
 						title="#{lbl['lbl.sc.pause.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -185,8 +184,8 @@
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
 
-					<p:graphicImage id="cancelBtnImage" library="ep/images/design"
-						name="cancel.png" value="/css/images/design/cancel.png"
+					<p:graphicImage id="cancelBtnImage" 
+						 value="/css/images/design/cancel.png"
 						title="#{lbl['lbl.sc.cancel.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -196,8 +195,8 @@
 					actionListener="#{biddingBB.reScheduleOrReBidPopUpAction(bid)}"
 					update="@([id$=rescheduleRebidPopUp])"
 					oncomplete="bidRescheduleOrResume.show();" size="5">
-					<p:graphicImage id="resumeBtnImage" library="ep/images/design"
-						name="play.png" value="/css/images/design/play.png"
+					<p:graphicImage id="resumeBtnImage"
+						 value="/css/images/design/play.png"
 						title="#{lbl['lbl.sc.resume.bid']}" />
 				</p:commandLink>
 
