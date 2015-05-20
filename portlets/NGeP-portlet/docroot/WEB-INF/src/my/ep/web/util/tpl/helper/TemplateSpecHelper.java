@@ -27,12 +27,15 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
+import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
@@ -79,7 +82,7 @@ public class TemplateSpecHelper {
 	 * 		clone including child entities.
 	 * @return	the new cloned TplSpecMaster instance.
 	 */
-	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions) {
+	public TplSpecMaster cloneTplSpecMaster(TplSpecMaster specMaster, boolean includeQuestions, boolean isScoringReq) {
 		debugLogger("cloneTplSpecMaster : " + specMaster);
 		
 		TplSpecMaster newSpecMaster = null;
@@ -97,6 +100,7 @@ public class TemplateSpecHelper {
 					newSpecMaster.setTplSpecZone(null);
 					newSpecMaster.setScQtDoc(null);
 					newSpecMaster.setScQuoteDocs(null);
+					newSpecMaster.setScoringReq(isScoringReq);
 					setUserDetails(newSpecMaster);
 
 					if (includeQuestions) {
@@ -621,5 +625,34 @@ public class TemplateSpecHelper {
 		specQuestion.setTplSpecTierQties(null);
 
 		resetEstimations(specQuestion);
+	}
+	
+	/**
+	 * Create new specification answer
+	 * 
+	 * @param templateSpecBean
+	 * 		the template specification bean
+	 * @param specQuestion
+	 * 		the template specification question
+	 * @param specTierQty
+	 * 		the template specification tier quantity
+	 * @return	the TplSpecAnswer instance
+	 */
+	public TplSpecAnswer createNewSpecAnswer(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion, 
+			TplSpecTierQty specTierQty) {
+		
+		TplSpecAnswer newSpecAnswer = new TplSpecAnswer();
+		
+		newSpecAnswer.setTplSpecQuestion(specQuestion);
+		newSpecAnswer.setTplSpecTierQty(specTierQty);
+		setUserDetails(newSpecAnswer);
+		
+		TplSpecSuppAnswer newSpecSuppAnswer = new TplSpecSuppAnswer();
+		newSpecSuppAnswer.setSmSupplier(templateSpecBean.getSupplier());
+		newSpecSuppAnswer.setTplSpecZoneDtl(templateSpecBean.getTplSpecZoneDtl());
+		newSpecAnswer.setTplSpecSuppAnswer(newSpecSuppAnswer);
+		setUserDetails(newSpecSuppAnswer);
+		
+		return newSpecAnswer;
 	}
 }
