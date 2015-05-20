@@ -167,7 +167,12 @@ public class TemplateSpecHelper {
 									}
 									
 									// clone spec scoring
-									cloneTplSpecScoring(newSpecQuestion, specQuestion.getTplSpecScorings());	
+									if (newSpecMaster.isScoringReq()) {
+										cloneTplSpecScoring(newSpecQuestion, specQuestion.getTplSpecScorings());	
+									} else {
+										newSpecQuestion.setScoreTypeCode(null);
+										newSpecQuestion.setMaxScore(null);
+									}
 									
 								} else {
 									IParameterSO parameterSO = null;

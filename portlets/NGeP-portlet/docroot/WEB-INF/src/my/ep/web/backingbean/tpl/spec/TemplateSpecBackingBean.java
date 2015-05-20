@@ -736,7 +736,7 @@ public class TemplateSpecBackingBean extends
 
 	private void resetAnswerTypeDtl(TplSpecQuestion specQuestion) {
 		if (ParameterConst.ANSWER_TYPE_TEXT.equals(specQuestion
-				.getAnswerTypeCode().getParameterCode())) {
+				.getAnswerTypeCode().getParameterCode()) && specQuestion.getTplSpecMaster().isScoringReq()) {
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.SCORE_TYPE,
 					ParameterConst.SCORE_TYPE_USER);
