@@ -2147,10 +2147,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
 			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-		    
-
-		   // OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
-		    
+			
 		    List<Object[]> list = resDTO.getOrgProfileDDList();
 		    items = new SelectItem[list.size() + 1];
 		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
