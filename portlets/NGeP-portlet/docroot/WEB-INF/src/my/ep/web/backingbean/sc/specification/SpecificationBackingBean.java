@@ -13709,7 +13709,8 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(
 							scQtCheckList.getScQtDoc().getTplSpecMaster(),
-							false);
+							false,
+							true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -13735,6 +13736,7 @@ public class SpecificationBackingBean extends
 			ParameterResDTO finSpecresDTO = parameterSO
 					.retrieveParameterByTypeAndCode(finSpecType);
 			specMaster.setSpecTypeCode(finSpecresDTO.getPmParameter());
+			specMaster.setScoringReq(true);
 			TemplateSpecHelper.getInstance().cloneTplSpecQuestions(
 					specMaster,
 					scQtCheckList.getScQtDoc().getTplSpecMaster()
@@ -13754,7 +13756,6 @@ public class SpecificationBackingBean extends
 					qtCheckList.getScQtDoc().getTplSpecMaster(),
 					qtCheckList.getScQtDoc().getTplSpecMaster()
 							.getTplSpecQuestions());
-			qtCheckList.getScQtDoc().getTplSpecMaster().setScoringReq(true);
 
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
@@ -13909,12 +13910,12 @@ public class SpecificationBackingBean extends
 			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(specReqDTO);
-			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
-					.cloneTplSpecMaster(resDTO.getSpecMaster(), true);
+			TplSpecMaster specMaster = TemplateSpecHelper.getInstance().cloneTplSpecMaster(
+					resDTO.getSpecMaster(), 
+					true, 
+					getManagedBean().getScQt().isTechEvaluationReq());
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
-			specMaster.setScoringReq(getManagedBean().getScQt()
-					.isTechEvaluationReq());
 			if (getManagedBean().getScQt().isZonal()) {
 				ScQtSupplierCriteria supplierCriteria = getManagedBean()
 						.getScQt().getScQtSupplierCriteria();

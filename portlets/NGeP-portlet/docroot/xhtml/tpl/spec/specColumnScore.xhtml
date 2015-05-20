@@ -13,7 +13,7 @@
 			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 		</h:outputText>
 	</p:column>
-	<p:column style="width:50px; white-space:normal; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}">
+	<p:column style="width:50px; white-space:normal; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.system.score']}" rendered="#{isScoringReq}">
 		<h:panelGroup rendered="#{isScoring and !isRepeated}">
 			<h:outputText value="#{tplSpecAnswer.autoScore}">
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -24,7 +24,7 @@
 			</h:outputText>
 		</h:panelGroup>
 	</p:column>
-	<p:column style="width:50px; white-space:normal; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}">
+	<p:column style="width:50px; white-space:normal; text-align:right;" headerText="#{lbl['lbl.tpl.spec.content.user.score']}" rendered="#{isScoringReq}">
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"/>
