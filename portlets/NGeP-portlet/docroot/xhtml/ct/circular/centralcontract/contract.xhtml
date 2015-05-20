@@ -214,8 +214,7 @@
 			widgetVar="contractDlg" modal="true" width="800" height="450">
 			<p:messages id="agencyMsg" showSummary="false" 
 			   showDetail="true"   autoUpdate="true" cosable="true" severity="error, info" />
-			<p:panel id="listOfContract">
-				<h:panelGrid columns="6">
+					<h:panelGrid columns="6">
 					<h:outputText value="#{lbl['lbl.ct.contract.no']}" />
 					<p:inputText id="contractNo" maxlength="17" 
 						value="#{centralContractBackingBean.managedBean.searchContractNo}"/>
@@ -256,8 +255,7 @@
 						 type="button" ajax="false"
 						onclick="contractDlg.hide();" />
 				</div>
-			</p:panel>
-		</p:dialog>
+	    	</p:dialog>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.txt.remarks']}" toggleable="true">
