@@ -224,9 +224,9 @@
 						readonly="true"
 						size="7"
 						disabled="#{!contractRequestBackingBean.managedBean.chargeLinePanel}"
-						conditionField="pmPtjGroup.ptjGroupId^#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.parentOrgProfile.orgProfileId}*pmPtjGroup^1^11"
+						conditionField="pmOrgProfile^1^11"
 						value="#{contractRequestBackingBean.managedBean.gosodo.glAccCode}"	
-						tooltip="#{lbl['lbl.fl.tooltip.gosodo']}"	>
+						tooltip="#{lbl['lbl.fl.tooltip.gosodo']}"  >
 					</ac:lov></h:panelGroup>
 					</td>
 				</tr>
