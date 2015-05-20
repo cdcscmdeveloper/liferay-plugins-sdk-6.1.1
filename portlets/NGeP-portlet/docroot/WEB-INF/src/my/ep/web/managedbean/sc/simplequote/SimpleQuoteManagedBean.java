@@ -301,9 +301,12 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	
 	/** The editable flag. */
 	private boolean editableFlag = Boolean.TRUE;
-	
-	/** The supplier view btn. */
-	private boolean supplierViewBtn = Boolean.TRUE;
+
+	/** The submit button flg. */
+	private boolean submitButtonFlg = Boolean.TRUE;
+
+	/** The save button flg. */
+	private boolean saveButtonFlg = Boolean.TRUE;
 	
 	/** The required. */
 	private boolean required;
@@ -1856,24 +1859,6 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
-	 * Checks if is supplier view btn.
-	 *
-	 * @return the supplierViewBtn
-	 */
-	public boolean isSupplierViewBtn() {
-		return supplierViewBtn;
-	}
-	
-	/**
-	 * Sets the supplier view btn.
-	 *
-	 * @param supplierViewBtn the supplierViewBtn to set
-	 */
-	public void setSupplierViewBtn(boolean supplierViewBtn) {
-		this.supplierViewBtn = supplierViewBtn;
-	}
-	
-	/**
 	 * Checks if is required.
 	 *
 	 * @return the required
@@ -2228,4 +2213,42 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	public void setRequestedSupplier(ScQuoteSupplier requestedSupplier) {
 		this.requestedSupplier = requestedSupplier;
 	}
+
+	/**
+	 * Checks if is submit button flg.
+	 *
+	 * @return true, if is submit button flg
+	 */
+	public boolean isSubmitButtonFlg() {
+		return submitButtonFlg;
+	}
+
+	/**
+	 * Sets the submit button flg.
+	 *
+	 * @param submitButtonFlg the new submit button flg
+	 */
+	public void setSubmitButtonFlg(boolean submitButtonFlg) {
+		this.submitButtonFlg = submitButtonFlg;
+	}
+
+	/**
+	 * Checks if is save button flg.
+	 *
+	 * @return true, if is save button flg
+	 */
+	public boolean isSaveButtonFlg() {
+		return saveButtonFlg;
+	}
+
+	/**
+	 * Sets the save button flg.
+	 *
+	 * @param saveButtonFlg the new save button flg
+	 */
+	public void setSaveButtonFlg(boolean saveButtonFlg) {
+		this.saveButtonFlg = saveButtonFlg;
+	}
+	
+	
 }
