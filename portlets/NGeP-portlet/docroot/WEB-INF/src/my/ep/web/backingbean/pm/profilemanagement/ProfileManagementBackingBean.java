@@ -1986,7 +1986,7 @@ public class ProfileManagementBackingBean extends
 		try {
 
 			/* show selected org's receiving addr */
-			if (this.getManagedBean().getSelectedUserOrg() != null
+			if (this.getManagedBean().getSelectedUserOrg() != null && !this.getManagedBean().getSelectedUserOrg().isBrandNew()
 					&& this.getManagedBean().getSelectedUser()
 							.getPmAddressTypes() != null) {
 				if (this.getManagedBean().getSelectedReceivingAddrTypes() == null) {
