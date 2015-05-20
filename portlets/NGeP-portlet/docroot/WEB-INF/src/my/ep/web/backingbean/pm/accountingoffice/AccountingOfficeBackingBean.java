@@ -142,7 +142,7 @@ public class AccountingOfficeBackingBean extends
 				agOfficeSO = (IAgOfficeSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IAgOfficeSO.class);
-				AgOfficeResDTO resDTO = agOfficeSO.searchAgOfficerData(ctrReqDTO);
+				AgOfficeResDTO resDTO = new AgOfficeResDTO(); //agOfficeSO.searchAgOfficerData(ctrReqDTO);
 						
 				if (resDTO.isSuccessful()) {
 
