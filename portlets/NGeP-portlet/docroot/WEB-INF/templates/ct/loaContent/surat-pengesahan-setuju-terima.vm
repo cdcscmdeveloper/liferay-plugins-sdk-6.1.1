@@ -24,27 +24,27 @@
             <img src='http://$hostUrl/NGeP-portlet/css/images/Lambang_Malaysia_2010.jpg' width='124' height='100' />
         </td>
         <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$agency</span>
+        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ptjName</span>
         </td>
 	</tr>
 	<tr>
         <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ministry</span>
+        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ministryJabatanName</span>
         </td>
     </tr>
     <tr>
         <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$agencyAddress</span>
+        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>$ptjAddress</span>
         </td>
     </tr>
     <tr>
         <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Tel No: $agencyPhoneNo</span>
+        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Tel No: $phoneNo</span>
         </td>
     </tr>
     <tr>
         <td>
-        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Fax No: $agencyFaxNo</span>
+        	<span style='font-weight:bold;font-size:16px;font-family: Albertus Medium;'>Fax No: $faxNo</span>
         </td>
     </tr>
 	</table>

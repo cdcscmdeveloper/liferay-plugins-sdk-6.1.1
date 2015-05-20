@@ -64,7 +64,7 @@
 	      	                 </p:column>
 	      	                 
 	      	                 <p:column style="width:25%;white-space:normal;" >
-				                    <h:outputText value="#{agencyData.orgProfile.parentOrgProfile.orgName}"/>
+				                    <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
 			                 </p:column>
 			                 
 			                  <p:column style="width:25%;white-space:normal;" >
@@ -75,7 +75,7 @@
            		    <p:inputText value="#{agencyData.ceilingAmount}"  required="true"  label="#{lbl['lbl.ct.ceiling.amount']}"
            		        disabled="#{contractDetailsBackingBean.managedBean.viewContract}" style="width:80px;" maxlength="23"  styleClass="ppRightBtn">
 			 		    <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-			 		    <p:ajax event="change" update=":form:tableAgencyDetails" process="@form" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
+			 		    <p:ajax event="change" update=":form:tableAgencyDetails" listener="#{contractDetailsBackingBean.validateCeilingAmount(agencyData)}"/> 
 				     </p:inputText>
 		    	</p:column>
 		   
@@ -97,7 +97,9 @@
 		   	
 		   	   <p:column>
 		   	       <p:selectBooleanCheckbox value="#{agencyData.ap178}" style="width:10px;float:center;" disabled="true"
-		   	          rendered="#{contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile.orgName != agencyData.orgProfile.parentOrgProfile.orgName}">
+		   	          rendered="#{contractDetailsBackingBean.retrieveMinistryOrgProfile(
+		   	          	contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId).getOrgProfileId() != 
+		   	          	contractDetailsBackingBean.retrieveMinistryOrgProfile(agencyData.orgProfile.orgProfileId).getOrgProfileId()}">
 		   	      </p:selectBooleanCheckbox>
 		       </p:column>
 		       <p:column style="white-space:normal;">
@@ -219,6 +221,16 @@
                  <p:selectOneMenu id="ministry" style="width:300px"
                       value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" >
             	   <f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax event="change" update=":form:jabatan" />
+                 </p:selectOneMenu>
+                 <p:selectOneMenu for="jabatan"  style="width:150px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="jabatan" style="width:300px"
+                      value="#{contractDetailsBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{contractDetailsBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" update=":form:jabatan"/>
                  </p:selectOneMenu>
                  <p:selectOneMenu for="ptjcodename" 
                     value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
@@ -232,7 +244,7 @@
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
-       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" 
+       		            action="#{contractDetailsBackingBean.searchAgencyDetails}" process="@this"
        		                onstart="blkAgencyTable.show();" oncomplete="blkAgencyTable.hide();" /> 
 			         <p:commandButton id="resetlBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 			            action="#{contractDetailsBackingBean.resetAgencyDetails}" update=":form:agencyies"   />

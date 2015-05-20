@@ -119,7 +119,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
@@ -157,7 +157,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean (name = "contractDetailsBackingBean")
 @ViewScoped
-public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsManagedBean> {
+public class ContractDetailsBackingBean extends ContractBaseBackingBean<ContractDetailsManagedBean> {
 	
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
@@ -417,12 +417,24 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				// Filter By - Org Type
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orgTypeCode.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),OrganizationType.DIVISION.value()));
 				
-				// Filter By - Parent Org Profile Id
+				
+				// Filter By - Ministry Profile Id
 				Long ministryProfileId = getManagedBean().getMinistryProfileId();
 				if (ministryProfileId == null) {
 					ministryProfileId = 0L;
 				}
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("parentOrgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),ministryProfileId));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								ministryProfileId));
+				
+				
+				if (getManagedBean().getJabatanProfileId() != null) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
+									SearchOperator.OPERATOR_EQUALS.value(),
+									getManagedBean().getJabatanProfileId()));
+				}
 				
 				Date currentDate = DateUtils.getCurrentDateWithoutTime();
 				// Filter By - Org effDate
@@ -540,7 +552,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * The method used to reset the search criteria for agency.
 	 */
 	public void resetAgencyDetails() {
-		getManagedBean().setMinistryProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId());
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjCodeName(null);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		agencyDataModel.resetData();
@@ -653,7 +667,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    if (getManagedBean().getContractVer().getCtAgencies() != null 
 	    		&& this.getManagedBean().getContractVer().getCtAgencies().size() > 0 ) {
 	    	getManagedBean().setSelectedAgency(null);
-	    	Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
+	    	//Collections.sort(this.getManagedBean().getContractVer().getCtAgencies(), new CtAgency());		           
+	    	sortAgencyList(this.getManagedBean().getContractVer().getCtAgencies());
 	    	for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
 	    		checkAgencyStatus(ctAgency);		        	   
 	    	}
@@ -687,7 +702,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    		} else if (item.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 	    			Collections.sort(item.getCtItemPrices(), new CtItemPrice());
 	    			if (item.getCtItemCeilingQties() != null && item.getCtItemCeilingQties().size() > 0) {
-	    				Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+	    				//Collections.sort(item.getCtItemCeilingQties(), new CtItemCeilingQty());
+	    				sortItemCeilingQtyList(item.getCtItemCeilingQties());
 	    				for (CtItemCeilingQty ceilingQty : item.getCtItemCeilingQties()) {			        	        	    	   
 	    					checkAgencyStatus(ceilingQty.getCtAgency());		        	   
 	    				}
@@ -2097,16 +2113,52 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		try {
 		    int i = 0;
-		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
-		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		    reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-		    OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
 		    
 		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
 		    items = new SelectItem[list.size()];
 			for (PmOrgProfile orgProfile : list) {
 			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+			reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+		    
+
+		   // OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+		    
+		    List<Object[]> list = resDTO.getOrgProfileDDList();
+		    items = new SelectItem[list.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			
+		    for(Object[] object : list){
+		    //for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(Long.parseLong(object[0].toString()), object[1].toString());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2430,8 +2482,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(reqDTO);
 			ctAgency.setOrgProfile(resDTO.getPmOrgProfile());
 			 
-			if (!getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId().equals(
-					ctAgency.getOrgProfile().getParentOrgProfile().getOrgProfileId())) {
+			if (!retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId().equals(
+					retrieveMinistryOrgProfile(ctAgency.getOrgProfile().getOrgProfileId()).getOrgProfileId())) {
 				ctAgency.setAp178(true);
 			}		  	
 			ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
@@ -2545,10 +2597,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 * @return true, if added agency's ministry different with contract's ministry
 	 *         false, if added agency's ministry same with contract's ministry
      */
-	public boolean isContractSharing() {		
+	public boolean isContractSharing() {
+		PmOrgProfile contractMinistry = retrieveMinistryOrgProfile(
+				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+		
 		for (CtAgency ctAgency : getManagedBean().getContractVer().getCtAgencies()) {
-			if (!getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName().equals(
-					ctAgency.getOrgProfile().getParentOrgProfile().getOrgName())) {
+			if (!contractMinistry.getOrgProfileId().equals(
+					retrieveMinistryOrgProfile(ctAgency.getOrgProfile().getOrgProfileId()).getOrgProfileId())) {
 				return true;
 			}
 		}
