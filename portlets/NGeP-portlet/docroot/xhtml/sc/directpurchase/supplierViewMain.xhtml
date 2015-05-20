@@ -17,14 +17,24 @@
 				password="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.password}"
 				challengeAns1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeAns1}"
 				challengeQues1="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-				postSignAction="#{simpleQuoteBackingBean.supplierSubmit(spkiBackingBean.pmDigiSign)}" />
+				postSignAction="#{simpleQuoteBackingBean.updateSupplierResponse(spkiBackingBean.pmDigiSign)}" />
+
+			<ac:gpkiPopup
+				textBeforeSign="#{simpleQuoteBackingBean.textBeforeSign}"
+				postSignAction="#{simpleQuoteBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}"
+				postCancelAction="#{simpleQuoteBackingBean.gpkiCancelAction}" />
+
 		</p:outputPanel>
 		<div class="ppRightBtn">
+
+			<p:commandButton value="#{lbl['lbl.btn.save']}" process="@this"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{simpleQuoteBackingBean.supplierSave}" />
+
 			<p:commandButton value="#{lbl['lbl.btn.submit']}"
-				action="#{simpleQuoteBackingBean.spkiSignAction}"
+				action="#{simpleQuoteBackingBean.supplierSubmit}"
 				actionListener="#{simpleQuoteBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-				update="spkiOutputPanel" 
-				onstart="blockWidget.show();"
+				update="spkiOutputPanel" onstart="blockWidget.show();"
 				oncomplete="blockWidget.hide();"
 				rendered="#{simpleQuoteBackingBean.managedBean.supplierViewBtn}" />
 		</div>

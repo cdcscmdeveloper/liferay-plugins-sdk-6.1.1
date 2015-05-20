@@ -1,4 +1,5 @@
-   <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,160 +9,170 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="suppViewDtl" header="#{lbl['lbl.sc.supplier.details']}"
 		toggleable="true">
-		<p:spacer height="10px" />
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.supplier.ep.no']}" /></td>
-				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.smSupplier.epNo}"/></td>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.supplier.ep.no']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{simpleQuoteBackingBean.managedBean.smSupplier.epNo}" /></td>
 
-				<td style="width: 200px;"><p:outputLabel
+				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.supplier']}" /></td>
-				<td><p:inputText disabled="true"  size="55" value="#{simpleQuoteBackingBean.managedBean.smSupplier.companyName}"/></td>
+				<td><p:inputText disabled="true" size="55"
+						value="#{simpleQuoteBackingBean.managedBean.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
-				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.sq.mof.reg.no']}" /></td>
-				<td><p:inputText disabled="true" value="#{simpleQuoteBackingBean.managedBean.smSupplier.smMofAccounts[0].mofNo}"/> 
-				
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.sq.mof.reg.no']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{simpleQuoteBackingBean.managedBean.smSupplier.smMofAccounts[0].mofNo}" />
+
 				</td>
 			</tr>
-	  </table>
+		</table>
 	</p:panel>
 
-	<p:panel id="tplSpecId" header="#{lbl['lbl.sc.simple.quote.details']}" toggleable="true">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.submit.instruction']}"/>
-		
+	<p:panel id="tplSpecId" header="#{lbl['lbl.sc.simple.quote.details']}"
+		toggleable="true">
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.submit.instruction']}" />
+
 		<p:spacer height="5px" />
-			<table style="width: 100%;">
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.panel']}" /></td>
-					<td><p:selectOneRadio
-							value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
-							disabled="true">
-							<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
-							<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
-						</p:selectOneRadio></td>
-				</tr>
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.direct.purchase.title']}" /></td>
-					<td><p:inputText disabled="true" size="91"
-							value="#{simpleQuoteBackingBean.managedBean.scQuote.title}" /></td>
-				</tr>
-				
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.zonal']}" /></td>
-					<td>
-						<table>
-							<tr>
-								<td><p:selectOneRadio
-										value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
-										disabled="true">
-										<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
-											itemValue="true" />
-										<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
-											itemValue="false" />
-									</p:selectOneRadio></td>
-								<td style="margin-top: -3px"><h:panelGroup
-										rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel eq true}">
-										<ac:iconTooltip
-											value="#{lbl[simpleQuoteBackingBean.managedBean.scQuote.panel ? 'lbl.sc.sq.panel.zonal.tooltip' : 'lbl.sc.sq.normal.zonal.tooltip']}" />
-									</h:panelGroup> <h:panelGroup
-										rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel eq false}">
-										<ac:iconTooltip
-											value="#{lbl[simpleQuoteBackingBean.managedBean.scQuote.zonal ? 'lbl.sc.sq.supplier.zonal.tooltip' : 'lbl.sc.sq.normal.zonal.tooltip']}" />
-									</h:panelGroup></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.start.date']}" /></td>
-					<td><p:calendar
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-							value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.end.date']}" /></td>
-					<td><p:calendar
-							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
-							value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td style="width: 200px;"><p:outputLabel
-							value="#{lbl['lbl.sc.sq.simple.quote.type']}" /></td>
-					<td>
-						<table>
-							<tr>
-								<td><p:selectOneRadio
-										value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}"
-										disabled="true">
-										<f:selectItem itemLabel="#{lbl['lbl.sc.sq.single']}"
-											itemValue="false" />
-										<f:selectItem
-											itemLabel="#{lbl['lbl.sc.sq.multiple']}"
-											itemValue="true" />
-									</p:selectOneRadio></td>
-								<td style="margin-top: -3px"><ac:iconTooltip
-										value="#{lbl['lbl.sc.sq.supplier.quotetype.tooltip']}" /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+		<table style="width: 100%;">
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.panel']}" /></td>
+				<td><p:selectOneRadio
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.panel}"
+						disabled="true">
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.direct.purchase.title']}" /></td>
+				<td><p:inputText disabled="true" size="30"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.title}" /></td>
+			</tr>
 
-			</table>
-	 <p:spacer height="5px" />
-	 <p:outputPanel autoUpdate="true" id="supplierview"> 
-      <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
-		<ac:templateSpec
-			templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
-			title="#{lbl['lbl.sc.simple.quote.product.list']}" />
-      </h:panelGroup>
-      
-	<p:spacer height="25px" />
-	 <h:panelGroup style="width: 100%;" rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specAnswerList) ne '0'}">
-		<ac:templateSpec
-			templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
-			title="#{lbl['lbl.sc.simple.quote.service.list']}" />
-       </h:panelGroup>
-     </p:outputPanel>
-	</p:panel>
-	
-	<p:panel label="#{lbl['lbl.sc.simple.quote.remark']}" header="#{lbl['lbl.sc.simple.quote.remark']}" id="suppRmkId" toggleable="true" toggleSpeed="500">
-	 <table style="width: 100%">
-		<tr>
-			<td class="TableFieldLeft" width="12%"></td>
-			<td class="TableFieldRight">
-				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.sq.zonal']}" /></td>
+				<td>
 					<table>
 						<tr>
-							<td rowspan="2" style="vertical-align: top;" align="left">
-								<h:graphicImage value="#{simpleQuoteBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
-							</td>
-							<td width="5"></td>
-							<td>
-								<h:outputText value="#{remarkVar.createdUser.userName}"/>,
-								<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
-									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-								</h:outputText>
-							</td>
-						</tr>
-						<tr>
-							<td></td>
-							<td>
-								<p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" />
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-							</td>
+							<td><p:selectOneRadio
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.zonal}"
+									disabled="true">
+									<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}"
+										itemValue="true" />
+									<f:selectItem itemLabel="#{lbl['lbl.btn.no']}"
+										itemValue="false" />
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><h:panelGroup
+									rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel eq true}">
+									<ac:iconTooltip
+										value="#{lbl[simpleQuoteBackingBean.managedBean.scQuote.panel ? 'lbl.sc.sq.panel.zonal.tooltip' : 'lbl.sc.sq.normal.zonal.tooltip']}" />
+								</h:panelGroup> <h:panelGroup
+									rendered="#{simpleQuoteBackingBean.managedBean.scQuote.panel eq false}">
+									<ac:iconTooltip
+										value="#{lbl[simpleQuoteBackingBean.managedBean.scQuote.zonal ? 'lbl.sc.sq.supplier.zonal.tooltip' : 'lbl.sc.sq.normal.zonal.tooltip']}" />
+								</h:panelGroup></td>
 						</tr>
 					</table>
-				</p:dataGrid>
-			</td>
-		</tr>
-	  </table>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.start.date']}" /></td>
+				<td><p:calendar
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.end.date']}" /></td>
+				<td><p:calendar
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.endDate}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.sq.simple.quote.type']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:selectOneRadio
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.multipleQuote}"
+									disabled="true">
+									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.single']}"
+										itemValue="false" />
+									<f:selectItem itemLabel="#{lbl['lbl.sc.sq.multiple']}"
+										itemValue="true" />
+								</p:selectOneRadio></td>
+							<td style="margin-top: -3px"><ac:iconTooltip
+									value="#{lbl['lbl.sc.sq.supplier.quotetype.tooltip']}" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+		<p:spacer height="5px" />
+		<p:outputPanel autoUpdate="true" id="supplierview">
+			<h:panelGroup style="width: 100%;"
+				rendered="#{fn:length(simpleQuoteBackingBean.managedBean.productTemplateSpecBean.specAnswerList) ne '0'}">
+				<ac:templateSpec
+					templateSpecBean="#{simpleQuoteBackingBean.managedBean.productTemplateSpecBean}"
+					title="#{lbl['lbl.sc.simple.quote.product.list']}" />
+			</h:panelGroup>
+
+			<h:panelGroup style="width: 100%;"
+				rendered="#{fn:length(simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean.specAnswerList) ne '0'}">
+				<p:spacer height="25px" />
+				<ac:templateSpec
+					templateSpecBean="#{simpleQuoteBackingBean.managedBean.serviceTemplateSpecBean}"
+					title="#{lbl['lbl.sc.simple.quote.service.list']}" />
+			</h:panelGroup>
+		</p:outputPanel>
+	</p:panel>
+
+	<p:panel label="#{lbl['lbl.sc.simple.quote.remark']}"
+		header="#{lbl['lbl.sc.simple.quote.remark']}" id="suppRmkId"
+		toggleable="true" toggleSpeed="500">
+		<table style="width: 100%">
+			<tr>
+				<td class="TableFieldLeft" width="16%"></td>
+				<td class="TableFieldRight"><p:dataGrid id="catatan"
+						value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}"
+						var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+						<table>
+							<tr>
+								<td rowspan="2" style="vertical-align: top;" align="left">
+									<h:graphicImage
+										value="#{simpleQuoteBackingBean.userImagePath(remarkVar.createdUser.loginId)}"
+										height="30" width="30" />
+								</td>
+								<td width="5"></td>
+								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
+									<h:outputText id="remarkDate" value="#{remarkVar.createdDate}">
+										<f:convertDateTime
+											pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+									</h:outputText></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td><p:inputTextarea style="width:350px;"
+										value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> <h:outputText
+										value="#{remarkVar.remark}" rendered="#{remarkIndex>0}"
+										style="display: inline-block; width:220px;word-wrap: break-word;" />
+								</td>
+							</tr>
+						</table>
+					</p:dataGrid></td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>
