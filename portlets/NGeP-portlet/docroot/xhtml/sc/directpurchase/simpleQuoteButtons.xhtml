@@ -5,41 +5,43 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
-		<p:confirmDialog
-			message="#{simpleQuoteBackingBean.managedBean.promptMessage}"
-			id="promptId" width="450px" height="80px" widgetVar="sqConformDlg"
-			severity="alert" closable="false"
-			header="#{lbl['lbl.sc.simple.quote.submit.confirmation']}">
+	<p:blockUI block=":form" widgetVar="blockWidget">
+		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+	</p:blockUI>
+	
+	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
+		header="#{lbl['lbl.sc.simple.quote.submit.confirmation']}" resizable="false"
+		width="500" height="100" closable="false" modal="true">
+				
+		<table>
+			<tr>
+				<td><h:graphicImage
+						value="/css/images/design/exclamation.png" /> 
+						#{simpleQuoteBackingBean.managedBean.promptMessage}</td>
+			</tr>
+		</table>
+			
+		<p:spacer height="1" />
+		<h:panelGroup id="conformDlgId">
+			<div class="ppRightBtn" style="width: 100%">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form"
+					rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
+					onsuccess="sqConformDlg.hide()"
+					actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}"
+					rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
+					partialSubmit="true" process="@this" onclick="sqConformDlg.hide();"
+					type="button" />
 
-			<p:blockUI block="conformDlgId" widgetVar="promptWidget"
-				id="conformDlg">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
+				<p:commandButton value="#{lbl['lbl.sc.ok']}"
+					rendered="#{!simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
+					partialSubmit="true" process="@this" onclick="sqConformDlg.hide();"
+					type="button" />
 
-			<p:panel id="conformDlgId">
-				<p:panelGrid styleClass="noBorders tr,noBorders td">
-					<p:row>
-						<p:column width="100%" style="text-align:right">
-							<p:commandButton value="#{lbl['lbl.btn.yes']}" update="@form" rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-								onstart="promptWidget.show()" oncomplete="promptWidget.hide();"
-								onsuccess="sqConformDlg.hide()"
-								actionListener="#{simpleQuoteBackingBean.submitSimpleQuote(simpleQuoteBackingBean.managedBean.selectedAction)}" />
-						  <p:commandButton value="#{lbl['lbl.btn.no']}" rendered="#{simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-								partialSubmit="true" process="@this"
-								onclick="sqConformDlg.hide();" type="button" />
-								
-						   <p:commandButton value="#{lbl['lbl.sc.ok']}" rendered="#{!simpleQuoteBackingBean.managedBean.conformDlgBtnFlag}"
-								partialSubmit="true" process="@this"
-								onclick="sqConformDlg.hide();" type="button" />
-								
-						</p:column>
-					</p:row>
-				</p:panelGrid>
-			</p:panel>
-		</p:confirmDialog>
+			</div>
+		</h:panelGroup>
+	</p:dialog>
+	
 	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 		<table width="100%">
 			<tr>
