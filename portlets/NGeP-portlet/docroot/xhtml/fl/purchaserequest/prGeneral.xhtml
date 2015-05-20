@@ -18,16 +18,16 @@
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="66" id="ptjGroup"
-						value="#{purchaseRequestBackingBean.retrieveJabatanByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputText size="66" id="controlOff"
+						value="#{purchaseRequestBackingBean.retrievePegawaiPengawalByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="66" id="controlOff"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="66" id="ptjGroup"
+						value="#{purchaseRequestBackingBean.retrieveJabatanByOrgProfileId(purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>

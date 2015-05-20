@@ -11,7 +11,7 @@
 			<tr>
 				<td style="width: 136px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td style="width: 378px;"><p:inputText size="59" id="ministry"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						value="#{receivedNoteBackingBean.retrieveMinistryByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 				<td style="width: 150px;" rowspan="3" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
@@ -22,16 +22,16 @@
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="59" id="ptjGroup"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
+				<td><p:inputText size="59" id="controlOff"
+						value="#{receivedNoteBackingBean.retrievePegawaiPengawalByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="59" id="controlOff"
-						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="59" id="ptjGroup"
+						value="#{receivedNoteBackingBean.retrieveJabatanByOrgProfileId(receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>

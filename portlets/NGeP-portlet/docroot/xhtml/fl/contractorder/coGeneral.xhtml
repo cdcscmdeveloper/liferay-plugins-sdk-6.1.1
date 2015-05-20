@@ -14,21 +14,21 @@
 				<td style="width: 138px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="65" id="ministry"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.orgName}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td style="width: 106px;"><p:outputLabel
-						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="65" id="ptjGroup"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmPtjGroup.groupName}"
+						value="#{flOrderBB.retrieveMinistryByOrgProfileId(flOrderBB.managedBean.flRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
 				<td><p:inputText size="65" id="controlOff"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmAgCtrlOfficer.description}"
+						value="#{flOrderBB.retrievePegawaiPengawalByOrgProfileId(flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td style="width: 106px;"><p:outputLabel
+						value="#{lbl['lbl.fl.jabatan']}" /></td>
+				<td><p:inputText size="65" id="ptjGroup"
+						value="#{flOrderBB.retrieveJabatanByOrgProfileId(flOrderBB.managedBean.flRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
