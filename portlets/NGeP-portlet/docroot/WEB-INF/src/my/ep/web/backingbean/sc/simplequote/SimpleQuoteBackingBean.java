@@ -3609,13 +3609,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 				} 
 
-				if(quoteResDTO.getSupplier() != null){
-					getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
+				if(quoteResDTO.getScQuoteSupplier() != null){
+					getManagedBean().setScQuoteSupplier(quoteResDTO.getScQuoteSupplier());
 				}
 				getManagedBean().setScQuote(scQuote);
 
 				quoteReqDTO.setQuoteBidDtl(scQuote);
 				quoteReqDTO.setSpecAnswers(specAnswers);
+				quoteReqDTO.setQuoteSupplier(quoteResDTO.getScQuoteSupplier());
 
 				// remarks
 				scQuote.setRemarks(initializeRemarks(
@@ -3759,7 +3760,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setRoleCode(getUserRoleCode());
 
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setSupplier(getManagedBean().getSmSupplier());
+			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
@@ -3870,7 +3871,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setPmDigiSign(pmDigiSign);
 			
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
-			reqDTO.setSupplier(getManagedBean().getSmSupplier());
+			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
 			QuoteResDTO quoteResDTO = getQuoteSO().saveSupplierResponse(reqDTO);
 			if (quoteResDTO.isSuccessful()) {
@@ -3925,8 +3926,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		String countryCode ="";
 		String orginalText = "";
 
-		if(getManagedBean().getSmSupplier() != null){
-			smSupplier = getManagedBean().getSmSupplier();
+		if(getManagedBean().getScQuoteSupplier() != null){
+			smSupplier = getManagedBean().getScQuoteSupplier().getSmSupplier();
 
 			if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
 				List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
@@ -3970,7 +3971,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		QuoteReqDTO quoteReqDTO = new QuoteReqDTO();
 		quoteReqDTO.setQuoteId(scQuote.getQuoteId());
 		quoteReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
-		quoteReqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
+		if(getManagedBean().getScQuoteSupplier() != null) {
+			quoteReqDTO.setSupplierId(getManagedBean().getScQuoteSupplier().getSmSupplier().getSupplierId());
+		}
 		quoteReqDTO.setFetchSubEntity(true);
 		QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(quoteReqDTO);
 		scQuote = quoteResDTO.getQuoteBidDtl();
@@ -3991,8 +3994,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 		} 
 
-		if(quoteResDTO.getSupplier() != null){
-			getManagedBean().setSmSupplier(quoteResDTO.getSupplier());
+		if(quoteResDTO.getScQuoteSupplier() != null){
+			getManagedBean().setScQuoteSupplier(quoteResDTO.getScQuoteSupplier());
 		}
 		getManagedBean().setScQuote(scQuote);
 		
