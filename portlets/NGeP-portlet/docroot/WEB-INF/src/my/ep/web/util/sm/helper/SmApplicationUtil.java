@@ -1581,7 +1581,7 @@ public class SmApplicationUtil {
 			// String amt = "";
 			String supType = "";
 			StringBuilder sb = new StringBuilder();
-			sb.append("RM.");
+			sb.append("RM ");
 			if (managedBean.getSmAppl().getSupplierType()
 					.equals(SupplierManagementConst.STYPE_CONSULTANT)
 					&& managedBean
@@ -1610,6 +1610,9 @@ public class SmApplicationUtil {
 				supType = ResourceBundleUtils.getMessage(
 						"lbl.sm.contractor.lowercaps",
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+			}
+			if (!sb.toString().contains(".")) {
+				sb.append(".00");
 			}
 			if (!validPaidUp) {
 				validAmt = false;
