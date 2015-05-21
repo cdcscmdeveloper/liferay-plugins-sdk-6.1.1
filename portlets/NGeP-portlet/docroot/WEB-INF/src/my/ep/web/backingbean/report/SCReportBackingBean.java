@@ -49,7 +49,9 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		 		rptGenBean.setScQuotationNoView(true);	
 		 		rptGenBean.setExtraTwoColumnView(true);
 	            break; 
-	        case ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL:			
+	        case ReportConst.KPPP1_PEMATUHAN_OC_RPT_VAL:
+	        	rptGenBean.setScQuotationNoView(true);	
+	        	rptGenBean.setExtraTwoColumnView(true);
 	            break;
 	        case ReportConst.PDDW_OC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);	
@@ -107,7 +109,9 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScQuotationNoView(true);
 	        	rptGenBean.setExtraTwoColumnView(true);
 	            break;
-	        case ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL:	        	
+	        case ReportConst.KPP1_PEMATUHAN_EC_RPT_VAL:
+	        	rptGenBean.setScQuotationNoView(true);	
+	        	rptGenBean.setExtraTwoColumnView(true);
 	            break;
 	        case ReportConst.PDW_EC_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);	
