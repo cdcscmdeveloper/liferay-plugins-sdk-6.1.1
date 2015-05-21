@@ -8,14 +8,14 @@
 	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 138px;"><p:outputLabel
+				<td style="width: 126px;"><p:outputLabel
 						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="53" id="ministry"
+				<td><p:inputText size="60" id="ministry"
 						value="#{createDOBackingBean.retrieveMinistryByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 				<td rowspan="3" valign="top" style="width: 108px;"><p:outputLabel
 						value="#{lbl['lbl.fl.do.title']}" /></td>
-				<td rowspan="3"><p:inputTextarea cols="55" rows="4" id="title"
+				<td rowspan="3"><p:inputTextarea cols="50" rows="4" id="title"
 						disabled="true" style=" margin-bottom:5px;"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.title}" /> <h:outputText
 						value="" /></td>						
@@ -23,44 +23,44 @@
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.pegawai.pengawal']}" /></td>
-				<td><p:inputText size="53" id="controlOff"
+				<td><p:inputText size="60" id="controlOff"
 						value="#{createDOBackingBean.retrievePegawaiPengawalByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td style="width: 106px;"><p:outputLabel
 						value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="53" id="ptjGroup"
+				<td><p:inputText size="60" id="ptjGroup"
 						value="#{createDOBackingBean.retrieveJabatanByOrgProfileId(createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="7" id="preparedOrgProfileId" disabled="true"
+				<td><p:inputText size="8" id="preparedOrgProfileId" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
+					<p:spacer width="5" /> <p:inputText size="42" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="7" id="issuedOrgProfileId" disabled="true"
+				<td><p:inputText size="8" id="issuedOrgProfileId" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
+					<p:spacer width="5" /> <p:inputText size="42" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="7" disabled="true"
+				<td><p:inputText size="8" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="39" disabled="true"
+					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="42" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
-				<td><p:inputText size="53" disabled="true"
+				<td><p:inputText size="60" disabled="true"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.requistioner.userName}" />
 				</td>
 			</tr>
@@ -89,12 +89,12 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="53"
+				<td><p:inputText disabled="true" size="60"
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="53" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchName}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
+				<td><p:inputText disabled="true" size="60" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.branchName}"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
@@ -122,12 +122,12 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="53" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPerson}"/></td>
+				<td><p:inputText disabled="true" size="60" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactPerson}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="53" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactEmail}"/></td>
+				<td><p:inputText disabled="true" size="60" value="#{createDOBackingBean.managedBean.fulfilmentRequest.flSupplierDtl.contactEmail}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.contact.telno']}" /></td>
@@ -151,7 +151,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.reason.justification']}" /></td>
-				<td><p:inputText disabled="true" size="53"	value="#{createDOBackingBean.managedBean.reasonDesc}" /></td>
+				<td><p:inputText disabled="true" size="60"	value="#{createDOBackingBean.managedBean.reasonDesc}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
 				<td><p:inputTextarea cols="40"  value="#{createDOBackingBean.managedBean.rejectedRemark.get(0).remark}" disabled="true"/> </td>
 			</tr>
