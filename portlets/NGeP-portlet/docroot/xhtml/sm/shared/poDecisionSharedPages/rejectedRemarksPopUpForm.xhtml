@@ -13,8 +13,9 @@
 	<table style="width: 100%">
 		<tr>
 			<c:if test="#{backingBean.managedBean.smAppl.applType ne 'C'}">
-				<td style="vertical-align: top"><p:outputLabel value="#{lbl['lbl.sm.rejection.reasons']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
+				<td style="vertical-align: top"><p:outputLabel
+						value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 
 				<td><p:selectManyMenu showCheckbox="true" id="applRejectSelBox"
 						required="#{backingBean.managedBean.valueReqd}"
@@ -35,8 +36,8 @@
 	<p:outputPanel id="rejRemarksPanelTst">
 		<table style="width: 100%">
 			<tr>
-				<td style="vertical-align: top;width: 14.5%"><p:outputLabel value="#{lbl['lbl.sm.remarks.rejection']}"
-						id="rejReasonLbl"
+				<td style="vertical-align: top; width: 14.5%"><p:outputLabel
+						value="#{lbl['lbl.sm.remarks.rejection']}" id="rejReasonLbl"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
 						value="*" styleClass="mandatory" id="rejReasonLblMndty"
 						rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
@@ -48,8 +49,8 @@
 						validatorMessage="#{lbl['lbl.sm.remarks.rejection']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 						label="#{lbl['lbl.sm.remarks.rejection']}"
 						required="#{backingBean.managedBean.valueReqd and backingBean.managedBean.rejectReasonReqd}"
-						maxlength="1000">
-						<f:validateLength maximum="1000" />
+						maxlength="2500">
+						<f:validateLength maximum="2500" />
 					</p:inputTextarea> <p:message id="rmrksForRejectTxtAreaMsg"
 						for="rmrksForRejectTxtArea" showSummary="true" showDetail="false"
 						display="icon" /></td>
