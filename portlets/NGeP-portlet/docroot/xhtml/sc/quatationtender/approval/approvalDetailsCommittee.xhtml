@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:spacer height="5" />
+	
 	<p:panel header="#{lbl['lbl.sc.qt.req.dtls']}" toggleable="true">
 		<p:dataTable id="committeereqdtlsid" var="committeerequestdetails"
 			value="#{committeeApprovalDtlsList}" rowIndexVar="index"
@@ -20,7 +20,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.qt.approver.selection']}"
 		toggleable="true">
-		<p:spacer height="3" />
+		
 		<div style="width: 100%">
 			<p:pickList id="committeeapproverid" value="#{commiteList}"
 				var="approverUser" showTargetControls="true"
