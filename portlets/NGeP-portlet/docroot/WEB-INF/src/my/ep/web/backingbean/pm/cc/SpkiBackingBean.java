@@ -204,12 +204,13 @@ public class SpkiBackingBean  extends BaseBackingBean{
 				break;
 
 			default:
-				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+				FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKI Signing error."));	
 				System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+				throw new EpException(MessageConst.ERROR_776052);
 				//TODO Please remove this line if want to turn on the SPKI
 //				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 //				signedData = "DEFAULT SIGNED TEXT1";
-				break;
+//				break;
 		}
 			
 		} catch (Exception ex)
