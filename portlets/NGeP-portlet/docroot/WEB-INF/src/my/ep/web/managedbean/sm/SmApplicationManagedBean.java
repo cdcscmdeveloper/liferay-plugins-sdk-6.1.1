@@ -356,6 +356,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean disabledBusinessType;
 	private boolean disableWithFedralTransaction;
 	private boolean disableBranchGst;
+	private boolean roleStaffAndPermAddrReqd;
+	private boolean roleStaffAndMailAddrReqd;
 	private String mofNumber;
 
 	/** The spki backing bean. */
@@ -2748,6 +2750,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setEduLevelList(List<PmEduLevel> eduLevelList) {
 		this.eduLevelList = eduLevelList;
+	}
+
+	public boolean isRoleStaffAndPermAddrReqd() {
+		return roleStaffAndPermAddrReqd;
+	}
+
+	public void setRoleStaffAndPermAddrReqd(boolean roleStaffAndPermAddrReqd) {
+		this.roleStaffAndPermAddrReqd = roleStaffAndPermAddrReqd;
+	}
+
+	public boolean isRoleStaffAndMailAddrReqd() {
+		return roleStaffAndMailAddrReqd;
+	}
+
+	public void setRoleStaffAndMailAddrReqd(boolean roleStaffAndMailAddrReqd) {
+		this.roleStaffAndMailAddrReqd = roleStaffAndMailAddrReqd;
 	}
 
 }

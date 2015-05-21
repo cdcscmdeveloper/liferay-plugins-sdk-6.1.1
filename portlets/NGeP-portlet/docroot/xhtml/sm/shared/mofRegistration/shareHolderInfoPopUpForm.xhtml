@@ -403,8 +403,12 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.sm.person.addrDtls']} " toggleable="true"
 		id="shareHolderAddrDialog">
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
+		<p:outputPanel rendered="#{backingBean.managedBean.selectedShareHolder.clerical}">
+			<ui:include src="/xhtml/sm/shared/mofRegistration/staffAddressInfoPopUpForm.xhtml" />
+		</p:outputPanel>
+		<p:outputPanel rendered="#{!backingBean.managedBean.selectedShareHolder.clerical}">
+			<ui:include src="/xhtml/sm/shared/mofRegistration/shareHolderAddressInfoPopUpForm.xhtml" />
+		</p:outputPanel>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.job.function']}" toggleable="true"
