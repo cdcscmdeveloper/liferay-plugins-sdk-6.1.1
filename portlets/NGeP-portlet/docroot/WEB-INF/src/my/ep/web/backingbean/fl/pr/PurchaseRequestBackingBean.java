@@ -317,8 +317,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
 			reqDTO.setContractRequest(false);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setOutcome(action);
@@ -326,6 +324,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			if(isFlFulfilmentRequisitioner()) {
+				List<String> backUpApprover = new ArrayList<String>();
+				reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+				for(String approver : getManagedBean().getApproverList()){
+					if(!approver.contains(getManagedBean().getSelectedApprover())){
+						backUpApprover.add(approver);
+					}
+				}
+				reqDTO.setSelectedApprovers(backUpApprover);
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
 			if(getManagedBean().getPmDigiSign() != null){
@@ -394,15 +400,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		flBB.initializeRemarkAndAttachement(resDTO.getFlFulfilmentRequest().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setSelectedTabIndex(0);
 
-		if(getManagedBean().getApproverModel()==null) {
-			List<String> source = new ArrayList<String>(); 
-	        List<String> target = new ArrayList<String>();  
-	        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-		}	
-		
 		if(getManagedBean().getFulfilmentRequest().getPmUserGroup()!=null) {
 			FulfilmentResDTO approverListRes = new FulfilmentResDTO();
-			List<String> source = new ArrayList<String>();
 				reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
 				try {
 					approverListRes = requestSO.retrieveApproverListByGroupId(reqDTO);
@@ -410,15 +409,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					e.printStackTrace();
 				}
 			for(PmUserGroupUser groupUser : approverListRes.getApproverGroupUserList()) {
-				source.add(groupUser.getPmUser().getUserName());
+				getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
 			}
-			getManagedBean().getApproverModel().setSource(source);
 		}
-		getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-		getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 
 		getSupplierBranchesList(resDTO.getFlFulfilmentRequest().getSmSupplier());
-		
+		if(!resDTO.getSelectedApproverList().isEmpty()){
+			getManagedBean().setSelectedApprover(resDTO.getSelectedApproverList().get(0));
+		}
 		if(isRequisitioner()){
 			initializeApproverGroup();
 		}
@@ -1382,12 +1380,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * Method get approver group and approver List.
 	 */
 	private void initializeApproverGroup() {
-		IFulfilmentRequestSO requestSO = null;
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);;
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		try {
 			if(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId() != getManagedBean().getCurrentPreparedOrgId()){
-				requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-				FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 				reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
 
@@ -1395,11 +1392,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					PmUserGroup pmUserGroup = new PmUserGroup();
 					getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
 				}
-				if(getManagedBean().getApproverModel()==null) {
-					List<String> source = new ArrayList<String>(); 
-					List<String> target = new ArrayList<String>();  
-					getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-				}			
 				getManagedBean().getUserGroupList().clear();
 
 				//new
@@ -1408,23 +1400,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					List<PmUserGroupUser> firstPmUserGroup = null;
 					for(PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
 						reqDTO.setGroupId(pmUserGroup.getUserGroupId());
+						reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 						resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
 						if(firstPmUserGroup==null) {
 							firstPmUserGroup = resDTO.getApproverGroupUserList();
 						}
 						for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);
+							getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
+							getManagedBean().getApproverMap().put(groupUser.getPmUser().getUserName(), groupUser);//TODO CR doesn't have this. is this necessary
 						}
 					}
-
-					List<String> source = new ArrayList<String>();
+					getManagedBean().getApproverList().clear();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
-						if(getManagedBean().getApproverModel().getSource().size()==0 && getManagedBean().getApproverModel().getTarget().size() == 0) {
-							getManagedBean().getApproverModel().setSource(source);
-						}
-						source.add(groupUser.getPmUser().getUserName());
+						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
 					}
-					getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
+					}
 				}
 
 			}
@@ -1462,18 +1454,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+		reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 		try {
 			resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		List<String> source = new ArrayList<String>(); 
-        List<String> target = new ArrayList<String>();  
+		getManagedBean().getApproverList().clear();
 		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
-			source.add(groupUser.getPmUser().getUserName());
+			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
 		}
-		getManagedBean().getApproverModel().setSource(source);
-		getManagedBean().getApproverModel().setTarget(target);
 	}
 	
 	/**
@@ -2301,7 +2291,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void getAgAccount(){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
-		getManagedBean().setApproverModel(null);
 		initializeApproverGroup();
 		initializeDelAddr();
 		IAgOfficeSO glAccountSO = (IAgOfficeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IAgOfficeSO.class);
@@ -2519,6 +2508,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(selectedTabIndex==4){
 			chargeLineValidationBeforeApproverList();
+			getApproverList();
 			initializeApproverGroup();
 		}
 	}
@@ -2963,7 +2953,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{ResourceBundleUtils.getMessage("lbl.fl.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}				
-				if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
+				if(getManagedBean().getSelectedApprover() == null){
 					throw new EpException(MessageConst.ERROR_750010);
 				}
 			} else if(BpmOutcomeConst.BPM_REVISE.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)){
@@ -2977,10 +2967,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
 			reqDTO.setContractRequest(Boolean.FALSE);
-			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
+			reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+			reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+			reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 			fulfilmentRequestSO.validateFulfilmentRequest(reqDTO);			
 			
 		}finally{
@@ -3208,4 +3200,30 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				retrieveMinistryOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId()).getOrgProfileId();
 		return condition;
 	}
+	private BigDecimal calculatesTotalOrderedAmt(){
+		BigDecimal totalAmt = new BigDecimal(0);
+		for(FlDeliveryAddress  deliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
+				totalAmt = totalAmt.add(itemAddress.getOrderedAmt());
+			}
+		}
+		return totalAmt;
+	}
+	private void getApproverList(){
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		reqDTO.setGroupId(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+		reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
+		try {
+			resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        getManagedBean().getApproverList().clear();
+		for(PmUserGroupUser groupUser : resDTO.getApproverGroupUserList()) {
+			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
+		}
+	}
+	
 }

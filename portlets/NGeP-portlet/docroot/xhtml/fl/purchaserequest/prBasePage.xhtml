@@ -116,25 +116,21 @@
 									<p:selectOneMenu style="width:350px; margin-bottom:5px;"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 										value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" >
-										<p:ajax event="change" process="@this" update="approverpickList"
+										<p:ajax event="change" process="@this" update="approverDropdown"
 											listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"  />
 										<f:selectItems value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
 									</p:selectOneMenu>
 								</h:panelGrid>
-								<h:panelGrid style="width:500px">
-									<p:pickList id="approverpickList" var="data" itemValue="#{data}" itemLabel="#{data}"
-										value="#{purchaseRequestBackingBean.managedBean.approverModel}"
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" />
+									<p:selectOneMenu id="approverDropdown"
 										disabled="#{purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
-										showTargetControls="true" filterMatchMode="contains">
-										<f:facet name="sourceCaption">#{lbl['lbl.fl.ptj.available']}
-										<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.available.approver']}"/>
-										</f:facet>
-										<f:facet name="targetCaption">#{lbl['lbl.fl.ptj.selected']}
-										<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.selected.approver']}"/></f:facet>
-										<p:column style="width:75%;">
-											<h:outputText value="#{data}" />
-										</p:column>
-									</p:pickList>
+										value="#{purchaseRequestBackingBean.managedBean.selectedApprover}"
+										style="width:340px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+										<f:selectItems
+											value="#{purchaseRequestBackingBean.managedBean.approverList}" />
+									</p:selectOneMenu>
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:panel>

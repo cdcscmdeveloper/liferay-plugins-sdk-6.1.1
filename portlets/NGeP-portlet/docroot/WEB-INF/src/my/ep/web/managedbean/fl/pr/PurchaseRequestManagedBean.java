@@ -165,9 +165,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The pm user org. */
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
-	/** The approver model. */
-	private DualListModel<String> approverModel;
-	
 	/** The approver map. */
 	private HashMap<String, PmUserGroupUser> approverMap;
 	
@@ -502,6 +499,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
 	private PmOrgProfile currentChargePtjGroup;
+	private String selectedApprover;
+	private List<String> approverList;
 	
 /**
  * Gets the charge line item root.
@@ -952,24 +951,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedItemRow(FlFulfilmentItem selectedItemRow) {
 		this.selectedItemRow = selectedItemRow;
-	}
-
-	/**
-	 * Gets the approver model.
-	 *
-	 * @return the approverModel
-	 */
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-	/**
-	 * Sets the approver model.
-	 *
-	 * @param approverModel the approverModel to set
-	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
 	}
 
 	/**
@@ -3165,6 +3146,37 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setCurrentChargePtjGroup(PmOrgProfile currentChargePtjGroup) {
 		this.currentChargePtjGroup = currentChargePtjGroup;
+	}
+
+	/**
+	 * @return the selectedApprover
+	 */
+	public String getSelectedApprover() {
+		return selectedApprover;
+	}
+
+	/**
+	 * @param selectedApprover the selectedApprover to set
+	 */
+	public void setSelectedApprover(String selectedApprover) {
+		this.selectedApprover = selectedApprover;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<String> getApproverList() {
+		if(approverList == null){
+			setApproverList(new ArrayList<String>());
+		}
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<String> approverList) {
+		this.approverList = approverList;
 	}
 
 }
