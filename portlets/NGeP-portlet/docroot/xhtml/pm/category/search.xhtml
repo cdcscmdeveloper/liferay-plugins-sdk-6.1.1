@@ -228,8 +228,7 @@
 					<p:commandLink rendered="#{category[0]==1}"
 						action="#{categoryBackingBean.addSubCategory(category[1])}"
 						style="margin-right: 10px;" update="@form">
-						<p:graphicImage library="ep/images/design" name="add.png"
-							title="#{lbl['lbl.pm.add.sub.category']}"
+						<p:graphicImage title="#{lbl['lbl.pm.add.sub.category']}"
 							value="/css/images/design/add.png" />
 					</p:commandLink>
 					<p:commandLink rendered="#{category[0]==1}"
@@ -244,8 +243,7 @@
 					<p:commandLink rendered="#{category[0]==2}"
 						action="#{categoryBackingBean.addSubDivision(category[1])}"
 						style="margin-right: 10px;" update="@form">
-						<p:graphicImage library="ep/images/design" name="add.png"
-							title="#{lbl['lbl.pm.add.sub.div']}"
+						<p:graphicImage title="#{lbl['lbl.pm.add.sub.div']}"
 							value="/css/images/design/add.png" />
 					</p:commandLink>
 					<p:commandLink rendered="#{category[0]==2}"
