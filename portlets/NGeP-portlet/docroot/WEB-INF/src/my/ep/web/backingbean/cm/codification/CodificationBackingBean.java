@@ -649,7 +649,7 @@ BaseBackingBean<CodificationManagedBean> {
 		 */
 
 		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
-			if (!StringUtils.isBlank(brand.getBrandName())) {
+			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
 				this.getManagedBean()
 				.getBrandCriteria()
 				.add(new SelectItem(brand.getBrandId(), brand
@@ -658,7 +658,7 @@ BaseBackingBean<CodificationManagedBean> {
 		}
 
 		for (CmType type : resDTO.getCommodityObj().getCmType()) {
-			if (!StringUtils.isBlank(type.getTypeName())) {
+			if (!StringUtils.isBlank(type.getTypeName()) && type.getRecordStatusFlg() ==1) {
 				this.getManagedBean()
 				.getTypeCriteria()
 				.add(new SelectItem(type.getTypeId(), type
@@ -668,7 +668,7 @@ BaseBackingBean<CodificationManagedBean> {
 
 		for (CmMeasurement measurement : resDTO.getCommodityObj()
 				.getCmMeasurement()) {
-			if (!StringUtils.isBlank(measurement.getMeasurementName())) {
+			if (!StringUtils.isBlank(measurement.getMeasurementName()) && measurement.getRecordStatusFlg()==1) {
 				this.getManagedBean()
 				.getMeasurementCriteria()
 				.add(new SelectItem(measurement.getMeasurementId(),
@@ -681,7 +681,7 @@ BaseBackingBean<CodificationManagedBean> {
 		for (CmColor color : resDTO.getColorList()) {
 			// log.info("color:"+color);
 			// log.info("color:"+color.getColorId());
-			if (!StringUtils.isBlank(color.getColorName())) {
+			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
 				this.getManagedBean()
 				.getColorCriteria()
 				.add(new SelectItem(color.getColorId(), color
