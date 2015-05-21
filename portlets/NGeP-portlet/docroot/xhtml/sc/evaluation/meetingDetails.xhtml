@@ -122,7 +122,7 @@
 				update="evaluationmeetingDetails" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
-				process="@this,evaluationmeetingDetails" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				oncomplete="evaluationMeetingDtlsDeletePopUp.show();"
 				update="@([id$=#{evaluationmeetingdtlsDeleteId}])">
 				<f:setPropertyActionListener
