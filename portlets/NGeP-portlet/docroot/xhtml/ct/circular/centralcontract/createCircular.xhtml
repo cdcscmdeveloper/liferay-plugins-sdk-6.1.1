@@ -84,7 +84,7 @@
 						buttonLabel="#{lbl['lbl.btn.add']}"
 						selectionMode="multiple"
 						saveObject="centralContractBackingBean.managedBean.orgProfiles"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form"
+						conditionField="#{centralContractBackingBean.retrieveMinistryBylovCondition()}" update="@form"
 						rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
 						  partialSubmit="true" 
@@ -133,7 +133,6 @@
 	
 	<p:dialog id="cancelCircularDlg" header="#{lbl['lbl.ct.cancelled.circular']}" widgetVar="cancelCircularDlg" 
 		styleClass="pop_up_top" modal="true" width="550" height="350">
-		<p:panel id="circular">
 			<p:dataTable id="cancelledCclDt" var="cancelledCircularDlgVar" rowKey="#{cancelledCircularDlgVar}" rowIndexVar="index"
 				value="#{centralContractBackingBean.managedBean.cancelledCircularList}" 
 				selection="#{centralContractBackingBean.managedBean.selectedCancelledCircularList}" >
@@ -152,6 +151,5 @@
 					update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.cancel']}" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 			</div>			
-		</p:panel>
 	</p:dialog>
 </ui:composition>

@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -987,7 +986,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	 * with the selected contract for change bank request.
 	 */
 	public void changeContractActionListener() {
-		IContractSO contractSO = null;
 		long starttime = Calendar.getInstance().getTimeInMillis();
 	 
 		log.info(" Start time>>>>>" +starttime);
@@ -998,15 +996,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		try {
 			if (getManagedBean().getSelectedContract() != null) {
 				changeBankAccSO = (IChangeBankAccSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IChangeBankAccSO.class);	
-					//	contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);	
-	            reqDTO = new ContractReqDTO();
+			   reqDTO = new ContractReqDTO();
 	            reqDTO.setContractVerId(getManagedBean().getSelectedContract().getCurrentContractVer().getContractVerId());
  	            reqDTO.setDocType(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
 	            reqDTO.setUpdateAction(true);
 				
 				resDTO = changeBankAccSO.retrieveContractVerForChangeAcc(reqDTO);
-	        //	resDTO = contractSO.retrieveContractVerDtls(reqDTO);
-				if (resDTO.isSuccessful()) {
+	          	if (resDTO.isSuccessful()) {
 					getManagedBean().setContractVer(resDTO.getCtContractVer());
 					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 				
@@ -1034,7 +1030,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 log.info(" Diff time>>>>>" +(starttime - endttime));
 				
 		} finally {
-		//	contractSO = null;
 			reqDTO  = null;
 			resDTO   = null;
 		}
@@ -1310,13 +1305,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				context.put("refNo", getManagedBean().getFactoring().getAuthRefNo());
 				context.put("currentDate", df.format(DateUtils.getCurrentDateWithoutTime()));
 				context.put("ptjName",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
+				context.put("ministryName", retrieveMinistryByOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()));
 				
-				if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() == null) {
-					context.put("jabatanMinistry",  getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName());
-				} else {
-					context.put("jabatanMinistry", getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName());
-				}
-				
+			
 				AddressReqDTO addressReqDTO = new AddressReqDTO();
 				addressReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
 				addressReqDTO.setOrgProfileId(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId());
@@ -1324,6 +1315,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				if (addressResDTO.getAddressTypeList().size() > 0) {
 					context.put("ptjAddress", AddressUtils.getFullAddress(
 							addressResDTO.getAddressTypeList().get(0).getPmAddress()).replaceAll("(\r\n|\n)", "<br/>"));
+				}else{
+					context.put("ptjAddress"," ");
 				}
 				
 				context.put("contractTitle", getManagedBean().getCtContract().getContractName());
@@ -1391,22 +1384,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.remove.factoring", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
-	}
-    
-    /**
-	 * The method used to retrieve proper portal name from property file.
-	 * 
-	 * @return portletTitle  the name of the portal
-     */
-    public String getMinistryAndPtjName(int temp) {
-		if (getManagedBean().getCtContract() != null && getManagedBean().getCtContract().getOwnerOrgProfile() != null) {
-			  if (temp == 1 && getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null){
-				  return getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgName();
-			  } else if ( temp == 2) {
-				  return getManagedBean().getCtContract().getOwnerOrgProfile().getOrgName();
-			  }
-		}
-		return " ";
 	}
     
     /**
