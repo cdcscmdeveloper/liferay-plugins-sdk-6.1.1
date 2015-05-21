@@ -41,9 +41,11 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -210,19 +212,16 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
 			}
 			if(orgProfile != null){
-				Set<Long> orgProfileSet = null;
-				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-					orgProfileSet = new HashSet<Long>(); 
-					for(PmOrgProfile childOrgProfile : orgProfile.getChildOrgProfiles()){
-						orgProfileSet.add(childOrgProfile.getOrgProfileId());
-					}
+				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {				
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile.parentOrgProfile.orgProfileId",
-									SearchOperator.OPERATOR_IN.value(),new ArrayList<Long>(orgProfileSet)));
+							new SearchFilterBean("pmOrgProfile."+ 
+									OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+									SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
 					
 				}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmOrgProfile.parentOrgProfile.orgProfileId",
+							new SearchFilterBean("pmOrgProfile." + 
+									OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()),
 									SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
 					
 				}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
@@ -643,24 +642,16 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
 		}
 		if(orgProfile != null){
-			List<Long> orgProfileList = null;
 			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
-				orgProfileList = new ArrayList<Long>(); 
-				for(PmOrgProfile childOrgProfile : orgProfile.getChildOrgProfiles()){
-					orgProfileList.add(childOrgProfile.getOrgProfileId());
-				}
-				sb.append("|parentOrgProfile.orgProfileId^");
-				for(int i = 0; i<orgProfileList.size();i++){
-					Long id = orgProfileList.get(i);
-					if(i != 0){
-						sb.append(",");
-					}
-					sb.append(id);				
-				}
-				sb.append("^9");
+				sb.append("|");
+				sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+				sb.append("^");
+				sb.append(orgProfile.getOrgProfileId());
 								
 			}else if (getFacesScopes().hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
-				sb.append("|parentOrgProfile.orgProfileId^");
+				sb.append("|");
+				sb.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.DEPARTMENT.value()));
+				sb.append("^");
 				sb.append(orgProfile.getOrgProfileId());
 				
 			}else if (getFacesScopes().hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
