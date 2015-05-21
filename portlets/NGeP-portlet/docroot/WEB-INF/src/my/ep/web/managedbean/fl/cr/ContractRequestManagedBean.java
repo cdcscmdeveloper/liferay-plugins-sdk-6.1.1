@@ -70,7 +70,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
 	private List<VCtActiveContract> activeContractList; 
-	private DualListModel<String> approverModel;
 	private FlFulfilmentItem selectedItemRow;
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private HashMap<String, FlFulfilmentItem> flItemMap;
@@ -80,6 +79,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<SelectItem> supplierBranchesList;
 	private List<PmUserGroup> userGroupList;
 	private List<Long> agentOrgProfileList;
+	private String selectedApprover;
+	private List<String> approverList;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
@@ -533,22 +534,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setSelectedContractedItemList(
 			List<CtContractItem> selectedContractedItemList) {
 		this.selectedContractedItemList = selectedContractedItemList;
-	}
-
-
-	/**
-	 * @return the approverModel
-	 */
-	public DualListModel<String> getApproverModel() {
-		return approverModel;
-	}
-
-
-	/**
-	 * @param approverModel the approverModel to set
-	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
-		this.approverModel = approverModel;
 	}
 
 
@@ -2549,6 +2534,37 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setCurrentChargePtjGroup(PmOrgProfile currentChargePtjGroup) {
 		this.currentChargePtjGroup = currentChargePtjGroup;
+	}
+
+	/**
+	 * @return the selectedApprover
+	 */
+	public String getSelectedApprover() {
+		return selectedApprover;
+	}
+
+	/**
+	 * @param selectedApprover the selectedApprover to set
+	 */
+	public void setSelectedApprover(String selectedApprover) {
+		this.selectedApprover = selectedApprover;
+	}
+
+	/**
+	 * @return the approverList
+	 */
+	public List<String> getApproverList() {
+		if(approverList == null){
+			setApproverList(new ArrayList<String>());
+		}
+		return approverList;
+	}
+
+	/**
+	 * @param approverList the approverList to set
+	 */
+	public void setApproverList(List<String> approverList) {
+		this.approverList = approverList;
 	}
 
 }
