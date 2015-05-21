@@ -10,7 +10,6 @@
 		header="#{lbl['lbl.sc.add']} #{qTCommitteBackingBean.managedBean.tabTitle}"
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember" width="950" height="600">
-		<p:panel id="scPanel" style="width:100%;margin-top:10px;">
 			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
 				<c:if
@@ -226,6 +225,5 @@
 					oncomplete="newspecificationcommittee.hide();"
 					update="@(.scMemberDtl)" />
 			</div>
-		</p:panel>
 	</p:dialog>
 </ui:composition>
