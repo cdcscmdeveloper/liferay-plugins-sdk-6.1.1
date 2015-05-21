@@ -74,7 +74,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	private static final String CONTENT_PAGE = "/xhtml/sm/postsupplierregistration/msgContent.xhtml";
 	private static final String PROMO_PAGE = "/xhtml/sm/postsupplierregistration/supplierPromo.xhtml";
 	private static final String MOF_SOFTCERT_REQUEST = "request-soft-cert";
-	private static final String MOF_CODIFICATION_SEARCH = "codification-search";
+	//private static final String MOF_CODIFICATION_SEARCH = "codification-search";
 	private static final String UPGRADE_TO_MOF = "upgrade-basic-to-mof";
 	
 	public static Logger log = Logger.getLogger(PostSupplierRegistrationBackingBean.class);
@@ -504,7 +504,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofActionMap.put("SC", MOF_SOFTCERT_REQUEST);
 			}
 			
-			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
+/*			List<CmSupplierItem> suppItems = getCmSupplierItems(supplier.getSupplierId());
 			log.info("SupplierItems size:>>>>> " + suppItems);
 			boolean publishedStatus = false;
 			if(suppItems.size() > 0){
@@ -518,7 +518,16 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 			if(!publishedStatus){
 				//String msg = getLabelFromProperties("lbl.sm.basic.catalogue.upload"); 
 				//String catUploadImg = getLabelFromProperties("lbl.sm.catalogue.upload.image");
-				mofActionMap.put("CU", MOF_CODIFICATION_SEARCH);
+				mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
+			}*/
+			
+			String catalogue = checkCatalogueUpload(supplier.getSupplierId()); 
+			if(catalogue == null){
+				mofActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
+			}else{
+				if(!catalogue.equalsIgnoreCase("U")){
+					mofActionMap.put("CU",CATALOGUE_MAINT);
+				}
 			}
 		}
 		
@@ -592,13 +601,22 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	/**
 	 * Action for basic supplier admin
 	 */
-	private void basicSupplierAction(){
+	private void basicSupplierAction(Long supplierId){
 		Map<String,String> basicActionMap = new HashMap<String, String>();
 		
 		//String msg = "Upgrade to MOF Account to enjoys more benefits.";
 		//String msg = getLabelFromProperties("lbl.sm.mof.upgrade.image");
-		basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
+		String catalogue = checkCatalogueUpload(supplierId); 
 		
+		if(catalogue == null){
+			basicActionMap.put("CU", CATALOGUE_UPLOAD_PATH);
+		}else{
+			if(!catalogue.equalsIgnoreCase("U")){
+				basicActionMap.put("CU",CATALOGUE_MAINT);
+			}
+		}
+		
+		basicActionMap.put("UPMOF", UPGRADE_TO_MOF);
 		getManagedBean().setUserActionMap(basicActionMap);
 	}
 	
@@ -643,7 +661,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 				mofUserAction(suppSearchResDTO.getSmSupplier());
 
 			}else if(validBasicSupplier()){
-				basicSupplierAction();
+				basicSupplierAction(userSupplier.getSupplierId());
 
 			}
 		}
@@ -660,7 +678,8 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 */
 	private String checkCatalogueUpload(Long supplierId){
 		List<CmSupplierItem> suppItems = getCmSupplierItems(supplierId);
-		log.info("SupplierItems size:>>>>> " + suppItems);
+		log.info("checkCatalogueUpload Supplier id>>>>>>" + supplierId);
+		log.info("checkCatalogueUpload SupplierItems size:>>>>> " + suppItems.size());
 		String catalogueStatus = null;
 				
 		
