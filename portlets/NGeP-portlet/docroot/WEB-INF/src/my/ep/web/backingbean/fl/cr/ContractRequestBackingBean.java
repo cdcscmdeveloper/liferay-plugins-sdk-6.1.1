@@ -53,7 +53,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -105,8 +104,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -3733,13 +3730,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				validateOrderQuantity();
 				checkMinimumQtyItem(getManagedBean().getFlRequest());
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
-					int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
-					Calendar today = Calendar.getInstance();
-					today.setTime(DateUtils.getCurrentDateWithoutTime());
-					today.add(Calendar.DATE, days);
-					if(today.getTime().after(expDate)) {
-						throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+					boolean skipLastCOChecking = false;
+					if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+						IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+						ContractReqDTO contractReqDTO = new ContractReqDTO();
+						contractReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+						skipLastCOChecking = contractSO.checkContractStatus(contractReqDTO).isActive();
+					}
+					if(!skipLastCOChecking) {
+						Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
+						int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
+						Calendar today = Calendar.getInstance();
+						today.setTime(DateUtils.getCurrentDateWithoutTime());
+						today.add(Calendar.DATE, days);
+						if(today.getTime().after(expDate)) {
+							throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+						}
 					}
 				} else {
 					if(null==getManagedBean().getApproverModel().getTarget() || getManagedBean().getApproverModel().getTarget().isEmpty()) {
