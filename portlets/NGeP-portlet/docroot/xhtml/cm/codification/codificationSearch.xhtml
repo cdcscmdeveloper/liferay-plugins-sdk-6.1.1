@@ -9,7 +9,8 @@
 	<script>
 		$('#portlet_codification_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.item.code.search']}");
 	</script>
-
+	
+	
 	<h:panelGroup id="cmUNSPSCsearchID">
 		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 			<table style="width: 80%">
@@ -56,11 +57,11 @@
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.btn.search']}"
 					action="#{codificationBackingBean.unspscSearch}"
-					update="cmUNSPSCsearchID" />
+					update="unspscTableID itemCodeSearchMsg" />
 					
 				<p:commandButton value="#{lbl['lbl.btn.reset']}"
 					action="#{codificationBackingBean.resetAction}"
-					update="cmUNSPSCsearchID">
+					update="@form">
 				</p:commandButton>
 			</div>
 		</p:panel>
