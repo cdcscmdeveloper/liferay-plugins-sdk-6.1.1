@@ -43,21 +43,26 @@
 
 
 					</p:column>
+
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.system.score']}"
-						style="width:20%">
+						style="width:20%"
+						rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
 						<h:outputText value="#{templateSpec.totalAutoScore}"></h:outputText>
 
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.tpl.spec.content.user.score']}"
-						style="width:20%">
+						style="width:20%"
+						rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
 						<h:outputText value="#{templateSpec.totalUserScore}"></h:outputText>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.total.score']}"
-						style="width:20%">
+						style="width:20%"
+						rendered="#{evaluationBackingBean.managedBean.scQtChecklist.scoringReq}">
 						<h:outputText value="#{templateSpec.totalScore}"></h:outputText>
 					</p:column>
+
 
 					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%">
 
