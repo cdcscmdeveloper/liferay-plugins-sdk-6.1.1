@@ -7,18 +7,18 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel">
+	<p:panel header="#{lbl['lbl.sc.notice.board.searchCriteria']}" id="nbpanel" style="margin-right:20px;">
 
 		<ac:lovPopup />
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
-				<td style="width: 125px;"><p:outputLabel
+				<td style="white-space: nowrap"><p:outputLabel
 						value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{noticeBoardBackingBean.managedBean.qtNo}" size="30" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
+				<td style="white-space: nowrap"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td><p:inputText
 						value="#{noticeBoardBackingBean.managedBean.title}" size="30" /></td>
 			</tr>
@@ -64,7 +64,7 @@
 						saveObject="noticeBoardBackingBean.managedBean.ptjGroupProfile"
 						value="#{noticeBoardBackingBean.managedBean.ptjGroupProfile.orgName}"
 						size="25" readonly="true" 
-						conditionField="#{noticeBoardBackingBean.constuctConditionFields()}"/></td>
+						conditionField="#{noticeBoardBackingBean.constuctConditionFieldsForPTJGroup()}"/></td>
 			</tr>
 			
 			<tr>
