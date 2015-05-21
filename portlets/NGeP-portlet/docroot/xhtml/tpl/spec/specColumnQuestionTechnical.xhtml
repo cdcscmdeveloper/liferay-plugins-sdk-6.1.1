@@ -48,7 +48,7 @@
 		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="#{!question.selected}" style="width:98px;" 
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
-			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+			<f:selectItems value="#{templateSpecBackingBean.getFulfilmentTypeDropdownList(templateSpecBean.specMaster)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.fulfilmentTypeChange(question)}" 
 				partialSubmit="true" process="@this" update="fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
 		</h:selectOneMenu>
