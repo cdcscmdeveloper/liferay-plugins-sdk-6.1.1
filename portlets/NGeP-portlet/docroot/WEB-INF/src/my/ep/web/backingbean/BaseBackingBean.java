@@ -930,4 +930,11 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		reqDTO.setOrgProfileId(orgProfileId);
 		return profileSO.retrieveJabatanByOrgProfileId(reqDTO).getPmOrgProfile();
 	}
+	
+	public PmOrgProfile retrievePegawaiPegawalOrgProfile(Long orgProfileId){
+		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		reqDTO.setOrgProfileId(orgProfileId);
+		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO).getPmOrgProfile();
+	}
 }
