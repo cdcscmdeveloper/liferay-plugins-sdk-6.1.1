@@ -40,16 +40,10 @@
 						<p:spacer width="5" />
 					<p:inputTextarea id="preparedOrgText" cols="52" rows="2" readonly="true"
 					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" ></p:inputTextarea>
-					<p:spacer width="5" /> <ac:lov id="preparedPtj" uiMode="button" 
-						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.prepared.for.ptj']}"
-						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile"
+					<p:spacer width="5" />
+					<p:inputText size="66" id="preparedPtj"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						disabled="true"
-						update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:preparedOrgText" readonly="true" size="50"
-						postUpdateListener="purchaseRequestBackingBean.getAgAccount()"
-						conditionField="parentOrgProfile.orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}"
-						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
-					</ac:lov>
+						disabled="true" />
 				</td>
 			</tr>
 			<tr>
@@ -71,15 +65,10 @@
 							<p:spacer width="5"></p:spacer>
 					<p:inputTextarea id="issuedOrgText" cols="52" rows="2" readonly="true"
 					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" />
-					<p:spacer width="5" /> <ac:lov id="chargePtj" uiMode="button"
-						lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.fl.charge.ptj']}" readonly="true"
-						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" 
-						update=":form:chargeOrgProfileId,:form:issuedOrgText" size="50"
-						disabled="true"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
-						tooltip="#{lbl['lbl.fl.tooltip.charge.ptj']}"	>
-					</ac:lov></td>
+					<p:spacer width="5" /> 
+					<p:inputText size="66" id="chargePtj"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
