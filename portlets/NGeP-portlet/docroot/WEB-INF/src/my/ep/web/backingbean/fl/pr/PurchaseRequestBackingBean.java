@@ -1539,7 +1539,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		retrievePTJList.add(new SelectItem("", ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
-		//orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
 		orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
 		resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
