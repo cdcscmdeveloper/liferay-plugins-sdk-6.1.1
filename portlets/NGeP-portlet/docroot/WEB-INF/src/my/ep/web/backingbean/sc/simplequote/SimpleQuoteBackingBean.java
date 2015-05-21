@@ -149,13 +149,13 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "simpleQuoteBackingBean")
 @RequestScoped
 public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteManagedBean> {
-	
+
 	/** The log. */
 	private static Logger log = Logger.getLogger(SimpleQuoteBackingBean.class);
-	
+
 	/** The text before sign. */
 	private String textBeforeSign;
-	
+
 	/**
 	 * Instantiates a new simple quote backing bean.
 	 */
@@ -174,7 +174,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 	/**
 	 * add panel or contract and non contract to simple quote from search catalogue.
 	 * 
@@ -202,7 +202,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 
-	  if(docId != null && docId >0 ){
+		if(docId != null && docId >0 ){
 			// panel item 
 			if(panelItemFlag){
 				// check non contract item list 
@@ -332,7 +332,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(scQuote.getQuoteNo() == null){
 			scQuote.setQuoteNo(getQuoteSO().generateQuoteNo());
 		}
-		
+
 		// WorkFlow Status should be set In the save
 		if(scQuote.getCurrentStatus() == null){
 			List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
@@ -392,15 +392,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(false);
 		return "simpleQuote";
 	}
-	
-	
-  /**
-   * Check item exists.
-   *
-   * @param cmSupplierItem the cm supplier item
-   * @return true, if successful
-   */
-  private boolean checkItemExists(CmSupplierItem cmSupplierItem){
+
+
+	/**
+	 * Check item exists.
+	 *
+	 * @param cmSupplierItem the cm supplier item
+	 * @return true, if successful
+	 */
+	private boolean checkItemExists(CmSupplierItem cmSupplierItem){
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		boolean exists = false;
@@ -441,7 +441,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return exists;
 	}
 
-	
+
 	/**
 	 * Prepare panel zones.
 	 *
@@ -462,13 +462,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		List<TplSpecZoneDtl> tplSpecZoneDtls = new ArrayList<TplSpecZoneDtl>();
 		if(ctPanelItem.getCtPanelZones() != null && ctPanelItem.getCtPanelZones().size()>0){
 			ScQuoteZone quoteZone = new ScQuoteZone();
-			
+
 			for (CtPanelZone ctPanelZone : ctPanelItem.getCtPanelZones()) {
 				TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
 				tplSpecZoneDtl.setTplSpecZone(quoteZone);
 				tplSpecZoneDtl.setZoneName(ctPanelZone.getName());
 				tplSpecZoneDtl.setPanelZone(ctPanelZone);
-				
+
 				List<PmState> states = SourcingLocationHelper
 						.getStateFromCtPanelZone(ctPanelZone.getPanelZoneDtls());
 				List<PmDistrict> districts = SourcingLocationHelper
@@ -477,15 +477,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				getManagedBean().getZoneTrees().add(
 						LocationSingleton.getInstance().buildTreeWithDisabledChilds(tplSpecZoneDtl, states,
 								districts, null, null,false,TplSpecZoneLoc.class));
-				
+
 				tplSpecZoneDtls.add(tplSpecZoneDtl);
-				
+
 				if(ctPanelZone.getCtPanelSuppliers() != null && ctPanelZone.getCtPanelSuppliers().size() >0){
 					createPanelSuppliersWithZone(ctPanelZone.getCtPanelSuppliers(), scQuote, tplSpecZoneDtl);
 				}
-				
+
 			}
-			
+
 			// for zonal 
 			scQuote.setZonal(Boolean.TRUE);
 			quoteZone.setScQuote(scQuote);
@@ -494,7 +494,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setScQuote(scQuote);
 		}
 	}
-	
+
 	/**
 	 * Creates the panel suppliers with zone.
 	 *
@@ -538,7 +538,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return suppliers;
 	}
-	
+
 	/**
 	 * Prepare questions.
 	 * prepare question based on item product or service.
@@ -591,32 +591,32 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if (templateSpecBackingBean == null) {
 			templateSpecBackingBean = new TemplateSpecBackingBean();
 		}
-		
+
 		for (ScQuoteDoc quoteDoc : quoteResDTO.getQuoteDocs()) {
 			if(ParameterConst.SQ_ITEM_LIST_SERVICE.equalsIgnoreCase(quoteDoc.getSpecMaster().getItemTypeCode().getParameterCode())){
 				TemplateSpecBean serviceTemplateSpecBean = getManagedBean().getServiceTemplateSpecBean();
-				  TplSpecMaster serviceTpl = null;
+				TplSpecMaster serviceTpl = null;
 
-				  if(serviceTemplateSpecBean.getSpecMaster() == null){
-					  serviceTpl =  quoteDoc.getSpecMaster();
-				  } else {
-					  serviceTpl = serviceTemplateSpecBean.getSpecMaster();
-				  }
-				  
-				  List<TplSpecQuestion> tplSpecQuestions = serviceTpl.getTplSpecQuestions();
-				  if(null == tplSpecQuestions){
-					  tplSpecQuestions = new ArrayList<TplSpecQuestion>();
-				  }
-				  if(isSpecificOrGenOrNonCtItem){  
-					  if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
-						  templateSpecBackingBean.addQuestion(serviceTpl, tplSpecQuestions, tplSpecQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
-						  TplSpecQuestion specQuestion = tplSpecQuestions.get(tplSpecQuestions.size()-1);
-						  specQuestion.setClUom(uom);
-						  specQuestion.setCmItem(cmItem);
-						  specQuestion.setClItem(ItemName);
-						  specQuestion.setClSpecDetail(itemSpec);
-					  } 
-				  }
+				if(serviceTemplateSpecBean.getSpecMaster() == null){
+					serviceTpl =  quoteDoc.getSpecMaster();
+				} else {
+					serviceTpl = serviceTemplateSpecBean.getSpecMaster();
+				}
+
+				List<TplSpecQuestion> tplSpecQuestions = serviceTpl.getTplSpecQuestions();
+				if(null == tplSpecQuestions){
+					tplSpecQuestions = new ArrayList<TplSpecQuestion>();
+				}
+				if(isSpecificOrGenOrNonCtItem){  
+					if (itemCode >= 70 && itemCode <= 94) { // for service  between  70 and 94  
+						templateSpecBackingBean.addQuestion(serviceTpl, tplSpecQuestions, tplSpecQuestions.size()-1, TemplateSpecConst.QUESTION_TYPE_ITEM);
+						TplSpecQuestion specQuestion = tplSpecQuestions.get(tplSpecQuestions.size()-1);
+						specQuestion.setClUom(uom);
+						specQuestion.setCmItem(cmItem);
+						specQuestion.setClItem(ItemName);
+						specQuestion.setClSpecDetail(itemSpec);
+					} 
+				}
 				serviceTpl.setTplSpecQuestions(tplSpecQuestions);
 				serviceTemplateSpecBean.setSpecMaster(serviceTpl);
 				getManagedBean().setServiceTemplateSpecBean(serviceTemplateSpecBean);
@@ -630,7 +630,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				} else {
 					prodTpl = productTemplateSpecBean.getSpecMaster();
 				}
-				
+
 				List<TplSpecQuestion> productQuestions = prodTpl.getTplSpecQuestions();
 				if(null == productQuestions){
 					productQuestions = new ArrayList<TplSpecQuestion>();
@@ -656,7 +656,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 
 	/**
 	 * Get parameter code select items by parameter type for radio buttons.
@@ -678,12 +678,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			pmParameter.setParameterCode(ParameterConst.PROC_TYPE_NORMAL);
 			scQuote.setProcurementType(pmParameter);
 		} 
-		
+
 		getManagedBean().setProcurementTypes(getRadioButtonCodeValues(ParameterTypeConst.PROCUREMENT_TYPE));
-		
+
 		return scQuote;
 	}
-	
+
 	/**
 	 * save Simple Quote
 	 * save - save data into database and initiate task for Simple Quote.
@@ -702,7 +702,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
-			
+
 			if(quote.getRequestItems() == null){
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
 				ScRequestItem requestItem = new ScRequestItem();
@@ -710,7 +710,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				requestItems.add(requestItem);
 				quote.setRequestItems(requestItems);
 			}
-			
+
 			if(quote.getRequestNotes() == null || quote.getRequestNotes().isEmpty()){
 				List<ScRequestNote>	requestNotes = new ArrayList<ScRequestNote>();
 				requestNote = getManagedBean().getRequestNote();
@@ -730,18 +730,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// location level 
 			if(quote.isZonal()){
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
-							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
+						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
 			} else {
 				quote.setZoneLocatonLevel(null);
 			}
 			// supplier location level by default - district 
 			if(getManagedBean().isByLocality()){
 				quote.setSupplierLocationLevel(getParameterByTypeAndCode(
-							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
+						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
 			} else {
 				quote.setSupplierLocationLevel(null);
 			}
-			
+
 			// justification type
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
@@ -763,10 +763,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getBusinessNatureCriterias() != null && getManagedBean().getBusinessNatureCriterias().size() >0){
 				quote.setBusinessNatureCriterias(getManagedBean().getBusinessNatureCriterias());
 			}
-			
+
 			// zone details
-	        quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-			
+			quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone 
 			if(quote.getPanelItem() != null){
@@ -785,7 +785,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						}
 					}
 				}
-				
+
 			} else{
 				if(quote.getProcurementType() != null){
 
@@ -802,7 +802,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						}
 					}
 				}
-				
+
 				//by location
 				if(!getManagedBean().getLocationTrees().isEmpty()){
 					quote.setLocationStateCriterias(getLocationStateCriterias(getManagedBean().getLocationTrees(), quote));	
@@ -820,24 +820,24 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
-			
+
 			if(suppliers != null && !suppliers.isEmpty()){
 				quote.setScQuoteSuppliers(suppliers);
 			}
-			
+
 			finalizeRemarks(quote.getRemarks());
 			// product and service
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 			if(quote.getQuoteDocs() !=null && quote.getQuoteDocs().size() >0){
 				for(ScQuoteDoc doc : quote.getQuoteDocs()) {
-					
+
 					if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
-						 doc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
-						 quoteDocs.add(doc);
+						doc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+						quoteDocs.add(doc);
 					}
 					else if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-						 doc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
-						 quoteDocs.add(doc);
+						doc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+						quoteDocs.add(doc);
 					}
 				}
 			} else {
@@ -846,10 +846,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 							getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
 						ScQuoteDoc quoteDoc = new ScQuoteDoc();
-						 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
-						 if(quote.getQuoteZone() != null){
-							 specMaster.setTplSpecZone(quote.getQuoteZone());
-						 }
+						TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+						if(quote.getQuoteZone() != null){
+							specMaster.setTplSpecZone(quote.getQuoteZone());
+						}
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -861,10 +861,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 							getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
 						ScQuoteDoc quoteDoc = new ScQuoteDoc();
-						 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
-						 if(quote.getQuoteZone() != null){
-							 specMaster.setTplSpecZone(quote.getQuoteZone());
-						 }
+						TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
+						if(quote.getQuoteZone() != null){
+							specMaster.setTplSpecZone(quote.getQuoteZone());
+						}
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -872,7 +872,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
-						
+
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
@@ -882,15 +882,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
-			
+
 			// ReQuote
 			reqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			reqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
-			
+
 			ScPurchaseInDefault pid = quote.getPurchaseInDefault();
-			
+
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
 				quoteResDTO = getQuoteSO().saveQuoteDtl(reqDTO);
@@ -906,19 +906,19 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					reqDTO.setFetchSubEntity(true);
 					scQuote = getQuoteSO().getQuoteDtl(reqDTO).getQuoteBidDtl();
 					scQuote.setPurchaseInDefault(pid);
-				    //quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
-		    		getManagedBean().setOutComes(outcomes);
-		    		getManagedBean().setTaskId(taskId);
-		    		getManagedBean().setDefaultCountryId(defaultCountryId);
-		    		getManagedBean().setAutoUpdate(autoUpdate);
+					//quoteResDTO = getQuoteSO().getQuoteDtl((reqDTO));
+					getManagedBean().setOutComes(outcomes);
+					getManagedBean().setTaskId(taskId);
+					getManagedBean().setDefaultCountryId(defaultCountryId);
+					getManagedBean().setAutoUpdate(autoUpdate);
 					reloadSimpleQuote(scQuote);
-					
+
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 							FacesMessage.SEVERITY_INFO, null, 
 							MessageUtils.getMessage(MessageConst.INFO_700025, 
 									new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES,ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
 									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-					
+
 				} else{
 					successMessage(MessageConst.INFO_700025,ParameterTypeConst.DOCUMENT_TYPES,
 							ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo());
@@ -948,10 +948,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null && 
 				productTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
 
-			
+
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
 				if(tplSpecQuestion.getClQuantity() != null){
-					 checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+					checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
 				}
 
 				ScQuote quote = getManagedBean().getScQuote();
@@ -968,9 +968,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				serviceTplSpecBean.getSpecMaster().getTplSpecQuestions().size() >0 ){
 
 			for (TplSpecQuestion tplSpecQuestion : productTplSpecBean.getSpecMaster().getTplSpecQuestions()) {
-				
+
 				if(tplSpecQuestion.getClQuantity() != null){
-					 checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
+					checkQty = Double.compare(tplSpecQuestion.getClQuantity().doubleValue() , ctPanelItem.getMinimumOrderQty());
 				}
 
 				if(checkQty < 0) {
@@ -990,14 +990,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
 		getManagedBean().setAutoUpdate(true);
-		
+
 		getManagedBean().setTitleChecker(true);
 		getManagedBean().setTabActiveIndex(0);
 		getManagedBean().setRnToSQFlag(true);
 		getManagedBean().setPanelItemFlag(true);
 		getManagedBean().setEditableFlag(true);
 		getManagedBean().setActiveIndex(0);
-		
+
 		if(scQuote.getCurrentStatus() == null){
 			List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus  scWorkFlowStatus = new ScSQWorkFlowStatus();
@@ -1011,9 +1011,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			workFlowStatuses.add(scWorkFlowStatus);
 			scQuote.setWorkflowStatuses(workFlowStatuses);
 
-	   } else{
-		getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
-	   }
+		} else{
+			getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
+		}
 
 		if(scQuote.getPanelItem() != null){
 			CtPanelItem panelItem = scQuote.getPanelItem();
@@ -1077,39 +1077,54 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(scQuote.getLocationDivisionCriterias() != null) {
 			if(scQuote.getLocationDivisionCriterias().size() >0){
 				for (ScLocationDivisionCriteria locationDivisionCriteria : scQuote.getLocationDivisionCriterias() ) {
-					TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 					divisions.add(locationDivisionCriteria.getPmDivision());
-					tplSpecZoneLoc.setPmDivision(locationDivisionCriteria.getPmDivision());
 				}
 			}
 		}	
 		List<PmDistrict> districts = new ArrayList<PmDistrict>();
 		if(scQuote.getLocationDistrictCriterias() != null) {
 			if(scQuote.getLocationDistrictCriterias().size() >0){
-
 				for (ScLocationDistrictCriteria locationDistrictCriteria : scQuote.getLocationDistrictCriterias() ) {
-					TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 					districts.add(locationDistrictCriteria.getPmDistrict());
-					tplSpecZoneLoc.setPmDistrict(locationDistrictCriteria.getPmDistrict());
 				}
 			}
 		}
+
 		List<PmState> states = new ArrayList<PmState>();
 		if(districts.isEmpty() && divisions.isEmpty()){
 			if(scQuote.getLocationStateCriterias() != null) {
 				if(scQuote.getLocationStateCriterias().size() >0){
 					for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
 						states.add(locationStateCriteria.getPmState());
-						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
-						tplSpecZoneLoc.setPmState(locationStateCriteria.getPmState());
 					}
 				}
 			}
+
 		}
-		if(states.size() >0 || divisions.size() >0 || districts.size() >0){
+		// division 
+		String locLovel = "";
+		if(scQuote.getSupplierLocationLevel() != null){
+			if(scQuote.getSupplierLocationLevel().getParameterCode().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
+				locLovel = ParameterConst.LOCATION_LEVEL_DIVISION;
+				if(scQuote.getLocationStateCriterias() != null) {
+					if(scQuote.getLocationStateCriterias().size() >0){
+						for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
+
+							if(locationStateCriteria.getPmState() != null){
+								PmState state = locationStateCriteria.getPmState();
+								if (!(state.getStateName().equalsIgnoreCase("SARAWAK") || state.getStateName().equalsIgnoreCase("SABAH"))) {
+									states.add(locationStateCriteria.getPmState());
+								}	
+							}
+						}
+					}
+				}
+			}	
+		}
+		if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
 			getManagedBean().setByLocality(Boolean.TRUE);
 			List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
-			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree("", states,
+			LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(locLovel, states,
 					districts, divisions, null,TplSpecZoneLoc.class));
 			getManagedBean().setLocationTrees(LocTrees.get(0).getChildren());
 		} else{
@@ -1157,20 +1172,20 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
-		
+
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(
 				scQuote, 
 				null,
 				scQuote.getRemarks(),
 				ScSQRemark.class));
-		
+
 		getManagedBean().setScQuote(scQuote);
 		procurementTypeEvent();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Reload simple quote.
 	 *
@@ -1179,12 +1194,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public void reQuote(ScQuote scQuote){
 		TemplateSpecBean productTplSpecBean = getManagedBean().getProductTemplateSpecBean();
 		TemplateSpecBean serviceTplSpecBean = getManagedBean().getServiceTemplateSpecBean();
-       
-		 //start date as current date
-		 Date currentDate  = new Date();
-		 scQuote.setStartDate(currentDate);
-		 scQuote.setEndDate(null);
-		 
+
+		//start date as current date
+		Date currentDate  = new Date();
+		scQuote.setStartDate(currentDate);
+		scQuote.setEndDate(null);
+
 		if(scQuote.getCurrentStatus() == null){
 			List<ScSQWorkFlowStatus> workFlowStatuses =  new  ArrayList<ScSQWorkFlowStatus>();
 			ScSQWorkFlowStatus  scWorkFlowStatus = new ScSQWorkFlowStatus();
@@ -1198,10 +1213,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			workFlowStatuses.add(scWorkFlowStatus);
 			scQuote.setWorkflowStatuses(workFlowStatuses);
 
-	   } else{
-		   getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
-	   }
-		
+		} else{
+			getCurrentStatus(scQuote.getCurrentStatus().getPmStatus());
+		}
+
 		// service and product
 		if(scQuote.getQuoteDocs() != null){
 			for (ScQuoteDoc scQuoteDoc : scQuote.getQuoteDocs()) {
@@ -1232,7 +1247,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().setRequestNote(scQuote.getRequestNotes().get(0));
 		}
 
-	
+
 
 		// business nature details
 		if(scQuote.getBusinessNatureCriterias() !=null && scQuote.getBusinessNatureCriterias().size() >0){
@@ -1257,7 +1272,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
-		
+
 		getManagedBean().setLocLevelDropdown(getLocationLevelDropdown());
 		// zone location level by default - district 
 		if(getManagedBean().getLocationLevel() == null){
@@ -1267,23 +1282,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(getManagedBean().getSupplierLocLevel() == null){
 			getManagedBean().setSupplierLocLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
 		}
-		
+
 		// to get country id
 		CountryReqDTO reqDTO = new CountryReqDTO();
 		reqDTO.setCountryCode("MY");
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
-		
+
 		getSupplierListCriteria();
-		
+
 		// Initializing Remarks
 		scQuote.setRemarks(initializeRemarks(
 				scQuote, 
 				null,
 				scQuote.getRemarks(),
 				ScSQRemark.class));
-		
+
 		getManagedBean().setScQuote(scQuote);
 		procurementTypeEvent();
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -1303,7 +1318,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			ScQuote quote = getManagedBean().getScQuote();
-			
+
 			if(quote.getRequestItems() == null){
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
 				ScRequestItem requestItem = new ScRequestItem();
@@ -1323,44 +1338,44 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				requestNotes.add(requestNote);
 				quote.setRequestNotes(requestNotes);
 			}
-			
+
 			quote.setProcurementType(getParameterByTypeAndCode(
 					ParameterTypeConst.PROCUREMENT_TYPE, getManagedBean().getScQuote().getProcurementType().getParameterCode()));
-			
+
 			// location level 
 			if(quote.isZonal()){
 				quote.setZoneLocatonLevel(getParameterByTypeAndCode(
-							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
+						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getLocationLevel()));
 			} else{
 				quote.setZoneLocatonLevel(null);
 			}
 			// supplier location level
 			if(getManagedBean().isByLocality()){
 				quote.setSupplierLocationLevel(getParameterByTypeAndCode(
-							ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
+						ParameterTypeConst.LOCATION_LEVEL, getManagedBean().getSupplierLocLevel()));
 			} else{
 				quote.setSupplierLocationLevel(null);
 			}
-			
+
 			// justification type
 			if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_AD_HOC)) {
-				
+
 				if(quote.getJustificationType().getParameterCode() == null){
 					throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				
+
 				quote.setJustificationType(getParameterByTypeAndCode(
 						ParameterTypeConst.JUSTIFICATION_TYPE_ADHOC, quote.getJustificationType().getParameterCode()));
 			} else if (quote.getProcurementType().getParameterCode()
 					.equalsIgnoreCase(ParameterConst.PROC_TYPE_EMERGENCY)) {
-				
+
 				if(quote.getJustificationType().getParameterCode() == null){
 					throw new EpException(MessageConst.ERROR_100022, new String[] {ResourceBundleUtils.getMessage("lbl.sc.reason",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 				}
-				
+
 				quote.setJustificationType(getParameterByTypeAndCode(
 						ParameterTypeConst.JUSTIFICATION_TYPE_EMERGENCY, quote.getJustificationType().getParameterCode()));
 
@@ -1380,7 +1395,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// panel item zone 
 			if(quote.getPanelItem() != null){
 				validatePanelItem(quote.getPanelItem());
-				
+
 				// panel item
 				if(getManagedBean().getPanelSuppliers() != null){
 
@@ -1394,7 +1409,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						}
 					}
 				}
-				
+
 			} else {
 				if(quote.getProcurementType() != null){
 
@@ -1428,11 +1443,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
-			
+
 			if(suppliers != null && !suppliers.isEmpty()){
 				quote.setScQuoteSuppliers(suppliers);
 			}
-			
+
 			finalizeRemarks(quote.getRemarks());
 			quote.setWorkflowStatuses(null);
 
@@ -1440,14 +1455,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			List<ScQuoteDoc> quoteDocs = new ArrayList<ScQuoteDoc>();
 			if(quote.getQuoteDocs() !=null && quote.getQuoteDocs().size() >0){
 				for(ScQuoteDoc doc : quote.getQuoteDocs()) {
-					
+
 					if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
-						 doc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
-						 quoteDocs.add(doc);
+						doc.setSpecMaster(getManagedBean().getProductTemplateSpecBean().getSpecMaster());
+						quoteDocs.add(doc);
 					}
 					else if(doc.getSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)) {
-						 doc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
-						 quoteDocs.add(doc);
+						doc.setSpecMaster(getManagedBean().getServiceTemplateSpecBean().getSpecMaster());
+						quoteDocs.add(doc);
 					}
 				}
 			} else {
@@ -1456,10 +1471,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 							getManagedBean().getProductTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
 						ScQuoteDoc quoteDoc = new ScQuoteDoc();
-						 TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
-						 if(quote.getQuoteZone() != null){
-							 specMaster.setTplSpecZone(quote.getQuoteZone());
-						 }
+						TplSpecMaster specMaster = getManagedBean().getProductTemplateSpecBean().getSpecMaster();
+						if(quote.getQuoteZone() != null){
+							specMaster.setTplSpecZone(quote.getQuoteZone());
+						}
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -1471,10 +1486,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions() != null && 
 							getManagedBean().getServiceTemplateSpecBean().getSpecMaster().getTplSpecQuestions().size() >0 ){
 						ScQuoteDoc quoteDoc = new ScQuoteDoc();
-						 TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
-						 if(quote.getQuoteZone() != null){
-							 specMaster.setTplSpecZone(quote.getQuoteZone());
-						 }
+						TplSpecMaster specMaster = getManagedBean().getServiceTemplateSpecBean().getSpecMaster();
+						if(quote.getQuoteZone() != null){
+							specMaster.setTplSpecZone(quote.getQuoteZone());
+						}
 						quoteDoc.setSpecMaster(specMaster);
 						quoteDoc.setQuote(quote);
 						quoteDocs.add(quoteDoc);
@@ -1482,7 +1497,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
-	
+
 			FacesScopes facesScopes = new FacesScopes();
 			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setToken(token);
@@ -1491,13 +1506,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
-			
+
 			// ReQuote
 			reqDTO.setEndLoaOutcome(getManagedBean().getEndLoaOutcome());
 			reqDTO.setEndLoaTaskId(getManagedBean().getEndLoaTaskId());
 			reqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			reqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
-			
+
 			QuoteResDTO quoteResDTO = null;
 			if(outcome.isEmpty()){
 				reqDTO.setSubmit(Boolean.TRUE);
@@ -1508,7 +1523,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} 
 			// submit prompt hiding
 			//RequestContext.getCurrentInstance().execute("promptWidget.hide()");
-			
+
 			if (quoteResDTO.isSuccessful()) {
 				ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
 				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || outcome.isEmpty()){
@@ -1516,9 +1531,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				} else  if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
 					successMessage(MessageConst.INFO_700010,ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE,scQuote.getQuoteNo());
 				}
-				 // clear SQ data
-				 super.renewSesionObject();
-				
+				// clear SQ data
+				super.renewSesionObject();
+
 			} else {
 				throw new EpException(MessageConst.ERROR_700020);
 			}
@@ -1527,95 +1542,95 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Approver action.
 	 *
 	 * @param outcome the outcome
 	 */
-   	public void approverAction(String outcome) {
-		   try {
-			   QuoteReqDTO reqDTO = new QuoteReqDTO();
-			   reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
-			   FacesScopes facesScopes = new FacesScopes();
-			   String token = facesScopes.getBPMAuthenticationCtxToken();
-			   reqDTO.setToken(token);
-			   reqDTO.setOutcome(outcome);
-			   reqDTO.setTaskId(getManagedBean().getTaskId());
-			   QuoteResDTO resDTO = getQuoteSO().updateSimpleQuote(reqDTO);
+	public void approverAction(String outcome) {
+		try {
+			QuoteReqDTO reqDTO = new QuoteReqDTO();
+			reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
+			FacesScopes facesScopes = new FacesScopes();
+			String token = facesScopes.getBPMAuthenticationCtxToken();
+			reqDTO.setToken(token);
+			reqDTO.setOutcome(outcome);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			QuoteResDTO resDTO = getQuoteSO().updateSimpleQuote(reqDTO);
 
-			   if(resDTO.isSuccessful()){
-				   if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
-					   successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+			if(resDTO.isSuccessful()){
+				if(BpmOutcomeConst.BPM_REVISE.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700009, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
 
-				   } else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
-					   successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+				} else if(BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700011, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
 
-				   } else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
-					   successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+				} else if(BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700008, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
 
-				   }else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
-					   successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
-				   }
-			   } else {
-				   throw new EpException(MessageConst.ERROR_700020);
-			   }
+				}else if(BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)){
+					successMessage(MessageConst.INFO_700010, ParameterTypeConst.DOCUMENT_TYPES,  ParameterConst.DOCTYPE_SIMPLE_QUOTE, getManagedBean().getScQuote().getQuoteNo());
+				}
+			} else {
+				throw new EpException(MessageConst.ERROR_700020);
+			}
 
-		   } finally {
-			   //quoteSO = null;
-		   }
-	   } 
+		} finally {
+			//quoteSO = null;
+		}
+	} 
 
-   	/**
-   	 * By loc and business event.
-   	 * gets the supplier location tab if selects by location 
-   	 * gets the business nature tab if selects by business nature in supplier criteria
-   	 */
-   	public void byLocAndBusinessEvent() {
-		   debugLogger("byBusinessEvent");
-		   if (getManagedBean().isByLocality()) {
-			   getManagedBean().setTabActiveIndex(0);
+	/**
+	 * By loc and business event.
+	 * gets the supplier location tab if selects by location 
+	 * gets the business nature tab if selects by business nature in supplier criteria
+	 */
+	public void byLocAndBusinessEvent() {
+		debugLogger("byBusinessEvent");
+		if (getManagedBean().isByLocality()) {
+			getManagedBean().setTabActiveIndex(0);
 
-			   if(getManagedBean().getSupplierLocLevel() == null){
-				   getManagedBean().setSupplierLocLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
-			   }
-			   ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
-			   
-		   } else{
-			   getManagedBean().setByLocality(Boolean.FALSE);
-			   if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
-				   getManagedBean().getLocationTrees().clear();
-			   }
-			   
-			   if(getManagedBean().getScQuote().getLocationStateCriterias() != null && getManagedBean().getScQuote().getLocationStateCriterias().size()>0){
-				   getManagedBean().getScQuote().getLocationStateCriterias().clear();
-			   }
-			   if(getManagedBean().getScQuote().getLocationDivisionCriterias() != null && getManagedBean().getScQuote().getLocationDivisionCriterias().size()>0){
-				   getManagedBean().getScQuote().getLocationDivisionCriterias().clear();
-			   }
-			   if(getManagedBean().getScQuote().getLocationDistrictCriterias() != null && getManagedBean().getScQuote().getLocationDistrictCriterias().size()>0){
-				   getManagedBean().getScQuote().getLocationDistrictCriterias().clear();
-			   }
-			   getManagedBean().setSupplierLocLevel(null); 
-		   }
+			if(getManagedBean().getSupplierLocLevel() == null){
+				getManagedBean().setSupplierLocLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
+			}
+			ptjLocality(ParameterConst.LOCATION_LEVEL_DISTRICT);
 
-		   if (getManagedBean().isByBusinessNature()) {
-			   getManagedBean().setTabActiveIndex(1);
-		   } else{
-			   if(getManagedBean().getBusinessNatureCriterias() != null && getManagedBean().getBusinessNatureCriterias().size() >0){
-				   getManagedBean().getBusinessNatureCriterias().clear();
-			   }
-			   if(getManagedBean().getBusinessNatures() != null && getManagedBean().getBusinessNatures().size() >0){
-				   getManagedBean().getBusinessNatures().clear();
-			   }
-		   }
+		} else{
+			getManagedBean().setByLocality(Boolean.FALSE);
+			if(getManagedBean().getLocationTrees() != null && getManagedBean().getLocationTrees().size()>0){
+				getManagedBean().getLocationTrees().clear();
+			}
 
-		   if(!getManagedBean().isByBusinessNature() && !getManagedBean().isByBusinessNature()){
-			   getManagedBean().setTabActiveIndex(0); 
-		   }
-	   }
+			if(getManagedBean().getScQuote().getLocationStateCriterias() != null && getManagedBean().getScQuote().getLocationStateCriterias().size()>0){
+				getManagedBean().getScQuote().getLocationStateCriterias().clear();
+			}
+			if(getManagedBean().getScQuote().getLocationDivisionCriterias() != null && getManagedBean().getScQuote().getLocationDivisionCriterias().size()>0){
+				getManagedBean().getScQuote().getLocationDivisionCriterias().clear();
+			}
+			if(getManagedBean().getScQuote().getLocationDistrictCriterias() != null && getManagedBean().getScQuote().getLocationDistrictCriterias().size()>0){
+				getManagedBean().getScQuote().getLocationDistrictCriterias().clear();
+			}
+			getManagedBean().setSupplierLocLevel(null); 
+		}
 
-   	/**
+		if (getManagedBean().isByBusinessNature()) {
+			getManagedBean().setTabActiveIndex(1);
+		} else{
+			if(getManagedBean().getBusinessNatureCriterias() != null && getManagedBean().getBusinessNatureCriterias().size() >0){
+				getManagedBean().getBusinessNatureCriterias().clear();
+			}
+			if(getManagedBean().getBusinessNatures() != null && getManagedBean().getBusinessNatures().size() >0){
+				getManagedBean().getBusinessNatures().clear();
+			}
+		}
+
+		if(!getManagedBean().isByBusinessNature() && !getManagedBean().isByBusinessNature()){
+			getManagedBean().setTabActiveIndex(0); 
+		}
+	}
+
+	/**
 	 * Event for procurement type  drop down in SQ.
 	 * to show justification drop down and justification remark based on procurement type.
 	 */
@@ -1661,9 +1676,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(getManagedBean().getScQuote().getJustificationType() == null){
 			getManagedBean().getScQuote().setJustificationType(new PmParameter());	
 		}
-		
+
 	}
-	
+
 	/**
 	 * Add business nature for Business nature in supplier criteria
 	 */
@@ -1700,7 +1715,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 	/**
 	 * delete supplier from supplier list in supplier criteria
 	 */	
@@ -1721,7 +1736,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}
-	
+
 	/**
 	 * delete govt seller from govt seller in supplier criteria
 	 */	
@@ -1764,12 +1779,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 	}	
-	
-   /**
-    * show zone popup to add the zone in Zone in simple quote.
-    */
+
+	/**
+	 * show zone popup to add the zone in Zone in simple quote.
+	 */
 	public void showZonePopup() {
-	  String locationLevel = this.getManagedBean().getLocationLevel();
+		String locationLevel = this.getManagedBean().getLocationLevel();
 		if (locationLevel == null) {
 			locationLevel = ParameterConst.LOCATION_LEVEL_DISTRICT;
 		}
@@ -1781,7 +1796,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setZoneName("");
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
-	
+
 	/**
 	 * show location popup to add the location in supplier location in simple quote.
 	 */
@@ -1807,7 +1822,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(),
 						states, districts, divisions, null, locationLevel,TplSpecZoneLoc.class));
 	}
-	
+
 	/**
 	 * adding selected zone to the zone from the zone popup in simple quote.
 	 */
@@ -1818,13 +1833,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getSelectedNodes() != null) {
 			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
-				
 				if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
 					if(treeNode.getType().equals("state")){
-						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
-						locationDTOs.addAll(locationDTO);
-						if(treeNode.getChildCount()>0){
-							break;
+						if(treeNode.getChildCount() == 0 && treeNode.getChildren().isEmpty()){
+							List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+							locationDTOs.addAll(locationDTO);
 						}
 					} else{
 						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
@@ -1856,8 +1869,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					.getDivisionFromLocationDTO(locationDTOs);
 			List<PmDistrict> districts = SourcingLocationHelper
 					.getDistrictFromLocationDTO(locationDTOs);
-			List<PmCity> cities = SourcingLocationHelper
-					.getCityFromLocationDTO(locationDTOs);
+			/*List<PmCity> cities = SourcingLocationHelper
+					.getCityFromLocationDTO(locationDTOs);*/
 
 			String editZoneName = getManagedBean().getTempZoneName();
 			if (getManagedBean().getZoneIndex() >= 0) {
@@ -1893,17 +1906,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if (getManagedBean().getZoneIndex() == -1) {
 				getManagedBean().getZoneTrees().add(
 						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
-								districts, divisions, cities,TplSpecZoneLoc.class));
+								districts, divisions, null, TplSpecZoneLoc.class));
 
 
 			} else if (getManagedBean().getZoneIndex() >= 0) {
-				 beans.remove(getManagedBean().getZoneIndex());
-				
+				beans.remove(getManagedBean().getZoneIndex());
+
 				getManagedBean().getZoneTrees().remove(getManagedBean().getZoneIndex());
 				getManagedBean().getZoneTrees().add(
 						getManagedBean().getZoneIndex(),
 						LocationSingleton.getInstance().buildLocationTree(tplSpecZoneDtl, states,
-								districts, divisions, cities ,TplSpecZoneLoc.class));
+								districts, divisions, null, TplSpecZoneLoc.class));
 			}
 			getManagedBean().getBeans().add(zonesBean);
 			this.getManagedBean().setZoneIndex(-1);
@@ -1918,14 +1931,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.zone.location",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
-        
+
 		getManagedBean().setZoneName(null);
 		getManagedBean().setTempZoneName(null);
-		
+
 		// hide zone location popup
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
-	
+
 	private void updateZoneBean(String zoneName){
 		List<ZonesBean> beans  = new ArrayList<ZonesBean>();
 		List<ZonesBean> zoneBeans  = getManagedBean().getBeans();
@@ -1933,9 +1946,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(zoneBeans != null && zoneBeans.size() >0){
 			for (ZonesBean zonesBean : zoneBeans) {
 				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
-				if(!prevsZone.getZoneName().equalsIgnoreCase(zoneName)){
-					beans.add(zonesBean);
-				}	
+				if(prevsZone != null) {
+					if(!prevsZone.getZoneName().equalsIgnoreCase(zoneName)){
+						beans.add(zonesBean);
+					}	
+				}
 			}
 		}
 		getManagedBean().setBeans(beans);
@@ -1954,17 +1969,15 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			for (TreeNode treeNode : getManagedBean().getSelectedLocNodes()) {
 
 				if(locationLevel.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
-
-				if(treeNode.getType().equals("state")){
-					 List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
-						locationDTOs.addAll(locationDTO);
-						if(treeNode.getChildCount()>0){
-							break;
+					if(treeNode.getType().equals("state")){
+						if(treeNode.getChildCount() == 0 && treeNode.getChildren().isEmpty()){
+							List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+							locationDTOs.addAll(locationDTO);
 						}
-				} else{
-					 List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
+					} else{
+						List<TplSpecZoneLoc> locationDTO = getLocations(treeNode);
 						locationDTOs.addAll(locationDTO);
-				}
+					}
 				} else{
 
 					if (treeNode.getParent().isSelected()) {
@@ -1977,7 +1990,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
-		
+
 		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTO(locationDTOs);
 		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTO(locationDTOs);
 		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTO(locationDTOs);
@@ -1990,26 +2003,26 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		// hide location popup
 		RequestContext.getCurrentInstance().execute("locationPopup.hide();");
 	}
-	
-   /**
-    * Gets the locations.
-    *
-    * @param zoneLocation the zone location
-    * @return the locations
-    */
-   private List<TplSpecZoneLoc> getLocations(TreeNode zoneLocation) {
-			List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
-			if (zoneLocation.isLeaf()) {
-				TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) zoneLocation.getData();
-				results.add(locationDTO);
-			} else {
-				for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
-					results.addAll(getLocations(childrendLocationNode));
-				}
+
+	/**
+	 * Gets the locations.
+	 *
+	 * @param zoneLocation the zone location
+	 * @return the locations
+	 */
+	private List<TplSpecZoneLoc> getLocations(TreeNode zoneLocation) {
+		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
+		if (zoneLocation.isLeaf()) {
+			TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) zoneLocation.getData();
+			results.add(locationDTO);
+		} else {
+			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
+				results.addAll(getLocations(childrendLocationNode));
 			}
-			return results;
 		}
-		
+		return results;
+	}
+
 	/*
 	 * private ScQuoteZone getZone(TreeNode zoneLocation) { ScQuoteZone result =
 	 * null; if (zoneLocation.getData() instanceof LocationDTO) { LocationDTO
@@ -2023,8 +2036,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * : zoneLocation.getChildren()) { result = getZone(childLocationNode); } }
 	 * } return result; }
 	 */
-	
-   /**
+
+	/**
 	 * edit selected zone in zone 
 	 * @param rootZoneLocation the root zone location
 	 * @param zoneIndex the zone index
@@ -2039,7 +2052,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				getManagedBean().setTempZoneName(tplSpecZoneDtl.getZoneName());
 			}
 		}
-		
+
 		List<PmState> states = SourcingLocationHelper
 				.getStateFromLocationDTO(locationDTOs);
 		List<PmDivision> divisions = SourcingLocationHelper
@@ -2048,7 +2061,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				.getDistrictFromLocationDTO(locationDTOs);
 		List<PmCity> cities = SourcingLocationHelper
 				.getCityFromLocationDTO(locationDTOs);
-		
+
 		getManagedBean().setRootZoneTree(
 				LocationSingleton.getInstance().buildLocationPopupTree(getManagedBean().getDefaultCountryId(),
 						states, districts, divisions, cities, locationLevel,TplSpecZoneLoc.class));
@@ -2056,7 +2069,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		this.getManagedBean().setZoneIndex(i);
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
-	
+
 	/**
 	 * edit selected supplier location in supplier location 
 	 *
@@ -2064,8 +2077,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * @param LocIndex the loc index
 	 */
 	public void editLocation(TreeNode rootZoneLocation, int LocIndex) {
-	    String locationLevel = this.getManagedBean().getSupplierLocLevel();
-	    
+		String locationLevel = this.getManagedBean().getSupplierLocLevel();
+
 		List<TplSpecZoneLoc> locationDTOs = new ArrayList<TplSpecZoneLoc>();
 		if (getManagedBean().getLocationTrees() != null) {
 			for (TreeNode treeNode : getManagedBean().getLocationTrees()) {
@@ -2093,18 +2106,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		List<PmState> results = new ArrayList<PmState>();
 		for (TreeNode rootNode : treeNodes) {
 			for (TreeNode treeNode : rootNode.getChildren()) {
-					if (treeNode.getType().equals("state")) {
-						TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) treeNode.getData();
-						if (locationDTO.getPmState() != null) {
+				if (treeNode.getType().equals("state")) {
+					TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) treeNode.getData();
+					if (locationDTO.getPmState() != null) {
 
-							results.add(locationDTO.getPmState());
-						}
+						results.add(locationDTO.getPmState());
 					}
+				}
 			}
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Gets the pm divisions.
 	 *
@@ -2114,8 +2127,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private List<PmDivision> getPmDivisions(List<TreeNode> treeNodes) {
 		List<PmDivision> results = new ArrayList<PmDivision>();
 		for (TreeNode rootNode : treeNodes) {
-		for (TreeNode treeNode : rootNode.getChildren()) {
-			for (TreeNode childNode : treeNode.getChildren()) {
+			for (TreeNode treeNode : rootNode.getChildren()) {
+				for (TreeNode childNode : treeNode.getChildren()) {
 					if (childNode.getType().equals("division")) {
 						TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) childNode.getData();
 						if (locationDTO.getPmDivision() != null) {
@@ -2123,11 +2136,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						}
 					}
 				}
-		}
+			}
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Gets the pm districts.
 	 *
@@ -2182,7 +2195,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return results;
 	}
-		
+
 	/**
 	 * Gets the location division criterias.
 	 *
@@ -2191,30 +2204,30 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * @return the location division criterias
 	 */
 	private	List<ScLocationDivisionCriteria> getLocationDivisionCriterias(List<TreeNode> treeNodes ,ScQuote quote){
-			List<ScLocationDivisionCriteria>	results = new ArrayList<ScLocationDivisionCriteria>();
-			List<PmDivision>	divisions	=	getPmDivisions(treeNodes);
-			if(divisions != null && divisions.size() > 0){
-				for(PmDivision division: divisions){
-					boolean isDivision = false;
-					if(quote.getLocationDivisionCriterias() !=null && quote.getLocationDivisionCriterias().size()>0){
-						for (ScLocationDivisionCriteria criteriaDiv : quote.getLocationDivisionCriterias()) {
-							if(division.getDivisionId().equals(criteriaDiv.getPmDivision().getDivisionId())){
-								isDivision = true;
-								results.add(criteriaDiv);
-							}
-						} 
+		List<ScLocationDivisionCriteria>	results = new ArrayList<ScLocationDivisionCriteria>();
+		List<PmDivision>	divisions	=	getPmDivisions(treeNodes);
+		if(divisions != null && divisions.size() > 0){
+			for(PmDivision division: divisions){
+				boolean isDivision = false;
+				if(quote.getLocationDivisionCriterias() !=null && quote.getLocationDivisionCriterias().size()>0){
+					for (ScLocationDivisionCriteria criteriaDiv : quote.getLocationDivisionCriterias()) {
+						if(division.getDivisionId().equals(criteriaDiv.getPmDivision().getDivisionId())){
+							isDivision = true;
+							results.add(criteriaDiv);
+						}
 					} 
-					if(!isDivision){
-						ScLocationDivisionCriteria  divisionCriteria = new ScLocationDivisionCriteria();
-						divisionCriteria.setPmDivision(division);
-						divisionCriteria.setQuote(quote);
-						results.add(divisionCriteria);
-					}
+				} 
+				if(!isDivision){
+					ScLocationDivisionCriteria  divisionCriteria = new ScLocationDivisionCriteria();
+					divisionCriteria.setPmDivision(division);
+					divisionCriteria.setQuote(quote);
+					results.add(divisionCriteria);
 				}
 			}
-			return results;
-	  }	
-		
+		}
+		return results;
+	}	
+
 	/**
 	 * Gets the location district criterias.
 	 *
@@ -2248,7 +2261,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Select zone tree node.
 	 *
@@ -2256,10 +2269,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void selectZoneTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-		
+
 		selectedTreeNode.setSelected(true);
 	}
-	
+
 	/**
 	 * Un select zone tree node.
 	 *
@@ -2267,7 +2280,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-		
+
 		selectedTreeNode.setSelected(false);
 	}
 
@@ -2292,8 +2305,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		this.getManagedBean().setZoneIndex(-1);
 	}
-	
-	
+
+
 	/**
 	 * Select location tree node.
 	 *
@@ -2301,10 +2314,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void selectLocationTreeNode(NodeSelectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-		
+
 		selectedTreeNode.setSelected(true);
 	}
-	
+
 	/**
 	 * Un select location tree node.
 	 *
@@ -2312,10 +2325,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
 		TreeNode selectedTreeNode = event.getTreeNode();
-		
+
 		selectedTreeNode.setSelected(false);
 	}
-	
+
 	/**
 	 * Delete tree nodes.
 	 *
@@ -2332,23 +2345,23 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				for (TreeNode zoneTree : rootTree.getChildren()) {
 					if (zoneTree.isSelected()) {
 						getManagedBean().setSelectedFlag(false); // to check wheather zone selected  or not
-						 tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
-						 if(tplSpecZoneDtl.getPanelZone() != null){
-							 deletePanelItemSuppliers(tplSpecZoneDtl);
-							 
-						 } else{
-							 deleteStateOrDivOrDist(tplSpecZoneDtl, null);
-						 }
- 
-						 rootTrees.remove(row--);
+						tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
+						if(tplSpecZoneDtl.getPanelZone() != null){
+							deletePanelItemSuppliers(tplSpecZoneDtl);
+
+						} else{
+							deleteStateOrDivOrDist(tplSpecZoneDtl, null);
+						}
+
+						rootTrees.remove(row--);
 					} else {
-						
+
 						removedList  = deleteChildTreeNodes(zoneTree.getChildren());
 
 						if (removedList != null) {
 							for (TreeNode treeNode : removedList) {
 								List<TplSpecZoneLoc> locationDTOs = getLocations(treeNode);
-								
+
 								deleteStateOrDivOrDist(tplSpecZoneDtl, locationDTOs);
 							}
 						}
@@ -2357,13 +2370,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							rootTrees.remove(row--);
 						}
 					}
-					
+
 				}
 			}
 		}
 		return removedList;
 	}
-	
+
 	/**
 	 * Delete child tree nodes.
 	 *
@@ -2395,7 +2408,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return nodesToRemoved;
 	}
-	
+
 	/**
 	 * Delete panel item suppliers.
 	 *
@@ -2420,12 +2433,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		removePanelItemZones(tplSpecZoneDtl);
 		if(panelSuppliers == null || panelSuppliers.isEmpty()){
 			this.getManagedBean().getScQuote().setScQuoteSuppliers(null);
-			
+
 		} else{
 			getManagedBean().getScQuote().setScQuoteSuppliers(panelSuppliers);
 		}
 		getManagedBean().setPanelSuppliers(panelSuppliers);
-		
+
 	}
 
 	/**
@@ -2462,7 +2475,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 
 	}
-	
+
 	/**
 	 * Select panel item zone.
 	 *
@@ -2472,7 +2485,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		TreeNode selectedNode = (TreeNode) event.getTreeNode();
 		selectedNode.setSelected(true);
 	}
-	
+
 	/**
 	 * Un select panel item zone.
 	 *
@@ -2495,14 +2508,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			for (TreeNode treeNode : rootTrees) {
 				if(treeNode.getChildren().size() >0){
 					for (TreeNode mainNode  : treeNode.getChildren()) {
-						  locationDTOs = getLocations(mainNode);
-					     locationDTOs.addAll(locationDTOs);
+						locationDTOs = getLocations(mainNode);
+						locationDTOs.addAll(locationDTOs);
 					}
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Delete loc tree nodes.
 	 *
@@ -2512,13 +2525,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if (rootTrees != null) {
 			for (int row = 0; row < rootTrees.size(); row++) {
 				TreeNode rootTree = rootTrees.get(row);
-				
+
 				for (TreeNode zoneTree : rootTree.getChildren()) {
 					if (zoneTree.isSelected()) {
 						rootTrees.remove(row--);
 					} else {
 						deleteChildTreeNodes(zoneTree.getChildren());
-						
+
 						if (zoneTree.getChildren().size() == 0) {
 							//rootTrees.remove(row--);
 						}
@@ -2598,70 +2611,70 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
 				}
 			}
-			
+
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogueSearch");  
 		}
 	}
 
-	 /**
- 	 * Gets the current status to show in SQ.
- 	 *
- 	 * @param pmStatus the pm status
- 	 * @return the current status
- 	 */
- 	public void  getCurrentStatus(PmStatus pmStatus) {
-		 getManagedBean().setSimpleQuoteStatus(pmStatus);
-	 }
+	/**
+	 * Gets the current status to show in SQ.
+	 *
+	 * @param pmStatus the pm status
+	 * @return the current status
+	 */
+	public void  getCurrentStatus(PmStatus pmStatus) {
+		getManagedBean().setSimpleQuoteStatus(pmStatus);
+	}
 
-	 /**
- 	 * Gets the location level drop down.
- 	 *
- 	 * @return the location level drop down
- 	 */
- 	public SelectItem[] getLocationLevelDropdown() {
-		 List<String> parameterCodes = new ArrayList<String>();
-		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_STATE);
-		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_DIVISION);
-		 parameterCodes.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
-		 FacesScopes face = new FacesScopes();
-		 SelectItem[] items = null;
-		 try {
-			 items = new SelectItem[parameterCodes.size() + 1];
-			 items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
-			 int i = 1;
-			 for (String parameterCode : parameterCodes) {
-				 List<PmParameterDesc> localParamDesc =
-						 retrieveParameterDescByType
-						 (ParameterTypeConst.LOCATION_LEVEL); 
-				 for (PmParameterDesc
-						 paramDesc : localParamDesc) { 
-					 if(paramDesc.getPmParameter().getParameterCode().equals(parameterCode)) {
-						 items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterCode(), 
-								 paramDesc.getCodeName());
-					 }
-				 }
-			 }
-		 } catch (Exception e) {
-			 e.printStackTrace();
-			 FacesContext.getCurrentInstance().addMessage(
-					 null,
-					 new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							 e.getMessage()));
-		 }
-		 return items;
-	 }
-	 
- 	/**
- 	 * Retrieve parameter desc by type.
- 	 *
- 	 * @param type the type
- 	 * @return the list
- 	 */
- 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
-		 return ParameterHelper.getInstance().getParameterDescList(type);
+	/**
+	 * Gets the location level drop down.
+	 *
+	 * @return the location level drop down
+	 */
+	public SelectItem[] getLocationLevelDropdown() {
+		List<String> parameterCodes = new ArrayList<String>();
+		parameterCodes.add(ParameterConst.LOCATION_LEVEL_STATE);
+		parameterCodes.add(ParameterConst.LOCATION_LEVEL_DIVISION);
+		parameterCodes.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
+		FacesScopes face = new FacesScopes();
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[parameterCodes.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale()));
+			int i = 1;
+			for (String parameterCode : parameterCodes) {
+				List<PmParameterDesc> localParamDesc =
+						retrieveParameterDescByType
+						(ParameterTypeConst.LOCATION_LEVEL); 
+				for (PmParameterDesc
+						paramDesc : localParamDesc) { 
+					if(paramDesc.getPmParameter().getParameterCode().equals(parameterCode)) {
+						items[i++] = new SelectItem(paramDesc.getPmParameter().getParameterCode(), 
+								paramDesc.getCodeName());
+					}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+	}
 
-	 }
-	 
+	/**
+	 * Retrieve parameter desc by type.
+	 *
+	 * @param type the type
+	 * @return the list
+	 */
+	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+
+	}
+
 	/*
 	 * public void durationEvent(){ try {
 	 * if(getManagedBean().getScQuote().getStartDate() != null &&
@@ -2689,79 +2702,79 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * MILLI_TO_DAYS = 1000 * 60 * 60 * 24; return (int) ((toDate.getTime() -
 	 * fromDate.getTime()) / MILLI_TO_DAYS ); }
 	 */
-	 
-	 
-	 /**
+
+
+	/**
 	 * Date listener.
 	 * validate start date and end date in simple quote general information
 	 */
 	public void dateListener() {
-		 ScQuote quote = getManagedBean().getScQuote();
-		 if (quote.getStartDate() != null &&  quote.getEndDate() != null){
+		ScQuote quote = getManagedBean().getScQuote();
+		if (quote.getStartDate() != null &&  quote.getEndDate() != null){
 
-			 if(quote.getEndDate().after(quote.getStartDate())){
-				 getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
-			 } else{
-				 throw new EpException(MessageConst.ERROR_760164);
-			 }
-		 }
-	 }
-		
-	 /**
- 	 * Gets the time diff by passing start date and end date
- 	 * @param dateOne the date one
- 	 * @param dateTwo the date two
- 	 * @return the time diff
- 	 */
- 	public static double getTimeDiff(Date dateOne, Date dateTwo) {
-		 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-		 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
-		 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
-		 double time  = (double) Integer.valueOf(hours) + (double)(Integer.valueOf(mins))/60;
-		
-		 return time;
-	 }
+			if(quote.getEndDate().after(quote.getStartDate())){
+				getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
+			} else{
+				throw new EpException(MessageConst.ERROR_760164);
+			}
+		}
+	}
 
-	 /**
- 	 * Submit prompt action.
- 	 * before submit simple quote, it shows 
- 	 * the prompt(dialogue) that Total time Supplier responds for this Simple Quote
- 	 */
- 	public void submitPromptAction() {
-		 ScQuote quote = getManagedBean().getScQuote();
-		 getManagedBean().setAutoUpdate(Boolean.TRUE);
-		 if (quote.getEndDate() != null){
-			 Date dateOne = new Date();
-			 Date dateTwo = quote.getEndDate();
-			 StringBuilder message  = new StringBuilder();
-			 if(quote.getEndDate().after(dateOne)){
-				 long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
-				 String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
-				 String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
-				 message.append("Total time Supplier responds for this Simple Quote is only")
-				 .append(" ")
-				 .append(hours)
-				 .append(" ")
-				 .append("Hour(s)")
-				 .append(" ")
-				 .append("and")
-				 .append(" ")
-				 .append(mins)
-				 .append(" ")
-				 .append("minute(s)")
-				 .append(" ")
-				 .append("Proceed?");
-				 getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
-				
-			 } else{
-				 message.append("End date and time cannot be less than current date and time. Please change the end date and time to more than current time."); 
-				 getManagedBean().setConformDlgBtnFlag(Boolean.FALSE);
-			 }
-			 RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
-			 getManagedBean().setPromptMessage(message.toString());
-		 }
-	 }
-		
+	/**
+	 * Gets the time diff by passing start date and end date
+	 * @param dateOne the date one
+	 * @param dateTwo the date two
+	 * @return the time diff
+	 */
+	public static double getTimeDiff(Date dateOne, Date dateTwo) {
+		long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+		String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
+		String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
+		double time  = (double) Integer.valueOf(hours) + (double)(Integer.valueOf(mins))/60;
+
+		return time;
+	}
+
+	/**
+	 * Submit prompt action.
+	 * before submit simple quote, it shows 
+	 * the prompt(dialogue) that Total time Supplier responds for this Simple Quote
+	 */
+	public void submitPromptAction() {
+		ScQuote quote = getManagedBean().getScQuote();
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if (quote.getEndDate() != null){
+			Date dateOne = new Date();
+			Date dateTwo = quote.getEndDate();
+			StringBuilder message  = new StringBuilder();
+			if(quote.getEndDate().after(dateOne)){
+				long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
+				String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
+				String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
+				message.append("Total time Supplier responds for this Simple Quote is only")
+				.append(" ")
+				.append(hours)
+				.append(" ")
+				.append("Hour(s)")
+				.append(" ")
+				.append("and")
+				.append(" ")
+				.append(mins)
+				.append(" ")
+				.append("minute(s)")
+				.append(" ")
+				.append("Proceed?");
+				getManagedBean().setConformDlgBtnFlag(Boolean.TRUE);
+
+			} else{
+				message.append("End date and time cannot be less than current date and time. Please change the end date and time to more than current time."); 
+				getManagedBean().setConformDlgBtnFlag(Boolean.FALSE);
+			}
+			RequestContext.getCurrentInstance().execute("sqConformDlg.show()");
+			getManagedBean().setPromptMessage(message.toString());
+		}
+	}
+
 	/*
 	 * public void calcDuration(Integer duration) throws Exception { ScQuote
 	 * quote = getManagedBean().getScQuote(); if
@@ -2776,7 +2789,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * 
 	 * }
 	 */
-		
+
 	/**
 	 * Tab menu listener.
 	 *  to view selected tab
@@ -2795,7 +2808,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		procurementTypeEvent();
 	}
-	
+
 	/**
 	 * Ptj locality.
 	 * show the ptj locality in supplier location in supplier criteria.
@@ -2865,7 +2878,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		this.getManagedBean().setSearchFromCreatedDate(null);
 		this.getManagedBean().setSearchToCreatedDate(null);
 	}
-	
+
 	/**
 	 * Adds the clone item spec.
 	 * add clone item to simple quote to item list
@@ -2890,7 +2903,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(serviceTplSpecBean.getSpecMaster() !=null){
 			serviceSpecMaster = serviceTplSpecBean.getSpecMaster();
 		}
-		
+
 		try {
 			if(getManagedBean().getSelectedQuote() != null && getManagedBean().getSelectedQuote().getQuoteDocs().size()>0) {
 				getManagedBean().getSelectedQuote();
@@ -2906,21 +2919,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						} 
 					}
 				}
-				
+
 				reqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 				TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
 				cloneSpecMaster = resDTO.getSpecMaster();
-				
+
 				// product Tpl Spec master
 				if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)){
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
 					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
-					
+
 					// non clone spec master
 					if(productTplSpecBean.getSpecMaster() !=null && productTplSpecBean.getSpecMaster().getTplSpecQuestions() != null){
 						getManagedBean().setProdQuestions(prodSpecMaster.getTplSpecQuestions());
 					}
-					
+
 					if(getManagedBean().getProdQuestions() != null && getManagedBean().getProdQuestions().size()>0){
 						List<TplSpecQuestion> prodQuestions = getManagedBean().getProdQuestions();
 						questions.addAll(prodQuestions);
@@ -2931,13 +2944,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 
 					prodSpecMaster.setTplSpecQuestions(questions);
-					
+
 					if (getManagedBean().getScQuote().getMultipleQuote()){ // for multiple quote
 						prodSpecMaster.setEstCostReq(Boolean.TRUE);
 					} else{
 						prodSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-					
+
 					productTplSpecBean.setSpecMaster(prodSpecMaster);
 					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 
@@ -2950,7 +2963,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					if(serviceTplSpecBean.getSpecMaster() !=null && serviceTplSpecBean.getSpecMaster().getTplSpecQuestions() !=null){
 						getManagedBean().setServiceQuestions(serviceSpecMaster.getTplSpecQuestions());
 					}
-					
+
 					if(getManagedBean().getServiceQuestions() != null && getManagedBean().getServiceQuestions().size()>0){
 						List<TplSpecQuestion> serviceQuestions = getManagedBean().getServiceQuestions();
 						questions.addAll(serviceQuestions);
@@ -2960,13 +2973,13 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						questions.addAll(cloneQuestions);
 					}
 					serviceSpecMaster.setTplSpecQuestions(questions);
-					
+
 					if (getManagedBean().getScQuote().getMultipleQuote()){ // for multiple quote
 						serviceSpecMaster.setEstCostReq(Boolean.TRUE);
 					} else{
 						serviceSpecMaster.setEstCostReq(Boolean.FALSE);
 					}
-					
+
 					serviceTplSpecBean.setSpecMaster(serviceSpecMaster);
 					getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 				}
@@ -2975,7 +2988,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			templateSpecSO = null;
 		}
 	}
-	
+
 	/*
 	 * private List<TplSpecQuestion> cloneTplSpecQuetions(TplSpecMaster
 	 * cloneMaster ,TplSpecMaster tplSpecMaster) throws IllegalAccessException,
@@ -2994,7 +3007,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * question.setTplSpecEstimations(cloneTplSpecEstimations(question)); }
 	 * questions.add(question); } return questions; }
 	 */
-	
+
 	/*
 	 * private List<TplSpecEstimation> cloneTplSpecEstimations(TplSpecQuestion
 	 * question) throws IllegalAccessException, InstantiationException,
@@ -3007,8 +3020,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * specEstimation.setBrandNew(Boolean.TRUE);
 	 * specEstimations.add(specEstimation); } return specEstimations; }
 	 */
-	
-	
+
+
 	/**
 	 * Clone action.
 	 * show the clone item popup to clone item to item list.
@@ -3018,16 +3031,16 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(productOrService != null){
 			if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)){
 				getManagedBean().setProductOrService(productOrService);
-				
+
 			} else if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_SERVICE)){
 				getManagedBean().setProductOrService(productOrService);
 			}
 		}
-		
+
 		getManagedBean().searchCloneItemSpec();
 		RequestContext.getCurrentInstance().execute("cloneItemSpec.show()");
 	}
-	
+
 	/**
 	 * Supplier list listener.
 	 * populate supplers from selected item from catalogue or comapare page in supplier criteria.
@@ -3069,7 +3082,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 	/**
 	 * Business nature listener.
 	 * adding bussiness natures from lov popup in supplier criteria.
@@ -3083,17 +3096,17 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			natureQuoteCriterias = new ArrayList<ScBusinessNatureQuoteCriteria>();
 		}
 		if (businessNatures != null){
-			 for (PmBusinessNature busiNature : businessNatures) {
-				 ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
-				   natureQuoteCriteria.setPmBusinessNature(busiNature);
-				   natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
+			for (PmBusinessNature busiNature : businessNatures) {
+				ScBusinessNatureQuoteCriteria natureQuoteCriteria = new ScBusinessNatureQuoteCriteria();
+				natureQuoteCriteria.setPmBusinessNature(busiNature);
+				natureQuoteCriteria.setQuote(getManagedBean().getScQuote());
 				if(getManagedBean().getBusinessNatureCriterias() == null || getManagedBean().getBusinessNatureCriterias().isEmpty()){
 					natureQuoteCriterias.add(natureQuoteCriteria);
 					getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
 
 				} else {
 					List<Long> busNatureIds = new ArrayList<Long>();
-					 for (ScBusinessNatureQuoteCriteria bnCriteria : getManagedBean().getBusinessNatureCriterias()) {
+					for (ScBusinessNatureQuoteCriteria bnCriteria : getManagedBean().getBusinessNatureCriterias()) {
 						busNatureIds.add(bnCriteria.getPmBusinessNature().getBusinessNatureId());
 					}
 					if (busNatureIds.size() > 0) {
@@ -3109,7 +3122,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 	/**
 	 * Govt seller listener.
 	 * adding govt sellers from lov popup in supplier criteria.
@@ -3124,18 +3137,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if (orgProfiles != null){
 			IQTSupplierSO qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
 			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
-		
-		   for (PmOrgProfile orgProfile : orgProfiles) {
-			   reqDTO.setSupplierId(orgProfile.getOrgProfileId());
-			   
-			   ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
-			   scQuoteSupplier.setSmSupplier(qtSupplierSO
-					   .retrieveGovSellerById(reqDTO)
-					   .getSmSupplier());
-			   scQuoteSupplier.setQuote(getManagedBean().getScQuote());
-			   govtSuppliers.add(scQuoteSupplier);
+
+			for (PmOrgProfile orgProfile : orgProfiles) {
+				reqDTO.setSupplierId(orgProfile.getOrgProfileId());
+
+				ScQuoteSupplier scQuoteSupplier = new ScQuoteSupplier();
+				scQuoteSupplier.setSmSupplier(qtSupplierSO
+						.retrieveGovSellerById(reqDTO)
+						.getSmSupplier());
+				scQuoteSupplier.setQuote(getManagedBean().getScQuote());
+				govtSuppliers.add(scQuoteSupplier);
 			}
-		   getManagedBean().setGovtSellers(govtSuppliers);
+			getManagedBean().setGovtSellers(govtSuppliers);
 		}
 	}
 
@@ -3160,7 +3173,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(panelSuppliers.isEmpty()){
 					panelSuppliers.add(scQuoteSupplier);
 					getManagedBean().setPanelSuppliers(panelSuppliers);
-                   
+
 				} else {
 					List<Long> supplierIds = new ArrayList<Long>();
 					for (ScQuoteSupplier quoteSupplier :  getManagedBean().getPanelSuppliers()) {
@@ -3179,7 +3192,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 	/**
 	 * Debug logger.
 	 *
@@ -3224,7 +3237,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				.append("|");
 			} 
 		}
-		
+
 		// By locality criteria
 		if(getManagedBean().isByLocality()){
 			// Locality Criteria
@@ -3283,14 +3296,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				.append("|");
 			} 
 		}
-		
+
 		// selected suppliers criteria
 		if(getManagedBean().getSupplierList() != null && getManagedBean().getSupplierList().size()>0){
 			for (ScQuoteSupplier scQuoteSupplier : getManagedBean().getSupplierList()) {
 				supplierCriteria.append(scQuoteSupplier.getSmSupplier().getSupplierId())
 				.append(",");
 			}
-			
+
 			if(supplierCriteria.length() > 0){
 				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
 				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
@@ -3299,7 +3312,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} 
 
 		}
-		
+
 		// add in rejected Supplier Id
 		if(getManagedBean().getScQuote().getRejectedSupplierList() != null && getManagedBean().getScQuote().getRejectedSupplierList().size()>0){
 			for (Long rejectedSupplierId : getManagedBean().getScQuote().getRejectedSupplierList()) {
@@ -3313,11 +3326,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				.append("|");
 			} 
 		}
-		
+
 		criteria.append("recordStatus^1");
 		return criteria.toString();
 	}
-	
+
 	/**
 	 * render the view based on the task id
 	 * page navigation to simple quote
@@ -3349,7 +3362,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(directPurchaseDataType.getPidId() != null) {
 				purchaseInDefaultId = Long.valueOf(directPurchaseDataType.getPidId());
 			}
-			
+
 			quoteReqDTO.setQuoteId(quoteId);
 			quoteReqDTO.setFetchSubEntity(true);
 			QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
@@ -3408,40 +3421,55 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(scQuote.getLocationDivisionCriterias() != null) {
 				if(scQuote.getLocationDivisionCriterias().size() >0){
 					for (ScLocationDivisionCriteria locationDivisionCriteria : scQuote.getLocationDivisionCriterias() ) {
-						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 						divisions.add(locationDivisionCriteria.getPmDivision());
-						tplSpecZoneLoc.setPmDivision(locationDivisionCriteria.getPmDivision());
 					}
 				}
 			}	
 			List<PmDistrict> districts = new ArrayList<PmDistrict>();
 			if(scQuote.getLocationDistrictCriterias() != null) {
 				if(scQuote.getLocationDistrictCriterias().size() >0){
-
 					for (ScLocationDistrictCriteria locationDistrictCriteria : scQuote.getLocationDistrictCriterias() ) {
-						TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
 						districts.add(locationDistrictCriteria.getPmDistrict());
-						tplSpecZoneLoc.setPmDistrict(locationDistrictCriteria.getPmDistrict());
 					}
 				}
 			}
+
 			List<PmState> states = new ArrayList<PmState>();
 			if(districts.isEmpty() && divisions.isEmpty()){
 				if(scQuote.getLocationStateCriterias() != null) {
 					if(scQuote.getLocationStateCriterias().size() >0){
 						for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
 							states.add(locationStateCriteria.getPmState());
-							TplSpecZoneLoc tplSpecZoneLoc  = new TplSpecZoneLoc();
-							tplSpecZoneLoc.setPmState(locationStateCriteria.getPmState());
 						}
 					}
 				}
+
 			}
 
+			// division 
+			String locLovel = "";
+			if(scQuote.getSupplierLocationLevel() != null){
+				if(scQuote.getSupplierLocationLevel().getParameterCode().equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)){
+					locLovel = ParameterConst.LOCATION_LEVEL_DIVISION;
+					if(scQuote.getLocationStateCriterias() != null) {
+						if(scQuote.getLocationStateCriterias().size() >0){
+							for (ScLocationStateCriteria locationStateCriteria : scQuote.getLocationStateCriterias() ) {
+
+								if(locationStateCriteria.getPmState() != null){
+									PmState state = locationStateCriteria.getPmState();
+									if (!(state.getStateName().equalsIgnoreCase("SARAWAK") || state.getStateName().equalsIgnoreCase("SABAH"))) {
+										states.add(locationStateCriteria.getPmState());
+									}	
+								}
+							}
+						}
+					}
+				}	
+			}
 			if(states.size() > 0 || divisions.size() > 0 || districts.size() > 0){
 				getManagedBean().setByLocality(Boolean.TRUE);
 				List<TreeNode>	LocTrees = new ArrayList<TreeNode>();
-				LocTrees.add(LocationSingleton.getInstance().constuctLocationTree("", states,
+				LocTrees.add(LocationSingleton.getInstance().constuctLocationTree(locLovel, states,
 						districts, divisions, null,TplSpecZoneLoc.class));
 				getManagedBean().setLocationTrees(LocTrees.get(0).getChildren());
 			} else{
@@ -3522,7 +3550,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// duration calc
 			dateListener();
 			procurementTypeEvent();
-		
+
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(res.getDocStatus().longValue());
 			StatusResDTO statusResDTO = getStatusSO().retrieveStatusByStatusId(statusReqDTO);
@@ -3534,7 +3562,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					scQuote.getCurrentStatus(),
 					scQuote.getRemarks(),
 					ScSQRemark.class));
-			
+
 
 			if(scQuote.isZonal()){
 				zoneEvent();
@@ -3548,7 +3576,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "simpleQuote");
 		}
 	}
-	
+
 	/**
 	 * render the supplier view based on the task id from notification.
 	 */
@@ -3695,7 +3723,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(scQuoteZone!=null){
 			List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
 			List<TplSpecZoneDtl> tplSpecDtls = new ArrayList<TplSpecZoneDtl>();
-			
+
 			for (TreeNode rootNode : treeNodes) {
 				results = new ArrayList<TplSpecZoneLoc>();
 
@@ -3741,7 +3769,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return scQuoteZone;
 	}
-	
+
 
 	/**
 	 * save supplier response details.
@@ -3765,7 +3793,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
 			}
-			
+
 			// update is submitted by supplier
 			if(quote.getScQuoteSuppliers() != null && quote.getScQuoteSuppliers().size()>0){
 				for (ScQuoteSupplier scQuoteSupplier : quote.getScQuoteSuppliers() ) {
@@ -3829,11 +3857,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
 		} else {*/
-			// spki
-			RequestContext.getCurrentInstance().execute("spki_dlg.show();");
+		// spki
+		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 		//}
 	}
-	
+
 	/**
 	 * Update supplier response.
 	 * and also authenticating gpki and spki before submit price details
@@ -3856,27 +3884,27 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// gpki
 			/*if(quote.getProcurementType() != null && 
 					quote.getProcurementType().getParameterCode().equals(ParameterConst.PROC_TYPE_G2G)){
-				
+
 				if (null != pmDigiSign) {
 					updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
 							quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.TRUE));
 				}
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide();");	
 			} else {*/
-			
-				// spki
-				if (null != pmDigiSign) {
-					updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
-							quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.FALSE));
-				}
-				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
-				pmDigiSign.setSignedData(signedData);
+
+			// spki
+			if (null != pmDigiSign) {
+				updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
+						quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.FALSE));
+			}
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
+			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
+			pmDigiSign.setSignedData(signedData);
 			//}
-				
+
 			// hide blcok ui
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-		
+
 			// tpl spec - service
 			if(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList() != null){
 				specAnswers.addAll(getManagedBean().getServiceTemplateSpecBean().getSpecAnswerList());
@@ -3893,14 +3921,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					}
 				}
 			}
-			
+
 			// remarks
 			finalizeRemarks(quote.getRemarks());
 			reqDTO.setSpecAnswers(specAnswers);
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmDigiSign(pmDigiSign);
-			
+
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setQuoteSupplier(getManagedBean().getScQuoteSupplier());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
@@ -3950,7 +3978,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		> Country Code.
 		> 00000000680427115037000000000KT0143162-VMY
 		> IC No. , Registration No., Country code*/
-		
+
 		FacesScopes facesScopes = new FacesScopes();
 		StringBuilder sb = new StringBuilder();
 		SmSupplier smSupplier = null;
@@ -3971,7 +3999,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 		}
-		
+
 		sb.append(getManagedBean().getScQuote().getQuoteNo())
 		.append("|")
 		.append(facesScopes.getUserSessionBean().getIdentificationNo())
@@ -3988,7 +4016,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return orginalText;
 	}
 
-	
+
 	/**
 	 * retrieve Supplier details in the supplier View.
 	 * gets simple quote details to view quote details after supplier submits.
@@ -4009,7 +4037,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtlForSupplier(quoteReqDTO);
 		scQuote = quoteResDTO.getQuoteBidDtl();
 
-		
+
 		// service and product
 		if(quoteResDTO.getProductAnswersTpl() != null && quoteResDTO.getProductAnswersTpl().size() >0){
 			productTplSpecBean.setSpecAnswerList(quoteResDTO.getProductAnswersTpl());
@@ -4024,7 +4052,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			serviceTplSpecBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
 			getManagedBean().setServiceTemplateSpecBean(serviceTplSpecBean);
 		} 
-		
+
 		if(quoteResDTO.getScQuoteSupplier() != null){
 			ScQuoteSupplier sQuoteSupplier = quoteResDTO.getScQuoteSupplier();
 
@@ -4047,9 +4075,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			getManagedBean().setScQuoteSupplier(sQuoteSupplier);
 		}
-		
+
 		getManagedBean().setScQuote(scQuote);
-		
+
 		// remarks
 		scQuote.setRemarks(initializeRemarks(
 				scQuote, 
@@ -4068,7 +4096,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		ScQuote quote = getManagedBean().getScQuote();
 		if (quote.isZonal()){
 			if(quote.getQuoteZone() == null){
-			     quoteZone = new  ScQuoteZone();
+				quoteZone = new  ScQuoteZone();
 			} else{
 				quoteZone = quote.getQuoteZone();
 			}
@@ -4079,7 +4107,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			if(getManagedBean().getLocationLevel() == null){
 				getManagedBean().setLocationLevel(ParameterConst.LOCATION_LEVEL_DISTRICT);	
 			}
-		
+
 		} else {
 			quote.setZonal(Boolean.FALSE);
 			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null 
@@ -4096,7 +4124,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 			getManagedBean().setLocationLevel(null);
 		}
-		
+
 		// product
 		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 			TemplateSpecHelper.getInstance().updateZoneDtl(
@@ -4108,11 +4136,11 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			TemplateSpecHelper.getInstance().updateZoneDtl(
 					getManagedBean().getServiceTemplateSpecBean().getSpecMaster(), quoteZone);
 		}
-		
+
 		quote.setQuoteZone(quoteZone);
 		this.getManagedBean().setScQuote(quote);
 	}
-	
+
 	/**
 	 * For the multiple quote, estimated price is show to key in in item list.
 	 * 
@@ -4121,7 +4149,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public void noOfQuoteEvent() {
 		ScQuote quote = getManagedBean().getScQuote();
 		if (quote.getMultipleQuote()){ // for multiple quote
-			
+
 			//get Template spec backing bean and manage bean
 			PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
 			TemplateSpecBackingBean templateSpecBackingBean = (TemplateSpecBackingBean) portletSession.getAttribute("templateSpecBackingBean");
@@ -4151,8 +4179,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setEstCostReq(Boolean.FALSE);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Prepare re quote.
 	 *
@@ -4229,7 +4257,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		procurementTypeEvent();
 	}
 
-	
+
 
 	/**
 	 * Locality loc level event.
@@ -4269,8 +4297,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		catalogueBackingBean.getManagedBean().setSimpleQuoteFlag(true);
 		return "catalogueSearch";
 	}
-	
-	
+
+
 	/**
 	 * Cancel zone pop up.
 	 */
@@ -4291,7 +4319,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	public SelectItem[] getRadioButtonCodeValues(String parameterType , boolean g2gSeller) {
 		return getRadioButtonCodeValuesBySearchBean(parameterType, null , g2gSeller);
 	}
-	
+
 	/**
 	 * Gets the radio button code values by search bean.
 	 *
@@ -4322,7 +4350,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					items[i] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName() , null , g2gSeller);
 				}
 			}
-			
+
 			i++;
 		}
 		return items;
@@ -4364,7 +4392,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return mofNo;
 	}
-	
+
 	/**
 	 * On tab change.
 	 *
@@ -4376,7 +4404,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			getSupplierListCriteria();
 		}
 	}
-	
+
 	/**
 	 * Gets the pm state ids.
 	 *
@@ -4436,7 +4464,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Delete state or div or dist.
 	 *
@@ -4455,7 +4483,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			distIds =  getPmDistrictsIds(tplSpecZoneLocs);
 		}
-		
+
 		List<ZonesBean> results  =  new ArrayList<ZonesBean>();
 		List<ZonesBean> list  = getManagedBean().getBeans();
 		if(list != null && list.size()>0){
@@ -4470,46 +4498,46 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							bean = zonesBean;
 							results.add(bean);
 						}
-						
+
 					} else {
-					       if(zonesBean.getTplSpecZoneLocs() != null && zonesBean.getTplSpecZoneLocs().size()>0){
-						   List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
-						   for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean.getTplSpecZoneLocs()) {
+						if(zonesBean.getTplSpecZoneLocs() != null && zonesBean.getTplSpecZoneLocs().size()>0){
+							List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
+							for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean.getTplSpecZoneLocs()) {
 
-							if(TplSpecZoneLoc.getPmState() != null){
+								if(TplSpecZoneLoc.getPmState() != null){
 
-								if(stateIds != null && stateIds.size()>0){
+									if(stateIds != null && stateIds.size()>0){
 
-									if(!stateIds.contains(TplSpecZoneLoc.getPmState().getStateId())){
-										specZoneLocs.add(TplSpecZoneLoc);
+										if(!stateIds.contains(TplSpecZoneLoc.getPmState().getStateId())){
+											specZoneLocs.add(TplSpecZoneLoc);
+										}
 									}
-								}
 
-							} else if(TplSpecZoneLoc.getPmDivision() != null){
-								if(divIds != null && divIds.size()>0){
-									if(!divIds.contains(TplSpecZoneLoc.getPmDivision().getDivisionId())){
-										specZoneLocs.add(TplSpecZoneLoc);
+								} else if(TplSpecZoneLoc.getPmDivision() != null){
+									if(divIds != null && divIds.size()>0){
+										if(!divIds.contains(TplSpecZoneLoc.getPmDivision().getDivisionId())){
+											specZoneLocs.add(TplSpecZoneLoc);
+										}
 									}
-								}
-							} else if(TplSpecZoneLoc.getPmDistrict() != null){
-								if(distIds != null && distIds.size()>0){
-									if(!distIds.contains(TplSpecZoneLoc.getPmDistrict().getDistrictId())){
-										specZoneLocs.add(TplSpecZoneLoc);
+								} else if(TplSpecZoneLoc.getPmDistrict() != null){
+									if(distIds != null && distIds.size()>0){
+										if(!distIds.contains(TplSpecZoneLoc.getPmDistrict().getDistrictId())){
+											specZoneLocs.add(TplSpecZoneLoc);
+										}
 									}
 								}
 							}
+							bean.setTplSpecZoneLocs(specZoneLocs);
 						}
-						bean.setTplSpecZoneLocs(specZoneLocs);
+						results.add(bean);
 					}
-					results.add(bean);
 				}
 			}
-		  }
 			getManagedBean().setBeans(results);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Check zone exists or not.
 	 *
@@ -4519,21 +4547,21 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl) {
 		List<Long> results = new ArrayList<Long>();
 		//if (index < 0 || isEditZone) {
-			List<ZonesBean> list  = getManagedBean().getBeans();
-			if(list != null && list.size() >0){
+		List<ZonesBean> list  = getManagedBean().getBeans();
+		if(list != null && list.size() >0){
 
-				for (ZonesBean zonesBean : list) {
-					TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+			for (ZonesBean zonesBean : list) {
+				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
 
-					if(zone != null){
+				if(zone != null){
 
-						if(zone.getZoneName().equals(tplSpecZoneDtl.getZoneName())){
-							throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
-						}
+					if(zone.getZoneName().equals(tplSpecZoneDtl.getZoneName())){
+						throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
 			}
+		}
 		//}
 		return results;
 	}
@@ -4607,7 +4635,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 		}
 	}
-	
+
 	/**
 	 * Constuct tree node with disable childs.
 	 *
@@ -4665,7 +4693,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		}
 		return root;
 	}
-	
+
 	public boolean isSupplierUser() {
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("SUPPLIER_ADMIN")
@@ -4681,7 +4709,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		FacesScopes fs = new FacesScopes();
 		return  fs.hasRoleUser("GOVT_SELLER");
 	}
-	
+
 	/**
 	 * Gpki sign action.
 	 * Authenticating gpki before update bpm.
@@ -4723,8 +4751,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private IQuoteSO getQuoteSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQuoteSO.class);
 	}
-	
-	
+
+
 	/**
 	 * Gets the status so.
 	 *
@@ -4733,5 +4761,5 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	private IStatusSO getStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 	}
-	
+
 }
