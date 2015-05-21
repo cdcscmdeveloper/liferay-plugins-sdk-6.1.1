@@ -502,7 +502,7 @@ public class LOADetailBackingBean extends
 		debugLogger("frequencyScheduleValidation");
 		FacesScopes facesScopes = new FacesScopes();
 		Calendar startDate = null;
-		Calendar EndDate = null;
+		Calendar endDate = null;
 		
 		if(scQtSchedule.getStartYear() == null || scQtSchedule.getStartYear().isEmpty()){
 			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.year",
@@ -541,17 +541,17 @@ public class LOADetailBackingBean extends
 	    }
 	   
 	    if(scQtSchedule.getEndYear() != null && scQtSchedule.getEndMonth() != null){
-	    	EndDate = Calendar.getInstance();
-	    	EndDate.clear();
-	    	EndDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(DateUtils.getDays(contractExpDate)),0,0,0);
+	    	endDate = Calendar.getInstance();
+	    	endDate.clear();
+	    	endDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(getDays(contractExpDate)),0,0,0);
 	    }
 	    
-	    if(startDate != null && EndDate != null){
-	    	if (startDate.after(EndDate)) {
+	    if(startDate != null && endDate != null){
+	    	if (startDate.after(endDate)) {
 	    		throw new EpException("Start date must be before end date");
 	    	}
 
-	    	if (EndDate.before(startDate)) {
+	    	if (endDate.before(startDate)) {
 	    		throw new EpException("End date must be after start date");
 	    	}
 
@@ -561,13 +561,23 @@ public class LOADetailBackingBean extends
 						"Start date should be in contract validity period.");
 			}
 
-			if (!(EndDate.getTime().after(contractEffDate)
-					&& (EndDate.getTime().before(contractExpDate)) || contractExpDate.equals(EndDate.getTime()))) {
+			if (!(endDate.getTime().after(contractEffDate)
+					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
 				throw new EpException(
 						"End date should be in contract validity period.");
 			}
 	    }
 
+	}
+	/**
+	 * @ param Date date
+	 * @return days of month
+	 */
+	private	static	String	getDays(Date date){
+		Calendar c1 = Calendar.getInstance();
+		c1.setTime(date);
+		String	days	=	String.valueOf(c1.get(Calendar.DAY_OF_MONTH));
+		return days;
 	}
 	
 	/**
@@ -2618,7 +2628,16 @@ public class LOADetailBackingBean extends
 				&& contractSignerUser.getUserId() != null) {
 			scLoa.setContractSigner(contractSignerUser);
 		}
-
+		
+		// supplier witness details
+		/*if(scLoa.getScLoaWitnesses() != null && scLoa.getScLoaWitnesses().size()>0){
+			List<ScLoaWitness> witnesses = scLoa.getScLoaWitnesses();
+			ScLoaWitness  loaWitness = getManagedBean().getLoaSupplierWitness();
+			if(loaWitness != null){
+				int index  = witnesses.indexOf(loaWitness);
+				scLoa.getScLoaWitnesses().set(index, loaWitness);	
+			}
+		}*/
 	}
 
 	/**
