@@ -666,6 +666,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		debugLogger("addToSiteVisitDtl");
 		BriefingZoneBean briefingZoneBean = this.getManagedBean()
 				.getBsvDtlBean();
+		briefingZoneBean.getScQtBsv().setAllSiteVisitReq(true);
 		if (briefingZoneBean.getBriefingList() != null
 				&& !briefingZoneBean.getBriefingList().isEmpty()) {
 			List<ScQtBsvDtl> selectedBsvDtls = briefingZoneBean
