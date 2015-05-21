@@ -19,7 +19,7 @@
 		</p:outputPanel>
 		<p:commandButton 
 			update="spkiOutputPanel" partialSubmit="true" process="@form" value="#{lbl['lbl.btn.submit']}"
-			action="#{supplierProposalDetailBackingBean.spkiSignAction}"
+			action="#{supplierProposalDetailBackingBean.spkiSignAction}" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
 			actionListener="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
 		</p:commandButton>
