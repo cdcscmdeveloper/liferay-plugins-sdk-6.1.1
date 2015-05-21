@@ -113,24 +113,22 @@
 										style="width:340px;">
 										<p:ajax event="change"
 											listener="#{contractRequestBackingBean.userGroupChangeListener()}"
-											process="@this" update="approverpickList" />
+											process="@this" update="approverDropdown" />
 										<f:selectItems
 											value="#{contractRequestBackingBean.getUserGroupDropdown()}" />
 									</p:selectOneMenu>
 								</h:panelGrid>
 								<p:spacer height="1" />
-								<h:panelGrid style="width:500px">
-									<p:pickList id="approverpickList"
-										value="#{contractRequestBackingBean.managedBean.approverModel}"
+								<h:panelGrid columns="2">
+									<h:outputLabel value="#{lbl['lbl.rpt.approverName']}" />
+									<p:selectOneMenu id="approverDropdown"
 										disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
-										var="data" itemValue="#{data}" itemLabel="#{data}"
-										showTargetControls="true" filterMatchMode="contains">
-										<f:facet name="sourceCaption">#{lbl['lbl.fl.ptj.available']}</f:facet>
-										<f:facet name="targetCaption">#{lbl['lbl.fl.ptj.selected']}</f:facet>
-										<p:column style="width:75%;">
-											<h:outputText value="#{data}" />
-										</p:column>
-									</p:pickList>
+										value="#{contractRequestBackingBean.managedBean.selectedApprover}"
+										style="width:340px;">
+										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
+										<f:selectItems
+											value="#{contractRequestBackingBean.managedBean.approverList}" />
+									</p:selectOneMenu>
 								</h:panelGrid>
 							</h:panelGrid>
 						</p:panel>
