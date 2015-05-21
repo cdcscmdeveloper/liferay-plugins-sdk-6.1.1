@@ -161,15 +161,24 @@
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationTypeId}"
 						style="width:200px" disabled="#{!registrationBackingBean.managedBean.smSuppOwner.brandNew}">
 						<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-						<p:ajax event="change" update="txtIdNumber"
+						<p:ajax event="change" update="txtIdNumber,pnlIdentLabel"
 							listener="#{registrationBackingBean.suppOwnerIdTypeChange}" />
 					</p:selectOneMenu>
 					
 					<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" /></td>
 
 				<td class="tdTitle">
-					<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
+					<p:outputPanel id="pnlIdentLabel">
+					<c:choose>
+							<c:when test="#{registrationBackingBean.managedBean.smSuppOwner.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+								<p:outputLabel value="#{lbl['lbl.sm.individual.newicno']}" />
+							</c:when>
+							<c:otherwise>
+								<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
+							</c:otherwise>
+					</c:choose>
 					<p:outputLabel value="*" styleClass="mandatory" />
+					</p:outputPanel>
 				</td>
 				<td class="tdContent">
 					<c:choose>

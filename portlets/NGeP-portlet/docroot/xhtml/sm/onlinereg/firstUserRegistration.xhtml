@@ -189,7 +189,7 @@
 						<p:selectOneMenu id="cmbUsrIdenType" required="#{!empty param['disableValidation']}" rendered="#{!registrationBackingBean.managedBean.sameAsOwner}"
 								label="#{lbl['lbl.sm.identificationtype']}" value="#{registrationBackingBean.managedBean.smPersonnel.identificationTypeId}">
 								<f:selectItems value="#{registrationBackingBean.pmIdTypeDropdownValues()}" />
-								<p:ajax event="change" update="txtIdNumber"
+								<p:ajax event="change" update="txtIdNumber,pnlFirstUserIdenType"
 									listener="#{registrationBackingBean.personnelIdTypeChange}" />
 						</p:selectOneMenu>
 						<p:message id="cmbUsrIdenTypeMsg" for="cmbUsrIdenType" display="icon" />
@@ -200,7 +200,16 @@
 					</td>
 
 					<td class="tdTitle">
-						<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
+						<p:outputPanel id="pnlFirstUserIdenType">
+						<c:choose>
+							<c:when test="#{registrationBackingBean.managedBean.smPersonnel.identificationType.parameterCode == SupplierManagementConst.NEW_IC}">
+								<p:outputLabel value="#{lbl['lbl.sm.individual.newicno']}" />
+							</c:when>
+							<c:otherwise>
+								<p:outputLabel value="#{lbl['lbl.sm.identificationno']}" />
+							</c:otherwise>
+						</c:choose>
+						</p:outputPanel>
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td class="tdContent">
