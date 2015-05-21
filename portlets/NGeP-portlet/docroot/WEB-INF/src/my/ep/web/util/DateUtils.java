@@ -280,11 +280,14 @@ public class DateUtils {
 	 */
 	public static Date addDays(Date date, int day){
 		
-		Calendar c1 = Calendar.getInstance();
-		c1.setTime(date);
-		c1.add(Calendar.DATE, day);
-		
-		return c1.getTime();
+		Date time = null;
+		if(date != null){
+			Calendar c1 = Calendar.getInstance();
+			c1.setTime(date);
+			c1.add(Calendar.DATE, day);
+			time =  c1.getTime();
+		}
+		return time;
 	}
 	
 	/**
