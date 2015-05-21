@@ -135,6 +135,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -3197,5 +3198,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 			}
 		}
+	}
+	/**
+	 * Get preparef PTJ condition for construct the LOV listing
+	 * @return String
+	 */
+	public String getPreparedPTJCondition() {
+		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+				retrieveMinistryOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId()).getOrgProfileId();
+		return condition;
 	}
 }
