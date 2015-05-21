@@ -83,7 +83,7 @@
 				<ac:paginator for="unspscTableID"></ac:paginator>
 
 
-				<p:column width="15%">
+				<p:column width="15%" sortBy="#{unspscObj.unspscCode}">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
@@ -110,7 +110,7 @@
 
 
 				</p:column>
-				<p:column>
+				<p:column sortBy="#{unspscObj.unspscTitle}">
 					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
 				</f:facet>

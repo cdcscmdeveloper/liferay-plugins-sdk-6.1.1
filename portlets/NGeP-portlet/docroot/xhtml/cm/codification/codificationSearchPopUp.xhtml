@@ -59,7 +59,7 @@
 			currentPageReportTemplate="/ {totalPages}"
 			rowsPerPageTemplate="5,10,15">
 
-			<p:column width="25%">
+			<p:column width="25%" sortBy="#{unspscObj1.unspscCode}">
 				<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
@@ -86,7 +86,7 @@
 
 
 			</p:column>
-			<p:column>
+			<p:column sortBy="#{unspscObj1.unspscTitle}">
 				<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
 				</f:facet>

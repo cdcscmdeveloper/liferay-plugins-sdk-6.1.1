@@ -37,7 +37,7 @@ import org.primefaces.model.SortOrder;
 public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPagingDataModel<T> {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(PagingDataModel.class);
-	
+
 	private boolean firstLoad;
 	private boolean defaultFirstLoad;
 	private int first;
@@ -57,7 +57,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		// TODO - temporary set first load default as true.
 		this(componentId, true);
 	}
-	
+
 	/**
 	 * PagingDataModel Contructor
 	 * 
@@ -75,6 +75,17 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		this.firstLoad = defaultFirstLoad;
 	}
 
+	public PagingDataModel(String componentId, boolean defaultFirstLoad, String sortField) {
+		if (StringUtils.isBlank(componentId)) {
+			throw new IllegalArgumentException("Invalid componentId.");
+		}
+		
+		this.componentId = componentId;
+		this.defaultFirstLoad = defaultFirstLoad;
+		this.firstLoad = defaultFirstLoad;
+		this.sortField = sortField;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -84,7 +95,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final T getRowData(String rowKey) {
 		@SuppressWarnings("unchecked")
 		List<T> list = (List<T>)getWrappedData();
-		
+
 		for (T obj : list) {
 			if (obj.toString().equals(rowKey))
 				return obj;
@@ -102,7 +113,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final Object getRowKey(T key) {
 		return key.toString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<T> getList() {
 		return (List<T>)super.getWrappedData();
@@ -119,33 +130,64 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 			SortOrder sortOrder, Map<String, String> filters) {
 		debugLogger("load");
 		
+
 		int pageNo = (int)(first / pageSize) + 1;
 		ISearchResultBean<T> resultBean = null;
-		
+
 		if (pageNo != this.pageNo) {
 			// retrieve new list from DB.
+			
 			this.pageNo = pageNo;
 			this.sortField = sortField;
 			this.sortOrder = sortOrder;
 			super.setPageSize(pageSize);
-			
+
 			if (firstLoad) {
 				this.searchBean = createSearchBean();
-				
 				resultBean = pageChangeListener(searchBean);
 			}  else {
 				firstLoad = true;
-				
+
 				resultBean = new SearchResultBean<T>();
 			}
-			
+
 			return updatePagingResults(resultBean);	
-		} else {
+		}else if(sortOrder != this.sortOrder){
+
+			// retrieve new list from DB based on order.
+			this.pageNo = pageNo;
+			this.sortField = sortField;
+			this.sortOrder = sortOrder;
+			super.setPageSize(pageSize);
+
+			if (firstLoad) {
+				this.searchBean = createSearchBean();
+				
+				if(this.getSortField()!=null){
+					boolean sortAsc = true;	
+					if(this.getSortOrder().toString().equalsIgnoreCase("ASCENDING")){
+						sortAsc = true;
+					}else{
+						sortAsc = false;
+					}
+
+					SearchOrderBean orderBean = new SearchOrderBean(this.getSortField(), sortAsc);
+
+					searchBean.getSortColumns().add(orderBean);
+				}
+				resultBean = pageChangeListener(searchBean);
+			}  else {
+				firstLoad = true;
+
+				resultBean = new SearchResultBean<T>();
+			}
+			return updatePagingResults(resultBean);	
+		}else {
 			// return cache list
 			return (List<T>)getWrappedData();
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -154,21 +196,21 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	@Override
 	public final void reloadData() {
 		debugLogger("reloadData");
-		
+
 		UIComponent component = new FacesScopes().findComponentById(
 				FacesContext.getCurrentInstance().getViewRoot(), 
 				componentId);
-		
+
 		if (component instanceof DataTable) {
 			DataTable dataTable = (DataTable)component;
-			
+
 			dataTable.reset();
 			//dataTable.loadLazyData();
 		}
-		
+
 		resetValue();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -177,12 +219,12 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	@Override
 	public final void resetData() {
 		debugLogger("resetData");
-		
+
 		firstLoad = defaultFirstLoad;
-		
+
 		reloadData();
 	}
-	
+
 	/**
 	 * Temporary fix 
 	 * Primefaces Issue 6081: java.lang.ArithmeticException: / by zero.
@@ -193,15 +235,15 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public void setRowIndex(int rowIndex) {
 		int newRowIndex = -1;
 		int pageSize = super.getPageSize();
-		
-        if(rowIndex == -1 || pageSize == 0)
-        	newRowIndex = -1;
-        else
-        	newRowIndex = (rowIndex % pageSize);
-        
-        super.setRowIndex(newRowIndex);
-    }
-	
+
+		if(rowIndex == -1 || pageSize == 0)
+			newRowIndex = -1;
+		else
+			newRowIndex = (rowIndex % pageSize);
+
+		super.setRowIndex(newRowIndex);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -210,32 +252,35 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	@Override
 	public final ISearchBean<T> createSearchBean() {
 		String componentId = this.getComponentId();
+		
 		SearchBean<T> searchBean = new SearchBean<T>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
 				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
-		
+
 		int pageNo = this.getPageNo();
 		int pageSize = this.getPageSize();
 		String sortField = this.getSortField();
 		SortOrder sortOrder = this.getSortOrder();
-		
+
 		debugLogger("pageNo:" + pageNo);
 		debugLogger("pageSize:" + pageSize);
 		debugLogger("sortField:" + sortField);
 		debugLogger("sortOrder:" + sortOrder);
 		
+		log.info("sortField2:" + sortField);
+
 		searchBean.setNavigatable(true);
 		searchBean.setPageNo(pageNo);
 		searchBean.setNoOfRowsPerPage(pageSize);
-		
+
 		if (StringUtils.isNotBlank(sortField)) {
 			List<SearchOrderBean> sortColumns = new ArrayList<SearchOrderBean>();
 			sortColumns.add(new SearchOrderBean(sortField, !SortOrder.DESCENDING.equals(sortOrder)));
 			searchBean.setSortColumns(sortColumns);
 		}
-		
+
 		return searchBean;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -245,18 +290,19 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final List<T> updatePagingResults(ISearchResultBean<T> resultBean) {
 		int totalRecord = 0;
 		List<T> list = null;
-		
+
 		if (resultBean != null) {
+
 			totalRecord = resultBean.getTotalRecord();
 			list = resultBean.getResultList();
 		}
-		
+
 		setRowCount(totalRecord);
 		setWrappedData(list);
-		
+
 		return list;
 	}
-	
+
 	/**
 	 * This method will invoke when there is page change event.
 	 * 
@@ -265,7 +311,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	 * @return	ISearchResultBean instance.
 	 */
 	protected abstract ISearchResultBean<T> pageChangeListener(ISearchBean<T> searchBean);
-	
+
 	private void resetValue() {
 		first = 0;
 		pageNo = 0;
@@ -273,13 +319,13 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		sortOrder = null;
 		searchBean = null;
 	}
-	
+
 	private void debugLogger(Object message) {
-        if(log.isDebugEnabled()) {
-            log.debug(message);
-        }
-        log.info(message);
-    }
+		if(log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
 
 	/**
 	 * @return the first
