@@ -10,7 +10,7 @@
 	
 		<ui:fragment
 			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypeItem}">
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+			<h:panelGrid columns="2" width="100%" border = "0"  columnClasses="columnWidth20">
 				<p:outputLabel value="#{lbl['lbl.sc.award.type']}" style="width:130px"></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
@@ -67,7 +67,7 @@
 		<ui:fragment
 			rendered="#{noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId.parameterCode eq ParameterConst.recommendTypePackage}">
 			
-			<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+			<h:panelGrid columns="2" width="100%" border="0"  columnClasses="columnWidth20">
 				<p:outputLabel value="#{lbl['lbl.sc.award.type']}" ></p:outputLabel>
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.awardType}"></h:outputText>
