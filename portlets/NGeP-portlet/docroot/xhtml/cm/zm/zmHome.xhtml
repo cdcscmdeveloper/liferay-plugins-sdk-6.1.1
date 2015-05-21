@@ -49,12 +49,12 @@
 					<p:commandLink
 						actionListener="#{zoneMaintenanceBackingBean.editZone(zoneTree,index)}"
 						process="@this" update=":form:ZL" oncomplete="ZL.show();">
-						<p:graphicImage value="/css/images/design/edit.png" />
+						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.cm.zm.edit']}" />
 					</p:commandLink>
 					<p:commandLink process="@this"
 						update="zoneDetailsDataTable, @([id$=zmMsgs])"
 						actionListener="#{zoneMaintenanceBackingBean.deleteTreeNodes(zoneTree)}">
-						<p:graphicImage value="/css/images/design/trash.png" />
+						<p:graphicImage value="/css/images/design/trash.png" title="#{lbl['lbl.btn.delete']}" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
