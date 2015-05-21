@@ -35,17 +35,13 @@
         
                         <p:column style="width:30%;" headerText="#{lbl['lbl.ct.ptj']}" 
                              rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-                              <h:panelGroup 
-                                   rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile != null}">
+                              <h:panelGroup>
                                    <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}" 
                                      saveObject="agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile"
                                      postUpdateListener="agreementBackingBean.validateDuplicateAgencyPtj(#{index},agreementBackingBean.managedBean.ctAgencySigner,agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile)"
 						             value="#{agSignerVar.orgProfile.orgName}" readonly="true" size="35" 
 						            conditionField="#{agreementBackingBean.retrievePtjBylovCondition()}" update="@form">
 					              </ac:lov>
-					         </h:panelGroup>
-					         <h:panelGroup  rendered="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.parentOrgProfile == null}">
-					               <h:outputText value="#{agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgName}" style="float:left;"/>
 					         </h:panelGroup>
 					     </p:column>
 			
