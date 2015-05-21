@@ -7,22 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<div class="ppRightBtn">
-		<p:blockUI block=":form" widgetVar="blockWidget">
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-		</p:blockUI>
-		<p:outputPanel id="spkiOutputPanel">
-			<ac:spkiPopup id="spkiPopup"
-				password="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.password}"
-				challengeAns1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeAns1}"
-				challengeQues1="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.challengeQues1}"
-				postSignAction="#{supplierProposalDetailBackingBean.submitSupplierProposal(spkiBackingBean.pmDigiSign)}" />
-		</p:outputPanel>
-		<p:commandButton 
-			update="spkiOutputPanel" partialSubmit="true" process="@form" value="#{lbl['lbl.btn.submit']}"
-			action="#{supplierProposalDetailBackingBean.spkiSignAction}" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
-			actionListener="#{supplierProposalDetailBackingBean.managedBean.spkiBackingBean.getChallengeQuestions}"
-			onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-		</p:commandButton>
-		
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.submit']}" process="@all" rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}"
+			action="#{supplierProposalDetailBackingBean.submitSupplierProposal}"/>
+	</div>
 	</div>
 </ui:composition>

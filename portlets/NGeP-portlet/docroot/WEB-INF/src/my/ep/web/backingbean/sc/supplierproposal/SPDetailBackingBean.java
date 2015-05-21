@@ -321,7 +321,9 @@ public class SPDetailBackingBean extends
 	/**
 	 * Method to submit the Supplier Proposal details
 	 */
-	public void submitSupplierProposal(PmDigiSign digiSign) {
+	public void submitSupplierProposal() {
+		
+		PmDigiSign digiSign = null;
 		debugLogger("submitSupplierProposal");
 		
 		retrievePaidUpCapitalNdDeclarationDtls();
@@ -350,7 +352,7 @@ public class SPDetailBackingBean extends
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
 			
-			// spki 
+		/*	// spki 
 			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 			String originalText = prepareOriginalText(getManagedBean().getSmSupplier());
@@ -360,7 +362,7 @@ public class SPDetailBackingBean extends
 			if (null != digiSign) {
 				updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
 						scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(), originalText);
-			}
+			}*/
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
@@ -375,7 +377,7 @@ public class SPDetailBackingBean extends
 					.isAgreeWithIntegrityPact());
 			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
 					.isAgreeWithOthersTermsConditions());
-			reqDTO.setDigiSignData(digiSign);
+			//reqDTO.setDigiSignData(digiSign);
 
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
