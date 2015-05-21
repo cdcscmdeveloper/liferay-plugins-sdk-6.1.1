@@ -2082,6 +2082,16 @@ public class QTDetailBackingBean extends
 										approvalRequest.get(i)
 												.setAppRequestRemark(
 														approvalRemark);
+									} else {
+										if (null == approvalRequest.get(i).getAppRequestRemark()) {
+											ScQtAppRequestRemark approvalRemark = new ScQtAppRequestRemark();
+											approvalRemark
+													.setApprovalRequest(approvalRequest
+															.get(i));
+											approvalRequest.get(i)
+													.setAppRequestRemark(
+															approvalRemark);
+										}
 									}
 								}
 							}
