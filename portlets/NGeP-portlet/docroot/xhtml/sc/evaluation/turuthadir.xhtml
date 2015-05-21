@@ -86,7 +86,7 @@
 				disabled="#{evaluationBackingBean.managedBean.readOnly}"
 				oncomplete="evaluationMeetingAttendanceDeletePopUp.show();"
 				update="@([id$=#{evaluationmeetingAttendanceDeleteId}])"
-				process="@this,turuthadir" partialSubmit="true">
+				process="@this" partialSubmit="true">
 				<f:setPropertyActionListener
 					target="#{evaluationBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />

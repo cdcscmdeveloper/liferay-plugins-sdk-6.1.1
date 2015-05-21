@@ -94,25 +94,24 @@
 				action="#{evaluationMeetingBackingBean.addMeetingAction}"
 				oncomplete="meetingDtls.paginator.endLink.click();"
 				update="evaluationmeetingDetails" />
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this,evaluationmeetingDetails" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				partialSubmit="true"
 				oncomplete="confirmMeetingDtlsDeletePopUp.show();"
 				update="@([id$=#{confirmmeetingdtlsDeleteId}])">
 				<f:setPropertyActionListener
 					target="#{evaluationMeetingBackingBean.managedBean.templateSpecBean.selectAll}"
 					value="#{false}" />
 			</p:commandButton>
-			<ui:param name="confirmmeetingdtlsDeleteId"
-				value="confirmmeetingdtlsDeleteId"></ui:param>
-			<ac:confirmationPopup id="#{confirmmeetingdtlsDeleteId}"
-				widget="confirmMeetingDtlsDeletePopUp" width="400" height="100"
-				okAction="evaluationMeetingBackingBean.deleteMeetingDtls"
-				title="#{lbl['lbl.sc.meeting.details']}"
-				content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
-				update="@([id$=evaluationmeetingDetails])" />
-
 
 		</div>
+		<ui:param name="confirmmeetingdtlsDeleteId"
+			value="confirmmeetingdtlsDeleteId"></ui:param>
+		<ac:confirmationPopup id="#{confirmmeetingdtlsDeleteId}"
+			widget="confirmMeetingDtlsDeletePopUp" width="400" height="100"
+			okAction="evaluationMeetingBackingBean.deleteMeetingDtls"
+			title="#{lbl['lbl.sc.meeting.details']}"
+			content="#{lbl['lbl.sc.dialog.confirm.meeting.dtls']}"
+			update="@([id$=evaluationmeetingDetails])" />
 
 	</p:panel>
 
@@ -229,7 +228,7 @@
 
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this,evaluationpreparecommittee" partialSubmit="true"
+				process="@this" partialSubmit="true"
 				oncomplete="confirmMeetingCommitteemembersDeletePopUp.show();"
 				update="@([id$=#{confirmmeetingCommitteemembersDeleteId}])">
 				<f:setPropertyActionListener
