@@ -1531,7 +1531,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    		 ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
 	         ctAgreementParty.setOfficer(new PmUser());
 		     ctAgreementParty.setOrgProfile(new PmOrgProfile());
-		     ctAgreementParty.getOrgProfile().setParentOrgProfile(new PmOrgProfile());
 		     getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 		} else {
 			 throw new EpException(MessageConst.WARN_755003);
