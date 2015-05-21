@@ -3349,7 +3349,7 @@ public class SmApplicationBackingBean extends
 							.getCategoryL1Code()
 							.equalsIgnoreCase(
 									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
-				validCat = SmApplicationUtil.validateIctCatCode(
+				validCat = SmApplicationUtil.validateIctCatCode(getManagedBean().getBusinessTypeVal(),
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getSelectedCategory());
 			}
