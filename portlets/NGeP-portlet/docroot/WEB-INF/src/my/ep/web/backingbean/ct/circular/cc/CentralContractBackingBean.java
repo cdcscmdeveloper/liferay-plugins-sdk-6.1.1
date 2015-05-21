@@ -90,10 +90,12 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -1309,4 +1311,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
+	
+	 public String retrieveMinistryBylovCondition() {
+		  
+	      String condition = "recordStatusFlg^1|";
+		  condition = condition +OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
+		  condition = condition + "orgTypeCode.parameterCode^"+ ParameterConst.ORG_TYPE_MINISTRY;
+	       return condition;
+      }
 }

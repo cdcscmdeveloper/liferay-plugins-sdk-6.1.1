@@ -1968,8 +1968,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
   
   public String retrievePtjBylovCondition() {
 	  
-	     OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
-	 	  String condition = "recordStatusFlg^1|";
+	      String condition = "recordStatusFlg^1|";
 		  condition = condition +OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
 		  condition = condition + "orgProfileId^"+  retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 	       return condition;
