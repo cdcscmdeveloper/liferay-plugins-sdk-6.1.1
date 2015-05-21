@@ -8,10 +8,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-
-		<p:messages showDetail="true" autoUpdate="true" closable="true"	showSummary="true"></p:messages>
 	
+		<p:messages id="itemCodeSearchMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false"></p:messages>
 		<ui:include src="codificationSearch.xhtml" />
-				
+
 	</ui:define>
 </ui:composition>
