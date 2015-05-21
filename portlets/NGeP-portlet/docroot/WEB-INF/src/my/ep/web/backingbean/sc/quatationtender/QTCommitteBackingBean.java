@@ -33,6 +33,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -70,11 +71,13 @@ import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -137,23 +140,6 @@ public class QTCommitteBackingBean extends
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		}
 
-		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
-				.getCloneSearchQTDataModel();
-
-		if (cloneSearchQTDataModel == null) {
-			getManagedBean().setCloneSearchQTDataModel(
-					new QTPagingDataModel("clonesearchCommitteid",
-							getManagedBean().getCloneQtnTenderSearchBean()));
-		}
-
-		IPagingDataModel<PmUser> userSearCommitteeDataModel = getManagedBean()
-				.getUserSearchCommitteeDataModel();
-		if (userSearCommitteeDataModel == null) {
-			getManagedBean().setUserSearchCommitteeDataModel(
-					new UserCommitteePagingDataModel(
-							"existingcommitteesearchid", getManagedBean()
-									.getUserCommitteeSearchBean()));
-		}
 	}
 
 	/**
@@ -256,17 +242,27 @@ public class QTCommitteBackingBean extends
 								SearchOperator.OPERATOR_EQUALS.value(), idtype,
 								true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()
-					.getParentOrgProfile()) {
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 				userSearchBean
 						.getDataFilterBeans()
-						.add(new SearchFilterBean(
-								"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(), this
-										.getManagedBean().getQt()
-										.getPmOrgProfile()
-										.getParentOrgProfile()
-										.getOrgProfileId()));
+						.add(new SearchMultiFilterBean(
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile."
+												+ OrgProfileUtil
+														.getSearchBeanParentString(OrganizationType.MINISTRY
+																.value()),
+										SearchOperator.OPERATOR_EQUALS.value(),
+										retrieveMinistryOrgProfile(
+												this.getManagedBean().getQt()
+														.getPmOrgProfile()
+														.getOrgProfileId())
+												.getOrgProfileId()),
+
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										ParameterConst.ORG_TYPE_OTHERS,
+										SearchCondition.CONDITION_OR.value())));
 			}
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -277,6 +273,7 @@ public class QTCommitteBackingBean extends
 	 * Search user action.
 	 */
 	public void searchUserAction() {
+
 		getManagedBean().getUserSearchCommitteeDataModel().reloadData();
 	}
 
@@ -452,16 +449,23 @@ public class QTCommitteBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()
-					.getParentOrgProfile()) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"pmOrgProfile.parentOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(), this
-										.getManagedBean().getQt()
-										.getPmOrgProfile()
-										.getParentOrgProfile()
-										.getOrgProfileId()));
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+				qtSearchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"pmOrgProfile."
+										+ OrgProfileUtil
+												.getSearchBeanParentString(OrganizationType.MINISTRY
+														.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+
+								retrieveMinistryOrgProfile(
+										this.getManagedBean().getQt()
+												.getPmOrgProfile()
+												.getOrgProfileId())
+										.getOrgProfileId()
+
+						));
 			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -473,6 +477,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void cloneSearchQtAction() {
 		getManagedBean().setCloneCommitteeSelectQt(null);
+
 		getManagedBean().getCloneSearchQTDataModel().reloadData();
 	}
 
@@ -754,7 +759,17 @@ public class QTCommitteBackingBean extends
 		// logic to check whether committe will allow for clone or not..
 		// checkIsSpecCommitteFormOrNot();
 		getManagedBean().setCloneCommitteeSelectQt(null);
-		getManagedBean().getCloneSearchQTDataModel().reloadData();
+
+		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
+				.getCloneSearchQTDataModel();
+
+		if (null == cloneSearchQTDataModel) {
+			getManagedBean().setCloneSearchQTDataModel(
+					new QTPagingDataModel("clonesearchCommitteid",
+							getManagedBean().getCloneQtnTenderSearchBean()));
+		}
+		getManagedBean().getCloneSearchQTDataModel().resetData();
+
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
@@ -799,7 +814,17 @@ public class QTCommitteBackingBean extends
 	 */
 	public void addCommitteMember(ScQtCommittee committee, String titleName) {
 		debugLogger("addCommitteMember");
-		getManagedBean().getUserSearchCommitteeDataModel().reloadData();
+
+		IPagingDataModel<PmUser> userSearCommitteeDataModel = getManagedBean()
+				.getUserSearchCommitteeDataModel();
+		if (null == userSearCommitteeDataModel) {
+			getManagedBean().setUserSearchCommitteeDataModel(
+					new UserCommitteePagingDataModel(
+							"existingcommitteesearchid", getManagedBean()
+									.getUserCommitteeSearchBean()));
+		}
+		getManagedBean().getUserSearchCommitteeDataModel().resetData();
+
 		getManagedBean().getUserCommitteeSearchBean().setName(null);
 		getManagedBean().getUserCommitteeSearchBean().setIdentificationType(
 				null);
@@ -1675,8 +1700,8 @@ public class QTCommitteBackingBean extends
 		Long currentQtStatus = this.getManagedBean().getQt().getQtStatus()
 				.getStatusId();
 
-		
-		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(currentQtStatus) <= 0 && this.getManagedBean().isMaintanceFlow()) {
+		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(currentQtStatus) <= 0
+				&& this.getManagedBean().isMaintanceFlow()) {
 			return true;
 		}
 
@@ -1710,7 +1735,7 @@ public class QTCommitteBackingBean extends
 					isChairpersonRequired(committee.getScCommitteeMembers());
 					isSecretaryRequired(committee.getScCommitteeMembers());
 					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
-				}else{
+				} else {
 					committee.setApprovalReq(false);
 					throw new EpException(MessageConst.ERROR_760275);
 				}
