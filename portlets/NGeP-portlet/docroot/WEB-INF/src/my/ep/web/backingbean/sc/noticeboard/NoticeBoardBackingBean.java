@@ -97,6 +97,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.QTDocumentsBackingBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -148,6 +149,7 @@ public class NoticeBoardBackingBean extends
 	public static Logger log = Logger.getLogger(NoticeBoardBackingBean.class);
 	private static final String NAV_TO_QTN_TENDER_DETAILS_PAGE = "tenderNoticeDetailScreen.xhtml?faces-redirect=true";
 	private static final String MOF_INVALID_MSG_KEY = "lbl.sc.mof.invalid.orinactive";
+	private static final String CAP_CHAR = "^";
 	
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
 	private boolean visible;
@@ -1039,17 +1041,19 @@ public class NoticeBoardBackingBean extends
 									pmCategoryL3.getCategoryL3Id()));
 
 				}
-
+				
+				int level = 0;
 				// Filter By - Ministry
 				PmOrgProfile ministryProfile = getManagedBean()
 						.getMinistryProfile();
 				if (ministryProfile != null
 						&& ministryProfile.getOrgProfileId() != null) {
+					level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY));
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("parentOrg1.ORG_PROFILE_ID",
+							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ministryProfile.getOrgProfileId()));
-
 				}
 				
 				// Filter By - PTJ Group
@@ -1057,8 +1061,10 @@ public class NoticeBoardBackingBean extends
 						.getPtjGroupProfile();
 				if (ptjGroupProfile != null
 						&& ptjGroupProfile.getOrgProfileId() != null) {
+					level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP));
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("parentOrg2.ORG_PROFILE_ID",
+							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ptjGroupProfile.getOrgProfileId()));
 
@@ -1066,8 +1072,11 @@ public class NoticeBoardBackingBean extends
 				// Filter By - PTJ
 				PmOrgProfile ptjProfile = getManagedBean().getPtjProfile();
 				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {
+					
+				level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.LVL_ORG_PROFILE_PTJ));
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("org.ORG_PROFILE_ID",
+							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ptjProfile.getOrgProfileId()));
 
@@ -1207,6 +1216,7 @@ public class NoticeBoardBackingBean extends
 				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
 				reqDTO.setQtSearchBean(searchBean);
 				reqDTO.setCurrentTab(selectedTab);
+				reqDTO.setLevels(level);
 				NoticeBoardResDTO resDTO = qtNoticeBoardSO
 						.searchQTNoticeBoard(reqDTO);
 
@@ -1613,49 +1623,36 @@ public class NoticeBoardBackingBean extends
 	 * @return orgProfileId
 	 */
 	public String constuctConditionFields() {
-		
+
 		String parentOrgProfile = null;
 		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
 				.getOrgProfileId();
 		Long PTJGroupOrgProfileId = this.getManagedBean().getPtjGroupProfile()
 				.getOrgProfileId();
 		if (null != PTJGroupOrgProfileId) {
-			parentOrgProfile = constuctConditionFields(ParameterConst.ORG_PROFILE_PTJ_GROPUP_LEVEL)
-					+ PTJGroupOrgProfileId;
+			parentOrgProfile = OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ CAP_CHAR + PTJGroupOrgProfileId;
 		} else if (null != MinistryOrgProfileId) {
-			parentOrgProfile = constuctConditionFields(ParameterConst.ORG_PROFILE_MINISTRY_LEVEL)
-					+ MinistryOrgProfileId;
+			parentOrgProfile = OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_MINISTRY)
+					+ CAP_CHAR + MinistryOrgProfileId;
 		} else {
 			parentOrgProfile = "";
 		}
 		return parentOrgProfile;
 	}
-	/**
-	 * @param levelcode
-	 * @return
-	 */
-	private String constuctConditionFields(int levelcode){
-		
-		String parentOrgProfile = null;
-		if(levelcode == 2){
-			parentOrgProfile = "parentOrgProfile.parentOrgProfile.orgProfileId^";
-		} else if (levelcode == 1) {
-			parentOrgProfile = "parentOrgProfile.orgProfileId^";
-		} else {
-			parentOrgProfile = "";
-		}
-		
-		return  parentOrgProfile;
-	}
+	
 
 	public String constuctConditionFieldsForPTJGroup() {
 
 		String parentOrgProfile = null;
 		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
 				.getOrgProfileId();
-		 if (null != MinistryOrgProfileId) {
-			parentOrgProfile = constuctConditionFields(ParameterConst.ORG_PROFILE_PTJ_GROPUP_LEVEL)
-					+ MinistryOrgProfileId;
+		if (null != MinistryOrgProfileId) {
+			parentOrgProfile = OrgProfileUtil
+					.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
+					+ CAP_CHAR + MinistryOrgProfileId;
 		} else {
 			parentOrgProfile = "";
 		}
