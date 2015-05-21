@@ -27,10 +27,10 @@
 							id="cancelReson" label="#{lbl['lbl.sm.mof.reg.reason.delete']}"
 							validatorMessage="#{lbl['lbl.sm.mof.reg.reason.delete']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}"
 							value="#{backingBean.managedBean.supplierRemarks}"
-							maxlength="1000">
+							maxlength="2500">
 							<p:ajax event="blur" process="@this"
 								update="cancelReson,@([id$=Msg])" />
-							<f:validateLength maximum="1000" />
+							<f:validateLength maximum="2500" />
 						</p:inputTextarea> <p:message id="cancelResonMsg" for="cancelReson" display="icon" /></td>
 				</tr>
 				<tr>
