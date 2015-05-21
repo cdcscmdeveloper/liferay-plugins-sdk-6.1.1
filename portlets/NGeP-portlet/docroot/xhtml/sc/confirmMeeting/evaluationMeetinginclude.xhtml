@@ -67,8 +67,8 @@
 
 				<p:calendar value="#{meeting.meetingDate}" showOn="button"
 					mindate="#{evaluationMeetingBackingBean.managedBean.today}"
-					id="meetingDate" label="#{lbl['lbl.sc.meeting.date']}"
-					required="true"
+					style="width:200px;" id="meetingDate"
+					label="#{lbl['lbl.sc.meeting.date']}" required="true"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"></p:calendar>
 				<p:message id="confirmMeetingId" for="meetingDate" display="icon"></p:message>
 
@@ -192,7 +192,8 @@
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeeMember.memberRole.parameterCode eq 'S'}">
-					<h:outputText value="#{evaluationMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleSecretary)}"
+					<h:outputText
+						value="#{evaluationMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleSecretary)}"
 						rendered="#{committeeMember.memberRole.parameterCode eq 'S'}" />
 				</ui:fragment>
 				<ui:fragment
