@@ -90,12 +90,10 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -130,7 +128,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	ContractBackingBean ctBB = null;
-	private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
+	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+	
+	//private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
 	
 	 /**
 		 * This constructor method used to initialize the variable on start up
@@ -147,10 +147,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 				getManagedBean().getCircularVer().setStatus(status);
 				 /*Initialization of contract details backing bean*/
-				ContractBackingBean ctBB = new ContractBackingBean(fileDirectory);
+				/* initializeRemarks();
+				 ctBB = new ContractBackingBean(fileDirectory);
 			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			     initializeRemarks();
-			}
+		*/	}
 			/*Setting login user id*/
 			if(isCentralContractAdmin()) 
 				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
@@ -173,6 +173,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	public void preRenderCircular() {			
 			renewSesionObject();
+			 getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "circularBase.xhtml?faces-redirect=true");
 	}
@@ -279,11 +280,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			   getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			}
-		    
-			getManagedBean().setRemarkList(resDTO.getRemarkList());
-			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
 			
-			ctBB = new ContractBackingBean(fileDirectory);
+			 ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 			initializeRemarks();
@@ -665,8 +663,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 			
 			if((getManagedBean().isUpdateAction() || (getManagedBean().getCircular() != null && getManagedBean().getCircular().getLatestCircularVer() != null)) && 
-				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
-				throw new EpException(MessageConst.ERROR_750018, new String[]{"central circular update"});
+					outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && getManagedBean().getAttachmentList().isEmpty()){
+					throw new EpException(MessageConst.ERROR_750018, new String[]{"central circular update"});
 			}
 		}
 		 finally {
@@ -682,7 +680,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		UploadedFile item = event.getFile();
 		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
 		
-		String filePath = fileDirectory;
+		String filePath = getManagedBean().getFileDirectory();
 		File file = new File(filePath);
 		file.mkdirs();
 		filePath = filePath + "/" + attachmentFormat.format(item.getFileName(), null);
@@ -1311,12 +1309,4 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
 	}
-	
-	 public String retrieveMinistryBylovCondition() {
-		  
-	      String condition = "recordStatusFlg^1|";
-		  condition = condition +OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
-		  condition = condition + "orgTypeCode.parameterCode^"+ ParameterConst.ORG_TYPE_MINISTRY;
-	       return condition;
-      }
 }
