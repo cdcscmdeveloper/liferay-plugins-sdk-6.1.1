@@ -61,9 +61,9 @@
 
 			</h:panelGrid>
 		</p:panel>
-			<p:spacer height="5" />
 			<!-- Committee Members table -->
-			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true">
+			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true" 
+			rendered="#{noticeBoardBackingBean.managedBean.committeeName ne null:'true':'false'}">
 							
 				<p:dataTable id="committeeId"
 					value="#{noticeBoardBackingBean.managedBean.scCommitteeMembers}"
@@ -89,7 +89,6 @@
 				</p:dataTable>
 			</p:panel>
 			<!-- End of Committee members -->
-			<p:spacer height="5" />
 			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<ui:include src="/xhtml/sc/noticeboard/offerpricesuppliers.xhtml"></ui:include>
 			</c:if>
