@@ -1548,10 +1548,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 					}
 					
-					List<String> source = new ArrayList<String>(); 
 					getManagedBean().getApproverList().clear();
 					for(PmUserGroupUser groupUser : firstPmUserGroup) {
-						source.add(groupUser.getPmUser().getUserName());
 						getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
 					}
 					if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
