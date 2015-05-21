@@ -324,31 +324,6 @@
 		</property>
 	</bean>
 
-	<bean id="CT_AGENCY" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="agencyId" />
-
-		<property name="daoClass" value="my.ep.persistence.dao.ct.dtl.CtAgencyDAO" />
-		<!-- <property name="searchMethod" value="findColor" /> -->
-		<property name="columns">
-			<list>
-				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="orgProfile.parentOrgProfile.orgName" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.ct.ministry.name" />
-					<!-- <property name="columnWidth" value="150" /> -->
-				</bean>
-				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="orgProfile.orgName" />
-					<property name="bundleFile"
-						value="messageprovider-config.bundles.labels.labels" />
-					<property name="bundleKey" value="lbl.ct.ptj.name" />
-					<!-- <property name="columnWidth" value="150" /> -->
-				</bean>
-			</list>
-		</property>
-	</bean>
-
 	<bean id="CT_CONTRACT" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="contractId" />
 
