@@ -12,13 +12,13 @@
 					<h:outputLabel value="#{lbl['lbl.ct.circular.no']} " />
 				</td>
 				<td class="header-info-text">
-					#{centralContractBackingBean.managedBean.circular.circularNo == null ? '-- System Generated --' : centralContractBackingBean.managedBean.circular.circularNo}
+					#{centralContractBackingBean.managedBean.circular.circularNo == null ? lbl['lbl.ct.system.generated'] : centralContractBackingBean.managedBean.circular.circularNo}
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.ct.circular.name']} " />
 				</td>
 				<td class="header-info-text">
-					#{centralContractBackingBean.managedBean.circularVer.name == null ? '-- User Input --' : centralContractBackingBean.managedBean.circularVer.name}
+					#{centralContractBackingBean.managedBean.circularVer.name == null ? lbl['lbl.ct.user.input'] : centralContractBackingBean.managedBean.circularVer.name}
 				</td>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.ct.status']} " />
