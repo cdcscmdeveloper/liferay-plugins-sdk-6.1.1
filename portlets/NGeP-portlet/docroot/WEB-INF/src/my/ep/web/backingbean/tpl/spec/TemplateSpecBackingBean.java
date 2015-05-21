@@ -531,6 +531,25 @@ public class TemplateSpecBackingBean extends
 	}
 
 	/**
+	 * Get fulfilement type dropdown list
+	 * 
+	 * @return	the list of SelectItem instance
+	 */
+	public SelectItem[] getFulfilmentTypeDropdownList(TplSpecMaster specMaster) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> filteredList = new ArrayList<String>();
+		filteredList.add(ParameterConst.FULFILMENT_TYPE_SCHEDULED);
+		filteredList.add(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), filteredList));
+
+		return super.getDropdownValuesBySearchBean(
+				ParameterTypeConst.FULFILMENT_TYPE, searchBean);
+	}
+	
+	/**
 	 * Get price type dropdown list
 	 * 
 	 * @return	the list of SelectItem instance
