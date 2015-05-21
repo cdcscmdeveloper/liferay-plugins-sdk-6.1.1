@@ -63,7 +63,7 @@
 		</p:panel>
 			<!-- Committee Members table -->
 			<p:panel header="#{noticeBoardBackingBean.managedBean.committeeName}" toggleable="true" 
-			rendered="#{noticeBoardBackingBean.managedBean.committeeName ne null:'true':'false'}">
+			rendered="#{noticeBoardBackingBean.managedBean.committeeName ne null?'true':'false'}">
 							
 				<p:dataTable id="committeeId"
 					value="#{noticeBoardBackingBean.managedBean.scCommitteeMembers}"
