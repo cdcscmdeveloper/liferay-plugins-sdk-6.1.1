@@ -50,14 +50,19 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.ct.panel.remarks.attachment']}" toggleable="true">		
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.attachment']}" escape="false"/><br/><br/>
 		<table style="width: 100%">
 			<tr>
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 						<tr>
-							<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.remarks']}" /></td>
+							<td class="TableFieldLeft" width="24%">
+								<h:panelGrid columns="2" style="float:right;">
+				    				<p:outputLabel value="*" styleClass="mandatory" />
+									<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
+								</h:panelGrid>
+							</td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{amendmentBackingBean.managedBean.contractVer.ap201Remark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
@@ -90,7 +95,12 @@
 				<td width="50%" valign="top">
 					<table style="width: 100%">
 				    <tr>
-				    	<td class="TableFieldLeft" width="24%"><h:outputLabel value="#{lbl['lbl.txt.attachment']}" /></td>
+				    	<td class="TableFieldLeft" width="24%">
+				    		<h:panelGrid columns="2" style="float:right;">
+				    			<p:outputLabel value="*" styleClass="mandatory" />
+				    			<p:outputLabel value="#{lbl['lbl.txt.attachment']}" />
+				    		</h:panelGrid>
+				    	</td>
 			           	<td class="TableFieldRight">
 				        	<p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
 					        	update="lampiran1, uploadDlg1" value="#{lbl['lbl.ct.upload.attach.files']}" />
