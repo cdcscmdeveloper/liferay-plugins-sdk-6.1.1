@@ -41,7 +41,7 @@
 						<td><p:calendar id="datecreatedfrm" showOn="button"
 								value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								size="29" readonlyInput="true" style="width:180px;">
+								size="29" readonlyInput="true" style="width:210px;">
 								<p:ajax event="dateSelect" update="datecreatedto" />
 							</p:calendar></td>
 						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
@@ -49,7 +49,7 @@
 								value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 								mindate="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								size="29" readonlyInput="true" style="width:180px;">
+								size="29" readonlyInput="true" style="width:210px;">
 								<f:attribute name="startDate"
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
 							</p:calendar></td>
@@ -60,7 +60,7 @@
 								value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
 								id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								style="width:180px;">
+								style="width:210px;">
 								<p:ajax event="dateSelect" update="pbdateTo" />
 							</p:calendar></td>
 						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
@@ -69,7 +69,7 @@
 								mindate="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								style="width:180px;">
+								style="width:210px;">
 								<f:attribute name="startDate"
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}" />
 								<f:validator validatorId="dateRangeValidator" />
@@ -81,7 +81,7 @@
 								value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
 								id="cldateFrom" showOn="button" size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								style="width:180px;">
+								style="width:210px;">
 								<p:ajax event="dateSelect" update="cldateTo" />
 							</p:calendar></td>
 						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
@@ -90,7 +90,7 @@
 								mindate="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
 								size="29" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								style="width:180px;">
+								style="width:210px;">
 								<f:attribute name="startDate"
 									value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}" />
 								<f:validator validatorId="dateRangeValidator" />
@@ -99,7 +99,7 @@
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-						<td><p:selectOneMenu style="width: 178px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{evaluationMeetingBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
 									value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'QT')}"></f:selectItems>
