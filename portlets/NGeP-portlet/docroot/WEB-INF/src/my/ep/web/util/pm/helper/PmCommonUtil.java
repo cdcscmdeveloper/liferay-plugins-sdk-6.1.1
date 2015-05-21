@@ -1068,6 +1068,28 @@ public class PmCommonUtil {
 		return ministryProfile;
 	}
 	
+
+	/**
+	 * retrieve the Pegawai Pengawal by ptj org profile id
+	 * @param Long orgProfileId
+	 * @return PmOrgProfile
+	 */
+	public static PmOrgProfile retrievePegawaiPengawalByOrgProfileId(Long orgProfileId){
+		IOrgProfileSO orgProfileSO = null;
+		PmOrgProfile jabatanProfile = null;
+		try{
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			reqDTO.setOrgProfileId(orgProfileId);
+			resDTO = orgProfileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO);
+			jabatanProfile = resDTO.getPmOrgProfile();
+		}finally{
+			orgProfileSO = null;
+		}
+		return jabatanProfile;
+	}
+	
 	/**
 	 * retrieve the Jabatan by ptj org profile id
 	 * @param Long orgProfileId

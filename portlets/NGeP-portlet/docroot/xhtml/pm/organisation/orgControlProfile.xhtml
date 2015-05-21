@@ -9,19 +9,36 @@
 		toggleable="true">
 		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ'}">				
 			<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
-			<p:inputText label="#{lbl['lbl.pm.organisation.orgName']}" size="50"
-				value="#{(organisationBackingBean.retrieveMinistry()).pmOrgValidity.orgName}"
+			<p:inputText label="#{lbl['lbl.pm.org.ministryName']}" size="50"
+				value="#{organisationBackingBean.retrieveMinistryName()}"
 				styleClass="ppDisplayTextL" disabled="true" />
+			<p:outputLabel value="#{lbl['lbl.pm.org.pegawai.pegawal']}" />
+			<p:inputText label="#{lbl['lbl.pm.org.pegawai.pegawal']}" size="50"
+				value="#{organisationBackingBean.retrievePegawaiPengawalName()}"
+				styleClass="ppDisplayTextL" disabled="true" />	
 			<p:outputLabel value="#{lbl['lbl.pm.organisation.ptjGroup']}" />
-			<p:inputText label="#{lbl['lbl.pm.organisation.orgName']}" size="50"
-				value="#{(organisationBackingBean.retrieveJabatan()).pmOrgValidity.orgName}"
+			<p:inputText label="#{lbl['lbl.pm.organisation.ptjGroup']}" size="50"
+				value="#{organisationBackingBean.retrieveJabatanName()}"
 				styleClass="ppDisplayTextL" disabled="true" />
 			<h:outputLabel value="#{lbl['lbl.pm.organisation.businessArea']}"></h:outputLabel>
-			<p:inputText label="#{lbl['lbl.pm.organisation.orgName']}" size="50"
+			<p:inputText label="#{lbl['lbl.pm.organisation.businessArea']}" size="50"
 				value="#{organisationBackingBean.managedBean.orgProfile.pmAgOffice.officeName}"
 				styleClass="ppDisplayTextL" disabled="true" />
 		</h:panelGrid>
 		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FJA'}">
+				<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
+				<p:inputText label="#{lbl['lbl.pm.org.ministryName']}" size="50"
+					value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile !=null and
+					organisationBackingBean.managedBean.orgProfile.parentOrgProfile.parentOrgProfile !=null ?
+					organisationBackingBean.managedBean.orgProfile.parentOrgProfile.parentOrgProfile.orgName : ''}"
+					styleClass="ppDisplayTextL" disabled="true" />
+				<h:outputLabel value="#{lbl['lbl.pm.org.pegawai.pegawal']}"></h:outputLabel>
+				<p:inputText label="#{lbl['lbl.pm.org.pegawai.pegawal']}" size="50"
+					value="#{organisationBackingBean.managedBean.orgProfile.parentOrgProfile !=null ?
+					organisationBackingBean.managedBean.orgProfile.parentOrgProfile.orgName : ''}"
+					styleClass="ppDisplayTextL" disabled="true" />
+		</h:panelGrid>
+		<h:panelGrid columns="2" rendered="#{organisationBackingBean.managedBean.orgType eq 'FPP'}">
 				<h:outputLabel value="#{lbl['lbl.pm.org.ministryName']}"></h:outputLabel>
 				<p:selectOneMenu disabled="#{(organisationBackingBean.managedBean.orgProfile.recordStatusFlg == 1 )? 'false': 'true'}"
 					label="#{lbl['lbl.pm.org.ministryName']}" 
