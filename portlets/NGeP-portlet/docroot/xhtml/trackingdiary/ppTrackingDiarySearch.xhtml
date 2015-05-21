@@ -17,116 +17,135 @@
 
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
 			
-		<p:panel id="searchPanel" header="#{lbl['lbl.fl.search']}" toggleable="true">
-						<table style="margin-top: 10px; width: 100%;">
-							<tr>
-								<td width="15%"><p:outputLabel
-										value="#{lbl['lbl.td.plan.title']}" /></td>
-								<td width="35%"><p:inputText size="50"
-										value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}"></p:inputText></td>
-							</tr>
+	<p:panel id="pPlanSearch" header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
+		<br/>
+		<table class="ppTwoTable">
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
+				</th>
+				<td>
+					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
+				</td>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
+				</th>
+				<td>
+				 	<ac:lov id="lovSearchAll" lovId="PM_ORG_PROFILE_ALL" size="50" 
+		            	readonly="true" update=":form:lovSearchAll:lovSearchAll"
+						headerText="#{lbl['lbl.pp.ptj']}"
+						value="#{pPlanBackingBean.managedBean.planSearchBean.ptj.pmOrgValidity.orgName}" 
+						saveObject="pPlanBackingBean.managedBean.planSearchBean.ptj"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatus^1#{pPlanBackingBean.managedBean.filterOrgCondition}" 
+						
+					/>
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu id="somPlanYearSearch" label="#{lbl['lbl.pp.plan.year']}" 
+						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.year}"
+						>
+						<f:selectItems value="#{pPlanBackingBean.getExistingPlanYearOptions()}"/>
+					</p:selectOneMenu>
+				</td>
+				<th>
+					
+				</th>
+				<td>
+					
+				</td>
+			</tr>
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.plan.type']}"/>
+				</th>
+				<td>
+					<p:selectOneMenu id="somPlanType" label="#{lbl['lbl.pp.plan.type']}" 
+						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterId}"
+						>
+						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
+						<!-- <p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
+							update="somVotSearch"/> -->
+					</p:selectOneMenu>
+				</td>
+				<th>
+					
+				</th>
+				<td>
 
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="#{lbl['lbl.td.plan.type']}" /></td>
-								<td width="65%"><p:inputText size="50"
-										value="#{ctTrackingDiaryBackingBean.managedBean.searchLoaNo}"></p:inputText></td>
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="#{lbl['lbl.td.ministry']}" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.yesNoFlag)}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="#{lbl['lbl.td.ptj']}" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues(PmCodeCatConst.yesNoFlag)}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							<tr>
-								<td width="35%"><p:outputLabel
-										value="#{lbl['lbl.td.status']}" /></td>
-								<td width="35%">					
-									<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
-										<f:selectItems value="#{cmTrackingDiaryBackingBean.getDropdownCodeValues('CT')}" />
-									</p:selectOneMenu>
-								</td>						
-							</tr>
-							
-						</table>
+				</td>
+			</tr>
+			<ui:remove>
+			<tr>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.vot.amanah.type']}" />
+				</th>
+				<td>
+					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotSearch" 
+						disabled="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
+						label="#{lbl['lbl.pp.vot.amanah.type']}" value="#{pPlanBackingBean.managedBean.planSearchBean.votType.parameterId}"
+					>
+						<f:selectItems value="#{pPlanBackingBean.getVotTypeOptions()}"/>
+					</p:selectOneMenu>
+				</td>
+				<th>
+					
+				</th>
+				<td>
+					
+				</td>
+			</tr>
+			</ui:remove>
+			<tr>
+				<td colspan="4">
 					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.search']}"
-							action="#{flTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							update="resultPanel" />
-						<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{flTrackingDiaryBackingBean.reset}" update=":form" />
+						<p:commandButton value="#{lbl['lbl.btn.search']}" 
+							process="pPlanSearch"
+							update="dtPlanResult" 
+							action="#{pPlanBackingBean.searchPlan}"
+							/>&#160;
+						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{pPlanBackingBean.resetPlanSearchBean}"
+							update="pPlanSearch, dtPlanResult" 
+							/> 
 					</div>
-		</p:panel>
+				</td>
+			</tr>
+		</table>
+		<ac:lovPopup /> 	
+	</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-			<p:dataTable id="supplierItemID" lazy="true" value="#{smTrackingDiaryBackingBean.searchDataModel}" var="smSupplier" width="100%" rows="10">
-
-				<ac:paginator for="supplierItemID"></ac:paginator>
-
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.creation.date']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.plan.number']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.plan.title']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.plan.type']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.ministry']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.ptj']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.status']}"/>
-					</f:facet>
-				#{smSupplier.regNo}
-				</p:column>
-				<p:column width="5%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.action']}"/>
-					</f:facet>
-					<p:commandLink action="#{smTrackingDiaryBackingBean.goToTrackingDiarySearch(smSupplier)}">
-						#{smSupplier.regNo}
-					</p:commandLink>
-				</p:column>
-			</p:dataTable>
+		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem" rows="10"
+			rowIndexVar="rowIndex"  lazy="true" var="plan" value="#{pPlanBackingBean.ppPlanDataModel}">
+			<ac:paginator for="dtPlanResult" />
+			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
+		    	#{plan.planNo}
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.plan.year']}">  
+		    	#{plan.planYear}
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.type']}">  
+	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
+	        </p:column> 
+	        <p:column headerText="#{lbl['lbl.pp.ministry']}" style="white-space:normal; width:25%;">  
+	            #{plan.orgProfile.parentOrgProfile!=null ? plan.orgProfile.parentOrgProfile.pmOrgValidity.orgName : '-'}
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pp.ptj']}" style="white-space:normal;  width:25%;" >  
+	            #{plan.orgProfile!=null ? plan.orgProfile.pmOrgValidity.orgName : '-'}
+	        </p:column>
+	        <p:column headerText="#{lbl['lbl.pm.status']}">  
+	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : pPlanBackingBean.getDefaultStatusDesc(plan.planType)}
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pm.action']}">  
+      		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">
+					<p:graphicIm1age value="#{!plan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+				</p:commandLink>
+	        </p:column>  
+	   	</p:dataTable> 
 
 			<div class="clear"></div>
 
