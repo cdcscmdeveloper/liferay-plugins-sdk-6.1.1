@@ -3300,6 +3300,17 @@ public class SpecificationBackingBean extends
 					if (null == this.getManagedBean()
 							.getRecommendationPackageScore()) {
 						ScQtScoreSetting pkgScoreSetting = constructScoreSetting(4);
+						if (QTConstants.EVALUATION_ONE_TIER
+								.equalsIgnoreCase(this.getManagedBean()
+										.getScQt().getEvaluationType())
+								&& !this.getManagedBean().getScQt()
+										.isTechEvaluationReq()) {
+							if (null != pkgScoreSetting) {
+								pkgScoreSetting.setOverallFin(new BigDecimal(
+										100));
+							}
+
+						}
 
 						this.getManagedBean().setRecommendationPackageScore(
 								pkgScoreSetting);
