@@ -84,7 +84,7 @@
 						buttonLabel="#{lbl['lbl.btn.add']}"
 						selectionMode="multiple"
 						saveObject="centralContractBackingBean.managedBean.orgProfiles"
-						conditionField="#{centralContractBackingBean.retrieveMinistryBylovCondition()}" update="@form"
+						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypeMinistry}|recordStatus^1" update="@form"
 						rendered="#{!centralContractBackingBean.managedBean.viewContract}"/>
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this" 
 						  partialSubmit="true" 
