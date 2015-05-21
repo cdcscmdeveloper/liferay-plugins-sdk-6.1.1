@@ -162,10 +162,12 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.pm.VotFundType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -3659,7 +3661,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * @return String
 	 */
 	public String getPreparedPTJCondition() {
-		String condition = "parentOrgProfile.orgProfileId^"+getManagedBean().getFlRequest().getPreparedOrgProfile().getParentOrgProfile().getOrgProfileId();
+		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+				retrieveMinistryOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId()).getOrgProfileId();
 		if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			condition = condition + "|orgProfileId^"+getManagedBean().getOrgProfileIds()+"^9";
 		}
