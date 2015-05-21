@@ -66,7 +66,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.supplier.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td>
+			<td width="22%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
 			</td>
@@ -116,7 +116,7 @@
 				<p:inputTextarea id="address"
 					cols="50" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaSupplierWitness.address}"
-					style=" margin-bottom:5px;"
+					style=" margin-bottom:5px; width: 325px;"
 					required="true"
 					maxlength="200"
 					label="#{lbl['lbl.sc.address']}" />
