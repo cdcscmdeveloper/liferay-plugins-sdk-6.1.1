@@ -612,8 +612,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		} else {
 			for (CtAgreementParty agencySigner : getManagedBean().getCtAgencySigner()) {
-				if (getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile() != null
-						&& getManagedBean().getCtContract().getOwnerOrgProfile().getParentOrgProfile().getOrgProfileId() != null
+				if (retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId() != null
+						&& retrieveJabatanOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId() != null
 						&& agencySigner.getOrgProfile().getOrgProfileId() == null) {
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.ptj", 
@@ -1966,11 +1966,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 }
   
+  @Override
+public PmOrgProfile retrieveJabatanOrgProfile(Long orgProfileId) {
+	// TODO Auto-generated method stub
+	return super.retrieveJabatanOrgProfile(orgProfileId);
+}
   public String retrievePtjBylovCondition() {
 	  
 	      String condition = "recordStatusFlg^1|";
 		  condition = condition +OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
-		  condition = condition + "orgProfileId^"+  retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
+		  condition = condition + "^"+  retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 	       return condition;
       }
 }
