@@ -1,0 +1,385 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<table style="width: 100%">
+		<tr>
+			<td valign="top" width="50%"><p:outputPanel id="staffPermAddrPan"
+					layout="block">
+					<table style="width: 100%">
+						<tr>
+							<td><u><b><h:outputText
+											value="#{lbl['lbl.sm.person.permAddr']} " /></b></u></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
+							<td><p:inputText id="staffEquiPersPermAddrLine" 
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.address']}" maxlength="35"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}"
+									size="35">
+									<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
+										update="staffPermAddrPan,@([id$=Msg])" />
+								</p:inputText></td>
+						</tr>
+
+						<tr>
+							<td></td>
+							<td><p:inputText maxlength="35"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address2}"
+									size="35">
+									<p:ajax process="@this" partialSubmit="true" update="@this" />
+								</p:inputText></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputText maxlength="35"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}"
+									size="35">
+									<p:ajax process="@this" partialSubmit="true" update="@this" />
+								</p:inputText></td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:inputText maxlength="35"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address4}"
+									size="35">
+									<p:ajax process="@this" partialSubmit="true" update="@this" />
+								</p:inputText></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.country']}"
+									id="staffEquiPersPermCntry"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="shrPermCountry"
+										value="#{backingBean.managedBean.countryLs}"
+										itemValue="#{shrPermCountry.countryId}"
+										itemLabel="#{shrPermCountry.countryName}" />
+									<p:ajax event="change" process="@this"
+										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="staffPermAddrPan,@([id$=Msg])" />
+								</p:selectOneMenu> <p:message id="staffEquiPersPermCntryMsg" for="staffEquiPersPermCntry"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.state']}"
+									style="width: 207px;margin-bottom: 5px;"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId}"
+									id="staffShrPermState">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="shrPermState"
+										value="#{backingBean.managedBean.shrHldrPermStates}"
+										itemValue="#{shrPermState.stateId}"
+										itemLabel="#{shrPermState.stateName}" />
+									<p:ajax event="change" process="@this"
+										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="staffPermAddrPan,@([id$=Msg])" />
+
+								</p:selectOneMenu> <p:message id="staffShrPermStateMsg" for="staffShrPermState"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.district']}"
+									style="width: 207px;margin-bottom: 5px;"
+									id="staffShrPermDist"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="shrPermDist"
+										value="#{backingBean.managedBean.shrHldrPermDistricts}"
+										itemValue="#{shrPermDist.districtId}"
+										itemLabel="#{shrPermDist.districtName}" />
+									<p:ajax event="change" process="@this"
+										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
+								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
+										update="staffPermAddrPan,@([id$=Msg])" />
+								</p:selectOneMenu> <p:message id="staffShrPermDistMsg" for="staffShrPermDist"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
+							<td><p:selectOneMenu
+									label="#{lbl['lbl.sm.person.permAddr']} - #{lbl['lbl.sm.towncity']}" style="width: 207px;margin-bottom: 5px;"
+									id="staffShrPermCity"
+									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityId}">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+									<f:selectItems var="shrPermCity"
+										value="#{backingBean.managedBean.shrHldrPermCities}"
+										itemValue="#{shrPermCity.cityId}"
+										itemLabel="#{shrPermCity.cityName}" />
+									<p:ajax event="change" process="@this" update="staffPermAddrPan,@([id$=Msg])" 
+										listener="#{backingBean.setRoleStaffAddrReqd()}"
+										partialSubmit="true" />
+								</p:selectOneMenu> <p:message id="staffShrPermCityMsg" for="staffShrPermCity"
+									showSummary="true" showDetail="false" display="icon" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+									value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndPermAddrReqd}"/></td>
+							<td><p:outputPanel id="staffPostCodePermPanelId">
+									<p:outputPanel
+										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+										<p:inputText maxlength="5" label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
+											id="staffEquiPersPermAddrPostCodeMy"
+											value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
+											validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+											size="35">
+											<f:validator validatorId="postcodeValidator" />
+											<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
+												update="staffPermAddrPan,@([id$=Msg])" />
+										</p:inputText>
+										<p:message id="staffEquiPersPermAddrPostCodeMyMsg"
+											for="staffEquiPersPermAddrPostCodeMy" showSummary="true"
+											showDetail="false" display="icon" />
+									</p:outputPanel>
+									<p:outputPanel
+										rendered="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+										<p:inputText maxlength="10" label="#{lbl['lbl.sm.person.permAddr']} -#{lbl['lbl.sm.postcode']}"
+											id="staffEquiPersPermAddrPostCodeForeign"
+											value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.postcode}"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
+												update="staffPermAddrPan,@([id$=Msg])" />
+										</p:inputText>
+										<p:message id="staffEquiPersPermAddrPostCodeForeignMsg"
+											for="staffEquiPersPermAddrPostCodeForeign" showSummary="true"
+											showDetail="false" display="icon" />
+									</p:outputPanel>
+								</p:outputPanel></td>
+						</tr>
+					</table>
+				</p:outputPanel></td>
+			<td valign="top"><p:outputPanel id="staffMailAddrPan"
+					rendered="#{backingBean.managedBean.selectedShareHolder.authorizedFlg eq '1'}"
+					layout="block">
+					<table style="width: 100%">
+						<tr>
+							<td><u><b><h:outputText
+											value="#{lbl['lbl.sm.person.mailAddr']}" /></b></u></td>
+							<td><table style="width: 100%">
+									<tr>
+										<td width="10px"><p:selectBooleanCheckbox
+												value="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
+												<p:ajax event="change" partialSubmit="true" process="@this"
+													update="staffMailAddrPan,@([id$=Msg])" />
+											</p:selectBooleanCheckbox></td>
+										<td><h:outputText
+												value="#{lbl['lbl.sm.person.duplicateAddr']}" /></td>
+									</tr>
+								</table></td>
+						</tr>
+						<c:choose>
+							<c:when
+								test="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}">
+								<ui:include
+									src="/xhtml/sm/shared/mofRegistration/shareHolderDuplicatAddrPanelForm.xhtml" />
+							</c:when>
+							<c:otherwise>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.address']}" /><p:outputLabel
+											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+									<td><p:inputText id="staffEquiPersMailAddrLine" maxlength="35" 
+											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.address']}"
+											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true"
+												update="staffMailAddrPan,@([id$=Msg])" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+										</p:inputText></td>
+								</tr>
+
+								<tr>
+									<td></td>
+									<td><p:inputText maxlength="35"
+											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address2}"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true" update="@this" />
+										</p:inputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><p:inputText maxlength="35"
+											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true" update="@this" />
+										</p:inputText></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><p:inputText maxlength="35"
+											readonly="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address4}"
+											size="35">
+											<p:ajax process="@this" partialSubmit="true" update="@this" />
+										</p:inputText></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+									<td><p:selectOneMenu
+											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.country']}"
+											id="staffEquiPerMailCntry"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId}"
+											style="width: 207px;margin-bottom: 5px;">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
+											<f:selectItems var="shrMailContry"
+												value="#{backingBean.managedBean.countryLs}"
+												itemValue="#{shrMailContry.countryId}"
+												itemLabel="#{shrMailContry.countryName}" />
+											<p:ajax event="change" process="@this"
+												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId, 
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmState,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+												update="staffMailAddrPan,@([id$=Msg])" />
+										</p:selectOneMenu> <p:message id="staffEquiPerMailCntryMsg" for="staffEquiPerMailCntry"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+									<td><p:selectOneMenu
+											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.state']}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											style="width: 207px;margin-bottom: 5px;"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId}"
+											id="staffShrMailState">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
+											<f:selectItems var="shrMailState"
+												value="#{backingBean.managedBean.shrHldrMailStates}"
+												itemValue="#{shrMailState.stateId}"
+												itemLabel="#{shrMailState.stateName}" />
+											<p:ajax event="change" process="@this"
+												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId, 
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+												update="staffMailAddrPan,@([id$=Msg])" />
+
+										</p:selectOneMenu> <p:message id="staffShrMailStateMsg" for="staffShrMailState"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+									<td><p:selectOneMenu
+											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.district']}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											style="width: 207px;margin-bottom: 5px;" id="staffShrMailDist"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId}">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
+											<f:selectItems var="shrMailDist"
+												value="#{backingBean.managedBean.shrHldrMailDistricts}"
+												itemValue="#{shrMailDist.districtId}"
+												itemLabel="#{shrMailDist.districtName}" />
+											<p:ajax event="change" process="@this"
+												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId, 
+								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
+								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
+												update="staffMailAddrPan,@([id$=Msg])" />
+										</p:selectOneMenu> <p:message id="staffShrMailDistMsg" for="staffShrMailDist"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+									<td><p:selectOneMenu
+											label="#{lbl['lbl.sm.person.mailAddr']} - #{lbl['lbl.sm.towncity']}"
+											disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+											style="width: 207px;margin-bottom: 5px;" id="staffShrMailCity"
+											value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityId}">
+											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+												itemValue="" />
+											<f:selectItems var="shrMailCity"
+												value="#{backingBean.managedBean.shrHldrMailCities}"
+												itemValue="#{shrMailCity.cityId}"
+												itemLabel="#{shrMailCity.cityName}" />
+											<p:ajax event="change" process="@this"
+												update="staffMailAddrPan,@([id$=Msg])" partialSubmit="true" />
+										</p:selectOneMenu> <p:message id="staffShrMailCityMsg" for="staffShrMailCity"
+											showSummary="true" showDetail="false" display="icon" /></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /> <p:outputLabel
+											value="*" styleClass="mandatory" rendered="#{backingBean.managedBean.roleStaffAndMailAddrReqd}"/></td>
+									<td><p:outputPanel id="staffPostCodeMailPanelId">
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId==backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="5"
+													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
+													id="staffEquiPersMailAddrPostCodeMy"
+													value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+													validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
+													size="35">
+													<f:validator validatorId="postcodeValidator" />
+													<p:ajax process="@this" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"
+														update="staffMailAddrPan,@([id$=Msg])" />
+												</p:inputText>
+												<p:message id="staffEquiPersMailAddrPostCodeMyMsg"
+													for="staffEquiPersMailAddrPostCodeMy" showSummary="true"
+													showDetail="false" display="icon" />
+											</p:outputPanel>
+											<p:outputPanel
+												rendered="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId!=backingBean.managedBean.myCountryId}">
+												<p:inputText maxlength="10"
+													disabled="#{backingBean.managedBean.shareHolderMailAddr.sameAsPerm}"
+													label="#{lbl['lbl.sm.person.mailAddr']} -#{lbl['lbl.sm.postcode']}"
+													id="staffEquiPersMailAddrPostCodeForeign"
+													value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.postcode}"
+													size="35">
+													<p:ajax process="@this" partialSubmit="true"
+														update="staffMailAddrPan,@([id$=Msg])" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
+												</p:inputText>
+												<p:message id="staffEquiPersMailAddrPostCodeForeignMsg"
+													for="staffEquiPersMailAddrPostCodeForeign" showSummary="true"
+													showDetail="false" display="icon" />
+											</p:outputPanel>
+										</p:outputPanel></td>
+								</tr>
+							</c:otherwise>
+						</c:choose>
+					</table>
+				</p:outputPanel></td>
+		</tr>
+	</table>
+</ui:composition>

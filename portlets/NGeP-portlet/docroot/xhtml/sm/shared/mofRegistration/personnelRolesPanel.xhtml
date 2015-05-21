@@ -61,8 +61,8 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
-											<p:ajax event="change" update=":form:tt:shrRolesPanel"
-												process=":form:tt:shrRolesPanel" partialSubmit="true" />
+											<p:ajax event="change" update=":form:tt:shrRolesPanel,@([id$=shareHolderAddrDialog])"
+												process=":form:tt:shrRolesPanel" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
 										</p:selectBooleanCheckbox>
 									</td>
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.stf']}" /></td>
@@ -144,8 +144,8 @@
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											disabled="#{backingBean.managedBean.selectedShareHolder.disableStaff}"
 											value="#{backingBean.managedBean.selectedShareHolder.clerical}" >
-										<p:ajax event="change" update=":form:tt:shrRolesPanel"
-												process=":form:tt:shrRolesPanel" partialSubmit="true" />
+										<p:ajax event="change" update=":form:tt:shrRolesPanel,@([id$=shareHolderAddrDialog])"
+												process=":form:tt:shrRolesPanel" partialSubmit="true" listener="#{backingBean.setRoleStaffAddrReqd()}"/>
 										</p:selectBooleanCheckbox>
 									</td>
 									<td><p:outputLabel style="float: left" value="#{lbl['lbl.sm.person.composition.clrStf']}" /></td>
