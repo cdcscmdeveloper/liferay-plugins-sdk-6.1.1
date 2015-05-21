@@ -11,6 +11,7 @@
 	<ui:param name="isAwardMultiple" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleAward}" />
 	<ui:param name="isAwardSingle" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendBySingleAward}" />
    	<ui:param name="isMultipleLOI" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleLoi}" />
+   	<ui:param name="isAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByAward}" />
 	<ui:param name="lblAfterNegoOrBidding" value="#{isBiddingAward ? 'lbl.sc.loiloa.loi.after.bidding.offer.price' : 'lbl.sc.loiloa.after.nego.offer.price'}" />
 		
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
@@ -33,7 +34,7 @@
 						size="30" /> 
 						
 					<p:inputText disabled="true"
-						rendered="#{isAwardMultiple or isAwardSingle}"
+						rendered="#{isAwardMultiple or isAwardSingle or isAward}"
 						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.directAward)}"
 						size="30" /></td>
 			</tr>
@@ -41,7 +42,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="false">
-		<p:dataTable id="loiItemListId" var="loiloaItem"
+		<p:dataTable id="loiItemListId" var="loiLoaItem"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
              <ac:paginator for="loiItemListId" />
@@ -90,8 +91,8 @@
 						style="white-space:normal;text-align:right;" />
 				</p:row>
 			</p:columnGroup>
-
-            <p:column style="width:15%;white-space:normal;" rendered="#{isZonal}">
+             <p:column style="width:15%;white-space:normal;">
+		
                 <p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
@@ -102,7 +103,7 @@
 			 </p:commandLink>
            </p:column>
 			<p:column style="width:15%;white-space:normal;">
-                   #{loiloaItem.scRequestItem.itemName}
+                   #{loiLoaItem.scRequestItem.itemName}
              </p:column>
 
 			<p:column style="width:10%; text-align:right;">
@@ -132,19 +133,19 @@
 			</p:column>
 
 			<p:column  style="width:10%;text-align:right;">
-				<h:outputText value="#{loiloaItem.qty}">
+				<h:outputText value="#{loiLoaItem.qty}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
 			</p:column>
 			
 			<p:column>
-               #{loiloaItem.scRequestItem.uom.uomName}
+               #{loiLoaItem.scRequestItem.uom.uomName}
             </p:column>
             
             
             <p:column  style="width:10%;text-align:right;" rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<h:outputText value="#{loiloaItem.unitPrice}">
+				<h:outputText value="#{loiLoaItem.unitPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<f:facet name="footer">
@@ -153,7 +154,7 @@
 			</p:column>
 
 			<p:column style="width:7%;text-align:right;" rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<h:outputText value="#{loiloaItem.subTotal}">
+				<h:outputText value="#{loiLoaItem.subTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				
@@ -167,7 +168,7 @@
 
 			<p:column style="width:10%; text-align:right;"
 				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<h:outputText value="#{loiloaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" />
+					<h:outputText value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" />
 					
 				<f:facet name="footer">
 					<h:outputText value="#{lbl['lbl.sc.total']}" />
@@ -176,7 +177,7 @@
 
 			<p:column style="width:10%; text-align:right;"
 				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				  <h:outputText value="#{loiloaItem.subTotal}">
+				  <h:outputText value="#{loiLoaItem.subTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				  </h:outputText>
 				
@@ -190,7 +191,7 @@
 
 			<p:column style="width:10%; text-align:right;"
 				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<p:inputText size="4" value="#{loiloaItem.unitPrice}" style="text-align:right;" disabled="#{isBiddingAward}">
+				<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" disabled="#{isBiddingAward}">
 				 <p:ajax event="blur" partialSubmit="true" process="@form" update="@all" listener="#{lOIDetailBackingBean.priceKeyInEvent()}"/>
 				 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -202,7 +203,7 @@
 			
 			<p:column style="width:10%; text-align:right;"
 				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<h:outputText value="#{loiloaItem.afterNegoSubTotal}">
+				<h:outputText value="#{loiLoaItem.afterNegoSubTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				  </h:outputText>
 
