@@ -702,8 +702,8 @@ public class SmApplicationUtil {
 	 *            - SmSupplierCategory object
 	 * @return true, if successful
 	 */
-	public static boolean validateIctCatCode(SmAppl appl,
-			SmSupplierCategory category) {
+	public static boolean validateIctCatCode(String businessTypeVal,
+			SmAppl appl, SmSupplierCategory category) {
 		boolean validCat = true;
 		if (appl.getSupplierType().equalsIgnoreCase(
 				SupplierManagementConst.STYPE_CONSULTANT)) {
@@ -772,7 +772,9 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722512,
 						new String[] { "equity owner" });
 			}
-			if (dirCnt < 1) {
+			if (businessTypeVal != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_INDIVIDUAL_DEFAULT
+					&& businessTypeVal != SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PARTNER_DEFAULT
+					&& dirCnt < 1) {
 				validCat = false;
 				throw new EpException(MessageConst.ERROR_722512,
 						new String[] { "director" });
