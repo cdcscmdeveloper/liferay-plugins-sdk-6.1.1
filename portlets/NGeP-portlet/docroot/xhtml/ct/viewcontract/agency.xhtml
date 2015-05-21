@@ -16,14 +16,52 @@
              value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" >
             <ac:paginator for="tableAgencyDetails"/>
        			<p:ajax event="rowSelect"   update=":form:agencyDeliveryAddress"  process="@this" />	
+       			
+       			
+       			<p:columnGroup type="header"> 
+								<p:row> 
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ptj']}"/> 						
+									<p:column rowspan="2" style="width:10%;white-space:normal;">
+									      <f:facet name="header">
+					                          <h:outputText value="#{lbl['lbl.ct.ceiling.amount']}"/>
+               		                          <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ceiling.amt']}"/>
+               	                           </f:facet>
+									</p:column>
+									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.effective.date']}" style="width:8%;" />
+									 <p:column rowspan="2" headerText="#{lbl['lbl.ct.expiry.date']}" style="width:8%;"/>
+									<p:column colspan="3" headerText="#{lbl['lbl.ct.ap178']}" style="text-align:center; white-space:normal;"> 
+									 <f:facet name="header">
+					                       <h:outputText value="#{lbl['lbl.ct.ap178']}"/>
+               		                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.ap178']}"/>
+               	                     </f:facet>
+               	                    </p:column>						
+									<p:column rowspan="2" headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;"/>
+								</p:row>							
+								<p:row> 
+								<p:column/>	
+									<p:column>
+									  <f:facet name="header">
+									     <h:outputText value="* " styleClass="mandatory" />
+									     <h:outputText value="#{lbl['lbl.txt.attachment']}"/>
+									  </f:facet>
+									</p:column>  
+									<p:column>
+									  <f:facet name="header">
+									       <h:outputText value="* " styleClass="mandatory" />
+									       <h:outputText value="#{lbl['lbl.ct.file.ref.no']}"/>
+									   </f:facet>
+									 </p:column>
+								</p:row>
+							</p:columnGroup>
      
-               <p:column headerText="#{lbl['lbl.ct.ministry']}" style="width:26%;white-space:normal;">
-				    <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
-			   </p:column>
-			
-			   <p:column headerText="#{lbl['lbl.ct.ptj']}" style="width:32%;white-space:normal;">
-				   <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
-			    </p:column>
+                             <p:column style="width:25%;white-space:normal;" >
+				                    <h:outputText value="#{contractDetailsBackingBean.retrieveMinistryByOrgProfileId(agencyData.orgProfile.orgProfileId)}"/>
+			                 </p:column>
+			                 
+			                  <p:column style="width:25%;white-space:normal;" >
+				                     <h:outputText  value="#{agencyData.orgProfile.orgName}"/>
+			                  </p:column>
 			
 			    <p:column style="width:10%;white-space:normal;">
 			  	    <f:facet name="header">
@@ -55,6 +93,19 @@
 		   	          rendered="#{contractDetailsBackingBean.retrieveMinistryOrgProfile(
 		   	          	contractDetailsBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId).getOrgProfileId() != 
 		   	          	contractDetailsBackingBean.retrieveMinistryOrgProfile(agencyData.orgProfile.orgProfileId).getOrgProfileId()}"/>
+		       </p:column>
+		       
+		       <p:column style="white-space:normal;">
+		      <h:commandLink
+						title="#{agencyData.fileName}"
+						value="#{contractDetailsBackingBean.getShortFileName(agencyData.fileName)}"						
+						style="float:left;margin-top:10px;" styleClass="blue_font"
+						action="#{contractDetailsBackingBean.downloadFile(agencyData.filePath, agencyData.fileName)}" />
+			 	 				
+		       </p:column>
+		       <p:column style="white-space:normal;">
+		           <p:inputText id="uploadRefNoDoc"  value="#{agencyData.refNo}" style="width:80px;"  disabled="true"
+		              rendered="#{agencyData.ap178}"> </p:inputText>
 		       </p:column>
 		        
 		        <p:column headerText="#{lbl['lbl.ct.status']}" style="width:6%;white-space:normal;">
