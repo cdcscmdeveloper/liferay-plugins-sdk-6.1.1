@@ -2503,7 +2503,7 @@ public class SpecificationBackingBean extends
 			// questionsList.add(tplSpecQuestion);
 			specMaster.setScoringReq(this.getManagedBean().getScQt()
 					.isTechEvaluationReq());
-			
+
 			if (null != panelItem.getCtPanelItemSpecs()
 					&& !panelItem.getCtPanelItemSpecs().isEmpty()) {
 				for (int i = 0; i < panelItem.getCtPanelItemSpecs().size(); i++) {
@@ -2524,11 +2524,11 @@ public class SpecificationBackingBean extends
 						PmParameter scoreType = getParameterByTypeAndCode(
 								ParameterTypeConst.SCORE_TYPE,
 								ParameterConst.SCORE_TYPE_USER);
-						tplSpecSpecifications.setScoreTypeCode(scoreType);	
+						tplSpecSpecifications.setScoreTypeCode(scoreType);
 					} else {
-						tplSpecSpecifications.setScoreTypeCode(null);	
+						tplSpecSpecifications.setScoreTypeCode(null);
 					}
-					
+
 					setUserDetails(tplSpecSpecifications);
 				}
 			}
@@ -11079,8 +11079,6 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	
-
 	/**
 	 * Gets the template spec create.
 	 * 
@@ -11244,8 +11242,11 @@ public class SpecificationBackingBean extends
 			ScCommitteeMember member = resDTO.getCommMember();
 			if (null != member) {
 
-				if (member.getMemberRole().getParameterCode()
-						.contains(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
+				if (member
+						.getMemberRole()
+						.getParameterCode()
+						.equalsIgnoreCase(
+								SourcingConstants.MEMBER_ROLE_SECRETARY)) {
 					this.getManagedBean().setReadOnly(false);
 
 				} else {
@@ -13895,8 +13896,7 @@ public class SpecificationBackingBean extends
 			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
 					.cloneTplSpecMaster(
 							scQtCheckList.getScQtDoc().getTplSpecMaster(),
-							false,
-							true);
+							false, true);
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 
@@ -14096,10 +14096,9 @@ public class SpecificationBackingBean extends
 			specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
 			TemplateSpecResDTO resDTO = templateSpecSO
 					.getTemplateMaster(specReqDTO);
-			TplSpecMaster specMaster = TemplateSpecHelper.getInstance().cloneTplSpecMaster(
-					resDTO.getSpecMaster(), 
-					true, 
-					getManagedBean().getScQt().isTechEvaluationReq());
+			TplSpecMaster specMaster = TemplateSpecHelper.getInstance()
+					.cloneTplSpecMaster(resDTO.getSpecMaster(), true,
+							getManagedBean().getScQt().isTechEvaluationReq());
 			specMaster
 					.setProcessType(ParameterConst.TPL_DOC_PROCESS_TYPE_SOURCING);
 			if (getManagedBean().getScQt().isZonal()) {
