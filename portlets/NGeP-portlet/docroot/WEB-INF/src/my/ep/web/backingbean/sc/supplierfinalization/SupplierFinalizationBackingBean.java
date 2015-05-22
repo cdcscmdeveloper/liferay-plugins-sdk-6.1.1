@@ -1645,8 +1645,25 @@ public class SupplierFinalizationBackingBean extends
 		
 		ScQtFinalizationReportAttachment reportAttachment = scQtFinalizationReport
 				.getScQtFinalizationReportAttachment();
-		if (reportAttachment == null || 
-				this.getManagedBean().isSecretaryUser()) {
+		boolean isEvaluationReport = false;
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(scQtFinalizationReport.getDefinationType().getParameterCode())) {
+			String docDefinitionKey = scQtFinalizationReport.getPmDocument()
+											.getDocDefinitionKey();
+			if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
+								.equals(docDefinitionKey) || 
+							SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
+								.equals(docDefinitionKey) || 
+							SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+								.equals(docDefinitionKey) || 
+							SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+								.equals(docDefinitionKey)) {
+				isEvaluationReport = true;
+			}
+		}		
+		if ((reportAttachment == null || 
+				this.getManagedBean().isSecretaryUser()) && 
+					!isEvaluationReport) {
 			reportAttachment = generateDocumentAttachment(scQtFinalizationReport);
 			scQtFinalizationReport
 					.setScQtFinalizationReportAttachment(reportAttachment);
@@ -1677,13 +1694,19 @@ public class SupplierFinalizationBackingBean extends
 				String docDefinitionKey = report.getPmDocument()
 												.getDocDefinitionKey();
 				if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
+						.equals(docDefinitionKey) || 
+							SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
+								.equals(docDefinitionKey) || 
+							SourcingConstants.DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT
+								.equals(docDefinitionKey) || 
+							SourcingConstants.DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
 								.equals(docDefinitionKey)) {
 					isEvaluationReport = true;
 				}
 			}
 			if ((attachment == null || 
 					this.getManagedBean().isSecretaryUser()) && 
-					!isEvaluationReport) {
+						isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
@@ -1746,7 +1769,7 @@ public class SupplierFinalizationBackingBean extends
 				reportAttachment.setFileName(filename.toString());
 				populateAttachmentDetails(reportAttachment);
 
-			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
+			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
 					.equals(docDefinitionKey)) {
 				// FIXME - get from Opening report
 
