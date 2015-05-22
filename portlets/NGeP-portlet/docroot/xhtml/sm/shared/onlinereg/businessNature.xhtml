@@ -47,7 +47,7 @@
 				</f:facet>
 				<p:commandLink id="btnBizNatEdit" oncomplete="bizDlg.show();"
 					action="#{registrationBackingBean.editBusinessNature(suppBizNature)}" update=":form:bizDialog" process="@this">
-					<p:graphicImage value="/css/images/design/edit.png" />
+					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 <!-- 					<f:setPropertyActionListener value="#{suppBizNature}"  -->
 <!-- 						target="#{registrationBackingBean.managedBean.selectedBusinessNature}" /> -->
 				</p:commandLink>
