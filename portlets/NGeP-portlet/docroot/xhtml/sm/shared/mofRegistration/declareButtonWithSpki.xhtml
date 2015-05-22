@@ -14,14 +14,16 @@
 		message="#{lbl['lbl.sm.supp.declare.print.confirmmsg']}"
 		header="#{lbl['lbl.sm.supp.declare.print.confirmheader']}" severity="alert"
 		widgetVar="printConfirm">
-
-		<p:commandButton id="yes" value="#{lbl['lbl.btn.download']}" ajax="false" onclick="printConfirm.hide()">
-			<p:fileDownload value="#{backingBean.printSupplierProfile()}" />
-		</p:commandButton>
-		<p:commandButton id="no"
-			value="#{lbl['lbl.btn.proceed']}" onclick="printConfirm.hide()" 
-			action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
-			update="spkiOutPanel,@([id$=Msg])" />
+		
+		<div align="right">
+			<p:commandButton id="yes" value="#{lbl['lbl.btn.download']}" ajax="false" onclick="printConfirm.hide()">
+				<p:fileDownload value="#{backingBean.printSupplierProfile()}" />
+			</p:commandButton>
+			<p:commandButton id="no"
+				value="#{lbl['lbl.btn.proceed']}" onclick="printConfirm.hide()" 
+				action="#{backingBean.onDisplaySpkiPopForSubmitAppl}"
+				update="spkiOutPanel,@([id$=Msg])" />
+		</div>
 
 	</p:confirmDialog>
 	
