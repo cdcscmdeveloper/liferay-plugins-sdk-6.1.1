@@ -25,7 +25,7 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelAssocBody(profBean)}" 
 						oncomplete="profDialog.show()" partialSubmit="true" process="@this" update=":form:tt:profPop">
-						<p:graphicImage value="/css/images/design/document.png"
+						<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
