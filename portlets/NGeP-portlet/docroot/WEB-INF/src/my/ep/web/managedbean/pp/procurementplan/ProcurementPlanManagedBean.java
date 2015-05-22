@@ -34,6 +34,7 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private ProcurementPlanSearchBean planSearchBean;
 	private String filterOrgCondition;
 	private PmOrgProfile currentActiveOrg;
+	private PmOrgProfile orgProfile;
 	
 	private boolean modeReview;
 	private boolean modeReviewEditable;
@@ -858,6 +859,21 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setEpTotalNonEpAllocH(BigDecimal epTotalNonEpAllocH) {
 		this.epTotalNonEpAllocH = epTotalNonEpAllocH;
+	}
+	
+	/**
+	 * @return the orgProfile
+	 */
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+	
+	/**
+	 * @param orgProfile
+	 *            the orgProfile to set
+	 */
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
 	}
 
 }
