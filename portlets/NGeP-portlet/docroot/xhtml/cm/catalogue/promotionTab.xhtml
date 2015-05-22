@@ -31,9 +31,7 @@
 				<p:column>
 							#{lbl['lbl.cm.end.date']}
 						</p:column>
-				<p:column>
-							#{lbl['lbl.cm.action']}
-						</p:column>
+				
 			</p:row>
 
 		</f:facet>
@@ -46,7 +44,7 @@
 			<p:column>
 				<p:inputText readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}" style="text-align:right">
-					<p:ajax event="keyup" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" update="promotionErrorLink" />
+					
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
 			</p:column>
@@ -54,8 +52,7 @@
 				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
-					<p:ajax event="keyup" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
+					
 					</p:calendar>
 
 			</p:column>
@@ -63,26 +60,11 @@
 				<p:calendar readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"
 					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}" mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
-					<p:ajax event="dateSelect" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
-					<p:ajax event="keyup" update="promotionErrorLink" listener="#{catalogueBackingBean.updatePromotionErrorDialog()}" />
+					
 					</p:calendar>
 
 			</p:column>
-			<p:column>
-				<p:panel id="promotionErrorLink" styleClass="noBorders tr,noBorders td">
-					<p:commandLink title="#{lbl['lbl.txt.error']}" update=":form"
-						oncomplete="errorDialog.show();"
-						actionListener="#{catalogueBackingBean.updatePromotionErrorDialog()}"
-						rendered="#{!catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}">
-						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
-					</p:commandLink>
-					<p:graphicImage value="/css/images/design/icon_success.png" 
-						rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.standardDisabled}"></p:graphicImage>
-				</p:panel>
-			</p:column>
-			
-			
-			
+
 		</p:row>
 
 
