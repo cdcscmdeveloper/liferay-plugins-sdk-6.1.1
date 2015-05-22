@@ -104,23 +104,45 @@
 				<h:outputText
 					value="#{contractTreeNode.contractName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.fs.no']}" style="width:90px;white-space:normal">
-				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}" />
+			<p:column style="width:150px;">
+				<f:facet name="header" style="width:200px;white-space:normal">
+					<h:outputText value="#{lbl['lbl.fl.fs.no']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.phase.no']}"/>
+				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}">
+				</h:outputText>			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.circularNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.period.start']}" style="width:97px">
-				<h:outputText value="#{contractTreeNode.startEffective}" >
-				<f:convertDateTime
+			<p:column>
+				<f:facet name="header" style="width:85px">
+					<h:outputText value="#{lbl['lbl.fl.period.start']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.start']}"/>
+				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				<h:outputText value="#{contractTreeNode.startEffective}">
+					<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
+				</h:outputText>			
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.period.end']}" style="width:91px">
-				<h:outputText value="#{contractTreeNode.endEffective}" >
-				<f:convertDateTime
+			<p:column>
+				<f:facet name="header" style="width:85px">
+					<h:outputText value="#{lbl['lbl.fl.period.end']}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.end']}"/>
+				</f:facet>
+				<f:facet name="footer">
+					<h:outputText value=""></h:outputText>			
+				</f:facet>
+				<h:outputText value="#{contractTreeNode.endEffective}">
+					<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-				</h:outputText>
+				</h:outputText>			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.fulfilment.type']}" style="width:108px;white-space:normal">
 				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.fulfilmentType)}" >
