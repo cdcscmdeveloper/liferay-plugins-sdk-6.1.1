@@ -74,14 +74,12 @@
 				<p:message id="emailMsg" for="email"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
-		<tr>
-			<td>
-				<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
-					action="#{reactivateBasicBackingBean.reactivateBasic}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-			</td>
-		</tr>
-
 	</table>
+	
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"  update=":form"
+					action="#{reactivateBasicBackingBean.reactivateBasic}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+	</div>
 
 	</ui:define>
 
