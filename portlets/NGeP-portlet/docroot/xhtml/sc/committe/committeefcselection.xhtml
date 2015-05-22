@@ -12,14 +12,14 @@
 			<p:commandButton value="#{lbl['lbl.btn.view.history']}"
 				action="#{committeBackingBean.viewHistoryAction(committeBackingBean.managedBean.qtCommittee)}" />
 		</div>
-		<p:dataTable id="fcMembers" rowKey="#{committeemember}"
+		<p:dataTable id="fcMembersId" rowKey="#{committeemember}"
 			value="#{committeBackingBean.managedBean.qtCommittee.scCommittee.scCommitteeMembers}"
 			var="committeemember" rowIndexVar="index" editable="true" rows="10"
 			selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
 
 			<p:column selectionMode="multiple" rendered="#{isCommitteeRecordStatusActive}" style="width:2%"   />
 
-			<ac:paginator for="fcMembers" />
+			<ac:paginator for="fcMembersId" />
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<h:outputText value="#{committeemember.memberName}" />
@@ -73,23 +73,18 @@
 				</f:facet>
 				<ui:fragment
 					rendered="#{committeemember.memberRole.parameterCode eq 'M'}">
-					<c:if test="#{isCommitteeRecordStatusActive}">
-						<p:selectOneMenu required="true" id="representativeType"
-							value="#{committeemember.representativeType.parameterId}"
-							label="#{lbl['lbl.sc.representative.type']}"
-							style="width: 178px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{committeBackingBean.managedBean.representativesTypeslist}" />
-							<p:ajax event="change"
-								listener="#{committeBackingBean.representiveTypeChange(committeemember)}"
-								partialSubmit="true" process="@this"></p:ajax>
-						</p:selectOneMenu>
-						<p:message id="representiveMsg" for="representativeType"
-							display="icon"></p:message>
-					</c:if>
-					<c:if test="#{!isCommitteeRecordStatusActive}">
-						<h:outputText value="#{committeBackingBean.getParameterDesc(committeemember.representativeType)}" />
-					</c:if>
+					<p:selectOneMenu required="true" id="representativeType"
+						value="#{committeemember.representativeType.parameterId}"
+						label="#{lbl['lbl.sc.representative.type']}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{committeBackingBean.managedBean.representativesTypeslist}" />
+						<p:ajax event="change"
+							listener="#{committeBackingBean.representiveTypeChange(committeemember)}"
+							partialSubmit="true" process="@this" />
+					</p:selectOneMenu>
+					<p:message id="representiveMsg" for="representativeType"
+						display="icon" />
 
 				</ui:fragment>
 
@@ -104,11 +99,18 @@
 				rendered="#{isCommitteeRecordStatusActive}" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, fcMembers"
-				action="#{committeBackingBean.deleteCommitteeAction}"
-				update="fcMembers"
-				rendered="#{isCommitteeRecordStatusActive}" />
+				process="@this, fcMembersId" partialSubmit="true"
+				oncomplete="fcCommitteeDeletePopUp.show();"
+				update="@([id$=#{fcCommitteeDeleteId}])" />
 		</div>
+		<ui:param name="fcCommitteeDeleteId" value="fcCommitteeDeleteId" />
+		<ac:confirmationPopup id="#{fcCommitteeDeleteId}"
+			widget="fcCommitteeDeletePopUp"
+			okAction="committeBackingBean.deleteCommitteeAction"
+			width="450" height="200"
+			title="#{committeBackingBean.managedBean.headerTitle}"
+			content="#{lbl['lbl.sc.dialog.confirm.committee.members.dtls']}"
+			update="@([id$=fcMembersId])" />
 	</p:panel>
 	<ui:include src="/xhtml/sc/committe/committeetenderscreen.xhtml" />
 </ui:composition>
