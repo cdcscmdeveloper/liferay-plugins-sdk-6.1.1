@@ -215,7 +215,7 @@ public class SpkiBackingBean  extends BaseBackingBean{
 			
 		} catch (Exception ex)
 		{
-			FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKI Signing error."));	
+			FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKIs Signing error."));	
 		throw new EpException(MessageConst.ERROR_776052);
 
 		}
