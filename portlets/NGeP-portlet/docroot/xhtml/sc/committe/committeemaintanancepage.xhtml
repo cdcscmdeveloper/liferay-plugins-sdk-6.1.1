@@ -14,7 +14,7 @@
 		<ui:include src="committeeaddscreen.xhtml" />
 		<ui:include src="committeeaddscreentwo.xhtml"/>
 
-		<p:messages id="specmessages" showDetail="true" autoUpdate="true"
+		<p:messages id="specmessages" showDetail="true" autoUpdate="#{committeBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false" />
 
 		<ui:include src="/xhtml/sc/committe/committedetails.xhtml" />
