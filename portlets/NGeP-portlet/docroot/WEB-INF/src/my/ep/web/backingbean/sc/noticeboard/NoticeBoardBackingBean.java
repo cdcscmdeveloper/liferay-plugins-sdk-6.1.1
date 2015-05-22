@@ -808,7 +808,18 @@ public class NoticeBoardBackingBean extends
 			reqDTO.setQtId(qtId);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveOfferedPriceDtls(reqDTO);
+			ScQt scQt = resDTO.getScQt();
 			this.getManagedBean().setScQt(resDTO.getScQt());
+			Long orgProfileId = scQt.getPmOrgProfile().getOrgProfileId();
+					
+			// Setting ministry name
+			this.getManagedBean().setMinistryName(
+					retrieveMinistryByOrgProfileId(orgProfileId));
+			
+			// Setting PTJ Group/ Jabatan
+			this.getManagedBean().setJabatan(
+					retrieveJabatanByOrgProfileId(orgProfileId));
+			
 			if (resDTO.getScQt().isZonal()) {
 				this.getManagedBean().setZones(resDTO.getZones());
 			} else {
@@ -1490,7 +1501,18 @@ public class NoticeBoardBackingBean extends
 			reqDTO.setQtId(qtId);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveAwardDetails(reqDTO);
-			this.getManagedBean().setScQt(resDTO.getScQt());
+			ScQt scQt = resDTO.getScQt();
+			this.getManagedBean().setScQt(scQt);
+			
+			Long orgProfileId = scQt.getPmOrgProfile().getOrgProfileId();
+			
+			// Setting ministry name
+			this.getManagedBean().setMinistryName(
+					retrieveMinistryByOrgProfileId(orgProfileId));
+			
+			// Setting PTJ Group/ Jabatan
+			this.getManagedBean().setJabatan(
+					retrieveJabatanByOrgProfileId(orgProfileId));
 			
 			if (resDTO.getScQt().isZonal()) {
 				this.getManagedBean().setZones(resDTO.getZones());
