@@ -49,7 +49,7 @@
 									value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
-									update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
 			     			" />
 							</p:selectOneMenu> <p:message id="orgTypeFederalListMsg" for="orgTypeFederalList"
@@ -64,23 +64,38 @@
 									value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
-									update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
 			     			" />
 							</p:selectOneMenu> <p:message id="orgTypeOthersListMsg" for="orgTypeOthersList"
 								display="icon" /></td>
 						<td colspan="2" align="left"><div style="float: left">
-								<ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="40"
-									required="true"
-									update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
-			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
-									readonly="true"
-									disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
+							<c:if test="#{ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
+							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="40" 
+							    	required="true" 
+					            	update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
+					            	readonly="true" disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
-									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
+									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" />
-								<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
+									
+							</c:if>
+							<c:if test="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
+							   <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE" size="40"
+												required="true"
+												update=":form:lovResOrg:lovResOrg, :form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
+						     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr"
+												readonly="true"
+												disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId==null}"
+												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
+												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
+												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" />
+											
+							</c:if>
+							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
 							</div></td>
 
 					</tr>

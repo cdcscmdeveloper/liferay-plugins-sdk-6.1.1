@@ -72,6 +72,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -383,12 +384,12 @@ public class ProfileManagementBackingBean extends
 
 	public void updateSearchCriteriaForOrgName() {
 		logger.info("updateSearchCriteriaForOrgName");
-		if (this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity() != null) {
-			String orgName = this.getManagedBean().getSelectedOrgProfile()
-					.getPmOrgValidity().getOrgName();
-
-			this.getManagedBean().getUserProfileSearchBean()
-					.setUserOrganizationName(orgName);
+//		if (this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity() != null) {
+//			String orgName = this.getManagedBean().getSelectedOrgProfile()
+//					.getPmOrgValidity().getOrgName();
+//
+//			this.getManagedBean().getUserProfileSearchBean()
+//					.setUserOrganizationName(orgName);
 			this.getManagedBean()
 					.getUserProfileSearchBean()
 					.setSelectedOrgProfileId(
@@ -397,7 +398,7 @@ public class ProfileManagementBackingBean extends
 			// get OrgTypeCode from selected orgProfile
 			// this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
 			// .getParameterId();
-		}
+	//	}
 
 	}
 
@@ -762,6 +763,7 @@ public class ProfileManagementBackingBean extends
 		PmOrgProfile pmOrgProfile = new PmOrgProfile();
 		pmOrgProfile.setOrgTypeCode(new PmParameter());
 		pmOrgProfile.setPmOrgValidity(new PmOrgValidity());
+		pmOrgProfile.setPmFinancialOrg(new PmFinancialOrg());
 		pmUserOrg.setPmOrgProfile(pmOrgProfile);
 		pmUserOrg.setEffDate(new Timestamp(System.currentTimeMillis()));
 		pmUserOrg.setPmUser(pmUser);
@@ -1346,7 +1348,11 @@ public class ProfileManagementBackingBean extends
 	 * changeEvent.getOldValue()); }
 	 */
 	public void resetOrgTypeAndCode() {
-
+		PmOrgProfile orgProfile = new PmOrgProfile();
+		orgProfile.setPmOrgValidity(new PmOrgValidity());
+		orgProfile.setPmFinancialOrg(new PmFinancialOrg());
+		orgProfile.setOrgTypeCode(new PmParameter());
+		getManagedBean().getSelectedUserOrg().setPmOrgProfile(orgProfile);
 	}
 
 	/**
@@ -1361,34 +1367,34 @@ public class ProfileManagementBackingBean extends
 				.setPmUserRoles(new ArrayList<PmUserRole>());
 		// clear reciving Addresses
 		showReceivingAddress();
-
-		if (this.getManagedBean().getSelectedUserOrg() != null) {
-			this.getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-					.setPmOrgValidity(new PmOrgValidity());
-			// this.getManagedBean().getSelectedUserOrg()
-			// .setPmUserRoles(new ArrayList<PmUserRole>());
-		}
-
+		
 		if (this.getManagedBean().getSelectedUserOrg().getPmOrgProfile()
 				.getOrgTypeCode().getParameterId() != null) {
 			PmParameter pmParameter = (PmParameter) orgTypeMapper.get(this
 					.getManagedBean().getSelectedUserOrg().getPmOrgProfile()
 					.getOrgTypeCode().getParameterId());
-			this.getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-					.getOrgTypeCode()
-					.setParameterCode(pmParameter.getParameterCode());
+//			this.getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+//					.getOrgTypeCode()
+//					.setParameterCode(pmParameter.getParameterCode());
+//			
+			PmOrgProfile orgProfile = new PmOrgProfile();
+			orgProfile.setPmOrgValidity(new PmOrgValidity());
+			orgProfile.setPmFinancialOrg(new PmFinancialOrg());
+			orgProfile.setOrgTypeCode(pmParameter);
+			getManagedBean().getSelectedUserOrg().setPmOrgProfile(orgProfile);
 		}
 
 	}
 
 	public void clearOrgNameAndRoleLovSearchFields() {
 		logger.info("clearOrgNameAndRoleLovSearchFields");
-		if (this.getManagedBean().getSelectedOrgProfile() != null) {
-			this.getManagedBean().getSelectedOrgProfile()
-					.setPmOrgValidity(new PmOrgValidity());
-			// this.getManagedBean().getSelectedUserOrg()
-			// .setPmUserRoles(new ArrayList<PmUserRole>());
-		}
+//		if (this.getManagedBean().getSelectedOrgProfile() != null) {
+//			this.getManagedBean().getSelectedOrgProfile()
+//					.setPmOrgValidity(new PmOrgValidity());
+//			// this.getManagedBean().getSelectedUserOrg()
+//			// .setPmUserRoles(new ArrayList<PmUserRole>());
+//		}
+		this.getManagedBean().setSelectedOrgProfile(null);
 		this.getManagedBean().setSelectedPmRoleDesc(null);
 
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null) {
