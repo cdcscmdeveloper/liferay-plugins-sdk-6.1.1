@@ -3349,8 +3349,9 @@ public class SmApplicationBackingBean extends
 							.getCategoryL1Code()
 							.equalsIgnoreCase(
 									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
-				validCat = SmApplicationUtil.validateIctCatCode(getManagedBean().getBusinessTypeVal(),
-						getManagedBean().getSmAppl(), getManagedBean()
+				validCat = SmApplicationUtil.validateIctCatCode(
+						getManagedBean().getBusinessTypeVal(), getManagedBean()
+								.getSmAppl(), getManagedBean()
 								.getSelectedCategory());
 			}
 		}
@@ -9402,45 +9403,18 @@ public class SmApplicationBackingBean extends
 				SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL)) {
 			if (!isNoNeedToSaveAddress(addr.getSmAddress())) {
 				getManagedBean().setShareHolderMailAddr(addr);
-				shareHolderBean.getSmPersonnelAddresses()
-						.set(shareHolderBean.getSmPersonnelAddresses().indexOf(
-								addr),
-								getManagedBean().getShareHolderMailAddr());
-				if (!shareHolderBean.getSmPersonnelAddresses().contains(
-						getManagedBean().getShareHolderOffAddr())) {
-					shareHolderBean.getSmPersonnelAddresses().add(
-							getManagedBean().getShareHolderMailAddr());
-				}
 			}
 		}
 		if (addr.getAddressType().equalsIgnoreCase(
 				SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE)) {
 			if (!isNoNeedToSaveAddress(addr.getSmAddress())) {
 				getManagedBean().setShareHolderOffAddr(addr);
-				shareHolderBean
-						.getSmPersonnelAddresses()
-						.set(shareHolderBean.getSmPersonnelAddresses().indexOf(
-								addr), getManagedBean().getShareHolderOffAddr());
-				if (!shareHolderBean.getSmPersonnelAddresses().contains(
-						getManagedBean().getShareHolderOffAddr())) {
-					shareHolderBean.getSmPersonnelAddresses().add(
-							getManagedBean().getShareHolderOffAddr());
-				}
 			}
 		}
 		if (addr.getAddressType().equalsIgnoreCase(
 				SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES)) {
 			if (!isNoNeedToSaveAddress(addr.getSmAddress())) {
 				getManagedBean().setShareHolderResdAddr(addr);
-				shareHolderBean.getSmPersonnelAddresses()
-						.set(shareHolderBean.getSmPersonnelAddresses().indexOf(
-								addr),
-								getManagedBean().getShareHolderResdAddr());
-				if (!shareHolderBean.getSmPersonnelAddresses().contains(
-						getManagedBean().getShareHolderResdAddr())) {
-					shareHolderBean.getSmPersonnelAddresses().add(
-							getManagedBean().getShareHolderResdAddr());
-				}
 			}
 		}
 		if (addr.getAddressType().equalsIgnoreCase(
@@ -9448,15 +9422,6 @@ public class SmApplicationBackingBean extends
 				&& !isNoNeedToSaveAddress(addr.getSmAddress())) {
 			if (!isNoNeedToSaveAddress(addr.getSmAddress())) {
 				getManagedBean().setShareHolderPermAddr(addr);
-				shareHolderBean.getSmPersonnelAddresses()
-						.set(shareHolderBean.getSmPersonnelAddresses().indexOf(
-								addr),
-								getManagedBean().getShareHolderPermAddr());
-				if (!shareHolderBean.getSmPersonnelAddresses().contains(
-						getManagedBean().getShareHolderPermAddr())) {
-					shareHolderBean.getSmPersonnelAddresses().add(
-							getManagedBean().getShareHolderPermAddr());
-				}
 			}
 		}
 	}
