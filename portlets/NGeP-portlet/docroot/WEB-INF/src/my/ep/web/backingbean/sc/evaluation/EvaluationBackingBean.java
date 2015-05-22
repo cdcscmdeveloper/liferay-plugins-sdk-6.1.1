@@ -761,7 +761,7 @@ public class EvaluationBackingBean extends
 
 		}
 	}
-	
+
 	public void retrieveGeneralInfo() {
 		this.getManagedBean().setPrepareActiveIndex(0);
 	}
@@ -5990,11 +5990,12 @@ public class EvaluationBackingBean extends
 				// this.getManagedBean().setCheckListType("");
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType())
-						&& this.getManagedBean()
-								.getCurrentStatusId()
-								.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
-					complianceStageStatusCheck();
+								.getCommitteeType())) {
+					if (this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+						complianceStageStatusCheck();
+					}
 					if (currentTab == 1) {
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							if (this.getManagedBean()
@@ -6009,8 +6010,11 @@ public class EvaluationBackingBean extends
 								throw new EpException(MessageConst.ERROR_760261);
 							}
 							if (this.getManagedBean().getCountDays() <= 0) {
-
-								checkSampleComplianceCompleted();
+								if (this.getManagedBean()
+										.getCurrentStatusId()
+										.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
+									checkSampleComplianceCompleted();
+								}
 							}
 
 							if (this.getManagedBean()
@@ -6203,11 +6207,12 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setCheckReportDownload(false);
 				if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 						.equalsIgnoreCase(this.getManagedBean()
-								.getCommitteeType())
-						&& this.getManagedBean()
-								.getCurrentStatusId()
-								.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
-					complianceStageStatusCheck();
+								.getCommitteeType())) {
+					if (this.getManagedBean()
+							.getCurrentStatusId()
+							.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
+						complianceStageStatusCheck();
+					}
 					if (currentTab == 1) {
 						if (!this.getManagedBean().getScQt().isSampleReq()) {
 							if (this.getManagedBean()
@@ -6222,7 +6227,11 @@ public class EvaluationBackingBean extends
 								throw new EpException(MessageConst.ERROR_760261);
 							}
 							if (this.getManagedBean().getCountDays() <= 0) {
-								checkSampleComplianceCompleted();
+								if (this.getManagedBean()
+										.getCurrentStatusId()
+										.equals(QTStatusConst.OC_PENDING_COMPLIANCE_PROPOSAL)) {
+									checkSampleComplianceCompleted();
+								}
 							}
 							if (this.getManagedBean()
 									.getComplianceActiveIndex() < 3) {
@@ -7892,7 +7901,7 @@ public class EvaluationBackingBean extends
 		} else {
 			this.getManagedBean().setStatusOnly(true);
 		}
-		
+
 		this.getManagedBean().setPrepareActiveIndex(0);
 		if (SCProcessNameConst.FINALISE_EC_EVALUATION
 				.equalsIgnoreCase(taskName)
