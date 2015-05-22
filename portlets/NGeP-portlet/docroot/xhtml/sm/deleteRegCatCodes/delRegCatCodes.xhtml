@@ -97,12 +97,14 @@
 			message="#{lbl['lbl.sm.delete.sure']} #{deleteCategoryCodeBB.managedBean.selectedCategories.size()} #{lbl['lbl.sm.records.sure']}"
 			header="#{lbl['lbl.sm.catcode.delete.header']}" severity="alert"
 			widgetVar="confirmation">
-
-			<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}"
-				update=":form:catDelPan" oncomplete="confirmation.hide()"
-				action="#{deleteCategoryCodeBB.deleteSelectedCatCodes}" />
-			<p:commandButton id="decline" value="#{lbl['lbl.btn.no']}"
-				onclick="confirmation.hide()" type="button" />
+			
+			<div align="right">
+				<p:commandButton id="confCatDel" value="#{lbl['lbl.btn.yes']}"
+					update=":form:catDelPan" oncomplete="confirmation.hide()"
+					action="#{deleteCategoryCodeBB.deleteSelectedCatCodes}" />
+				<p:commandButton id="decline" value="#{lbl['lbl.btn.no']}"
+					onclick="confirmation.hide()" type="button" />
+			</div>
 
 		</p:confirmDialog>
 	</ui:define>
