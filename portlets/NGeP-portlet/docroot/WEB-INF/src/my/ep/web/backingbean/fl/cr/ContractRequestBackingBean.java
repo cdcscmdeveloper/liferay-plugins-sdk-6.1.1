@@ -3387,7 +3387,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.cmItem.extensionCode",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemCode(),true));
 				}
 				if(getManagedBean().getSearchItemName() != null && getManagedBean().getSearchItemName() != ""){
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName(),true));
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("scRequestItem.itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName(),true));
 				}
 				if(getManagedBean().getSearchItemType() != null){
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("itemType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchItemType()));
