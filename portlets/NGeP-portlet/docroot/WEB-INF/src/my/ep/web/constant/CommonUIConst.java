@@ -22,14 +22,14 @@ public class CommonUIConst {
 	/**
 	 * @return the imagePath
 	 */
-	public static String getImagePath() {
+	public String getImagePath() {
 		return IMAGE_PATH;
 	}
 
 	/**
 	 * @return the imagePathUptoDesign
 	 */
-	public static String getImagePathUptoDesign() {
+	public String getImagePathUptoDesign() {
 		return IMAGE_PATH_UPTO_DESIGN;
 	}
 	
