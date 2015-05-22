@@ -43,7 +43,7 @@
 				
 				<h:outputLabel value="#{lbl['lbl.sc.ministry']}" />
 				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.parentOrgProfile.orgName}" />
+					value="#{noticeBoardBackingBean.managedBean.ministryName}" />
 				<h:outputLabel value="" />
 				<h:outputLabel value="" />
 				
@@ -172,7 +172,7 @@
 			</p:dataTable>
 			
 			<c:if
-				test="#{!noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
+				test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<br/>
 				<h:outputText value="#{lbl['lbl.sc.notice.board.locality']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
