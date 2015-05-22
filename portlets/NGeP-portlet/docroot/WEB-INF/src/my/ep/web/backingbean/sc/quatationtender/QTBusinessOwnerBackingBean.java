@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -73,6 +74,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -264,13 +266,24 @@ public class QTBusinessOwnerBackingBean extends
 			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
 				userSearchBean
 						.getDataFilterBeans()
-						.add(new SearchFilterBean(
-								"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(), this
-										.getManagedBean().getQt()
-										.getPmOrgProfile()
-										.getParentOrgProfile()
-										.getOrgProfileId()));
+						.add(new SearchMultiFilterBean(
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile."
+												+ OrgProfileUtil
+														.getSearchBeanParentString(OrganizationType.MINISTRY
+																.value()),
+										SearchOperator.OPERATOR_EQUALS.value(),
+										retrieveMinistryOrgProfile(
+												this.getManagedBean().getQt()
+														.getPmOrgProfile()
+														.getOrgProfileId())
+												.getOrgProfileId()),
+
+								new SearchFilterBean(
+										"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										ParameterConst.ORG_TYPE_OTHERS,
+										SearchCondition.CONDITION_OR.value())));
 			}
 			// Adding search filterbeans to searchbean.
 			// userSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -441,16 +454,21 @@ public class QTBusinessOwnerBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile() && 
-				this.getManagedBean().getQt().getPmOrgProfile().getParentOrgProfile() != null) {
-				qtSearchBean.getDataFilterBeans().add(
-						new SearchFilterBean(
-								"pmOrgProfile.parentOrgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(), this
-										.getManagedBean().getQt()
-										.getPmOrgProfile()
-										.getParentOrgProfile()
-										.getOrgProfileId()));
+			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+				qtSearchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"pmOrgProfile."
+										+ OrgProfileUtil
+												.getSearchBeanParentString(OrganizationType.MINISTRY
+														.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+								retrieveMinistryOrgProfile(
+										this.getManagedBean().getQt()
+												.getPmOrgProfile()
+												.getOrgProfileId())
+										.getOrgProfileId()
+						));
 			}
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
@@ -497,7 +515,7 @@ public class QTBusinessOwnerBackingBean extends
 		if (getManagedBean().getCommitteMember() == null) {
 			this.getManagedBean().setCommitteMember(new ScCommitteeMember());
 		}
-		getManagedBean().getCommitteMember().setUserSelection("E");
+		getManagedBean().getCommitteMember().setUserSelection(QTConstants.USER_SELECTION);
 		getSelectionTypes();
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
@@ -983,6 +1001,7 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public void deleteBusinessOwner() {
 		debugLogger("deleteBusinessOwner");
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		int count = 0;
 		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
 				.getScCommitteeMemberList();
