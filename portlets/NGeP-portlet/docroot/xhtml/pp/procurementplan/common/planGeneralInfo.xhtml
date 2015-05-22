@@ -47,7 +47,7 @@
 					<p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
 				</td>
 				<td class="header-info-text">
-					#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.parentOrgProfile.pmOrgValidity.orgName}
+					#{(pPlanBackingBean.retrieveMinistry())}
 				</td>
 				<td width="5%">
 					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
