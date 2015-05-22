@@ -1152,33 +1152,47 @@ public class LOIDetailBackingBean extends
 
 		// calc total items in award details
 		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
-			BigDecimal subTotal = null;
 			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
 			BigDecimal  offerPrice = BigDecimal.valueOf(0d);
+			BigDecimal  offeredPriceSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal  offeredPriceAmount = BigDecimal.valueOf(0d);
+
+			BigDecimal  afterNegoSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal  afterNegoTotalAmount = BigDecimal.valueOf(0d);
+
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
 				if(isTermPriceFound || isBiddingAward){
 					getManagedBean().setHideColumnFlag(Boolean.TRUE);
 					if(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null){
 						offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+								offerPrice, scLoiLoaItem.getQty());
+
+						// offered price sub total and total
+						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
 					}
-					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-							offerPrice, scLoiLoaItem.getQty());
 				} else{
 					getManagedBean().setHideColumnFlag(Boolean.FALSE);
-					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-							scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 				}
-
-				scLoiLoaItem.setSubTotal(subTotal);
-				totalAmount = totalAmount.add(subTotal);
+				afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+				// after nego price sub total and total
+				afterNegoTotalAmount =  afterNegoTotalAmount.add(afterNegoSubTotal);
+				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				
 			}
-			scLoi.setLoiAmt(totalAmount);
+
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
-			priceKeyInEvent();
+			scLoi.setOfferedPriceTotal(afterNegoTotalAmount); // offered price total
+			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
+			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
+			//priceKeyInEvent();
 		}
-	
 		getManagedBean().setScQt(resDTO.getScQt());
+		
 		// branch list
 		if (resDTO.getSmSupplierBranchs() != null
 				&& resDTO.getSmSupplierBranchs().size() > 0) {
