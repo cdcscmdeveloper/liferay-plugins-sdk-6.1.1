@@ -52,11 +52,8 @@
 				<tr>
 					<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
 					<td class="columnWidth150">
-						<h:panelGrid columns="2" style="float:right;">
-			           		<p:outputLabel value="*" styleClass="mandatory" />
-	     	             	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%"/>
-	                  	</h:panelGrid>
-					</td> 
+						 	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.delivery.period']}"  style="width:100%" styleClass="required"/>
+	                 </td> 
 					<td><p:inputText id="centralDelPeriod" styleClass="ppRightBtn"  style="width:45px;" maxlength="4"
 					         value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true"  />
                 		<p:spacer width="3"/>

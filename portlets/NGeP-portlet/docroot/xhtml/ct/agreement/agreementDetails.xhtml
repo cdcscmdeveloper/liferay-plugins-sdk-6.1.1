@@ -32,10 +32,7 @@
 					</td>
 					<h:panelGroup>
 					<td class="columnWidth150">
-						<h:panelGrid columns="2" style="float:right;">
-			           		<p:outputLabel value="*" styleClass="mandatory" />
-	     	             	<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}"/>
-	                  	</h:panelGrid>
+	     	             	<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}"  styleClass="required"/>
 					</td> 
 					<td>
 						<p:inputText id="contractPhysicalNo" for="physicalNo"

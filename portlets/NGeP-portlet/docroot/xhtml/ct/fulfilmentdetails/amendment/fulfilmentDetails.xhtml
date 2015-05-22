@@ -70,10 +70,7 @@
 					</h:panelGroup>
 					<h:panelGroup rendered="#{!amendmentBackingBean.managedBean.ctContract.zonalPricing}">
 					<td class="columnWidth150">
-						<h:panelGrid columns="2" style="float:right;">
-			           		<p:outputLabel value="*" styleClass="mandatory" />
-	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" />
-	                  	</h:panelGrid>
+	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%"  styleClass="required"/>
 					</td> 
 					<td><p:inputText id="dperiod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" required="true" style="width:45px;"
 		              		maxlength="4" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />

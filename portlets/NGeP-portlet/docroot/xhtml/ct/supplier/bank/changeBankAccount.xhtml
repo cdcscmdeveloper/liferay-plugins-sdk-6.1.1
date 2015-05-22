@@ -109,11 +109,8 @@
 			<h:panelGrid columns="4" style="width:100%;"
 				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
-				<h:panelGrid columns="2" style="float:right;">
-					<p:outputLabel value="*" styleClass="mandatory" />
-					<h:outputLabel for="contractNo"
-						value="#{lbl['lbl.ct.contract.no']}" />
-				</h:panelGrid>
+				
+					<h:outputLabel for="contractNo" value="#{lbl['lbl.ct.contract.no']}" styleClass="required"  />
 				<h:panelGrid id="menuContractId" columns="3">
 					<p:inputText id="contractNo"
 					value="#{supplierBackingBean.managedBean.ctContract.contractNo}"
@@ -196,10 +193,8 @@
 				styleClass="top-aligned-columns"
 				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
 
-				<h:panelGrid columns="2" style="float:right;">
-					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}" />
-				</h:panelGrid>
+				
+					<p:outputLabel value="#{lbl['lbl.ct.bank.account.name']}"  styleClass="required" />
 
 				<h:panelGrid id="menuBankId" columns="3"
 					rendered="#{supplierBackingBean.managedBean.taskId==null}">
