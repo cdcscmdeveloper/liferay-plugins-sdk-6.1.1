@@ -95,47 +95,47 @@
 			 <p:column style="width:25px">
             	<p:rowToggler rendered="#{not empty contractTreeNode.activeContractSubList}" />
         	</p:column>
-			<p:column headerText="Contract No" style="width:142px">
+			<p:column headerText="#{lbl['lbl.fl.contract.no']}" style="width:142px">
 					<p:commandLink value="#{contractTreeNode.contractNo}" 
 				action="#{contractRequestBackingBean.navigateDocument(contractTreeNode.contractId)}"/>
 				
 			</p:column>
-			<p:column headerText="Contract Name" style="width:142px;white-space:normal">
+			<p:column headerText="#{lbl['lbl.fl.contract.name']}" style="width:142px;white-space:normal">
 				<h:outputText
 					value="#{contractTreeNode.contractName}" />
 			</p:column>
-			<p:column headerText="Schedule/ Phase No" style="width:70px;white-space:normal">
+			<p:column headerText="#{lbl['lbl.fl.fs.no']}" style="width:90px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}" />
 			</p:column>
-			<p:column headerText="Circular" style="width:100px;white-space:normal">
+			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.circularNo}" />
 			</p:column>
-			<p:column headerText="Period (Start)" style="width:97px">
+			<p:column headerText="#{lbl['lbl.fl.period.start']}" style="width:97px">
 				<h:outputText value="#{contractTreeNode.startEffective}" >
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Period (End)" style="width:91px">
+			<p:column headerText="#{lbl['lbl.fl.period.end']}" style="width:91px">
 				<h:outputText value="#{contractTreeNode.endEffective}" >
 				<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Fulfilment Type" style="width:108px;white-space:normal">
+			<p:column headerText="#{lbl['lbl.fl.fulfilment.type']}" style="width:108px;white-space:normal">
 				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.fulfilmentType)}" >
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Contract type" style="width:99px">
+			<p:column headerText="#{lbl['lbl.fl.contract.type']}" style="width:99px">
 				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(contractTreeNode.contractType)}" >
 				</h:outputText>
 			</p:column>
-			<p:column headerText="Supplier Name" style="width:98px;white-space:normal">
+			<p:column headerText="#{lbl['lbl.fl.supp.name']}" style="width:98px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.supplierName}" >
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="Action" style="width:58px;text-align:center">
+			<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}" style="width:58px;text-align:center">
 				<p:commandLink id="crBasepageLink" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
 					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}'}])">
 					<p:graphicImage value="/css/images/design/revise.png"
@@ -179,7 +179,7 @@
 						<p:commandLink id="crBasepageLink" 
 							onclick="procure([{name:'contractId',value:'#{contractExpansion.contractId}'},{name:'scheduleNo',value:'#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}'}])">
 							<p:graphicImage value="/css/images/design/revise.png"
-								title="Contract Request" />
+								title="#{lbl['lbl.fl.contract.request']}" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
