@@ -119,15 +119,12 @@
 						</p:outputPanel>
 					</td>
 				</tr>
-			
-			<tr>
-				<td>
-					<p:commandButton value="#{lbl['lbl.btn.submit']}"  process="verificationPanel" update="@form"
-						action="#{forceReplaceSuppAdminBackingBean.submit}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				</td>
-			</tr>
 	
 		</table>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.submit']}"  process="verificationPanel" update="@form"
+						action="#{forceReplaceSuppAdminBackingBean.submit}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+		</div>
 	</p:outputPanel>
 	
 	
