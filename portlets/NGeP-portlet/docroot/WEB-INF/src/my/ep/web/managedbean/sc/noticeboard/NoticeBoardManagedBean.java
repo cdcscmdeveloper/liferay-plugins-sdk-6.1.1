@@ -162,6 +162,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private QtAmendMentBean qtAmendMentBean;
 	private String changedDate;
 	private String ministryName;
+	private String jabatan;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1139,6 +1140,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setMinistryName(String ministryName) {
 		this.ministryName = ministryName;
+	}
+
+	/**
+	 * @return the jabatan
+	 */
+	public String getJabatan() {
+		return jabatan;
+	}
+
+	/**
+	 * @param jabatan the jabatan to set
+	 */
+	public void setJabatan(String jabatan) {
+		this.jabatan = jabatan;
 	}
 
 
