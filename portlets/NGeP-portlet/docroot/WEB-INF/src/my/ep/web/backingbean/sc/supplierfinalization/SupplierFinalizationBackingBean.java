@@ -1706,7 +1706,7 @@ public class SupplierFinalizationBackingBean extends
 			}
 			if ((attachment == null || 
 					this.getManagedBean().isSecretaryUser()) && 
-						isEvaluationReport) {
+						!isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
