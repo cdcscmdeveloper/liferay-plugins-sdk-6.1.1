@@ -68,7 +68,7 @@
 				</f:facet>
 				<p:commandLink id="btnAdtMacEdit" oncomplete="adtMacDlg.show();" update=":#{p:component('adtMachineDlg')}" rendered="#{!viewFlag}"
 					action="#{svoSiteVisitBackingBean.editAdditionalMachine(addMachineDtl)}" process="@this">
-					<p:graphicImage value="/css/images/design/edit.png" />
+					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
