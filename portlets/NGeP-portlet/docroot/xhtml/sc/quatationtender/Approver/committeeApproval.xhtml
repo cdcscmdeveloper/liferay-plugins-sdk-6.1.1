@@ -7,8 +7,6 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel styleClass="scmemberdtls">
-		<p:spacer height="2" />
-
 		<p:dataTable id="committeeapprovalId"
 			value="#{membersList.scCommitteeMembers}" var="committeeapprover"
 			rowIndexVar="index" editable="true" rowKey="#{committeeapprover}"
@@ -60,19 +58,20 @@
 						disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}" />
 				</ui:fragment>
 				<ui:fragment rendered="#{!committeeapprover.PNP}"> -->
-					<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
-						value="#{committeeapprover.memberRole.parameterId}"
-						style="width: 110px;margin-bottom: 5px;"
-						disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
-						<p:ajax event="change" partialSubmit="true" process="@this"
-							listener="#{approvalBackingBean.roleChangeListner(committeeapprover)}" />
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems var="role"
-							value="#{approvalBackingBean.managedBean.roleTypes}"
-							itemLabel="#{role.codeName}"
-							itemValue="#{role.pmParameter.parameterId}" />
-					</p:selectOneMenu>
-					<p:message id="roleidMsg" for="roleid" display="icon" />
+				<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
+					value="#{committeeapprover.memberRole.parameterId}"
+					style="width: 110px;margin-bottom: 5px;"
+					disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						listener="#{approvalBackingBean.roleChangeListner(committeeapprover)}" />
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}" />
+					<f:selectItems var="role"
+						value="#{approvalBackingBean.managedBean.roleTypes}"
+						itemLabel="#{role.codeName}"
+						itemValue="#{role.pmParameter.parameterId}" />
+				</p:selectOneMenu>
+				<p:message id="roleidMsg" for="roleid" display="icon" />
 				<!-- </ui:fragment> -->
 			</p:column>
 
