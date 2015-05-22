@@ -32,16 +32,31 @@
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/><p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 							
-				<td><ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" required="true"
+				<td>
+				<p:outputPanel id="opFfcOrgCode" rendered="#{ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+				    <ac:lov id="lovFfcOrg" lovId="PM_ORG_PROFILE_FFC" size="29" 
+				    	required="true" 
+		            	update=":form:opDefinedSearch" 
+		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}" 
+						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
+						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
+						<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
+				</p:outputPanel>
+				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" required="true"
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 		            	update=":form:opDefinedSearch" readonly="true"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
-						conditionField="#{profileManagementBackingBean.constructConditionFields()}"/>
-						
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}"/>						
 		         	<p:message id="lovMinistryMsg" for="lovMinistry1" display="icon" />
+				</p:outputPanel>
+				
 			</td>
 			</tr>
 			<tr>
@@ -70,7 +85,7 @@
 				</th>
 				<td>
 				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="29" 
-		            	update=":form:opDefinedSearch" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity == null}"
+		            	update=":form:opDefinedSearch" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile == null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
 						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
