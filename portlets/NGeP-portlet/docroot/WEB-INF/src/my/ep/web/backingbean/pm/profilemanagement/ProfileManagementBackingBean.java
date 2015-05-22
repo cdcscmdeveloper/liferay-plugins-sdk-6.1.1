@@ -658,13 +658,13 @@ public class ProfileManagementBackingBean extends
 																// again
 			showReceivingAddress();
 			// set org category
-			if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT)
+			if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT_UP)
 					.contains(
 							pmUserOrg.getPmOrgProfile().getOrgTypeCode()
 									.getParameterCode())) {
 				getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 			} else if (Arrays
-					.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS)
+					.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS_UP)
 					.contains(
 							pmUserOrg.getPmOrgProfile().getOrgTypeCode()
 									.getParameterCode())) {
