@@ -158,12 +158,11 @@
 						</p:commandLink>
 
 					</td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
-					<td><p:inputText readonly="true" size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td><p:inputTextarea readonly="true" style="width: 53% !important;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.code']}" /></td>
+					<td><p:outputLabel size="35" styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.name']}" /></td>
+					<td><p:outputLabel  styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel></td>
 				</tr>
 
 				<tr style="height: 30px;">
