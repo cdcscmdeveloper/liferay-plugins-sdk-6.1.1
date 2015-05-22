@@ -172,7 +172,7 @@
 		header="#{lbl['lbl.sm.bankDtls.bankDiaHdr']}" widgetVar="bankDialog"
 		resizable="false" showEffect="fade" closable="false" hideEffect="fade"
 		modal="true" id="bankDialog">
-		<p:panel id="bankDetailsPanel">
+		<p:outputPanel id="bankDetailsPanel">
 			<p:messages id="suppBankAcctInfoMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="true" />
 			<table style="width: 100%">
@@ -434,7 +434,7 @@
 				</tr>
 
 			</table>
-		</p:panel>
+		</p:outputPanel>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sm.button.save']}"
 				partialSubmit="true" process=":form:tt:bankDialog"
