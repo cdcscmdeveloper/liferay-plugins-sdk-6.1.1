@@ -171,14 +171,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrievePpRejectReasons(ppItem)}"
 			    	disabled="#{!ppItem.rejected or !ppItem.editable}" id="clPpReason" update=":form:dlRejectReason" immediate="true">
-					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
 	        	<p:commandLink oncomplete="dlItemRemarkWv.show();" 
 	        		action="#{pPlanBackingBean.retrievePpItemRemark(ppItem)}"
 			    	immediate="true" update=":form:dlItemRemark">
-					<p:graphicImage value="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+					<p:graphicImage value="#{!(pPlanBackingBean.managedBean.modeEditable and ppItem.editable) ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
 	        <p:column>

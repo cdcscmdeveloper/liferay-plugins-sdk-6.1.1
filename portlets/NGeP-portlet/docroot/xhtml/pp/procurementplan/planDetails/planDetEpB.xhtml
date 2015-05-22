@@ -173,20 +173,20 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			    &#160;
 			    <p:commandLink oncomplete="dlRejectReasonWv.show();" action="#{pPlanBackingBean.retrieveEpRejectReasons(epItem)}"
 			    	disabled="#{!epItem.rejected or !epItem.editable}" id="clEpReason" update=":form:dgReason" immediate="true">
-					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeReviewEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
 	        	<p:commandLink oncomplete="dlItemJustificationWv.show();" update=":form:dgJustication" action="#{pPlanBackingBean.retrieveJustification(epItem)}"
 			    	 id="clEpJustification">
-					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.modeEditable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 					<f:param name="disableValidation" value="" />
 				</p:commandLink>
 	        </p:column>
 	        <p:column style="white-space:nowrap;" rendered="#{pPlanBackingBean.managedBean.modeEditable and (pPlanBackingBean.managedBean.selectedPlan.updatable or pPlanBackingBean.managedBean.approvedPlan)}">
 		      	<p:commandLink oncomplete="dlItemRemarkWv.show();" action="#{pPlanBackingBean.retrieveEpItemRemark(epItem)}"
 			    	immediate="true" update=":form:dlItemRemark">
-					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+					<p:graphicImage value="#{!pPlanBackingBean.managedBean.selectedPlan.updatable ? '/css/images/design/ico-view.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>
 	        <p:column>
