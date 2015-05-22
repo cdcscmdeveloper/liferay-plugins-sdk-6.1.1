@@ -32,20 +32,14 @@
    	<br/>
      <p:panel id="projectId" header="#{lbl['lbl.ct.panel.project.assoc.creation']}" toggleable="true" toggleSpeed="500">
 	     <h:panelGrid columns="2" styleClass="top-aligned-columns"> 
-	       	<h:panelGrid columns="2" style="float:right;">
-			  <p:outputLabel value="*" styleClass="mandatory" />
-	          <p:outputLabel value="#{lbl['lbl.ct.project.name']}" />
-	       </h:panelGrid>
+	          <p:outputLabel value="#{lbl['lbl.ct.project.name']}"  styleClass="required"/>
 	       <h:panelGrid columns="2">
            <p:inputText id="projectNames" style="width:300px;" required="true" label="#{lbl['lbl.ct.project.name']}"
                value="#{associationBackingBean.managedBean.ctAssociation.projectName}" maxlength="100">
                </p:inputText>
                 <p:message for="projectNames" display="icon"/>
            </h:panelGrid>
-           	<h:panelGrid columns="2" style="float:right;">
-           	   <p:outputLabel value="*" styleClass="mandatory" />
-                 <p:outputLabel value="#{lbl['lbl.ct.project.desc']}" />
-             </h:panelGrid>
+                 <p:outputLabel value="#{lbl['lbl.ct.project.desc']}"  styleClass="required"/>
             <h:panelGrid  columns="2">
 		    <p:inputTextarea id="projectDesc" style="width:500px;" required="true" label="#{lbl['lbl.ct.project.desc']}"
 		       value="#{associationBackingBean.managedBean.ctAssociation.description}" maxlength="200" rows="2" autoResize="false">

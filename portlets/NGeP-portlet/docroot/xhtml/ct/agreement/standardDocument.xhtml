@@ -124,10 +124,7 @@
 	    toggleable="true" toggleSpeed="500" rendered="#{agreementBackingBean.managedBean.uploadFinalAgreement}" >
 		<h:panelGroup id="uploadAgPg">
 			<h:panelGrid columns="2">
-				<h:panelGrid columns="2">
-					<p:outputLabel value="*" styleClass="mandatory" />
-					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" />
-				</h:panelGrid>
+					<p:outputLabel value="#{lbl['lbl.txt.attachment']}" styleClass="required" />
 				<p:commandButton oncomplete="uploadAgDlg.show();return false;" 
 					rendered="#{!agreementBackingBean.managedBean.uploadStampedAndSignedPage}"
 					icon="iconAttachment" value="#{lbl['lbl.btn.upload']}" update=":form:uploadAgPg, uploadAgDlg" />
