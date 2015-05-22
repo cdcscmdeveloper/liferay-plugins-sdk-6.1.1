@@ -4453,10 +4453,11 @@ public class SpecificationBackingBean extends
 				if (locationLevel
 						.equalsIgnoreCase(ParameterConst.LOCATION_LEVEL_DIVISION)) {
 					if (treeNode.getType().equals("state")) {
-						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
-						allNodes.addAll(locationDTO);
-						if (treeNode.getChildCount() > 0) {
-							break;
+						if (treeNode.getChildCount() == 0
+								&& treeNode.getChildren().isEmpty()) {
+							List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+							allNodes.addAll(locationDTO);
+
 						}
 					} else {
 						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
@@ -4580,8 +4581,10 @@ public class SpecificationBackingBean extends
 		if (zoneBeans != null && zoneBeans.size() > 0) {
 			for (ZonesBean zonesBean : zoneBeans) {
 				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
-				if (!prevsZone.getZoneName().equalsIgnoreCase(zoneName)) {
-					beans.add(zonesBean);
+				if (null != prevsZone) {
+					if (!prevsZone.getZoneName().equalsIgnoreCase(zoneName)) {
+						beans.add(zonesBean);
+					}
 				}
 			}
 		}
