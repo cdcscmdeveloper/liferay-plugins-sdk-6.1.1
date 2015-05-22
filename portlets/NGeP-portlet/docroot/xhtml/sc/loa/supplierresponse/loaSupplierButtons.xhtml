@@ -12,7 +12,7 @@
 	</p:blockUI>
 
 	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@this"
+		<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form" partialSubmit="true"
 			onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 			action="#{lOADetailBackingBean.saveAction}" />
 
