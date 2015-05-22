@@ -8409,7 +8409,10 @@ public class EvaluationBackingBean extends
 		String reportId = "";
 		String reportName = "";
 
-		if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+			reportName = ReportConst.SC_EC_PRICEOFFER_4M;
+			reportId = ReportConst.HARGA_TAWARAN_EC_RPT_VAL; // SC_030
+		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_FEC_PRICEOFFER_3D;
 			reportId = ReportConst.HARGA_TAWARAN_FEC_RPT_VAL; // SC_016
@@ -8526,30 +8529,30 @@ public class EvaluationBackingBean extends
 
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
-			for (ScQtScoreSetting qtScoreSetting : list) {
-				if (qtScoreSetting.isWeightageReq()) {
+			/*for (ScQtScoreSetting qtScoreSetting : list) {*/
+				/*if (qtScoreSetting.isWeightageReq()) {*/
 					// with weightage
 					reportName = ReportConst.SC_EC_TECH_SPEC_WEI;
 					reportId = ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_029
-				} else {
+				/*} else {
 					// without weightage
 					reportName = ReportConst.SC_EC_TECH_SPEC;
 					reportId = ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_028
-				}
-			}
+				}*/
+			/*}*/
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			for (ScQtScoreSetting qtScoreSetting : list) {
 				if (qtScoreSetting.getSettingType() == 1) {
-					if (qtScoreSetting.isWeightageReq()) {
+					/*if (qtScoreSetting.isWeightageReq()) {*/
 						// with weightage
 						reportName = ReportConst.SC_TEC_TECH_SPEC_WEI;
 						reportId = ReportConst.PSDAK_TEC_RPT_VAL; // SC_009
-					} else {
+					/*} else {
 						// without weightage
 						reportName = ReportConst.SC_TEC_TECH_SPEC;
 						reportId = ReportConst.TECSPEC_TEC_RPT_VAL; // SC_008
-					}
+					}*/
 				}
 			}
 		}

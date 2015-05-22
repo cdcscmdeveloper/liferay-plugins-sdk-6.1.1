@@ -124,6 +124,7 @@ public class ReportConst {
 		public static final String SC_EC_OVERALL_FIN_4I = "SC_EC_OVERALL_FIN_4I.jsp";
 		public static final String SC_EC_TECH_SPEC_WEI = "SC_EC_TECH_SPEC_WEI.jsp";
 		public static final String SC_EC_TECH_SPEC = "SC_EC_TECH_SPEC.jsp";
+		public static final String SC_EC_PRICEOFFER_4M = "SC_EC_PRICEOFFER_4M.jsp";
 		
 		//FC
 		public static final String SC_FINANCE_ANALYSIS_EVALUATION_RPT_JSP = "SC_FC_ANALYSIS_EVAL_REP_8A.jsp";
