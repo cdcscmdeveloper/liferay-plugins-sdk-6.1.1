@@ -11,7 +11,7 @@
 				<td style="width: 150px;"><p:outputLabel
 						value="#{lbl['lbl.sc.ministry']}" /></td>
 				<td><p:inputText
-						value="#{approvalBackingBean.managedBean.qt.pmOrgProfile.parentOrgProfile.orgName}"
+						value="#{approvalBackingBean.retrieveMinistryByOrgProfileId(approvalBackingBean.managedBean.qt.pmOrgProfile.orgProfileId)}"
 						disabled="true" readonly="true" size="80" /></td>
 				<td />
 				<td />
