@@ -16,10 +16,17 @@
 
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="" />
+					<p:column style="width:2%">
+						<f:facet name="header">
+							<h:panelGrid
+								rendered="#{supplierProposalDetailBackingBean.isMedicalProcurementCategory(supplierProposalDetailBackingBean.managedBean.qt.pmProcurementCategory)}">
+								<ac:iconTooltip value="#{lbl['lbl.sc.sp.ubat.instruction']}" />
+							</h:panelGrid>
+						</f:facet>
+					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.descriptions']}"
-						style="width:60%" />
+					<p:column style="width:60%"
+						headerText="#{lbl['lbl.sc.descriptions']}" />
 
 					<p:column headerText="#{lbl['lbl.sc.instruction']}"
 						style="width:28%" />
@@ -46,7 +53,7 @@
 				<h:outputText
 					rendered="#{((financeList.scQtCheckList.definationType.parameterCode eq 'UP' and financeList.scQtCheckList.action.parameterCode eq 'O') or (financeList.scQtCheckList.definationType.parameterCode eq 'NA'))}"
 					value="#{lbl['lbl.sc.attachment.msg']}" />
-					
+
 				<h:outputText
 					rendered="#{financeList.scQtCheckList.action.parameterCode eq 'V' and financeList.scQtCheckList.definationType.parameterCode eq 'UP'}"
 					value="#{lbl['lbl.sc.attachment.view.msg']}" />
