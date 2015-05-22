@@ -277,7 +277,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				
 				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-					codesSearchBean.setSearchField("parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchField("recordStatusFlg");
 					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
@@ -334,7 +334,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				}
 				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchField("recordStatusFlg");
 					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
@@ -407,7 +407,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				}
 				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchField("recordStatusFlg");
 					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
@@ -497,7 +497,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 				
 				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-					codesSearchBean.setSearchField("parentBusinessNature.parentBusinessNature.parentBusinessNature.parentBusinessNature.recordStatusFlg");
+					codesSearchBean.setSearchField("recordStatusFlg");
 					codesSearchBean.setSearchValue(getManagedBean().getStatus());
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
