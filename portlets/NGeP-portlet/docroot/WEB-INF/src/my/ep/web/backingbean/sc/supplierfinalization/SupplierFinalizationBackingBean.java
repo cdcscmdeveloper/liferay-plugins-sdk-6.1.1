@@ -1769,7 +1769,7 @@ public class SupplierFinalizationBackingBean extends
 				reportAttachment.setFileName(filename.toString());
 				populateAttachmentDetails(reportAttachment);
 
-			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT DOC_DEF_KEY_TECHNICAL_EVAALUATION_REPORT DOC_DEF_KEY_FINANCIAL_EVAALUATION_REPORT
+			} else if (SourcingConstants.DOC_DEF_KEY_OPENNING_REPORT
 					.equals(docDefinitionKey)) {
 				// FIXME - get from Opening report
 
