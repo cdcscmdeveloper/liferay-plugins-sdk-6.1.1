@@ -8,10 +8,7 @@
 	<p:panel id="amend" header="#{lbl['lbl.ct.menu.amendment']}" toggleable="true" toggleSpeed="500">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.amendment.type']}" escape="false"/><br/><br/>
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
-			<h:panelGrid columns="2" style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.amendment.type']}" />
-			</h:panelGrid>
+				<p:outputLabel value="#{lbl['lbl.ct.amendment.type']}"  styleClass="required"/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend}"
@@ -85,10 +82,7 @@
 			</h:panelGrid>
 	     </h:panelGrid>
 	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
-			<h:panelGrid columns="2" style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />
-				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" />
-			</h:panelGrid>
+				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" styleClass="required" />
 			<h:panelGrid columns="5">
 				<p:inputText id="txtfrno" style="width:650px;" label="#{lbl['lbl.ct.file.ref.no']}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" 
@@ -97,11 +91,8 @@
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.file.ref.no']}" />
 			    <p:spacer width="1"/>
 				<p:message for="txtfrno" display="icon" />
-			</h:panelGrid>
-			<h:panelGrid columns="2" style="float:right;">
-				<p:outputLabel value="*" styleClass="mandatory" />				
-				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}" />
-			</h:panelGrid>
+			</h:panelGrid>			
+				<p:outputLabel value="#{lbl['lbl.ct.amendment.title']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
 				<p:inputTextarea id="txtname" style="width:650px;"  label="#{lbl['lbl.ct.amendment.title']}" rows="2"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.title}" maxlength="100"
@@ -112,10 +103,7 @@
 		<h:panelGrid columns="3" style="width:100%"	columnClasses="columnWidth225">
 			<h:panelGroup>
 				<div style="float: right; vertical-align: top;">
-					<h:panelGrid columns="2">
-						<p:outputLabel value="*" styleClass="mandatory" />
-						<p:outputLabel value="#{lbl['lbl.ct.amendment.desc']}" />
-					</h:panelGrid>
+						<p:outputLabel value="#{lbl['lbl.ct.amendment.desc']}"  styleClass="required"/>
 				</div>
 			</h:panelGroup>
 			<h:panelGrid columns="2">

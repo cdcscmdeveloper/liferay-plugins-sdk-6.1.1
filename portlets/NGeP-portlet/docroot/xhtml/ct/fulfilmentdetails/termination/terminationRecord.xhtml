@@ -12,11 +12,9 @@
 	       <h:panelGrid columns="4" style="width:1050px;" styleClass="top-aligned-columns"
 	            columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 	            
-	            <h:panelGrid columns="2" style="float:right;">
-				      <p:outputLabel value="*" styleClass="mandatory" />
-		    	      <p:outputLabel value="#{lbl['lbl.ct.receiver.name']}" />
-		  	      </h:panelGrid>
-		  	      <h:panelGrid columns="5">
+	            
+		    	      <p:outputLabel value="#{lbl['lbl.ct.receiver.name']}" styleClass="required" />
+		  	       <h:panelGrid columns="5">
            		      <p:inputText id="receiverName" 	style="width:170px;" maxlength="50" required="true"  
            		      	  disabled="#{terminationBackingBean.managedBean.viewContract}"
            		          value="#{terminationBackingBean.managedBean.contractVer.ctTermination.receiverName}" label="#{lbl['lbl.ct.receiver.name']}"/>
@@ -26,10 +24,7 @@
                       <p:message for="receiverName" display="icon"/>
 		  	      </h:panelGrid>
 		  	      
-		  	      <h:panelGrid columns="2" style="float:right;">
-				       <p:outputLabel value="*" styleClass="mandatory" />
-		    	       <p:outputLabel value="#{lbl['lbl.ct.receiver.ic.no']}" />
-		  	       </h:panelGrid>
+		  	          <p:outputLabel value="#{lbl['lbl.ct.receiver.ic.no']}"  styleClass="required" />
 		  	       <h:panelGrid columns="5">
            		       <p:inputText id="icNo" style="width:170px;" maxlength="15" required="true" 
            		       	  disabled="#{terminationBackingBean.managedBean.viewContract}"
@@ -40,10 +35,7 @@
                        <p:message for="icNo" display="icon"/>
 		  	       </h:panelGrid>
 		  	      
-		  	       <h:panelGrid columns="2" style="float:right;">
-				      <p:outputLabel value="*" styleClass="mandatory" />
-		    	      <p:outputLabel value="#{lbl['lbl.ct.delivery.date']}" />
-		  	      </h:panelGrid>
+		    	      <p:outputLabel value="#{lbl['lbl.ct.delivery.date']}" styleClass="required" />
                   <h:panelGrid columns="5">
              	      <p:calendar  id="dDate" readonlyInput="true" required="true" label="#{lbl['lbl.ct.delivery.date']}"
              	         	disabled="#{terminationBackingBean.managedBean.viewContract}"
@@ -57,10 +49,8 @@
                       <p:message for="dDate" display="icon"/>
                    </h:panelGrid>
 	            
-	   		      <h:panelGrid columns="2" style="float:right;">
-				      <p:outputLabel value="*" styleClass="mandatory" />
-		    	      <p:outputLabel value="#{lbl['lbl.ct.notice.date']}" />
-		  	      </h:panelGrid>
+	   		      
+		    	      <p:outputLabel value="#{lbl['lbl.ct.notice.date']}" styleClass="required"  />
                   <h:panelGrid columns="5">
              	        <p:calendar id="nDate"   readonlyInput="true" required="true" label="#{lbl['lbl.ct.notice.date']}" navigator="true"
              	            disabled="#{terminationBackingBean.managedBean.viewContract}"
@@ -73,10 +63,8 @@
              	        <p:message for="nDate" display="icon"/>
                   </h:panelGrid>
             
-		  	       <h:panelGrid columns="2" style="float:right;">
-				       <p:outputLabel value="*" styleClass="mandatory" />
-		    	       <p:outputLabel value="#{lbl['lbl.ct.received.date']}" />
-		  	       </h:panelGrid>
+		  	      
+		    	       <p:outputLabel value="#{lbl['lbl.ct.received.date']}"  styleClass="required" />
           	       <h:panelGrid columns="5">
              	      <p:calendar id="rDate"  readonlyInput="true" required="true" label="#{lbl['lbl.ct.received.date']}"
              	        disabled="#{terminationBackingBean.managedBean.viewContract}"

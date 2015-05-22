@@ -64,10 +64,7 @@
 					</td>
 					<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
 					<td class="columnWidth150">
-						<h:panelGrid columns="2" style="float:right;">
-			           		<p:outputLabel value="*" styleClass="mandatory" />
-	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" />
-	                  	</h:panelGrid>
+	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" styleClass="required" />
 					</td> 
 					<td><p:inputText id="dperiod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" required="true" style="width:45px;"
 		              		maxlength="4" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}"
@@ -196,21 +193,15 @@
 	 <h:panelGrid columns="2" style="width:700px;" 
  		rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
        	contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
-        	<h:panelGrid columns="2" style="width:140px;">
-           <p:outputLabel value="*" styleClass="mandatory" />
-	   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}" />
-	   </h:panelGrid>
+	   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}"  styleClass="required"/>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
 		  	rows="3" style="width:500px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
 		  	required="true" autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputTextarea>
 		   	<p:message for="justificationLbl" display="icon"/>	
 	  </h:panelGrid>	
-	  <h:panelGrid columns="2" style="width:140px;"
-	         rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
-             <p:outputLabel value="*" styleClass="mandatory" />
-	   	     <p:outputLabel id="ap201FileId" value="#{lbl['lbl.ct.upload.ap201']}" />
-	   </h:panelGrid>	
+	   	     <p:outputLabel id="ap201FileId"   value="#{lbl['lbl.ct.upload.ap201']}"  
+	   	           styleClass="required"    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}"/>
 	   <h:panelGroup id="uploadAp201Pg">
 			 <p:commandButton oncomplete="uploadAp201Dlg.show();return false;" icon="iconAttachment" 
 				 update="uploadAp201Pg" value="#{lbl['lbl.bpm.choose.file']}" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"/>	

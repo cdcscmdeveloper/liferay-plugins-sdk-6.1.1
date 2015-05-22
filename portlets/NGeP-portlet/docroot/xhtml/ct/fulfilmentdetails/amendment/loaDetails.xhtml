@@ -99,10 +99,7 @@
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.signer']}"/>
 	  	</f:facet>
 		<h:panelGrid columns="2" style="width:80%" columnClasses="columnWidth225">
-		    <h:panelGrid columns="2" style="float:right;">
-			    <p:outputLabel value="*" styleClass="mandatory" />
-			    <p:outputLabel value="#{lbl['lbl.ct.loa.signer']}" />
-			</h:panelGrid>
+			    <p:outputLabel value="#{lbl['lbl.ct.loa.signer']}"  styleClass="required"/>
 			<h:panelGrid columns="2">
 			   <p:selectOneMenu id="signer" style="width:310px" label="#{lbl['lbl.ct.loa.signer']}"
 			        disabled="#{amendmentBackingBean.managedBean.disableFinalAmendDetails}"
