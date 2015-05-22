@@ -1264,10 +1264,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if(cmItem.getExtensionCode()==null) {
 						cmItem.setExtensionCode("000"); 
 					}
-					cmItem.setItemName(ctContractItem.getItemName());
+					cmItem.setItemName(ctContractItem.getScRequestItem().getItemName());
 					cmSupplierItem.setCmItem(cmItem);
 				}
-				cmSupplierItem.setPmUom(ctContractItem.getUom());
+				cmSupplierItem.setPmUom(ctContractItem.getScRequestItem().getUom());
 				cmSupplierItem.setMinOrder(Double.valueOf(ctContractItem.getMinimumOrderQty()).intValue());
 				cmSupplierItem.setSkuNumber(ctContractItem.getSku());
 				getContractItemPricing(cmSupplierItem, ctContractItem);
