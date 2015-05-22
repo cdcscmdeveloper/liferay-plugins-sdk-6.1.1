@@ -91,7 +91,7 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM"
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="#{lbl['lbl.cm.item.table.uom']}"
 				readonly="true"
 				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{rowIndex}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"

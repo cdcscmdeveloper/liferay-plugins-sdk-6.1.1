@@ -64,7 +64,7 @@
 					<p:column>
 
 						<ac:lov id="segmentUploadId" lovId="CM_UNSPSC"
-							headerText="#{lbl['lbl.cm.segment']} Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.segment']}" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^0">
@@ -95,7 +95,7 @@
 					</p:column>
 					<p:column>
 						<ac:lov id="familyUploadId" lovId="CM_UNSPSC"
-							headerText="#{lbl['lbl.cm.family']} Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.family']}" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscfamily"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
@@ -125,7 +125,7 @@
 					</p:column>
 					<p:column>
 						<ac:lov id="classUploadId" lovId="CM_UNSPSC"
-							headerText="#{lbl['lbl.cm.class']} Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.class']}" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscClass"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
@@ -155,7 +155,7 @@
 					</p:column>
 					<p:column>
 						<ac:lov id="commodityUploadId" lovId="CM_UNSPSC"
-							headerText="#{lbl['lbl.cm.commodity']} Lov" update=":form:tablePanelId"
+							headerText="#{lbl['lbl.cm.commodity']}" update=":form:tablePanelId"
 							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
 							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 							conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">

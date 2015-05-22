@@ -169,7 +169,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" /> <p:outputLabel value="*" styleClass="mandatory"/></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="UOM Lov" readonly="true"
+							headerText="{lbl['lbl.cm.item.table.uom']}" readonly="true" 
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
