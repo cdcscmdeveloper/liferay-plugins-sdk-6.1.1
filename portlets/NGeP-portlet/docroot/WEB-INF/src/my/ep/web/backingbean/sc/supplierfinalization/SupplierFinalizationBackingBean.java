@@ -1671,8 +1671,19 @@ public class SupplierFinalizationBackingBean extends
 		for (ScQtFinalizationReport report : scQtFinalizationReports) {
 			ScQtFinalizationReportAttachment attachment = report
 					.getScQtFinalizationReportAttachment();
-			if (attachment == null || 
-					this.getManagedBean().isSecretaryUser()) {
+			boolean isEvaluationReport = false;
+			if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+					.equals(report.getDefinationType().getParameterCode())) {
+				String docDefinitionKey = report.getPmDocument()
+												.getDocDefinitionKey();
+				if (SourcingConstants.DOC_DEF_KEY_EVALUATION_REPORT
+								.equals(docDefinitionKey)) {
+					isEvaluationReport = true;
+				}
+			}
+			if ((attachment == null || 
+					this.getManagedBean().isSecretaryUser()) && 
+					!isEvaluationReport) {
 				attachment = generateDocumentAttachment(report);
 				report.setScQtFinalizationReportAttachment(attachment);
 			}
