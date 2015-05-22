@@ -1160,7 +1160,6 @@ public class LOIDetailBackingBean extends
 
 		// calc total items in award details
 		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
-			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
 			BigDecimal  offerPrice = BigDecimal.valueOf(0d);
 			BigDecimal  offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal  offeredPriceAmount = BigDecimal.valueOf(0d);
@@ -1194,7 +1193,7 @@ public class LOIDetailBackingBean extends
 			}
 
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
-			scLoi.setOfferedPriceTotal(afterNegoTotalAmount); // offered price total
+			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
 			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
 			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
 			//priceKeyInEvent();
@@ -3764,14 +3763,15 @@ public class LOIDetailBackingBean extends
 				subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 				scLoiLoaItem.setAfterNegoSubTotal(subTotal);
+				scLoiLoaItem.setSubTotal(subTotal);
 				totalAmount = totalAmount.add(subTotal);
 			}
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 			scLoi.setAfterNegoTotal(totalAmount);
+			scLoi.setLoiAmt(totalAmount);
 		}
 		getManagedBean().setScLoi(scLoi);
 	}
-
 
 	/**
 	 * Check nego term price.
