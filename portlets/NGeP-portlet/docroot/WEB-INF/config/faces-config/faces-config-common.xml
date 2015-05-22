@@ -74,7 +74,7 @@
 	
 	<managed-bean>
 		<description>Common UI Constants</description>
-		<managed-bean-name>CommonUIConstants</managed-bean-name>
+		<managed-bean-name>CommonUIConstant</managed-bean-name>
 		<managed-bean-class>my.ep.web.constant.CommonUIConst</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
