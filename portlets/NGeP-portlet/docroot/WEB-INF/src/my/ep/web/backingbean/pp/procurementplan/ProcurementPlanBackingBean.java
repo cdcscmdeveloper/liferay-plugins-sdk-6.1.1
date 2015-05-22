@@ -74,6 +74,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.StatusHelper;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -1047,7 +1048,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmUser> sourceApprover = new ArrayList<PmUser>(); 
         List<PmUser> targetApprover = new ArrayList<PmUser>();  
         this.getManagedBean().setApproverModel(new DualListModel<PmUser>(sourceApprover, targetApprover));
-        generateSourceApprovers(orgProfile.getParentOrgProfile().getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
+        generateSourceApprovers(retrievePegawaiPegawalOrgProfile(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()).getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
 
 		log.info("loadPlanActors - End");
 	}
@@ -1217,6 +1218,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 		List<PmUser> sourceList = PpCommonUtil.retrieveUserListByRole(orgProfileId, roleCode, this.getManagedBean().getApproverModel().getTarget());
 		this.getManagedBean().getApproverModel().setSource(sourceList);
+	}
+	
+	public String retrieveMinistry(){
+		return retrieveMinistryByOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
 	}
 	/* --------------------------------------------------------- Plan General Related - END -----------------------------------------------------------------*/	
 	
