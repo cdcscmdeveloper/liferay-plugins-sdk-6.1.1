@@ -85,12 +85,12 @@ background: none;
 							</div>
 						</h:panelGroup>
 					</td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
-					<td><p:inputText readonly="true" size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td><p:inputTextarea readonly="true" style="width: 53% !important;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputTextarea>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.code']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"  value="#{lbl['lbl.cm.item.name']}" /></td>
+					<td style="overflow-wrap:break-word;width:25%;"><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel>
 						<p:spacer width="5" />
 						<p:commandLink rendered="#{fn:length(catalogueBackingBean.managedBean.itemSpec) > 0}"
 							update=":form:itemSpecDlg" oncomplete="itemSpecDlg.show();">
@@ -101,50 +101,40 @@ background: none;
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" /></td>
-					<td><p:inputText size="26"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
-							readonly="true"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
-					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"
-							readonly="true"></p:inputText></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.table.uom']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"></p:outputLabel></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.sku']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:outputLabel></td>
 					<td></td>
 				</tr>
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel
+					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
-					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"
-							readonly="true"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
-					<td colspan="1"><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"
-							readonly="true"></p:inputText></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"></p:outputLabel></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.model']}" /></td>
+					<td colspan="1"><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"></p:outputLabel></td>
 				</tr>
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
-					<td><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
-							readonly="true"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
-					<td colspan="1"><p:inputText size="26"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
-							readonly="true" />
-						<p:inputText style="margin-left: 2px;" size="3" value="#{lbl['lbl.cm.days']}"
-							readonly="true" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.min.order']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></p:outputLabel></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.delivery.term']}" /></td>
+					<td colspan="1"><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"/>
+						<p:outputLabel styleClass="outputLabel-view" style="margin-left: 2px;"  value="#{lbl['lbl.cm.days']}" /></td>
 				</tr>
 
 
 				<tr style="height: 30px;">
-					<td><p:outputLabel
+					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:inputTextarea
-							style="width:80% !important;height:100px;overflow:scroll;"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"
-							readonly="true" /></td>
+					<td colspan="3"><p:outputLabel styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"/></td>
 
 				</tr>
 
