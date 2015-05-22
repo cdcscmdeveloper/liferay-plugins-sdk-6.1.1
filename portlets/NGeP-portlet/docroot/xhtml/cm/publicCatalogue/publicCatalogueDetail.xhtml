@@ -1,4 +1,5 @@
-
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
 	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
@@ -8,13 +9,16 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 
 
 	<ui:define name="contentSection">
 
 		<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
-		<script>
+		<h:panelGroup
+			rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+			<script>
 			$(function() {
 				$('#slides').slidesjs({
 					width : 940,
@@ -33,6 +37,10 @@
 				});
 			});
 		</script>
+		</h:panelGroup>
+
+
+
 
 
 		<p:outputPanel id="publicCatalogDetPageId">
@@ -45,40 +53,35 @@
 			</div>
 
 
-			<p:panel>
+		
 
 				<table style="width: 100%;">
 					<tr style="height: 30px;">
-						<td rowspan="10" style="vertical-align: top; width: 30%;">
+						<td rowspan="10" style="vertical-align: top; width: 30%;"><h:panelGroup
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+								<div id="slides"
+									style="height: 200px; width: 300px; border: 1px solid #808080; left: 0px !important; margin-right: 70px; vertical-align: middle; text-align: center;">
 
-							
-								<h:panelGroup
-									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-									<div id="slides" style="width: 300px; float: right; margin-right: 60px;">
 									<ui:repeat var="cmImage"
 										value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-										
-												<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" 	
-													style="height: inherit !important; left: 0px !important; margin-left: auto; margin-right: auto; "  />
-									
-									</ui:repeat>
-									</div>
-								</h:panelGroup>
-								
-								<h:panelGroup
-									style="vertical-align:middle;"
-									rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-									<table>
-										<tr>
-											<td style="height:200px; width: 300px; border: 1px solid #808080; left: 0px !important; margin-right: 70px; vertical-align:middle; text-align:center; ">
-												<h:outputText value="#{lbl['lbl.cm.no.image.available']}" />
-											</td>
-										</tr>
-									</table>
-								</h:panelGroup>
-							
 
-						</td>
+										<img
+											src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"
+											style="height: inherit !important; left: 0px !important; margin-left: auto; margin-right: auto;" />
+
+									</ui:repeat>
+								</div>
+							</h:panelGroup> <h:panelGroup style="vertical-align:middle;"
+								rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+								<table>
+									<tr>
+										<td
+											style="height: 200px; width: 300px; border: 1px solid #808080; left: 0px !important; margin-right: 70px; vertical-align: middle; text-align: center;">
+											<h:outputText value="#{lbl['lbl.cm.no.image.available']}" />
+										</td>
+									</tr>
+								</table>
+							</h:panelGroup></td>
 						<td colspan="4"><h:outputText
 								style="text-align:left;vertical-align:top; padding: 0 0 0 0;"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"
@@ -163,7 +166,8 @@
 
 					</tr>
 					<tr>
-						<td colspan="4"><p:panel header="#{lbl['lbl.cm.pub.catalog.supplier.info']}"
+						<td colspan="4"><p:panel
+								header="#{lbl['lbl.cm.pub.catalog.supplier.info']}"
 								toggleable="true">
 								<table width="100%">
 									<tr>
@@ -230,11 +234,7 @@
 					</tr>
 
 				</table>
-			</p:panel>
-
-
-
-
+			
 
 		</p:outputPanel>
 	</ui:define>
