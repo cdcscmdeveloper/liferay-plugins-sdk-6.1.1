@@ -239,6 +239,12 @@
 						validatorMessage="#{lbl['lbl.sm.mobilenumber']} - #{lbl['lbl.sm.invalidNo']}">
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" disabled="#{empty param['disableValidation']}" />
 						</p:inputText>
+					 &#160; <p:graphicImage id="mobileno"
+						value="/css/images/design/tooltips.png" /> <p:tooltip
+						id="mbno" for="mobileno">
+						<p:outputLabel escape="false"
+							value="#{lbl['tt.sm.registration.user.mobileno']}" />
+					</p:tooltip>&#160;
 					<p:message id="txtMobileNoIdMsg" for="txtMobileNoId" display="icon" /></td>
 			</tr>
 
