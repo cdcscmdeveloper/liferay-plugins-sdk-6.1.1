@@ -3724,14 +3724,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				validateOrderQuantity();
 				checkMinimumQtyItem(getManagedBean().getFlRequest());
 				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-					boolean skipLastCOChecking = false;
 					if(getManagedBean().getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
 						IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 						ContractReqDTO contractReqDTO = new ContractReqDTO();
 						contractReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-						skipLastCOChecking = contractSO.checkContractStatus(contractReqDTO).isActive();
-					}
-					if(!skipLastCOChecking) {
+						if(!contractSO.checkContractStatus(contractReqDTO).isActive()) {
+							throw new EpException(MessageConst.ERROR_740034, new String[]{getManagedBean().getFlRequest().getCtContract().getContractNo()});
+						}
+					} else {
 						Date expDate = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate();
 						int days = getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtSetting().getLastCOBeforeExpiryDays();
 						Calendar today = Calendar.getInstance();
