@@ -5,36 +5,34 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
-		<ui:param name="membersList"
-			value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
-		<ui:param name="selectedMembersList"
-			value="#{qTDetailBB.managedBean.toBeDelCommitteMemebers}" />
+	<ui:param name="membersList"
+		value="#{qTDetailBB.managedBean.selectedTabBean.scQtCommittee.scCommittee}" />
+	<ui:param name="selectedMembersList"
+		value="#{qTDetailBB.managedBean.toBeDelCommitteMemebers}" />
 
-		<ui:include src="committeeApproval.xhtml" />
+	<ui:include src="committeeApproval.xhtml" />
 
-		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.clone']}"
-				actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
-				oncomplete="screen2.show();" process="@this"
-				update="@([id$=cloneid])" />
-			<p:commandButton id="committeeapproveradd"
-				value="#{lbl['lbl.btn.add']}" process="@this"
-				actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
-				oncomplete="newspecificationcommittee.show();"
-				update="@([id$=cloneid])" />
+	<div class="ppRightBtn">
+		<p:commandButton value="#{lbl['lbl.btn.clone']}"
+			actionListener="#{qTCommitteBackingBean.committeeclonePopupAction(qTDetailBB.managedBean.selectedTabBean.scQtCommittee)}"
+			oncomplete="screen2.show();" process="@this"
+			update="@([id$=cloneid])" />
+		<p:commandButton id="committeeapproveradd"
+			value="#{lbl['lbl.btn.add']}" process="@this"
+			actionListener="#{qTCommitteBackingBean.addCommitteMember(qTDetailBB.managedBean.selectedTabBean.scQtCommittee, qTDetailBB.managedBean.selectedTabBean.titleName)}"
+			oncomplete="newspecificationcommittee.show();"
+			update="@([id$=cloneid])" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, committeeapprovalId"
-				actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
-				update="committeeapprovalId" />
-		</div>
-		<ui:include src="addCommitteeApproval.xhtml" />
-		<ui:include src="cloneDetails.xhtml" />
-	</p:panel>
+		<p:commandButton value="#{lbl['lbl.btn.delete']}"
+			process="@this, committeeapprovalId"
+			actionListener="#{qTCommitteBackingBean.deleteSpecificationCommittee}"
+			update="committeeapprovalId" />
+	</div>
+	<ui:include src="addCommitteeApproval.xhtml" />
+	<ui:include src="cloneDetails.xhtml" />
 
-	<p:panel header="#{lbl['lbl.sc.remark']}"
-		toggleable="true" id="committeeremarksupDtls">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true"
+		id="committeeremarksupDtls">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
@@ -85,7 +83,9 @@
 									<table>
 										<tr>
 											<td rowspan="2" style="vertical-align: top;" align="left">
-												<h:graphicImage value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}" height="30" width="30"/>
+												<h:graphicImage
+													value="/css/images/design/#{approvalBackingBean.determineIcon(attachFile)}"
+													height="30" width="30" />
 											</td>
 											<td><h:outputText
 													value="#{attachFile.createdUser.userName}" />, <h:outputText
@@ -108,17 +108,18 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog id="committeeApproverAttachDlgids" widgetVar="committeeApproverAttachDlg"
-		modal="true" dynamic="true" hideEffect="explode" resizable="false"
-		width="700px" height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.txt.choose.files']}">
+	<p:dialog id="committeeApproverAttachDlgids"
+		widgetVar="committeeApproverAttachDlg" modal="true" dynamic="true"
+		hideEffect="explode" resizable="false" width="700px" height="200"
+		styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
 			fileUploadListener="#{approvalBackingBean.handleFileUpload}"
 			mode="advanced" id="dlgsuploadsids"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			update="committeeremarksupDtls" oncomplete="committeeApproverAttachDlg.hide()">
+			update="committeeremarksupDtls"
+			oncomplete="committeeApproverAttachDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 </ui:composition>
