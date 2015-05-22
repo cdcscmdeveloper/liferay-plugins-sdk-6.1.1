@@ -37,16 +37,7 @@
 		</table>
 		<br />
 		
-		<div align="left">
-			<table style="width: 100%">
-				<tr>
-					<td>
-						<p:outputLabel value="** #{lbl['lbl.sm.softcert.disclaimer']}" 
-							style="background-color:whitesmoke;text-align: left !important;float: left;"/>
-					</td>
-				</tr>
-			</table>
-		</div>
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
 
 		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="resultPanelId">
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
