@@ -1042,36 +1042,13 @@ public class NoticeBoardBackingBean extends
 
 				}
 				
-				int level = 0;
-				// Filter By - Ministry
-				PmOrgProfile ministryProfile = getManagedBean()
-						.getMinistryProfile();
-				if (ministryProfile != null
-						&& ministryProfile.getOrgProfileId() != null) {
-					level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
-							EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY));
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									ministryProfile.getOrgProfileId()));
-				}
 				
-				// Filter By - PTJ Group
-				PmOrgProfile ptjGroupProfile = getManagedBean()
-						.getPtjGroupProfile();
-				if (ptjGroupProfile != null
-						&& ptjGroupProfile.getOrgProfileId() != null) {
-					level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
-							EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP));
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									ptjGroupProfile.getOrgProfileId()));
-
-				}
-				// Filter By - PTJ
+				PmOrgProfile ministryProfile = getManagedBean().getMinistryProfile();
+				PmOrgProfile ptjGroupProfile = getManagedBean().getPtjGroupProfile();
 				PmOrgProfile ptjProfile = getManagedBean().getPtjProfile();
-				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {
+				int level = 0;
+				
+				if (ptjProfile != null && ptjProfile.getOrgProfileId() != null) {// Filter By - PTJ
 					
 				level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
 							EpPropertiesConst.LVL_ORG_PROFILE_PTJ));
@@ -1080,6 +1057,23 @@ public class NoticeBoardBackingBean extends
 									SearchOperator.OPERATOR_EQUALS.value(),
 									ptjProfile.getOrgProfileId()));
 
+				} else if (ptjGroupProfile != null
+						&& ptjGroupProfile.getOrgProfileId() != null) {// Filter By - PTJ Group
+					level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP));
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ptjGroupProfile.getOrgProfileId()));
+
+				} else if (ministryProfile != null
+						&& ministryProfile.getOrgProfileId() != null) {// Filter By - Ministry
+					level =  Integer.valueOf(EpPropertiesUtils.getInstance().getProperty(
+							EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY));
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean(ParameterConst.ORG_PROFILE+level+".ORG_PROFILE_ID",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ministryProfile.getOrgProfileId()));
 				}
 
 				// Filter By - Publish Date
@@ -1646,18 +1640,35 @@ public class NoticeBoardBackingBean extends
 
 	public String constuctConditionFieldsForPTJGroup() {
 
-		String parentOrgProfile = null;
+		StringBuffer parentOrgProfile = new StringBuffer();
 		Long MinistryOrgProfileId = this.getManagedBean().getMinistryProfile()
 				.getOrgProfileId();
 		if (null != MinistryOrgProfileId) {
-			parentOrgProfile = OrgProfileUtil
-					.getSearchBeanParentString(ParameterConst.ORG_TYPE_PTJ_GROUP)
-					+ CAP_CHAR + MinistryOrgProfileId;
+			String minLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_MINISTRY);
+			String ptjGrpLevel = EpPropertiesUtils.getInstance().getProperty(
+					EpPropertiesConst.LVL_ORG_PROFILE_PTJGROUP);
+			if (minLevel != null && ptjGrpLevel != null) {
+				int ministryLevel = Integer.valueOf(minLevel);
+				int ptjGroupLevel = Integer.valueOf(ptjGrpLevel);
+				int orgLevel = ministryLevel - ptjGroupLevel;
+
+				for (int i = 0; i < orgLevel; i++) {
+					parentOrgProfile.append("parentOrgProfile.");
+				}
+				parentOrgProfile.append("orgProfileId");
+				parentOrgProfile.append(CAP_CHAR);
+				parentOrgProfile.append(MinistryOrgProfileId);
+
+			}
+
 		} else {
-			parentOrgProfile = "";
+			parentOrgProfile.append("  ");
 		}
-		return parentOrgProfile;
+		return parentOrgProfile.toString();
 	}
+	
+	
 	/**
 	 * Method will return 0 days if clsDate is after Today date else
 	 * number of days.
