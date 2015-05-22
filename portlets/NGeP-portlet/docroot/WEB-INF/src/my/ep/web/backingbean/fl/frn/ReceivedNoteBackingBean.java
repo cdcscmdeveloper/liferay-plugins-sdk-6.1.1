@@ -20,6 +20,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
@@ -37,6 +38,7 @@ import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.FLProcessNameConst;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
@@ -515,9 +517,18 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}
 		
 		FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();	
-		if(fulfilmentNote.getFlRequest().getCtContract() != null && (fulfilmentNote.getReceivedDate().after(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) 
-				|| fulfilmentNote.getReceivedDate().before(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate()))){
-			throw new EpException(MessageConst.ERROR_700020);
+		if(fulfilmentNote.getFlRequest().getCtContract() != null) {
+			if(fulfilmentNote.getFlRequest().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setContractId(fulfilmentNote.getFlRequest().getCtContract().getContractId());
+				if(!contractSO.checkContractStatus(contractReqDTO).isActive()) {
+					throw new EpException(MessageConst.ERROR_700020);
+				}
+			} else if((fulfilmentNote.getReceivedDate().after(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getExpDate()) 
+					|| fulfilmentNote.getReceivedDate().before(fulfilmentNote.getFlRequest().getCtContract().getLatestContractVer().getCtContractValue().getEffDate()))){
+				throw new EpException(MessageConst.ERROR_700020);
+			}
 		}
 		
 		if(outcome.equalsIgnoreCase(my.ep.constant.BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
