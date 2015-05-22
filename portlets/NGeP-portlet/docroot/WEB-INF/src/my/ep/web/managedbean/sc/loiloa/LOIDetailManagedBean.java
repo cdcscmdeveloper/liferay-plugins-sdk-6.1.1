@@ -311,6 +311,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The loi loa list title. */
 	private String loiLoaListTitle;
+	
+	/** Is Itemized */
+	private boolean itemized;
 	    
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1863,6 +1866,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setLoiLoaListTitle(String loiLoaListTitle) {
 		this.loiLoaListTitle = loiLoaListTitle;
+	}
+
+	/**
+	 * @return the itemized
+	 */
+	public boolean isItemized() {
+		return itemized;
+	}
+
+	/**
+	 * @param itemized 
+	 * 			the itemized to set
+	 */
+	public void setItemized(boolean itemized) {
+		this.itemized = itemized;
 	}
 	
 }
