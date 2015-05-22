@@ -161,6 +161,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private boolean validMofNo;
 	private QtAmendMentBean qtAmendMentBean;
 	private String changedDate;
+	private String ministryName;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1124,6 +1125,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setPtjGroupProfile(PmOrgProfile ptjGroupProfile) {
 		this.ptjGroupProfile = ptjGroupProfile;
+	}
+
+	/**
+	 * @return the ministryName
+	 */
+	public String getMinistryName() {
+		return ministryName;
+	}
+
+	/**
+	 * @param ministryName the ministryName to set
+	 */
+	public void setMinistryName(String ministryName) {
+		this.ministryName = ministryName;
 	}
 
 
