@@ -31,6 +31,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -74,9 +75,11 @@ import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -1184,16 +1187,42 @@ public class EvaluationMeetingBackingBean extends
 									true));
 
 				}
-				if (null != getManagedBean().getQt().getPmOrgProfile()
-						.getParentOrgProfile()) {
+				/*
+				 * Long ministryId = retriveMinistryIdByPTJ(); if (null !=
+				 * ministryId) { String parentString = OrgProfileUtil
+				 * .getSearchBeanParentString(OrganizationType.MINISTRY
+				 * .value()); searchBean.getDataFilterBeans().add( new
+				 * SearchFilterBean( "pmOrgProfile." + parentString,
+				 * SearchOperator.OPERATOR_EQUALS.value(), ministryId)); }
+				 */
+
+				/*
+				 * if (null != getManagedBean().getQt().getPmOrgProfile()
+				 * .getParentOrgProfile()) { searchBean .getDataFilterBeans()
+				 * .add(new SearchFilterBean(
+				 * "pmOrgProfile.parentOrgProfile.orgProfileId",
+				 * SearchOperator.OPERATOR_EQUALS.value(),
+				 * getManagedBean().getQt().getPmOrgProfile()
+				 * .getParentOrgProfile() .getOrgProfileId())); }
+				 */
+
+				if (null != getManagedBean().getQt().getPmOrgProfile()) {
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
-									"pmOrgProfile.parentOrgProfile.orgProfileId",
+									"pmOrgProfile."
+											+ OrgProfileUtil
+													.getSearchBeanParentString(OrganizationType.MINISTRY
+															.value()),
 									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getQt().getPmOrgProfile()
-											.getParentOrgProfile()
-											.getOrgProfileId()));
+
+									retrieveMinistryOrgProfile(
+											getManagedBean().getQt()
+													.getPmOrgProfile()
+													.getOrgProfileId())
+											.getOrgProfileId()
+
+							));
 				}
 
 				reqDTO.setQtSearchBean(searchBean);
@@ -1206,7 +1235,7 @@ public class EvaluationMeetingBackingBean extends
 
 				dto = detailSO.getQuationTenders(reqDTO);
 
-				if (dto.isSuccessful()) {
+				if (null != dto && dto.isSuccessful()) {
 
 					return dto.getQtResultBean();
 				}
@@ -1321,16 +1350,50 @@ public class EvaluationMeetingBackingBean extends
 									getManagedBean().getIdentificationType(),
 									true));
 				}
-				if (null != getManagedBean().getQt().getPmOrgProfile()
-						.getParentOrgProfile()) {
+
+				/*
+				 * if (null != getManagedBean().getQt().getPmOrgProfile()
+				 * .getParentOrgProfile()) { searchBean .getDataFilterBeans()
+				 * .add(new SearchFilterBean(
+				 * "pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
+				 * SearchOperator.OPERATOR_EQUALS.value(),
+				 * getManagedBean().getQt().getPmOrgProfile()
+				 * .getParentOrgProfile() .getOrgProfileId())); }
+				 */
+
+				/*
+				 * Long ministryId = retriveMinistryIdByPTJ(); if (null !=
+				 * ministryId) { String parentString = OrgProfileUtil
+				 * .getSearchBeanParentString(OrganizationType.MINISTRY
+				 * .value()); searchBean.getDataFilterBeans().add( new
+				 * SearchFilterBean("pmUserOrgs.pmOrgProfile." + parentString,
+				 * SearchOperator.OPERATOR_EQUALS.value(), ministryId)); }
+				 */
+
+				if (null != getManagedBean().getQt().getPmOrgProfile()) {
 					searchBean
 							.getDataFilterBeans()
-							.add(new SearchFilterBean(
-									"pmUserOrgs.pmOrgProfile.parentOrgProfile.orgProfileId",
-									SearchOperator.OPERATOR_EQUALS.value(),
-									getManagedBean().getQt().getPmOrgProfile()
-											.getParentOrgProfile()
-											.getOrgProfileId()));
+							.add(new SearchMultiFilterBean(
+									new SearchFilterBean(
+											"pmUserOrgs.pmOrgProfile."
+													+ OrgProfileUtil
+															.getSearchBeanParentString(OrganizationType.MINISTRY
+																	.value()),
+											SearchOperator.OPERATOR_EQUALS
+													.value(),
+											retrieveMinistryOrgProfile(
+													getManagedBean().getQt()
+															.getPmOrgProfile()
+															.getOrgProfileId())
+													.getOrgProfileId()),
+
+									new SearchFilterBean(
+											"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+											SearchOperator.OPERATOR_EQUALS
+													.value(),
+											ParameterConst.ORG_TYPE_OTHERS,
+											SearchCondition.CONDITION_OR
+													.value())));
 				}
 				userReqDTO.setUserSearchBean(searchBean);
 
@@ -1624,5 +1687,20 @@ public class EvaluationMeetingBackingBean extends
 		}
 
 	}
+
+	/*
+	 * private Long retriveMinistryIdByPTJ() { IOrgProfileSO orgProfileSO =
+	 * null; Long ministryId = null; try { orgProfileSO =
+	 * BusinessDelegate.getInstance().getServiceObject(
+	 * ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	 * OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+	 * reqDTO.setOrgProfileId(this.getManagedBean().getQt()
+	 * .getPmOrgProfile().getOrgProfileId()); OrgProfileResDTO resDTO =
+	 * orgProfileSO .retrieveMinistryByOrgProfileId(reqDTO); if (null != resDTO
+	 * && null != resDTO.getPmOrgProfile()) { ministryId =
+	 * resDTO.getPmOrgProfile().getOrgProfileId(); } } finally {
+	 * 
+	 * } return ministryId; }
+	 */
 
 }
