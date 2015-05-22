@@ -471,6 +471,14 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setRecommendList(scQtRecommendList);
 				getManagedBean().setRecommendDtlIds(recommendDtlIds);
 				
+				String recommendType = scQtFinalization.getRecommendedTypeId()
+						.getParameterCode();
+				if (ParameterConst.RECOMMEND_TYPE_ITEM
+						.equals(recommendType)) {
+					getManagedBean().setItemized(true);
+				} else {
+					getManagedBean().setItemized(false);
+				}
 				if (scQtRecommendList != null) {
 					for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 						updateRecommendBy(scQtRecommend);	
