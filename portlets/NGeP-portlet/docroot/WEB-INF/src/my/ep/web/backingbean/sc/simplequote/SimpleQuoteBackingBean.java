@@ -3822,7 +3822,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
 						FacesMessage.SEVERITY_INFO, 
 						null,
-						MessageUtils.getMessage(MessageConst.INFO_700026, 
+						MessageUtils.getMessage(MessageConst.INFO_700025, 
 								new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_SIMPLE_QUOTE), scQuote.getQuoteNo()}, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, 
 								new FacesScopes().getUserLocale())));
@@ -4743,6 +4743,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		this.textBeforeSign = textBeforeSign;
 	}	
 
+	 /**
+   	 * The method to used auto update of request.
+   	 */
+	public void enableAutoUpdate() {
+		RequestContext.getCurrentInstance().update("@form");
+	}
 	/**
 	 * Gets the quote so.
 	 *
