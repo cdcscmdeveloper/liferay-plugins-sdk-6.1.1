@@ -58,10 +58,9 @@
 					<table style="width: 100%">
 						<tr>
 							<td class="TableFieldLeft" width="24%">
-								<h:panelGrid columns="2" style="float:right;">
-				    				<p:outputLabel value="*" styleClass="mandatory" />
-									<p:outputLabel value="#{lbl['lbl.txt.remarks']}" />
-								</h:panelGrid>
+								
+									<p:outputLabel value="#{lbl['lbl.txt.remarks']}" styleClass="required" />
+								
 							</td>
 							<td class="TableFieldRight">
 								<p:dataGrid value="#{amendmentBackingBean.managedBean.contractVer.ap201Remark}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
