@@ -629,11 +629,12 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setTextBeforeSign(sb.toString());			
 			validateFulfilmentNote(outcome);
 			// set action
-			getManagedBean().setAutoUpdate(Boolean.FALSE);	
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			getManagedBean().setButtonAction(outcome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		} else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			getManagedBean().setValidated(Boolean.FALSE);
 			return submitAction(outcome);
 		} else{
 			getManagedBean().setValidated(Boolean.TRUE);
