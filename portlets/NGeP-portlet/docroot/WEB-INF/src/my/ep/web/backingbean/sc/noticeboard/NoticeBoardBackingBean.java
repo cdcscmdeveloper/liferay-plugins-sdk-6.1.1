@@ -211,6 +211,11 @@ public class NoticeBoardBackingBean extends
 			// Need to add sorting..
 			this.getManagedBean().setCategoryList(
 					resDTO.getCategoryResultBean().getResultList());
+			
+			// Setting ministry name
+			this.getManagedBean().setMinistryName(
+					retrieveMinistryByOrgProfileId(scQt.getPmOrgProfile()
+							.getOrgProfileId()));
 
 			if (!scQt.isZonal()) {
 				if (null != resDTO.getLocCriteria()) {
