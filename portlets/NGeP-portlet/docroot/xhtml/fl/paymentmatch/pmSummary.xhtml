@@ -21,9 +21,9 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.fl.payment.match.total.deduction']}" /></td>
+						value="#{lbl['lbl.fl.payment.match.total.deduction']}" rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract}"/></td>
 				<td><p:inputText size="35" style="text-align:right"
-						disabled="true"
+						disabled="true" rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract}"
 						value="#{paymentMatchBackingBean.managedBean.deductionAmt}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
