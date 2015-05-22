@@ -190,7 +190,7 @@
 				<p:commandLink update=":form:tt:equiJobFunctionInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrJobFunc(jf)}" oncomplete="equiJobFunctionInfo.show()" 
 					partialSubmit="true" process="@this">
-					<p:graphicImage value="/css/images/design/document.png"
+					<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
 
@@ -263,7 +263,7 @@
 				<p:commandLink update=":form:tt:equiRelCompInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrRelatedCompany(relCom)}" oncomplete="equiRelCompInfo.show()"
 					partialSubmit="true" process="@this">
-					<p:graphicImage value="/css/images/design/document.png"
+					<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>
@@ -322,7 +322,7 @@
 				<p:commandLink update=":form:tt:equiShrProfBeanInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrProfBody(profBean)}"
 					partialSubmit="true" process="@this" oncomplete="equiShrProfBeanInfo.show()">
-					<p:graphicImage value="/css/images/design/document.png"
+					<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>
@@ -390,7 +390,7 @@
 				<p:commandLink update=":form:tt:equiAcadInfo" onstart="blockWidget.show()"
 					action="#{viewSmApplBackingBean.assignSelShrHldrAcademics(aq)}"
 					partialSubmit="true" process="@this" oncomplete="equiAcadInfo.show()">
-					<p:graphicImage value="/css/images/design/document.png"
+					<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 						style="margin-right:2px;" />
 				</p:commandLink>
 			</p:column>

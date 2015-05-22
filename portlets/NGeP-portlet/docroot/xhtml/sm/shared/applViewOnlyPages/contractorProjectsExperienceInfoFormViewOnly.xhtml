@@ -37,7 +37,7 @@
 					<p:commandLink partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelCompanyExperience(contrBean)}" oncomplete="contDialog.show()"
 						update=":form:tt:contDialog">
-						<p:graphicImage value="/css/images/design/document.png" />
+						<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>

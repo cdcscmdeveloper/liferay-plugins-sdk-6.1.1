@@ -50,7 +50,7 @@
 					<p:commandLink id="selectButton"
 						partialSubmit="true" process="@this" onstart="blockWidget.show()"
 						action="#{viewSmApplBackingBean.assignSelBranch(branchBean)}" update=":form:tt:branchDialogId" oncomplete="banchDialog.show()">
-						<p:graphicImage value="/css/images/design/document.png"
+						<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
 

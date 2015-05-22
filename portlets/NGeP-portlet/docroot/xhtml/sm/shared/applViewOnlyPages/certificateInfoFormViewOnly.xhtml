@@ -29,7 +29,7 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink action="#{viewSmApplBackingBean.assignSelCert(certBean)}" onstart="blockWidget.show()"
 						update=":form:tt:certPop" partialSubmit="true" process="@this" oncomplete="certDialog.show()">
-						<p:graphicImage value="/css/images/design/document.png"
+						<p:graphicImage value="/css/images/design/document.png" title="#{lbl['lbl.sm.view']}"
 							style="margin-right:2px;" />
 					</p:commandLink>
 				</p:column>
