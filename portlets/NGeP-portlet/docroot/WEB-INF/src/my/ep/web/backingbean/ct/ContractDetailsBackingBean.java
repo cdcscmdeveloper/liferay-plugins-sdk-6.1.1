@@ -1233,7 +1233,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 							totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 						}
 						if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
-							throw new EpException(MessageConst.ERROR_750009, new String[]{item.getItemName()});
+							throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
 						}
 					}
 				}
@@ -2834,7 +2834,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 			if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
 				ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0));
-				throw new EpException(MessageConst.ERROR_750009, new String[]{item.getItemName()});
+				throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
 			}
 		}
     }

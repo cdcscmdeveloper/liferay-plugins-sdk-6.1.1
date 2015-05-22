@@ -23,7 +23,7 @@
 				 <p:ajax event="rowSelect" update=":form:itemId" listener="#{amendmentBackingBean.onSelectProductItem()}"
 				     process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			
-				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.itemName}" filterMatchMode="contains">
+				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.scRequestItem.itemName}" filterMatchMode="contains">
 				  <f:facet name="header">
 		                    <h:outputText id="productItemDisc"  value="#{lbl['lbl.ct.item.desc']}"/>
 		                        &#160;<p:graphicImage id="amendProductItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
@@ -31,7 +31,7 @@
 							<h:outputText id="amendProductInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-					    <h:outputText value="#{ctItemVar.itemName}" style="float:left;" />
+					    <h:outputText value="#{ctItemVar.scRequestItem.itemName}" style="float:left;" />
 			   	  </p:column>
 			
 				  <p:column style="width:15%; white-space:normal;" headerText="#{lbl['lbl.ct.type.of.goods']}">
@@ -40,7 +40,7 @@
 				  </p:column>				
 			
 				  <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:10%; white-space:normal;">
-					    <h:outputText value="#{ctItemVar.uom.uomName}" style="float:left;" />
+					    <h:outputText value="#{ctItemVar.scRequestItem.uom.uomName}" style="float:left;" />
 				  </p:column>
 			
 				  <p:column style="width:10%; white-space:normal;text-align: right;">
@@ -49,7 +49,8 @@
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.min.order.qty']}"/>
 	                  </f:facet>
 					 <h:outputText value="#{ctItemVar.minimumOrderQty}" >
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />		
 					  </h:outputText>
 				   </p:column>
 			
@@ -59,15 +60,17 @@
 	               		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
 	                   </f:facet>
 					  <h:outputText value="#{ctItemVar.maxQuantity}" >
-					 	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
 					  </h:outputText>
 				</p:column>
 			
 			
 				<p:column headerText="#{lbl['lbl.ct.new.max.order.qty']}" style="text-align: right;width:15%; white-space:normal;" 
 				   rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
-					<p:inputText style="width:75px;" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" label="#{lbl['lbl.ct.new.max.order.qty']}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.uom.uomCode)}" />					
+					<p:inputText style="width:75px;" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" label="#{lbl['lbl.ct.new.max.order.qty']}">						
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
 					</p:inputText>
 					<p:spacer width="5"/>
 					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;" 
@@ -86,7 +89,7 @@
 			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" 
 			     header="#{lbl['lbl.ct.amend.max.qty']}" styleClass="pop_up_top" modal="true" width="550" height="200">
 			  	    <h:panelGrid columns="1">
-				    	<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{amendmentBackingBean.managedBean.selectedItem.itemName}</p:outputLabel>
+				    	<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{amendmentBackingBean.managedBean.selectedItem.scRequestItem.itemName}</p:outputLabel>
 				     </h:panelGrid>
 				     <p:spacer  height="5"/>
 				
@@ -96,12 +99,14 @@
 					     
 					       <p:column headerText="#{lbl['lbl.ct.max.order.qty']}">
 					        	<p:inputText value="#{itemMaxQtiesVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;width:119px;" rendered="#{itemMaxQtiesVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
-					        		disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
-							         <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemMaxQtiesVar.ctContractItem.uom.uomCode)}" />
-							         <p:ajax process="@this"/>
+					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+									<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<p:ajax event="blur" update="@this"/>
 						        </p:inputText>
 						        <h:outputText value="#{itemMaxQtiesVar.maxQuantity}" style="float:right;" rendered="#{!itemMaxQtiesVar.changeQuantity}">
-							        <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemMaxQtiesVar.ctContractItem.uom.uomCode)}" />
+							        <f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 						        </h:outputText>
 					       </p:column>
 				
@@ -197,9 +202,10 @@
 										<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
 					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
 					               	</f:facet>
-						            <p:outputLabel value="#{itemPriceVar.fromQty}" styleClass="ppRightBtn">
-						            	<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.uom.uomCode)}" />
-						            </p:outputLabel>
+						            <h:outputText value="#{itemPriceVar.fromQty}" styleClass="ppRightBtn">
+						            	<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						            </h:outputText>
 					           </p:column>
 				
 								<p:column style="width:10%; white-space:normal;"
@@ -211,9 +217,10 @@
 										<h:outputText value="#{lbl['lbl.ct.to.qty']}"/>
 					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
 					            	</f:facet>
-									<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn">
-										<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.uom.uomCode)}" />
-						            </p:outputLabel>
+									<h:outputText value="#{itemPriceVar.toQty}" styleClass="ppRightBtn">
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						            </h:outputText>
 								</p:column>
 							
 								<p:column style="width:10%; white-space:normal;"
@@ -223,9 +230,10 @@
 										<h:outputText value="#{lbl['lbl.ct.sub.seq']}"/>
 					               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.item.qty']}"/>
 					               	</f:facet>
-					               	<p:outputLabel value="#{itemPriceVar.toQty}" styleClass="ppRightBtn">
-					               		<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.uom.uomCode)}" />
-						            </p:outputLabel>
+					               	<h:outputText value="#{itemPriceVar.subSequence}" styleClass="ppRightBtn">					               		
+										<f:converter converterId="dynamicNumberConverter" />
+										<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						            </h:outputText>
 								</p:column>
 								
 								<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
@@ -306,13 +314,16 @@
 	               		 </f:facet>
 					     <h:panelGroup style="float:right;" rendered="#{itemCeilingQtiesVar.changeCeilQuantity}">
 						  <p:inputText value="#{itemCeilingQtiesVar.ceilingQuantity}" styleClass="ppRightBtn" style="width:100px;" label="#{lbl['lbl.ct.ceiling.qty']}"
+						  	maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 						  	disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}" >
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
-								<p:ajax process="@this"/>
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+							<p:ajax event="blur" update="@this"/>
 						</p:inputText>
 						</h:panelGroup>
 						<h:outputText value="#{itemCeilingQtiesVar.ceilingQuantity}" style="float:right;" rendered="#{!itemCeilingQtiesVar.changeCeilQuantity}">
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, itemCeilingQtiesVar.ctContractItem.uom.uomCode)}" />
+							<f:converter converterId="dynamicNumberConverter" />
+							<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
 						</h:outputText>
 					</p:column>
 					<p:column rendered="false" headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%; white-space:normal;">
@@ -367,7 +378,7 @@
 				<ac:paginator for="serviceTable" />
 				<p:ajax event="rowSelect" update=":form:serviceId" process="@this" listener="#{amendmentBackingBean.onSelectServiceItem()}" 
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
-				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.itemName}" filterMatchMode="contains">
+				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.scRequestItem.itemName}" filterMatchMode="contains">
 				      <f:facet name="header">
 		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
 		                        &#160; <p:graphicImage id="amendServiceItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
@@ -375,13 +386,13 @@
 							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
 						</p:tooltip> 
 		               </f:facet>
-					<h:outputText value="#{serviceItemVar.itemName}" style="float:left;" />
+					<h:outputText value="#{serviceItemVar.scRequestItem.itemName}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
 					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ct.uom']}"  style="width:15%;white-space:normal;">
-					<h:outputText value="#{serviceItemVar.uom.uomName}" style="float:left;" />
+					<h:outputText value="#{serviceItemVar.scRequestItem.uom.uomName}" style="float:left;" />
 				</p:column>
 		      <p:column headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" style="width:15%; white-space:normal;">
 		        	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomFrequency}" />
@@ -396,7 +407,10 @@
 		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
 		      </p:column>				
 				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
-					<h:outputText value="#{serviceItemVar.minimumOrderQty}" />
+					<h:outputText value="#{serviceItemVar.minimumOrderQty}">
+						<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, serviceItemVar.scRequestItem.uom.uomCode)}" />
+					</h:outputText>
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%;white-space:normal;">
 		            <h:outputText value="#{serviceItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>

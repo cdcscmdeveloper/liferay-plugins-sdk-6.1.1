@@ -4145,12 +4145,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		CommonUtils commonUtils = new CommonUtils();
 		DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		jadualHarga.setZone(itemPrice.getCtContractZone() != null ? itemPrice.getCtContractZone().getZoneName() : "N/A");
-		jadualHarga.setItem(itemPrice.getCtContractItem().getItemName());
+		jadualHarga.setItem(itemPrice.getCtContractItem().getScRequestItem().getItemName());
 		jadualHarga.setUnitPrice(nf.format(itemPrice.getUnitPrice().longValue()));
 		jadualHarga.setPriceType(itemPrice.getCtContractItem().getPriceType().getParameterCode());
 		// Product Item
 		if (type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
-			jadualHarga.setUom(itemPrice.getCtContractItem().getUom().getUomName());
+			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getUom().getUomName());
 			if (itemPrice.getFromQty() != null && itemPrice.getToQty() != null) {
 				jadualHarga.setTier(itemPrice.getFromQty() + " to " + itemPrice.getToQty());
 			}
@@ -4159,7 +4159,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// Service Item
 		else if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUom().getUomName());
+			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getUom().getUomName());
 			jadualHarga.setFreqUom(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency()
 					? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());
 	    	jadualHarga.setUomPerDay(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay()
