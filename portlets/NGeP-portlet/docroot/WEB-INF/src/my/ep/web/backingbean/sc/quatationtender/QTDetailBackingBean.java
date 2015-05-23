@@ -1962,13 +1962,14 @@ public class QTDetailBackingBean extends
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			ScQt scQt = this.getManagedBean().getQt();
 
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			QuationTenderResDTO resDTO = null;
 
-			reqDTO.setQtdetail(this.getManagedBean().getQt());
-			reqDTO.setAvaliableApprovals(this.getManagedBean().getQt()
-					.getScQtApprovals());
+			reqDTO.setQtdetail(scQt);
+			reqDTO.setAvaliableApprovals(scQt.getScQtApprovals());
 			reqDTO.setAmendMentBean(this.getManagedBean().getAmendMentBean());
 			reqDTO.setRuleDataBean(this.getManagedBean().getRuleDataBean());
 			resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
@@ -1999,8 +2000,7 @@ public class QTDetailBackingBean extends
 								approvalCategoryCode);
 
 						qtApproval.setScQtApprovalRemarks(initializeRemarks(
-								qtApproval, this.getManagedBean().getQt()
-										.getCurrentWorkFlowStatus(),
+								qtApproval, scQt.getCurrentWorkFlowStatus(),
 								qtApproval.getScQtApprovalRemarks(),
 								ScQtApprovalRemark.class));
 						// qtApproval.setScQtApprovalAttachment(null);
@@ -2020,7 +2020,7 @@ public class QTDetailBackingBean extends
 								.equals(approvalCategoryCode)) {
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval, settings));
-						} else if (this.getManagedBean().getQt().getQtStatus()
+						} else if (scQt.getQtStatus()
 								.getStatusId() >= QTStatusConst.QT_BRIEFING_SITE_VISIT
 								&& ParameterConst.APPROVAL_CATEGORY_PTJ
 										.equals(approvalCategoryCode)) {
@@ -2029,6 +2029,7 @@ public class QTDetailBackingBean extends
 									approvalCategoryCode, qtApproval,
 									approverSettingDtls(
 											RoleCode.PUBLICATION_APPROVER,
+											scQt.getPmOrgProfile().getOrgProfileId(),
 											qtApproval)));
 
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
@@ -2053,14 +2054,14 @@ public class QTDetailBackingBean extends
 									titleName,
 									approvalCategoryCode,
 									qtApproval,
-									retrieveFinalizationCommitteeType(this
-											.getManagedBean().getQt().getQtId())));
+									retrieveFinalizationCommitteeType(scQt.getQtId())));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval,
 									approverSettingDtls(
 											RoleCode.COMMITTEE_APPROVER,
+											scQt.getPmOrgProfile().getOrgProfileId(),
 											qtApproval)));
 						} else if (ParameterConst.APPROVAL_CATEGORY_OTHERS
 								.equals(approvalCategoryCode)) {
@@ -2693,8 +2694,11 @@ public class QTDetailBackingBean extends
 			if (null == this.getManagedBean().getPublicationApproval()) {
 				detailSO = BusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+				
+				ScQt scQt = getManagedBean().getQt();
+				
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				reqDTO.setQtId(scQt.getQtId());
 				reqDTO.setApprovalType(ParameterConst.APPROVAL_CATEGORY_PTJ);
 				QuationTenderResDTO resDTO = detailSO
 						.retrieveApprovalDtlsByQtIdNType(reqDTO);
@@ -2704,13 +2708,12 @@ public class QTDetailBackingBean extends
 					publicationApproval
 							.setScQtApprovalRemarks(initializeRemarks(
 									publicationApproval,
-									this.getManagedBean().getQt()
-											.getCurrentWorkFlowStatus(),
+									scQt.getCurrentWorkFlowStatus(),
 									publicationApproval
 											.getScQtApprovalRemarks(),
 									ScQtApprovalRemark.class));
 					publicationApproval.setScQtApprovalAttachments(null);
-					publicationApproval.setScQt(this.getManagedBean().getQt());
+					publicationApproval.setScQt(scQt);
 					List<ScQtApprovalRequest> approvalDtls = new ArrayList<ScQtApprovalRequest>();
 					ScQtApprovalRequest scQtApprovalDtl = new ScQtApprovalRequest();
 					ParameterReqDTO reqDTO1 = new ParameterReqDTO();
@@ -2729,15 +2732,16 @@ public class QTDetailBackingBean extends
 					publicationApproval
 							.setScQtApprovalRemarks(initializeRemarks(
 									publicationApproval,
-									this.getManagedBean().getQt()
-											.getCurrentWorkFlowStatus(),
+									scQt.getCurrentWorkFlowStatus(),
 									publicationApproval
 											.getScQtApprovalRemarks(),
 									ScQtApprovalRemark.class));
 
 				}
 				dualListModel = approverSettingDtls(
-						RoleCode.PUBLICATION_APPROVER, publicationApproval);
+						RoleCode.PUBLICATION_APPROVER, 
+						scQt.getPmOrgProfile().getOrgProfileId(),
+						publicationApproval);
 				this.getManagedBean().setPublicationApprovals(dualListModel);
 				this.getManagedBean().setPublicationApproval(
 						publicationApproval);
@@ -3148,7 +3152,7 @@ public class QTDetailBackingBean extends
 	 * @return the dual list model
 	 */
 	private DualListModel<ScQtApproverSettings> approverSettingDtls(
-			RoleCode code, ScQtApproval approval) {
+			RoleCode code, Long orgProfileId, ScQtApproval approval) {
 		List<ScQtApproverSettings> availableApprovers = new ArrayList<ScQtApproverSettings>();
 		List<ScQtApproverSettings> selectedApprovers = new ArrayList<ScQtApproverSettings>();
 		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
@@ -3156,7 +3160,9 @@ public class QTDetailBackingBean extends
 						IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
 		userReqDto.setRoleCode(code.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+		userReqDto.setOrgProfileId(orgProfileId);
+		userReqDto.setWithProfileGroup(true);
+		UserResDTO userResDTO = iUserSO.retrieveUserListWithProfileGroupUserByRole(userReqDto);
 		List<PmUser> approvers = userResDTO.getUserList();
 		if (null != approval) {
 			if (null != approval.getApproverSettings()
