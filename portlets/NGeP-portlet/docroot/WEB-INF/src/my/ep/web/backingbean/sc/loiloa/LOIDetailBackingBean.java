@@ -737,39 +737,6 @@ public class LOIDetailBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
 
-	
-	/**
-	 * getting Approver drop down listing in approval details.
-	 *
-	 * @return the approver names
-	 */
-	public List<PmUser> getApproverNames() {
-		List<PmUser> approverUsers = this.getManagedBean().getApproverNames();
-
-		// to get Approver
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null) {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(user.getUserId());
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-
-			IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
-			UserReqDTO userReqDto = new UserReqDTO();
-			userReqDto.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
-			// userReqDto.setOrgProfileId(resDTO.getUserOrgList()
-			// .get(0).getPmOrgProfile().getOrgProfileId());
-
-			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-			getManagedBean().setApproverNames(userResDTO.getUserList());
-
-		}
-		return approverUsers;
-	}
-
 	/**
 	 * To get current status for loi.
 	 *

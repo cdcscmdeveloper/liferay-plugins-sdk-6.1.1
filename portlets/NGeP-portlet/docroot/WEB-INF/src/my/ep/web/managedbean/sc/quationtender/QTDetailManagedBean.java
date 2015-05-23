@@ -22,10 +22,6 @@ import my.ep.biz.bean.sc.QTActivityBean;
 import my.ep.biz.bean.sc.QTRuleDataBean;
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
@@ -86,7 +82,6 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.PTJLocalityCode;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
@@ -96,7 +91,6 @@ import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.CloneAll;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
@@ -665,9 +659,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	/** The committee approval users. */
 	private DualListModel<PmUser> committeeApprovalUsers;
 	
-	/** The ptj approval users. */
-	private DualListModel<PmUser> ptjApprovalUsers;
-	
 	/** The publication approvals. */
 	private DualListModel<ScQtApproverSettings> publicationApprovals;
 	
@@ -1061,25 +1052,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		 * enumValues) { TreeNode node1 = new
 		 * DefaultTreeNode(cloneValue.getDisplayName(), node0); }
 		 */
-		getPTJApproverNames();
-	}
-
-	/**
-	 * Gets the PTJ approver names.
-	 *
-	 * @return the PTJ approver names
-	 */
-	private void getPTJApproverNames() {
-		IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IUserSO.class);
-		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.APPROVER.value());
-		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		List<PmUser> availableApprover = userResDTO.getUserList();
-		List<PmUser> selectedApprover = new ArrayList<PmUser>();
-		ptjApprovalUsers = new DualListModel<PmUser>(availableApprover,
-				selectedApprover);
 	}
 
 	/**
@@ -3655,24 +3627,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setDeskOfficerAdmin(List<PmUser> deskOfficerAdmin) {
 		this.deskOfficerAdmin = deskOfficerAdmin;
-	}
-
-	/**
-	 * Gets the ptj approval users.
-	 *
-	 * @return the ptj approval users
-	 */
-	public DualListModel<PmUser> getPtjApprovalUsers() {
-		return ptjApprovalUsers;
-	}
-
-	/**
-	 * Sets the ptj approval users.
-	 *
-	 * @param ptjApprovalUsers the new ptj approval users
-	 */
-	public void setPtjApprovalUsers(DualListModel<PmUser> ptjApprovalUsers) {
-		this.ptjApprovalUsers = ptjApprovalUsers;
 	}
 
 	/**
