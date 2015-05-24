@@ -51,7 +51,7 @@
 			</h:column>
 			
 			<h:column>
-				<h:panelGrid id="testId" border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" 
+				<h:panelGrid id="suppDoc" border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" 
 					columnClasses="columnWidth40,columnWidth40" >
 					<h:column>
 						<p:outputLabel value="#{lbl['lbl.sc.supporting.document']}" style="vertical-align:top;"/>
@@ -60,8 +60,8 @@
 						<table  border="0" cellspacing="0" cellpadding="0" width="100%" style="vertical-align:top;">
 							<tr>
 								<td class="TableFieldRight">
-									<p:commandButton oncomplete="uploadDlg.show();return false;" style="margin-top: 15%;"
-										icon="iconAttachment" update="@([id$=testId])"
+									<p:commandButton oncomplete="uploadDlg.show();return false;" style="margin-top: 12% !important;"
+										icon="iconAttachment" update="@([id$=suppDoc])"
 										partialSubmit="true" process="@this"  
 										value="#{lbl['lbl.txt.attach.file']}">
 										<f:setPropertyActionListener target="#{suppFinalBiddingBackingBean.managedBean.attachmentDocType}" value="#{ParameterConst.doctypeQuotation}" />
@@ -97,7 +97,7 @@
 													<p:commandLink
 														immediate="true"
 														rendered="#{!empty suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment}"
-														update="@([id$=testId])">
+														update="@([id$=suppDoc])">
 														<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" />
 														<f:setPropertyActionListener target="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment}" value="#{null}" />
 													</p:commandLink>
