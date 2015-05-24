@@ -4206,29 +4206,30 @@ public class SupplierFinalizationBackingBean extends
 									.setAwardSupplierList(new ArrayList<ScQtEvaluationResultDtl>());
 							getManagedBean().setRecommendedSupplierList(
 									new ArrayList<ScQtEvaluationResultDtl>());
-							for (ScQtEvaluationResultDtl scQtEvaluationResultDtl : getManagedBean()
-									.getShortlistedSupplierList()) {
-								Long supplierId = scQtEvaluationResultDtl
-										.getQtEvaluationResult()
-										.getScQtProposal().getScQtSupplier()
-										.getSmSupplier().getSupplierId();
-								if (supplierIdList.contains(supplierId)) {
-									scQtEvaluationResultDtl.setSelected(true);
-									for (ScQtRecommendDtl dtl : scQtRecommend
-											.getRecommendDtls()) {
-										if (supplierId == dtl.getSupplier()
-												.getSupplierId()) {
-											scQtEvaluationResultDtl
-													.setAwardValue(dtl
-															.getAwardQty());
+							if (CollectionUtils.isNotEmpty(
+									this.getManagedBean().getShortlistedSupplierList())) {
+								for (ScQtEvaluationResultDtl scQtEvaluationResultDtl : getManagedBean()
+										.getShortlistedSupplierList()) {
+									Long supplierId = scQtEvaluationResultDtl
+											.getQtEvaluationResult()
+											.getScQtProposal().getScQtSupplier()
+											.getSmSupplier().getSupplierId();
+									if (supplierIdList.contains(supplierId)) {
+										scQtEvaluationResultDtl.setSelected(true);
+										for (ScQtRecommendDtl dtl : scQtRecommend
+												.getRecommendDtls()) {
+											if (supplierId == dtl.getSupplier().getSupplierId()) {
+												scQtEvaluationResultDtl
+														.setAwardValue(dtl.getAwardQty());
+											}
 										}
+	
+										scQtRecommend.getAwardSupplierList().add(
+												scQtEvaluationResultDtl);
+										getManagedBean()
+												.getRecommendedSupplierList().add(
+														scQtEvaluationResultDtl);
 									}
-
-									scQtRecommend.getAwardSupplierList().add(
-											scQtEvaluationResultDtl);
-									getManagedBean()
-											.getRecommendedSupplierList().add(
-													scQtEvaluationResultDtl);
 								}
 							}
 						}
