@@ -2486,7 +2486,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			ctAgency.setCtContractVer(this.getManagedBean().getContractVer());
 			ctAgencyList.add(ctAgency);
 			 
-			if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 1) {
+			if (ctAgency != null && this.getManagedBean().getCtItemList() != null &&  this.getManagedBean().getCtItemList().size() > 0) {
 				for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
 					CtItemCeilingQty itemCeilingQty = new CtItemCeilingQty();
 					itemCeilingQty.setCtAgency(ctAgency);
@@ -2515,7 +2515,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 					CtAgency agency = agencyIterator.next();
 					if (agency.isSelectedCheckBox()) {
 						agencyIterator.remove();
-						if (this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 1) {
+						if (this.getManagedBean().getCtItemList() != null && this.getManagedBean().getCtItemList().size() > 0) {
 							for (CtContractItem contractItem: this.getManagedBean().getCtItemList()) {
 								Iterator<CtItemCeilingQty> ctItemCeilingQtyIterator =  contractItem.getCtItemCeilingQties().iterator();
 								while (ctItemCeilingQtyIterator.hasNext()) {
