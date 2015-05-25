@@ -493,7 +493,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setCurrentChargePtjGroup(profileSO.retrieveJabatanByOrgProfileId(orgReqDTO).getPmOrgProfile());
 		
 		//initialize all the COA map
-		getVotFundList(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+		getVotFundList(retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
 		for(FlFulfilmentItem item : getManagedBean().getFlRequest().getFlFulfilmentItems()){
 			if(item.getFlQuery() != null){
 				getManagedBean().setQueryDisplay(true);
@@ -2243,7 +2243,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			populateChargeLineData(false);	
 			setClassName("@(.crChargeLinePnlClass)");
 			onNodeSelect();
-			getVotFundList(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+			getVotFundList(retrieveJabatanOrgProfile(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);

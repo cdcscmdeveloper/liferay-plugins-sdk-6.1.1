@@ -479,7 +479,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 		//initialize all the COA map
-		getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
+		getVotFundList(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
 		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
 		orgReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
@@ -2500,7 +2500,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			populateChargeLineData(false);	
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
-			getVotFundList(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
+			getVotFundList(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
