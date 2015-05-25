@@ -73,7 +73,6 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
-import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -1448,7 +1447,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	public String navigateFulfilmentNote(FlDeliveryOrder delOrder){
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setFulfilmentNoteId(delOrder.getFlFulfilmentNote().get(0).getFulfilmentNoteId());
+			reqDTO.setFulfilmentNoteId(delOrder.getFulfilmentNote().getFulfilmentNoteId());
 			reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
