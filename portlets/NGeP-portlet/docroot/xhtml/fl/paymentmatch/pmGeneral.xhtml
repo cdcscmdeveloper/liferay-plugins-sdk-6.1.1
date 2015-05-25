@@ -115,8 +115,8 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.frn.no']}">
 				<p:commandLink
-					value="#{delOrder.flFulfilmentNote.get(0).fulfilmentNoteNo}"
-					rendered="#{delOrder.flFulfilmentNote.get(0).recordStatusFlg==1}"
+					value="#{delOrder.fulfilmentNote.fulfilmentNoteNo}"
+					rendered="#{delOrder.fulfilmentNote.recordStatusFlg==1}"
 					immediate="true"
 					action="#{paymentMatchBackingBean.navigateFulfilmentNote(delOrder)}" />
 			</p:column>
