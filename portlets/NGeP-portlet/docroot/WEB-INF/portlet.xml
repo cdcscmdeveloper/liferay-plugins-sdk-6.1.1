@@ -1697,8 +1697,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>View Purchase Order</title>
-			<short-title>View Purchase Order</short-title>
+			<title>View Contract Order</title>
+			<short-title>View Contract Order</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
