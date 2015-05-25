@@ -549,6 +549,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			break;
 		case ReportConst.DEL_ORD_RPT_PO_VAL:
 			//rptGenBean.setFlDurationView(true);
+			rptGenBean.setFlPtjView(true);
+			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlDeliveryOrderNoView(true);
 			rptGenBean.setFlDeliveryAddressView(true);
 			rptGenBean.setFlSupplierView(true);
