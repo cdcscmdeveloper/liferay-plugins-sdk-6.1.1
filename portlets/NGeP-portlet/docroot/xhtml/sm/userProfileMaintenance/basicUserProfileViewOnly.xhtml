@@ -54,7 +54,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" styleClass="outputLabel-view-label"/></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.selectedPersonnelIdentificationType}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.userprofile.idno']}" styleClass="outputLabel-view-label" id="equiPerIcNumLbl" /></td>
+					<td><p:outputLabel value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" styleClass="outputLabel-view-label" id="equiPerIcNumLbl" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view" value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationNo}" /></td>
 				</tr>
 				<tr>
