@@ -3,7 +3,9 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 	<div align="left" class="header-info">
 		<table style="width: 100%">
 			<tr>
@@ -15,6 +17,9 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.no']}" /></td>
 				<td class="header-info-text">
 					#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo == null ? 'N/A':paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo}
+					<h:panelGrid rendered="#{paymentMatchBackingBean.managedBean.paymentAdvice.paymentAdviceNo != null}">
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.actual.payment.status']}"/>
+					</h:panelGrid>
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ptj.name']} " />
 				</td>
