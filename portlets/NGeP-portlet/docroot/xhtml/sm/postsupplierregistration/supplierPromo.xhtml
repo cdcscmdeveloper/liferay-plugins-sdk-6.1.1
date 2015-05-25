@@ -12,7 +12,7 @@
 			<h:outputStylesheet library="ep/css" name="banner.css"  />
 
 			<c:forEach items="#{postSupplierRegBB.managedBean.userActionMap}" var="entry">
-				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'SC'}">
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'SC'}" styleClass="bannerlink">
 					<div class="banner2-container">
 					<div class="banner2">
 					<div class="banner2-text">
@@ -20,7 +20,7 @@
 					</div></div></div>
 				</p:commandLink>
 				
-				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'CU'}">
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'CU'}" styleClass="bannerlink">
 					<div class="banner1-container">
 					<div class="banner1">
 					<div class="banner1-text">
@@ -28,7 +28,7 @@
 					</div></div></div>
 				</p:commandLink>
 				
-				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'UPMOF'}">
+				<p:commandLink  action="#{postSupplierRegBB.pageRedirect(entry.value)}" rendered="#{entry.key eq 'UPMOF'}" styleClass="bannerlink">
 					<div class="banner3-container">
 					<div class="banner3">
 					<div class="banner3-text">
