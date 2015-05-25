@@ -980,7 +980,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// Mandatory for supporting document of AP201 special approver
 		if(isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME) &&
-				action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) && getManagedBean().getAttachmentList().isEmpty()){
+				action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) && getManagedBean().getContractVer().getAp201Attachements().isEmpty()){
 				throw new EpException(MessageConst.ERROR_750018, new String[]{ResourceBundleUtils.getMessage("lbl.ct.menu.special.ap201", 
 						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 		}
@@ -4148,9 +4148,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		jadualHarga.setItem(itemPrice.getCtContractItem().getScRequestItem().getItemName());
 		jadualHarga.setUnitPrice(nf.format(itemPrice.getUnitPrice().longValue()));
 		jadualHarga.setPriceType(itemPrice.getCtContractItem().getPriceType().getParameterCode());
-		// Product Item
-		if (type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
+		if (itemPrice.getCtContractItem().getScRequestItem().getUom() != null) {
 			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getUom().getUomName());
+		}
+		// Product Item
+		if (type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {			
 			if (itemPrice.getFromQty() != null && itemPrice.getToQty() != null) {
 				jadualHarga.setTier(itemPrice.getFromQty() + " to " + itemPrice.getToQty());
 			}
@@ -4159,7 +4161,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// Service Item
 		else if(type.equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-			jadualHarga.setUom(itemPrice.getCtContractItem().getScRequestItem().getUom().getUomName());
 			jadualHarga.setFreqUom(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency()
 					? "N/A" : itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomFrequency().toString());
 	    	jadualHarga.setUomPerDay(null == itemPrice.getCtContractItem().getScRequestItem().getTplSpecQuestion().getClUomPerDay()
