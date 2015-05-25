@@ -707,7 +707,7 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Price Type dropdown change action
 	 */
-	public void priceTypeChange(TplSpecQuestion specQuestion) {
+	public void priceTypeChange(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion) {
 		Long parameterId = specQuestion.getClPriceTypeCode().getParameterId();
 
 		// if (parameterId != null) {
@@ -721,7 +721,19 @@ public class TemplateSpecBackingBean extends
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			specQuestion.setClPriceTypeCode(resDTO.getPmParameter());
 
-			TemplateSpecHelper.getInstance().resetPriceTypeDtl(specQuestion);
+			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
+			specHelper.resetPriceTypeDtl(specQuestion);
+			
+			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER.equals(templateSpecBean.getContentType()) &&
+					specHelper.isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())){
+				
+				TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
+						templateSpecBean, specQuestion, null);
+				List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
+				specAnswers.add(specAnswer);
+				
+				specQuestion.setTplSpecAnswers(specAnswers);
+			}
 		} finally {
 			parameterSO = null;
 		}
@@ -1356,45 +1368,61 @@ public class TemplateSpecBackingBean extends
 		BigDecimal totalAmountPerYear = new BigDecimal(0);
 		Long tierSpecQuestionId = null;
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-		List<TplSpecAnswer> specAnswerList = templateSpecBean
-				.getSpecAnswerList();
 		TemplateSpecHelper templateSpecHelper = TemplateSpecHelper
 				.getInstance();
+		List<TplSpecAnswer> specAnswerList = null;
 
-		for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
-			TplSpecQuestion specQuestion = tplSpecAnswer.getTplSpecQuestion();
-			String priceType = specQuestion.getClPriceTypeCode()
-					.getParameterCode();
-			BigDecimal quantity = specQuestion.getClQuantity();
-
-			if (templateSpecHelper.isPriceTypeTariff(priceType)) {
-				// TODO - calculate tariff price.
-
-			} else if (templateSpecHelper.isPriceTypeTier(priceType)
-					&& (tierSpecQuestionId == null || tierSpecQuestionId
-							.compareTo(specQuestion.getSpecQuestionId()) != 0)) {
-				// Always used the 1st tier quantity unit price to calculate
-				// total amount.
-				if (tplSpecAnswer.getRatePerUom() != null) {
-					totalAmount = totalAmount.add(quantity
-							.multiply(tplSpecAnswer.getRatePerUom()));
-				}
-
-				tierSpecQuestionId = specQuestion.getSpecQuestionId();
-
-			} else if (templateSpecHelper.isPriceTypeStandard(priceType)
-					|| templateSpecHelper.isPriceTypeZonalStandard(priceType)) {
-
-				if (tplSpecAnswer.getAnswerNumeric() != null) {
-					totalAmount = totalAmount.add(tplSpecAnswer
-							.getAnswerNumeric());
+		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER.equals(templateSpecBean.getContentType())) {
+			specAnswerList = new ArrayList<TplSpecAnswer>();
+			
+			if (specMaster.getTplSpecQuestions() != null) {
+				for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+					if (specQuestion.getTplSpecAnswers() != null) {
+						specAnswerList.addAll(specQuestion.getTplSpecAnswers());
+					}
 				}
 			}
+			
+		} else {
+			specAnswerList = templateSpecBean.getSpecAnswerList();			
+		}
+		
+		if (specAnswerList != null) {
+			for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
+				TplSpecQuestion specQuestion = tplSpecAnswer.getTplSpecQuestion();
+				String priceType = specQuestion.getClPriceTypeCode()
+						.getParameterCode();
+				BigDecimal quantity = specQuestion.getClQuantity();
 
-			if (tplSpecAnswer.getAmountPerYear() != null) {
-				totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
-						.getAmountPerYear());
-			}
+				if (templateSpecHelper.isPriceTypeTariff(priceType)) {
+					// TODO - calculate tariff price.
+
+				} else if (templateSpecHelper.isPriceTypeTier(priceType)
+						&& (tierSpecQuestionId == null || tierSpecQuestionId
+								.compareTo(specQuestion.getSpecQuestionId()) != 0)) {
+					// Always used the 1st tier quantity unit price to calculate
+					// total amount.
+					if (tplSpecAnswer.getRatePerUom() != null) {
+						totalAmount = totalAmount.add(quantity
+								.multiply(tplSpecAnswer.getRatePerUom()));
+					}
+
+					tierSpecQuestionId = specQuestion.getSpecQuestionId();
+
+				} else if (templateSpecHelper.isPriceTypeStandard(priceType)
+						|| templateSpecHelper.isPriceTypeZonalStandard(priceType)) {
+
+					if (tplSpecAnswer.getAnswerNumeric() != null) {
+						totalAmount = totalAmount.add(tplSpecAnswer
+								.getAnswerNumeric());
+					}
+				}
+
+				if (tplSpecAnswer.getAmountPerYear() != null) {
+					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
+							.getAmountPerYear());
+				}
+			}	
 		}
 
 		specMaster.setTotalAmountPerYear(totalAmountPerYear);

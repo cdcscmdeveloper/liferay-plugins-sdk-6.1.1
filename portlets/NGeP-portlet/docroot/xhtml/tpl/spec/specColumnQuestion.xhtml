@@ -1,0 +1,218 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:column>
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" rendered="#{newable}" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.item']}"/>
+		</f:facet>
+		<c:if test="#{newable}">
+			<p:inputTextarea id="itemName" style="width:calc(100% - 31px);" value="#{question.clItem}" 
+				rendered="#{isQuestionTypeItem}" required="#{!question.selected}" rows="1" maxlength="2000"
+				label="#{lbl['lbl.tpl.spec.content.item']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+			</p:inputTextarea>
+			<p:message id="itemNameMsg" for="itemName" display="icon" />
+		</c:if>
+		<c:if test="#{!newable}">
+			<h:outputText value="#{question.clItem}" escape="false" rendered="#{isQuestionTypeItem}" />
+		</c:if>
+	</p:column>
+	<p:column rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.specification']}"/>
+		</f:facet>
+		<c:if test="#{newable}">
+			<p:inputTextarea id="specification" style="width:calc(100% - 31px);" value="#{question.clSpecDetail}" 
+				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="1000"
+				label="#{lbl['lbl.tpl.spec.content.specification']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this" />
+			</p:inputTextarea>
+			<p:message id="specificationMsg" for="specification" display="icon" />
+		</c:if>
+		<c:if test="#{!newable}">
+			<h:outputText value="#{question.clSpecDetail}" escape="false" rendered="#{!isQuestionTypeItem or !isSpecificationReq}" />
+		</c:if>
+	</p:column>
+	<p:column style="width:98px;" rendered="#{isItemTypeService and isFulfilmentTypeReq}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.fulfilment.type']}"/>
+		</f:facet>
+		<h:selectOneMenu id="fulfilType" value="#{question.clFulfilmentTypeCode.parameterId}" required="#{!question.selected}" style="width:98px;" 
+			rendered="#{isQuestionTypeItem}"
+			label="#{lbl['lbl.tpl.spec.content.fulfilment.type']}">
+			<f:selectItems value="#{templateSpecBackingBean.getFulfilmentTypeDropdownList(templateSpecBean.specMaster)}" />
+			<p:ajax event="change" listener="#{templateSpecBackingBean.fulfilmentTypeChange(question)}" 
+				partialSubmit="true" process="@this" update="fulfilTypeMsg, freqUOMPG, dayUOMPG, monthUOMPG, durationPG" />
+		</h:selectOneMenu>
+		<p:message id="fulfilTypeMsg" for="fulfilType" display="icon" />
+	</p:column>
+	<p:column style="width:106px;">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.uom']}"/>
+		</f:facet>
+		
+		<c:if test="#{newable}">
+			<h:panelGroup layout="block" style="width:105px;">
+				<ac:lov id="#{templateSpecId}uomLovId" lovId="PM_UOM" 
+					headerText="UOM Lov"
+					saveObject="templateSpecBackingBean.managedBean.tplSpecQuestions[#{row}].clUom"
+					value="#{question.clUom.uomName}"
+					conditionField="recordStatus^1"
+					rendered="#{isQuestionTypeItem}"
+					required="#{!question.selected}"
+					label="#{lbl['lbl.tpl.spec.content.uom']}"
+					size="8"
+					readonly="true"
+					update="@form">
+					<f:setPropertyActionListener for="actionEvent" target="#{templateSpecBackingBean.managedBean.tplSpecQuestions}" value="#{templateSpecBean.specMaster.tplSpecQuestions}" />
+				</ac:lov>
+			</h:panelGroup>
+		</c:if>
+		<c:if test="#{!newable}">
+			<h:outputText value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" />
+		</c:if>
+	</p:column>
+	
+	<ui:param name="isFulfilmentTypeOneOff" value="#{question.clFulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
+	<ui:param name="isShowService" value="#{(!isFulfilmentTypeReq or (isFulfilmentTypeReq and !isFulfilmentTypeOneOff))}" />
+	<c:if test="#{isItemTypeService}">
+		<p:column style="width:70px;white-space:normal;">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
+			</f:facet>
+			<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
+				<p:inputText id="freqUOM" style="min-width:0px !important;width:26px;" styleClass="ppNumericAlign" 
+					value="#{question.clUomFrequency}" 
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
+					<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, freqUOMMsg" />
+				</p:inputText>
+				<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
+			</h:panelGroup>
+		</p:column>
+		<p:column style="width:60px;white-space:normal;">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"/>
+			</f:facet>
+			<h:panelGroup id="dayUOMPG" style="white-space:nowrap;">
+				<p:inputText id="dayUOM" style="min-width:0px !important;width:22px;" styleClass="ppNumericAlign"
+					value="#{question.clUomPerDay}" 
+					rendered="#{isQuestionTypeItem and isUOMHours and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}">
+					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, dayUOMMsg" />
+					<f:attribute name="min" value="0.1" />
+					<f:attribute name="max" value="23.9" />
+				</p:inputText>
+				<p:message id="dayUOMMsg" for="dayUOM" display="icon" />
+			</h:panelGroup>
+		</p:column>
+		<p:column style="width:60px;white-space:normal;">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"/>
+			</f:facet>
+			<h:panelGroup id="monthUOMPG" style="white-space:nowrap;">
+				<p:inputText id="monthUOM" style="min-width:0px !important;width:22px;" styleClass="ppNumericAlign"
+					value="#{question.clUomPerMonth}" 
+					rendered="#{isQuestionTypeItem and (isUOMHours or isUOMDays) and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}">
+					<ac:validateNumber pattern="0.0" maxIntegerDigits="3" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, monthUOMMsg" />
+					<f:attribute name="min" value="0.1" />
+					<f:attribute name="max" value="31.0" />
+				</p:inputText>
+				<p:message id="monthUOMMsg" for="monthUOM" display="icon" />
+			</h:panelGroup>
+		</p:column>
+		<p:column style="width:63px;white-space:normal;" rendered="#{isDurationByItem}">
+			<f:facet name="header">
+				<h:outputText value="* " styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.tpl.spec.content.duration.month']}"/>
+			</f:facet>
+			<h:panelGroup id="durationPG" style="white-space:nowrap;">
+				<p:inputText id="duration" style="min-width:0px !important;width:30px;" styleClass="ppNumericAlign"
+					value="#{question.clDurationMonth}" 
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
+					label="#{lbl['lbl.tpl.spec.content.duration.month']}">
+					<ac:validateNumber maxIntegerDigits="4" integerOnly="true" />
+					<p:ajax partialSubmit="true" process="@this" update="@this, durationMsg" />
+				</p:inputText>
+				<p:message id="durationMsg" for="duration" display="icon" />
+			</h:panelGroup>
+		</p:column>
+	</c:if>
+	
+	<p:column style="width:100px;" rendered="#{!isItemTypeService}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.price.type']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.price.type.tooltip']}" />
+		</f:facet>
+		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{!question.selected}" style="width:100px;"
+			rendered="#{isQuestionTypeItem}"
+			label="#{lbl['lbl.tpl.spec.content.price.type']}">
+			<f:selectItems value="#{templateSpecBackingBean.getPriceTypeDropdownList(templateSpecBean.specMaster)}" />
+			<p:ajax event="change" listener="#{templateSpecBackingBean.priceTypeChange(templateSpecBean, question)}" partialSubmit="true" process="@this" update="priceTypeMsg, qtyPG, @([id$=estPG])" />
+		</h:selectOneMenu>
+		<p:message id="priceTypeMsg" for="priceType" display="icon" />
+	</p:column>
+	<p:column style="width:#{isItemTypeService ? '52px' : '85px'};">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.quantity']}"/>
+		</f:facet>
+		<h:panelGroup id="qtyPG" rendered="#{isQuestionTypeItem}">
+			<p:inputText id="qty" style="min-width:0px !important;width:35px;" styleClass="ppNumericAlign"
+				value="#{question.clQuantity}" 
+				required="#{!question.selected}" maxlength="14"
+				label="#{lbl['lbl.tpl.spec.content.quantity']}">
+				<p:ajax partialSubmit="true" process="@this" update="@this, qtyMsg" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
+			</p:inputText>
+			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
+				oncomplete="#{tierQtyPopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
+				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
+				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+			<p:message id="qtyMsg" for="qty" display="icon" />
+		</h:panelGroup>
+	</p:column>
+	<p:column style="width:120px;" rendered="#{!isItemTypeService and isDeliveryTermReq}">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" />
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
+			<ac:iconTooltip value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
+		</f:facet>
+		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:25px;" styleClass="ppNumericAlign"
+			value="#{question.clDeliveryTerm}" 
+			rendered="#{isQuestionTypeItem}" required="#{!question.selected}" maxlength="4"
+			label="#{lbl['lbl.tpl.spec.content.delivery.term']}">
+			<p:ajax partialSubmit="true" process="@this" update="@this, deliveryTermMsg" />
+		</p:inputText>
+		<h:selectOneMenu id="delTermType" value="#{question.clDeliveryTermTypeCode.parameterId}" required="#{!question.selected}" style="width:85px;" 
+			rendered="#{isQuestionTypeItem}"
+			label="#{lbl['lbl.tpl.spec.content.delivery.term.type']}">
+			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}" />
+			<p:ajax event="change" listener="#{templateSpecBackingBean.deliveryTermChange(question)}" 
+				partialSubmit="true" process="@this" update="@this, delTermTypeMsg" />
+		</h:selectOneMenu>
+		<p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
+		<p:message id="delTermTypeMsg" for="delTermType" display="icon" />
+	</p:column>
+</ui:composition>
