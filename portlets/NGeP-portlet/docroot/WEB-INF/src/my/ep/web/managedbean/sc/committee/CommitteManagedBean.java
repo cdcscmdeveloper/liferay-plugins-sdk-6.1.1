@@ -249,6 +249,9 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** The history committees. */
 	private List<ScCommittee> historyCommittees;
 
+	/** The auto update. */
+    private boolean autoUpdate = Boolean.TRUE;
+    
 	/**
 	 * Instantiates a new committe managed bean.
 	 */
@@ -1422,6 +1425,18 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.historyCommittees = historyCommittees;
 	}
 
-	
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
 
 }
