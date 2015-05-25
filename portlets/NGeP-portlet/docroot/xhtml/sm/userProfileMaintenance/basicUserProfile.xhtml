@@ -113,7 +113,7 @@
 					<td><p:outputPanel
 							id="basicBUIdTypeLblPan">
 							<p:outputLabel
-								value="#{lbl['lbl.sm.userprofile.idno']}"
+								value="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.identificationType.parameterCode eq SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}"
 								id="equiPerIcNumLbl" />
 							<p:outputLabel value="*" styleClass="mandatory" />
 						</p:outputPanel></td>
