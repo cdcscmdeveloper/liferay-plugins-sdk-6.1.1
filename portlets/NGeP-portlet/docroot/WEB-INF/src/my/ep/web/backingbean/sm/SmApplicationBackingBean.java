@@ -9275,59 +9275,31 @@ public class SmApplicationBackingBean extends
 
 		if (StringUtils.isBlank(smAddress.getAddress1())) {
 			sb.append(
-					SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									addressTypeKey, null)
-									+ " - "
-									+ SmCommonUtil.getMessage("lbl.sm.address",
-											null) })).append("<br />");
+					getAddressFieldRequiredMsg(addressTypeKey, "lbl.sm.address"))
+					.append("<br />");
 		}
 		if (smAddress.getPmState() == null
 				|| smAddress.getPmState().getStateId() == null) {
 			sb.append(
-					SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									addressTypeKey, null)
-									+ " - "
-									+ SmCommonUtil.getMessage("lbl.sm.state",
-											null) })).append("<br />");
+					getAddressFieldRequiredMsg(addressTypeKey, "lbl.sm.state"))
+					.append("<br />");
 		}
 		if (smAddress.getPmDistrict() == null
 				|| smAddress.getPmDistrict().getDistrictId() == null) {
 			sb.append(
-					SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									addressTypeKey, null)
-									+ " - "
-									+ SmCommonUtil.getMessage(
-											"lbl.sm.district", null) }))
-					.append("<br />");
+					getAddressFieldRequiredMsg(addressTypeKey,
+							"lbl.sm.district")).append("<br />");
 		}
 		if (smAddress.getPmCity() == null
 				|| smAddress.getPmCity().getCityId() == null) {
 			sb.append(
-					SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									addressTypeKey, null)
-									+ " - "
-									+ SmCommonUtil.getMessage(
-											"lbl.sm.towncity", null) }))
-					.append("<br />");
+					getAddressFieldRequiredMsg(addressTypeKey,
+							"lbl.sm.towncity")).append("<br />");
 		}
 		if (StringUtils.isBlank(smAddress.getPostcode())) {
 			sb.append(
-					SmCommonUtil.getMessage(
-							"lbl.sm.required.msg",
-							new String[] { SmCommonUtil.getMessage(
-									addressTypeKey, null)
-									+ " - "
-									+ SmCommonUtil.getMessage(
-											"lbl.sm.postcode", null) }))
-					.append("<br />");
+					getAddressFieldRequiredMsg(addressTypeKey,
+							"lbl.sm.postcode")).append("<br />");
 		}
 	}
 
@@ -9424,5 +9396,25 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setShareHolderPermAddr(addr);
 			}
 		}
+	}
+
+	/**
+	 * Get address required msg by address type and address field
+	 * 
+	 * @param String
+	 *            addrTypeKey
+	 * @param String
+	 *            addrFieldKey
+	 * @return String
+	 */
+	private String getAddressFieldRequiredMsg(String addrTypeKey,
+			String addrFieldKey) {
+		return SmCommonUtil
+				.getMessage(
+						"lbl.sm.required.msg",
+						new String[] { SmCommonUtil.getMessage(addrTypeKey,
+								null)
+								+ " - "
+								+ SmCommonUtil.getMessage(addrFieldKey, null) });
 	}
 }

@@ -19,16 +19,14 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<p:panel style="width:100%;border: none;">
-			<table style="width: 100%;table-layout:fixed">
-				<tr>
-					<td>
-						<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
-						action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
-					</td>
-				</tr>
-			</table>	
-		</p:panel>
+		<table style="width: 100%;table-layout:fixed">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" 
+					action="#{smPersonnelBackingBean.cancel}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+				</td>
+			</tr>
+		</table>
 
 
 		<p:panel id="UserProfile" style="border: none;width:100%;"
