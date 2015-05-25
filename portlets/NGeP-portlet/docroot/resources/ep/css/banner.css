@@ -6,17 +6,17 @@ html{
 	max-width:796px;
 	width:100%;
 	font-family:Arial, Helvetica, sans-serif;
-}
+}*/
 
-a {
+a.bannerlink {
     color: #ee5408;
 	text-decoration:none;
 }
 
-a:hover {
+a.bannerlink:hover {
     color: #009ae5;
-	text-decoration:underline;
-}*/
+	text-decoration:none;
+}
 
 
 .banner1-container p{
