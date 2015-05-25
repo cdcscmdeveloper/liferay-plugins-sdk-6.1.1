@@ -20,6 +20,8 @@
 				<f:selectItem itemLabel="Review" itemValue="#{TplSpecConst.contentTypeReview}" />
 				<f:selectItem itemLabel="Answer" itemValue="#{TplSpecConst.contentTypeAnswer}" />
 				<f:selectItem itemLabel="Score" itemValue="#{TplSpecConst.contentTypeScore}" />
+				<f:selectItem itemLabel="Update Specification" itemValue="#{TplSpecConst.contentTypeUpdateSpec}" />
+				<f:selectItem itemLabel="Question and Answer" itemValue="#{TplSpecConst.contentTypeQuestionAndAsnwer}" />
 				<p:ajax event="change" update="questionTbl, saveAnsPG" />
 			</p:selectOneMenu>
 			
@@ -39,7 +41,9 @@
 			<ui:param name="isContentTypeQuestion" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeQuestion}" />
 			<ui:param name="isContentTypeReview" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeReview}" />
 			<ui:param name="isContentTypeAnswer" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeAnswer}" />
-			<ui:param name="isContentTypeScore" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeScore}" />	
+			<ui:param name="isContentTypeScore" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeScore}" />
+			<ui:param name="isContentTypeUpdateSpec" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeUpdateSpec}" />	
+			<ui:param name="isContentTypeQuestionAndAnswer" value="#{templateSpecBean.contentType == TplSpecConst.contentTypeQuestionAndAsnwer}" />
 			<ui:param name="isItemTypeService" value="#{templateSpecBean.specMaster.itemTypeCode.parameterCode == ParameterConst.itemTypeService}" />
 			<ui:param name="isSpecTypeTechnical" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeTechnical}" />
 			<ui:param name="isSpecTypeFinancial" value="#{templateSpecBean.specMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeFinancial}" />
@@ -57,7 +61,7 @@
 				<table style="width:100%">
 				<tr>
 					<td width="16%" class="TableFieldLeft">
-						<p:outputLabel value="#{lbl['lbl.sc.tpl.duration.month']}" />
+						<p:outputLabel value="#{lbl['lbl.tpl.spec.duration.month']}" />
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td width="84%" class="TableFieldRight">
@@ -79,7 +83,11 @@
 				</table>
 			</c:if>
 			
-			<c:if test="#{isContentTypeQuestion or isContentTypeReview}">
+			<c:if test="#{isContentTypeQuestion or isContentTypeReview or isContentTypeUpdateSpec}">
+				<c:if test="#{isContentTypeQuestion and editable and isScoringReq}">
+					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
+				</c:if>
+				
 				<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq))}">
 					<ac:lovPopup />
 				</c:if>
@@ -99,7 +107,11 @@
 					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
 					
 					<c:if test="#{isContentTypeQuestion and (isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)) and editable}">
+						<ui:decorate template="specColumnQuestion.xhtml" />
 						<ui:decorate template="specColumnQuestionTechnical.xhtml" />
+					</c:if>
+					<c:if test="#{isContentTypeUpdateSpec and isSpecTypeTechnical and editable}">
+						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 					<c:if test="#{isContentTypeQuestion and isSpecTypeFinancial and isSpecificationReq and editable}">
 						<ui:decorate template="specColumnQuestionView.xhtml" />
@@ -146,6 +158,28 @@
 				<c:if test="#{isSpecTypeFinancial and isZonal}">
 					<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
 				</c:if>
+			</c:if>
+			
+			<c:if test="#{isContentTypeQuestionAndAnswer}">
+				<ac:lovPopup />
+				
+				<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
+					value="#{templateSpecBean.specMaster.tplSpecQuestions}"
+					scrollable1="true" scrollWidth1="#{scrollWidth}">
+					
+					<ui:param name="prevSpecQuestion" value="#{row > 0 ? templateSpecBean.specMaster.tplSpecQuestions[row-1] : null}" />
+					<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
+					<ui:param name="isPriceTypeStandard" value="#{question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard}" />
+					<ui:param name="isPriceTypeAllStandard" value="#{isPriceTypeStandard or question.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard}" />
+					<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
+					<ui:param name="isUOMHours" value="#{question.clUom.uomCode == 'H' or question.clUom.uomCode == 'HUR' or question.clUom.uomCode == 'HR'}" />
+					<ui:param name="isUOMDays" value="#{question.clUom.uomCode == 'D' or question.clUom.uomCode == 'DAY'}" />
+					
+					<ui:decorate template="specColumnQuestion.xhtml" />
+					<ui:decorate template="specColumnQuestionAnswer.xhtml" />
+				</p:dataTable>
 			</c:if>
 		</p:panel>
 		
