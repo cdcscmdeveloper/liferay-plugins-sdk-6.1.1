@@ -799,14 +799,24 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		}else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) && isSupplierRole()) {
-			validateDeliveryOrder();
-			// set action
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-			return null;
+		}else if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if(hasGovtSellerRole()){
+				validateDeliveryOrder();
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+				return null;
+			}else{
+				validateDeliveryOrder();
+				// set action
+				getManagedBean().setButtonAction(outcome);
+				getManagedBean().setAutoUpdate(Boolean.FALSE);
+				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+				RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+				return null;
+			}
+			
 		}else{
 			return createDeliveryOrder(outcome);
 		}
@@ -914,9 +924,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			return Boolean.TRUE;
 		} else if(getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
 			return Boolean.TRUE;
-		} else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
-			return Boolean.TRUE;
 		}
+//		else if(getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value())) {
+//			return Boolean.TRUE;
+//		}
 		return Boolean.FALSE;
 	}
 	
@@ -1154,5 +1165,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
+	
+	private boolean hasGovtSellerRole() {
+		 if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+				return true;
+		 else
+		return false;
 	}
 }
