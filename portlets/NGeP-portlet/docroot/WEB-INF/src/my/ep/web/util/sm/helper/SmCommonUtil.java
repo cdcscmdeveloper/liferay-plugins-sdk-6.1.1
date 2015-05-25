@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.application.FacesMessage.Severity;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
@@ -38,6 +39,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -1907,10 +1909,6 @@ public class SmCommonUtil {
 
 		String portalUrl = themeDisplay.getURLPortal();
 		String logOutUrl = portalUrl + "/c/portal/logout";
-		System.out.println(">>>>>>>>>>>>logout url default:" + logOutUrl
-				+ "<<<<<<<<<<<<<<");
-		log.info(">>>>>>>>>>>>logout url default:" + logOutUrl
-				+ "<<<<<<<<<<<<<<");
 		redirectToExternalUrl(logOutUrl);
 	}
 
@@ -1926,5 +1924,22 @@ public class SmCommonUtil {
 		ThemeDisplay themeDisplay = (ThemeDisplay) req
 				.getAttribute(WebKeys.THEME_DISPLAY);
 		return themeDisplay.getURLPortal();
+	}
+
+	/**
+	 * Show faces message based on severity level and component id (optional).
+	 * 
+	 * @param FacesContext
+	 *            fc
+	 * @param Severity
+	 *            severity
+	 * @param String
+	 *            msg
+	 * @param String
+	 *            componentId
+	 */
+	public static void showFacesMsg(FacesContext fc, Severity severity,
+			String msg, String componentId) {
+		fc.addMessage(componentId, new FacesMessage(severity, null, msg));
 	}
 }
