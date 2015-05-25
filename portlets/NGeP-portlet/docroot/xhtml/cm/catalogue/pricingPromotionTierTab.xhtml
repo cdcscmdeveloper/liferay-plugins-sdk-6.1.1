@@ -36,9 +36,13 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price.uom']}
 				</f:facet>
-				<p:inputText value="#{price.price}" size="10" style="text-align:right">
-					<p:ajax event="keyup" listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"  update="pTErrorLink" />
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				<p:inputText value="#{price.price}" size="10"
+					style="text-align:right">
+					<p:ajax event="keyup"
+						listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"
+						update="pTErrorLink" />
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</p:column>
 			<p:column>
@@ -46,7 +50,8 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{price.startDate}" showOn="button"
-					mindate="#{price.parentPrice.startDate}" maxdate="#{price.parentPrice.endDate}" rendered="#{price.showFlag}"
+					mindate="#{price.parentPrice.startDate}"
+					maxdate="#{price.parentPrice.endDate}" rendered="#{price.showFlag}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="dateSelect"
 						listener="#{catalogueBackingBean.updateValidateGroupingDates(rowIndex)}"
@@ -59,7 +64,7 @@
 						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 					<p:ajax event="keyup"
 						listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"
-						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />	
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 				</p:calendar>
 
 			</p:column>
@@ -67,7 +72,9 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" mindate="#{price.parentPrice.startDate}" maxdate="#{price.parentPrice.endDate}"
+				<p:calendar value="#{price.endDate}" showOn="button"
+					mindate="#{price.parentPrice.startDate}"
+					maxdate="#{price.parentPrice.endDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 					rendered="#{price.showFlag}">
 					<p:ajax event="dateSelect"
@@ -81,7 +88,7 @@
 						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 					<p:ajax event="keyup"
 						listener="#{catalogueBackingBean.validateTierPromotionPrice(rowIndex)}"
-						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />	
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
 				</p:calendar>
 
 			</p:column>
@@ -91,33 +98,28 @@
 					#{lbl['lbl.cm.action']}
 				</f:facet>
 
-				<table>
-					<tr>
 
-						<td style="text-align: right;"><p:commandLink
-								style="margin-left: 10px;" title="#{lbl['lbl.btn.delete']}"
-								rendered="#{price.showFlag}"
-								action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
-								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
-								<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-							</p:commandLink></td>
-						<td style="text-align: right;">
-							<p:panel id="pTErrorLink" styleClass="noBorders tr,noBorders td">
-								<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
-									actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}"
-									update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog"
-									oncomplete="errorDialog.show();"
-									rendered="#{(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}">
-									<p:graphicImage
-										value="/css/images/design/icon_error.png"></p:graphicImage>
-								</p:commandLink>
-								<p:graphicImage value="/css/images/design/icon_success.png" 
-									rendered="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}"/>
-							</p:panel>	
-						</td>
-					</tr>
 
-				</table>
+				<p:commandLink
+					title="#{lbl['lbl.btn.delete']}" rendered="#{price.showFlag}"
+					action="#{catalogueBackingBean.deletePromotionTierPrice(rowIndex)}"
+					update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:pricingTabID:headerTabId:tierId:pricingTierID">
+					<p:graphicImage style="padding-right:10px;" value="/css/images/design/trash.png"></p:graphicImage>
+				</p:commandLink>
+
+				<h:panelGroup id="pTErrorLink">
+					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
+						actionListener="#{catalogueBackingBean.updatePromotionTierErrorDialog(rowIndex)}"
+						update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID, :form:errorDialog"
+						oncomplete="errorDialog.show();"
+						rendered="#{(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}">
+						<p:graphicImage value="/css/images/design/icon_error.png"></p:graphicImage>
+					</p:commandLink>
+					<p:graphicImage value="/css/images/design/icon_success.png"
+						rendered="#{!(price.price eq null || price.startDate eq null or price.endDate eq null or price.startDate >= price.endDate || !price.displayAction or !price.checkOk)}" />
+				</h:panelGroup>
+
+
 			</p:column>
 
 
