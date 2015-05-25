@@ -25,7 +25,8 @@
 									styleClass="menuImage" />
 							</c:if>
 							<c:if test="#{menuBean.imageId == null}">		
-								<h:graphicImage library="ep/images/design" name="icon_default.png"
+								<h:graphicImage 
+									value="#{CommonUIConstant.imagePathUptoDesign}/ico-application.png"
 									title="#{menuBean.title}"
 									styleClass="menuImage" />
 							</c:if>
