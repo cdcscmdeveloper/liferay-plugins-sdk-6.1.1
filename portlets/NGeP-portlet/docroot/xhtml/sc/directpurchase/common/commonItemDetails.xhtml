@@ -145,7 +145,8 @@
 						      oncomplete="blockWidget.hide();"
 						      rendered="#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierId ne null}"
 						     update="@([id$=suppDetailsPopup])">
-						   <p:graphicImage value="/css/images/design/ico-supplier-details-2.png" style="vertical-align:middle"></p:graphicImage>
+						   <p:graphicImage value="/css/images/design/ico-supplier-details-2.png" style="vertical-align:middle"
+						   		title="#{lbl['lbl.sc.supplier.details']}"></p:graphicImage>
 					        <f:setPropertyActionListener value="#{requestNoteDtl.scRequestSupplierItem.smSupplier}" target="#{supplierDetailBackingBean.smSupplier}" />
 					     </p:commandLink>
 					  </p:column>

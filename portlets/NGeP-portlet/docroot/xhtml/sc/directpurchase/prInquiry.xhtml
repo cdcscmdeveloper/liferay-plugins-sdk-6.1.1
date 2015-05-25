@@ -96,8 +96,9 @@
 								<p:spacer width="2px"></p:spacer>
 								<h:commandLink immediate="true" action="#{requestNoteBackingBean.viewMarketResearch(purchaseInquiryBackingBean.managedBean.requestNoteDtl)}"
 									rendered="#{isPendingSubmissionStatus}">
-								   <p:graphicImage value="/css/images/design/ico-view.png"></p:graphicImage>
-									</h:commandLink></td>
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.sc.summary.searchresult.tooltip']}"></p:graphicImage>
+								</h:commandLink></td>
 								<td style="margin-top: -3px"><p:message id="priceTypeMsg" for="priceType"
 										display="icon" /><ac:iconTooltip value="#{lbl['lbl.sc.pricetype.tooltip']}" /></td>
 							</tr>
