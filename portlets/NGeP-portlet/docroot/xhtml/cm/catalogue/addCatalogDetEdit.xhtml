@@ -15,43 +15,44 @@
 
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
-<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-	<script>
-		$(function() {
-			$('#slides').slidesjs({
-				width : 940,
-				height : 528,
-				navigation : {
-					effect : "fade"
-				},
-				pagination : {
-					effect : "fade"
-				},
-				effect : {
-					fade : {
-						speed : 400
+	<h:panelGroup
+		rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+		<script>
+			$(function() {
+				$('#slides').slidesjs({
+					width : 940,
+					height : 528,
+					navigation : {
+						effect : "fade"
+					},
+					pagination : {
+						effect : "fade"
+					},
+					effect : {
+						fade : {
+							speed : 400
+						}
 					}
-				}
+				});
 			});
-		});
-	</script>
-</h:panelGroup>
+		</script>
+	</h:panelGroup>
 
 	<p:messages id="catalogDetMsgId" showDetail="true" autoUpdate="true"
 		closable="true" showSummary="false"></p:messages>
-		
+
 	<p:blockUI block="form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-		
+
 	<p:outputPanel id="addCatDet">
 
 		<div style="text-align: right; min-height: 40px;">
-				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" 
-							action="#{catalogueBackingBean.navigate}">
-					</p:commandButton>
-				</div>
+			<div style="float: left; clear: both;">
+				<p:commandButton value="#{lbl['lbl.cm.back']}"
+					action="#{catalogueBackingBean.navigate}">
+				</p:commandButton>
+			</div>
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin or unspscCodeBackingBean.allSupplier}">
@@ -62,43 +63,44 @@
 				<p:commandButton value="#{lbl['lbl.cm.save.as.draft']}"
 					rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue}"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
-					
-					<ui:remove>
-						<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-							rendered="#{catalogueBackingBean.managedBean.displayCatalogue}"
-							action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
-					</ui:remove>
+
+				<ui:remove>
+					<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+						rendered="#{catalogueBackingBean.managedBean.displayCatalogue}"
+						action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
+				</ui:remove>
 
 				<div style="float: left; clear: both;">
 					<ui:remove>
-						<p:commandButton value="#{lbl['lbl.cm.back']}" rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
+						<p:commandButton value="#{lbl['lbl.cm.back']}"
+							rendered="#{!catalogueBackingBean.managedBean.displayCatalogue}"
 							action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
 						</p:commandButton>
 					</ui:remove>
-					
+
 				</div>
 			</h:panelGroup>
-			
+
 			<ui:remove>
-			<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
-				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" 
-						action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
-					</p:commandButton>
-				</div>
-			</h:panelGroup>
+				<h:panelGroup rendered="#{unspscCodeBackingBean.requisitioner}">
+					<div style="float: left; clear: both;">
+						<p:commandButton value="#{lbl['lbl.cm.back']}"
+							action="#{catalogueBackingBean.cancelToSupplierItemSearch()}">
+						</p:commandButton>
+					</div>
+				</h:panelGroup>
 			</ui:remove>
 
 			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 
-				<p:commandButton value="#{lbl['lbl.btn.approve']}" 
+				<p:commandButton value="#{lbl['lbl.btn.approve']}"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.reject']}" 
+				<p:commandButton value="#{lbl['lbl.btn.reject']}"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
-				
+
 				<ui:remove>
-					<p:commandButton value="#{lbl['lbl.btn.cancel']}"						
+					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						action="#{reviewCatBackingBean.cancelToPendingApprovalItem()}"
 						immediate="true">
 					</p:commandButton>
@@ -119,8 +121,10 @@
 						<td><p:outputLabel value="#{lbl['lbl.cm.item.status']}" /></td>
 						<td><p:selectOneRadio
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.recordStatus}">
-								<f:selectItem itemLabel="#{lbl['lbl.cm.active']}" itemValue="true"></f:selectItem>
-								<f:selectItem itemLabel="#{lbl['lbl.cm.inactive']}" itemValue="false"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.cm.active']}"
+									itemValue="true"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.cm.inactive']}"
+									itemValue="false"></f:selectItem>
 							</p:selectOneRadio></td>
 					</tr>
 				</table>
@@ -128,48 +132,51 @@
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
-					<td rowspan="10">
-						<p:outputLabel 
-							value="#{lbl['lbl.cm.instruction.related.image']}" 
+					<td rowspan="10"><p:outputLabel
+							value="#{lbl['lbl.cm.instruction.related.image']}"
 							styleClass="splNotesFonts"
-							rendered="#{unspscCodeBackingBean.allSupplier}" /><br/>
-						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-							<div style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
-						</h:panelGroup>
-							
-						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+							rendered="#{unspscCodeBackingBean.allSupplier}" /><br /> <h:panelGroup
+							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+							<div
+								style="display: block; width: 120px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
+						</h:panelGroup> <h:panelGroup
+							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
 							<div id="slides" style="width: 250px;">
-									<ui:repeat var="cmImage" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-										<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" style="height: 150px; left: 0px !important;" />
-									</ui:repeat>
+								<ui:repeat var="cmImage"
+									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+									<img
+										src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}"
+										style="height: 150px; left: 0px !important;" />
+								</ui:repeat>
 							</div>
-						</h:panelGroup>
-					 
-						<p:commandLink style="margin-left: 200px;padding-right: 10px;"
+						</h:panelGroup> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							onclick="imageDialog.show()">
-							<p:graphicImage value="/css/images/design/upload.png" style="margin-top:10px;"></p:graphicImage>
-						</p:commandLink> 
-						<p:commandLink
+							<p:graphicImage value="/css/images/design/upload.png"
+								style="margin-top:10px;"></p:graphicImage>
+						</p:commandLink> <p:commandLink
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							title="Delete" oncomplete="deleteImage.show()">
 							<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-						</p:commandLink>
-
-					</td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.code']}" /></td>
+						</p:commandLink></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:outputLabel size="35" styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td style="overflow-wrap:break-word;width:25%;"><p:outputLabel  styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.item.name']}" /></td>
+					<td style="overflow-wrap: break-word; width: 25%;"><p:outputLabel
+							styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel></td>
 				</tr>
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" /> <p:outputLabel value="*" styleClass="mandatory"/></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.table.uom']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true" 
+							headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
@@ -195,16 +202,16 @@
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
-					<td><p:inputText size="35"
-							label="#{lbl['lbl.cm.min.order']}"
+					<td><p:inputText size="35" label="#{lbl['lbl.cm.min.order']}"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:inputText size="26"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" converterMessage="#{lbl['lbl.cm.error.delivery.term']}"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"
+							converterMessage="#{lbl['lbl.cm.error.delivery.term']}"
 							readonly="#{unspscCodeBackingBean.catalogueAdmin or catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'P' or !catalogueBackingBean.managedBean.displayCatalogue}" />
-						<p:inputText style="margin-left: 2px;" size="3" value="#{lbl['lbl.cm.days']}"
-							readonly="true" /></td>
+						<p:inputText style="margin-left: 2px;" size="3"
+							value="#{lbl['lbl.cm.days']}" readonly="true" /></td>
 				</tr>
 
 
@@ -231,8 +238,9 @@
 
 			<p:fileUpload
 				fileUploadListener="#{catalogueBackingBean.imageUpload}"
-				cancelLabel="#{lbl['lbl.btn.cancel']}" uploadLabel="#{lbl['lbl.btn.upload']}" label="#{lbl['lbl.btn.choose']}"
-				mode="advanced" id="upload"
+				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				uploadLabel="#{lbl['lbl.btn.upload']}"
+				label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP files are accepted"
 				oncomplete="refresh();" multiple="true">
@@ -242,7 +250,8 @@
 
 
 
-		<p:tabView id="pricingTabID" orientation="left" style="margin-top: 10px;"
+		<p:tabView id="pricingTabID" orientation="left"
+			style="margin-top: 10px;"
 			activeIndex="#{reviewCatBackingBean.managedBean.catDetTabActiveIndex}">
 
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
@@ -260,7 +269,8 @@
 							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="pricingTab.xhtml" />
 							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}" rendered="#{!unspscCodeBackingBean.supplierTemp}">
+							<p:tab title="#{lbl['lbl.cm.promotion']}"
+								rendered="#{!unspscCodeBackingBean.supplierTemp}">
 								<ui:include src="promotionTab.xhtml" />
 							</p:tab>
 
@@ -270,12 +280,14 @@
 
 					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and !unspscCodeBackingBean.supplierTemp}">
+					<p:tab title="#{lbl['lbl.cm.tier']}"
+						rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and !unspscCodeBackingBean.supplierTemp}">
 
 						<p:tabView id="tierId"
 							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
-							<p:ajax event="tabChange" update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID"/>
-        
+							<p:ajax event="tabChange"
+								update=":form:pricingTabID:headerTabId:tierId:pricingPromotionTierID" />
+
 
 							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="pricingTierTab.xhtml" />
@@ -291,7 +303,8 @@
 					</p:tab>
 
 
-					<p:tab title="#{lbl['lbl.cm.zonal']}" rendered="#{!unspscCodeBackingBean.supplierTemp}">
+					<p:tab title="#{lbl['lbl.cm.zonal']}"
+						rendered="#{!unspscCodeBackingBean.supplierTemp}">
 
 						<p:tabView id="zonalId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalPricingIndex}">
@@ -311,11 +324,13 @@
 
 					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.zonal.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and !unspscCodeBackingBean.supplierTemp}">
+					<p:tab title="#{lbl['lbl.cm.zonal.tier']}"
+						rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and !unspscCodeBackingBean.supplierTemp}">
 
 						<p:tabView id="zonalTierId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
-							<p:ajax event="tabChange" update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId"/>
+							<p:ajax event="tabChange"
+								update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalPromotionTierPricingsId" />
 							<p:tab title="#{lbl['lbl.cm.standard']}">
 								<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
@@ -357,57 +372,76 @@
 
 		</p:tabView>
 
-		<p:dialog id="errorDialog" header="#{lbl['lbl.txt.error.list']}" widgetVar="errorDialog"
-			modal="true" width="500" height="150">
-			
-			<p:panelGrid styleClass="noBorders">
-			    <p:row rendered="#{catalogueBackingBean.managedBean.error1}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error1']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error2}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error2']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error3}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error3']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error4}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error4']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error5}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error5']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error6}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error6']}"></h:outputText></p:column>
-			    </p:row>
-			    <p:row rendered="#{catalogueBackingBean.managedBean.error7}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error7']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error8}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error8']}"></h:outputText></p:column>
-			    </p:row>
-			     <p:row rendered="#{catalogueBackingBean.managedBean.error9}">
-			        <p:column style="width:2%;"><p:graphicImage value="/css/images/messages/error.png"></p:graphicImage></p:column>
-			        <p:column><h:outputText value="#{lbl['lbl.cm.error.error9']}"></h:outputText></p:column>
-			    </p:row>
-			 
-			    <p:row>
-			        <p:column colspan="2">
-			            <p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;" onclick="errorDialog.hide();" />
-			        </p:column>
-			    </p:row>
+		<p:dialog id="errorDialog" header="#{lbl['lbl.txt.error.list']}"
+			widgetVar="errorDialog" modal="true" width="500" height="150">
+
+			<p:panelGrid style="width:100%;">
+				<p:row rendered="#{catalogueBackingBean.managedBean.error1}">
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error1']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error2}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error2']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error3}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error3']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error4}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error4']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error5}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error5']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error6}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error6']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error7}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error7']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error8}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error8']}"></h:outputText>
+					</p:column>
+				</p:row>
+				<p:row rendered="#{catalogueBackingBean.managedBean.error9}">
+
+					<p:column style="border:none !important;">
+						<h:outputText value="#{lbl['lbl.cm.error.error9']}"></h:outputText>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column style="border:none !important;" colspan="1">
+						<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+							onclick="errorDialog.hide();" />
+					</p:column>
+				</p:row>
 			</p:panelGrid>
 		</p:dialog>
 
 
-		<p:dialog id="deleteImage" header="#{lbl['lbl.btn.delete']} #{lbl['lbl.cm.image']}"
+		<p:dialog id="deleteImage"
+			header="#{lbl['lbl.btn.delete']} #{lbl['lbl.cm.image']}"
 			widgetVar="deleteImage" modal="true" width="500" height="500">
 
 
