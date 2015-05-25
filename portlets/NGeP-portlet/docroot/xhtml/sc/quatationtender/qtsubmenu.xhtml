@@ -61,7 +61,7 @@
 						process="@form"
 						rendered="#{(qTDetailBB.managedBean.qt.qtStatus.statusId ge QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT and qTDetailBB.managedBean.qt.qtStatus.statusId le QTStatusConst.QT_PENDING_PUBLICATION)}" />
 				</p:tabMenu></td>
-			<td width="80%" ><h:panelGroup id="menuQTContent">
+			<td width="80%" valign="top"><h:panelGroup id="menuQTContent">
 					<c:if test="#{qTDetailBB.managedBean.activeIndex eq '0'}">
 						<ui:include src="qtdetails.xhtml" />
 					</c:if>
