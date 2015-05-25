@@ -63,7 +63,7 @@
 					action="#{noticeBoardBackingBean.gotoSupplierRegistration(scqt[0])}"
 					rendered="#{scqt[5] eq '1'}"
 					title="#{lbl['lbl.sc.notice.board.self.registration.tooltip']}">
-					<p:graphicImage value="/css/images/design/register.png" />
+					<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/register.png" />
 				</p:commandLink>
 			</p:column>
 
@@ -75,7 +75,7 @@
 						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}"
 						title="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}">
 						<p:graphicImage 
-							value="/css/images/design/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
+							value="#{CommonUIConstant.imagePathUptoDesign}/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
 					</p:commandLink>
 					<p:commandButton id="downloadIcon" icon="ui-icon-download"
 						style="background-color:transparent !important; border:0px none;"
