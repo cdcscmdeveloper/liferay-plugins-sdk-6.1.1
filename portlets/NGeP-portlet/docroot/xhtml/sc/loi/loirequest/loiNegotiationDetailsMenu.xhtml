@@ -13,10 +13,23 @@
 		</f:facet>
 		<p:dataTable id="negoloctbl" var="negoloc"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoLocations}"
-			selection="#{lOIDetailBackingBean.managedBean.selectedNegoLocationList}"
 			rows="10" rowKey="#{negoloc}" rowIndexVar="rowIndex">
 			<ac:paginator for="negoloctbl" />
-			<p:column selectionMode="multiple" style="width:2%" rendered="#{isEditableStatus}" />
+
+			<p:column style="width:2%">
+				<f:facet name="header">
+					<p:selectBooleanCheckbox id="selectAllNegoLoc"
+						value="#{lOIDetailBackingBean.flag}"
+						rendered="#{isEditableStatus}">
+						<p:ajax partialSubmit="true" process="@this" update="negoloctbl"
+							listener="#{lOIDetailBackingBean.selectAllNegoLocations}"></p:ajax>
+					</p:selectBooleanCheckbox>
+				</f:facet>
+				<p:selectBooleanCheckbox value="#{negoloc.selected}">
+						<p:ajax partialSubmit="true" process="@this" update="negoloctbl" />
+				</p:selectBooleanCheckbox>
+			</p:column>
+			
 
 			<p:column style="width:40%">
 				<f:facet name="header">
@@ -24,7 +37,7 @@
 						<h:outputText value="#{lbl['lbl.sc.location']}"/>
 				</f:facet>
 				<p:inputText value="#{negoloc.negoLocation}" id="negLocId" label="#{lbl['lbl.sc.location']}"
-				size="30" disabled="#{!isEditableStatus or afterNegotiation}" required="true"/>
+				size="30" disabled="#{!isEditableStatus or afterNegotiation}" required="#{!negoloc.selected}"/>
 				<p:message id="negLocIdMsg" for="negLocId" display="icon" />
 			</p:column>
 
@@ -33,7 +46,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.date']}"/>
 				</f:facet>
-				<p:calendar id="date" disabled="#{!isEditableStatus or afterNegotiation}" required="true" label="#{lbl['lbl.sc.date']}"
+				<p:calendar id="date" disabled="#{!isEditableStatus or afterNegotiation}" required="#{!negoloc.selected}" label="#{lbl['lbl.sc.date']}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
 					size="12" value="#{negoloc.negoDate}" />
 					<p:message id="dateMsg" for="date" display="icon" />
@@ -119,7 +132,7 @@
 				</c:if>
 
 				<c:if test="#{isEditableStatus and !afterNegotiation}">
-					<p:inputTextarea cols="70" rows="2" value="#{negoTerm.negoResult}"
+					<p:inputTextarea cols="70" rows="2" value="#{negoTerm.negoResult}" 
 						autoResize="false">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputTextarea>
