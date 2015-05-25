@@ -63,6 +63,13 @@
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.requistioner.userName}"
 						disabled="true" /></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.approver.name']}" /></td>
+				<td><p:inputText size="59"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.approver.userName}"
+						disabled="true" /></td>
+			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.del.ord.info']}" toggleable="true">
