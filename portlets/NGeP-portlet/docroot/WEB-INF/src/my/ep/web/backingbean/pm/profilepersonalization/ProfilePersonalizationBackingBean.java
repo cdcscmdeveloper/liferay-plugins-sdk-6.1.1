@@ -907,10 +907,10 @@ public class ProfilePersonalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_770125);
 			}
 			
-//			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
-//					.getOldPassword())) {
-//				throw new EpException(MessageConst.ERROR_770124);
-//			}
+			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
+					.getOldPassword())) {
+				throw new EpException(MessageConst.ERROR_770124);
+			}
 
 			if (StringUtils.isBlank(this.getManagedBean().getSelectedUser()
 					.getPassword())) {
