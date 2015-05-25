@@ -9,8 +9,9 @@
 	<p:panel header="#{lbl['lbl.sc.qt.schedule']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><h:panelGroup id="publishId">
 						<table>
 							<tr>
@@ -354,7 +355,7 @@
 					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}" />
 			</p:column>
 		</p:dataTable>
-		
+
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
@@ -401,7 +402,7 @@
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
-		
+
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
