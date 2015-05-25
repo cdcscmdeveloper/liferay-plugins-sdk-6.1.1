@@ -95,10 +95,7 @@
 					<table style="width: 100%">
 				    <tr>
 				    	<td class="TableFieldLeft" width="24%">
-				    		<h:panelGrid columns="2" style="float:right;">
-				    			<p:outputLabel value="*" styleClass="mandatory" />
-				    			<p:outputLabel value="#{lbl['lbl.txt.attachment']}" />
-				    		</h:panelGrid>
+				  			<p:outputLabel value="#{lbl['lbl.txt.attachment']}" styleClass="required" />
 				    	</td>
 			           	<td class="TableFieldRight">
 				        	<p:commandButton oncomplete="uploadDlg1.show();return false;" icon="iconAttachment" 
