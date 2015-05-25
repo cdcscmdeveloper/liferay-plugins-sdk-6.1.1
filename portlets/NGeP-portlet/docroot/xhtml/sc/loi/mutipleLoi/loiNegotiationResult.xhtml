@@ -87,7 +87,7 @@
 							style="white-space:normal;text-align:right;" />
 					</p:row>
 				</p:columnGroup>
-				 <p:column style="width:15%;white-space:normal;">
+				 <p:column style="width:15%;white-space:normal;"  rendered="#{isZonal}">
 				       <p:commandLink id="zoneName"
 						    oncomplete="zoneLocPopup.show();"
 						    partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
