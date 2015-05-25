@@ -30,15 +30,7 @@
 			styleClass="noBorders tr,noBorders td">
 			
 			<c:if test="#{not empty smPersonnelBackingBean.managedBean.noSupplierUserMsg}">
-				<br />
-				<table style="width: 100%">
-					<tr>
-						<td><h:outputText
-								value="** #{smPersonnelBackingBean.managedBean.noSupplierUserMsg}"
-								style="color: red;font-weight: bold;float:left;" /></td>
-					</tr>
-				</table>
-				<br />
+				<h:outputText styleClass="instruction" value="#{smPersonnelBackingBean.managedBean.noSupplierUserMsg}"/>
 			</c:if>
 			
 			<p:dataTable id="smPersonnelAuthorizedNonAdminId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -50,11 +42,11 @@
 
 				<p:column headerText="#{lbl['lbl.sm.userprofile.name']}">
 					<p:outputPanel rendered="#{personnel.epRole eq 'CM_USER'}">
-						<p:graphicImage id="uidti" value="/css/images/design/tooltips.png"  />
+						&#160;<p:graphicImage id="uidti" value="/css/images/design/tooltips.png"  />
 						<p:tooltip id="uidtt" for="uidti">
 							<p:outputLabel escape="false"
 								value="#{lbl['tt.sm.deactivateadmin.catalogueuser.upgrade']}" />
-						</p:tooltip>
+						</p:tooltip>&#160;
 					</p:outputPanel>
 					<h:outputText value="#{personnel.name}" />
 				</p:column>
