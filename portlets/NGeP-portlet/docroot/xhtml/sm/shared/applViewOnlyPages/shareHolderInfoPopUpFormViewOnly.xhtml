@@ -20,7 +20,7 @@
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareholderIdentificationType}" /></td>
 				<td>
 					<p:outputPanel id="equiPerDtlIdenTypeLblPan">
-						<p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.shrHldrInfo.idNo']}" id="equiPerIcNumLbl" />
+						<p:outputLabel styleClass="outputLabel-view-label" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationType.parameterCode eq SupplierManagementConst.NEW_IC?lbl['lbl.sm.individual.newicno']:lbl['lbl.sm.userprofile.idno']}" id="equiPerIcNumLbl" />
 					</p:outputPanel>
 				</td>
 				<td><p:outputPanel id="equiPerDtlIdenTypePan"><p:outputLabel styleClass="outputLabel-view" value="#{viewSmApplBackingBean.managedBean.selectedShareHolder.identificationNo}"/></p:outputPanel></td>
