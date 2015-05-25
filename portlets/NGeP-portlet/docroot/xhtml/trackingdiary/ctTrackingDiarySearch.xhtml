@@ -124,7 +124,7 @@
 					<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.td.status']}"/>
 					</f:facet>
-					#{ctTrackingDiaryBackingBean.getStatusDescById(ctDocument.statusId)}
+					#{ctTrackingDiaryBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ctDocument.currentDocType)}
 				</p:column>				
 				<p:column style="width:5%; white-space:normal;">
 					<f:facet name="header">
