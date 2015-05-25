@@ -162,7 +162,13 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(flBB.getManagedBean().getRemarkList().size()>1) {
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 			}
-			reqDTO.setUserRole(getUserRole());	
+			if(getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)){
+				reqDTO.setUserRole(hasRORole());	
+			}else if(getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+				reqDTO.setUserRole(hasApproverRole());	
+			}else{
+				reqDTO.setUserRole(getUserRole());
+			}
 			reqDTO.setToken(token);
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setFrnCancellationProcess(getManagedBean().isFrnCancellationProcess());
@@ -266,6 +272,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			IReceivedNoteSO receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReceivedNoteSO.class);
 			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
+			getManagedBean().setBpmTaskName(res.getTaskName());
 			if(res.getProcessName().equalsIgnoreCase(FLProcessNameConst.FRN_CANCELLATION_PROCESS_NAME)){
 				FLDOFulfillmentCancelReqType fulfillmentCancelReqType = (FLDOFulfillmentCancelReqType)obj;
 				reqDTO.setDeliveryOrderId(fulfillmentCancelReqType.getDoId());
@@ -834,5 +841,21 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "frnBasePage?faces-redirect=true");
 		}
 	}	
+	
+	private String hasRORole() {
+		if(getFacesScopes().hasRoleUser(RoleCode.RECEIVING_OFFICER.value())){
+			return RoleCode.RECEIVING_OFFICER.value();
+		}else
+			return null;
+		
+	}
+	
+	private String hasApproverRole() {
+		if(getFacesScopes().hasRoleUser(RoleCode.FL_APPROVER.value())){
+			return RoleCode.FL_APPROVER.value();
+		}else
+			return null;
+		
+	}
 	
 }
