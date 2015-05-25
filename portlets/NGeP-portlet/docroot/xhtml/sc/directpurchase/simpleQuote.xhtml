@@ -43,7 +43,7 @@ template="/WEB-INF/facelets/templates/basic_template.xhtml"
 								action="#{simpleQuoteBackingBean.tabMenuListener('3')}" />
 						</p:tabMenu>
 			</td>
-			<td width="80%">
+			<td width="80%" valign="top">
 				<c:if test="#{simpleQuoteBackingBean.managedBean.activeIndex eq '0'}">
 				    <ui:include src="/xhtml/sc/directpurchase/simpleQuoteGenInfo.xhtml" />
 				</c:if>
