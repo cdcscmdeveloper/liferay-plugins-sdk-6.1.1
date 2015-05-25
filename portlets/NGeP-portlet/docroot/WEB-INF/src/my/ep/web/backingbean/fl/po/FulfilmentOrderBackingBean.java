@@ -989,7 +989,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		 * @throws Exception the exception
 		 */
 		public String signingAction(String outcome) throws Exception{
-			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)) {
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
+					|| hasGovtSellerRole()) {
 				// Temp setTextBeforeSign : DocNo+SAP
 				StringBuilder sb = new StringBuilder();
 				sb.append(getManagedBean().getFulfilmentOrder().getDocNo());
@@ -1007,7 +1008,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 					|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
 							|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
 									|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())){
-//				|| getUserRole().equalsIgnoreCase(RoleCode.GOVT_SELLER.value())
 				
 				validateFulfillmentOrder(outcome);
 				getManagedBean().getSpkiBackingBean().getChallengeQuestions();
@@ -1022,6 +1022,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		}
 		
 		
+		private boolean hasGovtSellerRole() {
+			 if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+					return true;
+			 else
+			return false;
+		}
+
 		/**
 		 * Gets the order amount.
 		 *
