@@ -109,6 +109,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private String bpmTaskName;
 	
 	/** The from page url. */
 	private String fromPageUrl;
@@ -583,6 +584,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	/**
+	 * @return the bpmTaskName
+	 */
+	public String getBpmTaskName() {
+		return bpmTaskName;
+	}
+
+	/**
+	 * @param bpmTaskName the bpmTaskName to set
+	 */
+	public void setBpmTaskName(String bpmTaskName) {
+		this.bpmTaskName = bpmTaskName;
 	}
 
 
