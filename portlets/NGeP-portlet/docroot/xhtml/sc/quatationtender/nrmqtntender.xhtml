@@ -143,7 +143,6 @@
 					</tr>
 				</table>
 			</h:panelGroup>
-			<br />
 			<h:panelGroup
 				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<h:panelGrid width="100%">
@@ -242,7 +241,6 @@
 					</tr>
 				</table>
 			</p:panel>
-			<br />
 			<h:panelGroup
 				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<h:panelGrid width="100%">
