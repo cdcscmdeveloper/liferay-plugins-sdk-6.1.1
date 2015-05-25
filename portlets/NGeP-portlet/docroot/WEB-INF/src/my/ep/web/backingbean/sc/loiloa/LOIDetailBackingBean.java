@@ -738,6 +738,38 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
+	 * getting Approver drop down listing in approval details.
+	 *
+	 * @return the approver names
+	 */
+	public List<PmUser> getApproverNames() {
+		List<PmUser> approverUsers = this.getManagedBean().getApproverNames();
+
+		// to get Approver
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(user.getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+			IUserSO iUserSO = (IUserSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IUserSO.class);
+			UserReqDTO userReqDto = new UserReqDTO();
+			userReqDto.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+			// userReqDto.setOrgProfileId(resDTO.getUserOrgList()
+			// .get(0).getPmOrgProfile().getOrgProfileId());
+
+			UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
+			getManagedBean().setApproverNames(userResDTO.getUserList());
+
+		}
+		return approverUsers;
+	}
+
+	/**
 	 * To get current status for loi.
 	 *
 	 * @param statusId the status id
@@ -892,17 +924,23 @@ public class LOIDetailBackingBean extends
 	 * Delete nego locations in negotiation details.
 	 */
 	public void deleteNegoLocations() {
-		List<ScLoiNegoLocation> selectedNegoLocs = getManagedBean()
-				.getSelectedNegoLocationList();
-		if (selectedNegoLocs != null && selectedNegoLocs.size()>0) {
+		List<ScLoiNegoLocation> result = new ArrayList<ScLoiNegoLocation>();
+		boolean flag = true;
+		List<ScLoiNegoLocation> scLoiNegoLocations = getManagedBean().getScLoi().getScNegoLocations();
+		if (scLoiNegoLocations != null && scLoiNegoLocations.size()>0) {
 
-			for (ScLoiNegoLocation scLoiNegoLocation : selectedNegoLocs) {
-				getManagedBean().getScLoi().getScNegoLocations()
-						.remove(scLoiNegoLocation);
+			for (ScLoiNegoLocation loiNegoLocation : scLoiNegoLocations) {
+				if (!loiNegoLocation.isSelected()) {
+					result.add(loiNegoLocation);
+				} else{
+					flag = false;
+				}
 			}
-		} else {
+		}
+		if(flag){
 			throw new EpException("Please select At least one Item");
 		}
+		getManagedBean().getScLoi().setScNegoLocations(result);
 	}
 
 	/**
@@ -2435,6 +2473,20 @@ public class LOIDetailBackingBean extends
 			if(scLoi.getScNegoLocations()  == null || scLoi.getScNegoLocations().isEmpty()){
 				throw new EpException(MessageConst.ERROR_760274);
 			}
+			
+			// validate negotiation Term
+			boolean isSelected = Boolean.TRUE;
+			if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
+					if(scLoiTerm.isSelected()){
+						isSelected = Boolean.FALSE;
+					}
+				}
+
+				if(isSelected){
+					throw new EpException(MessageConst.ERROR_760289);	
+				}
+			}
 		}
 
 		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
@@ -3682,7 +3734,7 @@ public class LOIDetailBackingBean extends
 	public void selectAll(AjaxBehaviorEvent event) {
 		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScLoiTerm> scLoiTerms = getManagedBean().getScLoi().getScNegoTerms();
-		if (scLoiTerms != null) {
+		if (scLoiTerms != null && scLoiTerms.size()>0) {
 			for (ScLoiTerm scLoiTerm : scLoiTerms) {
 				if (flag && scLoiTerm.isModified()) {
 					scLoiTerm.setDeleted(true);
@@ -3692,6 +3744,26 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Select all
+	 * select all nego locations 
+	 * @param event the event
+	 */
+	public void selectAllNegoLocations(AjaxBehaviorEvent event) {
+		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		List<ScLoiNegoLocation> scLoiLocations = getManagedBean().getScLoi().getScNegoLocations();
+		if (scLoiLocations != null && scLoiLocations.size()>0) {
+			for (ScLoiNegoLocation scloiLocation : scLoiLocations) {
+				if (flag && scloiLocation.isSelected()) {
+					scloiLocation.setSelected(true);
+				} else {
+					scloiLocation.setSelected(false);
+				}
+			}
+		}
+	}
+
 
 	/**
 	 * Nego term price event.
