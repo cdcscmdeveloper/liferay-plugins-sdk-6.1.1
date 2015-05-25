@@ -34,7 +34,7 @@
 						process="@this" partialSubmit="true" update="@([id$=catCodePopup])"
 						oncomplete="catCodePopup.show();"
 						action="#{categoryCodeSearchBackingBean.renewSesionObject}">
-						<p:graphicImage value="/css/images/design/search.png"/>								
+						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/search.png"/>								
 					</p:commandLink>
 					
 					<ac:categoryCodePopup 
@@ -100,7 +100,7 @@
 							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','today')}"
 							rendered="#{noticeBoardBackingBean.managedBean.pubToday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<p:graphicImage value="/css/images/design/reset.png" />
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
 						</p:commandLink>
 
 					</p:column>
@@ -117,7 +117,7 @@
 							actionListener="#{noticeBoardBackingBean.showFields('PUBLISHDETAILS','null')}"
 							rendered="#{noticeBoardBackingBean.managedBean.pubYesterday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<p:graphicImage value="/css/images/design/reset.png" /> 
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" /> 
 						</p:commandLink>
 					</p:column>
 				</h:panelGrid>
@@ -263,7 +263,7 @@
 							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','today')}"
 							rendered="#{noticeBoardBackingBean.managedBean.breifToday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<p:graphicImage value="/css/images/design/reset.png" />
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
 						</p:commandLink>
 					</p:column>
 
@@ -280,7 +280,7 @@
 							actionListener="#{noticeBoardBackingBean.showFields('BRIEFINGDETAILS','null')}"
 							rendered="#{noticeBoardBackingBean.managedBean.breifYesterday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<p:graphicImage value="/css/images/design/reset.png" />
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
 						</p:commandLink>
 					</p:column>
 				</h:panelGrid>
@@ -329,7 +329,7 @@
 							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','today')}"
 							rendered="#{noticeBoardBackingBean.managedBean.svToday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<p:graphicImage value="/css/images/design/reset.png" />
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
 						</p:commandLink>
 					</p:column>
 
@@ -346,7 +346,7 @@
 							actionListener="#{noticeBoardBackingBean.showFields('SITEVISITDETAILS','null')}"
 							rendered="#{!noticeBoardBackingBean.managedBean.svToday and noticeBoardBackingBean.managedBean.svYesterday}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-							<p:graphicImage value="/css/images/design/reset.png" />
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" />
 						</p:commandLink>
 					</p:column>
 
