@@ -17,8 +17,7 @@
 
 			<div style="text-align: right; min-height: 40px;">
 				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					action="#{unspscCodeBackingBean.submitToBPM}"
-					update="@form"></p:commandButton>
+					action="#{unspscCodeBackingBean.submitToBPM}" update="@form"></p:commandButton>
 
 				<div style="float: left; clear: both;">
 					<p:commandButton value="#{lbl['lbl.cm.back']}"
@@ -30,60 +29,64 @@
 
 
 
+			<p:panel header="#{lbl['lbl.cm.extension.code.request.form']}"
+				toggleable="true">
 
 
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
-							size="50" disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td cosplan="1"><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscTitle}"
-							size="50" disabled="true" /></td>
-				</tr>
-			</table>
+				<table>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td cosplan="1"><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+				</table>
 
-			<p:dataTable id="extCodeId"
-				value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
-				var="ext">
-				<p:column>
-					<f:facet name="header">
+				<p:dataTable id="extCodeId"
+					value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
+					var="ext">
+					<p:column>
+						<f:facet name="header">
 						#{lbl['lbl.cm.type']}
 					</f:facet>
 						#{ext.typeName}
 
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 						#{lbl['lbl.cm.brand']}
 					</f:facet>
 						#{ext.brandName}
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 						#{lbl['lbl.cm.measurement']}
 					</f:facet>
 						#{ext.measurementName}
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 						#{lbl['lbl.cm.color']}
 					</f:facet>
 						#{ext.colorName}
 					</p:column>
 
-			</p:dataTable>
-			<h:panelGroup id="addBtnId">
-				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.btn.add']}"
-						action="#{unspscCodeBackingBean.addMoreRequest}"
-						update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
-				</div>
-			</h:panelGroup>
+				</p:dataTable>
+				<h:panelGroup id="addBtnId">
+					<div style="text-align: right;">
+						<p:commandButton value="#{lbl['lbl.btn.add']}"
+							action="#{unspscCodeBackingBean.addMoreRequest}"
+							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
+					</div>
+				</h:panelGroup>
+
+			</p:panel>
 
 			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
 				header="#{lbl['lbl.cm.request.extension.code']}" width="auto"
@@ -92,7 +95,6 @@
 				<ui:include src="requestExtensionPopUp.xhtml" />
 
 			</p:dialog>
-
 		</h:panelGroup>
 
 
