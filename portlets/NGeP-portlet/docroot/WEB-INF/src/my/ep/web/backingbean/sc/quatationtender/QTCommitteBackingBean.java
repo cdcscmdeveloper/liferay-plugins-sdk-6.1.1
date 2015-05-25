@@ -779,6 +779,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setCloneTenderList(null);
 		getManagedBean().setSearchcommitteeNode(null);
 		RequestContext.getCurrentInstance().execute("screen2.show()");
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
