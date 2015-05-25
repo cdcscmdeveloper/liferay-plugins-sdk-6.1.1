@@ -6,15 +6,15 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="cloneid" header="#{lbl['lbl.sc.clone.committee']}" widgetVar="screen2"
-		width="950" height="600" styleClass="cloneCommitteMember"
-		position="top">
-		<p:panel id="pnlid">
+	<p:dialog id="cloneid" header="#{lbl['lbl.sc.clone.committee']}"
+		widgetVar="screen2" width="970" height="600"
+		styleClass="cloneCommitteMember" position="top">
+		<h:panelGroup id="pnlid">
 			<p:messages id="clonemessages" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false" />
 			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
 				toggleable="true">
-				<table width="900px" >
+				<table width="900px">
 					<tr>
 						<td valign="top"><p:outputLabel
 								value="#{lbl['lbl.sc.title']}" /></td>
@@ -25,30 +25,28 @@
 					<tr>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qtn.no']}" /></td>
-						<td style="width:285px;"><p:inputText
+						<td style="width: 285px;"><p:inputText
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
 								style="width:210px;" maxlength="21" /></td>
-						<td style="width:165px;"><p:outputLabel
+						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
-						<td style="width:285px;"><p:selectOneMenu
+						<td style="width: 285px;"><p:selectOneMenu
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
 								style="width: 210px;margin-bottom: 5px;">
 								<f:selectItems
-									value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}"  />
+									value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
 							</p:selectOneMenu></td>
 					</tr>
-					
+
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.created.date.from']}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 						<td><p:calendar id="datecreatedfrm" showOn="button"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								size="29" readonlyInput="true" style="width:180px;">
 								<p:ajax event="dateSelect" update="datecreatedto" />
 							</p:calendar></td>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.created.date.to']}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.to']}" /></td>
 						<td><p:calendar id="datecreatedto" showOn="button"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
@@ -59,46 +57,49 @@
 							</p:calendar></td>
 					</tr>
 					<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
-					<td><p:calendar
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
-							id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
-							<p:ajax event="dateSelect" update="pbdateTo" />
-						</p:calendar></td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
-					<td><p:calendar id="pbdateTo" showOn="button"
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toPublishDate}"
-							mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
-							size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
-							<f:attribute name="startDate"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}" />
-							<f:validator validatorId="dateRangeValidator" />
-						</p:calendar></td>
-				</tr>
-				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
-					<td><p:calendar
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
-							id="cldateFrom" showOn="button" size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
-							<p:ajax event="dateSelect" update="cldateTo" />
-						</p:calendar></td>
-					<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
-					<td><p:calendar id="cldateTo" showOn="button"
-							value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toClosingDate}"
-							mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
-							size="29" readonlyInput="true"
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" style="width:180px;">
-							<f:attribute name="startDate"
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}" />
-							<f:validator validatorId="dateRangeValidator" />
-						</p:calendar></td>
-				</tr>
+						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
+						<td><p:calendar
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
+								id="pbdateFrom" showOn="button" size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<p:ajax event="dateSelect" update="pbdateTo" />
+							</p:calendar></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtto']}" /></td>
+						<td><p:calendar id="pbdateTo" showOn="button"
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toPublishDate}"
+								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}"
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<f:attribute name="startDate"
+									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromPublishDate}" />
+								<f:validator validatorId="dateRangeValidator" />
+							</p:calendar></td>
+					</tr>
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.status']}" /></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtfrom']}" /></td>
+						<td><p:calendar
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
+								id="cldateFrom" showOn="button" size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<p:ajax event="dateSelect" update="cldateTo" />
+							</p:calendar></td>
+						<td><h:outputLabel value="#{lbl['lbl.sc.clsdtto']}" /></td>
+						<td><p:calendar id="cldateTo" showOn="button"
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.toClosingDate}"
+								mindate="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}"
+								size="29" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+								style="width:180px;">
+								<f:attribute name="startDate"
+									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromClosingDate}" />
+								<f:validator validatorId="dateRangeValidator" />
+							</p:calendar></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
@@ -114,8 +115,7 @@
 						update="pnlid" process="@parent" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
-						resetValues="true" partialSubmit="true"
-						process="@this" />
+						resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
 			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
@@ -131,7 +131,7 @@
 						listener="#{qTCommitteBackingBean.onRowCloneAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
-						<h:outputText value="#{scQt.qtNo}" />
+						<h:outputText value="#{scQt.qtNo}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.title']}">
@@ -140,7 +140,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}"
+							style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.created.date']}">
@@ -149,7 +150,7 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sc.published.date']}">
 						<h:outputText value="#{scQt.publishDate}">
 							<f:convertDateTime
@@ -163,28 +164,26 @@
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
+							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}"
+							style="white-space: normal;" />
 					</p:column>
 
 				</p:dataTable>
-				
 				<br />
 				<ui:fragment rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
 					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
 				<br />
-
 				<p:treeTable id="committeeTbl" var="committeeNode"
 					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
 					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
 					selectionMode="checkbox">
 
 					<p:ajax event="unselect"
-						listener="#{qTCommitteBackingBean.onNodeUnselect}"
-						/>
+						listener="#{qTCommitteBackingBean.onNodeUnselect}" />
 
 					<p:column headerText="#{lbl['lbl.sc.name']}">
 						<h:outputText style="font-weight: bold;"
@@ -223,7 +222,8 @@
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
-						<h:outputText value="#{lbl[committeeNode.object.PNP ? 'lbl.txt.yes' : 'lbl.txt.no']}"
+						<h:outputText
+							value="#{lbl[committeeNode.object.PNP ? 'lbl.txt.yes' : 'lbl.txt.no']}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
 					</p:column>
 
@@ -240,10 +240,9 @@
 						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
 						update="@(.scMemberDtl)" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-						onclick="screen2.hide();"
-						update="@(.scMemberDtl)" />
+						onclick="screen2.hide();" update="@(.scMemberDtl)" />
 				</div>
 			</p:panel>
-		</p:panel>
+		</h:panelGroup>
 	</p:dialog>
 </ui:composition>
