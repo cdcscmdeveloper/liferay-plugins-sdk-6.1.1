@@ -21,7 +21,7 @@
 									update=":form:pnldetail,:form:notifyTable">
 									<h:outputText value="#{lbl['lbl.portal.notify.all']}"></h:outputText>
 								</p:commandLink> &#160;&#160;|&#160;&#160; <h:graphicImage
-									style="vertical-align:bottom;" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png" title="Unread email"/>&#160;
+									style="vertical-align:bottom;" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png" />&#160;
 								<p:commandLink
 									action="#{notifyBackingBean.retrieveUnreadNotifyList}"
 									id="unreadLink" update=":form:pnldetail,:form:notifyTable">
@@ -47,7 +47,8 @@
 									<p:column selectionMode="multiple" style="width:7%" />
 
 									<p:column style="text-align: right;width:7%">
-										<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/mail.png" title="Unread Email"/>
+										<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
+											rendered="#{notify.pmAlert.isRead eq '0'}" />
 									</p:column>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
