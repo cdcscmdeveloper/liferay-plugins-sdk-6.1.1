@@ -1234,14 +1234,67 @@
 					<TD style="width:200px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationreceiveddatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
-
-					<TD><p:calendar label="#{lbl['lbl.rpt.frmdate']}"
+                    
+                    
+                    
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smExpiryDateView}">
+					<TD><p:calendar label="#{lbl['lbl.rpt.expirydatefrom']}"
 							id="MandatoryFromDate" showOn="button" navigator="true"
 							display="inline" readonlyInput="true"
 							value="#{reportBackingBean.fromDate}" required="true"
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 							partialSubmit="true" process="@form" >
 						</p:calendar></TD>
+					</c:if>
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationDateView}">
+					<TD><p:calendar label="#{lbl['lbl.rpt.applicationdatefrom']}"
+							id="MandatoryFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form" >
+						</p:calendar></TD>
+					</c:if>	
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActivationDateView}">
+					<TD><p:calendar label="#{lbl['lbl.rpt.activationdatefrom']}"
+							id="MandatoryFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form" >
+						</p:calendar></TD>
+					</c:if>
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smSubmissionDateView}">
+					<TD><p:calendar label="#{lbl['lbl.rpt.submissiondatefrom']}"
+							id="MandatoryFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form" >
+						</p:calendar></TD>
+					</c:if>							
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryDateView}">
+					<TD><p:calendar label="#{lbl['lbl.rpt.dtRangeFrm']}"
+							id="MandatoryFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form" >
+						</p:calendar></TD>
+					</c:if>		
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationReceivedDateView}">
+					<TD><p:calendar label="#{lbl['lbl.rpt.applicationreceiveddatefrom']}"
+							id="MandatoryFromDate" showOn="button" navigator="true"
+							display="inline" readonlyInput="true"
+							value="#{reportBackingBean.fromDate}" required="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							partialSubmit="true" process="@form" >
+						</p:calendar></TD>
+					</c:if>
+                    
+                    
+                    
+					
 					<TD><p:message id="MandatoryFromDateMsg"
 							for="MandatoryFromDate" display="icon"  showDetail="false"/></TD>
 					<TD><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
