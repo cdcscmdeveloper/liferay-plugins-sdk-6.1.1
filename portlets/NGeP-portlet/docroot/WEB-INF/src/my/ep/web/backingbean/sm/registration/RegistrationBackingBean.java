@@ -1265,6 +1265,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//set gstFlag to true, if value is not null
 			if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() != null){
 				this.getManagedBean().setGstFlag(true);
+			}else{
+				this.getManagedBean().setGstFlag(false);
 			}
 			
 			retrieveIdentityTypeMap();
