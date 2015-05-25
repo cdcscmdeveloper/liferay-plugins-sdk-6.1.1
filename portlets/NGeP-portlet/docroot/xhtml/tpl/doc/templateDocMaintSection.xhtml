@@ -20,25 +20,25 @@
 						<f:facet name="header">Positioning</f:facet>
 						<p:commandLink action="#{templateDocBackingBean.positionNode('left')}"
 							update="@form">
-							<h:graphicImage library="ep/images/design" name="icon_arrow_left.png" />
+							<h:graphicImage value="/css/images/design/icon_arrow_left.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:commandLink action="#{templateDocBackingBean.positionNode('right')}"
 							update="@form">
-							<h:graphicImage library="ep/images/design" name="icon_arrow_right.png" />
+							<h:graphicImage value="/css/images/design/icon_arrow_right.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:commandLink action="#{templateDocBackingBean.positionNode('up')}"
 							update="@form">
-							<h:graphicImage library="ep/images/design" name="icon_arrow_up.png" />
+							<h:graphicImage value="/css/images/design/icon_arrow_up.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:commandLink action="#{templateDocBackingBean.positionNode('down')}"
 							update="@form">
-							<h:graphicImage library="ep/images/design" name="icon_arrow_down.png" />
+							<h:graphicImage value="/css/images/design/icon_arrow_down.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
@@ -47,14 +47,14 @@
 						<f:facet name="header">Action</f:facet>
 						<p:commandLink action="#{templateDocBackingBean.editContent}"
 							oncomplete="popupEdit.show();return false;" update=":form:popupEdit">
-							<h:graphicImage library="ep/images/design" name="icon-edit.png" />
+							<h:graphicImage value="/css/images/design/ico-edit.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
 						<p:spacer width="5px" />
 						<p:commandLink action="#{templateDocBackingBean.deleteNode}" update=":form">
 							<!-- oncomplete="popupsEdit.show();return false;" update=":form:popupsEdit"> -->							 
-							<h:graphicImage library="ep/images/design" name="icon_trash.png" />
+							<h:graphicImage value="/css/images/design/delete.png" />
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
@@ -183,7 +183,7 @@
 					<td>
 						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
 							process="@this,imptTemplateCategory" update="impMasterList">
-							<h:graphicImage library="ep/images/design" name="Search-icon.png"/> 
+							<h:graphicImage value="/css/images/design/ico-search.png"/> 
 						</p:commandLink> 
 					</td>
 				</tr>
