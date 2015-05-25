@@ -78,11 +78,8 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.person.isSoftCert']}" styleClass="outputLabel-view-label"/></td>
 					<td>
-						<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
-							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_USER') 
-							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER') 
-							or (smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'MOF_SUPPLIER_USER')}"/>
-						<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'CM_USER'}"/>
+						<p:outputLabel value="#{lbl['lbl.txt.yes']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg ne '0'}"/>
+						<p:outputLabel value="#{lbl['lbl.txt.no']}" styleClass="outputLabel-view" rendered="#{smPersonnelBackingBean.managedBean.basicSmPersonnel.softcertFlg eq '0'}"/>
 					</td>
 				</tr>
 				<p:outputPanel rendered="#{(smPersonnelBackingBean.managedBean.basicSmPersonnel.epRole eq 'BASIC_SUPPLIER_ADMIN') 
