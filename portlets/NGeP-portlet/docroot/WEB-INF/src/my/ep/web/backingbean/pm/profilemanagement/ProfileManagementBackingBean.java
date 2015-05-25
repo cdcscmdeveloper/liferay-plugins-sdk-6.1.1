@@ -3012,6 +3012,8 @@ public class ProfileManagementBackingBean extends
 						}
 					}
 					// }
+				}else if(pmUserOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED){
+					deleteRoleList.addAll(pmUserOrg.getPmUserRoles());
 				}
 			}
 			if (activeUserOrgId > 0 || isChanged) {
