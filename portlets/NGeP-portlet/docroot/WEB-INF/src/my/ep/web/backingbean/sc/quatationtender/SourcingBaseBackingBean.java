@@ -1438,4 +1438,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 	}
 
+	/**
+	 *  Check is multiple proposal category
+	 * 
+	 * @param qtId 
+	 * 		the quotation/tender id (Mandatory),
+	 * @param scQtCategories
+	 * 		the list of ScQtCategory instance
+	 * @return
+	 */
+	public boolean isMultiplePorposalCategory(Long qtId, List<ScQtCategory> scQtCategories) {
+		IQTDetailSO qtDetailSO = null;
+		try {
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setCategoryList(scQtCategories);
+			return qtDetailSO.isMultiplePorposalCategory(reqDTO);			
+			
+		} finally {
+			qtDetailSO = null;
+		}
+	}
 }
