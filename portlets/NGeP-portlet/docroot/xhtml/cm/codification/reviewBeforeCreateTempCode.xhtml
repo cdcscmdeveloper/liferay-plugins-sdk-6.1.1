@@ -88,7 +88,7 @@
 						action="#{unspscCodeBackingBean.navigateCodeAdminToSearch}"></p:commandButton>
 				</div>
 
-				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					var="unspscObj" width="100%">
 
