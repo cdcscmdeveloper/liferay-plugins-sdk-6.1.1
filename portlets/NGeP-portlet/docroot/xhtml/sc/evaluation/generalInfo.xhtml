@@ -59,11 +59,13 @@
 			<tr>
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.procurement.category']}" /></td>
-				<td><p:inputText disabled="true"
+				<td><p:selectOneMenu disabled="true"
 						style="width: 178px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{evaluationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
-					</p:inputText></td>
+						<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+					</p:selectOneMenu></td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td><p:inputText readonly="true" disabled="true" size="24"
 						value="#{lbl[evaluationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
@@ -83,40 +85,39 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" size="24" disabled="true" readonly="true"
-						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
+				<td><p:inputText id="proposalId" size="24" disabled="true"
+						readonly="true" label="#{lbl['lbl.sc.max.proposal']}"
+						maxlength="1"
 						value="#{evaluationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;margin-bottom: 5px;">
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td>
-					<p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
+				<td><p:outputLabel value=" #{lbl['lbl.sc.fullfillent.type']}" />
 				</td>
 				<td>
 					<table>
 						<tr>
-							<td><p:inputText id="fulfilId" 
-									label="#{lbl['lbl.sc.fullfillent.type']}" disabled="true" readonly="true"
+							<td><p:selectOneMenu disabled="true"
 									value="#{evaluationBackingBean.managedBean.scQt.fulfilmentType.parameterId}"
 									style="width: 178px;margin-bottom: 5px;">
-								</p:inputText> <p:message id="fulfilType" for="fulfilId" display="icon" /></td>
-							<td style="margin-top: -3px"><ac:iconTooltip
-									value="#{lbl['lbl.sc.fullfillent.type.tooltip']}" /></td>
+
+									<f:selectItems
+										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+
+								</p:selectOneMenu></td>
+
 						</tr>
 					</table>
 				</td>
-				<td style="white-space: nowrap;">
-					<p:outputLabel
-						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /> 
-				</td>
-				<td><p:inputMask id="contract"
-						size="24" mask="9?99" placeHolder="" maxlength="3"
-						disabled="true"
+				<td style="white-space: nowrap;"><p:outputLabel
+						value="#{lbl['lbl.sc.spec.complete.period']}" escape="false" /></td>
+				<td><p:inputMask id="contract" size="24" mask="9?99"
+						placeHolder="" maxlength="3" disabled="true"
 						label="#{lbl['lbl.sc.spec.complete.period']}"
 						value="#{evaluationBackingBean.managedBean.scQt.contractDuration}"
 						style="text-align:right;">
-					</p:inputMask> </td>
+					</p:inputMask></td>
 			</tr>
 		</table>
 	</p:panel>
