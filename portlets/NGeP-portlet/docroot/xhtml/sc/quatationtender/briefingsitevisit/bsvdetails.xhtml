@@ -77,37 +77,32 @@
 					rendered="#{QTStatusConst.BSV_COMPLETED ne briefingdtls.bsvStatus.statusId}"
 					action="#{qTBriefingSiteVisitBackingBean.editAction(briefingdtls,index,'B')}"
 					partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
-					<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
+					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
-				<div class="ppRightBtn">
-					<h:panelGroup id="addtositebutton">
-						<p:commandButton id="addtositevisitid"
-							update="@([id$=sameasbsvrequired])"
-							value="#{lbl['lbl.sc.qt.addtositevisit']}"
-							process="@this,briefingdtlid" partialSubmit="true"
-							actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
-							rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle' and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
-					</h:panelGroup>
-					<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
-						process="@this"
-						disabled="#{bsvdtlbean.briefingList.size() eq 1}"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
-						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
+		<div class="ppRightBtn">
+			<h:panelGroup id="addtositebutton">
+				<p:commandButton id="addtositevisitid"
+					update="@([id$=sameasbsvrequired])"
+					value="#{lbl['lbl.sc.qt.addtositevisit']}"
+					process="@this,briefingdtlid" partialSubmit="true"
+					actionListener="#{qTBriefingSiteVisitBackingBean.addToSiteVisitDtl(bsvdtlbean)}"
+					rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle' and !qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}" />
+			</h:panelGroup>
+			<p:commandButton id="briefingaddid" value="#{lbl['lbl.btn.add']}"
+				process="@this"
+				disabled="#{bsvdtlbean.briefingList.size() eq 1}"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+				action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('B')}"
+				oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-					<p:commandButton value="#{lbl['lbl.btn.delete']}"
-						process="@this,briefingdtlid" partialSubmit="true"
-						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
-						update="@form" />
-				</div>
-			</f:facet>
-		</p:panelGrid>
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this,briefingdtlid" partialSubmit="true"
+				rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+				action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('B')}"
+				update="@form" />
+		</div>
 	</p:panel>
 
 	<h:panelGroup id="sameasbsvrequired" rendered="#{bsvdtlbean.scQtBsv.sameBsv eq 'fasle'}">
@@ -173,28 +168,23 @@
 							rendered="#{QTStatusConst.BSV_COMPLETED ne sitevisitdtls.bsvStatus.statusId}"
 							action="#{qTBriefingSiteVisitBackingBean.editAction(sitevisitdtls,rowIndex,'S')}"
 							partialSubmit="true" process="@this" update="@([id$=briefdlgId])">
-							<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
+							<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" styleClass="tasklist_title1" />
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-				<p:panelGrid columns="2" style="width:100%;"
-					styleClass="noBorders tr,noBorders td">
-					<f:facet name="footer">
-						<div class="ppRightBtn">
-							<p:commandButton id="addsitevisitid"
-								rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-								value="#{lbl['lbl.btn.add']}" process="@this"
-								action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
-								oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
+				<div class="ppRightBtn">
+					<p:commandButton id="addsitevisitid"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+						value="#{lbl['lbl.btn.add']}" process="@this"
+						action="#{qTBriefingSiteVisitBackingBean.addBsvDetails('S')}"
+						oncomplete="addbsvdtls.show();" update="@(.qtBriefDetails)" />
 
-							<p:commandButton value="#{lbl['lbl.btn.delete']}"
-								rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
-								process="@this, sitevisitdtlid" partialSubmit="true"
-								action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
-								update="@([id$=sameasbsvrequired])" />
-						</div>
-					</f:facet>
-				</p:panelGrid>
+					<p:commandButton value="#{lbl['lbl.btn.delete']}"
+						rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_BSVDETAILS)}"
+						process="@this, sitevisitdtlid" partialSubmit="true"
+						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
+						update="@([id$=sameasbsvrequired])" />
+				</div>
 				<h:panelGroup rendered="#{bsvdtlbean.sitevisitList.size() eq 1}">
 					<table style="width: 100%" border="0">
 						<tr>
