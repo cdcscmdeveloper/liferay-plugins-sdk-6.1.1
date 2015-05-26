@@ -51,17 +51,12 @@ public class SoftCertManagedBean extends BaseManagedBean {
 		List<Role> loginUserRoles = sc.getUserRoleList();
 		List<String> roleNames = new ArrayList<String>();
 		for (Role r : loginUserRoles) {
-			System.out.println(" Role ===  >> " + r.getName());
 			roleNames.add(r.getName());
 		}
 		if (sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)) {
 			setLoginRoleName(SupplierManagementConst.MOF_SUPPLIER_ADMIN);
-			System.out
-					.println("  *** LOGGED IN USER IS MOF SUPPLIER ADMIN *** ");
 		} else {
 			setLoginRoleName(SupplierManagementConst.BASIC_SUPPLIER_ADMIN);
-			System.out
-					.println("  *** LOGGED IN USER IS BASIC SUPPLIER ADMIN *** ");
 		}
 	}
 
