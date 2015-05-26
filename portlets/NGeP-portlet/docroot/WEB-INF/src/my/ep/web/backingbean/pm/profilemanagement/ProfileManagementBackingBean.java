@@ -493,6 +493,7 @@ public class ProfileManagementBackingBean extends
 		logger.info("preLoadingUserProfile");
 		this.setCurrentActiveOrg();
 		this.getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
+		getManagedBean().setLazy(false);
 		this.resetUserProfileSearchBean();
 		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
@@ -2518,6 +2519,7 @@ public class ProfileManagementBackingBean extends
 		}
 
 		logger.info("searchUserProfile");
+		getManagedBean().setLazy(true);
 		userOrgDataModel.reloadData();
 	}
 
@@ -2713,7 +2715,7 @@ public class ProfileManagementBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public UserProfilePagingDataModel() {
-			super("dtUserResult",false);
+			super("dtUserResult",getManagedBean().isLazy());
 		}
 
 		@Override
