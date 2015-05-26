@@ -75,6 +75,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String searchContractName;
 	private String textBeforeSign;
 	private String taskName;
+	private String gotoPreviewPage;	
 	
 	private Date searchStartDate;
 	private Date searchEndDate;	
@@ -88,6 +89,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private boolean chkItemZone;
 	private boolean chkItemPrice;
 	private boolean chkCancelPage;
+	private boolean chkCentralCircular;
 	private boolean fromCircularNotice;
 	private boolean autoUpdate = true;
 	private boolean circularExtension;
@@ -754,12 +756,34 @@ public class CentralContractManagedBean extends BaseManagedBean {
 		this.fromCircularNotice = fromCircularNotice;
 	}
 
+	/**
+	 * @return the gotoPreviewPage
+	 */
+	public String getGotoPreviewPage() {
+		return gotoPreviewPage;
+	}
+
+	/**
+	 * @param gotoPreviewPage the gotoPreviewPage to set
+	 */
+	public void setGotoPreviewPage(String gotoPreviewPage) {
+		this.gotoPreviewPage = gotoPreviewPage;
+	}
+
 	public boolean isCircularExtension() {
 		return circularExtension;
 	}
 
 	public void setCircularExtension(boolean circularExtension) {
 		this.circularExtension = circularExtension;
+	}
+
+	public boolean isChkCentralCircular() {
+		return chkCentralCircular;
+	}
+
+	public void setChkCentralCircular(boolean chkCentralCircular) {
+		this.chkCentralCircular = chkCentralCircular;
 	}
 
 

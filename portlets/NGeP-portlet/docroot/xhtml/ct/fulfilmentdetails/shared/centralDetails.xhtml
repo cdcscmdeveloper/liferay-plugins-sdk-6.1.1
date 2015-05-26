@@ -131,6 +131,20 @@
                 	</h:panelGroup>
                 	<td></td><td></td>
 				</tr>
+				<tr>
+					<h:panelGroup rendered="#{contractDetailsBackingBean.chkCircularActiveRecord()}">
+					<td class="columnWidth150">
+						<p:outputLabel id="centralCicularId" value="Central Circular No" />
+					</td>
+					<td>
+						<h:commandLink for="centralCicularId" styleClass="blue_font"
+							title="#{contractDetailsBackingBean.managedBean.ctCircularVer.ctCircular.circularNo}"
+							value="#{contractDetailsBackingBean.managedBean.ctCircularVer.ctCircular.circularNo}"
+							action="#{contractDetailsBackingBean.gotoCicularPage(contractDetailsBackingBean.managedBean.ctCircularVer.circularVerId)}" />
+					</td>
+                	</h:panelGroup>
+                	<td></td><td></td>
+				</tr>
 				
 				<tr rowspan="4">
 					<td class="columnWidth150">

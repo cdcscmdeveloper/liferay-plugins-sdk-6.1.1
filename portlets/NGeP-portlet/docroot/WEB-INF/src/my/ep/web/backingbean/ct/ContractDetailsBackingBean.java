@@ -86,6 +86,7 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -121,6 +122,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
 import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -155,7 +157,7 @@ import com.liferay.portal.util.PortalUtil;
  * @author Alam
  * @since 26/9/2013
  */
-@ManagedBean (name = "contractDetailsBackingBean")
+@ManagedBean (name = "contractDetailsBackingBean") 
 @ViewScoped
 public class ContractDetailsBackingBean extends ContractBaseBackingBean<ContractDetailsManagedBean> {
 	
@@ -308,7 +310,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the paidPercentage
 	 */
 	public BigDecimal getPaidPercentage() {
-		paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(
+			paidPercentage = (this.getManagedBean().getPaidInvoiceAmt().multiply(
 				BigDecimal.valueOf(100)).divide(
 						this.getManagedBean().getContractVer().getCtContractAmount().getContractAmount(), 2, RoundingMode.HALF_UP));
 		return paidPercentage;
@@ -1768,6 +1770,17 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
 		return CONTRACT_COMMON_PAGE;
+	}
+	
+	public String gotoCicularPage(Long contractVerId){
+		
+		   CentralContractBackingBean centralBB = new CentralContractBackingBean();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			centralBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
+			centralBB.getManagedBean().setChkCentralCircular(true);
+			centralBB.gotoCommonPage(contractVerId);
+			centralBB.getManagedBean().setAction(" ");
+			return "/xhtml/ct/circular/centralcontract/circularBase.xhtml?faces-redirect=true";
 	}
 	
 	/**
@@ -3652,4 +3665,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
 	}
+    
+    public boolean chkCircularActiveRecord(){
+    	if(getManagedBean().getCtContract().getCtCircularContracts().size() > 0) {
+    			  for(CtCircularContract circularContract : getManagedBean().getCtContract().getCtCircularContracts()) {
+    			   //   if(circularContract.getCtCircularVer().getRecordStatusFlg() == 1) {
+    			    	  getManagedBean().setCtCircularVer(circularContract.getCtCircularVer());
+    			    	  return true;
+    			   //   }
+    		  } 
+    	}
+      	return false;
+    }
 }

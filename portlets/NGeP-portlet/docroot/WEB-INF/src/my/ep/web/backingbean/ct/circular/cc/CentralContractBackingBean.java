@@ -731,8 +731,26 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		out.flush();
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
-	}	
+	}
 	
+	public void gotoCommonPage(Long contractVerId) {
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(contractVerId);
+			getManagedBean().setSelectedTabIndex(0);
+			CircularResDTO resDTO = null;
+			 resDTO = circularSO.retrieveCircularVerById(reqDTO);
+			setContractCircularVar(resDTO);					
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+	}
 	/**
 	 * This method used to navigate circular details for view 
 	 * and update during maintenance
@@ -1046,7 +1064,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		   return "/xhtml/ct/circular/panel/cancelCircularBase.xhtml?faces-redirect=true";
 	   } else if(getManagedBean().isFromCircularNotice()) {
 		   return "../portal/circularListing.xhtml?faces-redirect=true";
-	   } else {
+	   } else if(getManagedBean().isChkCentralCircular()) {
+		   return getManagedBean().getGotoPreviewPage();
+	   } 
+	   else {
 		   return "search.xhtml?faces-redirect=true";
 	   }
 	}
@@ -1308,5 +1329,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void enableAutoUpdate(){
 		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	public String gotoBackPage() {
+		return getManagedBean().getGotoPreviewPage();
 	}
 }
