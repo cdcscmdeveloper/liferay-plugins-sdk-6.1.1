@@ -162,8 +162,14 @@
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
+					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
+					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
+					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
+					<p:graphicImage value="/css/images/ico-info.png"
+						title="#{lbl['lbl.fl.request.item.info']}" />
+					</p:commandLink>				
 					<p:inputText value="#{flItem.orderedQty}" size="13" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}" 
-						styleClass="colFloatRight" maxlength="#{flItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
+						style="text-align:right" styleClass="colFloatRight" maxlength="#{flItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}"
 						disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}"
 						onkeypress="if (event.keyCode == 13) { return false; }" >
 						<f:converter converterId="dynamicNumberConverter" />
@@ -174,12 +180,6 @@
 							process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
 					</p:inputText>
-					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
-					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
-					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
-					<p:graphicImage value="/css/images/ico-info.png"
-						title="Request Item Information" />
-					</p:commandLink>
 					<p:message for="orderedQty" display="icon" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
