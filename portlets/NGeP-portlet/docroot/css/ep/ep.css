@@ -1077,6 +1077,10 @@ important;
 	box-shadow: none !important;
 }
 
+.ui-datatable .ui-expanded-row {
+	border-bottom: #DDD !important;
+}
+
 .ui-datatable-data .ui-widget-content.ui-state-hover a,.ui-datatable-data .ui-widget-content.ui-state-hover a:hover
 	{
 	text-decoration: underline;
