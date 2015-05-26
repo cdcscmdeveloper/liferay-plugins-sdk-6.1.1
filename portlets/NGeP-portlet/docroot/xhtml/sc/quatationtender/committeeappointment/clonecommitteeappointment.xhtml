@@ -27,14 +27,14 @@
 								value="#{lbl['lbl.sc.qtn.no']}" /></td>
 						<td style="width: 285px;"><p:inputText
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtNo}"
-								style="width:210px;" maxlength="21" /></td>
+								maxlength="21" size="33" /></td>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.procurement.mode']}" /></td>
 						<td style="width: 285px;"><p:selectOneMenu
-								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}"
-								style="width: 210px;margin-bottom: 5px;">
+								style="width: 218px;margin-bottom: 5px;"
+								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.procurementMode}">
 								<f:selectItems
-									value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
+									value="#{qTCommitteBackingBean.getProcurementModeDropdownValues()}" />
 							</p:selectOneMenu></td>
 					</tr>
 
@@ -100,7 +100,7 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
-						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
+						<td><p:selectOneMenu style="width: 218px;margin-bottom: 5px;"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
 									value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
@@ -172,11 +172,9 @@
 					</p:column>
 
 				</p:dataTable>
-				<br />
 				<ui:fragment rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
 					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
 				</ui:fragment>
-				<br />
 				<p:treeTable id="committeeTbl" var="committeeNode"
 					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
 					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"

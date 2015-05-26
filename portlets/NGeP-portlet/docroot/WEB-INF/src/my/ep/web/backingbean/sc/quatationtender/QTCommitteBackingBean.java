@@ -1900,4 +1900,22 @@ public class QTCommitteBackingBean extends
 		return false;
 	}
 
+	/**
+	 * Get parameter code select items by parameter type for radio buttons.
+	 * 
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getProcurementModeDropdownValues() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recommendList = new ArrayList<String>();
+		recommendList.add(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO);
+		recommendList.add(ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE);
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), recommendList));
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
+		return items;
+	}
+
 }
