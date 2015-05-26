@@ -3102,7 +3102,8 @@ public class SmApplicationUtil {
 		}
 	}
 
-	public static Long retrieveOtherRejectReasonId() {
+	public static Long retrieveOtherRejectReasonIdByParamCodeAndType(
+			String paramCode, String others) {
 		Long id = null;
 		IParameterSO reqSO = (IParameterSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IParameterSO.class);
@@ -3110,7 +3111,7 @@ public class SmApplicationUtil {
 				.getServiceObject("pm", IReasonSO.class);
 
 		ParameterReqDTO reqDTO = new ParameterReqDTO();
-		reqDTO.setParameterCode("SRR");
+		reqDTO.setParameterCode(paramCode);
 		reqDTO.setParameterType("RC");
 		ParameterResDTO resDTO = reqSO.retrieveParameterByTypeAndCode(reqDTO);
 		if (resDTO != null && resDTO.getPmParameter() != null) {
@@ -3119,7 +3120,7 @@ public class SmApplicationUtil {
 					.getParameterId());
 			resReqDTO.setLanguage(new FacesScopes().getUserLocale()
 					.getLanguage());
-			resReqDTO.setReasonCode("OTHERS");
+			resReqDTO.setReasonCode(others);
 			ReasonResDTO resResDTO = resReqSO
 					.retrieveReasonByReasonCode(resReqDTO);
 			if (resResDTO != null && resResDTO.getPmReason() != null) {
@@ -3205,12 +3206,12 @@ public class SmApplicationUtil {
 	 * 
 	 * @return the list PmReasonDesc of type rejection reason
 	 */
-	public static List<PmReasonDesc> retrieveRejectReasonList() {
+	public static List<PmReasonDesc> retrieveRejectReasonListByParameterCode(
+			String paramterCode) {
 		IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IReasonSO.class);
 		ReasonReqDTO reqDTO = new ReasonReqDTO();
-		reqDTO.setReasonCategory(ReasonCategory.SUPPLIER_REJECTION_REASON
-				.value());
+		reqDTO.setReasonCategory(paramterCode);
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
 		if (resDTO != null) {

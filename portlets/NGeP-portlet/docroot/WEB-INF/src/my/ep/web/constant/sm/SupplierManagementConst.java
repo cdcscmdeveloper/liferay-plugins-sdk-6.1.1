@@ -461,6 +461,8 @@ public class SupplierManagementConst {
 
 	public static final Integer SM_SUPPORTDOCS_FILE_SIZE_LIMIT = 20000000;
 	public static final String GST_ATTACHMENT_DOC_TYPE = "GST";
+	public static final String SM_REASON_CODE_OTHERS ="OTHERS";
+	public static final String SM_REASON_CODE_OTHER ="OTHER";
 
 	// Getters for panel info
 	public String getSM_BASIC_INFO_PANEL() {
