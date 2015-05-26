@@ -160,7 +160,7 @@
 			<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}" style="width:58px;text-align:center">
 				<p:commandLink id="crBasepageLink" rendered="#{contractTreeNode.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}"
 					onclick="procure([{name:'contractId',value:'#{contractTreeNode.contractId}'},{name:'scheduleNo',value:'#{contractTreeNode.scheduleNo == null ? contractTreeNode.phaseNo : contractTreeNode.scheduleNo}'}])">
-					<p:graphicImage value="/css/images/design/revise.png"
+					<p:graphicImage value="/css/images/design/ico-view.png"
 						title="Contract Request" />
 				</p:commandLink>
 			</p:column>
@@ -200,7 +200,7 @@
 					<p:column style="width:58px;text-align:center">
 						<p:commandLink id="crBasepageLink" 
 							onclick="procure([{name:'contractId',value:'#{contractExpansion.contractId}'},{name:'scheduleNo',value:'#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}'}])">
-							<p:graphicImage value="/css/images/design/revise.png"
+							<p:graphicImage value="/css/images/design/ico-view.png"
 								title="#{lbl['lbl.fl.contract.request']}" />
 						</p:commandLink>
 					</p:column>
