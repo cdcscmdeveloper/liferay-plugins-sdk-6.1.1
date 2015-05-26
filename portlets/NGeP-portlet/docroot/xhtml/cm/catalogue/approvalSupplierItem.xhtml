@@ -8,7 +8,7 @@
 
 
 
-	<p:dataTable id="approvalSupplierItemID" lazy="true"
+	<p:dataTable id="approvalSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.approvalSearchDataModel}"
 		rowIndexVar="rowIndex" var="approval"
 		rowKey="#{approval.supplierItemId}">

@@ -65,7 +65,7 @@
 			</p:panel>
 
 			<p:panel header="#{lbl['lbl.cm.list.of.items']}" toggleable="true">
-				<p:dataTable
+				<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{codificationBackingBean.managedBean.selectedVPendingRequestItemList}"
 					var="requestItem" binding="#{table}" id="contractedTableId">
 					<p:column width="3%">

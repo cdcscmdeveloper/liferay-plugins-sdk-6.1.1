@@ -36,7 +36,7 @@
 		</div>
 
 		<div style="float: right; width: 65%">
-			<p:dataTable id="allWishListId"
+			<p:dataTable id="allWishListId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{catalogueBackingBean.managedBean.wishLists}" var="wishList"
 				rowKey="#{wishList.wishlistId}"
 				selection="#{wishListBackingBean.managedBean.selectedWishLists}">

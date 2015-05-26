@@ -20,7 +20,7 @@
 			update="approvedSupplierItemID" />
 
 	</div>
-	<p:dataTable id="approvedSupplierItemID" lazy="true"
+	<p:dataTable id="approvedSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.approvedSearchDataModel}"
 		rowIndexVar="rowIndex" var="approved"
 		rowKey="#{approved.supplierItemId}" rows="10"

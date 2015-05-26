@@ -17,7 +17,7 @@
 					action="#{catalogueBackingBean.backToPrev}" />
 
 			</div>
-			<p:dataTable var="cartList" rowIndexVar="rowIndex"
+			<p:dataTable var="cartList" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{catalogueBackingBean.managedBean.cartList}">
 
 				<p:column headerText="#{lbl['lbl.cm.item.name']}">

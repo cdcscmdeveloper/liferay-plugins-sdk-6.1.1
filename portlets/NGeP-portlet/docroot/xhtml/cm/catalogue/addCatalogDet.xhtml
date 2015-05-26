@@ -147,7 +147,7 @@ background: none;
 	    		<p:outputLabel value="#{lbl['lbl.cm.item.name']}" >: #{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}</p:outputLabel>
 	     	</h:panelGrid>
 	     	<p:spacer  height="5"/>
-	     	<p:dataTable id="itemSpecDt" var="data" value="#{catalogueBackingBean.managedBean.itemSpec}" rowIndexVar="index">
+	     	<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="itemSpecDt" var="data" value="#{catalogueBackingBean.managedBean.itemSpec}" rowIndexVar="index">
 				<ac:paginator for="itemSpecDt" />
 				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:45%; white-space:normal">
 					<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"

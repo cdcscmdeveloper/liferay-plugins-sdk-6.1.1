@@ -166,7 +166,7 @@
 
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-				<p:dataTable id="itemTable2ID"
+				<p:dataTable id="itemTable2ID" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{codificationBackingBean.extensionSearchItemDataModel}"
 					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedExtenstionForItem}"

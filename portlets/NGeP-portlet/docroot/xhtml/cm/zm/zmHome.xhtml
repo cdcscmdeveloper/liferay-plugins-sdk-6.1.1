@@ -25,7 +25,7 @@
 
 
 		<h:panelGrid id="zoneTable" width="100%">
-			<p:dataTable id="zoneDetailsDataTable"
+			<p:dataTable id="zoneDetailsDataTable" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{zoneMaintenanceBackingBean.managedBean.zoneTrees}"
 				var="zoneTree" rowIndexVar="index">
 				<p:column headerText="#{lbl['lbl.cm.zm.details']}">
