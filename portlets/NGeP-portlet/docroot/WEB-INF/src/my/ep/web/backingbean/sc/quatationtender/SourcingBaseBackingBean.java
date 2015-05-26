@@ -1444,7 +1444,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @param qtId 
 	 * 		the quotation/tender id (Mandatory),
 	 * @param scQtCategories
-	 * 		the list of ScQtCategory instance
+	 * 		the list of ScQtCategory instance (optional)
 	 * @return
 	 */
 	public boolean isMultiplePorposalCategory(Long qtId, List<ScQtCategory> scQtCategories) {
