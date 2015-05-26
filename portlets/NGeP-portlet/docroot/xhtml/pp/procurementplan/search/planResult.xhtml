@@ -23,7 +23,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pp.ministry']}" style="white-space:normal; width:25%;">  
-	            #{plan.orgProfile.parentOrgProfile!=null ? plan.orgProfile.parentOrgProfile.pmOrgValidity.orgName : '-'}
+	           	#{pPlanBackingBean.retrieveMinistryByOrgProfileId(plan.orgProfile.orgProfileId)}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pp.ptj']}" style="white-space:normal;  width:25%;" >  
 	            #{plan.orgProfile!=null ? plan.orgProfile.pmOrgValidity.orgName : '-'}
