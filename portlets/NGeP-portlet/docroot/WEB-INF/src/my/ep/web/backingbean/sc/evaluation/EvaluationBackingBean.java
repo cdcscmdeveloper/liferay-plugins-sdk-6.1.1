@@ -139,6 +139,7 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecEstimation;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.sc.EvaluationReport;
@@ -1016,6 +1017,8 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationSo = null;
 
 		try {
+			this.getManagedBean().setItemName(null);
+			this.getManagedBean().setSampleItemSpecifications(null);
 			this.getManagedBean().setScQtSampleLbl(label);
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
@@ -8409,7 +8412,8 @@ public class EvaluationBackingBean extends
 		String reportId = "";
 		String reportName = "";
 
-		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this.getManagedBean().getCommitteeType())) {
+		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
+				.getManagedBean().getCommitteeType())) {
 			reportName = ReportConst.SC_EC_PRICEOFFER_4M;
 			reportId = ReportConst.HARGA_TAWARAN_EC_RPT_VAL; // SC_030
 		} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
@@ -8529,30 +8533,30 @@ public class EvaluationBackingBean extends
 
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
-			/*for (ScQtScoreSetting qtScoreSetting : list) {*/
-				/*if (qtScoreSetting.isWeightageReq()) {*/
-					// with weightage
-					reportName = ReportConst.SC_EC_TECH_SPEC_WEI;
-					reportId = ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_029
-				/*} else {
-					// without weightage
-					reportName = ReportConst.SC_EC_TECH_SPEC;
-					reportId = ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_028
-				}*/
-			/*}*/
+			/* for (ScQtScoreSetting qtScoreSetting : list) { */
+			/* if (qtScoreSetting.isWeightageReq()) { */
+			// with weightage
+			reportName = ReportConst.SC_EC_TECH_SPEC_WEI;
+			reportId = ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_029
+			/*
+			 * } else { // without weightage reportName =
+			 * ReportConst.SC_EC_TECH_SPEC; reportId =
+			 * ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL; // SC_028 }
+			 */
+			/* } */
 		} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 				.equals(this.getManagedBean().getCommitteeType())) {
 			for (ScQtScoreSetting qtScoreSetting : list) {
 				if (qtScoreSetting.getSettingType() == 1) {
-					/*if (qtScoreSetting.isWeightageReq()) {*/
-						// with weightage
-						reportName = ReportConst.SC_TEC_TECH_SPEC_WEI;
-						reportId = ReportConst.PSDAK_TEC_RPT_VAL; // SC_009
-					/*} else {
-						// without weightage
-						reportName = ReportConst.SC_TEC_TECH_SPEC;
-						reportId = ReportConst.TECSPEC_TEC_RPT_VAL; // SC_008
-					}*/
+					/* if (qtScoreSetting.isWeightageReq()) { */
+					// with weightage
+					reportName = ReportConst.SC_TEC_TECH_SPEC_WEI;
+					reportId = ReportConst.PSDAK_TEC_RPT_VAL; // SC_009
+					/*
+					 * } else { // without weightage reportName =
+					 * ReportConst.SC_TEC_TECH_SPEC; reportId =
+					 * ReportConst.TECSPEC_TEC_RPT_VAL; // SC_008 }
+					 */
 				}
 			}
 		}
@@ -10070,6 +10074,35 @@ public class EvaluationBackingBean extends
 		markDeleteSelectedRowsAction(getManagedBean()
 				.getMeetingAttendanceList(), getManagedBean()
 				.getMeetingAttendanceRemoveList());
+
+	}
+
+	// retrieve specification based on sample item.
+	public void retriveSpecificationsByItem(ScRequestItem requestItem) {
+		this.getManagedBean().setSampleItemSpecifications(
+				new ArrayList<TplSpecQuestion>());
+		this.getManagedBean().setItemName(null);
+		if (null != requestItem) {
+			TplSpecQuestion specQuestions = requestItem.getTplSpecQuestion();
+			this.getManagedBean().setItemName(specQuestions.getClItem());
+			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.COMMON_COMPONENT,
+							ITemplateSpecSO.class);
+			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			specReqDTO.setItemName(specQuestions.getClItem());
+
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.retrieveTechSpecByItemNames(specReqDTO);
+
+			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
+				this.getManagedBean().getSampleItemSpecifications()
+						.addAll(resDTO.getSpecQuestionList());
+
+			}
+
+		}
 
 	}
 }
