@@ -76,9 +76,9 @@ public class ReportViewServlet extends HttpServlet {
 			outputStream.flush();
 		} catch (Exception e) {
 			generateErrorMsg(request,response);
-			throw new EpException(
+			/*throw new EpException(
 					CommonMethod
-							.getMessageCommon("Report Server service is down"));
+							.getMessageCommon("Report Server service is down"));*/
 			
 		} finally {
 			if (null != urlConnection) {
