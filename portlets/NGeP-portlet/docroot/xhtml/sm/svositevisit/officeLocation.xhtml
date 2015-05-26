@@ -42,8 +42,12 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.officeloc.office.arrngmnt']}" /></td>
-				<td><p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" 
-				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}"/></td>
+				<td>
+				<p:inputTextarea rows="5" cols="50"  autoResize="false" maxlength="255" label="#{lbl['lbl.sm.officeloc.office.arrngmnt']}"
+				value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smSvOffice.officeArrangement}">
+					<f:validateLength maximum="255" />
+				</p:inputTextarea>
+				</td>
 			</tr>
 		</table>
 	</p:panel>
