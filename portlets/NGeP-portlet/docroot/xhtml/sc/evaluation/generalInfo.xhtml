@@ -64,7 +64,7 @@
 						label="#{lbl['lbl.sc.procurement.category']}"
 						value="#{evaluationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
 						<f:selectItems
-							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 					</p:selectOneMenu></td>
 				<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td><p:inputText readonly="true" disabled="true" size="24"
@@ -103,7 +103,7 @@
 									style="width: 178px;margin-bottom: 5px;">
 
 									<f:selectItems
-										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
+										value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.fulfilmentType)}" />
 
 								</p:selectOneMenu></td>
 
