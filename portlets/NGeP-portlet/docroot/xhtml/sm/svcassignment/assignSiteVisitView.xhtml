@@ -67,7 +67,7 @@
 					headerText="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
 					style="width: 30%;white-space: normal;">
 					<h:outputText value="*"
-						style="font-size: 12px;font-family: Arial;color: #FF0000;font-weight: bold;" />&#160;&#160;
+						styleClass="mandatory" />&#160;&#160;
 					<p:calendar id="scheduleDateId" navigator="true" required="true"
 						label="#{lbl['lbl.sm.siteassign.expected.visiting.date']}"
 						value="#{svc.scheduleDate}"
@@ -99,9 +99,13 @@
 							<tr>
 								<td valign="top" style="width: 20%"><p:outputLabel
 										value="#{lbl['lbl.sm.svc.remark']}" /></td>
-								<td valign="top"><p:inputTextarea rows="5" cols="60" style="width:auto;"
-										maxlength="2500" autoResize="false" id="Remark"
-										value="#{svcSiteAssignBackingBean.managedBean.smRemark.remark}" /></td>
+								<td valign="top">
+									<p:inputTextarea rows="5" cols="60" style="width:auto;"
+										maxlength="2500" autoResize="false" id="Remark" label="#{lbl['lbl.sm.svc.remark']}"
+										value="#{svcSiteAssignBackingBean.managedBean.smRemark.remark}">
+										<f:validateLength maximum="2500" />
+									</p:inputTextarea>
+									</td>
 							</tr>
 						</table>
 					</td>
