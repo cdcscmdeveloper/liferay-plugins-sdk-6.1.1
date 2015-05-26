@@ -5,19 +5,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-		<p:panel id="panel2" header="Contents" toggleable="true">
+		<p:panel id="panel2" header="#{lbl['lbl.tpl.doc.section.contents']}" toggleable="true">
 			
 			<h:panelGrid width="100%">
 				<p:treeTable id="sampleTT" var="document"
 					value="#{templateDocBackingBean.managedBean.docSectionTN}" >
 					<p:column style="width:200px">
-						<f:facet name="header">Section</f:facet>
+						<f:facet name="header">#{lbl['lbl.tpl.doc.section']}</f:facet>
 						<h:outputText value="#{document.sectionNumber}" />
 						<p:spacer width="5px" />
 						<h:outputText value="#{document.sectionName}" />
 					</p:column>
 					<p:column style="width:50px;text-align:center;">
-						<f:facet name="header">Positioning</f:facet>
+						<f:facet name="header">#{lbl['lbl.tpl.doc.positioning']}</f:facet>
 						<p:commandLink action="#{templateDocBackingBean.positionNode('left')}"
 							update="@form">
 							<h:graphicImage value="/css/images/design/icon_arrow_left.png" />
@@ -44,7 +44,7 @@
 						</p:commandLink>
 					</p:column>
 					<p:column style="width:50px;text-align:center;">
-						<f:facet name="header">Action</f:facet>
+						<f:facet name="header">#{lbl['lbl.td.action']}</f:facet>
 						<p:commandLink action="#{templateDocBackingBean.editContent}"
 							oncomplete="popupEdit.show();return false;" update=":form:popupEdit">
 							<h:graphicImage value="/css/images/design/ico-edit.png" />
@@ -61,11 +61,11 @@
 						</p:commandLink>
 						<p:spacer width="3px" />
 						<p:menuButton value="" id="addSecMenu" styleClass="addSecMenu">
-				            <p:menuitem value="Import Section" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
+				            <p:menuitem value="#{lbl['lbl.tpl.doc.import.section']}" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
 					            <f:setPropertyActionListener value="#{document}"
 									target="#{templateDocBackingBean.managedBean.selectedSection}" />
 				            </p:menuitem>
-				            <p:menuitem value="Add Section" update="sampleTT" action="#{templateDocBackingBean.addNode}">
+				            <p:menuitem value="#{lbl['lbl.tpl.doc.add.section']}" update="sampleTT" action="#{templateDocBackingBean.addNode}">
 				            	<f:setPropertyActionListener value="#{document}"
 									target="#{templateDocBackingBean.managedBean.selectedSection}" />
 				            </p:menuitem>
@@ -77,7 +77,7 @@
 			</h:panelGrid>
 			<h:panelGrid width="100%" columns="1" >
 				<h:panelGroup style="float: right;">
-					<p:commandButton value="Re-Numbering"
+					<p:commandButton value="#{lbl['lbl.tpl.doc.renumbering']}"
 						action="#{templateDocBackingBean.reNumbering(templateDocBackingBean.managedBean.docSectionTN)}"
 						process="@this" update="@form" />
 					<p:commandButton action="#{templateDocBackingBean.previewAction}" 
