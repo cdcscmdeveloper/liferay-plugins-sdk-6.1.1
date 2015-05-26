@@ -10,20 +10,26 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages id="tempCodeReviewMsgId" showDetail="true"	autoUpdate="true" closable="true" showSummary="false" />
-		
+		<p:messages id="tempCodeReviewMsgId" showDetail="true"
+			autoUpdate="true" closable="true" showSummary="false" />
+
 		<ac:lovPopup />
-		
+
 		<h:panelGroup id="cmReviewUnspsc">
 			<div style="text-align: right;">
-				<ui:repeat var="action"	value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton 
-					 disabled="#{(action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND TO SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
-						value="#{action}"
+				<ui:repeat var="action"
+					value="#{unspscCodeBackingBean.managedBean.action}">
+					<ui:param name="lblBpmBtn"
+						value="lbl.cm.bpm.btn_#{action}" />
+					<p:commandButton
+						disabled="#{(action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
+						value="#{lbl[lblBpmBtn]}"
 						action="#{unspscCodeBackingBean.savetempCode(action)}"
 						update="@form" />
 				</ui:repeat>
 			</div>
+
+
 
 
 			<ui:include src="DocumentHeader.xhtml"></ui:include>
@@ -37,19 +43,23 @@
 						<td><p:selectOneMenu
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
 								style="width:228px;" disabled="true">
-								<f:selectItem itemValue="P" itemLabel="#{lbl['lbl.txt.product']}" />
-								<f:selectItem itemValue="S" itemLabel="#{lbl['lbl.txt.service']}" />
+								<f:selectItem itemValue="P"
+									itemLabel="#{lbl['lbl.txt.product']}" />
+								<f:selectItem itemValue="S"
+									itemLabel="#{lbl['lbl.txt.service']}" />
 							</p:selectOneMenu></td>
 						<td></td>
 						<td></td>
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:inputText disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
 								size="40"></p:inputText></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.details']}" />
+							<p:outputLabel value="*" styleClass="mandatory" /></td>
 						<td><p:inputText disabled="true"
 								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
 								size="40"></p:inputText></td>
@@ -57,21 +67,25 @@
 					<h:panelGroup id="extensionFiledsId"
 						rendered="#{unspscCodeBackingBean.managedBean.requestCode.itemType != 'S'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.cm.type']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.type']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
 									size="40"></p:inputText></td>
-							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
 									size="40"></p:inputText></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
 									size="40"></p:inputText></td>
-							<td><p:outputLabel value="#{lbl['lbl.cm.color']}"/><p:outputLabel value="*" styleClass="mandatory"/></td>
+							<td><p:outputLabel value="#{lbl['lbl.cm.color']}" />
+								<p:outputLabel value="*" styleClass="mandatory" /></td>
 							<td><p:inputText disabled="true"
 									value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
 									size="40"></p:inputText></td>
@@ -88,7 +102,8 @@
 						action="#{unspscCodeBackingBean.navigateCodeAdminToSearch}"></p:commandButton>
 				</div>
 
-				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					var="unspscObj" width="100%">
 
@@ -132,7 +147,8 @@
 			</p:panel>
 
 
-			<p:panel header="#{lbl['lbl.cm.create.temporary.code']}" toggleable="true">
+			<p:panel header="#{lbl['lbl.cm.create.temporary.code']}"
+				toggleable="true">
 
 				<p:panelGrid style="width:100%;" styleClass="tablePanel"
 					id="tablePanelId">
@@ -142,11 +158,13 @@
 								<h:outputLabel value="" />
 							</p:column>
 							<p:column>
-							  <h:outputText  value="*" styleClass="mandatory"/><h:outputText value=" #{lbl['lbl.cm.code']}" />
-						</p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText value=" #{lbl['lbl.cm.code']}" />
+							</p:column>
 							<p:column>
-							  <h:outputText  value="*" styleClass="mandatory"/><h:outputText value=" #{lbl['lbl.cm.doc.title']}" />
-						</p:column>
+								<h:outputText value="*" styleClass="mandatory" />
+								<h:outputText value=" #{lbl['lbl.cm.doc.title']}" />
+							</p:column>
 
 							<p:column>
 							#{lbl['lbl.cm.description']}
@@ -162,11 +180,12 @@
 						<p:column>
 
 							<ac:lov id="segmentUploadId" lovId="CM_UNSPSC"
-								headerText="#{lbl['lbl.cm.segment']}" update=":form:tablePanelId"
+								headerText="#{lbl['lbl.cm.segment']}"
+								update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscSegment"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^0|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}">
-								
+
 							</ac:lov>
 
 						</p:column>
@@ -191,8 +210,8 @@
 							<h:outputLabel value="#{lbl['lbl.cm.family']}" />
 						</p:column>
 						<p:column>
-							<ac:lov id="familyUploadId" lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.family']}"
-								update=":form:tablePanelId"
+							<ac:lov id="familyUploadId" lovId="CM_UNSPSC"
+								headerText="#{lbl['lbl.cm.family']}" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscfamily"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^1|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscSegment.unspscCode}">
@@ -219,8 +238,8 @@
 							<h:outputLabel value="#{lbl['lbl.cm.class']}" />
 						</p:column>
 						<p:column>
-							<ac:lov id="classUploadId" lovId="CM_UNSPSC" headerText="#{lbl['lbl.cm.class']}"
-								update=":form:tablePanelId"
+							<ac:lov id="classUploadId" lovId="CM_UNSPSC"
+								headerText="#{lbl['lbl.cm.class']}" update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspscClass"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^2|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscfamily.unspscCode}">
@@ -249,7 +268,8 @@
 						</p:column>
 						<p:column>
 							<ac:lov id="commodityUploadId" lovId="CM_UNSPSC"
-								headerText="#{lbl['lbl.cm.commodity']}" update=":form:tablePanelId"
+								headerText="#{lbl['lbl.cm.commodity']}"
+								update=":form:tablePanelId"
 								saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
 								value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
 								conditionField="recordStatus^1|unspscLevel^3|unspscCode^70000000^#{unspscCodeBackingBean.productOrServiceOperator()}|unspscParentCode^#{unspscCodeBackingBean.managedBean.selectedLovUnspscClass.unspscCode}">
