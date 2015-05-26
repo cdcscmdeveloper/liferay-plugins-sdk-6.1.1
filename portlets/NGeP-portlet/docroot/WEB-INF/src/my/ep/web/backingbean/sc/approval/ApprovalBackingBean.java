@@ -706,8 +706,7 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(approval.getScQtApprovalRemarks());
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
-				approval.getScQtApprovalDtls().removeAll(
-						this.getManagedBean().getScQtApprovalRequestList());
+				approval.getScQtApprovalDtls().clear();
 				approval.getScQtApprovalDtls().addAll(
 						this.getManagedBean().getScQtApprovalRequestList());
 				qt.setScQtApprovals(qtApproval);
@@ -814,8 +813,8 @@ public class ApprovalBackingBean extends
 				updateApprovalRequest(approvalRequests, outcome);
 
 				finalizeRemarks(approval.getScQtApprovalRemarks());
-				approval.getScQtApprovalDtls().removeAll(
-						approvalRequests);
+				approval.getScQtApprovalDtls().clear();
+						
 				approval.getScQtApprovalDtls().addAll(
 						approvalRequests);
 				
