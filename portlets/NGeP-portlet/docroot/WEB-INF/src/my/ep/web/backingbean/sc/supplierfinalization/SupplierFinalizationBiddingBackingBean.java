@@ -316,8 +316,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
-			reqDTO.setBidItemId(bidItem.getScRequestItem()
-					.getRequestNoteItemId());
+			reqDTO.setBidItemId(bidItem.getBidItemId());
 			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 
 			BiddingResDTO resDTO = biddingSO
