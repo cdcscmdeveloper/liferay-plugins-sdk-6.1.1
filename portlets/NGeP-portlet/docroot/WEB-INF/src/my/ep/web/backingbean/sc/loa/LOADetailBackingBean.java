@@ -134,6 +134,7 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -3297,9 +3298,17 @@ public class LOADetailBackingBean extends
 				serviceJadualHargaList.add(jadualHarga);
 			}
 		}
+		
+		// check whether loa from s1 or s2.
+		boolean isS1OrS2 = Boolean.TRUE;
+		if(scLoa.getScLoiLoa() != null){
+			if(scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+				isS1OrS2 = Boolean.FALSE;
+			}
+		}
 
 		generateJadualHarga(attachment, productJadualHargaList,
-				serviceJadualHargaList);
+				serviceJadualHargaList , isS1OrS2);
 
 	}
 
@@ -3341,12 +3350,12 @@ public class LOADetailBackingBean extends
 				.getTplSpecQuestion().getClQuantity() ? "N/A" : item
 				.getScRequestItem().getTplSpecQuestion().getClQuantity()
 				.toString());
-		jadualHarga.setTotalAmount(item
-				.getUnitPrice()
-				.multiply(
-						item.getScRequestItem().getTplSpecQuestion()
-								.getClQuantity()).toString());
 
+		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
+		BigDecimal subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(item.getScRequestItem().getTplSpecQuestion(), 
+				item.getUnitPrice(), item.getQty());
+		totalAmount = totalAmount.add(subTotal);
+		jadualHarga.setTotalAmount(totalAmount.toString());
 		return jadualHarga;
 
 	}
@@ -3360,19 +3369,20 @@ public class LOADetailBackingBean extends
 	 * @throws Exception the exception
 	 */
 	private void generateJadualHarga(ScAttachment attachment,
-			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList)
+			List<JadualHargaBean> productList, List<JadualHargaBean> serviceList, boolean isS1OrS2)
 					throws Exception {
 		if (serviceList.size() > 0 || productList.size() > 0) {
 			try {
-				/*	FileInputStream inputStream = new FileInputStream(new File(
+				/*FileInputStream inputStream = new FileInputStream(new File(
 						FacesContext.getCurrentInstance().getExternalContext()
-								.getRealPath("/WEB-INF/templates")
-								+ "/sc/loa/jadual-harga.xlsx"));*/
+						.getRealPath("/WEB-INF/templates")
+						+ "/sc/loa/jadual-harga.xlsx"));*/
 
 				final String templatePath = "templates" + SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
 				InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(templatePath);
 				if (inputStream != null) {
 					XSSFWorkbook wb = new XSSFWorkbook(inputStream); //or new HSSFWorkbook();
+					
 
 					boolean emptyProductList = false;
 					Sheet productSheet = null;
@@ -3421,6 +3431,12 @@ public class LOADetailBackingBean extends
 						} else {
 							serviceSheet = wb.getSheetAt(1);
 							wb.setSheetName(1, "ServiceSheet");
+						}
+						
+						if(isS1OrS2){
+							Row row0 = serviceSheet.getRow(0);
+							Cell cell9 = row0.getCell(9);
+							cell9.setCellValue("Total Amount (RM)");
 						}
 
 						for (JadualHargaBean service : serviceList) {
