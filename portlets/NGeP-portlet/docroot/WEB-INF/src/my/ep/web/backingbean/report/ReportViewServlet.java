@@ -26,8 +26,7 @@ import my.ep.web.constant.report.ReportConst;
 @WebServlet("/ReportViewServlet")
 public class ReportViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final Logger log = EpLogger
-			.getLogger(ReportViewServlet.class);
+	
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -61,7 +60,7 @@ public class ReportViewServlet extends HttpServlet {
 				content[i] = byteRead;
 				i++;
 			}
-			log.info("#######################################"+content.length); 
+			
 			bufferedInputStream.close();
 			outputStream.write(content);
 			response.setContentType("application/pdf");
