@@ -310,7 +310,9 @@
 				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.sm.remark']}">
-					<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" autoResize="false" maxlength="100" />
+					<p:inputTextarea value="#{suppDoc.sdoRemarks}" id="docRemarkId" label="#{lbl['lbl.sm.remark']}" autoResize="false" maxlength="100">
+						<f:validateLength maximum="100" />
+					</p:inputTextarea>
 				</p:column>
 
 			</p:dataTable>
