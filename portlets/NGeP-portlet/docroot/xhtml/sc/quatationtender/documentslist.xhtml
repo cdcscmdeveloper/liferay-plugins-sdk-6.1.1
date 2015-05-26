@@ -61,7 +61,7 @@
 			<p:column style="width:10%;" headerText="#{lbl['lbl.sc.action']}">
 				<p:commandLink
 					action="#{qTDocumentsBackingBean.showTemplateAction(rowIndex,scQtDocReport)}">
-					<h:graphicImage value="/css/images/design/edit.png" rendered="#{scQtDocReport.definationType.parameterCode eq 'TD'}"/>
+					<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png" rendered="#{scQtDocReport.definationType.parameterCode eq 'TD'}"/>
 				</p:commandLink>			
 				<p:commandButton id="download" style="background-color:transparent !important; border:0px none;"
 					ajax="false" icon="ui-icon-download"
