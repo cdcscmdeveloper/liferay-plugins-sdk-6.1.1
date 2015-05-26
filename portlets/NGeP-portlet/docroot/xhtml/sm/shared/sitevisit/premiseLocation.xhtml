@@ -69,7 +69,9 @@
 				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.floor']} :  #{lbl['lbl.sm.sitevisit.if.others']}"
 				maxlength="50" id="otherFloorRemarkId" label="#{lbl['lbl.sm.sitevist.remarks']}"
 				disabled="#{!svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor || viewFlag}"
-				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor and !viewFlag}" ></p:inputTextarea>
+				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherFloor and !viewFlag}">
+					<f:validateLength maximum="50"/>
+				</p:inputTextarea>
 			</td>
 			
 			<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.sitevist.premiseloc.environment']}" /></td>
@@ -85,7 +87,9 @@
 				requiredMessage="#{lbl['lbl.sm.sitevist.premiseloc.environment']} : #{lbl['lbl.sm.sitevisit.if.others']}" 
 				maxlength="50" id="otherEnvRemarkId" label="#{lbl['lbl.sm.sitevist.remarks']}"
 				disabled="#{!svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv || viewFlag}"
-				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv and !viewFlag}"></p:inputTextarea>
+				required="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvFacility.otherEnv and !viewFlag}">
+					<f:validateLength maximum="50"/>
+				</p:inputTextarea>
 			</td>
 		</tr>
 		
