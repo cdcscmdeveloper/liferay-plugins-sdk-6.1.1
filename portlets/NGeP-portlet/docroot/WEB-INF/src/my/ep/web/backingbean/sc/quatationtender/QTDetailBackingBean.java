@@ -1869,7 +1869,8 @@ public class QTDetailBackingBean extends
 					qt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 				}
-				if (null == this.getManagedBean().getScQtSampleSubmissionList()) {
+				//if (null == this.getManagedBean().getScQtSampleSubmissionList()) {
+				if (qt.getScQtSampleSubmission().isEmpty() && qt.getScQtSampleSubmission().size() == 0) {
 					retrieveScheduleTabDtl();
 				}
 			}
