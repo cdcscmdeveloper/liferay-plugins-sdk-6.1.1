@@ -32,6 +32,8 @@
 	</p:panel>
 	<br />
 	<h:panelGroup id="ItemDetAndNegoTerm">
+	 <ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
+		
 		<p:panel header="#{lbl['lbl.sc.item.details']}" id="itemDetailsId" toggleable="true"
 			rendered="#{lOIDetailBackingBean.managedBean.itemDetailsFlag}">
 			<p:dataTable id="itemDtlID" var="loiLoaItem"
@@ -192,16 +194,17 @@
 
 				<p:column style="width:10%; text-align:right;"
 					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<p:inputText size="4" value="#{loiLoaItem.unitPrice}" disabled="#{!isPendingNegotiationStatus}"
-						style="text-align:right;">
-						<p:ajax event="blur" partialSubmit="true" process="@form"
-							update="@all"
-							listener="#{lOIDetailBackingBean.priceKeyInEvent()}" />
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					 <p:inputText size="4" value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" style="text-align:right;" 
+					       disabled="true" rendered="#{isBiddingAward}">
+					   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					</p:inputText>
+					
+					<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" rendered="#{!isBiddingAward}">
+					   <p:ajax event="blur" partialSubmit="true" process="@form" update="@all" listener="#{lOIDetailBackingBean.priceKeyInEvent()}"/>
+					   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
 
-					<f:facet name="footer">
+				   <f:facet name="footer">
 						<h:outputText value="#{lbl['lbl.sc.total']}" />
 					</f:facet>
 				</p:column>
