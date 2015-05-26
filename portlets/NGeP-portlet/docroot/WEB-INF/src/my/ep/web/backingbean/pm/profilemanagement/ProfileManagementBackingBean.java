@@ -492,6 +492,7 @@ public class ProfileManagementBackingBean extends
 	public void preLoadingUserProfile() {
 		logger.info("preLoadingUserProfile");
 		this.setCurrentActiveOrg();
+		this.getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
 		this.resetUserProfileSearchBean();
 		this.retrieveOrgTypeMap();
 		this.getManagedBean().setSelectedTabIndex(TAB_USER_PROFILE);
@@ -662,13 +663,13 @@ public class ProfileManagementBackingBean extends
 					.contains(
 							pmUserOrg.getPmOrgProfile().getOrgTypeCode()
 									.getParameterCode())) {
-				getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
+				getManagedBean().setOrgCategory(FEDERAL_GOVT);
 			} else if (Arrays
 					.asList(ProfileManagementConst.ORG_CATEGORY_OTHERS_UP)
 					.contains(
 							pmUserOrg.getPmOrgProfile().getOrgTypeCode()
 									.getParameterCode())) {
-				getManagedBean().setSearchOrgCategory(OTHERS);
+				getManagedBean().setOrgCategory(OTHERS);
 			}
 			// }
 			// addressEntered();
@@ -788,7 +789,7 @@ public class ProfileManagementBackingBean extends
 		pmUser.setConfirmPassword(null);
 		pmUser.setPmUserAttachments(new ArrayList<PmUserAttachment>());
 
-		getManagedBean().setSearchOrgCategory(FEDERAL_GOVT);
+		getManagedBean().setOrgCategory(FEDERAL_GOVT);
 		this.getManagedBean().setAddressEntered(false);
 		this.getManagedBean().setSelectedUser(pmUser);
 		this.getManagedBean().setSelectedRoles(null);
@@ -2712,7 +2713,7 @@ public class ProfileManagementBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public UserProfilePagingDataModel() {
-			super("dtUserResult");
+			super("dtUserResult",false);
 		}
 
 		@Override
@@ -4376,8 +4377,33 @@ public class ProfileManagementBackingBean extends
 		logger.info("getOrgTypeDropdownValues");
 		ISearchBean<PmParameterDesc> searchBean = null;
 		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
-			searchBean = getUserOrgTypeSearchBean("orgTypeFederalList");
+			searchBean = getUserOrgTypeSearchBean("somFederalOrgType");
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
+			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");
+		}
+
+		SelectItem[] items = null;
+		if (searchBean != null) {
+			searchBean.getSortColumns();
+			items = getDropdownValuesBySearchBean(
+					ParameterTypeConst.ORGANISATION_TYPES, searchBean);
+		}
+
+		return items;
+	}
+	
+	
+	/**
+	 * The method used for generating a list of available display type of org
+	 * type as selection.
+	 * 
+	 */
+	public SelectItem[] getNewOrgTypeDropdownValues() {
+		logger.info("getOrgTypeDropdownValues");
+		ISearchBean<PmParameterDesc> searchBean = null;
+		if (getManagedBean().getOrgCategory() == FEDERAL_GOVT) {
+			searchBean = getUserOrgTypeSearchBean("orgTypeFederalList");
+		} else if (getManagedBean().getOrgCategory() == OTHERS) {
 			searchBean = getUserOrgTypeSearchBean("orgTypeOthersList");
 		}
 

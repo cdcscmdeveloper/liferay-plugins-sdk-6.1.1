@@ -63,6 +63,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private PmUserOrg activeUserOrg;
 	private List<PmUserRole> activeUserRoleFor = new ArrayList<PmUserRole>();
 	private int searchOrgCategory = 0;
+	private int orgCategory = 0;
 	
 	
 	
@@ -392,6 +393,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	public void setSearchOrgCategory(int searchOrgCategory) {
 		this.searchOrgCategory = searchOrgCategory;
+	}
+	/**
+	 * @return the orgCategory
+	 */
+	public int getOrgCategory() {
+		return orgCategory;
+	}
+	/**
+	 * @param orgCategory the orgCategory to set
+	 */
+	public void setOrgCategory(int orgCategory) {
+		this.orgCategory = orgCategory;
 	}
 	
 

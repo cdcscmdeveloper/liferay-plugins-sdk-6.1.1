@@ -9,25 +9,44 @@
 	<p:outputPanel id="opDefinedSearch">
 		<br/>
 		<table class="ppTwoTable">
+			
+		    <tr>
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.org.category']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:selectOneRadio value="#{profileManagementBackingBean.managedBean.searchOrgCategory}">
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{profileManagementBackingBean.federalGovt}"/>
+						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{profileManagementBackingBean.others}"/>
+						<p:ajax process="@this" event="change" partialSubmit="true" update=":form:opDefinedSearch" listener ="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
+					</p:selectOneRadio></td>
+			
+			</tr>
 			<tr>
-				<th width="20%">
-					<p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgtype']}"/><p:outputLabel
-								value="*" styleClass="mandatory" />
-				</th>
-				<td width="55%" style="white-space:nowrap;">
-				
-					<p:selectOneMenu value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}" required="true"
-						styleClass="ppDropDownWidthM" id="somOrgType"   
-						label="#{lbl['lbl.pm.ta.org.type.name']}">  
-						<f:selectItems value="#{profileManagementBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.organisationTypes, profileManagementBackingBean.orgTypeSearchBean)}" />   
-				     	<p:ajax event="change" listener="#{profileManagementBackingBean.clearOrgNameAndRoleLovSearchFields()}" 
+				<th width="20%"><p:outputLabel
+						value="#{lbl['lbl.pm.organisation.orgType']}" /><p:outputLabel
+						value="*" styleClass="mandatory" /></th>
+				<td><p:outputPanel id="somType"><p:selectOneMenu id="somFederalOrgType"
+						rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.federalGovt}" 
+						styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+						value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}">
+						<f:selectItems
+							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
+							<p:ajax event="change" listener="#{profileManagementBackingBean.clearOrgNameAndRoleLovSearchFields()}" 
 				     		update=":form:opDefinedSearch"/> 
-		            </p:selectOneMenu>	
-	            <p:message id="somOrgTypeMsg" for="somOrgType" display="icon" />
-						</td>
-					
-					</tr>
-					<tr>
+					</p:selectOneMenu>
+					<p:selectOneMenu id="somOtherOrgType" 
+							rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.others}" 
+							styleClass="ppDropDownWidthL" required="true" label="#{lbl['lbl.pm.organisation.orgType']}" style="margin-bottom: 5px;"
+							value="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId}">
+						<f:selectItems
+							value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
+							<p:ajax event="change" listener="#{profileManagementBackingBean.clearOrgNameAndRoleLovSearchFields()}" 
+				     		update=":form:opDefinedSearch"/> 
+					</p:selectOneMenu>
+					</p:outputPanel></td>
+			
+			</tr>
+			<tr>
 					
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.profiles.search.orgname']}"/><p:outputLabel
 								value="*" styleClass="mandatory" /></th>

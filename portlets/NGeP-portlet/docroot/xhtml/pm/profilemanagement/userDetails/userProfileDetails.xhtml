@@ -20,7 +20,7 @@
 								value="*" styleClass="mandatory" /></th>
 								
 						<td><p:selectOneRadio
-								value="#{profileManagementBackingBean.managedBean.searchOrgCategory}"
+								value="#{profileManagementBackingBean.managedBean.orgCategory}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or !profileManagementBackingBean.isNotEpOrSupportAdmin()}">
 								<f:selectItem
 									itemLabel="#{lbl['lbl.pm.org.federal.government']}"
@@ -39,14 +39,14 @@
 								value="#{lbl['lbl.pm.organisation.orgType']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 						<td width="30%"><p:selectOneMenu id="orgTypeFederalList"
-								rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.federalGovt}"
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
 								styleClass="ppDropDownWidthL" required="true"
 								label="#{lbl['lbl.pm.organisation.orgType']}"
 								style="margin-bottom: 5px;"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}">
 								<f:selectItems
-									value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
+									value="#{profileManagementBackingBean.getNewOrgTypeDropdownValues()}" />
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
 									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
@@ -54,14 +54,14 @@
 			     			" />
 							</p:selectOneMenu> <p:message id="orgTypeFederalListMsg" for="orgTypeFederalList"
 								display="icon" /> <p:selectOneMenu id="orgTypeOthersList"
-								rendered="#{profileManagementBackingBean.managedBean.searchOrgCategory eq profileManagementBackingBean.others}"
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
 								styleClass="ppDropDownWidthL" required="true"
 								label="#{lbl['lbl.pm.organisation.orgType']}"
 								style="margin-bottom: 5px;"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}">
 								<f:selectItems
-									value="#{profileManagementBackingBean.getOrgTypeDropdownValues()}" />
+									value="#{profileManagementBackingBean.getNewOrgTypeDropdownValues()}" />
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.changeResOrgType()}"
 									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
