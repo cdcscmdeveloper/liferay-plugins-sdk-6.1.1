@@ -1291,8 +1291,10 @@ public class QTCommitteBackingBean extends
 						}
 					}
 				}
-				if (tabBean.getTabType().equalsIgnoreCase(
-						ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+				if (tabBean
+						.getTabType()
+						.equalsIgnoreCase(
+								ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
 					List<ScCommitteeMember> existingMembers = tabBean
 							.getScQtCommittee().getScCommittee()
 							.getScCommitteeMembers();
@@ -1334,8 +1336,10 @@ public class QTCommitteBackingBean extends
 						}
 					}
 				}
-				if (tabBean.getTabType().equalsIgnoreCase(
-						ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
+				if (tabBean
+						.getTabType()
+						.equalsIgnoreCase(
+								ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE)) {
 					List<ScCommitteeMember> existingMembers = tabBean
 							.getScQtCommittee().getScCommittee()
 							.getScCommitteeMembers();
@@ -1823,6 +1827,12 @@ public class QTCommitteBackingBean extends
 					isAtleastOneMemebersReq(committee.getScCommitteeMembers());
 				} else {
 					committee.setApprovalReq(false);
+					int selectedIndex = this.getManagedBean()
+							.getSelectedTabIndex();
+					this.getManagedBean().getScCommitteeMemberTabList()
+							.remove(selectedIndex);
+					this.getManagedBean().getScCommitteeMemberTabList()
+							.add(selectedIndex, selectedCommitteTabBean);
 					throw new EpException(MessageConst.ERROR_760275);
 				}
 			}
