@@ -403,7 +403,7 @@
 				<p:column headerText="#{lbl['lbl.ct.uom.per.month']}" style="width:15%; white-space:normal;text-align: right;">
 					<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
 				</p:column>
-		      <p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}"  style="text-align: right;width:15%; white-space:normal;">
+		      <p:column    headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}" style="text-align: right;width:15%; white-space:normal;"  rendered="false" >
 		          	<h:outputText value="#{serviceItemVar.scRequestItem.tplSpecQuestion.clUomPerYear}" />
 		      </p:column>				
 				<p:column headerText="#{lbl['lbl.ct.quantity']}" style="width:15%;white-space:normal;text-align:right;">
