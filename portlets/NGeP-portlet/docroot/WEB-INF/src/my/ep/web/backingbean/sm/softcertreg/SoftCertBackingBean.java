@@ -107,8 +107,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * 
 	 * @return String
 	 */
-	public String cancel() {
-		return "softCertUserSearch.xhtml";
+	public void cancel() {
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/softcertreg/softCertUserSearch.xhtml", "");
+
 	}
 
 	/**
@@ -322,13 +324,12 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					MessageConst.ERROR_721037);
 		}
 	}
-	
+
 	/**
 	 * Call confirmation dialog
 	 */
-	public void showConfirmDialog(){
-		RequestContext.getCurrentInstance().execute(
-				"confirmDialog.show()");
+	public void showConfirmDialog() {
+		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
 
 	/**
