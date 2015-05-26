@@ -662,7 +662,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)125254;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)61410;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2426,7 +2426,7 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
-	//ministryName  
+	 
 	public String retrieveMinistryName(Long orgprofileid){
 		ministryName =null;
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4274,9 +4274,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 									.getMessageCommon(ReportConst.URL_NOT_CONNECTED));
 				}
 			}
-			RequestContext context = RequestContext.getCurrentInstance();
+			/*RequestContext context = RequestContext.getCurrentInstance();
 			context.addCallbackParam(ReportConst.RPT_IN_VALID,
-					ReportConst.RPT_TRUE);
+					ReportConst.RPT_TRUE);*/
 		} else {
 			throw new EpException(
 					CommonMethod
@@ -4633,7 +4633,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmCancellationBy()!= null) && (this.getSmCancellationBy() != ReportConst.EMPTY_VAL))
 				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))) {
-//SM_APPLICATION_APPROVED_RPT_VAL
+
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
 							.equalsIgnoreCase(ReportConst.SM_APPLICATION_APPROVED_RPT_VAL))){
