@@ -101,14 +101,10 @@
 						</c:if>
 
 						<c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '1' and not isPendingNegotiation}">
+							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '1'}">
 							<ui:include src="loiAwardDetailsMenu.xhtml" />
 						</c:if>
-
-                         <c:if
-							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '1' and isPendingNegotiation}">
-							<ui:include src="loiAfterNegoAwardDetails.xhtml" />
-						</c:if>
+						
 						<c:if
 							test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == '2' and not isPendingNegotiation}">
 							<ui:include src="loiNegotiationDetailsMenu.xhtml" />
