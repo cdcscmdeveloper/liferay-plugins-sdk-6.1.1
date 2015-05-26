@@ -76,18 +76,46 @@
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.reason']} : " /> <p:outputLabel
+					<td style="vertical-align: top"><p:outputLabel
+							value="#{lbl['lbl.sm.rejection.reasons']}" /> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
-					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;"
-							required="true" id="delPendResn" label="#{lbl['lbl.sm.reason']}"
-							value="#{backingBean.managedBean.supplierRemarks}"
-							maxlength="2500"
-							validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}">
-							<f:validateLength maximum="2500" />
-						</p:inputTextarea> <p:message id="delPendResnMsg" for="delPendResn" display="icon" /></td>
 
+					<td><p:selectManyMenu showCheckbox="true"
+							id="applRejectSelBox" required="true"
+							label="#{lbl['lbl.sm.rejection.reasons']}"
+							value="#{backingBean.managedBean.reasonId}"
+							style="height:200px;width:750px;">
+							<f:selectItems value="#{backingBean.managedBean.reasonDescList}"
+								var="res" itemLabel="#{res.reasonDesc}"
+								itemValue="#{res.pmReason.reasonId}" />
+							<p:ajax update="delPendRejRemarksPanelTst" event="change"
+								process="applRejectSelBox"
+								listener="#{backingBean.verifySelectedRejectReasons()}" />
+						</p:selectManyMenu> <p:message id="applRejectSelBoxMsg" for="applRejectSelBox"
+							showSummary="true" showDetail="false" display="icon" /></td>
 				</tr>
 			</table>
+			<p:outputPanel id="delPendRejRemarksPanelTst">
+				<table style="width: 100%; margin-top: 10px;">
+					<tr>
+						<td style="width: 15.3%;"><p:outputLabel
+								value="#{lbl['lbl.sm.reason']} : "
+								rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
+								value="*" styleClass="mandatory"
+								rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
+						<td><p:inputTextarea cols="122" style="margin-bottom : 5px;"
+								rows="5" required="#{backingBean.managedBean.rejectReasonReqd}"
+								id="delPendResn" label="#{lbl['lbl.sm.reason']}"
+								rendered="#{backingBean.managedBean.rejectReasonReqd}"
+								value="#{backingBean.managedBean.supplierRemarks}"
+								maxlength="2500"
+								validatorMessage="#{lbl['lbl.sm.reason']} #{lbl['lbl.sm.rmrkLength.thsndCharLimit']}">
+								<f:validateLength maximum="2500" />
+							</p:inputTextarea> <p:message id="delPendResnMsg" for="delPendResn" display="icon" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
 			<div align="center">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{backingBean.onDisplayConfirmDelPending}"

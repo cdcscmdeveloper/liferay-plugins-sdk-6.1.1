@@ -120,6 +120,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -533,10 +534,18 @@ public class SmApplicationBackingBean extends
 					SmApplicationUtil.retrievePmProfBodyList());
 
 			getManagedBean().setUomLs(SmApplicationUtil.retrieveUomList());
-			getManagedBean().setReasonDescList(
-					SmApplicationUtil.retrieveRejectReasonList());
-			getManagedBean().setRejectionOtherReasonId(
-					SmApplicationUtil.retrieveOtherRejectReasonId());
+			getManagedBean()
+					.setReasonDescList(
+							SmApplicationUtil
+									.retrieveRejectReasonListByParameterCode(ReasonCategory.SUPPLIER_REJECTION_REASON
+											.value()));
+			getManagedBean()
+					.setRejectionOtherReasonId(
+							SmApplicationUtil
+									.retrieveOtherRejectReasonIdByParamCodeAndType(
+											ReasonCategory.SUPPLIER_REJECTION_REASON
+													.value(),
+											SupplierManagementConst.SM_REASON_CODE_OTHERS));
 			getManagedBean().setRegStatusDescList(
 					SmApplicationUtil
 							.retrieveRegistrationStatusList(applicationType));
@@ -964,7 +973,18 @@ public class SmApplicationBackingBean extends
 					setPmStatusDesc(sts.getPmStatus().getStatusId().toString());
 				}
 			}
-
+			getManagedBean()
+					.setReasonDescList(
+							SmApplicationUtil
+									.retrieveRejectReasonListByParameterCode(ReasonCategory.DELETE_PENDING_APPLICATION_REASON
+											.value()));
+			getManagedBean()
+					.setRejectionOtherReasonId(
+							SmApplicationUtil
+									.retrieveOtherRejectReasonIdByParamCodeAndType(
+											ReasonCategory.DELETE_PENDING_APPLICATION_REASON
+													.value(),
+											SupplierManagementConst.SM_REASON_CODE_OTHER));
 			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
 
 		}
@@ -5933,14 +5953,37 @@ public class SmApplicationBackingBean extends
 	public String submitDeletePendingMofApplToBpm() {
 		IMofRegistrationSO regSo = null;
 		try {
-			if (getManagedBean().getSupplierRemarks().equalsIgnoreCase("")
-					|| getManagedBean().getSupplierRemarks() == null) {
+			StringBuffer sb = new StringBuffer();
+			for (Long resId : getManagedBean().getReasonId()) {
+				for (PmReasonDesc desc : getManagedBean().getReasonDescList()) {
+					if (desc.getPmReason().getReasonId().equals(resId)) {
+						if (!desc
+								.getPmReason()
+								.getReasonCode()
+								.equalsIgnoreCase(
+										SupplierManagementConst.SM_REASON_CODE_OTHER)) {
+							sb.append(desc.getReasonDesc());
+							sb.append("\n");
+						} else {
+							sb.append(getManagedBean().getSupplierRemarks())
+									.append("\n");
+						}
+					}
+				}
+			}
+
+			if (sb.toString() == null || sb.toString().equalsIgnoreCase("")) {
 				throw new EpException(MessageConst.ERROR_722529);
 			}
 			SmRemark remark = new SmRemark();
 			remark.setDocId(getManagedBean().getSmAppl().getApplId());
 			remark.setDocType(ParameterConst.NEW_SM_APPLN_FOR_DELETE_PENDING_APPL);
-			remark.setRemark(getManagedBean().getSupplierRemarks());
+			if (sb.toString().length() > 2500) {
+				remark.setRemark(sb.toString().substring(0, 2500));
+			} else {
+				remark.setRemark(sb.toString());
+			}
+
 			saveSmRemarks(remark);
 			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());

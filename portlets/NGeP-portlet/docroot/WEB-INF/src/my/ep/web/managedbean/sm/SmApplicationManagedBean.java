@@ -272,7 +272,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private List<SelectItem> uomSelectItems;
 	private List<SelectItem> raceSelectItems;
 	List<PmReasonDesc> reasonDescList;
+	List<PmReasonDesc> deletePendingApplDescList;
 	private Long rejectionOtherReasonId;
+	private Long deletePendingApplOtherReasonId;
 	private List<PmStatusDesc> regStatusDescList;
 
 	private String currentStatus;
@@ -2766,6 +2768,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setRoleStaffAndMailAddrReqd(boolean roleStaffAndMailAddrReqd) {
 		this.roleStaffAndMailAddrReqd = roleStaffAndMailAddrReqd;
+	}
+
+	public List<PmReasonDesc> getDeletePendingApplDescList() {
+		return deletePendingApplDescList;
+	}
+
+	public void setDeletePendingApplDescList(
+			List<PmReasonDesc> deletePendingApplDescList) {
+		this.deletePendingApplDescList = deletePendingApplDescList;
+	}
+
+	public Long getDeletePendingApplOtherReasonId() {
+		return deletePendingApplOtherReasonId;
+	}
+
+	public void setDeletePendingApplOtherReasonId(
+			Long deletePendingApplOtherReasonId) {
+		this.deletePendingApplOtherReasonId = deletePendingApplOtherReasonId;
 	}
 
 }
