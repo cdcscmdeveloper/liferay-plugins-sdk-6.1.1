@@ -709,9 +709,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            int index(mandatory)
 	 * @return String(editCatalogItem)
 	 */
-	public String navigateToCatalogDet(int index) {
+	public String navigateToCatalogDet(int i) {
 
-
+		
+		int index = i%5;
 
 
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getDraftSearchDataModel().getList().get(index).getSupplierItemId());
