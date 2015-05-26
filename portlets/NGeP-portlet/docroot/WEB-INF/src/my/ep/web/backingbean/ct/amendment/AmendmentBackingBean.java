@@ -4268,7 +4268,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		        		row.createCell(cellIndex++).setCellValue(service.getFreqUom());
 		        		row.createCell(cellIndex++).setCellValue(service.getUomPerDay());
 		        		row.createCell(cellIndex++).setCellValue(service.getUomPerMonth());
-		        		row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
+		        	//	row.createCell(cellIndex++).setCellValue(service.getUomPerYear());
 		        		row.createCell(cellIndex++).setCellValue(service.getQuantity());
 		        		row.createCell(cellIndex++).setCellValue(service.getUnitPrice());
 		        	}
