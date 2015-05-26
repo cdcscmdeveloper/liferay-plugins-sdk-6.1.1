@@ -5,17 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-		
-	<ui:param name="isZonal" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
-	<ui:param name="isBiddingAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByOnlineBidding}" />
-	<ui:param name="isAwardMultiple" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleAward}" />
-	<ui:param name="isAwardSingle" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendBySingleAward}" />
-   	<ui:param name="isMultipleLOI" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByMultipleLoi}" />
-   	<ui:param name="isAward" value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy.parameterCode eq ParameterConst.recommendByAward}" />
-	<ui:param name="lblAfterNegoOrBidding" value="#{isBiddingAward ? 'lbl.sc.loiloa.loi.after.bidding.offer.price' : 'lbl.sc.loiloa.after.nego.offer.price'}" />
-		
+
+	<ui:param name="isZonal"
+		value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.zonal}" />
+
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
-		id="awardTypeId" toggleable="true">
+		id="afterNegoAwardDetails" toggleable="true">
 		<table>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
@@ -24,75 +19,59 @@
 						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendTypeCode)}"
 						size="30" /></td>
 			</tr>
-
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
 						value="#{lbl['lbl.sc.recommend.by']}" /></td>
-				<td><p:inputText disabled="true"
-						rendered="#{isBiddingAward or isMultipleLOI}"
+				<td><p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType ne ParameterConst.directAward}"
 						value="#{lOIDetailBackingBean.getParameterDesc(lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.recommendBy)}"
-						size="30" /> 
+						size="30" />
 						
-					<p:inputText disabled="true"
-						rendered="#{isAwardMultiple or isAwardSingle or isAward}"
-						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes, ParameterConst.directAward)}"
+					<p:inputText disabled="true" rendered="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.directAward}"
+						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.documentTypes,
+					lOIDetailBackingBean.managedBean.docType)}"
 						size="30" /></td>
 			</tr>
 		</table>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="false">
-		<p:dataTable id="loiItemListId" var="loiLoaItem"
+		<p:dataTable id="afterNegoItemList" var="loiLoaItem"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
 			rowKey="#{itemPrice}" rowIndexVar="index">
-             <ac:paginator for="loiItemListId" />
+	       <ac:paginator for="afterNegoItemList" />
+			
 			<p:columnGroup type="header">
 				<p:row>
-				 <p:column  rowspan="3" style="width:8%;white-space:normal;"  rendered="#{isZonal}"
+				  <p:column style="width:10%;white-space:normal;"  rendered="#{isZonal}"
 						headerText="#{lbl['lbl.sc.zone']}" />
 				
-					<p:column rowspan="3" style="width:15%;white-space:normal;"
+					<p:column style="width:15%;white-space:normal;"
 						headerText="#{lbl['lbl.sc.item']}" />
 
-					<p:column rowspan="3" style="white-space:normal;text-align:right;"
+					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" />
 
-					<p:column rowspan="3" style="white-space:normal;text-align:right;"
+					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}" />
 
-					<p:column rowspan="3" style="white-space:normal;text-align:right;"
+					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.duration.month']}" />
 
-
-					<p:column rowspan="3" style="white-space:normal;text-align:right;"
+					<p:column style="white-space:normal;text-align:right;"
 						headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}" />
 
-					<p:column rowspan="3" headerText="#{lbl['lbl.sc.quantity']}" />
-					<p:column rowspan="3" headerText="#{lbl['lbl.sc.uom']}" />
+					<p:column headerText="#{lbl['lbl.sc.quantity']}" />
 					
-					<p:column rowspan="3" headerText="#{lbl['lbl.sc.unit.price']}"  rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}"/>
-					<p:column rowspan="3" headerText="#{lbl['lbl.sc.sub.total']}"  rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}"/>
-
-					<p:column colspan="2" style="white-space:normal;text-align:center;"
-						headerText="#{lbl['lbl.sc.loiloa.original.offer.price']}"
-						rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}" />
-					<p:column colspan="2" style="white-space:normal;text-align:center;"
-						rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}"
-						headerText="#{lbl[lblAfterNegoOrBidding]}" />
+					<p:column headerText="#{lbl['lbl.sc.uom']}" />
+					
+					<p:column  headerText="#{lbl['lbl.sc.unit.price']}"/>
+					
+					<p:column  headerText="#{lbl['lbl.sc.sub.total']}"/>
 				</p:row>
-				<p:row rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<p:column headerText="#{lbl['lbl.sc.loiloa.per.unit']}"
-						style="white-space:normal;text-align:right;" />
-					<p:column headerText="#{lbl['lbl.sc.loiloa.total.price']}"
-						style="white-space:normal;text-align:right;" />
-					<p:column headerText="#{lbl['lbl.sc.loiloa.per.unit']}"
-						style="white-space:normal;text-align:right;" />
-					<p:column headerText="#{lbl['lbl.sc.loiloa.total.price']}"
-						style="white-space:normal;text-align:right;" />
-				</p:row>
+			
 			</p:columnGroup>
-
-            <p:column style="width:15%;white-space:normal;" rendered="#{isZonal}">
+			
+			<p:column style="width:15%;white-space:normal;" rendered="#{isZonal}">
                 <p:commandLink id="zoneName"
 					oncomplete="zoneLocPopup.show();"
 					partialSubmit="true" process="@this" update="@([id$=zoneLocPopup])">
@@ -102,6 +81,7 @@
 					<h:outputText value="#{loiLoaItem.tplSpecZoneDtl.zoneName}" />
 			 </p:commandLink>
            </p:column>
+
 			<p:column style="width:15%;white-space:normal;">
                    #{loiLoaItem.scRequestItem.itemName}
              </p:column>
@@ -140,11 +120,10 @@
 			</p:column>
 			
 			<p:column>
-               #{loiLoaItem.scRequestItem.uom.uomName}
+                  #{loiLoaItem.scRequestItem.uom.uomName}
             </p:column>
             
-            
-            <p:column  style="width:10%;text-align:right;" rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
+            <p:column  style="width:10%;text-align:right;">
 				<h:outputText value="#{loiLoaItem.unitPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -153,7 +132,7 @@
 				</f:facet>	
 			</p:column>
 
-			<p:column style="width:7%;text-align:right;" rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
+			<p:column style="width:7%;text-align:right;">
 				<h:outputText value="#{loiLoaItem.subTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -165,59 +144,6 @@
 				</f:facet>
 			</p:column>
             
-
-			<p:column style="width:10%; text-align:right;"
-				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<h:outputText value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" />
-					
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.total']}" />
-				</f:facet>
-			</p:column>
-
-			<p:column style="width:10%; text-align:right;"
-				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				  <h:outputText value="#{loiLoaItem.offeredPriceSubTotal}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				  </h:outputText>
-				
-				<f:facet name="footer">
-					<h:outputText
-						value="#{lOIDetailBackingBean.managedBean.scLoi.offeredPriceTotal}">
-						 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</f:facet>
-			</p:column>
-
-			<p:column style="width:10%; text-align:right;"
-				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<p:inputText size="4" value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" style="text-align:right;" disabled="true" rendered="#{isBiddingAward}">
-				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				
-				<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" rendered="#{!isBiddingAward}">
-				 <p:ajax event="blur" partialSubmit="true" process="@form" update="@all" listener="#{lOIDetailBackingBean.priceKeyInEvent()}"/>
-				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</p:inputText>
-				
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.sc.total']}" />
-				</f:facet>
-			</p:column>
-			
-			<p:column style="width:10%; text-align:right;"
-				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<h:outputText value="#{loiLoaItem.afterNegoSubTotal}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				  </h:outputText>
-
-				<f:facet name="footer">
-					<h:outputText
-						value="#{lOIDetailBackingBean.managedBean.scLoi.afterNegoTotal}">
-						 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</f:facet>
-			</p:column>
 		</p:dataTable>
 
 	</p:panel>
