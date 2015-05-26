@@ -226,8 +226,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 						BigDecimal estimatedCost = new BigDecimal(0);
 						if (CollectionUtils.isNotEmpty(
 								bidScheduleList.get(0).getScBidItems())) {
-							ScBidItem bidItem = bidScheduleList.get(0).getScBidItems().get(0);
-							estimatedCost = bidItem.getEstimatedCost();
+							for (ScBidItem bidItem : bidScheduleList.get(0).getScBidItems()) {
+								if (bidItem.getEstimatedCost() != null) {
+									estimatedCost = estimatedCost.add(bidItem.getEstimatedCost());
+								}
+							}
 						}
 						
 						bidReqDTO.setBidScheduleId(bidScheduleId);
@@ -242,14 +245,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 							getManagedBean().setBiddingPackagePriceList(
 									biddingPackagePriceList);
 							
-							BigDecimal bumiSuppLowestOfferedPrice = new BigDecimal(1);
+							BigDecimal bumiSuppLowestOfferedPrice = null;
+							BigDecimal lowestNonBumiOfferedPrice = null;
 							
 							// Set lowest non-bumi offered price
 							if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
 								List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
+								List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
 								for (BidPackageBean packageBean : biddingPackagePriceList) {
 									if (packageBean.getScBidSupplier().getSmSupplier().isBumi()) {
 										bumiPriceList.add(packageBean.getBidPriceTotal());
+									} else {
+										nonBumiPriceList.add(packageBean.getBidPriceTotal());
 									}
 									String supplierName = getSupplierNameById(
 											packageBean.getScBidSupplier().getSmSupplier().getSupplierId());
@@ -259,9 +266,20 @@ public class SupplierFinalizationBiddingBackingBean extends
 								if (CollectionUtils.isNotEmpty(bumiPriceList)) {
 									Collections.sort(bumiPriceList);
 									bumiSuppLowestOfferedPrice = bumiPriceList.get(0);
+								} 
+								if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
+									Collections.sort(nonBumiPriceList);
+									lowestNonBumiOfferedPrice = nonBumiPriceList.get(0);
 								}
 							}
+							
 							getManagedBean().setBumiSuppLowestOfferedPrice(bumiSuppLowestOfferedPrice);
+							getManagedBean().setLowestNonBumiOfferedPrice(lowestNonBumiOfferedPrice);
+							
+							if (bumiSuppLowestOfferedPrice != null && 
+										lowestNonBumiOfferedPrice != null) {
+								getManagedBean().setBumiAndNonBumiCombination(true);
+							}
 						}
 					}
 				}
@@ -298,7 +316,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
 
 			BiddingReqDTO reqDTO = new BiddingReqDTO();
-			reqDTO.setBidItemId(bidItem.getBidItemId());
+			reqDTO.setBidItemId(bidItem.getScRequestItem()
+					.getRequestNoteItemId());
 			reqDTO.setScBidSchedule(bidItem.getScBidSchedule());
 
 			BiddingResDTO resDTO = biddingSO

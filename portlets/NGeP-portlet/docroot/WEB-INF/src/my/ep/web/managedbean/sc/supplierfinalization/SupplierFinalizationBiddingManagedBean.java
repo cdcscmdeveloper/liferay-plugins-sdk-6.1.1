@@ -86,6 +86,8 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	
 	private BigDecimal estimatedCost;
 	
+	private boolean isBumiAndNonBumiCombination = false;
+	
 	/**
 	 * @return the onlineBiddingActiveIndex
 	 */
@@ -530,6 +532,21 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setEstimatedCost(BigDecimal estimatedCost) {
 		this.estimatedCost = estimatedCost;
+	}
+	
+	/**
+	 * @return the isBumiAndNonBumiCombination
+	 */
+	public boolean isBumiAndNonBumiCombination() {
+		return isBumiAndNonBumiCombination;
+	}
+	
+	/**
+	 * @param isBumiAndNonBumiCombination 
+	 * 				the isBumiAndNonBumiCombination to set
+	 */
+	public void setBumiAndNonBumiCombination(boolean isBumiAndNonBumiCombination) {
+		this.isBumiAndNonBumiCombination = isBumiAndNonBumiCombination;
 	}
 	
 }
