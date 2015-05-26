@@ -488,6 +488,9 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 	private int oneTierFinancialActiveIndex;
 	private BigDecimal finSpecZoneEstimatedPrice;
+	private List<TplSpecQuestion> sampleItemSpecifications;
+	private String itemName;
+	
 
 	/**
 	 * Gets the today.
@@ -3203,6 +3206,35 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinSpecZoneEstimatedPrice(BigDecimal finSpecZoneEstimatedPrice) {
 		this.finSpecZoneEstimatedPrice = finSpecZoneEstimatedPrice;
+	}
+
+	/**
+	 * @return the sampleItemSpecifications
+	 */
+	public List<TplSpecQuestion> getSampleItemSpecifications() {
+		return sampleItemSpecifications;
+	}
+
+	/**
+	 * @param sampleItemSpecifications the sampleItemSpecifications to set
+	 */
+	public void setSampleItemSpecifications(
+			List<TplSpecQuestion> sampleItemSpecifications) {
+		this.sampleItemSpecifications = sampleItemSpecifications;
+	}
+
+	/**
+	 * @return the itemName
+	 */
+	public String getItemName() {
+		return itemName;
+	}
+
+	/**
+	 * @param itemName the itemName to set
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
 	}
 
 }
