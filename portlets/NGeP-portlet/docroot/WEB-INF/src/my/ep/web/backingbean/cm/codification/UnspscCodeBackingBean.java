@@ -78,7 +78,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "unspscCodeBackingBean")
 @RequestScoped
 public class UnspscCodeBackingBean extends
-		BaseBackingBean<UnspscCodeManagedBean> {
+BaseBackingBean<UnspscCodeManagedBean> {
 
 	private static Logger log = Logger.getLogger(UnspscCodeBackingBean.class);
 
@@ -126,13 +126,13 @@ public class UnspscCodeBackingBean extends
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("CD_COMMITTEE");
 	}
-	
+
 	public boolean isSupplierTemp() {
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser(RoleCode.SUPPLIER_TEMP.value());
 	}
-	
-	
+
+
 
 	public boolean isSupplierUserOrTempSupplierAdmin() {
 		FacesScopes fs = new FacesScopes();
@@ -190,9 +190,9 @@ public class UnspscCodeBackingBean extends
 				log.info("getSmSupplier: "
 						+ smResDTO.getResultBean().getResultList().get(0));
 				this.getManagedBean()
-						.getRequestCode()
-						.setSmSupplier(
-								smResDTO.getResultBean().getResultList().get(0));
+				.getRequestCode()
+				.setSmSupplier(
+						smResDTO.getResultBean().getResultList().get(0));
 
 				reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
 
@@ -231,26 +231,26 @@ public class UnspscCodeBackingBean extends
 					reqDTO.setTrackingStatus(true);
 					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
-										
-                    if(resDTO.isSuccessful()){
-					FacesContext facesContext = FacesContext
-							.getCurrentInstance();
-					facesContext
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_INFO,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.INFO_710013, new String[] {resDTO.getRequestCode().getDocNo()},
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
-					log.debug("***************BB end*****************");
-					// return "unspscRequestForm";
-					return "BPMtesting";
-                    }
+
+					if(resDTO.isSuccessful()){
+						FacesContext facesContext = FacesContext
+								.getCurrentInstance();
+						facesContext
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+										.getMessage(
+												MessageConst.INFO_710013, new String[] {resDTO.getRequestCode().getDocNo()},
+												MessageUtils.BUNDLE_COMMON_MESSAGES,
+												new FacesScopes()
+												.getUserLocale())));
+						log.debug("***************BB end*****************");
+						// return "unspscRequestForm";
+						return "BPMtesting";
+					}
 				} else {
 					log.info("***update***");
 					resDTO = unspscSO.updateCodificationRequest(reqDTO);
@@ -266,7 +266,7 @@ public class UnspscCodeBackingBean extends
 									new String[] {resDTO.getRequestCode().getDocNo()},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-			
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			throw new EpException(MessageConst.EP_MAJ_00001,
@@ -302,8 +302,8 @@ public class UnspscCodeBackingBean extends
 			reqDTO.setOutCome(action);
 			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
 
-			if (action.equalsIgnoreCase("RECOMMEND TO SUPPLIER")) {
-				
+			if (action.equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")) {
+
 				if (!(this.getManagedBean().getRequestCode()
 						.getCmRecommendCodes() != null && this.getManagedBean()
 						.getRequestCode().getCmRecommendCodes().size() > 0)) {
@@ -312,17 +312,17 @@ public class UnspscCodeBackingBean extends
 					FacesContext facesContext = FacesContext
 							.getCurrentInstance();
 					facesContext
-							.addMessage(
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_715005,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+									MessageUtils
+									.getMessage(
+											MessageConst.ERROR_715005,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+											.getUserLocale())));
 
 					return "reviewUnspscCode";
 				}
@@ -334,12 +334,12 @@ public class UnspscCodeBackingBean extends
 							.getRequestCode());					
 
 				}
-				
+
 			}
 
 			System.out.println("size:"
 					+ this.getManagedBean().getRequestCode()
-							.getCmRecommendCodes().size());
+					.getCmRecommendCodes().size());
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 
 			CodificationResDTO resDTO = null;
@@ -365,8 +365,8 @@ public class UnspscCodeBackingBean extends
 						+ reqDTO.getRequestCode().getCmRecommendCodes().size());
 				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
 				{	log.info("tracking diary for status:bpmTesting");			
-					reqDTO.setTrackingStatus(true);
-					UNSPSCCodeRequestReviewByUser(reqDTO,face,action);					
+				reqDTO.setTrackingStatus(true);
+				UNSPSCCodeRequestReviewByUser(reqDTO,face,action);					
 				}
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			}
@@ -383,9 +383,9 @@ public class UnspscCodeBackingBean extends
 			ex.printStackTrace();
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext
-					.addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"BPM  ERROR", ex.getMessage()));
+			.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"BPM  ERROR", ex.getMessage()));
 
 			return "reviewUnspscCode";
 		}
@@ -393,7 +393,7 @@ public class UnspscCodeBackingBean extends
 		return "BPMtesting";
 
 	}
-	
+
 	public void UNSPSCCodeRequestReviewByUser(CodificationReqDTO reqDTO,FacesScopes face,String action){     
 		if(action.equalsIgnoreCase("SUBMIT")){
 			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
@@ -422,13 +422,13 @@ public class UnspscCodeBackingBean extends
 		try {
 
 			System.out
-					.println("this.getManagedBean().getRequestCode().getCmRecommendCodes().size()"
-							+ this.getManagedBean().getRequestCode()
-									.getCmRecommendCodes().size());
+			.println("this.getManagedBean().getRequestCode().getCmRecommendCodes().size()"
+					+ this.getManagedBean().getRequestCode()
+					.getCmRecommendCodes().size());
 			if (this.getManagedBean().getRequestCode().getCmRecommendCodes()
 					.size() > 1) {
 				System.out
-						.println("***************more than 1*****************");
+				.println("***************more than 1*****************");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 
 				facesContext.addMessage(
@@ -465,11 +465,11 @@ public class UnspscCodeBackingBean extends
 			log.info("***update***");
 			System.out.println("size:"
 					+ reqDTO.getRequestCode().getCmRecommendCodes().size());
-			
+
 			log.info("tracking diary for Catalog_Admin:selectSubmitRecommend");
 			reqDTO.setTrackingStatus(true);
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, new PmStatus()));
-			
+
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -483,9 +483,9 @@ public class UnspscCodeBackingBean extends
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext
-					.addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"BPM  ERROR", ex.getMessage()));
+			.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"BPM  ERROR", ex.getMessage()));
 
 			return "selectRecommendUnspscCode";
 		}
@@ -527,9 +527,9 @@ public class UnspscCodeBackingBean extends
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext
-					.addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"BPM  ERROR", ex.getMessage()));
+			.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"BPM  ERROR", ex.getMessage()));
 
 			return "reviewDeleteExtension";
 		}
@@ -825,7 +825,7 @@ public class UnspscCodeBackingBean extends
 
 		if (this.getManagedBean().getRequestCode().getCmRecommendCodes() != null
 				&& this.getManagedBean().getRequestCode().getCmRecommendCodes()
-						.size() > 0) {
+				.size() > 0) {
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 
@@ -880,25 +880,25 @@ public class UnspscCodeBackingBean extends
 				if (this.getManagedBean().getSelectedLovUnspscSegment()
 						.getUnspscCode().isEmpty()
 						|| this.getManagedBean().getSelectedLovUnspscfamily()
-								.getUnspscCode().isEmpty()
+						.getUnspscCode().isEmpty()
 						|| this.getManagedBean().getSelectedLovUnspscClass()
-								.getUnspscCode().isEmpty()
+						.getUnspscCode().isEmpty()
 						|| this.getManagedBean().getSelectedLovUnspsc()
-								.getUnspscCode().isEmpty()) {
+						.getUnspscCode().isEmpty()) {
 
 					FacesContext
-							.getCurrentInstance()
-							.addMessage(
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_715002,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+									MessageUtils
+									.getMessage(
+											MessageConst.ERROR_715002,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+											.getUserLocale())));
 
 					return "reviewBeforeCreateTempCode";
 
@@ -927,7 +927,7 @@ public class UnspscCodeBackingBean extends
 							.getSelectedLovUnspscSegment().getUnspscCode());
 					resDTO = unspscSO.searchUnspscObj(reqDTO);
 					if (resDTO.getUnspscObj() == null) {// so its new unspsc,
-														// save it
+						// save it
 						CmUnspsc unspsc = new CmUnspsc();
 						unspsc.setUnspscCode(this.getManagedBean()
 								.getSelectedLovUnspscSegment().getUnspscCode());
@@ -950,10 +950,10 @@ public class UnspscCodeBackingBean extends
 						.isBrandNew()) {
 					CmUnspsc unspsc = new CmUnspsc();
 					System.out
-							.println("this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()"
-									+ this.getManagedBean()
-											.getSelectedLovUnspscfamily()
-											.getUnspscCode());
+					.println("this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()"
+							+ this.getManagedBean()
+							.getSelectedLovUnspscfamily()
+							.getUnspscCode());
 					unspsc.setUnspscCode(this.getManagedBean()
 							.getSelectedLovUnspscfamily().getUnspscCode());
 					unspsc.setUnspscKey(this.getManagedBean()
@@ -975,7 +975,7 @@ public class UnspscCodeBackingBean extends
 							.getSelectedLovUnspscfamily().getUnspscCode());
 					resDTO = unspscSO.searchUnspscObj(reqDTO);
 					if (resDTO.getUnspscObj() == null) {// so its new unspsc,
-														// save it
+						// save it
 						CmUnspsc unspsc = new CmUnspsc();
 						unspsc.setUnspscCode(this.getManagedBean()
 								.getSelectedLovUnspscfamily().getUnspscCode());
@@ -1000,10 +1000,10 @@ public class UnspscCodeBackingBean extends
 						.isBrandNew()) {
 					CmUnspsc unspsc = new CmUnspsc();
 					System.out
-							.println("this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()"
-									+ this.getManagedBean()
-											.getSelectedLovUnspscClass()
-											.getUnspscCode());
+					.println("this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()"
+							+ this.getManagedBean()
+							.getSelectedLovUnspscClass()
+							.getUnspscCode());
 					unspsc.setUnspscCode(this.getManagedBean()
 							.getSelectedLovUnspscClass().getUnspscCode());
 					unspsc.setUnspscKey(this.getManagedBean()
@@ -1025,7 +1025,7 @@ public class UnspscCodeBackingBean extends
 							.getSelectedLovUnspscClass().getUnspscCode());
 					resDTO = unspscSO.searchUnspscObj(reqDTO);
 					if (resDTO.getUnspscObj() == null) {// so its new unspsc,
-														// save it
+						// save it
 						CmUnspsc unspsc = new CmUnspsc();
 						unspsc.setUnspscCode(this.getManagedBean()
 								.getSelectedLovUnspscClass().getUnspscCode());
@@ -1046,9 +1046,9 @@ public class UnspscCodeBackingBean extends
 				}
 				// //start commodity
 				System.out
-						.println(".....................this.getManagedBean().getSelectedLovUnspsc().isBrandNew()="
-								+ this.getManagedBean().getSelectedLovUnspsc()
-										.isBrandNew());
+				.println(".....................this.getManagedBean().getSelectedLovUnspsc().isBrandNew()="
+						+ this.getManagedBean().getSelectedLovUnspsc()
+						.isBrandNew());
 				if (this.getManagedBean().getSelectedLovUnspsc().isBrandNew()) {
 					CmUnspsc unspsc = new CmUnspsc();
 					unspsc.setUnspscCode(this.getManagedBean()
@@ -1072,7 +1072,7 @@ public class UnspscCodeBackingBean extends
 							.getSelectedLovUnspsc().getUnspscCode());
 					resDTO = unspscSO.searchUnspscObj(reqDTO);
 					if (resDTO.getUnspscObj() == null) {// so its new unspsc,
-														// save it
+						// save it
 						CmUnspsc unspsc = new CmUnspsc();
 						unspsc.setUnspscCode(this.getManagedBean()
 								.getSelectedLovUnspsc().getUnspscCode());
@@ -1092,40 +1092,40 @@ public class UnspscCodeBackingBean extends
 				}
 
 				System.out
-						.println("...................	reqDTO.getCommodityList().size="
-								+ reqDTO.getCommodityList().size());
+				.println("...................	reqDTO.getCommodityList().size="
+						+ reqDTO.getCommodityList().size());
 
 				String check68 = (String) String.valueOf(
 						this.getManagedBean().getSelectedLovUnspsc()
-								.getUnspscCode()).substring(6, 8);
+						.getUnspscCode()).substring(6, 8);
 				String check46 = (String) String.valueOf(
 						this.getManagedBean().getSelectedLovUnspscClass()
-								.getUnspscCode()).substring(4, 6);
+						.getUnspscCode()).substring(4, 6);
 				String check24 = (String) String.valueOf(
 						this.getManagedBean().getSelectedLovUnspscfamily()
-								.getUnspscCode()).substring(2, 4);
+						.getUnspscCode()).substring(2, 4);
 				String check02 = (String) String.valueOf(
 						this.getManagedBean().getSelectedLovUnspscSegment()
-								.getUnspscCode()).substring(0, 2);
+						.getUnspscCode()).substring(0, 2);
 
 				String tempCode = check02 + check24 + check46 + check68;
 				System.out.println("tempCode:" + tempCode);
 				this.getManagedBean().getRequestCode().setTempCode(tempCode);
 				this.getManagedBean()
-						.getRequestCode()
-						.setTempTitle(
-								this.getManagedBean().getSelectedLovUnspsc()
-										.getUnspscTitle());
+				.getRequestCode()
+				.setTempTitle(
+						this.getManagedBean().getSelectedLovUnspsc()
+						.getUnspscTitle());
 
 				if (bb.productCode(tempCode)) {
 
 					this.getManagedBean().getRequestCode().setRequestType(true);
 					this.getManagedBean().getRequestCode()
-							.setRequestBrand(true);
+					.setRequestBrand(true);
 					this.getManagedBean().getRequestCode()
-							.setRequestColor(true);
+					.setRequestColor(true);
 					this.getManagedBean().getRequestCode()
-							.setRequestMeasurement(true);
+					.setRequestMeasurement(true);
 				}
 
 				reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
@@ -1145,30 +1145,30 @@ public class UnspscCodeBackingBean extends
 								.getUnspscTitle() != null && this
 								.getManagedBean().getSelectedLovUnspscClass()
 								.getUnspscTitle().trim().length() > 0)
-						|| !(this.getManagedBean().getSelectedLovUnspscfamily()
-								.getUnspscTitle() != null && this
-								.getManagedBean().getSelectedLovUnspscfamily()
-								.getUnspscTitle().trim().length() > 0)
-						|| !(this.getManagedBean()
-								.getSelectedLovUnspscSegment().getUnspscTitle() != null && this
-								.getManagedBean().getSelectedLovUnspscSegment()
-								.getUnspscTitle().trim().length() > 0)) {
+								|| !(this.getManagedBean().getSelectedLovUnspscfamily()
+										.getUnspscTitle() != null && this
+										.getManagedBean().getSelectedLovUnspscfamily()
+										.getUnspscTitle().trim().length() > 0)
+										|| !(this.getManagedBean()
+												.getSelectedLovUnspscSegment().getUnspscTitle() != null && this
+												.getManagedBean().getSelectedLovUnspscSegment()
+												.getUnspscTitle().trim().length() > 0)) {
 
 					FacesContext facesContext = FacesContext
 							.getCurrentInstance();
 
 					facesContext
-							.addMessage(
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_715008,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+									MessageUtils
+									.getMessage(
+											MessageConst.ERROR_715008,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+											.getUserLocale())));
 
 					return "reviewBeforeCreateTempCode";
 
@@ -1189,7 +1189,7 @@ public class UnspscCodeBackingBean extends
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
-			} else if (outcome.equalsIgnoreCase("RECOMMEND TO SUPPLIER")) {
+			} else if (outcome.equalsIgnoreCase("RECOMMEND_TO_SUPPLIER")) {
 
 				if (!(this.getManagedBean().getRequestCode()
 						.getCmRecommendCodes() != null && this.getManagedBean()
@@ -1200,17 +1200,17 @@ public class UnspscCodeBackingBean extends
 							.getCurrentInstance();
 
 					facesContext
-							.addMessage(
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
 									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_ERROR,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.ERROR_715003,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+									MessageUtils
+									.getMessage(
+											MessageConst.ERROR_715003,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+											.getUserLocale())));
 
 					return "reviewBeforeCreateTempCode";
 				}
@@ -1227,7 +1227,7 @@ public class UnspscCodeBackingBean extends
 				reqDTO.setToken(token);
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 				reqDTO.setOutCome(outcome);
-                log.info("tracking diary for UNSPSC Code Recomended to Supplier by Codification_Officer");
+				log.info("tracking diary for UNSPSC Code Recomended to Supplier by Codification_Officer");
 				reqDTO.setTrackingStatus(true);
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, new PmStatus()));	
 
@@ -1302,26 +1302,26 @@ public class UnspscCodeBackingBean extends
 									new FacesScopes().getUserLocale())));
 			return false;
 		}
-       if(!family.substring(4).equals("0000")){
-    	   FacesContext.getCurrentInstance().addMessage(
+		if(!family.substring(4).equals("0000")){
+			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_716013,
 									new String[] { ResourceBundleUtils.getMessage("lbl.cm.family",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-    	   return false;
+			return false;
 		}
-       if(!classC.substring(6).equals("00")){
-    	   FacesContext.getCurrentInstance().addMessage(
+		if(!classC.substring(6).equals("00")){
+			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 							MessageUtils.getMessage(MessageConst.ERROR_716013,
 									new String[] { ResourceBundleUtils.getMessage("lbl.cm.class",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()) },
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-    	   return false;
-       }
+			return false;
+		}
 		// checking for not redundant segment, familiy, class and commodity
 		segmentIdentifier = segmentIdentifier + "00";
 		if (segmentIdentifier.equals(familyIdentifier)) {
@@ -1477,15 +1477,15 @@ public class UnspscCodeBackingBean extends
 		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
 
 		this.getManagedBean()
-				.getRequestExtCode()
-				.setTempCode(
-						this.getManagedBean().getSelectedLovUnspsc()
-								.getUnspscCode());
+		.getRequestExtCode()
+		.setTempCode(
+				this.getManagedBean().getSelectedLovUnspsc()
+				.getUnspscCode());
 		this.getManagedBean()
-				.getRequestExtCode()
-				.setTempTitle(
-						this.getManagedBean().getSelectedLovUnspsc()
-								.getUnspscTitle());
+		.getRequestExtCode()
+		.setTempTitle(
+				this.getManagedBean().getSelectedLovUnspsc()
+				.getUnspscTitle());
 		this.getManagedBean().setTypeList(resDTO.getCommodityObj().getCmType());
 		this.getManagedBean().setBrandList(
 				resDTO.getCommodityObj().getCmBrand());
@@ -1496,15 +1496,15 @@ public class UnspscCodeBackingBean extends
 
 		this.getManagedBean().setRequestExtCode(new CmRequestCode());
 		this.getManagedBean()
-				.getRequestExtCode()
-				.setTempCode(
-						this.getManagedBean().getSelectedLovUnspsc()
-								.getUnspscCode());
+		.getRequestExtCode()
+		.setTempCode(
+				this.getManagedBean().getSelectedLovUnspsc()
+				.getUnspscCode());
 		this.getManagedBean()
-				.getRequestExtCode()
-				.setTempTitle(
-						this.getManagedBean().getSelectedLovUnspsc()
-								.getUnspscTitle());
+		.getRequestExtCode()
+		.setTempTitle(
+				this.getManagedBean().getSelectedLovUnspsc()
+				.getUnspscTitle());
 		clearForm();
 		this.getManagedBean().setTypeDisable(true);
 		this.getManagedBean().setBrandDisable(true);
@@ -1549,33 +1549,33 @@ public class UnspscCodeBackingBean extends
 
 		for (CmRequestCode code : this.getManagedBean().getRequestExtCodeList()) {
 			code.setSmSupplier(smResDTO.getResultBean().getResultList().get(0));			
-			
-		    }
+
+		}
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);		
 		log.info("Tracking diary for Extension Code---submitToBPM()");			
-			if(face.hasRoleUser(CmConst.CM_ADMIN)){
-				reqDTO.setTrackingStatus(true);
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST_ADMIN, new PmStatus()));	
+		if(face.hasRoleUser(CmConst.CM_ADMIN)){
+			reqDTO.setTrackingStatus(true);
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST_ADMIN, new PmStatus()));	
 
-			}
-			else {
-				reqDTO.setTrackingStatus(true);
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));				
-			}		
+		}
+		else {
+			reqDTO.setTrackingStatus(true);
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));				
+		}		
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
-		
-        if(resDTO.isSuccessful()){
-	     	facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710013,new String[] {resDTO.getSaveExtList().get(0).getDocNo()},
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-        }
-        
+
+		if(resDTO.isSuccessful()){
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+							.getMessage(MessageConst.INFO_710013,new String[] {resDTO.getSaveExtList().get(0).getDocNo()},
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
+
 		return "BPMtesting";
 	}
 
@@ -1592,7 +1592,7 @@ public class UnspscCodeBackingBean extends
 		if (!this.getManagedBean().getRequestExtCode().isRequestType()
 				&& !this.getManagedBean().getRequestExtCode().isRequestBrand()
 				&& !this.getManagedBean().getRequestExtCode()
-						.isRequestMeasurement()
+				.isRequestMeasurement()
 				&& !this.getManagedBean().getRequestExtCode().isRequestColor()) {
 			throw new EpException(MessageConst.ERROR_716010);
 
@@ -1600,25 +1600,25 @@ public class UnspscCodeBackingBean extends
 		// //////////checking for redundancy
 		if (this.getManagedBean().getRequestExtCode().isRequestType()
 				&& !this.getManagedBean().getRequestExtCode().getTypeName()
-						.isEmpty()) {
+				.isEmpty()) {
 			checkingTypeRedundency(this.getManagedBean().getRequestExtCode()
 					.getTypeName());
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestBrand()
 				&& !this.getManagedBean().getRequestExtCode().getBrandName()
-						.isEmpty()) {
+				.isEmpty()) {
 			checkingBrandRedundency(this.getManagedBean().getRequestExtCode()
 					.getBrandName());
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestMeasurement()
 				&& !this.getManagedBean().getRequestExtCode()
-						.getMeasurementName().isEmpty()) {
+				.getMeasurementName().isEmpty()) {
 			checkingMeasurmentRedundency(this.getManagedBean()
 					.getRequestExtCode().getMeasurementName());
 		}
 		if (this.getManagedBean().getRequestExtCode().isRequestColor()
 				&& !this.getManagedBean().getRequestExtCode().getColorName()
-						.isEmpty()) {
+				.isEmpty()) {
 			checkingColorRedundency(this.getManagedBean().getRequestExtCode()
 					.getColorName());
 		}
@@ -1665,15 +1665,15 @@ public class UnspscCodeBackingBean extends
 
 			if (!this.getManagedBean().getRequestExtCode().isRequestType()) {
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setTypeName(
-								this.getManagedBean().getSelectedType()
-										.getTypeName());
+				.getRequestExtCode()
+				.setTypeName(
+						this.getManagedBean().getSelectedType()
+						.getTypeName());
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setTypeId(
-								this.getManagedBean().getSelectedType()
-										.getTypeId());
+				.getRequestExtCode()
+				.setTypeId(
+						this.getManagedBean().getSelectedType()
+						.getTypeId());
 			}
 		}
 		// brand
@@ -1692,15 +1692,15 @@ public class UnspscCodeBackingBean extends
 
 			if (!this.getManagedBean().getRequestExtCode().isRequestBrand()) {
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setBrandName(
-								this.getManagedBean().getSelectedBrand()
-										.getBrandName());
+				.getRequestExtCode()
+				.setBrandName(
+						this.getManagedBean().getSelectedBrand()
+						.getBrandName());
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setBrandId(
-								this.getManagedBean().getSelectedBrand()
-										.getBrandId());
+				.getRequestExtCode()
+				.setBrandId(
+						this.getManagedBean().getSelectedBrand()
+						.getBrandId());
 			}
 		}
 		// color
@@ -1718,15 +1718,15 @@ public class UnspscCodeBackingBean extends
 		} else {
 			if (!this.getManagedBean().getRequestExtCode().isRequestColor()) {
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setColorName(
-								this.getManagedBean().getSelectedColor()
-										.getColorName());
+				.getRequestExtCode()
+				.setColorName(
+						this.getManagedBean().getSelectedColor()
+						.getColorName());
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setColorId(
-								this.getManagedBean().getSelectedColor()
-										.getColorId());
+				.getRequestExtCode()
+				.setColorId(
+						this.getManagedBean().getSelectedColor()
+						.getColorId());
 			}
 		}
 		// measurement
@@ -1745,20 +1745,20 @@ public class UnspscCodeBackingBean extends
 			if (!this.getManagedBean().getRequestExtCode()
 					.isRequestMeasurement()) {
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setMeasurementId(
-								this.getManagedBean().getSelectedMeasurement()
-										.getMeasurementId());
+				.getRequestExtCode()
+				.setMeasurementId(
+						this.getManagedBean().getSelectedMeasurement()
+						.getMeasurementId());
 				this.getManagedBean()
-						.getRequestExtCode()
-						.setMeasurementName(
-								this.getManagedBean().getSelectedMeasurement()
-										.getMeasurementName());
+				.getRequestExtCode()
+				.setMeasurementName(
+						this.getManagedBean().getSelectedMeasurement()
+						.getMeasurementName());
 			}
 		}
 
 		this.getManagedBean().getRequestExtCodeList()
-				.add(this.getManagedBean().getRequestExtCode());
+		.add(this.getManagedBean().getRequestExtCode());
 		clearForm();
 
 		RequestContext.getCurrentInstance().execute("extensionPopUp.hide();");
@@ -1924,7 +1924,7 @@ public class UnspscCodeBackingBean extends
 			log.info("Tracking diary for Extension Code Published by Code_Officer");
 			reqDTO.setTrackingStatus(true);
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_PUBLISHED_CODE_OFFICER, new PmStatus()));
-			
+
 			resDTO = unspscSO.publishExtensionRequest(reqDTO);
 
 		}
@@ -1946,25 +1946,25 @@ public class UnspscCodeBackingBean extends
 					if (!isCodeAdmin()) {
 						if (code.isRequestType()
 								&& (code.getTypeRemarkII() != null && code
-										.getTypeRemarkII().trim().length() > 0)) {
+								.getTypeRemarkII().trim().length() > 0)) {
 							checkingTypeRedundency(code.getReviewedTypeNameII());
 						}
 						if (code.isRequestBrand()
 								&& (code.getBrandRemarkII() != null && code
-										.getBrandRemarkII().trim().length() > 0)) {
+								.getBrandRemarkII().trim().length() > 0)) {
 							checkingBrandRedundency(code
 									.getReviewedBrandNameII());
 						}
 						if (code.isRequestMeasurement()
 								&& (code.getMeasurementRemarkII() != null && code
-										.getMeasurementRemarkII().trim()
-										.length() > 0)) {
+								.getMeasurementRemarkII().trim()
+								.length() > 0)) {
 							checkingMeasurmentRedundency(code
 									.getReviewedMeasurementNameII());
 						}
 						if (code.isRequestColor()
 								&& (code.getColorRemarkII() != null && code
-										.getColorRemarkII().trim().length() > 0)) {
+								.getColorRemarkII().trim().length() > 0)) {
 							checkingColorRedundency(code
 									.getReviewedColorNameII());
 						}
@@ -1973,11 +1973,11 @@ public class UnspscCodeBackingBean extends
 					if ((code.getTypeRemarkII() != null && code
 							.getTypeRemarkII().trim().length() > 0)
 							|| (code.getBrandRemarkII() != null && code
-									.getBrandRemarkII().trim().length() > 0)
+							.getBrandRemarkII().trim().length() > 0)
 							|| (code.getMeasurementRemarkII() != null && code
-									.getMeasurementRemarkII().trim().length() > 0)
+							.getMeasurementRemarkII().trim().length() > 0)
 							|| (code.getColorRemarkII() != null && code
-									.getColorRemarkII().trim().length() > 0)) {
+							.getColorRemarkII().trim().length() > 0)) {
 						System.out.println("remark added!!");
 						code.setRemarkRequiredII(false);
 
@@ -1998,34 +1998,34 @@ public class UnspscCodeBackingBean extends
 					// //////checking for redundant values
 					if (code.isRequestType()
 							&& (code.getTypeRemark() != null && code
-									.getTypeRemark().trim().length() > 0)) {
+							.getTypeRemark().trim().length() > 0)) {
 						checkingTypeRedundency(code.getReviewedTypeName());
 					}
 					if (code.isRequestBrand()
 							&& (code.getBrandRemark() != null && code
-									.getBrandRemark().trim().length() > 0)) {
+							.getBrandRemark().trim().length() > 0)) {
 						checkingBrandRedundency(code.getReviewedBrandName());
 					}
 					if (code.isRequestMeasurement()
 							&& (code.getMeasurementRemark() != null && code
-									.getMeasurementRemark().trim().length() > 0)) {
+							.getMeasurementRemark().trim().length() > 0)) {
 						checkingMeasurmentRedundency(code
 								.getReviewedMeasurementName());
 					}
 					if (code.isRequestColor()
 							&& (code.getColorRemark() != null && code
-									.getColorRemark().trim().length() > 0)) {
+							.getColorRemark().trim().length() > 0)) {
 						checkingColorRedundency(code.getReviewedColorName());
 					}
 					// //////////////////////////////////
 					if ((code.getTypeRemark() != null && code.getTypeRemark()
 							.trim().length() > 0)
 							|| (code.getBrandRemark() != null && code
-									.getBrandRemark().trim().length() > 0)
+							.getBrandRemark().trim().length() > 0)
 							|| (code.getMeasurementRemark() != null && code
-									.getMeasurementRemark().trim().length() > 0)
+							.getMeasurementRemark().trim().length() > 0)
 							|| (code.getColorRemark() != null && code
-									.getColorRemark().trim().length() > 0)) {
+							.getColorRemark().trim().length() > 0)) {
 						System.out.println("remark added!!");
 						code.setRemarkRequired(false);
 
@@ -2033,8 +2033,8 @@ public class UnspscCodeBackingBean extends
 
 					if (code.isRemarkRequired()) {
 						System.out
-								.println("................test...........code.isRemarkRequired()="
-										+ code.isRemarkRequired());
+						.println("................test...........code.isRemarkRequired()="
+								+ code.isRemarkRequired());
 						throw new EpException(
 								MessageConst.ERROR_716007,
 								new String[] { ResourceBundleUtils
@@ -2042,7 +2042,7 @@ public class UnspscCodeBackingBean extends
 												null,
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
-														.getUserLocale()) });
+												.getUserLocale()) });
 
 						// return "reviewApproveExtensionCode";
 					}
@@ -2051,9 +2051,9 @@ public class UnspscCodeBackingBean extends
 				{   
 					log.info("tracking diary for ExtensionCodeReviewStatus: submitToReviewExt");
 					reqDTO.setTrackingStatus(true);					
-				    getExtensionCodeReviewStatus(reqDTO,face);
+					getExtensionCodeReviewStatus(reqDTO,face);
 				}
-			  
+
 			}
 			resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
@@ -2074,12 +2074,12 @@ public class UnspscCodeBackingBean extends
 		return "BPMtesting";
 	}
 
-	
+
 	public void getExtensionCodeReviewStatus(CodificationReqDTO reqDTO,FacesScopes face){			
 		if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by Catalog_Admin");
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CATALOG_ADMIN, new PmStatus()));
-			}
+		}
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CD_COMMITTE, new PmStatus()));
@@ -2087,10 +2087,10 @@ public class UnspscCodeBackingBean extends
 		else if (face.hasRoleUser(CmConst.EP_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by EP_COMMITTE");
 			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_EP_COMMITTE, new PmStatus()));
-			}
+		}
 	}
-	
-	
+
+
 	public void preRenderExtensionMaintenanceView() {
 
 		System.out.println("**********preRenderExtensionView**************");
@@ -2174,18 +2174,29 @@ public class UnspscCodeBackingBean extends
 		if (unspsc.getItemId() != null && unspsc.getItemId().size() > 0) {
 			for (String itemId : unspsc.getItemId()) {
 				System.out.println("itemId:" + itemId);
-				codeDTO.setRequestId(new Long(itemId));
-				resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
-				this.getManagedBean().getReviewExtCodeList()
-						.add(resDTO.getRequestCode());
 
-				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+				if(itemId!=null && itemId.trim().length()>0){
+
+
+					codeDTO.setRequestId(new Long(itemId));
+					resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+					this.getManagedBean().getReviewExtCodeList()
+					.add(resDTO.getRequestCode());
+
+					this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+				}else{
+					codeDTO.setRequestId(new Long(unspsc.getRequestId()));
+					resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+					this.getManagedBean().getReviewExtCodeList()
+					.add(resDTO.getRequestCode());
+					this.getManagedBean().setRequestCode(resDTO.getRequestCode());
+				}
 			}
 		} else {
 			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
 			resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 			this.getManagedBean().getReviewExtCodeList()
-					.add(resDTO.getRequestCode());
+			.add(resDTO.getRequestCode());
 			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		}
 
@@ -2280,21 +2291,21 @@ public class UnspscCodeBackingBean extends
 		if (res.getTaskName().equalsIgnoreCase("Approve Extension Code")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"reviewApproveExtensionCode.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"reviewApproveExtensionCode.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Endorse Extension Code")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"reviewApproveExtensionCodeII.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Publish Extension Code")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"reviewApproveExtensionCodeII.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Result Notification")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 
@@ -2307,18 +2318,18 @@ public class UnspscCodeBackingBean extends
 
 			if (unspsc.isPublished()) {
 				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, "resultNotification.xhtml");
+				.handleNavigation(fc, null, "resultNotification.xhtml");
 			} else {
 				fc.getApplication()
-						.getNavigationHandler()
-						.handleNavigation(fc, null,
-								"reviewExtensionCodeFlow2.xhtml");
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"reviewExtensionCodeFlow2.xhtml");
 			}
 		} else {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
 		}
 
 		//
@@ -2368,7 +2379,7 @@ public class UnspscCodeBackingBean extends
 				RequestCodeResDTO resDTO = requestSO
 						.retrieveUnspscCodeReview(codeDTO);
 				this.getManagedBean().getReviewExtCodeList()
-						.add(resDTO.getRequestCode());
+				.add(resDTO.getRequestCode());
 				this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 			}
 		} else {
@@ -2376,7 +2387,7 @@ public class UnspscCodeBackingBean extends
 			RequestCodeResDTO resDTO = requestSO
 					.retrieveUnspscCodeReview(codeDTO);
 			this.getManagedBean().getReviewExtCodeList()
-					.add(resDTO.getRequestCode());
+			.add(resDTO.getRequestCode());
 			this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		}
 
@@ -2409,33 +2420,33 @@ public class UnspscCodeBackingBean extends
 		if (res.getTaskName().equalsIgnoreCase("Create Temporary Code")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "reviewBeforeCreateTempCode");
+			.handleNavigation(fc, null, "reviewBeforeCreateTempCode");
 		} else if (res.getTaskName().equalsIgnoreCase("Create Extension Code")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "reviewBeforeCreateExtCode");
+			.handleNavigation(fc, null, "reviewBeforeCreateExtCode");
 		} else if (res.getTaskName().equalsIgnoreCase("Select Recommended")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"selectRecommendUnspscCode.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"selectRecommendUnspscCode.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Publish Extension Code")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"reviewApproveExtensionCodeII.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"reviewApproveExtensionCodeII.xhtml");
 		} else if (res.getTaskName().equalsIgnoreCase("Result Notification")) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
-					.getNavigationHandler()
-					.handleNavigation(fc, null,
-							"unspscResultNotification.xhtml");
+			.getNavigationHandler()
+			.handleNavigation(fc, null,
+					"unspscResultNotification.xhtml");
 		} else {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, "reviewUnspscCode");
+			.handleNavigation(fc, null, "reviewUnspscCode");
 
 		}
 
@@ -2542,15 +2553,15 @@ public class UnspscCodeBackingBean extends
 		CodificationBackingBean codeBB = new CodificationBackingBean();
 
 		this.getManagedBean()
-				.getSelectedLovUnspsc()
-				.setUnspscCode(
-						codeBB.getManagedBean().getSelectedUNSPSCObj()
-								.getUnspscCode());
+		.getSelectedLovUnspsc()
+		.setUnspscCode(
+				codeBB.getManagedBean().getSelectedUNSPSCObj()
+				.getUnspscCode());
 		this.getManagedBean()
-				.getSelectedLovUnspsc()
-				.setUnspscTitle(
-						codeBB.getManagedBean().getSelectedUNSPSCObj()
-								.getUnspscTitle());
+		.getSelectedLovUnspsc()
+		.setUnspscTitle(
+				codeBB.getManagedBean().getSelectedUNSPSCObj()
+				.getUnspscTitle());
 		return "extensionCodeRequestForm?faces-redirect=true";
 	}
 
@@ -2562,14 +2573,14 @@ public class UnspscCodeBackingBean extends
 	public void removeRecommendCode(int index) {
 
 		this.getManagedBean().getRequestCode().getCmRecommendCodes()
-				.remove(index);
+		.remove(index);
 
 	}
 
 	public void removeExtensionRecord() {
 
 		this.getManagedBean().getRequestExtCodeList().remove(0);// there is only
-																// one record
+		// one record
 
 	}
 
@@ -2584,10 +2595,10 @@ public class UnspscCodeBackingBean extends
 		}
 
 		System.out
-				.println("remark.getCreatedUser():" + remark.getCreatedUser());
+		.println("remark.getCreatedUser():" + remark.getCreatedUser());
 
 		this.getManagedBean().getReviewExtCodeList().get(0)
-				.getCmRequestRemarks().add(remark);
+		.getCmRequestRemarks().add(remark);
 
 		for (CmRequestCode code : this.getManagedBean().getReviewExtCodeList()) {
 			code.setRemarkRequired(false);
@@ -2601,7 +2612,7 @@ public class UnspscCodeBackingBean extends
 
 		this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
 		this.getManagedBean().getRequestCode().getCmRecommendCodes()
-				.add(this.getManagedBean().getSelectedRecommendCode());
+		.add(this.getManagedBean().getSelectedRecommendCode());
 	}
 
 	public String requestUnspscCode() {
@@ -2611,7 +2622,7 @@ public class UnspscCodeBackingBean extends
 			this.getManagedBean().getRequestExtCodeList().clear();
 		}
 		this.getManagedBean().getRequestCode().setItemType("P");
-		return "unspscRequestForm";
+		return "unspscRequestForm?faces-redirect=true";
 	}
 
 	public List<CmType> autoCompleteType(String query) {
@@ -2743,7 +2754,7 @@ public class UnspscCodeBackingBean extends
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "unspscRequestFormByMenu");
+		.handleNavigation(fc, null, "unspscRequestFormByMenu");
 	}
 
 	public int productOrServiceOperator() {
@@ -2775,7 +2786,7 @@ public class UnspscCodeBackingBean extends
 												"lbl.cm.type",
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
-														.getUserLocale()) });
+												.getUserLocale()) });
 					}
 				}
 			}
@@ -2800,7 +2811,7 @@ public class UnspscCodeBackingBean extends
 												"lbl.cm.brand",
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
-														.getUserLocale()) });
+												.getUserLocale()) });
 					}
 				}
 			}
@@ -2827,7 +2838,7 @@ public class UnspscCodeBackingBean extends
 												"lbl.cm.measurement",
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
-														.getUserLocale()) });
+												.getUserLocale()) });
 					}
 				}
 			}
@@ -2857,7 +2868,7 @@ public class UnspscCodeBackingBean extends
 												"lbl.cm.color",
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes()
-														.getUserLocale()) });
+												.getUserLocale()) });
 
 					}
 				}
