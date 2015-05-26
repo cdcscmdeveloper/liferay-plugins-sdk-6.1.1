@@ -695,35 +695,49 @@ public class LOIDetailBackingBean extends
 	 */
 	public void onSupplierSelectEvent() {
 		ScLoi scLoi = getManagedBean().getScLoi();
-		boolean isTermPriceFound = false;
-		getManagedBean().setItemDetailsFlag(true);
+		boolean isTermPriceFound =  Boolean.FALSE;
+		getManagedBean().setItemDetailsFlag(Boolean.TRUE);
+
 		isTermPriceFound = checkNegoTermPrice(scLoi);
+		
 		// calc total items in award details
 		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
-			BigDecimal subTotal = null;
-			BigDecimal  totalAmount = BigDecimal.valueOf(0d);
 			BigDecimal  offerPrice = BigDecimal.valueOf(0d);
+			BigDecimal  offeredPriceSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal  offeredPriceAmount = BigDecimal.valueOf(0d);
+
+			BigDecimal  afterNegoSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal  afterNegoTotalAmount = BigDecimal.valueOf(0d);
+
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-				if(isTermPriceFound ){
+				if(isTermPriceFound){
 					getManagedBean().setHideColumnFlag(Boolean.TRUE);
 					if(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null){
 						offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+								offerPrice, scLoiLoaItem.getQty());
+
+						// offered price sub total and total
+						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
 					}
-					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-							offerPrice, scLoiLoaItem.getQty());
 				} else{
 					getManagedBean().setHideColumnFlag(Boolean.FALSE);
-					subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-							scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 				}
-
-				scLoiLoaItem.setSubTotal(subTotal);
-				totalAmount = totalAmount.add(subTotal);
+				afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+				// after nego price sub total and total
+				afterNegoTotalAmount =  afterNegoTotalAmount.add(afterNegoSubTotal);
+				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 			}
-			scLoi.setLoiAmt(totalAmount);
+
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
-			priceKeyInEvent();
+			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
+			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
+			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
+			//priceKeyInEvent();
 		}
 	}
 
@@ -1760,6 +1774,47 @@ public class LOIDetailBackingBean extends
 
 		} finally {
 			//iqtAwardSO = null;
+		}
+
+		return null;
+	}
+	
+	
+	
+	/**
+	 * save LOI list details.
+	 * save - save data into database.
+	 * @param outcome the outcome
+	 * @return the string
+	 */
+	public String savetLoiListAction() {
+		debugLogger("savetLoiListAction");
+
+		try {
+			ScQt scQt = getManagedBean().getScQtFinalization().getScQt();
+
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			reqDTO.setDocType(getManagedBean().getDocType());
+
+			AwardSupplierResDTO resDTO = new AwardSupplierResDTO();
+
+			if (resDTO.isSuccessful()) {
+				renewSesionObject();
+				FacesContext.getCurrentInstance().addMessage(null, 
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_700025,
+								new String[] {
+								getParameterDesc(
+										ParameterTypeConst.DOCUMENT_TYPES,
+										ParameterConst.DOCTYPE_QUOTATION),
+										scQt.getQtNo() },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes()
+						.getUserLocale())));
+
+			}
+
+		} finally {
 		}
 
 		return null;
