@@ -154,22 +154,25 @@ public class ApprovalBackingBean extends
 	 * 
 	 * @return the approval categories
 	 */
-	public SelectItem[] getApprovalCategories() {		
+	public SelectItem[] getApprovalCategories() {
 		List<String> approvalCategories = new ArrayList<String>();
-		//approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_BUDGET);
+		// approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_BUDGET);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_BPK);
-		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
+		approvalCategories
+				.add(ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_PTJ);
-		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
+		approvalCategories
+				.add(ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
 		approvalCategories.add(ParameterConst.APPROVAL_CATEGORY_OTHERS);
-		
+
 		SearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		searchBean.getDataFilterBeans().add(new SearchFilterBean(
-				"pmParameter.parameterCode",
-				SearchOperator.OPERATOR_IN.value(),
-				approvalCategories));
-		
-		return getRadioButtonCodeValuesBySearchBean(ParameterTypeConst.APPROVAL_CATEGORY, searchBean);
+		searchBean
+				.getDataFilterBeans()
+				.add(new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_IN.value(), approvalCategories));
+
+		return getRadioButtonCodeValuesBySearchBean(
+				ParameterTypeConst.APPROVAL_CATEGORY, searchBean);
 	}
 
 	/**
@@ -342,10 +345,9 @@ public class ApprovalBackingBean extends
 
 		if (SCProcessNameConst.APPROVE_BUDGET.equalsIgnoreCase(taskName)) {
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BUDGET;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_BGT_APPROVAL, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.APPROVE_BPK.equalsIgnoreCase(taskName)
@@ -354,12 +356,11 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagBpk());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BPK;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
-			
+
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
 
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
@@ -382,10 +383,9 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagPublication());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_PTJ;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.FC_APPROVE_QT_CHANGE
@@ -395,20 +395,18 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_QUOTATION, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.REVISE_BPK.equalsIgnoreCase(taskName)) {
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagBpk());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_BPK;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_BPK_APPROVAL, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		} else if (SCProcessNameConst.APPROVE_COMMITTEE
@@ -417,10 +415,9 @@ public class ApprovalBackingBean extends
 						.equalsIgnoreCase(taskName)) {
 
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_COMMITTE_APROVAL, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 			List<Long> cmtStatus = new ArrayList<Long>(3);
@@ -507,12 +504,11 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
-			
+
 			if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
 					.equalsIgnoreCase(this.getManagedBean().getQt().getQtType())) {
 				if (null != this.getManagedBean().getQt().getScQtSuppliers()) {
@@ -526,10 +522,9 @@ public class ApprovalBackingBean extends
 			paramTypes = getRequestTypes(((SCQuotationTenderDataType) obj)
 					.getXflagFinalization());
 			approvalCategoryCode = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
-			approvalRequests = getApprovalRequests(qtId,
-					approvalCategoryCode,
+			approvalRequests = getApprovalRequests(qtId, approvalCategoryCode,
 					ParameterConst.DOCTYPE_PCB_APPROVAL, paramTypes);
-			
+
 			this.getManagedBean().setApprovalType(approvalCategoryCode);
 
 		}
@@ -819,7 +814,11 @@ public class ApprovalBackingBean extends
 				updateApprovalRequest(approvalRequests, outcome);
 
 				finalizeRemarks(approval.getScQtApprovalRemarks());
-				approval.getScQtApprovalDtls().addAll(approvalRequests);
+				approval.getScQtApprovalDtls().removeAll(
+						approvalRequests);
+				approval.getScQtApprovalDtls().addAll(
+						approvalRequests);
+				
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
 				qt.setScQtApprovals(qtApproval);
@@ -892,18 +891,19 @@ public class ApprovalBackingBean extends
 	 */
 	public List<TabBean> constructCommitteTabBean(
 			List<ScQtCommittee> qtCommittees) {
-		
+
 		String parameterType = ParameterTypeConst.SC_COMMITTEE_TYPE;
 		ParameterHelper parameterHelper = ParameterHelper.getInstance();
 		List<TabBean> committeTabs = new ArrayList<TabBean>();
-		
+
 		for (ScQtCommittee scQtCommittee : qtCommittees) {
-			String committeeType = scQtCommittee.getScCommittee().getCommitteeType().getParameterCode();
-			
-			if (!ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER.equals(committeeType)) {
-				TabBean bean = new TabBean(
-						parameterHelper.getParameterDesc(parameterType, committeeType),
-						committeeType,
+			String committeeType = scQtCommittee.getScCommittee()
+					.getCommitteeType().getParameterCode();
+
+			if (!ParameterConst.COMMITTEE_TYPE_BUSINESS_OWNER
+					.equals(committeeType)) {
+				TabBean bean = new TabBean(parameterHelper.getParameterDesc(
+						parameterType, committeeType), committeeType,
 						getQtCommitteeTypeDtl(scQtCommittee.getScCommittee()
 								.getCommitteeType().getParameterCode(),
 								scQtCommittee.getScQt().getQtId()));
@@ -1062,8 +1062,10 @@ public class ApprovalBackingBean extends
 						isRevise = true;
 						break;
 					}
-				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI.equals(approvalType) ||
-						ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN.equals(approvalType)) {
+				} else if (ParameterConst.APPROVAL_REQUEST_OPEN_TO_BUMI
+						.equals(approvalType)
+						|| ParameterConst.APPROVAL_REQUEST_BUMI_TO_OPEN
+								.equals(approvalType)) {
 					if (ParameterConst.APPROVAL_DECISION_TYPE_REJECTED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
@@ -1167,7 +1169,6 @@ public class ApprovalBackingBean extends
 		this.pmDigiSign = pmDigiSign;
 	}
 
-
 	private void revertToOldValues(List<ScQtApprovalRequest> approvalRequests,
 			ScQt scQt) {
 		if (CollectionUtils.isNotEmpty(approvalRequests)) {
@@ -1240,7 +1241,7 @@ public class ApprovalBackingBean extends
 			qt.setScQtApprovals(qtApproval);
 
 			qt.setScQtCommittees(null);
-			
+
 			qtReqDTO.setPayLoad(this.getManagedBean()
 					.getQuotationTenderDataType());
 			FacesScopes facesScope = new FacesScopes();
