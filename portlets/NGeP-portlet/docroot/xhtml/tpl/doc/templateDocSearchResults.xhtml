@@ -17,11 +17,11 @@
 							 width="100%" editable="true">
 							   <p:columnGroup type="header">
 								<p:row>
-									<p:column rowspan="1" headerText="Title"></p:column>
-									<p:column rowspan="1" headerText="Procurement Category"></p:column>
-									<ui:remove><p:column rowspan="1" headerText="Process Type"></p:column>
-									 <p:column rowspan="1" headerText="Type"></p:column></ui:remove>
-									<p:column rowspan="1" headerText="View/Edit"></p:column>
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.section.title']}"></p:column>
+									<p:column rowspan="1" headerText="#{lbl['lbl.pm.procurement.category']}"></p:column>
+									<ui:remove><p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.processtype']}"></p:column>
+									 <p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.type']}"></p:column></ui:remove>
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.view.edit']}"></p:column>
 								</p:row>
 							</p:columnGroup>
 							<p:column>
@@ -43,7 +43,7 @@
 							
 							<p:column>
                                 <p:commandLink action="#{templateDocBackingBean.goToMaint(tplMasterObj)}">
-                                      <p:graphicImage value="/css/images/design/ico-edit.png" update="resultID" />
+                                      <p:graphicImage value="/css/images/design/ico-viewnedit.png" update="resultID" />
                                 </p:commandLink>
 							 </p:column>
 						</p:dataTable>
@@ -51,7 +51,7 @@
 				</tr>
 				<tr>
 					<td style="text-align:right">
-						<p:commandButton value="Create" update="resultID"
+						<p:commandButton value="#{lbl['lbl.btn.create']}" update="resultID"
 							action="#{templateDocBackingBean.createNewTemplate}" />
 					</td>
 				</tr>

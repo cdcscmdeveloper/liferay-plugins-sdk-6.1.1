@@ -9,7 +9,7 @@
 			<table style="width:100%">
 				<tr>
 					<td class="TableFieldLeft" style="width:120px">
-						<h:outputLabel value=" Procurement Category" />
+						<h:outputLabel value="#{lbl['lbl.pm.procurement.category']}" />
 					</td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.procurementCategoryId}" id="templateCategory">
@@ -17,7 +17,7 @@
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px">
-					      <h:outputLabel value=" Title" />
+					      <h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" />
 					</td>
 					<td class="TableFieldRight">
 					     <p:inputText id="templateTitle" value="#{templateDocBackingBean.managedBean.title}" style="width:280px" />
@@ -26,11 +26,11 @@
 				<tr style="height: 3px;"></tr>
 				<tr>
 					<td colspan="4" style="text-align:right;">
-						<p:commandButton value="Search"
+						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{templateDocBackingBean.tempDocSearch}"
 							  process="@this,panel1" update="resultID" />
 
-						<p:commandButton value="Reset" action="#{templateDocBackingBean.reset}" 
+						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{templateDocBackingBean.reset}" 
 							   update="panel1,panel2" resetValues="true" partialSubmit="true" process="@this">
 					    </p:commandButton>						 
 					 

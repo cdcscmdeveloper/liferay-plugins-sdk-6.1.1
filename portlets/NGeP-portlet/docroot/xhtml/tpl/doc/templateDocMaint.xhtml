@@ -15,13 +15,13 @@
 					<p:commandButton immediate="true" action="#{templateDocBackingBean.backAction}" value="#{lbl['lbl.btn.back']}" />
 				</td>
 				<td style="text-align:right">
-					<p:commandButton action="#{templateDocBackingBean.saveAction}" value="Save" />
+					<p:commandButton action="#{templateDocBackingBean.saveAction}" value="#{lbl['lbl.btn.save']}" />
 					<p:spacer width="5px" rendered="#{false and templateDocBackingBean.managedBean.externalPageUrl==null}" />
 					<p:commandButton action="#{templateDocBackingBean.saveAction}" rendered="#{false and templateDocBackingBean.managedBean.externalPageUrl==null}" value="Submit" />
 				</td>
 			</tr>
 		</table>
-		<p:panel id="panel1" header="Header" toggleable="true">
+		<p:panel id="panel1" header="#{lbl['lbl.tpl.doc.header']}" toggleable="true">
 			<table width="100%">
 				<tr>
 					<td class="TableFieldLeft" style="width: 120px">
@@ -71,7 +71,7 @@
 				</tr>
 				<tr style="height: 5px;"></tr>
 					<tr>
-					<td class="TableFieldLeft" style="width: 120px;"><h:outputLabel value="#{lbl['lbl.tpl.doc.createduser']}" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}"/></td>
+					<td class="TableFieldLeft" style="width: 120px;"><h:outputLabel value="#{lbl['lbl.tpl.spec.created.user']}" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}"/></td>
 					<td class="TableFieldRight" >
 						<p:inputText value="#{templateDocBackingBean.getUserNameById(tplMasterObj.createdBy)}" readonly="true" disabled="true" style="width:280px" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}" />
 					</td>
@@ -85,19 +85,19 @@
 			</table>
 		</p:panel>
 
-		<p:panel id="panel2" header="Contents" toggleable="true">
+		<p:panel id="panel2" header="#{lbl['lbl.tpl.doc.section.contents']}" toggleable="true">
 			
 			<h:panelGrid width="100%">
 				<p:treeTable id="sampleTT" var="document" 
 					value="#{templateDocBackingBean.managedBean.docSectionTN}" >
 					<p:column style="width:200px">
-						<f:facet name="header">Section</f:facet>
+						<f:facet name="header">#{lbl['lbl.tpl.doc.section']}</f:facet>
 						<h:outputText value="#{document.sectionNumber}" />
 						<p:spacer width="5px" />
 						<h:outputText value="#{document.sectionName}" />
 					</p:column>
 					<p:column style="width:50px;text-align:center;">
-						<f:facet name="header">Positioning</f:facet>
+						<f:facet name="header">#{lbl['lbl.tpl.doc.positioning']}</f:facet>
 						<p:commandLink action="#{templateDocBackingBean.positionNode('left')}"
 							update="sampleTT">
 							<h:graphicImage value="/css/images/design/icon_arrow_left.png" />
@@ -124,7 +124,7 @@
 						</p:commandLink>
 					</p:column>
 					<p:column style="width:50px;text-align:center;">
-						<f:facet name="header">Action</f:facet>
+						<f:facet name="header">#{lbl['lbl.td.action']}</f:facet>
 						<p:commandLink action="#{templateDocBackingBean.editContent}"
 							oncomplete="popupEdit.show();return false;" update=":form:popupEdit">
 							<h:graphicImage value="/css/images/design/ico-edit.png" />
@@ -140,11 +140,11 @@
 						</p:commandLink>
 						<p:spacer width="3px" />
 						<p:menuButton value="" id="addSecMenu" styleClass="addSecMenu">
-				            <p:menuitem value="Import Section" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
+				            <p:menuitem value="#{lbl['lbl.tpl.doc.import.section']}" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
 					            <f:setPropertyActionListener value="#{document}"
 									target="#{templateDocBackingBean.managedBean.selectedSection}" />
 				            </p:menuitem>
-				            <p:menuitem value="Add Section" update="sampleTT" action="#{templateDocBackingBean.addNode}">
+				            <p:menuitem value="#{lbl['lbl.tpl.doc.add.section']}" update="sampleTT" action="#{templateDocBackingBean.addNode}">
 				            	<f:setPropertyActionListener value="#{document}"
 									target="#{templateDocBackingBean.managedBean.selectedSection}" />
 				            </p:menuitem>
@@ -166,7 +166,7 @@
 		</p:panel>
 
 		<p:dialog id="popupEdit" widgetVar="popupEdit" modal="false"
-			resizable="false" header="Edit Content" width="650" height="460">
+			resizable="false" header="#{lbl['lbl.tpl.doc.edit.content']}" width="650" height="460">
 			<p:ajax event="close" />
 			
 			<h:panelGroup id="docs">
@@ -189,8 +189,8 @@
 				<p:spacer height="5px" />
 				<h:panelGrid width="100%">
 					 <p:selectOneRadio id="options" style="width:130px" value="#{templateDocBackingBean.managedBean.selectedOption}" >  
-           				 <f:selectItem itemLabel="Content" itemValue="1" /> 
-           				 <f:selectItem itemLabel="Variable" itemValue="2" />  
+           				 <f:selectItem itemLabel="#{lbl['lbl.tpl.doc.content']}" itemValue="1" /> 
+           				 <f:selectItem itemLabel="#{lbl['lbl.tpl.doc.variable']}" itemValue="2" />  
            				 <p:ajax listener="#{templateDocBackingBean.viewContent}" update="contentID,variableID" process="@this" />
        				 </p:selectOneRadio>  
 				</h:panelGrid>
@@ -210,9 +210,9 @@
 						var="variableObj" width="100%">
 						<p:columnGroup type="header">
 							<p:row>
-								<p:column rowspan="2" headerText="Name" />
-								<p:column rowspan="2" headerText="Value" />
-								<p:column rowspan="2" headerText="Action" />
+								<p:column rowspan="2" headerText="#{lbl['lbl.tpl.doc.section.name']}" />
+								<p:column rowspan="2" headerText="#{lbl['lbl.pm.value']}" />
+								<p:column rowspan="2" headerText="#{lbl['lbl.td.action']}" />
 							</p:row>
 						</p:columnGroup>
 						<p:column>
@@ -229,31 +229,31 @@
 			</h:panelGroup>
 			<h:panelGroup>		
 				<p:commandButton id="editlinkM" action="#{templateDocBackingBean.saveContent}"
-					value="OK" oncomplete="popupEdit.hide()" update=":form:sampleTT" />
+					value="#{lbl['lbl.btn.ok']}" oncomplete="popupEdit.hide()" update=":form:sampleTT" />
 				<p:commandButton id="editl" action="#{templateDocBackingBean.saveContent}"
-					value="Cancel" oncomplete="popupEdit.hide()" update=":form:sampleTT" />									
+					value="#{lbl['lbl.btn.cancel']}" oncomplete="popupEdit.hide()" update=":form:sampleTT" />									
 			</h:panelGroup>
 		</p:dialog>
 		
 		<p:dialog id="popupImportSec" widgetVar="popupImportSec" modal="false" 
-			resizable="false" header="Import Section" width="850" height="460">
+			resizable="false" header="#{lbl['lbl.tpl.doc.import.section']}" width="850" height="460">
 			<table>
 				<tr>
-					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Name" /></td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.section.name']}" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu id="imptTemplateCategory" style="width:100px;"
 							value="#{templateDocBackingBean.managedBean.impCategoryId}">
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Process Type" /></td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.processtype']}" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu id="imptProcessType" style="width:100px;"
 							value="#{templateDocBackingBean.managedBean.impProcessTypeId}">
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Title" /></td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" /></td>
 					<td class="TableFieldRight"><p:inputText id="imptTitle" style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" /></td>
 					<td>
 						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
@@ -273,7 +273,7 @@
 							<p:columnGroup type="header">
 								<p:row>
 									<p:column rowspan="1" />
-									<p:column rowspan="1" headerText="Template Document" />
+									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.template.doc']}" />
 								</p:row>
 							</p:columnGroup>
 							<p:column selectionMode="single" style="width:2%" />
@@ -289,7 +289,7 @@
 						<p:treeTable id="impSectionList" value="#{templateDocBackingBean.managedBean.imptSectionTN}"
 							var="document">
 							<p:column style="width:150px">
-								<f:facet name="header">Section</f:facet>
+								<f:facet name="header">#{lbl['lbl.tpl.doc.section']}</f:facet>
 	            				<p:selectBooleanCheckbox value="#{templateDocBackingBean.uncheck}">
 	            					<p:ajax listener="#{templateDocBackingBean.checkRow(document)}" />
 	            				</p:selectBooleanCheckbox>
@@ -303,21 +303,21 @@
 				</tr>
 				<tr>
 					<td>
-						<p:commandButton value="Select" action="#{templateDocBackingBean.addSelectedImptNodes}" 
+						<p:commandButton value="#{lbl['lbl.btn.select']}" action="#{templateDocBackingBean.addSelectedImptNodes}" 
 							update=":form:sampleTT"	oncomplete="popupImportSec.hide();" />
 					</td>
 				</tr>
 			</table>
 		</p:dialog>
   
-	    <p:dialog header="Content" widgetVar="dlg" modal="true" height="450" width="600" resizable="true" >  
+	    <p:dialog header="#{lbl['lbl.tpl.doc.content']}" widgetVar="dlg" modal="true" height="450" width="600" resizable="true" >  
 	        <h:outputText id="display" value="#{templateDocBackingBean.managedBean.previewValue}" escape="false" />  
 	       
 	 
 	  
 	   <p:panel style="float:right;">
             
-	   <h:commandButton id="tbls" value="GenerateDoc" action="#{templateDocBackingBean.createPDF}" onclick="alert('testtest');" />
+	   <h:commandButton id="tbls" value="#{lbl['lbl.tpl.doc.generate.doc']}" action="#{templateDocBackingBean.createPDF}" />
 	   <p:remoteCommand name="createPdf" action="#{templateDocBackingBean.createPDF}" partialSubmit="true" />
 	
       </p:panel>
