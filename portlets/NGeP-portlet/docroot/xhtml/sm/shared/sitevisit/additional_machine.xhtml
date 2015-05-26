@@ -101,7 +101,11 @@
 			
 			<tr>
 				<td valign="top"><p:outputLabel value="#{lbl['lbl.sm.machine.function']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:inputTextarea  maxlength="100" style="width:50;" label="#{lbl['lbl.sm.machine.function']}" required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.machineFunction}" /></td>
+				<td><p:inputTextarea  maxlength="100" style="width:50;" label="#{lbl['lbl.sm.machine.function']}" 
+				required="#{!empty param['disableMsgAutoUpdate']}" value="#{svoSiteVisitBackingBean.managedBean.selectedAdtMachine.machineFunction}">
+					<f:validateLength maximum="100" />
+				</p:inputTextarea>
+				</td>
 			</tr>
 			
 			<tr>
