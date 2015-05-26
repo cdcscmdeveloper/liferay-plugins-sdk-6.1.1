@@ -75,8 +75,11 @@ public class ReportViewServlet extends HttpServlet {
 			request.getSession().removeAttribute("generatedUrl");
 			outputStream.flush();
 		} catch (Exception e) {
-			
 			generateErrorMsg(request,response);
+			throw new EpException(
+					CommonMethod
+							.getMessageCommon("Report Server service is down"));
+			
 		} finally {
 			if (null != urlConnection) {
 				urlConnection.disconnect();
