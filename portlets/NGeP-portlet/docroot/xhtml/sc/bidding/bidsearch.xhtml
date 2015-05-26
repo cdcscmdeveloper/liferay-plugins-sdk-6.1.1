@@ -160,7 +160,7 @@
 				<p:commandLink id="bidManagementNavigationBtn" size="5"
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
 
-					<p:graphicImage id="viewBtnImage"  value="/css/images/design/document.png"
+					<p:graphicImage id="viewBtnImage"  value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
 						title="#{lbl['lbl.txt.view']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -171,8 +171,8 @@
 					actionListener="#{biddingBB.bidPausePopUpAction(bid)}"
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
-					<p:graphicImage id="pauseBtnImage" 
-						 value="/css/images/design/pause.png"
+					<p:graphicImage id="pauseBtnImage" value="#{CommonUIConstant.imagePathUptoDesign}/ico-suspend.png"
+						 
 						title="#{lbl['lbl.sc.pause.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
@@ -184,8 +184,8 @@
 					update="@([id$=pauseCancelPopUp])"
 					oncomplete="bidPauseOrCancel.show();" size="5">
 
-					<p:graphicImage id="cancelBtnImage" 
-						 value="/css/images/design/cancel.png"
+					<p:graphicImage id="cancelBtnImage" value="#{CommonUIConstant.imagePathUptoDesign}/ico-termination.png"
+						
 						title="#{lbl['lbl.sc.cancel.bid']}" />
 					<p:spacer width="5"></p:spacer>
 				</p:commandLink>
