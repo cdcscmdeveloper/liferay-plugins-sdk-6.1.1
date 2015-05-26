@@ -47,6 +47,7 @@ import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
+import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -593,7 +594,12 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			pmBB.getManagedBean().setSelectedTabIndex(0);
 			pmBB.getManagedBean().setButtonVal(buttonVal);
 			pmBB.getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
-			pmBB.getManagedBean().setDelOrderList(resDTO.getPaymentAdvice().getFulfilmentOrder().getFlDeliveryOrders());
+			pmBB.getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			for(FlDeliveryOrder flDeliveryOrder : resDTO.getPaymentAdvice().getFulfilmentOrder().getFlDeliveryOrders()) {
+				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					pmBB.getManagedBean().getDelOrderList().add(flDeliveryOrder);
+				}
+			}			
 			pmBB.setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 			pmBB.setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());
 			pmBB.populateChargeLineData();

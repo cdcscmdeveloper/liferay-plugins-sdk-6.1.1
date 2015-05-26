@@ -331,7 +331,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			}
 
 			getManagedBean().setPaymentAdvice(paymentAdvice);
-			getManagedBean().setDelOrderList(paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders());
+			getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			for(FlDeliveryOrder flDeliveryOrder : paymentAdvice.getFulfilmentOrder().getFlDeliveryOrders()) {
+				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					getManagedBean().getDelOrderList().add(flDeliveryOrder);
+				}
+			}			
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			// For PO No Deduction Panel 
@@ -1505,7 +1510,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
 			
 			getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
-			getManagedBean().setDelOrderList(resDTO.getPaymentAdvice().getFulfilmentOrder().getFlDeliveryOrders());
+			getManagedBean().setDelOrderList(new ArrayList<FlDeliveryOrder>()); 
+			for(FlDeliveryOrder flDeliveryOrder : resDTO.getPaymentAdvice().getFulfilmentOrder().getFlDeliveryOrders()) {
+				if(flDeliveryOrder.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
+					getManagedBean().getDelOrderList().add(flDeliveryOrder);
+				}
+			}
 			setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 			setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());
 			populateChargeLineData();
