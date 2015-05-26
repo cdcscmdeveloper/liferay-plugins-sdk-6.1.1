@@ -190,7 +190,7 @@
 				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
 					<p:inputText value="#{item.orderedQty}" size="14" id="orderedQty" label="#{lbl['lbl.fl.ordered.qty']}"
 						disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}"
-						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" styleClass="colFloatRight" 
+						maxlength="#{item.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" styleClass="colFloatRight" style="text-align:right" 
 						onkeypress="if (event.keyCode == 13) { return false; }">
 						<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.scRequestItem.uom.uomCode)}" />
@@ -203,7 +203,7 @@
 					action="#{contractRequestBackingBean.reqItemInfoList(item)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
 					<p:graphicImage value="/css/images/ico-info.png"
-						title="Request Item Information" />
+						title="#{lbl['lbl.fl.request.item.info']}" />
 					</p:commandLink>
 					</p:inputText>
 					<p:message for="orderedQty" display="icon" />
