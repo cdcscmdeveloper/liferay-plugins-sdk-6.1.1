@@ -19,7 +19,7 @@
 	<p:panel header="#{lbl['lbl.sc.qt.schedule.dtls']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel
+				<td style="width: 200px;"><p:outputLabel value="#{lbl['lbl.sc.publish.date']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:calendar label="#{lbl['lbl.sc.publish.date']}"
 						mindate="#{approvalBackingBean.managedBean.today}"
@@ -57,10 +57,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.closing.date']}" /></td>
 				<td><p:inputText id="publishClosingDate"
 						value="#{approvalBackingBean.managedBean.qt.closingDate}"
-						readonly="true" disabled="true" style="margin-top:5px;" size="14">
+						readonly="true" disabled="true" style="margin-top:5px;" size="15">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText
+					</p:inputText>&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; <h:inputText
 						value="12:00 PM" disabled="true" size="4"
 						style="width: 52px;margin-top: 5px;margin-bottom: 0px;" /></td>
 			</tr>
