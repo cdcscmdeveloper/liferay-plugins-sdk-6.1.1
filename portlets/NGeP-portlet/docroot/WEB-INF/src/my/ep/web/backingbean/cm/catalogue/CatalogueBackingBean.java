@@ -886,7 +886,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            int index(mandatory)
 	 * @return String(editCatalogItem)
 	 */
-	public String navigateToPublishedItemDet(int index) {
+	public String navigateToPublishedItemDet(int i) {
+		
+		
+		int index = i%5;
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
@@ -942,7 +945,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            int index(mandatory)
 	 * @return String(editCatalogItem)
 	 */
-	public String navigateToExpiredItemDet(int index) {
+	public String navigateToExpiredItemDet(int i) {
+		
+		int index = i%5;
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
@@ -1080,7 +1085,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            int index(mandatory)
 	 * @return String(addCatalogItem)
 	 */
-	public String navigateToApprovedItemDet(int index) {
+	public String navigateToApprovedItemDet(int i) {
+		
+		int index= i%5;
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
@@ -1109,7 +1116,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            int index(mandatory)
 	 * @return String(editCatalogItem)
 	 */
-	public String navigateToRejectedItemDet(int index) {
+	public String navigateToRejectedItemDet(int i) {
+		
+		int index = i%5;
+		
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
