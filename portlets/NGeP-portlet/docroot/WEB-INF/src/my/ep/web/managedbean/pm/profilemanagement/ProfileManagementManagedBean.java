@@ -64,6 +64,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private List<PmUserRole> activeUserRoleFor = new ArrayList<PmUserRole>();
 	private int searchOrgCategory = 0;
 	private int orgCategory = 0;
+	private boolean isLazy = false;
 	
 	
 	
@@ -405,6 +406,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setOrgCategory(int orgCategory) {
 		this.orgCategory = orgCategory;
+	}
+	/**
+	 * @return the isLazy
+	 */
+	public boolean isLazy() {
+		return isLazy;
+	}
+	/**
+	 * @param isLazy the isLazy to set
+	 */
+	public void setLazy(boolean isLazy) {
+		this.isLazy = isLazy;
 	}
 	
 
