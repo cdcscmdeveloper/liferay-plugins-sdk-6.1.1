@@ -31,6 +31,8 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -144,6 +146,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private CtContractVer agreementContractVer;
 	private CtContract ctContract;
+	private CtCircularVer ctCircularVer;
 	private CtContractItem selectedItem;
 	private CtContractItem selectedServiceItem;
 	private CtDeduction selectedDeduction;
@@ -1456,6 +1459,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSmAddress(SmAddress smAddress) {
 		this.smAddress = smAddress;
+	}
+	
+	/**
+	 * @return the ctCircularVer
+	 */
+	public CtCircularVer getCtCircularVer() {
+		return ctCircularVer;
+	}
+
+	/**
+	 * @param ctCircularVer the ctCircularVer to set
+	 */
+	public void setCtCircularVer(CtCircularVer ctCircularVer) {
+		this.ctCircularVer = ctCircularVer;
 	}
 
 	/**
