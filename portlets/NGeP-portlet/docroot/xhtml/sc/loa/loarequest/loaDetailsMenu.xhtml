@@ -76,7 +76,7 @@
 				<p:inputTextarea id="suppAddr" cols="50"
 					rows="5"
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
-					style=" margin-bottom:5px;" disabled="true" />
+					style=" margin-bottom:5px;width: 325px;" disabled="true" />
 			</td>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
@@ -433,7 +433,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td  width="23%">
+			<td  width="24%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -486,7 +486,7 @@
 				<p:inputTextarea id="address"
 					cols="47" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
-					style=" margin-bottom:5px;"
+					style=" margin-bottom:5px;width: 302px;"
 					required="true"
 					maxlength="200"
 					label="#{lbl['lbl.sc.address']}"

@@ -55,10 +55,12 @@
 					process="@this, deductTbl" partialSubmit="true"
 					action="#{lOIDetailBackingBean.addDeductionPaymentAction}"
 					oncomplete="deductTblWidget.paginator.endLink.click();"
+					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 					update="deductTbl" />
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, deductTbl" partialSubmit="true"
 					oncomplete="deductionPayDeletePopUp.show();"
+					rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 					update="@([id$=#{deductionPayDeleteId}])" />
 			</div>
 			<ac:confirmationPopup id="deductionPayDeleteId"
@@ -116,11 +118,13 @@
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						action="#{lOIDetailBackingBean.addDeductionClauseAction}"
+						rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 						oncomplete="deductClauseTblWidget.paginator.endLink.click();"
 						update="deductClauseTbl" />
 					<p:commandButton value="#{lbl['lbl.btn.delete']}"
 						process="@this, deductClauseTbl" partialSubmit="true"
 						oncomplete="deductionClauseDeletePopUp.show();"
+						rendered="#{lOIDetailBackingBean.managedBean.buttonFlag}"
 						update="@([id$=#{deductionClauseDeleteId}])" />
 
 				</h:panelGroup>
