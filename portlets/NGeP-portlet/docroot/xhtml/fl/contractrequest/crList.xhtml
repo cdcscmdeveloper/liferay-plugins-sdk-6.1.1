@@ -104,8 +104,8 @@
 				<h:outputText
 					value="#{contractTreeNode.contractName}" />
 			</p:column>
-			<p:column style="width:136px;">
-				<f:facet name="header" style="width:200px;white-space:normal">
+			<p:column style="width:80px;white-space:normal;">
+				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.fs.no']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.phase.no']}"/>
 				</f:facet>
@@ -118,8 +118,8 @@
 			<p:column headerText="#{lbl['lbl.fl.physical.treasury.circular']}" style="width:100px;white-space:normal">
 				<h:outputText value="#{contractTreeNode.circularNo}" />
 			</p:column>
-			<p:column style="width:100px;">
-				<f:facet name="header" style="width:85px">
+			<p:column style="width:60px;white-space:normal;">
+				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.period.start']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.start']}"/>
 				</f:facet>
@@ -131,8 +131,8 @@
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>			
 			</p:column>
-			<p:column style="width:90px;">
-				<f:facet name="header" style="width:85px">
+			<p:column style="width:60px;white-space:normal;">
+				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.fl.period.end']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.crlist.period.end']}"/>
 				</f:facet>
@@ -175,17 +175,17 @@
 					</p:column>
 					<p:column style="width:142px">
 					</p:column>
-					<p:column style="width:70px;text-align:center">
+					<p:column style="width:80px;text-align:center">
 						<h:outputText value="#{contractExpansion.scheduleNo == null ? contractExpansion.phaseNo : contractExpansion.scheduleNo}" />
 					</p:column>
 					<p:column style="width:100px">
 					</p:column>
-					<p:column style="width:97px;">
+					<p:column style="width:60px;">
 						<h:outputText value="#{contractExpansion.startEffective}" >
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column style="width:91px;">
+					<p:column style="width:60px;">
 						<h:outputText value="#{contractExpansion.endEffective}" >
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
