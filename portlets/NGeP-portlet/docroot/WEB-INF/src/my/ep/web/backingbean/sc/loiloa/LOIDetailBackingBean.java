@@ -1162,21 +1162,23 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setScLoi(scLoi);
 		boolean isTermPriceFound = Boolean.FALSE;
 		boolean isBiddingAward = Boolean.FALSE;
+
+		// online bidding
+		if(scLoi.getScLoiLoa().getRecommendBy() != null){
+			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
+			if(recommendedBy.getParameterCode().equals(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)){
+				isBiddingAward = Boolean.TRUE;
+				// remove nego price   recommended by  - online bidding.
+				removeNegoTermPrice(scLoi);
+			}
+		}
 		
 		// check nego term price
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
 		if(QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)){
 			isTermPriceFound = checkNegoTermPrice(scLoi);
 		}
-
-		  // online bidding
-		if(scLoi.getScLoiLoa().getRecommendBy() != null){
-			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
-			if(recommendedBy.getParameterCode().equals(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)){
-               isBiddingAward = Boolean.TRUE;
-			}
-		}
-
+		
 		// calc total items in award details
 		if(scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size()>0){
 			BigDecimal  offerPrice = BigDecimal.valueOf(0d);
@@ -1208,9 +1210,7 @@ public class LOIDetailBackingBean extends
 				afterNegoTotalAmount =  afterNegoTotalAmount.add(afterNegoSubTotal);
 				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
 				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
-				
 			}
-
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
 			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
@@ -3884,6 +3884,23 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		return termPriceFound;
+	}
+	
+	/**
+	 * Removes the nego term price.
+	 *
+	 * @param scLoi the sc loi
+	 */
+	private void removeNegoTermPrice(ScLoi scLoi) {
+		List<ScLoiTerm> scNegoTerms = new ArrayList<ScLoiTerm>();
+		if(scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size()>0){
+			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
+				if(!term.getTermDesc().equals(QTConstants.LOI_NEGO_TERM_PRICE)){
+					scNegoTerms.add(term);
+				}
+			}
+			scLoi.setScNegoTerms(scNegoTerms);
+		}
 	}
 	
 	/**
