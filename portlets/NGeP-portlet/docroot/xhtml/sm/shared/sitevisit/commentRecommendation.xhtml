@@ -6,20 +6,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sm.comments']}" toggleable="true">
-		<p:inputTextarea rows="8" disabled="#{viewFlag}"  style="width:80%;" autoResize="false" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.officerComment}">
+		<p:inputTextarea rows="8" disabled="#{viewFlag}"  style="width:80%;" autoResize="false" maxlength="4000" 
+		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.officerComment}" label="#{lbl['lbl.sm.comments']}">
 	    <f:validateLength maximum="4000" />
 	    </p:inputTextarea>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}"
 		toggleable="true">
-		<p:inputTextarea rows="8" disabled="#{viewFlag}" style="width:80%;" autoResize="false" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.companyInfoUpdate}">
+		<p:inputTextarea rows="8" disabled="#{viewFlag}" style="width:80%;" autoResize="false" maxlength="4000" 
+		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.companyInfoUpdate}" label="#{lbl['lbl.sm.officeloc.cmpny.info.update.any']}">
 	    <f:validateLength maximum="4000" />
 	    </p:inputTextarea>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sm.recommend']}" toggleable="true">
-		<p:inputTextarea rows="8" disabled="#{viewFlag}"  style="width:80%;" autoResize="false" maxlength="4000" value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.recommendation}" >
+		<p:inputTextarea rows="8" disabled="#{viewFlag}"  style="width:80%;" autoResize="false" maxlength="4000" 
+		value="#{svoSiteVisitBackingBean.managedBean.selectedSvTemplate.smSvComment.recommendation}" label="#{lbl['lbl.sm.recommend']}">
 	    <f:validateLength maximum="4000" />
 	    </p:inputTextarea>
 	</p:panel>
