@@ -74,7 +74,10 @@
 			
 			<p:dialog id="reviceApprovalDlg" widgetVar="reviceApprovalDlg"
 				header="Revice Confirmation" resizable="false" width="325"
-				height="82" closable="false">
+				height="82" modal="true">
+				<p:blockUI block=":form" widgetVar="blockWidget">
+					<p:graphicImage value="/css/images/ajax-loader.gif" />
+				</p:blockUI>
 				<table>
 					<tr>
 						<td align="center"><p:outputLabel
@@ -85,7 +88,8 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.yes']}"
 						oncomplete="reviceApprovalDlg.hide();"
-						action="#{approvalBackingBean.updateReviceBpmTask}" />
+						action="#{approvalBackingBean.updateReviceBpmTask}" 
+						onstart="blockWidget.show();"/>
 					<p:commandButton value="#{lbl['lbl.btn.no']}"
 						onclick="reviceApprovalDlg.hide();" type="button" />
 				</div>
