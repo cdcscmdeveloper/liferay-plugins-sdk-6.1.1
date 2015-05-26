@@ -13,7 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import my.ep.exception.EpException;
+import my.ep.factory.EpLogger;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 
@@ -23,7 +26,8 @@ import my.ep.web.constant.report.ReportConst;
 @WebServlet("/ReportViewServlet")
 public class ReportViewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private static final Logger log = EpLogger
+			.getLogger(ReportViewServlet.class);
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -57,7 +61,7 @@ public class ReportViewServlet extends HttpServlet {
 				content[i] = byteRead;
 				i++;
 			}
-			
+			log.info("#######################################"+content.length); 
 			bufferedInputStream.close();
 			outputStream.write(content);
 			response.setContentType("application/pdf");
@@ -71,10 +75,8 @@ public class ReportViewServlet extends HttpServlet {
 			request.getSession().removeAttribute("generatedUrl");
 			outputStream.flush();
 		} catch (Exception e) {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon("Report Server service is down"));
-			//generateErrorMsg(request,response);
+			
+			generateErrorMsg(request,response);
 		} finally {
 			if (null != urlConnection) {
 				urlConnection.disconnect();
