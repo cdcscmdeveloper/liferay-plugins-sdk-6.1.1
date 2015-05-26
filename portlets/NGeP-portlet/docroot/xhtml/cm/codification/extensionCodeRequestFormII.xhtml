@@ -42,7 +42,7 @@
 				</tr>
 			</table>
 
-			<p:dataTable id="extCodeId"
+			<p:dataTable id="extCodeId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
 				var="ext">
 				<p:column>

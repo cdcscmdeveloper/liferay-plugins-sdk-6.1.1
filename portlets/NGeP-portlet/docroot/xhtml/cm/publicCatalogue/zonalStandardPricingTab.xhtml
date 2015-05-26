@@ -12,7 +12,7 @@
 
 
 	<p:outputPanel id="zStanPriceId">
-		<p:dataTable id="zStanPriceTableId"
+		<p:dataTable id="zStanPriceTableId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.zStdPrices}"
 			var="standard" rowKey="#{standard}" rowIndexVar="rowIndex"
 			width="100%">

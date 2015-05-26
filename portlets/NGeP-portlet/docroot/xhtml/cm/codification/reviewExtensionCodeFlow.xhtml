@@ -40,7 +40,7 @@
 				</table>
 				
 				
-				<p:dataTable style="width:100%;"
+				<p:dataTable style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
 
@@ -115,7 +115,7 @@
 				</p:dataTable>
 				
 				<ui:remove>
-				<p:dataTable style="width:100%;"
+				<p:dataTable style="width:100%;" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
 					

@@ -47,7 +47,7 @@
 		<div style="padding: 2px;"></div>
 
 
-		<p:dataTable id="unspscTablePopUpId"
+		<p:dataTable id="unspscTablePopUpId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{codificationBackingBean.managedBean.unspscPopUpList}"
 			var="unspscObj1" width="100%" paginator="true" rows="10"
 			paginatorPosition="bottom"

@@ -11,7 +11,7 @@
 
 
 	<p:outputPanel id="zonalPricePageID">
-		<p:dataTable id="zonalPricingID"
+		<p:dataTable id="zonalPricingID" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.zonalPricingList}"
 			var="zonal" rowKey="#{zonal}"
 			selection="#{catalogueBackingBean.managedBean.selectedPricing}"

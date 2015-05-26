@@ -12,7 +12,7 @@
 
 
 	<p:outputPanel id="cmZonalPromotionTierPricings">
-		<p:dataTable id="cmZonalPromotionTierPricingsId"
+		<p:dataTable id="cmZonalPromotionTierPricingsId" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionTierPricings}"
 			var="tier" rowKey="#{tier}" rowIndexVar="rowIndex" width="100%">
 

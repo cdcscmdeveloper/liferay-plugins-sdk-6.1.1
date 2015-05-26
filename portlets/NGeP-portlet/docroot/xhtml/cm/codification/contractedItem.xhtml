@@ -13,7 +13,7 @@
 
 		<p:panel header="#{lbl['lbl.cm.codification.pending']}" style="width: 100%;">
 
-			<p:dataTable id="documentTableID" lazy="true" rows="15"
+			<p:dataTable id="documentTableID" lazy="true" rows="15" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{codificationBackingBean.managedBean.vPendingCodifiedItemSearchDataModel}"
 				rowKey="#{vPendingCodifiedItem}" var="vPendingCodifiedItem" width="100%" rowIndexVar="rowIndex">
 		     	<ac:paginator for="documentTableID"></ac:paginator>		
