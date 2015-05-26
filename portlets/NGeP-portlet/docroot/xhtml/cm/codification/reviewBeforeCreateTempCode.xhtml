@@ -20,7 +20,7 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<ui:param name="lblBpmBtn"
-						value="lbl.cm.bpm.btn_#{action}" />
+						value="lbl.bpm.action.#{action}" />
 					<p:commandButton
 						disabled="#{(action == 'SUBMIT' and (unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1)) or (action == 'RECOMMEND_TO_SUPPLIER' and !(unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1))}"
 						value="#{lbl[lblBpmBtn]}"
