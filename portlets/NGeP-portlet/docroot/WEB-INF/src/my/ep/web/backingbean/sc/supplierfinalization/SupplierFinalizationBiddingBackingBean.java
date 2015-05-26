@@ -69,6 +69,7 @@ import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.supplierfinalization.SupplierFinalizationBiddingManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -334,6 +335,19 @@ public class SupplierFinalizationBiddingBackingBean extends
 		} finally {
 			biddingSO = null;
 		}
+	}
+	
+	/**
+	 * To calculated the total estimated cost by item
+	 * 
+	 * @return totalAmount
+	 */
+	public BigDecimal getCalculatedTotalAmount(BigDecimal bidItemPrice) {
+		ScBidItem bidItem = this.getManagedBean().getSelectedBiddingItem();
+		BigDecimal totalAmount = TemplateSpecHelper.getInstance().calcTotalAmount(
+												bidItem.getScRequestItem().getTplSpecQuestion(),
+												bidItemPrice, bidItem.getQty());
+		return totalAmount;
 	}
 
 	/*
