@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.exception.EpException;
+import my.ep.web.constant.report.CommonMethod;
+import my.ep.web.constant.report.ReportConst;
+
 /**
  * Servlet implementation class ReportViewServlet
  */
@@ -66,8 +70,11 @@ public class ReportViewServlet extends HttpServlet {
 			//response.setHeader("Pragma", "public");
 			request.getSession().removeAttribute("generatedUrl");
 			outputStream.flush();
-		} catch (Exception e) {			
-			generateErrorMsg(request,response);
+		} catch (Exception e) {
+			throw new EpException(
+					CommonMethod
+							.getMessageCommon("Report Server service is down"));
+			//generateErrorMsg(request,response);
 		} finally {
 			if (null != urlConnection) {
 				urlConnection.disconnect();
@@ -86,7 +93,7 @@ public class ReportViewServlet extends HttpServlet {
 		PrintWriter writer=null;
 		try {
 			writer = response.getWriter();
-			writer.write("Service Down");
+			writer.write("Report Server service is down");
 			writer.flush();
 		} catch (IOException e) {		
 			e.printStackTrace();
