@@ -58,10 +58,14 @@
 				escape="false" />
 
 			<p:dataTable var="sampleItem" id="sampleItemId" editable="true"
-				rows="10"
+				rows="10" selectionMode="single"
 				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
 				rowIndexVar="index" style="width:100%" rowKey="#{sampleItem}">
 				<ac:paginator for="sampleItemId" />
+
+				<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+					update="@form"
+					listener="#{evaluationBackingBean.retriveSpecificationsByItem(sampleItem.scRequestItem)}"></p:ajax>
 
 
 				<p:column headerText="#{lbl['lbl.sc.item']}" style="width:35%">
@@ -102,29 +106,31 @@
 				</p:column>
 			</p:dataTable>
 
-		</p:panel>
+			<p:spacer height="20"></p:spacer>
+			<h:panelGroup id="itemListSpecification">
+				<ui:fragment
+					rendered="#{evaluationBackingBean.managedBean.itemName ne null}">
+			#{evaluationBackingBean.managedBean.itemName}>#{lbl['lbl.sc.eva.item.specification']}
+			</ui:fragment>
+				<p:dataTable var="itemspec" id="itemSpecId" editable="true"
+					rows="10"
+					value="#{evaluationBackingBean.managedBean.sampleItemSpecifications}"
+					rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
+					<ac:paginator for="itemSpecId" />
 
-		<p:panel header="#{lbl['lbl.sc.eva.item.specification']}"
-			toggleable="true">
-			<p:dataTable var="itemspec" id="itemSpecId" editable="true" rows="10"
-				value="#{evaluationBackingBean.managedBean.complianceSampleItemList}"
-				rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
-				<ac:paginator for="itemSpecId" />
 
+					<p:column headerText="#{lbl['lbl.sc.specification']}"
+						style="width:50%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.specification']}" />
+							<ac:iconTooltip
+								value="#{lbl['lbl.sc.eva.sample.proposal.item.specification.tooltip']}" />
+						</f:facet>
+						<h:outputText value="#{itemspec.clSpecDetail}"></h:outputText>
+					</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.specification']}"
-					style="width:50%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.specification']}" />
-						<ac:iconTooltip
-							value="#{lbl['lbl.sc.eva.sample.proposal.item.specification.tooltip']}" />
-					</f:facet>
-					<h:outputText
-						value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
-				</p:column>
-
-			</p:dataTable>
-
+				</p:dataTable>
+			</h:panelGroup>
 		</p:panel>
 
 	</ui:define>
