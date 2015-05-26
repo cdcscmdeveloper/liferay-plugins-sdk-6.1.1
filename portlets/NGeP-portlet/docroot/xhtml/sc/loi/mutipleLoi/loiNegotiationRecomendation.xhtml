@@ -37,7 +37,7 @@
 				</f:facet>
 				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none">
 					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}"  rendered="#{isPendingNegotiationStatus}">
+						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}" disabled="#{!isPendingNegotiationStatus}">
 							<p:ajax event="change" partialSubmit="true" process="@this" update="@this, @([id$=qtyPG])" 
 								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
