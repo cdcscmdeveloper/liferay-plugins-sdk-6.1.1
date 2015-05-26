@@ -13,11 +13,12 @@
 		<ui:param name="applType" value="#{supportingDocInquiryBackingBean.getsupplierApplTypeDesc(supportingDocInquiryBackingBean.managedBean.smApplInquiry.smAppl.applType)}" />
 		<ui:include src="/xhtml/sm/shared/common/commonHeader.xhtml" />
 		
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.submit']}" onclick="submissionConfirmDlg.show();" />
 		</div>
 
-		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100"
+		<p:dialog widgetVar="submissionConfirmDlg" modal="true" height="100" 
 			width="500">
    			 #{lbl['lbl.sm.supportingdoc.want.proceed.qmark']}	
    		<div align="right">
@@ -57,7 +58,10 @@
 					<td style="width:15%;" valign="top"><p:outputLabel value="#{lbl['lbl.sm.supportingdoc.panel.response']}" /></td>
 					<td><p:inputTextarea id="inquiryResId" rows="10" cols="100" maxlength="1000" style="width:auto;"
 							value="#{supportingDocInquiryBackingBean.managedBean.smApplInquiry.responseText}"
-							autoResize="false" /></td>
+							autoResize="false" label="#{lbl['lbl.sm.supportingdoc.panel.response']}">
+							<f:validateLength maximum="100" />	
+						</p:inputTextarea>
+						</td>
 				</tr>
 			</table>
 		</p:panel>
