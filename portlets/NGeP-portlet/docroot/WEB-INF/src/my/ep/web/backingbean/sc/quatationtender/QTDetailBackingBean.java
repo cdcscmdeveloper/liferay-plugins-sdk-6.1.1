@@ -2052,11 +2052,6 @@ public class QTDetailBackingBean extends
 			List<TabBean> existingApprovalTabs = this.getManagedBean()
 					.getTabList();
 
-			/*
-			 * this.getManagedBean().setToBeRemoveList(
-			 * getToBeRemoveApprovals(requiredApproval));
-			 */
-
 			ParameterHelper parameterHelper = ParameterHelper.getInstance();
 			MenuModel menuModel = new DefaultMenuModel();
 			if (requiredApproval != null) {
@@ -2122,11 +2117,10 @@ public class QTDetailBackingBean extends
 									approverSettings.setQtApproval(qtApproval);
 								}
 							}
-							tabBeans.add(new TabBean(
-									titleName,
-									approvalCategoryCode,
-									qtApproval,
-									retrieveFinalizationCommitteeType(scQt.getQtId())));
+							tabBeans.add(new TabBean(titleName,
+									approvalCategoryCode, qtApproval,
+									retrieveFinalizationCommitteeType(scQt
+											.getQtId())));
 						} else if (ParameterConst.APPROVAL_CATEGORY_COMMITTEEE_APOINTMENT
 								.equals(approvalCategoryCode)) {
 							tabBeans.add(new TabBean(titleName,
@@ -2194,10 +2188,13 @@ public class QTDetailBackingBean extends
 				approvalItem
 						.setOncomplete("approvalTabChangeAction([ {name : 'selectedApprovalTabIndex', value : "
 								+ approvalTabIndex + "}]);");
-				
-				if (ParameterConst.APPROVAL_CATEGORY_OTHERS.equals(approvalTabBean.getTabType())) {					
+
+				if (ParameterConst.APPROVAL_CATEGORY_OTHERS
+						.equals(approvalTabBean.getTabType())) {
 					approvalItem.setTitle(ResourceBundleUtils.getMessage(
-							"lbl.sc.qt.approval." + approvalTabBean.getTabType().toLowerCase() +".tooltip", 
+							"lbl.sc.qt.approval."
+									+ approvalTabBean.getTabType()
+											.toLowerCase() + ".tooltip",
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 							new FacesScopes().getUserLocale()));
 				}
@@ -2211,9 +2208,9 @@ public class QTDetailBackingBean extends
 			// approval
 			if (menuModel.getContents() != null
 					&& menuModel.getContents().size() > 0) {
-				this.getManagedBean().setSelectedTabIndex(0);
+				
 				this.getManagedBean().setSelectedApprovalTabBean(
-						tabBeans.get(0));
+						tabBeans.get(this.getManagedBean().getSelectedApprovalTabIndex()));
 				this.getManagedBean().setTabList(tabBeans);
 			}
 		} finally {
@@ -2803,17 +2800,16 @@ public class QTDetailBackingBean extends
 				} else {
 					publicationApproval
 							.setScQtApprovalRemarks(initializeRemarks(
-									publicationApproval,
-									scQt.getCurrentWorkFlowStatus(),
+									publicationApproval, scQt
+											.getCurrentWorkFlowStatus(),
 									publicationApproval
 											.getScQtApprovalRemarks(),
 									ScQtApprovalRemark.class));
 
 				}
 				dualListModel = approverSettingDtls(
-						RoleCode.PUBLICATION_APPROVER, 
-						scQt.getPmOrgProfile().getOrgProfileId(),
-						publicationApproval);
+						RoleCode.PUBLICATION_APPROVER, scQt.getPmOrgProfile()
+								.getOrgProfileId(), publicationApproval);
 				this.getManagedBean().setPublicationApprovals(dualListModel);
 				this.getManagedBean().setPublicationApproval(
 						publicationApproval);
@@ -3234,7 +3230,8 @@ public class QTDetailBackingBean extends
 		userReqDto.setRoleCode(code.value());
 		userReqDto.setOrgProfileId(orgProfileId);
 		userReqDto.setWithProfileGroup(true);
-		UserResDTO userResDTO = iUserSO.retrieveUserListWithProfileGroupUserByRole(userReqDto);
+		UserResDTO userResDTO = iUserSO
+				.retrieveUserListWithProfileGroupUserByRole(userReqDto);
 		List<PmUser> approvers = userResDTO.getUserList();
 		if (null != approval) {
 			if (null != approval.getApproverSettings()
