@@ -191,9 +191,13 @@
 
 			<p:column style="width:10%; text-align:right;"
 				rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-				<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" disabled="#{isBiddingAward}">
+				<p:inputText size="4" value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" style="text-align:right;" disabled="true" rendered="#{isBiddingAward}">
+				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+				
+				<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" rendered="#{!isBiddingAward}">
 				 <p:ajax event="blur" partialSubmit="true" process="@form" update="@all" listener="#{lOIDetailBackingBean.priceKeyInEvent()}"/>
-				 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 				
 				<f:facet name="footer">
