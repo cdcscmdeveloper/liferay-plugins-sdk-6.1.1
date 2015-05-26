@@ -38,7 +38,7 @@
 
 	<ac:lovPopup />
 
-	<p:dataTable id="draftSupplierItemID" lazy="true"
+	<p:dataTable id="draftSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
 		rowKey="#{selectedSuppCat.supplierItemId}"

@@ -10,7 +10,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex"
+	<p:dataTable id="deleteImageId" var="cmImage" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
 
 		<ac:paginator for="deleteImageId"></ac:paginator>

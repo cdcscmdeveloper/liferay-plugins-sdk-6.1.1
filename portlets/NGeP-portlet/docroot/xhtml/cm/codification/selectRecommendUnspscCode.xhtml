@@ -85,7 +85,7 @@
 
 
 
-				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					selection="#{unspscCodeBackingBean.managedBean.selectedRecommendCode}"
 					selectionMode="single" rowKey="#{unspscObj}" var="unspscObj"

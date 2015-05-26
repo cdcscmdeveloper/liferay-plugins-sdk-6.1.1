@@ -8,7 +8,7 @@
 
 
 
-	<p:dataTable id="expiredSupplierItemID" lazy="true"
+	<p:dataTable id="expiredSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.expiredSearchDataModel}"
 		rowIndexVar="rowIndex" var="expired"
 		rowKey="#{expired.supplierItemId}"
