@@ -151,7 +151,6 @@ import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
@@ -479,7 +478,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		
 		//initialize all the COA map
-		getVotFundList(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
+		Long jabatanOrgProfileId = -1l;
+		PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
+		if(jabatan!=null) {
+			jabatanOrgProfileId = jabatan.getOrgProfileId();
+		}
+		getVotFundList(jabatanOrgProfileId);
 		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
 		orgReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
@@ -2500,7 +2504,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			populateChargeLineData(false);	
 			setClassName("@(.prChargeLinePnlClass)");
 			onNodeSelect();
-			getVotFundList(retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId()).getOrgProfileId());
+			Long jabatanOrgProfileId = -1l;
+			PmOrgProfile jabatan = retrieveJabatanOrgProfile(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
+			if(jabatan!=null) {
+				jabatanOrgProfileId = jabatan.getOrgProfileId();
+			}			
+			getVotFundList(jabatanOrgProfileId);
 			getManagedBean().setChargeLinePanel(false);
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
