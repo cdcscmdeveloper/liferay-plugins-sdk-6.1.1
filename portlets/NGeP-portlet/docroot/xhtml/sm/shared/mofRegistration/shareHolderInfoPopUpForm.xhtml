@@ -422,18 +422,30 @@
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column>
 				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" 
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
+					and backingBean.managedBean.selectedShareHolder.equityOwner 
+					and empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 					<h:outputText value="#{lbl['lbl.sm.companyname']}" />
 				</f:facet>
 				<h:outputText value="#{jf.companyName}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" 
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
+					and backingBean.managedBean.selectedShareHolder.equityOwner 
+					and empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 					<h:outputText value="#{lbl['lbl.sm.designation']}" />
 				</f:facet>
 				<h:outputText value="#{jf.designation}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" 
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
+					and backingBean.managedBean.selectedShareHolder.equityOwner 
+					and empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.from']}" />
 				</f:facet>
 				<h:outputText value="#{jf.fromYear}" maxlength="4"
@@ -441,12 +453,23 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" 
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
+					and backingBean.managedBean.selectedShareHolder.equityOwner 
+					and empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
 					<h:outputText value="#{lbl['lbl.sm.year.to']}" />
 				</f:facet>
 				<h:outputText value="#{jf.toYear}" maxlength="4"
 					label="#{lbl['lbl.sm.year.to']}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sm.label.action']}">
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="*" styleClass="mandatory" 
+					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J' 
+					and backingBean.managedBean.selectedShareHolder.equityOwner 
+					and empty backingBean.managedBean.selectedShareHolder.smStaffExperiences}"/>
+					<h:outputText value="#{lbl['lbl.sm.label.action']}" />
+				</f:facet>
 				<p:commandLink update=":form:tt:equiJobFunctionInfo"
 					action="#{backingBean.assignSelShrHldrJobFunc(jf)}"
 					partialSubmit="true" process="@this">

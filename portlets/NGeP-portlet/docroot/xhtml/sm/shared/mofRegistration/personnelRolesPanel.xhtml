@@ -18,7 +18,7 @@
 								<c:if test="#{backingBean.managedBean.validEquityLimit}">
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
-											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
+											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog]),:form:tt:equiShrHldrJbFnc"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
@@ -84,7 +84,7 @@
 								<c:if test="#{backingBean.managedBean.validEquityLimit}">
 									<td style="width: 20px"><p:selectBooleanCheckbox
 											value="#{backingBean.managedBean.selectedShareHolder.equityOwner}">
-											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog])"
+											<p:ajax event="change" update=":form:tt:shrRolesPanel, @([id$=shareHolderAddrDialog]),:form:tt:equiShrHldrJbFnc"
 												process=":form:tt:shrRolesPanel" partialSubmit="true"
 												listener="#{backingBean.managePersonnelRoles('Y')}" />
 										</p:selectBooleanCheckbox></td>
