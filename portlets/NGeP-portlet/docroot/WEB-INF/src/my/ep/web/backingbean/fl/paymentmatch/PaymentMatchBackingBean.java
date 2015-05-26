@@ -1477,5 +1477,54 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
+	public void viewPaymentMatch() {
+		IPaymentMatchSO paymentSO = (IPaymentMatchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IPaymentMatchSO.class);
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String paymentAdviseId = originalServletRequest.getParameter("paymentAdviseId");
+		
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		if(paymentAdviseId!=null) {
+			reqDTO.setPaymentAdviseId(Long.valueOf(paymentAdviseId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+			reqDTO.setFrnLink(Boolean.TRUE);
+			renewSesionObject();
+			try {
+				resDTO = paymentSO.retrievePaymentAdviseByPaymentId(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setButtonVal(BpmOutcomeConst.BPM_VIEW);
+			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+			
+			getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
+			getManagedBean().setDelOrderList(resDTO.getPaymentAdvice().getFulfilmentOrder().getFlDeliveryOrders());
+			setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
+			setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());
+			populateChargeLineData();
+			getManagedBean().setFulfilmentRequest(resDTO.getPaymentAdvice().getFlRequest());
+			getManagedBean().getPaymentAdvice().setFlPaymentDeduction(resDTO.getPaymentAdvice().getFlPaymentDeduction());
+			getManagedBean().setPmUser(reqDTO.getPmUser());
+			checkHaveAdvancedPayment(resDTO.getPaymentAdvice());
+			
+			SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy");
+			String newDate = df.format(getManagedBean().getPaymentAdvice().getFlInvoice().getSubmissionDate());
+			getManagedBean().setInvoiceDate(newDate);
+			flBB.getManagedBean().setHideRemarks(true);
+			flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(),resDTO.getAttachmentList());
+			if(getManagedBean().getPaymentAdvice().getFulfilmentOrder().isFactored()){
+				getFactoringDtl(); 
+			}
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "pmBasePage?faces-redirect=true");
+		}
+	}	
 }
 
