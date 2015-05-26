@@ -1822,8 +1822,9 @@ public class QTDetailBackingBean extends
 	public String updateBpmTask(String outcome) {
 
 		// Code will be called if user didnt visit the approval tabs..
-		List<TabBean> tabList = this.getManagedBean().getTabList();
-		if (CollectionUtils.isEmpty(tabList)) {
+		//List<TabBean> tabList = this.getManagedBean().getTabList();
+		List<ScQtApproval> approvals =  this.getManagedBean().getQt().getScQtApprovals();
+		if (CollectionUtils.isEmpty(approvals)) {
 			retrieveApprovalTabDtl();
 		}
 
