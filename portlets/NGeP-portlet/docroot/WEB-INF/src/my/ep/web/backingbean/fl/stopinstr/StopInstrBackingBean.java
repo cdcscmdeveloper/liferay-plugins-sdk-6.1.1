@@ -402,7 +402,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		}
 		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
-				&&  hasGovtSellerRole()) {
+				||  hasGovtSellerRole()) {
 			// Temp setTextBeforeSign : DocNo+SAP
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
