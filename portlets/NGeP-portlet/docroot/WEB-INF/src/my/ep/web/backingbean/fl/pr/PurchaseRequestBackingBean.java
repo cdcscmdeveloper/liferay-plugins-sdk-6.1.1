@@ -324,12 +324,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			if(isFlFulfilmentRequisitioner()) {
 				List<String> backUpApprover = new ArrayList<String>();
-				reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-				for(String approver : getManagedBean().getApproverList()){
-					if(!approver.contains(getManagedBean().getSelectedApprover())){
-						backUpApprover.add(approver);
+				if(getManagedBean().getSelectedApprover() != null){
+					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+					for(String approver : getManagedBean().getApproverList()){
+						if(!approver.contains(getManagedBean().getSelectedApprover())){
+							backUpApprover.add(approver);
+						}
 					}
 				}
+				
 				reqDTO.setSelectedApprovers(backUpApprover);
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
