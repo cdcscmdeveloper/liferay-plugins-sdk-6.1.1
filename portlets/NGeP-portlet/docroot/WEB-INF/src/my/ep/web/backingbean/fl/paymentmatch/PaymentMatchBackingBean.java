@@ -1435,9 +1435,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setDocType(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			FulfilmentResDTO resDTO = orderSO.retrieveDeliveryOrderById(reqDTO);
 			DeliveryOrderBackingBean doBB = new DeliveryOrderBackingBean();
+			doBB.renewSesionObject();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
 			doBB.getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
+			doBB.getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 			doBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			return NAV_DELIVERYORDER_PAGE;
 	}
@@ -1456,6 +1458,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setDocType(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNoteByReceivedNoteId(reqDTO);
 			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
+			recNoteBB.renewSesionObject();
 			recNoteBB.getManagedBean().setSelectedTabIndex(0);
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
 			recNoteBB.getManagedBean().setFulfilmentRequest(resDTO.getFulfilmentNote().getFlRequest());

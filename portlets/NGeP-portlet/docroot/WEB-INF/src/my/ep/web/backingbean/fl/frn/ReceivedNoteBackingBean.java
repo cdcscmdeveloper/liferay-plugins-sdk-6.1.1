@@ -717,7 +717,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			doBB.getManagedBean().getFulfilmentOrder().setStatus(resDTO.getFlDeliveryOrder().getStatus());
 			
 			return NAV_DELIVERYORDER_PAGE;
-		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)){
+		}else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)||docType.equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			reqDTO.setFlOrderId(getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
