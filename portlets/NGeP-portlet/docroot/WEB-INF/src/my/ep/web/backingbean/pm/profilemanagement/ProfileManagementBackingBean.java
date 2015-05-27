@@ -1282,24 +1282,26 @@ public class ProfileManagementBackingBean extends
 					this.getManagedBean().getSelectedUser()
 							.setHasActiveOrg(false);
 				}
-			}
-			if (this.getManagedBean().getSelectedUserOrg() != null
-					&& this.getManagedBean().getSelectedUserOrg()
-							.getPmUserRoles() != null) {
-				for (PmUserRole pmUserRoles : this.getManagedBean()
-						.getSelectedUserOrg().getPmUserRoles()) {
-					pmUserRoles.setRecordStatusFlg(status);
-					userRoleStatusChange(pmUserRoles);
+				
+				if (this.getManagedBean().getSelectedUserOrg() != null
+						&& this.getManagedBean().getSelectedUserOrg()
+								.getPmUserRoles() != null) {
+					for (PmUserRole pmUserRoles : this.getManagedBean()
+							.getSelectedUserOrg().getPmUserRoles()) {
+						pmUserRoles.setRecordStatusFlg(status);
+						userRoleStatusChange(pmUserRoles);
+					}
+				}
+				if (this.getManagedBean().getSelectedReceivingAddrTypes() != null
+						&& !this.getManagedBean().getSelectedReceivingAddrTypes()
+								.isEmpty()) {
+					for (PmAddressType addressType : this.getManagedBean()
+							.getSelectedReceivingAddrTypes()) {
+						addressType.setRecordStatusFlg(status);
+					}
 				}
 			}
-			if (this.getManagedBean().getSelectedReceivingAddrTypes() != null
-					&& !this.getManagedBean().getSelectedReceivingAddrTypes()
-							.isEmpty()) {
-				for (PmAddressType addressType : this.getManagedBean()
-						.getSelectedReceivingAddrTypes()) {
-					addressType.setRecordStatusFlg(status);
-				}
-			}
+			
 		}
 	}
 
@@ -3176,9 +3178,9 @@ public class ProfileManagementBackingBean extends
 	 * @param user
 	 */
 	private void validateRoles(PmUserOrg userOrg) {
-		List<String> uniqueRoles = new ArrayList(
+		List<String> uniqueRoles = new ArrayList <String>(
 				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
-
+		boolean activeRole = false;
 		if (userOrg != null) {
 			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
 			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -3205,9 +3207,19 @@ public class ProfileManagementBackingBean extends
 									new String[] { getRoleDescByRoleCode(roleCode) });
 						}
 					}
+					
+					//check if one role is active for user org active status only
+					if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()){
+						activeRole = true;						
+					}
 				}
 			}
 			// }
+		}
+		
+		
+		if(!activeRole){
+			throw new EpException(MessageConst.ERROR_770022);
 		}
 
 	}
