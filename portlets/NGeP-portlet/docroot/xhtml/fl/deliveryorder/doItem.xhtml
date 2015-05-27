@@ -123,7 +123,7 @@
     				</f:facet>
 						<h:panelGroup id="delQtyTxt">
 							<p:inputText value="#{doItems.deliveredQty}" size="5" styleClass="colFloatRight" maxlength="14"	disabled="#{doItems.delQtyDisabled}"
-								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}" 
+								rendered="#{createDOBackingBean.managedBean.docProcess ne 'DO'}"  style="text-align:right;" 
 								onkeypress="if (event.keyCode == 13) { delQty.jq.click(); return false; }" widgetVar="delQty">
 								<p:ajax event="blur" update="delQtyTxt,delAmountTxt,remaingQtyTxt" process="@this"
 									listener="#{createDOBackingBean.retrieveDelAmount(doItems)}" />
@@ -146,7 +146,7 @@
 							</h:outputText>
 							<p:inputText value="#{doItems.deliveredAmt}" size="17"
 								disabled="#{doItems.delQtyDisabled}"
-								maxlength="15" styleClass="colFloatRight"
+								maxlength="15" styleClass="colFloatRight" style="text-align:right;"
 								rendered="#{doItems.itemType.parameterCode eq ParameterConst.itemTypeService}">
 								<f:convertNumber
 									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -193,7 +193,7 @@
 							<f:setPropertyActionListener
 								target="#{createDOBackingBean.managedBean.selectedItemRow}"
 								value="#{doItems}" />
-							<p:graphicImage value="/css/images/design/document.png"  styleClass="tasklist_title1"/>
+							<p:graphicImage value="/css/images/design/ico-view.png"  styleClass="tasklist_title1"/>
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
