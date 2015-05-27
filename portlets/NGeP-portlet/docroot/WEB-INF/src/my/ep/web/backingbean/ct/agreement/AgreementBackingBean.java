@@ -1187,11 +1187,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @throws IOException       if an input or output exception occurred
 	 * @see    IOException
 	 */
-	public void downloadDocFile(CtAgreementContent agreementContent) throws IOException {		
+	public void downloadDocFile(CtAgreementContent agreementContent) throws   Exception {		
+	
 		AttachmentFormat attachmentFormat = null;
-
+		if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
+			   if(agreementContent.getTplDocMaster() == null || agreementContent.getTplDocMaster().getTplDocSections() == null){
+				    throw new EpException(MessageConst.WARN_755017);
+			   }
+		}
+		
 		try {
-			String fileName = getTemplateFileName(agreementContent.getTitle());
+	    	String fileName = getTemplateFileName(agreementContent.getTitle());
 			if (fileName != null) {
 				String content = null;
 				String filePath = getManagedBean().getFileDirectory() + "/temp";
@@ -1202,7 +1208,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				filePath = filePath + "/"+ attachmentFormat.format(fileName, null);
 				
 				if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
-				    getTemplateContent(agreementContent);
+					getTemplateContent(agreementContent);
 				    content = previewAction();
 				} else {
 					content = getContent(agreementContent.getTitle());
@@ -1219,16 +1225,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				downloadFile(DocumentRepositoryUtils.getDBFilePath(agreementContent.getFilePath()),
 						agreementContent.getFileName());
 			}
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new EpException(e.getMessage());
-		} finally {
-	
-			attachmentFormat = null;
-		}
+		}catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw new EpException(e.getMessage());
+			} finally {
+		
+				attachmentFormat = null;
+			}
 	}
 	
 	/**
