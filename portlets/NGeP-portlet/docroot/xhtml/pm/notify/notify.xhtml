@@ -20,7 +20,7 @@
 									id="allLink" action="#{notifyBackingBean.retrieveNotifyList}"
 									update=":form:pnldetail,:form:notifyTable">
 									<h:outputText value="#{lbl['lbl.portal.notify.all']}"></h:outputText>
-								</p:commandLink> &#160;&#160;|&#160;&#160; <h:graphicImage
+								</p:commandLink> &#160;&#160;|&#160;&#160; <h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}"
 									style="vertical-align:bottom;" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png" />&#160;
 								<p:commandLink
 									action="#{notifyBackingBean.retrieveUnreadNotifyList}"
@@ -47,7 +47,7 @@
 									<p:column selectionMode="multiple" style="width:7%" />
 
 									<p:column style="text-align: right;width:7%">
-										<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
+										<h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
 											rendered="#{notify.pmAlert.isRead eq '0'}" />
 									</p:column>
 									<p:column
