@@ -23,10 +23,7 @@
 		              style="width:28%; white-space:normal;" filterMatchMode="contains">
 		              <f:facet name="header">
 		                    <h:outputText id="productItemDisc" value="#{lbl['lbl.ct.item.desc']}"/>
-		                        &#160; <p:graphicImage id="productItem" value="/css/images/design/tooltips.png" /> <p:tooltip
-							          id="productTooltip" for="productItem">
-							<h:outputText id="productInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
-						</p:tooltip> 
+		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
 		               </f:facet>
 		              <h:outputText value="#{ctItemVar.scRequestItem.itemName}" style="float:left;"/>
 		         </p:column>       
