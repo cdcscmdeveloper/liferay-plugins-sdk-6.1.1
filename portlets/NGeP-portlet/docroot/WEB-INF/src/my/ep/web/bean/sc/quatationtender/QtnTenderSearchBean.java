@@ -53,6 +53,8 @@ public class QtnTenderSearchBean implements Serializable {
 	/** The committee type. */
 	private String committeeType;
 	
+	private Long recordStatus;
+	
 	/**
 	 * Instantiates a new qtn tender search bean.
 	 */
@@ -255,6 +257,20 @@ public class QtnTenderSearchBean implements Serializable {
 	 */
 	public void setCommitteeType(String committeeType) {
 		this.committeeType = committeeType;
+	}
+
+	/**
+	 * @return the recordStatus
+	 */
+	public Long getRecordStatus() {
+		return recordStatus;
+	}
+
+	/**
+	 * @param recordStatus the recordStatus to set
+	 */
+	public void setRecordStatus(Long recordStatus) {
+		this.recordStatus = recordStatus;
 	}
 	
 }
