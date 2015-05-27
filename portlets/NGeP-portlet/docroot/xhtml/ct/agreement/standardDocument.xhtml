@@ -44,9 +44,9 @@
 				        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.content.action']}"/>
 				  	</f:facet>
 				  	<h:panelGroup rendered="#{contentsVar.contentType.parameterCode eq ParameterConst.agreementTemplateDoc}">
-						<h:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}" immediate="true">
+						<p:commandLink action="#{agreementBackingBean.downloadDocFile(contentsVar)}"  >
 							<p:graphicImage value="/css/images/design/ico-download.png" title="#{lbl['lbl.txt.file.download']}" />
-						</h:commandLink>
+						</p:commandLink>
 					 <p:spacer width="5"/>
 					 <p:commandLink
 							action="#{agreementBackingBean.gotoTemplateDoc(contentsVar)}">
