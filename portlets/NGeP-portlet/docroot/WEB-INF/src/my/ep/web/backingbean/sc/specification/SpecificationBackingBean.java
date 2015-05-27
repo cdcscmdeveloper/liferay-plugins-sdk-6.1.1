@@ -2387,7 +2387,8 @@ public class SpecificationBackingBean extends
 			checkList.setDocCategory(QTConstants.TECHNICAL_DOC_TYPE);
 			checkList
 					.setChecklistSeq(SourcingConstants.CHECKLIST_SEQ_TEMPLATE_SPEC);
-			checkList.setScoringReq(true);
+			checkList.setScoringReq(this.getManagedBean().getScQt()
+					.isTechEvaluationReq());
 			checkList.setAction(checkListactionresDTO.getPmParameter());
 			checkList.setScQt(this.getManagedBean().getScQt());
 			checkList.setDefinationType(specTyperesDTO.getPmParameter());
