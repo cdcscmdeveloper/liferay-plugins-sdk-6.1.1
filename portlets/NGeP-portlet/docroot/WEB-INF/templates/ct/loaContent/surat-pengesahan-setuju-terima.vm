@@ -76,7 +76,7 @@
 		<td>
 			<br />
 			Tuan, <br />
-			<b>Tambahan Kepada $contractNo </b> <br/><br/>
+			<b>Perubahan/Tambahan Kepada $contractNo </b> <br/><br/>
 		</td>
 	</tr>	
 	<tr>
@@ -92,7 +92,7 @@
 					<p>3.3 Apa-apa kegagalan dalam mematuhi kehendak-kehendak para 3 ini dalam tempoh masa yang dinyatakan, kecuali jika diabaikan dengan nyata oleh Kerajaan, akan menyebabkan penerimaan SST ini terbatal dan selepas itu Kerajaan tidaklah dengan apa-apa cara juga bertanggungjawab kepada tuan.<br /></p>
 				</li>
 				#end
-				<li style="padding-bottom:20px;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate.<br /></li>
+				<li style="padding-bottom:20px;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate. Perubahan/Tambahan kepada syarat-syarat kontrak adalah seperti di lampiran.<br /></li>
 				<li style="padding-bottom:20px;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.<br /><br /></li>
 			</ol>
 		</td>
