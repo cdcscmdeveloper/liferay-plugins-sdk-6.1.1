@@ -9,179 +9,215 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
-		<p:messages id="catCmpMsg" showDetail="true" autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}" closable="true" showSummary="false" />
+		<p:messages id="catCmpMsg" showDetail="true"
+			autoUpdate="#{requestNoteBackingBean.managedBean.autoUpdate}"
+			closable="true" showSummary="false" />
 
-       <p:blockUI block=":form" widgetVar="blockWidget">
-				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
-			</p:blockUI>
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
 
+
+
+		<div style="text-align: left;">
+			<p:commandButton value="#{lbl['lbl.cm.back']}"
+				action="#{catalogueBackingBean.backToPervious()}" process="@this"></p:commandButton>
+		</div>
 		<h:panelGroup id="compareCatalogueId">
 
-			<div style="text-align: right; float: left;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}"
-					action="#{catalogueBackingBean.backToPervious()}" process="@this"></p:commandButton>
-			</div>
+			<table style="width: 100%;">
+				<tr>
+					<td style="width: 10%; padding-right: 10px;"><h:panelGroup
+							styleClass="comparelabelCss">
 
-			<h:panelGrid columns="2" style="width:100%;" columnClasses="comparelabelCss compareValueCss">
-				 <table>
-				 <TR style="height:60px">
-				 </TR>
-				 <TR>				 
-				 <ui:repeat  var="label" value="#{catalogueBackingBean.managedBean.compareLabel}">
-					<p:panel styleClass="comparePanelLabel">
-						<h:outputLabel value="#{label}" style="width:160px;"/>
-					</p:panel>
-				</ui:repeat>				
-				</TR>
-                </table>
-				<p:dataGrid id="compareDataList" rowIndexVar="compareKey" paginator="true" styleClass="datagridfloat" 
-					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}" var="supplierItem" columns="4" rows="4" 
-					paginatorPosition="bottom" paginatorTemplate="{PageLinks} ">
-					<table>
-						<tr style="height:85px">
-							<td colspan="5">
-							<h:panelGroup rendered="#{fn:length(supplierItem.cmImages) == 0 }">
-								<p:graphicImage value="/images/noImage.jpg" height="80px" style="height:80px;"></p:graphicImage>
-							</h:panelGroup>
-							
-							<h:panelGroup rendered="#{fn:length(supplierItem.cmImages) > 0 }">
-								<img src="/NGeP-portlet/image?imageName=#{supplierItem.smSupplier.epNo}/#{supplierItem.cmImages[0].imagePath}" style="height:80px;" />
-							</h:panelGroup>
+							<table>
+								<tr height="40px;">
+									<td></td>
+								</tr>
+								<tr>
+									<td><ui:repeat var="label"
+											value="#{catalogueBackingBean.managedBean.compareLabel}">
+											<p:panel styleClass="comparePanelLabel">
+												<h:outputLabel value="#{label}" style="width:160px;" />
+											</p:panel>
+										</ui:repeat></td>
 
-							</td>
-						</tr>
-						<tr 
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">
-							  
-								<p:menuButton value="">
-									<p:menuitem id="simpleQuoteId" value="#{lbl['lbl.sc.sq']}" icon="ui-icon-plus"
-										action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierItemId ,false , catalogueBackingBean.managedBean.selectedSupplierItemList)}"
-										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-										rendered="#{unspscCodeBackingBean.requisitioner}" /> 
-									
-									<p:menuitem value="#{lbl['lbl.sc.pr.inquiry']}"
-										icon="ui-icon-plus"
-										id="purchaseInquiryId"
-										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-										action="#{purchaseInquiryBackingBean.prInquiryAction(supplierItem, catalogueBackingBean.managedBean.selectedSupplierItemList)}"
-										rendered="#{unspscCodeBackingBean.requisitioner}" />
-									<p:menuitem value="#{lbl['lbl.sc.add.to.cart']}"
-									id="addToCartId"
-										icon="ui-icon-plus"
-										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-										action="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true ,catalogueBackingBean.managedBean.selectedSupplierItemList)}"
-										partialSubmit="true" process="@this"
-										update="@([id$=addToCartPopup])"
-										rendered="#{unspscCodeBackingBean.requisitioner}" />
-									
-								</p:menuButton> 
-								<p:tooltip for="simpleQuoteId">
-									<h:outputText value="#{lbl['lbl.sc.compare.sq']}" escape="false" />
-								</p:tooltip>
-								<p:tooltip for="purchaseInquiryId">
-									<h:outputText value="#{lbl['lbl.sc.pi.tooltip']}" escape="false" />
-								</p:tooltip>
-								<p:tooltip for="addToCartId">
-									<h:outputText value="#{lbl['lbl.sc.atc.tooltip']}" escape="false" />
-								</p:tooltip>
-								<p:commandLink
-									id="deleteComparedItem"
-									action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
-									update=":form:compareDataList">
-									<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-								</p:commandLink>
-								<p:tooltip for="deleteComparedItem">
-									<h:outputText value="#{lbl['lbl.sc.compare.remove.tooltip']}" escape="false" />
-								</p:tooltip>
-							    </td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.cmItem.itemName}&#160;</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5; width: 270px;">#{supplierItem.cmItem.extensionCode}&#160;
-                               <p:commandLink id="recentPrice" value="#{lbl['lbl.sc.recent.price']}" rendered="#{unspscCodeBackingBean.requisitioner}"
-									action="#{requestNoteBackingBean.showRecentPrice(supplierItem, null)}"
-									oncomplete="recentPricePopup.show()" />
-								<p:tooltip for="recentPrice">
-									<h:outputText value="#{lbl['lbl.sc.recentprice.tooltip']}" escape="false" />
-								</p:tooltip>
-							</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.cmStandardPricing.price} 
-								
-								<p:commandLink
-									value="#{lbl['lbl.cm.view.all.price']}"
-									action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
-									oncomplete="morePrice.show()"
-									update=":form:morePrice"></p:commandLink>&#160;
-								
-							</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.smSupplier.companyName}&#160;</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.skuNumber}&#160;</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.minOrder}&#160;</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.leadTime}&#160;</td>
-						</tr>
-						<tr height="31px"
-							style="border-bottom: 2px solid #FFFFFF !important;">
-							<td colspan="5" style="background-color: #f5f5f5;width:270px;">#{supplierItem.itemDesc}&#160;</td>
-						</tr>
+								</tr>
 
-
-					</table>
-
-
-				</p:dataGrid>
+							</table>
 
 
 
-			</h:panelGrid>
 
-			<p:dialog id="morePrice" widgetVar="morePrice" modal="true" header="#{lbl['lbl.cm.pricing']}" width="800" height="250">
+						</h:panelGroup></td>
+					<td width="100%;"><h:panelGroup styleClass="compareValueCss">
 
-				<p:tabView id="catalogueViewPricingId" activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}">
+							<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
+								paginator="true" styleClass="datagridfloat"
+								value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
+								var="supplierItem" columns="4" rows="4"
+								paginatorPosition="bottom" paginatorTemplate="{PageLinks} ">
+								<table>
+									<tr style="height: 85px">
+										<td colspan="5"><h:panelGroup
+												rendered="#{fn:length(supplierItem.cmImages) == 0 }">
+												<p:graphicImage value="/images/noImage.jpg" height="80px"
+													style="height:80px;"></p:graphicImage>
+											</h:panelGroup> <h:panelGroup
+												rendered="#{fn:length(supplierItem.cmImages) > 0 }">
+												<img
+													src="/NGeP-portlet/image?imageName=#{supplierItem.smSupplier.epNo}/#{supplierItem.cmImages[0].imagePath}"
+													style="height: 80px;" />
+											</h:panelGroup></td>
+									</tr>
+									<tr
+										style="border-bottom: 2px solid #FFFFFF !important; height: 40px;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;"><p:menuButton
+												value="">
+												<p:menuitem id="simpleQuoteId" value="#{lbl['lbl.sc.sq']}"
+													icon="ui-icon-plus"
+													action="#{simpleQuoteBackingBean.simpleQuoteAction(supplierItem.supplierItemId ,false , catalogueBackingBean.managedBean.selectedSupplierItemList)}"
+													onstart="blockWidget.show();"
+													oncomplete="blockWidget.hide();"
+													rendered="#{unspscCodeBackingBean.requisitioner}" />
+
+												<p:menuitem value="#{lbl['lbl.sc.pr.inquiry']}"
+													icon="ui-icon-plus" id="purchaseInquiryId"
+													onstart="blockWidget.show();"
+													oncomplete="blockWidget.hide();"
+													action="#{purchaseInquiryBackingBean.prInquiryAction(supplierItem, catalogueBackingBean.managedBean.selectedSupplierItemList)}"
+													rendered="#{unspscCodeBackingBean.requisitioner}" />
+												<p:menuitem value="#{lbl['lbl.sc.add.to.cart']}"
+													id="addToCartId" icon="ui-icon-plus"
+													onstart="blockWidget.show();"
+													oncomplete="blockWidget.hide();"
+													action="#{requestNoteBackingBean.addToCart(supplierItem.supplierItemId ,true ,catalogueBackingBean.managedBean.selectedSupplierItemList)}"
+													partialSubmit="true" process="@this"
+													update="@([id$=addToCartPopup])"
+													rendered="#{unspscCodeBackingBean.requisitioner}" />
+
+											</p:menuButton> <p:tooltip for="simpleQuoteId">
+												<h:outputText value="#{lbl['lbl.sc.compare.sq']}"
+													escape="false" />
+											</p:tooltip> <p:tooltip for="purchaseInquiryId">
+												<h:outputText value="#{lbl['lbl.sc.pi.tooltip']}"
+													escape="false" />
+											</p:tooltip> <p:tooltip for="addToCartId">
+												<h:outputText value="#{lbl['lbl.sc.atc.tooltip']}"
+													escape="false" />
+											</p:tooltip> <p:commandLink id="deleteComparedItem"
+												action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
+												update=":form:compareDataList">
+												<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+											</p:commandLink> <p:tooltip for="deleteComparedItem">
+												<h:outputText
+													value="#{lbl['lbl.sc.compare.remove.tooltip']}"
+													escape="false" />
+											</p:tooltip></td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.cmItem.itemName}&#160;</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.cmItem.extensionCode}&#160;
+											<p:commandLink id="recentPrice"
+												value="#{lbl['lbl.sc.recent.price']}"
+												rendered="#{unspscCodeBackingBean.requisitioner}"
+												action="#{requestNoteBackingBean.showRecentPrice(supplierItem, null)}"
+												oncomplete="recentPricePopup.show()" /> <p:tooltip
+												for="recentPrice">
+												<h:outputText value="#{lbl['lbl.sc.recentprice.tooltip']}"
+													escape="false" />
+											</p:tooltip>
+										</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.cmStandardPricing.price}
+
+											<p:commandLink value="#{lbl['lbl.cm.view.all.price']}"
+												action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
+												oncomplete="morePrice.show()" update=":form:morePrice"></p:commandLink>&#160;
+
+										</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.smSupplier.companyName}&#160;</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.skuNumber}&#160;</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.minOrder}&#160;</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.leadTime}&#160;</td>
+									</tr>
+									<tr height="40px"
+										style="border-bottom: 2px solid #FFFFFF !important;">
+										<td colspan="5"
+											style="background-color: #f5f5f5; width: 270px;">#{supplierItem.itemDesc}&#160;</td>
+									</tr>
+
+
+								</table>
+
+
+							</p:dataGrid>
+
+
+
+						</h:panelGroup></td>
+				</tr>
+
+			</table>
+
+
+
+			<p:dialog id="morePrice" widgetVar="morePrice" modal="true"
+				header="#{lbl['lbl.cm.pricing']}" width="800" height="250">
+
+				<p:tabView id="catalogueViewPricingId"
+					activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}">
 					<p:tab title="#{lbl['lbl.cm.normal']}">
 						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 					</p:tab>
-					
+
 					<p:tab title="#{lbl['lbl.cm.promotion']}"
 						rendered="#{catalogueBackingBean.managedBean.supplierItemObj.cmPromotionPricing.price > 0 and 
 						catalogueBackingBean.showActivePromotion(catalogueBackingBean.managedBean.supplierItemObj)}">
 						<ui:include src="/xhtml/cm/pricing/promotionPricingTab.xhtml"></ui:include>
 					</p:tab>
-					
+
 					<p:tab title="#{lbl['lbl.cm.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
 					</p:tab>
-					
+
 					<p:tab title="#{lbl['lbl.cm.promotion.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmPromotionTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
 					</p:tab>
-					
+
 					<p:tab title="#{lbl['lbl.cm.zonal.standard']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.zStdPrices) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
 					</p:tab>
-					
+
 					<p:tab title="#{lbl['lbl.cm.zonal.promotion']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
@@ -191,19 +227,21 @@
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
 					</p:tab>
-					
+
 					<p:tab title="#{lbl['lbl.cm.zonal.promotion.tier']}"
 						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionTierPricings) > 0}">
-						<ui:include src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
+						<ui:include
+							src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
 					</p:tab>
-					
+
 				</p:tabView>
 
 			</p:dialog>
 
 		</h:panelGroup>
 		<ui:include src="/xhtml/sc/directpurchase/common/addToCartPopup.xhtml" />
-		<ui:include src="/xhtml/sc/directpurchase/common/recentPricePopup.xhtml" />
+		<ui:include
+			src="/xhtml/sc/directpurchase/common/recentPricePopup.xhtml" />
 	</ui:define>
 
 </ui:composition>
