@@ -6046,12 +6046,12 @@ public class EvaluationBackingBean extends
 										.saveReportDtls(reqDTO);
 								this.getManagedBean().setScQt(
 										evalResDTO.getScQt());
-								/*if (null != evalResDTO.getWorkFlowStatus()) {
-									this.getManagedBean().setCurrentStatusId(
-											evalResDTO.getWorkFlowStatus()
-													.getPmStatus()
-													.getStatusId());
-								}*/
+								/*
+								 * if (null != evalResDTO.getWorkFlowStatus()) {
+								 * this.getManagedBean().setCurrentStatusId(
+								 * evalResDTO.getWorkFlowStatus() .getPmStatus()
+								 * .getStatusId()); }
+								 */
 							}
 						} else if (this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
@@ -6068,12 +6068,12 @@ public class EvaluationBackingBean extends
 										.saveReportDtls(reqDTO);
 								this.getManagedBean().setScQt(
 										evalResDTO.getScQt());
-								/*if (null != evalResDTO.getWorkFlowStatus()) {
-									this.getManagedBean().setCurrentStatusId(
-											evalResDTO.getWorkFlowStatus()
-													.getPmStatus()
-													.getStatusId());
-								}*/
+								/*
+								 * if (null != evalResDTO.getWorkFlowStatus()) {
+								 * this.getManagedBean().setCurrentStatusId(
+								 * evalResDTO.getWorkFlowStatus() .getPmStatus()
+								 * .getStatusId()); }
+								 */
 							}
 						}
 					}
@@ -7898,7 +7898,9 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setReadOnly(true);
 				this.getManagedBean().setMemberOnly(false);
 
-			} else if (member.getMemberRole().getParameterCode()
+			} else if (member
+					.getMemberRole()
+					.getParameterCode()
 					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 				this.getManagedBean().setReadOnly(true);
 				this.getManagedBean().setMemberOnly(true);
@@ -10091,29 +10093,28 @@ public class EvaluationBackingBean extends
 	}
 
 	// retrieve specification based on sample item.
-	public void retriveSpecificationsByItem(ScRequestItem requestItem) {
+	public void retriveSpecificationsByItem(SelectEvent event) {
 		this.getManagedBean().setSampleItemSpecifications(
 				new ArrayList<TplSpecQuestion>());
 		this.getManagedBean().setItemName(null);
-		if (null != requestItem) {
-			TplSpecQuestion specQuestions = requestItem.getTplSpecQuestion();
-			this.getManagedBean().setItemName(specQuestions.getClItem());
-			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.COMMON_COMPONENT,
-							ITemplateSpecSO.class);
-			TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-			specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			specReqDTO.setItemName(specQuestions.getClItem());
+		ScQtSampleItem sampleItem = (ScQtSampleItem) event.getObject();
+				
 
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.retrieveTechSpecByItemNames(specReqDTO);
+		// TplSpecQuestion specQuestions = requestItem.getTplSpecQuestion();
+		this.getManagedBean().setItemName(sampleItem.getScRequestItem().getItemName());
+		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+		specReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		specReqDTO.setItemName(sampleItem.getScRequestItem().getItemName());
 
-			if (null != resDTO && null != resDTO.getSpecQuestionList()) {
-				this.getManagedBean().getSampleItemSpecifications()
-						.addAll(resDTO.getSpecQuestionList());
+		TemplateSpecResDTO resDTO = templateSpecSO
+				.retrieveTechSpecByItemNames(specReqDTO);
 
-			}
+		if (null != resDTO && null != resDTO.getSpecQuestionList()) {
+			this.getManagedBean().getSampleItemSpecifications()
+					.addAll(resDTO.getSpecQuestionList());
 
 		}
 
