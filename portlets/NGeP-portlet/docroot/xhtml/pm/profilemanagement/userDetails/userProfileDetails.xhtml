@@ -19,7 +19,7 @@
 								value="#{lbl['lbl.pm.org.category']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 								
-						<td><p:selectOneRadio
+						<td ><p:selectOneRadio
 								value="#{profileManagementBackingBean.managedBean.orgCategory}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew or !profileManagementBackingBean.isNotEpOrSupportAdmin()}">
 								<f:selectItem
@@ -32,6 +32,9 @@
 									update=":form:orgProfileDet,:form:opUserProfileDet" />
 							</p:selectOneRadio></td>
 						<th></th>
+						<td></td>
+						<td></td>
+						<td></td>
 						<td></td>
 					</tr>
 					<tr>
@@ -52,8 +55,7 @@
 									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
 			     			" />
-							</p:selectOneMenu> <p:message id="orgTypeFederalListMsg" for="orgTypeFederalList"
-								display="icon" /> <p:selectOneMenu id="orgTypeOthersList"
+							</p:selectOneMenu>  <p:selectOneMenu id="orgTypeOthersList"
 								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUserOrg.brandNew}"
 								styleClass="ppDropDownWidthL" required="true"
@@ -67,8 +69,15 @@
 									update=":form:lovResOrg:lovResOrg,:form:tvRoleReceivingAddr:lovAddrType:lovAddrType, 
 			     			:form:tvRoleReceivingAddr:dtRoles, :form:tvRoleReceivingAddr:dtReceiveAddr
 			     			" />
-							</p:selectOneMenu> <p:message id="orgTypeOthersListMsg" for="orgTypeOthersList"
-								display="icon" /></td>
+							</p:selectOneMenu> </td><td width="5%">
+							<p:message id="orgTypeFederalListMsg" 
+								for="orgTypeFederalList"
+								display="icon" 
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.federalGovt}"/>
+							<p:message id="orgTypeOthersListMsg" 
+								for="orgTypeOthersList"
+								display="icon" 
+								rendered="#{profileManagementBackingBean.managedBean.orgCategory eq profileManagementBackingBean.others}"/></td>
 						<td colspan="2" align="left"><div style="float: left">
 							<c:if test="#{ParameterConst.orgTypeFactoring eq profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
 							    <ac:lov id="lovResOrg" lovId="PM_ORG_PROFILE_FFC" size="40" 
@@ -95,8 +104,13 @@
 												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" />
 											
 							</c:if>
+							</div>
+							</td>
+							<td width="5%">
 							<p:message id="lovResOrgMsg" for="lovResOrg" display="icon" />
-							</div></td>
+							</td>
+							<td></td>
+						<td></td>
 
 					</tr>
 				</table>
@@ -124,8 +138,11 @@
 								<p:ajax event="change"
 									listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
 									partialSubmit="true" process="@this" update="@form" />
-							</p:selectOneMenu> <p:message id="somIdTypeMsg" for="somIdType" display="icon" />
-						</td>
+							</p:selectOneMenu>
+							</td>
+							<td width="5%"> <p:message id="somIdTypeMsg" for="somIdType" display="icon" />
+							</td>
+						
 						<td width="20%">
 						<c:choose>
 								<c:when
@@ -157,9 +174,11 @@
 											partialSubmit="true" process="@this" update="@form" />
 									</p:inputText>
 								</c:otherwise>
-							</c:choose> <p:message id="itIdentityNoMsg" for="itIdentityNo"
+							</c:choose>
+							</td>
+							<td width="5%"> <p:message id="itIdentityNoMsg" for="itIdentityNo"
 								display="icon" />
-						</td>
+							</td>
 						<!-- Profile Photo -->
 						<td colspan="2" rowspan="9"><p:outputPanel id="opPortrait"
 								rendered="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}">
@@ -194,9 +213,12 @@
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.loginid']} - #{lbl['lbl.pm.profiles.invalidLogin']}">
 								<f:validateRegex pattern="^([a-zA-Z0-9._-]{8,40})?$" />
-							</p:inputText> <p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
+							</p:inputText> 
+						</td>
+						<td><p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
 
 						</td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -217,8 +239,10 @@
 									value="#{profileManagementBackingBean.salutationOptions()}"
 									var="salutation" itemLabel="#{salutation.salutationName}"
 									itemValue="#{salutation.salutationId}" />
-							</p:selectOneMenu> <p:message id="somSalutationMsg" for="somSalutation"
+							</p:selectOneMenu> </td>
+							<td><p:message id="somSalutationMsg" for="somSalutation"
 								display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -238,8 +262,11 @@
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserUsername"
 								value="#{lbl['lbl.pm.profiles.userdetails.username.tooltip']}"
-								showEffect="fade" hideEffect="fade" /> <p:message
+								showEffect="fade" hideEffect="fade" />
+						</td>
+						<td> <p:message
 								id="itUserNameMsg" for="itUserName" display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -261,8 +288,11 @@
 									value="#{profileManagementBackingBean.getCountryList()}"
 									var="countrylist" itemLabel="#{countrylist.countryName}"
 									itemValue="#{countrylist.countryId}" />
-							</p:selectOneMenu> <p:message id="somNationalityMsg" for="somNationality"
+							</p:selectOneMenu> 
+						</td>
+						<td><p:message id="somNationalityMsg" for="somNationality"
 								display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -277,8 +307,11 @@
 								required="#{!empty param['disableValidation']}"
 								label="#{lbl['lbl.pm.profiles.userdetails.designation']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUserOrg.designation}" />
+						</td>
+						<td>
 							<p:message id="itDesignationMsg" for="itDesignation"
 								display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -293,6 +326,8 @@
 								<f:selectItems
 									value="#{profileManagementBackingBean.getYesNoOptions()}" />
 							</p:selectOneRadio></td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -315,6 +350,9 @@
 								for="giUserGrade"
 								value="#{lbl['lbl.pm.profiles.userdetails.grade.tooltip']}"
 								showEffect="fade" hideEffect="fade" /></td>
+						<td><p:message id="userGradeMsg" for="userGrade"
+								display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -335,8 +373,11 @@
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giEmail"
 								value="#{lbl['lbl.pm.profiles.userdetails.email.tooltip']}"
-								showEffect="fade" hideEffect="fade" /> <p:message
+								showEffect="fade" hideEffect="fade" /> 
+								</td>
+								<td><p:message
 								id="itEmailMsg" for="itEmail" display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -349,7 +390,10 @@
 								styleClass="ppDisplayTextL" maxlength="12"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.telno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText> <p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>
+							</p:inputText>
+						</td>
+						<td> <p:message id="itTelNoMsg" for="itTelNo" display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -362,7 +406,10 @@
 								styleClass="ppDisplayTextL" maxlength="12"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.faxno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText> <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>
+							</p:inputText>
+						</td>
+						<td> <p:message id="itFaxNoMsg" for="itFaxNo" display="icon" /></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -375,8 +422,11 @@
 								maxlength="12" styleClass="ppDisplayTextL"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.mobileno']} - #{lbl['lbl.pm.profiles.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-							</p:inputText> <p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
+							</p:inputText>
 						</td>
+						<td> <p:message id="itMobileNoMsg" for="itMobileNo" display="icon" />
+						</td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
@@ -397,11 +447,9 @@
 									partialSubmit="true" process="@this"
 									update="@this, :form:pUserProfileHeader, :form:tvRoleReceivingAddr" />
 
-							</p:selectOneMenu> &#160;&#160; <p:graphicImage id="giUserStatus"
-								value="/css/images/design/tooltips.png" /> <p:tooltip
-								for="giUserStatus"
-								value="#{lbl['lbl.pm.profiles.userdetails.status.tooltip']}"
-								showEffect="fade" hideEffect="fade" /></td>
+							</p:selectOneMenu></td>
+						<td></td>
+						<td></td>
 						<td></td>
 						<td></td>
 						<td></td>
