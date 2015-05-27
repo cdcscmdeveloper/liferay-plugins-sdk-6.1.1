@@ -3,38 +3,37 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
-		<p:dataTable
+		<p:dataTable id="qtDetailsId"
 			value="#{committeBackingBean.managedBean.scCommittee.scQtCommittees}"
-			var="qt">
+			var="scQtCommittees" rows="10">
+			
+			<ac:paginator for="qtDetailsId" />
 
 			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:15%">
-				<h:outputText value="#{qt.scQt.qtNo}" />
+				#{scQtCommittees.scQt.qtNo}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.title']}" style="width:10px;">
-
-				<h:outputText value="#{qt.scQt.qtTitle}" />
-
+				#{scQtCommittees.scQt.qtTitle}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.procurement.mode']}" style="width:10%">
-				<h:outputText
-					value="#{committeBackingBean.getParameterDesc(qt.scQt.procurementMode)}" />
+				#{committeBackingBean.getParameterDesc(scQtCommittees.scQt.procurementMode)}
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.created.date']}" style="width:10%">
-				<h:outputText value="#{qt.scQt.createdDate}">
+				<h:outputText value="#{scQtCommittees.scQt.createdDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:10%">
-				<h:outputText
-					value="#{committeBackingBean.getStatusDescById(qt.scQt.qtStatus.statusId)}" />
+				#{committeBackingBean.getStatusDescById(scQtCommittees.scQt.qtStatus.statusId)}
 			</p:column>
 
 		</p:dataTable>
