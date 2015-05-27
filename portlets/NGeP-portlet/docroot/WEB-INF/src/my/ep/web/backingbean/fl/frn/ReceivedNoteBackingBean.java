@@ -162,9 +162,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(flBB.getManagedBean().getRemarkList().size()>1) {
 				reqDTO.setFlRemarkList(flBB.getManagedBean().getRemarkList());
 			}
-			if(getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)){
+			if(getManagedBean().getBpmTaskName()!=null && 
+				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.CREATE_FRN_HT)){
 				reqDTO.setUserRole(hasRORole());	
-			}else if(getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
+			}else if(getManagedBean().getBpmTaskName()!=null && 
+				getManagedBean().getBpmTaskName().equalsIgnoreCase(FLProcessNameConst.APPROVE_FRN_HT)){
 				reqDTO.setUserRole(hasApproverRole());	
 			}else{
 				reqDTO.setUserRole(getUserRole());
