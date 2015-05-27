@@ -422,6 +422,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @param item the item
 	 */
 	public void retrieveReceivedAmt(FlFulfilmentNoteItem item) {
+		if(item.getReceivedQty()==null) {
+			item.setReceivedQty(BigDecimal.ZERO);
+		}
 		if(item.getReceivedQty().doubleValue() > item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
 			item.setReceivedQty(BigDecimal.ZERO);
 			item.setReceivedAmt(BigDecimal.ZERO);
@@ -691,6 +694,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	 * @return the remaining quantity
 	 */
 	public double getRemainingQuantity(FlFulfilmentNoteItem flFulfilmentNoteItem) {
+		if(flFulfilmentNoteItem.getReceivedQty()==null) {
+			flFulfilmentNoteItem.setReceivedQty(BigDecimal.ZERO);
+		}
 		double orderQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getOrderedQty().doubleValue();
 		double receivedQty = flFulfilmentNoteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getReceivedQty().doubleValue();
 		return orderQty - receivedQty - flFulfilmentNoteItem.getReceivedQty().doubleValue();	
