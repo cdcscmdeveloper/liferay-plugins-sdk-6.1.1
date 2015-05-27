@@ -10,16 +10,14 @@
 		id="qtsearchid">
 		<table>
 			<tr>
-				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.sc.title']}" /></td>
+				<td valign="top"><p:outputLabel value="#{lbl['lbl.sc.title']}" /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtTitle}"
 						cols="115" rows="2" style=" margin-bottom:5px;width: 100%;"
 						maxlength="100" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.qtn.no']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtNo}"
 						size="30" maxlength="21" /></td>
@@ -27,8 +25,7 @@
 				<td />
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.created.date']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.created.date']}" /></td>
 				<td><p:calendar
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 						id="crdateFrm" showOn="button" size="30" readonlyInput="true"
@@ -37,13 +34,11 @@
 				<td />
 			</tr>
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.status']}" /></td>
-				<td><p:selectOneMenu
-						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtStatus}"
-						style="width: 178px;margin-bottom: 5px;">
+				<td><p:outputLabel value="#{lbl['lbl.sc.recordstatus']}" /></td>
+				<td><p:selectOneMenu style="width: 204px;margin-bottom: 5px;"
+						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.recordStatus}">
 						<f:selectItems
-							value="#{committeBackingBean.getStatusDropdownValues('SC', 'CMT')}" />
+							value="#{committeBackingBean.getRecordStatusDropdownValues()}" />
 					</p:selectOneMenu></td>
 				<td />
 				<td />
@@ -52,7 +47,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.committe.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.committeeType}"
-						style="width: 178px;margin-bottom: 5px;">
+						style="width: 204px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.getFCCommitteesDropDown()}" />
 					</p:selectOneMenu></td>
@@ -66,8 +61,8 @@
 				process="@this, qtsearchid" />
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				action="#{committeBackingBean.resetSearchDetails}"
-				update="qtsearchid" resetValues="true"
-				partialSubmit="true" process="@this" />
+				update="qtsearchid" resetValues="true" partialSubmit="true"
+				process="@this" />
 		</div>
 	</p:panel>
 
@@ -78,9 +73,7 @@
 
 			<ac:paginator for="searchQTs" />
 
-			<p:column
-				headerText="#{lbl['lbl.sc.qtn.no']}"
-				style="width:100px;">
+			<p:column headerText="#{lbl['lbl.sc.qtn.no']}" style="width:100px;">
 				<h:outputText value="#{scqtcommittee.scQt.qtNo}" />
 			</p:column>
 
@@ -90,13 +83,12 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.committe.type']}"
-				style="width:100px;">
+				style="width:20%">
 				<h:outputText
 					value="#{committeBackingBean.getParameterDesc(scqtcommittee.scCommittee.committeeType)}" />
 			</p:column>
 
-			<p:column
-				headerText="#{lbl['lbl.sc.created.date']}"
+			<p:column headerText="#{lbl['lbl.sc.created.date']}"
 				style="width:80px;">
 				<h:outputText value="#{scqtcommittee.scQt.createdDate}">
 					<f:convertDateTime
@@ -104,16 +96,14 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column
-				headerText="#{lbl['lbl.sc.status']}"
-				style="width:200px">
-				<h:outputText
-					value="#{committeBackingBean.getStatusDescById(scqtcommittee.scCommittee.committeStatus.statusId)}" />
-			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.recordstatus']}"
+				style="width:10%"> 
+   	    		#{(scqtcommittee.scQt.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+      		</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}"
-				style="width:6%">
-				<ui:param name="isFCCommitteeType" value="#{scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeB or 
+			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:6%">
+				<ui:param name="isFCCommitteeType"
+					value="#{scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeB or 
 			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeQuotationCommitteeA or
 			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardB or 
 			scqtcommittee.scCommittee.committeeType.parameterCode eq ParameterConst.committeeTypeProcurementBoardA or
@@ -123,13 +113,17 @@
 					action="#{committeBackingBean.editAction(scqtcommittee)}"
 					style="margin-right:20px;" partialSubmit="true" process="@this"
 					rendered="#{(isFCCommitteeType and scqtcommittee.scCommittee.recordStatus) or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId ne QTStatusConst.CMT_COMPLETED)}">
-					<h:graphicImage value="/css/images/design/edit.png" styleClass="tasklist_title1" />
+					<h:graphicImage
+						value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+						styleClass="tasklist_title1" />
 				</p:commandLink>
 				<p:commandLink
 					action="#{committeBackingBean.editAction(scqtcommittee)}"
 					style="margin-right:20px;" partialSubmit="true" process="@this"
 					rendered="#{(isFCCommitteeType and !scqtcommittee.scCommittee.recordStatus) or (!isFCCommitteeType and scqtcommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED)}">
-					<h:graphicImage value="/css/images/design/document.png" styleClass="tasklist_title1" />
+					<h:graphicImage
+						value="#{CommonUIConstant.imagePathUptoDesign}/document.png"
+						styleClass="tasklist_title1" />
 				</p:commandLink>
 			</p:column>
 

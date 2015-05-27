@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -103,7 +104,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class CommitteBackingBean.
  *
@@ -119,6 +119,9 @@ public class CommitteBackingBean extends
 	
 	/** The Constant NAV_TO_VIEW_HISTORY. */
 	private static final String NAV_TO_VIEW_HISTORY = "/xhtml/sc/committe//history/viewHistory.xhtml";
+	
+	/** The Constant NAV_TO_SEARCH_PAGE. */
+	private static final String NAV_TO_SEARCH_PAGE = "/xhtml/sc/committe/committemain.xhtml";
 
 	/** The Constant logger. */
 	private static final Logger logger = EpLogger
@@ -404,26 +407,61 @@ public class CommitteBackingBean extends
 				searchFilterBean.add(bean);
 			}
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
+			Date toCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			if (null != fromCreatedDate) {
+				Calendar c1 = Calendar.getInstance();
+				c1.setTime(fromCreatedDate);
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+						c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+				fromDate.set(Calendar.MILLISECOND, 0);
+				fromCreatedDate = fromDate.getTime();
+				
+				Calendar c2 = Calendar.getInstance();
+				c2.setTime(toCreatedDate);
+				Calendar toDate = Calendar.getInstance();
+				toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+						c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				toDate.set(Calendar.MILLISECOND, 999);
+				toCreatedDate = toDate.getTime();
+				
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.CREATED_DATE);
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(fromCreatedDate);
+				/*bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(fromCreatedDate);*/
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						fromCreatedDate, toCreatedDate);
+				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
-			String status = qtnTenderSearchBean.getQtStatus();
+			/*String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status)) {
 				qtSearchBean
 						.getDataFilterBeans()
 						.add(new SearchFilterBean(
 								"scCommittee.committeStatus.statusId",
 								SearchOperator.OPERATOR_EQUALS.value(), status));
+			}*/
+			
+			Long recordStatus = qtnTenderSearchBean.getRecordStatus();
+			if (recordStatus != null && !"".equals(recordStatus)) {
+				SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+				codesSearchBean.setSearchField("recordStatusFlg");
+				codesSearchBean.setSearchValue(recordStatus);
+				searchFilterBean.add(codesSearchBean);
+			} else {
+				SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+				codesSearchBean.setSearchField("recordStatusFlg");
+				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
+				searchFilterBean.add(codesSearchBean);
 			}
+			
 			String committeeType = qtnTenderSearchBean.getCommitteeType();
 			if (!StringUtils.isBlank(committeeType)) {
 				qtSearchBean.getDataFilterBeans().add(
 						new SearchFilterBean(
-								"scCommittee.committeeType.parameterCode",
+								"scCommittee.committeeType.parameterId",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								committeeType));
 			}
@@ -1188,6 +1226,10 @@ public class CommitteBackingBean extends
 			SelectItem[] pbbItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_PBB);
 			this.getManagedBean().setAddRepresentativesTypeslist(
 					Arrays.asList(pbbItems));
+		} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equalsIgnoreCase(commType)) {
+			SelectItem[] qcaItems = getDropdownValues(ParameterTypeConst.REPRESENTATIVE_TYPE_QC);
+			this.getManagedBean().setAddRepresentativesTypeslist(
+					Arrays.asList(qcaItems));
 		}
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
@@ -2082,7 +2124,7 @@ public class CommitteBackingBean extends
 		this.getManagedBean().getQtnTenderSearchBean().setQtTitle(null);
 		this.getManagedBean().getQtnTenderSearchBean().setQtNo(null);
 		this.getManagedBean().getQtnTenderSearchBean().setFromCreatedDate(null);
-		this.getManagedBean().getQtnTenderSearchBean().setQtStatus(null);
+		this.getManagedBean().getQtnTenderSearchBean().setRecordStatus(null);
 		this.getManagedBean().getQtnTenderSearchBean().setCommitteeType(null);
 	}
 
@@ -2140,6 +2182,32 @@ public class CommitteBackingBean extends
 			member.setRepresentativeType(ParameterHelper.getInstance()
 					.getPmParameterById(paramId));
 		}
+	}
+	
+	/**
+	 * Goto qt search page.
+	 * 
+	 * @return the string
+	 */
+	public String viewSearchBackAction() {
+		debugLogger("viewSearchBackAction");
+		return NAV_TO_SEARCH_PAGE + "?faces-redirect=true";
+	}
+	
+	public SelectItem[] getRecordStatusDropdownValues() {
+		/*
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recordStatusList = new ArrayList<String>();
+		recordStatusList.add(ParameterConst.RECORD_STATUS_ACTIVE);
+		recordStatusList.add(ParameterConst.RECORD_STATUS_INACTIVE);
+		*/
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> recordStatusList = new ArrayList<String>();
+		recordStatusList.add(ParameterConst.RECORD_STATUS_ACTIVE);
+		recordStatusList.add(ParameterConst.RECORD_STATUS_INACTIVE);
+		searchBean.getDataFilterBeans().add(new SearchFilterBean("pmParameter.parameterCode",SearchOperator.OPERATOR_IN.value(), recordStatusList));
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.RECORD_STATUS, searchBean);
+		return items;
 	}
 
 }
