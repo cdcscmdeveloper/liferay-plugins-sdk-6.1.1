@@ -10,22 +10,25 @@
 
 		<p:panel>
 
-			<div style="text-align: left;">
-				<p:outputLabel
-					value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"></p:outputLabel>
 
-				<p:outputLabel
-					value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"></p:outputLabel>
-			</div>
+			<table style="width: 100">
+				<tr>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"></p:outputLabel> -
+					</td>
+					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"></p:outputLabel></td>
 
-			<br />
-			<p:spacer height="15px;" />
+				</tr>
+
+			</table>
+
 			<div style="text-align: left;">
-				<p:outputLabel
+				<p:outputLabel styleClass="outputLabel-view"
 					value="#{lbl['lbl.cm.add.service.to.cataloque.confirmation.msg']}"></p:outputLabel>
 			</div>
 			<br />
-			<p:spacer height="40px;" />
+			<p:spacer height="20px;" />
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}" immediate="true"
 					onclick="confirmationPopUp.hide()" />
