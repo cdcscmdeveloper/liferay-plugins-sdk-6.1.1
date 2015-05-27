@@ -662,7 +662,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)61410;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)25;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3949,19 +3949,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		if(yearToInt==yearFromInt+1){
 			if(monthToInt==monthFromInt){
 				if(dayToInt>dayFromInt){
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR));
+					throw new EpException(MessageConst.ERROR_REPORT_780011);
 				}				
 			}else if(monthToInt>monthFromInt){
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR));
+				throw new EpException(MessageConst.ERROR_REPORT_780011);
 			}			
 		}else if(yearToInt>yearFromInt+1){			
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.TO_DT_SHOULD_NOT_MORE_THAN_ONE_YEAR));
+			throw new EpException(MessageConst.ERROR_REPORT_780011);
 		}		
 	}
 
@@ -4167,16 +4161,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 								&& (this.getScCreatedFromMonth() != null) || (this
 								.getScCreatedToMonth() != null)
 								&& (this.getScCreatedFromMonth() == null)))) {
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
+					throw new EpException(MessageConst.ERROR_REPORT_780004);
 				}
 			}
 			if ((this.getFromDate() != null) && (this.getToDate() != null)) {
 				if (this.getFromDate().after(this.getToDate())) {
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
 			if ((this.getFromDate() != null) && (this.getToDate() != null)) {
@@ -4189,9 +4179,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getScSoneCrtdToDate() != null)) {
 				if (this.getScSoneCrtdFromDate().after(
 						this.getScSoneCrtdToDate())) {
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
 			/*if (((getManagedBean().getReportValue() != null)
@@ -4229,7 +4217,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						}
 					}
 					}
-			}else*/ if ((getManagedBean().getReportValue() != null)
+			}else*/  if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
 						+ getManagedBean().getReportValue());
@@ -4269,18 +4257,14 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					fileGenerateReport(getManagedBean().getReportJsp(),
 							constructedParamString);
 				} catch (IOException e) {
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.URL_NOT_CONNECTED));
+					throw new EpException(MessageConst.ERROR_REPORT_780009);
 				}
-			}
+			} 
 			/*RequestContext context = RequestContext.getCurrentInstance();
 			context.addCallbackParam(ReportConst.RPT_IN_VALID,
 					ReportConst.RPT_TRUE);*/
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_SEL_ONE_RPT_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 	}
 
@@ -4514,14 +4498,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 
@@ -4578,9 +4558,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else if ((getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
@@ -4594,9 +4572,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationType() != null) && (this.getSmApplicationType() != ReportConst.EMPTY_VAL))
@@ -4641,9 +4617,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				&& ((this.getSmMofRegNo() == null) || (this.getSmMofRegNo().equals(ReportConst.EMPTY_VAL)))
 				&& ((this.getFromDate() == null) || (this.getFromDate().toString().equals(ReportConst.EMPTY_VAL)))
 				&& ((this.getToDate() == null) || (this.getToDate().toString().equals(ReportConst.EMPTY_VAL)))){
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}		
 			}
 							
@@ -4952,14 +4926,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 
@@ -4981,9 +4951,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else if (((getScQuotationNo() != null) && (getScQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
@@ -5023,9 +4991,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getScCreatedFromMonth() != null)
 					|| (this.getScCreatedToMonth() != null)
 					&& (this.getScCreatedFromMonth() == null)) {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.PLZ_SEL_BOTH_DTS_RPT_SEARCH));
+				throw new EpException(MessageConst.ERROR_REPORT_780004);
 			}
 			if ((this.getScCreatedToMonth() != null)
 					&& (this.getScCreatedFromMonth() != null)) {
@@ -5033,16 +4999,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						&& (this.getScCreatedFromYear() != null)) {
 					if (Integer.parseInt(this.getScCreatedToYear()) < Integer
 							.parseInt(this.getScCreatedFromYear())) {
-						throw new EpException(
-								CommonMethod
-										.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+						throw new EpException(MessageConst.ERROR_REPORT_780008);
 					} else if (Integer.parseInt(this.getScCreatedToYear()) == Integer
 							.parseInt(this.getScCreatedFromYear())) {
 						if (Integer.parseInt(this.getScCreatedToMonth()) < Integer
 								.parseInt(this.getScCreatedFromMonth())) {
-							throw new EpException(
-									CommonMethod
-											.getMessageCommon(ReportConst.TO_DT_GTR_THN_FRM_DT));
+							throw new EpException(MessageConst.ERROR_REPORT_780008);
 						}
 					}
 					rptGenBean
@@ -5310,14 +5272,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 	/*
@@ -5493,14 +5451,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 
@@ -5865,16 +5819,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007); 
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
-	}
+	}  
 	/*
 	 * Generate PP module report
 	 */
@@ -5912,14 +5862,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getReportValueIdVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NO_URL_PROVIDED_FOR_THIS_RPT));
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.PLZ_ENTER_ONE_RPT_CRITERIA_SEARCH));
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
 		}
 	}
 	/*
@@ -5940,9 +5886,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			getQuotationNumber();
 		} else {
 			this.setScQuotationNo(null);
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.NUMERIC_CHAR_VALID_ONLY));
+			throw new EpException(MessageConst.ERROR_REPORT_780006);
 		}
 	}
 
@@ -5966,15 +5910,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					this.setScQuotationId(scqt.getQtId().toString());
 				} else {
 					this.setScQuotationNo(null);
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
+					throw new EpException(MessageConst.ERROR_REPORT_780005);
 				}
 			} else {
 				this.setScQuotationNo(null);
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.NOT_VALID_QOTATION_NO));
+				throw new EpException(MessageConst.ERROR_REPORT_780005);
 			}
 		}
 	}
