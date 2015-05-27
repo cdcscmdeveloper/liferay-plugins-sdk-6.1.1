@@ -136,8 +136,11 @@
 	</p:panel>
 	
 	<h:panelGroup>
-		<p:panel header="#{lbl['lbl.fl.stop.instuc.reason']}"  toggleable="true" id="stopInstructionPnl" >
-		<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.instr']}"/>
+		<p:panel toggleable="true" id="stopInstructionPnl" >
+	        <f:facet name="header">
+				<h:outputText id="stopInstructionPnlHeader" value="#{lbl['lbl.fl.stop.instuc.reason']}" />
+		        <ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.instr']}"/>
+		  	</f:facet>				
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 138px;">
