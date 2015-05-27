@@ -1780,7 +1780,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			centralBB.getManagedBean().setChkCentralCircular(true);
 			centralBB.gotoCommonPage(contractVerId);
 			centralBB.getManagedBean().setAction(" ");
-			return "/xhtml/ct/circular/centralcontract/circularBase.xhtml?faces-redirect=true";
+			return "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	}
 	
 	/**
@@ -3669,10 +3669,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     public boolean chkCircularActiveRecord(){
     	if(getManagedBean().getCtContract().getCtCircularContracts().size() > 0) {
     			  for(CtCircularContract circularContract : getManagedBean().getCtContract().getCtCircularContracts()) {
-    			   //   if(circularContract.getCtCircularVer().getRecordStatusFlg() == 1) {
+    			      if(circularContract.getCtCircularVer().getRecordStatusFlg() == 1) {
     			    	  getManagedBean().setCtCircularVer(circularContract.getCtCircularVer());
     			    	  return true;
-    			   //   }
+    			      }
     		  } 
     	}
       	return false;
