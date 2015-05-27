@@ -95,6 +95,10 @@
 
 						<f:selectItems
 							value="#{evaluationBackingBean.getDropdownValues(ParameterTypeConst.sampleSubmissionStatus)}"></f:selectItems>
+
+
+						<p:ajax event="change" process="@this" partialSubmit="true"
+							listener="#{evaluationBackingBean.changeSampleStatus(index,evaluationBackingBean.managedBean.complianceSampleItemList)}"></p:ajax>
 					</p:selectOneMenu>
 					<p:message id="sampleSubmissionMsg" for="sampleSubmissionId"
 						display="icon"></p:message>
