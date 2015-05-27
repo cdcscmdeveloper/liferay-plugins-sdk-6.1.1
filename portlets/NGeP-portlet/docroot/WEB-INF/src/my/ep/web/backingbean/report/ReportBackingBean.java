@@ -662,7 +662,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)240561;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2541,6 +2541,41 @@ public class ReportBackingBean extends
 		}
 		return items;
 	}
+	public SelectItem[] getLtstMinistryListByUserid() {
+		SelectItem[] items = null;
+
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setUserId(lngUserId);
+			reqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			items = new SelectItem[resDTO.getOrgProfileList().size() + 1];
+			//items[0] = new SelectItem(null, "- Select One -");
+			//int i = 0;
+			/*SelectItem selectItem = new SelectItem();
+			selectItem.setLabel("- Select One -");
+			selectItem.setValue(null);
+			ministryList.add(selectItem);*/
+			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
+				SelectItem selectItem1 = new SelectItem();
+				selectItem1.setLabel(orgProfile.getOrgName());
+				selectItem1.setValue(orgProfile.getOrgProfileId());
+				ministryList.add(selectItem1);
+				/*items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
+						orgProfile.getOrgName());*/
+			}			
+		} finally {
+			orgProfileSO = null;
+		}
+		return items;
+	}
 	/*public List<SelectItem> getReceivedPTJList() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
 		OrgProfileResDTO resDTO = new OrgProfileResDTO();
@@ -3081,7 +3116,7 @@ public class ReportBackingBean extends
 		}
 		if ((this.getSelectedCatList().size()>9)) {
 			this.setEnableValue(true);
-			//throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
+			//throw new EpException(MessageConst.ERROR_REPORT_780010);
 		}else{
 			this.setEnableValue(false);
 		}
@@ -3091,7 +3126,7 @@ public class ReportBackingBean extends
 		SmSupplierCategory cat = new SmSupplierCategory();		
 		if ((this.getSelectedCatList().size()>8)) {
 			this.setEnableValue(true);
-			//throw new EpException(ReportConst.ERR_999000_MORTHAN_TEN);
+			//throw new EpException(MessageConst.ERROR_REPORT_780010);
 		}else{
 			this.setEnableValue(false);
 		}		
@@ -3226,9 +3261,7 @@ public class ReportBackingBean extends
 				}
 			}
 		} else {
-			throw new EpException(
-					CommonMethod
-							.getMessageCommon(ReportConst.REPORTS_NOT_AVAILABLE_BY_MODULE));
+			throw new EpException(MessageConst.ERROR_REPORT_780012);
 		}
 		return reportList;
 	}
@@ -3413,6 +3446,7 @@ public class ReportBackingBean extends
 			}
 			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
 				retrieveFPJMinistryList();
+				//getLtstMinistryListByUserid();
 				retrieveFPJPTJList();
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
@@ -3554,17 +3588,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					this.setCmUnspscCode(null);
 					this.setCmExtentionCode(null);
 					rptGenBean.setCmExtentionCodeView(false);
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+					throw new EpException(MessageConst.ERROR_REPORT_780013);
 				}
 			} else {
 				this.setCmUnspscCode(null);
 				this.setCmExtentionCode(null);
 				rptGenBean.setCmExtentionCodeView(false);
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+				throw new EpException(MessageConst.ERROR_REPORT_780013);
 			}
 		} else {
 			this.setCmExtentionCode(null);
@@ -3612,9 +3642,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 					getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
 					getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-					throw new EpException(
-							CommonMethod
-									.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+					throw new EpException(MessageConst.ERROR_REPORT_780013);
 				}
 			} else {
 				this.setCmUnspscCode(null);
@@ -3630,9 +3658,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				getManagedBean().getRptGenBean().setCmExtentionTypeView(false);
 				getManagedBean().getRptGenBean().setCmExtentionMeasurmentView(false);
 				getManagedBean().getRptGenBean().setCmExtentionColourView(false);
-				throw new EpException(
-						CommonMethod
-								.getMessageCommon(ReportConst.PLZ_PROV_VALID_UNSPCCODE));
+				throw new EpException(MessageConst.ERROR_REPORT_780013);
 			}
 		} else {
 			this.setCmUnspscCode(null);
