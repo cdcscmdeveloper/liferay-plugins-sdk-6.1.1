@@ -245,10 +245,17 @@ public class LovBackingBean implements Serializable {
 			columnsToDisplay.clear();
 			for(LovColumnBean column : lovBean.getColumns()) {
 				if(column.isViewable()) {
-
-					ValueExpression valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
-							.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
-									"#{entity." + column.getColumnName() + "}", Object.class);
+					
+					ValueExpression valueExpression = null;
+					if(column.getColumnName() != null) {
+						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
+								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
+										"#{entity." + column.getColumnName() + "}", Object.class);	
+					} else {
+						valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
+								.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
+										"#{" + column.getMethodName() + "}", Object.class);						
+					}
 					
 					column.setColumnNameve(valueExpression);
 					
