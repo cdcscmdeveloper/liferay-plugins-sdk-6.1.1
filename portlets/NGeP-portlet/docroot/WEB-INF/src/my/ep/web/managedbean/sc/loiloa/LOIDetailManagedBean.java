@@ -314,6 +314,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** Is Itemized */
 	private boolean itemized;
+	
+	
+	/** The loi required. */
+	private boolean loiRequired;
 	    
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1881,6 +1885,14 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setItemized(boolean itemized) {
 		this.itemized = itemized;
+	}
+
+	public boolean isLoiRequired() {
+		return loiRequired;
+	}
+
+	public void setLoiRequired(boolean loiRequired) {
+		this.loiRequired = loiRequired;
 	}
 	
 }

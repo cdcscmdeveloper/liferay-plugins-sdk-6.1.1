@@ -11,11 +11,21 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:commandButton value="#{lbl['lbl.btn.submit']}"
-			action="#{lOIDetailBackingBean.submitLoiListAction}" process="@form"
+		<p:commandButton value="#{lbl['lbl.btn.save']}"
+			action="#{lOIDetailBackingBean.savetLoiListAction}" process="@form" 
+			partialSubmit="true"
 			update="@form"
 			onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
+			rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}" />
+		
+		<p:commandButton value="#{lbl['lbl.btn.submit']}"
+			action="#{lOIDetailBackingBean.submitLoiListAction}" process="@form"
+			partialSubmit="true"
+			update="@form"
+			onstart="blockWidget.show();"
+			oncomplete="blockWidget.hide();"
+			disabled="#{lOIDetailBackingBean.managedBean.loiRequired}"
 			rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}" />
 	</div>
 </ui:composition>

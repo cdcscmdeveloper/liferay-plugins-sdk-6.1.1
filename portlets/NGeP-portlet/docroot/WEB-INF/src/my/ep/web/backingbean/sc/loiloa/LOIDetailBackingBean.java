@@ -558,8 +558,21 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
+			List<ScLoiLoa> loiLoas = new ArrayList<ScLoiLoa>();
+
+			if(resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size()>0){
+				for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) {
+					if(scLoiLoa.isLoiCreated()){
+						scLoiLoa.setLoiRequired(Boolean.TRUE);
+					}
+					if(scLoiLoa.isLoiRequired()){
+						getManagedBean().setLoiRequired(Boolean.TRUE);
+					} 
+					loiLoas.add(scLoiLoa);
+				}
+			}
 			// rec supplier in loi list
-			getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
+			getManagedBean().setRecSupplierList(loiLoas);	
 
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
@@ -1780,7 +1793,6 @@ public class LOIDetailBackingBean extends
 	}
 	
 	
-	
 	/**
 	 * save LOI list details.
 	 * save - save data into database.
@@ -1789,25 +1801,27 @@ public class LOIDetailBackingBean extends
 	 */
 	public String savetLoiListAction() {
 		debugLogger("savetLoiListAction");
-
 		try {
-			ScQt scQt = getManagedBean().getScQtFinalization().getScQt();
-
+			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+			String docType  = getManagedBean().getDocType();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setDocType(getManagedBean().getDocType());
 
-			AwardSupplierResDTO resDTO = new AwardSupplierResDTO();
+			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
+			AwardSupplierResDTO resDTO = getQtAwardSO().saveLoiLoaList(reqDTO);
 
 			if (resDTO.isSuccessful()) {
 				renewSesionObject();
+				getManagedBean().setScQtFinalization(scQtFinalization);
+				getManagedBean().setDocType(docType);
+				
+				getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
 				FacesContext.getCurrentInstance().addMessage(null, 
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_700025,
 								new String[] {
 								getParameterDesc(
 										ParameterTypeConst.DOCUMENT_TYPES,
 										ParameterConst.DOCTYPE_QUOTATION),
-										scQt.getQtNo() },
+										scQtFinalization.getScQt().getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes()
 						.getUserLocale())));
@@ -1818,6 +1832,23 @@ public class LOIDetailBackingBean extends
 		}
 
 		return null;
+	}
+	
+	
+	/**
+	 * Loi required listener.
+	 *
+	 * @param scLoiLoa the sc loi loa
+	 */
+	public void loiRequiredListener(ScLoiLoa scLoiLoa){
+		debugLogger("loiRequiredListener");
+		int index = getManagedBean().getRecSupplierList().indexOf(scLoiLoa);
+		getManagedBean().getRecSupplierList().set(index, scLoiLoa);
+		if(scLoiLoa.isLoiRequired()){
+			getManagedBean().setLoiRequired(Boolean.TRUE);
+		} else{
+			getManagedBean().setLoiRequired(Boolean.FALSE);
+		}
 	}
 
 	/**

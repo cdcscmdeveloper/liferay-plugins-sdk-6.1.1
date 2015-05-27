@@ -52,9 +52,21 @@
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 
+				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}">
+					<h:selectOneMenu value="#{loiLoa.loiRequired}"
+					    disabled="#{loiLoa.loiCreated}"
+						id="isLoiReq" label="Is Loi Required">
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						<p:ajax event="change" update="@form" partialSubmit="true" 
+						    listener="#{lOIDetailBackingBean.loiRequiredListener(loiLoa)}"
+							process="@this loiLoaDtl" />
+					</h:selectOneMenu>
+				</p:column>
+
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
-						rendered="#{!loiLoa.loiCreated}"
+						rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired}"
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 				</p:column>
 			</p:dataTable>
