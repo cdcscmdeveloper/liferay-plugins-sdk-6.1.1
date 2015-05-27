@@ -20,10 +20,7 @@
 		      <p:column filterBy="#{data.scRequestItem.itemName}" style="width:20%; white-space:normal;" filterMatchMode="contains">
 		             <f:facet name="header">
 		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
-		                        &#160; <p:graphicImage id="serviceItem" value="/css/images/design/tooltips.png" /> <p:tooltip
-							          id="serviceTooltip" for="serviceItem">
-							<h:outputText id="serviceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
-						</p:tooltip> 
+		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
 		               </f:facet>
 		         <h:outputText value="#{data.scRequestItem.itemName}" style="float:left;"/>
 		      </p:column>       
