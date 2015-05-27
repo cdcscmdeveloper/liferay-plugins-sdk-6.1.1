@@ -33,7 +33,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.module']}" id="moduleName"
 												value="#{reportBackingBean.moduleValue}" required="true"
-												style="margin-top:5px;width:300px;">
+												style="width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 												<f:selectItems value="#{reportBackingBean.getAllModuleList()}"></f:selectItems>
 												<p:ajax event="change" listener="#{reportBackingBean.retrieveReportListByAuthorization}" process="@this"
@@ -61,7 +61,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.rptName']}" id="reportName"
 												value="#{reportBackingBean.reportValue}" required="true"
-												style="margin-top:5px;width:300px;">
+												style="width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>												
 												<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
 												<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
