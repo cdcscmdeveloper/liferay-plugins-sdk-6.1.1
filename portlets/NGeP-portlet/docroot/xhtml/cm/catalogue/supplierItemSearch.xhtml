@@ -212,10 +212,10 @@
 									update="searchViewId,catSrchMsg,btnId"></p:menuitem>
 							</p:tabMenu>
 
-							<p:dataTable lazy="true"
+							<p:dataTable lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 								rendered="#{catalogueBackingBean.managedBean.renderTableView}"
 								value="#{catalogueBackingBean.managedBean.searchDataModel}"
-								rowKey="#{supplierItem.rowId}"
+								rowKey="#{supplierItem.rowId}" 
 								selection="#{catalogueBackingBean.managedBean.selectedItems}"
 								id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
 								rows="10">
