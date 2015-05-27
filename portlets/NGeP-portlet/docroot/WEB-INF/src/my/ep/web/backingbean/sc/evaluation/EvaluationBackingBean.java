@@ -6046,9 +6046,16 @@ public class EvaluationBackingBean extends
 										.saveReportDtls(reqDTO);
 								this.getManagedBean().setScQt(
 										evalResDTO.getScQt());
+								/*if (null != evalResDTO.getWorkFlowStatus()) {
+									this.getManagedBean().setCurrentStatusId(
+											evalResDTO.getWorkFlowStatus()
+													.getPmStatus()
+													.getStatusId());
+								}*/
 							}
 						} else if (this.getManagedBean().getScQt()
 								.isTechEvaluationReq()) {
+
 							if (null == this.getManagedBean().getScQt()
 									.getTecEvaluationCheck()) {
 
@@ -6061,6 +6068,12 @@ public class EvaluationBackingBean extends
 										.saveReportDtls(reqDTO);
 								this.getManagedBean().setScQt(
 										evalResDTO.getScQt());
+								/*if (null != evalResDTO.getWorkFlowStatus()) {
+									this.getManagedBean().setCurrentStatusId(
+											evalResDTO.getWorkFlowStatus()
+													.getPmStatus()
+													.getStatusId());
+								}*/
 							}
 						}
 					}
@@ -7717,7 +7730,7 @@ public class EvaluationBackingBean extends
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
 		if (member.getMemberRole().getParameterCode()
-				.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+				.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(outCome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
@@ -7875,18 +7888,18 @@ public class EvaluationBackingBean extends
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
 		if (null != member) {
 			if (member.getMemberRole().getParameterCode()
-					.contains(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
+					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_SECRETARY)) {
 
 				this.getManagedBean().setReadOnly(false);
 				this.getManagedBean().setMemberOnly(false);
 
 			} else if (member.getMemberRole().getParameterCode()
-					.contains(SourcingConstants.MEMBER_ROLE_MEMBER)) {
+					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_MEMBER)) {
 				this.getManagedBean().setReadOnly(true);
 				this.getManagedBean().setMemberOnly(false);
 
 			} else if (member.getMemberRole().getParameterCode()
-					.contains(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+					.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 				this.getManagedBean().setReadOnly(true);
 				this.getManagedBean().setMemberOnly(true);
 			}
