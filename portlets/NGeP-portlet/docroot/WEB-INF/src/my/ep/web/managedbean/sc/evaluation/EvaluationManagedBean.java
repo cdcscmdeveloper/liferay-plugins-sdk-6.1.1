@@ -490,6 +490,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private BigDecimal finSpecZoneEstimatedPrice;
 	private List<TplSpecQuestion> sampleItemSpecifications;
 	private String itemName;
+	private ScQtSampleItem sampleItemSelection;
 	
 
 	/**
@@ -3235,6 +3236,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
+	}
+
+	/**
+	 * @return the sampleItemSelection
+	 */
+	public ScQtSampleItem getSampleItemSelection() {
+		return sampleItemSelection;
+	}
+
+	/**
+	 * @param sampleItemSelection the sampleItemSelection to set
+	 */
+	public void setSampleItemSelection(ScQtSampleItem sampleItemSelection) {
+		this.sampleItemSelection = sampleItemSelection;
 	}
 
 }
