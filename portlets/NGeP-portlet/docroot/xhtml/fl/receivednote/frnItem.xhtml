@@ -132,7 +132,7 @@
     				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
     				</f:facet>
-				<p:inputText id="receivedQty" label="#{lbl['lbl.fl.received.qty']}" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}"
+				<p:inputText id="receivedQty" label="#{lbl['lbl.fl.received.qty']}" style="text-align:right;" styleClass="colFloatRight" value="#{item.receivedQty}" size="8" maxlength="14" disabled="#{receivedNoteBackingBean.managedBean.isDocMaintainRemarks()}"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeProduct}">
 					<p:ajax event="blur" update="receivedAmt,receivedQty,remaingQtyTxt" process="@this" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" listener="#{receivedNoteBackingBean.retrieveReceivedAmt(item)}"/>
 					<f:converter converterId="dynamicNumberConverter" />
@@ -146,7 +146,7 @@
 				</h:outputText>
 			</p:column>
 			<p:column  headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;text-align:right;">
-				<p:inputText styleClass="colFloatRight" id="receivedAmtVal" label="#{lbl['lbl.fl.received.amount']}" 
+				<p:inputText style="text-align:right;" styleClass="colFloatRight" id="receivedAmtVal" label="#{lbl['lbl.fl.received.amount']}" 
 					disabled="#{receivedNoteBackingBean.managedBean.buttonVal=='Cancel' or  receivedNoteBackingBean.managedBean.buttonVal=='View'}"
 					rendered="#{item.flDelOrderItem.flFulfilmentItemAddr.itemType.parameterCode eq ParameterConst.itemTypeService}" value="#{item.receivedAmt}">
 					<p:ajax update="receivedAmtVal" listener="#{receivedNoteBackingBean.receivedAmtValidation(item)}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
