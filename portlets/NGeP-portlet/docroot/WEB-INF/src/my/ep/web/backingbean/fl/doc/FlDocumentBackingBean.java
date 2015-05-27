@@ -591,6 +591,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setPaymentAdviseId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = paymentSO.retrievePaymentAdviseByPaymentId(reqDTO);
 			PaymentMatchBackingBean pmBB = new PaymentMatchBackingBean();
+			pmBB.renewSesionObject();
 			pmBB.getManagedBean().setSelectedTabIndex(0);
 			pmBB.getManagedBean().setButtonVal(buttonVal);
 			pmBB.getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());

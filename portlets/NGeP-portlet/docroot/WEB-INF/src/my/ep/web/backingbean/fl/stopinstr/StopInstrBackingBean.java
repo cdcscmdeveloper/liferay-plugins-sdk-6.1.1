@@ -402,7 +402,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		}
 		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
-				&&  !isSupplierRole()) {
+				&&  hasGovtSellerRole()) {
 			// Temp setTextBeforeSign : DocNo+SAP
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getStopInstr().getFlFulfilmentOrder().getDocNo());
@@ -553,5 +553,12 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
+	
+	private boolean hasGovtSellerRole() {
+		 if (getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()))
+				return true;
+		 else
+		return false;
 	}
 }
