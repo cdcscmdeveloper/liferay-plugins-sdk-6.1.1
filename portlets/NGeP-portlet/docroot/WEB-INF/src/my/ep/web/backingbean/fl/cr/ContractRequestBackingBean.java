@@ -351,12 +351,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			if(isRequisitioner()){
 				List<String> backUpApprover = new ArrayList<String>();
-				reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
-				for(String approver : getManagedBean().getApproverList()){
-					if(!approver.contains(getManagedBean().getSelectedApprover())){
-						backUpApprover.add(approver);
+				if(getManagedBean().getSelectedApprover() != null){
+					reqDTO.setSelectedApprover(getManagedBean().getSelectedApprover());
+					for(String approver : getManagedBean().getApproverList()){
+						if(!approver.equalsIgnoreCase(getManagedBean().getSelectedApprover())){
+							backUpApprover.add(approver);
+						}
 					}
 				}
+				
 				reqDTO.setSelectedApprovers(backUpApprover);
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
