@@ -132,13 +132,13 @@
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel
 						value="#{lbl['lbl.fl.doc.maintain.circular.contract.duration']}" />
-					<p:calendar mode="popup" showOn="button"
+					<p:calendar mode="popup" showOn="button" id="calendarStart"
 						readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{flDocumentBackingBean.managedBean.searchContractFromDuration}">
 					</p:calendar>
 					<p:spacer width="5" />
-					<p:calendar mode="popup" showOn="button"
+					<p:calendar mode="popup" showOn="button" id="calendarEnd"
 						readonlyInput="true"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 						value="#{flDocumentBackingBean.managedBean.searchContractToDuration}">
