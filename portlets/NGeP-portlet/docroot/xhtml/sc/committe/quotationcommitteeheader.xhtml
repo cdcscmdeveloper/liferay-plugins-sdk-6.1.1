@@ -22,7 +22,7 @@
 				<td style="width: 5%"><h:outputLabel
 						value="#{lbl['lbl.sc.status']}" /></td>
 				<td style="width: 12%" class="header-info-text">
-					#{committeBackingBean.getStatusDescById(committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId)}
+					#{(committeBackingBean.managedBean.qtCommittee.recordStatusFlg==1)? lbl['lbl.txt.active'] : lbl['lbl.txt.inactive']}
 				</td>
 			</tr>
 		</table>
