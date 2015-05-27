@@ -15,6 +15,7 @@ public class LovColumnBean {
 	private String bundleKey;
 	private String columnTitle;
 	private String columnName;
+	private String methodName;
 	
 	private Object columnValue;
 	private String labelMap;
@@ -101,6 +102,14 @@ public class LovColumnBean {
 
 	public void setColumnNameve(ValueExpression columnNameve) {
 		this.columnNameve = columnNameve;
+	}
+
+	public String getMethodName() {
+		return methodName;
+	}
+
+	public void setMethodName(String methodName) {
+		this.methodName = methodName;
 	}
 	
 	
