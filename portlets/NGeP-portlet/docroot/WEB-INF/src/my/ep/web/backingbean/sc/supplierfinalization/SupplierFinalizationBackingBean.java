@@ -1183,8 +1183,8 @@ public class SupplierFinalizationBackingBean extends
 					removedList.remove(removedDetail);
 					removedDetail
 							.setShortlistedSupplier(scQtEvaluationResultDtl);
-					removedDetail.setScQtProposalAmount(scQtEvaluationResultDtl
-							.getQtEvaluationResult().getScQtProposal().getProposalAmount());
+					removedDetail.setScQtProposalAmount(
+							scQtEvaluationResultDtl.getProposalAmount());
 					if (!this.getManagedBean().isItemize()) {
 						ScQtProposalItem qtProposalItem = 
 								getQtProposalItem(scQtRecommend, scQtEvaluationResultDtl);
@@ -1202,8 +1202,8 @@ public class SupplierFinalizationBackingBean extends
 		recommendDtl.setSupplier(supplier);
 		recommendDtl.setShortlistedSupplier(scQtEvaluationResultDtl);
 		recommendDtl.setScQtRecommend(scQtRecommend);
-		recommendDtl.setScQtProposalAmount(scQtEvaluationResultDtl
-				.getQtEvaluationResult().getScQtProposal().getProposalAmount());
+		recommendDtl.setScQtProposalAmount(
+				scQtEvaluationResultDtl.getProposalAmount());
 		if (!this.getManagedBean().isItemize()) {
 			ScQtProposalItem qtProposalItem = 
 					getQtProposalItem(scQtRecommend, scQtEvaluationResultDtl);
