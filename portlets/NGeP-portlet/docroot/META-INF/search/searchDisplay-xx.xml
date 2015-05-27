@@ -1170,13 +1170,13 @@
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="parentOrgProfile.pmOrgValidity.orgCode" />
+					<property name="methodName" value="pPlanBackingBean.retrieveMinistryCodeByOrgProfileId(entity.orgProfileId)" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.org.ministryCode" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="parentOrgProfile.pmOrgValidity.orgName" />
+					<property name="methodName" value="pPlanBackingBean.retrieveMinistryByOrgProfileId(entity.orgProfileId)" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.pm.org.ministryName" />
