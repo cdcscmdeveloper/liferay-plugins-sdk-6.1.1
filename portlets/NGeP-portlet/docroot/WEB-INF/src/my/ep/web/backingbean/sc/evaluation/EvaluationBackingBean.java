@@ -10098,10 +10098,10 @@ public class EvaluationBackingBean extends
 				new ArrayList<TplSpecQuestion>());
 		this.getManagedBean().setItemName(null);
 		ScQtSampleItem sampleItem = (ScQtSampleItem) event.getObject();
-				
 
 		// TplSpecQuestion specQuestions = requestItem.getTplSpecQuestion();
-		this.getManagedBean().setItemName(sampleItem.getScRequestItem().getItemName());
+		this.getManagedBean().setItemName(
+				sampleItem.getScRequestItem().getItemName());
 		ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
 						ITemplateSpecSO.class);
@@ -10118,5 +10118,34 @@ public class EvaluationBackingBean extends
 
 		}
 
+	}
+
+	// change sample submission status in sample tab.
+	public void changeSampleStatus(int index,
+			List<ScQtSampleItem> sampleItemList) {
+
+		ScQtSampleItem sampleItem = sampleItemList.get(index);
+		Long submissionStatusId = null;
+		if (null != sampleItem.getSubmissionStatus()) {
+			submissionStatusId = sampleItem.getSubmissionStatus()
+					.getParameterId();
+		}
+
+		if (null != submissionStatusId) {
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.SAMPLE_SUBMISSION_STATUS);
+
+			for (PmParameterDesc paramDesc : localParamDesc) {
+
+				if (paramDesc.getPmParameter().getParameterId()
+						.equals(submissionStatusId)) {
+					sampleItem.setSubmissionStatus(paramDesc.getPmParameter());
+					break;
+
+				}
+
+			}
+			this.getManagedBean().getComplianceSampleItemList()
+					.set(index, sampleItem);
+		}
 	}
 }
