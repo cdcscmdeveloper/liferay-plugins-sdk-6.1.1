@@ -3524,3 +3524,7 @@ table.rptTbl {
  .required:before { 
     content:"* ";color: red; 
   }
+  
+.ui-selectonemenu-label{
+	width:100% !important;
+}
