@@ -55,7 +55,13 @@ public class AddressUtils {
 			}
 			if (smAddress.getPmState() != null && smAddress.getPmState().getStateName() !=null && smAddress.getPmState().getStateName().length() > 0) {
 				address.append(smAddress.getPmState().getStateName());
-			}			
+				address.append(separator);
+			}
+			
+			if (smAddress.getPmCountry() != null && smAddress.getPmCountry().getCountryName() !=null && smAddress.getPmCountry().getCountryName().length() > 0) {
+				address.append(smAddress.getPmCountry().getCountryName());
+			}
+			
 		}
 		return address.toString();
 	}
