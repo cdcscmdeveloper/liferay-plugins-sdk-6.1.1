@@ -491,6 +491,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<TplSpecQuestion> sampleItemSpecifications;
 	private String itemName;
 	private ScQtSampleItem sampleItemSelection;
+	private boolean checkTechnicalQualifiedOpenPopup;
+	private boolean checkFinancialQualifiedOpenPopup;
 	
 
 	/**
@@ -3250,6 +3252,36 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setSampleItemSelection(ScQtSampleItem sampleItemSelection) {
 		this.sampleItemSelection = sampleItemSelection;
+	}
+
+	/**
+	 * @return the checkTechnicalQualifiedOpenPopup
+	 */
+	public boolean isCheckTechnicalQualifiedOpenPopup() {
+		return checkTechnicalQualifiedOpenPopup;
+	}
+
+	/**
+	 * @param checkTechnicalQualifiedOpenPopup the checkTechnicalQualifiedOpenPopup to set
+	 */
+	public void setCheckTechnicalQualifiedOpenPopup(
+			boolean checkTechnicalQualifiedOpenPopup) {
+		this.checkTechnicalQualifiedOpenPopup = checkTechnicalQualifiedOpenPopup;
+	}
+
+	/**
+	 * @return the checkFinancialQualifiedOpenPopup
+	 */
+	public boolean isCheckFinancialQualifiedOpenPopup() {
+		return checkFinancialQualifiedOpenPopup;
+	}
+
+	/**
+	 * @param checkFinancialQualifiedOpenPopup the checkFinancialQualifiedOpenPopup to set
+	 */
+	public void setCheckFinancialQualifiedOpenPopup(
+			boolean checkFinancialQualifiedOpenPopup) {
+		this.checkFinancialQualifiedOpenPopup = checkFinancialQualifiedOpenPopup;
 	}
 
 }
