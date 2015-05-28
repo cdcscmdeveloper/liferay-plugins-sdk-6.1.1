@@ -790,7 +790,17 @@ public class QTCommitteBackingBean extends
 	 */
 	public void committeeclonePopupAction(ScQtCommittee committee) {
 		debugLogger("committeeclonePopupAction");
-		getManagedBean().getCloneSearchQTDataModel().reloadData();
+		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
+				.getCloneSearchQTDataModel();
+
+		if (null == cloneSearchQTDataModel) {
+			getManagedBean().setCloneSearchQTDataModel(
+					new QTPagingDataModel("clonesearchCommitteid",
+							getManagedBean().getCloneQtnTenderSearchBean()));
+		}
+		getManagedBean().getCloneSearchQTDataModel().resetData();
+
+		// getManagedBean().getCloneSearchQTDataModel().reloadData();
 		getManagedBean().getCloneQtnTenderSearchBean().setQtTitle(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtNo(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setProcurementMode(null);
@@ -803,6 +813,8 @@ public class QTCommitteBackingBean extends
 				.getParameterCode();
 		this.getManagedBean().setCommType(commType);
 		log.info("Committee Type : " + getManagedBean().getCommType());
+		RequestContext.getCurrentInstance().execute("screen2.show()");
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**

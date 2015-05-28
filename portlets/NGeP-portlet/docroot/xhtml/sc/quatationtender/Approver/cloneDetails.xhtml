@@ -6,11 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="cloneid" header="#{lbl['lbl.sc.clone.committee']}" widgetVar="screen2"
-		width="950" height="600" position="top"
+	<p:dialog id="cloneid" header="#{lbl['lbl.sc.clone.committee']}"
+		widgetVar="screen2" width="970" height="600" position="top"
 		styleClass="cloneCommitteMember">
-		<p:panel id="pnlid">
-			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.sc.search']}"
+		<h:panelGroup id="pnlid">
+			<p:messages id="clonemessages" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
 				toggleable="true">
 				<table width="900px">
 					<tr>
@@ -20,7 +22,7 @@
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtTitle}"
 								style="width:650px;" maxlength="100" /></td>
 					</tr>
-					
+
 					<tr>
 						<td style="width: 165px;"><p:outputLabel
 								value="#{lbl['lbl.sc.qtn.no']}" /></td>
@@ -36,7 +38,7 @@
 									value="#{qTCommitteBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" />
 							</p:selectOneMenu></td>
 					</tr>
-										
+
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sc.created.date.from']}" /></td>
 						<td><p:calendar id="datecreatedfrm" showOn="button"
@@ -55,7 +57,7 @@
 									value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}" />
 							</p:calendar></td>
 					</tr>
-					
+
 					<tr>
 						<td><h:outputLabel value="#{lbl['lbl.sc.pbldtfrom']}" /></td>
 						<td><p:calendar
@@ -98,10 +100,9 @@
 								<f:validator validatorId="dateRangeValidator" />
 							</p:calendar></td>
 					</tr>
-					
+
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.sc.status']}" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 						<td><p:selectOneMenu style="width: 210px;margin-bottom: 5px;"
 								value="#{qTCommitteBackingBean.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 								<f:selectItems
@@ -114,11 +115,10 @@
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						action="#{qTCommitteBackingBean.cloneSearchQtAction}"
-						update="clonesearchCommitteid" process="@this, clonesearchpnlid" />
+						update="pnlid" process="@parent" />
 					<p:commandButton value="#{lbl['lbl.btn.reset']}"
 						action="#{qTCommitteBackingBean.resetClone}" update="pnlid"
-						resetValues="true" partialSubmit="true"
-						process="@this" />
+						resetValues="true" partialSubmit="true" process="@this" />
 				</div>
 			</p:panel>
 			<p:panel header="#{lbl['lbl.sc.qtn.list']}" toggleable="true">
@@ -130,11 +130,11 @@
 
 					<ac:paginator for="clonesearchCommitteid" />
 
-					<p:ajax event="rowSelect" update=":form:committeeTbl"
+					<p:ajax event="rowSelect" update=":form:pnlid"
 						listener="#{qTCommitteBackingBean.onRowCloneAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
-						<h:outputText value="#{scQt.qtNo}" />
+						<h:outputText value="#{scQt.qtNo}" style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.title']}">
@@ -143,7 +143,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.procurement.mode']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}" />
+							value="#{qTCommitteBackingBean.getParameterDesc(scQt.procurementMode)}"
+							style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.created.date']}">
@@ -152,7 +153,7 @@
 								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 						</h:outputText>
 					</p:column>
-					
+
 					<p:column headerText="#{lbl['lbl.sc.published.date']}">
 						<h:outputText value="#{scQt.publishDate}">
 							<f:convertDateTime
@@ -168,15 +169,15 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.status']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" />
+							value="#{qTCommitteBackingBean.getStatusDescById(scQt.qtStatus.statusId)}" style="white-space: normal;"/>
 					</p:column>
 
 				</p:dataTable>
-			</p:panel>
-			<p:spacer height="2" />
-			<p:panel id="cloneCommitteMembersid" header="#{lbl['lbl.sc.committe.list']}"
-				toggleable="true">
-
+				<br />
+				<ui:fragment
+					rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
+				#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
+			</ui:fragment>
 				<p:treeTable id="committeeTbl" var="committeeNode"
 					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
 					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
@@ -228,16 +229,14 @@
 
 				</p:treeTable>
 				<br />
-				<p:spacer height="3" />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						actionListener="#{qTCommitteBackingBean.addCloneDtlToTabs(true)}"
-						oncomplete="screen2.hide();"
-						update="@(.scmemberdtls)"/>
+						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
+						update="@(.scmemberdtls)" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-					    onclick="screen2.hide();" />
+						onclick="screen2.hide();" update="@(.scMemberDtl)" />
 				</div>
 			</p:panel>
-		</p:panel>
+		</h:panelGroup>
 	</p:dialog>
 </ui:composition>
