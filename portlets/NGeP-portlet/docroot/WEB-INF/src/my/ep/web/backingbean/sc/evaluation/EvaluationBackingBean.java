@@ -1992,6 +1992,7 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setEvaluationStgTechnicalCheckList(
 					localCheckList);
+			checkTechnicalSuppliersQualified();
 
 		} finally {
 			evaluationSO = null;
@@ -2090,6 +2091,14 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setEvaluationStgfinancialCheckList(
 					localCheckList);
+			if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType()) && this
+							.getManagedBean().getScQt().isTechEvaluationReq())) {
+				checkFinancialSuppliersQualified();
+
+			}
 
 		} finally {
 			evaluationSO = null;
@@ -2563,19 +2572,13 @@ public class EvaluationBackingBean extends
 					}
 				} else {
 
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_WARN,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.WARN_760248,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					/*
+					 * FacesContext .getCurrentInstance() .addMessage( null, new
+					 * FacesMessage( FacesMessage.SEVERITY_WARN, null,
+					 * MessageUtils .getMessage( MessageConst.WARN_760248,
+					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+					 * .getUserLocale())));
+					 */
 
 				}
 			} else {
@@ -2613,19 +2616,13 @@ public class EvaluationBackingBean extends
 					}
 				} else {
 
-					FacesContext
-							.getCurrentInstance()
-							.addMessage(
-									null,
-									new FacesMessage(
-											FacesMessage.SEVERITY_WARN,
-											null,
-											MessageUtils
-													.getMessage(
-															MessageConst.WARN_760248,
-															MessageUtils.BUNDLE_COMMON_MESSAGES,
-															new FacesScopes()
-																	.getUserLocale())));
+					/*
+					 * FacesContext .getCurrentInstance() .addMessage( null, new
+					 * FacesMessage( FacesMessage.SEVERITY_WARN, null,
+					 * MessageUtils .getMessage( MessageConst.WARN_760248,
+					 * MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes()
+					 * .getUserLocale())));
+					 */
 
 				}
 			}
@@ -5640,19 +5637,13 @@ public class EvaluationBackingBean extends
 							.equalsIgnoreCase(this.getManagedBean().getScQt()
 									.getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq()))) {
-						FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_WARN,
-												null,
-												MessageUtils
-														.getMessage(
-																MessageConst.WARN_760248,
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes()
-																		.getUserLocale())));
+						/*
+						 * FacesContext .getCurrentInstance() .addMessage( null,
+						 * new FacesMessage( FacesMessage.SEVERITY_WARN, null,
+						 * MessageUtils .getMessage( MessageConst.WARN_760248,
+						 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+						 * FacesScopes() .getUserLocale())));
+						 */
 					}
 				}
 
@@ -5727,19 +5718,13 @@ public class EvaluationBackingBean extends
 						}
 					} else {
 
-						FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_WARN,
-												null,
-												MessageUtils
-														.getMessage(
-																MessageConst.WARN_760248,
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes()
-																		.getUserLocale())));
+						/*
+						 * FacesContext .getCurrentInstance() .addMessage( null,
+						 * new FacesMessage( FacesMessage.SEVERITY_WARN, null,
+						 * MessageUtils .getMessage( MessageConst.WARN_760248,
+						 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+						 * FacesScopes() .getUserLocale())));
+						 */
 
 					}
 				} else {
@@ -5788,19 +5773,13 @@ public class EvaluationBackingBean extends
 						}
 					} else {
 
-						FacesContext
-								.getCurrentInstance()
-								.addMessage(
-										null,
-										new FacesMessage(
-												FacesMessage.SEVERITY_WARN,
-												null,
-												MessageUtils
-														.getMessage(
-																MessageConst.WARN_760248,
-																MessageUtils.BUNDLE_COMMON_MESSAGES,
-																new FacesScopes()
-																		.getUserLocale())));
+						/*
+						 * FacesContext .getCurrentInstance() .addMessage( null,
+						 * new FacesMessage( FacesMessage.SEVERITY_WARN, null,
+						 * MessageUtils .getMessage( MessageConst.WARN_760248,
+						 * MessageUtils.BUNDLE_COMMON_MESSAGES, new
+						 * FacesScopes() .getUserLocale())));
+						 */
 
 					}
 				}
@@ -10147,5 +10126,51 @@ public class EvaluationBackingBean extends
 			this.getManagedBean().getComplianceSampleItemList()
 					.set(index, sampleItem);
 		}
+	}
+
+	private void checkTechnicalSuppliersQualified() {
+		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
+
+		} else {
+			if (!this.getManagedBean().isReadOnly()) {
+				this.getManagedBean().setCheckTechnicalQualifiedOpenPopup(true);
+				/*
+				 * RequestContext.getCurrentInstance().execute(
+				 * "technicalEvaluationStandardChecklistDlgs.show()");
+				 */
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+								MessageUtils.getMessage(
+										MessageConst.WARN_760290,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+
+			}
+		}
+
+	}
+
+	private void checkFinancialSuppliersQualified() {
+		if (!this.getManagedBean().isCheckQualifiedSuppliers()) {
+
+		} else {
+			if (!this.getManagedBean().isReadOnly()) {
+				this.getManagedBean().setCheckFinancialQualifiedOpenPopup(true);
+				/*
+				 * RequestContext.getCurrentInstance().execute(
+				 * "financialEvaluationStandardChecklistDlgs.show()");
+				 */
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+								MessageUtils.getMessage(
+										MessageConst.WARN_760248,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+
+			}
+		}
+
 	}
 }
