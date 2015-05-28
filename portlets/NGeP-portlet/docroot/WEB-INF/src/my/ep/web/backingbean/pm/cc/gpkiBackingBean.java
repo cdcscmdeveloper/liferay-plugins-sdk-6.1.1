@@ -16,6 +16,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -48,6 +49,12 @@ public class gpkiBackingBean {
         }
         log.info(message);
     }
+
+	public String getGpkiEnabledProperty() {
+		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
+		System.out.println("getGpkiEnabledProperty :"+ prop.getProperty("gpki.enabled"));
+		return prop.getProperty("gpki.enabled");
+	}
 
 	public String getSignedText() {
 		return signedText;
@@ -88,18 +95,26 @@ public class gpkiBackingBean {
 		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
 		System.out.println("ContextualCompositeMethodExpression  2");  
 		debugLogger("reflectAction=====================================: "+obj);		
-		if(true){
-//		if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+		if(getGpkiEnabledProperty().equalsIgnoreCase("true")){
+			if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+				pmDigiSign.setCreatedBy(userId);
+		        pmDigiSign.setCreatedDate(date);
+		        pmDigiSign.setOrginalData(textBeforeSign);
+		        pmDigiSign.setSignedData(signedText);
+				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
+				debugLogger("=================================Same IC No");
+		        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString();
+		        }
+			else{
+				FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate not match with signer identity."));	
+			}
+		}else{
 			pmDigiSign.setCreatedBy(userId);
 	        pmDigiSign.setCreatedDate(date);
 	        pmDigiSign.setOrginalData(textBeforeSign);
 	        pmDigiSign.setSignedData(signedText);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-			debugLogger("=================================Same IC No");
-	        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 	  
-		}else{
-			FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate not match with signer identity."));	
-			debugLogger("=================================Not Same IC No ");
+	        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 
 		}
         return null; 	  
 
