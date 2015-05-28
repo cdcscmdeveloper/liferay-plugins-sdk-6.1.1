@@ -24,6 +24,7 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.exception.ResourceNotFoundException;
 
 /**
  * @author siew mei
@@ -124,6 +125,10 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 					navigateToErrorPage = true;
 					
 					break;	
+				} else if (throwable.getMessage().contains("EJB")) {
+					msgCode = throwable.getMessage();
+					
+					break;	
 				}
 				
 			} else if (throwable instanceof EpException) {
@@ -142,6 +147,8 @@ public class EpExceptionHandler extends ExceptionHandlerWrapper {
 				isValidationException = true;
 				
 				break;
+			} else if (throwable instanceof ResourceNotFoundException) {
+				msgCode = throwable.getMessage();
 			}
 		}
 
