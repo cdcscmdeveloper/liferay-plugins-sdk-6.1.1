@@ -372,6 +372,7 @@
 			<h:outputText value="#{lbl['lbl.ct.panel.service']}"/>
 	        <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/>
 	  	</f:facet>
+	  	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
 		<h:panelGrid style="width:100%;">
 			<p:dataTable id="serviceTable" var="serviceItemVar" value="#{amendmentBackingBean.managedBean.ctServiceItemList}"
 				selectionMode="single" selection="#{amendmentBackingBean.managedBean.selectedServiceItem}"   rowKey="#{serviceItemVar}"  widgetVar="serviceTableObj">
