@@ -22,12 +22,14 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
@@ -54,8 +56,8 @@ import org.apache.log4j.Logger;
 public class PpTrackingDiaryBackingBean extends
 		BaseBackingBean<PpTrackingDiaryManagedBean> {
 	private static Logger log = Logger.getLogger(PpTrackingDiaryBackingBean.class);
-	public static final String NAV_TO_SC_SEARCH = "trackingDiary.xhtml";
-	public static final String NAV_TO_DETAIL_SEARCH = "scTrackingDiaryDetailSearch.xhtml";
+	public static final String NAV_TO_PP_SEARCH = "trackingDiary.xhtml";
+	public static final String NAV_TO_DETAIL_SEARCH = "ppTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	
 	public PpTrackingDiaryBackingBean() {
@@ -63,6 +65,17 @@ public class PpTrackingDiaryBackingBean extends
 	private FacesScopes getFacesScopes(){
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
+	}
+	//Authorization 
+	private ISearchBean<PmParameterDesc> planTypeSearchBean;
+	
+	public ISearchBean<PmParameterDesc> getPlanTypeSearchBean() {
+		log.info("getPlanTypeSearchBean");
+		if (this.planTypeSearchBean == null) {
+			this.planTypeSearchBean = super.createSearchBean(PmParameterDesc.class, "somPlanType");
+		}
+
+		return this.planTypeSearchBean;
 	}
 
 	/**
@@ -72,25 +85,15 @@ public class PpTrackingDiaryBackingBean extends
 	public SelectItem[] getExistingPlanYearOptions() {
 		log.info("getExistingPlanYearOptions");
 		SelectItem[] items = null;
-		List <Long> planYears = null; 
-		Long orgProfileId = null;
 		try{
-//			if(!isRoleBPK()){
-//				orgProfileId = this.getCurrentActiveOrg().getOrgProfileId();
-//			}
-			//default
-			items = new SelectItem[1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-//			planYears = PpCommonUtil.getExistingPlanYear(getFacesScopes().getUserSessionBean().getUserId(), orgProfileId);
+			items = new SelectItem[7];
+//			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 			
-			if (planYears!=null && !planYears.isEmpty()) {
 				int i = 1;
-				items = new SelectItem[planYears.size()+1];
+//				items = new SelectItem[planYears.size()+1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-				for(Long year:planYears){
-					items[i] = new SelectItem(year, year.toString());
-					i++;
-				}
+				for(i=0;i<6;i++){
+					items[i] = new SelectItem(new Long(2013-i), new Long(2013-i).toString());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -98,6 +101,27 @@ public class PpTrackingDiaryBackingBean extends
 		}
 		return items;
 	}
+
+	public void search() {
+		System.out.println("ScTrackingDiaryBackingBean search");
+//		if ((null == getManagedBean().getSearchDocumentType()) 
+//				&& (getManagedBean().getSearchUNSPSCExtensionCodeValue() != null && getManagedBean().getSearchUNSPSCExtensionCodeValue().isEmpty()) 
+//				&& (getManagedBean().getSearchSupplierValue() != null && getManagedBean().getSearchSupplierValue().isEmpty())
+//				) {
+//			throw new EpException(MessageConst.ERROR_776101);
+//		}
+		getManagedBean().getPpDocumentDataModel().reloadData();
+	}
+
+//	/**
+//	 * get VOT Type options
+//	 * @return SelectItem[]
+//	 */
+//	public SelectItem[] getVotTypeOptions() {
+//		log.info("getVotTypeOptions");
+//		return getDropdownValues(ParameterTypeConst.VOT_TYPE);
+//	}
+	
 //	/**
 //	 * reset search bean fields
 //	 */
@@ -121,10 +145,6 @@ public class PpTrackingDiaryBackingBean extends
 		  }else if(this.getManagedBean().getPlanSearchBean().getYear()!=null){
 			  isEmpty = false;
 		  }else if(this.getManagedBean().getPlanSearchBean().getPlanType().getParameterId()!=null){
-			  isEmpty = false;
-		  }else if(this.getManagedBean().getPlanSearchBean().getVotType().getParameterId()!=null){
-			  isEmpty = false;
-		  }else if(this.getManagedBean().getPlanSearchBean().getPtj().getOrgProfileId()!=null){
 			  isEmpty = false;
 		  }
 		  if(isEmpty){
