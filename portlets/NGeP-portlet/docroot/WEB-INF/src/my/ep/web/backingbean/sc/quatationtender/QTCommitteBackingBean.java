@@ -1659,6 +1659,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void deleteSpecificationCommittee() {
 		debugLogger("deleteSelected Committe Mmeners");
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getToBeDelCommitteMemebers();
