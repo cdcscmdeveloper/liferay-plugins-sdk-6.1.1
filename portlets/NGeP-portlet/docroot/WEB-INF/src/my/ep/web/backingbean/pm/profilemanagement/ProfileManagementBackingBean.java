@@ -78,7 +78,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -104,8 +103,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.model.Role;
 
 /**
  * Backing Bean for User Profiles (Management)
@@ -1388,6 +1385,28 @@ public class ProfileManagementBackingBean extends
 			getManagedBean().getSelectedUserOrg().setPmOrgProfile(orgProfile);
 		}
 
+	}
+	
+	public void changeOrgUnit(){
+		logger.info("changeOrgUnit");
+		if(getManagedBean().getSelectedUserOrg() != null 
+				&& getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null 
+				&& getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId() != null){
+			if( getManagedBean().getSelectedCurrentOrgProfile() == null){
+				getManagedBean().setSelectedCurrentOrgProfile(getManagedBean().getSelectedUserOrg().getPmOrgProfile());
+			}else{
+				if(getManagedBean().getSelectedCurrentOrgProfile().getOrgProfileId() 
+						!= getManagedBean().getSelectedUserOrg().getPmOrgProfile().getOrgProfileId()){
+					// clear role list
+					this.getManagedBean().getSelectedUserOrg()
+							.setPmUserRoles(new ArrayList<PmUserRole>());
+					// clear reciving Addresses
+					showReceivingAddress();
+					getManagedBean().setSelectedCurrentOrgProfile(getManagedBean().getSelectedUserOrg().getPmOrgProfile());
+				}
+			}
+		}
+		
 	}
 
 	public void clearOrgNameAndRoleLovSearchFields() {
@@ -3483,6 +3502,7 @@ public class ProfileManagementBackingBean extends
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
+			reqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 			UserResDTO resDTO = userSO.saveUserAndUserOrg(reqDTO);
 			logger.info("save user -END");
 			if (resDTO.isSuccessful()) {

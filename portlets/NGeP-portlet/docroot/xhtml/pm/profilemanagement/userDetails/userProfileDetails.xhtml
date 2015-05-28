@@ -88,7 +88,8 @@
 									headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
-									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" />
+									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
+									postUpdateListener="#{profileManagementBackingBean.changeOrgUnit()}" />
 									
 							</c:if>
 							<c:if test="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
@@ -101,7 +102,8 @@
 												headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
-												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" />
+												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}"
+												postUpdateListener="#{profileManagementBackingBean.changeOrgUnit()}"  />
 											
 							</c:if>
 							</div>
@@ -158,7 +160,7 @@
 										<f:validateLength minimum="12" />
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
-											partialSubmit="true" process="@this" update="@form" />
+											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
 									</p:inputText>
 								</c:when>
 
@@ -171,7 +173,7 @@
 										size="30" maxlength="12">
 										<p:ajax event="change"
 											listener="#{profileManagementBackingBean.checkIdentificationNumber()}"
-											partialSubmit="true" process="@this" update="@form" />
+											partialSubmit="true" process="@this" update="@this,somIdType,itLoginId,somSalutation,itUserName,somNationality"/>
 									</p:inputText>
 								</c:otherwise>
 							</c:choose>
@@ -213,6 +215,8 @@
 								value="#{profileManagementBackingBean.managedBean.selectedUser.loginId}"
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.loginid']} - #{lbl['lbl.pm.profiles.invalidLogin']}">
 								<f:validateRegex pattern="^([a-zA-Z0-9._-]{8,40})?$" />
+								<p:ajax event="blur"
+									partialSubmit="true" process="@this" update="@this" />
 							</p:inputText> 
 						</td>
 						<td><p:message id="itLoginIdMsg" for="itLoginId" display="icon" />
@@ -239,6 +243,8 @@
 									value="#{profileManagementBackingBean.salutationOptions()}"
 									var="salutation" itemLabel="#{salutation.salutationName}"
 									itemValue="#{salutation.salutationId}" />
+								<p:ajax event="change"
+									partialSubmit="true" process="@this" update="@this" />
 							</p:selectOneMenu> </td>
 							<td><p:message id="somSalutationMsg" for="somSalutation"
 								display="icon" /></td>
@@ -258,6 +264,8 @@
 								validatorMessage="#{lbl['lbl.pm.profiles.userdetails.username']} #{lbl['lbl.pm.profiles.invalidString']}"
 								value="#{profileManagementBackingBean.managedBean.selectedUser.userName}">
 								<f:validateRegex pattern="^([\S]+[\s\S]{1,80})?$" />
+								<p:ajax event="blur"
+									partialSubmit="true" process="@this" update="@this" />
 							</p:inputText>&#160;&#160;<p:graphicImage id="giUserUsername"
 								value="/css/images/design/tooltips.png" /> <p:tooltip
 								for="giUserUsername"
@@ -288,6 +296,8 @@
 									value="#{profileManagementBackingBean.getCountryList()}"
 									var="countrylist" itemLabel="#{countrylist.countryName}"
 									itemValue="#{countrylist.countryId}" />
+									<p:ajax event="change"
+										partialSubmit="true" process="@this" update="@this" />
 							</p:selectOneMenu> 
 						</td>
 						<td><p:message id="somNationalityMsg" for="somNationality"
