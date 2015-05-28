@@ -1013,7 +1013,7 @@ public class QTDetailBackingBean extends
 				if (null != this.getManagedBean().getScQtSampleSubmission()) {
 					PmAddress pmAddress = this.getManagedBean()
 							.getScQtSampleSubmission().getAddress();
-					if (null != pmAddress) {
+					/*if (null != pmAddress) {
 						pmAddress.setPmCity(getPmCity(pmAddress.getPmCity().getCityId()));
 						pmAddress.setPmState(getPmState(pmAddress.getPmState().getStateId()));
 						pmAddress.setPmDistrict(getPmDistrict(pmAddress.getPmDistrict().getDistrictId()));
@@ -1024,14 +1024,14 @@ public class QTDetailBackingBean extends
 							pmAddress.setPmDivision(null);
 						}
 					}
-					this.getManagedBean().getScQtSampleSubmission().setAddress(pmAddress);
-					/*if (pmAddress.getPmDivision() != null
+					this.getManagedBean().getScQtSampleSubmission().setAddress(pmAddress);*/
+					if (pmAddress.getPmDivision() != null
 							&& pmAddress.getPmDivision().getDivisionId() == null) {
 						this.getManagedBean().getScQtSampleSubmission()
 								.getAddress().setPmDivision(null);
 					}
 					this.getManagedBean().getScQtSampleSubmission()
-							.getAddress().setPmCountry(retrieveCountry());*/
+							.getAddress().setPmCountry(retrieveCountry());
 					sampleSubmissionList.add(this.getManagedBean()
 							.getScQtSampleSubmission());
 				}
@@ -1871,7 +1871,10 @@ public class QTDetailBackingBean extends
 							.getScQtDocReportList());
 				}
 				//if (null == this.getManagedBean().getScQtSampleSubmissionList()) {
-				if (qt.getScQtSampleSubmission().isEmpty() && qt.getScQtSampleSubmission().size() == 0) {
+				if (this.getManagedBean().getQt().isSampleReq()
+						&& (null == this.getManagedBean()
+								.getScQtSampleSubmission() && isEmptyOrNull(this
+								.getManagedBean().getScQtSampleSubmissionList()))) {
 					retrieveScheduleTabDtl();
 				}
 			}
