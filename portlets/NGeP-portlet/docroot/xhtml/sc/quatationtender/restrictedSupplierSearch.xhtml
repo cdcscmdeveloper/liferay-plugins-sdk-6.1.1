@@ -11,7 +11,8 @@
 
 		<table style="width: 100%;">
 			<tr>
-				<td style="width: 160px;"><p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" /></td>
+				<td style="width: 180px;"><p:outputLabel
+						value="#{lbl['lbl.sc.supplier.name']}" /></td>
 				<td colspan="3"><p:inputText
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.supplierSearchBean.supplierName}"
 						size="30" /></td>
@@ -29,24 +30,24 @@
 						size="30" /></td>
 			</tr>
 		</table>
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				styleClass="apply_button" id="restrictSupplier"
+				action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
+				update="restrictedsupplierPnl" process="@this, searchrestrictedsupp" />
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				action="#{qTSupplierQulCriteriaBackingBean.reset}"
+				update="searchrestrictedsupp" resetValues="true"
+				partialSubmit="true" process="@this" />
+		</div>
 	</p:panel>
-	<div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.btn.search']}"
-			styleClass="apply_button" id="restrictSupplier"
-			action="#{qTSupplierQulCriteriaBackingBean.searchRestrictedSupplierAction}"
-			update="restrictedsupplierPnl" process="@this, searchrestrictedsupp" />
-		<p:commandButton value="#{lbl['lbl.btn.reset']}"
-			action="#{qTSupplierQulCriteriaBackingBean.reset}"
-			update="searchrestrictedsupp"  resetValues="true"
-			partialSubmit="true" process="@this" />
-	</div>
-	<p:spacer height="1" />
 	<p:panel id="restrictedsupplierPnl"
 		header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 		<p:dataTable var="smSupplier" id="ressupplier"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplierDataModel}"
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
-			rowKey="#{smSupplier.supplierId}" lazy="true" style="width : 100%;" rows="10">
+			rowKey="#{smSupplier.supplierId}" lazy="true" style="width : 100%;"
+			rows="10">
 
 			<ac:paginator for="ressupplier" />
 
@@ -61,7 +62,8 @@
 					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).mofNo}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}" style="width: 10%;">
+			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}"
+				style="width: 10%;">
 				<h:outputText
 					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate}">
 					<f:convertDateTime
@@ -71,7 +73,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width: 10%;">
 				<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).recordStatusFlg)}" />
+					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).recordStatusFlg)}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

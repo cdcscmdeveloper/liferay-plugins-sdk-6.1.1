@@ -20,7 +20,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qtn.no']}" /></td>
 				<td><p:inputText
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.qtNo}"
-						size="30" maxlength="21" /></td>
+						size="37" maxlength="21" /></td>
 				<td />
 				<td />
 			</tr>
@@ -35,7 +35,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.recordstatus']}" /></td>
-				<td><p:selectOneMenu style="width: 204px;margin-bottom: 5px;"
+				<td><p:selectOneMenu style="width: 243px;margin-bottom: 5px;"
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.recordStatus}">
 						<f:selectItems
 							value="#{committeBackingBean.getRecordStatusDropdownValues()}" />
@@ -47,7 +47,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.committe.type']}" /></td>
 				<td><p:selectOneMenu
 						value="#{committeBackingBean.managedBean.qtnTenderSearchBean.committeeType}"
-						style="width: 204px;margin-bottom: 5px;">
+						style="width: 243px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{committeBackingBean.getFCCommitteesDropDown()}" />
 					</p:selectOneMenu></td>
