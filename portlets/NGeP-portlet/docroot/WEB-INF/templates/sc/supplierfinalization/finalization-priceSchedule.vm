@@ -40,24 +40,25 @@
     		 <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 				#if ($isZone == "true")
 					#foreach( $zone in $zones )
-						$zone.zoneName<br/>
+						$zone.zoneName.toUpperCase()<br/>
+						<table class="table2" width='100%'>
+							<tr>
+								<td bgcolor="#eee">No.</td>
+								<td bgcolor="#eee">Kod Pembekal</td>
+								<td bgcolor="#eee">Harga Ditawarkan (RM)</td>
+							</tr>
+							#set( $count = 1 )
+							#foreach( $supplierBean in $supplierBeansMap.get($zone.specZoneId) )
+							<tr>
+								<td>$count</td>
+								<td>$supplierBean.supplierId</td>
+								<td>$supplierBean.offeredPrice</td>
+							</tr>
+							#set( $count = $count + 1 )
+							#end
+						</table>
+						<br/>
 					#end
-					<table class="table2" width='100%'>
-						<tr>
-							<td bgcolor="#eee">No.</td>
-							<td bgcolor="#eee">Kod Pembekal</td>
-							<td bgcolor="#eee">Harga Ditawarkan (RM)</td>
-						</tr>
-						#set( $count = 1 )
-						#foreach( $supplierBean in $supplierBeans )
-						<tr>
-							<td>$count</td>
-							<td>$supplierBean.supplierId</td>
-							<td>$supplierBean.offeredPrice</td>
-						</tr>
-						#set( $count = $count + 1 )
-						#end
-					</table>
 				#end
 				
 				#if ($isZone == "false")
