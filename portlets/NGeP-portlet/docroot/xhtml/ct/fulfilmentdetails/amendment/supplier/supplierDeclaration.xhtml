@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="panelSupplierDeclare" header="#{lbl['lbl.ct.panel.terms.condition']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid style="width:100%">
-			<p:editor controls="print" id="loaEditor" value="#{amendmentBackingBean.managedBean.editorValue}" width="800" height="430" />
+			<p:editor controls="" id="loaEditor" value="#{amendmentBackingBean.managedBean.editorValue}" width="800" height="430" disabled="true"/>
 			<p:spacer height="10" />
 			<h:panelGrid columns="2">
 				<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.termAndConditionFlg}" />
