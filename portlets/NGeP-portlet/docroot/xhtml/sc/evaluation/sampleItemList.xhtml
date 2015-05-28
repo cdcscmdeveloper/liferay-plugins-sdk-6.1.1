@@ -11,17 +11,19 @@
 
 	<h:panelGroup>
 		<h:panelGroup id="sampleItemList">
-			<p:panel header="#{lbl['lbl.sc.item.list']}"
-				toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 				<p:dataTable var="sampleItem" id="techSampleEvaluateId" rows="10"
 					value="#{evaluationBackingBean.managedBean.sampleItemList}"
+					selectionMode="single"
+					selection="#{evaluationBackingBean.managedBean.sampleItemSelection}"
 					editable="true" rowIndexVar="index" style="width:100%"
 					rowKey="#{sampleItem}">
 					<ac:paginator for="techSampleEvaluateId" />
 
-
-					<p:column headerText="#{lbl['lbl.sc.item.name']}"
-						style="width:70%">
+					<p:ajax event="rowSelect" process="@this" partialSubmit="true"
+						update="@form"
+						listener="#{evaluationBackingBean.retriveSpecificationsByItem}"></p:ajax>
+					<p:column headerText="#{lbl['lbl.sc.item.name']}" style="width:70%">
 						<h:outputText
 							value="#{sampleItem.scRequestItem.tplSpecQuestion.clItem}"></h:outputText>
 					</p:column>
@@ -36,7 +38,8 @@
 
 					<tr>
 
-						<td><h:outputText value="#{lbl['lbl.tpl.spec.content.user.score']}"
+						<td><h:outputText
+								value="#{lbl['lbl.tpl.spec.content.user.score']}"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}" /></td>
 						<td><p:inputText id="sampleaddressUserScoreId"
 								rendered="#{evaluationBackingBean.managedBean.qtProposalChecklist.scQtCheckList.scoringReq}"
@@ -71,15 +74,14 @@
 				toggleable="true">
 				<p:dataTable var="itemspec" id="techSampleSpecId" editable="true"
 					rows="10"
-					value="#{evaluationBackingBean.managedBean.sampleItemList}"
+					value="#{evaluationBackingBean.managedBean.sampleItemSpecifications}"
 					rowIndexVar="index" style="width:50%" rowKey="#{itemspec}">
 					<ac:paginator for="techSampleSpecId" />
 
 
 					<p:column headerText="#{lbl['lbl.sc.specification']}"
 						style="width:50%">
-						<h:outputText
-							value="#{itemspec.scRequestItem.tplSpecQuestion.clSpecDetail}"></h:outputText>
+						<h:outputText value="#{itemspec.clSpecDetail}"></h:outputText>
 
 					</p:column>
 
