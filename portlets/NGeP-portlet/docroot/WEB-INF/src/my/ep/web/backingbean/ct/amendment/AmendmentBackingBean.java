@@ -751,11 +751,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 			    }
 			    // Retrieve approver list
-			    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
-			    if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
-			    	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-					getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
-				} 
+			    // Skip during supplier acknowledgment
+			    if (!getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+				    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+				    if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
+				    	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+						getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+					} 
+			    }
 				
 			    initializeRemarks();
 			    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
