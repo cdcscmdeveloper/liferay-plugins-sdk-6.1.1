@@ -1278,7 +1278,7 @@ public class ProfileManagementBackingBean extends
 					throw new EpException(MessageConst.ERROR_770167);
 				} else {
 					this.getManagedBean().getSelectedUserOrg()
-							.setExpDateDisplay(getCurrentDate());
+							.setExpDateDisplay(null);
 					this.getManagedBean().getSelectedUser()
 							.setHasActiveOrg(false);
 				}
@@ -3213,6 +3213,8 @@ public class ProfileManagementBackingBean extends
 						activeRole = true;						
 					}
 				}
+			}else{
+				activeRole = true;	
 			}
 			// }
 		}
@@ -3908,9 +3910,10 @@ public class ProfileManagementBackingBean extends
 						loadUserInfo(user.getUserId());
 						// assign new pmUserOrg object to the current user
 					}
+					
 
 				}
-
+				 
 			} finally {
 				userSO = null;
 			}
