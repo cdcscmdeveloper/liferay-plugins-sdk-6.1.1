@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sc.bidding;
 
 import java.io.IOException;
-
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -23,6 +22,7 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.sc.bidding.BiddingReqDTO;
 import my.ep.dto.sc.bidding.BiddingResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidAction;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
@@ -319,6 +319,14 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		log.info("decrementAmountValueChangeListener");
 		ScBidPrice newBidPrice = new ScBidPrice();
 		BigDecimal newPrice = null;
+		
+		if(scBidPrice.getNewPrice() != null && scBidPrice.getNewPrice().doubleValue() < scBidPrice.getScBidSupplierItem().getScBidItem().getDecrementAmt().doubleValue()){
+			int index = getBidPrices().indexOf(scBidPrice);
+			scBidPrice.setNewPrice(null);
+			getBidPrices().set(index, scBidPrice);
+			newBidPrice = null;
+			throw new EpException("Please select a value greater than"+scBidPrice.getScBidSupplierItem().getScBidItem().getDecrementAmt());
+		}
 
 		if (scBidPrice.getBidPrice() == null
 				&& scBidPrice.getNewPrice() != null) {
