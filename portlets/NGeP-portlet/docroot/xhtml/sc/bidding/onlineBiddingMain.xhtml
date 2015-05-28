@@ -13,13 +13,7 @@
 
 	<ui:define name="contentSection">
 
-		<h:panelGroup id="pollPanelGroup"
-			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-
-			<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
-				listener="#{onlineBiddingBB.pollListener}"
-				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
-		</h:panelGroup>
+		
 
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
 
