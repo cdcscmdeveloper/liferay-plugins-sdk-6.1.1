@@ -144,13 +144,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) 
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
 					|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)){
-				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
-					for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
-						if(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-							throw new EpException(MessageConst.ERROR_745069);
-						}
-					}
-				}				
+				// UnitEP request can reject service
+//				if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
+//					for(FlFulfilmentNoteItem frnItem : getManagedBean().getFulfilmentNote().getFlFulfilmentNoteItem()) {
+//						if(frnItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+//							throw new EpException(MessageConst.ERROR_745069);
+//						}
+//					}
+//				}				
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
 					throw new EpException(MessageConst.ERROR_100022, new String[]{ResourceBundleUtils.getMessage("lbl.txt.remarks",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 				}
