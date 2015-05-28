@@ -241,6 +241,10 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The clauses title. */
 	private String clausesTitle;
 	
+	/** The template spec bean. */
+	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	
+	
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
@@ -1390,5 +1394,19 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setClausesTitle(String clausesTitle) {
 		this.clausesTitle = clausesTitle;
+	}
+
+	/**
+	 * @return the templateSpecBean
+	 */
+	public TemplateSpecBean getTemplateSpecBean() {
+		return templateSpecBean;
+	}
+
+	/**
+	 * @param templateSpecBean the templateSpecBean to set
+	 */
+	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
+		this.templateSpecBean = templateSpecBean;
 	}
 }
