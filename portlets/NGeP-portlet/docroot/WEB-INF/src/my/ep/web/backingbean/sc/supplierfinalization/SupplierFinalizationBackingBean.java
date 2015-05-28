@@ -2558,6 +2558,8 @@ public class SupplierFinalizationBackingBean extends
 					.retrieveOfferedPriceDtls(reqDTO);
 //			this.getManagedBean().setScQt(resDTO.getScQt());
 			if (resDTO.getScQt().isZonal()) {
+				Map<Long,List<SupplierQualificationBean>>
+						zonalQualifiedSuppliersMap = new HashMap<Long,List<SupplierQualificationBean>>();
 				List<TplSpecZoneDtl> zones = resDTO.getZones();
 				if (null != zones) {
 					isZone = true;
@@ -2568,18 +2570,21 @@ public class SupplierFinalizationBackingBean extends
 					for (TplSpecZoneDtl zoneDtl : zones) {
 						boardReqDTO.setZoneId(zoneDtl.getSpecZoneId());
 						NoticeBoardResDTO boardResDTO = qtNoticeBoardSO
-								.retrieveOfferedPriceDtlsByZone(reqDTO);
-						beans.addAll(boardResDTO.getQualificationBean());
+								.retrieveOfferedPriceDtlsByZone(boardReqDTO);
+						zonalQualifiedSuppliersMap.put(zoneDtl.getSpecZoneId(), 
+								boardResDTO.getQualificationBean());
 					}
+					context.put("zones", list);
+					context.put("supplierBeansMap", zonalQualifiedSuppliersMap);
 				}
 			} else {
 				beans.addAll(resDTO.getQualificationBean());
+				context.put("supplierBeans", beans);
 			}
 		} finally {
 			qtNoticeBoardSO = null;
 		}
 		context.put("isZone", isZone);
-		context.put("supplierBeans", beans);
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_FZ_PRICE_SCHEDULE, context,
 				new FileOutputStream(getActualFilePath(attachment)));
