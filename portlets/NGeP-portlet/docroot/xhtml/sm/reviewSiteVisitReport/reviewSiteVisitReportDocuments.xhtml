@@ -73,7 +73,7 @@
 						<table style="width: 50%">
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-								<td><p:inputTextarea autoResize="true" cols="41"
+								<td><p:inputTextarea autoResize="false" cols="41"
 										maxlength="200" id="siteVisitRevPORmrks"
 										validatorMessage="#{lbl['lbl.sm.revSiteVisitRpt.panHdr']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 										value="#{backingBean.managedBean.poSecReview.siteVisitVerifiedRemark}">
@@ -88,11 +88,11 @@
 						<table style="width: 100%">
 							<tr>
 								<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-								<td><p:inputTextarea autoResize="true" readonly="true"
+								<td><p:inputTextarea autoResize="false" readonly="true"
 										disabled="true" cols="41" maxlength="200"
 										value="#{backingBean.managedBean.poSecReview.siteVisitVerifiedRemark}" /></td>
 								<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-								<td><p:inputTextarea autoResize="true" cols="41"
+								<td><p:inputTextarea autoResize="false" cols="41"
 										maxlength="200" id="siteVisitRptAprvrRmrk"
 										validatorMessage="#{lbl['lbl.sm.revSiteVisitRpt.panHdr']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 										value="#{backingBean.managedBean.apprvrSecReview.siteVisitVerifiedRemark}">

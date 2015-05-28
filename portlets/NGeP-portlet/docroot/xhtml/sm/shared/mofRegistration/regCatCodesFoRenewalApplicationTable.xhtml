@@ -60,7 +60,8 @@
 					listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBeanR)}"
 					update=":form:tt:catCodeInfPan" />
 			</p:inputTextarea>
-			<p:graphicImage id="prevOtherDescR" value="/css/images/design/icon_alert.png" 
+			<p:graphicImage id="prevOtherDescR"
+				value="/css/images/design/icon_alert.png"
 				style="padding-left : 3px;"
 				rendered="#{not empty catBeanR.approvedDate and (catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) and not empty catBeanR.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
 			<p:tooltip for="prevOtherDescR">
@@ -83,7 +84,8 @@
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}" />
 			<h:outputText value="#{lbl['lbl.sm.catCodes.pendingVer']}"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
-			<p:graphicImage id="pendReApprvImg" value="/css/images/design/icon_alert.png" 
+			<p:graphicImage id="pendReApprvImg"
+				value="/css/images/design/icon_alert.png"
 				style="padding-left : 3px;"
 				rendered="#{catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS}" />
 			<p:tooltip for="pendReApprvImg">
@@ -144,7 +146,9 @@
 				rows="5" cols="20"
 				label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
 				id="poCatRDecisionRmrk"
-				required="#{catBeanR.poDecFlg == 0 and empty param['disableValidation']}" />
+				required="#{catBeanR.poDecFlg == 0 and empty param['disableValidation']}">
+				<f:validateLength maximum="200" />
+			</p:inputTextarea>
 			<p:message id="poCatRDecisionRmrkMsg" for="poCatRDecisionRmrk"
 				showSummary="true" showDetail="false" display="icon" />
 		</p:column>
@@ -173,7 +177,9 @@
 				rendered="#{(catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.PENDING_RE_APPROVAL_STATUS or catBeanR.recordStatusFlg eq SupplierManagementConst.APPROVED_RECORD_STATUS)}"
 				label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBeanR.pmCategoryL1.categoryL1Code} #{catBeanR.pmCategoryL2.categoryL2Code} #{catBeanR.pmCategoryL3.categoryL3Code} "
 				maxlength="200"
-				required="#{catBeanR.apprvrDecFlg == 0 and empty param['disableValidation']}" />
+				required="#{catBeanR.apprvrDecFlg == 0 and empty param['disableValidation']}">
+				<f:validateLength maximum="200" />
+			</p:inputTextarea>
 			<p:message id="apprvrCatRDecisionRmrkMsg"
 				for="apprvrCatRDecisionRmrk" showSummary="true" showDetail="false"
 				display="icon" />

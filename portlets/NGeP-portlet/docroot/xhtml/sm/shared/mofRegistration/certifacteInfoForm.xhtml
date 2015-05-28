@@ -100,7 +100,7 @@
 				<table style="width: 50%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
+						<td><p:inputTextarea autoResize="false" cols="41"
 								maxlength="200" id="certInfoPoRmrk"
 								validatorMessage="#{lbl['lbl.sm.panHdr.certInfo']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.certRemark}">
@@ -114,11 +114,11 @@
 				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
+						<td><p:inputTextarea autoResize="false" readonly="true"
 								disabled="true" cols="41" maxlength="200"
 								value="#{backingBean.managedBean.poSecReview.certRemark}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
+						<td><p:inputTextarea autoResize="false" cols="41"
 								maxlength="200" id="certInforAprvrRmrk"
 								validatorMessage="#{lbl['lbl.sm.panHdr.certInfo']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.apprvrSecReview.certRemark}">

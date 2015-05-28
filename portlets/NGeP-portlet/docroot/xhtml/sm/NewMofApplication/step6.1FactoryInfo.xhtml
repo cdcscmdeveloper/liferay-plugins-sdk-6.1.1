@@ -64,7 +64,7 @@
 									<tr>
 										<td style="padding-left: 38px;"><p:outputLabel
 												value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-										<td><p:inputTextarea autoResize="true" cols="41"
+										<td><p:inputTextarea autoResize="false" cols="41"
 												maxlength="200" id="newMofFactPoRmrk"
 												validatorMessage="#{lbl['lbl.sm.poRemarks.length.validMsg']}"
 												value="#{backingBean.managedBean.poSecReview.factoryRemark}">
@@ -79,12 +79,12 @@
 									<tr>
 										<td style="padding-left: 38px;"><p:outputLabel
 												value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-										<td><p:inputTextarea autoResize="true" readonly="true"
+										<td><p:inputTextarea autoResize="false" readonly="true"
 												disabled="true" cols="41" maxlength="200"
 												value="#{backingBean.managedBean.poSecReview.factoryRemark}" /></td>
 										<td style="padding-left: 22px;"><p:outputLabel
 												value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-										<td><p:inputTextarea autoResize="true" cols="41"
+										<td><p:inputTextarea autoResize="false" cols="41"
 												maxlength="200" id="newFactApprvrRmrk"
 												validatorMessage="#{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 												value="#{backingBean.managedBean.apprvrSecReview.factoryRemark}">
