@@ -155,33 +155,34 @@
 						</h:outputText>
 					</h:panelGroup>
 				</p:column>
-				<p:column
+				<p:column 
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-					<p:spinner style="width : 88%" size="8"
+					<p:spinner style="width : 88%" size="8" 
 						value="#{bidPriceItem.newPrice}"
-						min="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}"
+						min="0"
 						id="spinner" label="New Bid Price"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"
-							update="spinner,newPrice,newPriceSubTotal,@(.calcTotal)"></p:ajax>
+							update="spinner,submitButton,newPrice,newPriceSubTotal,@(.calcTotal)"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:spinner>
 					<p:spacer width="5"></p:spacer>
-					<p:commandLink id="submitBidOB"
-						action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"
+					<h:panelGroup id="submitButton">
+					<p:commandLink id="submitBidOB" disabled="#{(bidPriceItem.newPrice == null) and (bidPriceItem.newPrice eq 0) }"
+						action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"  
 						process="@this" partialSubmit="true"
 						update="lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB,@(.calcTotal)">
-						<p:graphicImage 
-							value="/css/images/design/submit.png" />
+						<p:graphicImage  value="#{CommonUIConstant.imagePathUptoDesign}/submit.png"/>
 					</p:commandLink>
+					</h:panelGroup>
 				</p:column>
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 					<h:panelGroup id="newPrice">
 						<h:outputText id="newBidPriceOB" style="float : right"
-							rendered="#{bidPriceItem.newBidPrice != null}"
+							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) }"
 							value="#{bidPriceItem.newBidPrice.bidPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -192,8 +193,8 @@
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 
 					<h:panelGroup id="newPriceSubTotal">
-						<h:outputText id="newBidPriceTotalOB" style="float : right"
-							rendered="#{(bidPriceItem.newBidPrice.bidPrice * bidPriceItem.scBidSupplierItem.scBidItem.qty) ne 0}"
+						<h:outputText id="newBidPriceTotalOB" style="float : right" 
+							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) }"
 							value="#{onlineBiddingBB.tplSpecHelper.calcTotalAmount(bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.newBidPrice.bidPrice,bidPriceItem.scBidSupplierItem.scBidItem.qty)}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -266,7 +267,7 @@
 			widgetVar="newBidPriceConfirm">
 			<div align="right">
 				<p:commandButton id="confSubmit" value="#{lbl['lbl.btn.yes']}"
-					partialSubmit="true"
+					partialSubmit="true" update="@form"
 					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank(bidPriceItem)}"
 					process="@this" oncomplete="newBidPriceConfirm.hide()" />
 				<p:commandButton id="confNotSubmit" value="#{lbl['lbl.btn.no']}"

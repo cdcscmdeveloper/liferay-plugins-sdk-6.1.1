@@ -43,6 +43,7 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private List<ScBidItem> selectedBidItemList;
 	private ScBid scBid;
 	private List<ScQtRecommendDtl> bidParticipants;
+	private ScBidSchedule scheduleForParticipant;
 
 	private List<ScBidSchedule> bidScheduleList;
 	private List<ScBidSchedule> selectedBidBidScheduleList;
@@ -72,6 +73,25 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		minStartDate = c.getTime();
 		minEndDate = c.getTime();
 	}
+	
+
+	/**
+	 * @return the scheduleForParticipant
+	 */
+	public ScBidSchedule getScheduleForParticipant() {
+		return scheduleForParticipant;
+	}
+
+
+	/**
+	 * @param scheduleForParticipant the scheduleForParticipant to set
+	 */
+	public void setScheduleForParticipant(ScBidSchedule scheduleForParticipant) {
+		this.scheduleForParticipant = scheduleForParticipant;
+	}
+
+
+
 
 	/**
 	 * @return the rowSelectedBid
