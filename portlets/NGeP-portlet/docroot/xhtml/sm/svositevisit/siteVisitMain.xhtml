@@ -15,7 +15,6 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<f:event listener="#{svoSiteVisitBackingBean.preRenderView}" type="preRenderView" />
 		<ui:param name="supplierName" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.smSupplier.companyName}" />
 		<ui:param name="applNo" value="#{svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applNo}" />
 		<ui:param name="applType" value="#{svoSiteVisitBackingBean.getsupplierApplTypeDesc(svoSiteVisitBackingBean.managedBean.smSvTask.smAppl.applType)}" />
