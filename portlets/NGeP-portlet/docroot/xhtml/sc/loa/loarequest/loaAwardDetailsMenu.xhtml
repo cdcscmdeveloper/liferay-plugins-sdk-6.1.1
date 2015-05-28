@@ -7,17 +7,21 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<ui:param name="isZonal" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.zonal}" />
-
+	<ui:param name="loa" value="#{lOADetailBackingBean.managedBean.scLoa}" />
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="17%">
 				<h:outputLabel value="#{lbl['lbl.sc.award.type']}" />
 			</td>
-			<td width="83%">
+			<td width="66%">
 				<p:inputText
 					value="#{dpLOABackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.recommendTypeCode)}"
 					disabled="true" size="30" readonly="true" />
+			</td>
+			<td width="17%" style="white-space: nowrap; margin-right: 10px;" align="right">
+				<p:commandButton value="Update Specfication" action="#{lOADetailBackingBean.setTemplateSpec(loa)}" 
+			    rendered="#{isPendingSubmissionStatus}"></p:commandButton>
 			</td>
 		</tr>
 		</table>
