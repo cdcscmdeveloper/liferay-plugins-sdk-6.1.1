@@ -197,10 +197,9 @@ public class SpkiBackingBean  extends BaseBackingBean{
 			switch(res.getStatusCode())
 			{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				
+				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 				signedData = new String(Base64.encode(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE))));
-				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				break;
 
 			default:
@@ -216,7 +215,7 @@ public class SpkiBackingBean  extends BaseBackingBean{
 		} catch (Exception ex)
 		{
 			FacesContext.getCurrentInstance().addMessage("spki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "SPKIs Signing error."));	
-		throw new EpException(MessageConst.ERROR_776052);
+			throw new EpException(MessageConst.ERROR_776052);
 
 		}
 		return signedData;
