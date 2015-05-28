@@ -42,7 +42,8 @@ public class AddressUtils {
 			}
 			if (smAddress.getPostcode() != null && smAddress.getPostcode().length() > 0) {
 				address.append(smAddress.getPostcode());
-				address.append(" ").append(htmlLineSeparator);
+				address.append(" ");
+				//.append(htmlLineSeparator);
 			}
 			if (smAddress.getPmCity() != null && smAddress.getPmCity().getCityName() !=null && smAddress.getPmCity().getCityName().length() > 0) {
 				address.append(smAddress.getPmCity().getCityName());
