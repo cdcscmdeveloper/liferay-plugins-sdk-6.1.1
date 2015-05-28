@@ -3897,7 +3897,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				updateSpkiDigiSignData(pmDigiSign, ParameterConst.DOCTYPE_SIMPLE_QUOTE, 
 						quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.FALSE));
 			}
-//			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
+			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
 			pmDigiSign.setSignedData(signedData);
 			//}
