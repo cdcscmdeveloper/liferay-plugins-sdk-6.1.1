@@ -86,14 +86,14 @@ public class PpTrackingDiaryBackingBean extends
 		log.info("getExistingPlanYearOptions");
 		SelectItem[] items = null;
 		try{
-			items = new SelectItem[7];
+			items = new SelectItem[8];
 //			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
 			
 				int i = 1;
 //				items = new SelectItem[planYears.size()+1];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-				for(i=0;i<6;i++){
-					items[i] = new SelectItem(new Long(2013-i), new Long(2013-i).toString());
+				for(i=0;i<7;i++){
+					items[i+1] = new SelectItem(new Long(2013-i), new Long(2013-i).toString());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
