@@ -342,7 +342,7 @@
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td colspan="3"><p:inputTextarea autoResize="true" cols="41"
+						<td colspan="3"><p:inputTextarea autoResize="false" cols="41"
 								maxlength="200" id="poCompBasicRmrk"
 								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.poSecReview.basicRemark}">
@@ -356,7 +356,7 @@
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionPoRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
+						<td><p:inputTextarea autoResize="false" readonly="true"
 								id="poCompBasicRemarkRd" disabled="true" cols="41"
 								maxlength="200"
 								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.poRemarks.length.validMsg']}"
@@ -365,7 +365,7 @@
 							</p:inputTextarea> <p:message id="poCompBasicRemarkRdMsg" for="poCompBasicRemarkRd"
 								showSummary="true" showDetail="false" display="icon" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.sectionApprRmrk']}" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41"
+						<td><p:inputTextarea autoResize="false" cols="41"
 								maxlength="200" id="apprvrCompBasicRmrk"
 								validatorMessage="#{lbl['lbl.sm.panHdr.comBasic']} - #{lbl['lbl.sm.apprvrRemarks.length.validMsg']}"
 								value="#{backingBean.managedBean.apprvrSecReview.basicRemark}">

@@ -93,7 +93,8 @@
 						listener="#{backingBean.assignCategoryReApprovalOnOtherDescChange(catBean)}"
 						update=":form:tt:catCodeInfPan" />
 				</p:inputTextarea>
-				<p:graphicImage id="prevOtherDesc" value="/css/images/design/icon_alert.png"
+				<p:graphicImage id="prevOtherDesc"
+					value="/css/images/design/icon_alert.png"
 					style="padding-left : 3px;"
 					rendered="#{not empty catBean.approvedDate and catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and not empty catBean.prevOtherDesc and (backingBean.managedBean.poUser or backingBean.managedBean.approverUser)}" />
 				<p:tooltip for="prevOtherDesc">
@@ -180,7 +181,9 @@
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					id="poCatDecisionRmrk"
-					required="#{catBean.poDecFlg == 0 and empty param['disableValidation']}" />
+					required="#{catBean.poDecFlg == 0 and empty param['disableValidation']}">
+					<f:validateLength maximum="200" />
+				</p:inputTextarea>
 				<p:message id="poCatDecisionRmrkMsg" for="poCatDecisionRmrk"
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS and backingBean.managedBean.poUser}"
 					showSummary="true" showDetail="false" display="icon" />
@@ -212,7 +215,9 @@
 					rendered="#{catBean.recordStatusFlg eq SupplierManagementConst.PENDING_ACT_STATUS}"
 					label="#{lbl['lbl.sm.catCodes.rejRemarks']} #{catBean.pmCategoryL1.categoryL1Code} #{catBean.pmCategoryL2.categoryL2Code} #{catBean.pmCategoryL3.categoryL3Code} "
 					id="apprvrCatDecisionRmrk"
-					required="#{catBean.apprvrDecFlg == 0 and empty param['disableValidation']}" />
+					required="#{catBean.apprvrDecFlg == 0 and empty param['disableValidation']}">
+					<f:validateLength maximum="200" />
+				</p:inputTextarea>
 				<p:message id="apprvCatDecisionRmrkMsg" for="apprvrCatDecisionRmrk"
 					showSummary="true" showDetail="false" display="icon" />
 			</p:column>
