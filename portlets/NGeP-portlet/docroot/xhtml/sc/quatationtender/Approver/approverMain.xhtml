@@ -14,7 +14,7 @@
 				<p:graphicImage value="/css/images/ajax-loader.gif" />
 			</p:blockUI>
 			<p:messages id="specApprovalMessages"
-						showDetail="true" autoUpdate="true" closable="true"
+						showDetail="true" autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}" closable="true"
 						showSummary="false" />
 			
 			<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
