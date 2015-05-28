@@ -156,6 +156,7 @@
 			<portlet id="flViewPurchaseOrder" />
 			<portlet id="flViewContractOrder" />
 			<portlet id="flViewPaymentMatch" />
+			<portlet id="flViewDebitAdjustment" />
 			
 		</category>
 		<!-- Fulfilment End Added by Giri -->
