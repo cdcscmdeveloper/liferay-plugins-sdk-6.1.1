@@ -8,7 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.workshop.details']}" toggleable="true"
 		id="smWorkShopDtPanel">
-		<p:outputLabel rendered="#{backingBean.managedBean.showWorkShopPanel}">
+		<p:outputPanel rendered="#{backingBean.managedBean.showWorkShopPanel}">
 			<p:dataTable var="work" widgetVar="smWorkShopDtWidVar"
 				value="#{backingBean.managedBean.applWorkShopFacilities}"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -29,7 +29,8 @@
 					<p:commandLink partialSubmit="true" process="@this"
 						action="#{backingBean.assignSelWorkshop(work)}"
 						update=":form:tt:workShopDialog" style="padding-right:5px">
-						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}"/>
+						<p:graphicImage value="/css/images/design/edit.png"
+							title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>
 				</p:column>
 
@@ -46,7 +47,7 @@
 					update=":form:tt:workDt" />
 			</div>
 			<br />
-		</p:outputLabel>
+		</p:outputPanel>
 		<p:outputPanel
 			rendered="#{!backingBean.managedBean.showWorkShopPanel}"
 			layout="block">
