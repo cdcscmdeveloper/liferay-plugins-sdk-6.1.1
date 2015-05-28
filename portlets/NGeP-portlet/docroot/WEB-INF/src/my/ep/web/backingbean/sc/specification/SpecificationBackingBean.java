@@ -11041,26 +11041,12 @@ public class SpecificationBackingBean extends
 				}
 
 				if (null != getManagedBean().getMinistryId()) {
-					/*
-					 * SearchFilterBean ministrySearchBean = new
-					 * SearchFilterBean(
-					 * SearchOperator.OPERATOR_EQUALS.value()); String
-					 * parentString = OrgProfileUtil
-					 * .getSearchBeanParentString(OrganizationType.MINISTRY
-					 * .value());
-					 * ministrySearchBean.setSearchField("pmOrgProfile." +
-					 * parentString);
-					 * ministrySearchBean.setSearchValue(getManagedBean()
-					 * .getMinistryId());
-					 * searchBean.getDataFilterBeans().add(ministrySearchBean);
-					 */
-
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
 									"pmOrgProfile."
 											+ OrgProfileUtil
-													.getSearchBeanParentString(OrganizationType.DEPARTMENT
+													.getSearchBeanParentString(OrganizationType.MINISTRY
 															.value()),
 									SearchOperator.OPERATOR_EQUALS.value(),
 
@@ -11070,18 +11056,6 @@ public class SpecificationBackingBean extends
 				}
 
 				if (null != getManagedBean().getPtjGroupId()) {
-					/*
-					 * SearchFilterBean ptjSearchBean = new SearchFilterBean(
-					 * SearchOperator.OPERATOR_EQUALS.value()); String
-					 * parentString = OrgProfileUtil
-					 * .getSearchBeanParentString(OrganizationType.DEPARTMENT
-					 * .value()); ptjSearchBean .setSearchField("pmOrgProfile."
-					 * + parentString);
-					 * ptjSearchBean.setSearchValue(getManagedBean()
-					 * .getPtjGroupId());
-					 * searchBean.getDataFilterBeans().add(ptjSearchBean);
-					 */
-
 					searchBean
 							.getDataFilterBeans()
 							.add(new SearchFilterBean(
