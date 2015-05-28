@@ -145,6 +145,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
 	private List<String> paramList = new ArrayList<String>();
 	private List<String> highRoleCodeList = new ArrayList<String>();
+	private List<String> paramTableRoleCodeList = new ArrayList<String>();
 	private List<SelectItem> rolecodeRquisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
 	private List<SelectItem> rolecodeRecievingOfficerList = new ArrayList<SelectItem>();
@@ -184,6 +185,14 @@ public class ReportBackingBean extends
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
+
+	public List<String> getParamTableRoleCodeList() {
+		return paramTableRoleCodeList;
+	}
+
+	public void setParamTableRoleCodeList(List<String> paramTableRoleCodeList) {
+		this.paramTableRoleCodeList = paramTableRoleCodeList;
+	}
 
 	public List<SelectItem> getIdentificationTypeList() {
 		return identificationTypeList;
@@ -661,8 +670,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)240561;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	private Long lngUserId = (long)240561;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3419,19 +3428,30 @@ public class ReportBackingBean extends
 	public void  retrieveAllMinistry() {
 		ptjList = new ArrayList<String>();
 		ministryList = new ArrayList<SelectItem>();
-		new FacesScopes().getUserRoleList();
-			//if(authoriztionList.contains(RoleCode.BPK_PCA.value()))  {	
-		if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
-				 getLtstMinistryList();
-				 //getLtstPTJList();
-				 /*if(this.getCommonMinistry()==null){
-				   retrieveFPJPTJList();
-				 }*/	 
-			}else{
-				retrieveParameterCodeType();
+		retrieveRoleCodeFromParamTable();
+		if(paramTableRoleCodeList!=null){
+			if((highRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0)))){
+			//if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
+					 getLtstMinistryList();					 
 			}
+		}else{
+			retrieveParameterCodeType();
+		}
 	}
 	
+	public List<String>  retrieveRoleCodeFromParamTable() {
+		paramTableRoleCodeList = new ArrayList<String>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<String> roleCodeFromParamTableLst = reportSO.retrieveRoleCodeFromParamTable();			
+					for (int i = 0; i < roleCodeFromParamTableLst.size(); i++) {
+						paramTableRoleCodeList.add(roleCodeFromParamTableLst.get(i));
+					}        	    
+        }
+		return paramTableRoleCodeList;
+	}
 	public void  retrieveParameterCodeType() {
 		ptjList = new ArrayList<String>();
 		ministryList = new ArrayList<SelectItem>();
