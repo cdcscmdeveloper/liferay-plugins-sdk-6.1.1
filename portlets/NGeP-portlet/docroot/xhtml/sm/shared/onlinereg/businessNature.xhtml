@@ -11,7 +11,8 @@
 		<p:dataTable var="suppBizNature" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{registrationBackingBean.managedBean.smSupp.smSupplierBusinesses}"
 			selection="#{registrationBackingBean.managedBean.selectedBusinessNatureLs}"
-			id="suppBizNatureId" rowKey="#{suppBizNature}">
+			id="suppBizNatureId" rowKey="#{suppBizNature}" rows="10">
+			<ac:paginator for="suppBizNatureId" />
 			<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{!registrationBackingBean.managedBean.smSupp.brandNew and registrationBackingBean.managedBean.smSupp.smSupplierBusinesses.size() le 1}" />
 			<p:ajax event="rowSelectCheckbox" />
 			
