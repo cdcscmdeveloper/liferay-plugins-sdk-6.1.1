@@ -98,13 +98,14 @@
 			<p:outputPanel id="delPendRejRemarksPanelTst">
 				<table style="width: 100%; margin-top: 10px;">
 					<tr>
-						<td style="width: 15.3%;"><p:outputLabel
+						<td style="width: 14.5%;"><p:outputLabel
 								value="#{lbl['lbl.sm.reason']} : "
 								rendered="#{backingBean.managedBean.rejectReasonReqd}" /> <p:outputLabel
 								value="*" styleClass="mandatory"
 								rendered="#{backingBean.managedBean.rejectReasonReqd}" /></td>
-						<td><p:inputTextarea cols="122" style="margin-bottom : 5px;"
-								rows="5" required="#{backingBean.managedBean.rejectReasonReqd}"
+						<td><p:inputTextarea cols="122"
+								style="margin-bottom : 5px;width: 75%;" rows="5"
+								required="#{backingBean.managedBean.rejectReasonReqd}"
 								id="delPendResn" label="#{lbl['lbl.sm.reason']}"
 								rendered="#{backingBean.managedBean.rejectReasonReqd}"
 								value="#{backingBean.managedBean.supplierRemarks}"
