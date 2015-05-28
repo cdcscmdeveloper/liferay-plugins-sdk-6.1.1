@@ -65,10 +65,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private int searchOrgCategory = 0;
 	private int orgCategory = 0;
 	private boolean isLazy = false;
-	
-	
-	
-
+	private PmOrgProfile selectedCurrentOrgProfile;
 
 	/**
 	 * @return the additionalOrgFilter
@@ -418,6 +415,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+	/**
+	 * @return the selectedCurrentOrgProfile
+	 */
+	public PmOrgProfile getSelectedCurrentOrgProfile() {
+		return selectedCurrentOrgProfile;
+	}
+	/**
+	 * @param selectedCurrentOrgProfile the selectedCurrentOrgProfile to set
+	 */
+	public void setSelectedCurrentOrgProfile(PmOrgProfile selectedCurrentOrgProfile) {
+		this.selectedCurrentOrgProfile = selectedCurrentOrgProfile;
 	}
 	
 
