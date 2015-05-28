@@ -13408,7 +13408,11 @@ public class SpecificationBackingBean extends
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
-			validateBusinessOwner(true);
+			if (null != getManagedBean().getScQt().getScQtSupplierCriteria()
+					&& getManagedBean().getScQt().getScQtSupplierCriteria()
+							.isBrandNew()==true) {
+				validateBusinessOwner(true);
+			}
 
 		}
 
@@ -13858,7 +13862,11 @@ public class SpecificationBackingBean extends
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
-			validateBusinessOwner(true);
+			if (null != getManagedBean().getScQt().getScQtSupplierCriteria()
+					&& getManagedBean().getScQt().getScQtSupplierCriteria()
+							.isBrandNew()==true) {
+				validateBusinessOwner(true);
+			}
 
 		}
 		// retriveSpecdetails(this.getManagedBean().getScQt().getQtId(), "QT");
