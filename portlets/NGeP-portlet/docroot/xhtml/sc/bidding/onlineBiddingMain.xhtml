@@ -25,14 +25,14 @@
 
 
 
-		<p:panel id="onLineBiddingPanel" header="#{lbl['lbl.sc.bidding.bid.price.details']}"
-			toggleable="true">
+		<p:panel id="onLineBiddingPanel"
+			header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
 			<p:spacer height="5" />
 			<ui:include src="/xhtml/sc/bidding/onlineBiddingTimers.xhtml" />
 			<h:panelGrid rendered="#{onlineBiddingBB.scBidSchedule eq null}">
-			<p:spacer height="5" />
-			<h:outputText style="font-size : 25px;" styleClass="lastUpdated"
-				value="#{lbl['lbl.sc.bid.bidding.notification']}"/>
+				<p:spacer height="5" />
+				<h:outputText style="font-size : 25px;" styleClass="lastUpdated"
+					value="#{lbl['lbl.sc.bid.bidding.notification']}" />
 				<p:spacer height="5" />
 			</h:panelGrid>
 			<p:spacer height="5" />
@@ -45,7 +45,8 @@
 						<p:column rowspan="2" width="22%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.item.name']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
 							</f:facet>
 						</p:column>
 
@@ -55,7 +56,8 @@
 						<p:column rowspan="2" style="white-space : normal" width="4%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
-								<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.supplier.tooltip']}" />
+								<ac:iconTooltip
+									value="#{lbl['lbl.sc.min.decrement.block.supplier.tooltip']}" />
 							</f:facet>
 						</p:column>
 
@@ -155,34 +157,36 @@
 						</h:outputText>
 					</h:panelGroup>
 				</p:column>
-				<p:column 
+				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-					<p:spinner style="width : 88%" size="8" 
-						value="#{bidPriceItem.newPrice}"
-						min="0"
-						id="spinner" label="New Bid Price"
+					<p:spinner style="width : 88%" size="8"
+						value="#{bidPriceItem.newPrice}" min="0" id="spinner"
+						label="New Bid Price"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
 							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"
 							update="spinner,submitButton,newPrice,newPriceSubTotal,@(.calcTotal)"></p:ajax>
+
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:spinner>
 					<p:spacer width="5"></p:spacer>
 					<h:panelGroup id="submitButton">
-					<p:commandLink id="submitBidOB" disabled="#{(bidPriceItem.newPrice == null) and (bidPriceItem.newPrice eq 0) }"
-						action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"  
-						process="@this" partialSubmit="true"
-						update="lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB,@(.calcTotal)">
-						<p:graphicImage  value="#{CommonUIConstant.imagePathUptoDesign}/submit.png"/>
-					</p:commandLink>
+						<p:commandLink id="submitBidOB"
+							disabled="#{(bidPriceItem.newPrice == null) or (bidPriceItem.newPrice lt bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt)}"
+							action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"
+							process="@this" partialSubmit="true"
+							update="@this,spinner,lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB,@(.calcTotal)">
+							<p:graphicImage
+								value="#{CommonUIConstant.imagePathUptoDesign}/ico-submit.png" />
+						</p:commandLink>
 					</h:panelGroup>
 				</p:column>
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 					<h:panelGroup id="newPrice">
 						<h:outputText id="newBidPriceOB" style="float : right"
-							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) }"
+							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) and !(bidPriceItem.newPrice lt 0)}"
 							value="#{bidPriceItem.newBidPrice.bidPrice}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -193,8 +197,8 @@
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 
 					<h:panelGroup id="newPriceSubTotal">
-						<h:outputText id="newBidPriceTotalOB" style="float : right" 
-							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) }"
+						<h:outputText id="newBidPriceTotalOB" style="float : right"
+							rendered="#{(bidPriceItem.newPrice != null) and (bidPriceItem.newPrice ne 0) and !(bidPriceItem.newPrice lt 0)}"
 							value="#{onlineBiddingBB.tplSpecHelper.calcTotalAmount(bidPriceItem.scBidSupplierItem.scBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.newBidPrice.bidPrice,bidPriceItem.scBidSupplierItem.scBidItem.qty)}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -267,7 +271,7 @@
 			widgetVar="newBidPriceConfirm">
 			<div align="right">
 				<p:commandButton id="confSubmit" value="#{lbl['lbl.btn.yes']}"
-					partialSubmit="true" update="@form"
+					partialSubmit="true" update="form:itemWiseBidListOB"
 					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank(bidPriceItem)}"
 					process="@this" oncomplete="newBidPriceConfirm.hide()" />
 				<p:commandButton id="confNotSubmit" value="#{lbl['lbl.btn.no']}"

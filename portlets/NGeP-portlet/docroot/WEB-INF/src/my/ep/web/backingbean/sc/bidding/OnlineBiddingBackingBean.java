@@ -47,8 +47,9 @@ import com.liferay.portal.util.PortalUtil;
 
 /**
  * Online Bidding Backing Bean
+ * 
  * @author Venkat Chanumolu
- *
+ * 
  */
 @ManagedBean(name = "onlineBiddingBB")
 @ViewScoped
@@ -187,6 +188,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Listener method for Bid selection events
+	 * 
 	 * @throws PortalException
 	 * @throws SystemException
 	 * @throws IOException
@@ -222,6 +224,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Listener method for poll events
+	 * 
 	 * @throws PortalException
 	 * @throws SystemException
 	 * @throws IOException
@@ -301,6 +304,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * action method to populate item details
+	 * 
 	 * @param scBidPrice
 	 */
 	public void itemDetialsPopupAction(ScBidPrice scBidPrice) {
@@ -312,21 +316,28 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Listener method for spinner component change events
+	 * 
 	 * @param scBidPrice
 	 */
 	public void decrementAmountValueChangeListener(ScBidPrice scBidPrice) {
 
 		log.info("decrementAmountValueChangeListener");
+
+		if (scBidPrice.getNewPrice() != null
+				&& scBidPrice.getNewPrice().doubleValue() < scBidPrice
+						.getScBidSupplierItem().getScBidItem()
+						.getDecrementAmt().doubleValue()) {
+			if (scBidPrice.getNewPrice().doubleValue() > 0d
+					|| scBidPrice.getNewPrice().doubleValue() < 0d) {
+				throw new EpException(
+						"Please select a value greater than or equal to"
+								+ scBidPrice.getScBidSupplierItem()
+										.getScBidItem().getDecrementAmt());
+			}
+
+		}
 		ScBidPrice newBidPrice = new ScBidPrice();
 		BigDecimal newPrice = null;
-		
-		if(scBidPrice.getNewPrice() != null && scBidPrice.getNewPrice().doubleValue() < scBidPrice.getScBidSupplierItem().getScBidItem().getDecrementAmt().doubleValue()){
-			int index = getBidPrices().indexOf(scBidPrice);
-			scBidPrice.setNewPrice(null);
-			getBidPrices().set(index, scBidPrice);
-			newBidPrice = null;
-			throw new EpException("Please select a value greater than"+scBidPrice.getScBidSupplierItem().getScBidItem().getDecrementAmt());
-		}
 
 		if (scBidPrice.getBidPrice() == null
 				&& scBidPrice.getNewPrice() != null) {
@@ -358,6 +369,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * action method to confirm and submit bid price
+	 * 
 	 * @param scBidPrice
 	 */
 	public void confirmAndSubmitBIdPrice(ScBidPrice scBidPrice) {
@@ -401,6 +413,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * action method to update bid price and calculate rank
+	 * 
 	 * @param bidPriceItem
 	 */
 	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
@@ -437,7 +450,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				// setScBidSchedule(resDTO.getScBidSchedule());
 				int index = getBidPrices().indexOf(bidPriceItem);
 				ScBidPrice persistedItem = resDTO.getScBidPrice();
-				persistedItem.setNewPrice(null);
+				persistedItem.setNewPrice(new BigDecimal(0d));
 				getBidPrices().set(index, persistedItem);
 
 				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this
@@ -454,6 +467,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * Listener method to notify bid status change
+	 * 
 	 * @throws PortalException
 	 * @throws SystemException
 	 * @throws IOException
@@ -498,7 +512,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * method to calculate item  new price total
+	 * method to calculate item new price total
+	 * 
 	 * @return the itemNewBidPriceTotal
 	 */
 	public String getItemNewBidPriceTotal() {
@@ -544,6 +559,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * method to calculate remaining time for bid
+	 * 
 	 * @return the remainingBidTime
 	 */
 	public Long getRemainingBidTime() {
@@ -572,6 +588,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * method to calculate item last bid price total
+	 * 
 	 * @return the itemLastBidPriceTotal
 	 */
 	public String getItemLastBidPriceTotal() {
@@ -605,6 +622,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * method to calculate refresh interval for poll component
+	 * 
 	 * @return the interval
 	 */
 	public Long getInterval() {
@@ -629,6 +647,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * method to return remaining seconds for static clock
+	 * 
 	 * @return the remainingSeconds
 	 */
 	public String getRemainingSeconds() {
@@ -646,6 +665,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * method to return remaining minutes for static clock
+	 * 
 	 * @return the remainingMinutes
 	 */
 	public String getRemainingMinutes() {
@@ -663,6 +683,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	/**
 	 * method to return remaining hours for static clock
+	 * 
 	 * @return the remainingHours
 	 */
 	public String getRemainingHours() {
