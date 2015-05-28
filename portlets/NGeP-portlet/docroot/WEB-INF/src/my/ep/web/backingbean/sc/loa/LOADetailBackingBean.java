@@ -48,6 +48,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -119,6 +120,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.LOADetailManagedBean;
@@ -227,7 +229,7 @@ public class LOADetailBackingBean extends
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
-
+			this.getManagedBean().setScQt(resDTO.getScQt());
 			if (scLoa != null
 					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 				if (new FacesScopes()
@@ -4490,5 +4492,97 @@ public class LOADetailBackingBean extends
 	private IQTSuppFinalizationSO getQtSuppFinalizationSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+	}
+	
+	
+	/**
+	 * Called on click of Update Specification button & shows item details
+	 * 
+	 * @param loa
+	 * @return
+	 */
+	public String setTemplateSpec(ScLoa loa){
+		
+		List<ScLoiLoaItem> items = loa.getScLoiLoaItems();
+		SmSupplier smSupplier = loa.getScLoiLoa().getSmSupplier();
+		TemplateSpecBean specBean = new TemplateSpecBean();
+		List<String> itemNames = new ArrayList<String>(items.size());
+		for (ScLoiLoaItem item : items) {
+			itemNames.add(item.getScRequestItem().getTplSpecQuestion()
+					.getClItem());
+		}
+		   if(loa.getScLoiLoa().isZonal()){
+			   // needs to set zonal details
+		   }
+		Long qtId = this.getManagedBean().getScQt().getQtId();
+		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames);
+		if(null != specResDTO && specResDTO.isSuccessful()){
+			specBean.setSpecAnswerList(specResDTO.getSpecAnswerList());
+		}
+		specBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+		this.getManagedBean().setTemplateSpecBean(specBean);
+		return "loaTemplateSpecDtls";
+	}
+	
+	private TemplateSpecResDTO getTplSpecAnswers(Long qtId, SmSupplier supplier,
+			List<String> itemNameList) {
+
+		ITemplateSpecSO templateSpecSO = null;
+		TemplateSpecResDTO specResDTO = null;
+		try {
+			templateSpecSO = getTemplateSpecSO();
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setQtId(qtId);
+			reqDTO.setSupplier(supplier);
+			reqDTO.setItemNameList(itemNameList);
+			specResDTO = templateSpecSO.retrieveSupplierTechAnswersByItemNames(reqDTO);
+			
+		} finally {
+			templateSpecSO = null;
+		}
+		return specResDTO;
+	}
+	
+	public void saveTemplateSpec(TemplateSpecBean templateSpecBean){
+		
+		ITemplateSpecSO templateSpecSO = null;
+		try {
+			templateSpecSO = getTemplateSpecSO();
+			List<TplSpecAnswer> answerList = templateSpecBean
+					.getSpecAnswerList();
+			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+			reqDTO.setAnswerList(answerList);
+			TemplateSpecResDTO resDTO = templateSpecSO
+					.saveTemplateSpecAnswer(reqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_100002,
+										new String[] {},
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+			}
+
+		} finally {
+			templateSpecSO = null;
+		}
+		
+	}
+	
+	private ITemplateSpecSO getTemplateSpecSO(){
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+	}
+	
+	public void backToPrevious(int tabIndex) {
+
+		log.info("backToPrevious");
+		getManagedBean().setSelectedTabIndex(tabIndex);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, QTConstants.LOA_PAGE);
+
 	}
 }
