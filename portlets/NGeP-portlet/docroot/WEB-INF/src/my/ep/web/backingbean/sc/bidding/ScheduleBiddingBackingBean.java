@@ -569,5 +569,17 @@ public class ScheduleBiddingBackingBean extends
 		}
 		getManagedBean().setMultiSelectContact(multiSelectContact);
 	}
+	
+	public void rowSelectListener(ScBidSchedule zoneBid){
+		zoneBid.getScBidItems();
+		int index = getManagedBean().getBidScheduleList().indexOf(getManagedBean().getRowSelectedBid());
+		getManagedBean().getBidScheduleList().set(index, getManagedBean().getRowSelectedBid());
+		getManagedBean().setRowSelectedBid(null);
+		getManagedBean().setRowSelectedBid(zoneBid);
+	}
+	
+	public void getParticipantsListAction(ScBidSchedule bidSchedule){
+		
+	}
 
 }

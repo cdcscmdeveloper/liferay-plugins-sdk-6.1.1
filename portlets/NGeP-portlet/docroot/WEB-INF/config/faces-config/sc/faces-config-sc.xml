@@ -125,6 +125,13 @@
 	</managed-bean>
 	
 	<managed-bean>
+		<description>Bidding Constants</description>
+		<managed-bean-name>BiddingConst</managed-bean-name>
+		<managed-bean-class>my.ep.constant.sc.BiddingConst</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+	
+	<managed-bean>
 		<description>QT Status Constants</description>
 		<managed-bean-name>QTStatusConst</managed-bean-name>
 		<managed-bean-class>my.ep.constant.sc.QTStatusConst</managed-bean-class>

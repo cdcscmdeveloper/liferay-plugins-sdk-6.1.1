@@ -10,13 +10,12 @@
 		header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true">
 		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.bidding.schedule.by.zone.instruction']}" escape="false" />
 
-		<p:dataTable id="bidScheduleByZonal" rows="10"
+		<p:dataTable id="bidScheduleByZonal" rows="10" selectionMode="single"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList}"
 			var="scheduleZoneBid" rowIndexVar="index" rowKey="#{scheduleZoneBid}"
 			selection="#{scheduleBiddingBB.managedBean.rowSelectedBid}">
+			<p:ajax event="rowSelect" listener="#{scheduleBiddingBB.rowSelectListener(scheduleZoneBid)}"  update="@([id$=zoneBidItemsPanel])" />
 			<ac:paginator for="bidScheduleByZonal"></ac:paginator>
-			<p:ajax event="rowSelect" update="@([id$=bidScheduleByZoneBidItems])" />
-
 			<p:column headerText="#{lbl['lbl.sc.zone.name']}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.zone.name']}" />
@@ -30,7 +29,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.bidding.start']}">
 				<p:calendar value="#{scheduleZoneBid.startDate}" showOn="button"
-					label="#{lbl['lbl.sc.bidding.start']}" required="true"
+					label="#{lbl['lbl.sc.bidding.start']}" 
 					readonlyInput="true" id="zoneBidStartDate"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}">
@@ -49,7 +48,7 @@
 			<p:column headerText="#{lbl['lbl.sc.bidding.end']}">
 
 				<p:calendar value="#{scheduleZoneBid.endDate}" showOn="button"
-					id="zoneBidEndDate" required="true"
+					id="zoneBidEndDate" 
 					label="#{lbl['lbl.sc.bidding.end']}"
 					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
@@ -72,9 +71,9 @@
 			</p:column>
 		</p:dataTable>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
+	<p:panel id="zoneBidItemsPanel"  header="#{lbl['lbl.sc.item.list']}" toggleable="true">
 
-		<p:dataTable id="bidScheduleByZoneBidItems"
+		<p:dataTable id="bidScheduleByZoneBidItems" rows="10"
 			value="#{scheduleBiddingBB.managedBean.rowSelectedBid.scBidItems}"
 			var="item">
 
