@@ -3731,6 +3731,7 @@ public class EvaluationBackingBean extends
 			else if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 					.equalsIgnoreCase(proposalCheckList.getScQtCheckList()
 							.getDefinationType().getParameterCode())) {
+				this.getManagedBean().setSampleItemSpecifications(null);
 				this.getManagedBean().setUserScores(
 						proposalCheckList.getScQtCheckList()
 								.getQtScoreWeightage().getScore().toString());
