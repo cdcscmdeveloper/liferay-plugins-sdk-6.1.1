@@ -25,20 +25,7 @@
 					<p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/>
 				</th>
 				<td>
-					<p:inputText styleClass="ppDisplayTextM" value="#{pPlanBackingBean.managedBean.planSearchBean.planNumber}"/>
-				</td>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
-				</th>
-				<td>
-				 	<ac:lov id="lovSearchAll" lovId="PM_ORG_PROFILE_ALL" size="50" 
-		            	readonly="true" update=":form:lovSearchAll:lovSearchAll"
-						headerText="#{lbl['lbl.pp.ptj']}"
-						value="#{pPlanBackingBean.managedBean.planSearchBean.ptj.pmOrgValidity.orgName}" 
-						saveObject="pPlanBackingBean.managedBean.planSearchBean.ptj"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatus^1#{pPlanBackingBean.managedBean.filterOrgCondition}" 
-						
-					/>
+					<p:inputText styleClass="ppDisplayTextM" value="#{ppTrackingDiaryBackingBean.managedBean.planSearchBean.planNumber}"/>
 				</td>
 			</tr>
 			<tr>
@@ -46,10 +33,9 @@
 					<p:outputLabel value="#{lbl['lbl.pp.plan.year']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu id="somPlanYearSearch" label="#{lbl['lbl.pp.plan.year']}" 
-						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.year}"
-						>
-						<f:selectItems value="#{pPlanBackingBean.getExistingPlanYearOptions()}"/>
+					<p:selectOneMenu  label="#{lbl['lbl.pp.plan.year']}" 
+						styleClass="ppDropDownWidthM"  value="#{ppTrackingDiaryBackingBean.managedBean.planSearchBean.planNumber}">
+						<f:selectItems value="#{ppTrackingDiaryBackingBean.getExistingPlanYearOptions()}"/>
 					</p:selectOneMenu>
 				</td>
 				<th>
@@ -65,53 +51,26 @@
 				</th>
 				<td>
 					<p:selectOneMenu id="somPlanType" label="#{lbl['lbl.pp.plan.type']}" 
-						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterId}"
+						styleClass="ppDropDownWidthM"  value="#{ppTrackingDiaryBackingBean.managedBean.planSearchBean.planType.parameterId}"
 						>
-						<f:selectItems value="#{pPlanBackingBean.getDropdownValuesBySearchBean(ParameterTypeConst.planType, pPlanBackingBean.planTypeSearchBean)}" />
-						<!-- <p:ajax event="change" listener="#{pPlanBackingBean.changePlanTypeSearch(pPlanBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
+						<f:selectItems value="#{ppTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.planType)}" />
+						<!-- <p:ajax event="change" listener="#{ppTrackingDiaryBackingBean.changePlanTypeSearch(ppTrackingDiaryBackingBean.managedBean.planSearchBean.planType.parameterId)}" 
 							update="somVotSearch"/> -->
 					</p:selectOneMenu>
 				</td>
-				<th>
-					
-				</th>
 				<td>
 
 				</td>
 			</tr>
-			<ui:remove>
-			<tr>
-				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.vot.amanah.type']}" />
-				</th>
-				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" id="somVotSearch" 
-						disabled="#{pPlanBackingBean.managedBean.planSearchBean.planType.parameterCode ne ParameterConst.planTypeExpenditure}"
-						label="#{lbl['lbl.pp.vot.amanah.type']}" value="#{pPlanBackingBean.managedBean.planSearchBean.votType.parameterId}"
-					>
-						<f:selectItems value="#{pPlanBackingBean.getVotTypeOptions()}"/>
-					</p:selectOneMenu>
-				</td>
-				<th>
-					
-				</th>
-				<td>
-					
-				</td>
-			</tr>
-			</ui:remove>
 			<tr>
 				<td colspan="4">
-					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.search']}" 
-							process="pPlanSearch"
-							update="dtPlanResult" 
-							action="#{pPlanBackingBean.searchPlan}"
-							/>&#160;
-						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{pPlanBackingBean.resetPlanSearchBean}"
-							update="pPlanSearch, dtPlanResult" 
-							/> 
-					</div>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.search']}"
+								action="#{ppTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								update="resultPanel" />
+							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
+								action="#{ppTrackingDiaryBackingBean.reset}" update=":form" />
+						</div>
 				</td>
 			</tr>
 		</table>
@@ -119,9 +78,9 @@
 	</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-		<p:dataTable id="dtPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem" rows="10"
-			rowIndexVar="rowIndex"  lazy="true" var="plan" value="#{pPlanBackingBean.ppPlanDataModel}">
-			<ac:paginator for="dtPlanResult" />
+		<p:dataTable id="pPlanResult" emptyMessage="#{lbl['lbl.pp.no.record.found']}" styleClass="ppTablePlanItem" rows="10"
+			rowIndexVar="rowIndex"  lazy="true" var="plan" value="#{ppTrackingDiaryBackingBean.managedBean.ppDocumentDataModel}">
+			<ac:paginator for="pPlanResult" />
 			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
 		    	#{plan.planNo}
 	        </p:column>  
@@ -129,7 +88,7 @@
 		    	#{plan.planYear}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.type']}">  
-	            #{pPlanBackingBean.getParameterDesc(plan.planType)}
+	            #{ppTrackingDiaryBackingBean.getParameterDesc(plan.planType)}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pp.ministry']}" style="white-space:normal; width:25%;">  
 	            #{plan.orgProfile.parentOrgProfile!=null ? plan.orgProfile.parentOrgProfile.pmOrgValidity.orgName : '-'}
@@ -138,11 +97,11 @@
 	            #{plan.orgProfile!=null ? plan.orgProfile.pmOrgValidity.orgName : '-'}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pm.status']}">  
-	             #{plan.status !=null ? pPlanBackingBean.getStatusDescById(plan.status.statusId) : pPlanBackingBean.getDefaultStatusDesc(plan.planType)}
+	             #{plan.status !=null ? ppTrackingDiaryBackingBean.getStatusDescById(plan.status.statusId) : ppTrackingDiaryBackingBean.getDefaultStatusDesc(plan.planType)}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pm.action']}">  
-      		   <p:commandLink action="#{pPlanBackingBean.redirectToMaintainPlan(plan.planId)}">
-					<p:graphicIm1age value="#{!plan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
+      		   <p:commandLink action="#{ppTrackingDiaryBackingBean.redirectToMaintainPlan(plan.planId)}">
+					<p:graphicImage value="#{!plan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}"/>
 				</p:commandLink>
 	        </p:column>  
 	   	</p:dataTable> 
