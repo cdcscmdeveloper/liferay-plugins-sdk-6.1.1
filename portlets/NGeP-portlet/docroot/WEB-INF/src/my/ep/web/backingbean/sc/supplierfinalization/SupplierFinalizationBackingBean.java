@@ -968,7 +968,8 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private void setForwardToHigherAuthorityStatus(ScQtRecommend scQtRecommend) {
-		if (!this.getManagedBean().isForwardToHigherAuthority()) {
+		if (!this.getManagedBean().isForwardToHigherAuthority() ||  
+				!this.getManagedBean().isItemize()) {
 			scQtRecommend.setHigherAuthReq(false);
 		}
 	}
