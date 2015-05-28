@@ -4402,13 +4402,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtPhysicalContractNo() != null) && (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
+				/*|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))*/				
+				|| ((this.getCtAgreement() != null) && (!this.getCtAgreement().equals(ReportConst.CT_GROUP_VAL_ALL)))
+				|| ((this.getCtStatus() != null) && (!this.getCtStatus().equals(ReportConst.CT_GROUP_VAL_ALL)))
+				|| ((this.getCtStatusTwo() != null) && (!this.getCtStatusTwo().equals(ReportConst.CT_GROUP_VAL_ALL)))				
+				/*|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))*/
+				|| ((this.getCtComplete() != null) && (!this.getCtComplete().equals(ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL)) 
-			    || ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL))) {
+			    /*|| ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL))*/
+			    || ((this.getCtProcurementMode() != null) && (!this.getCtProcurementMode().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))
+		       {
+			
 			if ((this.getCtStatus() != null)
 					&& (this.getCtStatus() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setCtStatusVar(ReportConst.CT_AMP_STATUS_EQ
@@ -6121,19 +6128,19 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		scRstrctdTndrList = new ArrayList<SelectItem>();
 		this.setCtContractNo(null);
 		this.setCtPhysicalContractNo(null);
-		this.setCtAgreement(null);
-		this.setCtStatus(null);
-		this.setCtStatusTwo(null);
-		this.setCtComplete(null);
-		this.setCtGroupOne(null);
-		this.setCtGroupTwo(null);
-		this.setCtGroupThree(null);
+		this.setCtAgreement(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtStatus(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtStatusTwo(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtComplete(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtGroupOne(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtGroupTwo(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtGroupThree(ReportConst.CT_GROUP_VAL_ALL);
 		this.setCtProductService(null);
 		this.setCtLoanNo(null);
 		this.setCtLOAPhysicalNo(null);
 		this.setCtSubType(null);
 		this.setCtUserType(null);		
-		this.setCtProcurementMode(null);
+		this.setCtProcurementMode(ReportConst.CT_GROUP_VAL_ALL);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
 		this.setFlGroupThree(null);
