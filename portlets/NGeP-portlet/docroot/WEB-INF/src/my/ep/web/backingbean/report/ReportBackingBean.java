@@ -103,6 +103,7 @@ public class ReportBackingBean extends
 	private boolean enableValue = false;
 	String parameterCodeType = new String();
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
+	private List<SelectItem> reportCategoryList = new ArrayList<SelectItem>();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
@@ -185,6 +186,14 @@ public class ReportBackingBean extends
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
+
+	public List<SelectItem> getReportCategoryList() {
+		return reportCategoryList;
+	}
+
+	public void setReportCategoryList(List<SelectItem> reportCategoryList) {
+		this.reportCategoryList = reportCategoryList;
+	}
 
 	public List<String> getParamTableRoleCodeList() {
 		return paramTableRoleCodeList;
@@ -671,7 +680,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)240561;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)240508;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3017,6 +3026,36 @@ public class ReportBackingBean extends
 				return reportList;	
 			}
 	
+	public List<SelectItem>  retrieveReportCategoryListByAuthorization() {
+		reportList = new ArrayList<SelectItem>();
+		rptGenBean = new ReportsGenerateBean();
+		this.setReportValue(null);		
+		this.setReportName(null);
+		setRoleCode(null);
+		
+		getManagedBean().setReportList(new ArrayList<SelectItem>());
+		
+		
+		rptGenBean = new ReportsGenerateBean();
+		getManagedBean().setRptGenBean(rptGenBean);
+		resetReportForm();
+		this.setReportValue(null);
+		reportList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
+					for (Object[] object : reportModList) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1].toString());
+						reportList.add(selectItem);
+					}
+				}
+				return reportList;	
+			}
+	
     public void getReportIdlist() {
     	rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);
@@ -3429,13 +3468,13 @@ public class ReportBackingBean extends
 		ptjList = new ArrayList<String>();
 		ministryList = new ArrayList<SelectItem>();
 		retrieveRoleCodeFromParamTable();
-		if(paramTableRoleCodeList!=null){
-			if((highRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0)))){
+		if(highRoleCodeList!=null){
+			if((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0)))){
 			//if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
 					 getLtstMinistryList();					 
+			}else{
+				retrieveParameterCodeType();
 			}
-		}else{
-			retrieveParameterCodeType();
 		}
 	}
 	
@@ -3472,7 +3511,7 @@ public class ReportBackingBean extends
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 				}
 			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
-				retrieveFMIMinistryList();
+				retrieveFPJPTJList();
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 				}
