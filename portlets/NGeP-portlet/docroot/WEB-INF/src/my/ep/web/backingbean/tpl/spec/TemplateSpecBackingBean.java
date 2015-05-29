@@ -882,6 +882,8 @@ public class TemplateSpecBackingBean extends
 	 */
 	public void tierQtyPopupAction(TemplateSpecBean templateSpecBean, TplSpecQuestion selectedSpecQuestion) {
 		debugLogger("tierQtyPopupAction");
+		log.info("templateSpecBean:" + templateSpecBean);
+		log.info("selectedSpecQuestion:" + selectedSpecQuestion);
 
 		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
 
