@@ -61,10 +61,10 @@ public class CmSchedulerServlet extends HttpServlet {
 						EpPropertiesUtils.getInstance().getProperty("1gfmas.pm.inbound"));
 				//GFMAS SC IN bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
-						CmSchedulerConstants.GFMAS_SC_IN_CONTINUOUS_JOB,
-						CmSchedulerConstants.GFMAS_SC_IN_JOB_GROUP),
+						CmSchedulerConstants.GFMAS_SC_OUT_CONTINUOUS_JOB,
+						CmSchedulerConstants.GFMAS_SC_OUT_JOB_GROUP),
 						GfmasBatchScInboundJob.class, CmSchedulerConstants.GFMAS_SC_CONTINUOUS_JOB_DESC,
-						EpPropertiesUtils.getInstance().getProperty("1gfmas.sc.inbound"));  
+						EpPropertiesUtils.getInstance().getProperty("1gfmas.sc.outbound"));  
 				//GFMAS SM IN bound Continuous job				
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_SM_IN_CONTINUOUS_JOB,
