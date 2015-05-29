@@ -38,27 +38,21 @@
 			</tr>
 			<tr>
 				<td style="width: 142px;"><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="preparedPtj"
-						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{flOrderBB.managedBean.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.preparedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="issuePtj"
-						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="50" id="chargedPtj"
-						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{flOrderBB.managedBean.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{flOrderBB.managedBean.flRequest.chargeOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>

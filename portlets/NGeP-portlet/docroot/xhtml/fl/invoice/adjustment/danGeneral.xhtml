@@ -41,11 +41,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-					<td><p:inputText size="8" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" /> <p:inputText size="45"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"
-							disabled="true" /> <ac:iconTooltip
+					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/>
+					<ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
 					<td style="width: 320px;"><p:inputText size="40"

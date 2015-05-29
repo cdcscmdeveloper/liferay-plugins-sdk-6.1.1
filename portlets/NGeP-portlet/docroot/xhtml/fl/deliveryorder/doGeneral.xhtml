@@ -36,26 +36,20 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td><p:inputText size="8" id="preparedOrgProfileId" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="42" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" />
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:360px;" 
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:inputText size="8" id="issuedOrgProfileId" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="42" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:360px;" 
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText size="8" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText id="chargedPtj" size="42" disabled="true"
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" />
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:360px;" 
+						value="#{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{createDOBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 			</tr>
 			<tr>
