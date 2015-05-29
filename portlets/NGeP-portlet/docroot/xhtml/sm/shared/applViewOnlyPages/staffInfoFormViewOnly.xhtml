@@ -8,9 +8,7 @@
 
 	<p:panel header="#{lbl['lbl.sm.panHdr.stfInfo']}" toggleable="true">
 		<p:outputPanel id="stfInfPan" layout="block">
-			<p:dataGrid value="#{viewSmApplBackingBean.managedBean.smAppl.smStaffTotals}"
-				var="staff" columns="1" rowIndexVar="index" id="dtfGrd">
-
+			<ui:repeat var="staff" value="#{viewSmApplBackingBean.managedBean.smAppl.smStaffTotals}">
 				<table style="width: 50%;table-layout:fixed">
 					<tr>
 						<td>
@@ -40,7 +38,7 @@
 						</td>
 					</tr>
 				</table>
-			</p:dataGrid>
+			</ui:repeat>
 				
 		</p:outputPanel>
 		
