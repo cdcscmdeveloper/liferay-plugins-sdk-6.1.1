@@ -51,11 +51,9 @@
 			</c:if>
 			<c:if test="#{isZonal}">
 				<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-					action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
+					action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean, question)}"
 					oncomplete="#{estimationPopup}.show();"
-					partialSubmit="true" process="@this" update="@([id$=estimationPopup])">
-					<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-				</p:commandButton>
+					partialSubmit="true" process="@this" update="@([id$=estimationPopup])" />
 			</c:if>
 		</h:panelGroup>
 	</p:column>
