@@ -36,7 +36,7 @@ public class TemplateSpecBean {
 	private TplSpecQuestion oriSpecQuestion;
 	private List<TplSpecAnswer> specAnswerList;
 	private TplSpecZoneDtl tplSpecZoneDtl;
-	
+	private boolean updateSpecByAnswers;
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -193,4 +193,19 @@ public class TemplateSpecBean {
 	public void setTplSpecZoneDtl(TplSpecZoneDtl tplSpecZoneDtl) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 	}
+
+	/**
+	 * @return the updateSpecByAnswers
+	 */
+	public boolean isUpdateSpecByAnswers() {
+		return updateSpecByAnswers;
+	}
+
+	/**
+	 * @param updateSpecByAnswers the updateSpecByAnswers to set
+	 */
+	public void setUpdateSpecByAnswers(boolean updateSpecByAnswers) {
+		this.updateSpecByAnswers = updateSpecByAnswers;
+	}
+	
 }
