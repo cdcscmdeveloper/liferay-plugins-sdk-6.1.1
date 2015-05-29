@@ -58,6 +58,9 @@ public class BriefingZoneBean implements Serializable {
 	
 	/** The selected site visit dtls. */
 	private List<ScQtBsvDtl> selectedSiteVisitDtls;
+	
+	/** The total suppliers attended in current zone **/
+	private int totalSuppliersAttended;	
 
 	/**
 	 * Instantiates a new briefing zone bean.
@@ -278,6 +281,21 @@ public class BriefingZoneBean implements Serializable {
 	 */
 	public void setSelectedSiteVisitDtls(List<ScQtBsvDtl> selectedSiteVisitDtls) {
 		this.selectedSiteVisitDtls = selectedSiteVisitDtls;
+	}
+
+	/**
+	 * @return the totalSuppliersAttended
+	 */
+	public int getTotalSuppliersAttended() {
+		return totalSuppliersAttended;
+	}
+
+	/**
+	 * @param totalSuppliersAttended 
+	 * 					the totalSuppliersAttended to set
+	 */
+	public void setTotalSupplierAttended(int totalSuppliersAttended) {
+		this.totalSuppliersAttended = totalSuppliersAttended;
 	}
 
 }
