@@ -86,14 +86,10 @@ public class PpTrackingDiaryBackingBean extends
 		log.info("getExistingPlanYearOptions");
 		SelectItem[] items = null;
 		try{
-			items = new SelectItem[8];
-//			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-			
-				int i = 1;
-//				items = new SelectItem[planYears.size()+1];
+				items = new SelectItem[8];
 				items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, getFacesScopes().getUserLocale()));
-				for(i=0;i<7;i++){
-					items[i+1] = new SelectItem(new Long(2013-i), new Long(2013-i).toString());
+				for(int i=0;i<7;i++){
+					items[i+1] = new SelectItem(new Long(2015-i), new Long(2015-i).toString());
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -180,6 +176,8 @@ public class PpTrackingDiaryBackingBean extends
 //			Object[] scObj = getManagedBean().getScObj();
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),scObj[3]));
+//			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),scObj[0]));
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
@@ -206,7 +204,7 @@ public class PpTrackingDiaryBackingBean extends
 
 	public String backToPrev() {
 
-		return NAV_TO_SC_SEARCH + "?faces-redirect=true";
+		return NAV_TO_PP_SEARCH + "?faces-redirect=true";
 	}
 
 	public IPagingDataModel<PmTrackingDiary> getSearchTrackingDiaryDataModel() {
