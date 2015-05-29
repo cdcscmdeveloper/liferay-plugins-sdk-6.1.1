@@ -147,9 +147,6 @@
 					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
 					<ui:param name="isScoring" value="#{question.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}" />
-					<ui:param name="isSpecTypeTechnical" value="#{question.tplSpecMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeTechnical}" />
-					<ui:param name="isSpecificationReq" value="#{question.tplSpecMaster.specificationReq}" />
-					<ui:param name="isSpecTypeFinancial" value="#{question.tplSpecMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeFinancial}" />
 					
 					<c:if test="#{isContentTypeAnswer}">
 						<ui:decorate template="specColumnAnswer.xhtml" />
