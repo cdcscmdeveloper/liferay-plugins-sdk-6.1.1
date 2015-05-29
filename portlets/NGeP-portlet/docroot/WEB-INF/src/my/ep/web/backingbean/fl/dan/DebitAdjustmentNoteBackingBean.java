@@ -40,6 +40,7 @@ import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
@@ -470,5 +471,36 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		getManagedBean().setAutoUpdate(Boolean.FALSE);
 		RequestContext.getCurrentInstance().update("@form");
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
+	}
+	public void viewDebitAdjustment() {
+		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		
+		String danId = originalServletRequest.getParameter("danId");
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		if(danId!=null) {
+			reqDTO.setDanId(Long.valueOf(danId));
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setDocType(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
+			reqDTO.setPoLink(Boolean.TRUE);
+			renewSesionObject();
+			try {
+				resDTO = adjustmentSO.retrieveAdjustmentById(reqDTO);
+			} catch (EpException e) {
+				handleException(e);
+				return;
+			}
+			getManagedBean().setSelectedTabIndex(0);
+			setAdjustmentNote(resDTO);
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setTaskId(BpmOutcomeConst.BPM_VIEW);//for the purpose of hide the back button.
+			flBB.getManagedBean().setHideRemarks(true);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "danBasePage?faces-redirect=true");
+		}
 	}
 }
