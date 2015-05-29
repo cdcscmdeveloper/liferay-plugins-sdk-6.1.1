@@ -5398,7 +5398,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>pmCalendar</portlet-name>
-		<display-name>Calendar</display-name>
+		<display-name>Calendar Schedule</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -5412,7 +5412,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Calendar</title>
+			<title>Calendar Schedule</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
