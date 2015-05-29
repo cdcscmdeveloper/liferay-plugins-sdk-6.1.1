@@ -56,6 +56,7 @@
 			<ui:param name="isZonal" value="#{!empty templateSpecBean.specMaster.tplSpecZone}" />
 			<ui:param name="isAllPriceTypesStandard" value="#{templateSpecBackingBean.isAllPriceTypesStandard(templateSpecBean)}" />
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
+			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			
 			<c:if test="#{isItemTypeService and !isDurationByItem}">
 				<table style="width:100%">
@@ -83,7 +84,7 @@
 				</table>
 			</c:if>
 			
-			<c:if test="#{isContentTypeQuestion or isContentTypeReview or isContentTypeUpdateSpec}">
+			<c:if test="#{isContentTypeQuestion or isContentTypeReview or (isContentTypeUpdateSpec and !isUpdateSpecByAnswers)}">
 				<c:if test="#{isContentTypeQuestion and editable and isScoringReq}">
 					<h:outputText  styleClass="instruction" value="#{lbl['lbl.tpl.spec.content.instruction']}" escape="false" />
 				</c:if>
@@ -124,7 +125,8 @@
 				</p:dataTable>
 			</c:if>
 			
-			<c:if test="#{isContentTypeAnswer or isContentTypeScore}">
+					
+			<c:if test="#{isContentTypeAnswer or isContentTypeScore or (isContentTypeUpdateSpec and isUpdateSpecByAnswers)}">
 				<p:dataTable id="questionTbl" var="tplSpecAnswer" rowIndexVar="row"
 					value="#{templateSpecBean.specAnswerList}"
 					scrollable1="true" scrollWidth1="#{scrollWidth}">
@@ -145,6 +147,9 @@
 					<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
 					<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
 					<ui:param name="isScoring" value="#{question.scoreTypeCode.parameterCode == ParameterConst.scoreTypeAuto}" />
+					<ui:param name="isSpecTypeTechnical" value="#{question.tplSpecMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeTechnical}" />
+					<ui:param name="isSpecificationReq" value="#{question.tplSpecMaster.specificationReq}" />
+					<ui:param name="isSpecTypeFinancial" value="#{question.tplSpecMaster.specTypeCode.parameterCode == ParameterConst.specificationTypeFinancial}" />
 					
 					<c:if test="#{isContentTypeAnswer}">
 						<ui:decorate template="specColumnAnswer.xhtml" />
@@ -152,6 +157,9 @@
 					<c:if test="#{isContentTypeScore}">
 						<ui:decorate template="specColumnAnswerView.xhtml" />
 						<ui:decorate template="specColumnScore.xhtml" />
+					</c:if>
+					<c:if test="#{isContentTypeUpdateSpec}">
+						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
 				
