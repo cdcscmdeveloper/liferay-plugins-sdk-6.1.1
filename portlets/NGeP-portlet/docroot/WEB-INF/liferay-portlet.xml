@@ -1802,7 +1802,7 @@
 		<css-class-wrapper>pm-ruleconfigure-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmCalenderSchedule</portlet-name>
+		<portlet-name>pmCalendar</portlet-name>
 
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
@@ -1811,7 +1811,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		
-		<css-class-wrapper>pm-calenderschedule-portlet</css-class-wrapper>
+		<css-class-wrapper>pm-calendar-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>factoring-Companies</portlet-name>
