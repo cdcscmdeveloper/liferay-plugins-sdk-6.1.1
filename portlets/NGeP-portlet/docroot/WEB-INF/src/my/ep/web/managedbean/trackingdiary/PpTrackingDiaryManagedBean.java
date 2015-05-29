@@ -43,7 +43,7 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	private ProcurementPlanSearchBean planSearchBean;
+	private ProcurementPlanSearchBean planSearchBean = new ProcurementPlanSearchBean();
 	private IPagingDataModel<PpPlan> ppDocumentDataModel = new PpDocumentPagingDataModel();
 	
 	/**
@@ -109,17 +109,6 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
-		// vot type
-		if(planSearchBean.getVotType()!=null && planSearchBean.getVotType().getParameterId()!=null){
-			log.info("+ getVotType "  +planSearchBean.getVotType().getParameterId());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("ppExpenditureItems.votFundType.parameterId");
-			bean.setSearchValue(planSearchBean.getVotType().getParameterId());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		
 		
 		
 //		
@@ -163,21 +152,6 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 					IProcurementPlanSO reqSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROCUREMENT_PLAN, IProcurementPlanSO.class);	
 					ProcurementPlanResDTO resDTO = reqSO.retrievePlanBySearchBean(reqDTO);
 					if (resDTO.isSuccessful()) {
-						// result list icon
-						if(resDTO.getPlanResultBean()!=null && resDTO.getPlanResultBean().getResultList()!=null){
-							for(PpPlan ppPlan: resDTO.getPlanResultBean().getResultList()){
-								if(ppPlan.getStatus()!=null){
-									
-									if((ProcurementPlanConst.PPP_APPROVED.equals(ppPlan.getStatus().getStatusId()) 
-											|| ProcurementPlanConst.PPE_APPROVED.equals(ppPlan.getStatus().getStatusId()))
-											){
-	
-										ppPlan.setUpdatable(true);
-									}
-								}
-							}
-						}
-						
 						return resDTO.getPlanResultBean();
 				}
 			} catch (Exception e) {
