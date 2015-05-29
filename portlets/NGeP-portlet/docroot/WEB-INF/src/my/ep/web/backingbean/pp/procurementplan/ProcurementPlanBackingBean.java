@@ -1048,7 +1048,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		List<PmUser> sourceApprover = new ArrayList<PmUser>(); 
         List<PmUser> targetApprover = new ArrayList<PmUser>();  
         this.getManagedBean().setApproverModel(new DualListModel<PmUser>(sourceApprover, targetApprover));
-        generateSourceApprovers(retrievePegawaiPegawalOrgProfile(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()).getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
+        generateSourceApprovers(retrieveMinistryOrgProfile(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId()).getOrgProfileId(), RoleCode.PLAN_APPROVER.value(), ppPlanActors); 
 
 		log.info("loadPlanActors - End");
 	}
