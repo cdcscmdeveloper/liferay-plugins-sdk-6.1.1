@@ -36,11 +36,9 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td colspan="3"><p:inputText size="7" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="45"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"
-						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
+				<td colspan="3"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
