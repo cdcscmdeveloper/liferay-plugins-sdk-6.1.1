@@ -7,7 +7,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -22,7 +25,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.ScheduleEvent;
 
-@ManagedBean(name = "CalendarBackingBean")
+@ManagedBean(name = "calendarBackingBean")
 @ViewScoped
 public class CalendarBackingBean extends
 		BaseBackingBean<CalendarManageBean> {
@@ -93,8 +96,10 @@ public class CalendarBackingBean extends
 		setDefaultEvent();
 	}
 	
-	public void selectedState(AjaxBehaviorEvent e) {
+	public void updateState(AjaxBehaviorEvent e) {
+		
 		Long id = (Long) e.getComponent().getAttributes().get("value");
+		
 		if (id != null) {
 			getManagedBean().loadScheduler(id);
 		}

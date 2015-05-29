@@ -72,6 +72,8 @@ public class CalendarManageBean extends BaseManagedBean {
 		}
 		
 		selectedStateId = stateId;
+		
+		setEvent(new DefaultScheduleEvent());
 	}
 
 	public ScheduleEvent getEvent() {

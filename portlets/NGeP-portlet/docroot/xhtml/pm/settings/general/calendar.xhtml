@@ -10,60 +10,93 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<ui:define name="contentSection">
+
 	<style type="text/css">
 		.value {
 			width: 1000px;
 		}
 	</style>
 	
-	<script>	
-
-		function changeWeekEndColor(int weekEndDay1, int weekEndDay2){
+	<script type="text/javascript">	
+	
+		function changeWeekEndColor(){
+			
+			clearDayColor();
+			
+			var weekEndDay1 = document.getElementById('#{facesContext.externalContext.encodeNamespace('')}:form:weekend1').value; 
+			var weekEndDay2 = document.getElementById('#{facesContext.externalContext.encodeNamespace('')}:form:weekend2').value;
 			
 			var td1 = null;
 			var td2 = null;
 			
 			if(weekEndDay1 == 1){
-				td1 = document.getElementsByClassName('fc-Mon');
+				td1 = document.getElementsByClassName('fc-mon');
 			} else if(weekEndDay1 == 2){
-				td1 = document.getElementsByClassName('fc-Tue');
+				td1 = document.getElementsByClassName('fc-tue');
 			} else if(weekEndDay1 == 3){
-				td1 = document.getElementsByClassName('fc-Wed');
+				td1 = document.getElementsByClassName('fc-wed');
 			} else if(weekEndDay1 == 4){
-				td1 = document.getElementsByClassName('fc-Thu');
+				td1 = document.getElementsByClassName('fc-thu');
 			} else if(weekEndDay1 == 5){
-				td1 = document.getElementsByClassName('fc-Fri');
+				td1 = document.getElementsByClassName('fc-fri');
 			} else if(weekEndDay1 == 6){
-				td1 = document.getElementsByClassName('fc-Sat');
+				td1 = document.getElementsByClassName('fc-sat');
 			} else if(weekEndDay1 == 7){
-				td1 = document.getElementsByClassName('fc-Sun');
+				td1 = document.getElementsByClassName('fc-sun');
 			}
 			
 			if(weekEndDay2 == 1){
-				td2 = document.getElementsByClassName('fc-Mon');
+				td2 = document.getElementsByClassName('fc-mon');
 			} else if(weekEndDay2 == 2){
-				td2 = document.getElementsByClassName('fc-Tue');
+				td2 = document.getElementsByClassName('fc-tue');
 			} else if(weekEndDay2 == 3){
-				td2 = document.getElementsByClassName('fc-Wed');
+				td2 = document.getElementsByClassName('fc-wed');
 			} else if(weekEndDay2 == 4){
-				td2 = document.getElementsByClassName('fc-Thu');
+				td2 = document.getElementsByClassName('fc-thu');
 			} else if(weekEndDay2 == 5){
-				td2 = document.getElementsByClassName('fc-Fri');
+				td2 = document.getElementsByClassName('fc-fri');
 			} else if(weekEndDay2 == 6){
-				td2 = document.getElementsByClassName('fc-Sat');
+				td2 = document.getElementsByClassName('fc-sat');
 			} else if(weekEndDay2 == 7){
-				td2 = document.getElementsByClassName('fc-Sun');
+				td2 = document.getElementsByClassName('fc-sun');
 			}
 			
-			elements[td1].style.backgroundColor="blue";
+			if(td1 != null){
+				updateDayColor(td1, "lightGrey");
+			}
+			
+			if(td2 != null){
+				updateDayColor(td2, "lightGrey");
+			}
+			
+			document.getElementsByClassName('fc-today')[0].style.backgroundColor = "grey";
+ 		}
+		
+		function clearDayColor(){
+			updateDayColor(document.getElementsByClassName('fc-mon'),"white");
+			updateDayColor(document.getElementsByClassName('fc-tue'),"white");
+			updateDayColor(document.getElementsByClassName('fc-wed'),"white");
+			updateDayColor(document.getElementsByClassName('fc-thu'),"white");
+			updateDayColor(document.getElementsByClassName('fc-fri'),"white");
+			updateDayColor(document.getElementsByClassName('fc-sat'),"white");
+			updateDayColor(document.getElementsByClassName('fc-sun'),"white");
+		}
+		
+		function updateDayColor(td, color){
+			
+			td[1].style.backgroundColor=color;
+			td[2].style.backgroundColor=color;
+			td[3].style.backgroundColor=color;
+			td[4].style.backgroundColor=color;
+			td[5].style.backgroundColor=color;
+			td[6].style.backgroundColor=color;
 		}
 
 	</script>
 
-	<ui:define name="contentSection">
-
 		<p:panel id="ruleConfigId">
-
+		
 			<p:messages id="calendarMsg" showDetail="true" autoUpdate="true"
 				closable="true" showSummary="false"></p:messages>
 
@@ -75,16 +108,19 @@
 								styleClass="mandatory" /></td>
 						<td><p:selectOneMenu id="orgState"
 								styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.cal.state']}"
-								value="#{calendarSchedulerBackingBean.managedBean.selectedState.stateId}"
+								value="#{calendarBackingBean.managedBean.selectedState.stateId}"
 								style="width: 275px;margin-bottom: 5px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
 								<f:selectItems
-									value="#{calendarSchedulerBackingBean.getStateListOfMalaysia()}"
+									value="#{calendarBackingBean.getStateListOfMalaysia()}"
 									var="state" itemLabel="#{state.stateName}"
 									itemValue="#{state.stateId}" />
-								<p:ajax event="change" update="schedule"
-									listener="#{calendarSchedulerBackingBean.selectedState}" />
-							</p:selectOneMenu></td>
+								<p:ajax event="change" listener="#{calendarBackingBean.updateState}" 
+								partialSubmit="true" process="@this" update="schedule, weekend1, weekend2" oncomplete="changeWeekEndColor()"/>	
+							</p:selectOneMenu>
+							<h:inputHidden id="weekend1" value="#{calendarBackingBean.managedBean.selectedState.weekend1}" />
+							<h:inputHidden id="weekend2" value="#{calendarBackingBean.managedBean.selectedState.weekend2}" />
+							</td>
 						<td><p:message for="orgState" id="orgStateMsg" display="icon" /></td>
 					</tr>
 					<tr />
@@ -92,25 +128,25 @@
 						<td colspan="3"><p:schedule id="schedule"
 								leftHeaderTemplate="prev,next, today" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
-								value="#{calendarSchedulerBackingBean.managedBean.eventModel}"
+								value="#{calendarBackingBean.managedBean.eventModel}"
 								widgetVar="myschedule" timeZone="GMT+2">
 
 								<p:ajax event="dateSelect"
-									listener="#{calendarSchedulerBackingBean.onDateSelect}"
+									listener="#{calendarBackingBean.onDateSelect}"
 									update="eventDetails" oncomplete="eventDialog.show();"
-									disabled="#{calendarSchedulerBackingBean.managedBean.selectedState.stateId eq '0'}" />
+									disabled="#{calendarBackingBean.managedBean.selectedState.stateId eq '0'}" />
 								<p:ajax event="eventSelect"
-									listener="#{calendarSchedulerBackingBean.onEventSelect}"
+									listener="#{calendarBackingBean.onEventSelect}"
 									update="eventDetails" oncomplete="eventDialog.show();" />
 								<p:ajax event="eventMove"
-									listener="#{calendarSchedulerBackingBean.onEventMove}"
+									listener="#{calendarBackingBean.onEventMove}"
 									update=":form:calendarMsg" />
 
 							</p:schedule></td>
 					</tr>
 				</table>
 			</h:panelGroup>
-
+			
 			<p:dialog widgetVar="eventDialog"
 				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="400"
 				height="150" showEffect="clip" hideEffect="clip">
@@ -119,7 +155,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.title']}" /></td>
 							<td><p:inputText id="title" size="30" maxlength="30"
-									value="#{calendarSchedulerBackingBean.managedBean.event.title}"
+									value="#{calendarBackingBean.managedBean.event.title}"
 									required="true" /></td>
 						</tr>
 						<tr>
@@ -128,7 +164,7 @@
 							<td><p:calendar showOn="button" id="fromDateId"
 									label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									value="#{calendarSchedulerBackingBean.managedBean.event.startDate}">
+									value="#{calendarBackingBean.managedBean.event.startDate}">
 								</p:calendar></td>
 						</tr>
 						<tr>
@@ -137,16 +173,16 @@
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
 									validatorMessage="To Date should be greater than from Date"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									value="#{calendarSchedulerBackingBean.managedBean.event.endDate}">
+									value="#{calendarBackingBean.managedBean.event.endDate}">
 									<f:attribute name="startDate"
-										value="#{calendarSchedulerBackingBean.managedBean.event.startDate}" />
+										value="#{calendarBackingBean.managedBean.event.startDate}" />
 									<f:validator validatorId="primeDateRangeValidator" />
 								</p:calendar></td>
 						</tr>
 						<!-- 						<tr> -->
 						<!-- 							<td /> -->
 						<!-- 							<td><h:selectBooleanCheckbox id="national" -->
-						<!-- 									value="#{calendarSchedulerBackingBean.managedBean.event.allDay}" /> -->
+						<!-- 									value="#{calendarBackingBean.managedBean.event.allDay}" /> -->
 						<!-- 								<div style="float: left;"><p:outputLabel value="#{lbl['lbl.pm.cal.isNational']}" /></div></td> -->
 						<!-- 						</tr> -->
 						<br />
@@ -155,11 +191,11 @@
 							<td>
 								<div style="float: right;">
 									<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
-										actionListener="#{calendarSchedulerBackingBean.addOrUpdateEvent}"
+										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();"
 										update="ruleConfigId" />
 									<p:commandButton value="#{lbl['lbl.btn.delete']}"
-										actionListener="#{calendarSchedulerBackingBean.deleteEvent}"
+										actionListener="#{calendarBackingBean.deleteEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();"
 										update="ruleConfigId" />
 								</div>
