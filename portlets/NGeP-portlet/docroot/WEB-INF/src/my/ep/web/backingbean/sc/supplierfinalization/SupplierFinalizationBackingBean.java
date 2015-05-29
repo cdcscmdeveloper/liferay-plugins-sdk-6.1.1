@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.sc.quationtender.IQTMeetingSO;
 import my.ep.biz.service.sc.quationtender.IQTNoticeBoardSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
@@ -65,6 +66,8 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.EvaluationReqDTO;
+import my.ep.dto.sc.quationtender.EvaluationResDTO;
 import my.ep.dto.sc.quationtender.MeetingReqDTO;
 import my.ep.dto.sc.quationtender.MeetingResDTO;
 import my.ep.dto.sc.quationtender.NoticeBoardReqDTO;
@@ -110,6 +113,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
 import my.ep.persistence.entity.sc.supplierproposal.ScQtProposalItem;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleItem;
+import my.ep.persistence.entity.sc.supplierproposal.ScQtSampleLable;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -2050,6 +2055,79 @@ public class SupplierFinalizationBackingBean extends
 			isSample = true;
 		}
 		context.put("isSample", isSample);
+		if (isSample) {
+			String sampleClosingDate = "";
+			if (scQt.getSampleClosingDate() != null) {
+				sampleClosingDate = dateSDF.format(scQt.getSampleClosingDate());
+			}
+			context.put("sampleClosingDate", sampleClosingDate);
+			
+			IQTEvaluationSO evaluationSo = null;
+			try {
+				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				EvaluationResDTO resDTO = evaluationSo
+						.retrieveSampleLableDtls(reqDTO);	
+				
+				Map<String,SampleLabelDTO> sampleLabelsMap = null;
+				
+				List<ScQtSampleLable> scQtSampleLabelList = 
+							resDTO.getLableResultBean().getResultList();
+				if (CollectionUtils.isNotEmpty(scQtSampleLabelList)) {
+					sampleLabelsMap = new HashMap<String,SampleLabelDTO>();
+				}
+				for (ScQtSampleLable scQtSampleLabel 
+										: scQtSampleLabelList) {
+					reqDTO.setLableId(scQtSampleLabel.getSampleLableId());
+					resDTO = evaluationSo.retrieveSampleItemDtlsByLable(reqDTO);
+					List<ScQtSampleItem> sampleItemsList = resDTO.getItemResultBean().getResultList();
+					if (CollectionUtils.isNotEmpty(sampleItemsList)) {
+						for (ScQtSampleItem scQtSampleItem : 
+													sampleItemsList) {
+							String itemName = scQtSampleItem.getScRequestItem().getItemName();
+							if (sampleLabelsMap.containsKey(itemName)) {
+								SampleLabelDTO sampleLabelDTO = sampleLabelsMap.get(itemName);
+								String submissionStatusCode
+												= scQtSampleItem.getSubmissionStatus().getParameterCode();
+								if (!ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT
+										.equals(submissionStatusCode)) {
+									sampleLabelDTO.setTotalSubmitted(
+											sampleLabelDTO.getTotalSubmitted() + 1);									
+									if (ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE
+											.equals(submissionStatusCode)) {
+										sampleLabelDTO.setTotalCompliant(
+												sampleLabelDTO.getTotalCompliant() + 1);										
+									} else {
+										sampleLabelDTO.setTotalNotCompliant(
+												sampleLabelDTO.getTotalNotCompliant() + 1);										
+									}
+								} 
+							} else {
+								SampleLabelDTO sampleLabelDTO = new SampleLabelDTO();
+								String submissionStatusCode
+											= scQtSampleItem.getSubmissionStatus().getParameterCode();
+								if (!ParameterConst.SAMPLE_SUBMISSION_STATUS_NOT_SUBMIT
+										.equals(submissionStatusCode)) {
+									sampleLabelDTO.setTotalSubmitted(1);									
+									if (ParameterConst.SAMPLE_SUBMISSION_STATUS_COMPLIANCE
+											.equals(submissionStatusCode)) {
+										sampleLabelDTO.setTotalCompliant(1);										
+									} else {
+										sampleLabelDTO.setTotalNotCompliant(1);										
+									}
+								}
+								sampleLabelsMap.put(itemName, sampleLabelDTO);
+							}
+						}
+					}
+				}
+				context.put("sampleLabelsMap", sampleLabelsMap);
+			} finally {
+				evaluationSo = null;
+			}
+		}
 
 		String publishDate = "";
 		if (scQt.getPublishDate() != null) {
@@ -2062,68 +2140,82 @@ public class SupplierFinalizationBackingBean extends
 			closingDate = dateSDF.format(scQt.getChangedDate());
 		}
 		context.put("closingDate", closingDate);
+		
+		context.put("isBsvRequired", scQt.isBsvRequired());
+		context.put("isZone", scQt.isZonal());
+		
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getZoneDetails();
+		context.put("zoneDetails", zoneDetails);
 
 		// get Total Suppliers based on Zone
-		boolean isZone = false;
 		List<Object[]> list = new ArrayList<Object[]>();
 		BriefingZoneBean briefingZoneBean = null;
-		List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+		Map<Long,List<BriefingZoneBean>> zoneBeansMap 
+					= new HashMap<Long,List<BriefingZoneBean>>();
 		IQTBriefingSO qTBriefingSO;
-		try {
-			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-			String languageCode = new FacesScopes().getUserLocale()
-					.getLanguage();
-			BriefingReqDTO reqDTO = new BriefingReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setLanguageCode(languageCode);
-			BriefingResDTO resDTO = qTBriefingSO
-					.retrieveBriefingSiteVisitDtl(reqDTO);
-			if (scQt.isZonal()) {
-				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
-				if (null != zoneDtls) {
-					isZone = true;
-					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-						BriefingResDTO briefingResDTO = qTBriefingSO
-								.getTotalAttendedSupplier(reqDTO);
-						list = briefingResDTO.getTotalAttendedSupplier();
-						log.info("Size : " + list.size());
-						ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
-						briefingZoneBean = new BriefingZoneBean(specZoneDtl,
-								briefingResDTO.getBriefingList(),
-								briefingResDTO.getSiteVisitList(), scQtBsv);
-						zoneBeans.add(briefingZoneBean);
-						/*
-						 * for(Object[] object : list){ TplSpecZoneDtl
-						 * tplSpecZoneDtl = (TplSpecZoneDtl) object[0]; Long
-						 * totalAttended = (Long) object[1]; ScQtBsvDtl
-						 * scQtBsvDtl = (ScQtBsvDtl) object[2];
-						 * log.info("tplSpecZoneDtl.getZoneName() : "+
-						 * tplSpecZoneDtl.getZoneName());
-						 * log.info("totalAttended : "+ totalAttended);
-						 * log.info("scQtBsvDtl.getBsvDesc() : "+
-						 * scQtBsvDtl.getBsvDesc()); }
-						 */
+		if (scQt.isBsvRequired()) {
+			try {
+				qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
+				String languageCode = new FacesScopes().getUserLocale()
+						.getLanguage();
+				BriefingReqDTO reqDTO = new BriefingReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setLanguageCode(languageCode);
+				BriefingResDTO resDTO = qTBriefingSO
+						.retrieveBriefingSiteVisitDtl(reqDTO);
+				if (scQt.isZonal()) {
+					List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
+					if (null != zoneDtls) {
+						context.put("zones", zoneDtls);
+						for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+							List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+							reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+							BriefingResDTO briefingResDTO = qTBriefingSO
+									.getTotalAttendedSupplier(reqDTO);
+							list = briefingResDTO.getTotalAttendedSupplier();
+							log.info("Size : " + list.size());
+							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
+							briefingZoneBean = new BriefingZoneBean(specZoneDtl,
+									briefingResDTO.getBriefingList(),
+									briefingResDTO.getSiteVisitList(), scQtBsv);
+							briefingZoneBean.setTotalSupplierAttended(
+									list != null ? list.size() : 0);
+							zoneBeans.add(briefingZoneBean);
+							zoneBeansMap.put(specZoneDtl.getSpecZoneId(),zoneBeans);
+							/*
+							 * for(Object[] object : list){ TplSpecZoneDtl
+							 * tplSpecZoneDtl = (TplSpecZoneDtl) object[0]; Long
+							 * totalAttended = (Long) object[1]; ScQtBsvDtl
+							 * scQtBsvDtl = (ScQtBsvDtl) object[2];
+							 * log.info("tplSpecZoneDtl.getZoneName() : "+
+							 * tplSpecZoneDtl.getZoneName());
+							 * log.info("totalAttended : "+ totalAttended);
+							 * log.info("scQtBsvDtl.getBsvDesc() : "+
+							 * scQtBsvDtl.getBsvDesc()); }
+							 */
+						}
 					}
+				} else {
+					BriefingResDTO briefingResDTO = qTBriefingSO
+							.getTotalAttendedSupplier(reqDTO);
+					list = briefingResDTO.getTotalAttendedSupplier();
 				}
-			} else {
-				BriefingResDTO briefingResDTO = qTBriefingSO
-						.getTotalAttendedSupplier(reqDTO);
-				list = briefingResDTO.getTotalAttendedSupplier();
+			} finally {
+				qTBriefingSO = null;
 			}
-		} finally {
-			qTBriefingSO = null;
+		} else {
+			String supplierSize = "";
+			if (CollectionUtils.isNotEmpty(list)) {
+				supplierSize = String.valueOf(list.size());
+			}
+			context.put("supplierSize", supplierSize);
 		}
-		context.put("isZone", isZone);
-		context.put("zoneBeans", zoneBeans);
-		String supplierSize = "";
-		if (CollectionUtils.isNotEmpty(list)) {
-			supplierSize = String.valueOf(list.size());
-		}
-		context.put("supplierSize", supplierSize);
+		
+		context.put("zoneBeansMap", zoneBeansMap);
 
 		Long totalQualifiedSuppliers = null;
+		Map<Long,Long> totalQualifiedSuppliersByZone = null;
 		try {
 			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
@@ -2132,48 +2224,75 @@ public class SupplierFinalizationBackingBean extends
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setLanguageCode(languageCode);
-			BriefingResDTO resDTO = qTBriefingSO
-					.retrieveBriefingSiteVisitDtl(reqDTO);
-			if (scQt.isZonal()) {
-				List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
-				if (null != zoneDtls) {
-					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-						BriefingResDTO briefingResDTO = qTBriefingSO
-								.getTotalQualifiedSupplier(reqDTO);
-						totalQualifiedSuppliers = briefingResDTO
-								.getQualifiedSupp();
+			if (scQt.isBsvRequired()) {
+				if (scQt.isZonal()) {
+					BriefingResDTO resDTO = qTBriefingSO
+							.retrieveBriefingSiteVisitDtl(reqDTO);
+					List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
+					if (null != zoneDtls) {
+						totalQualifiedSuppliersByZone = 
+										new HashMap<Long,Long>();
+						for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+							reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+							BriefingResDTO briefingResDTO = qTBriefingSO
+									.getTotalQualifiedSupplier(reqDTO);
+							totalQualifiedSuppliers = briefingResDTO
+									.getQualifiedSupp();
+							totalQualifiedSuppliersByZone.put(
+									specZoneDtl.getSpecZoneId(), 
+									totalQualifiedSuppliers);
+						}
+						context.put("totalQualifiedSuppliersByZone", totalQualifiedSuppliersByZone);
 					}
+				} else {
+					BriefingResDTO briefingResDTO = qTBriefingSO
+							.getTotalQualifiedSupplier(reqDTO);
+					totalQualifiedSuppliers = briefingResDTO
+							.getQualifiedSupp();
+					
+					if (totalQualifiedSuppliers == null) {
+						totalQualifiedSuppliers = 0l;
+					}
+					context.put("totalQualifiedSuppliers", totalQualifiedSuppliers);				
 				}
-			} else {
-				BriefingResDTO briefingResDTO = qTBriefingSO
-						.getTotalQualifiedSupplier(reqDTO);
-				totalQualifiedSuppliers = briefingResDTO
-						.getQualifiedSupp();				
 			}
 		} finally {
 			qTBriefingSO = null;
 		}
-		if (totalQualifiedSuppliers == null) {
-			totalQualifiedSuppliers = 0l;
-		}
-		context.put("totalQualifiedSuppliers", totalQualifiedSuppliers);
 
 		// QTProposalSO.retrieveTotalSubmittedProposal
 		Long totalSuppliers;
+		Map<Long,Long> totalSuppliersSubmittedProposalByZone = null;
 		IQTProposalSO qTProposalSO;
 		try {
 			qTProposalSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTProposalSO.class);
 			ProposalReqDTO proposalReqDTO = new ProposalReqDTO();
 			proposalReqDTO.setQtId(scQt.getQtId());
-			ProposalResDTO proposalResDTO = qTProposalSO
-					.getTotalSubmittedProposal(proposalReqDTO);
-			totalSuppliers = proposalResDTO.getTotalSubmitted();
+			if (scQt.isZonal() && 
+					CollectionUtils.isNotEmpty(zoneDetails)) {
+				totalSuppliersSubmittedProposalByZone 
+								= new HashMap<Long,Long>();
+				for (TplSpecZoneDtl zoneDtl : zoneDetails) {
+					proposalReqDTO.setSpecZoneId(zoneDtl.getSpecZoneId());
+					ProposalResDTO proposalResDTO = qTProposalSO
+							.getTotalSubmittedProposal(proposalReqDTO);
+					totalSuppliers = proposalResDTO.getTotalSubmitted();
+					totalSuppliersSubmittedProposalByZone.put(
+							zoneDtl.getSpecZoneId(),totalSuppliers);
+				}
+				context.put("totalSuppliersSubmittedProposalByZone", 
+									totalSuppliersSubmittedProposalByZone);				
+			} else {
+				ProposalResDTO proposalResDTO = qTProposalSO
+						.getTotalSubmittedProposal(proposalReqDTO);
+				totalSuppliers = proposalResDTO.getTotalSubmitted();
+				context.put("totalSuppliersSubmittedProposal", totalSuppliers);
+			}
+
 		} finally {
 			qTProposalSO = null;
 		}
-		context.put("totalSuppliers", totalSuppliers);
 
 		context.put("validityDays", scQt.getQtValidityPeriod());
 		StringBuilder openType = new StringBuilder();
@@ -5869,4 +5988,56 @@ public class SupplierFinalizationBackingBean extends
 		this.textBeforeSign = textBeforeSign;
 	}
 
+	public class SampleLabelDTO {
+		private int totalCompliant;
+		private int totalNotCompliant;
+		private int totalSubmitted;
+		
+		public SampleLabelDTO() {
+		}
+
+		/**
+		 * @return the totalCompliant
+		 */
+		public int getTotalCompliant() {
+			return totalCompliant;
+		}
+
+		/**
+		 * @param totalCompliant the totalCompliant to set
+		 */
+		public void setTotalCompliant(int totalCompliant) {
+			this.totalCompliant = totalCompliant;
+		}
+
+		/**
+		 * @return the totalNotCompliant
+		 */
+		public int getTotalNotCompliant() {
+			return totalNotCompliant;
+		}
+
+		/**
+		 * @param totalNotCompliant the totalNotCompliant to set
+		 */
+		public void setTotalNotCompliant(int totalNotCompliant) {
+			this.totalNotCompliant = totalNotCompliant;
+		}
+
+		/**
+		 * @return the totalSubmitted
+		 */
+		public int getTotalSubmitted() {
+			return totalSubmitted;
+		}
+
+		/**
+		 * @param totalSubmitted the totalSubmitted to set
+		 */
+		public void setTotalSubmitted(int totalSubmitted) {
+			this.totalSubmitted = totalSubmitted;
+		}
+
+	}
+	
 }
