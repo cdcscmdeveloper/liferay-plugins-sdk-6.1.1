@@ -983,7 +983,7 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						PmAddress pmAddress = scQtSampleSubmission.getAddress();
-						if (null != pmAddress) {
+						/*if (null != pmAddress) {
 							pmAddress.setPmCity(getPmCity(pmAddress.getPmCity().getCityId()));
 							pmAddress.setPmState(getPmState(pmAddress.getPmState().getStateId()));
 							pmAddress.setPmDistrict(getPmDistrict(pmAddress.getPmDistrict().getDistrictId()));
@@ -994,8 +994,8 @@ public class QTDetailBackingBean extends
 								pmAddress.setPmDivision(null);
 							}
 						}
-						scQtSampleSubmission.setAddress(pmAddress);
-						/*if (null != pmAddress) {
+						scQtSampleSubmission.setAddress(pmAddress);*/
+						if (null != pmAddress) {
 							if (pmAddress.getPmDivision() != null
 									&& pmAddress.getPmDivision()
 											.getDivisionId() == null) {
@@ -1004,7 +1004,7 @@ public class QTDetailBackingBean extends
 							}
 							scQtSampleSubmission.getAddress().setPmCountry(
 									retrieveCountry());
-						}*/
+						}
 						scQtSampleSubmission.setScQt(getManagedBean().getQt());
 					}
 				}
