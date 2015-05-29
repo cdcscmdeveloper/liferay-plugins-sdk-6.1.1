@@ -22,7 +22,7 @@
 						value="*" styleClass="mandatory" />
 				</h:column>
 				<h:column>
-					<p:selectOneMenu id="functionMOD" value="#{trackingDiaryBackingBean.managedBean.moduleSelected}">
+					<p:selectOneMenu value="#{trackingDiaryBackingBean.managedBean.moduleSelected}">
 						<f:selectItems value="#{trackingDiaryBackingBean.getDropdownCodeValues('MOD')}" />
 			        	<p:ajax event="change" onstart="#{trackingDiaryBackingBean.onModuleSelect()}" partialSubmit="true" update="trackingDiary"/>
 					</p:selectOneMenu>
