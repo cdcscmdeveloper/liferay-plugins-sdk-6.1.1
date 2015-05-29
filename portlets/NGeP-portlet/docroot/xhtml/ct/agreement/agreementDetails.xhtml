@@ -13,7 +13,7 @@
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br /><br />
 		
 		<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-			<h:panelGroup style="width:750px;" >
+			<h:panelGroup style="width:765px;" >
 			<table style="width: 100%">
 				<tr>
 					<td class="columnWidth150">
@@ -100,13 +100,13 @@
 					</td>
 					<td colspan="3">
 						<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-							disabled="true" rows="4" style="width:465px; margin-bottom:5px;" 
+							disabled="true" rows="4" style="width:460px; margin-bottom:5px;" 
 							value="#{agreementBackingBean.managedBean.ctContract.contractName}" />
 					</td>					
 				</tr>
 			</table>
 		</h:panelGroup>
-		<h:panelGrid style="width:280px; margin-left:5px">
+		<h:panelGrid style="width:265px; margin-left:5px">
 		   <h:panelGrid columns="3" rendered="#{agreementBackingBeanmanagedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
 		   		and agreementBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 			 <p:selectBooleanCheckbox value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
@@ -185,7 +185,7 @@
 		 	agreementBackingBean.managedBean.contractVer.ctContractValue.concession}">
 			<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
 			<p:inputTextarea id="justificationLbl" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"
-	  			rows="3" style="width:465px;" maxlength="200" autoResize="false" disabled="true" />			
+	  			rows="3" style="width:460px;" maxlength="200" autoResize="false" disabled="true" />			
 	    </h:panelGrid> 
 	  	</p:outputPanel>
 	</p:panel>

@@ -9,7 +9,7 @@
 	<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.dtls']}"/> -->
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		<h:panelGroup style="width:750px;" >
+		<h:panelGroup style="width:765px;" >
 			<table style="width: 100%">
 				<tr>
 					<td class="columnWidth150">
@@ -119,13 +119,13 @@
 					</td>
 					<td colspan="3">
 						<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-							disabled="true" rows="4" style="width:465px; margin-bottom:5px;" 
+							disabled="true" rows="4" style="width:460px; margin-bottom:5px;" 
 							value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}" />
 					</td>					
 				</tr>
 			</table>
 		</h:panelGroup>
-		<h:panelGrid  style="width:280px; margin-left:5px">
+		<h:panelGrid  style="width:265px; margin-left:5px">
 		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}"
 			 	 disabled="#{contractDetailsBackingBean.managedBean.viewContract or contractDetailsBackingBean.managedBean.ctContractAmount.agreement}">
@@ -196,7 +196,7 @@
 	   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}"  styleClass="required"/>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  	rows="3" style="width:465px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+		  	rows="3" style="width:460px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
 		  	required="true" autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputTextarea>
 		   	<p:message for="justificationLbl" display="icon"/>	
 	  </h:panelGrid>	
