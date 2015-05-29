@@ -680,7 +680,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)240508;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)240526;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3511,6 +3511,7 @@ public class ReportBackingBean extends
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 				}
 			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
+				retrieveFPJMinistryList();
 				retrieveFPJPTJList();
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
