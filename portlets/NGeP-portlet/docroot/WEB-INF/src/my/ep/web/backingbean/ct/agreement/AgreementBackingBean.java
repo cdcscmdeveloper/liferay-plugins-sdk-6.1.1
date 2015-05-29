@@ -1959,10 +1959,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 }
   
-  public void validateAgreementCaluse(CtAgreementContent agreementContent){
-	  
-  }
-  
   public String retrievePtjBylovCondition() {
 	  
 	      String condition = "recordStatusFlg^1|";
