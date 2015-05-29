@@ -37,21 +37,15 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-				<td>
-					<p:inputText size="8" id="preparedOrgProfileId" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}" />
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/>
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td>
-					<p:inputText size="8" id="issuedOrgProfileId" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-					<p:spacer width="5" /> <p:inputText size="39" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}" />
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
+						value="#{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{stopInstrBB.managedBean.stopInstr.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>
 				</td>
 			</tr>
