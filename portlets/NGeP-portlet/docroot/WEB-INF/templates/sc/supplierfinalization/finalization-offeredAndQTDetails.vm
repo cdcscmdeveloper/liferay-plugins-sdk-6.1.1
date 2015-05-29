@@ -53,7 +53,13 @@
 <table border="0" cellpadding="0" cellspacing="0" width="100%">
 	<tr>
 		<td align="center">
-			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> KERTAS TAKLIMAT TENDER/SEBUT HARGA UNTUK PERTIMBANGAN JAWATANKUASA PEMILIHAN AKHIR PEMBEKAL</span>
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'> 
+				#if ($procurementMode == "Q")
+					SEBUT HARGA UNTUK PERTIMBANGAN JAWATANKUASA PEMILIHAN AKHIR PEMBEKAL
+				#else 
+					KERTAS TAKLIMAT TENDER UNTUK PERTIMBANGAN JAWATANKUASA PEMILIHAN AKHIR PEMBEKAL
+				#end
+			</span>
             <br/><br/>
         </td>
     </tr>
@@ -75,7 +81,12 @@
 	<tr>
 		<td align="left">
 			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-			1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA </span>
+				#if ($procurementMode == "Q")
+					1. SEBUT HARGA
+				#else 
+					1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER
+				#end			
+			</span>
 			<br/>
 		</td>
 	</tr>
@@ -88,7 +99,13 @@
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.2</td>
-		<td class="tdInfoTable">Amaun Tender / Sebut Harga</td>
+		<td class="tdInfoTable">
+			#if ($procurementMode == "Q")
+				Sebut Harga
+			#else 
+				Amaun Tender
+			#end
+		</td>
 		<td class="tdInfoTable">$estimatedAmount</td>
 	</tr>
 	<tr>
@@ -108,13 +125,19 @@
 				</table>
 			#end
 			#if ($isPlanned == "false")
-				NA
+				-
 			#end
 		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.4</td>
-		<td class="tdInfoTable">Tempoh Perjanjian  (Bermasa) / Tempoh Penyiapan (for One-Off)</td>
+		<td class="tdInfoTable">
+			#if ($fulfilmentType == "OF")
+				Tempoh Penyiapan (for One-Off)
+			#else
+				Tempoh Perjanjian  (Bermasa)
+			#end			
+		</td>
 		<td class="tdInfoTable">$contractDuration</td>
 	</tr>
 	<tr>
@@ -134,66 +157,132 @@
 		<td class="tdInfoTable">1.7</td>
 		<td class="tdInfoTable">Bilangan Pembekal Menyertai Taklimat Bagi</td>
 		<td class="tdInfoTable">
-			#if ($isZone == "true")
-				#foreach( $zoneList in $zoneBeans )
-					Zone Name : $zoneList.tplSpecZoneDtl.zoneName
-				#end
+			#if ($isBsvRequired)
+				#if ($isZone)
+					#foreach ($zone in $zones)
+						Zone Name : $zone.zoneName.toUpperCase()<br/>
+						#if ($zoneBeansMap.keySet().contains($zone.specZoneId))
+							Total Suppliers : $zoneBeansMap.get($zone.specZoneId).size()
+						#else
+							0
+						#end
+						<br/><br/>
+					#end
+				#else
 					Total Suppliers : $supplierSize
-			#end
-			#if ($isZone == "false")
-				
+				#end
+			#else
+				-
 			#end
 		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.8</td>
-		<td class="tdInfoTable">Jumlah Pembekal Yang Layak Menyertai Tender/Sebut Harga</td>
-		<td class="tdInfoTable">$totalQualifiedSuppliers</td>
+		<td class="tdInfoTable">
+			#if ($procurementMode == "Q")
+				Sebut Harga
+			#else 
+				Jumlah Pembekal Yang Layak Menyertai Tender
+			#end		
+		</td>
+		<td class="tdInfoTable">
+			#if ($isBsvRequired)
+				#if ($isZone)
+					#foreach ($zone in $zoneDetails)
+						Zone Name : $zone.zoneName.toUpperCase()<br/>
+						Total Qualified Suppliers : $totalQualifiedSuppliersByZone.get($zone.specZoneId)
+						<br/><br/>
+					#end
+				#else
+					$totalQualifiedSuppliers
+				#end	
+			#else
+				-
+			#end		
+		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.9</td>
-		<td class="tdInfoTable">Jumlah Pembekal Yang Menghantar Cadangan</td>
-		<td class="tdInfoTable">$totalSuppliers</td>
+		<td class="tdInfoTable">Jumlah Pembekal Yang Menghantar Cadangan Tawaran</td>
+		<td class="tdInfoTable">
+				#if ($isZone)
+					#foreach ($zone in $zoneDetails)
+						Zone Name : $zone.zoneName.toUpperCase()<br/>
+						Total Suppliers : $totalSuppliersSubmittedProposalByZone.get($zone.specZoneId)
+						<br/><br/>
+					#end
+				#else
+					$totalSuppliersSubmittedProposal
+				#end		
+		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.10</td>
-		<td class="tdInfoTable">Maklumat Penyerahan Sampel</td>
+		<td class="tdInfoTable">Jumlah Pembekal Yang Menghantar Sampel</td>
 		<td class="tdInfoTable">
 			#if ($isSample == "true")
-				Tarikh Pembukaan: <br/>
-				Bil. Penghantaran Sample: <br/>
-				Bil. Sample Yang Ditolak: <br/>
-				Bil. Sample Yang Diterima: <br/>
+				#foreach ($item in $sampleLabelsMap.keySet())
+					Tarikh Pembukaan: $sampleClosingDate<br/>
+					<b>$item.toUpperCase()</b><br/>
+					Bil. Penghantaran Sample: $sampleLabelsMap.get($item).totalSubmitted<br/>
+					Bil. Sample Yang Ditolak: $sampleLabelsMap.get($item).totalNotCompliant<br/>
+					Bil. Sample Yang Diterima: $sampleLabelsMap.get($item).totalCompliant<br/><br/>
+				#end
 			#end
 			#if ($isSample == "false")
+				-
 			#end			
 		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.11</td>
-		<td class="tdInfoTable">Tempoh Sah Laku Tender/Sebut Harga</td>
+		<td class="tdInfoTable">
+			#if ($procurementMode == "Q")
+				Sebut Harga
+			#else 
+				Tempoh Sah Laku Tender
+			#end			
+		</td>
 		<td class="tdInfoTable">$validityDays</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.12</td>
-		<td class="tdInfoTable">Jenis Tender/ Sebut Harga</td>
+		<td class="tdInfoTable">
+			#if ($procurementMode == "Q")
+				Sebut Harga
+			#else 
+				Jenis Tender
+			#end			
+		</td>
 		<td class="tdInfoTable">$openType 
 			#if ($openType == "Open")
-				to 
-				#if ($openFor == "B")
-					Bumiputra
-				#else
-					All 
-				#end
+				Terbuka
+			#else
+				-
 			#end		 				
 		</td>
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.13</td>
-		<td class="tdInfoTable">PEMBEKAL SEMASA</td>
+		<td class="tdInfoTable">Terbuka Untuk</td>
+		<td class="tdInfoTable">
+			#if ($openType == "Open")
+				#if ($openFor == "B")
+					Bumiputra
+				#else
+					Semua 
+				#end
+			#else
+				-
+			#end
+		</td>
+	</tr>	
+	<tr>
+		<td class="tdInfoTable">1.14</td>
+		<td class="tdInfoTable">Pembekal Semasa</td>
 		<td class="tdInfoTable">
 			#if ($existingContract == "")
-				$existingContract
+				-
 			#else
 				Nama Pembekal : $contract.smSupplier.companyName <br/>
 				Nilai Perjanjian Asal : $contract.quotationTender.estimatedAmount <br/>
