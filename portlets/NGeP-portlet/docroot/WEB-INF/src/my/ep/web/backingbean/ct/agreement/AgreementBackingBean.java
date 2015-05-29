@@ -111,7 +111,7 @@ import my.ep.web.util.template.MergeDocx;
 
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
-import org.docx4j.jaxb.Context;
+import org.docx4j.jaxb.*;
 import org.docx4j.openpackaging.contenttype.ContentType;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.exceptions.InvalidFormatException;
@@ -1190,12 +1190,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public void downloadDocFile(CtAgreementContent agreementContent) throws   Exception {		
 	
 		AttachmentFormat attachmentFormat = null;
-		if(agreementContent.getContentType().getParameterCode().equalsIgnoreCase(ParameterConst.AGREEMENT_TEMPLATE_DOC)) {
-			   if(agreementContent.getTplDocMaster() == null || agreementContent.getTplDocMaster().getTplDocSections() == null){
-				    throw new EpException(MessageConst.WARN_755017);
-			   }
-		}
-		
+			
 		try {
 	    	String fileName = getTemplateFileName(agreementContent.getTitle());
 			if (fileName != null) {
@@ -1963,6 +1958,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}
 	}
 }
+  
+  public void validateAgreementCaluse(CtAgreementContent agreementContent){
+	  
+  }
   
   public String retrievePtjBylovCondition() {
 	  
