@@ -112,6 +112,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -4504,28 +4505,37 @@ public class LOADetailBackingBean extends
 	public String setTemplateSpec(ScLoa loa){
 		
 		List<ScLoiLoaItem> items = loa.getScLoiLoaItems();
-		SmSupplier smSupplier = loa.getScLoiLoa().getSmSupplier();
+		ScLoiLoa scLoiLoa = loa.getScLoiLoa();
+		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+		boolean isZonal = scLoiLoa.isZonal();
 		TemplateSpecBean specBean = new TemplateSpecBean();
-		List<String> itemNames = new ArrayList<String>(items.size());
+		int size = items.size();
+		List<String> itemNames = new ArrayList<String>(size);
+		List<TplSpecZoneDtl> zoneDetails = null;
+		if(isZonal){
+			zoneDetails = new ArrayList<TplSpecZoneDtl>(size);
+		}
 		for (ScLoiLoaItem item : items) {
 			itemNames.add(item.getScRequestItem().getTplSpecQuestion()
 					.getClItem());
+			if (isZonal) {
+				zoneDetails.add(item.getTplSpecZoneDtl());
+			}
 		}
-		   if(loa.getScLoiLoa().isZonal()){
-			   // needs to set zonal details
-		   }
+		  
 		Long qtId = this.getManagedBean().getScQt().getQtId();
-		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames);
+		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames,zoneDetails);
 		if(null != specResDTO && specResDTO.isSuccessful()){
 			specBean.setSpecAnswerList(specResDTO.getSpecAnswerList());
 		}
-		specBean.setContentType(TemplateSpecConst.CONTENT_TYPE_ANSWER);
+		specBean.setContentType(TemplateSpecConst.CONTENT_TYPE_UPDATE_SPEC);
+		specBean.setUpdateSpecByAnswers(true);
 		this.getManagedBean().setTemplateSpecBean(specBean);
 		return "loaTemplateSpecDtls";
 	}
 	
 	private TemplateSpecResDTO getTplSpecAnswers(Long qtId, SmSupplier supplier,
-			List<String> itemNameList) {
+			List<String> itemNameList, List<TplSpecZoneDtl> zoneDetails) {
 
 		ITemplateSpecSO templateSpecSO = null;
 		TemplateSpecResDTO specResDTO = null;
@@ -4535,6 +4545,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setQtId(qtId);
 			reqDTO.setSupplier(supplier);
 			reqDTO.setItemNameList(itemNameList);
+			reqDTO.setTplSpecZoneDtls(zoneDetails);
 			specResDTO = templateSpecSO.retrieveSupplierTechAnswersByItemNames(reqDTO);
 			
 		} finally {
@@ -4550,11 +4561,14 @@ public class LOADetailBackingBean extends
 			templateSpecSO = getTemplateSpecSO();
 			List<TplSpecAnswer> answerList = templateSpecBean
 					.getSpecAnswerList();
+			for(TplSpecAnswer answer : answerList ){
+				answer.getTplSpecQuestion();
+			}
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setAnswerList(answerList);
-			TemplateSpecResDTO resDTO = templateSpecSO
-					.saveTemplateSpecAnswer(reqDTO);
-			if (resDTO.isSuccessful()) {
+			/*TemplateSpecResDTO resDTO = templateSpecSO
+					.saveTemplateSpecAnswer(reqDTO);*/
+			if (true) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
