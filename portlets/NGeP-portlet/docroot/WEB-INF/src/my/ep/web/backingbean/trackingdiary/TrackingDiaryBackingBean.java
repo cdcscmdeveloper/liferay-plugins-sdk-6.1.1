@@ -92,7 +92,6 @@ public class TrackingDiaryBackingBean extends
 				fc.getExternalContext().getSessionMap().remove(PP_TRACKING_DIARY_MANAGED_BEAN);
 				System.out.println("remove ModuleSelect" +PP_TRACKING_DIARY_MANAGED_BEAN);
 			}   	 	
-//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "trackingDiary");
 		}else{
 //			 renewSesionObject() ;			getManagedBean().setModuleSelected("");
 			getManagedBean().setPreviousSelectedModule(getManagedBean().getModuleSelected());
