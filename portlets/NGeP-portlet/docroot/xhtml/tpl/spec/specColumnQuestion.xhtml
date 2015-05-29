@@ -183,13 +183,11 @@
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, question.clUom.uomCode)}" maxIntegerDigits="10" />
 			</p:inputText>
 			<p:commandButton id="tierQtyBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
-				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean)}"
+				action="#{templateSpecBackingBean.tierQtyPopupAction(templateSpecBean, question)}"
 				oncomplete="#{tierQtyPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=tierQtyPopup])"
 				rendered="#{!isPriceTypeAllStandard and !empty question.clPriceTypeCode.parameterId}"
-				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}">
-				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
-			</p:commandButton>
+				title="#{lbl['lbl.tpl.spec.content.tier.dtls.tooltip']}" />
 			<p:message id="qtyMsg" for="qty" display="icon" />
 		</h:panelGroup>
 	</p:column>
