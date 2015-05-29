@@ -3510,7 +3510,7 @@ table.rptTbl {
 .columnWidth40 {
 	width: 40%;
 }
-.noBorder{
+.noBorder, .noBorder tr, .noBorder td, .noBorder div{
 	border:none;
 }
 
@@ -3527,4 +3527,7 @@ table.rptTbl {
   
 .ui-selectonemenu-label{
 	width:100% !important;
+}
+.ui-radiobutton{
+	margin-right:5px;
 }
