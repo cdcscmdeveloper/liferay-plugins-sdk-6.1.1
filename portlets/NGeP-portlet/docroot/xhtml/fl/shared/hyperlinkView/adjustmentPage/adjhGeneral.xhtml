@@ -41,11 +41,8 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
-					<td><p:inputText size="5" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" /> <p:inputText size="39"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"
-							disabled="true" /> <ac:iconTooltip
+					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:327px;" 
+						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/><ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
 					<td style="width: 320px;"><p:inputText size="40"
@@ -55,11 +52,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
-					<td><p:inputText size="5" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" /> <p:inputText size="39"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"
-							disabled="true" /> <ac:iconTooltip
+					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:327px;" 
+						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
+						<ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.issued.ptj']}" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
 					<td><p:inputText size="20"
@@ -69,11 +64,9 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-					<td><p:inputText size="5" disabled="true"
-							value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" /> <p:inputText
-							value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"
-							size="39" disabled="true" /> <ac:iconTooltip
+					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:327px;" 
+						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
+						 <ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
 					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
 					<td><p:selectBooleanCheckbox
