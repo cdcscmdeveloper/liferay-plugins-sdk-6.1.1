@@ -9,14 +9,14 @@
 	<!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.fulfilment.dtls']}"/> -->
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.mandatory']}" escape="false" /><br/><br/>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="top-aligned-columns">
-		<h:panelGroup style="width:770px;" >
+		<h:panelGroup style="width:750px;" >
 			<table style="width: 100%">
 				<tr>
 					<td class="columnWidth150">
 						<p:outputLabel id="cno" value="#{lbl['lbl.ct.contract.no']}" />
 					</td>
 					<td>
-						<p:inputText for="cno"  disabled="true" maxlength="17" style="width:160px;"
+						<p:inputText for="cno"  disabled="true" maxlength="17" style="width:130px;"
 							value="#{contractDetailsBackingBean.managedBean.ctContract.contractNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.contract.no']}" />
 					</td>
@@ -25,7 +25,7 @@
 						<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physical.no']}" />
 					</td> 
 					<td>
-						<p:inputText for="physicalNo" maxlength="30" style="width:160px;"
+						<p:inputText for="physicalNo" maxlength="30" style="width:130px;"
 						disabled="true"
 		 	    		value="#{contractDetailsBackingBean.managedBean.contractVer.contractPhysicalNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.physical.contract.no']}" />
@@ -37,7 +37,7 @@
 						<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effective.date']}" />
 					</td>
 					<td>
-						<p:inputText for="effectiveDate" disabled="true" style="width:160px;"
+						<p:inputText for="effectiveDate" disabled="true" style="width:130px;"
 							value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
@@ -46,7 +46,7 @@
 						<p:outputLabel id="edate" value="#{lbl['lbl.ct.expiry.date']}" />
 					</td> 
 					<td>
-						<p:inputText for="edate" disabled="true" style="width:160px;"
+						<p:inputText for="edate" disabled="true" style="width:130px;"
 							value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
@@ -57,7 +57,7 @@
 						<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
 					</td>
 					<td>
-						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
+						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
@@ -83,7 +83,7 @@
 					</td>
 					<td>
 						<p:inputTextarea id="astatus" autoResize="false" maxlength="1000" 
-							disabled="true" rows="2" style="width:160px;margin-bottom:5px;"
+							disabled="true" rows="2" style="width:130px;margin-bottom:5px;"
 							value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId)}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
@@ -105,7 +105,7 @@
 						<p:outputLabel id="signBy" value="#{lbl['lbl.ct.signed.date']}" />
 					</td> 
 					<td>
-						<p:inputText for="signBy" disabled="true" style="width:160px;"
+						<p:inputText for="signBy" disabled="true" style="width:130px;"
 							value="#{contractDetailsBackingBean.managedBean.contractVer.signedDate}">
 			   				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
@@ -119,13 +119,13 @@
 					</td>
 					<td colspan="3">
 						<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-							disabled="true" rows="4" style="width:500px; margin-bottom:5px;" 
+							disabled="true" rows="4" style="width:465px; margin-bottom:5px;" 
 							value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}" />
 					</td>					
 				</tr>
 			</table>
 		</h:panelGroup>
-		<h:panelGrid  style="width:260px; margin-left:5px">
+		<h:panelGrid  style="width:280px; margin-left:5px">
 		   <h:panelGrid columns="3" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}">
 			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}"
 			 	 disabled="true">
@@ -197,7 +197,7 @@
 	   </h:panelGrid>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  	rows="3" style="width:500px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+		  	rows="3" style="width:465px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
 		  	required="true" autoResize="false" disabled="true"></p:inputTextarea>
 	  </h:panelGrid>	
 	  <h:panelGrid columns="2" style="width:140px;"
