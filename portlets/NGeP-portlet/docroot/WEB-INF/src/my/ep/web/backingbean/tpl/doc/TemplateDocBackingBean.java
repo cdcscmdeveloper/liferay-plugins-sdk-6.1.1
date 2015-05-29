@@ -461,11 +461,12 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				
 				// TODO: common save for all process type from external page
 				if (getManagedBean().getExternalPageUrl() != null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
-					getManagedBean().getCtAgreementContent().setTplDocMaster(resDTO.getTplDocMaster());
+					reqDTOS.setDocMasterId(resDTO.getTplDocMaster().getDocMasterId());
+					getManagedBean().getCtAgreementContent().setTplDocMaster(templateSO.getTemplateMaster(reqDTOS).getTplDocMaster());
 					ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();					
 					contractAgreementReqDTO.setAgreementContent(getManagedBean().getCtAgreementContent());
 					IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-					agreementSO.saveAgreementClause(contractAgreementReqDTO);					
+					agreementSO.saveAgreementClause(contractAgreementReqDTO);	
 				}
 			}
 		} catch (Exception e) {
@@ -530,7 +531,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 			paramReqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
 			paramReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
-			resDTO.getTplDocMaster().setProcessType(parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter());
+		    resDTO.getTplDocMaster().setProcessType(parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter());
 			
 			getManagedBean().setSelectedTemplate(resDTO.getTplDocMaster());
 			getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
