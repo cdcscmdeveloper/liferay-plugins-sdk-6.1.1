@@ -112,6 +112,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -4515,9 +4516,13 @@ public class LOADetailBackingBean extends
 		if(isZonal){
 			zoneDetails = new ArrayList<TplSpecZoneDtl>(size);
 		}
+		
 		for (ScLoiLoaItem item : items) {
-			itemNames.add(item.getScRequestItem().getTplSpecQuestion()
-					.getClItem());
+			
+			TplSpecQuestion tplSpecQuestion = item.getScRequestItem()
+					.getTplSpecQuestion();
+			itemNames.add(tplSpecQuestion.getClItem());
+			
 			if (isZonal) {
 				zoneDetails.add(item.getTplSpecZoneDtl());
 			}
@@ -4525,8 +4530,14 @@ public class LOADetailBackingBean extends
 		  
 		Long qtId = this.getManagedBean().getScQt().getQtId();
 		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames,zoneDetails);
+		
 		if(null != specResDTO && specResDTO.isSuccessful()){
-			specBean.setSpecAnswerList(specResDTO.getSpecAnswerList());
+			List<TplSpecAnswer> answerList = specResDTO.getSpecAnswerList();
+			if (answerList != null && !answerList.isEmpty()) {
+				specBean.setSpecAnswerList(answerList);
+				specBean.setSpecMaster(answerList.get(0)
+						.getTplSpecQuestion().getTplSpecMaster());
+			}
 		}
 		specBean.setContentType(TemplateSpecConst.CONTENT_TYPE_UPDATE_SPEC);
 		specBean.setUpdateSpecByAnswers(true);
@@ -4561,24 +4572,29 @@ public class LOADetailBackingBean extends
 			templateSpecSO = getTemplateSpecSO();
 			List<TplSpecAnswer> answerList = templateSpecBean
 					.getSpecAnswerList();
-			for(TplSpecAnswer answer : answerList ){
-				answer.getTplSpecQuestion();
+			if (answerList != null && !answerList.isEmpty()) {
+				List<TplSpecQuestion> questionList = new ArrayList<TplSpecQuestion>();
+				for (TplSpecAnswer answer : answerList) {
+					questionList.add(answer.getTplSpecQuestion());
+				}
+				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
+				reqDTO.setQuestionList(questionList);
+				TemplateSpecResDTO resDTO = templateSpecSO
+						.saveTemplateSpecQuestion(reqDTO);
+				if (resDTO != null && resDTO.isSuccessful()) {
+					FacesContext.getCurrentInstance()
+							.addMessage(null,new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_100002,
+															new String[] {},
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+				}
 			}
-			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setAnswerList(answerList);
-			/*TemplateSpecResDTO resDTO = templateSpecSO
-					.saveTemplateSpecAnswer(reqDTO);*/
-			if (true) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_100002,
-										new String[] {},
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-			}
-
 		} finally {
 			templateSpecSO = null;
 		}
