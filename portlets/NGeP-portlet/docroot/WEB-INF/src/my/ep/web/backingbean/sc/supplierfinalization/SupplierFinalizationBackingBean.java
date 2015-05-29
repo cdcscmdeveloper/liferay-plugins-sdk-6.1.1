@@ -5823,17 +5823,20 @@ public class SupplierFinalizationBackingBean extends
 		if (scQtRecommend.getRecommendBy() == null || 
 				(scQtRecommend.getRecommendBy().getParameterCode()
 					.equals(ParameterConst.RECOMMEND_BY_AWARD)) ) {
-//			scQtRecommend.setRecommendBy(null);
-//			setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
-//			throw new EpException(MessageConst.ERROR_760211);
-			
-			// By default set recommend to Single Award 
-			// if Supplier Finalization method is not selected
-			scQtRecommend.setRecommendBy(
-					getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-					ParameterConst.RECOMMEND_BY_SINGLE_AWARD)
-						);	
-			scQtRecommend.setRecommendByStr(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);		
+			if (this.getManagedBean().isSubmit()) {
+				scQtRecommend.setRecommendBy(null);
+				setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
+				throw new EpException(MessageConst.ERROR_760211);
+			} else {
+				
+				// By default set recommend to Single Award 
+				// if Supplier Finalization method is not selected
+				scQtRecommend.setRecommendBy(
+						getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+						ParameterConst.RECOMMEND_BY_SINGLE_AWARD)
+							);	
+				scQtRecommend.setRecommendByStr(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);	
+			}
 		}
 		String recommendByCode = scQtRecommend.getRecommendBy()
 				.getParameterCode();
