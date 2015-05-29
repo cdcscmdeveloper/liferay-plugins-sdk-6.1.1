@@ -157,22 +157,22 @@
 			style="width:15%">
 			<p:commandLink oncomplete="attachDlg.show();return false;"
 				update="performancebondtbl" rendered="#{bondList.fileName eq 'null'}">
-				<p:graphicImage library="ep/images/design" name="upload.png"
-					value="/resources/ep/images/design/upload.png" />
+				<p:graphicImage
+					value="/css/images/design/upload.png" />
 				<f:setPropertyActionListener value="#{bondList}"
 					target="#{lOADetailBackingBean.managedBean.scBondDtl}" />
 			</p:commandLink>
 			<p:spacer width="10" height="5" />
 			<p:commandLink rendered="#{bondList.fileName ne 'null'}">
-				<p:graphicImage library="ep/images/design" name="edit.png"
-					value="/resources/ep/images/design/edit.png" />
+				<p:graphicImage 
+					value="/css/images/design/edit.png" />
 			</p:commandLink>
 		</p:column>
 
 		<p:column headerText="#{lbl['lbl.sc.action']}" style="width:5%">
 			<p:commandLink>
-				<p:graphicImage library="ep/images/design" name="edit.png"
-					value="/resources/ep/images/design/edit.png" />
+				<p:graphicImage
+					value="/css/images/design/edit.png" />
 			</p:commandLink>
 
 		</p:column>
