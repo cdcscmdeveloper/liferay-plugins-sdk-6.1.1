@@ -418,11 +418,17 @@ public class SupplierFinalizationBackingBean extends
 					List<ScQtCommitteeActivity> localList = new ArrayList<ScQtCommitteeActivity>();
 					if (null != sccommittee.getScCommitteeMembers()
 							&& !sccommittee.getScCommitteeMembers().isEmpty()) {
-						for (ScCommitteeMember scCommitteeMember : sccommittee
-								.getScCommitteeMembers()) {
+						List<String> membersIcNos = new ArrayList<String>();
+						for (ScCommitteeMember scCommitteeMember : 
+													sccommittee.getScCommitteeMembers()) {
+							if (membersIcNos.contains(scCommitteeMember.getIcPassport())) {
+								continue;
+							} else {
+								membersIcNos.add(scCommitteeMember.getIcPassport());
+							}
 							ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-							activity.setScQtCommittee(this.getManagedBean()
-									.getScQtCommittee());
+							activity.setScQtCommittee(
+									this.getManagedBean().getScQtCommittee());
 							activity.setScCommitteeMember(scCommitteeMember);
 							setUserDetails(activity);
 							localList.add(activity);
@@ -691,7 +697,6 @@ public class SupplierFinalizationBackingBean extends
 						.getDeletedMeetingList());
 				reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 				reqDTO.setScQtCommittee(scQtCommittee);
-				reqDTO.setScQtFinalization(scQtFinalization);
 				reqDTO.setSubmit(this.getManagedBean().isSubmit());
 				
 				qtSuppFinalizationSO.validatePreparation(reqDTO);
@@ -1349,7 +1354,9 @@ public class SupplierFinalizationBackingBean extends
 		} finally {
 		}
 
+		String exceptionMsgConstant = null;
 		if (CollectionUtils.isNotEmpty(meetingList)) {
+			boolean atleastOneMeetingIsDone = false;
 			for (ScQtMeeting meeting : meetingList) {
 				if ((meeting.getMeetingStatus() == null)
 						|| !(QTConstants.SC_MEETING_CANCELLED_STATUS_ID
@@ -1361,22 +1368,45 @@ public class SupplierFinalizationBackingBean extends
 									.equals(meeting.getMeetingStatus()
 											.getStatusId()))) {
 
-					// Save Supplier finalization tab data before throwing exception
-					reqDTO = validateInfo(activeIndex);
-					SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
-							.saveSupplierFinalization(reqDTO);
-					reloadData(resDTO);
-					
-					if (activeIndex != 0) {
-						navigateToPreparationTab();
-					}
-					qtSuppFinalizationSO = null;
-					
-					throw new EpException(MessageConst.ERROR_760208);
+					exceptionMsgConstant = MessageConst.ERROR_760208;
+					break;
+				} else if (QTConstants.SC_MEETING_DONE_STATUS_ID
+								.equals(meeting.getMeetingStatus()
+											   .getStatusId())) {
+					atleastOneMeetingIsDone = true;
 				}
 			}
+			if (!atleastOneMeetingIsDone) {
+				exceptionMsgConstant = MessageConst.ERROR_760292;
+			}
+		} else {
+			exceptionMsgConstant = MessageConst.ERROR_760291;
 		}
 		
+		if (exceptionMsgConstant != null) {
+			ScQtCommittee scQtCommittee = preparationDtlsInfo();
+			
+			// Save Preparation tab and Supplier finalization tab data 
+			// before throwing exception
+			reqDTO = validateInfo(2);
+			reqDTO.setDeletedMeetingsList(
+					this.getManagedBean().getDeletedMeetingList());
+			scQtCommittee.setQtCommitteRemarks(
+					reqDTO.getScQtCommittee().getQtCommitteRemarks());
+			reqDTO.setScQtCommittee(scQtCommittee);
+			
+			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+					.saveSupplierFinalization(reqDTO);
+			reloadData(resDTO);
+			
+			if (activeIndex != 0) {
+				navigateToPreparationTab();
+			}
+			qtSuppFinalizationSO = null;
+			
+			throw new EpException(exceptionMsgConstant);
+		}
+
 		// Validate Preparation tab details for committee members attendance
 		try {
 			reqDTO = validateInfo(0);
@@ -5088,7 +5118,6 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void addSelectedItem(ScQtRecommend scQtRecommend) {
-
 		if (getManagedBean().getSelectedRecommendList() == null) {
 			getManagedBean().setSelectedRecommendList(
 					new ArrayList<ScQtRecommend>());
@@ -5836,6 +5865,7 @@ public class SupplierFinalizationBackingBean extends
 						ParameterConst.RECOMMEND_BY_SINGLE_AWARD)
 							);	
 				scQtRecommend.setRecommendByStr(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);	
+				return;
 			}
 		}
 		String recommendByCode = scQtRecommend.getRecommendBy()
