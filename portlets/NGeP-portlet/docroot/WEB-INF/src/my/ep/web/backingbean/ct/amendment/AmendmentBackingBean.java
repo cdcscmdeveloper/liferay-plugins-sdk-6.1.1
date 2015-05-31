@@ -752,7 +752,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    }
 			    // Retrieve approver list
 			    // Skip during supplier acknowledgment
-			    if (!getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
+			    if (getManagedBean().getTaskName() == null || !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
 				    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 				    if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 				    	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
