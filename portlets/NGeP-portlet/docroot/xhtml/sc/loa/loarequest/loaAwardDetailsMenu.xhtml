@@ -14,18 +14,18 @@
 			<td width="17%">
 				<h:outputLabel value="#{lbl['lbl.sc.award.type']}" />
 			</td>
-			<td width="66%">
+			<td width="83%">
 				<p:inputText
 					value="#{dpLOABackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.scLoiLoa.recommendTypeCode)}"
 					disabled="true" size="30" readonly="true" />
 			</td>
-			<td width="17%" style="white-space: nowrap; margin-right: 10px;" align="right">
-				<p:commandButton value="Update Specfication" action="#{lOADetailBackingBean.setTemplateSpec(loa)}" 
-			    rendered="#{isPendingSubmissionStatus}"></p:commandButton>
-			</td>
 		</tr>
-		</table>
-		
+		</table> 
+		<div width="17%" style="white-space: nowrap;" align="right">
+			<p:commandButton value="#{lbl['lbl.sc.loiloa.update.specification']}"
+				action="#{lOADetailBackingBean.setTemplateSpec(loa)}"
+				rendered="#{isPendingSubmissionStatus and isDocTypeQuotation}"></p:commandButton>
+		</div>
 		<p:dataTable id="itemtbl" var="scLoiLoaItem"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoaItems}" rows="10">
 			
