@@ -692,13 +692,16 @@ public class QTScheduleDetailBackingBean extends
 			briefingReqDTO.setOutcome(outcome);
 			briefingReqDTO.setTplSpecZoneDtl(this.getManagedBean()
 					.getQtBriefing().getScQtBsv().getTplSpecZoneDtl());
-			if (null != this.getManagedBean().getScQtApproval()) {
-				finalizeRemarks(this.getManagedBean().getScQtApproval()
+			ScQtApproval approval  = this.getManagedBean().getScQtApproval();
+			if (null != approval) {
+				finalizeRemarks(approval
 						.getScQtApprovalRemarks());
-				briefingReqDTO.setApproval(this.getManagedBean()
-						.getScQtApproval());
 				updateApprovalRequest(this.getManagedBean()
 						.getScQtApprovalRequestList(), outcome);
+				approval.setScQtApprovalDtls(this.getManagedBean()
+						.getScQtApprovalRequestList());
+				briefingReqDTO.setApproval(approval);
+				
 			}
 			briefingSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);

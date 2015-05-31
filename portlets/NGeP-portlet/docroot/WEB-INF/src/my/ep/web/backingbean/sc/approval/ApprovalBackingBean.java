@@ -706,9 +706,9 @@ public class ApprovalBackingBean extends
 				finalizeRemarks(approval.getScQtApprovalRemarks());
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
-				approval.getScQtApprovalDtls().clear();
-				approval.getScQtApprovalDtls().addAll(
-						this.getManagedBean().getScQtApprovalRequestList());
+				// approval.getScQtApprovalDtls().clear();
+				approval.setScQtApprovalDtls(this.getManagedBean()
+						.getScQtApprovalRequestList());
 				qt.setScQtApprovals(qtApproval);
 
 				List<TabBean> qtCommittes = this.getManagedBean()
@@ -813,11 +813,10 @@ public class ApprovalBackingBean extends
 				updateApprovalRequest(approvalRequests, outcome);
 
 				finalizeRemarks(approval.getScQtApprovalRemarks());
-				approval.getScQtApprovalDtls().clear();
-						
-				approval.getScQtApprovalDtls().addAll(
-						approvalRequests);
-				
+				// approval.getScQtApprovalDtls().clear();
+
+				approval.setScQtApprovalDtls(approvalRequests);
+
 				List<ScQtApproval> qtApproval = new ArrayList<ScQtApproval>();
 				qtApproval.add(approval);
 				qt.setScQtApprovals(qtApproval);
