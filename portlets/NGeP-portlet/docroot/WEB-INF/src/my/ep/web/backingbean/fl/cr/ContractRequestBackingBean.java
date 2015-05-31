@@ -670,6 +670,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().setPmDivision(new PmDivision());
 		getManagedBean().getFlManulaAddress().setReceivingGrp(new PmAddressType());
 		
+		if(null == getManagedBean().getFlManulaAddress().getAddressType().getPmContacts() || getManagedBean().getFlManulaAddress().getAddressType().getPmContacts().size()==0){
+			getManagedBean().getFlManulaAddress().getAddressType().setPmContacts(new ArrayList<PmContact>());
+			getManagedBean().getFlManulaAddress().getAddressType().getPmContacts().add(new PmContact());
+		}
+		
 		StateReqDTO reqDTO = new StateReqDTO();
 		reqDTO.setCountryId(getManagedBean().getFlManulaAddress().getAddressType().getPmAddress().getPmCountry().getCountryId());
 		IStateSO reqSO = (IStateSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStateSO.class);
