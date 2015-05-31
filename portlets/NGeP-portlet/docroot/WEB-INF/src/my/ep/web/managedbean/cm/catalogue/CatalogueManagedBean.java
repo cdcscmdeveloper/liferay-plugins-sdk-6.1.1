@@ -994,7 +994,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
 				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
-				if(orgProfileResDTO.getPmOrgProfile()!=null && orgProfileResDTO.getPmOrgProfile().getParentOrgProfile()!=null) {
+				if(orgProfileResDTO.getPmOrgProfile()!=null) {
 					String ministryId = "#"+orgProfileResDTO.getPmOrgProfile().getOrgProfileId()+"#";
 					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(new SearchFilterBean("EXEMPTED_MINISTRY_LIST", SearchOperator.OPERATOR_IS_NULL.value(), null), 
 							new SearchFilterBean("EXEMPTED_MINISTRY_LIST", SearchOperator.OPERATOR_NOT_LIKE.value(), ministryId, SearchCondition.CONDITION_OR.value()));
