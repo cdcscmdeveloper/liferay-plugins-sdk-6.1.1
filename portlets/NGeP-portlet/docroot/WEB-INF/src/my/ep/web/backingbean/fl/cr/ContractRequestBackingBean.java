@@ -4026,6 +4026,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		return totalAmt;
 	}
 	private void getApproverList(){
+		if(getManagedBean().getFlRequest().getPmUserGroup()==null || getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId()==null) {
+			getManagedBean().getApproverList().clear();
+			return;
+		}
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();

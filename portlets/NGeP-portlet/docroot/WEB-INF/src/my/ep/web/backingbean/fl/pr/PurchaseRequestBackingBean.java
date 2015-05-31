@@ -3227,6 +3227,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return totalAmt;
 	}
 	private void getApproverList(){
+		if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null || getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId()==null) {
+			getManagedBean().getApproverList().clear();
+			return;
+		}		
 		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
