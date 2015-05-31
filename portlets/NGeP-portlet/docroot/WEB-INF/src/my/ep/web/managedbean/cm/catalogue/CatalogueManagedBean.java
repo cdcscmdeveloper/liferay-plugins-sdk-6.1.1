@@ -874,19 +874,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				System.out.println("catTypeFilterBean.getSearchValue(): " + catTypeFilterBean.getSearchValue());
 				if(catTypeFilterBean.getSearchValue() != null) {
-					catTypeFilterBean.setSearchField("catType");
+					catTypeFilterBean.setSearchField("CAT_TYPE");
 					//				catTypeFilterBean.setSearchValue("XC");
 					searchBean.getDataFilterBeans().add(catTypeFilterBean);
 				}
 				if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
-					itemNameFilterBean.setSearchField("itemName");
+					itemNameFilterBean.setSearchField("ITEM_NAME");
 					itemNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 				}
 				
 				if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
 					System.out.println("(String)keyWordFilterBean.getSearchValue()"+(String)keyWordFilterBean.getSearchValue());
-					keyWordFilterBean.setSearchField("keyword");
+					keyWordFilterBean.setSearchField("KEYWORD");
 					keyWordFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(keyWordFilterBean);
 				}
@@ -894,49 +894,49 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				
 
 				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
-					itemCodeFilterBean.setSearchField("itemCode");
+					itemCodeFilterBean.setSearchField("ITEM_CODE");
 					itemCodeFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
-					supplierNameFilterBean.setSearchField("companyName");
+					supplierNameFilterBean.setSearchField("COMPANY_NAME");
 					supplierNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
-					contractNoFilterBean.setSearchField("contractNo");
+					contractNoFilterBean.setSearchField("CONTRACT_NO");
 					contractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)physicalContractNoFilterBean.getSearchValue())) {
-					physicalContractNoFilterBean.setSearchField("contractPhysicalNo");
+					physicalContractNoFilterBean.setSearchField("CONTRACT_PHYSICAL_NO");
 					physicalContractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(physicalContractNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
-					circularNoFilterBean.setSearchField("circularNo");
+					circularNoFilterBean.setSearchField("CIRCULAR_NO");
 					circularNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(circularNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue())) {
-					epNoFilterBean.setSearchField("epNo");
+					epNoFilterBean.setSearchField("EP_NO");
 					epNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(epNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue())) {
-					mofNoFilterBean.setSearchField("mofNo");
+					mofNoFilterBean.setSearchField("MOF_NO");
 					mofNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(mofNoFilterBean);
 				}
 
 				if (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue())) {
-					bizRegNoFilterBean.setSearchField("bizRegNo");
+					bizRegNoFilterBean.setSearchField("BIZ_REG_NO");
 					bizRegNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
 				}
@@ -944,7 +944,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
 				log.info("bb.isRequisitioner()"+bb.isRequisitioner());
 				if(!bb.isRequisitioner()){
-					catTypeFilterBean.setSearchField("catType");
+					catTypeFilterBean.setSearchField("CAT_TYPE");
 					catTypeFilterBean.setSearchValue("XC");
 					searchBean.getDataFilterBeans().add(catTypeFilterBean);
 				}
@@ -959,7 +959,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				log.debug("districtLs.size():"+districtLs.size());
 				if(districtLs != null && districtLs.size()>0){
-					districtFilterBean.setSearchField("districtId");
+					districtFilterBean.setSearchField("DISTRICT_ID");
 					districtFilterBean.setSearchValue(districtLs);
 					searchBean.getDataFilterBeans().add(districtFilterBean);
 				}
@@ -972,7 +972,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				log.info("districtLs"+districtLs);
 				if(districtLs.isEmpty()){
 					if(stateLs!=null && stateLs.size()>0){
-						stateFilterBean.setSearchField("stateId");
+						stateFilterBean.setSearchField("STATE_ID");
 						stateFilterBean.setSearchValue(stateLs);
 						searchBean.getDataFilterBeans().add(stateFilterBean);
 
@@ -990,35 +990,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
 				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
 
-				SearchMultiFilterBean dateFilterBean = new SearchMultiFilterBean(
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.effDate", SearchOperator.OPERATOR_GREATER.value(), getCurrentDateWithoutTime(), JoinType.LEFT),
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.expDate", SearchOperator.OPERATOR_LESS.value(), getCurrentDateWithoutTime(), SearchCondition.CONDITION_OR.value(), JoinType.LEFT));
-				SearchMultiFilterBean suspendFilterBean = new SearchMultiFilterBean(
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_SUSPENDED, JoinType.LEFT),
-						dateFilterBean);
-				SearchMultiFilterBean recordStatusFilterBean = new SearchMultiFilterBean(suspendFilterBean,
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.recordStatusFlg", SearchOperator.OPERATOR_EQUALS.value(), DbValueConst.RECORD_STATUS_ACTIVE, SearchCondition.CONDITION_OR.value(), JoinType.LEFT));
-				SearchMultiFilterBean ptjFilterBean = new SearchMultiFilterBean(recordStatusFilterBean,
-						new SearchFilterBean("ctContract.latestContractVer.ctAgencies.orgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(), userOrg.getPmOrgProfile().getOrgProfileId(), JoinType.LEFT));
-				SearchMultiFilterBean agencyFilterBean = new SearchMultiFilterBean(ptjFilterBean, 
-						new SearchFilterBean("catType", SearchOperator.OPERATOR_NOT_EQUALS.value(), "MC", SearchCondition.CONDITION_OR.value()));
-
-				searchBean.getDataFilterBeans().add(agencyFilterBean);
-
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
 				if(orgProfileResDTO.getPmOrgProfile()!=null && orgProfileResDTO.getPmOrgProfile().getParentOrgProfile()!=null) {
-					String ministryId = "#"+orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId()+"#";
-					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(new SearchFilterBean("exemptedMinistryList", SearchOperator.OPERATOR_IS_NULL.value(), null), 
-							new SearchFilterBean("exemptedMinistryList", SearchOperator.OPERATOR_NOT_LIKE.value(), ministryId, SearchCondition.CONDITION_OR.value()));
+					String ministryId = "#"+orgProfileResDTO.getPmOrgProfile().getOrgProfileId()+"#";
+					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(new SearchFilterBean("EXEMPTED_MINISTRY_LIST", SearchOperator.OPERATOR_IS_NULL.value(), null), 
+							new SearchFilterBean("EXEMPTED_MINISTRY_LIST", SearchOperator.OPERATOR_NOT_LIKE.value(), ministryId, SearchCondition.CONDITION_OR.value()));
 					searchBean.getDataFilterBeans().add(ministryFilterBean);
 				}
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+				searchBean.setUseEntityClass(true);
 				reqDTO.setViewSearchBean(searchBean);
-
+				reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
+				if(catTypeFilterBean!=null && catTypeFilterBean.getSearchValue()!=null) {
+					reqDTO.setCatType(catTypeFilterBean.getSearchValue().toString());
+				}
+				
 				if(searchBean.getDataFilterBeans().size()<=0){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
