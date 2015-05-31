@@ -791,7 +791,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    	getManagedBean().setDisableFinalAmendDetails(true);
 			    }
 			    //Default the secretary
-			    if ((getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
+			    if (getManagedBean().getCommitteeType()!=null && 
+			    		(getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)
 			    		|| getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A))
 			    		&& getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)
 			    		&& !getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
