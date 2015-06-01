@@ -221,9 +221,9 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     	String extensionCode = requestItem.getCmItem().getExtensionCode();
     	Long uomId = cmSupplierItem.getPmUom().getUomId();
     	StringBuilder sb = new StringBuilder();
-    	sb.append("itemCode^").append(extensionCode).append("|")//item Code
-    	.append("catType^").append("XC").append("|")
-    	.append("uomId^").append(uomId);
+    	sb.append("ITEM_CODE^").append(extensionCode).append("|")//item Code
+    	//.append("catType^").append("XC").append("|")
+    	.append("UOM_ID^").append(uomId);
 
     	// adding suppliers from the compare screen 
     	StringBuilder supplierItemIds = new StringBuilder();

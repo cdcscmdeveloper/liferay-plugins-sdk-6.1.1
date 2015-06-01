@@ -1,5 +1,5 @@
 /**
- * Copyright © 2013 Archisoft. All rights reserved.
+ * Copyright ï¿½ 2013 Archisoft. All rights reserved.
  */
 // TODO: Auto-generated Javadoc
 package my.ep.web.backingbean.sc.purchaseindefault;
@@ -213,9 +213,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 		String extensionCode = vCmSupplierItem.getItemCode();
 		Long uomId = vCmSupplierItem.getUomId();
 		StringBuilder sb = new StringBuilder();
-		sb.append("itemCode^").append(extensionCode).append("|")//item Code
-		.append("catType^").append("XC").append("|")
-		.append("uomId^").append(uomId);
+		sb.append("ITEM_CODE^").append(extensionCode).append("|")//item Code
+		//.append("catType^").append("XC").append("|")
+		.append("UOM_ID^").append(uomId);
 		viewSearchBean = new CatalogueBackingBean().getManagedBean().getSearchDataModel().getSearchBean();
 		List<BaseSearchFilterBean> filterBeans = viewSearchBean.getDataFilterBeans();
 
