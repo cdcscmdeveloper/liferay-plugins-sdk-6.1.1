@@ -12835,8 +12835,9 @@ public class SpecificationBackingBean extends
 			// supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
 			supplierCriteria.setScQtLocCriteria(null);
 			scQt.setZoneLocationLevel(new PmParameter());
-
-			this.getManagedBean().setZoneTrees(null);
+			if (supplierCriteria.isAllState() == true) {
+				this.getManagedBean().setZoneTrees(null);
+			}
 		} else {
 			this.getManagedBean().setZoneGeneralTrees(null);
 			supplierCriteria.setQtZoneCriterias(null);
@@ -13410,7 +13411,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(specType)) {
 			if (null != getManagedBean().getScQt().getScQtSupplierCriteria()
 					&& getManagedBean().getScQt().getScQtSupplierCriteria()
-							.isBrandNew()==true) {
+							.isBrandNew() == true) {
 				validateBusinessOwner(true);
 			}
 
@@ -13864,7 +13865,7 @@ public class SpecificationBackingBean extends
 						.equalsIgnoreCase(specType)) {
 			if (null != getManagedBean().getScQt().getScQtSupplierCriteria()
 					&& getManagedBean().getScQt().getScQtSupplierCriteria()
-							.isBrandNew()==true) {
+							.isBrandNew() == true) {
 				validateBusinessOwner(true);
 			}
 
