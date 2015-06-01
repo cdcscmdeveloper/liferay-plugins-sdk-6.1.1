@@ -10,10 +10,12 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import com.liferay.portal.model.Role;
 
@@ -36,13 +38,16 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private BigDecimal gstRate;
 	private SmPersonnel loginUserPersonnelInfo;
 	private SmPersonnel freeSoftCertPersonnel;
+	private SoftcertUploadSuppDocVO selectedSuppDoc;
 	private String loginRoleName;
 	private String taskName;
 	private String token;
 	private String paymentBtnLbl;
+	private String targetPage;
 	private WorklistItemVO softCertBpmTask;
 	private List<SmPersonnel> authorizedPersonnels;
 	private boolean alreadyHadFreeSoftcert;
+	private List<SoftcertUploadSuppDocVO> softcertUploadSuppDocList;
 	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
 
 	public SoftCertManagedBean() {
@@ -205,6 +210,31 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setGstRate(BigDecimal gstRate) {
 		this.gstRate = gstRate;
+	}
+
+	public List<SoftcertUploadSuppDocVO> getSoftcertUploadSuppDocList() {
+		return softcertUploadSuppDocList;
+	}
+
+	public void setSoftcertUploadSuppDocList(
+			List<SoftcertUploadSuppDocVO> softcertUploadSuppDocList) {
+		this.softcertUploadSuppDocList = softcertUploadSuppDocList;
+	}
+
+	public SoftcertUploadSuppDocVO getSelectedSuppDoc() {
+		return selectedSuppDoc;
+	}
+
+	public void setSelectedSuppDoc(SoftcertUploadSuppDocVO selectedSuppDoc) {
+		this.selectedSuppDoc = selectedSuppDoc;
+	}
+
+	public String getTargetPage() {
+		return targetPage;
+	}
+
+	public void setTargetPage(String targetPage) {
+		this.targetPage = targetPage;
 	}
 
 }

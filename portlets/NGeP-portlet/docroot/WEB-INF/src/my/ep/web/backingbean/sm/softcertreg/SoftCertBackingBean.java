@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.softcertreg;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,9 +16,14 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.personnel.PersonnelResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmSoftcertDoc;
+import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
@@ -28,10 +34,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -40,6 +48,9 @@ import com.liferay.portal.util.PortalUtil;
 public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 	public static Logger log = Logger.getLogger(SoftCertBackingBean.class);
+	private String SELECT_PERSONNELS_PAGE = "1";
+	private String UPLOAD_DOC_PAGE = "2";
+	private String PAYMENT_PAGE = "3";
 
 	public SoftCertBackingBean() {
 		SmCommonUtil.setMDCUserId();
@@ -49,18 +60,21 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * Pre - render Request Softcert page
 	 */
 	public void preRenderSoftCert() {
+		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
 		initAuthorizedPersonnels();
 		getManagedBean().setGstRate(SmCommonUtil.getGstCurrentRate());
-		SmCommonUtil.redirectToPage("softCertUserSearch.xhtml", "");
+		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
+		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "");
 	}
 
 	/**
 	 * Pre - render My Softcert Page
 	 */
 	public void preRenderMySoftCert() {
+		renewSesionObject();
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser usr = facesScopes.getUserSessionBean();
 		getPersonnelByPmUser(usr);
@@ -107,10 +121,20 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * 
 	 * @return String
 	 */
-	public void cancel() {
-		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/softcertreg/softCertUserSearch.xhtml", "");
+	public void backToUploadPage() {
+		getManagedBean().setTargetPage(UPLOAD_DOC_PAGE);
+//		SmCommonUtil.redirectToPage(
+//				"/xhtml/sm/softcertreg/softCertUploadDoc.xhtml?faces-redirect=true", "");
 
+	}
+
+	/**
+	 * Return back to Softcert Main Page
+	 */
+	public void backToPersonnelListPage() {
+		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
+//		SmCommonUtil.redirectToPage(
+//				"/xhtml/sm/softcertreg/softCertUserSearch.xhtml?faces-redirect=true", "");
 	}
 
 	/**
@@ -129,16 +153,92 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
+	 * Navigate to Soft Certificate Upload Supporting Document page
+	 */
+	public void navigateToUploadSuppDocPage() {
+		initRequestedSoftcertUserSuppDoc();
+		getManagedBean().setTargetPage(UPLOAD_DOC_PAGE);
+//		SmCommonUtil.redirectToPage(
+//				"/xhtml/sm/softcertreg/softCertUploadDoc.xhtml?faces-redirect=true", "");
+	}
+
+	/**
 	 * Navigate to Soft Certificate payment page
 	 * 
 	 * @return String
 	 */
-	public String navigateToPaymentPage() {
+	public void navigateToPaymentPage() {
+		validateUploadSuppDoc();
 		this.getManagedBean().setSoftCertPayList(
 				this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
 		setSoftCertPaymentBpmTask();
-		return "softCertPaymentPage.xhtml";
+		getManagedBean().setTargetPage(PAYMENT_PAGE);
+//		SmCommonUtil.redirectToPage(
+//				"/xhtml/sm/softcertreg/softCertPaymentPage.xhtml?faces-redirect=true", "");
+	}
+
+	/**
+	 * Set selected supporting document to upload
+	 * 
+	 * @param SmSoftcertDoc
+	 *            doc
+	 */
+	public void assignSelectedSupportDoc(SmPersonnel smPersonnel,
+			SmSoftcertDoc doc) {
+		List<SmSoftcertDoc> softcertDocList = new ArrayList<SmSoftcertDoc>();
+		softcertDocList.add(doc);
+		SoftcertUploadSuppDocVO selectedSuppDoc = new SoftcertUploadSuppDocVO();
+		selectedSuppDoc.setPersonnel(smPersonnel);
+		selectedSuppDoc.setSuppDocList(softcertDocList);
+		getManagedBean().setSelectedSuppDoc(selectedSuppDoc);
+	}
+
+	/**
+	 * Handle file upload for softcert supporting document
+	 * 
+	 * @param FileUploadEvent
+	 *            event
+	 */
+	public void handleSupDocFileAttachment(FileUploadEvent event) {
+		if (event.getFile() != null) {
+			if (getManagedBean().getSelectedSuppDoc() != null
+					&& getManagedBean().getSelectedSuppDoc().getSuppDocList() != null
+					&& !getManagedBean().getSelectedSuppDoc().getSuppDocList()
+							.isEmpty()) {
+
+				SoftcertUploadSuppDocVO selectedSuppDocVO = getManagedBean()
+						.getSelectedSuppDoc();
+
+				// construct file path
+				String filePath = Calendar.getInstance().get(Calendar.YEAR)
+						+ "/SM/SOFTCERT/DOC/"
+						+ selectedSuppDocVO.getPersonnel().getPmUser()
+								.getLoginId() + "/";
+
+				// init suppDocFile (currently only default one file)
+				SmSoftcertDocFile docFile = new SmSoftcertDocFile();
+				docFile.setSmSoftcertDoc(selectedSuppDocVO.getSuppDocList()
+						.get(0));
+				docFile.setFileName(StringUtils.replace(event.getFile()
+						.getFileName(), " ", "-"));
+				docFile.setFilePath(filePath);
+				selectedSuppDocVO
+						.getSuppDocList()
+						.get(0)
+						.setSmSofcertDocFiles(
+								new ArrayList<SmSoftcertDocFile>());
+				selectedSuppDocVO.getSuppDocList().get(0)
+						.getSmSofcertDocFiles().add(docFile);
+
+				// set selected doc to main list
+				setSelectedSuppDocToMainList(filePath);
+
+				// upload file
+				commonUploadFile(event, filePath);
+			}
+		}
+
 	}
 
 	/**
@@ -209,6 +309,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setSoftCertPaymentTaskId(getManagedBean()
 					.getSoftCertBpmTask() == null ? null : getManagedBean()
 					.getSoftCertBpmTask().getTaskId());
+			reqDTO.setSoftcertDocList(getUploadedSoftcertDocs());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
@@ -435,6 +536,25 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
+	 * Get list of uploaded supporting document
+	 * 
+	 * @return List<SmSoftcertDoc>
+	 */
+	private List<SmSoftcertDoc> getUploadedSoftcertDocs() {
+		List<SmSoftcertDoc> softcertDocList = new ArrayList<SmSoftcertDoc>();
+		if (getManagedBean().getSoftcertUploadSuppDocList() != null
+				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			for (SoftcertUploadSuppDocVO docVO : getManagedBean()
+					.getSoftcertUploadSuppDocList()) {
+				for (SmSoftcertDoc doc : docVO.getSuppDocList()) {
+					softcertDocList.add(doc);
+				}
+			}
+		}
+		return softcertDocList;
+	}
+
+	/**
 	 * Set personnel soft certificate validity date and soft certificate number
 	 * inside data table for request soft certificate screen
 	 * 
@@ -479,4 +599,213 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		smPersonnel.setSoftcertValidityDate(softcertValidityDate);
 		smPersonnel.setSoftcertNo(sofcertNo);
 	}
+
+	/**
+	 * Construct VO to display list of selected personnel and document that need
+	 * to be uploaded
+	 */
+	private void initRequestedSoftcertUserSuppDoc() {
+		List<PmDocument> softcertSuppDocList = SmServiceLookup.getDocumentSO()
+				.retrieveSoftcertSuppDocuments().getDocumentList();
+		setSoftcertUserSuppDoc();
+		if (getManagedBean().getSoftcertUploadSuppDocList() != null
+				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			SmSoftcertDoc softcertDoc = null;
+			for (SoftcertUploadSuppDocVO softcertUploadSuppDocVO : getManagedBean()
+					.getSoftcertUploadSuppDocList()) {
+				if (softcertSuppDocList != null
+						&& !softcertSuppDocList.isEmpty()
+						&& (softcertUploadSuppDocVO.getSuppDocList() == null || softcertUploadSuppDocVO
+								.getSuppDocList().isEmpty())) {
+					softcertUploadSuppDocVO
+							.setSuppDocList(new ArrayList<SmSoftcertDoc>());
+					for (PmDocument softcertSuppDoc : softcertSuppDocList) {
+						softcertDoc = new SmSoftcertDoc();
+						softcertDoc.setPmDocument(softcertSuppDoc);
+						softcertDoc.setPmUser(softcertUploadSuppDocVO
+								.getPersonnel().getPmUser());
+						softcertDoc
+								.setSmSofcertDocFiles(new ArrayList<SmSoftcertDocFile>());
+						softcertDoc
+								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						softcertUploadSuppDocVO.getSuppDocList().add(
+								softcertDoc);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Init VO list
+	 */
+	private void setSoftcertUserSuppDoc() {
+		deleteUploadSoftcertDocSession();
+		if (getManagedBean().getSoftcertUploadSuppDocList() == null
+				|| getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			getManagedBean().setSoftcertUploadSuppDocList(
+					new ArrayList<SoftcertUploadSuppDocVO>());
+		}
+
+		if (getManagedBean().getSoftCertSelectList() != null
+				&& !getManagedBean().getSoftCertSelectList().isEmpty()) {
+			SoftcertUploadSuppDocVO suppDocVO = null;
+			for (SmPersonnel requestedPersonnel : getManagedBean()
+					.getSoftCertSelectList()) {
+				suppDocVO = getSoftcertUploadDocVO(requestedPersonnel);
+				if (suppDocVO == null) {
+					suppDocVO = new SoftcertUploadSuppDocVO();
+					suppDocVO.setPersonnel(requestedPersonnel);
+					getManagedBean().getSoftcertUploadSuppDocList().add(
+							suppDocVO);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set selected doc to be uploaded to main list
+	 * 
+	 * @param String
+	 *            filePath
+	 */
+	private void setSelectedSuppDocToMainList(String filePath) {
+		Iterator<SoftcertUploadSuppDocVO> docVOIter = getManagedBean()
+				.getSoftcertUploadSuppDocList().iterator();
+		while (docVOIter.hasNext()) {
+			SoftcertUploadSuppDocVO docVO = docVOIter.next();
+			if (docVO
+					.getPersonnel()
+					.getIdentificationNo()
+					.equals(getManagedBean().getSelectedSuppDoc()
+							.getPersonnel().getIdentificationNo())) {
+
+				docVO.getSuppDocList().set(
+						docVO.getSuppDocList().indexOf(
+								getManagedBean().getSelectedSuppDoc()
+										.getSuppDocList().get(0)),
+						getManagedBean().getSelectedSuppDoc().getSuppDocList()
+								.get(0));
+
+			}
+		}
+	}
+
+	/**
+	 * Validate uploaded supporting document
+	 */
+	private void validateUploadSuppDoc() {
+		StringBuffer sb = new StringBuffer();
+		if (getManagedBean().getSoftcertUploadSuppDocList() != null
+				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			for (SoftcertUploadSuppDocVO docVO : getManagedBean()
+					.getSoftcertUploadSuppDocList()) {
+				if (docVO.getSuppDocList() != null
+						&& !docVO.getSuppDocList().isEmpty()) {
+					for (SmSoftcertDoc doc : docVO.getSuppDocList()) {
+						if (doc.getSmSofcertDocFiles() == null
+								|| doc.getSmSofcertDocFiles().isEmpty()) {
+							sb.append(
+									getSuppDocRequiredMsg(docVO.getPersonnel(),
+											doc.getPmDocument())).append(
+									"<br />");
+						} else {
+							if (StringUtils.isBlank(doc.getSmSofcertDocFiles()
+									.get(0).getFileName())
+									|| StringUtils.isBlank(doc
+											.getSmSofcertDocFiles().get(0)
+											.getFilePath())) {
+								sb.append(
+										getSuppDocRequiredMsg(
+												docVO.getPersonnel(),
+												doc.getPmDocument())).append(
+										"<br />");
+							}
+						}
+					}
+				}
+			}
+		}
+
+		if (sb.length() > 0) {
+			throw new EpException(sb.toString());
+		}
+	}
+
+	/**
+	 * Get supporting documents required msg by personnel and document
+	 * 
+	 * @param String
+	 *            addrTypeKey
+	 * @param String
+	 *            addrFieldKey
+	 * @return String
+	 */
+	private String getSuppDocRequiredMsg(SmPersonnel smPersonnel,
+			PmDocument document) {
+		return SmCommonUtil.getMessage(
+				"lbl.sm.softcert.suppdoc.upload.missing.errmsg", new String[] {
+						document.getDocName(), smPersonnel.getName() });
+	}
+
+	/**
+	 * Remove non selected personnel in SoftcertUploadSuppDocVO session
+	 */
+	private void deleteUploadSoftcertDocSession() {
+		if (getManagedBean().getSoftcertUploadSuppDocList() != null
+				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			for (Iterator<SoftcertUploadSuppDocVO> it = getManagedBean()
+					.getSoftcertUploadSuppDocList().iterator(); it.hasNext();) {
+				SoftcertUploadSuppDocVO docVO = it.next();
+				if (!isExistInSelectedPersonnel(docVO.getPersonnel())) {
+					it.remove();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Check if personnel exist in selected personnel list
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 * @return boolean
+	 */
+	private boolean isExistInSelectedPersonnel(SmPersonnel personnel) {
+		boolean exist = false;
+		for (SmPersonnel selectedPersonnel : getManagedBean()
+				.getSoftCertSelectList()) {
+			if (personnel.getIdentificationNo().equals(
+					selectedPersonnel.getIdentificationNo())) {
+				exist = true;
+				break;
+			}
+		}
+		return exist;
+	}
+
+	/**
+	 * Get SoftcertUploadSuppDocVO by SmPersonnel
+	 * 
+	 * @param SmPersonnel
+	 *            smPersonnel
+	 * @return SoftcertUploadSuppDocVO
+	 */
+	private SoftcertUploadSuppDocVO getSoftcertUploadDocVO(
+			SmPersonnel smPersonnel) {
+		SoftcertUploadSuppDocVO retVal = null;
+		if (getManagedBean().getSoftcertUploadSuppDocList() != null
+				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
+			for (SoftcertUploadSuppDocVO docVO : getManagedBean()
+					.getSoftcertUploadSuppDocList()) {
+				if (docVO.getPersonnel().getIdentificationNo()
+						.equals(smPersonnel.getIdentificationNo())) {
+					retVal = docVO;
+					break;
+				}
+			}
+		}
+		return retVal;
+	}
+
 }
