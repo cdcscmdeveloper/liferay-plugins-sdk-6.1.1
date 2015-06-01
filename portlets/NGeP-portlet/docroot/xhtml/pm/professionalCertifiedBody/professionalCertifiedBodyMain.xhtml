@@ -6,7 +6,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:tp="http://java.sun.com/jsf/composite/ep">
+	xmlns:tp="http://java.sun.com/jsf/composite/ep">	
+	
+	
+	<ui:define name="resourceSection">
+		<script>
+			$('#portlet_pmProfessionalCertifiedBody_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.pm.professional.certificate.body.title']}");
+		</script>
+	</ui:define>
+
 
 	<ui:define name="contentSection">
 		<!-- Validation Message -->
