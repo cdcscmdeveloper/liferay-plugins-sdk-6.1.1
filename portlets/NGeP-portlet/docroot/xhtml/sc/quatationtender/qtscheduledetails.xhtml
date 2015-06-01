@@ -155,18 +155,18 @@
 					<p:commandLink
 						action="#{qTScheduleDetailBackingBean.editAddress(samplesubmissiondtl,rowIndex)}"
 						style="margin-right:20px;" partialSubmit="true" process="@this"
-						update="@(.sampleSubmitionUpdate)">
+						update="@(.sampleSubmitionAddrUpdate)">
 						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 							styleClass="tasklist_title1" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.sc.qt.btn.same.address']}"
+				<p:commandButton id="samplesubaddId" value="#{lbl['lbl.sc.qt.btn.same.address']}"
 					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 					process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
-					update="@(.sampleSubmitionUpdate)" />
+					oncomplete="sampledlg.show();" update="@(.sampleSubmitionAddrUpdate)" />
 			</div>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.qt.sample.submission']}"
