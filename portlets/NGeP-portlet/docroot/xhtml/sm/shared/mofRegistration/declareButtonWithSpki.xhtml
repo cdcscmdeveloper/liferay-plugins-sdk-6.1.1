@@ -32,7 +32,7 @@
 			password="#{backingBean.managedBean.spkiBackingBean.password}"
 			challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
 			challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
-			postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, ParameterConst.newSmApplnForMof)}" />
+			postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
 	</p:outputPanel>
 	
 </ui:composition>
