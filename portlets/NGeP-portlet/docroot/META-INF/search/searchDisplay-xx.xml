@@ -886,6 +886,7 @@
 		<property name="pk" value="docId" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.cm.catalog.ViewSupplierItemDAO" />
+		<property name="searchMethod" value="retrieveNonContractedSupplierItems" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
