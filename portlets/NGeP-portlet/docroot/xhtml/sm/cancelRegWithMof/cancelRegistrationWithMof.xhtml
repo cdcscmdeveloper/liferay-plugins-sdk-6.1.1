@@ -48,6 +48,10 @@
 			</table>
 			<div align="right" style="width: 99%" class="button-wrapper">
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+						action="#{backingBean.onDisplayConfirmCanceMofRegistration}"
+						update="@([id$=Msg])" />
+				<!-- disable spki for now
+					<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{backingBean.onDisplayConfirmCanceMofRegistration}"
 					update="spkiOutPanel,@([id$=Msg])" />
 				<p:outputPanel id="spkiOutPanel">
@@ -56,7 +60,7 @@
 						challengeAns1="#{backingBean.managedBean.spkiBackingBean.challengeAns1}"
 						challengeQues1="#{backingBean.managedBean.spkiBackingBean.challengeQues1}"
 						postSignAction="#{backingBean.submitSmApplToBpm(spkiBackingBean.pmDigiSign, backingBean.managedBean.smAppl.applType)}" />
-				</p:outputPanel>
+				</p:outputPanel> -->
 			</div>
 		</p:panel>
 		<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
