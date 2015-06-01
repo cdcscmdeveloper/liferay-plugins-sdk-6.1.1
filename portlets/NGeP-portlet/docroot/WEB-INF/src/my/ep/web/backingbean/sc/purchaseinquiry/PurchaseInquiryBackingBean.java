@@ -243,7 +243,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     		}
     	}
     	sb.append("|")
-    	.append("docId^")
+    	.append("DOC_ID^")
     	.append(supplierItemIds)
     	.append("^")
     	.append(SearchOperator.OPERATOR_IN.value());
