@@ -115,6 +115,7 @@ public class OrganisationBackingBean extends
 	public static final int PROFILE_DETAIL = 0;
 	public static final int GOV_SELLER = 1;
 	public static final int RESPONSIBLE_PROFILE = 2;
+	private static final String NOT_RECOMMENDED_STATE = "LUAR NEGARA";
 	
 	// Navigation Details
 	public static final String NAV_TO_SEARCH = "organisationMain.xhtml?faces-redirect=true";
@@ -1983,7 +1984,17 @@ public class OrganisationBackingBean extends
 	 */
 	public List<PmState> getStateList(Long countryId) {
 		log.info("getStateList");
-		return PmCommonUtil.retrievePmStateList(countryId);
+		List<PmState> resultList=new ArrayList<PmState>();
+		
+		for(PmState pmState:PmCommonUtil.retrievePmStateList(countryId))
+		{ 
+			if(!pmState.getStateName().equalsIgnoreCase(NOT_RECOMMENDED_STATE))
+			{
+				resultList.add(pmState);
+			}
+		}
+
+		return resultList;
 	}
 
 	/**
