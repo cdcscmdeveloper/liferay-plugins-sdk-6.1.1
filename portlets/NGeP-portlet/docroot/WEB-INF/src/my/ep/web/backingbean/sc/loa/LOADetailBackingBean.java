@@ -4531,10 +4531,37 @@ public class LOADetailBackingBean extends
 		Long qtId = this.getManagedBean().getScQt().getQtId();
 		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames,zoneDetails);
 		
-		if(null != specResDTO && specResDTO.isSuccessful()){
+		if (null != specResDTO && specResDTO.isSuccessful()) {
 			List<TplSpecAnswer> answerList = specResDTO.getSpecAnswerList();
 			if (answerList != null && !answerList.isEmpty()) {
-				specBean.setSpecAnswerList(answerList);
+				List<TplSpecAnswer> tempAnsList = new ArrayList<TplSpecAnswer>();
+				// tempAnsList.addAll(answerList);
+				for (TplSpecAnswer answer : answerList) {
+					TplSpecQuestion parentQuest = answer.getTplSpecQuestion().getParentSpecQuestion();
+					if (parentQuest == null) {
+						tempAnsList.add(answer);
+					} else {
+						if (tempAnsList.size() > 0) {
+							int i = 0;
+							for (TplSpecAnswer ans : tempAnsList) {
+								if (ans.getTplSpecQuestion()
+										.getSpecQuestionId()
+										.equals(parentQuest
+												.getSpecQuestionId())) {
+									int p = i;
+									tempAnsList.add(p + 1, answer);
+									break;
+								}
+								i++;
+							}
+						} else {
+							tempAnsList.add(answer);
+						}
+					}
+
+				}
+				
+				specBean.setSpecAnswerList(tempAnsList);
 				specBean.setSpecMaster(answerList.get(0)
 						.getTplSpecQuestion().getTplSpecMaster());
 			}
@@ -4615,4 +4642,5 @@ public class LOADetailBackingBean extends
 				.handleNavigation(fc, null, QTConstants.LOA_PAGE);
 
 	}
+
 }
