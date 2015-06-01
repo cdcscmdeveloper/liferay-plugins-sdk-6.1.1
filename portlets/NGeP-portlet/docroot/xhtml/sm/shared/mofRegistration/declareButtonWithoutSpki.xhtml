@@ -22,7 +22,7 @@
 			<p:commandButton id="no"
 				value="#{lbl['lbl.btn.proceed']}" onclick="printConfirm.hide()" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForMof)}" />
+				action="#{backingBean.submitSmApplToBpm(backingBean.managedBean.smAppl.applType)}" />
 		</div>
 
 	</p:confirmDialog>
