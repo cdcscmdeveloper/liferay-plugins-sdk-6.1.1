@@ -20,7 +20,10 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForApplcatcodes,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
-
+						
+						<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+						
+						<!-- disable spki for now
 						<c:choose>
 							<c:when
 								test="#{backingBean.managedBean.overLappedCategoryExists}">
@@ -41,7 +44,7 @@
 									oncomplete="blockWidget.hide()"
 									action="#{backingBean.submitSmApplToBpm(ParameterConst.newSmApplnForApplcatcodes)}" />
 							</c:otherwise>
-						</c:choose>
+						</c:choose> -->
 					</div>
 				</p:outputPanel> <p:outputPanel id="supDocPan">
 					<h:inputHidden

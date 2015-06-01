@@ -1023,11 +1023,12 @@ public class SmApplicationBackingBean extends
 		}
 		if (!valid) {
 			throw new EpException(sb.toString());
-		} else {
-			// RequestContext.getCurrentInstance().execute("canRegConfirm.show()");
-			// SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		}
+		else {
+			//disable spki for now
+//			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+//			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			submitCancelMofApplToBpm();
 		}
 	}
 
