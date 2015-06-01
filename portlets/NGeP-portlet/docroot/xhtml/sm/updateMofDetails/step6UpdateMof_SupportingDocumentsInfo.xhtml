@@ -21,6 +21,10 @@
 							actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,backingBean.managedBean.tabActiveIndex)}"
 							action="#{backingBean.saveApplicationAsDraft(backingBean.managedBean.smAppl.applType,backingBean.managedBean.currentPageType)}"
 							update=":form" style="margin-bottom:5px;" />
+						
+						<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+						
+						<!-- disable spki for now
 						<c:choose>
 							<c:when
 								test="#{backingBean.managedBean.smAppl.applType ne ParameterConst.newSmApplnForUpdate}">
@@ -29,7 +33,7 @@
 							<c:otherwise>
 								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
 							</c:otherwise>
-						</c:choose>
+						</c:choose> -->
 
 
 
