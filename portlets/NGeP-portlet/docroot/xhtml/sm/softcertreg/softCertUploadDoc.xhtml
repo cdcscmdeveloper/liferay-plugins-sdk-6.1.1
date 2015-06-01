@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+		
+		<table style="width: 100%;">
+			<tr>
+				<td>
+					<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+						action="#{softCertBackingBean.backToPersonnelListPage}" update="@form"/>
+				</td>
+				<td style="white-space: nowrap; float: right;">
+				    <p:commandButton value="#{lbl['lbl.sm.request.softcert']}" style="float:right;" id="uploadRequestBtnId" update="@form"
+				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{softCertBackingBean.navigateToPaymentPage}"/>
+				</td>
+			</tr>
+		</table>
+		
+		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}"/>
+
+		<p:panel header="#{lbl['lbl.sm.softcert.selected.personnel.panheader']}" toggleable="true" id="uploadPanelId">
+			<p:dataTable id="softcertUploadDtlId" rowKey="#{upload}"
+				rowIndexVar="index" value="#{softCertBackingBean.managedBean.softcertUploadSuppDocList}"
+				var="upload" >
+				<ac:paginator for="softcertUploadDtlId" />
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
+					</f:facet>
+					<h:outputText value="#{upload.personnel.name}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.nationality']}" />
+					</f:facet>
+					<h:outputText value="#{upload.personnel.pmCountry.countryName}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.eprole']}" />
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
+						rendered="#{upload.personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or upload.personnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or upload.personnel.epRole eq 'SUPPLIER_TEMP'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
+						rendered="#{upload.personnel.epRole eq 'BASIC_SUPPLIER_USER' or upload.personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+						rendered="#{upload.personnel.epRole eq 'CM_USER'}" />
+					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+						rendered="#{upload.personnel.contractSigner}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{upload.personnel.recordStatusFlg eq '1'}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="*" styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sm.softcert.suppdoc']}" />
+					</f:facet>
+					<table width="100%">
+						<ui:repeat var="suppDoc" value="#{upload.suppDocList}">
+							<tr>
+								<td width="40%">
+									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
+								</td>
+								<td width="20%">
+									<p:commandLink oncomplete="uploadDialog.show();return false;" update="@([id$=uploadDialog])"
+										action="#{softCertBackingBean.assignSelectedSupportDoc(upload.personnel,suppDoc)}">
+										<p:graphicImage value="/css/images/design/upload.png"
+											style="margin-right:2px;" />
+									</p:commandLink>
+								</td>
+								<td width="40%">
+									<h:outputText value="#{suppDoc.smSofcertDocFiles[0].fileName}"
+										style="float: left;white-space: normal;" rendered="#{not empty suppDoc.smSofcertDocFiles}"/>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</p:column>
+					
+			</p:dataTable>
+		</p:panel>
+		
+		<p:dialog id="uploadDialog" widgetVar="uploadDialog" modal="true"
+				dynamic="true" resizable="false" width="700px" height="200"
+				styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+				<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+					sizeLimit="#{SupplierManagementConst.SM_SUPPORTDOCS_FILE_SIZE_LIMIT}"
+					invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+					invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed20Mb']}"
+					fileUploadListener="#{softCertBackingBean.handleSupDocFileAttachment}"
+					update=":form" oncomplete="uploadDialog.hide();" />
+			</p:dialog>
+
+</ui:composition>
