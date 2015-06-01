@@ -476,10 +476,12 @@ public class QTScheduleDetailBackingBean extends
 			sampleSubmission.setAddress(address);
 			this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
 			retrievePmStateList();
-			RequestContext.getCurrentInstance().execute("sampledlg.show();");
+			// RequestContext.getCurrentInstance().execute("sampledlg.show();");
+			this.getManagedBean().setRequired(Boolean.TRUE);
 		} else {
 			throw new EpException(MessageConst.ERROR_760232);
 		}
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
@@ -510,6 +512,7 @@ public class QTScheduleDetailBackingBean extends
 
 		// this.getManagedBean().setScQtSampleSubmission(null);
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
+		this.getManagedBean().setRequired(Boolean.FALSE);
 	}
 
 	/**
