@@ -165,6 +165,7 @@
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
+		<portlet id="keywordMaintenance"></portlet>
 
 	</category>
 	
