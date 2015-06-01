@@ -2980,7 +2980,7 @@ public class ProfileManagementBackingBean extends
 	private void loadUserOrgType(PmUser user, PmUserOrg userOrg) {
 		logger.info("loadUserOrgType");
 		if (userOrg != null
-				&& userOrg.getPmOrgProfile().getPmOrgValidity().getOrgCode() != null) {
+				&& userOrg.getPmOrgProfile().getOrgTypeCode() != null) {
 			// for (PmUserOrg userOrg : user.getPmUserOrgs()) {
 			// if (userOrg.getRecordStatusFlg() ==
 			// DbValueConst.RECORD_STATUS_ACTIVE) {
