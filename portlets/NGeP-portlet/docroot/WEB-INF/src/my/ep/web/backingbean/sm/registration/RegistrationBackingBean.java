@@ -462,6 +462,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smPersonnel.setEpRole(RoleCode.SUPPLIER_TEMP.value());
 		smPersonnel.setClerical(true);
 		
+		String trimmedName = smPersonnel.getName().trim();
+		smPersonnel.setName(trimmedName);
+		
 		//set personnel bumi flag or muslim flag 
 		smPersonnel.setBumiFlg(getManagedBean().getUserBumiFlg());
 		smPersonnel.setMuslimFlg(getManagedBean().getUserMuslimFlg());
