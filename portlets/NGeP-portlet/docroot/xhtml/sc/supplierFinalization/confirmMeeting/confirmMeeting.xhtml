@@ -176,7 +176,7 @@
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
 									<p:selectOneMenu value="#{committeeMember.representativeType.parameterCode}" 
 										label="#{lbl['lbl.sc.representative.type']}"
-										style="width: 110px;margin-bottom: 5px;" required="true" 
+										style="width: 100%;margin-bottom: 5px;" required="true" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues()}" />
 										<p:ajax event="change" 
