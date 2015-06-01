@@ -1455,9 +1455,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    String extensionCode = scRequestItem.getCmItem().getExtensionCode();
 		    Long uomId = selectedSupplierItem.getPmUom().getUomId();
 		    StringBuilder sb = new StringBuilder();
-		    sb.append("itemCode^").append(extensionCode).append("|")//item Code
-		    .append("catType^").append("XC").append("|")
-		    .append("uomId^").append(uomId);
+		    sb.append("ITEM_CODE^").append(extensionCode).append("|")//item Code
+		    //.append("catType^").append("XC").append("|")
+		    .append("UOM_ID^").append(uomId);
 		    
 		    if(cartFlag){
 		    	// adding suppliers from the compare screen 
