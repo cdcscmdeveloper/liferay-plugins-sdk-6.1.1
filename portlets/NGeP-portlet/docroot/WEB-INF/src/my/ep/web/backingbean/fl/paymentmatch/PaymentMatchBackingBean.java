@@ -809,7 +809,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				getManagedBean().setDeductionAmt(totalDeductionAmt);
 				calPaymentAmt=calPaymentAmt.add(getManagedBean().getPaymentAdvice().getFlInvoice().getInvoiceAmtNew().subtract(totalDeductionAmt).subtract(transFee));
 			}
-		}else if(nonExemptedItemAmt.doubleValue() > 0 && haveDeduction == false){
+		}else if(nonExemptedItemAmt.doubleValue() >= 0 && haveDeduction == false){
 			if(nonExemptedItemAmt.doubleValue() > 0){
 				invMulty = nonExemptedItemAmt.multiply(serviceFee);
 				transFee = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
