@@ -123,9 +123,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void backToUploadPage() {
 		getManagedBean().setTargetPage(UPLOAD_DOC_PAGE);
-//		SmCommonUtil.redirectToPage(
-//				"/xhtml/sm/softcertreg/softCertUploadDoc.xhtml?faces-redirect=true", "");
-
 	}
 
 	/**
@@ -133,8 +130,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void backToPersonnelListPage() {
 		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
-//		SmCommonUtil.redirectToPage(
-//				"/xhtml/sm/softcertreg/softCertUserSearch.xhtml?faces-redirect=true", "");
 	}
 
 	/**
@@ -158,8 +153,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	public void navigateToUploadSuppDocPage() {
 		initRequestedSoftcertUserSuppDoc();
 		getManagedBean().setTargetPage(UPLOAD_DOC_PAGE);
-//		SmCommonUtil.redirectToPage(
-//				"/xhtml/sm/softcertreg/softCertUploadDoc.xhtml?faces-redirect=true", "");
 	}
 
 	/**
@@ -174,8 +167,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		updateAmount();
 		setSoftCertPaymentBpmTask();
 		getManagedBean().setTargetPage(PAYMENT_PAGE);
-//		SmCommonUtil.redirectToPage(
-//				"/xhtml/sm/softcertreg/softCertPaymentPage.xhtml?faces-redirect=true", "");
 	}
 
 	/**
