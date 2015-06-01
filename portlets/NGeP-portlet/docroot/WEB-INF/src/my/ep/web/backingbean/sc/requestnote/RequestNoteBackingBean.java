@@ -1479,7 +1479,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		    	}
 		    	
 		    	sb.append("|")
-		    		.append("docId^")
+		    		.append("DOC_ID^")
 			    	.append(supplierItemIds)
 			    	.append("^")
 			    	.append(SearchOperator.OPERATOR_IN.value());
@@ -3453,22 +3453,22 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			         if(conditions.length > 2) {
 			        	 searchCondition = Integer.parseInt(conditions[2]);
 			         }
-			         if ("itemName".equals(searchField)) {
+			         if ("ITEM_NAME".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_ITEM_NAME, searchValue);	
-			         } else if ("companyName".equals(searchField)) {
+			         } else if ("COMPANY_NAME".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_SUPPLIER_NAME, searchValue);	
-			         } else if ("epNo".equals(searchField)) {
+			         } else if ("EP_NO".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_EP_NO, searchValue);	
-			         } else if ("bizRegNo".equals(searchField)) {
+			         } else if ("BIZ_REG_NO".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_BIZ_REG_NO, searchValue);	
-			         } else if ("stateId".equals(searchField)) {
+			         } else if ("STATE_ID".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_STATE_ID, searchValue);	
 
-			         } else if ("districtId".equals(searchField)) {
+			         } else if ("DISTRICT_ID".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_DISTRICT_ID, searchValue);	
-			         } else if ("mofNo".equals(searchField)) {
+			         } else if ("MOF_NO".equals(searchField)) {
 			        	 paramMap.put(ReportConst.PARAM_MOF_NO, searchValue);	
-			         } else if ("docId".equals(searchField)) {				
+			         } else if ("DOC_ID".equals(searchField)) {				
 			        	 paramMap.put(ReportConst.PARAM_SUPP_ITEM_ID, searchValue);	
 			         }	
 			         paramMap.put(ReportConst.PARAM_ITEM_CODE, itemCode);	
