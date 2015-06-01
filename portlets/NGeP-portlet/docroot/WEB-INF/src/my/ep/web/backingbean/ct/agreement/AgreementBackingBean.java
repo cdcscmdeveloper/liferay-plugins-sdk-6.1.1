@@ -24,6 +24,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -79,6 +81,7 @@ import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -109,6 +112,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.template.MergeDocx;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.docx4j.jaxb.*;
@@ -1858,9 +1862,142 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	public String previewAction() {
 		String combinedContentHtml ="";
+		PmOrgProfile pmOrgProfile = getManagedBean().getCtContract().getOwnerOrgProfile();
+		IAddressSO addressSO = null;
+		PmAddressType pmAddressType = null;
 		try {
 			String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
 		    combinedContentHtml = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
+		
+		    // Replace variables
+		    CommonUtils commonUtils = new CommonUtils();
+			DecimalFormat af = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+					CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			DecimalFormat pf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+					CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));			
+			
+			// Define default variable value
+		    String bondAmountTxt = "______________________";
+		    String bondAmount = "___________";
+		    String bondPercentageTxt = "_________________";
+		    String bondPercentage = "_____";
+		    String ministryName = "Kementerian ...................... ";
+		    String ptjName = "______________________";
+		    String ptjAddress = "______________________";
+		    String ptjTelNo = "N/A";
+		    String ptjFaksNo = "N/A";
+		    String ptjEmel = "N/A";
+		    String supplierName = "______________________";
+		    String supplierAddress = "______________________";
+		    String supplierTelNo = "N/A";
+		    String supplierFaksNo = "N/A";
+		    String supplierEmel = "N/A";
+		    
+		    
+		    if (getManagedBean().getCtContract().isBondReq()) {    	
+		    	if (getManagedBean().getCtContract().isBondReq()) {
+					if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
+						if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
+							bondAmount = af.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt());
+							bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString());
+							bondPercentage = pf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage());
+							//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage().toString());
+							bondPercentageTxt = bondPercentage;
+						}						
+					} else {
+						if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
+							bondAmount = af.format(getManagedBean().getCtContract().getLoa().getBondAmt());
+							bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondAmt().toString());
+							bondPercentage = pf.format(getManagedBean().getCtContract().getLoa().getBondPercentage());
+							//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondPercentage().toString());
+							bondPercentageTxt = bondPercentage;
+						}
+					}
+				}
+		    }
+		    
+		    if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+		    	ministryName = retrieveMinistryByOrgProfileId(pmOrgProfile.getOrgProfileId());
+		    } else {
+		    	ministryName = pmOrgProfile.getOrgName();
+		    }
+		    ptjName = pmOrgProfile.getOrgName();			
+		    
+		    addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+			if (resDTO.getAddressTypeList().size() > 0) {
+				pmAddressType = resDTO.getAddressTypeList().get(0);
+			}
+			
+		    StringBuilder ptjAddressStr = new StringBuilder();				
+			if (pmAddressType != null) {
+				PmAddress pmAddress = pmAddressType.getPmAddress();
+				if (pmAddress != null) {
+					ptjAddressStr.append(pmAddress.getAddress1());
+					ptjAddressStr.append(",<br />");
+					ptjAddressStr.append(pmAddress.getAddress2());
+					ptjAddressStr.append(",<br />");
+					ptjAddressStr.append(pmAddress.getPostcode());
+					ptjAddressStr.append(" ");
+					ptjAddressStr.append(pmAddress.getPmCity() != null ? pmAddress.getPmCity().getCityName() : "");
+					ptjAddressStr.append(",<br />");
+					ptjAddressStr.append(pmAddress.getPmState() != null ? pmAddress.getPmState().getStateName() : "");
+					
+					ptjAddress = ptjAddressStr.toString();
+					
+					if (pmAddress.getPhoneNo() != null)
+						ptjTelNo = pmAddress.getPhoneNo();
+					if (pmAddress.getFaxNo() != null)
+						ptjFaksNo = pmAddress.getFaxNo();
+					if (pmAddress.getEmail() != null)
+						ptjEmel = pmAddress.getEmail();
+				}
+			}
+			if (getManagedBean().getContractVer().getCtContractValue().getSupplierName() != null)
+				supplierName = getManagedBean().getContractVer().getCtContractValue().getSupplierName();
+			String address = AddressUtils.getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+			if (address != null)
+				supplierAddress = address;
+			if (getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo() != null)
+				supplierTelNo = getManagedBean().getContractVer().getCtContractValue().getSupplierPhoneNo();
+			if (getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo() != null)
+				supplierFaksNo = getManagedBean().getContractVer().getCtContractValue().getSupplierFaxNo();
+			if (getManagedBean().getContractVer().getCtContractValue().getSupplierEmail() != null)
+				supplierEmel = getManagedBean().getContractVer().getCtContractValue().getSupplierEmail();		
+			
+			
+			Map<String,String> replaceString = new HashMap<String,String>();
+			replaceString.put("bondAmountTxt", bondAmountTxt);
+			replaceString.put("bondAmount", bondAmount);
+			replaceString.put("bondPercentageTxt", bondPercentageTxt);
+			replaceString.put("bondPercentage", bondPercentage);
+			replaceString.put("ministryName", ministryName);
+			replaceString.put("ptjName", ptjName);
+			replaceString.put("ptjAddress", ptjAddress);
+			replaceString.put("ptjTelNo", ptjTelNo);
+			replaceString.put("ptjFaksNo", ptjFaksNo);
+			replaceString.put("ptjEmel", ptjEmel);
+			replaceString.put("supplierName", supplierName);
+			replaceString.put("supplierAddress", supplierAddress);
+			replaceString.put("supplierTelNo", supplierTelNo);
+			replaceString.put("supplierFaksNo", supplierFaksNo);
+			replaceString.put("supplierEmel", supplierEmel);	
+			
+			String patternString = "%(" + StringUtils.join(replaceString.keySet(), "|") + ")%";
+			Pattern pattern = Pattern.compile(patternString);
+			Matcher matcher = pattern.matcher(combinedContentHtml);
+
+			StringBuffer sb = new StringBuffer();
+			while(matcher.find()) {
+			    matcher.appendReplacement(sb, replaceString.get(matcher.group(1)));
+			}
+			matcher.appendTail(sb);
+
+			combinedContentHtml = sb.toString();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
