@@ -656,7 +656,8 @@ public class FinancialOrgBackingBean extends
 					this.getManagedBean().getContactPerson().setPmAddressType(pmAddressType);
 					pmAddressType.getPmContacts().add(this.getManagedBean().getContactPerson());
 				}else{
-					pmAddressType.getPmContacts().set(0, this.getManagedBean().getContactPerson());
+					pmAddressType.getPmContacts().clear();
+					pmAddressType.getPmContacts().add(this.getManagedBean().getContactPerson());
 				}
 			}
 		}
