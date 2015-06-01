@@ -883,14 +883,14 @@
 		</property>
 	</bean>
 	<bean id="V_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
-		<property name="pk" value="docId" />
+		<property name="pk" value="DOC_ID" />
 		<property name="daoClass"
 			value="my.ep.persistence.dao.cm.catalog.ViewSupplierItemDAO" />
 		<property name="searchMethod" value="retrieveNonContractedSupplierItems" />
 		<property name="columns">
 			<list>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="companyName" />
+					<property name="columnName" value="COMPANY_NAME" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sm.companyname" />
