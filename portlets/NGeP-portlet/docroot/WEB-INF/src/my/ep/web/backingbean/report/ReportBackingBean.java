@@ -99,11 +99,12 @@ public class ReportBackingBean extends
 	private String moduleValue;
 	private String reportName;
 	private String reportValue;
+	private String reportCategory;
 	private ScQt scqt;
 	private boolean enableValue = false;
 	String parameterCodeType = new String();
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
-	private List<SelectItem> reportCategoryList = new ArrayList<SelectItem>();
+	private List<String> reportCategoryList = new ArrayList<String>();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
@@ -187,11 +188,21 @@ public class ReportBackingBean extends
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
 
-	public List<SelectItem> getReportCategoryList() {
+	public String getReportCategory() {
+		return reportCategory;
+	}
+
+	public void setReportCategory(String reportCategory) {
+		this.reportCategory = reportCategory;
+	}
+
+	
+
+	public List<String> getReportCategoryList() {
 		return reportCategoryList;
 	}
 
-	public void setReportCategoryList(List<SelectItem> reportCategoryList) {
+	public void setReportCategoryList(List<String> reportCategoryList) {
 		this.reportCategoryList = reportCategoryList;
 	}
 
@@ -679,8 +690,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)240526;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	private Long lngUserId = (long)229703;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -794,6 +805,7 @@ public class ReportBackingBean extends
 	private String flGroupFifteen;
 	private String flGroupSixteen;
 	private String flGroupSeventeen;
+	private boolean reportCategoryView = false;
 	// sm
 	private String smCreatedFromYear;
 	private String smCreatedToYear;
@@ -862,6 +874,14 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public boolean isReportCategoryView() {
+		return reportCategoryView;
+	}
+
+	public void setReportCategoryView(boolean reportCategoryView) {
+		this.reportCategoryView = reportCategoryView;
+	}
 
 	public String getMinistryName() {
 		return ministryName;
@@ -2483,7 +2503,7 @@ public class ReportBackingBean extends
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
 			
-					List<Object[]> moduleLst = reportSO.retrieveModuleList("en","MOD");			
+					List<Object[]> moduleLst = reportSO.retrieveModuleList("en",lngUserId);			
 					for (Object[] object : moduleLst) {
 						SelectItem selectItem = new SelectItem();						
 						selectItem.setValue(object[0].toString());
@@ -3009,43 +3029,62 @@ public class ReportBackingBean extends
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
+		rptGenBean.setReportCategoryView(false);
+		this.setReportCategory(null);
 		this.setReportValue(null);
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
-					for (Object[] object : reportModList) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(object[0].toString());
-						selectItem.setValue(object[1].toString());
-						reportList.add(selectItem);
-					}
+					if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase("FL"))){
+						rptGenBean.setReportCategoryView(true);
+						retrieveSubModuleReportCategoryList();
+					}else{						
+						List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
+						for (Object[] object : reportModList) {
+							SelectItem selectItem = new SelectItem();
+							selectItem.setLabel(object[0].toString());
+							selectItem.setValue(object[1].toString());
+							reportList.add(selectItem);
+						}
+					}					
 				}
 				return reportList;	
 			}
 	
-	public List<SelectItem>  retrieveReportCategoryListByAuthorization() {
-		reportList = new ArrayList<SelectItem>();
-		rptGenBean = new ReportsGenerateBean();
-		this.setReportValue(null);		
+	public List<String>  retrieveSubModuleReportCategoryList() {
+		reportList = new ArrayList<SelectItem>();	
+		reportCategoryList = new ArrayList<String>();	
 		this.setReportName(null);
-		setRoleCode(null);
-		
-		getManagedBean().setReportList(new ArrayList<SelectItem>());
-		
-		
-		rptGenBean = new ReportsGenerateBean();
-		getManagedBean().setRptGenBean(rptGenBean);
+		setRoleCode(null);		
+		getManagedBean().setReportList(new ArrayList<SelectItem>());		
 		resetReportForm();
-		this.setReportValue(null);
-		reportList = new ArrayList<SelectItem>();
+		this.setReportValue(null);		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
+					List<String> reportCatList = reportSO.retrieveSubModuleReportCategoryList(this.getModuleValue(), lngUserId);
+					for (int i = 0; i < reportCatList.size(); i++) {
+						reportCategoryList.add(reportCatList.get(i));
+					}
+				}
+				return reportCategoryList;	
+		}
+	
+	public List<SelectItem>  retrieveReportListBySubModule() {
+		reportList = new ArrayList<SelectItem>();			
+		this.setReportName(null);
+		setRoleCode(null);		
+		getManagedBean().setReportList(new ArrayList<SelectItem>());		
+		resetReportForm();
+		this.setReportValue(null);		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<Object[]> reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
 					for (Object[] object : reportModList) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
@@ -3054,7 +3093,7 @@ public class ReportBackingBean extends
 					}
 				}
 				return reportList;	
-			}
+		}
 	
     public void getReportIdlist() {
     	rptGenBean = new ReportsGenerateBean();
@@ -3893,7 +3932,14 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		smReportBackingBean = new SMReportBackingBean();
 		ctReportBackingBean = new CTReportBackingBean();
 		ppReportBackingBean = new PPReportBackingBean();
+		if(rptGenBean.isReportCategoryView()==true){
+			rptGenBean = new ReportsGenerateBean();
+			rptGenBean.setReportCategoryView(true);
+			//this.setReportCategoryView(true);
+		}else{
 		rptGenBean = new ReportsGenerateBean();
+		//rptGenBean.setReportCategoryView(this.isReportCategoryView());
+		}
 		getManagedBean().setRptGenBean(null);
 		this.setSubModule(null);
 		this.setReportName(ReportConst.EMPTY_VAL);
@@ -4442,18 +4488,18 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getCommonPtj() != null) && (this.getCommonPtj() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtContractNo() != null) && (this.getCtContractNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtPhysicalContractNo() != null) && (this.getCtPhysicalContractNo() != ReportConst.EMPTY_VAL))
-				/*|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtAgreement() != null) && (this.getCtAgreement() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtStatus() != null) && (this.getCtStatus() != ReportConst.EMPTY_VAL))
-				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))*/				
-				|| ((this.getCtAgreement() != null) && (!this.getCtAgreement().equals(ReportConst.CT_GROUP_VAL_ALL)))
+				|| ((this.getCtStatusTwo() != null) && (this.getCtStatusTwo() != ReportConst.EMPTY_VAL))			
+				/*|| ((this.getCtAgreement() != null) && (!this.getCtAgreement().equals(ReportConst.CT_GROUP_VAL_ALL)))
 				|| ((this.getCtStatus() != null) && (!this.getCtStatus().equals(ReportConst.CT_GROUP_VAL_ALL)))
-				|| ((this.getCtStatusTwo() != null) && (!this.getCtStatusTwo().equals(ReportConst.CT_GROUP_VAL_ALL)))				
-				/*|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))*/
-				|| ((this.getCtComplete() != null) && (!this.getCtComplete().equals(ReportConst.CT_GROUP_VAL_ALL)))
+				|| ((this.getCtStatusTwo() != null) && (!this.getCtStatusTwo().equals(ReportConst.CT_GROUP_VAL_ALL)))*/
+				|| ((this.getCtComplete() != null) && (this.getCtComplete() != ReportConst.EMPTY_VAL))
+				/*|| ((this.getCtComplete() != null) && (!this.getCtComplete().equals(ReportConst.CT_GROUP_VAL_ALL)))*/
 				|| ((getFromDate() != null) && (getFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getToDate() != null) && (getToDate().toString() != ReportConst.EMPTY_VAL)) 
-			    /*|| ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL))*/
-			    || ((this.getCtProcurementMode() != null) && (!this.getCtProcurementMode().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))
+			    || ((this.getCtProcurementMode() != null) && (this.getCtProcurementMode().toString() != ReportConst.EMPTY_VAL)))
+			    /*|| ((this.getCtProcurementMode() != null) && (!this.getCtProcurementMode().toString().equals(ReportConst.CT_GROUP_VAL_ALL))))*/
 		       {
 			
 			if ((this.getCtStatus() != null)
@@ -6168,19 +6214,19 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		scRstrctdTndrList = new ArrayList<SelectItem>();
 		this.setCtContractNo(null);
 		this.setCtPhysicalContractNo(null);
-		this.setCtAgreement(ReportConst.CT_GROUP_VAL_ALL);
-		this.setCtStatus(ReportConst.CT_GROUP_VAL_ALL);
-		this.setCtStatusTwo(ReportConst.CT_GROUP_VAL_ALL);
-		this.setCtComplete(ReportConst.CT_GROUP_VAL_ALL);
-		this.setCtGroupOne(ReportConst.CT_GROUP_VAL_ALL);
-		this.setCtGroupTwo(ReportConst.CT_GROUP_VAL_ALL);
-		this.setCtGroupThree(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtAgreement(null);
+		this.setCtStatus(null);
+		this.setCtStatusTwo(null);
+		this.setCtComplete(null);
+		this.setCtGroupOne(null);
+		this.setCtGroupTwo(null);
+		this.setCtGroupThree(null);
 		this.setCtProductService(null);
 		this.setCtLoanNo(null);
 		this.setCtLOAPhysicalNo(null);
 		this.setCtSubType(null);
 		this.setCtUserType(null);		
-		this.setCtProcurementMode(ReportConst.CT_GROUP_VAL_ALL);
+		this.setCtProcurementMode(null);
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
 		this.setFlGroupThree(null);
