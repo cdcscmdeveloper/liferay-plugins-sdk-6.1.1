@@ -14,7 +14,7 @@
 			  	widgetVar="cbBackProfile" id="cbBackProfile" />
 			  <div class="rowBtnRight">
 				   <c:choose>
-				  		<c:when test="#{profileManagementBackingBean.managedBean.selectedUser.brandNew}">
+				  		<c:when test="#{profileManagementBackingBean.managedBean.isNewUser}">
 				  			<p:commandButton value="#{lbl['lbl.btn.create']}" update="@form" 
 				  			disabled="#{profileManagementBackingBean.managedBean.selectedUser.hasActiveOrg}"
 				  				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"

@@ -656,6 +656,7 @@ public class ProfileManagementBackingBean extends
 																// relations
 																// again
 			showReceivingAddress();
+			this.getManagedBean().setIsNewUser(false);
 			// set org category
 			if (Arrays.asList(ProfileManagementConst.ORG_CATEGORY_FEDERAL_GOVT_UP)
 					.contains(
@@ -799,6 +800,7 @@ public class ProfileManagementBackingBean extends
 		this.getManagedBean().setDeletePortrait(false);
 		this.getManagedBean().setFileEventMapper(
 				new HashMap<PmUserAttachment, FileUploadEvent>());
+		this.getManagedBean().setIsNewUser(true);
 		System.out.println("login "
 				+ this.getManagedBean().getSelectedUser().getLoginId());
 	}
