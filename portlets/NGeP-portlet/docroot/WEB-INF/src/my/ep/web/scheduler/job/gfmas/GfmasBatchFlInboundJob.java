@@ -29,9 +29,9 @@ public class GfmasBatchFlInboundJob implements Job {
 
 		log.info("GfmasFlIntegrationJob ");
 
-		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 		// Update Payment Info
-		//gfmasIntegration.paymentGfmasInbound();
+//		gfmasIntegration.paymentGfmasInbound();
 
 	}
 

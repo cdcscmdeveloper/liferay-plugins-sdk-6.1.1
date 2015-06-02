@@ -25,12 +25,12 @@ public class PhisBatchPmOutboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("PM PHIS Servrice");
-		PhisIntegration phisIntegration = new PhisIntegration();
-		phisIntegration.votFund();
-		phisIntegration.votFundDana();
-		phisIntegration.glAccount();
-		phisIntegration.programActivity();
-		phisIntegration.project();
+//		PhisIntegration phisIntegration = new PhisIntegration();
+//		phisIntegration.votFund();
+//		phisIntegration.votFundDana();
+//		phisIntegration.glAccount();
+//		phisIntegration.programActivity();
+//		phisIntegration.project();
 
 	}
 

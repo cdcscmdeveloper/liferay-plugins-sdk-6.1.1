@@ -27,8 +27,8 @@ public class EperundingBatchIntegrationJob implements Job {
 			throws JobExecutionException {
 		
 	  log.info("Eperunding Servrice");
-	  EperundingIntegration eperundingIntegration = new EperundingIntegration();	
-	  //eperundingIntegration.createAuthorizedSignatory(resDTO)
+//	  EperundingIntegration eperundingIntegration = new EperundingIntegration();	
+//	  eperundingIntegration.createFilesforEperunding();
        
 		
 	}
