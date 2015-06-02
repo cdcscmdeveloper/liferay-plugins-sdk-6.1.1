@@ -3531,3 +3531,6 @@ table.rptTbl {
 .ui-radiobutton{
 	margin-right:5px;
 }
+.ui-spinner-input{
+	width:auto !important;
+}
