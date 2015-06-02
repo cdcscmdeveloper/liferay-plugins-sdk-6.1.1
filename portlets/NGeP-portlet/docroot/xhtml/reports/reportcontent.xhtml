@@ -20,7 +20,7 @@
 						    <p:column>
 								<table style="width: 190px;">
 									<tr style="width: 100%;">
-										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.module']}" />
+										<td style="margin-top:5px;width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.module']}" />
 												<p:outputLabel value="*" styleClass="mandatory"	/>
 												</td>
 										
@@ -33,7 +33,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.module']}" id="moduleName"
 												value="#{reportBackingBean.moduleValue}" required="true"
-												style="width:300px;">
+												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 												<f:selectItems value="#{reportBackingBean.getAllModuleList()}"></f:selectItems>
 												<p:ajax event="change" listener="#{reportBackingBean.retrieveReportListByAuthorization}" process="@this"
@@ -44,11 +44,41 @@
 									</tr>
 								</table>
 							</p:column>
-						    
-							 <p:column>
-								<table style="width: 175px;">
+						     
+						   
+						    <c:if test="#{reportBackingBean.managedBean.rptGenBean.reportCategoryView}"> 
+						     <p:column>
+								<table style="width: 190px;">
 									<tr style="width: 100%;">
-										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" />
+										<td style="margin-top:5px;width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rptCategory']}" />
+												<p:outputLabel value="*" styleClass="mandatory"	/>
+										</td>										
+									</tr>
+								</table>
+							</p:column>
+						    <p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.rptCategory']}" id="reportCategory"
+												value="#{reportBackingBean.reportCategory}" required="true"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+												<f:selectItems value="#{reportBackingBean.getReportCategoryList()}"></f:selectItems>
+												<p:ajax event="change" listener="#{reportBackingBean. retrieveReportListBySubModule}" process="@this"
+												 partialSubmit="true"  update="@all"/>
+											</p:selectOneMenu></td>
+										<td><p:message id="reportCategoryMsg" for="reportCategory"
+												display="icon" /></td>
+									</tr>
+								</table>
+							</p:column>
+						     </c:if>
+						     
+							 <p:column>
+								<table style="width: 190px;">
+									<tr style="width: 100%;">
+										<td style="margin-top:5px;width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rptName']}" />
 												<p:outputLabel value="*" styleClass="mandatory"	/>
 												</td>
 										
@@ -61,7 +91,7 @@
 										<td style="width: 84%"><p:selectOneMenu
 												label="#{lbl['lbl.rpt.rptName']}" id="reportName"
 												value="#{reportBackingBean.reportValue}" required="true"
-												style="width:300px;">
+												style="margin-top:5px;width:300px;">
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>												
 												<f:selectItems value="#{reportBackingBean.reportList}"></f:selectItems>
 												<p:ajax event="change" listener="#{reportBackingBean.criteriaVariablesByReport}" process="@this"
