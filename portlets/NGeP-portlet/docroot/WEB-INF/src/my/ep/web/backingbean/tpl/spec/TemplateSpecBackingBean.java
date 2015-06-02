@@ -880,24 +880,23 @@ public class TemplateSpecBackingBean extends
 	 * @param templateSpecBean
 	 * 		the TemplateSpecBean instance
 	 */
-	public void tierQtyPopupAction(TemplateSpecBean templateSpecBean, TplSpecQuestion selectedSpecQuestion) {
+	public void tierQtyPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyPopupAction");
-		log.info("templateSpecBean:" + templateSpecBean);
-		log.info("selectedSpecQuestion:" + selectedSpecQuestion);
 
+		TplSpecQuestion tplSpecQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
 		TplSpecQuestion oriSpecQuestion = new TplSpecQuestion();
 
 		List<TplSpecTierQty> oriSpecTierQties = TemplateSpecHelper
 				.getInstance().cloneTplSpecTierQty(oriSpecQuestion,
-						selectedSpecQuestion.getTplSpecTierQties());
+						tplSpecQuestion.getTplSpecTierQties());
 
 		if (oriSpecTierQties != null) {
 			for (TplSpecTierQty oriSpecTierQty : oriSpecTierQties) {
-				oriSpecTierQty.setTplSpecQuestion(selectedSpecQuestion);
+				oriSpecTierQty.setTplSpecQuestion(tplSpecQuestion);
 			}
 		}
 
-		templateSpecBean.setSelectedSpecQuestion(selectedSpecQuestion);
 		templateSpecBean.setOriSpecQuestion(oriSpecQuestion);
 
 		templateSpecBean.setSelectAll(false);
@@ -1004,10 +1003,12 @@ public class TemplateSpecBackingBean extends
 	 * @param templateSpecBean
 	 * 		the TemplateSpecBean instance
 	 */
-	public void estimationPopupAction(TemplateSpecBean templateSpecBean, TplSpecQuestion selectedSpecQuestion) {
+	public void estimationPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("estimationPopupAction");
 
-		List<TplSpecEstimation> specEstimations = selectedSpecQuestion
+		TplSpecQuestion tplSpecQuestion = templateSpecBean
+				.getSelectedSpecQuestion();
+		List<TplSpecEstimation> specEstimations = tplSpecQuestion
 				.getTplSpecEstimations();
 		TplSpecZone specZone = templateSpecBean.getSpecMaster()
 				.getTplSpecZone();
@@ -1062,15 +1063,14 @@ public class TemplateSpecBackingBean extends
 					|| specZoneDtls.size() == 0 ? 1 : specZoneDtls.size()); zoneRow++) {
 				if (specZoneDtls != null && specZoneDtls.size() > 0) {
 					TplSpecEstimation specEstimation = new TplSpecEstimation();
-					specEstimation.setTplSpecQuestion(selectedSpecQuestion);
+					specEstimation.setTplSpecQuestion(tplSpecQuestion);
 					specEstimation.setTplSpecZoneDtl(specZoneDtls.get(zoneRow));
 
 					specEstimations.add(specEstimation);
 				}
 			}
-			selectedSpecQuestion.setTplSpecEstimations(specEstimations);
+			tplSpecQuestion.setTplSpecEstimations(specEstimations);
 		}
-		templateSpecBean.setSelectedSpecQuestion(selectedSpecQuestion);
 	}
 
 	/**
