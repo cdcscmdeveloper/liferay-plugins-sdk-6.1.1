@@ -19,13 +19,13 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:outputPanel rendered="#{softCertBackingBean.managedBean.targetPage eq '1'}">
+		<p:outputPanel id="personnelListPanelId" rendered="#{softCertBackingBean.managedBean.targetPage eq '1'}">
 			<ui:include src="/xhtml/sm/softcertreg/softCertUserSearch.xhtml" />
 		</p:outputPanel>
-		<p:outputPanel rendered="#{softCertBackingBean.managedBean.targetPage eq '2'}">
+		<p:outputPanel id="uploadDocPanelId" rendered="#{softCertBackingBean.managedBean.targetPage eq '2'}">
 			<ui:include src="/xhtml/sm/softcertreg/softCertUploadDoc.xhtml" />
 		</p:outputPanel>
-		<p:outputPanel rendered="#{softCertBackingBean.managedBean.targetPage eq '3'}">
+		<p:outputPanel id="paymentPanelId" rendered="#{softCertBackingBean.managedBean.targetPage eq '3'}">
 			<ui:include src="/xhtml/sm/softcertreg/softCertPaymentPage.xhtml" />
 		</p:outputPanel>
 	</ui:define>
