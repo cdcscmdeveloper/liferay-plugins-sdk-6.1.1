@@ -9,8 +9,6 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-
-
 @DisallowConcurrentExecution
 public class GfmasBatchSmOutboundJob implements Job {
 
@@ -29,9 +27,9 @@ public class GfmasBatchSmOutboundJob implements Job {
 
 		log.info("GfmasSMOutboundJob ");
 
-		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		 gfmasIntegration.sstInformationGfmas();
-		
+//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+//		gfmasIntegration.masterDataVendorGfmasOutbound();
+
 	}
 
 }
