@@ -34,7 +34,8 @@
 			rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
 			<ac:paginator for="supplierApplHistoryDtId" />
 			
-			<p:column headerText="#{lbl['lbl.sm.companyname']}" rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
+			<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" 
+				rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
 				<h:outputText value="#{smAppl.smSupplier.companyName}" />
 			</p:column>
 			
@@ -42,13 +43,23 @@
 				<h:outputText value="#{smAppl.applNo}" />
 			</p:column>
 	
-			<p:column headerText="#{lbl['lbl.sm.applicationtype']}">
+			<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
 				<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl.applType eq 'N'}" />
 				<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl.applType eq 'B'}" />
 				<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl.applType eq 'A'}" />
 				<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl.applType eq 'U'}" />
 				<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl.applType eq 'C'}" />
 				<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl.applType eq 'R'}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
+				<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl.supplierType eq 'K'}"/>
+				<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl.supplierType eq 'J'}"/>
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.sm.regStatus']}">
+				<h:outputText value="#{smAppl.pmRegStatus.pmStatus.pmStatusDescs[0].statusName}" rendered="#{not empty smAppl.pmRegStatus}"/>
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smAppl.pmRegStatus}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">

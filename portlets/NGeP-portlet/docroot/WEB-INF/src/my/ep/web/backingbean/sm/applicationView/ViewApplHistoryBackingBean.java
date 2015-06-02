@@ -32,15 +32,20 @@ public class ViewApplHistoryBackingBean extends
 
 		if (!getManagedBean().isSupplierUser()) {
 			String supplierIdParam = getSupplierIdParam();
+			getManagedBean().setRegStatusDescList(
+					retrieveRegistrationStatusList());
+			getManagedBean().setZoneList(
+					SmServiceLookup.getZoneSO().retrieveZoneList()
+							.getZoneList());
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 				reqDTO.setSupplierId(Long.parseLong(supplierIdParam));
-				SmSupplier paramSupplier = 
-						SmServiceLookup.getSupplierSearchSO()
-						.retriveSupplierById(reqDTO).getSmSupplier();
+				SmSupplier paramSupplier = SmServiceLookup
+						.getSupplierSearchSO().retriveSupplierById(reqDTO)
+						.getSmSupplier();
 				getManagedBean().setSearchSupplier(new SmSupplier());
-				getManagedBean().getSearchSupplier().setRegNo(paramSupplier.getRegNo());
-				getManagedBean().setSearchBy(SEARCH_BY_BUSINESS_REG_NO);
+				getManagedBean().getSearchSupplier().setRegNo(
+						paramSupplier.getRegNo());
 				getManagedBean().searchSupplier();
 			}
 		}
@@ -77,6 +82,10 @@ public class ViewApplHistoryBackingBean extends
 			}
 		}
 		return statusDesc;
+	}
+
+	public void search() {
+		getManagedBean().searchSupplier();
 	}
 
 }
