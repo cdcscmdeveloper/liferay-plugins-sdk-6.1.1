@@ -134,9 +134,9 @@
 		</p:commandButton>
 	</h:panelGroup>
 	
-	<h:panelGroup rendered="#{cc.attrs.tooltip != ''}">
+	<c:if test="#{cc.attrs.tooltip != ''}">
 		<ac:iconTooltip id="#{cc.attrs.id}TP" value="#{cc.attrs.tooltip}"/>
-	</h:panelGroup>
+	</c:if>
 	
 	<h:panelGroup id="msgpg" rendered="#{cc.attrs.selectionMode ne 'multiple'}">
 		<p:message id="#{cc.attrs.id}Msg" for="#{cc.attrs.id}"></p:message>
