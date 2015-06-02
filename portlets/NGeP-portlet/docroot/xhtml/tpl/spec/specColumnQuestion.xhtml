@@ -159,7 +159,7 @@
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.price.type']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.price.type.tooltip']}" />
+			<ac:iconTooltip id="priceType#{row}TP" value="#{lbl['lbl.tpl.spec.content.price.type.tooltip']}" />
 		</f:facet>
 		<h:selectOneMenu id="priceType" value="#{question.clPriceTypeCode.parameterId}" required="#{!question.selected}" style="width:100px;"
 			rendered="#{isQuestionTypeItem}"
@@ -195,7 +195,7 @@
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.delivery.term']}"/>
-			<ac:iconTooltip value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
+			<ac:iconTooltip id="deliveryTerm#{row}TP" value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
 		</f:facet>
 		<p:inputText id="deliveryTerm" style="min-width:0px !important;width:25px;" styleClass="ppNumericAlign"
 			value="#{question.clDeliveryTerm}" 
