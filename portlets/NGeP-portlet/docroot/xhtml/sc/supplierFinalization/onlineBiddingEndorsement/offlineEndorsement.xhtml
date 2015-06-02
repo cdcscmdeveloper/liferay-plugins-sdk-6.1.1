@@ -74,7 +74,7 @@
 										<table border="0" cellspacing="0" cellpadding="0" width="100%">
 											<tr>
 												<td width="5%" rowspan="2">
-													<h:graphicImage value="/css/images/design/#{suppFinalBiddingBackingBean.determineIcon(
+													<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/#{suppFinalBiddingBackingBean.determineIcon(
 															suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment)}"
 														height="30" width="30"
 														rendered="#{!empty suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment}" />
@@ -98,7 +98,7 @@
 														immediate="true"
 														rendered="#{!empty suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment}"
 														update="@([id$=suppDoc])">
-														<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" />
+														<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
 														<f:setPropertyActionListener target="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.scQtFinalizationEndorsementAttachment}" value="#{null}" />
 													</p:commandLink>
 												</td>

@@ -17,14 +17,10 @@
 		}
 		
 		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
-		.tdWidth: { 86%; }
-		.sidemenu > .ui-tabmenu-nav {
-			padding-bottom: 310px !important;
-			margin-bottom: -310px !important;
-		}		
+			.tdWidth: { 86%; }
 		</c:if>
 		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
-		.tdWidth: { 100%; }
+			.tdWidth: { 100%; }
 		</c:if>		
 	</style>
 	
@@ -252,7 +248,8 @@
 				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal() and
 				 			  (suppFinalizationBackingBean.managedBean.recommendSupplier or 
 				 			  	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
-					<td width="14%" style="vertical-align: baseline;" class="sidemenutd">
+				 			  	
+					<td width="14%" class="sidemenutd" valign="top">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=supplierPanel])" 
 										 partialSubmit="true" process="@this" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
 						
