@@ -3925,7 +3925,10 @@ public class ProfileManagementBackingBean extends
 						// the identification Number already in DB
 						this.getManagedBean().getSelectedUser()
 								.setHasActiveOrg(true);
-						throw new EpException(MessageConst.ERROR_770155);
+						PmOrgProfile orgProfile = pmUserOrgs.get(0).getPmOrgProfile();
+						throw new EpException(MessageConst.ERROR_770155,new String[] {
+								orgProfile.getOrgName(),orgProfile.getOrgCode()						
+						});
 					} else {
 						loadUserInfo(user.getUserId());
 						// assign new pmUserOrg object to the current user
@@ -4439,7 +4442,7 @@ public class ProfileManagementBackingBean extends
 		logger.info("getOrgTypeDropdownValues");
 		ISearchBean<PmParameterDesc> searchBean = null;
 		if (getManagedBean().getOrgCategory() == FEDERAL_GOVT) {
-			searchBean = getUserOrgTypeSearchBean("orgTypeFederalList");
+			searchBean = getUserOrgTypeSearchBean("orgTypeFederalList");			
 		} else if (getManagedBean().getOrgCategory() == OTHERS) {
 			searchBean = getUserOrgTypeSearchBean("orgTypeOthersList");
 		}
