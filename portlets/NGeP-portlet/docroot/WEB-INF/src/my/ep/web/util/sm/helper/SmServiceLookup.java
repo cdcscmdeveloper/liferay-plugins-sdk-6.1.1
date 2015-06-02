@@ -11,6 +11,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
@@ -311,5 +312,15 @@ public class SmServiceLookup {
 	public static IRuleSO getRuleSO() {
 		return (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+	}
+	
+	/**
+	 * Get IZoneSO
+	 * 
+	 * @return IZoneSO
+	 */
+	public static IZoneSO getZoneSO() {
+		return (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
 	}
 }
