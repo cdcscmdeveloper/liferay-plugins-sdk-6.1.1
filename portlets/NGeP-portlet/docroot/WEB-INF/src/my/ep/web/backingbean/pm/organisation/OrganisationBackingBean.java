@@ -1280,9 +1280,11 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setOrgType(
 				resDTO.getPmParameter().getParameterCode());
 		if (getManagedBean().getOrgType().equalsIgnoreCase(
-				OrganizationType.BPK_PEROLEHAN_PM_SABAH.value())
+				OrganizationType.BPK_PENDAFTARAN_HQ.value())
 				|| getManagedBean().getOrgType().equalsIgnoreCase(
-						OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value())) {
+						OrganizationType.BPK_PENDAFTARAN_SABAH.value())
+						|| getManagedBean().getOrgType().equalsIgnoreCase(
+								OrganizationType.BPK_PENDAFTARAN_SARAWAK.value())) {
 			retrievePmZoneList();
 			getManagedBean().getOrgProfile().setPmZone(new PmZone());
 		}
