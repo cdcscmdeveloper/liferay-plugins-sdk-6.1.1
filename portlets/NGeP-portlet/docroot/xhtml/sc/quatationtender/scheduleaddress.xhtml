@@ -23,7 +23,8 @@
 							<table>
 								<tr>
 									<td><p:inputText id="sampleaddress"
-											label="#{lbl['lbl.sc.qt.address.one']}" required="true"
+											label="#{lbl['lbl.sc.qt.address.one']}"
+											required="#{qTScheduleDetailBackingBean.managedBean.required}"
 											value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.address1}"
 											style="margin-top:5px;" size="30" maxlength="255" /></td>
 									<td><p:message id="sampleaddressMsg" for="sampleaddress"
@@ -38,7 +39,8 @@
 							<table>
 								<tr>
 									<td><p:selectOneMenu id="samplestate"
-											label="#{lbl['lbl.sc.state']}" required="true"
+											label="#{lbl['lbl.sc.state']}"
+											required="#{qTScheduleDetailBackingBean.managedBean.required}"
 											value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmState.stateId}"
 											style="width: 218px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
@@ -88,7 +90,8 @@
 								<tr>
 									<td><p:selectOneMenu styleClass="samplestateDistrict"
 											style="width: 218px;margin-bottom: 5px;" id="sampledistrict"
-											required="true" label="#{lbl['lbl.sc.district']}"
+											required="#{qTScheduleDetailBackingBean.managedBean.required}"
+											label="#{lbl['lbl.sc.district']}"
 											value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmDistrict.districtId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
@@ -118,7 +121,8 @@
 								<tr>
 									<td><p:selectOneMenu styleClass="districtCity"
 											style="width: 218px;margin-bottom: 5px;" id="samplecity"
-											required="true" label="#{lbl['lbl.sc.town']}"
+											required="#{qTScheduleDetailBackingBean.managedBean.required}"
+											label="#{lbl['lbl.sc.town']}"
 											value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.pmCity.cityId}">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
