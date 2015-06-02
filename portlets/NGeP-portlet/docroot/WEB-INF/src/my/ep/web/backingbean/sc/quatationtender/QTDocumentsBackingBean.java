@@ -1165,7 +1165,9 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			for (ScQtCheckList qtCheckList : financeSpecList) {
 				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
 						|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
-					uploadFinanceSpecList.add(qtCheckList);
+					if (!qtCheckList.getAction().getParameterCode().equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
+						uploadFinanceSpecList.add(qtCheckList);
+					}
 				}
 			}
 			context.put("uploadFinanceSpecList", uploadFinanceSpecList);
