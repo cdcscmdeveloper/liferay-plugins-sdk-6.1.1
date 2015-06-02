@@ -14,7 +14,9 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
@@ -41,6 +43,8 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.vo.SmPersonnleCalcVO;
+
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
@@ -144,12 +148,18 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	private String revTypeParam;
 	private int maxTab;
-	
+
+	private List<PmStatusDesc> regStatusDescList;
+	private List<PmZone> zoneList;
 	private boolean mofSupplier;
 	private boolean renderedBackButton;
 	private int searchBy;
 	private SmSupplier searchSupplier;
-	
+	private String searchMofNo;
+	private String searchSuppType;
+	private Long searchPmRegStatusId;
+	private Long searchPmZoneId;
+
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
 		selectedCert.setPmCertBody(new PmCertBody());
@@ -176,7 +186,6 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		equiCompCapTotal = new BigDecimal(0);
 		setReviewApplicationExist(true);
 		setViewSupplierProfile(false);
-		
 
 		shareHolderMailAddr = new SmPersonnelAddress();
 		shareHolderMailAddr.setSmAddress(defaultAddr);
@@ -186,7 +195,20 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		shareHolderOffAddr.setSmAddress(defaultAddr);
 		shareHolderResdAddr = new SmPersonnelAddress();
 		shareHolderResdAddr.setSmAddress(defaultAddr);
-		
+
+	}
+
+	public boolean isSearchCriteriaEmpty() {
+		boolean retVal = true;
+		if (StringUtils.isNotBlank(getSearchMofNo())
+				|| getSearchPmRegStatusId() != null
+				|| StringUtils.isNotBlank(getSearchSuppType())
+				|| (getSearchSupplier() != null && (StringUtils
+						.isNotBlank(getSearchSupplier().getCompanyName()) || StringUtils
+						.isNotBlank(getSearchSupplier().getRegNo())))) {
+			retVal = false;
+		}
+		return retVal;
 	}
 
 	private void initLoginUser() {
@@ -841,7 +863,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		return activeCategoryList;
 	}
 
-	public void setActiveCategoryList(List<SmSupplierCategory> activeCategoryList) {
+	public void setActiveCategoryList(
+			List<SmSupplierCategory> activeCategoryList) {
 		this.activeCategoryList = activeCategoryList;
 	}
 
@@ -984,6 +1007,54 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setPortletUrlLabel(String portletUrlLabel) {
 		this.portletUrlLabel = portletUrlLabel;
+	}
+
+	public String getSearchMofNo() {
+		return searchMofNo;
+	}
+
+	public void setSearchMofNo(String searchMofNo) {
+		this.searchMofNo = searchMofNo;
+	}
+
+	public String getSearchSuppType() {
+		return searchSuppType;
+	}
+
+	public void setSearchSuppType(String searchSuppType) {
+		this.searchSuppType = searchSuppType;
+	}
+
+	public Long getSearchPmRegStatusId() {
+		return searchPmRegStatusId;
+	}
+
+	public void setSearchPmRegStatusId(Long searchPmRegStatusId) {
+		this.searchPmRegStatusId = searchPmRegStatusId;
+	}
+
+	public List<PmStatusDesc> getRegStatusDescList() {
+		return regStatusDescList;
+	}
+
+	public void setRegStatusDescList(List<PmStatusDesc> regStatusDescList) {
+		this.regStatusDescList = regStatusDescList;
+	}
+
+	public List<PmZone> getZoneList() {
+		return zoneList;
+	}
+
+	public void setZoneList(List<PmZone> zoneList) {
+		this.zoneList = zoneList;
+	}
+
+	public Long getSearchPmZoneId() {
+		return searchPmZoneId;
+	}
+
+	public void setSearchPmZoneId(Long searchPmZoneId) {
+		this.searchPmZoneId = searchPmZoneId;
 	}
 
 }

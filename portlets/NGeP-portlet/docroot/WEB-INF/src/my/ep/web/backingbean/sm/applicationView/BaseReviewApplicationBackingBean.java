@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -40,6 +39,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -91,10 +91,7 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Role;
-import com.liferay.portal.theme.ThemeDisplay;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -1335,10 +1332,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 *            aca
 	 */
 	public void assignSelShrHldrAcademics(SmStaffAcademic aca) {
-		if(aca.getPmEduField()==null){
+		if (aca.getPmEduField() == null) {
 			aca.setPmEduField(new PmEduField());
 		}
-		if(aca.getPmEduLevel()==null){
+		if (aca.getPmEduLevel() == null) {
 			aca.setPmEduLevel(new PmEduLevel());
 		}
 		getManagedBean().setSelectedStaffAcademic(aca);
@@ -1669,8 +1666,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	public void resetSearch() {
 		getManagedBean().getSearchSupplier().setCompanyName("");
-		getManagedBean().getSearchSupplier().setEpNo("");
 		getManagedBean().getSearchSupplier().setRegNo("");
+		getManagedBean().setSearchMofNo("");
+		getManagedBean().setSearchSuppType("");
+		getManagedBean().setSearchPmRegStatusId(null);
+		getManagedBean().setSearchPmZoneId(null);
 	}
 
 	/**
@@ -1833,6 +1833,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	public void redirectToSupplierProfileOrHistoryPage() {
 		SmCommonUtil.redirectToExternalUrl(getManagedBean().getPortletUrl()
 				+ "?supplierId=" + getManagedBean().getSupplierIdParam());
+	}
+
+	/**
+	 * Retrieve all registration status list
+	 * 
+	 * @return List<PmStatusDesc>
+	 */
+	public List<PmStatusDesc> retrieveRegistrationStatusList() {
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+		StatusResDTO resDTO = null;
+		resDTO = SmServiceLookup.getStatusSO().retrieveRegStatusList(reqDTO);
+		if (resDTO != null) {
+			return resDTO.getStatusDescList();
+		} else {
+			return null;
+		}
 	}
 
 }

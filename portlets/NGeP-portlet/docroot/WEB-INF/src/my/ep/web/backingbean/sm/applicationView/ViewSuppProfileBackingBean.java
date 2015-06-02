@@ -54,6 +54,11 @@ public class ViewSuppProfileBackingBean extends
 		} else {
 			getManagedBean().setRenderedBackButton(true);
 			String supplierIdParam = getSupplierIdParam();
+			getManagedBean().setRegStatusDescList(
+					retrieveRegistrationStatusList());
+			getManagedBean().setZoneList(
+					SmServiceLookup.getZoneSO().retrieveZoneList()
+							.getZoneList());
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				getManagedBean().setRenderedBackButton(false);
 				viewApplication(SmApplicationUtil
@@ -66,6 +71,10 @@ public class ViewSuppProfileBackingBean extends
 								"");
 			}
 		}
+	}
+
+	public void search() {
+		getManagedBean().searchSupplier();
 	}
 
 }

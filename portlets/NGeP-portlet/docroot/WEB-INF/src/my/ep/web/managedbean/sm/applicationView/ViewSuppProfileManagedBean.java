@@ -10,9 +10,8 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-
-import org.apache.commons.lang3.StringUtils;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -29,7 +28,7 @@ public class ViewSuppProfileManagedBean extends
 	public ViewSuppProfileManagedBean() {
 
 	}
-	
+
 	private class SmSupplierPagingDataModel extends PagingDataModel<SmSupplier> {
 		/**
 		 * 
@@ -49,12 +48,7 @@ public class ViewSuppProfileManagedBean extends
 
 			try {
 				if (!isSupplierUser()) {
-					if (StringUtils.isNotBlank(getSearchSupplier()
-							.getCompanyName())
-							|| StringUtils.isNotBlank(getSearchSupplier()
-									.getEpNo())
-							|| StringUtils.isNotBlank(getSearchSupplier()
-									.getRegNo())) {
+					if (!isSearchCriteriaEmpty()) {
 						return getApplicationHistoryResultBean(reqDTO);
 					} else {
 						return new SearchResultBean();
@@ -72,6 +66,11 @@ public class ViewSuppProfileManagedBean extends
 		private ISearchResultBean<SmSupplier> getApplicationHistoryResultBean(
 				SmApplRevisionReqDTO reqDTO) {
 			reqDTO.setSmSupplier(getSearchSupplier());
+			reqDTO.setMofAccountNo(getSearchMofNo());
+			reqDTO.setPmRegStatusId(getSearchPmRegStatusId());
+			reqDTO.setSupplierType(getSearchSuppType());
+			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+			reqDTO.setPmZoneId(getSearchPmZoneId());
 			return SmServiceLookup.getSmApplRevisionSO()
 					.retrieveSupplierBySearchCriteria(reqDTO)
 					.getSupplierResultBean();
