@@ -17,7 +17,7 @@
 			update="@form"
 			onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
-			rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}" />
+			rendered="#{!isMultipleLoi}" />
 		
 		<p:commandButton value="#{lbl['lbl.btn.submit']}"
 			action="#{lOIDetailBackingBean.submitLoiListAction}" process="@form"
@@ -26,6 +26,6 @@
 			onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
 			disabled="#{lOIDetailBackingBean.managedBean.loiRequired}"
-			rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}" />
+			rendered="#{!isMultipleLoi}" />
 	</div>
 </ui:composition>
