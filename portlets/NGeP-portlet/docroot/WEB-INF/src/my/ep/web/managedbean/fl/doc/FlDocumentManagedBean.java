@@ -297,6 +297,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(isFlFulfilmentSupplier()){
 					FacesScopes facesScopes = new FacesScopes();
 					setPmUser(facesScopes.getUserSessionBean());
+					if (getPmUser().getUserId() == null) {
+						throw new IllegalArgumentException("userId cannot be null");
+					}						
 					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 					supplierSearchReqDTO.setUserId(getPmUser().getUserId());
 					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
