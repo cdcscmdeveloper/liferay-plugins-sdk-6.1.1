@@ -583,7 +583,7 @@ public class TemplateSpecHelper {
 		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster.getItemTypeCode().getParameterCode());
 		
 		if (!isPriceTypeTier) {
-			if (unitPrice != null) {
+			if (unitPrice != null && quantity != null) {
 				totalPrice = unitPrice.multiply(quantity);
 				
 				if (isItemTypeService) {
