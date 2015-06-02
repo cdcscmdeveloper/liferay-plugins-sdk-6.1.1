@@ -135,7 +135,7 @@
 	</h:panelGroup>
 	
 	<h:panelGroup rendered="#{cc.attrs.tooltip != ''}">
-		<ac:iconTooltip value="#{cc.attrs.tooltip}"/>
+		<ac:iconTooltip id="#{cc.attrs.id}TP" value="#{cc.attrs.tooltip}"/>
 	</h:panelGroup>
 	
 	<h:panelGroup id="msgpg" rendered="#{cc.attrs.selectionMode ne 'multiple'}">
