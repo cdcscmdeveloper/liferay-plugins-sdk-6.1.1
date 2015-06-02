@@ -338,7 +338,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ctReqDTO = new ContractAgreementReqDTO();
 			CTAgreementDataType dataType = (CTAgreementDataType) obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 			ctReqDTO.setDocId(new Long(dataType.getDocId()));
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
@@ -351,8 +350,14 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    if(getManagedBean().getAgreementType() != null
 		    		&& getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
 		    	
-		    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);		    	
-		    	if (dataType.getAgreementId().intValue() == 0) {  
+		    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);	
+		    	
+				ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();
+				ContractAgreementResDTO contractAgreementResDTO = new ContractAgreementResDTO();
+				contractAgreementReqDTO.setContractVerId(new Long(dataType.getDocId()));
+				contractAgreementResDTO = agreementSO.retrieveSupAgreementByContractVersion(contractAgreementReqDTO); 
+		    	
+		    	if (contractAgreementResDTO.getAgreement() == null) { 
 		    		conReqDTO = new ContractReqDTO();
 		    		conReqDTO.setContractVerId(new Long(dataType.getDocId()));
 					conReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
@@ -364,15 +369,21 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
 					getManagedBean().setContractVer(conResDTO.getCtContractVer());
 					getManagedBean().setAgreementContractVer(conResDTO.getCtContractVer());
-				} else {  
+					
+					setCtAgreementDetails(resDTO);
+					saveAgreement(BpmOutcomeConst.BPM_SAVE);
+				} else {
+					ctReqDTO.setAgreementId(contractAgreementResDTO.getAgreement().getAgreementId());
 					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+					setCtAgreementDetails(resDTO);
 		     	}
 		    } else {
+				ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 		    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 			 	resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+			 	setCtAgreementDetails(resDTO);
 			}
 		    
-		    setCtAgreementDetails(resDTO);
 		    if (res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPLOAD_SIGNED_STAMPED_FINAL_AGREEMENT)) {
 				getManagedBean().setUploadStampedAndSignedPage(true);
 				getManagedBean().setUploadFinalAgreement(true);
@@ -544,17 +555,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					messageId = MessageConst.INFO_700001;
 				}
 				
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(messageId,
-										new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
-										MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				if (!isBrandNew) {
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+									MessageUtils.getMessage(messageId,
+											new String[] {getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, reqDTO.getDocType()), getManagedBean().getCtContract().getContractNo()},
+											MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				}
 				
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)
 						|| (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)) {
-					renewSesionObject();
-					return CommonUIConst.ACKNOWLEDGE_PAGE;
-				} else if (isBrandNew) {
 					renewSesionObject();
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} else {
