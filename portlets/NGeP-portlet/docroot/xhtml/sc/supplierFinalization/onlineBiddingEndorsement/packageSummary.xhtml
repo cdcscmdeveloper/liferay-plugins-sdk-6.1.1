@@ -45,7 +45,7 @@
 						oncomplete="pricePop.show();"
 						actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(price)}"
 						update="@([id$=itemPricePop])" style="float: right;" title="Item Price Details">
-						<p:graphicImage value="/css/images/design/ico-price.png" style="vertical-align:middle"></p:graphicImage>
+						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-price.png" style="vertical-align:middle"></p:graphicImage>
 					</p:commandLink>
 					<h:outputText style="float: right; margin-right: 10px;" value="#{price.bidPriceTotal}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
