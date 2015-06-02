@@ -36,27 +36,27 @@ public class GfmasBatchPmInboundJob implements Job {
 
 		log.info("GfmasPMBatchIntegrationJob ");
 
-		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		
-		gfmasIntegration.kumpulanPtjGfmasInbound();
-		
-        gfmasIntegration.votGfmasInbound();
-		
-		gfmasIntegration.votDanaGfmasInbound();
-		
-		gfmasIntegration.pejabatPerakaunanGfmasInbound();
-		
-		gfmasIntegration.pegawaiPengawalGfmasInbound();
-		
-        gfmasIntegration.projectGfmasInbound();
-		
-		gfmasIntegration.kodAkaunGfmasInbound();			
-		
-		gfmasIntegration.kodBankGfmasInbound();			
-		
-		gfmasIntegration.programAktivitiGfmasInbound();		
-		
-		gfmasIntegration.masterDataPtjGfmasInbound();
+//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+//		
+//		gfmasIntegration.kumpulanPtjGfmasInbound();
+//		
+//        gfmasIntegration.votGfmasInbound();
+//		
+//		gfmasIntegration.votDanaGfmasInbound();
+//		
+//		gfmasIntegration.pejabatPerakaunanGfmasInbound();
+//		
+//		gfmasIntegration.pegawaiPengawalGfmasInbound();
+//		
+//        gfmasIntegration.projectGfmasInbound();
+//		
+//		gfmasIntegration.kodAkaunGfmasInbound();			
+//		
+//		gfmasIntegration.kodBankGfmasInbound();			
+//		
+//		gfmasIntegration.programAktivitiGfmasInbound();		
+//		
+//		gfmasIntegration.masterDataPtjGfmasInbound();
 		
 		
 

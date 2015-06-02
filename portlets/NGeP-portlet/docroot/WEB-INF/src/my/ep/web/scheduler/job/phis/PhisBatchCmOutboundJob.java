@@ -25,8 +25,8 @@ public class PhisBatchCmOutboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("PHIS OUTBOUND EVERY 5 MINS (CM Module)");
-		PhisIntegration phisIntegration = new PhisIntegration();
-		phisIntegration.createFilesforPHIS();
+//		PhisIntegration phisIntegration = new PhisIntegration();
+//		phisIntegration.createFilesforPHIS();
 
 	}
 
