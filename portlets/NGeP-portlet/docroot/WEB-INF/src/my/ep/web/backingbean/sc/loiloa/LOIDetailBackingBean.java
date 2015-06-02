@@ -542,8 +542,7 @@ public class LOIDetailBackingBean extends
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
-//			reqDTO.setOrgProfileId(32950L); // TODO - change in SO to remove
-//											// this.
+			// reqDTO.setOrgProfileId(32950L); // TODO - change in SO to remove this.
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO()
@@ -551,23 +550,35 @@ public class LOIDetailBackingBean extends
 
 			// loi loa list
 			//if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
-				// getManagedBean().setLoiLoaBeans(prepareLoiLoaList(resDTO.getLoiLoas()));
-				//reqDTO.setScLoi(resDTO.getLoiLoas().get(0).getScLois().get(0));
+			// getManagedBean().setLoiLoaBeans(prepareLoiLoaList(resDTO.getLoiLoas()));
+			//reqDTO.setScLoi(resDTO.getLoiLoas().get(0).getScLois().get(0));
 			//}
 
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
+
+			boolean isMultipleLoi = Boolean.FALSE;
+			if(getManagedBean().getDocType().equals(ParameterConst.DOCTYPE_MULTIPLE_LOI)){
+				isMultipleLoi = Boolean.TRUE;
+			}
+
 			List<ScLoiLoa> loiLoas = new ArrayList<ScLoiLoa>();
 
 			if(resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size()>0){
 				for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) {
-					if(scLoiLoa.isLoiCreated()){
+
+					if(isMultipleLoi){
 						scLoiLoa.setLoiRequired(Boolean.TRUE);
+						
+					} else{
+						if(scLoiLoa.isLoiCreated()){
+							scLoiLoa.setLoiRequired(Boolean.TRUE);
+						}
+						if(scLoiLoa.isLoiRequired()){
+							getManagedBean().setLoiRequired(Boolean.TRUE);
+						} 
 					}
-					if(scLoiLoa.isLoiRequired()){
-						getManagedBean().setLoiRequired(Boolean.TRUE);
-					} 
 					loiLoas.add(scLoiLoa);
 				}
 			}
@@ -576,13 +587,13 @@ public class LOIDetailBackingBean extends
 
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
-			
+
 			// loiLoaList Title
 			getLoiLoaListTitle(null);
 
-//			populateUserMinistryList();
-//			initializeRemarks(new ScLoi());
-//			getApproverNames();
+			// populateUserMinistryList();
+			// initializeRemarks(new ScLoi());
+			// getApproverNames();
 
 		} catch (Exception ex) {
 			handleException(ex);
@@ -1085,26 +1096,32 @@ public class LOIDetailBackingBean extends
 	 */
 	public void createLOI(ScLoiLoa scLoiLoa) {
 		try {
-			renewSessionWithPreviousValues();
-			
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			ScLoi loi = new ScLoi();
-			loi.setScLoiLoa(scLoiLoa);
-			reqDTO.setScLoi(loi);
-			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
-			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
 
-			populateLOIDetails(resDTO);
-			getManagedBean().setEditFlag(true);
-			getManagedBean().setButtonFlag(true);
-		} catch (Exception ex) {
-			handleException(ex);
-		}
-		FacesContext fc = FacesContext.getCurrentInstance();
-		getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
-		
-		fc.getApplication().getNavigationHandler()
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
+			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO().saveLoiLoaList(reqDTO);
+
+			if(awardSupplierResDTO.isSuccessful()){
+				renewSessionWithPreviousValues();
+
+				ScLoi loi = new ScLoi();
+				loi.setScLoiLoa(scLoiLoa);
+				reqDTO.setScLoi(loi);
+				reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
+				AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
+
+				populateLOIDetails(resDTO);
+				getManagedBean().setEditFlag(true);
+				getManagedBean().setButtonFlag(true);
+
+				FacesContext fc = FacesContext.getCurrentInstance();
+				getManagedBean().setBackToPreviousPage(fc.getViewRoot().getViewId());
+
+				fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+			}
+		} finally{
+		}
 	}
 
 	/**
@@ -1842,9 +1859,17 @@ public class LOIDetailBackingBean extends
 	 */
 	public void loiRequiredListener(ScLoiLoa scLoiLoa){
 		debugLogger("loiRequiredListener");
+		boolean isLoiRequired = Boolean.FALSE;
+		
 		int index = getManagedBean().getRecSupplierList().indexOf(scLoiLoa);
 		getManagedBean().getRecSupplierList().set(index, scLoiLoa);
-		if(scLoiLoa.isLoiRequired()){
+		
+		for(ScLoiLoa loiLoa : getManagedBean().getRecSupplierList()){
+			if(loiLoa.isLoiRequired()){
+				isLoiRequired = Boolean.TRUE;
+			}
+		}
+		if(isLoiRequired){
 			getManagedBean().setLoiRequired(Boolean.TRUE);
 		} else{
 			getManagedBean().setLoiRequired(Boolean.FALSE);
