@@ -67,7 +67,7 @@
 					<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td width="5%" rowspan="2">
-							<h:graphicImage value="/css/images/design/#{suppFinalizationBackingBean.determineIcon(
+							<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/#{suppFinalizationBackingBean.determineIcon(
 									suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment)}"
 								height="30" width="30"
 								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}" />
@@ -92,7 +92,7 @@
 								rendered="#{!empty suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment and 
 											suppFinalizationBackingBean.managedBean.secretaryUser}"
 								update="attachFilesPanel">
-								<h:graphicImage value="/css/images/design/icon_trash.png" styleClass="tasklist_title1" />
+								<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png" styleClass="tasklist_title1" />
 									
 								<f:setPropertyActionListener target="#{suppFinalizationBackingBean.managedBean.scQtFinalization.scQtFinalizationAttachment}" value="#{null}" />
 							</p:commandLink>
