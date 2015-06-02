@@ -1,16 +1,24 @@
 package my.ep.web.backingbean.trackingdiary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.compat.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -18,6 +26,7 @@ import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.trackingdiary.TrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -124,6 +133,25 @@ public class TrackingDiaryBackingBean extends
 		RoleHelper roleHelper = new RoleHelper();
 		
 		return roleHelper.getRoleDescByCode(roleCode);
+	}
+	
+	/**
+	 * Populate values for Module By drop down.
+	 * 
+	 * @return an array of Recommend By values
+	 */
+	public SelectItem[] getModulesDropDown() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		List<String> moduleList = new ArrayList<String>();
+		moduleList.add(ParameterConst.MODULE_PROCUREMENT_PLAN);
+
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("pmParameter.parameterCode",
+						SearchOperator.OPERATOR_NOT_IN.value(), moduleList));
+
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.MODULE_NAME, searchBean);
+		return items;
 	}
 }
 
