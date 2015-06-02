@@ -69,8 +69,8 @@
 					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled'] : panelBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center"  style="width:10%;white-space:normal;">
-					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.pqApproved or 
-						((data.status.statusId == CtStatusConst.pqRejected or data.status.statusId == CtStatusConst.pqCancelled) and data.ctCircular.latestCircularVer != null)}" 
+					<p:commandLink rendered="#{panelBackingBean.isPanelAdmin() and (data.status.statusId == CtStatusConst.pqApproved or 
+						((data.status.statusId == CtStatusConst.pqRejected or data.status.statusId == CtStatusConst.pqCancelled) and data.ctCircular.latestCircularVer != null))}" 
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 					 <p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>

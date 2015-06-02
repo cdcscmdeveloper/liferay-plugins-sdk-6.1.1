@@ -82,8 +82,8 @@
 					<h:outputText value="#{(data.status.statusId eq 0)? lbl['lbl.ct.cancelled']  : centralContractBackingBean.getStatusDescById(data.status.statusId)}" />
 				</p:column>				
 				<p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;white-space:normal;">
-					<p:commandLink rendered="#{data.status.statusId == CtStatusConst.cqApproved or 
-						((data.status.statusId == CtStatusConst.cqRejected or data.status.statusId == CtStatusConst.cqCancelled) and data.ctCircular.latestCircularVer != null)}"
+					<p:commandLink rendered="#{centralContractBackingBean.isCentralContractAdmin() and (data.status.statusId == CtStatusConst.cqApproved or 
+						((data.status.statusId == CtStatusConst.cqRejected or data.status.statusId == CtStatusConst.cqCancelled) and data.ctCircular.latestCircularVer != null))}"
 						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
 						<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.update']}" />
 					</p:commandLink>

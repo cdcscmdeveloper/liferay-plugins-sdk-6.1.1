@@ -110,32 +110,33 @@
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
 					</p:column>
 					 	<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; white-space:normal;">
-					 	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
-							onclick="gotoSuspendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-							onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.ct.suspend.contract']}" />
-						</p:commandLink>					   
-					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />
-					  	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
-							onclick="gotoTerminatePage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-							onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.ct.termination']}" />
-						</p:commandLink>
-					   	<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1
-					   		and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase and contractDetailsBackingBean.checkAmendmentAllow(data)}" />
-					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1
-					   		and data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase and contractDetailsBackingBean.checkAmendmentAllow(data)}"
-							onclick="gotoAmendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'update'}])"
-							onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.amendment']}" />
-						</p:commandLink>
-						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />
-					   	<p:commandLink rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}"
-							onclick="gotoUpdatePage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
-							onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
-							<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.update']}" />
-						</p:commandLink>
-						<p:spacer width="5" rendered="#{data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" />
+					 	<h:panelGroup rendered="#{contractDetailsBackingBean.isContractAdmin()
+					 		and data.fdStatus == 1 and data.ctContract.recordStatusFlg==1}" >
+						 	<p:commandLink
+								onclick="gotoSuspendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
+								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+								<p:graphicImage value="/css/images/design/ico-suspend.png" title="#{lbl['lbl.ct.suspend.contract']}" />
+							</p:commandLink>
+						   	<p:spacer width="5" />
+						  	<p:commandLink
+								onclick="gotoTerminatePage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
+								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+								<p:graphicImage value="/css/images/design/ico-termination.png" title="#{lbl['lbl.ct.termination']}" />
+							</p:commandLink>
+						   	<p:spacer width="5" rendered="#{data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase and contractDetailsBackingBean.checkAmendmentAllow(data)}" />
+						   	<p:commandLink rendered="#{data.ctContract.procurementMode.parameterCode!=ParameterConst.procurementModeDirectPurchase and contractDetailsBackingBean.checkAmendmentAllow(data)}"
+								onclick="gotoAmendPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'action',value:'update'}])"
+								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+								<p:graphicImage value="/css/images/design/ico-viewnedit.png" title="#{lbl['lbl.ct.amendment']}" />
+							</p:commandLink>
+							<p:spacer width="5" />
+						   	<p:commandLink
+								onclick="gotoUpdatePage([{name:'contractId',value:'#{data.ctContract.contractId}'}])"
+								onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
+								<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.update']}" />
+							</p:commandLink>
+							<p:spacer width="5" />
+						</h:panelGroup>
 					   	<p:commandLink onclick="gotoViewPage([{name:'contractId',value:'#{data.ctContract.contractId}'}, {name:'contractVerId',value:'#{data.ctContractVer.contractVerId}'}])"
 					   		onstart="blkContractSearchTable.show()" oncomplete="blkContractSearchTable.hide()">
 							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
