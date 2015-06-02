@@ -66,6 +66,7 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private int orgCategory = 0;
 	private boolean isLazy = false;
 	private PmOrgProfile selectedCurrentOrgProfile;
+	private Boolean isNewUser;
 
 	/**
 	 * @return the additionalOrgFilter
@@ -427,6 +428,18 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedCurrentOrgProfile(PmOrgProfile selectedCurrentOrgProfile) {
 		this.selectedCurrentOrgProfile = selectedCurrentOrgProfile;
+	}
+	/**
+	 * @return the isNewUser
+	 */
+	public Boolean getIsNewUser() {
+		return isNewUser;
+	}
+	/**
+	 * @param isNewUser the isNewUser to set
+	 */
+	public void setIsNewUser(Boolean isNewUser) {
+		this.isNewUser = isNewUser;
 	}
 	
 
