@@ -45,6 +45,7 @@ public class ReportsGenerateBean {
 	private boolean madatoryIndicatorView = false;
 	private boolean cmMadatoryIndicatorView= false;
 	private boolean enableCriteriaMenuView = false;
+	private boolean reportCategoryView = false;
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
@@ -461,6 +462,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isReportCategoryView() {
+			return reportCategoryView;
+		}
+		public void setReportCategoryView(boolean reportCategoryView) {
+			this.reportCategoryView = reportCategoryView;
+		}
 		public boolean isSmApplicationReceivedDateView() {
 			return smApplicationReceivedDateView;
 		}
