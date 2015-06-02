@@ -29,7 +29,7 @@ public class CmSchedulerServlet extends HttpServlet {
 	
 	public void init(ServletConfig config) throws ServletException {
 				
-			// PHIS PM Out bound Continuous job
+		/*	// PHIS PM Out bound Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.PHIS_PM_OUTBOUND_CONTINUOUS_JOB,
 						CmSchedulerConstants.PHIS_PM_OUTBOUND_JOB_GROUP),
@@ -88,6 +88,6 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
-						EpPropertiesUtils.getInstance().getProperty("notification.sm.outbound"));
+						EpPropertiesUtils.getInstance().getProperty("notification.sm.outbound"));*/
 	}
 }
