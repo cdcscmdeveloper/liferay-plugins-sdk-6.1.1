@@ -641,6 +641,10 @@ public class OrganisationBackingBean extends
 						AddressType.BILLING_ADDRESS.value())
 						&& (pmAddressType.getRecordStatusFlg()
 								.equals(DbValueConst.RECORD_STATUS_ACTIVE))) {
+					//cater for sarawak if no division
+					if(pmAddressType.getPmAddress().getPmDivision() == null){
+						pmAddressType.getPmAddress().setPmDivision(new PmDivision()); 
+					}
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
 					addrExist = true;
@@ -1654,6 +1658,22 @@ public class OrganisationBackingBean extends
 		ISearchBean<PmParameterDesc> searchBean = null;
 		if (getManagedBean().getOrgCategory() == FEDERAL_GOVT){
 			searchBean = getOrgTypeSearchBean("newOrgTypeFederalList");
+			if(getManagedBean().getOrgProfile().isBrandNew()){
+				List<String> excludeList = new ArrayList<String>();
+				excludeList.add(OrganizationType.BAHAGIAN_PERBENDAHARAAN_KERAJAAN
+						.value());
+				excludeList.add(OrganizationType.BPK_PENDAFTARAN_HQ.value());
+				excludeList.add(OrganizationType.BPK_PENDAFTARAN_SABAH.value());
+				excludeList.add(OrganizationType.BPK_PENDAFTARAN_SARAWAK.value());
+				excludeList.add(OrganizationType.BPK_PEROLEHAN_HQ.value());
+				excludeList.add(OrganizationType.BPK_PEROLEHAN_PM_SABAH.value());
+				excludeList
+						.add(OrganizationType.BPK_PEROLEHAN_PM_SARAWAK.value());
+		
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmParameter.parameterCode",
+								SearchOperator.OPERATOR_NOT_IN.value(), excludeList));
+			}
 		}else if (getManagedBean().getOrgCategory() == OTHERS) {
 			searchBean = getOrgTypeSearchBean("newOrgTypeOtherList");
 		}
