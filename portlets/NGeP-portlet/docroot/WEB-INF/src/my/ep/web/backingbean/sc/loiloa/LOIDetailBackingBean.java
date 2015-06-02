@@ -1237,9 +1237,11 @@ public class LOIDetailBackingBean extends
 				afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 				// after nego price sub total and total
-				afterNegoTotalAmount =  afterNegoTotalAmount.add(afterNegoSubTotal);
-				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				if(afterNegoSubTotal != null){
+					afterNegoTotalAmount =  afterNegoTotalAmount.add(afterNegoSubTotal);
+					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+					scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				}
 			}
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
