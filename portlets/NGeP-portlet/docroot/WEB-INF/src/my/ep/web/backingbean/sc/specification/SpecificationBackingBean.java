@@ -14002,6 +14002,8 @@ public class SpecificationBackingBean extends
 			scQtCheckList.setPmEvalStatus(evalStatus);
 			scQtCheckList.getScQtDoc().getTplSpecMaster()
 					.setTemplateStatus(TemplateSpecConst.TEMPLATE_STATUS_FINAL);
+			reqDTO.setEstimatedPrice(this.getManagedBean().getScQt()
+					.getEstimatedAmount());
 			updatedCheckLists.add(scQtCheckList);
 
 		}
