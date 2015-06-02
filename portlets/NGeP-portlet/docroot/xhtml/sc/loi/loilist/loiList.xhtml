@@ -11,6 +11,7 @@
 		<p:messages id="loiMsg" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
 
+        <ui:param name="isMultipleLoi" value="#{lOIDetailBackingBean.managedBean.docType eq ParameterConst.doctypeMultipleLoi}" />
 		<ui:include src="loiListButtons.xhtml" />
 
 		<ui:include src="loiListHeader.xhtml" />
@@ -52,7 +53,7 @@
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" rendered="#{lOIDetailBackingBean.managedBean.docType != ParameterConst.doctypeMultipleLoi}">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" rendered="#{!isMultipleLoi}">
 					<h:selectOneMenu value="#{loiLoa.loiRequired}"
 					    disabled="#{loiLoa.loiCreated}"
 						id="isLoiReq" label="Is Loi Required">
