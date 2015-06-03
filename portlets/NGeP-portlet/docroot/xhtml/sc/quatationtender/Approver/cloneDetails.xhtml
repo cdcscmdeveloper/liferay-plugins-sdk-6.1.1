@@ -131,7 +131,7 @@
 					<ac:paginator for="clonesearchCommitteid" />
 
 					<p:ajax event="rowSelect" update=":form:pnlid"
-						listener="#{qTCommitteBackingBean.onRowCloneAction}" />
+						listener="#{qTCommitteBackingBean.onRowCloneCommitteeApprovalsAction}" />
 
 					<p:column headerText="#{lbl['lbl.sc.qtn.no']}">
 						<h:outputText value="#{scQt.qtNo}" style="white-space: normal;" />
@@ -176,62 +176,59 @@
 				<br />
 				<ui:fragment
 					rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
-				#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
-			</ui:fragment>
-				<p:treeTable id="committeeTbl" var="committeeNode"
-					value="#{qTCommitteBackingBean.managedBean.searchcommitteeNode}"
-					selection="#{qTCommitteBackingBean.managedBean.selectSearchcommitteeNode}"
-					selectionMode="checkbox">
+					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
+				</ui:fragment>
+				<p:dataTable id="committeeListId"
+					value="#{qTCommitteBackingBean.managedBean.cloneCommitteMemebers}"
+					var="committeeMember" rowKey="#{committeeMember}"
+					selection="#{qTCommitteBackingBean.managedBean.selectedCommitteMemebers}"
+					styleClass="cloneResults">
+					
+					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="#{lbl['lbl.sc.name']}">
-						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
-							rendered="#{committeeNode.type == 'committee'}" />
-						<h:outputText value="#{committeeNode.object.memberName}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+						<h:outputText value="#{committeeMember.memberName}"
+							style="white-space: normal;" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.identification.no']}">
-						<h:outputText value="#{committeeNode.object.icPassport}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+					<p:column headerText="#{lbl['lbl.sc.identification.no']}" style="width : 15%; white-space: normal;">
+						<h:outputText value="#{committeeMember.icPassport}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.designation']}">
-						<h:outputText value="#{committeeNode.object.designation}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+						<h:outputText value="#{committeeMember.designation}"
+							style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.email']}">
-						<h:outputText value="#{committeeNode.object.email}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+						<h:outputText
+							value="#{committeeMember.pmUser.pmAddressTypes[0].pmAddress.email}"
+							style="white-space: normal;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.grade']}">
-						<h:outputText value="#{committeeNode.object.grade}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+						<h:outputText value="#{committeeMember.grade}" />
 					</p:column>
 
-					<p:column>
+					<p:column style="width : 6%;">
 						<f:facet name="header">
 							<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
 						</f:facet>
 						<h:outputText
-							value="#{lbl[committeeNode.object.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+							value="#{lbl[committeeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 					</p:column>
-
+					
 					<p:column headerText="#{lbl['lbl.sc.role']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeNode.object.memberRole)}"
-							rendered="#{committeeNode.type == 'scCommitteeMember'}" />
+							value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeMember.memberRole)}"
+							/>
 					</p:column>
-
-				</p:treeTable>
+				</p:dataTable>
 				<br />
 				<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.btn.ok']}"
-						action="#{qTCommitteBackingBean.addCloneDtlToTabs(false)}"
+						action="#{qTCommitteBackingBean.addCloneCommitteeMembersApprovalsAction}"
 						update="@(.scmemberdtls)" />
 					<p:commandButton value="#{lbl['lbl.btn.cancel']}"
 						onclick="screen2.hide();" update="@(.scMemberDtl)" />
