@@ -13,7 +13,7 @@
 
 	<ui:define name="contentSection">
 
-		
+
 
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
 
@@ -30,6 +30,7 @@
 				<p:spacer height="5" />
 			</h:panelGrid>
 			<p:spacer height="5" />
+
 			<p:dataTable id="itemWiseBidListOB"
 				style="word-wrap: break-word ; table-layout: fixed "
 				value="#{onlineBiddingBB.bidPrices}" var="bidPriceItem">
@@ -155,6 +156,7 @@
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 					<p:spinner style="width : 88%" size="8"
 						value="#{bidPriceItem.newPrice}" min="0" id="spinner"
+						max="#{(bidPriceItem.bidPrice ne null) and (bidPriceItem.bidPrice le 0)? bidPriceItem.bidPrice : bidPriceItem.scBidSupplierItem.itemStartPrice}"
 						label="New Bid Price"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this" partialSubmit="true"
@@ -258,21 +260,23 @@
 				</p:columnGroup>
 
 			</p:dataTable>
+			
+			 <p:remoteCommand name="rc" update=":form:itemWiseBidListOB" />
+
 		</p:panel>
 
 		<p:confirmDialog id="newBidPriceConfirm" width="300px"
 			message="#{lbl['lbl.sc.bidding.confirm.message']}"
-			widgetVar="newBidPriceConfirm">
+			widgetVar="newBidPriceConfirm" >
 			<div align="right">
 				<p:commandButton id="confSubmit" value="#{lbl['lbl.btn.yes']}"
-					partialSubmit="true" update="form:itemWiseBidListOB"
-					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank(bidPriceItem)}"
+					action="#{onlineBiddingBB.updateBidPricePostConfirmation(bidPriceItem)}"
 					process="@this" oncomplete="newBidPriceConfirm.hide()" />
 				<p:commandButton id="confNotSubmit" value="#{lbl['lbl.btn.no']}"
-					process="@this" partialSubmit="true"
-					onclick="newBidPriceConfirm.hide()" />
+					process="@this" onclick="newBidPriceConfirm.hide()" />
 			</div>
 		</p:confirmDialog>
+
 
 		<!-- header="#{lbl['lbl.sc.new.bid']}"  -->
 

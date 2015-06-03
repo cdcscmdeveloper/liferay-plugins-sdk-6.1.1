@@ -409,6 +409,12 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				updateBidPriceAndCalculateRank(scBidPrice);
 			}
 		}
+
+	}
+
+	public void updateBidPricePostConfirmation(ScBidPrice bidPriceItem){
+		updateBidPriceAndCalculateRank(bidPriceItem);
+		RequestContext.getCurrentInstance().execute("rc()");
 	}
 
 	/**
@@ -416,7 +422,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 * 
 	 * @param bidPriceItem
 	 */
-	public void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
+	private void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
 		if (bidPriceItem.getNewBidPrice() != null
@@ -463,6 +469,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		} finally {
 			biddingSO = null;
 		}
+		
 	}
 
 	/**
