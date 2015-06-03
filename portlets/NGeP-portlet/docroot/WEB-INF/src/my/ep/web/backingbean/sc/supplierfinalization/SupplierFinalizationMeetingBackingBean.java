@@ -1252,7 +1252,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		return scQtCommittee;
 	}
 	
-	private void validateMeetingDtlsInfo(MeetingReqDTO reqDTO ) {
+	private void validateMeetingDtlsInfo(MeetingReqDTO reqDTO) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
