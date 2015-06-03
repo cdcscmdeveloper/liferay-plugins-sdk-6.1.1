@@ -1823,6 +1823,9 @@ public class LOIDetailBackingBean extends
 		try {
 			ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 			String docType  = getManagedBean().getDocType();
+			Long sourceId = getManagedBean().getSourceId();
+			List<String> recommendDtlIds  = getManagedBean().getRecommendDtlIds();
+			Object payLoadData =  getManagedBean().getPayLoadData();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 
 			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
@@ -1832,8 +1835,11 @@ public class LOIDetailBackingBean extends
 				renewSesionObject();
 				getManagedBean().setScQtFinalization(scQtFinalization);
 				getManagedBean().setDocType(docType);
-				
 				getManagedBean().setRecSupplierList(resDTO.getLoiLoas());
+				getManagedBean().setSourceId(sourceId);
+				getManagedBean().setRecommendDtlIds(recommendDtlIds);
+				getManagedBean().setPayLoadData(payLoadData);
+				
 				FacesContext.getCurrentInstance().addMessage(null, 
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_700025,
 								new String[] {
