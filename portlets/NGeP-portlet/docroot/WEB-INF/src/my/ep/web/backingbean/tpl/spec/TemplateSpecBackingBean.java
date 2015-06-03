@@ -565,7 +565,7 @@ public class TemplateSpecBackingBean extends
 
 			if (specificationReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
-				filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
+				//filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
 			} else if (!estCostReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
 			}
@@ -574,7 +574,7 @@ public class TemplateSpecBackingBean extends
 
 			if (specificationReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
-				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
+				//filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
 			} else if (!estCostReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
 			}
@@ -1429,6 +1429,44 @@ public class TemplateSpecBackingBean extends
 		specMaster.setTotalAmount(totalAmount);
 
 		return totalAmount;
+	}
+	
+	/**
+	 * Calculate the total amount and amount per year for each item.
+	 * 
+	 * @param templateSpecBean
+	 * 		the TemplateSpecBean instance
+	 * @return the total score
+	 */
+	public String calcTotalScore(TemplateSpecBean templateSpecBean) {
+		String totalScoreStr = null;
+		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
+
+		if (specAnswerList != null && specAnswerList.size() > 0) {
+			BigDecimal totalScore = BigDecimal.valueOf(0);
+			BigDecimal totalMaxScore = BigDecimal.valueOf(0);
+			
+			for (TplSpecAnswer specAnswer : specAnswerList) {
+				BigDecimal autoScore = specAnswer.getAutoScore();
+				BigDecimal userScore = specAnswer.getUserScore();
+				
+				if (autoScore != null) {
+					totalScore = totalScore.add(autoScore);
+				}
+				
+				if (userScore != null) {
+					totalScore = totalScore.add(userScore);
+				}
+				
+				if (specAnswer.getTplSpecQuestion().getMaxScore() != null && (autoScore != null || userScore != null)) {
+					totalMaxScore = totalMaxScore.add(specAnswer.getTplSpecQuestion().getMaxScore());
+				}
+			}
+			
+			totalScoreStr = totalScore.toString() + " / " + totalMaxScore.toString();
+		}
+		
+		return totalScoreStr;
 	}
 
 	/**
