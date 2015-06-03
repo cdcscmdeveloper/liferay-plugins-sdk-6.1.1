@@ -30,7 +30,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmKeyword;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPendingCodifiedItem;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
@@ -2775,7 +2774,7 @@ BaseBackingBean<CodificationManagedBean> {
 
 			
 			reqDTO.setCmItem(this.getManagedBean().getKeywordItem());
-			codificationSO.saveKeyword(reqDTO);
+//			codificationSO.saveKeyword(reqDTO);
 
 
 			FacesContext facesContext = null;
