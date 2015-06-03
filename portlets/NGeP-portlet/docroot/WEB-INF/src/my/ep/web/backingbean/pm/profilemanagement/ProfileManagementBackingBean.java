@@ -1632,11 +1632,14 @@ public class ProfileManagementBackingBean extends
 			}
 		}
 
-		roleRestrictionValidation(this.getManagedBean().getSelectedRole().getPmRole());
+		if(roleRestrictionValidation(this.getManagedBean().getSelectedRole().getPmRole())){
+			throw new EpException(MessageConst.ERROR_770135,
+					new String[] { this.getManagedBean().getSelectedRole().getRoleName()});
+		}
 
 	}
 	
-	public void roleRestrictionValidation(PmRole pmRole){
+	public boolean roleRestrictionValidation(PmRole pmRole){
 		// Check role conflict/restriction
 		List<PmUserRole> activeRoles = new ArrayList<PmUserRole>();
 		if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null){
@@ -1648,17 +1651,18 @@ public class ProfileManagementBackingBean extends
 			}
 		}
 		
-		
+		boolean roleRestictionError = false;
 		if (pmRole.isRestrRole()) {
 			if (activeRoles != null
 					&& ! activeRoles.isEmpty()) {
 				if (PmCommonUtil
 						.checkRoleRestriction(pmRole.getRoleCode(),activeRoles)) {
-					throw new EpException(MessageConst.ERROR_770135,
-							new String[] { PmCommonUtil.getRoleDescByRoleCode(pmRole.getRoleCode()) });
-						}
-					}
+					roleRestictionError = true;
+					
 				}
+			}
+		}
+		return roleRestictionError;
 	}
 
 	/**
@@ -1823,7 +1827,12 @@ public class ProfileManagementBackingBean extends
 		
 		//check for role restriction
 		if(DbValueConst.RECORD_STATUS_ACTIVE == pmUserRole.getRecordStatusFlg()){
-			roleRestrictionValidation(pmUserRole.getPmRole());
+			if(roleRestrictionValidation(pmUserRole.getPmRole())){
+				pmUserRole.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+				throw new EpException(MessageConst.ERROR_770135,
+						new String[] { PmCommonUtil.getRoleDescByRoleCode(pmUserRole.getPmRole().getRoleCode())});
+				
+			}
 		}
 		
 	}
@@ -2387,7 +2396,8 @@ public class ProfileManagementBackingBean extends
 
 					for (PmUserRole obj : getManagedBean().getSelectedUserOrg()
 							.getPmUserRoles()) {
-						if (obj.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+						if (obj.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE ||
+								obj.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
 							selectedRolesToExclude.add(obj.getPmRole()
 									.getRoleCode());
 						}
