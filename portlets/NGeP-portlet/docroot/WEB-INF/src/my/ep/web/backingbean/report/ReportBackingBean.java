@@ -4481,6 +4481,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 */
 	public void generateCTReport() {
 		if (((this.getCtContrMontrStatus() != null) && (this.getCtContrMontrStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtUserType() != null) && (this.getCtUserType() != ReportConst.EMPTY_VAL))
+				|| ((this.getCtSubType() != null) && (this.getCtSubType() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtProductService() != null) && (this.getCtProductService() != ReportConst.EMPTY_VAL))
 				|| ((this.getCtLoanNo() != null) && (this.getCtLoanNo() != ReportConst.EMPTY_VAL)) 
 				|| ((this.getCtLOAPhysicalNo() != null) && (this.getCtLOAPhysicalNo() != ReportConst.EMPTY_VAL))
