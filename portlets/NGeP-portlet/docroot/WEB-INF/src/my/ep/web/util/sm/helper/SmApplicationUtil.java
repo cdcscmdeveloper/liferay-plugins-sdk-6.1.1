@@ -1102,6 +1102,7 @@ public class SmApplicationUtil {
 	public static boolean validateCategoryOtherDesc(boolean validSave,
 			SmApplicationManagedBean managedBean, int currentTab) {
 		SmAppl appl = managedBean.getSmAppl();
+		validateRenewalApplTypeForSpecialCategory(appl);
 		if (appl.getSmSupplierCategories() != null
 				&& appl.getSmSupplierCategories().size() > 0) {
 			StringBuilder sb = new StringBuilder();
@@ -5374,6 +5375,32 @@ public class SmApplicationUtil {
 						}
 					}
 				}
+			}
+		}
+	}
+
+	private static void validateRenewalApplTypeForSpecialCategory(SmAppl smAppl) {
+		if (!smAppl.getApplCategoryType().equals(
+				ParameterConst.CATEGORY_TYPE_NORMAL)
+				&& smAppl.getApplType().equals(
+						ParameterConst.NEW_SM_APPLN_FOR_RENEW)) {
+			int count = 0;
+			for (SmSupplierCategory category : smAppl.getSmSupplierCategories()) {
+				if (category.getPmCategoryL3() != null
+						&& category.getPmCategoryL3().getCategoryTypeCode() != null
+						&& category.getPmCategoryL3().getCategoryTypeCode()
+								.getParameterCode() != null) {
+					if (!category.getPmCategoryL3().getCategoryTypeCode()
+							.getParameterCode()
+							.equals(ParameterConst.CATEGORY_TYPE_NORMAL)) {
+						count++;
+						break;
+					}
+				}
+			}
+
+			if (count == 0) {
+				throw new EpException(MessageConst.ERROR_722606);
 			}
 		}
 	}
