@@ -219,16 +219,16 @@
 			<p:commandButton value="#{lbl['lbl.btn.clone']}" process="@this"
 				partialSubmit="true" oncomplete="screen2.show();"
 				actionListener="#{evaluationMeetingBackingBean.addCloneCommittee}"
-				update="form:cloneid" />
+				update="@([id$=#{cloneid}])" />
 			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@this"
 				partialSubmit="true"
 				actionListener="#{evaluationMeetingBackingBean.addCommitteeDetails}"
-				update=":form:newspecificationcommitteeid"
+				update="@([id$=#{newspecificationcommitteeid}])"
 				oncomplete="newspecificationcommittee.show();" />
 
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				partialSubmit="true"
 				oncomplete="confirmMeetingCommitteemembersDeletePopUp.show();"
 				update="@([id$=#{confirmmeetingCommitteemembersDeleteId}])">
 				<f:setPropertyActionListener
