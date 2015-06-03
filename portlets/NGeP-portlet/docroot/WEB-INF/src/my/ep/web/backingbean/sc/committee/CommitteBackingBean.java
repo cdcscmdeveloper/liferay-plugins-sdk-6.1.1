@@ -447,12 +447,12 @@ public class CommitteBackingBean extends
 			Long recordStatus = qtnTenderSearchBean.getRecordStatus();
 			if (recordStatus != null && !"".equals(recordStatus)) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-				codesSearchBean.setSearchField("recordStatusFlg");
+				codesSearchBean.setSearchField("scCommittee.recordStatusFlg");
 				codesSearchBean.setSearchValue(recordStatus);
 				searchFilterBean.add(codesSearchBean);
 			} else {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
-				codesSearchBean.setSearchField("recordStatusFlg");
+				codesSearchBean.setSearchField("scCommittee.recordStatusFlg");
 				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 				searchFilterBean.add(codesSearchBean);
 			}
