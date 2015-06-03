@@ -118,6 +118,13 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	private String currentTaskName;
 	
+	private Object selectedKeywordObject;
+	private CmItem keywordItem;
+	private boolean productKeyword =false;
+	private boolean serviceKeyword =false;
+	
+	
+	
 //	private String typeName;
 //	private String colorName;
 //	private String measurementName;
@@ -770,5 +777,46 @@ public class CodificationManagedBean extends BaseManagedBean {
 		}
 
 	}
+
+	public Object getSelectedKeywordObject() {
+		return selectedKeywordObject;
+	}
+
+	public void setSelectedKeywordObject(Object selectedKeywordObject) {
+		this.selectedKeywordObject = selectedKeywordObject;
+	}
+
+	public CmItem getKeywordItem() {
+		return keywordItem;
+	}
+
+	public void setKeywordItem(CmItem keywordItem) {
+		this.keywordItem = keywordItem;
+	}
+
+	public boolean isProductKeyword() {
+		return productKeyword;
+	}
+
+	public void setProductKeyword(boolean productKeyword) {
+		this.productKeyword = productKeyword;
+	}
+
+	public boolean isServiceKeyword() {
+		return serviceKeyword;
+	}
+
+	public void setServiceKeyword(boolean serviceKeyword) {
+		this.serviceKeyword = serviceKeyword;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }
