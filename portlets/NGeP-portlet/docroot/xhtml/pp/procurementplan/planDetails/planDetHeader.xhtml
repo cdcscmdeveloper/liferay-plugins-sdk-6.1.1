@@ -11,7 +11,49 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	
-	<table class="ppTwoTable" style="width: 50%;">
+	<table class="ppTwoTable" style="width: 100%;">
+		<tr>
+			<th>
+				<p:outputLabel value="#{lbl['lbl.pp.ministry']}" />
+			</th>
+			<td>
+				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.retrieveMinistry()}"></p:inputTextarea>
+			</td>
+			<th>
+				<p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}" />
+			</th>
+			<td>
+				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.retrievePegawaiPengawal()}"></p:inputTextarea>
+			</td>
+			<th>
+				
+			</th>
+			<td>
+				
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}" />
+			</th>
+			<td>
+				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.retrieveKumpulanPtj()}"></p:inputTextarea>
+			</td>
+			<th>
+				<p:outputLabel value="#{lbl['lbl.pp.ptj']}" />
+			</th>
+			<td>
+				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} /
+					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputTextarea>
+			</td>
+			<th>
+				
+			</th>
+			<td>
+				
+			</td>
+		</tr>
+		
 		<tr>
 			<th>
 				<p:outputLabel value="#{lbl['lbl.pp.plan.type']}" />
@@ -28,15 +70,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</p:selectOneMenu>
 				<p:message id="somPlanTypeMsg" for="somPlanType" display="icon" />
 			</td>
-			<th>
-				
-			</th>
-			<td>
-				
-			</td>
-		</tr>
-
-		<tr>
 			<th>
 				<p:outputLabel value="#{lbl['lbl.pp.plan.year']}" />
 				<p:outputLabel value="*" styleClass="mandatory" />
