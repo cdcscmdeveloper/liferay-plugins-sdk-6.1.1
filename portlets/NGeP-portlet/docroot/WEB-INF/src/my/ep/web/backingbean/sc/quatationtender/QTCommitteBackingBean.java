@@ -538,6 +538,97 @@ public class QTCommitteBackingBean extends
 				.remove(this.getManagedBean().getCommitteMember());
 	}
 
+	public void onRowCloneCommitteeApprovalsAction(SelectEvent event) {
+		debugLogger("onRowCloneCommitteeApprovalsAction");
+		ScQt scQt = (ScQt) event.getObject();
+		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
+		
+		CommitteReqDTO reqDTO = new CommitteReqDTO();
+		reqDTO.setCommitteeType(this.getManagedBean().getCommType());
+		reqDTO.setQtId(scQt.getQtId());
+		CommitteResDTO resDTO = new CommitteResDTO();
+		try {
+			ICommitteSO committeSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+			resDTO = committeSO
+					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
+			this.getManagedBean().setCloneCommitteMemebers(null);
+			if (null != resDTO.getScQtCommittee()) {
+				if (null != resDTO.getScQtCommittee().getScCommittee().getScCommitteeMembers()
+						&& !resDTO.getScQtCommittee().getScCommittee().getScCommitteeMembers().isEmpty()) {
+					List<ScCommitteeMember> commMembers = resDTO.getScQtCommittee().getScCommittee().getScCommitteeMembers();
+					this.getManagedBean().setCloneCommitteMemebers(commMembers);
+				}
+			}
+		} finally {
+		}
+	}
+	
+	public void addCloneCommitteeMembersApprovalsAction() {
+		debugLogger("addCloneCommitteeMembersApprovalsAction");
+		int committeTabIndex = this.getManagedBean().getSelectedTabIndex();
+		TabBean selectedCommitteTabBean = this.getManagedBean()
+				.getScCommitteeMemberTabList().get(committeTabIndex);
+		ScCommittee scCommittee = selectedCommitteTabBean.getScQtCommittee()
+				.getScCommittee();
+		List<ScCommitteeMember> memberList = scCommittee.getScCommitteeMembers();
+		if (null == memberList) {
+			memberList = new ArrayList<ScCommitteeMember>();
+		}
+		List<String> itemIds = new ArrayList<String>();
+		List<ScCommitteeMember> selectedCloneMembersList = getManagedBean()
+				.getSelectedCommitteMemebers();
+		if (!selectedCloneMembersList.isEmpty()) {
+			if (scCommittee.getScCommitteeMembers().isEmpty()) {
+				for (ScCommitteeMember member : selectedCloneMembersList) {
+					ScCommitteeMember member1 = null;
+					try {
+						member1 = (ScCommitteeMember) BeanUtils
+								.cloneBean(member);
+					} catch (IllegalAccessException | InstantiationException
+							| InvocationTargetException | NoSuchMethodException e) {
+						e.printStackTrace();
+					}
+					if (null != member1) {
+						member1.setCommitteeMemberId(null);
+						setUserDetails(member1);
+						member1.setChangedDate(null);
+						if (member1.isConsolidate()) {
+							this.getManagedBean().setSelectScCommitteMember(
+									member1);
+						}
+						member1.setScCommittee(scCommittee);
+						memberList.add(member1);
+					}
+				}
+			} else {
+				for (ScCommitteeMember committee : scCommittee.getScCommitteeMembers()) {
+					itemIds.add(committee.getIcPassport());
+				}
+				for (ScCommitteeMember committeeMember : selectedCloneMembersList) {
+					if (itemIds.size() > 0) {
+						if (itemIds.contains(committeeMember.getIcPassport())) {
+							throw new EpException(MessageConst.ERROR_760120);
+						} else {
+							committeeMember.setCommitteeMemberId(null);
+							setUserDetails(committeeMember);
+							committeeMember.setChangedDate(null);
+							committeeMember.setScCommittee(scCommittee);
+							memberList.add(committeeMember);
+							scCommittee.setScCommitteeMembers(memberList);
+						}
+					}
+				}
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_760121);
+		}
+		scCommittee.setScCommitteeMembers(memberList);
+		selectedCommitteTabBean.getScQtCommittee().setScCommittee(scCommittee);
+		
+		// Clone Committee Approval validation
+		RequestContext.getCurrentInstance().execute("screen2.hide()");
+	}
 	/**
 	 * On row clone action.
 	 * 
@@ -809,6 +900,8 @@ public class QTCommitteBackingBean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
 		getManagedBean().setSearchcommitteeNode(null);
+		getManagedBean().setCloneCommitteMemebers(null);
+		getManagedBean().setSelectedCommitteMemebers(null);
 		String commType = committee.getScCommittee().getCommitteeType()
 				.getParameterCode();
 		this.getManagedBean().setCommType(commType);
