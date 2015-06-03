@@ -1539,18 +1539,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 				resDTO = requestSO.retrieveGroupListByOrgId(reqDTO);
 				
-				if(getManagedBean().getFlRequest().getPmUserGroup()==null) {
-					PmUserGroup pmUserGroup = new PmUserGroup();
-					getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
-				}
+				PmUserGroup pmUserGroup = new PmUserGroup();
+				getManagedBean().getFlRequest().setPmUserGroup(pmUserGroup);
 				getManagedBean().getUserGroupList().clear();
 				
 				//new
 				getManagedBean().setUserGroupList(resDTO.getUserGroupList());
 				if(resDTO.getUserGroupList().size()>0) {
 					List<PmUserGroupUser> firstPmUserGroup = null;
-					for(PmUserGroup pmUserGroup : getManagedBean().getUserGroupList()) {
-						reqDTO.setGroupId(pmUserGroup.getUserGroupId());
+					for(PmUserGroup userGroup : getManagedBean().getUserGroupList()) {
+						reqDTO.setGroupId(userGroup.getUserGroupId());
 						reqDTO.setApproverLimit(calculatesTotalOrderedAmt());
 						resDTO = requestSO.retrieveApproverListByGroupId(reqDTO);
 						if(firstPmUserGroup==null) {
@@ -1569,6 +1567,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 					}
 					
+				}
+				if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+							MessageUtils.getMessage(MessageConst.ERROR_745070, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				}
 			}
 		} catch (Exception e) {

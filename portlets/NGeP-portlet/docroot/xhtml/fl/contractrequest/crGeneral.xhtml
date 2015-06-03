@@ -39,7 +39,7 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or contractRequestBackingBean.isApprover()}"
-						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:controlOff" readonly="true"
+						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:controlOff,:form:messagePnl" readonly="true"
 						postUpdateListener="contractRequestBackingBean.getAgAccount()"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
