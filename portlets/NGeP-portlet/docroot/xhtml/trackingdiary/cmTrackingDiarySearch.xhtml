@@ -68,7 +68,7 @@
 								action="#{cmTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 								update="resultPanel" />
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-								action="#{cmTrackingDiaryBackingBean.reset}" update=":form" />
+								action="#{cmTrackingDiaryBackingBean.managedBean.reset}" update=":form" />
 						</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.cm.search.result']}" toggleable="true">

@@ -153,5 +153,19 @@ public class CmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetDocumentDataModel() {
 		this.cmDocumentDataModel = new SearchPagingDataModel();
 	}
+	
+	public void reset(){
+		this.setSearchItemCodeValue(null);
+		this.setSearchItemNameValue(null);
+		this.setSearchStatusId(null);
+		this.setSearchSupplierValue(null);
+		this.setSearchCreatedFromDuration(null);
+		this.setSearchCreatedToDuration(null);	
+		this.setCmDocumentDataModel(new SearchPagingDataModel());
+		System.out.println("****************end****************");
+		
+	
+	}
+	
 
 }
