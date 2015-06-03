@@ -13409,9 +13409,14 @@ public class SpecificationBackingBean extends
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
-			if (null != getManagedBean().getScQt().getScQtSupplierCriteria()
-					&& getManagedBean().getScQt().getScQtSupplierCriteria()
-							.isBrandNew() == true) {
+			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean()
+					.getScQt().getScQtSupplierCriteria();
+			if (((null != zoneSupplierCriteria && zoneSupplierCriteria
+					.isBrandNew() == true) || (getManagedBean().getScQt()
+					.isZonal()
+					&& null != zoneSupplierCriteria
+					&& null != zoneSupplierCriteria.getQtZoneCriterias() && null == zoneSupplierCriteria
+					.getQtZoneCriterias().getSpecZoneId()))) {
 				validateBusinessOwner(true);
 			}
 
@@ -13863,9 +13868,14 @@ public class SpecificationBackingBean extends
 		if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)
 				&& SourcingConstants.TECHNICAL_DOCTYPE
 						.equalsIgnoreCase(specType)) {
-			if (null != getManagedBean().getScQt().getScQtSupplierCriteria()
-					&& getManagedBean().getScQt().getScQtSupplierCriteria()
-							.isBrandNew() == true) {
+			ScQtSupplierCriteria zoneSupplierCriteria = getManagedBean()
+					.getScQt().getScQtSupplierCriteria();
+			if (((null != zoneSupplierCriteria && zoneSupplierCriteria
+					.isBrandNew() == true) || (getManagedBean().getScQt()
+					.isZonal()
+					&& null != zoneSupplierCriteria
+					&& null != zoneSupplierCriteria.getQtZoneCriterias() && null == zoneSupplierCriteria
+					.getQtZoneCriterias().getSpecZoneId()))) {
 				validateBusinessOwner(true);
 			}
 
