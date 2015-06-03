@@ -40,7 +40,7 @@
 		</f:facet>
 		<h:panelGroup id="estPG" rendered="#{isQuestionTypeItem}" style="white-space:nowrap;">
 			<c:if test="#{!isZonal}">
-				<p:inputText id="estCost" style="min-width:0px !important;width:44px;" styleClass="ppNumericAlign"
+				<p:inputText id="estCost" style="min-width:0px !important;width:44px; text-align:right;"
 					value="#{question.tplSpecEstimations[0].estimatedCost}" 
 					required="#{!question.selected}" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">

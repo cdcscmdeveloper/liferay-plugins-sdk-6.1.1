@@ -70,7 +70,7 @@
 							#{templateSpecBean.specMaster.durationMonth}
 						</c:if>
 						<c:if test="#{!isContentTypeAnswer and !isContentTypeScore}">
-							<p:inputText id="durationMonth" styleClass="ppNumericAlign"
+							<p:inputText id="durationMonth" style="text-align:right;"
 								value="#{templateSpecBean.specMaster.durationMonth}" 
 								required="true" maxlength="4"
 								label="#{lbl['lbl.tpl.spec.content.duration.month']}">
@@ -159,6 +159,22 @@
 						<ui:decorate template="specColumnQuestionView.xhtml" />
 					</c:if>
 				</p:dataTable>
+				
+				<c:if test="#{isContentTypeScore and isSpecTypeFinancial}">
+					<p:spacer height="10" />
+					<table style="width:100%">
+					<tr>
+						<td class="TableFieldLeft" width="8%">
+							<p:outputLabel value="#{lbl['lbl.sc.total.score']}" />
+						</td>
+						<td class="TableFieldRight" width="92%">
+							<p:inputText style="text-align:right;" styleClass="calcScore" size="8" 
+								value="#{templateSpecBackingBean.calcTotalScore(templateSpecBean)}"
+								disabled="true" />
+						</td>
+					</tr>
+					</table>
+				</c:if>
 				
 				<c:if test="#{isSpecTypeFinancial and isZonal}">
 					<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
