@@ -14,7 +14,7 @@
 		<p:inputText style="min-width:0px !important;width:86px;" rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
 	<p:column style="width:115px;white-space:normal;" rendered="#{isItemTypeService and isSpecTypeFinancial and !isDurationByItem}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
-		<p:inputText style="min-width:0px !important;width:104px;" styleClass="ppNumericAlign"
+		<p:inputText style="min-width:0px !important;width:104px; text-align:right;"
 			rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
 	<p:column style="width:115px;white-space:normal;" rendered="#{isEstCostReq}">
@@ -30,7 +30,7 @@
 			</h:outputText>
 		</f:facet>
 		<c:if test="#{!isZonal}">
-			<p:inputText id="estimatedCost" style="min-width:0px !important;width:71px;" styleClass="ppNumericAlign" 
+			<p:inputText id="estimatedCost" style="min-width:0px !important;width:71px; text-align:right;" 
 				value="#{question.tplSpecEstimations[0].estimatedCost}" 
 				required="true" maxlength="19"
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}">
@@ -50,7 +50,7 @@
 	</p:column>
 	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
 		<f:facet name="footer">
-			<p:inputText style="width:113px;" styleClass="ppNumericAlign" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
+			<p:inputText style="width:113px; text-align:right;" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
 		
 		<p:inputText style="min-width:0px !important;width:75px;" rendered="#{isQuestionTypeItem}" disabled="true" />

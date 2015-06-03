@@ -51,7 +51,7 @@
 		</td>
 		<td>
 			<h:panelGroup id="maxScorePG">
-				<p:inputText id="maxScore" styleClass="ppNumericAlign" 
+				<p:inputText id="maxScore" style="text-align:right;"
 					value="#{templateSpecBean.selectedSpecQuestion.maxScore}" 
 					required="true" size="15" maxlength="3"
 					disabled="#{!editable}"
@@ -70,7 +70,7 @@
 		</td>
 		<td>
 			<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
-				<p:inputText id="weightage" styleClass="ppNumericAlign" 
+				<p:inputText id="weightage" style="text-align:right;" 
 					value="#{templateSpecBean.selectedSpecQuestion.weightage}" 
 					required="true" size="15" maxlength="19"
 					disabled="#{!editable}"
@@ -122,7 +122,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}" />
 				</f:facet>
-				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" style="width:80%;" styleClass="ppNumericAlign" 
+				<p:inputText id="rangeFrom" value="#{tplSpecScoring.rangeFrom}" style="width:80%; text-align:right;" 
 					required="true" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.from']}"
 					disabled="#{!editable}">
@@ -137,7 +137,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}" />
 				</f:facet>
-				<p:inputText id="fromVariance" value="#{tplSpecScoring.rangeFrom}" style="width:75%;" styleClass="ppNumericAlign" 
+				<p:inputText id="fromVariance" value="#{tplSpecScoring.rangeFrom}" style="width:75%; text-align:right;" 
 					required="true" maxlength="3"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.from.variance']}"
 					disabled="#{!editable}">
@@ -152,7 +152,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}" />
 				</f:facet>
-				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:80%;" styleClass="ppNumericAlign" 
+				<p:inputText id="rangeTo" value="#{tplSpecScoring.rangeTo}" style="width:80%; text-align:right;" 
 					required="#{rowIndex lt templateSpecBean.selectedSpecQuestion.tplSpecScorings.size()-1}" maxlength="19"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.range.to']}"
 					disabled="#{!editable}">
@@ -166,7 +166,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}" />
 				</f:facet>
-				<p:inputText id="toVariance" value="#{tplSpecScoring.rangeTo}" style="width:75%;" styleClass="ppNumericAlign" 
+				<p:inputText id="toVariance" value="#{tplSpecScoring.rangeTo}" style="width:75%; text-align:right;" 
 					required="true" maxlength="3"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.to.variance']}"
 					disabled="#{!editable}">
@@ -187,7 +187,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}"/>
 				</f:facet>
-				<p:inputText id="belowScore" value="#{tplSpecScoring.belowScore}" style="width:75%;" styleClass="ppNumericAlign" 
+				<p:inputText id="belowScore" value="#{tplSpecScoring.belowScore}" style="width:75%; text-align:right;" 
 					required="true" maxlength="3"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.below.score']}"
 					disabled="#{!editable}">
@@ -204,7 +204,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl[lblScore]}" />
 				</f:facet>
-				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:75%;" styleClass="ppNumericAlign" 
+				<p:inputText id="score" value="#{tplSpecScoring.score}" style="width:75%; text-align:right;" 
 					maxlength="3"
 					label="#{lbl[lblScore]}"
 					disabled="#{!editable}">
@@ -219,7 +219,7 @@
 					<h:outputText value="* " styleClass="mandatory" rendered="#{editable}" />
 					<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}"/>
 				</f:facet>
-				<p:inputText id="aboveScore" value="#{tplSpecScoring.aboveScore}" style="width:75%;" styleClass="ppNumericAlign" 
+				<p:inputText id="aboveScore" value="#{tplSpecScoring.aboveScore}" style="width:75%; text-align:right;" 
 					required="true" maxlength="3"
 					label="#{lbl['lbl.tpl.spec.content.scoring.scoring.above.score']}"
 					disabled="#{!editable}">

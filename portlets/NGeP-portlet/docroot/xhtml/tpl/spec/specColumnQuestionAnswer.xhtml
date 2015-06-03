@@ -15,7 +15,7 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard}" />
 		</f:facet>
 		
-		<p:inputText id="ratePerUom" style="min-width:0px !important;width:86px;" styleClass="ppNumericAlign"
+		<p:inputText id="ratePerUom" style="min-width:0px !important;width:86px; text-align:right;"
 			value="#{question.tplSpecAnswers[0].ratePerUom}"
 			rendered="#{isQuestionTypeItem and isPriceTypeStandard}" required="true" maxlength="19"
 			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
