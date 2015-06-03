@@ -43,21 +43,6 @@
 				<td class="header-info-text">
 					#{pPlanBackingBean.managedBean.selectedPlan.planNo}
 				</td>
-				<td width="6%">
-					<p:outputLabel value="#{lbl['lbl.pp.ministry']}"/>
-				</td>
-				<td class="header-info-text">
-					#{(pPlanBackingBean.retrieveMinistry())}
-				</td>
-				<td width="5%">
-					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
-				</td>
-				<td class="header-info-text">
-					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} /
-					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}
-				</td>
-			</tr>
-			<tr>
 				<td width="5%">
 					<p:outputLabel value="#{lbl['lbl.pp.status']}"/>
 				</td>
