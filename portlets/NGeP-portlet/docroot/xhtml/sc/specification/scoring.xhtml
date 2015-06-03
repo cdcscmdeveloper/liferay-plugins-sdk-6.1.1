@@ -35,12 +35,11 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.from']}"
-						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
-					<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"
-						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
-					<h:outputText value=" #{lbl['lbl.sc.spec.from.month']}"
-						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS'}" />
+					<h:outputText value="#{lbl['lbl.sc.from']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}" />
+					<!-- <h:outputText value=" #{lbl['lbl.sc.spec.from.month']}"
+						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS'}" /> -->
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_fromRangeTN"
 					style="text-align:right"
@@ -88,17 +87,16 @@
 						rendered="#{!specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
-					<h:outputText value="#{lbl['lbl.sc.to']}"
-						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS'}" />
-					<h:outputText value=" #{lbl['lbl.sc.spec.to.month']}"
-						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS'}" />
+					<h:outputText value="#{lbl['lbl.sc.to']}" />
+					<!-- <h:outputText value=" #{lbl['lbl.sc.spec.to.month']}"
+						rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS'}" /> -->
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toRangeNE" style="text-align:right"
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'BS' and specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey ne 'AL'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					required="#{index lt scoringList.size()-1}"
-					label="#{lbl['lbl.sc.to']}"
-					value="#{checkListScoring.rangeTo}" maxlength="18">
+					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
+					maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true" />
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
@@ -107,8 +105,8 @@
 					rendered="#{specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'BS' or specificationBackingBean.managedBean.scQtChecklist.pmDocument.docDefinitionKey eq 'AL'}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 					required="#{index lt scoringList.size()-1}"
-					label="#{lbl['lbl.sc.to']}"
-					value="#{checkListScoring.rangeTo}" maxlength="18">
+					label="#{lbl['lbl.sc.to']}" value="#{checkListScoring.rangeTo}"
+					maxlength="18">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						update="#{scoringPnlId}_toRangeBS" />
 					<ac:validateNumber
@@ -128,8 +126,8 @@
 				</f:facet>
 				<p:inputText id="#{scoringPnlId}_toScore" style="text-align:right"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
-					label="#{lbl['lbl.sc.score']}"
-					value="#{checkListScoring.score}" maxlength="18">
+					label="#{lbl['lbl.sc.score']}" value="#{checkListScoring.score}"
+					maxlength="18">
 					<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
 				</p:inputText>
 
