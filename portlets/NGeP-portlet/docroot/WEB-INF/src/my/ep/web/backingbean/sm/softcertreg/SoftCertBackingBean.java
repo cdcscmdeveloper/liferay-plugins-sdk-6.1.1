@@ -237,20 +237,30 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public void updateAmount() {
 		BigDecimal amount = BigDecimal.ZERO;
+		BigDecimal amountPerPersonnel = BigDecimal.ZERO;
 		int i = 0;
+		SmSoftcertRequest softcertRequest = null;
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
 			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
-				this.getManagedBean().getPaymentMap()
-						.put(personnel.getPersonnelId(), BigDecimal.ZERO);
-				amount = amount.add(BigDecimal.ZERO);
 				personnel.setFreeSoftCert(true);
 				getManagedBean().setFreeSoftCertPersonnel(personnel);
 			} else {
-				this.getManagedBean()
-						.getPaymentMap()
-						.put(personnel.getPersonnelId(),
-								BigDecimal.valueOf(150));
-				amount = amount.add(BigDecimal.valueOf(150));
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+					softcertRequest = SmApplicationUtil
+							.getPersonnelSoftcertRequest(getManagedBean()
+									.getLoginUserPersonnelInfo().getSmAppl()
+									.getSmSupplier().getSupplierId(), personnel
+									.getPmUser().getUserId());
+					if (softcertRequest != null && softcertRequest.isFree()) {
+						personnel.setFreeSoftCert(true);
+						getManagedBean().setFreeSoftCertPersonnel(personnel);
+					}
+				} else {
+					amountPerPersonnel = new BigDecimal(150);
+				}
+				this.getManagedBean().getPaymentMap()
+						.put(personnel.getPersonnelId(), amountPerPersonnel);
+				amount = amount.add(amountPerPersonnel);
 			}
 			i++;
 		}
@@ -331,7 +341,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.getSoftCertSelectList().iterator();
 			while (iterator.hasNext()) {
 				SmPersonnel personnel = iterator.next();
-				if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+				if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
+						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED) {
 					iterator.remove();
 				} else {
 					if (personnel.getPmUser() == null) {
