@@ -448,6 +448,9 @@
 							disabledSelection="#{person.epRole eq 'SUPPLIER_TEMP' or person.epRole eq 'BASIC_SUPPLIER_ADMIN' or person.epRole eq 'MOF_SUPPLIER_ADMIN' 
 							or (person.prevApprovedDirector or person.prevApprovedEquityOwner)}">
 							<h:outputText
+								value="#{lbl['lbl.sm.person.composition.rejected']}"
+								rendered="#{person.softcertFlg eq '6' and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
+							<h:outputText
 								value="#{lbl['lbl.sm.person.composition.pending.request']}"
 								rendered="#{person.softcertFlg eq '4' and (backingBean.managedBean.newSupplierType ne 'J' and backingBean.managedBean.smAppl.supplierType ne 'J')}" />
 							<h:outputText
