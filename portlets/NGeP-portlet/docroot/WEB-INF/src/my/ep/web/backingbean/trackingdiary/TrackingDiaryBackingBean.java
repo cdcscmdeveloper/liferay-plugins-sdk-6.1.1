@@ -36,7 +36,7 @@ import my.ep.web.util.pm.helper.RoleHelper;
 @ManagedBean(name = "trackingDiaryBackingBean")
 @RequestScoped
 public class TrackingDiaryBackingBean extends
-		BaseBackingBean<TrackingDiaryManagedBean> {
+BaseBackingBean<TrackingDiaryManagedBean> {
 	private ISearchBean<PmParameterDesc> docTypeSearchBean;
 	public static final String SC_TRACKING_DIARY_MANAGED_BEAN = "scTrackingDiaryManagedBean";
 	public static final String DP_TRACKING_DIARY_MANAGED_BEAN = "dpTrackingDiaryManagedBean";
@@ -55,14 +55,25 @@ public class TrackingDiaryBackingBean extends
 
 		return this.docTypeSearchBean;
 	}
-	
-	 /**
+
+	/**
 	 * Page navigation 
 	 */
-	 public void onModuleSelect() {
-//			fc.getApplication().getNavigationHandler()
-//			.handleNavigation(fc, null, "taskListView");
-			System.out.println("1onModuleSelect" +getManagedBean().getPreviousSelectedModule());
+	public void onModuleSelect() {
+		//			fc.getApplication().getNavigationHandler()
+		//			.handleNavigation(fc, null, "taskListView");
+		System.out.println("1onModuleSelect" +getManagedBean().getPreviousSelectedModule());
+
+
+		if(getManagedBean().getPreviousSelectedModule().equalsIgnoreCase("CM") || getManagedBean().getPreviousSelectedModule().equalsIgnoreCase("CD")){
+			CmTrackingDiaryBackingBean bb = new CmTrackingDiaryBackingBean();
+			bb.getManagedBean().reset();
+
+			CdTrackingDiaryBackingBean cd = new CdTrackingDiaryBackingBean();
+			cd.getManagedBean().reset();
+
+		}
+
 
 		FacesContext fc=FacesContext.getCurrentInstance();
 		if(!getManagedBean().getModuleSelected().equalsIgnoreCase(getManagedBean().getPreviousSelectedModule())){
@@ -102,25 +113,25 @@ public class TrackingDiaryBackingBean extends
 				System.out.println("remove ModuleSelect" +PP_TRACKING_DIARY_MANAGED_BEAN);
 			}   	 	
 		}else{
-//			 renewSesionObject() ;			getManagedBean().setModuleSelected("");
+			//			 renewSesionObject() ;			getManagedBean().setModuleSelected("");
 			getManagedBean().setPreviousSelectedModule(getManagedBean().getModuleSelected());
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "trackingDiary");
-		System.out.println("2onModuleSelect"+ getManagedBean().getModuleSelected());
+			System.out.println("2onModuleSelect"+ getManagedBean().getModuleSelected());
 		}
-	 }	
+	}	
 
-		/**
-		 * pre Render
-		 */
-		public void preRender() {
-			System.out.println("preRender");
-			renewSesionObject() ;			
+	/**
+	 * pre Render
+	 */
+	public void preRender() {
+		System.out.println("preRender");
+		renewSesionObject() ;			
 
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "trackingDiary");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "trackingDiary");
 	}
 
-	 public String getUserName(Long userId) {
+	public String getUserName(Long userId) {
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
 		UserResDTO resDTO = new UserResDTO();
@@ -128,13 +139,13 @@ public class TrackingDiaryBackingBean extends
 		resDTO = trackingDiarySO.retrieveUserByUserId(reqDTO);
 		return resDTO.getPmUser().getUserName();
 	}
-	
+
 	public PmRoleDesc getRoleDescByCode(String roleCode) {
 		RoleHelper roleHelper = new RoleHelper();
-		
+
 		return roleHelper.getRoleDescByCode(roleCode);
 	}
-	
+
 	/**
 	 * Populate values for Module By drop down.
 	 * 
