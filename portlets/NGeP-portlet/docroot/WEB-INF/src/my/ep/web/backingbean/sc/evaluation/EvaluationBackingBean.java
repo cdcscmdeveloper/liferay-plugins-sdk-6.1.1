@@ -6453,17 +6453,23 @@ public class EvaluationBackingBean extends
 
 			}
 			if (!isAtleastOneChairPersonAttendance(chairPersonList)) {
-				throw new EpException(MessageConst.ERROR_760252,
-						new String[] { "ChairPerson" });
+				throw new EpException(MessageConst.ERROR_760252, new String[] {
+						"ChairPerson",
+						getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+								this.getManagedBean().getCommitteeType()) });
 			}
 			if (!isAtleastOneSecretaryAttendance(secretaryList)) {
-				throw new EpException(MessageConst.ERROR_760252,
-						new String[] { "Secretary" });
+				throw new EpException(MessageConst.ERROR_760252, new String[] {
+						"Secretary",
+						getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+								this.getManagedBean().getCommitteeType()) });
 			}
 
 			if (!isAtleastOneMemberAttendance(memberList)) {
-				throw new EpException(MessageConst.ERROR_760252,
-						new String[] { "Member" });
+				throw new EpException(MessageConst.ERROR_760252, new String[] {
+						"Member",
+						getParameterDesc(ParameterTypeConst.SC_COMMITTEE_TYPE,
+								this.getManagedBean().getCommitteeType()) });
 			}
 
 		}
