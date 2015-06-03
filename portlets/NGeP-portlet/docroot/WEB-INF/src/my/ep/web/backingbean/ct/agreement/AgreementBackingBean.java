@@ -913,12 +913,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 	}
 	     
 		 	//Reset the agency signer ic no and designation if record didn't exist in the drop down
-		 	PmUser user = null;
 		 	for (CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
-		 		user = null;
-		 		if (agencySigner.getOfficer() != null) {
-		 			user = agencyUserMap.get(agencySigner.getOfficer().getUserId());
+		 		if (agencySigner.getOfficer() == null) {
+		 			agencySigner.setOfficer(new PmUser());
 		 		}
+		 		PmUser user = agencyUserMap.get(agencySigner.getOfficer().getUserId());
 		 		if (user == null) {
 		 			agencySigner.setOfficerIc(null);
 		 			agencySigner.setOfficerPosition(null);
