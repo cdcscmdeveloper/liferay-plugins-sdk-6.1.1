@@ -1,25 +1,21 @@
 package my.ep.web.managedbean.trackingdiary;
 
-import java.util.Date;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.trackingdiary.CdTrackingDiaryBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 @ManagedBean(name = "cdTrackingDiaryManagedBean")
 @SessionScoped
 public class CdTrackingDiaryManagedBean extends BaseManagedBean { 
@@ -138,4 +134,16 @@ public class CdTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetDocumentDataModel() {
 		this.cdDocumentDataModel = new SearchPagingDataModel();
 	}
+	
+	
+	public void reset(){
+		this.setSearchDocumentNoValue(null);
+		this.setSearchSupplierValue(null);
+		this.setSearchUNSPSCExtensionCodeValue(null);
+		this.setSearchStatusId(null);
+		this.setCdDocumentDataModel(new SearchPagingDataModel());
+	}
+	
+	
+	
 }
