@@ -4422,7 +4422,7 @@ public class EvaluationBackingBean extends
 										.getScoreTypeCode()
 								&& specAnswers.getTplSpecQuestion()
 										.getScoreTypeCode().getParameterCode()
-										.equalsIgnoreCase("A")) {
+										.equalsIgnoreCase(ParameterConst.SCORE_TYPE_AUTO)) {
 							List<TplSpecScoring> specScoring = calclateSpecItemVariance(
 									specAnswers.getTplSpecQuestion()
 											.getTplSpecEstimations(),
