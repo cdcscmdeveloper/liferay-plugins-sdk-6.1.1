@@ -489,13 +489,17 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void setPersonnelRowSelection(List<SmPersonnel> personnels) {
 		getManagedBean().setAlreadyHadFreeSoftcert(false);
 		for (SmPersonnel personnel : personnels) {
-			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+			if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
+					&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED) {
 				personnel.setDisableRowSelection(true);
 				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PROCESSING
 						|| personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED) {
 					getManagedBean().setAlreadyHadFreeSoftcert(true);
 				}
 			} else {
+				if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
+					getManagedBean().setAlreadyHadFreeSoftcert(true);
+				}
 				if (StringUtils.isBlank(personnel.getSmAppl().getApplNo())) {
 					if (personnel.getPmUser() == null) {
 						personnel.setDisableRowSelection(true);
