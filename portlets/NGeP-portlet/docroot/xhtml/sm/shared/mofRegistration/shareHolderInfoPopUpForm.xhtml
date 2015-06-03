@@ -320,6 +320,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.composition.rejected']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '6'}" />
+						<p:outputLabel styleClass="outputLabel-view"
 							value="#{lbl['lbl.sm.person.composition.pending.request']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '4'}" />
 						<p:outputLabel styleClass="outputLabel-view"

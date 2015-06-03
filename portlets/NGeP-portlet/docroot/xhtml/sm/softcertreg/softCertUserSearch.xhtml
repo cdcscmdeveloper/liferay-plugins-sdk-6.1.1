@@ -66,6 +66,9 @@
 
 				<p:column headerText="#{lbl['lbl.sm.person.composition.certStatus']}" disabledSelection="#{personnel.disableRowSelection}">
 					<h:outputText
+						value="#{lbl['lbl.sm.person.composition.rejected']}"
+						rendered="#{personnel.softcertFlg eq '6'}" />
+					<h:outputText
 						value="#{lbl['lbl.sm.person.composition.pending.request']}"
 						rendered="#{personnel.softcertFlg eq '4'}" />
 					<h:outputText
