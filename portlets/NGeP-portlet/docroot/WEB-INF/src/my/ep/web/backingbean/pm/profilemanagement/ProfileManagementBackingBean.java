@@ -1593,7 +1593,7 @@ public class ProfileManagementBackingBean extends
 				.getPmOrgProfile().getOrgTypeCode().getParameterCode();
 
 		// Check unique org role
-		List<String> uniqueRoles = new ArrayList(
+		List<String> uniqueRoles = new ArrayList<String>(
 				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
 		if (uniqueRoles.contains(this.getManagedBean().getSelectedRole()
 				.getPmRole().getRoleCode())) {
@@ -1632,23 +1632,33 @@ public class ProfileManagementBackingBean extends
 			}
 		}
 
+		roleRestrictionValidation(this.getManagedBean().getSelectedRole().getPmRole());
+
+	}
+	
+	public void roleRestrictionValidation(PmRole pmRole){
 		// Check role conflict/restriction
-		if (this.getManagedBean().getSelectedRole().getPmRole().isRestrRole()) {
-			if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null
-					&& !this.getManagedBean().getSelectedUserOrg()
-							.getPmUserRoles().isEmpty()) {
-				if (PmCommonUtil
-						.checkRoleRestriction(this.getManagedBean()
-								.getSelectedRole().getPmRole().getRoleCode(),
-								this.getManagedBean().getSelectedUserOrg()
-										.getPmUserRoles())) {
-					throw new EpException(MessageConst.ERROR_770135,
-							new String[] { this.getManagedBean()
-									.getSelectedRole().getRoleName() });
+		List<PmUserRole> activeRoles = new ArrayList<PmUserRole>();
+		if (this.getManagedBean().getSelectedUserOrg().getPmUserRoles() != null){
+			for(PmUserRole userRole : this.getManagedBean().getSelectedUserOrg().getPmUserRoles()){
+				if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg() 
+						&& !userRole.getPmRole().getRoleCode().equals(pmRole.getRoleCode())){
+					activeRoles.add(userRole);
 				}
 			}
 		}
-
+		
+		
+		if (pmRole.isRestrRole()) {
+			if (activeRoles != null
+					&& ! activeRoles.isEmpty()) {
+				if (PmCommonUtil
+						.checkRoleRestriction(pmRole.getRoleCode(),activeRoles)) {
+					throw new EpException(MessageConst.ERROR_770135,
+							new String[] { PmCommonUtil.getRoleDescByRoleCode(pmRole.getRoleCode()) });
+						}
+					}
+				}
 	}
 
 	/**
@@ -1810,6 +1820,12 @@ public class ProfileManagementBackingBean extends
 			}
 
 		}
+		
+		//check for role restriction
+		if(DbValueConst.RECORD_STATUS_ACTIVE == pmUserRole.getRecordStatusFlg()){
+			roleRestrictionValidation(pmUserRole.getPmRole());
+		}
+		
 	}
 
 	private boolean isAnyPendingTaskForAdressType(PmAddressType addressType,
