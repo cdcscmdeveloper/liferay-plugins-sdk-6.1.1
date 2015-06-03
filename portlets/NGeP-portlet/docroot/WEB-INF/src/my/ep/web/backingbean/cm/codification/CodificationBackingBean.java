@@ -30,6 +30,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmKeyword;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPendingCodifiedItem;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
@@ -175,8 +176,8 @@ BaseBackingBean<CodificationManagedBean> {
 		log.info("after reset.........................");
 		return null;
 	}
-	
-	
+
+
 
 	private class ExtensionSearchItemDataModel extends
 	PagingDataModel<Object[]> {
@@ -384,7 +385,7 @@ BaseBackingBean<CodificationManagedBean> {
 
 				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 						.getServiceObject("cm", ICodificationSO.class);
-				
+
 
 				if (getManagedBean().getAutoCompleteUnspscCode()
 						.getUnspscCode() != null
@@ -514,8 +515,8 @@ BaseBackingBean<CodificationManagedBean> {
 				&& unspscCode.length() != 8) {
 			throw new EpException(MessageConst.ERROR_715026);
 		}
-		
-		
+
+
 		if(unspscCode == null && unspscTitle.trim().length()<3){
 			throw new EpException(MessageConst.ERROR_715060);
 		}
@@ -1441,6 +1442,11 @@ BaseBackingBean<CodificationManagedBean> {
 	public String backToPrev() {
 
 		return "codificationView";
+	}
+
+	public String backTokeywordView() {
+
+		return "keywordMaintainView";
 	}
 
 	public String backToVerifyUnspsc() {
@@ -2650,8 +2656,163 @@ BaseBackingBean<CodificationManagedBean> {
 		log.info(".................setItemTypeParameter................");
 		this.itemTypeParameter = itemTypeParameter;
 	}
+
+
+
+
+	public String backTokeyWordSearch() {
+
+		return "keywordMaintainSearch";
+	}
 	
-	
+	public String backTokeyWordView() {
+
+		return "keywordMaintainView";
+	}
+
+
+
+
+	public String goToKeywordExtensionSearch(CmUnspsc unspscObj) {
+		log.debug("**********goToKeywordExtensionSearch************");
+
+		this.getManagedBean().setMeasurementCriteria(null);
+		this.getManagedBean().setColorCriteria(null);
+		this.getManagedBean().setBrandCriteria(null);
+		this.getManagedBean().setTypeCriteria(null);
+
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
+				.getInstance().getServiceObject("cm", ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		reqDTO.setUnspscCode(unspscObj.getUnspscCode());
+		CodificationResDTO resDTO = unspscSO
+				.retrieveUNSPSCByCommodityCode(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			CmUnspsc commodity = resDTO.getCommodityObj();
+
+			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscCode(commodity.getUnspscCode());
+			// this.getManagedBean().getSelectedUNSPSCObj().setUnspscTitle(commodity.getUnspscTitle());
+			this.getManagedBean().setSelectedUNSPSCObj(commodity);
+
+			this.getManagedBean().setClassCode(
+					commodity.getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setClassTitle(
+					commodity.getCmUnspsc().getUnspscTitle());
+
+			this.getManagedBean().setFamilyCode(
+					commodity.getCmUnspsc().getCmUnspsc().getUnspscCode());
+			this.getManagedBean().setFamilyTitle(
+					commodity.getCmUnspsc().getCmUnspsc().getUnspscTitle());
+
+			this.getManagedBean().setSegmentCode(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
+					.getUnspscCode());
+			this.getManagedBean().setSegmentTitle(
+					commodity.getCmUnspsc().getCmUnspsc().getCmUnspsc()
+					.getUnspscTitle());
+		}
+
+
+		for (CmBrand brand : resDTO.getCommodityObj().getCmBrand()) {
+			if (!StringUtils.isBlank(brand.getBrandName()) && brand.getRecordStatusFlg() ==1) {
+				this.getManagedBean()
+				.getBrandCriteria()
+				.add(new SelectItem(brand.getBrandId(), brand
+						.getBrandName()));
+			}
+		}
+
+		for (CmType type : resDTO.getCommodityObj().getCmType()) {
+			if (!StringUtils.isBlank(type.getTypeName()) && type.getRecordStatusFlg() ==1) {
+				this.getManagedBean()
+				.getTypeCriteria()
+				.add(new SelectItem(type.getTypeId(), type
+						.getTypeName()));
+			}
+		}
+
+		for (CmMeasurement measurement : resDTO.getCommodityObj()
+				.getCmMeasurement()) {
+			if (!StringUtils.isBlank(measurement.getMeasurementName()) && measurement.getRecordStatusFlg()==1) {
+				this.getManagedBean()
+				.getMeasurementCriteria()
+				.add(new SelectItem(measurement.getMeasurementId(),
+						measurement.getMeasurementName()));
+			}
+		}
+
+		resDTO = unspscSO.searchColor(reqDTO);
+
+		for (CmColor color : resDTO.getColorList()) {
+			// log.info("color:"+color);
+			// log.info("color:"+color.getColorId());
+			if (!StringUtils.isBlank(color.getColorName()) && color.getRecordStatusFlg()==1) {
+				this.getManagedBean()
+				.getColorCriteria()
+				.add(new SelectItem(color.getColorId(), color
+						.getColorName()));
+			}
+		}
+
+		return "keywordMaintainSearch?faces-redirect=true";
+	}
+
+
+	public String saveKeyWord(){
+
+
+		//System.out.println("keyword:"+this.getManagedBean().getKeywordItem().getCmKeyword().get(0).getKeyword());
+
+
+		ICodificationSO codificationSO = null;
+		try {
+			codificationSO = (ICodificationSO) BusinessDelegate.getInstance()
+					.getServiceObject("cm", ICodificationSO.class);
+			
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+			
+			reqDTO.setCmItem(this.getManagedBean().getKeywordItem());
+			codificationSO.saveKeyword(reqDTO);
+
+
+			FacesContext facesContext = null;
+
+			facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									MessageConst.INFO_711001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+
+
+
+
+
+
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			codificationSO = null;
+		}
+
+		
+		if(this.getManagedBean().isProductKeyword()){
+			return "keywordMaintainSearch";
+		}else if(this.getManagedBean().isServiceKeyword()){
+			return "keywordMaintainView";
+		}
+
+		return "keywordMaintainSearch";
+	}
+
+
+
+
 
 
 }
