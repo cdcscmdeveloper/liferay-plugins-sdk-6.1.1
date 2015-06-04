@@ -27,13 +27,10 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 		switch (getManagedBean().getReportValue()) {		
 	        case ReportConst.LST_PUB_CAT_ITM_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);
-	        	//rptGenBean.setCmItemStatusView(true);
 				rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmExtentionCodeView(true);
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);
 				if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
@@ -42,16 +39,13 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						rptGenBean.setCmRegistrationTypeView(true);	
 					}
 					rptGenBean.setCmGroupOneView(true);
-				//};
+				
 	            break;
-	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:
-	        	//rptGenBean.setCmSupplOrAdminView(true);			
+	        case ReportConst.LST_APPR_CAT_ITM_RPT_VAL:	        		
 				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmExtentionCodeView(true);			
+				rptGenBean.setCmUnspscTitleView(true);		
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);						
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
@@ -60,19 +54,13 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						rptGenBean.setCmCompanyNameView(true);
 						rptGenBean.setCmRegistrationTypeView(true);	
 					}
-					rptGenBean.setCmGroupOneView(true);
-					//rptGenBean.setCmProofIdentityView(true);
-					//rptGenBean.setCmItemCategoryView(false);
-				//};
+					rptGenBean.setCmGroupOneView(true);					
 	            break;
-	        case ReportConst.LST_REJ_CAT_ITM_RPT_VAL:
-	        	//rptGenBean.setCmSupplOrAdminView(true);			
+	        case ReportConst.LST_REJ_CAT_ITM_RPT_VAL:			
 				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmExtentionCodeView(true);			
+				rptGenBean.setCmUnspscTitleView(true);		
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -82,16 +70,12 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
 					rptGenBean.setCmGroupOneView(true);
-				//};
 	            break;
-	        case ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL:
-	        	//rptGenBean.setCmSupplOrAdminView(true);			
+	        case ReportConst.LST_PEND_APPR_CAT_ITM_RPT_VAL:		
 				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmExtentionCodeView(true);			
+				rptGenBean.setCmUnspscTitleView(true);			
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -101,17 +85,12 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
 					rptGenBean.setCmGroupOneView(true);
-					//rptGenBean.setCmProofIdentityView(true);
-					//rptGenBean.setCmItemCategoryView(false);
-				//};
 	            break;
 	        case ReportConst.LST_EXP_CAT_ITM_RPT_VAL:	        		
 				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmExtentionCodeView(true);			
+				rptGenBean.setCmUnspscTitleView(true);	
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -121,7 +100,6 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
 					rptGenBean.setCmGroupOneView(true);
-				//};
 	            break;
 	        case ReportConst.TOT_CAT_ITM_STS_RPT_VAL:	        	
 				rptGenBean.setFromDateView(true);
@@ -132,11 +110,9 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.TOT_CAT_ITM_UNSPSC_CODE_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmExtentionCodeView(true);			
+				rptGenBean.setCmUnspscTitleView(true);		
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -146,15 +122,12 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 							rptGenBean.setCmRegistrationTypeView(true);	
 						}
 					rptGenBean.setCmGroupOneView(true);
-				//};
 	            break;
 	        case ReportConst.LST_CAT_ITM_STD_PRC_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmSupplOrAdminView(true);					
+				rptGenBean.setCmUnspscTitleView(true);			
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -162,32 +135,26 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
-						}				
-				//};
+						}
 				break;
 	        case ReportConst.LST_CAT_ITM_TIER_PRC_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				//rptGenBean.setCmSupplOrAdminView(true);					
+				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					//rptGenBean.setCmItemTypeView(true);
+				rptGenBean.setToDateView(true);	
 				if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
 					}else {
 						rptGenBean.setCmCompanyNameView(true);
 						rptGenBean.setCmRegistrationTypeView(true);	
-					}				
-				//};
+					}
 				break;
 	        case ReportConst.LST_CAT_ITM_ZON_PRC_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -195,24 +162,20 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
-						}					
-				//};
+						}
 				break;
 	        case ReportConst.LST_CAT_ITM_ZON_TIER_PRC_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
-					//rptGenBean.setCmItemTypeView(true);
+				rptGenBean.setToDateView(true);	
 				if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
 					}else {
 						rptGenBean.setCmCompanyNameView(true);
 						rptGenBean.setCmRegistrationTypeView(true);	
-					}				
-				//};
+					}
 				break;
 	        case ReportConst.LST_PEND_CODE_ASGN_AGNCY_RPT_VAL:
 	        	rptGenBean.setCmItemTypeView(true);	
@@ -224,8 +187,7 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -233,15 +195,13 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
-						}				
-				//};
+						}
 				break;
 	        case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);	
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -249,14 +209,11 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
-						}			
-				//};
+						}
 				break;
-	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:
-	        					
+	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:	        					
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);				
 					rptGenBean.setCmItemTypeView(true);
 					if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 						rptGenBean.setCmCompanyNameView(false);
@@ -264,71 +221,28 @@ public class CMReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 						}else {
 							rptGenBean.setCmCompanyNameView(true);
 							rptGenBean.setCmRegistrationTypeView(true);	
-						}				
-				//};
+						}
 				break;
 	        case ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);					
-				//if((authoriztionList!=null)&&(authoriztionList.contains(RoleCode.CM_ADMIN.toString()))){
+				rptGenBean.setToDateView(true);	
 				if((paramList!=null)&&(paramList.contains(ReportConst.ROLE_CODE_SUP))){
 					rptGenBean.setCmCompanyNameView(false);
 					rptGenBean.setCmRegistrationTypeView(false);
 					}else {
 						rptGenBean.setCmCompanyNameView(true);
 						rptGenBean.setCmRegistrationTypeView(true);	
-					}				
-				//};
+					}
 				break;
 	        case ReportConst.LST_ITM_CODE_RPT_VAL:
 	        	rptGenBean.setCmUnspscCodeView(true);
 				rptGenBean.setCmUnspscTitleView(true);				
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);					
-				rptGenBean.setCmItemNameView(true);		
-				//rptGenBean.setCmExtentionView(true);
-				break;
-	       /* case ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_VAL:
-	        	rptGenBean.setCmItemTypeView(true);			
-				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);							
-				rptGenBean.setCmCompanyNameView(true);
-				rptGenBean.setCmRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setCmProofIdentityView(true);
-				//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.TOT_CAT_ITM_APPR_REJ_RPT_NAME));
-	            break;
-	        case ReportConst.LST_UNSPSC_CODE_REQ_RPT_VAL:
-	        	rptGenBean.setCmItemTypeView(true);						
-				rptGenBean.setCmCompanyNameView(true);
-				rptGenBean.setCmRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setCmProofIdentityView(true);
-				//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_UNSPSC_CODE_REQ_RPT_NAME));
-	            break;
-	        case ReportConst.LST_NEW_EXT_CODE_CREA_RPT_VAL:
-	        	rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);							
-				rptGenBean.setCmCompanyNameView(true);
-				rptGenBean.setCmRegistrationTypeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);			
-				rptGenBean.setCmProofIdentityView(true);
-				//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_NEW_EXT_CODE_CREA_RPT_NAME));	
-	            break;
-	        case ReportConst.LST_ITM_CODE_RPT_VAL:
-	        	rptGenBean.setCmItemNameView(true);			
-				rptGenBean.setCmUnspscCodeView(true);
-				rptGenBean.setCmUnspscTitleView(true);
-				rptGenBean.setCmExtentionCodeView(true);			
-				rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
-				//getManagedBean().setReportName(CommonMethod.getMessageCommon(ReportConst.LST_ITM_CODE_RPT_NAME));
-	            break;*/	       
+				rptGenBean.setCmItemNameView(true);	
+				break;	       
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
