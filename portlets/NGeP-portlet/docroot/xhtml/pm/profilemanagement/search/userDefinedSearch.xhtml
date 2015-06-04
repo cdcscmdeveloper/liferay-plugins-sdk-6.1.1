@@ -104,7 +104,8 @@
 				</th>
 				<td>
 				<ac:lov id="lovRoleDesc" lovId="PM_ROLE_DESC" size="29" 
-		            	update=":form:opDefinedSearch" readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile == null}"
+		            	update=":form:opDefinedSearch" readonly="true" 
+		            	disabled="#{profileManagementBackingBean.managedBean.selectedOrgProfile eq null or (profileManagementBackingBean.managedBean.selectedOrgProfile ne null and profileManagementBackingBean.managedBean.selectedOrgProfile.orgProfileId eq null) }"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
 						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
