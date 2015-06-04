@@ -2614,99 +2614,7 @@ public class ReportBackingBean extends
 		}
 		return items;
 	}
-	/*public List<SelectItem> getReceivedPTJList() {
-		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
-		OrgProfileResDTO resDTO = new OrgProfileResDTO();
-		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
-		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		retrievePTJList.add(new SelectItem("", "- Select One -"));
-		//System.out.println("profile is for list::: "+getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
-		//orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
-		orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
-		resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
-		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
-			
-			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
-			for(PmOrgProfile obj : listDB){
-				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
-			}
-		}		
-		return retrievePTJList;
-	}
-	public SelectItem[] getLtstPTJList() {
-		SelectItem[] items = null;
-
-		IOrgProfileSO orgProfileSO = null;
-		try {
-			orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-
-			items = new SelectItem[resDTO.getOrgProfileList().size() + 1];
-			items[0] = new SelectItem(null, "- Select One -");
-			int i = 1;
-			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
-				items[i++] = new SelectItem(orgProfile.getOrgProfileId(),
-						orgProfile.getOrgName());
-			}
-		} finally {
-			orgProfileSO = null;
-		}
-		return items;
-	}*/
-	/*private void retrieveMinistryList() {
-		pmMinistryList =new ArrayList<SelectItem>();
-		pmPtjList =new ArrayList<String>();		
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setUserId(lngUserId);
-		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
-		UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
-			if(userResDTO.getUserOrgList()!=null&&userResDTO.getUserOrgList().size()>0){
-				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
-				PmOrgProfile pmOrgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
-					if(orgProfileResDTO.getPmOrgProfile()!=null && orgProfileResDTO.getPmOrgProfile().getParentOrgProfile()!=null) {
-						ministryId = orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId();
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgName());
-						selectItem.setValue(orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
-						pmMinistryList.add(selectItem);				
-					}
-					if(pmOrgProfile!=null) {				
-						pmPtjList.add(pmOrgProfile.getOrgName());				
-					}
-			}
-			if(userResDTO.getUserOrgList()!=null&&userResDTO.getUserOrgList().size()>0){
-				List<PmUserOrg> userOrgList= userResDTO.getUserOrgList();
-				PmOrgProfile pmOrgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
-				for (PmUserOrg userOrg : userOrgList) {
-				
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
-					if(orgProfileResDTO.getPmOrgProfile()!=null && orgProfileResDTO.getPmOrgProfile().getParentOrgProfile()!=null) {
-						ministryId = orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId();
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgName());
-						selectItem.setValue(orgProfileResDTO.getPmOrgProfile().getParentOrgProfile().getOrgProfileId());
-						pmMinistryList.add(selectItem);				
-					}				
-				}
-				if(pmOrgProfile!=null) {				
-				    pmPtjList.add(pmOrgProfile.getOrgName());				
-			    }
-			}
-			
-		}*/
+	
 	public void retrievePtjListByMinistryId() {		
 		pmPtjList =new ArrayList<String>();		
 		if(ministryId!=null){
@@ -3455,51 +3363,7 @@ public class ReportBackingBean extends
 								.getRoleCode());
 					}
 				}
-			}
-			/*userResDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			if (userResDTO.getUserOrgList() != null
-					&& userResDTO.getUserOrgList().size() > 0) {
-				List<PmUserOrg> userOrg = userResDTO.getUserOrgList();
-				for (PmUserOrg pmuserOrg : userOrg) {
-					if (pmuserOrg.getPmOrgProfile().getOrgProfileId() != null) {
-						if (!orgProfileList.contains((pmuserOrg
-								.getPmOrgProfile().getOrgProfileId())
-								.toString())) {
-							orgProfileList.add((pmuserOrg.getPmOrgProfile()
-									.getOrgProfileId()).toString());
-							SelectItem selectItem = new SelectItem();
-							selectItem.setLabel(pmuserOrg.getPmOrgProfile()
-									.getOrgName());
-							selectItem.setValue((pmuserOrg.getPmOrgProfile()
-									.getOrgProfileId()).toString());
-							orgProfileIdNameList.add(selectItem);
-						}
-					}
-				}
-			}*/
-			/*String roleCode = ReportConst.EMPTY_VAL;
-			if (approverNayakTarafList.size()>0) {
-				roleCode = ReportConst.APPROVER_NAIK_TARAF;
-			} else if (authoriztionList.contains(ReportConst.RN_APPROVER)) {
-				roleCode = ReportConst.RN_APPROVER;
-			}else if (authoriztionList.contains(ReportConst.BPK_APPROVER)) {
-				roleCode = ReportConst.BPK_APPROVER;
-			}*/
-			/*if (roleCode != null && roleCode != ReportConst.EMPTY_VAL) {
-				for (int i = 0; i < orgProfileList.size(); i++) {
-					reqDTO.setUserId(lngUserId);
-					reqDTO.setRoleCode(roleCode);
-					reqDTO.setOrgProfileId(Long.parseLong(orgProfileList.get(i)));
-					userResDTO = userSO.retrieveUserListByRole(reqDTO);
-					List<PmUser> list = userResDTO.getUserList();
-					for (PmUser user : list) {
-						SelectItem selectItem = new SelectItem();
-						selectItem.setLabel(user.getUserName());
-						selectItem.setValue(user.getUserId());
-						userListbyprofileRole.add(selectItem);
-					}
-				}
-			}*/
+			}			
 		}
 		return authoriztionList;
 	}
@@ -3588,29 +3452,7 @@ public class ReportBackingBean extends
 			for (int i = 0; i < ptjLst.size(); i++) {				
 				ptjList.add(ptjLst.get(i));
 			}			
-		}
-		/*IOrgProfileSO orgProfileSO = null;
-		try {
-			if (null !=this.getCommonMinistry()) {
-				Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
-				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);	
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setParentOrgProfileId(lngorgprflid);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrievePTJListByMinistry(reqDTO);
-				resDTO.getOrgProfileList();	
-				for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
-					//SelectItem selectItem1 = new SelectItem();
-					//selectItem1.setLabel(orgProfile.getOrgName());
-					//selectItem1.setValue(orgProfile.getOrgProfileId());
-					//ptjList.add(selectItem1);					
-				}					
-			}		
-		} finally {
-			orgProfileSO = null;
-		}*/			
+		}				
 		return ptjList;
 	}
 	public List<SelectItem>  retrieveFPJMinistryList() {
@@ -3625,13 +3467,7 @@ public class ReportBackingBean extends
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1].toString());
 				ministryList.add(selectItem);
-			}
-			/*for (int i = 0; i < minstryLst.size(); i++) {
-				SelectItem selectItem = new SelectItem();
-				selectItem.setLabel(minstryLst.get(i).toString());
-				selectItem.setValue(minstryLst.get(i));
-				ministryList.add(selectItem);
-			}*/			
+			}				
 		}
 		return ministryList;	
 	}
@@ -4314,42 +4150,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					throw new EpException(MessageConst.ERROR_REPORT_780008);
 				}
 			}
-			/*if (((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL))&&(((getManagedBean().getReportValue() == ReportConst.TECSPEC_TEC_RPT_VAL)
-							&& (getManagedBean().getReportValue().equals(ReportConst.TECSPEC_TEC_RPT_VAL)))||((getManagedBean().getReportValue() == ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL)
-									&& (getManagedBean().getReportValue().equals(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL))))) {
-				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-								IPMReportSO.class);
-				List<String> weitageReq = reportSO.retrieveWeightageReq(lngUserId);
-				String wtgReqVal=null;
-				if(weitageReq.size()>0) {					
-					wtgReqVal = highRoleCodeList.get(0);
-				}
-				if(getManagedBean().getReportValue().equals(ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL)){
-				if(wtgReqVal!=null){
-					if(wtgReqVal.equals(ReportConst.ZERO_VAL)){
-						rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-								+ ReportConst.PSDAK_BILANGAN_KONTRAK_EC_RPT_VAL);
-					}else if(wtgReqVal.equals(ReportConst.ONE_VAL)){
-						rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-								+ ReportConst.PSDABK_BILANGAN_KONTRAK_EC_RPT_VAL);
-						getManagedBean().setReportJsp(ReportConst.SC_EC_TECH_SPEC_WEI);
-					}
-				}
-				}else if(getManagedBean().getReportValue().equals(ReportConst.TECSPEC_TEC_RPT_VAL)){
-					if(wtgReqVal!=null){
-						if(wtgReqVal.equals(ReportConst.ZERO_VAL)){
-							rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-									+ ReportConst.TECSPEC_TEC_RPT_VAL);
-						}else if(wtgReqVal.equals(ReportConst.ONE_VAL)){
-							rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
-									+ ReportConst.PSDAK_TEC_RPT_VAL);
-							getManagedBean().setReportJsp(ReportConst.SC_TEC_TECH_SPEC_WEI);
-						}
-					}
-					}
-			}else*/  if ((getManagedBean().getReportValue() != null)
+			 if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setReportValueIdVar(ReportConst.FL_AMP_REPORT_ID_EQ
 						+ getManagedBean().getReportValue());
@@ -4934,12 +4735,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getSmPaidUpCapitalNaccum() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSmPaidUpCapitalNaccumVar(ReportConst.AMP_SM_PAIDUP_CPTL_R_ACLTD_EQ
 						+ this.getSmPaidUpCapitalNaccum());
-			}
-			/*if ((this.getSmRole() != null)
-					&& (this.getSmRole() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmRoleVar(ReportConst.AMP_SM_ROLE_EQ
-						+ this.getSmRole());
-			}*/
+			}			
 			if ((this.getSmEpNo() != null)
 					&& (this.getSmEpNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setSmEpNoVar(ReportConst.AMP_SM_EP_NO_EQ
@@ -5455,12 +5251,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setItemTypeTotVar(ReportConst.CM_AMP_ITEM_TYPE_EQ
 						+ this.getCmItemType());
 			}
-			/*if ((this.getCmItemStatus() != null)
-					&& (this.getCmItemStatus() != ReportConst.EMPTY_VAL)) {
-				rptGenBean
-						.setItemStatusTotVar(ReportConst.CM_AMP_ITEM_STATUS_EQ
-								+ this.getCmItemStatus());
-			}*/
+			
 			if ((this.getCmUnspscCode() != null)
 					&& (this.getCmUnspscCode() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
