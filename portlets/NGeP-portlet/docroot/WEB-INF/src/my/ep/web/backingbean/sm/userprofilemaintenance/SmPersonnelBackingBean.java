@@ -142,7 +142,7 @@ public class SmPersonnelBackingBean extends
 
 		getManagedBean().setNoSupplierUserMsg("");
 
-		if (isHavePendingTaskList()) {
+		if (isHavePendingTaskList(smSupplier)) {
 			SmCommonUtil.redirectToPage(redirectPage, MessageConst.INFO_721213);
 		} else {
 			redirectPage = "adminReAssign.xhtml";
@@ -1701,21 +1701,9 @@ public class SmPersonnelBackingBean extends
 	 * 
 	 * @return boolean
 	 */
-	private boolean isHavePendingTaskList() {
-		boolean retVal = false;
-		if (getManagedBean().getToken() == null
-				|| StringUtils.isBlank(getManagedBean().getToken())) {
-			FacesScopes face = new FacesScopes();
-			getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
-		}
-		List<WorklistItemVO> taskList = SmCommonUtil
-				.getBpmTaskListByAuthToken(getManagedBean().getToken());
-
-		if (taskList == null || taskList.isEmpty()) {
-			retVal = false;
-		} else {
-			retVal = true;
-		}
+	private boolean isHavePendingTaskList(SmSupplier supplier) {
+		boolean retVal = SmApplicationUtil
+				.checkActiveSmApplForSupp(supplier);
 		return retVal;
 	}
 
