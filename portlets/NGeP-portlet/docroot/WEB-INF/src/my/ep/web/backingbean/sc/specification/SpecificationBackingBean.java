@@ -5476,7 +5476,7 @@ public class SpecificationBackingBean extends
 				docDefTypeReqDTO
 						.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
 				docDefTypeReqDTO
-						.setParameterCode(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+						.setParameterCode(ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD);
 				ParameterResDTO docDefTypeResDTO = parameterSo
 						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 				StatusReqDTO statusreq = new StatusReqDTO();
@@ -5561,7 +5561,7 @@ public class SpecificationBackingBean extends
 				docDefTypeReqDTO
 						.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
 				docDefTypeReqDTO
-						.setParameterCode(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+						.setParameterCode(ParameterConst.CHECKLIST_ACTION_SUPPLIER_UPLOAD);
 				ParameterResDTO docDefTypeResDTO = parameterSo
 						.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
 				StatusReqDTO statusreq = new StatusReqDTO();
