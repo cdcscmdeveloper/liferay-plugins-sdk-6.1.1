@@ -24,7 +24,8 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.ptj']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu id="ppPtj" value="#{reportBackingBean.commonPtj}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>																																										
+										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																										
 									</p:selectOneMenu>		
 								  </c:if> 
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ppYearView}">
@@ -32,7 +33,7 @@
 									<p:selectOneMenu id="ppYear" value="#{reportBackingBean.ppYear}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.generateYearList()}"></f:selectItems>
-																																										
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																
 									</p:selectOneMenu>		
 								  </c:if>
 										   
