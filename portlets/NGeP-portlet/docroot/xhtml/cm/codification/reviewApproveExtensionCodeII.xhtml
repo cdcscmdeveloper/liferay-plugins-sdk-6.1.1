@@ -103,28 +103,28 @@
 						<div style="width:100%; ">
 							<p:inputText value="#{review.reviewedTypeNameII}"
 								disabled="#{!review.requestType or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.type']}">
-								<p:ajax event="blur" update=":form:dt:typeremark2 :form:dt:typeremarkmsg"></p:ajax>
+								<p:ajax event="blur" update=":form:dt:typeremark2"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.reviewedBrandNameII}"
 								disabled="#{!review.requestBrand or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.brand']}">
 								<p:ajax event="blur"
-									update=":form:dt:brandRemark2 :form:dt:brandremarkmsg"></p:ajax>
+									update=":form:dt:brandRemark2"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.reviewedMeasurementNameII}"
 								disabled="#{!review.requestMeasurement or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.measurement']}">
 								<p:ajax event="blur"
-									update=":form:dt:measurementRemark2 :form:dt:measurementremarkmsg"></p:ajax>
+									update=":form:dt:measurementRemark2"></p:ajax>
 							</p:inputText>
 						</div>
 						<div style="width:100%; ">
 							<p:inputText value="#{review.reviewedColorNameII}"
 								disabled="#{!review.requestColor or unspscCodeBackingBean.codeAdmin}" required="true" label="#{lbl['lbl.cm.color']}">
 								<p:ajax event="blur"
-									update=":form:dt:colorRemark2 :form:dt:colorremarkmsg"></p:ajax>
+									update=":form:dt:colorRemark2"></p:ajax>
 							</p:inputText>
 						</div>
 
@@ -166,23 +166,7 @@
 						</div>
 
 					</p:column>
-					 <p:column>
-
-						<div style="width:100%;">
-							<p:message id="typeremarkmsg" for="typeremark2" display="icon"></p:message>
-							
-						</div>
-						<div style="width:100%;height: 25px;">
-							<p:message id="brandremarkmsg" for="brandRemark2" display="icon"></p:message>
-						</div>
-						<div style="width:100%;height: 25px;">
-							<p:message id="measurementremarkmsg" for="measurementRemark2" display="icon"></p:message>
-						</div>
-						<div style="width:100%;height: 20px;">
-							<p:message id="colorremarkmsg" for="colorRemark2" display="icon"></p:message>
-						</div>
-						
-					</p:column>
+					
 
 				</p:dataTable>
 			</p:panel>
