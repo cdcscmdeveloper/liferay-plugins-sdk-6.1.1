@@ -1223,6 +1223,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	public String retrieveMinistry(){
 		return retrieveMinistryByOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
 	}
+	
+	public String retrievePegawaiPengawal(){
+		return retrievePegawaiPengawalByOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+	}
+	
+	public String retrieveKumpulanPtj(){
+		return retrieveJabatanByOrgProfileId(getManagedBean().getSelectedPlan().getOrgProfile().getOrgProfileId());
+	}
 	/* --------------------------------------------------------- Plan General Related - END -----------------------------------------------------------------*/	
 	
 	
