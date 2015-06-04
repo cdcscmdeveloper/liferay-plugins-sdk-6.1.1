@@ -447,9 +447,9 @@ public class LOADetailBackingBean extends
 
 			// active tab index for loa contents
 			if(getManagedBean().getCurrentStatusId() != null){
-				if(getManagedBean().getCurrentStatusId().equals(QTStatusConst.LOA_PENDING_VERIFICATION)){
+				if(QTStatusConst.LOA_PENDING_VERIFICATION.equals(getManagedBean().getCurrentStatusId())){
 					if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getDocType() != null){
-						if(scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+						if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
 							getManagedBean().setSelectedTabIndex(6);
 						} else{
 							getManagedBean().setSelectedTabIndex(5);
@@ -1349,21 +1349,34 @@ public class LOADetailBackingBean extends
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)){
 					// if pending supplier acknowledgement , always regenerate 
-					filename.append(".pdf");
-					scLoaReportAttachment.setFileName(filename.toString());
+					
 					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
-							.equals(docDefinitionKey)) {					
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
 						generateContractSummaryPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
 					} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
 							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
 						generateAgreementLetterPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa,
 								getManagedBean().getScQt());
 					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
-							.equals(docDefinitionKey)) {					
+							.equals(docDefinitionKey)) {	
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
 						generateDeclarationPdfFromVelocity(
 								(ScAttachment) scLoaReportAttachment, scLoa);
+						
+					} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+							.equals(docDefinitionKey)) {
+						filename.append(".xlsx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						formJadualHarga((ScAttachment) scLoaReportAttachment,
+								scLoa);
+						
 					}
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
@@ -1907,79 +1920,6 @@ public class LOADetailBackingBean extends
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT , 
 				context, new FileOutputStream(getActualFilePath(attachment)));
-	}
-
-	/**
-	 * Retrieve bond dtls.
-	 *
-	 * @param scLoa the sc loa
-	 */
-	private void retrieveBondDtls(ScLoa scLoa) {
-		debugLogger("retrieveBondDtls");
-		try {
-			
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			ScLoa loa = new ScLoa();
-			loa.setLoaId(scLoa.getLoaId());
-			reqDTO.setScLoa(loa);
-			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveBondDtls(reqDTO);
-
-			List<ScPerformanceBond> bondDtl = resDTO.getBondDtls();
-			System.out.println("Bond Details : " + bondDtl.size());
-
-			for (ScPerformanceBond dtl : bondDtl) {
-
-			}
-
-			getManagedBean().setScBondDtlList(bondDtl);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	/**
-	 * Show officer details.
-	 */
-	private void showOfficerDetails() {
-		IAddressSO addressSO;
-		try {
-			PmUser user = new FacesScopes().getUserSessionBean();
-
-			// getManagedBean().getScLoa().setOfficierName(user.getUserName());
-			// getManagedBean().getScLoa().setOfficerDesignation(
-			// user.getDesignation());
-
-			addressSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
-			AddressReqDTO addReqDTO = new AddressReqDTO();
-			addReqDTO.setUserId(user.getUserId());
-			addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-
-			AddressResDTO addResDTO = addressSO
-					.retrieveAddressTypeList(addReqDTO);
-
-			List<PmAddressType> addList = addResDTO.getAddressTypeList();
-
-			/*
-			 * getManagedBean().getScLoa().setOfficerAddress(
-			 * addList.get(0).getPmAddress().getAddress1());
-			 */
-			/*
-			 * getManagedBean().getScLoa().setOfficerFaxNo(
-			 * addList.get(0).getPmAddress().getFaxNo());
-			 * getManagedBean().getScLoa().setOfficerPhoneNo(
-			 * addList.get(0).getPmAddress().getPhoneNo());
-			 */
-			/*
-			 * getManagedBean().getScLoa().setOfficerEmail(
-			 * addList.get(0).getPmAddress().getEmail());
-			 */
-
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-
 	}
 
 	/**
@@ -2859,28 +2799,7 @@ public class LOADetailBackingBean extends
 		}
 	}
 
-	/**
-	 * Handle file upload.
-	 *
-	 * @param event the event
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
-	 */
-	public void handleFileAttachment(FileUploadEvent event) {
-		debugLogger("handleFileAttachment");
-		ScPerformanceBond bondDtl = getManagedBean().getScBondDtl();
-		// ScBondDtlAttachment attachment = bondDtl.getScBondDtlAttachment();
-		/*
-		 * if (null == attachment) { attachment = new ScBondDtlAttachment();
-		 * attachment.setScBondDtl(bondDtl); }
-		 */
-
-		// uploadAttachment(event.getFile(), attachment);
-
-		// bondDtl.setScBondDtlAttachment(attachment);
-
-	}
-
+	
 	/**
 	 * Adds the schedule details in Fulfillment Schedule.
 	 */
@@ -3297,7 +3216,7 @@ public class LOADetailBackingBean extends
 		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
 			jadualHarga = mappingJadualHarga(item);
 			itemType = item.getScRequestItem().getItemType().getParameterCode();
-			if (itemType.equals(ParameterConst.ITEM_TYPE_PRODUCT)) {
+			if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
 				productJadualHargaList.add(jadualHarga);
 			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
 				serviceJadualHargaList.add(jadualHarga);
@@ -3307,7 +3226,7 @@ public class LOADetailBackingBean extends
 		// check whether loa from s1 or s2.
 		boolean isS1OrS2 = Boolean.TRUE;
 		if(scLoa.getScLoiLoa() != null){
-			if(scLoa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)){
+			if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
 				isS1OrS2 = Boolean.FALSE;
 			}
 		}
@@ -3519,9 +3438,9 @@ public class LOADetailBackingBean extends
 		TemplateSpecResDTO templateSpecResDTO  = templateSpecSO.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
 		if(templateSpecResDTO.getSpecAnswerList() != null && templateSpecResDTO.getSpecAnswerList().size()>0){
 			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO.getSpecAnswerList()) {
-				if(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_PRODUCT)){
+				if(ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
 					productAnswers.add(tplSpecAnswer);
-				} else if(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode().equals(ParameterConst.ITEM_TYPE_SERVICE)){
+				} else if(ParameterConst.ITEM_TYPE_SERVICE.equals(tplSpecAnswer.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode().getParameterCode())){
 					serviceAnswers.add(tplSpecAnswer);
 				}
 			}
@@ -3670,20 +3589,20 @@ public class LOADetailBackingBean extends
 		String answerType="";
 		String answerTypeCode = answer.getTplSpecQuestion().getAnswerTypeCode().getParameterCode();
 
-		if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_TEXT)){
+		if(ParameterConst.ANSWER_TYPE_TEXT.equals(answerTypeCode)){
 
 			if(null == answer.getAnswerText()){
 				answerType = "N/A";
 			} else{
 				answerType = answer.getAnswerText();
 			}
-		} else if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_NUMERIC)){
+		} else if(ParameterConst.ANSWER_TYPE_NUMERIC.equals(answerTypeCode)){
 			if(null == answer.getAnswerText()){
 				answerType = "N/A";
 			} else{
 				answerType = answer.getAnswerNumeric().toString();
 			}
-		} else if(answerTypeCode.equals(ParameterConst.ANSWER_TYPE_DROPDOWN)){
+		} else if(ParameterConst.ANSWER_TYPE_DROPDOWN.equals(answerTypeCode)){
 			if(answer.getAnswerCompliance()){
 				answerType  = SourcingConstants.SUPPLIER_REQUIREMENT_YES;
 			} else{
@@ -4420,7 +4339,7 @@ public class LOADetailBackingBean extends
 		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 		BigDecimal loaAmt = loa.getLoaAmt();
 		
-		boolean isOneOffFulfilment = fulfilmentType.equals(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
+		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
 		if(!isOneOffFulfilment) {
 			isAgreementMandatory = true;
 		} else {
@@ -4437,7 +4356,7 @@ public class LOADetailBackingBean extends
 	
 	private boolean isbondExceptionCategory(ScLoa loa) {
 		ScQt scQt = null;
-		if(loa.getScLoiLoa().getDocType().equals(ParameterConst.DOCTYPE_QUOTATION)) {
+		if(ParameterConst.DOCTYPE_QUOTATION.equals(loa.getScLoiLoa().getDocType())) {
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(loa.getScLoiLoa().getDocId());
 			scQt = getQtSuppFinalizationSO().retrieveQTDtls(reqDTO).getScQt();
