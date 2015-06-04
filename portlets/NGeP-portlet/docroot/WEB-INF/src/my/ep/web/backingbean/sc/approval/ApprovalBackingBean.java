@@ -787,6 +787,7 @@ public class ApprovalBackingBean extends
 
 				String approvalCategoryCode = approval.getApprovalCategory()
 						.getParameterCode();
+				qtReqDTO.setApprovalType(approvalCategoryCode);
 				List<ScQtApprovalRequest> approvalRequests = this
 						.getManagedBean().getScQtApprovalRequestList();
 				if (ParameterConst.APPROVAL_CATEGORY_BPK
@@ -801,12 +802,16 @@ public class ApprovalBackingBean extends
 								.getQuotationTenderDataType())
 								.setBpkRevise(true);
 					}
+					else if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(action)) {
+						qtReqDTO.setRejected(true);
+					}
 				} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
 						.equalsIgnoreCase(approvalCategoryCode)
 						|| ParameterConst.APPROVAL_CATEGORY_PTJ
 								.equalsIgnoreCase(approvalCategoryCode)) {
 
 					if (BpmOutcomeConst.BPM_REJECT.equalsIgnoreCase(outcome)) {
+						qtReqDTO.setRejected(true);
 						revertToOldValues(approvalRequests, qt);
 					}
 				}
@@ -1015,6 +1020,7 @@ public class ApprovalBackingBean extends
 			ScQt scQt) {
 		if (null != approvalRequests) {
 			boolean isRevise = false;
+			boolean isRejected = false;
 			for (int i = 0; i < approvalRequests.size(); i++) {
 				ScQtApprovalRequest approvalRequest = approvalRequests.get(i);
 				String approvalType = approvalRequest.getApprovalType()
@@ -1041,6 +1047,7 @@ public class ApprovalBackingBean extends
 								.parseInt(approvalRequest.getOriginalValue()));
 						approvalRequest.setChangedValue(approvalRequest
 								.getOriginalValue());
+						isRejected = true;
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
@@ -1054,6 +1061,7 @@ public class ApprovalBackingBean extends
 									.getApproverAction().getParameterCode())) {
 						scQt.setPublishPeriod(Integer.parseInt(approvalRequest
 								.getOriginalValue()));
+						isRejected = true;
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
@@ -1075,6 +1083,7 @@ public class ApprovalBackingBean extends
 						} else {
 							scQt.setOpenFor(QTConstants.QT_BUMIPUTRA);
 						}
+						isRejected = true;
 					} else if (ParameterConst.APPROVAL_DECISION_TYPE_REVISED
 							.equalsIgnoreCase(approvalRequest
 									.getApproverAction().getParameterCode())) {
@@ -1085,6 +1094,9 @@ public class ApprovalBackingBean extends
 			}
 			if (isRevise) {
 				return BpmOutcomeConst.BPM_REVISE;
+			}
+			else if(isRejected) {
+				return BpmOutcomeConst.BPM_REJECT;
 			}
 		}
 		return BpmOutcomeConst.BPM_APPROVE;
