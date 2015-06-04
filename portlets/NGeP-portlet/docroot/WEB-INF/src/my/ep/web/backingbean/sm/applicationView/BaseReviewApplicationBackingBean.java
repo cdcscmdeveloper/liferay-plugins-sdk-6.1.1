@@ -18,6 +18,7 @@ import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -167,9 +168,23 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		// show message if supp profile not ready
 		if (!getManagedBean().isReviewApplicationExist()) {
-			log.error("**************error init revision appl*****************");
-			SmApplicationUtil.showSuppProfileNotReadyMsg(FacesContext
-					.getCurrentInstance());
+			// if failed to load ser file, then load using db (previous and
+			// original application)
+			if (getManagedBean().isOriginal()
+					|| getManagedBean().isPreviousApproved()) {
+				MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+				mofRegistrationReqDTO.setApplNo(getManagedBean()
+						.getApplicationNoParam());
+				getManagedBean().setSmAppl(
+						SmServiceLookup
+								.getMofRegistrationSO()
+								.retrieveSmApplWithChildByApplNo(
+										mofRegistrationReqDTO).getSmAppl());
+			} else {
+				SmCommonUtil.redirectToPage(
+						SmApplicationUtil.getApplicationErrorPage(),
+						MessageConst.INFO_721212);
+			}
 		}
 
 	}
