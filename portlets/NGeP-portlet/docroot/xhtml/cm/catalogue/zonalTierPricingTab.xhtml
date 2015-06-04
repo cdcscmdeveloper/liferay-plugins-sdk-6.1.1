@@ -157,7 +157,7 @@
 					disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}"
 					action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
 					update=":form:pricingTabID:headerTabId:zonalTierId">
-					<p:graphicImage value="/css/images/design/promo.png" ></p:graphicImage>
+					<p:graphicImage height="16" width="16" value="/css/images/design/promo.png" ></p:graphicImage>
 				</p:commandLink>
 				<h:panelGroup id="zTErrorLink">
 					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
