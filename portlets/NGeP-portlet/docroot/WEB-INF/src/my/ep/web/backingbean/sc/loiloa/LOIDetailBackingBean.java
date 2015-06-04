@@ -559,7 +559,7 @@ public class LOIDetailBackingBean extends
 
 
 			boolean isMultipleLoi = Boolean.FALSE;
-			if(getManagedBean().getDocType().equals(ParameterConst.DOCTYPE_MULTIPLE_LOI)){
+			if(ParameterConst.DOCTYPE_MULTIPLE_LOI.equals(getManagedBean().getDocType())){
 				isMultipleLoi = Boolean.TRUE;
 			}
 
