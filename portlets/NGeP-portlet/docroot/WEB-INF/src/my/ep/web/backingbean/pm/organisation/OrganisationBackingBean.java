@@ -642,8 +642,12 @@ public class OrganisationBackingBean extends
 						&& (pmAddressType.getRecordStatusFlg()
 								.equals(DbValueConst.RECORD_STATUS_ACTIVE))) {
 					//cater for sarawak if no division
-					if(pmAddressType.getPmAddress().getPmDivision() == null){
-						pmAddressType.getPmAddress().setPmDivision(new PmDivision()); 
+					if(pmAddressType.getPmAddress().getPmState() != null 
+							&& pmAddressType.getPmAddress().getPmDivision() == null){
+						if(pmAddressType.getPmAddress().getPmState().getStateCode()
+								.equals(ProfileManagementConst.STATE_CODE_SARAWAK)){
+							pmAddressType.getPmAddress().setPmDivision(new PmDivision()); 
+						}
 					}
 					this.getManagedBean().setOfficeAddress(
 							pmAddressType.getPmAddress());
