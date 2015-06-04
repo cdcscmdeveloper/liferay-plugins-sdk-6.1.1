@@ -11,25 +11,21 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	
-	<table class="ppTwoTable" style="width: 100%;">
+	<table class="ppTwoTable" style="width: 70%;">
 		<tr>
 			<th>
 				<p:outputLabel value="#{lbl['lbl.pp.ministry']}" />
 			</th>
 			<td>
-				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.retrieveMinistry()}"></p:inputTextarea>
+				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrieveMinistry()}"></p:inputText>
 			</td>
+		</tr>
+		<tr>
 			<th>
 				<p:outputLabel value="#{lbl['lbl.pp.pegawai.pengawal']}" />
 			</th>
 			<td>
-				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.retrievePegawaiPengawal()}"></p:inputTextarea>
-			</td>
-			<th>
-				
-			</th>
-			<td>
-				
+				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrievePegawaiPengawal()}"></p:inputText>
 			</td>
 		</tr>
 		<tr>
@@ -37,15 +33,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<p:outputLabel value="#{lbl['lbl.pp.kumpulan.ptj']}" />
 			</th>
 			<td>
-				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.retrieveKumpulanPtj()}"></p:inputTextarea>
+				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.retrieveKumpulanPtj()}"></p:inputText>
 			</td>
+		</tr>
+		<tr>
 			<th>
 				<p:outputLabel value="#{lbl['lbl.pp.ptj']}" />
 			</th>
 			<td>
-				<p:inputTextarea disabled="true" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} /
-					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputTextarea>
+				<p:inputText disabled="true" style="width:209%;" value="#{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgCode} /
+					 #{pPlanBackingBean.managedBean.selectedPlan.orgProfile.pmOrgValidity.orgName}"></p:inputText>
 			</td>
+		</tr>
+		<tr>
 			<th>
 				
 			</th>
@@ -53,7 +53,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				
 			</td>
 		</tr>
-		
 		<tr>
 			<th>
 				<p:outputLabel value="#{lbl['lbl.pp.plan.type']}" />
