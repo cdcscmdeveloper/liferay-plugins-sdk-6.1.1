@@ -141,7 +141,7 @@
 					disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.standardDisabled or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}"
 					action="#{catalogueBackingBean.cloneZonalTierPrice(rowIndex)}"
 					update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId, :form:pricingTabID:headerTabId:zonalTierId:addZonalTierButton">
-					<p:graphicImage style="padding-right:10px;" value="/css/images/design/add.png"></p:graphicImage>
+					<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
 				</p:commandLink>
 				<p:commandLink title="#{lbl['lbl.btn.delete']}" id="zTDeleteLink"
 					rendered="#{tier.showFlag}"
@@ -149,7 +149,7 @@
 					oncomplete="confirmationZonal.show()"
 					update=":form:pricingTabID:headerTabId:zonalTierId:cmZonalTierPricingsId">
 					<f:param name="index" value="#{rowIndex}"></f:param>
-					<p:graphicImage style="padding-right:10px;" value="/css/images/design/trash.png"></p:graphicImage>
+					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 				<p:commandLink id="zTPromoLink"
 					title="#{lbl['lbl.cm.add.to.promotion']}"
@@ -157,8 +157,7 @@
 					disabled="#{tier.cmSupplierZone.suppZoneId eq 0 or tier.price eq null or tier.fromQty eq null or tier.toQty eq null or tier.fromQty >= tier.toQty or tier.startDate eq null or tier.endDate eq null or tier.startDate >= tier.endDate or !tier.displayAction}"
 					action="#{catalogueBackingBean.addToZonalPromotion(rowIndex)}"
 					update=":form:pricingTabID:headerTabId:zonalTierId">
-					<p:graphicImage style="padding-right:10px;" value="/css/images/design/promo.png" width="16"
-						height="16"></p:graphicImage>
+					<p:graphicImage value="/css/images/design/promo.png" ></p:graphicImage>
 				</p:commandLink>
 				<h:panelGroup id="zTErrorLink">
 					<p:commandLink title="#{lbl['lbl.txt.error']}" process="@this"
