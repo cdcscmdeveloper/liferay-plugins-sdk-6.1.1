@@ -49,31 +49,6 @@
 		
 		<tr>
 			<td>
-				<h:outputLabel value="#{lbl['lbl.sm.activation.password']}" />
-			</td>
-			<td>
-				<p:password id="pwd1" value="#{supplierUserActivationBackingBean.password}" maxlength="20" 
-				feedback="false" match="pwd2" label="#{lbl['lbl.sm.activation.password']}" required="true">
-					<f:validateLength minimum="8" maximum="20"></f:validateLength>
-				</p:password>
-				
-				<p:graphicImage id="regPassTT" value="/css/images/design/tooltips.png" />
-				<p:tooltip id="regPass" for="regPassTT">
-					<p:outputLabel escape="false" value="#{lbl['tt.sm.supplieractivation.password']}"  />
-				</p:tooltip>&#160;
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h:outputLabel value="#{lbl['lbl.sm.activation.password2']}" />
-			</td>
-			<td>
-				<p:password id="pwd2" value="#{supplierUserActivationBackingBean.confirmPassword}" maxlength="20" 
-				feedback="false" label="#{lbl['lbl.sm.activation.password2']}" required="true"/>
-			</td>
-		</tr>
-		<tr>
-			<td>
 				<p:commandButton 
 					value="#{lbl['lbl.btn.submit']}" onclick="submissionDialog.show();"  oncomplete="submissionDialog.hide();"
 					action="#{supplierUserActivationBackingBean.activateSupplierUser}" />
