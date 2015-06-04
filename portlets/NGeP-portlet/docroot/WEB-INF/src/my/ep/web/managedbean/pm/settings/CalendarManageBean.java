@@ -6,16 +6,12 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
 
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
 import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -27,59 +23,81 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 @ManagedBean(name = "calendarSchedulerMB")
 @SessionScoped
 public class CalendarManageBean extends BaseManagedBean {
-	
-	private static Logger log = Logger.getLogger(CalendarManageBean.class);
+
 	private ScheduleModel eventModel;
 	private Long selectedStateId;
 	private PmState selectedState;
-	private ScheduleEvent event = new DefaultScheduleEvent();
+	private ScheduleEvent event;
 
 	@PostConstruct
 	public void init() {
-		// default state to putrajaya , stateId = 17
-		loadScheduler(17L);
+		loadSchedule(2);
 	}
-	
-	public void loadScheduler(long stateId){
-		
+
+	public void loadSchedule(long stateId) {
 		eventModel = new DefaultScheduleModel();
+		event = new DefaultScheduleEvent();
 		
-		PmState state = PmCommonUtil.retrievePmStateByStateId(stateId);
-		setSelectedState(state);
-		ICalendarSO calendarSO = null;
-		CalendarResDTO resDTO = new CalendarResDTO();
+		this.loadCountrySchedule();
 		
-		try {
-			calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICalendarSO.class);
-			CalendarReqDTO reqDTO = new CalendarReqDTO();
-			reqDTO.setStateId(stateId);
-			resDTO = calendarSO.getHolidaysForState(reqDTO);
-			List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
-
-			if(stateHolidayList!=null){
-				log.info(".............stateHolidayList.size()="
-						+ stateHolidayList.size());
-				for (PmHoliday holiday : stateHolidayList) {
-					eventModel.addEvent(new DefaultScheduleEvent(holiday
-							.getHolidayName(), holiday.getStartDate(), holiday
-							.getEndDate()));
-				}
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
+		if(stateId!=0){
+			this.loadStateSchedule(stateId);
 		}
 		
 		selectedStateId = stateId;
-		
-		setEvent(new DefaultScheduleEvent());
+	}
+
+	private void loadStateSchedule(long stateId) {
+		PmState state = PmCommonUtil.retrievePmStateByStateId(stateId);
+		setSelectedState(state);
+		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICalendarSO.class);
+		CalendarReqDTO reqDTO = new CalendarReqDTO();
+		reqDTO.setStateId(stateId);
+		CalendarResDTO resDTO = calendarSO.getHolidaysForState(reqDTO);
+		List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
+		if (stateHolidayList != null) {
+			for (PmHoliday holiday : stateHolidayList) {
+				ScheduleEvent event = new DefaultScheduleEvent(
+						holiday.getHolidayName(), holiday.getStartDate(),
+						holiday.getEndDate());
+				event.setId(String.valueOf(holiday.getHolidayId()));
+				eventModel.addEvent(event);
+			}
+		}
+	}
+
+	private void loadCountrySchedule() {
+		setSelectedState(new PmState());
+		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICalendarSO.class);
+		CalendarReqDTO reqDTO = new CalendarReqDTO();
+		CalendarResDTO resDTO = calendarSO.getHolidaysForCountry(reqDTO);
+		List<PmHoliday> countryHolidayList = resDTO.getHolidayList();
+
+		if (countryHolidayList != null) {
+			for (PmHoliday holiday : countryHolidayList) {
+				ScheduleEvent event = new DefaultScheduleEvent(
+						holiday.getHolidayName(), holiday.getStartDate(),
+						holiday.getEndDate());
+				event.setId(String.valueOf(holiday.getHolidayId()));
+				eventModel.addEvent(event);
+			}
+		}
+	}
+
+	public ScheduleModel getEventModel() {
+		return eventModel;
+	}
+
+	public void setEventModel(ScheduleModel eventModel) {
+		this.eventModel = eventModel;
 	}
 
 	public ScheduleEvent getEvent() {
 		return event;
 	}
-	
+
 	public void setEvent(ScheduleEvent event) {
 		this.event = event;
 	}
@@ -92,18 +110,7 @@ public class CalendarManageBean extends BaseManagedBean {
 		this.selectedStateId = selectedStateId;
 	}
 
-	public ScheduleModel getEventModel() {
-		return eventModel;
-	}
-
-	public void setEventModel(ScheduleModel eventModel) {
-		this.eventModel = eventModel;
-	}
-
 	public PmState getSelectedState() {
-		if (selectedState == null) {
-			selectedState = new PmState();
-		}
 		return selectedState;
 	}
 
