@@ -17,7 +17,8 @@
 	   <ui:param name="isEditableStatus"
 			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
 			
-		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
+					closable="true" showSummary="false" severity="error, info" />
 		
 	   <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
 		   postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" />

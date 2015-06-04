@@ -11,7 +11,8 @@
 	<ui:define name="contentSection">
 		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.scQt.currentWorkFlowStatus.pmStatus.statusId == QTStatusConst.QT_RE_FINALIZATION}" />
 	
-		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" autoUpdate="true" closable="true"/>
+		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
+					autoUpdate="true" closable="true" severity="error, info" />
 		
 		<ac:gpkiPopup textBeforeSign="#{suppFinalizationBackingBean.textBeforeSign}"
 		   postSignAction="#{suppFinalizationBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
