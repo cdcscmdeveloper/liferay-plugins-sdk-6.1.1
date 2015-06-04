@@ -757,7 +757,9 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		File dir = new File(uploadDir);
 		log.info(" dir.exists()" + dir.exists());
 		if (!dir.exists()) {
+			log.info("before make directory");
 			dir.mkdirs();
+			log.info("after make directory");
 		}
 
 		try {

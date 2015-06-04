@@ -203,7 +203,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 				// construct file path
 				String filePath = Calendar.getInstance().get(Calendar.YEAR)
-						+ "/SM/SOFTCERT/DOC/"
+						+ "/SM/" + "SOFTCERT/"
 						+ selectedSuppDocVO.getPersonnel().getPmUser()
 								.getLoginId() + "/";
 
