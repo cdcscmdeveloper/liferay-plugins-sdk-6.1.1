@@ -172,7 +172,6 @@
 						conditionField="#{contractDetailsBackingBean.getDeliveryAddressCondition()}"
 						update=":form:deliveryAddressTbl"
 						rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
-					<ac:lovPopup />
 					 <p:commandButton id="delAddressBtn" value="#{lbl['lbl.btn.delete']}" 
 				     	 process="@this" onclick="delAddressDlg.show()" rendered="#{!contractDetailsBackingBean.managedBean.viewContract}"/>
 				</div>
@@ -192,7 +191,7 @@
 				<p:spacer height="20"/>		
 			</h:panelGroup>
 	    </p:outputPanel> 
-	  	    
+	  	<ac:lovPopup />
         <p:dialog id="dlgDel" widgetVar="dlgDel" styleClass="screen-title"  
            modal="true" width="330">  
            <h:panelGrid columns="3">
