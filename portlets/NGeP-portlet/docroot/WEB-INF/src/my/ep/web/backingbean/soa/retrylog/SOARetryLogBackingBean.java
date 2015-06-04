@@ -138,7 +138,7 @@ public class SOARetryLogBackingBean extends
 			ISOARetryLogSO logSO = (ISOARetryLogSO) BusinessDelegate
 					.getInstance().getServiceObject(ModuleCodeConst.SOA,
 							ISOARetryLogSO.class);
-			SOARetryLogResDTO resDTO = logSO.submitSOARetryLogList(reqDTO);
+			SOARetryLogResDTO resDTO = logSO.removeSOARetryLogList(reqDTO);
 			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
 					+ "]");
 
