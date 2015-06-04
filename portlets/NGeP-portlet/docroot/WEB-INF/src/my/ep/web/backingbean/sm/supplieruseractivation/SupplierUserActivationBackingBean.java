@@ -57,8 +57,8 @@ public class SupplierUserActivationBackingBean extends
 
 	private String tempPassword;
 	
-	private String password;
-	private String confirmPassword;
+	//private String password;
+	//private String confirmPassword;
 	private String loginId;
 	
 		
@@ -163,13 +163,13 @@ public class SupplierUserActivationBackingBean extends
 			log.info("****activation key***" + this.getTempPassword());
 			log.info("****pr***" + personnelId);
 			log.info("****suppid***" + supplierId);
-			log.info("****password***" + password);
-			log.info("****confirm password***" + confirmPassword);
+//			log.info("****password***" + password);
+//			log.info("****confirm password***" + confirmPassword);
 			
 			//ensure password is not same as loginId
-			if(password.equalsIgnoreCase(loginId)){
-				throw new EpException(MessageConst.ERROR_721038);
-			}
+//			if(password.equalsIgnoreCase(loginId)){
+//				throw new EpException(MessageConst.ERROR_721038);
+//			}
 			
 			String keyStr = supplierId + personnelId + this.getTempPassword();
 			String hashStr = SmCommonUtil.hashString(keyStr);
@@ -211,7 +211,7 @@ public class SupplierUserActivationBackingBean extends
 //					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					reqDTO.setLoginId(loginId);
-					reqDTO.setPassword(password);
+					//reqDTO.setPassword(password);
 //					reqDTO.setConfirmPassword(confirmPassword);
 					System.out.println("Proceed to create user.............................");
 					ISupplierUserActivationSO reqSO = (ISupplierUserActivationSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierUserActivationSO.class);
@@ -237,14 +237,14 @@ public class SupplierUserActivationBackingBean extends
 						throw new EpException(ex.getMessage());
 					}
 				} else {
-					if(password.equals(confirmPassword)) {
+					//if(password.equals(confirmPassword)) {
 						//check Liferay UserName
 						checkExistLiferayUsername(loginId);
 						
 						//Create PmOrgProfile and PmUser
 						SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();					
 						reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
-						reqDTO.setPassword(password);
+						//reqDTO.setPassword(password);
 						reqDTO.setLoginId(loginId);
 	//					reqDTO.setConfirmPassword(confirmPassword);
 						System.out.println("Proceed to create user.............................");
@@ -267,9 +267,9 @@ public class SupplierUserActivationBackingBean extends
 							throw new EpException(ex.getMessage());
 						}
 						
-					} else {
+					/*} else {
 						errorMsg("Invalid Password.");
-					}
+					}*/
 				}
 			}else{
 				log.info("Invalid Activation Key.");
@@ -281,7 +281,7 @@ public class SupplierUserActivationBackingBean extends
 			throw new EpException(MessageConst.ERROR_721032);
 		}
 
-		return "/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml";
+		//return "/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml";
 	
 	}
 	
@@ -485,7 +485,7 @@ public class SupplierUserActivationBackingBean extends
 		this.tempPassword = tempPassword;
 	}
 
-	public String getPassword() {
+	/*public String getPassword() {
 		return password;
 	}
 
@@ -499,7 +499,7 @@ public class SupplierUserActivationBackingBean extends
 
 	public void setConfirmPassword(String confirmPassword) {
 		this.confirmPassword = confirmPassword;
-	}
+	}*/
 
 	public String getLoginId() {
 		return loginId;
