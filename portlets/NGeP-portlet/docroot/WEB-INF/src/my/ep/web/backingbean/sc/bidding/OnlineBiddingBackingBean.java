@@ -412,32 +412,38 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 	}
 
-	public void updateBidPricePostConfirmation(ScBidPrice bidPriceItem){
-		updateBidPriceAndCalculateRank(bidPriceItem);
-		RequestContext.getCurrentInstance().execute("rc()");
-	}
-
 	/**
 	 * action method to update bid price and calculate rank
 	 * 
 	 * @param bidPriceItem
 	 */
+	public void updatePostConfirm() {
+		updateBidPriceAndCalculateRank(this.getScBidPrice());
+		RequestContext.getCurrentInstance().execute("rc();");
+	}
+
 	private void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
 		if (bidPriceItem.getNewBidPrice() != null
 				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
 			priceItemToPersist = bidPriceItem.getNewBidPrice();
+			// TOTAL_BID_PRICE
 			priceItemToPersist.setBidTotalPrice(this.tplSpecHelper
 					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
 							.getScBidItem().getScRequestItem()
 							.getTplSpecQuestion(), bidPriceItem
 							.getNewBidPrice().getBidPrice(), bidPriceItem
 							.getScBidSupplierItem().getScBidItem().getQty()));
-			// TOTAL_BID_PRICE
 
 		} else {
 			priceItemToPersist = this.getScBidPrice().getNewBidPrice();
+			priceItemToPersist.setBidTotalPrice(this.tplSpecHelper
+					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
+							.getScBidItem().getScRequestItem()
+							.getTplSpecQuestion(), bidPriceItem
+							.getNewBidPrice().getBidPrice(), bidPriceItem
+							.getScBidSupplierItem().getScBidItem().getQty()));
 		}
 
 		IBiddingSO biddingSO = null;
@@ -469,7 +475,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		} finally {
 			biddingSO = null;
 		}
-		
+
 	}
 
 	/**
@@ -1048,4 +1054,21 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		return servicetype;
 	}
 
+	public String itemNewPriceTotal(ScBidPrice bidPriceItem) {
+		BigDecimal newPriceTotal = null;
+		if (bidPriceItem.getNewBidPrice() != null
+				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
+			newPriceTotal = this.tplSpecHelper.calcTotalAmount(bidPriceItem
+					.getScBidSupplierItem().getScBidItem().getScRequestItem()
+					.getTplSpecQuestion(), bidPriceItem.getNewBidPrice()
+					.getBidPrice(), bidPriceItem.getScBidSupplierItem()
+					.getScBidItem().getQty());
+		}
+		if (newPriceTotal != null && newPriceTotal.doubleValue() != 0.0d) {
+			return nf.format(newPriceTotal.doubleValue());
+		} else {
+			return "";
+
+		}
+	}
 }
