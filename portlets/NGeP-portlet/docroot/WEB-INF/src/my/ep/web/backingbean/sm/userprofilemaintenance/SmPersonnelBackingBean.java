@@ -12,7 +12,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterConst;
@@ -1534,7 +1533,6 @@ public class SmPersonnelBackingBean extends
 	 * Redirect to liferay logout url
 	 */
 	public void proceedToLogout() {
-		log.info(">>>>>>>>>>>>>>>inside redirect to logout<<<<<<<<<<<<<<<");
 		SmCommonUtil.redirectToLogoutUrl();
 	}
 
@@ -1702,8 +1700,7 @@ public class SmPersonnelBackingBean extends
 	 * @return boolean
 	 */
 	private boolean isHavePendingTaskList(SmSupplier supplier) {
-		boolean retVal = SmApplicationUtil
-				.checkActiveSmApplForSupp(supplier);
+		boolean retVal = SmApplicationUtil.checkActiveSmApplForSupp(supplier);
 		return retVal;
 	}
 
