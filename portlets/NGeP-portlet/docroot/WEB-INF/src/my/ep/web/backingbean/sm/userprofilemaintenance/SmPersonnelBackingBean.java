@@ -1697,7 +1697,7 @@ public class SmPersonnelBackingBean extends
 	}
 
 	/**
-	 * Check whether the login user have pending task in task list
+	 * Check whether the login user have active application that still running
 	 * 
 	 * @return boolean
 	 */
