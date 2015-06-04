@@ -19,7 +19,8 @@
 									<p:selectOneMenu value="#{reportBackingBean.cmItemType}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmProduct']}" itemValue="#{lbl['lbl.rpt.itmProduct']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmService']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>																					
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmService']}" itemValue="#{lbl['lbl.rpt.itmService']}"></f:selectItem>	
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																				
 									</p:selectOneMenu>
 									</c:if>			
 								    <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemStatusView}">
@@ -27,7 +28,8 @@
 									<p:selectOneMenu value="#{reportBackingBean.cmItemStatus}" style="margin-top:5px;width:150px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmActive']}" itemValue="#{lbl['lbl.rpt.itmActive']}"></f:selectItem>
-										<f:selectItem  itemLabel="#{lbl['lbl.rpt.itmInactive']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>																							
+										<f:selectItem  itemLabel="#{lbl['lbl.rpt.itmInactive']}" itemValue="#{lbl['lbl.rpt.itmInactive']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																							
 									</p:selectOneMenu>
 									</c:if>			
 									  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscCodeView}">
@@ -38,29 +40,34 @@
 									</c:if>			
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscTitleView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.unspscTitle']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText  value="#{reportBackingBean.cmUnspscTitle}" style="margin-top:5px;width:290px;">									
+									<p:inputText  value="#{reportBackingBean.cmUnspscTitle}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmCompanyNameView}">
 									<p:outputLabel  value="#{lbl['lbl.rpt.cmpName']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText maxlength="200" value="#{reportBackingBean.cmCompanyName}" style="margin-top:5px;width:290px;" >									
+									<p:inputText maxlength="200" value="#{reportBackingBean.cmCompanyName}" style="margin-top:5px;width:290px;" >
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>			
 														
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemCategoryView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.catItm']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmItemCategory}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText value="#{reportBackingBean.cmItemCategory}"  style="margin-top:5px;width:290px;" >
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmItemNameView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.itmName']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmItemName}"  style="margin-top:5px;width:290px;" >									
+									<p:inputText value="#{reportBackingBean.cmItemName}"  style="margin-top:5px;width:290px;" >	
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />								
 					 				</p:inputText>
 									</c:if>											
 									
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmProofIdentityView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.proofIdentity']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText value="#{reportBackingBean.cmProofIdentity}"  style="margin-top:5px;width:290px;">									
+									<p:inputText value="#{reportBackingBean.cmProofIdentity}"  style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 								   </c:if>
 								   
@@ -70,7 +77,8 @@
 									<p:selectOneMenu value="#{reportBackingBean.cmSupplOrAdmin}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.SUPPLR']}" itemValue="#{lbl['lbl.rpt.SUPPLR']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.CATOLOGUEADMIN']}" itemValue="#{lbl['lbl.rpt.CATOLOGUEADMIN']}"></f:selectItem>													
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.CATOLOGUEADMIN']}" itemValue="#{lbl['lbl.rpt.CATOLOGUEADMIN']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />														
 									</p:selectOneMenu>
 									</c:if>								
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmRegistrationTypeView}">
@@ -80,7 +88,7 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}" itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}" itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
 										<p:ajax event="change" listener="#{reportBackingBean.enableRegistrationType}" process="@this" 
-											 partialSubmit="true"  update="rptCmCriteriaRegtype"/>			
+											 partialSubmit="true"  update="rptCmCriteriaRegtype,@([id$=Msg])"/>			
 									</p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmGroupOneView}">
@@ -88,7 +96,8 @@
 									<p:selectOneMenu value="#{reportBackingBean.cmGroupOne}" style="margin-top:5px;width:300px;">
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.itmtype']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>										
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspsccode']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>																			
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.unspsccode']}" itemValue="#{lbl['lbl.rpt.unspsccode']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																			
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionCodeView}">
@@ -99,7 +108,7 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.extBrand']}" itemValue="#{lbl['lbl.rpt.extBrand']}"></f:selectItem>		
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.extMeasurment']}" itemValue="#{lbl['lbl.rpt.extMeasurment']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.extColour']}" itemValue="#{lbl['lbl.rpt.extColour']}"></f:selectItem>
-										<p:ajax event="change" listener="#{reportBackingBean.retrieveExtention}" process="@this" partialSubmit="true" update="rptCmExtention"/>											
+										<p:ajax event="change" listener="#{reportBackingBean.retrieveExtention}" process="@this" partialSubmit="true" update="rptCmExtention,@([id$=Msg])"/>											
 									</p:selectOneMenu>
 									</c:if>	
 									<c:if test="#{smReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
@@ -115,27 +124,32 @@
 							      
 							     <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmBasicRegView}">
 									<p:outputLabel id="epNolbl" value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText  value="#{reportBackingBean.cmEpNumber}"  style="margin-top:5px;width:290px;">									
+									<p:inputText  value="#{reportBackingBean.cmEpNumber}"  style="margin-top:5px;width:290px;">	
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />								
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmBasicRegView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.busRegNo']}"  style="margin-top:5px;width:160px;"/>
-									<p:inputText  value="#{reportBackingBean.cmBusinessRegNo}"  style="margin-top:5px;width:290px;">									
+									<p:inputText  value="#{reportBackingBean.cmBusinessRegNo}"  style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmBasicRegView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.icNo']}" style="margin-top:5px;width:160px;"/>
-									<p:inputText  value="#{reportBackingBean.cmIcNumber}" style="margin-top:5px;width:290px;">									
+									<p:inputText  value="#{reportBackingBean.cmIcNumber}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>
 									
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmMofRegView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.mofNo']}" style="margin-top:5px;width:160px;" />
-									<p:inputText  value="#{reportBackingBean.cmMofNumber}" style="margin-top:5px;width:290px;">									
+									<p:inputText  value="#{reportBackingBean.cmMofNumber}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									
 									<p:outputLabel value="#{lbl['lbl.rpt.epNo']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText  value="#{reportBackingBean.cmEpNumber}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 					 				</p:inputText>
 									</c:if> 					  
 							    </h:panelGrid>							    
@@ -148,28 +162,32 @@
 							        <p:outputLabel value="#{lbl['lbl.rpt.extType']}" style="margin-top:5px;width:160px;" />									
 						 			<p:selectOneMenu value="#{reportBackingBean.cmExtentionType}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.extTypeList}"></f:selectItems>										
+										<f:selectItems value="#{reportBackingBean.extTypeList}"></f:selectItems>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
 								    </p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionBrandView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.extBrand']}"  style="margin-top:5px;width:160px;"/>									
 					 				<p:selectOneMenu value="#{reportBackingBean.cmExtentionBrand}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.brandList}"></f:selectItems>										
+										<f:selectItems value="#{reportBackingBean.brandList}"></f:selectItems>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
 								    </p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionMeasurmentView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.extMeasurment']}" style="margin-top:5px;width:160px;"/>
 					 				<p:selectOneMenu value="#{reportBackingBean.cmExtentionMeasurment}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.measurmentList}"></f:selectItems>										
+										<f:selectItems value="#{reportBackingBean.measurmentList}"></f:selectItems>	
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />									
 								    </p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionColourView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.extColour']}" style="margin-top:5px;width:160px;" />
 					 				<p:selectOneMenu value="#{reportBackingBean.cmExtentionColour}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.colorList}"></f:selectItems>										
+										<f:selectItems value="#{reportBackingBean.colorList}"></f:selectItems>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
 								    </p:selectOneMenu>
 								    </c:if>
 								    <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
