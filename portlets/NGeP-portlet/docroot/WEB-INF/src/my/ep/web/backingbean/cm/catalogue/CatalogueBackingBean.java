@@ -93,6 +93,7 @@ import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmImage;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
+import my.ep.persistence.entity.cm.catalog.CmKeyword;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmPromotionPricing;
@@ -8597,17 +8598,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					if (codeResDTO.getItemList() != null
 							&& codeResDTO.getItemList().size() > 0) {
 
-//						for (CmItem item : codeResDTO.getItemList()) {
-//							bb.getManagedBean().setKeywordItem(item);
-//							CmKeyword keyword = new CmKeyword();
-//							
-//							if(bb.getManagedBean().getKeywordItem().getCmKeyword().size()==0){
-//
-//								bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
-//							}
-//
-//							
-//						}
+						for (CmItem item : codeResDTO.getItemList()) {
+							bb.getManagedBean().setKeywordItem(item);
+							CmKeyword keyword = new CmKeyword();
+							
+							if(bb.getManagedBean().getKeywordItem().getCmKeyword().size()==0){
+
+								bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
+							}
+
+							
+						}
 
 					} else {
 						log.debug("************else*******************");
@@ -8649,9 +8650,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 						bb.getManagedBean().setKeywordItem(codeResDTO.getCmItem());
-//						CmKeyword keyword = new CmKeyword();
-//
-//						bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
+						CmKeyword keyword = new CmKeyword();
+
+						bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
 
 					}
 
@@ -8742,12 +8743,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 				CmItem item = codeResDTO.getItemList().get(0);
 				bb.getManagedBean().setKeywordItem(item);
-//				CmKeyword keyword = new CmKeyword();
-//
-//				if(bb.getManagedBean().getKeywordItem().getCmKeyword().size()==0){
-//
-//					bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
-//				}
+				CmKeyword keyword = new CmKeyword();
+
+				if(bb.getManagedBean().getKeywordItem().getCmKeyword().size()==0){
+
+					bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
+				}
 
 
 			} else {
@@ -8819,9 +8820,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				codeResDTO = codificationSO.saveNewItem(codeReqDTO);
 
 				bb.getManagedBean().setKeywordItem(codeResDTO.getCmItem());
-//				CmKeyword keyword = new CmKeyword();
-//
-//				bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
+				CmKeyword keyword = new CmKeyword();
+
+				bb.getManagedBean().getKeywordItem().getCmKeyword().add(keyword);
 
 
 			}
