@@ -4166,12 +4166,15 @@ public class LOADetailBackingBean extends
 		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(reqDTO);
 		QtLOABackingBean  loaBackingBean = new QtLOABackingBean();
 		if (resDTO.isSuccessful()) {
+			loaBackingBean.getManagedBean().setQt(resDTO.getScQt());
 			List<ScLoiLoa> loiLoaList = resDTO.getLoiLoas();
 			if (loiLoaList != null && loiLoaList.size() > 0) {
+				loaBackingBean.getManagedBean().setSuppLoiLoaMap(resDTO.getLoiLoaSupplierMap());
 				loaBackingBean.getManagedBean().setScLoiLoaList(loiLoaList);
 				loaBackingBean.getManagedBean().setSelectedLoiLoa(loiLoaList.get(0));
 			}	
 		}
+		loaBackingBean.generateSuppLoiLoaList();
 	}
 
 	/**
