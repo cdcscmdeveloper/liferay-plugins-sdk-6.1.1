@@ -1001,7 +1001,8 @@ public class SmApplicationBackingBean extends
 	/**
 	 * To open the confirmation dialog box for cancel registration with MOF
 	 */
-	public void onDisplayConfirmCanceMofRegistration() {
+	public String onDisplayConfirmCanceMofRegistration() {
+		String page = null;
 		Locale locale = new FacesScopes().getUserLocale();
 		StringBuffer sb = new StringBuffer();
 		boolean valid = true;
@@ -1028,8 +1029,9 @@ public class SmApplicationBackingBean extends
 			//disable spki for now
 //			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
 //			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
-			submitCancelMofApplToBpm();
+			page = submitCancelMofApplToBpm();
 		}
+		return page;
 	}
 
 	public void onDisplaySpkiPopForSubmitAppl() {
