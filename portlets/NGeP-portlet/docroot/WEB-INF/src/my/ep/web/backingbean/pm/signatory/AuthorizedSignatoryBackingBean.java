@@ -3,6 +3,7 @@ package my.ep.web.backingbean.pm.signatory;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,7 @@ import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -172,10 +174,12 @@ public class AuthorizedSignatoryBackingBean extends
 	private void validation(){
 		debugLogger("validation");
 		if (null == this.getManagedBean().getZone().getZoneId()) {
+			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770140);
 		}
 		
 		if (null == this.getManagedBean().getCertSignatories() || this.getManagedBean().getCertSignatories().isEmpty()) {
+			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770141);
 		}
 	}
@@ -219,11 +223,27 @@ public class AuthorizedSignatoryBackingBean extends
 							isCurrentPairOverlap = PmCommonUtil.dateOverlapping(startA, endA, startB, endB, false);
 
 							if (isCurrentPairOverlap) {
+								getManagedBean().setValidationError(true);
 								throw new EpException(MessageConst.ERROR_770143);
 							}
 						}
 					}
 				} 
+			}
+		}
+		// eff date must not be after exp date
+		PmCertSignatory certSignatory = null;
+		Date effDate = null;
+		Date expDate =null;
+		for (int i = 0; i < certSignatories.size(); i++) {
+			certSignatory = certSignatories.get(i);
+			if(DbValueConst.RECORD_STATUS_ACTIVE == certSignatory.getRecordStatusFlg()){
+				if(certSignatory.getEffDate()!=null 
+						&& certSignatory.getExpDate()!=null 
+						&& certSignatory.getExpDate().compareTo(certSignatory.getEffDate())<0){
+					getManagedBean().setValidationError(true);
+					throw new EpException(MessageConst.ERROR_770146);
+				}
 			}
 		}
 		
@@ -239,8 +259,10 @@ public class AuthorizedSignatoryBackingBean extends
 			}
 		}
 		if(activeNumber>1){
+			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770144);
 		}else if(activeNumber==0){
+			getManagedBean().setValidationError(true);
 			throw new EpException(MessageConst.ERROR_770145);
 		}
 	}
@@ -253,7 +275,14 @@ public class AuthorizedSignatoryBackingBean extends
 	 */
 	private boolean checkEffDate(PmCertSignatory pmCertSignatory){
 		log.info("checkEffDate");
-		Date currentDate = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.clear(Calendar.HOUR);
+		calendar.clear(Calendar.MINUTE);
+		calendar.clear(Calendar.SECOND);
+		calendar.clear(Calendar.MILLISECOND);
+
+		Date currentDate =  calendar.getTime();
 		boolean isActive = true;
 		// effDate after currentDate
 		if(pmCertSignatory.getEffDate().compareTo(currentDate)>0){
@@ -264,6 +293,35 @@ public class AuthorizedSignatoryBackingBean extends
 		}
 		return isActive;
 	}
+	
+	
+	public boolean checkExpDate(PmCertSignatory pmCertSignatory){
+		log.info("checkExpDate");
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.clear(Calendar.HOUR);
+		calendar.clear(Calendar.MINUTE);
+		calendar.clear(Calendar.SECOND);
+		calendar.clear(Calendar.MILLISECOND);
+
+		Date currentDate =  calendar.getTime();
+		boolean isActive = true;
+		if(!pmCertSignatory.isBrandNew() && !getManagedBean().isValidationError()){
+			if(pmCertSignatory.getEffDate() == null){
+				isActive =false;
+			}
+			// effDate after currentDate
+			if(pmCertSignatory.getExpDate()!=null && pmCertSignatory.getExpDate().compareTo(currentDate)<0){
+				isActive = false;
+			}
+		}
+		return isActive;
+	}
+	
+	public Date getExpDateMinDate(PmCertSignatory pmCertSignatory){
+		Date date = pmCertSignatory.getEffDate();
+		return date;
+	}
 
 	
 	/**
@@ -273,7 +331,7 @@ public class AuthorizedSignatoryBackingBean extends
 	 */	
 	public void saveCertSignatoryDetials() throws Exception {
 		debugLogger("saveCertSignatoryDetials");
-		
+		getManagedBean().setValidationError(false);
 		validation();
 		
 		List<PmCertSignatory> certSignatories = this.getManagedBean().getCertSignatories();
@@ -294,6 +352,8 @@ public class AuthorizedSignatoryBackingBean extends
 		reqDTO.setCertSignatorys(certSignatories);
 		SignatoryResDTO resDTO = iSignatorySO.saveCertSignatoryDtls(reqDTO);
 		if (resDTO.isSuccessful()) {
+			retrieveCertSignatoryByZone(certSignatories.get(0).getPmZone().getZoneId());
+			
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 		     FacesMessage.SEVERITY_INFO,
 		     null,
