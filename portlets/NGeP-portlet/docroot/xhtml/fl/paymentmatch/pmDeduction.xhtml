@@ -46,7 +46,7 @@
 				<p:outputPanel id="danaPnl">
 					<ac:lov id="dana" update=":form:deductionDataTable"
 						disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == 'View'}"
-						lovId="PM_VOT_FUND" headerText="Fund Code Lov"
+						lovId="PM_VOT_FUND" headerText="#{lbl['lbl.fl.payment.match.amanah']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmVotFund"
 						readonly="true" size="4"
 						conditionField="recordStatusFlg^1|votFundType^A|votFundCode^#{paymentMatchBackingBean.managedBean.feeVotFund.votFundCode}^2"
@@ -62,7 +62,7 @@
 				<p:outputPanel id="gosodoPnl">
 					<ac:lov id="gosodo" update=":form:deductionDataTable"
 						disabled="#{deduction.deductionType.parameterId == null or paymentMatchBackingBean.managedBean.buttonVal == 'View'}"
-						lovId="PM_GL_ACCOUNT" headerText="GOSODO Lov"
+						lovId="PM_GL_ACCOUNT" headerText="#{lbl['lbl.fl.gosodo']}"
 						saveObject="paymentMatchBackingBean.managedBean.paymentAdvice.flPaymentDeduction[#{index}].pmGlAccount"
 						conditionField="pmOrgProfile.orgProfileId^#{paymentMatchBackingBean.retrieveJabatanOrgProfile(paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.chargeOrgProfile.orgProfileId).orgProfileId}*pmOrgProfile^1^11"
 						readonly="true" size="10"
