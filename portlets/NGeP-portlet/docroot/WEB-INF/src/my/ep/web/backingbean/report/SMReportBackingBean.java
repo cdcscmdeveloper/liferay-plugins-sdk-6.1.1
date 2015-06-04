@@ -67,11 +67,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmRegistrationStatusView(true);	        	
 	        	rptGenBean.setFromDateView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
-	        	/*rptGenBean.setSmMandatoryStateView(true);
-	        	rptGenBean.setSmMandatoryDistrictView(true);	        	
-	        	rptGenBean.setSmMandatoryRegistrationStatusView(true);	        	
-	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);*/
+	        	
 	        break;
 		case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:	
 			    rptGenBean.generateYearList();
@@ -80,13 +76,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
 				rptGenBean.retrieveCategoryLevOne1();				
 				rptGenBean.retrieveState();	
-				rptGenBean.setSmMandatoryCategoryView(true);
-	        	//rptGenBean.setSmMandatoryStaticByStateView(true);
+				rptGenBean.setSmMandatoryCategoryView(true);	        	
 				rptGenBean.setSmStaticStateView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
             break;
-		 case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:		        	
-			 	//rptGenBean.setSmReceiveDateView(true);
+		 case ReportConst.SM_APPLICATION_VERIFICATION_RPT_VAL:
 			 	rptGenBean.setSmMandatoryFromDateView(true);
 			 	rptGenBean.setSmApplicationReceivedDateView(true);
             break;
@@ -120,7 +114,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmMandatoryCreatedFromYearView(true);				
 	            break;
 		 case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:
-				//rptGenBean.setSmYearTextView(true);
 			    rptGenBean.setSmMandatoryMonthlyRptByYearView(true);
 				rptGenBean.setSmExtraTwoColumnView(true);					
 	            break;
@@ -135,8 +128,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmRegistrationTypeTwoView(true);
 				rptGenBean.setSmActiveSubmissiveFromDateView(true);
 				rptGenBean.setSmActSubmisAllDateView(true);
-				/*rptGenBean.setSmMandatoryFromDateView(true);
-				rptGenBean.setSmMandatoryDateView(true);*/
 	            break;
 		 case ReportConst.SM_SUPPL_STAT_BY_CATEGORY_RPT_VAL:
 	           	rptGenBean.setSmExtraTwoColumnView(true);	        	
@@ -217,7 +208,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmZoneView(true);	        	
 	        	rptGenBean.setSmCompanyNameView(true);
 	        	rptGenBean.setFromDateView(true);
-	        	//rptGenBean.setSmMandatoryDateView(true);
 	        	rptGenBean.setSmStateView(true);
 	        	rptGenBean.setSmDistrictView(true);
 	        	rptGenBean.setSmApplicationNoView(true);
@@ -248,7 +238,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.retrieveState();
 	        	rptGenBean.setSmApplicationNoView(true);
 	        	rptGenBean.setSmApplicationStatusView(true);
-	        	//rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmEpNoView(true);
 	        	rptGenBean.setSmRegistrationNoView(true);
 	        	rptGenBean.setSmSupportingDocumentModeView(true);
@@ -258,16 +247,13 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;    
 		 case ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL:
 			   
-	        	rptGenBean.setSmApplicationNoView(true);	        	
-	        	//rptGenBean.setSmRoleView(true);
+	        	rptGenBean.setSmApplicationNoView(true);
 	        	rptGenBean.setSmEpNoView(true);
 	        	rptGenBean.setSmRegistrationNoView(true);	        	
 	        	rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
-		 case ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL:       	
-	        	/*rptGenBean.setSmRoleView(true);	
-	        	rptGenBean.setSmExtraTwoColumnView(true);*/
+		 case ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL: 
 	        	rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
@@ -275,7 +261,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.retrieveCategoryLevOne1();
 				rptGenBean.setSmMandatoryCategoryView(true);
 				rptGenBean.setSmCompanyNameView(true);
-	        	//rptGenBean.setSmRoleView(true);	
 	        	rptGenBean.setSmRegistrationStatusView(true);
 	        	rptGenBean.setSmRegistrationTypeView(true);
 	        	rptGenBean.setSmMandatorySupplierTypeView(true);
@@ -289,7 +274,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	//rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmSupplierTypeView(true);
 	        	rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmMofRegNoFromView(true);
@@ -298,7 +282,6 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	//rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmSupplierTypeView(true);
 	        	rptGenBean.setSmMofRegNoFromView(true);
 	        	rptGenBean.setSmMofRegNoToView(true);
@@ -307,28 +290,24 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;    
 		 case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	//rptGenBean.setSmRoleView(true);
 	        	rptGenBean.setSmSupplierTypeView(true);
 	        	rptGenBean.setSmMofRegNoFromView(true);
 	        	rptGenBean.setSmMofRegNoToView(true);
 	        	rptGenBean.setSmZoneView(true);
 	            break;
-		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL: 				
-	        	//rptGenBean.setSmRoleView(true);
+		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:
 	        	rptGenBean.setSmSupplierTypeView(true);	        	
 	        	rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;      
-		 case ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL: 				
-	        	//rptGenBean.setSmRoleView(true);
+		 case ReportConst.SM_LIST_OF_PER_MORE_COMPANY_RPT_VAL:
 	        	rptGenBean.setSmIdentficationTypeView(true);
 	        	rptGenBean.setSmIdentificationNumberView(true);
 	        	rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
-		 case ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL: 				
-	        	//rptGenBean.setSmRoleView(true);
+		 case ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL:
 	        	rptGenBean.setSmMandatorySupplierTypeView(true);
 	        	rptGenBean.setSmMandatoryZoneView(true);
 	        	rptGenBean.setSmMandatoryApplicationStatusTwoView(true);
@@ -336,20 +315,17 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryFromDateView(true);
 	        	rptGenBean.setSmMandatoryDateView(true);
 	            break; 
-		 case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL: 				
-	        	//rptGenBean.setSmRoleView(true);
+		 case ReportConst.SM_COMPANY_ADDRESS_LIST_RPT_VAL:
 	        	rptGenBean.setSmMandatorySupplierTypeView(true);
 	        	rptGenBean.setSmMandatoryApplicationStatusThreeView(true);
 	        	rptGenBean.setSmMandatoryFromDateView(true);
 	        	rptGenBean.setSmMandatoryDateView(true);
 	            break;      
-		 case ReportConst.SM_BPK_USER_PROFILE_RPT_VAL: 				
-	        	//rptGenBean.setSmRoleView(true);
+		 case ReportConst.SM_BPK_USER_PROFILE_RPT_VAL: 
 	        	rptGenBean.setSmMandatoryZoneView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
 	            break;     
-		 case ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL: 				
-	        	//rptGenBean.setSmRoleView(true);
+		 case ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL:
 	        	rptGenBean.setSmMandatoryZoneView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
 	            break; 
