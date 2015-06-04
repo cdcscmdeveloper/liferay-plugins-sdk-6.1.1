@@ -2419,6 +2419,20 @@ public class LOIDetailBackingBean extends
 						CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
 		
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort();
+		String userName = fs.getUserSessionBean().getUserName();
+		context.put("hostUrl", hostUrl);
+		context.put("userName", userName);
+
+		Date newDate = new Date();
+		String date = "";
+		if (newDate != null) {
+			date = dateSDF.format(newDate);
+		}
+		context.put("date", date);
+		
 		context.put("dateSDF", dateSDF);
 		context.put("numberDF", numberDF);
 		context.put("amountDF", amountDF);
@@ -2500,11 +2514,14 @@ public class LOIDetailBackingBean extends
 			}
 		 }
 		
-		if(selectedNegoTerms != null && selectedNegoTerms.size()>0){
+		String Keputusan = "&lt;&lt;Keputusan&gt;&gt;";
+		if (selectedNegoTerms != null && selectedNegoTerms.size() > 0){
 			context.put("scNegoTerms", selectedNegoTerms);
-		}else if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
+		} else if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
 			context.put("scNegoTerms", scLoi.getScNegoTerms());
+			context.put("Keputusan", Keputusan);
 		}
+
 
 		String ackDueDays = "14";
 		if (scLoi.getIssueDate() != null && scLoi.getAckDueDate() != null) {
