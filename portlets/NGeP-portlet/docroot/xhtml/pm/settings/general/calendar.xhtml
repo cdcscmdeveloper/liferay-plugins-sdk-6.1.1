@@ -1,3 +1,4 @@
+
 <!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <ui:composition
@@ -74,7 +75,7 @@
 				updateDayColor(td2, "lightGrey");
 			}
 			
-			document.getElementsByClassName('fc-today')[0].style.backgroundColor = "grey";
+			document.getElementsByClassName('fc-today')[0].style.background = "grey";
  		}
 		
 		function clearDayColor(){
@@ -88,13 +89,12 @@
 		}
 		
 		function updateDayColor(td, color){
-			
-			td[1].style.backgroundColor=color;
-			td[2].style.backgroundColor=color;
-			td[3].style.backgroundColor=color;
-			td[4].style.backgroundColor=color;
-			td[5].style.backgroundColor=color;
-			td[6].style.backgroundColor=color;
+			td[1].style.background=color;
+			td[2].style.background=color;
+			td[3].style.background=color;
+			td[4].style.background=color;
+			td[5].style.background=color;
+			td[6].style.background=color;
 		}
 
 	</script>
@@ -114,7 +114,7 @@
 								styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.cal.state']}"
 								value="#{calendarBackingBean.managedBean.selectedState.stateId}"
 								style="width: 275px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="0" />
+								<f:selectItem itemLabel="MALAYSIA" itemValue="0" />
 								<f:selectItems
 									value="#{calendarBackingBean.getStateListOfMalaysia()}"
 									var="state" itemLabel="#{state.stateName}"
@@ -129,24 +129,25 @@
 					</tr>
 					<tr />
 					<tr>
-						<td colspan="3"><p:schedule id="schedule"
+						<td colspan="3">
+							<p:schedule id="schedule"
 								leftHeaderTemplate="prev,next, today" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
 								value="#{calendarBackingBean.managedBean.eventModel}"
-								widgetVar="myschedule" timeZone="GMT+8">
-
+								widgetVar="myschedule" timeZone="GMT+8" timeFormat="">
 								<p:ajax event="dateSelect"
 									listener="#{calendarBackingBean.onDateSelect}"
-									update="eventDetails" oncomplete="eventDialog.show();"
+									update="eventDetails, calendarMsg" oncomplete="eventDialog.show();"
 									disabled="#{calendarBackingBean.managedBean.selectedState.stateId eq '0'}" />
 								<p:ajax event="eventSelect"
 									listener="#{calendarBackingBean.onEventSelect}"
-									update="eventDetails" oncomplete="eventDialog.show();" />
+									update="eventDetails, calendarMsg" oncomplete="eventDialog.show();" />
 								<p:ajax event="eventMove"
 									listener="#{calendarBackingBean.onEventMove}"
-									update=":form:calendarMsg" />
-
-							</p:schedule></td>
+									update="calendarMsg" />
+								<p:ajax event="eventResize" listener="#{scheduleView.onEventResize}"/>
+							</p:schedule>
+						  </td>
 					</tr>
 				</table>
 			</h:panelGroup>
@@ -183,12 +184,6 @@
 									<f:validator validatorId="primeDateRangeValidator" />
 								</p:calendar></td>
 						</tr>
-						<!-- 						<tr> -->
-						<!-- 							<td /> -->
-						<!-- 							<td><h:selectBooleanCheckbox id="national" -->
-						<!-- 									value="#{calendarBackingBean.managedBean.event.allDay}" /> -->
-						<!-- 								<div style="float: left;"><p:outputLabel value="#{lbl['lbl.pm.cal.isNational']}" /></div></td> -->
-						<!-- 						</tr> -->
 						<br />
 						<tr>
 							<td />
