@@ -2988,7 +2988,8 @@ public class ReportBackingBean extends
 		getManagedBean().setReportList(new ArrayList<SelectItem>());		
 		resetReportForm();
 		this.setReportValue(null);
-		if(rptGenBean.isReportCategoryView()==true){
+		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
+				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
 			//this.setReportCategoryView(true);
