@@ -92,7 +92,7 @@
 		</p:panel>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{softCertBackingBean.makePayment}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
 			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 		</div>
 	</p:dialog>
