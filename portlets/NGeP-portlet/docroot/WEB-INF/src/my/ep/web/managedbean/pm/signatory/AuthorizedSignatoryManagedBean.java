@@ -31,6 +31,7 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private List<PmCertSignatory> certSignatories;
 	private List<PmCertSignatory> deletedCertSignatories;
 	private int status;
+	private boolean validationError = false;
 	
 
 	/**
@@ -126,6 +127,20 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	 */
 	public void setCertSignatories(List<PmCertSignatory> certSignatories) {
 		this.certSignatories = certSignatories;
+	}
+
+	/**
+	 * @return the validationError
+	 */
+	public boolean isValidationError() {
+		return validationError;
+	}
+
+	/**
+	 * @param validationError the validationError to set
+	 */
+	public void setValidationError(boolean validationError) {
+		this.validationError = validationError;
 	}	
 		
 }

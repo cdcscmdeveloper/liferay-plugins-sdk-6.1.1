@@ -62,8 +62,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.expdate']}" style="width :20%">
-				<p:calendar id="expDateId" value="#{certSignatory.expDate}"
-					disabled="#{!certSignatory.brandNew}" navigator="true"
+				<p:calendar id="expDateId" value="#{certSignatory.expDate}" 
+					disabled="#{!authorizedsignatoryBackingBean.checkExpDate(certSignatory)}" navigator="true"
 					maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="c-50:c+99" showOn="button"
