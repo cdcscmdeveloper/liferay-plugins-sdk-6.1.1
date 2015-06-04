@@ -2987,7 +2987,20 @@ public class ReportBackingBean extends
 		setRoleCode(null);		
 		getManagedBean().setReportList(new ArrayList<SelectItem>());		
 		resetReportForm();
-		this.setReportValue(null);		
+		this.setReportValue(null);
+		if(rptGenBean.isReportCategoryView()==true){
+			rptGenBean = new ReportsGenerateBean();
+			rptGenBean.setReportCategoryView(true);
+			//this.setReportCategoryView(true);
+		}else{
+		rptGenBean = new ReportsGenerateBean();
+		//rptGenBean.setReportCategoryView(this.isReportCategoryView());
+		}
+		getManagedBean().setRptGenBean(null);
+		this.setSubModule(null);
+		this.setReportName(ReportConst.EMPTY_VAL);
+		getManagedBean().setRptGenBean(rptGenBean);
+		resetReportForm();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3768,7 +3781,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		smReportBackingBean = new SMReportBackingBean();
 		ctReportBackingBean = new CTReportBackingBean();
 		ppReportBackingBean = new PPReportBackingBean();
-		if(rptGenBean.isReportCategoryView()==true){
+		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
+				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
 			rptGenBean = new ReportsGenerateBean();
 			rptGenBean.setReportCategoryView(true);
 			//this.setReportCategoryView(true);
@@ -3855,6 +3869,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				ppReportBackingBean.enableCriteriaVariablesByReportByPP(
 						rptGenBean, authoriztionList);
 			}
+			rptGenBean.isReportCategoryView();
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();			
 			retrieveDates();
