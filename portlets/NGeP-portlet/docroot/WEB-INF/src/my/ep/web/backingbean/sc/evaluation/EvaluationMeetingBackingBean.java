@@ -79,6 +79,7 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -679,6 +680,7 @@ public class EvaluationMeetingBackingBean extends
 			String taskName = this.getManagedBean().getTaskName();
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
 			Object object = this.getManagedBean().getPayLoad();
+			String QtNum = this.getManagedBean().getQt().getQtNo();
 			MeetingResDTO meetingResDTO = meetingso.saveQTDtl(metReqDtO);
 			renewSesionObject();
 			this.getManagedBean().setTaskId(taskId);
@@ -690,12 +692,22 @@ public class EvaluationMeetingBackingBean extends
 					new QtnTenderSearchBean());
 			// getRoleTypeDropdownValues(ParameterTypeConst.COMMITTEE_ROLE);
 			retriveMeetingDetails(qtId, committeeType);
-
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Meeting Saved Successfully",
-							"Evaluation Meeting Saved Successfully"));
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+											.getMessage(
+													MessageConst.INFO_700004,
+													new String[] {
+															getMessageCommon("lbl.sc.evaluation.meeting"),
+															QtNum },
+													MessageUtils.BUNDLE_COMMON_MESSAGES,
+													new FacesScopes()
+															.getUserLocale())));
 		} finally {
 
 		}
@@ -1437,6 +1449,7 @@ public class EvaluationMeetingBackingBean extends
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTMeetingSO.class);
 			MeetingReqDTO reqDTO = prepareMeetingDtls();
+			String qtNum = this.getManagedBean().getQt().getQtNo();
 			checkCommitteeFormation(reqDTO);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(ctxToken);
@@ -1446,10 +1459,15 @@ public class EvaluationMeetingBackingBean extends
 
 			// Code to renew the session Object..
 			renewSesionObject();
+
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "",
-							"Evaluation Meeting Submitted Successfully"));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									getMessgeConstant("SUBMIT"), new String[] {
+											"Evaluation Meeting", qtNum },
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 		} finally {
 
 		}
