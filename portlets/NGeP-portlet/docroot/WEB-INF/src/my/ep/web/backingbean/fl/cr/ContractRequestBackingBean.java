@@ -1,4 +1,5 @@
 /**
+
  * Copyright © 2013 Archisoft. All rights reserved.
  */
 package my.ep.web.backingbean.fl.cr;
@@ -1568,11 +1569,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 					
 				}
-				if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_745070, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
+			}
+			if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_745070, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2235,10 +2236,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==0){
+			initializeApproverGroup();
+		}
 		if(selectedTabIndex==1){
 			if(!getManagedBean().isFlRequestLink()){
 				validatePreparedOrgAndAgencies();
 				checkContractValidity(getManagedBean().getFlRequest());
+				initializeApproverGroup();
 			}
 			sortAddress(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);

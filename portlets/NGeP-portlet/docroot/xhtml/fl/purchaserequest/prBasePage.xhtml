@@ -20,9 +20,7 @@
 			textBeforeSign="#{purchaseRequestBackingBean.managedBean.textBeforeSign}"
 			postSignAction="#{purchaseRequestBackingBean.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
 			enableAutoUpdate="#{purchaseRequestBackingBean.enableAutoUpdate()}"	/>
-		<h:panelGroup id="messagePnl">
 			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{purchaseRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
-		</h:panelGroup>
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: " rendered="#{purchaseRequestBackingBean.managedBean.gfmasError}"/> </td>
