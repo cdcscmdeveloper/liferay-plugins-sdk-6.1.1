@@ -41,7 +41,8 @@
 								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 								<p:ajax event="change" 
-									update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],[id$=rePublishPanel],[id$=itemSupplierPanel],[id$=itemSupplierPanel])" 
+									update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],[id$=rePublishPanel],
+											  [id$=itemSupplierPanel],[id$=itemSupplierPanel])" 
 									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" />
 				   			</p:selectOneMenu>
 						</td>
