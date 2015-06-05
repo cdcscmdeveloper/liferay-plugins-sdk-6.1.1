@@ -476,7 +476,7 @@ public class QTScheduleDetailBackingBean extends
 			sampleSubmission.setAddress(address);
 			this.getManagedBean().setScQtSampleSubmission(sampleSubmission);
 			retrievePmStateList();
-			// RequestContext.getCurrentInstance().execute("sampledlg.show();");
+			RequestContext.getCurrentInstance().execute("sampledlg.show();");
 			this.getManagedBean().setRequired(Boolean.TRUE);
 		} else {
 			throw new EpException(MessageConst.ERROR_760232);
@@ -488,6 +488,7 @@ public class QTScheduleDetailBackingBean extends
 	 * Will be call if clicks OK action on sample dailog screen..
 	 */
 	public void okSubmission() {
+		debugLogger("okSubmission");
 		List<ScQtSampleSubmission> submissionList = null;
 		if (SourcingConstants.ACTION_EDIT.equalsIgnoreCase(this
 				.getManagedBean().getActionType())) {
@@ -519,6 +520,7 @@ public class QTScheduleDetailBackingBean extends
 	 * To update closing date and proposal validity days..
 	 */
 	public void handlePublishClosingDate() {
+		debugLogger("handlePublishClosingDate");
 		ScQt scQt = this.getManagedBean().getQt();
 
 		Date clsDate = null;
@@ -550,6 +552,7 @@ public class QTScheduleDetailBackingBean extends
 	 *            the index
 	 */
 	public void editAddress(ScQtSampleSubmission sampleSubmission, int index) {
+		debugLogger("editAddress");
 		if (sampleSubmission.getAddress() == null) {
 			PmAddress address = new PmAddress();
 			address.setPmCity(new PmCity());
@@ -575,12 +578,14 @@ public class QTScheduleDetailBackingBean extends
 				.set(index, this.getManagedBean().getScQtSampleSubmission());
 		retrievePmStateList();
 		RequestContext.getCurrentInstance().execute("sampledlg.show();");
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 
 	/**
 	 * Will be call when we click cancel action of open dailog.
 	 */
 	public void closeSampleAddressPopUp() {
+		debugLogger("closeSampleAddressPopUp");
 		this.getManagedBean().setScQtSampleSubmission(null);
 		RequestContext.getCurrentInstance().execute("sampledlg.hide();");
 	}
