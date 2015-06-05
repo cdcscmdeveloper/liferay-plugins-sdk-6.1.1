@@ -99,7 +99,7 @@
 				style="white-space:normal;width:480px;">
 				<h:outputText
 					rendered="#{delOrder.flDeliveryAddress.addressType != null}"
-					value="#{paymentMatchBackingBean.getFullAddress(delOrder.flDeliveryAddress.addressType.pmAddress)}" />
+					value="#{paymentMatchBackingBean.getFullAddress(delOrder.flDeliveryAddress.pmAddress)}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.frn.do.no']}"
 				style="white-space:normal;">
