@@ -71,6 +71,8 @@ public class CalendarBackingBean extends
 		
 		if (getManagedBean().getEvent().getId() != null) {
 			String holidayName = getManagedBean().getEvent().getTitle();
+			Date startDate = getManagedBean().getEvent().getStartDate();
+			Date endDate = getManagedBean().getEvent().getEndDate();
 			Long stateId = getManagedBean().getSelectedStateId();
 			ICalendarSO calendarSO = null;
 			CalendarResDTO resDTO = null;
@@ -81,9 +83,14 @@ public class CalendarBackingBean extends
 				
 				PmHoliday holiday = new PmHoliday();
 				holiday.setHolidayName(holidayName);
+				holiday.setStartDate(startDate);
+				holiday.setEndDate(endDate);
+				
 				PmState state = new PmState();
 				state.setStateId(stateId);
+				
 				holiday.setState(state);
+				
 				reqDTO.setHoliday(holiday);
 				
 				resDTO = calendarSO.removeHoliday(reqDTO);
