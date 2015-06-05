@@ -495,6 +495,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public void addRestrictedToSupplierListAction() {
 		debugLogger("addRestrictedToSupplierListAction");
+		this.getManagedBean().setRequired(Boolean.FALSE);
 		List <ScQtSupplier> qtSupplierList = this.getManagedBean().getQtSupplierList();
 		if (null == qtSupplierList ) {
 			qtSupplierList = new ArrayList<ScQtSupplier>();
@@ -506,33 +507,35 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (!selectedSupplierList.isEmpty()) {
 			for (SmSupplier smSupplier : selectedSupplierList) {
 				Date presentDate = new Date();
-				Date expDate = smSupplier.getSmMofAccount().getExpDate();
-				long days = DateUtils.getDaysDifference(presentDate, expDate);
-				int day = (int) days;
-				if (day > 0) {
-					ScQtSupplier scQtSupplier = new ScQtSupplier();
-					scQtSupplier.setSmSupplier(smSupplier);
-					scQtSupplier.setScQt(scQt);
-					scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
-					if (this.getManagedBean().getQtSupplierList().isEmpty()) {
-						this.getManagedBean().getQtSupplierList().add(scQtSupplier);
-						getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
-					} else {
-						for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
-							itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
-						}
-						if (itemIds.size() > 0) {
-							if (itemIds.contains(smSupplier.getSupplierId().toString())) {
-								throw new EpException(MessageConst.ERROR_760197);
-							} else {
-								qtSupplierList.add(scQtSupplier);
-								this.getManagedBean().setQtSupplierList(qtSupplierList);	
-								getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+				if (null != smSupplier.getSmMofAccount() && null != smSupplier.getSmMofAccount().getExpDate()) {
+					Date expDate = smSupplier.getSmMofAccount().getExpDate();
+					long days = DateUtils.getDaysDifference(presentDate, expDate);
+					int day = (int) days;
+					if (day > 0) {
+						ScQtSupplier scQtSupplier = new ScQtSupplier();
+						scQtSupplier.setSmSupplier(smSupplier);
+						scQtSupplier.setScQt(scQt);
+						scQtSupplier.setScQtSupplierZones(new ArrayList<ScQtSupplierZone>());
+						if (this.getManagedBean().getQtSupplierList().isEmpty()) {
+							this.getManagedBean().getQtSupplierList().add(scQtSupplier);
+							getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+						} else {
+							for (ScQtSupplier qtSupplier : this.getManagedBean().getQtSupplierList()) {
+								itemIds.add(qtSupplier.getSmSupplier().getSupplierId().toString());
+							}
+							if (itemIds.size() > 0) {
+								if (itemIds.contains(smSupplier.getSupplierId().toString())) {
+									throw new EpException(MessageConst.ERROR_760197);
+								} else {
+									qtSupplierList.add(scQtSupplier);
+									this.getManagedBean().setQtSupplierList(qtSupplierList);	
+									getManagedBean().setTotalSupplier(this.getManagedBean().getQtSupplierList().size());
+								}
 							}
 						}
+					} else {
+						log.info("before present date.");
 					}
-				} else {
-					log.info("before present date.");
 				}
 			}
 		} else {
@@ -844,6 +847,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public void deleteRestrictedSupplierList() {
 		debugLogger("deleteRestrictedSupplierList");
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		List<ScQtSupplier> list = getManagedBean().getQtSupplierList();
 		List<ScQtSupplier> selectedList = getManagedBean()
 				.getSelectedQtSupplierList();
