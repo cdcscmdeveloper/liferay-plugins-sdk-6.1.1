@@ -23,10 +23,12 @@
 	
 		function changeWeekEndColor(){
 			
+			
 			clearDayColor();
 			
 			var weekEndDay1 = document.getElementById('#{facesContext.externalContext.encodeNamespace('')}:form:weekend1').value; 
 			var weekEndDay2 = document.getElementById('#{facesContext.externalContext.encodeNamespace('')}:form:weekend2').value;
+			
 			
 			var td1 = null;
 			var td2 = null;
@@ -75,7 +77,7 @@
 				updateDayColor(td2, "lightGrey");
 			}
 			
-			document.getElementsByClassName('fc-today')[0].style.background = "grey";
+			document.getElementsByClassName('fc-today')[0].style.background = "#fcefa1";
  		}
 		
 		function clearDayColor(){
@@ -96,8 +98,9 @@
 			td[5].style.background=color;
 			td[6].style.background=color;
 		}
-
 	</script>
+
+	#{calendarBackingBean.managedBean.loadSchedule(calendarBackingBean.managedBean.selectedState.stateId)}
 
 		<p:panel id="ruleConfigId">
 		
@@ -114,7 +117,8 @@
 								styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.cal.state']}"
 								value="#{calendarBackingBean.managedBean.selectedState.stateId}"
 								style="width: 275px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="MALAYSIA" itemValue="0" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="-1" />
+								<!--f:selectItem itemLabel="Malaysia" itemValue="0" /-->
 								<f:selectItems
 									value="#{calendarBackingBean.getStateListOfMalaysia()}"
 									var="state" itemLabel="#{state.stateName}"
@@ -130,7 +134,7 @@
 					<tr />
 					<tr>
 						<td colspan="3">
-							<p:schedule id="schedule"
+							<p:schedule id="schedule" pattern="dd-MM-yyyy"
 								leftHeaderTemplate="prev,next, today" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
 								value="#{calendarBackingBean.managedBean.eventModel}"
@@ -145,7 +149,7 @@
 								<p:ajax event="eventMove"
 									listener="#{calendarBackingBean.onEventMove}"
 									update="calendarMsg" />
-								<p:ajax event="eventResize" listener="#{scheduleView.onEventResize}"/>
+								<p:ajax event="eventResize" listener="#{calendarBackingBean.onEventResize}"/>
 							</p:schedule>
 						  </td>
 					</tr>
