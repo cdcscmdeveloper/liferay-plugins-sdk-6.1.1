@@ -232,7 +232,7 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
 								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="400"
+							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smCompanyName}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
@@ -253,7 +253,7 @@
 									<tr>
 										<td style="width: 84%"><p:inputText
 												label="#{lbl['lbl.rpt.cmpName']}" id="CompanyName"
-												maxlength="400" value="#{reportBackingBean.smCompanyName}"
+												maxlength="100" value="#{reportBackingBean.smCompanyName}"
 												required="true" style="margin-top:5px;width:290px;">
 												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
@@ -268,7 +268,7 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.mofRegNo']}"
 								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="12"
+							<p:inputText maxlength="20"
 								value="#{reportBackingBean.smMofRegNo}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
@@ -277,7 +277,7 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoTwoView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.businessRegNo']}"
 								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="12"
+							<p:inputText maxlength="20"
 								value="#{reportBackingBean.smMofRegNo}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
@@ -299,7 +299,7 @@
 									<tr>
 										<td style="width: 84%"><p:inputText
 												label="#{lbl['lbl.rpt.mofRegNo']}" id="MOFRegNo"
-												maxlength="12" value="#{reportBackingBean.smMofRegNo}"
+												maxlength="20" value="#{reportBackingBean.smMofRegNo}"
 												required="true" style="margin-top:5px;width:290px;">
 												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
