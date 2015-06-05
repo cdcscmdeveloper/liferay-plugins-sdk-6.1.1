@@ -1428,12 +1428,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(getManagedBean().getUserGroupList().get(0).getUserGroupId());
 					}
 				}
-				if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_745070, 
-									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-				}
-				
+			}
+			if(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId() == null){
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(MessageConst.ERROR_745070, 
+								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2316,7 +2315,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().setAgOffice(new PmAgOffice());
 		}
 		getManagedBean().getFulfilmentRequest().setAgOffice(resDTO.getAgOffice());
-		
 	}
 	
 	/**
@@ -2502,9 +2500,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * @param selectedTabIndex the selected tab index
 	 */
 	public void onTabChange(int selectedTabIndex){
+		if(selectedTabIndex==0){
+			initializeApproverGroup();
+		}
 		if(selectedTabIndex==1){
 			sortAddress(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses());
 			getManagedBean().setEmailValidate(true);
+			initializeApproverGroup();
 		}
 		if(selectedTabIndex==2){
 			if(getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()!=null) { 
