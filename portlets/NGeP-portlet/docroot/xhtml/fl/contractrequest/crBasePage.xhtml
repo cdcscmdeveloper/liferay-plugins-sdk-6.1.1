@@ -33,9 +33,7 @@
 			enableAutoUpdate="#{contractRequestBackingBean.enableAutoUpdate()}" />		
 		<f:event listener="#{contractRequestBackingBean.preRenderView}"
 			type="preRenderView" />
-		<h:panelGroup id="messagePnl">
-			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
-		</h:panelGroup>
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{contractRequestBackingBean.managedBean.autoUpdate}" closable="true" severity="error,info" />
 		<table style="width: 100%">
 			<tr>
 				<td><p:commandButton value="#{lbl['lbl.btn.back']}" immediate="true" rendered="#{contractRequestBackingBean.managedBean.buttonVal != null}" 
@@ -61,7 +59,7 @@
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form"
+						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form,:form:itemDataTable"
 							actionListener="#{contractRequestBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
