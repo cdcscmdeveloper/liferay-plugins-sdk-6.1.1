@@ -646,8 +646,17 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getContractVer().getCtAmendment() == null) {
 				getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				getManagedBean().getContractVer().getCtAmendment().setFileRefNo("");
-				getManagedBean().getContractVer().getCtAmendment().setTitle(getManagedBean().getCtContract().getContractName());
-				getManagedBean().getContractVer().getCtAmendment().setDescription(getManagedBean().getCtContract().getContractName());
+				String contractName = getManagedBean().getCtContract().getContractName();
+				if (contractName != null && contractName.length() > 100) {
+					getManagedBean().getContractVer().getCtAmendment().setTitle(contractName.substring(0, 100));
+				} else {
+					getManagedBean().getContractVer().getCtAmendment().setTitle(contractName);
+				}
+				if (contractName != null && contractName.length() > 200) {
+					getManagedBean().getContractVer().getCtAmendment().setDescription(contractName.substring(0, 200));
+				} else {
+					getManagedBean().getContractVer().getCtAmendment().setDescription(contractName);
+				}
 				getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
 				getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
 				getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
