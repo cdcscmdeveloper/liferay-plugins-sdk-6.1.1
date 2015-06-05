@@ -10,48 +10,138 @@
 	
 	
 	<p:panel header="#{lbl['lbl.sc.recommendation']}" toggleable="true">
-		
-		<p:dataTable id="recommendTbl" var="item"
-			value="#{lOIDetailBackingBean.managedBean.recommendList}"
+		<p:dataTable id="recommendTblPkg" var="supplierDtl"
+			value="#{lOIDetailBackingBean.managedBean.recommendedSupplierList}"
 			rows="10"
-			selection="#{lOIDetailBackingBean.managedBean.selectedRecommendList}"
-			rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex">
-			
-			<p:ajax event="rowSelect" partialSubmit="true" process="@this" update="@this, :form:awardSupplier" />
-			<p:ajax event="rowUnselect" partialSubmit="true" process="@this" update="@this, :form:awardSupplier" />
-			<p:ajax event="rowSelectCheckbox" partialSubmit="true" process="@this" update="@this, :form:awardSupplier" />
-			<p:ajax event="rowUnselectCheckbox" partialSubmit="true" process="@this" update="@this, :form:awardSupplier" />
-			<p:ajax event="toggleSelect" partialSubmit="true" process="@this" update="@this, :form:awardSupplier" />
-			
-			<ac:paginator for="itemListTbl" />
-			
-			<p:column selectionMode="multiple" style="width:2%"  rendered="#{isPendingNegotiationStatus}"/> 
-			<p:column headerText="#{lbl['lbl.sc.item']}" style="white-space: normal;">
-				<h:outputText value="#{item.requestItem.itemName}" />
-			</p:column>
-			
+			selection="#{lOIDetailBackingBean.managedBean.selectedSupplier}"
+			rowKey="#{supplierDtl}" rowIndexVar="rowIndex"
+			rendered="#{!lOIDetailBackingBean.managedBean.itemized}">
+
+			<p:ajax event="rowSelectRadio" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" 
+				listener="#{lOIDetailBackingBean.awardSelectedSupplierAction()}"/>
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" />
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" />
+			<p:ajax event="toggleSelect" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" />
+
+			<ac:paginator for="recommendTblPkg" />
+
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
 				</f:facet>
-				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none">
+				<p:commandLink update="@([id$=suppDtlPopUp])"
+					oncomplete="suppDtlWidgetVar.show();">
+					<f:setPropertyActionListener value="#{supplierDtl.supplier}"
+						target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
+					<h:outputText
+						value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}" 
+						style="white-space:normal;"/>
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
+				<h:outputText
+					value="#{supplierDtl.qtEvaluationResult.scQtProposal.supplierNo}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
+				<h:outputText
+					value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+										  		fn:toUpperCase(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+				style="text-align: right;">
+				<h:outputText value="#{supplierDtl.proposalAmount.proposalAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="text-align: right;">
+				<h:outputText value="#{supplierDtl.totalScore}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				style="text-align: right;">
+				<h:outputText value="#{supplierDtl.evalRank}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.mof.status']}">
+				<h:outputText value="#{lbl['lbl.pm.status.active']}"
+					rendered="#{!empty supplierDtl.smMofAccount and 
+							supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
+			</p:column>
+
+			<p:column selectionMode="single" style="width:2%" rendered="#{isPendingNegotiationStatus}" />
+		</p:dataTable>
+
+		<p:dataTable id="recommendTbl" var="item"
+			value="#{lOIDetailBackingBean.managedBean.recommendList}" rows="10"
+			selection="#{lOIDetailBackingBean.managedBean.selectedRecommendList}"
+			rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex"
+			rendered="#{lOIDetailBackingBean.managedBean.itemized}">
+
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" />
+			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" />
+			<p:ajax event="rowSelectCheckbox" partialSubmit="true"
+				process="@this" update="@this, :form:awardSupplier" />
+			<p:ajax event="rowUnselectCheckbox" partialSubmit="true"
+				process="@this" update="@this, :form:awardSupplier" />
+			<p:ajax event="toggleSelect" partialSubmit="true" process="@this"
+				update="@this, :form:awardSupplier" />
+
+			<ac:paginator for="recommendTbl" />
+
+			<p:column headerText="#{lbl['lbl.sc.item']}"
+				style="white-space: normal;">
+				<h:outputText value="#{item.requestItem.itemName}" />
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
+				</f:facet>
+				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}"
+					type="none">
 					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}" disabled="#{!isPendingNegotiationStatus}">
-							<p:ajax event="change" partialSubmit="true" process="@this" update="@this, @([id$=qtyPG])" 
+						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}"
+							disabled="#{!isPendingNegotiationStatus}">
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update="@this, @([id$=qtyPG])"
 								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
 						<p:commandLink update="@([id$=suppDtlPopUp])"
 							oncomplete="suppDtlWidgetVar.show();">
 							<f:setPropertyActionListener value="#{scQtRecommendDtl.supplier}"
 								target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
-							<h:outputText value="#{scQtRecommendDtl.supplier.companyName}" />
+							<h:outputText value="#{scQtRecommendDtl.supplier.companyName}" 
+								style="white-space:normal;"/>
 						</p:commandLink>
 						<br />
 					</p:column>
 				</p:dataList>
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 				<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}">
 					<h:outputText
@@ -59,7 +149,7 @@
 					<br />
 				</ui:repeat>
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
 				<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}">
 					<h:outputText
@@ -67,55 +157,73 @@
 					<br />
 				</ui:repeat>
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.sc.price.type']}">
-				<h:outputText value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.offered.price']}" style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl" value="#{item.awardSupplierList}">
-					<h:outputText value="#{evaluationResultDtl.qtEvaluationResult.offeredPrice}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-					<br/>
-				</ui:repeat>				
+				<h:outputText
+					value="#{lOIDetailBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl" value="#{item.awardSupplierList}">
-					<h:outputText value="#{evaluationResultDtl.totalScore}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
+				style="text-align: right;">
+				<ui:repeat var="evaluationResultDtl"
+					value="#{item.awardSupplierList}">
+					<h:outputText
+						value="#{evaluationResultDtl.qtEvaluationResult.offeredPrice}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-					<br/>
+					<br />
 				</ui:repeat>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl" value="#{item.awardSupplierList}">
-					<h:outputText value="#{evaluationResultDtl.evalRank}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+			<p:column headerText="#{lbl['lbl.sc.total.score']}"
+				style="text-align: right;">
+				<ui:repeat var="evaluationResultDtl"
+					value="#{item.awardSupplierList}">
+					<h:outputText value="#{evaluationResultDtl.totalScore}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
-					<br/>					
+					<br />
+				</ui:repeat>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.ranking']}"
+				style="text-align: right;">
+				<ui:repeat var="evaluationResultDtl"
+					value="#{item.awardSupplierList}">
+					<h:outputText value="#{evaluationResultDtl.evalRank}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+					</h:outputText>
+					<br />
 				</ui:repeat>
 			</p:column>
 
 			<p:column style="text-align: right;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.quantity']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 				</f:facet>
 				<h:panelGroup id="qtyPG">
-					<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none" rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}"
+						type="none"
+						rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 						<p:column>
-							<h:inputText id="awardQty" value="#{scQtRecommendDtl.awardQty}" maxlength="14" size="6"
-							  rendered="#{isPendingNegotiationStatus}"
+							<h:inputText id="awardQty" value="#{scQtRecommendDtl.awardQty}"
+								maxlength="14" size="6" rendered="#{isPendingNegotiationStatus}"
 								style="text-align: right;" required="true"
 								label="#{lbl['lbl.sc.quantity']}">
-								<p:ajax partialSubmit="true" process="@this" update="@this, awardQtyMsg" />
-								<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}" 
-									maxIntegerDigits="10" max="#{item.requestItem.quantity}" />
+								<p:ajax partialSubmit="true" process="@this"
+									update="@this, awardQtyMsg" />
+								<ac:validateNumber
+									pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.requestItem.uom.uomCode)}"
+									maxIntegerDigits="10" maxFractionDigits="3"
+									max="#{item.requestItem.quantity}" />
 							</h:inputText>
-							<h:outputText value="#{scQtRecommendDtl.awardQty}" rendered="#{!isPendingNegotiationStatus}"/>
+							<h:outputText value="#{scQtRecommendDtl.awardQty}"
+								rendered="#{!isPendingNegotiationStatus}" />
 							<p:message id="awardQtyMsg" for="awardQty" display="icon" />
 							<br />
 						</p:column>
@@ -123,13 +231,16 @@
 
 					<h:outputText value="#{item.requestItem.quantity}"
 						rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
-							and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
+								and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
 				</h:panelGroup>
 			</p:column>
+			
+			<p:column selectionMode="multiple" style="width:2%" rendered="#{isPendingNegotiationStatus}" />			
 		</p:dataTable>
-		
+				
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-			columnClasses="columnWidth20"  rendered="#{isPendingNegotiationStatus}">
+			columnClasses="columnWidth20"  rendered="#{isPendingNegotiationStatus and 
+					lOIDetailBackingBean.managedBean.itemized}">
 			
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.sc.award.supplier']}" />
