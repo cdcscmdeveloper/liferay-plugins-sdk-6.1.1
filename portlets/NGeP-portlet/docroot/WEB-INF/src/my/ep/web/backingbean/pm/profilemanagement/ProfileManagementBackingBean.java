@@ -1593,17 +1593,17 @@ public class ProfileManagementBackingBean extends
 				.getPmOrgProfile().getOrgTypeCode().getParameterCode();
 
 		// Check unique org role
-		List<String> uniqueRoles = new ArrayList<String>(
-				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
-		if (uniqueRoles.contains(this.getManagedBean().getSelectedRole()
-				.getPmRole().getRoleCode())) {
-			if (checkUniqueRole(orgType, this.getManagedBean()
-					.getSelectedRole().getPmRole().getRoleCode(), false)) {
-				throw new EpException(MessageConst.ERROR_770106,
-						new String[] { this.getManagedBean().getSelectedRole()
-								.getRoleName() });
-			}
-		}
+//		List<String> uniqueRoles = new ArrayList<String>(
+//				Arrays.asList(ProfileManagementConst.UNIQUE_ORG_ROLES));
+//		if (uniqueRoles.contains(this.getManagedBean().getSelectedRole()
+//				.getPmRole().getRoleCode())) {
+//			if (checkUniqueRole(orgType, this.getManagedBean()
+//					.getSelectedRole().getPmRole().getRoleCode(), false)) {
+//				throw new EpException(MessageConst.ERROR_770106,
+//						new String[] { this.getManagedBean().getSelectedRole()
+//								.getRoleName() });
+//			}
+//		}
 
 		// Check single role for all users
 		if (this.getManagedBean().getSelectedRole().getPmRole().isSingleRole()) {
@@ -3244,16 +3244,16 @@ public class ProfileManagementBackingBean extends
 					}
 
 					// check if contains unique role
-					if (uniqueRoles
-							.contains(userRole.getPmRole().getRoleCode())) {
-						String orgType = userOrg.getPmOrgProfile()
-								.getOrgTypeCode().getParameterCode();
-						if (checkUniqueRole(orgType, roleCode, true)) {
-							throw new EpException(
-									MessageConst.ERROR_770106,
-									new String[] { getRoleDescByRoleCode(roleCode) });
-						}
-					}
+//					if (uniqueRoles
+//							.contains(userRole.getPmRole().getRoleCode())) {
+//						String orgType = userOrg.getPmOrgProfile()
+//								.getOrgTypeCode().getParameterCode();
+//						if (checkUniqueRole(orgType, roleCode, true)) {
+//							throw new EpException(
+//									MessageConst.ERROR_770106,
+//									new String[] { getRoleDescByRoleCode(roleCode) });
+//						}
+//					}
 					
 					//check if one role is active for user org active status only
 					if(DbValueConst.RECORD_STATUS_ACTIVE == userRole.getRecordStatusFlg()){
