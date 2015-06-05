@@ -376,6 +376,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 				throw new EpException(MessageConst.ERROR_721011);
 			}
+			//check business registration no with supplier Type;
+			checkExistingBusinessRegNo();
 		}else{
 			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate.getInstance().getServiceObject("sm", IPersonnelSO.class);
 			PersonnelReqDTO personneleqDTO = new PersonnelReqDTO();
@@ -1096,7 +1098,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	private void checkExistingBusinessRegNo(){
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		IRegistrationSO reqSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		IRegistrationSO reqSO = SmServiceLookup.getRegistrationSO();
 		reqDTO.setRegNo(this.getManagedBean().getSmSupp().getRegNo());
 		RegistrationResDTO resDTO = reqSO.retrieveActiveSupplierByRegNo(reqDTO);
 		
