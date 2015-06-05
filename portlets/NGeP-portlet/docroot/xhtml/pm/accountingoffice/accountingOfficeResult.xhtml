@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="accountingOfficeResult" header="#{lbl['lbl.pm.accounting.search.result']}"
+		toggleable="true">
+		<p:dataTable id="accountingSR"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{accountingOfficeBackingBean.searchAccountingOffice}" rows="10"
+			var="accountingList" rowIndexVar="index" lazy="true">
+			<ac:paginator for="accountingSR" />
+
+			<p:column headerText="#{lbl['lbl.pm.accounting.code']}" style="width:15%">
+				<h:outputText value="#{accountingList.officeCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.accounting.name']}" style="width:60%">
+				<h:outputText value="#{accountingList.officeName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.search.status']}"
+				style="width:20%"> 
+   	    #{(accountingList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+       </p:column>
+		</p:dataTable>
+	</p:panel>
+	
+</ui:composition>

@@ -18,13 +18,16 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.agoffice.AgOfficeReqDTO;
 import my.ep.dto.pm.common.agoffice.AgOfficeResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAgOffice;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.AccountingOfficeSearchBean;
 import my.ep.web.managedbean.pm.accountingoffice.AccountingOfficeManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -39,18 +42,28 @@ public class AccountingOfficeBackingBean extends
 	
 	public static final String NAV_TO_MAIN = "/xhtml/pm/accountingoffice/accountingOfficeSearchMain";
 
-	private IPagingDataModel<PmAgOffice> searcrOffice = new SearchOfficePagingDataModel();
+	private IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
 
 	boolean result = false;
 	// Default value
 	public static final boolean SEARCH_DEFAULT = false;
 
 	public AccountingOfficeBackingBean() {
+		
+		log.info("inside AccountingOfficeBackingBean constructor");
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		if (pmUser != null && pmUser.getUserId() != null) {
+			System.out.println("***userId: " + pmUser.getUserId());
 
+			new LogKey(pmUser.getUserId()); 
+		}else{
+			new LogKey(1L); 
+		}
 	}
 
 	public void preLoadingAccountingOffice() {
-		log.info("preLoading Office method");
+		log.info("preLoading AccountingOffice method");
+		renewSesionObject();
 		this.resetOfficeSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
@@ -61,20 +74,58 @@ public class AccountingOfficeBackingBean extends
 	 * reset search bean fields
 	 */
 	public void resetOfficeSearchBean() {
-
+		
+		debugLogger("resetAccountingOfficeSearch");
 		this.getManagedBean().setAccountingOfficeSearchBean(new AccountingOfficeSearchBean());
-		searcrOffice = new SearchOfficePagingDataModel();
+		this.getManagedBean().setLazy(false);
+        this.getManagedBean().setAccountingOfficceCodes(new String());
+        this.getManagedBean().setAccountingOfficeNames(new String());
+        this.getManagedBean().setStatus(null);        
+        searchAccountingOffice = new SearchOfficePagingDataModel();
 	}
 
-	public void searchCtrOfficer() {
-		searcrOffice.reloadData();
+	public void searchAccountingOffice() {
+		searchAccountingOffice.reloadData();
 	}
 
 	public String backToSearch() {
 
 		return NAV_TO_MAIN;
 	}
+	
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}	
+	
+	
+	/**
+	 * @return the searchAccountingOffice
+	 */
+	public IPagingDataModel<PmAgOffice> getSearchAccountingOffice() {
+		return searchAccountingOffice;
+	}
 
+	/**
+	 * @param searchAccountingOffice the searchAccountingOffice to set
+	 */
+	public void setSearchAccountingOffice(
+			IPagingDataModel<PmAgOffice> searchAccountingOffice) {
+		this.searchAccountingOffice = searchAccountingOffice;
+	}
+	
+	/**
+	 * get salutation info into maintenance page
+	 *//*
+	public String goToMaintaincePage(PmAgOffice pmAccountingOffice) {
+		debugLogger("goToMaintainceAction");
+		this.getManagedBean().setPmAccountingOffice(pmAccountingOffice);
+
+		return "/xhtml/pm/salutation/salutationMaintenance.xhtml";
+	}	*/
+	
 	private ISearchBean<PmAgOffice> getSearchBeanData(
 			ISearchBean<PmAgOffice> searchBean) {
 
@@ -124,7 +175,7 @@ public class AccountingOfficeBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public SearchOfficePagingDataModel() {
-			super("searchCtrOfficer");
+			super("searchAccountingOfficer",getManagedBean().isLazy());
 		}
 
 		@Override
@@ -142,8 +193,8 @@ public class AccountingOfficeBackingBean extends
 				agOfficeSO = (IAgOfficeSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IAgOfficeSO.class);
-				AgOfficeResDTO resDTO = new AgOfficeResDTO(); //agOfficeSO.searchAgOfficerData(ctrReqDTO);
-						
+				AgOfficeResDTO resDTO= agOfficeSO.retrieveAgOfficeByOfficeCodeBySearch(ctrReqDTO);
+				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
 
 					return resDTO.getOfficeResultBean();
@@ -161,8 +212,5 @@ public class AccountingOfficeBackingBean extends
 		return PmCommonUtil.getCommonStatusOptions();
 	}
 
-	
-
-	
 
 }
