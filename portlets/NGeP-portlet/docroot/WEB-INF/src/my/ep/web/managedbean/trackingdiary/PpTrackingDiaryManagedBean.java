@@ -3,24 +3,18 @@
  */
 package my.ep.web.managedbean.trackingdiary;
 
-import java.util.Date;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
@@ -29,6 +23,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+//import my.ep.web.backingbean.trackingdiary.PpPlanDataModel;
 
 /**
  * Managed Bean for Fulfillment document
@@ -46,6 +41,8 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 	private ProcurementPlanSearchBean planSearchBean = new ProcurementPlanSearchBean();
 	private IPagingDataModel<PpPlan> ppDocumentDataModel = new PpDocumentPagingDataModel();
 	
+	private PpPlan ppPlan;
+	
 	/**
 	 * Get search bean, filtered based on login org.
 	 * @return ISearchBean<PpPlan>
@@ -56,7 +53,18 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 //		boolean isSearchable = SEARCH_DEFAULT;
 		boolean isEmpty = true;
 		ProcurementPlanSearchBean planSearchBean = getPlanSearchBean();
-			
+		
+		// plan type
+		if(planSearchBean.getPlanType()!=null && planSearchBean.getPlanType().getParameterId()!=null){
+			log.info("+ getPlanType "  +planSearchBean.getPlanType().getParameterId());
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchField("planType.parameterId");
+			bean.setSearchValue(planSearchBean.getPlanType().getParameterId());
+			searchBean.getDataFilterBeans().add(bean);
+			isEmpty = false;
+		}
+		
 		// plan number
 		if(planSearchBean.getPlanNumber()!=null && !StringUtils.isBlank(planSearchBean.getPlanNumber())){
 			log.info("+ getPlanNumber "  +planSearchBean.getPlanNumber());
@@ -68,37 +76,7 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 			searchBean.getDataFilterBeans().add(bean);
 			isEmpty = false;
 		}
-		// plan type
-		if(planSearchBean.getPlanType()!=null && planSearchBean.getPlanType().getParameterId()!=null){
-			log.info("+ getPlanType "  +planSearchBean.getPlanType().getParameterId());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("planType.parameterId");
-			bean.setSearchValue(planSearchBean.getPlanType().getParameterId());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
-		// ministry
-//		if(planSearchBean.getMinistry()!=null && planSearchBean.getMinistry().getOrgProfileId()!=null){
-//			log.info("+ getMinistry "  +planSearchBean.getMinistry().getOrgProfileId());
-//			SearchFilterBean bean = new SearchFilterBean();
-//			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-//			bean.setSearchField("orgProfile.parentOrgProfile.orgProfileId");
-//			bean.setSearchValue(planSearchBean.getMinistry().getOrgProfileId());
-//			searchBean.getDataFilterBeans().add(bean);
-//			isEmpty = false;
-//		}
 		
-		// ptj
-		if(planSearchBean.getPtj()!=null  && planSearchBean.getPtj().getOrgProfileId()!=null){
-			log.info("+ getPtj "  +planSearchBean.getPtj().getOrgProfileId());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchField("orgProfile.orgProfileId");
-			bean.setSearchValue(planSearchBean.getPtj().getOrgProfileId());
-			searchBean.getDataFilterBeans().add(bean);
-			isEmpty = false;
-		}
 		// year
 		if(planSearchBean.getYear()!=null && !"".equalsIgnoreCase(planSearchBean.getYear())){
 			log.info("+ getYear "  +planSearchBean.getYear());
@@ -110,23 +88,18 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 			isEmpty = false;
 		}
 		
-		
-//		
-//		//base on the flag, default list is either select all or empty
-//		if(isEmpty && !isSearchable){
-//			log.info("+ status "  + null);
-//			SearchFilterBean bean = new SearchFilterBean();
-//			bean.setSearchField("recordStatusFlg");
-//			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-//			bean.setSearchValue(null);
-//			searchBean.getDataFilterBeans().add(bean);
-//		}
-	
-	
+		//base on the flag, default list is either select all or empty
+		if(isEmpty){
+			log.info("+ status "  + null);
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setSearchField("recordStatusFlg");
+			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			bean.setSearchValue(null);
+			searchBean.getDataFilterBeans().add(bean);
+		}
 		log.info("getSearchBeanData - End");
 		return searchBean;
 	}
-
 	
 	/**
 	 * paginate for plan list
@@ -175,5 +148,17 @@ public class PpTrackingDiaryManagedBean extends BaseManagedBean {
 		this.ppDocumentDataModel = ppDocumentDataModel;
 	}
 	
+	/**
+	 * @return the ppPlan
+	 */
+	public PpPlan getPpPlan() {
+		return ppPlan;
+	}
+	/**
+	 * @param ppPlan the ppPlan to set
+	 */
+	public void setPpPlan(PpPlan ppPlan) {
+		this.ppPlan = ppPlan;
+	}
 	
 }
