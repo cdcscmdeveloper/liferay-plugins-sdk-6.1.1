@@ -508,6 +508,7 @@ public class SpecificationBackingBean extends
 			IQTSpecSO specSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSpecSO.class);
+			this.getManagedBean().setSpecComplete(isSpecComplete);
 			String zonelocationLevel = this.getManagedBean().getStateCode();
 			String locationLevael = this.getManagedBean().getLocalLevelCode();
 			int activeIndex = this.getManagedBean().getActiveIndex();
