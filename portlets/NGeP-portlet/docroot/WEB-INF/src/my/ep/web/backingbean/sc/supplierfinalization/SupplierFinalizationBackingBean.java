@@ -1100,11 +1100,8 @@ public class SupplierFinalizationBackingBean extends
 					scQtRecommend.setShortListedSupplierList(shortlistedSuppliersForCurrentZone);
 					
 					Long specZoneId = scQtRecommend.getTplSpecZoneDtl().getSpecZoneId();
-					if (!(specZoneId.equals(zoneDtl.getSpecZoneId()))) {
-						if (isSubmit && toBeValidated) {
-							toBeValidatedRecommendList.add(scQtRecommend);
-						}
-						continue;
+					if (isSubmit && toBeValidated) {
+						toBeValidatedRecommendList.add(scQtRecommend);
 					}
 					setForwardToHigherAuthorityStatus(scQtRecommend);
 					if (scQtRecommend.getRecommendDtls() == null) {
