@@ -341,26 +341,27 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		if (committeeMember.getMemberRole().getParameterCode()
 				.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
 			committeeMember.setSelected(true);
+			selectMemberEvent(committeeMember);
 		} else {
 			return;
 		}
-		selectMemberEvent(committeeMember);
 	}
 	
 	public void selectMemberEvent(ScCommitteeMember committeeMember) {
 		this.getManagedBean().setSelectAllMembers(false);
-		if (this.getManagedBean()
-				.getSelectedCommitteeMembersList() == null) {
-			this.getManagedBean().setSelectedCommitteeMembersList(
-					new ArrayList<ScCommitteeMember>());
+		List<ScCommitteeMember> selectedCommitteeMembers 
+				= this.getManagedBean().getSelectedCommitteeMembersList();
+		if (selectedCommitteeMembers == null) {
+			selectedCommitteeMembers = new ArrayList<ScCommitteeMember>();
 		}
-		if (committeeMember.isSelected()) {
-			this.getManagedBean().getSelectedCommitteeMembersList()
-				.add(committeeMember);	
+		if (committeeMember.isSelected() && 
+				!selectedCommitteeMembers.contains(committeeMember)) {
+			selectedCommitteeMembers.add(committeeMember);	
 		} else {
-			this.getManagedBean().getSelectedCommitteeMembersList()
-				.remove(committeeMember);
+			selectedCommitteeMembers.remove(committeeMember);
 		}
+		this.getManagedBean().setSelectedCommitteeMembersList(
+				selectedCommitteeMembers);
 	}
 	
 	/**
@@ -1255,7 +1256,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	private void validateMeetingDtlsInfo(MeetingReqDTO reqDTO) {
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
-			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
+			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+											ModuleCodeConst.SUPPLIER_SELECTION, IQTSuppFinalizationSO.class);
 			
 			SuppFinalizationReqDTO suppFinalReqDTO = new SuppFinalizationReqDTO();
 			String committeeType = getManagedBean().getCommitteeType();
