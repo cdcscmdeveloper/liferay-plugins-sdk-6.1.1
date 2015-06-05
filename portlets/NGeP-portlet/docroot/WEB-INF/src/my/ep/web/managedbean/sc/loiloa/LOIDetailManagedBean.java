@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeetingAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -318,6 +319,12 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The loi required. */
 	private boolean loiRequired;
+	
+	/** The recommended list of Suppliers */
+	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
+	
+	/** The selected supplier */
+	private ScQtEvaluationResultDtl selectedSupplier;
 	    
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1893,6 +1900,37 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	public void setLoiRequired(boolean loiRequired) {
 		this.loiRequired = loiRequired;
+	}
+
+	/**
+	 * @return the recommendedSupplierList
+	 */
+	public List<ScQtEvaluationResultDtl> getRecommendedSupplierList() {
+		return recommendedSupplierList;
+	}
+
+	/**
+	 * @param recommendedSupplierList 
+	 * 				the recommendedSupplierList to set
+	 */
+	public void setRecommendedSupplierList(
+			List<ScQtEvaluationResultDtl> recommendedSupplierList) {
+		this.recommendedSupplierList = recommendedSupplierList;
+	}
+
+	/**
+	 * @return the selectedSupplier
+	 */
+	public ScQtEvaluationResultDtl getSelectedSupplier() {
+		return selectedSupplier;
+	}
+
+	/**
+	 * @param selectedSupplier 
+	 * 				the selectedSupplier to set
+	 */
+	public void setSelectedSupplier(ScQtEvaluationResultDtl selectedSupplier) {
+		this.selectedSupplier = selectedSupplier;
 	}
 	
 }
