@@ -1,5 +1,8 @@
 package my.ep.web.managedbean.pm.settings;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -31,7 +34,7 @@ public class CalendarManageBean extends BaseManagedBean {
 
 	@PostConstruct
 	public void init() {
-		loadSchedule(2);
+		//loadSchedule(2);
 	}
 
 	public void loadSchedule(long stateId) {
@@ -58,9 +61,12 @@ public class CalendarManageBean extends BaseManagedBean {
 		List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
 		if (stateHolidayList != null) {
 			for (PmHoliday holiday : stateHolidayList) {
+				
+				long timeadj = 24*60*60*1000;
+				Date newDate = new Date (holiday.getEndDate().getTime ()+timeadj);
 				ScheduleEvent event = new DefaultScheduleEvent(
 						holiday.getHolidayName(), holiday.getStartDate(),
-						holiday.getEndDate());
+						newDate);
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				eventModel.addEvent(event);
 			}
