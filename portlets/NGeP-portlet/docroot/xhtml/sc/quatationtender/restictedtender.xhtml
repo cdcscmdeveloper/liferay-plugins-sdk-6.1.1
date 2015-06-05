@@ -31,7 +31,7 @@
 	<p:dialog id="suppPopup" header="#{lbl['lbl.sc.qt.search.supplier']}" widgetVar="suppdlg"
 		modal="true" width="800" height="450" position="top">
 		<p:messages id="supplierSearchMessages" showDetail="true" autoUpdate="true"
-				closable="true" showSummary="false" />
+				closable="true" showSummary="false" severity="error, info" />
 		<ui:include src="restrictedSupplierSearch.xhtml" />
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.ok']}" 
