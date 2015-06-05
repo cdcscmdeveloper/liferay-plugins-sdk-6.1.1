@@ -14494,7 +14494,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void evaluationTypeChange() {
 		String evaluationType = getManagedBean().getScQt().getEvaluationType();
-		if (evaluationType.equals("2")) {
+		if (evaluationType.equals(QTConstants.EVALUATION_TWO_TIER)) {
 			getManagedBean().getScQt().setTechEvaluationReq(true);
 		}
 		techEvaluationReqChanged();
