@@ -16,19 +16,12 @@
 	<ui:define name="contentSection">
 		<p:panel id="Pnl" header="Trackng Diary" toggleable="true">
 
-	<h:panelGroup id="cmUNSPSCsearchID">
-	<script>
-	$('#portlet_Catalogue_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.cm.catalogue.search']}"); 
-	</script>
 
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="true"></p:messages>
-		<div style="text-align: right; min-height: 40px;">	
-			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{ppTrackingDiaryBackingBean.backToPrev}" />
-			</div>
-		</div>
-		<ac:trackingDiaryDetail dataTable="#{cdTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
-	</h:panelGroup>		
+		<h:panelGroup id="trackingDiarySearchID" autoUpdate="true">
+			<ac:trackingDiaryDetail action="#{ppTrackingDiaryBackingBean.backToPrev}" 
+									dataTable="#{ppTrackingDiaryBackingBean.searchTrackingDiaryDataModel}"  /> 
+		</h:panelGroup>	
 
 
 			<br />
