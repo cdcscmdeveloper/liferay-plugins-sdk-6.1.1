@@ -15,7 +15,7 @@
 			</p:blockUI>
 			<p:messages id="specApprovalMessages"
 						showDetail="true" autoUpdate="#{approvalBackingBean.managedBean.autoUpdate}" closable="true"
-						showSummary="false" />
+						showSummary="false" severity="error, info" />
 			
 			<ac:gpkiPopup textBeforeSign="#{approvalBackingBean.textBeforeSign}"
 			postSignAction="#{approvalBackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />

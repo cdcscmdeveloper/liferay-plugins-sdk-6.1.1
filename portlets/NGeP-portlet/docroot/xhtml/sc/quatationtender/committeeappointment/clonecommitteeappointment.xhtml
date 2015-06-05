@@ -11,7 +11,7 @@
 		styleClass="cloneCommitteMember" position="top">
 		<h:panelGroup id="pnlid">
 			<p:messages id="clonemessages" showDetail="true" autoUpdate="true"
-				closable="true" showSummary="false" />
+				closable="true" showSummary="false" severity="error, info" />
 			<p:panel id="clonesearchpnlid" header="#{lbl['lbl.btn.search']}"
 				toggleable="true">
 				<table width="900px">
@@ -172,6 +172,7 @@
 					</p:column>
 
 				</p:dataTable>
+				<br />
 				<ui:fragment rendered="#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt ne null}">
 					#{qTCommitteBackingBean.managedBean.cloneCommitteeSelectQt.qtNo} > #{lbl['lbl.sc.committee.details']}
 				</ui:fragment>

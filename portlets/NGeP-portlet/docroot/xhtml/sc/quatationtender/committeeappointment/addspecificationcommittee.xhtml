@@ -11,7 +11,7 @@
 		dynamic="true" widgetVar="newspecificationcommittee" modal="true"
 		styleClass="scAddMember" width="950" height="600">
 			<p:messages id="scmessages" showDetail="true" autoUpdate="true"
-				closable="true" showSummary="false" />
+				closable="true" showSummary="false" severity="error, info" />
 				<c:if
 					test="#{qTCommitteBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 					<p:panel id="usersearchpnlid" header="#{lbl['lbl.sc.search']}"
