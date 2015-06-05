@@ -4430,28 +4430,20 @@ public class LOADetailBackingBean extends
 		List<ScLoiLoaItem> items = loa.getScLoiLoaItems();
 		ScLoiLoa scLoiLoa = loa.getScLoiLoa();
 		SmSupplier smSupplier = scLoiLoa.getSmSupplier();
-		boolean isZonal = scLoiLoa.isZonal();
+		
 		TemplateSpecBean specBean = new TemplateSpecBean();
 		int size = items.size();
 		List<String> itemNames = new ArrayList<String>(size);
-		List<TplSpecZoneDtl> zoneDetails = null;
-		if(isZonal){
-			zoneDetails = new ArrayList<TplSpecZoneDtl>(size);
-		}
-		
 		for (ScLoiLoaItem item : items) {
 			
 			TplSpecQuestion tplSpecQuestion = item.getScRequestItem()
 					.getTplSpecQuestion();
 			itemNames.add(tplSpecQuestion.getClItem());
 			
-			if (isZonal) {
-				zoneDetails.add(item.getTplSpecZoneDtl());
-			}
 		}
 		  
 		Long qtId = this.getManagedBean().getScQt().getQtId();
-		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames,zoneDetails);
+		TemplateSpecResDTO specResDTO = getTplSpecAnswers(qtId, smSupplier, itemNames);
 		
 		if (null != specResDTO && specResDTO.isSuccessful()) {
 			List<TplSpecAnswer> answerList = specResDTO.getSpecAnswerList();
@@ -4495,7 +4487,7 @@ public class LOADetailBackingBean extends
 	}
 	
 	private TemplateSpecResDTO getTplSpecAnswers(Long qtId, SmSupplier supplier,
-			List<String> itemNameList, List<TplSpecZoneDtl> zoneDetails) {
+			List<String> itemNameList) {
 
 		ITemplateSpecSO templateSpecSO = null;
 		TemplateSpecResDTO specResDTO = null;
@@ -4505,7 +4497,6 @@ public class LOADetailBackingBean extends
 			reqDTO.setQtId(qtId);
 			reqDTO.setSupplier(supplier);
 			reqDTO.setItemNameList(itemNameList);
-			reqDTO.setTplSpecZoneDtls(zoneDetails);
 			specResDTO = templateSpecSO.retrieveSupplierTechAnswersByItemNames(reqDTO);
 			
 		} finally {
