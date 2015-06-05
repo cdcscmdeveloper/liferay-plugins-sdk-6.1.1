@@ -235,11 +235,11 @@
                     value="#{contractDetailsBackingBean.managedBean.ptjCodeName}"  style="width:150px;">
                        <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.code']}" itemValue="#{CtConst.ptjCode}"/>
             	      <f:selectItem itemLabel="#{lbl['lbl.ct.ptj.name']}" itemValue="#{CtConst.ptjName}"/>
+            	      <p:ajax process="@this"/>
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
                  <p:inputText id="ptjCodeVaue"  style="width:300px;" 
-                     label="Ptj code or name" value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" ></p:inputText>
-                        <p:message id="ptjMsg" for="ptjCodeVaue" display="icon"/>
+                     value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" ><p:ajax process="@this"/></p:inputText>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
