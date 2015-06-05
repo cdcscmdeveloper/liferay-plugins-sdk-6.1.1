@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:dialog id="sampledlg" header="Sample Submission123" modal="true"
+	<p:dialog id="sampledlg" header="#{lbl['lbl.sc.qt.sample.submission']}" modal="true"
 		dynamic="true" position="top"
 		styleClass="pop_up_top sampleSubmitionAddrUpdate"
 		style="width:646px;height:218px;" widgetVar="sampledlg"
@@ -15,7 +15,7 @@
 				test="#{!empty qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission}">
 				<p:panel id="sampleAddressId" toggleable="true">
 					<p:messages id="sampleaddressmsg" showDetail="true"
-						autoUpdate="true" closable="true" showSummary="false" />
+						autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
 					<table>
 						<tr>
 							<td style="width: 80px;"><p:outputLabel
