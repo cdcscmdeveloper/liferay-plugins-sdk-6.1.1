@@ -455,7 +455,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 								SearchCondition.CONDITION_OR.value())));
 				
 				if (getManagedBean().getPtjCodeName() != null
-						&& (getManagedBean().getPtjCodeNameSearchValues() != null || getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
+						&& (getManagedBean().getPtjCodeNameSearchValues() != null && !getManagedBean().getPtjCodeNameSearchValues().equalsIgnoreCase(""))) {
 					if (getManagedBean().getPtjCodeName().equalsIgnoreCase(ContractConst.PTJ_CODE)) {
 						SearchFilterBean filterBean = new SearchFilterBean("pmOrgValidity.orgCode", SearchOperator.OPERATOR_LIKE.value(), getManagedBean().getPtjCodeNameSearchValues());
 						filterBean.setCaseInsensitive(true);
@@ -557,7 +557,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjCodeName(null);		
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
 		getManagedBean().setPtjCodeNameSearchValues(null);
 		agencyDataModel.resetData();
 	}
