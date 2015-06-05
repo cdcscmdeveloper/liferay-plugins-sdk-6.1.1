@@ -31,6 +31,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -46,6 +47,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.clause.ClauseReqDTO;
@@ -109,6 +112,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
@@ -495,6 +499,20 @@ public class LOIDetailBackingBean extends
 				if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(recommendType)) {
 					getManagedBean().setItemized(true);
 				} else {
+					setRecommendedSupplierListByItem(scQtRecommendList.get(0));
+					List<ScQtEvaluationResultDtl> recommendedSupplierList = scQtRecommendList
+							.get(0).getAwardSupplierList();
+					getManagedBean().setRecommendedSupplierList(
+							recommendedSupplierList);
+					if (CollectionUtils.isNotEmpty(recommendedSupplierList)) {
+						for (ScQtEvaluationResultDtl recommendedSupplier : recommendedSupplierList) {
+							if (recommendedSupplier.isAwareded()) {
+								this.getManagedBean().setSelectedSupplier(
+										recommendedSupplier);
+								break;
+							}
+						}
+					}
 					getManagedBean().setItemized(false);
 				}
 				if (scQtRecommendList != null) {
@@ -519,6 +537,10 @@ public class LOIDetailBackingBean extends
 				// LOI Reports
 				getManagedBean().setRecommendedLoi(resDTO.getScLoi());
 				getManagedBean().setScLoi(resDTO.getScLoi());
+
+				// Display the negotiation results of the first supplier
+				// in the order of display
+				onSupplierSelectEvent();
 
 				// status
 				getCurrentStatus(getManagedBean().getCurrentStatusId());
@@ -1041,6 +1063,111 @@ public class LOIDetailBackingBean extends
 	}
 
 	/**
+	 * Handle Department drop down changed - reset selected ptj profile and
+	 * populate list of department.
+	 * 
+	 */
+	public void handleMinistryProfileChanged() {
+		debugLogger("handleMinistryProfileChanged");
+
+		Long parentOrgProfileId = this.getManagedBean().getQt()
+				.getMinistryOrgProfile().getOrgProfileId();
+
+		if (parentOrgProfileId != null) {
+			PmUser user = new FacesScopes().getUserSessionBean();
+
+			if (user != null) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+				reqDTO.setUserId(user.getUserId());
+				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+				reqDTO.setParentOrgProfileId(parentOrgProfileId);
+
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+
+				this.getManagedBean().setUserDepartmentList(
+						resDTO.getOrgProfileList());
+			}
+		} else {
+			this.getManagedBean().setUserDepartmentList(
+					new ArrayList<PmOrgProfile>());
+		}
+
+		this.getManagedBean().getQt().getDepartmentOrgProfile()
+				.setOrgProfileId(null);
+
+		handleDepartmentProfileChanged();
+	}
+
+	/**
+	 * Handle Department dropdown changed - reset selected ptj profile and
+	 * populate list of division.
+	 */
+	public void handleDepartmentProfileChanged() {
+		debugLogger("handleDepartmentProfileChanged");
+
+		Long parentOrgProfileId = this.getManagedBean().getQt()
+				.getDepartmentOrgProfile().getOrgProfileId();
+
+		if (parentOrgProfileId != null) {
+			PmUser user = new FacesScopes().getUserSessionBean();
+
+			if (user != null) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+				reqDTO.setUserId(user.getUserId());
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				reqDTO.setParentOrgProfileId(parentOrgProfileId);
+
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
+
+				/*
+				 * this.getManagedBean().setUserDivisionList(
+				 * resDTO.getOrgProfileList());
+				 */
+			}
+		} else {
+			/*
+			 * this.getManagedBean().setUserDivisionList( new
+			 * ArrayList<PmOrgProfile>());
+			 */
+		}
+
+		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
+	}
+
+	// /**
+	// * Method to populate parent orgprofiles for scqt.
+	// */
+	// public void populateParentOrgProfile(ScQt scQt) {
+	// PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
+	// .getParentOrgProfile();
+	//
+	// while (parentOrgProfile != null) {
+	// // Ministry
+	// if (OrganizationType.MINISTRY.value().equals(
+	// parentOrgProfile.getOrgTypeCode().getParameterCode())) {
+	// scQt.setMinistryOrgProfile(parentOrgProfile);
+	// }
+	// // Department
+	// else if (OrganizationType.DEPARTMENT.value().equals(
+	// parentOrgProfile.getOrgTypeCode().getParameterCode())) {
+	// scQt.setDepartmentOrgProfile(parentOrgProfile);
+	// }
+	//
+	// parentOrgProfile = parentOrgProfile.getParentOrgProfile();
+	// }
+	// }
+
+	/**
 	 * Creates the loi. page navigate to loi details page.
 	 * 
 	 * @param scLoiLoa
@@ -1158,8 +1285,8 @@ public class LOIDetailBackingBean extends
 		// online bidding
 		if (scLoi.getScLoiLoa().getRecommendBy() != null) {
 			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
-			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING.equals(recommendedBy
-					.getParameterCode())) {
+			if (recommendedBy.getParameterCode().equals(
+					ParameterConst.RECOMMEND_BY_ONLINE_BIDDING)) {
 				isBiddingAward = Boolean.TRUE;
 				// remove nego price recommended by - online bidding.
 				removeNegoTermPrice(scLoi);
@@ -2223,6 +2350,11 @@ public class LOIDetailBackingBean extends
 			SCEvaluationDataType evaluationDataType = (SCEvaluationDataType) getManagedBean()
 					.getPayLoadData();
 
+			ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean()
+					.getSelectedSupplier();
+			if (!getManagedBean().isItemized() && awardedSupplier == null) {
+				throw new EpException(MessageConst.ERROR_760293);
+			}
 			AwardSupplierReqDTO reqDTO = parseMultipleLoiDtls();
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setOutcome(outcome);
@@ -2292,6 +2424,14 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		reqDTO.setEcActivityList(ecActivityList);
+
+		boolean itemized = this.getManagedBean().isItemized();
+		ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean()
+				.getSelectedSupplier();
+		if (!itemized && awardedSupplier != null) {
+			awardedSupplier.setAwareded(true);
+			reqDTO.setAwardedSupplier(awardedSupplier);
+		}
 
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		scQtCommittee.setQtCommitteRemarks(finalizeRemarks(scQtCommittee
@@ -3761,7 +3901,6 @@ public class LOIDetailBackingBean extends
 			context.put("recommendList", getManagedBean().getRecommendList());
 			context.put("bean", this);
 		}
-
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				"/sc/loi/loi-negotiationRecommendation.vm", context,
 				new FileOutputStream(getActualFilePath(attachment)));
@@ -4073,8 +4212,8 @@ public class LOIDetailBackingBean extends
 		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
 				if (term.getTermDesc() != null) {
-					if (QTConstants.LOI_NEGO_TERM_PRICE.equals(term
-							.getTermDesc())) {
+					if (term.getTermDesc().equals(
+							QTConstants.LOI_NEGO_TERM_PRICE)) {
 						termPriceFound = true;
 					}
 				}
@@ -4141,7 +4280,7 @@ public class LOIDetailBackingBean extends
 		List<ScLoiTerm> scNegoTerms = new ArrayList<ScLoiTerm>();
 		if (scLoi.getScNegoTerms() != null && scLoi.getScNegoTerms().size() > 0) {
 			for (ScLoiTerm term : scLoi.getScNegoTerms()) {
-				if (!QTConstants.LOI_NEGO_TERM_PRICE.equals(term.getTermDesc())) {
+				if (!term.getTermDesc().equals(QTConstants.LOI_NEGO_TERM_PRICE)) {
 					scNegoTerms.add(term);
 				}
 			}
@@ -4194,7 +4333,6 @@ public class LOIDetailBackingBean extends
 		scQtRecommendDtl
 				.setRecordStatusFlg(scQtRecommendDtl.isRecordStatus() ? DbValueConst.RECORD_STATUS_ACTIVE
 						: DbValueConst.RECORD_STATUS_SUSPENDED);
-
 		updateRecommendBy(scQtRecommend);
 
 		if (ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD.equals(scQtRecommend
@@ -4203,10 +4341,43 @@ public class LOIDetailBackingBean extends
 					.getRecommendDtls()) {
 				recommendDtl.setAwardQty(null);
 			}
-
 		} else {
 			scQtRecommendDtl.setAwardQty(scQtRecommend.getRequestItem()
 					.getQuantity());
+		}
+	}
+
+	/**
+	 * 
+	 */
+	public void awardSelectedSupplierAction() {
+		ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean()
+				.getSelectedSupplier();
+		Long awardedSupplierId = awardedSupplier.getQtEvaluationResult()
+				.getScQtProposal().getScQtSupplier().getSmSupplier()
+				.getSupplierId();
+		List<ScQtRecommend> recommendedItems = this.getManagedBean()
+				.getRecommendList();
+		if (CollectionUtils.isNotEmpty(recommendedItems)) {
+			for (ScQtRecommend recommendedItem : recommendedItems) {
+				if (CollectionUtils.isNotEmpty(recommendedItem
+						.getRecommendDtls())) {
+					for (ScQtRecommendDtl recommendDtl : recommendedItem
+							.getRecommendDtls()) {
+						Long recommendedSupplierId = recommendDtl.getSupplier()
+								.getSupplierId();
+						if (awardedSupplierId == recommendedSupplierId) {
+							recommendDtl.setRecordStatus(true);
+							recommendDtl
+									.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+						} else {
+							recommendDtl.setRecordStatus(false);
+							recommendDtl
+									.setRecordStatusFlg(DbValueConst.RECORD_STATUS_SUSPENDED);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -4227,10 +4398,10 @@ public class LOIDetailBackingBean extends
 				.setRecommendByStr(activeCount > 1 ? ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
 						: ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
 
-		setAwardSupplierListByItem(scQtRecommend);
+		setRecommendedSupplierListByItem(scQtRecommend);
 	}
 
-	private void setAwardSupplierListByItem(ScQtRecommend scQtRecommend) {
+	private void setRecommendedSupplierListByItem(ScQtRecommend scQtRecommend) {
 		List<ScQtEvaluationResultDtl> shortlistedSupplierList = null;
 		boolean isSuccessful = false;
 		if (CollectionUtils.isEmpty(scQtRecommend.getShortListedSupplierList())) {

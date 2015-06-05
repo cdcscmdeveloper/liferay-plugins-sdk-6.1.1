@@ -135,8 +135,8 @@
 				</p:column>
 
 				<p:column>
-               #{loiLoaItem.scRequestItem.uom.uomName}
-            </p:column>
+               		#{loiLoaItem.scRequestItem.uom.uomName}
+            	</p:column>
 
 				<p:column style="width:10%;text-align:right;"
 					rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
@@ -199,7 +199,8 @@
 					   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
 					
-					<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" rendered="#{!isBiddingAward}">
+					<p:inputText size="4" value="#{loiLoaItem.unitPrice}" style="text-align:right;" rendered="#{!isBiddingAward}" 
+						disabled="#{isPendingNegotiationStatus}">
 					   <p:ajax event="blur" partialSubmit="true" process="@form" update="@all" listener="#{lOIDetailBackingBean.priceKeyInEvent()}"/>
 					   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
@@ -241,11 +242,11 @@
 				<ac:paginator for="negoTermList" />
 
 				<p:column selectionMode="multiple" style="width:2%"
-					rendered="#{isPendingNegotiationStatus}"  disabledSelection="#{!empty scLoiTerm.pmTerm}"/>
+					rendered="#{!isPendingNegotiationStatus}"  disabledSelection="#{!empty scLoiTerm.pmTerm}"/>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}">
 					<p:inputTextarea value="#{scLoiTerm.termDesc}" rows="2"
 						maxlength="500" style=" margin-bottom:5px; width:92%"
-						rendered="#{scLoiTerm.brandNew}" />
+						rendered="#{scLoiTerm.brandNew and !isPendingNegotiationStatus}" />
 
 					<h:outputText value="#{scLoiTerm.termDesc}"
 						rendered="#{!scLoiTerm.brandNew}" />
@@ -257,13 +258,13 @@
 						<h:outputText value="#{lbl['lbl.sc.loiloa.nego.results']}" />
 					</f:facet>
 					<p:inputTextarea value="#{scLoiTerm.negoResult}" rows="2"
-						maxlength="500" rendered="#{isPendingNegotiationStatus}"
+						maxlength="500" rendered="#{!isPendingNegotiationStatus}"
 						style=" margin-bottom:5px; width:92%">
 						<p:ajax partialSubmit="true" process="@this" update="@this" />
 					</p:inputTextarea>
 
 					<h:outputText value="#{scLoiTerm.negoResult}"
-						rendered="#{!isPendingNegotiationStatus}"></h:outputText>
+						rendered="#{isPendingNegotiationStatus}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
@@ -273,11 +274,11 @@
 					action="#{lOIDetailBackingBean.addNegotiationTerm}"
 					oncomplete="negoTermListWidget.paginator.endLink.click();"
 					update="negoTermList"
-					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}" />
+					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and !isPendingNegotiationStatus}" />
 
 				<p:commandButton value="#{lbl['lbl.btn.delete']}"
 					process="@this, negoTermList" partialSubmit="true"
-					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and isPendingNegotiationStatus}"
+					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and !isPendingNegotiationStatus}"
 					oncomplete="negoTermDeletePopUp.show();"
 					update="@([id$=#{negoTermDeleteId}])" />
 			</div>
