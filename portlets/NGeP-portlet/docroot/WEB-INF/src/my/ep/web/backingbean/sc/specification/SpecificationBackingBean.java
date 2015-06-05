@@ -982,6 +982,7 @@ public class SpecificationBackingBean extends
 	public String businessOwnerTemplateSpecBackAction() {
 		this.getManagedBean().setCheckListTitle("");
 		this.getManagedBean().setIndex(-1);
+		this.getManagedBean().setSpecComplete(false);
 		return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 
 	}
@@ -14073,6 +14074,7 @@ public class SpecificationBackingBean extends
 				settemplateSpecList(savedCheckLists, flowType);
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().setCheckListTitle("");
+				this.getManagedBean().setSpecComplete(false);
 				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
 			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
 					.equalsIgnoreCase(flowType)) {
