@@ -61,12 +61,9 @@ public class CalendarManageBean extends BaseManagedBean {
 		List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
 		if (stateHolidayList != null) {
 			for (PmHoliday holiday : stateHolidayList) {
-				
-				long timeadj = 24*60*60*1000;
-				Date newDate = new Date (holiday.getEndDate().getTime ()+timeadj);
 				ScheduleEvent event = new DefaultScheduleEvent(
 						holiday.getHolidayName(), holiday.getStartDate(),
-						newDate);
+						holiday.getEndDate());
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				eventModel.addEvent(event);
 			}
