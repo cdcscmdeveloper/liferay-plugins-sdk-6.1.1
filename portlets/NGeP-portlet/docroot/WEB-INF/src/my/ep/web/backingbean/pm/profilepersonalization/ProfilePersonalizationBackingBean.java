@@ -591,10 +591,10 @@ public class ProfilePersonalizationBackingBean extends
 				throw new EpException(MessageConst.ERROR_770046);
 			}
 
-			if (pmUser.getNotifyRemovalDay() == null
-					|| pmUser.getNotifyRemovalDay() <= 0) {
-				throw new EpException(MessageConst.ERROR_770047);
-			}
+//			if (pmUser.getNotifyRemovalDay() == null
+//					|| pmUser.getNotifyRemovalDay() <= 0) {
+//				throw new EpException(MessageConst.ERROR_770047);
+//			}
 		}
 	}
 
