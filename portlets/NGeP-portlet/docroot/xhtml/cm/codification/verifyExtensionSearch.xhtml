@@ -215,17 +215,10 @@
 						<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
-						<table>
-							<tr>
-								<td width="2px"><p:commandLink title="#{lbl['lbl.ss.item.detail.recommend']}"
+						<p:commandLink title="#{lbl['lbl.ss.item.detail.recommend']}"
 										action="#{codificationBackingBean.recommendItemCode(obj)}">
 										<p:graphicImage value="/css/images/design/add.png"></p:graphicImage>
-									</p:commandLink></td>
-							</tr>
-						</table>
-
-
-
+									</p:commandLink>
 					</p:column>
 
 				</p:dataTable>
