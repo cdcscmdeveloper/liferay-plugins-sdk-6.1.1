@@ -4420,9 +4420,12 @@ public class EvaluationBackingBean extends
 						if (null != specAnswers.getTplSpecQuestion()
 								&& null != specAnswers.getTplSpecQuestion()
 										.getScoreTypeCode()
-								&& specAnswers.getTplSpecQuestion()
-										.getScoreTypeCode().getParameterCode()
-										.equalsIgnoreCase(ParameterConst.SCORE_TYPE_AUTO)) {
+								&& specAnswers
+										.getTplSpecQuestion()
+										.getScoreTypeCode()
+										.getParameterCode()
+										.equalsIgnoreCase(
+												ParameterConst.SCORE_TYPE_AUTO)) {
 							List<TplSpecScoring> specScoring = calclateSpecItemVariance(
 									specAnswers.getTplSpecQuestion()
 											.getTplSpecEstimations(),
@@ -7061,6 +7064,7 @@ public class EvaluationBackingBean extends
 			List<ScQtProposalChecklist> demoList = this.getManagedBean()
 					.getPresentationDemoSupplierList();
 			int countDays = this.getManagedBean().getCountDays();
+			String QtNum = this.getManagedBean().getScQt().getQtNo();
 			if (!this.getManagedBean().isDemo()) {
 				if (tabindex == 0) {
 					evaluationSO.saveQTDtl(reqDtO);
@@ -7092,9 +7096,12 @@ public class EvaluationBackingBean extends
 			if (save == true) {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Evaluation Preperation Saved Successfully",
-								"Evaluation Preperation Saved Successfully"));
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_700004, new String[] {
+												"Prepare Evaluation", QtNum },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
 			}
 		} finally {
 
