@@ -163,6 +163,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String changedDate;
 	private String ministryName;
 	private String jabatan;
+	private Long qtId;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1154,6 +1155,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setJabatan(String jabatan) {
 		this.jabatan = jabatan;
+	}
+
+	/**
+	 * @return the qtId
+	 */
+	public Long getQtId() {
+		return qtId;
+	}
+
+	/**
+	 * @param qtId the qtId to set
+	 */
+	public void setQtId(Long qtId) {
+		this.qtId = qtId;
 	}
 
 
