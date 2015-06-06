@@ -113,7 +113,6 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -4456,17 +4455,20 @@ public class LOADetailBackingBean extends
 						tempAnsList.add(answer);
 					} else {
 						if (tempAnsList.size() > 0) {
-							int i = 0;
+							
 							for (TplSpecAnswer ans : tempAnsList) {
 								if (ans.getTplSpecQuestion()
 										.getSpecQuestionId()
 										.equals(parentQuest
 												.getSpecQuestionId())) {
-									int p = i;
-									tempAnsList.add(p + 1, answer);
+									int index = tempAnsList.indexOf(ans);
+									int questionorder =  answer.getTplSpecQuestion().getQuestionOrder();
+									int parentOrder = parentQuest.getQuestionOrder();
+									int position = questionorder-parentOrder;
+									tempAnsList.add((index+position), answer);
 									break;
 								}
-								i++;
+								
 							}
 						} else {
 							tempAnsList.add(answer);
