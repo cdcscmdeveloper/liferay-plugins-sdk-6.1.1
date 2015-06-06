@@ -85,6 +85,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvAttendance;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvRegistration;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
@@ -152,6 +153,7 @@ public class NoticeBoardBackingBean extends
 	private static final String CAP_CHAR = "^";
 	
 	private IPagingDataModel<Object[]> qtDataModel = new QTPagingDataModel();
+	private IPagingDataModel<ScQtCategory> categoryCodesDataModel = new QTCategoryCodesDataModel();
 	private boolean visible;
 	private boolean displayImage;
 	private String slectedHeaderName;
@@ -201,6 +203,7 @@ public class NoticeBoardBackingBean extends
 			qtNoticeBoardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTNoticeBoardSO.class);
 			reqDTO.setQtId(qtId);
+			this.getManagedBean().setQtId(qtId);
 			NoticeBoardResDTO resDTO = qtNoticeBoardSO
 					.retrieveQtNoticeDtl(reqDTO);
 			ScQt scQt = resDTO.getScQt();
@@ -208,10 +211,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setScQt(resDTO.getScQt());
 			this.getManagedBean().setContactPersons(
 					resDTO.getContactPersonResultBean().getResultList());
-			// Need to add sorting..
-			this.getManagedBean().setCategoryList(
-					resDTO.getCategoryResultBean().getResultList());
-			
+
 			// Setting ministry name
 			this.getManagedBean().setMinistryName(
 					retrieveMinistryByOrgProfileId(scQt.getPmOrgProfile()
@@ -2394,4 +2394,64 @@ public class NoticeBoardBackingBean extends
 		this.slectedHeaderName = slectedHeaderName;
 	}
 	
+	private class QTCategoryCodesDataModel extends PagingDataModel<ScQtCategory> {
+
+		public QTCategoryCodesDataModel() {
+			super("restrcatcode");
+		}
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public ISearchResultBean<ScQtCategory> pageChangeListener(
+				ISearchBean<ScQtCategory> searchBean) {
+			IQTNoticeBoardSO qtNoticeBoardSO = null;
+			
+			// Filter By - qtId
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("scQt.qtId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getQtId()));
+
+			// Order by categoryCodes..
+			if (searchBean.getSortColumns().size() == 0) {
+
+				searchBean.getSortColumns().add(
+						new SearchOrderBean("pmCategoryL1.categoryL1Code"));
+				searchBean.getSortColumns().add(
+						new SearchOrderBean("pmCategoryL2.categoryL2Code"));
+				searchBean.getSortColumns().add(
+						new SearchOrderBean("pmCategoryL3.categoryL3Code"));
+			}
+
+			try {
+				qtNoticeBoardSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTNoticeBoardSO.class);
+				NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
+				reqDTO.setQtCategorySearchBean(searchBean);
+				NoticeBoardResDTO resDTO = qtNoticeBoardSO.getQtCategoryCodesList(reqDTO);
+				return resDTO.getCategoryResultBean();
+			} finally{
+				qtNoticeBoardSO = null;
+			}
+			
+		}
+	}
+
+	/**
+	 * @return the categoryCodesDataModel
+	 */
+	public IPagingDataModel<ScQtCategory> getCategoryCodesDataModel() {
+		return categoryCodesDataModel;
+	}
+
+	/**
+	 * @param categoryCodesDataModel the categoryCodesDataModel to set
+	 */
+	public void setCategoryCodesDataModel(
+			IPagingDataModel<ScQtCategory> categoryCodesDataModel) {
+		this.categoryCodesDataModel = categoryCodesDataModel;
+	}
+
 }
