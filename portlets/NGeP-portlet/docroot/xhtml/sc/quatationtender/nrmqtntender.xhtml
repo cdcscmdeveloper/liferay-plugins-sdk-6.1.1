@@ -66,14 +66,16 @@
 			okAction="qTSupplierQulCriteriaBackingBean.addNewCategoryAction"
 			update="@([id$=openPnlId])" />
 	</p:panel>
+	
+	<ui:param name="isQuotationThresHold" value="#{qTSupplierQulCriteriaBackingBean.isQuotationThresHold(qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount)}" />
 
 	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
-		rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
+		rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
 
 		<table style="width: 100%">
 			<h:panelGroup id="allstate"
-				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000'}">
+				rendered="#{!isQuotationThresHold}">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"
 							style="width : 80px" /></td>
@@ -90,13 +92,13 @@
 			</h:panelGroup>
 			<p:outputPanel id="minPaidCapital">
 				<ui:fragment
-					rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}">
+					rendered="#{!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}">
 					<tr>
 						<td style="width: 185px"><p:outputLabel
 								value="#{lbl['lbl.sc.paidup']}"
-								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}" /></td>
 						<td><p:inputText size="30" maxlength="18" disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
-								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
+								rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState eq 'true'}"
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.minPaidUpCapital}"
 								style="margin-right:5px;text-align:right;">
 								<p:ajax event="blur" partialSubmit="true" process="@this"
@@ -112,7 +114,7 @@
 	<h:panelGroup>
 		<h:panelGroup id="supplierallStae">
 			<h:panelGroup
-				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
+				rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 185px"><p:outputLabel
@@ -144,7 +146,7 @@
 				</table>
 			</h:panelGroup>
 			<h:panelGroup
-				rendered="#{((qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount gt '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
+				rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and !qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false') or (!isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false'  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal))}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneLocationDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"
@@ -212,7 +214,7 @@
 					update="@([id$=zoneLocationDataTable])" />
 			</h:panelGroup>
 			<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}" toggleable="true"
-				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+				rendered="#{isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 185px"><p:outputLabel
@@ -242,7 +244,7 @@
 				</table>
 			</p:panel>
 			<h:panelGroup
-				rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount le '500000' and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+				rendered="#{isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.supplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
 				<h:panelGrid width="100%">
 					<p:dataTable id="zoneyesDataTable" rows="10"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.zoneTrees}"

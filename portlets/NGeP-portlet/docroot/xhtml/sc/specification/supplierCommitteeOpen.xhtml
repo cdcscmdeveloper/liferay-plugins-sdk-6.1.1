@@ -56,7 +56,7 @@
 
 	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
-		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
@@ -82,7 +82,7 @@
 
 
 	<h:panelGroup
-		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
+		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneyesDataTable" rows="10"
 				value="#{specificationBackingBean.managedBean.zoneTrees}"
@@ -110,15 +110,15 @@
 
 	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
-		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
+		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 185px"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}"
-						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 				<td><p:inputText disabled="true" value="No"
-						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
+						rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState =='false'}" />
 				</td>
 
 			</tr>
@@ -144,7 +144,7 @@
 	</p:panel>
 
 	<h:panelGroup
-		rendered="#{((specificationBackingBean.managedBean.scQt.estimatedAmount le '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
+		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<h:panelGrid width="100%">
 
 			<p:dataTable id="zoneLocationDataTable" rows="10"
@@ -170,7 +170,7 @@
 	</h:panelGroup>
 	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
 		toggleable="true"
-		rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount gt '500000' and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
+		rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
 		<table>
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
