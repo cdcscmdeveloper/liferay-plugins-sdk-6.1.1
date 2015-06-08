@@ -860,6 +860,7 @@ public class NoticeBoardBackingBean extends
 	public void checkSupplierQulificationStatus() {
 		
 		this.getManagedBean().setQualificationBean(null);
+		this.getManagedBean().setProposalURL(null);
 		String mofNo = this.getManagedBean().getMofNo();
 		setVisible(false);
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
