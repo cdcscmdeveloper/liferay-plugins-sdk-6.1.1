@@ -134,19 +134,26 @@
 	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 142px;"><p:outputLabel
-						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
+				<td style="width: 136px;"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td style="width: 25px;"><p:inputText size="16"
+							<td style="width: 127px;"><p:inputText size="15"
 									disabled="true"
 									value="#{flOrderBB.managedBean.flRequest.smSupplier.regNo}" /></td>
-							<td style="width: 72px;"><p:outputLabel
+							<td style="width: 24px;"><ac:iconTooltip
+									value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}" /></td>
+							<td style="width: 60px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="15" disabled="true"
-									value="#{flOrderBB.retrieveMofNo(flOrderBB.managedBean.flRequest.smSupplier)}" /></td>
+									value="#{flOrderBB.retrieveMofNo(flOrderBB.managedBean.flRequest.smSupplier)}" />
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}" /></td>
 						</tr>
 					</table></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
+				<td style="width: 295px;"><p:inputText size="15"
+						disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : flOrderBB.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
