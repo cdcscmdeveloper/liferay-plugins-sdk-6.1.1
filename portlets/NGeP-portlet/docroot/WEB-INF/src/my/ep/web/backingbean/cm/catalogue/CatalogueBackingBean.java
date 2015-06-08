@@ -1941,6 +1941,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 								if (row.getCell(11) != null && !row.getCell(11).toString().isEmpty()) {
 									additionalItemDesc = row.getCell(11).toString();
 									supplierItem.setItemDesc(additionalItemDesc);
+									supplierItem.setReviewRequired(true);
 								}
 								// Removed Frequency for Bug#3664 
 								/*//frequency
