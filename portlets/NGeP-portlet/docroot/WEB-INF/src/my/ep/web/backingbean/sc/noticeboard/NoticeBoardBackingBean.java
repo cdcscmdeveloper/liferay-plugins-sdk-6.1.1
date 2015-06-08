@@ -865,9 +865,11 @@ public class NoticeBoardBackingBean extends
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
 			throw new EpException("Mof No should not be Null or Empty");
 		}
-
+		ScQt scQt = this.getManagedBean().getScQt();
+		final Long qtId = scQt.getQtId();
+		Long currentStatus = scQt.getQtStatus().getStatusId();
 		try {
-			final Long qtId = this.getManagedBean().getScQt().getQtId();
+			
 			IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTNoticeBoardSO.class);
@@ -896,7 +898,9 @@ public class NoticeBoardBackingBean extends
 			}
 
 			// construct the proposal/update url
-			if (this.getManagedBean().isQualified()) {
+			if (this.getManagedBean().isQualified()
+					&& QTStatusConst.QT_PROPOSAL_PREPARATION
+							.equals(currentStatus)) {
 				StringBuffer proposalURL = new StringBuffer(85);
 				proposalURL.append(EpPropertiesUtils.getInstance().getProperty(
 						EpPropertiesConst.PORTAL_APPLICATION_URL));
