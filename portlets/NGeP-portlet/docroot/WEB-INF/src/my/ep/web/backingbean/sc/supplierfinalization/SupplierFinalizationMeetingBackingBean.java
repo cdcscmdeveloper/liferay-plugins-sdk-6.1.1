@@ -1108,11 +1108,20 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	public void saveAction() {
 		IQTMeetingSO qtMeetingSO = null;
 		try {
-			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,IQTMeetingSO.class);
+			FacesScopes facesScopes = new FacesScopes();
+			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,IQTMeetingSO.class);
 			
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
-			validateMeetingDtlsInfo(reqDTO);
-						
+			boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
+			if (!isValidationSuccessful) {
+				return;
+			}
+			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
+			reqDTO.setToken(ctxToken);
+			
 			qtMeetingSO.saveQTDtl(reqDTO);
 			renewSessionAndRetrieve();
 			
@@ -1161,7 +1170,10 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			 
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
-			validateMeetingDtlsInfo(reqDTO);
+			boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
+			if (!isValidationSuccessful) {
+				return;
+			}
 			
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -1176,7 +1188,6 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + qtNo;
 			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
 			commonMessageAcknowledmentPage(MessageConst.INFO_700026, variable1, variable2);
-			
 		} finally {
 			meetingSO = null;
 		}
@@ -1185,7 +1196,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 	private MeetingReqDTO meetingDtlsInfo(){
 		MeetingReqDTO reqDTO = new MeetingReqDTO();
 		try {
-			ScQtCommittee scQtCommittee = isCommitteeChanged();
+			ScQtCommittee scQtCommittee = this.getManagedBean().getScQtCommittee(); //isCommitteeChanged();
 			
 			List<ScQtMeeting> meetingList = this.getManagedBean().getScQtMeetings();
 			if (meetingList != null && !meetingList.isEmpty()) {
@@ -1253,7 +1264,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		return scQtCommittee;
 	}
 	
-	private void validateMeetingDtlsInfo(MeetingReqDTO reqDTO) {
+	private boolean validateMeetingDtlsInfo(MeetingReqDTO reqDTO) {
+		boolean isValidationSuccessful = false;
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
@@ -1264,9 +1276,13 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			suppFinalReqDTO.setCommitteeType(committeeType);
 			suppFinalReqDTO.setScQtCommittee(reqDTO.getScQtCommitte());
 			qtSuppFinalizationSO.validateCoordinateMeeting(suppFinalReqDTO);
+			
+			isValidationSuccessful = true;
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
+		
+		return isValidationSuccessful;
 	}
 	
 	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
