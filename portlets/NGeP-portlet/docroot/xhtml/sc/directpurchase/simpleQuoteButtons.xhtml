@@ -8,19 +8,19 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 	</p:blockUI>
-	
+
 	<p:dialog id="quoteSubmitConform" widgetVar="sqConformDlg"
-		header="#{lbl['lbl.sc.simple.quote.submit.confirmation']}" resizable="false"
-		width="500" height="100" closable="false" modal="true">
-				
+		header="#{lbl['lbl.sc.simple.quote.submit.confirmation']}"
+		resizable="false" width="500" height="100" closable="false"
+		modal="true">
+
 		<table>
 			<tr>
-				<td><h:graphicImage
-						value="/css/images/design/exclamation.png" /> 
-						#{simpleQuoteBackingBean.managedBean.promptMessage}</td>
+				<td><h:graphicImage value="/css/images/design/exclamation.png" />
+					#{simpleQuoteBackingBean.managedBean.promptMessage}</td>
 			</tr>
 		</table>
-			
+
 		<p:spacer height="1" />
 		<h:panelGroup id="conformDlgId">
 			<div class="ppRightBtn" style="width: 100%">
@@ -41,14 +41,12 @@
 			</div>
 		</h:panelGroup>
 	</p:dialog>
-	
+
 	<c:if test="#{simpleQuoteBackingBean.managedBean.taskId eq null}">
 		<table width="100%">
 			<tr>
-				<td align="right">
-				    <p:commandButton immediate="true"
-						id="backButton"
-						value="#{lbl['lbl.btn.item.search']}"
+				<td align="right"><p:commandButton immediate="true"
+						id="backButton" value="#{lbl['lbl.btn.item.search']}"
 						partialSubmit="true" process="@this" style="float:left;"
 						rendered="#{isPendingSubmissionStatus}"
 						action="#{simpleQuoteBackingBean.backToPrevious}"
@@ -57,16 +55,12 @@
 					</p:commandButton> <p:commandButton immediate="true" value="#{lbl['lbl.btn.back']}"
 						partialSubmit="true" process="@this" style="float:left;"
 						rendered="#{!isPendingSubmissionStatus}"
-						action="#{simpleQuoteBackingBean.backToPrevious}" /> 
-						
-					 <p:commandButton
+						action="#{simpleQuoteBackingBean.backToPrevious}" /> <p:commandButton
 						value="#{lbl['lbl.btn.save']}" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();"
 						action="#{simpleQuoteBackingBean.saveSimpleQuote('')}"
 						process="@all" update="@form"
-						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" /> 
-						
-					<p:commandButton
+						rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}" /> <p:commandButton
 						value="#{lbl['lbl.btn.submit']}"
 						actionListener="#{simpleQuoteBackingBean.submitPromptAction}"
 						update="@form" process="@all"
@@ -90,8 +84,8 @@
 			<tr>
 				<td align="right"><c:if test="#{isPendingSubmissionStatus}">
 						<p:commandButton immediate="true"
-							value="#{lbl['lbl.btn.item.search']}"
-							partialSubmit="true" process="@this" style="float:left;"
+							value="#{lbl['lbl.btn.item.search']}" partialSubmit="true"
+							process="@this" style="float:left;"
 							action="#{simpleQuoteBackingBean.backToPrevious}" />
 					</c:if> <!-- to view simple Quote from the request note header  Icon    -->
 					<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
@@ -133,5 +127,4 @@
 			</tr>
 		</table>
 	</c:if>
-	<p:spacer height="1px"></p:spacer>
 </ui:composition>
