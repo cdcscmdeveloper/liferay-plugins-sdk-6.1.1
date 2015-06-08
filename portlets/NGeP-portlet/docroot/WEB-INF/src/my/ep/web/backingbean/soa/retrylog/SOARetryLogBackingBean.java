@@ -80,86 +80,118 @@ public class SOARetryLogBackingBean extends
 			return null;
 		}
 	}
+	
+	/**
+	 * Functional methods.
+	 */
 
 	public void refreshRetryLogList() {
 		debugLogger("refreshRetryLogList");
-
-		retryLogDataModel.resetData();
-		retryLogDataModel.reloadData();
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Records refreshed.", ""));
+		resetAndReloadData();
 	}
 
 	public void submitRetryLogList() {
-		debugLogger("submitRetryLogList");
-
-		SOARetryLogReqDTO reqDTO = new SOARetryLogReqDTO();
-		for (OsbRetryDtl retryDtl : this.getManagedBean()
-				.getSelectedRetryLogs()) {
-			debugLogger("RetryDtlId : " + retryDtl.getRetryDtlId());
-			reqDTO.getOsbRetryDtl().add(retryDtl);
-		}
-
-		if (!reqDTO.getOsbRetryDtl().isEmpty()) {
-			ISOARetryLogSO logSO = (ISOARetryLogSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.SOA,
-							ISOARetryLogSO.class);
-			SOARetryLogResDTO resDTO = logSO.submitSOARetryLogList(reqDTO);
-			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
-					+ "]");
-
-			if (resDTO.isSuccessful()) {
-				String message = "";
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record removed successfully.", message));
-			}
-		} else {
-			String message = "";
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"List Empty.", message));
-		}
-
-		retryLogDataModel.resetData();
-		retryLogDataModel.reloadData();
+		submitOrRemoveRetryLogList(true);
 	}
 
 	public void removeRetryLogList() {
-		debugLogger("removeRetryLogList");
+		submitOrRemoveRetryLogList(false);
+	}
+	
+	/**
+	 * Private methods.
+	 */
+
+	private void submitOrRemoveRetryLogList(boolean isSubmit) {
+
+		if (isSubmit) {
+			debugLogger("submitRetryLogList");
+		} else {
+			debugLogger("removeRetryLogList");
+		}
+
 		SOARetryLogReqDTO reqDTO = new SOARetryLogReqDTO();
+
 		for (OsbRetryDtl retryDtl : this.getManagedBean()
 				.getSelectedRetryLogs()) {
 			debugLogger("RetryDtlId : " + retryDtl.getRetryDtlId());
 			reqDTO.getOsbRetryDtl().add(retryDtl);
 		}
 
-		if (!reqDTO.getOsbRetryDtl().isEmpty()) {
-			ISOARetryLogSO logSO = (ISOARetryLogSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.SOA,
-							ISOARetryLogSO.class);
-			SOARetryLogResDTO resDTO = logSO.removeSOARetryLogList(reqDTO);
-			debugLogger("NotifyResDTO isSuccessful[" + resDTO.isSuccessful()
-					+ "]");
-
-			if (resDTO.isSuccessful()) {
-				String message = "";
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Record removed successfully.", message));
-			}
-		} else {
-			String message = "";
+		if (reqDTO.getOsbRetryDtl().isEmpty()) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"List Empty.", message));
+							"Please select at least a record. ", ""));
+			
+			return;
+		}
+		
+		ISOARetryLogSO logSO = (ISOARetryLogSO) BusinessDelegate
+				.getInstance().getServiceObject(ModuleCodeConst.SOA,
+						ISOARetryLogSO.class);
+
+		SOARetryLogResDTO resDTO = null;
+
+		try{
+		
+			if (isSubmit) {
+				resDTO = logSO.submitSOARetryLogList(reqDTO);
+			} else {
+				resDTO = logSO.removeSOARetryLogList(reqDTO);
+			}
+
+			debugLogger("NotifyResDTO : at least one record isSuccessful[" + resDTO.isSuccessful()+ "]");
+
+			if (resDTO.isSuccessful()) {
+
+				String message = null;
+
+				if (resDTO.isAllRemoved()) {
+					message = "Record(s) removed successfully.";
+				} else {
+					message = "Some record(s) removed unsuccessfully.";
+				}
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, message,
+								""));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Unable to remove any record due to " + resDTO.getErrorMessage(), ""));
+			}
+		} catch (Exception ex){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to remove any record due to " + ex.getMessage(),""));
 		}
 
+		resetAndReloadData();
+	}
+
+	private void resetAndReloadData(){
 		retryLogDataModel.resetData();
 		retryLogDataModel.reloadData();
 	}
+	
+	private void debugLogger(Object message) {
+		if (logger.isDebugEnabled()) {
+			logger.debug(message);
+		}
+		logger.info(message);
+	}
+	
+	/**
+	 * Setters & getters.
+	 */
 
 	public IPagingDataModel<OsbRetryDtl> getRetryLogDataModel() {
 		return retryLogDataModel;
@@ -168,12 +200,5 @@ public class SOARetryLogBackingBean extends
 	public void setRetryLogDataModel(
 			IPagingDataModel<OsbRetryDtl> retryLogDataModel) {
 		this.retryLogDataModel = retryLogDataModel;
-	}
-
-	private void debugLogger(Object message) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(message);
-		}
-		logger.info(message);
 	}
 }
