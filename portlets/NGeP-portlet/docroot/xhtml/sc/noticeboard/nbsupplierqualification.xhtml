@@ -123,7 +123,7 @@
 			<p:spacer height="10px"/>
 			<div style="text-align: center;">
 			<h:outputLink value="#{noticeBoardBackingBean.managedBean.proposalURL}" 
-			      rendered="#{noticeBoardBackingBean.managedBean.qualified}">
+			      rendered="#{noticeBoardBackingBean.managedBean.proposalURL ne null}">
 				    <h:outputText value="#{lbl['lbl.sc.notice.board.proposal.url.name']}" 
 				    style="font-size:14px;">	</h:outputText>			
 			</h:outputLink>
