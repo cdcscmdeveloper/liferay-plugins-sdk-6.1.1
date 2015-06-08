@@ -766,6 +766,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 			// zone details
 			quote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+			if(quote.getQuoteZone() != null && quote.getQuoteZone().isBrandNew()){
+				quote.getQuoteZone().setDocId(quote.getQuoteId());
+				quote.getQuoteZone().setDocType(ParameterConst.DOCTYPE_SIMPLE_QUOTE);
+			}
 
 			List<ScQuoteSupplier> suppliers = new ArrayList<ScQuoteSupplier>();
 			// panel item zone 
@@ -789,8 +793,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			} else{
 				if(quote.getProcurementType() != null){
 
-					if(quote.getProcurementType().getParameterCode()
-							.equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)){
+					if(ParameterConst.PROC_TYPE_G2G.equals(quote.getProcurementType().getParameterCode())){
 						// govt sellers
 						if(getManagedBean().getGovtSellers() != null){
 							suppliers.addAll(getManagedBean().getGovtSellers());
@@ -1934,11 +1937,38 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		getManagedBean().setZoneName(null);
 		getManagedBean().setTempZoneName(null);
+		
+		//update zone when add or edit zone
+		//updateZone(getManagedBean().getScQuote());
 
 		// hide zone location popup
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
+	
+	/**
+	 * Update zone.
+	 *
+	 * @param scQuote the sc quote
+	 */
+	private void updateZone(ScQuote scQuote){
+		// product
+		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+			TemplateSpecHelper.getInstance().updateZoneDtl(
+					getManagedBean().getProductTemplateSpecBean().getSpecMaster(), scQuote.getQuoteZone());
+		}
 
+		// service 
+		if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+			TemplateSpecHelper.getInstance().updateZoneDtl(
+					getManagedBean().getServiceTemplateSpecBean().getSpecMaster(), scQuote.getQuoteZone());
+		}
+	}
+
+	/**
+	 * Update zone bean.
+	 *
+	 * @param zoneName the zone name
+	 */
 	private void updateZoneBean(String zoneName){
 		List<ZonesBean> beans  = new ArrayList<ZonesBean>();
 		List<ZonesBean> zoneBeans  = getManagedBean().getBeans();
@@ -2925,7 +2955,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				cloneSpecMaster = resDTO.getSpecMaster();
 
 				// product Tpl Spec master
-				if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_PRODUCT)){
+				if(ParameterConst.SQ_ITEM_LIST_PRODUCT.equals(productOrService)){
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
 					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
 
@@ -2939,7 +2969,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						questions.addAll(prodQuestions);
 					}
 					cloneQuestions = TemplateSpecHelper.getInstance().cloneTplSpecQuestions(prodSpecMaster ,cloneSpecMaster.getTplSpecQuestions());
-					if(cloneQuestions.size() >0){
+					if(cloneQuestions != null && cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
 
@@ -2955,7 +2985,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					getManagedBean().setProductTemplateSpecBean(productTplSpecBean);
 
 					// service Tpl Spec master
-				} else if(productOrService.equals(ParameterConst.SQ_ITEM_LIST_SERVICE)){
+				} else if(ParameterConst.SQ_ITEM_LIST_SERVICE.equals(productOrService)){
 					List<TplSpecQuestion> questions = new ArrayList<TplSpecQuestion>();
 					List<TplSpecQuestion>  cloneQuestions  = new ArrayList<TplSpecQuestion>();
 
@@ -2969,7 +2999,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						questions.addAll(serviceQuestions);
 					}
 					cloneQuestions = TemplateSpecHelper.getInstance().cloneTplSpecQuestions(serviceSpecMaster ,cloneSpecMaster.getTplSpecQuestions());
-					if(cloneQuestions.size() >0){
+					if(cloneQuestions != null && cloneQuestions.size() >0){
 						questions.addAll(cloneQuestions);
 					}
 					serviceSpecMaster.setTplSpecQuestions(questions);
@@ -3367,6 +3397,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quoteReqDTO.setFetchSubEntity(true);
 			QuoteResDTO  quoteResDTO = getQuoteSO().getQuoteDtl((quoteReqDTO));
 			ScQuote scQuote = quoteResDTO.getQuoteBidDtl();
+			getManagedBean().setScQuote(scQuote);
 
 			if(scQuote.getJustificationType() == null){
 				scQuote.setJustificationType(new PmParameter());
@@ -3546,7 +3577,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					getManagedBean().setNewableFlag(Boolean.FALSE);
 				}
 			}
-			getManagedBean().setScQuote(scQuote);
 			// duration calc
 			dateListener();
 			procurementTypeEvent();
@@ -3565,7 +3595,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 
 			if(scQuote.isZonal()){
-				zoneEvent();
+				//updateZone(scQuote);
+			}
+			if(scQuote.getMultipleQuote()){
+				//noOfQuoteEvent();
 			}
 
 			getManagedBean().setProcessName(res.getProcessName());
