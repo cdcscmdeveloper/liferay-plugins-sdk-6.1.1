@@ -48,6 +48,7 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
+import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -564,12 +565,33 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			bpmreqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(bpmreqDTO);
 			Object obj = res.getPojo();
-			FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
+			
 			getManagedBean().setModificationCancel(false);
-			if(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(res.getProcessName()) || FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(res.getProcessName())){
+			if(FLProcessNameConst.DO_MODIFICATION_PROCESS_NAME.equals(res.getProcessName())){
+				FLDOFulfillmentModificationReqType doModDataType = (FLDOFulfillmentModificationReqType) obj;
+				if(doModDataType.getErrorId() != null && doModDataType.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(doModDataType.getErrorId());
+					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
 				getManagedBean().setButtonVal("ACK");
 				getManagedBean().setModificationCancel(true);
-			}	
+			}else if(FLProcessNameConst.DO_CANCELLATION_PROCESS_NAME.equals(res.getProcessName())){
+				FLDOFulfillmentCancelReqType doCancelDataType = (FLDOFulfillmentCancelReqType) obj;
+				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
+					getManagedBean().setAutoUpdate(Boolean.FALSE);
+					getManagedBean().setGfmasError(true);
+					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
+					errReq.setErrorId(doCancelDataType.getErrorId());
+					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
+					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+				}
+				getManagedBean().setButtonVal("ACK");
+				getManagedBean().setModificationCancel(true);
+			}
 				reqDTO.setDeliveryOrderId(Long.valueOf(res.getDocId()));
 				deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IDeliveryOrderSO.class);
 				FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrderById(reqDTO);
@@ -584,14 +606,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().setTaskId(taskId);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-				if(doCancelDataType.getErrorId() != null && doCancelDataType.getErrorId() > 0){
-					getManagedBean().setAutoUpdate(Boolean.FALSE);
-					getManagedBean().setGfmasError(true);
-					FulfilmentReqDTO errReq = new FulfilmentReqDTO();
-					errReq.setErrorId(doCancelDataType.getErrorId());
-					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
-					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
-				}
+			
 		}
 	}
 
