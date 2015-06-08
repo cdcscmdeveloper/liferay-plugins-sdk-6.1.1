@@ -6,9 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-
+	<ui:param name="isQuotationThresHold" value="#{specificationBackingBean.isQuotationThresHold(specificationBackingBean.managedBean.scQt.estimatedAmount)}" />
+	<ui:param name="isOneTierThresHold" value="#{specificationBackingBean.isOneTierThresHold(specificationBackingBean.managedBean.scQt.estimatedAmount)}" />
+	
 	<ac:lovPopup />
 
 	<table border="0" cellspacing="0" cellpadding="0" width="100%">

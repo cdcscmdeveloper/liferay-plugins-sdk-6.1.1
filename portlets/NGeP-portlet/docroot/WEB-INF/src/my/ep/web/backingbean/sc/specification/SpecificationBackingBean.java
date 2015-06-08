@@ -2007,14 +2007,16 @@ public class SpecificationBackingBean extends
 									scQt.getScQtSuppliers().size());
 						}
 					}
-					if (scQt.getEstimatedAmount().intValue() > 500000
+					
+					boolean isQuotationThresHold = isQuotationThresHold(scQt.getEstimatedAmount());
+					if (!isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
-					if (scQt.getEstimatedAmount().intValue() <= 500000
+					if (isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())) {
 						if (null == scQt.getScQtSupplierCriteria()
@@ -2077,14 +2079,16 @@ public class SpecificationBackingBean extends
 				} else {
 					this.getManagedBean().setPanelItemCategory("");
 					ScQt scQt = this.getManagedBean().getScQt();
-					if (scQt.getEstimatedAmount().intValue() > 500000
+					boolean isQuotationThresHold = isQuotationThresHold(scQt.getEstimatedAmount());
+					
+					if (!isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
-					if (scQt.getEstimatedAmount().intValue() <= 500000
+					if (isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())) {
 						if (null == scQt.getScQtSupplierCriteria()
@@ -4936,8 +4940,7 @@ public class SpecificationBackingBean extends
 			}
 
 			if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
-					&& this.getManagedBean().getScQt().getEstimatedAmount()
-							.intValue() > 500000
+					&& !isQuotationThresHold(this.getManagedBean().getScQt().getEstimatedAmount())
 					&& this.getManagedBean().getScQt()
 							.getScQtSupplierCriteria().isAllState()) {
 				if (null != qtSupplierCriteria) {
@@ -5807,7 +5810,7 @@ public class SpecificationBackingBean extends
 		try {
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			if (scQt.getEstimatedAmount().intValue() <= 50000) {
+			if (isOneTierThresHold(scQt.getEstimatedAmount())) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
 				quotationReqDTO
@@ -5863,7 +5866,10 @@ public class SpecificationBackingBean extends
 		try {
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			if (scQt.getEstimatedAmount().intValue() <= 50000) {
+			
+			boolean isQuotationThresHold = isQuotationThresHold(scQt.getEstimatedAmount());
+			
+			if (isOneTierThresHold(scQt.getEstimatedAmount())) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
 				quotationReqDTO
@@ -5901,8 +5907,7 @@ public class SpecificationBackingBean extends
 						}
 					}
 				}
-			} else if (scQt.getEstimatedAmount().intValue() > 50000
-					&& scQt.getEstimatedAmount().intValue() <= 100000) {
+			} else if (isOpenForBumiputraThresHold(scQt.getEstimatedAmount())) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
 				quotationReqDTO
@@ -5918,8 +5923,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQt(scQt);
 			}
 
-			else if (scQt.getEstimatedAmount().intValue() > 100000
-					&& scQt.getEstimatedAmount().intValue() <= 500000) {
+			else if (isQuotationThresHold) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
 				quotationReqDTO
@@ -5935,7 +5939,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQt(scQt);
 			}
 
-			else if (scQt.getEstimatedAmount().intValue() > 500000) {
+			else {
 
 				ParameterReqDTO tenderReqDTO = new ParameterReqDTO();
 				tenderReqDTO
@@ -5957,13 +5961,13 @@ public class SpecificationBackingBean extends
 			}
 			if (SourcingConstants.QT_TYPE_OPEN.equalsIgnoreCase(scQt
 					.getQtType())) {
-				if (scQt.getEstimatedAmount().intValue() > 500000
+				if (!isQuotationThresHold
 						&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 						&& null != scQt.getScQtSupplierCriteria()
 						&& !scQt.getScQtSupplierCriteria().isAllState()) {
 					scQt.getScQtSupplierCriteria().setAllState(true);
 				}
-				if (scQt.getEstimatedAmount().intValue() <= 500000) {
+				if (isQuotationThresHold) {
 					if (null != scQt.getScQtSupplierCriteria()) {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
@@ -12899,8 +12903,7 @@ public class SpecificationBackingBean extends
 		recommendList.add(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 		if (null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getEstimatedAmount()
-				&& this.getManagedBean().getScQt().getEstimatedAmount()
-						.intValue() > 500000) {
+				&& !isQuotationThresHold(this.getManagedBean().getScQt().getEstimatedAmount())) {
 			recommendList
 					.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 		}
@@ -14390,8 +14393,7 @@ public class SpecificationBackingBean extends
 		List<TplSpecLoc> tplSpecLocList = new ArrayList<TplSpecLoc>();
 
 		ScQt scQt = getManagedBean().getScQt();
-		int estimatedAmt = scQt.getEstimatedAmount().intValue();
-		if (estimatedAmt >= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
+		if (!isQuotationThresHold(scQt.getEstimatedAmount())) {
 			if (getManagedBean().getAllStateCode() != PTJLocalityCode.STATE_PENINSULAR
 					&& !scQtSupplierCriteria.isAllState()) {
 				if (null != scQtSupplierCriteria

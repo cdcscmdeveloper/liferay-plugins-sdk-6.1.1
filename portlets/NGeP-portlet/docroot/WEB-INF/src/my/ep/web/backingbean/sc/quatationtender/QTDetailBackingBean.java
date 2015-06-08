@@ -2328,13 +2328,11 @@ public class QTDetailBackingBean extends
 						}
 					}
 
-					if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
+					if (!isQuotationThresHold(scQt.getEstimatedAmount())
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
-					}
-
-					if (scQt.getEstimatedAmount().intValue() <= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
+					} else {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
 							scQt.getScQtSupplierCriteria().setLocationLevel(
@@ -2383,12 +2381,11 @@ public class QTDetailBackingBean extends
 					}
 				} else {
 					ScQt scQt = this.getManagedBean().getQt();
-					if (scQt.getEstimatedAmount().intValue() > SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND
+					if (!isQuotationThresHold(scQt.getEstimatedAmount())
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
-					}
-					if (scQt.getEstimatedAmount().intValue() <= SourcingConstants.ESTMT_FIVE_HUNDERED_THOUSAND) {
+					} else {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
 							scQt.getScQtSupplierCriteria().setLocationLevel(
