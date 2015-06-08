@@ -203,6 +203,10 @@
 									<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/>	</td>
 						</tr>
 					</table></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
+				<td style="width: 295px;"><p:inputText size="15"
+						disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : contractRequestBackingBean.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>

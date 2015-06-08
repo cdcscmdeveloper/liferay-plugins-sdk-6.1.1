@@ -75,6 +75,15 @@
 							<td style="width: 120px;"><p:inputText size="9" value="#{invoiceBackingBean.retrieveMofNo(invoiceBackingBean.managedBean.invoice.flRequest.smSupplier)}" disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/></td>
 						</tr>
 					</table></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
+				<td style="width:295px;"><p:inputText size="15" disabled="true" 
+									value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.epNo}"></p:inputText></td>		
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><p:inputText size="45" disabled="true" id="suppName"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
 				<td style="width: 154px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
@@ -94,19 +103,14 @@
 		   				value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankAccountNo}  #{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankName}"></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText size="45" disabled="true" id="suppName"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
+				<td><p:inputText size="45" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.branchName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 				<td style="width: 72px;"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.invoice.no']}" /><p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="35" maxlength="30" disabled="true" 
 						value="#{invoiceBackingBean.managedBean.invoice.supplierInvoiceRef}" id="supplierInvoiceRef" required="true" label="Supplier Invoice No"/><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.inv.no']}"/><p:message for="supplierInvoiceRef" display="icon" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText size="45" disabled="true"
-						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.branchName}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top" style="width: 137px;"><p:outputLabel

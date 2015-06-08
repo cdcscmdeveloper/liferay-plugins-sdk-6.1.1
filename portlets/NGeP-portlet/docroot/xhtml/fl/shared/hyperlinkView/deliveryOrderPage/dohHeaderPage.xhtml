@@ -12,7 +12,7 @@
 				</td>
 				<td class="header-info-text">
 					<p:commandLink value="#{createDOBackingBean.managedBean.fulfilmentOrder.docNo}"
-					action="#{createDOBackingBean.navigateOrderNoPage}"/>
+					action="#{createDOBackingBean.navigateOrderNoPage(createDOBackingBean.managedBean.fulfilmentOrder.docType)}"/>
 				</td>
 				<td><h:outputLabel value="#{lbl['lbl.fl.frn.do.no']} " rendered="#{createDOBackingBean.managedBean.flDeliveryOrder.deliveryOrderNo != null}"/>
 				</td>
