@@ -189,7 +189,7 @@
 								<hr class="horizontal_dotted_line" /> <br /> 
 								
 								<p:dataGrid style="width:100%;"
-									columns="3" rows="9" 
+									columns="3" rows="9" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 									value="#{pCatalogueBackingBean.managedBean.catalogueList}"
 									id="catalogueGridViewID" var="supplierItem">
 									<ac:paginator for="catalogueGridViewID"></ac:paginator>
