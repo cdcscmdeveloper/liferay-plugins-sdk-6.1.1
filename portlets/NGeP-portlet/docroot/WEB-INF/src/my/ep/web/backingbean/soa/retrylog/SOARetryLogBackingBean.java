@@ -89,7 +89,7 @@ public class SOARetryLogBackingBean extends
 		debugLogger("refreshRetryLogList");
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR,
+				new FacesMessage(FacesMessage.SEVERITY_INFO,
 						"Records refreshed.", ""));
 		resetAndReloadData();
 	}
