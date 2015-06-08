@@ -56,14 +56,9 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 		System.out.println("1onModuleSelect" +getManagedBean().getPreviousSelectedModule());
 
 
-		if(getManagedBean().getPreviousSelectedModule().equalsIgnoreCase("CM") || getManagedBean().getPreviousSelectedModule().equalsIgnoreCase("CD")){
-			CmTrackingDiaryBackingBean bb = new CmTrackingDiaryBackingBean();
-			bb.getManagedBean().reset();
+		resetSearchDataModelResult();
 
-			CdTrackingDiaryBackingBean cd = new CdTrackingDiaryBackingBean();
-			cd.getManagedBean().reset();
 
-		}
 
 
 		FacesContext fc=FacesContext.getCurrentInstance();
@@ -154,6 +149,20 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.MODULE_NAME, searchBean);
 		return items;
+	}
+
+
+
+	public void resetSearchDataModelResult(){
+
+		CmTrackingDiaryBackingBean bb = new CmTrackingDiaryBackingBean();
+		bb.getManagedBean().reset();
+
+		CdTrackingDiaryBackingBean cd = new CdTrackingDiaryBackingBean();
+		cd.getManagedBean().reset();
+
+
+
 	}
 }
 
