@@ -64,10 +64,10 @@
 				<td style="width: 18%;">
 				<p:outputLabel
 						value="#{lbl['lbl.sc.price.inquiry.order.qty']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td ><p:inputText disabled="#{!isPendingSubmissionStatus}"  
+				<td ><p:inputText disabled="#{!isPendingSubmissionStatus}"  style="text-align: right;"
 				           label="#{lbl['lbl.sc.price.inquiry.order.qty']}" maxlength="14" id="oderQtyId"  required="true"
 					       validatorMessage="Order Qty: must be a decimal number between 0.0 and 9999999999.999"
-						   value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.quantity}" styleClass="ppRightBtn"
+						   value="#{purchaseInquiryBackingBean.managedBean.scRequestSupplierItem.requestNoteItem.quantity}"
 						   size="25">
 						</p:inputText>
 			     </td>
