@@ -154,7 +154,7 @@ public class SOARetryLogBackingBean extends
 				if (resDTO.isAllRemoved()) {
 					message = "Record(s) removed successfully.";
 				} else {
-					message = "Some record(s) removed unsuccessfully.";
+					message = "Some record(s) removed successfully.";
 				}
 
 				FacesContext.getCurrentInstance().addMessage(
