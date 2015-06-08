@@ -102,19 +102,17 @@
 				</p:column>
 				<p:column style="align : center; width : 14%"
 					headerText="#{lbl['lbl.sc.starting.price']}">
-					<h:outputText id="itemStartPriceVBI" style="float : right"
-						value="#{biddingBB.managedBean.tplSpecHelper.calcTotalAmount(biddingBB.managedBean.selectedBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.startingPrice,biddingBB.managedBean.selectedBidItem.qty)}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+					<p:outputLabel id="itemStartPriceVBI" style="float : right"
+						value="#{biddingBB.itemizedStartPriceTotal(bidPriceItem)}">
+					</p:outputLabel>
 				</p:column>
 				<p:column style=" align : center; width : 14%"
 					headerText="#{lbl['lbl.sc.last.bid.price']}">
 					<div style="align: right">
 						<p:commandLink id="bidPriceVBI"
 							rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) eq '0')}"
-							value="#{biddingBB.formattedTotalAmount(biddingBB.managedBean.selectedBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.bidPrice,biddingBB.managedBean.selectedBidItem.qty)}"
-							style="float : right" oncomplete="priceHistory.show();"
+							value="#{bidPriceItem.bidPriceTotal}" style="float : right"
+							oncomplete="priceHistory.show();"
 							action="#{biddingBB.historyPricePopupAction(bidPriceItem)}"
 							update="@([id$=historyPricePopupPanel])">
 						</p:commandLink>
@@ -124,8 +122,8 @@
 				<p:column style=" align : center; width : 15%"
 					headerText="#{lbl['lbl.sc.difference.rm']}">
 					<h:outputText id="differenceVBI" style="float : right"
-						rendered="#{bidPriceItem.bumi and !((bidPriceItem.startingPrice - bidPriceItem.bidPrice) eq '0')}"
-						value="#{biddingBB.managedBean.tplSpecHelper.calcTotalAmount(biddingBB.managedBean.selectedBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.startingPrice,biddingBB.managedBean.selectedBidItem.scBidItem.qty) - biddingBB.managedBean.tplSpecHelper.calcTotalAmount(biddingBB.managedBean.selectedBidItem.scRequestItem.tplSpecQuestion,bidPriceItem.bidPrice,biddingBB.managedBean.selectedBidItem.qty)}">
+						rendered="#{bidPriceItem.bumi and biddingBB.managedBean.nonBumiAvail}"
+						value="#{biddingBB.managedBean.lowestNonBumiOfferedPrice - bidPriceItem.bidPriceTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>

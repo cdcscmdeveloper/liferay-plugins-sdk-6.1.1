@@ -75,6 +75,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		}
 		log.info(message);
 	}
+
 	CommonUtils commonUtils = new CommonUtils();
 	DecimalFormat nf = new DecimalFormat(
 			commonUtils
@@ -301,8 +302,11 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		Date startDate = (Date) e.getComponent().getAttributes().get("value");
 		getManagedBean().getBidAction().setNewStartDate(startDate);
 
-		if (getManagedBean().getBidAction().getActionType()
-				.equalsIgnoreCase(ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)) {
+		if (getManagedBean()
+				.getBidAction()
+				.getActionType()
+				.equalsIgnoreCase(
+						ParameterConst.BID_ACTION_TYPES_RESUME_BIDDING)) {
 
 			final long ONE_MINUTE_IN_MILLIS = 60000;
 
@@ -508,13 +512,14 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 			}
 		}
 		if (nonBumiPriceList != null && nonBumiPriceList.size() != 0) {
+			getManagedBean().setNonBumiAvail(true);
 			Collections.sort(nonBumiPriceList);
 			if (nonBumiPriceList.get(0) != null) {
 				getManagedBean().setLowestNonBumiOfferedPrice(
 						nonBumiPriceList.get(0));
 			}
 		} else {
-
+			getManagedBean().setNonBumiAvail(false);
 			getManagedBean().setLowestNonBumiOfferedPrice(new BigDecimal(0d));
 		}
 
@@ -553,8 +558,7 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 		LineChartSeries chartSeries = new LineChartSeries();
 
-		chartSeries.setLabel(ResourceBundleUtils.getMessage(
-				"lbl.sc.bid.price", 
+		chartSeries.setLabel(ResourceBundleUtils.getMessage("lbl.sc.bid.price",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 
@@ -750,7 +754,31 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setBidPriceItems(resDTO.getBidPriceItems());
-				
+
+				if (resDTO.getBidPriceItems() != null
+						&& resDTO.getBidPriceItems().size() != 0) {
+					List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
+					for (BidItemBean bidItem : resDTO.getBidPriceItems()) {
+
+						if (!bidItem.isBumi()) {
+
+							nonBumiPriceList.add(bidItem.getBidPriceTotal());
+						}
+					}
+					if (nonBumiPriceList != null
+							&& nonBumiPriceList.size() != 0) {
+						getManagedBean().setNonBumiAvail(true);
+						Collections.sort(nonBumiPriceList);
+						if (nonBumiPriceList.get(0) != null) {
+							getManagedBean().setLowestNonBumiOfferedPrice(
+									nonBumiPriceList.get(0));
+						}
+					} else {
+						getManagedBean().setNonBumiAvail(false);
+						getManagedBean().setLowestNonBumiOfferedPrice(
+								new BigDecimal(0d));
+					}
+				}
 			}
 		}
 
@@ -845,7 +873,17 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		return "/xhtml/sc/bidding/biddingmain.xhtml ? faces-redirect=true";
 	}
 
-	public String formattedTotalAmount(TplSpecQuestion specQuestion,BigDecimal bidPrice,BigDecimal qty){
-		return nf.format(getManagedBean().getTplSpecHelper().calcTotalAmount(specQuestion, bidPrice, qty));
+	public String formattedTotalAmount(TplSpecQuestion specQuestion,
+			BigDecimal bidPrice, BigDecimal qty) {
+		return nf.format(getManagedBean().getTplSpecHelper().calcTotalAmount(
+				specQuestion, bidPrice, qty));
+	}
+
+	public String itemizedStartPriceTotal(BidItemBean itemBean) {
+
+		return formattedTotalAmount(this.getManagedBean().getSelectedBidItem()
+				.getScRequestItem().getTplSpecQuestion(),
+				itemBean.getStartingPrice(), this.getManagedBean()
+						.getSelectedBidItem().getQty());
 	}
 }

@@ -93,6 +93,7 @@ public class BiddingManagedBean extends BaseManagedBean {
 	
 	private List<BidPackageBean> bidPackages;
 	private BigDecimal lowestNonBumiOfferedPrice;
+	private boolean nonBumiAvail;
 	
 	private List<TplSpecZoneDtl> zoneDetailsList;
 	private String selectedZone;
@@ -944,6 +945,19 @@ public class BiddingManagedBean extends BaseManagedBean {
 		this.tplSpecHelper = tplSpecHelper;
 	}
 
+	/**
+	 * @return the nonBumiAvail
+	 */
+	public boolean isNonBumiAvail() {
+		return nonBumiAvail;
+	}
+
+	/**
+	 * @param nonBumiAvail the nonBumiAvail to set
+	 */
+	public void setNonBumiAvail(boolean nonBumiAvail) {
+		this.nonBumiAvail = nonBumiAvail;
+	}
 
 	private IPagingDataModel<ScBidSchedule> searchDataModel = new SearchPagingDataModel();
 
