@@ -41,6 +41,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
+import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -49,7 +50,9 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -57,6 +60,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
+import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -1460,6 +1464,66 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			
 		} finally {
 			qtDetailSO = null;
+		}
+	}
+	
+	public boolean isOneTierThresHold(BigDecimal estimatedAmount) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
+			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
+			return ruleSO
+					.compareAValueWithRuleTypeValues(reqDTO)
+					.isCompareValueResult();
+			
+		} finally {
+			ruleSO = null;
+		}
+	}
+	
+	public boolean isOpenForBumiputraThresHold(BigDecimal estimatedAmount) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.OPEN_FOR_BUMI_THRESHOLD);
+			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
+			return ruleSO
+					.compareAValueWithRuleTypeValues(reqDTO)
+					.isCompareValueResult();
+			
+		} finally {
+			ruleSO = null;
+		}
+	}
+	
+	public boolean isQuotationThresHold(BigDecimal estimatedAmount) {
+		IRuleSO ruleSO = null;
+		try {
+			ruleSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			
+			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
+			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
+			List<String> ruleValueStrList = ruleSO
+					.getRuleValuesByTypeAndCurrentDateRange(reqDTO)
+					.getRuleValueStrList();
+
+			if (ruleValueStrList != null && ruleValueStrList.size() > 0) {
+				return ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(ruleValueStrList.get(0));
+			}
+			
+			return true;
+			
+		} finally {
+			ruleSO = null;
 		}
 	}
 }

@@ -120,7 +120,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount le '50000'}">
+						rendered="#{isOneTierThresHold}">
 						<p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
@@ -130,7 +130,7 @@
 								update="@form"></p:ajax>
 						</p:selectOneRadio>
 					</ui:fragment> <ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or specificationBackingBean.managedBean.scQt.estimatedAmount gt '50000'}">
+						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or !isOneTierThresHold}">
 						<table>
 							<tr>
 								<td><p:selectOneRadio required="true" id="evalType"
