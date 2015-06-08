@@ -285,8 +285,8 @@ BaseBackingBean<UnspscCodeManagedBean> {
 	public String bpmTesting(String action) throws Exception {
 
 		try {
-			System.out.println("action:" + action);
-			CodificationBackingBean codeBB = new CodificationBackingBean();
+			
+		
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
@@ -420,7 +420,10 @@ BaseBackingBean<UnspscCodeManagedBean> {
 	public String selectSubmitRecommend(String action) throws Exception {
 
 		try {
-
+			this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
+			this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
+			System.out.println("getUnspscTitle:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
+			
 			System.out
 			.println("this.getManagedBean().getRequestCode().getCmRecommendCodes().size()"
 					+ this.getManagedBean().getRequestCode()
@@ -2608,13 +2611,25 @@ BaseBackingBean<UnspscCodeManagedBean> {
 
 	}
 
-	public void selectRecommendCode() {
+	/*public void selectRecommendCode() {
+	
+		System.out.println("this.getManagedBean().getSelectedRecommendCode():"+this.getManagedBean().getSelectedRecommendCode().isBrandNew());
+		System.out.println("this.getManagedBean().getSelectedRecommendCode()title:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
 
-		this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
-		this.getManagedBean().getRequestCode().getCmRecommendCodes()
-		.add(this.getManagedBean().getSelectedRecommendCode());
+		
+		this.getManagedBean().getRequestCode().getCmRecommendCodes().set(0, this.getManagedBean().getSelectedRecommendCode());
+		
+		System.out.println("size:"+this.getManagedBean().getRequestCode().getCmRecommendCodes().size());
+		if(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>1){
+			this.getManagedBean().getRequestCode().getCmRecommendCodes().remove(1);
+		}
+		
+		for(CmRecommendCode code1: this.getManagedBean().getRequestCode().getCmRecommendCodes()){
+			System.out.println("getUnspscTitle:"+code1.getUnspscTitle());
+		}
+		
 	}
-
+*/
 	public String requestUnspscCode() {
 		renewSesionObject();
 
