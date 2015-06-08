@@ -25,6 +25,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -203,7 +204,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 
 				// construct file path
 				String filePath = Calendar.getInstance().get(Calendar.YEAR)
-						+ "/SM/" + "SOFTCERT/"
+						+ "/SM/"
+						+ "SOFTCERT/"
 						+ selectedSuppDocVO.getPersonnel().getPmUser()
 								.getLoginId() + "/";
 
@@ -311,6 +313,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.getSoftCertBpmTask() == null ? null : getManagedBean()
 					.getSoftCertBpmTask().getTaskId());
 			reqDTO.setSoftcertDocList(getUploadedSoftcertDocs());
+			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
@@ -351,6 +354,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 		}
+		addSupplierTmpInSelectionListIfNotSelected();
 	}
 
 	/**
@@ -518,6 +522,58 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 			setPersonnelSoftcertInformation(personnel);
+			setSupplierTempSelection(personnel);
+		}
+	}
+
+	/**
+	 * Add personnel with role SUPPLIER_TMP in selection list if needed during
+	 * tick or untick
+	 */
+	private void addSupplierTmpInSelectionListIfNotSelected() {
+		if (getManagedBean().getSupplierTmpPersonnel() != null) {
+			if (getManagedBean().getSoftCertSelectList().isEmpty()) {
+				getManagedBean().setSoftCertSelectList(
+						new ArrayList<SmPersonnel>());
+				getManagedBean().getSoftCertSelectList().add(
+						getManagedBean().getSupplierTmpPersonnel());
+			} else {
+				boolean alreadyHaveSupplierTmp = false;
+				for (SmPersonnel personnel : getManagedBean()
+						.getSoftCertSelectList()) {
+					if (personnel.getPersonnelId().compareTo(
+							getManagedBean().getSupplierTmpPersonnel()
+									.getPersonnelId()) == 0) {
+						alreadyHaveSupplierTmp = true;
+						break;
+					}
+				}
+				if (!alreadyHaveSupplierTmp) {
+					getManagedBean().getSoftCertSelectList().add(
+							getManagedBean().getSupplierTmpPersonnel());
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set personnel auto select and disable tick for role SUPPLIER_TEMP
+	 * 
+	 * @param SmPersonnel
+	 *            personnel
+	 */
+	private void setSupplierTempSelection(SmPersonnel personnel) {
+		if (StringUtils.isNotBlank(personnel.getEpRole())
+				&& personnel.getEpRole().equals(RoleCode.SUPPLIER_TEMP.value())
+				&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_PENDING_REQ) {
+			if (getManagedBean().getSoftCertSelectList() == null
+					|| getManagedBean().getSoftCertSelectList().isEmpty()) {
+				getManagedBean().setSoftCertSelectList(
+						new ArrayList<SmPersonnel>());
+			}
+			personnel.setDisableRowSelection(true);
+			getManagedBean().getSoftCertSelectList().add(personnel);
+			getManagedBean().setSupplierTmpPersonnel(personnel);
 		}
 	}
 

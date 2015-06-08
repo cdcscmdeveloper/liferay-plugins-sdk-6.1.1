@@ -38,6 +38,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private BigDecimal gstRate;
 	private SmPersonnel loginUserPersonnelInfo;
 	private SmPersonnel freeSoftCertPersonnel;
+	private SmPersonnel supplierTmpPersonnel;
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
 	private String loginRoleName;
 	private String taskName;
@@ -235,6 +236,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setTargetPage(String targetPage) {
 		this.targetPage = targetPage;
+	}
+
+	public SmPersonnel getSupplierTmpPersonnel() {
+		return supplierTmpPersonnel;
+	}
+
+	public void setSupplierTmpPersonnel(SmPersonnel supplierTmpPersonnel) {
+		this.supplierTmpPersonnel = supplierTmpPersonnel;
 	}
 
 }
