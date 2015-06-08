@@ -46,8 +46,8 @@ public class CmTypeConverter implements Converter {
     			return resDTO.getTypeList().get(0);
     			
   
-            } catch(NumberFormatException exception) {  
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Not a valid player"));  
+            } catch(Exception ex) {  
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", ex.getMessage()));  
             }  
         }  
   

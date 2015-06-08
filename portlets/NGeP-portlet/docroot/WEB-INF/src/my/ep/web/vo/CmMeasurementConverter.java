@@ -46,8 +46,8 @@ public class CmMeasurementConverter implements Converter {
     			return resDTO.getMeasurementList().get(0);
     			
   
-            } catch(NumberFormatException exception) {  
-                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", "Not a valid player"));  
+            } catch(Exception ex) {  
+                throw new ConverterException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Conversion Error", ex.getMessage()));  
             }  
         }  
   
