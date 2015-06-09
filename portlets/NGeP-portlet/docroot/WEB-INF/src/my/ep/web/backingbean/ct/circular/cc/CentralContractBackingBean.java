@@ -130,8 +130,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	ContractBackingBean ctBB = null;
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
 	
-	//private static String fileDirectory = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/Circulars/"+ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR;
-	
 	 /**
 		 * This constructor method used to initialize the variable on start up
 		 * Setting button if user not call from BPM
@@ -147,10 +145,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				status.setStatusId(ContractStatusConst.CQ_PENDING_SUBMISSION);
 				getManagedBean().getCircularVer().setStatus(status);
 				 /*Initialization of contract details backing bean*/
-				/* initializeRemarks();
-				 ctBB = new ContractBackingBean(fileDirectory);
+				 initializeRemarks();
+				 ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			     ctBB.initializeRemarkAndAttachement(null, getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		*/	}
+			}
 			/*Setting login user id*/
 			if(isCentralContractAdmin()) 
 				getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
