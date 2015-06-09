@@ -460,12 +460,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			throw new EpException(MessageConst.ERROR_750000);
 		}		
 		
-		if (getManagedBean().getOriginalAccountNo() != null && getManagedBean().getOriginalAccountNo().equalsIgnoreCase(
-				getManagedBean().getContractVer().getCtContractValue().getBankAccountNo())) {
-			throw new EpException(MessageConst.ERROR_750000);
-		}		
-		
-		
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
 			 CtRemark remark = getManagedBean().getRemarkList().get(0);
 			 if (remark.getRemark().equalsIgnoreCase(null) || remark.getRemark().equalsIgnoreCase("")) {
