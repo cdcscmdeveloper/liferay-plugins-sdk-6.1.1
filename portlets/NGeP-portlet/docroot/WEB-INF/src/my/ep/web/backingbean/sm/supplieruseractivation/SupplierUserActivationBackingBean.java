@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.sm.supplieruseractivation;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
