@@ -1776,10 +1776,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		
 		   CentralContractBackingBean centralBB = new CentralContractBackingBean();
 			FacesContext fc = FacesContext.getCurrentInstance();
+			centralBB.getManagedBean().setSelectedCircularContract(null);
+			centralBB.getManagedBean().setSelectedCircularItem(null);
+			centralBB.getManagedBean().setSelectedZoneItems(null);
+			centralBB.getManagedBean().setSelectedTabIndex(0);
+			centralBB.getManagedBean().setAction("view");
+			centralBB.getManagedBean().setViewContract(true);
+			centralBB.getManagedBean().setUpdateAction(false);
+			centralBB.getManagedBean().setOutComes(new String[]{});
 			centralBB.getManagedBean().setGotoPreviewPage(fc.getViewRoot().getViewId());
 			centralBB.getManagedBean().setChkCentralCircular(true);
 			centralBB.gotoCommonPage(contractVerId);
-			centralBB.getManagedBean().setAction(" ");
+			
 			return "/xhtml/ct/circular/portal/centralCircularTab.xhtml?faces-redirect=true";
 	}
 	
