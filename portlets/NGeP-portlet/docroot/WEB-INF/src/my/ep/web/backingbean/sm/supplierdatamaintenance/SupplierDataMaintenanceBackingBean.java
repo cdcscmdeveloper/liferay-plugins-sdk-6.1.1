@@ -41,6 +41,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSmAppl(
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		setApplication(getManagedBean().getSmAppl());
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/supplierdatamaintenance/editSupplierDataMaintenance.xhtml",

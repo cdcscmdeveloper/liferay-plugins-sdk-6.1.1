@@ -1025,11 +1025,10 @@ public class SmApplicationBackingBean extends
 		}
 		if (!valid) {
 			throw new EpException(sb.toString());
-		}
-		else {
-			//disable spki for now
-//			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-//			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+		} else {
+			// disable spki for now
+			// getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+			// RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			page = submitCancelMofApplToBpm();
 		}
 		return page;
@@ -4403,7 +4402,8 @@ public class SmApplicationBackingBean extends
 					SmCommonUtil.getMessage("lbl.sm.person.panHdr", null));
 		}
 
-		if (shareHolderBean.getPmUser() != null
+		if (shareHolderBean.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				&& shareHolderBean.getPmUser() != null
 				&& shareHolderBean.getPmUser().getUserId() != null)
 			getManagedBean().setDisableIcEmail(true);
 		else
@@ -5945,7 +5945,7 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			// return SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
-//			throw new EpException(MessageConst.ERROR_722519);
+			// throw new EpException(MessageConst.ERROR_722519);
 			throw new EpException(e.getMessage());
 		}
 	}
@@ -6919,7 +6919,7 @@ public class SmApplicationBackingBean extends
 			e.printStackTrace();
 			retMsg = null;
 			retriveLatestApplAfterUpdate("", "");
-//			throw new EpException(MessageConst.ERROR_722519);
+			// throw new EpException(MessageConst.ERROR_722519);
 			throw new EpException(e.getMessage());
 		} finally {
 			reqSO = null;
