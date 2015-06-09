@@ -62,8 +62,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 @RequestScoped
 public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSupplierRegistrationManagedBean>{
 	//private static final String CATALOGUE_UPLOAD_PATH = "/xhtml/cm/codification/codificationView.xhtml";
-	private static final String CATALOGUE_UPLOAD_PATH = "supptemp-codification-search";
-	private static final String CATALOGUE_MAINT = "supptemp-catalogue-maint";
+	private static final String CATALOGUE_UPLOAD_PATH = "codification-search";
+	private static final String CATALOGUE_MAINT = "catalogue-maintenance-file";
 	//private static final String SUPPLIER_TYPE_SELECTION_PATH = "supptemp-registration-cont";
 	private static final String SOFT_CERT_PATH = "supptemp-request-soft-cert";
 	private static final String MOF_REG_PATH = "supptemp-mof-registration";
