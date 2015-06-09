@@ -435,23 +435,23 @@ public class SupplierManagementConst {
 	public static final long CATEGORY_TYPE_ID_READING = 1261;
 
 	// SM Action description for sm tracking dairy
-	public static final String SUPP_SAVE_APPL_DRAFT = "Supplier saved application as draft";
-	public static final String SUPP_SUBMIT_NORM_APPL = "Supplier submit application for approval";
-	public static final String SUPP_SUBMIT_CANCREG_APPL = "Supplier submit cancel registration with mof for approval";
-	public static final String SUPP_SUBMIT_DELDRFT_APPL = "Supplier submit delete pending application for approval";
-	public static final String PO_RECOM_SITE_VISIT = "PO Recommend for site visit";
-	public static final String PO_REJECT_APPL = "Application rejected by PO";
-	public static final String APPROVER_REJECT_APPL = "Application Rejeceted by Approver";
-	public static final String PO_APPROVE_APPL = "Application approved by PO";
-	public static final String APPROVER_APPROVE_APPL = "Application approved by Approver";
-	public static final String PO_SEND_INQUIRY_SUPP = "PO sent inquiry to supplier";
-	public static final String PO_ESCALATE_APPROVER = "PO esclated the application to Approver for final decision";
+	public static final String SUPP_SAVE_APPL_DRAFT = "Pembekal simpan draf permohonan";
+	public static final String SUPP_SUBMIT_NORM_APPL = "Pembekal hantar permohonan untuk diluluskan";
+	public static final String SUPP_SUBMIT_CANCREG_APPL = "Pembekal hantar pembatalan pendaftaran dengan MOF untuk diluluskan";
+	public static final String SUPP_SUBMIT_DELDRFT_APPL = "Pembekal hantar hapus permohonan belum selesai untuk diluluskan";
+	public static final String PO_RECOM_SITE_VISIT = "PO mencadang untuk lawatan tapak";
+	public static final String PO_REJECT_APPL = "Permohonan ditolak oleh PO";
+	public static final String APPROVER_REJECT_APPL = "Permohonan ditolak oleh Pelulus";
+	public static final String PO_APPROVE_APPL = "Permohonan diluluskan oleh PO";
+	public static final String APPROVER_APPROVE_APPL = "Permohonan diluluskan oleh Pelulus";
+	public static final String PO_SEND_INQUIRY_SUPP = "PO hantar pertanyaan kepada pembekal";
+	public static final String PO_ESCALATE_APPROVER = "PO hantar permohonan kepada Pelulus untuk keputusan akhir";
 
-	public static final String SDO_SUBMIT_APPL = "SDO submitted supporting document checklist";
-	public static final String SDO_SEND_INQUIRY = "SDO sent inquiry to supplier";
-	public static final String SUPP_SEND_INQUIRY_SDO = "Supplier sent response to SDO";
-	public static final String SVC_ASSIGN_SITEVISIT = "SVC assigned site visit task to SVO";
-	public static final String SVO_SUBMIT_REPORT = "SVO submitted site visit report";
+	public static final String SDO_SUBMIT_APPL = "SDO hantar senarai dokumen sokongan";
+	public static final String SDO_SEND_INQUIRY = "SDO hantar pertanyaan kepada pembekal";
+	public static final String SUPP_SEND_INQUIRY_SDO = "Pembekal hantar respon kepada pembekal";
+	public static final String SVC_ASSIGN_SITEVISIT = "SVC beri tugasan lawatan tapak kepada SVO";
+	public static final String SVO_SUBMIT_REPORT = "SVO hantar laporan lawatan tapak";
 
 	public static final String SM_STATE_NAME_SABAH = "SABAH";
 	public static final String SM_STATE_NAME_SARAWAK = "SARAWAK";
