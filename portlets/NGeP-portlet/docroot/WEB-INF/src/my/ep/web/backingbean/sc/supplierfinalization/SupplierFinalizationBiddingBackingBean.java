@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -50,16 +52,16 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
-import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSvWorker_;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -72,11 +74,16 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.docx4j.docProps.variantTypes.Array;
+import org.primefaces.component.menuitem.MenuItem;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
 
 /**
  * Implementation for supplier finalization by bidding
@@ -135,6 +142,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 	private void retrieveOnlineBiddingEndorsement(Long qtId) {
 		retriveQTDetails(qtId);
 		retrieveSupplierFinalization(qtId);
+		generateZoneMenuModel();
 		retrieveBiddingSummary();
 	}
 
@@ -176,130 +184,301 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(qtId);
-
+			
+			boolean isZonal = this.getManagedBean().getScQt().isZonal();
+			reqDTO.setZonal(isZonal);
+			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveSupplierFinalization(reqDTO);
 			ScQtFinalization scQtFinalization = resDTO.getScQtFinalization();
+			
+			if (isZonal) {
+				this.getManagedBean().setBiddingZoneDetails(
+						new ArrayList<TplSpecZoneDtl>());
+				this.getManagedBean().setScQtRecommendsByZone(
+						new LinkedHashMap<Long, List<ScQtRecommend>>());
+				this.getManagedBean().setBidSchedulesByZone(
+						new LinkedHashMap<Long, List<ScBidSchedule>>());
+				this.getManagedBean().setBidPackageBeansByZone(
+						new LinkedHashMap<Long, List<BidPackageBean>>());				
+				this.getManagedBean().setBidItemsByZone(
+						new LinkedHashMap<Long, List<ScBidItem>>());
+				
+				Map<Long, List<ScQtRecommend>> scQtRecommendsByZone = 
+							new LinkedHashMap<Long, List<ScQtRecommend>>();
+				
+				List<TplSpecZoneDtl> biddingZoneDetails = new ArrayList<TplSpecZoneDtl>();
+				TplSpecZoneDtl specZoneDtl = null;
+				for (ScQtRecommend scQtRecommend 
+										: scQtFinalization.getScQtRecommends()) {
+					if (!ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
+							.equals(scQtRecommend.getRecommendBy().getParameterCode())) {
+						continue;
+					}
+					specZoneDtl = scQtRecommend.getTplSpecZoneDtl();
+					
+					if (!biddingZoneDetails.contains(specZoneDtl)) {
+						biddingZoneDetails.add(specZoneDtl);
+					}
+					if (scQtRecommendsByZone
+							.containsKey(specZoneDtl.getSpecZoneId())) {
+						List<ScQtRecommend> scQtRecommends 
+								= scQtRecommendsByZone.get(specZoneDtl.getSpecZoneId());
+						scQtRecommends.add(scQtRecommend);
+					} else {
+						List<ScQtRecommend> scQtRecommends 
+								= new ArrayList<ScQtRecommend>();
+						scQtRecommends.add(scQtRecommend);
+						scQtRecommendsByZone.put(specZoneDtl.getSpecZoneId(), scQtRecommends);
+					}
+				}
+				if (CollectionUtils.isNotEmpty(biddingZoneDetails)) {
+					this.getManagedBean().setBiddingZoneDetails(biddingZoneDetails);
+					this.getManagedBean().setSelectedZone(biddingZoneDetails.get(0));
+					generateZoneMenuModel();
+				}
+			}
+			
 			getManagedBean().setScQtFinalization(scQtFinalization);
 
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
+	
+	private void generateZoneMenuModel() {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean().getBiddingZoneDetails())) {
+			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean().getBiddingZoneDetails();
+
+			// Dynamically generating the tabs
+			MenuModel zoneMenuModel = new DefaultMenuModel();
+			if (CollectionUtils.isNotEmpty(zoneDtls)) {
+				int zoneTabIndex = 0;
+				for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+					specZoneDtl.setZoneTabIndex(zoneTabIndex);
+
+					MenuItem zoneItem = new MenuItem();
+					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
+					zoneItem.setAjax(true);
+					zoneItem.setPartialSubmit(true);
+					zoneItem.setProcess("@this");
+					zoneItem.setUpdate("@this");
+					zoneItem.setOncomplete("onZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : "
+							+ zoneTabIndex + "}]);");
+					zoneMenuModel.addMenuItem(zoneItem);
+					++zoneTabIndex;
+				}
+			}
+			this.getManagedBean().setZoneMenuModel(zoneMenuModel);
+		}
+	}	
+	
+	/**
+	 * To retrieve the bidding details on selection of a zone tab
+	 */
+	public void onZoneTabChangeAction() {
+		Integer selectedZoneTabIndex = Integer.valueOf(FacesContext
+				.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("selectedZoneTabIndex"));
+		if (selectedZoneTabIndex == 
+				this.getManagedBean().getZoneActiveIndex()) {
+			return;
+		} 
+		
+		List<TplSpecZoneDtl> zoneDetails = this.getManagedBean().getBiddingZoneDetails();
+		this.getManagedBean().setSelectedZone(zoneDetails.get(selectedZoneTabIndex));
+		this.getManagedBean().setZoneActiveIndex(selectedZoneTabIndex);
+		retrieveBiddingSummary();
+	}
 
 	/**
 	 * To retrieve the details of Online Bidding Summary
 	 */
 	public void retrieveBiddingSummary() {
-		this.getManagedBean().setOnlineBiddingActiveIndex(
-				ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY);
+		navigateToBiddingSummaryTab();
+		
 		ScQt scQt = getManagedBean().getScQt();
+		boolean isZonal = scQt.isZonal();
 		String recommendType = getManagedBean().getScQtFinalization()
 				.getRecommendedTypeId().getParameterCode();
-
-		IScheduleBiddingSO scheduleBiddingSO = null;
+		ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
+		Long qtId = scQt.getQtId();
+		reqDTO.setQtID(qtId);
+		
+		if (isZonal) {
+			reqDTO.setSelectedZoneId(
+					this.getManagedBean().getSelectedZone().getSpecZoneId());
+		}
+		if (recommendType.equals(
+				ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
+			reqDTO.setDocType(QTConstants.DOCTYPE_QT);
+			retrieveRecommendedSuppliersByPkg(reqDTO);
+		} else if (recommendType.equals(
+				ParameterConst.RECOMMEND_TYPE_ITEM)) {
+			retrieveBiddingItems(reqDTO);
+		}
+	}
+	
+	private void retrieveRecommendedSuppliersByPkg(ScheduleBiddingReqDTO reqDTO) {
 		IBiddingSO biddingSO = null;
+		IScheduleBiddingSO scheduleBiddingSO = null;
+		
+		TplSpecZoneDtl selectedZone = null;
+		List<ScBidSchedule> currentZoneBidSchedules = null;
+		List<BidPackageBean> currentZoneBidPackageBeans = null;
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+				
 		try {
-			scheduleBiddingSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-							IScheduleBiddingSO.class);
-
-			if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_PACKAGE)) {
-				biddingSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);
-
-				ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-				Long qtId = scQt.getQtId();
-				reqDTO.setQtID(qtId);
-				reqDTO.setDocType(QTConstants.DOCTYPE_QT);
-
+			if (isZonal) {
+				selectedZone = this.getManagedBean().getSelectedZone();
+				if (MapUtils.isNotEmpty(
+						this.getManagedBean().getBidSchedulesByZone())) {
+					currentZoneBidSchedules 
+						= this.getManagedBean().getBidSchedulesByZone().get(
+								selectedZone.getSpecZoneId());
+					currentZoneBidPackageBeans
+						= this.getManagedBean().getBidPackageBeansByZone().get(
+								selectedZone.getSpecZoneId());
+				}
+			}
+			
+			if (CollectionUtils.isNotEmpty(
+					currentZoneBidSchedules) && 
+						CollectionUtils.isNotEmpty(
+							currentZoneBidPackageBeans)) {
+				processPackageBidSchedules(
+						currentZoneBidSchedules, currentZoneBidPackageBeans);
+			} else {
+				scheduleBiddingSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IScheduleBiddingSO.class);
 				ScheduleBiddingResDTO resDTO = scheduleBiddingSO
 						.retrieveBiddingScheduleByDocId(reqDTO);
-				if (resDTO.isSuccessful()) {
-					List<ScBidSchedule> bidScheduleList = resDTO
-							.getBidSchedules();
-					if (scQt.isZonal()) {
-						// TODO
-					} else {
-						BiddingReqDTO bidReqDTO = new BiddingReqDTO();
-						Long bidScheduleId = bidScheduleList.get(0)
-								.getBidScheduleId();
-						BigDecimal estimatedCost = new BigDecimal(0);
-						if (CollectionUtils.isNotEmpty(
-								bidScheduleList.get(0).getScBidItems())) {
-							for (ScBidItem bidItem : bidScheduleList.get(0).getScBidItems()) {
-								if (bidItem.getEstimatedCost() != null) {
-									estimatedCost = estimatedCost.add(bidItem.getEstimatedCost());
-								}
-							}
-						}
-						
-						bidReqDTO.setBidScheduleId(bidScheduleId);
-						getManagedBean().setScheduledBid(bidScheduleList.get(0));
-						getManagedBean().setEstimatedCost(estimatedCost);
+				List<ScBidSchedule> bidScheduleList = resDTO
+						.getBidSchedules();	
+				biddingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IBiddingSO.class);	
+				
+				BiddingReqDTO bidReqDTO = new BiddingReqDTO();
+				Long bidScheduleId = bidScheduleList.get(0)
+						.getBidScheduleId();				
+				bidReqDTO.setBidScheduleId(bidScheduleId);				
+				BiddingResDTO bidResDTO = biddingSO
+						.retrieveBidScheduleDtl(bidReqDTO);				
 
-						BiddingResDTO bidResDTO = biddingSO
-								.retrieveBidScheduleDtl(bidReqDTO);
-						if (bidResDTO.isSuccessful()) {
-							List<BidPackageBean> biddingPackagePriceList = bidResDTO
-									.getBidPackages();
-							getManagedBean().setBiddingPackagePriceList(
-									biddingPackagePriceList);
-							
-							BigDecimal bumiSuppLowestOfferedPrice = null;
-							BigDecimal lowestNonBumiOfferedPrice = null;
-							
-							// Set lowest non-bumi offered price
-							if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
-								List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
-								List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
-								for (BidPackageBean packageBean : biddingPackagePriceList) {
-									if (packageBean.getScBidSupplier().getSmSupplier().isBumi()) {
-										bumiPriceList.add(packageBean.getBidPriceTotal());
-									} else {
-										nonBumiPriceList.add(packageBean.getBidPriceTotal());
-									}
-									String supplierName = getSupplierNameById(
-											packageBean.getScBidSupplier().getSmSupplier().getSupplierId());
-									packageBean.setSupplierName(supplierName);
-//									packageBean.getScBidSupplier().getScBidSupplierItems();
-								}
-								if (CollectionUtils.isNotEmpty(bumiPriceList)) {
-									Collections.sort(bumiPriceList);
-									bumiSuppLowestOfferedPrice = bumiPriceList.get(0);
-								} 
-								if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
-									Collections.sort(nonBumiPriceList);
-									lowestNonBumiOfferedPrice = nonBumiPriceList.get(0);
-								}
-							}
-							
-							getManagedBean().setBumiSuppLowestOfferedPrice(bumiSuppLowestOfferedPrice);
-							getManagedBean().setLowestNonBumiOfferedPrice(lowestNonBumiOfferedPrice);
-							
-							if (bumiSuppLowestOfferedPrice != null && 
-										lowestNonBumiOfferedPrice != null) {
-								getManagedBean().setBumiAndNonBumiCombination(true);
-							}
-						}
+				if (bidResDTO.isSuccessful()) {
+					processPackageBidSchedules(bidScheduleList, bidResDTO.getBidPackages());
+					if (isZonal) {
+						this.getManagedBean().getBidSchedulesByZone()
+							.put(selectedZone.getSpecZoneId(), bidScheduleList);
+						this.getManagedBean().getBidPackageBeansByZone()
+							.put(selectedZone.getSpecZoneId(), bidResDTO.getBidPackages());						
 					}
-				}
-			} else if (recommendType.equals(ParameterConst.RECOMMEND_TYPE_ITEM)) {
-
-				ScheduleBiddingReqDTO reqDTO = new ScheduleBiddingReqDTO();
-				Long qtId = scQt.getQtId();
-				reqDTO.setQtID(qtId);
-
-				ScheduleBiddingResDTO resDTO = scheduleBiddingSO
-						.retrieveBiddingItem(reqDTO);
-				if (resDTO.isSuccessful()) {
-					List<ScBidItem> biddingItemList = resDTO.getBidItemsList();
-					getManagedBean().setBiddingItemList(biddingItemList);
 				}
 			}
 		} finally {
+			biddingSO = null;
 			scheduleBiddingSO = null;
 		}
+	}
+	
+	private void processPackageBidSchedules(List<ScBidSchedule> bidScheduleList, 
+						List<BidPackageBean> biddingPackagePriceList) {
+		BigDecimal estimatedCost = new BigDecimal(0);
+		if (CollectionUtils.isNotEmpty(
+				bidScheduleList.get(0).getScBidItems())) {
+			for (ScBidItem bidItem : bidScheduleList.get(0).getScBidItems()) {
+				if (bidItem.getEstimatedCost() != null) {
+					estimatedCost = estimatedCost.add(bidItem.getEstimatedCost());
+				}
+			}
+		}
+
+		getManagedBean().setScheduledBid(bidScheduleList.get(0));
+		getManagedBean().setEstimatedCost(estimatedCost);
+		getManagedBean().setBiddingPackagePriceList(
+				biddingPackagePriceList);
+		
+		BigDecimal bumiSuppLowestOfferedPrice = null;
+		BigDecimal lowestNonBumiOfferedPrice = null;
+		
+		// Set lowest non-bumi offered price
+		if (CollectionUtils.isNotEmpty(biddingPackagePriceList)) {
+			List<BigDecimal> bumiPriceList = new ArrayList<BigDecimal>();
+			List<BigDecimal> nonBumiPriceList = new ArrayList<BigDecimal>();
+			for (BidPackageBean packageBean : biddingPackagePriceList) {
+				if (packageBean.getScBidSupplier().getSmSupplier().isBumi()) {
+					bumiPriceList.add(packageBean.getBidPriceTotal());
+				} else {
+					nonBumiPriceList.add(packageBean.getBidPriceTotal());
+				}
+				if (StringUtils.isBlank(packageBean.getSupplierName())) {
+					String supplierName = getSupplierNameById(
+							packageBean.getScBidSupplier().getSmSupplier().getSupplierId());
+					packageBean.setSupplierName(supplierName);
+				}
+//					packageBean.getScBidSupplier().getScBidSupplierItems();
+			}
+			if (CollectionUtils.isNotEmpty(bumiPriceList)) {
+				Collections.sort(bumiPriceList);
+				bumiSuppLowestOfferedPrice = bumiPriceList.get(0);
+			} 
+			if (CollectionUtils.isNotEmpty(nonBumiPriceList)) {
+				Collections.sort(nonBumiPriceList);
+				lowestNonBumiOfferedPrice = nonBumiPriceList.get(0);
+			}
+		}
+		
+		getManagedBean().setBumiSuppLowestOfferedPrice(bumiSuppLowestOfferedPrice);
+		getManagedBean().setLowestNonBumiOfferedPrice(lowestNonBumiOfferedPrice);
+		
+		if (bumiSuppLowestOfferedPrice != null && 
+					lowestNonBumiOfferedPrice != null) {
+			getManagedBean().setBumiAndNonBumiCombination(true);
+		}		
+	}
+	
+	private void retrieveBiddingItems(ScheduleBiddingReqDTO reqDTO) {
+		IScheduleBiddingSO scheduleBiddingSO = null;
+		try {
+			TplSpecZoneDtl selectedZone = this.getManagedBean().getSelectedZone();
+			boolean isZonal = this.getManagedBean().getScQt().isZonal();
+			List<ScBidItem> biddingItemList = null;
+			if (isZonal) {
+				if (MapUtils.isNotEmpty(
+						this.getManagedBean().getBidItemsByZone())) {
+					biddingItemList = this.getManagedBean().getBidItemsByZone()
+						.get(selectedZone.getSpecZoneId());
+				}
+			}
+			if (CollectionUtils.isEmpty(biddingItemList)) {
+				scheduleBiddingSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IScheduleBiddingSO.class);
+				
+				ScheduleBiddingResDTO resDTO = scheduleBiddingSO
+						.retrieveBiddingItem(reqDTO);
+				if (resDTO.isSuccessful()) {
+					biddingItemList = resDTO.getBidItemsList();
+				}				
+			}
+			if (isZonal) {
+				this.getManagedBean().getBidItemsByZone()
+					.put(selectedZone.getSpecZoneId(), biddingItemList);
+			}
+			
+			getManagedBean().setBiddingItemList(biddingItemList);
+		} finally {
+			scheduleBiddingSO = null;
+		}
+	}
+	
+	/**
+	 * To navigate to bidding summary tab
+	 */
+	public void navigateToBiddingSummaryTab() {
+		this.getManagedBean().setOnlineBiddingActiveIndex(
+				ONLINE_BIDDING_ACTIVE_INDEX_SUMMARY);
 	}
 
 	/**
@@ -408,10 +587,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 					.getSupplierId());
 			reqDTO.setBidScheduleId(getManagedBean().getScheduledBid()
 					.getBidScheduleId());
-
 			BiddingResDTO resDTO = biddingSO
 					.retrieveSupplierBidPriceList(reqDTO);
-
 			if (resDTO.isSuccessful()) {
 				getManagedBean().setScBidPriceList(resDTO.getBidPrices());
 			}
