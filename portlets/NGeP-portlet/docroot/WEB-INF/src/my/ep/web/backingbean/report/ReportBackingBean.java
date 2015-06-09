@@ -690,8 +690,8 @@ public class ReportBackingBean extends
 	private String localToDateVar;
 
 	private String userId;	
-	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)229703;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
+	private Long lngUserId = (long)240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -850,6 +850,8 @@ public class ReportBackingBean extends
 	private String smIdentificationType;
 	private String smIdentificationNumber;
 	private String smCancellationBy;
+	private String smFromMonth;
+	private String smToMonth;
 	// CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -874,6 +876,22 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getSmFromMonth() {
+		return smFromMonth;
+	}
+
+	public void setSmFromMonth(String smFromMonth) {
+		this.smFromMonth = smFromMonth;
+	}
+
+	public String getSmToMonth() {
+		return smToMonth;
+	}
+
+	public void setSmToMonth(String smToMonth) {
+		this.smToMonth = smToMonth;
+	}
 
 	public boolean isReportCategoryView() {
 		return reportCategoryView;
@@ -2464,7 +2482,29 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
-	 
+	public void changeReportType(){
+		
+		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
+			getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(false);
+			getManagedBean().getRptGenBean().setSmMandatoryRegisteredReportTypeDateView(false);
+			getManagedBean().getRptGenBean().setSmMandatoryRecievedReportTypeView(false);
+			getManagedBean().getRptGenBean().setSmMandatoryApprovedReportTypeView(false);
+			getManagedBean().getRptGenBean().setSmMandatoryRejectedReportTypeView(false);
+			if (null != this.getSmReportType()&&this.getSmReportType().equals("RECEIVED")) {
+				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryRecievedReportTypeView(true);
+			} else if (null != this.getSmReportType()&&this.getSmReportType().equals("APPROVED")) {
+				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryApprovedReportTypeView(true);
+			} else if (null != this.getSmReportType()&&this.getSmReportType().equals("REJECTED")) {
+				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryRejectedReportTypeView(true);
+			} /*else {
+			    rptGenBean.setSmMandatoryCreatedFromYearView(true);
+				rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);
+			}*/
+		}
+	}
 	public String retrieveMinistryName(Long orgprofileid){
 		ministryName =null;
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -4125,6 +4165,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			rptGenBean.setScProcureRestrctdEditView(false);
 		}
 	}
+	
+	public void checkSMYearNMonthDefference() {
+		int fromyear = Integer.parseInt(this.getSmCreatedFromYear());
+		int toyear = Integer.parseInt(this.getSmCreatedToYear());
+		int fromMonth = Integer.parseInt(this.getSmFromMonth());
+		int toMonth = Integer.parseInt(this.getSmToMonth());
+		if(fromyear==toyear){
+			if(fromMonth>toMonth){
+				throw new EpException(MessageConst.ERROR_REPORT_780014);
+			}			
+		}else if(fromyear>toyear){			
+			throw new EpException(MessageConst.ERROR_REPORT_780015);
+		}		
+	}
 
 	/*
 	 * Generate all modules reports
@@ -4473,6 +4527,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| (getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
+			if ( (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
+				checkSMYearNMonthDefference();
+			}
 			if ((this.getSmCreatedFromYear() != null)
 					&& (this.getSmCreatedFromYear() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -4503,6 +4562,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setToDateVar(ReportConst.AMP_SM_TO_DATE_EQ
 						+ outputDateFormat.format(this.getToDate()));
 			}
+			if ((this.getSmFromMonth() != null)
+					&& (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
+				String month = getManagedBean().getMonthMap().get(this.getSmFromMonth());
+				rptGenBean
+						.setSmFromMonthVar(ReportConst.AMP_SM_FROM_DATE_EQ
+								+ month);
+			}
+			if ((this.getSmToMonth() != null)
+					&& (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
+				String month = getManagedBean().getMonthMap().get(this.getSmToMonth());
+				rptGenBean
+						.setSmToMonthVar(ReportConst.AMP_SM_TO_DATE_EQ
+								+ month);
+			}
 			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
 			if ((rptGenBean.getUrlReportJSPName() != null)
 					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
@@ -4514,6 +4587,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getToDateVar()
 						+ rptGenBean.getReportTypeTotVar()
 						+ rptGenBean.getReportValueIdVar()
+						+ rptGenBean.getSmFromMonthVar()
+						+ rptGenBean.getSmToMonthVar()
 						+ rptGenBean.getUserIdVar());
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);

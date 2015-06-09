@@ -1,11 +1,14 @@
 package my.ep.web.bean.report;
 
 
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.faces.model.SelectItem;
+
+import java.util.HashMap;
 import org.apache.log4j.Logger;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -36,6 +39,8 @@ public class ReportsGenerateBean {
 	private List<SelectItem> levThreeCatLst = new ArrayList<SelectItem>();
 	private List<String> stsLst = new ArrayList<String>();
 	private List<String> yearList = new ArrayList<String>();
+	private List<SelectItem> monthList = new ArrayList<SelectItem>();
+	private HashMap<String, String> monthMap= new HashMap<String, String>();
 	private Object[] statusLst;
 	private boolean fromDateView = false;
 	private boolean toDateView = false;
@@ -151,6 +156,10 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryApplicationNoView = false;
 		private boolean smSVOUserView = false;
 		private boolean smMandatoryReportTypeView = false;
+		private boolean smMandatoryRecievedReportTypeView = false;
+		private boolean smMandatoryApprovedReportTypeView = false;
+		private boolean smMandatoryRejectedReportTypeView = false;
+		private boolean smMandatoryRegisteredReportTypeDateView = false;
 		private boolean smMandatoryZoneView = false;
 		private boolean smBasicRegView = false;
 		private boolean smMandatoryBothSupplierTypeView = false;
@@ -196,7 +205,8 @@ public class ReportsGenerateBean {
 		private boolean smReceiptNoView = false;
 		private boolean smProcessingTypeView = false;
 		private boolean smPaymentMethodView = false;
-		
+		private boolean smFromMonthView = false;
+		private boolean smToMonthView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -379,6 +389,8 @@ public class ReportsGenerateBean {
 		private String smReceiptNoVar=ReportConst.EMPTY_VAL;
 		private String smProcessingTypeVar=ReportConst.EMPTY_VAL;
 		private String smPaymentMethodVar=ReportConst.EMPTY_VAL;
+		private String smFromMonthVar=ReportConst.EMPTY_VAL;
+		private String smToMonthVar=ReportConst.EMPTY_VAL;
 		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
@@ -462,6 +474,58 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmFromMonthView() {
+			return smFromMonthView;
+		}
+		public void setSmFromMonthView(boolean smFromMonthView) {
+			this.smFromMonthView = smFromMonthView;
+		}
+		public boolean isSmToMonthView() {
+			return smToMonthView;
+		}
+		public void setSmToMonthView(boolean smToMonthView) {
+			this.smToMonthView = smToMonthView;
+		}
+		public String getSmFromMonthVar() {
+			return smFromMonthVar;
+		}
+		public void setSmFromMonthVar(String smFromMonthVar) {
+			this.smFromMonthVar = smFromMonthVar;
+		}
+		public String getSmToMonthVar() {
+			return smToMonthVar;
+		}
+		public void setSmToMonthVar(String smToMonthVar) {
+			this.smToMonthVar = smToMonthVar;
+		}
+		public boolean isSmMandatoryRegisteredReportTypeDateView() {
+			return smMandatoryRegisteredReportTypeDateView;
+		}
+		public void setSmMandatoryRegisteredReportTypeDateView(
+				boolean smMandatoryRegisteredReportTypeDateView) {
+			this.smMandatoryRegisteredReportTypeDateView = smMandatoryRegisteredReportTypeDateView;
+		}
+		public boolean isSmMandatoryRecievedReportTypeView() {
+			return smMandatoryRecievedReportTypeView;
+		}
+		public void setSmMandatoryRecievedReportTypeView(
+				boolean smMandatoryRecievedReportTypeView) {
+			this.smMandatoryRecievedReportTypeView = smMandatoryRecievedReportTypeView;
+		}
+		public boolean isSmMandatoryApprovedReportTypeView() {
+			return smMandatoryApprovedReportTypeView;
+		}
+		public void setSmMandatoryApprovedReportTypeView(
+				boolean smMandatoryApprovedReportTypeView) {
+			this.smMandatoryApprovedReportTypeView = smMandatoryApprovedReportTypeView;
+		}
+		public boolean isSmMandatoryRejectedReportTypeView() {
+			return smMandatoryRejectedReportTypeView;
+		}
+		public void setSmMandatoryRejectedReportTypeView(
+				boolean smMandatoryRejectedReportTypeView) {
+			this.smMandatoryRejectedReportTypeView = smMandatoryRejectedReportTypeView;
+		}
 		public boolean isReportCategoryView() {
 			return reportCategoryView;
 		}
@@ -1268,6 +1332,19 @@ public class ReportsGenerateBean {
 		}
 		public void setYearList(List<String> yearList) {
 			this.yearList = yearList;
+		}		
+		public List<SelectItem> getMonthList() {
+			return monthList;
+		}		
+		
+		public HashMap<String, String> getMonthMap() {
+			return monthMap;
+		}
+		public void setMonthMap(HashMap<String, String> monthMap) {
+			this.monthMap = monthMap;
+		}
+		public void setMonthList(List<SelectItem> monthList) {
+			this.monthList = monthList;
 		}
 		public boolean isSmMandatoryStaticByStateView() {
 			return smMandatoryStaticByStateView;
@@ -2931,7 +3008,7 @@ public class ReportsGenerateBean {
 		
 		public void retrieveState(){
 			stateLst = new ArrayList<SelectItem>();		
-			IStateSO stateSO	=	(IStateSO)BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
+			IStateSO stateSO	=	BusinessDelegate.getInstance().getServiceObject("pm", IStateSO.class);		
 			StateReqDTO	stateReqDTO	=	new StateReqDTO();
 			stateReqDTO.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
 			//stateReqDTO.setCountryId(1L);//TODO malaysia		
@@ -2957,7 +3034,7 @@ public class ReportsGenerateBean {
 		}
 		public void retrieveDistrict(String state){		
 			districtLst = new ArrayList<SelectItem>();		
-			IDistrictSO	districtSO	=	(IDistrictSO)BusinessDelegate.getInstance().getServiceObject("pm", IDistrictSO.class);
+			IDistrictSO	districtSO	=	BusinessDelegate.getInstance().getServiceObject("pm", IDistrictSO.class);
 			DistrictReqDTO	districtReqDTO	=	new DistrictReqDTO();
 			if(state!=null&&state!=""){			
 				districtReqDTO.setStateId( Long.parseLong(state));
@@ -2972,7 +3049,7 @@ public class ReportsGenerateBean {
 		}
 		public List<SelectItem> retrieveCategoryLevOne(){
 			levOneCatLst = new ArrayList<SelectItem>();		
-			ICategoryCodeSO categoryCodeSO	=	(ICategoryCodeSO)BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
+			ICategoryCodeSO categoryCodeSO	=	BusinessDelegate.getInstance().getServiceObject("pm", ICategoryCodeSO.class);		
 			//CategoryCodeReqDTO	catCodeReqDTO	=	new CategoryCodeReqDTO();
 			//CategoryCodeResDTO	catCodeResDTO	=	new CategoryCodeResDTO();
 			CategoryCodeResDTO catCodeResDTO = categoryCodeSO.retrieveCategoryL1List();		
@@ -2996,6 +3073,29 @@ public class ReportsGenerateBean {
 				 yearList.add(Integer.toString(i));
 			 }
 			 return yearList; 
+		}
+		public List<SelectItem> generateCommonMonthList(){
+			monthList = new ArrayList<SelectItem>();		
+			String month = ReportConst.EMPTY_VAL;
+			int monthNoInt;
+			String monthNoStr= ReportConst.EMPTY_VAL;
+	        DateFormatSymbols dfs = new DateFormatSymbols();
+	        String[] months = dfs.getMonths();        
+	       for (int i = 0; i <= 11; i++) {
+	    	   monthNoInt= i+1;
+	    	   if(monthNoInt<10){
+	    		   monthNoStr=ReportConst.ZERO_VAL+monthNoInt;
+	    	   }else{
+	    		   monthNoStr=monthNoInt+ReportConst.EMPTY_VAL;
+	    	   }
+	            month = months[i];            
+	            SelectItem selectItem= new SelectItem();
+	            selectItem.setLabel(month);
+	            selectItem.setValue(monthNoStr);	            
+	            monthList.add(selectItem);
+	            monthMap.put(monthNoStr, month);
+	        }      
+	        return monthList;
 		}
 		public List<String> generateCommonYearList(){
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
