@@ -485,7 +485,7 @@ public class MofRegistrationBackingBean extends
 	}
 
 	public void deletePendingApplicationDetails() {
-		IMofRegistrationSO mofRegistrationSO = null;
+		/*IMofRegistrationSO mofRegistrationSO = null;
 		try {
 			mofRegistrationSO = BusinessDelegate.getInstance()
 					.getServiceObject(IMofRegistrationSO.class);
@@ -495,7 +495,7 @@ public class MofRegistrationBackingBean extends
 
 		} finally {
 			mofRegistrationSO = null;
-		}
+		}*/
 	}
 
 	public void submitForApproval() {
