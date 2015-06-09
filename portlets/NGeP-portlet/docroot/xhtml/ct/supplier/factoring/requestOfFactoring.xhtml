@@ -383,8 +383,7 @@
 				</h:panelGrid>
 				<div class="ppRightBtn">
        				<p:commandButton id="contractLoaSearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableContractLoa"  
-       		   			action="#{supplierBackingBean.searchContractLoa(ParameterConst.doctypeRequestFactoring)}" process="@this"
-       		       		onstart="blkContratLoaTable.show();" oncomplete="blkContratLoaTable.hide();" /> 
+       		   			action="#{supplierBackingBean.searchContractLoa(ParameterConst.doctypeRequestFactoring)}" process="@this" /> 
 					<p:commandButton id="resetBtn" value="#{lbl['lbl.ct.reset']}" process="@this"
 						action="#{supplierBackingBean.resetContractLoa}" update=":form:contractLoa"   />
 		  		</div>
@@ -408,9 +407,6 @@
 					</p:column>
 			 	</p:dataTable>
 			 </p:panel>
-			  	<p:blockUI widgetVar="blkContratLoaTable" trigger="contractLoaSearchId"  block=":form:contractLoa">  
-			      	<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
-		      	</p:blockUI> 
 			  	<h:panelGrid columns="1"  style="float:right;height:100px;vertical-align: middle;">
 					<p:commandButton id="selectBtn" value="#{lbl['lbl.btn.select']}" 
 						disabled="#{supplierBackingBean.managedBean.selectedContract == null}"
