@@ -73,14 +73,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 * Instantiates a new zone maintenance backing bean.
 	 */
 	public ZoneMaintenanceBackingBean() {
-		System.out.println("********************ZoneMaintenanceBackingBean Constructor***************");
+		log.debug("********************ZoneMaintenanceBackingBean Constructor***************");
 	}
 
 	/**
 	 * Pre render zone view.
 	 */
 	public void preRenderZoneView(){
-		System.out.println("********************ZoneMaintenanceBackingBean PreRender***************");
+		log.debug("********************ZoneMaintenanceBackingBean PreRender***************");
 		getManagedBean().setCurrentSupplier(getCurrentUserSupplier());
 		showZonePopup();
 		getManagedBean().setSelectedSupplierZone(null);
@@ -142,18 +142,18 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			deleteList = getManagedBean().getDeletedCmSupplierZoneList();
 		}
 			Iterator<CmSupplierZone> ite = getManagedBean().getCmSupplierZoneList().iterator();
-			System.out.println("Checking for Delete");
+			log.debug("Checking for Delete");
 			while(ite.hasNext()){
 				CmSupplierZone cmZone = ite.next(); 
 				if(cmZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
-					System.out.println("Found it");
+					log.debug("Found it");
 					if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
 						throw new EpException(MessageConst.ERROR_716005);
 					}
-					System.out.println("Size Before:" + getManagedBean().getCmSupplierZoneList().size());
+					log.info("Size Before:" + getManagedBean().getCmSupplierZoneList().size());
 					deleteList.add(cmZone);
 					ite.remove();
-					System.out.println("Size After:" + getManagedBean().getCmSupplierZoneList().size());
+					log.info("Size After:" + getManagedBean().getCmSupplierZoneList().size());
 				}
 			}
 		getManagedBean().setDeletedCmSupplierZoneList(deleteList);	
@@ -164,7 +164,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 * Delete Cmsupplier zones.
 	 */
 	public void deleteCmSupplierZones(){
-		System.out.println("********************ZoneMaintenanceBackingBean deleteCmSupplierZones***************");
+		log.debug("********************ZoneMaintenanceBackingBean deleteCmSupplierZones***************");
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
 		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
@@ -177,9 +177,9 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			resDTO.setSuccessful(true);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 		if (resDTO.isSuccessful()) {
-			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
+			log.info("SuccessMMMMMMMMMMMMMMMMM");
 		} else {
-			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
+			log.info("Not SuccessMMMMMMMMMMMMMMMMM");
 			throw new EpException(MessageConst.ERROR_716001);
 		}
 	}
@@ -190,7 +190,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 * @return string
 	 */
 	public String saveCmSupplierZones() {
-		System.out.println("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
+		log.debug("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
 		assignValReqdToFalse();
 		/* First delete any records that are to be deleted */
 		if(getManagedBean().getDeletedCmSupplierZoneList() != null)
@@ -200,7 +200,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 				.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
 		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		reqDTO.setCmSupplierZoneList(getManagedBean().getCmSupplierZoneList());
-		System.out.println("Current Size:" + getManagedBean().getCmSupplierZoneList().size());
+		log.info("Current Size:" + getManagedBean().getCmSupplierZoneList().size());
 		ZoneMaintenanceResDTO resDTO = new ZoneMaintenanceResDTO();
 		if(getManagedBean().getCmSupplierZoneList().size() > 0)
 			resDTO = zoneMaintenanceSO.save(reqDTO);
@@ -272,7 +272,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 * Adds the new zone.
 	 */
 	public void addNewZone() {
-		System.out.println("********************ZoneMaintenanceBackingBean addNewZone***************");
+		log.debug("********************ZoneMaintenanceBackingBean addNewZone***************");
 		getManagedBean().setEditMode(false);
 		assignValReqdToTrue();
 		getManagedBean().setSelectedSupplierZone(new CmSupplierZone());
@@ -416,7 +416,7 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 	 * Update zone list on pop up close.
 	 */
 	public void updateZoneListOnPopUpClose(){
-		System.out.println("********************ZoneMaintenanceBackingBean updateZoneListOnPopUpClose***************");
+		log.debug("********************ZoneMaintenanceBackingBean updateZoneListOnPopUpClose***************");
 		CmSupplierZone selZone = getManagedBean().getSelectedSupplierZone();
 		if(selZone.getSuppZoneName().isEmpty()) {
 			log.info(111);
@@ -618,7 +618,7 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 							reqStateDTO.setStateId(stateNodeDto4.getState().getStateId());
 							StateResDTO resStateDTO = stateSO.retriveStateDetailsByID(reqStateDTO);
 							newState4 = resStateDTO.getPmState();
-							System.out.println("*******State4:" + newState4.getStateName());
+							log.info("*******State4:" + newState4.getStateName());
 						}
 					}
 					CmSupplierZoneStateDistrictDTO divisionNodeDto3 = (CmSupplierZoneStateDistrictDTO) selectedNode.getParent().getData();
@@ -678,7 +678,7 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		 */		
 		if(selZone.getCmSupplierZoneDtls() != null){
 			log.info(3838);
-			System.out.println("Count Before add" + selZone.getCmSupplierZoneDtls().size());
+			log.info("Count Before add" + selZone.getCmSupplierZoneDtls().size());
 			selZone.getCmSupplierZoneDtls().addAll(newCmSupplierZoneDTLs);
 		} else {
 			log.info(3939);
@@ -699,10 +699,10 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 				unSelectedDivisions.add(dv);
 			}
 		}
-		System.out.println("Size sel lists:" + selectedStates.size() + ":" + selectedDistricts.size());
+		log.info("Size sel lists:" + selectedStates.size() + ":" + selectedDistricts.size());
 		if(unSelectedStates.size() > 0 || unSelectedDistricts.size() > 0 || unSelectedDivisions.size() > 0){
 			log.info(4040);
-			System.out.println("Size rem lists:" + existingStates.size() + ":" + existingDistricts.size());
+			log.info("Size rem lists:" + existingStates.size() + ":" + existingDistricts.size());
 				if(selZone.getCmSupplierZoneDtls() != null){
 					log.info(4141);
 					Iterator<CmSupplierZoneDTL> ite = selZone.getCmSupplierZoneDtls().iterator();
@@ -710,18 +710,18 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 						CmSupplierZoneDTL cmDtl = ite.next();
 						if(unSelectedStates.size() > 0 && unSelectedStates.contains(cmDtl.getPmState().getStateId())){	
 							ite.remove();
-							System.out.println("Removed");
+							log.info("Removed 1");
 						} else if(unSelectedDistricts.size() > 0 && (cmDtl.getPmDistrict() != null) && unSelectedDistricts.contains(cmDtl.getPmDistrict().getDistrictId())){
 							ite.remove();
-							System.out.println("Removed");
+							log.info("Removed 2");
 						} else if(unSelectedDivisions.size() > 0 && (cmDtl.getPmDivision() != null) && unSelectedDivisions.contains(cmDtl.getPmDivision().getDivisionId())){
 							ite.remove();
-							System.out.println("Removed");
+							log.info("Removed 3");
 						}
 					}	
 				}
 			}
-		System.out.println("Count After" + selZone.getCmSupplierZoneDtls().size());
+		log.info("Count After" + selZone.getCmSupplierZoneDtls().size());
 		if(!getManagedBean().getCmSupplierZoneList().contains(selZone))
 			getManagedBean().getCmSupplierZoneList().add(selZone);
 		getManagedBean().setSelectedSupplierZone(null);
