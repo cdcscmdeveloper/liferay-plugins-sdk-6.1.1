@@ -106,8 +106,7 @@ public class GlAccountBackingBean extends
 
 		GlAccountSearchBean glAccountSearchBean = this.getManagedBean().getGlAccountSearchBean();
 		boolean	isEmpty = true;
-		if (glAccountSearchBean.getAccountCode() != null
-				&& glAccountSearchBean.getAccountCode() .trim().length() > 0) {
+		if (StringUtils.isNotBlank(glAccountSearchBean.getAccountCode())) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("glAccCode",

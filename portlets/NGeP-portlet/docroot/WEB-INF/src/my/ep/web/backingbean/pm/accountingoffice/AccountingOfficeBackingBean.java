@@ -31,6 +31,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "accountingOfficeBackingBean")
@@ -53,8 +54,8 @@ public class AccountingOfficeBackingBean extends
 		log.info("inside AccountingOfficeBackingBean constructor");
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		if (pmUser != null && pmUser.getUserId() != null) {
-			System.out.println("***userId: " + pmUser.getUserId());
 
+			System.out.println("***userId: " + pmUser.getUserId());
 			new LogKey(pmUser.getUserId()); 
 		}else{
 			new LogKey(1L); 
@@ -131,26 +132,23 @@ public class AccountingOfficeBackingBean extends
 
 		AccountingOfficeSearchBean officeSearchBean = this.getManagedBean().getAccountingOfficeSearchBean();
 		boolean	isEmpty = true;
-		if (officeSearchBean.getOfficeCode() != null
-				&& officeSearchBean.getOfficeCode() .trim().length() > 0) {
+		if (StringUtils.isNotBlank(officeSearchBean.getOfficeCode())){
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("officeCode",
-							SearchOperator.OPERATOR_LIKE.value(), officeSearchBean.getOfficeCode() , true));
+							SearchOperator.OPERATOR_EQUALS.value(), officeSearchBean.getOfficeCode().toUpperCase() , true));
 			isEmpty = false;
 			
 		}
-		if (officeSearchBean.getOfficeName() != null
-				&& officeSearchBean.getOfficeName().trim().length() > 0) {
+		if (StringUtils.isNotBlank(officeSearchBean.getOfficeName())) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("officeName",
 							SearchOperator.OPERATOR_LIKE.value(), officeSearchBean
-									.getOfficeName(), true));
+									.getOfficeName().toUpperCase(), true));
 			isEmpty = false;
 		}
-		if(officeSearchBean.getStatus() != null
-				&& !"".equals(officeSearchBean.getStatus())) {
+		if(StringUtils.isNotBlank(officeSearchBean.getStatus())) {
 		
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
