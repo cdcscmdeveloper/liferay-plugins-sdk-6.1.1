@@ -144,7 +144,7 @@
 									</p:inputText>																					
 									</c:if>	
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequisenerIdView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}" style="margin-top:5px;width:160px;" />									
+									<p:outputLabel value="#{lbl['lbl.rpt.requisitionerScreen']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scRequisenerId}" style="margin-top:5px;width:300px;">
 									     <f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>
 										
@@ -218,7 +218,7 @@
 									
 									
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcurementTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.procurementtype']}" style="margin-top:5px;width:160px;" />									
+									<p:outputLabel value="#{lbl['lbl.rpt.procurementtypeScreen']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scProcurementType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.gtog']}" itemValue="#{lbl['lbl.rpt.gtog']}"></f:selectItem>

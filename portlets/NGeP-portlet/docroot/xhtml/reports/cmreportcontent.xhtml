@@ -33,7 +33,7 @@
 									</p:selectOneMenu>
 									</c:if>			
 									  <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmUnspscCodeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.unspscCode']}" style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.unspscCodeScreen']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="8" value="#{reportBackingBean.cmUnspscCode}" style="margin-top:5px;width:290px;">
 									<p:ajax event="change" listener="#{reportBackingBean.enableExtensionTypes}" process="@this" partialSubmit="true" update="rptCmExtention"/>																		
 									</p:inputText>									
@@ -159,7 +159,7 @@
 						    <td width="100%">
 							    <h:panelGrid  id="rptCmExtention" columns="4" style="width:85%;">
 							        <c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionTypeView}">							      
-							        <p:outputLabel value="#{lbl['lbl.rpt.extType']}" style="margin-top:5px;width:160px;" />									
+							        <p:outputLabel value="#{lbl['lbl.rpt.extTypeScreen']}" style="margin-top:5px;width:160px;" />									
 						 			<p:selectOneMenu value="#{reportBackingBean.cmExtentionType}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.extTypeList}"></f:selectItems>
@@ -167,7 +167,7 @@
 								    </p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionBrandView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.extBrand']}"  style="margin-top:5px;width:160px;"/>									
+									<p:outputLabel value="#{lbl['lbl.rpt.extBrandScreen']}"  style="margin-top:5px;width:160px;"/>									
 					 				<p:selectOneMenu value="#{reportBackingBean.cmExtentionBrand}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.brandList}"></f:selectItems>
@@ -175,7 +175,7 @@
 								    </p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionMeasurmentView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.extMeasurment']}" style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.extMeasurmentScreen']}" style="margin-top:5px;width:160px;"/>
 					 				<p:selectOneMenu value="#{reportBackingBean.cmExtentionMeasurment}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.measurmentList}"></f:selectItems>	
@@ -183,7 +183,7 @@
 								    </p:selectOneMenu>
 									</c:if>
 									<c:if test="#{cmReportBackingBean.managedBean.rptGenBean.cmExtentionColourView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.extColour']}" style="margin-top:5px;width:160px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.extColourScreen']}" style="margin-top:5px;width:160px;" />
 					 				<p:selectOneMenu value="#{reportBackingBean.cmExtentionColour}" style="margin-bottom:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.colorList}"></f:selectItems>
