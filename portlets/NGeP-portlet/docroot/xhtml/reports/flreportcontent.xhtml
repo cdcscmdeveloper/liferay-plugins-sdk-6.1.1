@@ -57,7 +57,7 @@
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSstView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.sst']}"  style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.sstScreen']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="20" value="#{reportBackingBean.flSst}"  style="margin-top:5px;width:290px;" >
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
@@ -70,13 +70,13 @@
 									</c:if>
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierTextView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}"  style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierScreen']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="100" value="#{reportBackingBean.flSupplier}"  style="margin-top:5px;width:290px;" >
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierDropdownView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.supplier']}" style="margin-bottom:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierScreen']}" style="margin-bottom:5px;width:160px;"/>
 									<p:selectOneMenu value="#{reportBackingBean.flSupplier}" style="margin-bottom:5px;width:300px;">
 										<f:selectItems value="#{reportBackingBean.supplCompanyList}"></f:selectItems>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
@@ -129,7 +129,7 @@
 									</p:selectOneMenu>
 									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flRequisitionerView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.requisitioner']}"  style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.requisitionerScreen']}"  style="margin-top:5px;width:160px;"/>
 									
 					 				<p:selectOneMenu value="#{reportBackingBean.flRequisitioner}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
@@ -210,7 +210,7 @@
 									</c:if>
 									
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPkpNoView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.pkpNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:outputLabel value="#{lbl['lbl.rpt.pkpNoScreen']}"  style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="20" value="#{reportBackingBean.flPkpNo}" style="margin-top:5px;width:290px;">
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>

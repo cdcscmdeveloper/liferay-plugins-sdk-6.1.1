@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.report;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -21,7 +22,7 @@ public class ReportMangedBean extends BaseManagedBean{
 	private String reportValue;
 	//private String moduleValue;
 	private String reportJsp;
-	
+	private HashMap<String, String> monthMap= new HashMap<String, String>();
 			
 	public String getReportJsp() {
 		return reportJsp;
@@ -58,5 +59,12 @@ public class ReportMangedBean extends BaseManagedBean{
 	}
 	public void setReportList(List<SelectItem> reportList) {
 		this.reportList = reportList;
-	}	
+	}
+	public HashMap<String, String> getMonthMap() {
+		return monthMap;
+	}
+	public void setMonthMap(HashMap<String, String> monthMap) {
+		this.monthMap = monthMap;
+	}
+	
 }

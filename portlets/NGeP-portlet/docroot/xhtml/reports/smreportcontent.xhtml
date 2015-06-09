@@ -575,7 +575,7 @@
 													itemValue="#{lbl['lbl.rpt.rpttypeapproved']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperejected']}"
 													itemValue="#{lbl['lbl.rpt.rpttyperejected']}"></f:selectItem>
-													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+													<p:ajax event="change" listener="#{reportBackingBean.changeReportType}" partialSubmit="true"	update="@all" />
 											</p:selectOneMenu></td>
 										<td><p:message id="smReportTypeMsg" for="ReportType"
 												display="icon" showDetail="false"/></td>
@@ -1350,31 +1350,131 @@
 						</TABLE>
 						</c:if>							
 		            </div>
+		            
+
+<div>
+		<c:if
+			test="#{reportBackingBean.managedBean.rptGenBean.smFromMonthView}">
+			<TABLE style="margin-top: 10px; width: 60%;">
+				<TR>
+				  
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.frommonth']}"
+							 /><p:outputLabel value="*" styleClass="mandatory"
+							 />
+					</TD>                               
+					<TD>                   
+					<p:selectOneMenu label="#{lbl['lbl.rpt.frommonth']}"
+							id="MandatoryFromMonth"
+							value="#{reportBackingBean.smFromMonth}" required="true"
+							style="margin-top:5px;width:150px;">
+							
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.monthList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu>				
+					</TD>
+					<TD><p:message id="MandatoryFromMonthMsg"
+							for="MandatoryFromMonth" display="icon"  showDetail="false"/></TD>
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.tomonth']}"
+							 /><p:outputLabel value="*" styleClass="mandatory"
+							 /></TD>
+					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.tomonth']}"
+							id="MandatoryToMonth" value="#{reportBackingBean.smToMonth}"
+							required="true" style="margin-top:5px;width:150px;">
+							
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.monthList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu></TD>
+					<TD><p:message id="MandatoryToMonthMsg" for="MandatoryToMonth"
+							display="icon"  showDetail="false"/></TD>
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
+
+
+		            
+		            
 	<div>
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryCreatedFromYearView}">
 			<TABLE style="margin-top: 10px; width: 60%;">
 				<TR>
-					<TD style="width:145px;"><p:outputLabel value="#{lbl['lbl.rpt.registeredyearfrom']}"
+				   <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRegisteredReportTypeDateView}">
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.registeredyearfrom']}"
 							 /><p:outputLabel value="*" styleClass="mandatory"
 							 /></TD>
-
-					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.registeredyearfrom']}"
+                    </c:if>
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRecievedReportTypeView}">
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.receivedyearfrom']}"
+							 /><p:outputLabel value="*" styleClass="mandatory"
+							 /></TD>
+                    </c:if>
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryApprovedReportTypeView}">
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.approvedyearfrom']}"
+							 /><p:outputLabel value="*" styleClass="mandatory"
+							 /></TD>
+                    </c:if>
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRejectedReportTypeView}">
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.rejectedyearfrom']}"
+							 /><p:outputLabel value="*" styleClass="mandatory"
+							 /></TD>
+                    </c:if>
+                    
+                    
+                    
+					<TD>
+					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRegisteredReportTypeDateView}">
+					<p:selectOneMenu label="#{lbl['lbl.rpt.registeredyearfrom']}"
 							id="MandatoryFromYear"
 							value="#{reportBackingBean.smCreatedFromYear}" required="true"
-							style="margin-top:5px;width:80px;">
+							style="margin-top:5px;width:150px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
-						</p:selectOneMenu></TD>
+						</p:selectOneMenu>
+                    </c:if>
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRecievedReportTypeView}">
+					<p:selectOneMenu label="#{lbl['lbl.rpt.receivedyearfrom']}"
+							id="MandatoryFromYear"
+							value="#{reportBackingBean.smCreatedFromYear}" required="true"
+							style="margin-top:5px;width:150px;">
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu>
+                    </c:if>
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryApprovedReportTypeView}">
+					<p:selectOneMenu label="#{lbl['lbl.rpt.approvedyearfrom']}"
+							id="MandatoryFromYear"
+							value="#{reportBackingBean.smCreatedFromYear}" required="true"
+							style="margin-top:5px;width:150px;">
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu>
+                    </c:if>
+                    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryRejectedReportTypeView}">
+					<p:selectOneMenu label="#{lbl['lbl.rpt.rejectedyearfrom']}"
+							id="MandatoryFromYear"
+							value="#{reportBackingBean.smCreatedFromYear}" required="true"
+							style="margin-top:5px;width:150px;">
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu>
+                    </c:if>
+					
+							</TD>
 					<TD><p:message id="MandatoryFromYearMsg"
 							for="MandatoryFromYear" display="icon"  showDetail="false"/></TD>
-					<TD style="width:145px;"><p:outputLabel value="#{lbl['lbl.rpt.createdTo']}"
+					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
 							 /><p:outputLabel value="*" styleClass="mandatory"
 							 /></TD>
-					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.createdTo']}"
+					<TD><p:selectOneMenu label="#{lbl['lbl.rpt.dtRangeTo']}"
 							id="MandatoryToYear" value="#{reportBackingBean.smCreatedToYear}"
-							required="true" style="margin-top:5px;width:80px;">
+							required="true" style="margin-top:5px;width:150px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />

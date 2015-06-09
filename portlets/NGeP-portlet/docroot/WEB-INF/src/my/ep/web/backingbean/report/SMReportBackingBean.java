@@ -71,7 +71,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        break;
 		case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:	
 			    rptGenBean.generateYearList();
-				rptGenBean.setSmMandatoryCreatedFromYearView(true);				
+				rptGenBean.setSmMandatoryCreatedFromYearView(true);	
+				rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);	
             break;
 		case ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL:
 				rptGenBean.retrieveCategoryLevOne1();				
@@ -106,12 +107,15 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmExtraTwoColumnView(true);
 	            break;
 		 case ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL:
-			    rptGenBean.generateYearList();
+			    rptGenBean.generateCommonMonthList();
+			    rptGenBean.generateCommonYearList();
+			    getManagedBean().setMonthMap(rptGenBean.getMonthMap());
 	        	rptGenBean.setSmExtraTwoColumnView(true);
 				rptGenBean.setSmMandatoryReportTypeView(true);
-				rptGenBean.setSmMandatoryFromDateView(true);
-				rptGenBean.setSmMandatoryDateView(true);
-				rptGenBean.setSmMandatoryCreatedFromYearView(true);				
+				rptGenBean.setSmFromMonthView(true);
+				//rptGenBean.setSmMandatoryFromDateView(true);
+				//rptGenBean.setSmMandatoryDateView(true);
+				//rptGenBean.setSmMandatoryCreatedFromYearView(true);				
 	            break;
 		 case ReportConst.SM_LST_MONTH_WISE_RPT_VAL:
 			    rptGenBean.setSmMandatoryMonthlyRptByYearView(true);
