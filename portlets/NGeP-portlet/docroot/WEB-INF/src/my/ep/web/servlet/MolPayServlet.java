@@ -43,7 +43,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("******Servlet Testing doGet*********");
 		PrintWriter out = res.getWriter();
 		out.print("CBTOKEN:MPSTATOK");
-		
+
 		//res.sendRedirect("http://localhost:8080/web/guest/svo-site-visit");
 	}
 
@@ -51,7 +51,7 @@ public class MolPayServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		log.info("************Payment PostBack Start********");
 		log.info("******Servlet Testing doPost*********");
-		
+
 		String nbcb = req.getParameter("nbcb") != null ? req.getParameter("nbcb") : null;
 		String amount = req.getParameter("amount");
 		String orderId = req.getParameter("orderid");
@@ -65,7 +65,7 @@ public class MolPayServlet extends HttpServlet {
 		String paydate = req.getParameter("paydate");
 		String skey = req.getParameter("skey");
 		//String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
-		
+
 		log.info("nbcb:" + nbcb);
 		log.info("orderId: " + orderId);
 		log.info("tranID: " + tranID);
@@ -79,7 +79,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
 		//log.info("channel:" + channel);
-		
+
 		if(nbcb.equals("1")){
 			//To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
@@ -92,105 +92,105 @@ public class MolPayServlet extends HttpServlet {
 				IPaymentSO reqSO = SmServiceLookup.getPaymentSO();
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
 
-				if (skey.equals(key1)) {
-					log.info("SKey & Key1 Are Match>>>>");
-					Long ordId = Long.valueOf(orderId);
-					reqDTO.setPaymentId(ordId);
-					PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
-					BigDecimal txAmount = new BigDecimal(amount);
-					boolean validPayment = false;
 
-					if (resDTO.getSmPayment() != null) {
-						SmPayment smPayment = resDTO.getSmPayment();
-						SmPaymentResponse smPaymentRes = new SmPaymentResponse();
-						SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
-						Long statusCode = null;
-						
-						if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
-							BigDecimal paymentAmount = smPayment.getPaymentAmt();
-							Long paymentId = smPayment.getPaymentId();
+				log.info("SKey & Key1 Are Match>>>>");
+				Long ordId = Long.valueOf(orderId);
+				reqDTO.setPaymentId(ordId);
+				PaymentResDTO resDTO = reqSO.retrievePaymentInfoByPaymentId(reqDTO);
+				BigDecimal txAmount = new BigDecimal(amount);
+				boolean validPayment = false;
 
-							if (paymentId.longValue() == ordId.longValue() && paymentAmount.compareTo(txAmount) == 0) {
-								if (smPayment.getPmStatus() != null) {
-									if (smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT
-											|| smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT) {
-										statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
-										validPayment = true;
-									}else{
-										log.info("Payment Status ID -" + smPayment.getPmStatus().getStatusId());
-									}
+				if (resDTO.getSmPayment() != null) {
+					SmPayment smPayment = resDTO.getSmPayment();
+					SmPaymentResponse smPaymentRes = new SmPaymentResponse();
+					SmPaymentOrder paymentOrder = smPayment.getSmPaymentOrder();
+					Long statusCode = null;
+
+					if (status.equals(SupplierManagementConst.MOL_SUCCESS)) {
+						BigDecimal paymentAmount = smPayment.getPaymentAmt();
+						Long paymentId = smPayment.getPaymentId();
+
+						if (paymentId.longValue() == ordId.longValue() && paymentAmount.compareTo(txAmount) == 0) {
+							if (smPayment.getPmStatus() != null) {
+								if (smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_PENDING_PAYMENT
+										|| smPayment.getPmStatus().getStatusId() == SupplierManagementConst.PM_STAT_FAILED_PAYMENT) {
+									statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
+									validPayment = true;
 								}else{
-									log.info("smPayment.getPmStatus() is NULL");
+									log.info("Payment Status ID -" + smPayment.getPmStatus().getStatusId());
 								}
 							}else{
-								log.info("ord id or payment amount unmatch");
-								log.info("ord id - " + ordId);
-								log.info("paymentAmount id - " + paymentAmount);
+								log.info("smPayment.getPmStatus() is NULL");
 							}
-						}else if(status.equals(SupplierManagementConst.MOL_FAIL)){
-							statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
-							
-						}else if(status.equals(SupplierManagementConst.MOL_PENDING)){
-							statusCode = SupplierManagementConst.PM_STAT_PENDING_PAYMENT;
+						}else{
+							log.info("ord id or payment amount unmatch");
+							log.info("ord id - " + ordId);
+							log.info("paymentAmount id - " + paymentAmount);
 						}
-						
-						Date txDate;
-						try {
-							txDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
-						} catch (Exception e) {
-							txDate = new Date();
-							e.printStackTrace();
-						}
-						//paymentOrder.setChannelName(channel);
-						smPaymentRes.setTransactionId(Long.valueOf(tranID));
-						smPaymentRes.setErrorCode(errorCode);
-						smPaymentRes.setErrorDesc(errorDesc);
-						smPaymentRes.setTransactionDate(txDate);
-						smPaymentRes.setSmPaymentOrder(paymentOrder);
-						smPaymentRes.setPaymentStatus(status);
-						smPaymentRes.setPaidAmt(txAmount);
-						paymentOrder.getSmPaymentResponses().add(smPaymentRes);
-						int requeryCount = paymentOrder.getRequeryCount() + 1;
-						paymentOrder.setRequeryCount(requeryCount);
+					}else if(status.equals(SupplierManagementConst.MOL_FAIL)){
+						statusCode = SupplierManagementConst.PM_STAT_FAILED_PAYMENT;
 
-						if(statusCode != null){
-							StatusReqDTO statusReqDTO = new StatusReqDTO();
-							statusReqDTO.setStatusId(statusCode);
-							PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
-							smPayment.setPmStatus(pmStat);
-						}
-						
-						PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
-						//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
-						pymtReqDTO.setValidPayment(validPayment);
-						pymtReqDTO.setSmPayment(smPayment);
-						pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
-
-//						pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-//						pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-//						pymtReqDTO.setToken(token);
-						String portalUrl = PortalUtil.getPortalURL(req);
-						pymtReqDTO.setPortalBaseUrl(portalUrl);
-						pymtReqDTO.setLanguage("en");
-						
-
-						PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
-						
-						if(pymtResDTO.isSuccessful()){
-							PrintWriter out = res.getWriter();
-							out.print("CBTOKEN:MPSTATOK");
-						}
-					}else{
-						log.info("No SmPayment Object is found");
+					}else if(status.equals(SupplierManagementConst.MOL_PENDING)){
+						statusCode = SupplierManagementConst.PM_STAT_PENDING_PAYMENT;
 					}
+
+					Date txDate;
+					try {
+						txDate = DateUtils.convertStringToDate("yyyy-MM-dd HH:mm:ss", paydate);
+					} catch (Exception e) {
+						txDate = new Date();
+						e.printStackTrace();
+					}
+					//paymentOrder.setChannelName(channel);
+					smPaymentRes.setTransactionId(Long.valueOf(tranID));
+					smPaymentRes.setErrorCode(errorCode);
+					smPaymentRes.setErrorDesc(errorDesc);
+					smPaymentRes.setTransactionDate(txDate);
+					smPaymentRes.setSmPaymentOrder(paymentOrder);
+					smPaymentRes.setPaymentStatus(status);
+					smPaymentRes.setPaidAmt(txAmount);
+					paymentOrder.getSmPaymentResponses().add(smPaymentRes);
+					int requeryCount = paymentOrder.getRequeryCount() + 1;
+					paymentOrder.setRequeryCount(requeryCount);
+
+					if(statusCode != null){
+						StatusReqDTO statusReqDTO = new StatusReqDTO();
+						statusReqDTO.setStatusId(statusCode);
+						PmStatus pmStat= SmServiceLookup.getStatusSO().retrieveStatusByStatusId(statusReqDTO).getPmStatus();
+						smPayment.setPmStatus(pmStat);
+					}
+
+					PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
+					//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
+					pymtReqDTO.setValidPayment(validPayment);
+					pymtReqDTO.setSmPayment(smPayment);
+					pymtReqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
+
+					//						pymtReqDTO.setTaskId(this.getManagedBean().getTaskId());
+					//						pymtReqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+					//						pymtReqDTO.setToken(token);
+					String portalUrl = PortalUtil.getPortalURL(req);
+					pymtReqDTO.setPortalBaseUrl(portalUrl);
+					pymtReqDTO.setLanguage("en");
+
+
+					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
+
+					if(pymtResDTO.isSuccessful()){
+						PrintWriter out = res.getWriter();
+						out.print("CBTOKEN:MPSTATOK");
+					}
+				}else{
+					log.info("No SmPayment Object is found");
 				}
-			}else if(skey != key1){
+
+			}else{
 				log.info("*******SKey Unmatch***********");
 			}
 		}
 	}
-	
-/*	private void updateRecordStatus(BaseEntity entity) {
+
+	/*	private void updateRecordStatus(BaseEntity entity) {
 		entity.setCreatedBy(1L);
 		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		entity.setChangedBy(1L);
