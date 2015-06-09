@@ -7,7 +7,7 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.backingbean.cm.catalogue;
 
 import java.util.ArrayList;
@@ -68,7 +68,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneMaintenanceBackingBean.class);
-	
+
 	/**
 	 * Instantiates a new zone maintenance backing bean.
 	 */
@@ -89,13 +89,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance().getServiceObject("pm",ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryByCode(reqDTO);
 		getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
-		
+
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "cmSupplierZoneMaintenance");
+		.handleNavigation(fc, null, "cmSupplierZoneMaintenance");
 
 	}
-	
+
 	/**
 	 * Gets the zone.
 	 * 
@@ -141,25 +141,25 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		if(getManagedBean().getDeletedCmSupplierZoneList() != null && getManagedBean().getDeletedCmSupplierZoneList().size() > 0){
 			deleteList = getManagedBean().getDeletedCmSupplierZoneList();
 		}
-			Iterator<CmSupplierZone> ite = getManagedBean().getCmSupplierZoneList().iterator();
-			log.debug("Checking for Delete");
-			while(ite.hasNext()){
-				CmSupplierZone cmZone = ite.next(); 
-				if(cmZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
-					log.debug("Found it");
-					if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
-						throw new EpException(MessageConst.ERROR_716005);
-					}
-					log.info("Size Before:" + getManagedBean().getCmSupplierZoneList().size());
-					deleteList.add(cmZone);
-					ite.remove();
-					log.info("Size After:" + getManagedBean().getCmSupplierZoneList().size());
+		Iterator<CmSupplierZone> ite = getManagedBean().getCmSupplierZoneList().iterator();
+		log.debug("Checking for Delete");
+		while(ite.hasNext()){
+			CmSupplierZone cmZone = ite.next(); 
+			if(cmZone.getSuppZoneName().equalsIgnoreCase(zone.getSuppZoneName())){
+				log.debug("Found it");
+				if(cmZone.getCmPricings() != null && cmZone.getCmPricings().size() > 0){
+					throw new EpException(MessageConst.ERROR_716005);
 				}
+				log.info("Size Before:" + getManagedBean().getCmSupplierZoneList().size());
+				deleteList.add(cmZone);
+				ite.remove();
+				log.info("Size After:" + getManagedBean().getCmSupplierZoneList().size());
 			}
+		}
 		getManagedBean().setDeletedCmSupplierZoneList(deleteList);	
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
-	  }
-	
+	}
+
 	/**
 	 * Delete Cmsupplier zones.
 	 */
@@ -167,7 +167,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		log.debug("********************ZoneMaintenanceBackingBean deleteCmSupplierZones***************");
 		IZoneMaintenanceSO zoneMaintenanceSO = null;
 		zoneMaintenanceSO = (IZoneMaintenanceSO) BusinessDelegate
-					.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
+				.getInstance().getServiceObject("cm", IZoneMaintenanceSO.class);
 		ZoneMaintenanceReqDTO reqDTO = new ZoneMaintenanceReqDTO();
 		reqDTO.setCmSupplierZoneList(getManagedBean().getDeletedCmSupplierZoneList());
 		ZoneMaintenanceResDTO resDTO = new ZoneMaintenanceResDTO(); 
@@ -183,13 +183,13 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			throw new EpException(MessageConst.ERROR_716001);
 		}
 	}
-	
+
 	/**
 	 * save CmSupplierZones .
 	 * 
 	 * @return string
 	 */
-	public String saveCmSupplierZones() {
+	public void saveCmSupplierZones() {
 		log.debug("********************ZoneMaintenanceBackingBean saveCmSupplierZones***************");
 		assignValReqdToFalse();
 		/* First delete any records that are to be deleted */
@@ -206,33 +206,17 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			resDTO = zoneMaintenanceSO.save(reqDTO);
 		else 
 			resDTO.setSuccessful(true);
-		
+
 		if(resDTO.isSuccessful()){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
 					FacesMessage.SEVERITY_INFO,
 					null,
 					MessageUtils.getMessage(MessageConst.INFO_711001, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
-			return "outputMsg";
+
 		}
-		else 
-			return null;
-		
-//		if (resDTO.isSuccessful()) {
-//			System.out.println("SuccessMMMMMMMMMMMMMMMMM");
-//			showZonePopup();
-//			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
-//					FacesMessage.SEVERITY_INFO, null, 
-//					MessageUtils.getMessage(MessageConst.INFO_711001, 
-//							new String[]{""+1}, 
-//							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));
-//			return null;
-//		} else {
-//			System.out.println("Not SuccessMMMMMMMMMMMMMMMMM");
-//			zoneMaintenanceSO = null;
-//			throw new EpException(MessageConst.ERROR_716002);
-//		}
+
 	}
-	
+
 	/**
 	 * Edits the zone.
 	 * 
@@ -243,14 +227,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 	 */
 	public void editZone(TreeNode rootZoneLocation, int zoneIndex) {
 		getManagedBean().setEditMode(true);
-//		List<CmSupplierZoneStateDistrictDTO> detailDTOs = getDetails(rootZoneLocation);
+		//		List<CmSupplierZoneStateDistrictDTO> detailDTOs = getDetails(rootZoneLocation);
 		CmSupplierZone zone = getZone(rootZoneLocation);
-//		List<PmState> states = SourcingZoneDetailHelper
-//				.getStateFromDetailDTOs(detailDTOs);
-//		List<PmDivision> divisions = SourcingZoneDetailHelper
-//				.getDivisionFromDetailDTOs(detailDTOs);
-//		List<PmDistrict> districts = SourcingZoneDetailHelper
-//				.getDistrictFromDetailDTOs(detailDTOs);
+		//		List<PmState> states = SourcingZoneDetailHelper
+		//				.getStateFromDetailDTOs(detailDTOs);
+		//		List<PmDivision> divisions = SourcingZoneDetailHelper
+		//				.getDivisionFromDetailDTOs(detailDTOs);
+		//		List<PmDistrict> districts = SourcingZoneDetailHelper
+		//				.getDistrictFromDetailDTOs(detailDTOs);
 
 		List<PmState> states = getPmStates(rootZoneLocation.getChildren());
 		List<PmDivision> divisions = getPmDivisions(rootZoneLocation.getChildren());
@@ -267,7 +251,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds the new zone.
 	 */
@@ -280,7 +264,7 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		getManagedBean().setRootZoneTree(
 				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
 	}
-	
+
 	/**
 	 * To Show Zone Popup.
 	 */
@@ -296,14 +280,14 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		} else {
 			this.getManagedBean().setCmSupplierZoneList(new ArrayList<CmSupplierZone>());
 		}
-			this.getManagedBean().setDeletedCmSupplierZoneList(null);
-			this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
-			this.getManagedBean().setRootZoneTree(
-					CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
-			this.getManagedBean().setZoneName(null);
+		this.getManagedBean().setDeletedCmSupplierZoneList(null);
+		this.getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
+		this.getManagedBean().setRootZoneTree(
+				CmSupplierZoneSingleton.getInstance().buildCmSupplierZoneTree(getManagedBean().getDefaultCountryId(), null, null, null));
+		this.getManagedBean().setZoneName(null);
 	}
-		
-	
+
+
 	/**
 	 * Gets the current user supplier.
 	 * 
@@ -327,8 +311,8 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		}
 		return smSupp;
 	}
-	
-/*	private List<CmSupplierZoneStateDistrictDTO> getDetails(TreeNode zoneDetail) {
+
+	/*	private List<CmSupplierZoneStateDistrictDTO> getDetails(TreeNode zoneDetail) {
 		List<CmSupplierZoneStateDistrictDTO> results = new ArrayList<CmSupplierZoneStateDistrictDTO>();
 		if (zoneDetail.isLeaf()) {
 			CmSupplierZoneStateDistrictDTO cmSupplierZoneStateDistrictDTO = (CmSupplierZoneStateDistrictDTO) zoneDetail.getData();
@@ -340,29 +324,29 @@ BaseBackingBean<ZoneMaintenanceManagedBean> {
 		}
 		return results;
 	}
-*/	
+	 */	
 	/**
- * Gets the pm states.
- * 
- * @param  treeNodes
- *         (List<TreeNode> treeNodes(mandatory))
- * @return List<PmState>
- */
-private List<PmState> getPmStates(List<TreeNode> treeNodes) {
+	 * Gets the pm states.
+	 * 
+	 * @param  treeNodes
+	 *         (List<TreeNode> treeNodes(mandatory))
+	 * @return List<PmState>
+	 */
+	private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		List<PmState> results = new ArrayList<PmState>();
 		for (TreeNode rootNode : treeNodes) {
 			for (TreeNode treeNode : rootNode.getChildren()) {
-					if (treeNode.getType().equals("state")) {
-						CmSupplierZoneStateDistrictDTO locationDTO = (CmSupplierZoneStateDistrictDTO) treeNode.getData();
-						if (locationDTO.getState() != null) {
-							results.add(locationDTO.getState());
-						}
+				if (treeNode.getType().equals("state")) {
+					CmSupplierZoneStateDistrictDTO locationDTO = (CmSupplierZoneStateDistrictDTO) treeNode.getData();
+					if (locationDTO.getState() != null) {
+						results.add(locationDTO.getState());
 					}
+				}
 			}
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Gets the Pm divisions.
 	 * 
@@ -373,8 +357,8 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 	private List<PmDivision> getPmDivisions(List<TreeNode> treeNodes) {
 		List<PmDivision> results = new ArrayList<PmDivision>();
 		for (TreeNode rootNode : treeNodes) {
-		for (TreeNode treeNode : rootNode.getChildren()) {
-			for (TreeNode childNode : treeNode.getChildren()) {
+			for (TreeNode treeNode : rootNode.getChildren()) {
+				for (TreeNode childNode : treeNode.getChildren()) {
 					if (childNode.getType().equals("division")) {
 						CmSupplierZoneStateDistrictDTO locationDTO = (CmSupplierZoneStateDistrictDTO) childNode.getData();
 						if (locationDTO.getDivision() != null) {
@@ -382,11 +366,11 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 						}
 					}
 				}
-		}
+			}
 		}
 		return results;
 	}
-	
+
 	/**
 	 * Gets the Pm districts.
 	 * 
@@ -411,7 +395,7 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		return results;
 	}
 
-	
+
 	/**
 	 * Update zone list on pop up close.
 	 */
@@ -431,7 +415,7 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 				}
 			}
 		}
-			
+
 		if(selZone.getSuppZoneId() == 0 && !getManagedBean().getCmSupplierZoneList().contains(selZone)){
 			log.info(333);
 			selZone = new CmSupplierZone();
@@ -464,7 +448,7 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 			if(cmDtl.getPmDivision() != null)
 				existingDivisions.add(cmDtl.getPmDivision().getDivisionId());
 		}
-		
+
 		/*
 		 * New zone details added*
 		 */
@@ -703,31 +687,31 @@ private List<PmState> getPmStates(List<TreeNode> treeNodes) {
 		if(unSelectedStates.size() > 0 || unSelectedDistricts.size() > 0 || unSelectedDivisions.size() > 0){
 			log.info(4040);
 			log.info("Size rem lists:" + existingStates.size() + ":" + existingDistricts.size());
-				if(selZone.getCmSupplierZoneDtls() != null){
-					log.info(4141);
-					Iterator<CmSupplierZoneDTL> ite = selZone.getCmSupplierZoneDtls().iterator();
-					while(ite.hasNext()){
-						CmSupplierZoneDTL cmDtl = ite.next();
-						if(unSelectedStates.size() > 0 && unSelectedStates.contains(cmDtl.getPmState().getStateId())){	
-							ite.remove();
-							log.info("Removed 1");
-						} else if(unSelectedDistricts.size() > 0 && (cmDtl.getPmDistrict() != null) && unSelectedDistricts.contains(cmDtl.getPmDistrict().getDistrictId())){
-							ite.remove();
-							log.info("Removed 2");
-						} else if(unSelectedDivisions.size() > 0 && (cmDtl.getPmDivision() != null) && unSelectedDivisions.contains(cmDtl.getPmDivision().getDivisionId())){
-							ite.remove();
-							log.info("Removed 3");
-						}
-					}	
-				}
+			if(selZone.getCmSupplierZoneDtls() != null){
+				log.info(4141);
+				Iterator<CmSupplierZoneDTL> ite = selZone.getCmSupplierZoneDtls().iterator();
+				while(ite.hasNext()){
+					CmSupplierZoneDTL cmDtl = ite.next();
+					if(unSelectedStates.size() > 0 && unSelectedStates.contains(cmDtl.getPmState().getStateId())){	
+						ite.remove();
+						log.info("Removed 1");
+					} else if(unSelectedDistricts.size() > 0 && (cmDtl.getPmDistrict() != null) && unSelectedDistricts.contains(cmDtl.getPmDistrict().getDistrictId())){
+						ite.remove();
+						log.info("Removed 2");
+					} else if(unSelectedDivisions.size() > 0 && (cmDtl.getPmDivision() != null) && unSelectedDivisions.contains(cmDtl.getPmDivision().getDivisionId())){
+						ite.remove();
+						log.info("Removed 3");
+					}
+				}	
 			}
+		}
 		log.info("Count After" + selZone.getCmSupplierZoneDtls().size());
 		if(!getManagedBean().getCmSupplierZoneList().contains(selZone))
 			getManagedBean().getCmSupplierZoneList().add(selZone);
 		getManagedBean().setSelectedSupplierZone(null);
 		getManagedBean().setZoneTrees(CmSupplierZoneSingleton.getInstance().buildZoneSDTree(this.getManagedBean().getCmSupplierZoneList()));
 	}
-	
+
 	/**
 	 * Assign val reqd to true.
 	 */
