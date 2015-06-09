@@ -7,8 +7,8 @@ public class VotSearchBean {
 	 */
 	private String votCode;
 	private String votName;
-	private String ptjCode;
-	private String ptjDescription;
+	private String kumpulanPtjCode;
+	private String kumpulanPtjDesc;
 	private String status;
 	/**
 	 * @return the votCode
@@ -32,31 +32,32 @@ public class VotSearchBean {
 	 * @param votName the votName to set
 	 */
 	public void setVotName(String votName) {
-		this.votName = votName;
+		this.votName = votName;	
+		
+	}		
+	/**
+	 * @return the kumpulanPtjCode
+	 */
+	public String getKumpulanPtjCode() {
+		return kumpulanPtjCode;
 	}
 	/**
-	 * @return the ptjCode
+	 * @param kumpulanPtjCode the kumpulanPtjCode to set
 	 */
-	public String getPtjCode() {
-		return ptjCode;
+	public void setKumpulanPtjCode(String kumpulanPtjCode) {
+		this.kumpulanPtjCode = kumpulanPtjCode;
 	}
 	/**
-	 * @param ptjCode the ptjCode to set
+	 * @return the kumpulanPtjDesc
 	 */
-	public void setPtjCode(String ptjCode) {
-		this.ptjCode = ptjCode;
+	public String getKumpulanPtjDesc() {
+		return kumpulanPtjDesc;
 	}
 	/**
-	 * @return the ptjDescription
+	 * @param kumpulanPtjDesc the kumpulanPtjDesc to set
 	 */
-	public String getPtjDescription() {
-		return ptjDescription;
-	}
-	/**
-	 * @param ptjDescription the ptjDescription to set
-	 */
-	public void setPtjDescription(String ptjDescription) {
-		this.ptjDescription = ptjDescription;
+	public void setKumpulanPtjDesc(String kumpulanPtjDesc) {
+		this.kumpulanPtjDesc = kumpulanPtjDesc;
 	}
 	/**
 	 * @return the status
@@ -64,6 +65,7 @@ public class VotSearchBean {
 	public String getStatus() {
 		return status;
 	}
+	
 	/**
 	 * @param status the status to set
 	 */
