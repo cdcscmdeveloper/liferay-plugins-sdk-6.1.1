@@ -349,7 +349,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * 
 	 * @return SmMofAccount
 	 */
-	private SmMofAccount getSingleSmMofAccount() {
+	public SmMofAccount getSingleSmMofAccount() {
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.SUPPLIER_MANAGEMENT,
