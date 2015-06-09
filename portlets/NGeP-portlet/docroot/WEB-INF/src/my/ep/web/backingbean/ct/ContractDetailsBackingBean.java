@@ -1625,6 +1625,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
+			trBB.getManagedBean().setExternalPageUrl(null);
 			trBB.setTerminationContractVer(resDTO);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1741,6 +1742,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    getManagedBean().setViewContract(true);
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
+	    getManagedBean().setExternalPageUrl(null);
 	    reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
@@ -1818,6 +1820,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    setValidateContractField(resDTO);		    
 		    getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});		    
 	        getManagedBean().setViewContract(false);
+	        getManagedBean().setExternalPageUrl(null);
 	        this.getManagedBean().setSelectedTabIndex(0);	     
 			return CONTRACT_PAGE;
 		} finally {
@@ -1846,6 +1849,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getManagedBean().setViewContract(true);
 		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+		trBB.getManagedBean().setExternalPageUrl(null);
 		trBB.retrieveContractVerOfAgreement();
 		
 		resDTO = contractSO.retrieveTerminationHistoryList(ctReqDTO);
