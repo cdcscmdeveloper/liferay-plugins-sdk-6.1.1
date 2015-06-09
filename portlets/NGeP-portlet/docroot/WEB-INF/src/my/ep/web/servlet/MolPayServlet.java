@@ -87,7 +87,7 @@ public class MolPayServlet extends HttpServlet {
 
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
-			if(skey.equals(key1)){
+			//if(skey.equals(key1)){
 				log.info("SKey & Key1 Are Match>>>>");
 				IPaymentSO reqSO = SmServiceLookup.getPaymentSO();
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -184,9 +184,9 @@ public class MolPayServlet extends HttpServlet {
 					log.info("No SmPayment Object is found");
 				}
 
-			}else{
-				log.info("*******SKey Unmatch***********");
-			}
+//			}else{
+//				log.info("*******SKey Unmatch***********");
+//			}
 		}
 	}
 
