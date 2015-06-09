@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="votResult" header="#{lbl['lbl.pm.vot.search.result']}"
+		toggleable="true">
+		<p:dataTable id="vot"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{votBackingBean.searchVot}" rows="10"
+			var="votList" rowIndexVar="index" lazy="true">
+			<ac:paginator for="vot" />
+
+			<p:column headerText="#{lbl['lbl.pm.vot.code']}" style="width:10%">
+				<h:outputText value="#{votList.votFundCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.vot.desc']}" style="width:30%">
+				<h:outputText value="#{votList.description}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pm.kumpulan.ptj']}" style="width:30%">
+				<h:outputText value="#{votList.pmOrgProfile.pmOrgValidity.orgCode}" />
+				<p:spacer width="3%"></p:spacer>
+				<h:outputText value="#{votList.pmOrgProfile.pmOrgValidity.orgName}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pm.vot.valid.from']}" style="width:10%">
+				<h:outputText value="#{votList.effDate}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pm.vot.valid.to']}" style="width:10%">
+				<h:outputText value="#{votList.expDate}" />
+			</p:column>			
+
+			<p:column headerText="#{lbl['lbl.pm.search.status']}"
+				style="width:10%"> 
+   	    #{(votList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+       </p:column>
+		</p:dataTable>
+	</p:panel>
+	
+</ui:composition>
