@@ -41,45 +41,40 @@
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/suppFinalizationHeader.xhtml"></ui:include>
 
-		<table style="border: 0px; width: 100%;">
-			<tr>
-				<td width="10%" style="vertical-align: baseline;">
-					<p:tabMenu styleClass="sidemenu"
-						activeIndex="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex}"
-						style="display : table-caption;">
-
-						<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
-							action="#{suppFinalBiddingBackingBean.retrieveBiddingSummary}"
-							update="@form" />
-						<p:menuitem
-							rendered="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"
-							value="#{lbl['lbl.sc.endorsement']}"
-							action="#{suppFinalBiddingBackingBean.retrieveOnlineEndorsement}"
-							update="@form" />
-						<p:menuitem
-							rendered="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"
-							value="#{lbl['lbl.sc.escalation']}"
-							action="#{suppFinalBiddingBackingBean.retrieveOfflineEndorsement}"
-							update="@form" />
-					</p:tabMenu>
-				</td>
-
-				<td width="90%">
-					<c:if test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq '0'}">
-						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/biddingSummary.xhtml"></ui:include>
-					</c:if> 
-					<c:if test="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse and
+		<p:tabMenu
+			activeIndex="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex}">
+			<p:menuitem value="#{lbl['lbl.sc.bidding.summary']}"
+				action="#{suppFinalBiddingBackingBean.navigateToBiddingSummaryTab}"
+				update="@form" />
+			<p:menuitem
+				rendered="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"
+				value="#{lbl['lbl.sc.endorsement']}"
+				action="#{suppFinalBiddingBackingBean.retrieveOnlineEndorsement}"
+				update="@form" />
+			<p:menuitem
+				rendered="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}"
+				value="#{lbl['lbl.sc.escalation']}"
+				action="#{suppFinalBiddingBackingBean.retrieveOfflineEndorsement}"
+				update="@form" />
+		</p:tabMenu>
+		
+		<p:panel id="contentPanel">
+			<c:if test="#{suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq '0'}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/biddingSummary.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse and
 									suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq '1'}">
-						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml"></ui:include>
-					</c:if> 
-					<c:if test="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse and
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/onlineEndorsement.xhtml"></ui:include>
+			</c:if>
+			<c:if test="#{!suppFinalBiddingBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse and
 									suppFinalBiddingBackingBean.managedBean.onlineBiddingActiveIndex eq '1'}">
-						<ui:include src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/offlineEndorsement.xhtml"></ui:include>
-					</c:if>
-				</td>
-			</tr>
-		</table>
-
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/offlineEndorsement.xhtml"></ui:include>
+			</c:if>
+		</p:panel>
+				
 		<ui:include
 			src="/xhtml/sc/supplierFinalization/onlineBiddingEndorsement/uploads.xhtml" />
 

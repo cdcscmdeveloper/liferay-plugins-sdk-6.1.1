@@ -14,14 +14,15 @@
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
 		
-		<p:dataTable id="supplierPackageTbl" value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" var="price">
+		<p:dataTable id="supplierPackageTbl" 
+					 value="#{suppFinalBiddingBackingBean.managedBean.biddingPackagePriceList}" var="price">
 			<ac:paginator for="supplierItemTbl"></ac:paginator>
 			
-			<p:column headerText="#{lbl['lbl.sc.ranking']}">
+			<p:column headerText="#{lbl['lbl.sc.ranking']}" style="width:5%;">
 				<p:outputLabel value="#{price.ranking}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.supplier.name']}" style="white-space:normal;">
+			<p:column headerText="#{lbl['lbl.sc.supplier.name']}" style="white-space:normal;" >
 				<p:commandLink update="@([id$=suppDtlPopUp])"
 					action="#{suppFinalBiddingBackingBean.showSupplierDetails(
 										price.scBidSupplier.smSupplier.supplierId)}"
@@ -30,51 +31,57 @@
 				</p:commandLink>
 			</p:column>			
 			
-			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
+			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;">
 				<h:outputText value="#{(price.scBidSupplier.smSupplier.bumi)?lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}">
+			<p:column headerText="#{lbl['lbl.sc.total.starting.price']}" style="width:10%; white-space:normal;">
 				<h:outputText style="float : right;" value="#{price.scBidSupplier.packageStartPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
-					<p:commandLink immediate="true"
-						oncomplete="pricePop.show();"
-						actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(price)}"
-						update="@([id$=itemPricePop])" style="float: right;" title="Item Price Details">
-						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/ico-price.png" style="vertical-align:middle"></p:graphicImage>
-					</p:commandLink>
-					<h:outputText style="float: right; margin-right: 10px;" value="#{price.bidPriceTotal}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>										
+			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}" style="width:15%; white-space:normal;">
+				<p:commandLink immediate="true" oncomplete="pricePop.show();"
+					actionListener="#{suppFinalBiddingBackingBean.supplierItemPricePopupAction(price)}"
+					update="@([id$=itemPricePop])" style="float: right;"
+					title="Item Price Details">
+					<p:graphicImage
+						value="#{CommonUIConstant.imagePathUptoDesign}/ico-price.png"
+						style="vertical-align:middle"></p:graphicImage>
+				</p:commandLink>
+				<h:outputText style="float: right; margin-right: 10px;"
+					value="#{price.bidPriceTotal}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-					<h:outputText style="float : right;" 
-						value="#{price.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
-						rendered="#{isRendered}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.difference.rm']}" style="width:10%; white-space:normal;">
+				<h:outputText style="float : right;"
+					value="#{price.bidPriceTotal - suppFinalBiddingBackingBean.managedBean.lowestNonBumiOfferedPrice}"
+					rendered="#{isRendered}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
-					<h:outputText style="float : right;" 
-						value="#{price.diffPercentage}" rendered="#{isRendered}">
-						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.difference.perc']}" style="width:10%; white-space:normal;">
+				<h:outputText style="float : right;" value="#{price.diffPercentage}"
+					rendered="#{isRendered}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
+			<p:column headerText="#{lbl['lbl.sc.pref.margin']}" style="width:5%; white-space:normal;">
 				<h:outputText style="float : right;" 
 							  rendered="#{isRendered}" value="#{price.prefMargin}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 				</h:outputText>
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
+			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}"  style="width:10%; white-space:normal;">
 				<h:outputText style="float : right;" value="#{suppFinalBiddingBackingBean.managedBean.estimatedCost - 
 																					price.bidPriceTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
