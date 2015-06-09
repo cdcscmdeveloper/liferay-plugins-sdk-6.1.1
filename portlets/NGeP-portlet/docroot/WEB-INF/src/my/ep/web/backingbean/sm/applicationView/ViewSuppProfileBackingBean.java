@@ -57,7 +57,7 @@ public class ViewSuppProfileBackingBean extends
 			getManagedBean().setRegStatusDescList(
 					retrieveRegistrationStatusList());
 			getManagedBean().setZoneList(
-					SmServiceLookup.getZoneSO().retrieveZoneList()
+					SmServiceLookup.getZoneSO().retrieveActiveZoneList()
 							.getZoneList());
 			if (StringUtils.isNotBlank(supplierIdParam)) {
 				getManagedBean().setRenderedBackButton(false);

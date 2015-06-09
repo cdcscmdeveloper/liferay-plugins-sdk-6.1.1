@@ -245,6 +245,7 @@
 		<portlet id="SoftCertPayment"></portlet>
 		<portlet id="viewSupplierProfile"></portlet>
 		<portlet id="viewApplicationHistory"></portlet>
+		<portlet id="supplierDataMaintenance"></portlet>
 		<portlet id="SoftCertReg"></portlet>
 		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
