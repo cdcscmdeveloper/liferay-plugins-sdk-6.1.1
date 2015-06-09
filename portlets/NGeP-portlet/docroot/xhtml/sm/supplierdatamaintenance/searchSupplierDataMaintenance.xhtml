@@ -9,7 +9,7 @@
 
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_viewSupplierProfile_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supp.data.maintenance']}");
+			$('#portlet_supplierDataMaintenance_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.supp.data.maintenance']}");
 		</script>
 	</ui:define>
 	
@@ -21,7 +21,7 @@
 		
 		<ui:param name="viewSuppProfileBackingBean" value="#{supplierDataMaintenanceBackingBean}" />
 		
-		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
 		
 		<p:panel header="#{lbl['lbl.sm.search.supprofile']}" toggleable="true" id="searchSupplierProfilePanelId">
 		
