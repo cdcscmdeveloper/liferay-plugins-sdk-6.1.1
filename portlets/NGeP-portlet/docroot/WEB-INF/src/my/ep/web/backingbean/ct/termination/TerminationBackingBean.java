@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -125,6 +126,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	
 	private boolean viewNoticeFlag;
+	private List<SelectItem> decisionTypeList;
 	private ContractBackingBean ctBB = null;
 	private CtTerminationReason[] selectedTerminationReasonsList;
 	private CtAgency selectedRecommendedAgency;
@@ -632,45 +634,53 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	  * 
 	  * @return the selection list of decision type
 	  */
-	 public SelectItem[] getDecisionTypeDropdown() {
+	 public List<SelectItem> getDecisionTypeList() {
+		 if (decisionTypeList == null) {
 			boolean remedy = false;
-			SelectItem[] items = null;
-		ISearchBean<PmParameterDesc> searchBean = null;
-		try {
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			
-			reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
-			ContractResDTO resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
-			
-			for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
-				if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(
-						ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
-					remedy = true;
-					break;
-				}
-			}			
-			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
-					ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
-			items = (remedy || getManagedBean().isViewContract()) ? new SelectItem[parameterDescs.size() + 1] : new SelectItem[parameterDescs.size()];
-		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
-		    int i = 1;
-		    for (PmParameterDesc parameterDesc : parameterDescs) {
-		    	if (!getManagedBean().isViewContract() && !remedy 
-		    			&& parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
-		    		continue;
-		    	}
-		    	items[i++] = new SelectItem(
-		    			parameterDesc.getPmParameter().getParameterId(), 
-		    			parameterDesc.getCodeName());
-		    }
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	    return items;
+			decisionTypeList = new ArrayList<SelectItem>();
+			ISearchBean<PmParameterDesc> searchBean = null;
+			try {
+				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);			
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				
+				reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
+				ContractResDTO resDTO = contractSO.retrieveTerminationHistoryList(reqDTO);
+				
+				for (CtTermination ctTermination : resDTO.getTerminationHistoryList()) {
+					if (ctTermination.getDecisionType().getParameterCode().equalsIgnoreCase(
+							ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
+						reqDTO = new ContractReqDTO();
+						reqDTO.setDocId(ctTermination.getCtContractVer().getContractVerId());
+						reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+						PmStatus status = contractSO.retrieveWorkflowStatus(reqDTO).getCtWorkflowStatus().getPmStatus();
+						if (status.getStatusId().longValue() == ContractStatusConst.FT_APPROVED.longValue()) {
+							remedy = true;
+							break;
+						}
+					}
+				}			
+				List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance().getParameterDescListBySearchBean(
+						ParameterTypeConst.TERMINATION_DECISION_TYPE, searchBean);
+				
+				decisionTypeList.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())));
+				
+			    for (PmParameterDesc parameterDesc : parameterDescs) {
+			    	if (!getManagedBean().isViewContract() && !remedy 
+			    			&& parameterDesc.getPmParameter().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE)) {
+			    		continue;
+			    	}
+			    	decisionTypeList.add(new SelectItem(
+			    			parameterDesc.getPmParameter().getParameterId(), 
+			    			parameterDesc.getCodeName()));
+			    }
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			}
+		 }
+		 return decisionTypeList;
 	}
 	
 	 /**
