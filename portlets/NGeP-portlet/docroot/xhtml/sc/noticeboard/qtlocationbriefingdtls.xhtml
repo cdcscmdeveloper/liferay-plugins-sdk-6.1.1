@@ -83,7 +83,8 @@
 					<h:outputText value=")" styleClass="lastUpdated" escape="false" 
 					rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate ne null}"/>
 				</f:facet>
-				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
+				<!--  Commented as part of defect fix 4927-->
+				<!-- <h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
 					<h:outputText value="#{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
 						rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
 						style="font-weight:bold;text-align: left;" />
@@ -95,7 +96,7 @@
 						style="font-weight:bold;text-align: left;" />
 
 				</h:panelGroup>
-				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
+ -->				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
 					style="width:100%">
 					<ac:paginator for="brfsitdtl"></ac:paginator>
 					<p:column headerText="#{lbl['lbl.sc.description']}"
