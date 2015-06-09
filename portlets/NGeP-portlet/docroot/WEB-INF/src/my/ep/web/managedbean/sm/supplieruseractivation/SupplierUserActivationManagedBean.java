@@ -1,7 +1,5 @@
 package my.ep.web.managedbean.sm.supplieruseractivation;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -21,7 +19,6 @@ public class SupplierUserActivationManagedBean extends BaseManagedBean {
 	private long personnelId;
 	private String encrpKeyStr;
 	private SmPersonnel smPersonnel;
-	private List<SmPersonnel> latesApprovedAndDraftPersonnels;
 	
 	public boolean isValidActivation() {
 		return validActivation;
@@ -61,15 +58,6 @@ public class SupplierUserActivationManagedBean extends BaseManagedBean {
 
 	public void setSmPersonnel(SmPersonnel smPersonnel) {
 		this.smPersonnel = smPersonnel;
-	}
-
-	public List<SmPersonnel> getLatesApprovedAndDraftPersonnels() {
-		return latesApprovedAndDraftPersonnels;
-	}
-
-	public void setLatesApprovedAndDraftPersonnels(
-			List<SmPersonnel> latesApprovedAndDraftPersonnels) {
-		this.latesApprovedAndDraftPersonnels = latesApprovedAndDraftPersonnels;
 	}
 
 	

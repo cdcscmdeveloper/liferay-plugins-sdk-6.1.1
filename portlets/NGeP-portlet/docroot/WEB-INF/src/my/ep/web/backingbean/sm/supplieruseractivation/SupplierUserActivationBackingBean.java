@@ -121,11 +121,6 @@ public class SupplierUserActivationBackingBean extends
 					this.getManagedBean().setSupplierId(supplierProfile.getSupplierId());*/
 					personnel.setEpRole(getEpRole(personnel, supplierProfile));
 					this.getManagedBean().setSmPersonnel(personnel);
-					this.getManagedBean()
-							.setLatesApprovedAndDraftPersonnels(
-									getOthersPersonnelWithSameIdentificationNoAndSupplierId(
-											personnel,
-											supplierProfile.getSupplierId()));
 					this.getManagedBean().setEncrpKeyStr(encryptedKey);
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplieruseractivation/enterActivationDetails.xhtml");
 					return;
@@ -206,8 +201,6 @@ public class SupplierUserActivationBackingBean extends
 //					}
 					
 					SupplierUserActivationReqDTO reqDTO = new SupplierUserActivationReqDTO();		
-					
-					reqDTO.setSmPersonnels(getManagedBean().getLatesApprovedAndDraftPersonnels());
 //					reqDTO.setDraftApplId(draftApplId);
 					reqDTO.setSmPersonnel(this.getManagedBean().getSmPersonnel());
 					reqDTO.setLoginId(loginId);
@@ -328,53 +321,6 @@ public class SupplierUserActivationBackingBean extends
 		}
 	}
 	
-	// syazwan: added to retrieve all personnel with same identificationNo
-	// and supplierId
-	private List<SmPersonnel> getOthersPersonnelWithSameIdentificationNoAndSupplierId(
-			SmPersonnel currPersonnel, Long supplierId) {
-		log.info("************others personnel that need to update pmuser for personnel Id:"
-				+ currPersonnel.getPersonnelId() + "******************");
-		List<SmPersonnel> smPersonnelList = new ArrayList<SmPersonnel>();
-		try {
-			IPersonnelSO personnelSO = (IPersonnelSO) BusinessDelegate
-					.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IPersonnelSO.class);
-			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
-			reqDTO.setIdentificationNo(currPersonnel.getIdentificationNo());
-			reqDTO.setSmSupplierId(supplierId);
-			PersonnelResDTO resDTO = null;
-
-			// add personnel same identificationNo by supplierid but exclude
-			// current personnel
-			resDTO = personnelSO
-					.retrievePersonnelByIdentificationNoAndSuppId(reqDTO);
-			if (resDTO.getSmPersonnelList() != null
-					&& !resDTO.getSmPersonnelList().isEmpty()) {
-				for (SmPersonnel smPersonnelTmp : resDTO.getSmPersonnelList()) {
-					if (smPersonnelTmp.getPersonnelId().compareTo(
-							currPersonnel.getPersonnelId()) != 0
-							&& smPersonnelTmp.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_PENDING_ACTIVATION
-							&& smPersonnelTmp.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE
-							&& smPersonnelTmp.getEpRole() != null
-							&& StringUtils.isNotBlank(smPersonnelTmp
-									.getEpRole())) {
-						log.info("**************************others personnel id:"
-								+ smPersonnelTmp.getPersonnelId()
-								+ "************************");
-						smPersonnelTmp
-								.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-						smPersonnelList.add(smPersonnelTmp);
-					}
-				}
-			}
-
-		} catch (Exception ex) {
-			log.info("Error in getOthersPersonnelWithSameIdentificationNoAndSupplierId:"
-					+ ex.getMessage());
-		}
-		return smPersonnelList;
-	}
 
 	// syazwan: added to validate if pending activation personnel already
 	// deactivate/terminate in latest approved personnel
