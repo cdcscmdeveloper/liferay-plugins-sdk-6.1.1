@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -5944,7 +5945,8 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 			// return SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
-			throw new EpException(MessageConst.ERROR_722519);
+//			throw new EpException(MessageConst.ERROR_722519);
+			throw new EpException(e.getMessage());
 		}
 	}
 
@@ -6258,7 +6260,7 @@ public class SmApplicationBackingBean extends
 			log.info("***Error in Delete Draft  **** ");
 			retriveLatestApplAfterUpdate(getManagedBean().getCurrentPageType(),
 					"");
-			throw new EpException(MessageConst.ERROR_722519);
+			throw new EpException(e.getMessage());
 		}
 
 		finally {
@@ -6917,7 +6919,8 @@ public class SmApplicationBackingBean extends
 			e.printStackTrace();
 			retMsg = null;
 			retriveLatestApplAfterUpdate("", "");
-			throw new EpException(MessageConst.ERROR_722519);
+//			throw new EpException(MessageConst.ERROR_722519);
+			throw new EpException(e.getMessage());
 		} finally {
 			reqSO = null;
 		}
