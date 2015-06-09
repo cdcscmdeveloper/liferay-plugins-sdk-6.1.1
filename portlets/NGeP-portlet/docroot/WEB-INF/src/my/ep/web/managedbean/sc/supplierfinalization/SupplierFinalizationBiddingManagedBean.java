@@ -5,9 +5,12 @@ package my.ep.web.managedbean.sc.supplierfinalization;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import org.primefaces.model.MenuModel;
 
 import my.ep.biz.bean.sc.BidItemBean;
 import my.ep.biz.bean.sc.BidPackageBean;
@@ -20,11 +23,13 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -87,6 +92,16 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private BigDecimal estimatedCost;
 	
 	private boolean isBumiAndNonBumiCombination = false;
+	
+	private int ZoneActiveIndex;
+	private MenuModel zoneMenuModel;
+	private TplSpecZoneDtl selectedZone;
+	
+	private List<TplSpecZoneDtl> biddingZoneDetails;
+	private Map<Long,List<ScQtRecommend>> scQtRecommendsByZone;
+	private Map<Long,List<ScBidSchedule>> bidSchedulesByZone;
+	private Map<Long,List<BidPackageBean>> bidPackageBeansByZone;
+	private Map<Long,List<ScBidItem>> bidItemsByZone;
 	
 	/**
 	 * @return the onlineBiddingActiveIndex
@@ -549,4 +564,125 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		this.isBumiAndNonBumiCombination = isBumiAndNonBumiCombination;
 	}
 	
+	/**
+	 * @return the zoneActiveIndex
+	 */
+	public int getZoneActiveIndex() {
+		return ZoneActiveIndex;
+	}
+	
+	/**
+	 * @param zoneActiveIndex 
+	 * 				the zoneActiveIndex to set
+	 */
+	public void setZoneActiveIndex(int zoneActiveIndex) {
+		ZoneActiveIndex = zoneActiveIndex;
+	}
+	
+	/**
+	 * @return the zoneMenuModel
+	 */
+	public MenuModel getZoneMenuModel() {
+		return zoneMenuModel;
+	}
+	
+	/**
+	 * @param zoneMenuModel 
+	 * 				the zoneMenuModel to set
+	 */
+	public void setZoneMenuModel(MenuModel zoneMenuModel) {
+		this.zoneMenuModel = zoneMenuModel;
+	}
+	
+	/**
+	 * @return the selectedZone
+	 */
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+	
+	/**
+	 * @param selectedZone 
+	 * 				the selectedZone to set
+	 */
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+	
+	/**
+	 * @return the biddingZoneDetails
+	 */
+	public List<TplSpecZoneDtl> getBiddingZoneDetails() {
+		return biddingZoneDetails;
+	}
+	
+	/**
+	 * @param biddingZoneDetails 
+	 * 				the biddingZoneDetails to set
+	 */
+	public void setBiddingZoneDetails(List<TplSpecZoneDtl> biddingZoneDetails) {
+		this.biddingZoneDetails = biddingZoneDetails;
+	}
+	
+	/**
+	 * @return the scQtRecommendsByZone
+	 */
+	public Map<Long, List<ScQtRecommend>> getScQtRecommendsByZone() {
+		return scQtRecommendsByZone;
+	}
+	
+	/**
+	 * @param scQtRecommendsByZone 
+	 * 				the scQtRecommendsByZone to set
+	 */
+	public void setScQtRecommendsByZone(
+			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone) {
+		this.scQtRecommendsByZone = scQtRecommendsByZone;
+	}
+	/**
+	 * @return the bidSchedulesByZone
+	 */
+	public Map<Long, List<ScBidSchedule>> getBidSchedulesByZone() {
+		return bidSchedulesByZone;
+	}
+	
+	/**
+	 * @param bidSchedulesByZone 
+	 * 				the bidSchedulesByZone to set
+	 */
+	public void setBidSchedulesByZone(
+			Map<Long, List<ScBidSchedule>> bidSchedulesByZone) {
+		this.bidSchedulesByZone = bidSchedulesByZone;
+	}
+	
+	/**
+	 * @return the bidPackageBeansByZone
+	 */
+	public Map<Long, List<BidPackageBean>> getBidPackageBeansByZone() {
+		return bidPackageBeansByZone;
+	}
+	
+	/**
+	 * @param bidPackageBeansByZone 
+	 * 				the bidPackageBeansByZone to set
+	 */
+	public void setBidPackageBeansByZone(
+			Map<Long, List<BidPackageBean>> bidPackageBeansByZone) {
+		this.bidPackageBeansByZone = bidPackageBeansByZone;
+	}
+	/**
+	 * @return the bidItemsByZone
+	 */
+	public Map<Long, List<ScBidItem>> getBidItemsByZone() {
+		return bidItemsByZone;
+	}
+	
+	/**
+	 * @param bidItemsByZone 
+	 * 				the bidItemsByZone to set
+	 */
+	public void setBidItemsByZone(Map<Long, List<ScBidItem>> bidItemsByZone) {
+		this.bidItemsByZone = bidItemsByZone;
+	}
+	 
 }
