@@ -608,8 +608,14 @@ public class LOADetailBackingBean extends
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
 				scLoa.getSupplierBranch());
-		getManagedBean()
-				.setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());
+
+		SmPersonnel supplierHQPersonnel = resDTO.getSupplierHQPersonnel();
+		if(null == supplierHQPersonnel){
+			throw new EpException(MessageConst.ERROR_760294);
+		} else{
+			getManagedBean().setSupplierHQPersonnel(supplierHQPersonnel); 
+		}
+		
 		getManagedBean().setBranchsList(resDTO.getSmSupplierBranchs());
 		if (scLoa.isBrandNew()) {
 			handleBranchDetailsChanged();
