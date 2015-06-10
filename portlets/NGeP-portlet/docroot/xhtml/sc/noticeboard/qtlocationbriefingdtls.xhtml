@@ -84,7 +84,7 @@
 					rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate ne null}"/>
 				</f:facet>
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-					<h:outputText value="#{lbl['lbl.sc.attendance.required.for.brefing']}"
+					<h:outputText value="* #{lbl['lbl.sc.attendance.required.for.brefing']}"
 						style="font-weight:bold;text-align: left;" />
 				</h:panelGroup>
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
