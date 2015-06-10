@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.applicationView;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.model.SelectItem;
@@ -161,6 +162,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String searchSuppType;
 	private Long searchPmRegStatusId;
 	private Long searchPmZoneId;
+	private Date currDate;
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -197,6 +199,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 		shareHolderOffAddr.setSmAddress(defaultAddr);
 		shareHolderResdAddr = new SmPersonnelAddress();
 		shareHolderResdAddr.setSmAddress(defaultAddr);
+		
+		currDate = new Date();
 
 	}
 
@@ -1073,6 +1077,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSmSupplierBankList(List<SmSupplierBank> smSupplierBankList) {
 		this.smSupplierBankList = smSupplierBankList;
+	}
+
+	public Date getCurrDate() {
+		return currDate;
+	}
+
+	public void setCurrDate(Date currDate) {
+		this.currDate = currDate;
 	}
 
 }
