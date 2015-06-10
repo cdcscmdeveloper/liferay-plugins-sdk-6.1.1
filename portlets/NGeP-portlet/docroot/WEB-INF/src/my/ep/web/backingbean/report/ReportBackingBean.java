@@ -6037,7 +6037,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setSmReceiptNo(null);
 		this.setSmProcessingOfficerName(null);
 		this.setSmPaymentMethod(null);
-		
+		this.setSmFromMonth(null);
+		this.setSmToMonth(null);
 		this.setSmCompanyName(null);
 		this.setSmRegistrationType(null);
 		this.setSmCreatedFromYear(null);
