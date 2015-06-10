@@ -36,8 +36,18 @@
 				<ac:paginator for="contractRequestId"></ac:paginator>
 
 				<p:column headerText="#{lbl['lbl.cm.image']}">
-					<p:graphicImage value="/images/#{contractObj.imagePath}"
-						height="80" width="80" />
+					<h:panelGroup rendered="#{contractObj.imagePath == null}">
+						<p:outputPanel
+							style="border: 1px solid #808080; display: block; vertical-align: middle; padding: 20px 4px; text-align: center;">
+								#{lbl['lbl.cm.no.image.available']}
+								</p:outputPanel>
+
+					</h:panelGroup>
+					<h:panelGroup rendered="#{contractObj.imagePath != null}">
+						<img
+							src="/NGeP-portlet/image?imageName=#{contractObj.epNo}/#{contractObj.imagePath}"
+							style="height: 80px; left: 0px !important;" />
+					</h:panelGroup>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.cm.item.name']}">
