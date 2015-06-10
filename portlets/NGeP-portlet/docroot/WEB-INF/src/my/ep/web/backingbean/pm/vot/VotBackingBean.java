@@ -221,7 +221,7 @@ public class VotBackingBean extends
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IVotFundSO.class);
 				VotFundResDTO resDTO = votFundSO.searchVotFundData(votReqDTO);
-						
+				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
 
 					return resDTO.getVotResultBean();

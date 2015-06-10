@@ -165,7 +165,7 @@ public class GlAccountBackingBean extends
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IGlAccountSO.class);
 				GlAccountResDTO resDTO = glAccountSO.searchGlAccountData(glAccountReqDTO);				
-						
+				getManagedBean().setLazy(true);		
 				if (resDTO.isSuccessful()) {
 
 					return resDTO.getGlAccountResultBean();
