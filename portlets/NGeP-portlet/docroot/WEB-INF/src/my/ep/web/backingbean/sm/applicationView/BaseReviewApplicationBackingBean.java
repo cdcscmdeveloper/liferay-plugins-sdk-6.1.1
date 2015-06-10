@@ -1733,6 +1733,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSearchSupplier().setEpNo("");
 			getManagedBean().getSearchSupplier().setRegNo("");
 		}
+		SmCommonUtil.setMDCUserId();
 	}
 
 	/**
