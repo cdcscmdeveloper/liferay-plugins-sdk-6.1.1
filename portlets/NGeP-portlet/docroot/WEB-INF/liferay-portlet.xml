@@ -1388,6 +1388,18 @@
 		<css-class-wrapper>glAccount search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+	<portlet>
+		<portlet-name>pmFund</portlet-name>
+		<icon>/icon.png</icon>
+		<control-panel-entry-category>apps</control-panel-entry-category>
+		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>fund search-portlet</css-class-wrapper>
+	</portlet>
 		<portlet-name>ZoneMaintenancePortlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
