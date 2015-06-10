@@ -8089,7 +8089,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				.getExternalContext();
 		externalContext.getApplicationMap().put(facesScope.getUserSessionBean().getUserId().toString()+getManagedBean().getCtRequestList().get(0)
 				.getContractId().toString(), getManagedBean().getCtRequestList());
-		String url = "contract-request";
+		String url = "contract-request-from-catalogue";
 
 		try {
 			externalContext.redirect(commonUrl
