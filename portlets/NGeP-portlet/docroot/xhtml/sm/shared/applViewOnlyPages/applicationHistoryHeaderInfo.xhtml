@@ -15,6 +15,7 @@
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'B'}">#{lbl['lbl.sm.bumi.headerLbl']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'R'}">#{lbl['lbl.sm.renewMof.headerLbl']}</c:if>
 					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'U'}">#{lbl['lbl.sm.updateMof.headerLbl']}</c:if>
+					<c:if test="#{viewSmApplBackingBean.managedBean.smAppl.applType eq 'C'}">#{lbl['lbl.sm.appltype.cancelmof']}</c:if>
 				</td>
 				<td><h:outputLabel value="#{lbl['lbl.sm.application.no']}" /></td>
 				<td class="header-info-text">#{viewSmApplBackingBean.managedBean.smAppl.applNo}</td>
