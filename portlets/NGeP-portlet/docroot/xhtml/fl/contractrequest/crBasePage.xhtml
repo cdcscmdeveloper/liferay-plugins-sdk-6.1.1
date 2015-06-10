@@ -59,7 +59,7 @@
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form,:form:itemDataTable"
+						<p:menuitem value="#{lbl['lbl.fl.menu.delivery.address.item']}" update="@form"
 							actionListener="#{contractRequestBackingBean.onTabChange(1)}">
 							<f:setPropertyActionListener
 								target="#{contractRequestBackingBean.managedBean.selectedTabIndex}"
