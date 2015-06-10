@@ -143,7 +143,7 @@
 			</table>
 		</h:panelGroup>
 		<h:panelGrid style="width:265px; margin-left:5px">
-		   <h:panelGrid columns="3" rendered="#{amendmentBackingBeanmanagedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
+		   <h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
 		   		and amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 			 <p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="true">
 			 </p:selectBooleanCheckbox>
@@ -181,7 +181,7 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>	 
-		   <h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode eq ParameterConst.contractTypeCentral}">  
+		   <h:panelGrid columns="3" rendered="#{amendmentBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">  
 			   <p:selectBooleanCheckbox 
 			      value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"  disabled="true"/>
 		       <p:spacer width="2" />

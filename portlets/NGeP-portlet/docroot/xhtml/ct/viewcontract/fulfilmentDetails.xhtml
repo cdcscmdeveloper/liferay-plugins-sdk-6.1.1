@@ -203,7 +203,7 @@
 	  <h:panelGrid columns="2" style="width:140px;"
 	         rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
              <p:outputLabel value="*" styleClass="mandatory" />
-	   	     <p:outputLabel id="ap201FileId" value="upload Ap201 File" />
+	   	     <p:outputLabel id="ap201FileId" value="#{lbl['lbl.ct.upload.ap201']}" />
 	   </h:panelGrid>	
 	   <h:panelGroup id="uploadAp201Pg">
 		     <h:commandLink value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201FileName}" 

@@ -182,7 +182,7 @@
 				  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mto']}" />
 			  </h:panelGrid>
 		   </h:panelGrid>	
-		     <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.ctContract.procurementMode.parameterCode eq ParameterConst.contractTypeCentral}">  
+		     <h:panelGrid columns="3" rendered="#{terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral}">  
 			   <p:selectBooleanCheckbox 
 			      value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}"  disabled="true"/>
 		       <p:spacer width="2" />
