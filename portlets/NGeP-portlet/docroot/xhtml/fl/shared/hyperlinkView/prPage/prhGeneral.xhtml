@@ -34,41 +34,22 @@
 				<td style="width: 146px;"><p:outputLabel
 						value="#{lbl['lbl.fl.prepared.for.ptj']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td style="width: 488px;"><p:inputText size="8" id="preparedOrgProfileId"
-						readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5" />
-					<p:inputTextarea id="preparedOrgText" cols="52" rows="2" readonly="true"
-					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}" ></p:inputTextarea>
-					<p:spacer width="5" />
-					<p:inputText size="66" id="preparedPtj"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"
-						disabled="true" />
-				</td>
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:423px;" 
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>		
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /> </td>
-				<td><p:inputText size="8" id="issuedOrgCode"
-						readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode}" />
-						<p:spacer width="5"></p:spacer>
-					<p:inputTextarea id="issuedOrgName" cols="52" rows="2" readonly="true"
-					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}" />
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/>	
-				</td>
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:423px;" 
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>										
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="8" id="chargeOrgProfileId" readonly="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode}" />
-							<p:spacer width="5"></p:spacer>
-					<p:inputTextarea id="issuedOrgText" cols="52" rows="2" readonly="true"
-					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}" />
-					<p:spacer width="5" /> 
-					<p:inputText size="66" id="chargePtj"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"
-						disabled="true" /></td>
+				<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:423px;" 
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"/>
+						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.acc.office']}" /></td>
