@@ -89,6 +89,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String businessTypeVal;
 	private List<SmPersonnel> smapplShareHolders;
 	private List<SmSupplierCategory> activeCategoryList;
+	private List<SmSupplierBank> smSupplierBankList;
 
 	// temp added for testing
 	private boolean poUser;
@@ -1064,6 +1065,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
+	}
+
+	public List<SmSupplierBank> getSmSupplierBankList() {
+		return smSupplierBankList;
+	}
+
+	public void setSmSupplierBankList(List<SmSupplierBank> smSupplierBankList) {
+		this.smSupplierBankList = smSupplierBankList;
 	}
 
 }
