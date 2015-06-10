@@ -1387,7 +1387,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>glAccount search-portlet</css-class-wrapper>
 	</portlet>
-	<portlet>
+	
 	<portlet>
 		<portlet-name>pmFund</portlet-name>
 		<icon>/icon.png</icon>
@@ -1400,6 +1400,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>fund search-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
 		<portlet-name>ZoneMaintenancePortlet</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
