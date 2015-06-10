@@ -1,0 +1,41 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="fundResult" header="#{lbl['lbl.pm.fund.search.result']}"
+		toggleable="true">
+		<p:dataTable id="fund"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{fundBackingBean.searchFund}" rows="10"
+			var="fundList" rowIndexVar="index" lazy="true">
+			<ac:paginator for="fund" />
+
+			<p:column headerText="#{lbl['lbl.pm.fund.code']}" style="width:10%">
+				<h:outputText value="#{fundList.votFundCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.fund.desc']}" style="width:50%">
+				<h:outputText value="#{fundList.description}" />
+			</p:column>		
+			
+			
+			<p:column headerText="#{lbl['lbl.pm.fund.valid.from']}" style="width:15%">
+				<h:outputText value="#{fundList.effDate}" />
+			</p:column>
+			
+			<p:column headerText="#{lbl['lbl.pm.fund.valid.to']}" style="width:15%">
+				<h:outputText value="#{fundList.expDate}" />
+			</p:column>			
+
+			<p:column headerText="#{lbl['lbl.pm.search.status']}"
+				style="width:10%"> 
+   	    #{(fundList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
+       </p:column>
+		</p:dataTable>
+	</p:panel>
+	
+</ui:composition>
