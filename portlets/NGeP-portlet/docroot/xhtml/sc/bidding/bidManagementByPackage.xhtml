@@ -6,28 +6,28 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:param name="isRendered"
-		value="#{!item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.lowestNonBumiOfferedPrice eq 0}" />
-
-
 	<p:panel header="#{lbl['lbl.sc.item.details']}"
 		id="itemDetailsByPackage" toggleable="true">
-		
-		<p:dataTable id="scBidItemsList" rows="10" var="item" rowIndexVar="index"
-			value="#{biddingBB.managedBean.scheduledBid.scBidItems}" >
+
+		<p:dataTable id="scBidItemsList" rows="10" var="item"
+			rowIndexVar="index"
+			value="#{biddingBB.managedBean.scheduledBid.scBidItems}">
 			<ac:paginator for="scBidItemsList"></ac:paginator>
 
 
 			<p:column headerText="#{lbl['lbl.sc.item.name']}">
-				<h:outputText id="itemNameVBP" value="#{item.scRequestItem.itemName}" />
+				<h:outputText id="itemNameVBP"
+					value="#{item.scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}">
 
-				<h:outputText id="ItemDescriptionVBP" value="#{item.scRequestItem.itemDesc}" />
+				<h:outputText id="ItemDescriptionVBP"
+					value="#{item.scRequestItem.itemDesc}" />
 			</p:column>
 			<p:column style="width : 60px" headerText="#{lbl['lbl.sc.uom']}">
 
-				<h:outputText id="uomNameVBP" value="#{item.scRequestItem.uom.uomName}" />
+				<h:outputText id="uomNameVBP"
+					value="#{item.scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column style="width : 65px" headerText="#{lbl['lbl.sc.quantity']}">
 				<h:outputText id="qtyVBP" style="float : right" value="#{item.qty}">
@@ -37,7 +37,8 @@
 			</p:column>
 			<p:column style="width : 125px"
 				headerText="#{lbl['lbl.sc.min.decrement.block']}">
-				<h:outputText id="decrementAmtVBP" style="float : right" value="#{item.decrementAmt}">
+				<h:outputText id="decrementAmtVBP" style="float : right"
+					value="#{item.decrementAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -57,12 +58,15 @@
 
 		<div align="center">
 
-		<h4><B> Bidding Statistic Graph</B></h4>
+			<h4>
+				<B> Bidding Statistic Graph</B>
+			</h4>
 
 		</div>
 		<p:spacer height="2"></p:spacer>
 		<div>
-			<p:lineChart id="LineChartVBP" value="#{biddingBB.managedBean.bidPriceLinearModel}"
+			<p:lineChart id="LineChartVBP"
+				value="#{biddingBB.managedBean.bidPriceLinearModel}"
 				legendPosition="e" style="height:300px;" />
 		</div>
 		<p:spacer height="10"></p:spacer>
@@ -94,28 +98,32 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.last.bid.price']}">
-				<h:outputText rendered="#{item.scBidSupplier.packageStartPrice ne item.bidPriceTotal}" style="float : right" value="#{item.bidPriceTotal}">
+				<h:outputText
+					rendered="#{item.scBidSupplier.packageStartPrice ne item.bidPriceTotal}"
+					style="float : right" value="#{item.bidPriceTotal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<c:if test="#{isRendered}">
-					<h:outputText style="float : right" rendered="#{biddingBB.managedBean.lowestNonBumiOfferedPrice ne '0'}"
-						value="#{item.bidPriceTotal - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					</h:outputText>
-				</c:if>
+
+				<h:outputText style="float : right"
+					rendered="#{item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
+					value="#{item.bidPriceTotal - biddingBB.managedBean.lowestNonBumiOfferedPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.difference.perc']}">
-				<c:if test="#{isRendered}">
-					<h:outputText style="float : right"
-						value="#{item.diffPercentage}">
-						<f:convertNumber
-							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
-					</h:outputText>
-				</c:if>
+
+				<h:outputText style="float : right"
+					rendered="#{item.scBidSupplier.smSupplier.bumi and biddingBB.managedBean.nonBumiAvail}"
+					value="#{item.diffPercentage}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
+				</h:outputText>
+
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.pref.margin']}">
 				<h:outputText style="float : right" value="#{item.prefMargin}"
@@ -125,7 +133,8 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.total.cost.saving']}">
-				<h:outputText style="float : right" value="#{biddingBB.managedBean.scheduledBid.packageEstimateCost - item.bidPriceTotal}">
+				<h:outputText style="float : right"
+					value="#{biddingBB.managedBean.scheduledBid.packageEstimateCost - item.bidPriceTotal}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
@@ -160,8 +169,7 @@
 							<p:spacer width="5"></p:spacer>
 						</h:outputLabel></TD>
 
-					<TD><h:outputLabel
-							value="#{lbl['lbl.sc.difference.perc']}">
+					<TD><h:outputLabel value="#{lbl['lbl.sc.difference.perc']}">
 							<p:spacer width="5"></p:spacer>
 						</h:outputLabel></TD>
 
@@ -197,9 +205,9 @@
 		</div>
 
 	</p:panel>
-	<p:dialog closeOnEscape="true" header="#{lbl['lbl.sc.item.price.section']}"
-		 widgetVar="pricePop" showEffect="fade"
-		hideEffect="fade" modal="true" id="itemPricePop">
+	<p:dialog closeOnEscape="true"
+		header="#{lbl['lbl.sc.item.price.section']}" widgetVar="pricePop"
+		showEffect="fade" hideEffect="fade" modal="true" id="itemPricePop">
 		<ui:include src="/xhtml/sc/bidding/BMByZoneItemPricePopup.xhtml"></ui:include>
 	</p:dialog>
 </ui:composition>

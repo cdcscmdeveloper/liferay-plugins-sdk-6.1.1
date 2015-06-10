@@ -1067,8 +1067,48 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		if (newPriceTotal != null && newPriceTotal.doubleValue() != 0.0d) {
 			return nf.format(newPriceTotal.doubleValue());
 		} else {
-			return "";
+			return null;
 
 		}
 	}
+
+	public String lastBidPriceTotal(ScBidPrice bidPriceItem) {
+
+		BigDecimal lastBidPriceTotal = null;
+		if (bidPriceItem.getBidPrice() != null) {
+			lastBidPriceTotal = this.tplSpecHelper
+					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
+							.getScBidItem().getScRequestItem()
+							.getTplSpecQuestion(), bidPriceItem.getBidPrice(),
+							bidPriceItem.getScBidSupplierItem().getScBidItem()
+									.getQty());
+		}
+		if (lastBidPriceTotal != null
+				&& lastBidPriceTotal.doubleValue() != 0.0d) {
+			return nf.format(lastBidPriceTotal.doubleValue());
+		} else {
+			return null;
+		}
+	}
+
+	public String startPriceTotal(ScBidPrice bidPriceItem) {
+
+		BigDecimal lastStartPriceTotal = null;
+		if (bidPriceItem.getScBidSupplierItem().getItemStartPrice() != null) {
+			lastStartPriceTotal = this.tplSpecHelper
+					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
+							.getScBidItem().getScRequestItem()
+							.getTplSpecQuestion(), bidPriceItem
+							.getScBidSupplierItem().getItemStartPrice(),
+							bidPriceItem.getScBidSupplierItem().getScBidItem()
+									.getQty());
+		}
+		if (lastStartPriceTotal != null
+				&& lastStartPriceTotal.doubleValue() != 0.0d) {
+			return nf.format(lastStartPriceTotal.doubleValue());
+		} else {
+			return null;
+		}
+	}
+
 }
