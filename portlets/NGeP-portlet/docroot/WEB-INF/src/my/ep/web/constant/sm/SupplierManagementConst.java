@@ -452,6 +452,10 @@ public class SupplierManagementConst {
 	public static final String SUPP_SEND_INQUIRY_SDO = "Pembekal hantar respon kepada pembekal";
 	public static final String SVC_ASSIGN_SITEVISIT = "SVC beri tugasan lawatan tapak kepada SVO";
 	public static final String SVO_SUBMIT_REPORT = "SVO hantar laporan lawatan tapak";
+	
+	public static final String SUPPLIER_MAINTENANCE_REGISTRATION_STATUS = "Selenggara Data Pembekal: Kemaskini Status Pendaftaran";
+	public static final String SUPPLIER_MAINTENANCE_ADD_CATEGORY_CODE = "Selenggara Data Pembekal: Tambah Kod Bidang";
+	public static final String SUPPLIER_MAINTENANCE_DELETE_CATEGORY_CODE = "Selenggara Data Pembekal: Hapus Kod Bidang";
 
 	public static final String SM_STATE_NAME_SABAH = "SABAH";
 	public static final String SM_STATE_NAME_SARAWAK = "SARAWAK";
