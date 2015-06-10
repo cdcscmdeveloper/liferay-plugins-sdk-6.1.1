@@ -1890,6 +1890,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			
 //			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 //            reqDTO.setUserRole(getOneRoleByStatus(ppPlan));
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			reqDTO.setPmUser(pmUser);
 			reqDTO.setPpRemark(remark);
 			reqDTO.setPpRemarks(itemRemarks);
 			reqDTO.setJustifications(justifications);
