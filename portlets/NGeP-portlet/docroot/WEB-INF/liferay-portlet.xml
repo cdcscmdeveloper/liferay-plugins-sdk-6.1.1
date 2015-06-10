@@ -1358,7 +1358,7 @@
 		<css-class-wrapper>ctrilOfficer search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmAccountingOffice</portlet-name>
+		<portlet-name>list-accounting-office</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1368,7 +1368,7 @@
 		<css-class-wrapper>accountingOffice search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmVot</portlet-name>
+		<portlet-name>list-vot</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1378,7 +1378,7 @@
 		<css-class-wrapper>pmVot search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmGlAccount</portlet-name>
+		<portlet-name>list-gl-account</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -1388,7 +1388,7 @@
 		<css-class-wrapper>glAccount search-portlet</css-class-wrapper>
 	</portlet>	
 	<portlet>
-		<portlet-name>pmFund</portlet-name>
+		<portlet-name>list-fund</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 

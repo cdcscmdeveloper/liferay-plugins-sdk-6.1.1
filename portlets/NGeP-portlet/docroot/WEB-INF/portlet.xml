@@ -4479,7 +4479,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>pmAccountingOffice</portlet-name>
+		<portlet-name>list-accounting-office</portlet-name>
 		<display-name>Accounting Office List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4510,7 +4510,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>pmVot</portlet-name>
+		<portlet-name>list-vot</portlet-name>
 		<display-name>Vot List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4541,7 +4541,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>pmGlAccount</portlet-name>
+		<portlet-name>list-gl-account</portlet-name>
 		<display-name>GL Account List </display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -4572,7 +4572,7 @@
 		</security-role-ref>
 	</portlet>	
 	<portlet>
-		<portlet-name>pmFund</portlet-name>
+		<portlet-name>list-fund</portlet-name>
 		<display-name>Fund List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
