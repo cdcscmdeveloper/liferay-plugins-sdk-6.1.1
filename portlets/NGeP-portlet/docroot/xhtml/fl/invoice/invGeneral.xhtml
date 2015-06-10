@@ -68,7 +68,7 @@
 						<tr>
 							<td><p:inputText size="14" value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.regNo}"
 									disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}"/></td>
-							<td><p:outputLabel
+							<td style="width:35px;"><p:outputLabel
 									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 							<td><p:inputText size="14" value="#{invoiceBackingBean.retrieveMofNo(invoiceBackingBean.managedBean.invoice.flRequest.smSupplier)}" disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}"/></td>
 						</tr>
@@ -82,7 +82,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText size="45" disabled="true" id="suppName"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
-				<td style="width: 130px;"><p:outputLabel
+				<td style="width: 134px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
 					<p:outputLabel value="*" styleClass="mandatory"
