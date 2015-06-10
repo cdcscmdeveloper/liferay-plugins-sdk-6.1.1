@@ -60,8 +60,8 @@
 			<portlet id="pmCtrlOfficer"></portlet>
 			<portlet id="pmAccountingOffice"></portlet>	
 			<portlet id="pmVot"></portlet>
-			<portlet id="pmGlAccount"></portlet>	
-			<portlet id="pmCalendar"></portlet>
+			<portlet id="pmGlAccount"></portlet>
+            <portlet id="pmFund"></portlet>			
 			
 		</category>
 		<!-- Profile Management - END -->		
