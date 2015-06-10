@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -177,7 +178,9 @@ import com.liferay.portal.theme.ThemeDisplay;
 @ManagedBean(name = "catalogueBackingBean")
 //@ViewScoped
 @RequestScoped
-public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> {
+public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	/** The log. */
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);

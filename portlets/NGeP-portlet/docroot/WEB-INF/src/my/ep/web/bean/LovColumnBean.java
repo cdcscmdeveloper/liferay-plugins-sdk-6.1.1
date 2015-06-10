@@ -3,14 +3,20 @@
  */
 package my.ep.web.bean;
 
+import java.io.Serializable;
+
 import javax.el.ValueExpression;
 
 /**
  * @author Kian Seng
  *
  */
-public class LovColumnBean {
+public class LovColumnBean implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String bundleFile;
 	private String bundleKey;
 	private String columnTitle;
