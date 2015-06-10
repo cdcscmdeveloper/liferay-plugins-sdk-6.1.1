@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.cm.codification;
 
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,8 +79,10 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "unspscCodeBackingBean")
 @RequestScoped
 public class UnspscCodeBackingBean extends
-BaseBackingBean<UnspscCodeManagedBean> {
+BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private static Logger log = Logger.getLogger(UnspscCodeBackingBean.class);
 
 	private SearchFilterBean colorFilterBean = new SearchFilterBean(

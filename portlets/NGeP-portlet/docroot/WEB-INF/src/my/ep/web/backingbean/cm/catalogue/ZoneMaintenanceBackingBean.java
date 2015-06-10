@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -64,8 +65,12 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean(name = "zoneMaintenanceBackingBean")
 @ViewScoped
 public class ZoneMaintenanceBackingBean extends
-BaseBackingBean<ZoneMaintenanceManagedBean> {
+BaseBackingBean<ZoneMaintenanceManagedBean> implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger.getLogger(ZoneMaintenanceBackingBean.class);
 

@@ -10,6 +10,7 @@
 */
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 
@@ -50,7 +51,12 @@ import my.ep.dto.cm.catalogue.CmTrackingDairyVO;
 @ManagedBean(name = "reviewCatBackingBean")
 @RequestScoped
 public class ReviewCatalogueBackingBean extends
-		BaseBackingBean<ReviewCatalogueManagedBean> {
+		BaseBackingBean<ReviewCatalogueManagedBean> implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	/** The status filter bean. */
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(
