@@ -876,7 +876,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 		String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
 		ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		String url = "contract-request";
+		String url = "contract-request-from-crlist";
 
 		try {
 			externalContext.redirect(commonUrl+"/" + url+"?contractId="+contractId+"&scheduleNo="+scheduleNo);
@@ -1570,6 +1570,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					
 				}
 			}
+			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
 			if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						MessageUtils.getMessage(MessageConst.ERROR_745070, 
