@@ -62,7 +62,7 @@
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.instruction.mandatory']}"/>
 		<table>
 			<tr>
-				<td style="width: 136px;white-space:nowrap;"><p:outputLabel
+				<td ><p:outputLabel
 						value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
 				<td><table style="width: 100%">
 						<tr>
@@ -82,7 +82,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText size="45" disabled="true" id="suppName"
 						value="#{invoiceBackingBean.managedBean.invoice.flRequest.flSupplierDtl.supplierName}" /></td>
-				<td style="width: 154px;"><p:outputLabel
+				<td style="width: 130px;"><p:outputLabel
 						value="#{lbl['lbl.fl.bank.acc.no.name']}"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
 					<p:outputLabel value="*" styleClass="mandatory"
