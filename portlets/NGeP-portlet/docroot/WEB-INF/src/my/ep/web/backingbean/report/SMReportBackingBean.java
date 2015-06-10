@@ -295,8 +295,10 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
 	        	rptGenBean.setSmSupplierTypeView(true);
-	        	rptGenBean.setSmMofRegNoFromView(true);
-	        	rptGenBean.setSmMofRegNoToView(true);
+	        	/*rptGenBean.setSmMofRegNoFromView(true);
+	        	rptGenBean.setSmMofRegNoToView(true);*/
+	        	rptGenBean.setSmMandatoryMofRegNoFromView(true);
+	        	rptGenBean.setSmMandatoryMofRegNoToView(true);
 	        	rptGenBean.setSmZoneView(true);
 	            break;
 		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:
