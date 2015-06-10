@@ -1830,6 +1830,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * adding selected zone to the zone from the zone popup in simple quote.
 	 */
 	public void updateZone(){
+	    ScQuote scQuote = getManagedBean().getScQuote();
 		List<ZonesBean> beans = getManagedBean().getBeans();
 		ZonesBean zonesBean = new ZonesBean();
 		String locationLevel = this.getManagedBean().getLocationLevel();
@@ -1862,7 +1863,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		if(locationDTOs != null && !locationDTOs.isEmpty()){
 			TplSpecZoneDtl tplSpecZoneDtl = new TplSpecZoneDtl();
 			ScQuoteZone quoteZone = getManagedBean().getScQuote().getQuoteZone();
-			quoteZone.setScQuote(getManagedBean().getScQuote());
+			quoteZone.setModified(Boolean.TRUE);
+			quoteZone.setScQuote(scQuote);
 			tplSpecZoneDtl.setTplSpecZone(quoteZone);
 			tplSpecZoneDtl.setZoneName(getManagedBean().getZoneName());
 
@@ -1927,7 +1929,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			// zone details
 			if(getManagedBean().getScQuote().isZonal()){
 				if(!getManagedBean().getZoneTrees().isEmpty()){
-					getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
+					scQuote.setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
 				}
 			}
 		} else{
@@ -1939,18 +1941,19 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setTempZoneName(null);
 		
 		//update zone when add or edit zone
-		//updateZone(getManagedBean().getScQuote());
+		updateSpecMasterZone(scQuote);
 
 		// hide zone location popup
 		RequestContext.getCurrentInstance().execute("ZoneLocation.hide();");
 	}
-	
+
 	/**
-	 * Update zone.
+	 * Update spec master zone.
 	 *
 	 * @param scQuote the sc quote
 	 */
-	private void updateZone(ScQuote scQuote){
+	private void updateSpecMasterZone(ScQuote scQuote) {
+
 		// product
 		if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 			TemplateSpecHelper.getInstance().updateZoneDtl(
@@ -2321,15 +2324,18 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		getManagedBean().setSelectedFlag(true);
 		List<TreeNode> rootTrees = getManagedBean().getZoneTrees();
 		deleteTreeNodes(rootTrees);
+		
+		ScQuote scQuote = getManagedBean().getScQuote();
 
 		// zone details
-		if(!getManagedBean().getZoneTrees().isEmpty()){
-			getManagedBean().getScQuote().setQuoteZone(getQuoteZones(getManagedBean().getZoneTrees()));
-		}
+		scQuote.setQuoteZone(getQuoteZones(rootTrees));
+		scQuote.getQuoteZone().setModified(Boolean.TRUE);
+
+		updateSpecMasterZone(scQuote);
 
 		if(getManagedBean().isSelectedFlag()){
 			Locale locale = new FacesScopes().getUserLocale();
-			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.ss.simple.quote.delivery.location",
+			throw new EpException(MessageConst.ERROR_760165, new String[] {ResourceBundleUtils.getMessage("lbl.sc.simple.quote.delivery.location",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale)});
 		}
 
