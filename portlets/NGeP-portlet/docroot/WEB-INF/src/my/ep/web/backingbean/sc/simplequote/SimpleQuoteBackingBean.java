@@ -3333,14 +3333,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				supplierCriteria.append(scQuoteSupplier.getSmSupplier().getSupplierId())
 				.append(",");
 			}
-
-			if(supplierCriteria.length() > 0){
-				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
-				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
-				criteria.append("supplierId").append("^").append(supplierCriteria.toString())
-				.append("|");
-			} 
-
 		}
 
 		// add in rejected Supplier Id
@@ -3349,13 +3341,14 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				supplierCriteria.append(rejectedSupplierId)
 				.append(",");
 			}
-			if(supplierCriteria.length() > 0){
-				supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
-				supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
-				criteria.append("supplierId").append("^").append(supplierCriteria.toString())
-				.append("|");
-			} 
 		}
+		
+		if(supplierCriteria.length() > 0){
+			supplierCriteria.deleteCharAt(supplierCriteria.lastIndexOf(","));
+			supplierCriteria.append("^").append(SearchOperator.OPERATOR_NOT_IN.value());
+			criteria.append("supplierId").append("^").append(supplierCriteria.toString())
+			.append("|");
+		} 
 
 		criteria.append("recordStatus^1");
 		return criteria.toString();
@@ -4143,10 +4136,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 		} else {
 			quote.setZonal(Boolean.FALSE);
-			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null 
-					&& getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
+			quote.setQuoteZone(null);
+			if(getManagedBean().getProductTemplateSpecBean().getSpecMaster() != null){
 				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
-				getManagedBean().getProductTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
+			}
+			if(getManagedBean().getServiceTemplateSpecBean().getSpecMaster() != null){
+				getManagedBean().getServiceTemplateSpecBean().getSpecMaster().setTplSpecZone(null);
 			}
 
 			if(getManagedBean().getZoneTrees() != null){
