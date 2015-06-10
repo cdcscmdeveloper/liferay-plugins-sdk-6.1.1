@@ -115,4 +115,12 @@ public class SmRuleHelper {
 			ruleSO = null;
 		}
 	}
+	
+	public int getProcessingFee() {
+		return 50;
+	}
+	
+	public int getRegistrationFee() {
+		return 400;
+	}
 }
