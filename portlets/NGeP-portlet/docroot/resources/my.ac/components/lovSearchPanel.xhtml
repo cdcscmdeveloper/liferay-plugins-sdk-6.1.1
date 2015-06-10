@@ -16,7 +16,7 @@
 				<f:selectItems value="#{lovBackingBean.searchOperators}" />
 			</p:selectOneMenu>
 		</ui:remove>
-		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-bottom: 0px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/>
+		<p:inputText value="#{lovBackingBean.lovSearchBean.dataFilterBeans[0].searchValue}" style="margin-bottom: 5px;" onkeypress="if (event.keyCode == 13) { lovSearch.jq.click(); return false; }"/>
 
 		<ui:remove>
 		<p:selectOneMenu value="#{lovBackingBean.lovSearchBean.dataFilterBeans[1].searchField}">
