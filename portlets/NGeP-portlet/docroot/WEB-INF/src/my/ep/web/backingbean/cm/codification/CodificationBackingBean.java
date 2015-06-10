@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.cm.codification;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,7 +67,9 @@ import org.primefaces.model.TreeNode;
 @ManagedBean(name = "codificationBackingBean")
 @ViewScoped
 public class CodificationBackingBean extends
-BaseBackingBean<CodificationManagedBean> {
+BaseBackingBean<CodificationManagedBean> implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	public static final String NAV_TO_CODIFICATION_VIEW = "codificationView";
 	public static final String NAV_TO_EXTENSION_SEARCH = "extensionSearch";
