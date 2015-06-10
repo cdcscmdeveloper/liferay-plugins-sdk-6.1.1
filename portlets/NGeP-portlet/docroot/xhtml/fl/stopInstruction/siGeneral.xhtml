@@ -76,18 +76,18 @@
 				</td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
-				<td style="width:295px;"><p:inputText size="15" disabled="true" 
+				<td style="width:255px;"><p:inputText size="15" disabled="true" 
 									value="#{stopInstrBB.managedBean.stopInstr.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.smSupplier.epNo}"></p:inputText></td>		
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="55"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.flSupplierDtl.supplierName}" />
 				</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="55"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.flSupplierDtl.branchName}" />
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/>
 				</td>
@@ -116,13 +116,13 @@
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.flSupplierDtl.contactPerson}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.email']}" /></td>
-				<td><p:inputText disabled="true" size="50"
+				<td><p:inputText disabled="true" size="53"
 						value="#{stopInstrBB.managedBean.stopInstr.flRequest.flSupplierDtl.contactEmail}" /></td>
 			</tr>
 			<tr>
@@ -171,7 +171,7 @@
 						value="#{lbl['lbl.fl.stop.instuc.others']}" />
 					</td>
 					<td>
-						<p:inputText size="50" maxlength="255" value="#{stopInstrBB.managedBean.stopInstr.reasonDesc}" id="otherId" 
+						<p:inputText size="53" maxlength="255" value="#{stopInstrBB.managedBean.stopInstr.reasonDesc}" id="otherId" 
 							disabled="#{stopInstrBB.managedBean.stopInstr.pmReason.reasonCode ne 'OTHERS'}" />
 					</td>
 				</tr>
