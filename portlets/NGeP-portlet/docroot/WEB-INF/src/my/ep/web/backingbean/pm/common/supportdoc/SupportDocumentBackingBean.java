@@ -1182,6 +1182,10 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			throw new EpException(MessageConst.ERROR_770083);
 		}
 		
+		if(validateDisplaySequence(pmDocument)){
+			throw new EpException(MessageConst.ERROR_770087);
+		}
+		
 		if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 			if(StringUtils.isBlank(pmDocument.getDocName())){ 
 				throw new EpException(MessageConst.ERROR_770084);
@@ -1317,7 +1321,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		}
 		
 	}
-	
 	
 	private boolean searchDocument(ISearchBean<PmDocument> searchBean){
 		DocumentReqDTO reqDTO = new DocumentReqDTO();
@@ -1758,4 +1761,34 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		return RESTR_CERTBODY;
 	}
 
+	/**
+	 * Returns true if  display seq & doc category id holds same as prev values
+	 * 
+	 * @param pmDocument
+	 * @return boolean
+	 */
+	private boolean validateDisplaySequence(PmDocument pmDocument) {
+		
+		
+		SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
+		//docCategoryCode
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("docCategoryCode.parameterCode",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						pmDocument.getDocCategoryCode().getParameterCode()));
+		// display Seq
+		searchBean.getDataFilterBeans().add(
+				new SearchFilterBean("displaySeq",
+						SearchOperator.OPERATOR_EQUALS.value(), pmDocument
+								.getDisplaySeq()));
+		//documentId
+		if(!pmDocument.isBrandNew()){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("documentId",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							pmDocument.getDocumentId()));
+		}
+		
+		return searchDocument(searchBean);
+	}
 }
