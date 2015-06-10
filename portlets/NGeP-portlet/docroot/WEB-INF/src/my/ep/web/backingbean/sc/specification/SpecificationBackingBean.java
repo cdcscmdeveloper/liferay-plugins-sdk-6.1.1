@@ -7685,7 +7685,7 @@ public class SpecificationBackingBean extends
 					if (null == document.getDisplaySeq()) {
 						scqtlist.setChecklistSeq(new Integer(10));
 					} else {
-						scqtlist.setChecklistSeq(document.getDisplaySeq());
+						scqtlist.setChecklistSeq(new Integer(document.getDisplaySeq()));
 					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
@@ -7841,7 +7841,7 @@ public class SpecificationBackingBean extends
 					if (null == document.getDisplaySeq()) {
 						scqtlist.setChecklistSeq(new Integer(10));
 					} else {
-						scqtlist.setChecklistSeq(document.getDisplaySeq());
+						scqtlist.setChecklistSeq(new Integer(document.getDisplaySeq()));
 					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
