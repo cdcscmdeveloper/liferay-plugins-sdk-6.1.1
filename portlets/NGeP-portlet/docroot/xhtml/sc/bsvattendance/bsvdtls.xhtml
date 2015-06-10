@@ -78,16 +78,8 @@
 
 		<p:panel header="#{lbl['lbl.sc.briefing.dtls']}" toggleable="true">
 			<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-				<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.briefiing']}"
-					rendered="#{bsvDetails.scQtBsv.allBriefingReq}"
+				<h:outputText value="* #{lbl['lbl.sc.attendance.required.for.brefing']}"
 					style="font-weight:bold;text-align: left;" />
-
-
-				<h:outputText
-					value="#{lbl['lbl.sc.qt.atleast']} #{bsvDetails.scQtBsv.minBriefingAttend} #{lbl['lbl.sc.attendance.required.for.briefiing']}"
-					rendered="#{!bsvDetails.scQtBsv.allBriefingReq}"
-					style="font-weight:bold;text-align: left;" />
-
 			</h:panelGroup>
 			<p:dataTable id="brfsitdtl" var="brfsitdtl"
 				value="#{bsvDetails.briefingList}" style="width:100%">
