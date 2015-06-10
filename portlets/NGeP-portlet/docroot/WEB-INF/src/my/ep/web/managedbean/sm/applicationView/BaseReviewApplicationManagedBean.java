@@ -145,6 +145,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmFacility> applWorkShopFacilities;
 	private List<SmFacility> applStoreFacilities;
 	private String bumiRecommendationNote;
+	private String roleCode;
 
 	private String revTypeParam;
 	private int maxTab;
@@ -1055,6 +1056,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setSearchPmZoneId(Long searchPmZoneId) {
 		this.searchPmZoneId = searchPmZoneId;
+	}
+
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 	}
 
 }
