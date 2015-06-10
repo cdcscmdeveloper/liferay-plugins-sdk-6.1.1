@@ -14,6 +14,18 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
@@ -42,10 +54,13 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.web.backingbean.fl.pr.FLCtSupplierItemVO;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.CtActiveContractVO;
 
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -110,7 +125,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
-	private TreeNode contractListTree;
 	private List<CtActiveContractVO> contractListTable;
 
 	//getSI
@@ -266,6 +280,67 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	//display gst info
 	private String gstRegistrationNo;
 	private Date gstRegistrationDate;
+	
+	/** The active contract list document data model. */
+	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
+	
+	private class ActiveContractPagingDataModel extends PagingDataModel<VCtActiveContract> {
+		
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new action contract list paging data model.
+		 */
+		public ActiveContractPagingDataModel() {
+			super("ctListDt", true);
+		}
+		
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<VCtActiveContract> pageChangeListener(ISearchBean<VCtActiveContract> searchBean) {
+			try {
+				searchBean.setUseEntityClass(true);
+				
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				FacesScopes facesScopes = new FacesScopes();
+				if (facesScopes.getUserSessionBean().getUserId() == null) {
+					throw new IllegalArgumentException("userId cannot be null");
+				}	
+				userReqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				Long orgProfileId = userResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+				
+				IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(orgProfileId);
+				Long ministryId = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile().getOrgProfileId();
+				
+				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+				ContractReqDTO contractReqDTO = new ContractReqDTO();
+				contractReqDTO.setActiveContractSearchBean(searchBean);
+				contractReqDTO.setMinistryId(ministryId);
+				contractReqDTO.setOrgProfileId(orgProfileId);
+				ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReqDTO);
+				
+				if(resDTO.isSuccessful()) {
+					for(VCtActiveContract vCtActiveContract : resDTO.getActiveContractResultBean().getResultList()) {
+						if(vCtActiveContract.getFulfilmentType().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
+							contractReqDTO.setContractId(vCtActiveContract.getContractId());
+							vCtActiveContract.setActiveContractSubList(contractSO.retrieveScheduleInfoForContract(contractReqDTO).getActiveContractList());
+						}
+					}
+					return resDTO.getActiveContractResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
 	
 	/**
 	 * @param chargeLineItemRoot the chargeLineItemRoot to set
@@ -1521,37 +1596,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.supplierBranchesList = supplierBranchesList;
 	}
 
-
-	/**
-	 * @return the addressManualTypesList
-	 *//*
-	public List<PmAddressType> getAddressManualTypesList() {
-		return addressManualTypesList;
-	}
-
-
-	*//**
-	 * @param addressManualTypesList the addressManualTypesList to set
-	 *//*
-	public void setAddressManualTypesList(List<PmAddressType> addressManualTypesList) {
-		this.addressManualTypesList = addressManualTypesList;
-	}*/
-	/**
-	 * @return the contractListTree
-	 */
-	public TreeNode getContractListTree() {
-		return contractListTree;
-	}
-
-
-	/**
-	 * @param contractListTree the contractListTree to set
-	 */
-	public void setContractListTree(TreeNode contractListTree) {
-		this.contractListTree = contractListTree;
-	}
-
-
 	/**
 	 * @return the deliveryTerm
 	 */
@@ -2565,6 +2609,14 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverList(List<String> approverList) {
 		this.approverList = approverList;
+	}
+
+	public IPagingDataModel<VCtActiveContract> getActiveContractDataModel() {
+		return activeContractDataModel;
+	}
+
+	public void setActiveContractDataModel(IPagingDataModel<VCtActiveContract> activeContractDataModel) {
+		this.activeContractDataModel = activeContractDataModel;
 	}
 
 }

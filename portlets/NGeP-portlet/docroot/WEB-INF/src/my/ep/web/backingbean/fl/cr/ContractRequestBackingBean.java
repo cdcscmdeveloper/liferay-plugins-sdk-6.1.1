@@ -115,7 +115,6 @@ import my.ep.jaxb.fl.phis.codata.FLPHISContractOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
@@ -180,7 +179,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.CtActiveContractVO;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -2852,62 +2850,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		return isAnyAddrSelected;
 	}
-	private void populateContractListTree() {
-		Map<Long, TreeNode> contractTree = new HashMap<Long, TreeNode>();
-
-		TreeNode root = getManagedBean().getContractListTree();
-		root = new DefaultTreeNode("root", null);
-		TreeNode parent = null;
-		
-		for(VCtActiveContract vCtActiveContract : getManagedBean().getActiveContractList()){
-			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
-				parent = contractTree.get(vCtActiveContract.getContract().getContractId());
-					new DefaultTreeNode(
-						new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
-			}else{
-				parent = new DefaultTreeNode(
-						new CtActiveContractVO(vCtActiveContract.getContractNo(),vCtActiveContract.getContract().getContractName(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId()),root);
-				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-					new DefaultTreeNode(
-							new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId()),parent);
-				}
-				
-				contractTree.put(vCtActiveContract.getContract().getContractId(),parent);
-			}
-		}
-		getManagedBean().setContractListTree(root);
-		
-	}
 	
-	private void populateContractList() {
-		Map<Long, CtActiveContractVO> contractTree = new HashMap<Long, CtActiveContractVO>();
-		getManagedBean().setContractListTable(new ArrayList<CtActiveContractVO>());
-		CtActiveContractVO activeContract = null;
-		CtActiveContractVO subActiveContract = null;
-		for(VCtActiveContract vCtActiveContract : getManagedBean().getActiveContractList()){
-			if(contractTree.containsKey(vCtActiveContract.getContract().getContractId())){
-				activeContract = contractTree.get(vCtActiveContract.getContract().getContractId());
-				if(activeContract.getActiveContractSubList() == null){
-					activeContract.setActiveContractSubList(new ArrayList<CtActiveContractVO>());
-				}
-				subActiveContract = new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
-				activeContract.getActiveContractSubList().add(subActiveContract);
-			}else{
-				activeContract = 
-					new CtActiveContractVO(vCtActiveContract.getContractNo(),vCtActiveContract.getContract().getContractName(),"","",vCtActiveContract.getCircularNo(),vCtActiveContract.getStartEffective(),vCtActiveContract.getEndEffective(),vCtActiveContract.getFulfilmentType(),vCtActiveContract.getContractType(),vCtActiveContract.getBusinessRegno(),vCtActiveContract.getMofNo(),vCtActiveContract.getSupplierName(),vCtActiveContract.getContract().getContractId());
-				if(vCtActiveContract.getFulfilmentType().getParameterCode().equalsIgnoreCase(ParameterConst.FULFILMENT_TYPE_SCHEDULED)){
-					if(activeContract.getActiveContractSubList() == null){
-						activeContract.setActiveContractSubList(new ArrayList<CtActiveContractVO>());
-					}
-					subActiveContract = new CtActiveContractVO("","",vCtActiveContract.getScheduleNo(),vCtActiveContract.getPhaseNo(),"",vCtActiveContract.getPeriodStart(),vCtActiveContract.getPeriodEnd(),null,null,"","","",vCtActiveContract.getContract().getContractId());
-					activeContract.getActiveContractSubList().add(subActiveContract);				
-				}
-				getManagedBean().getContractListTable().add(activeContract);
-				
-				contractTree.put(vCtActiveContract.getContract().getContractId(),activeContract);
-			}
-		}
-	}
 	/**
 	 * Update delivery date based on delivery Term and uomCode.
 	 */
@@ -3535,25 +3478,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			addr.setSelectedChargeItem(false);
 		}
 	}
+	
 	/**
 	 * Pre-render contract list
 	 */
 	public void preRenderContractList() {
-		
-		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-
-		reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-		FulfilmentResDTO resDTO = requestSO.retrieveActiveContractList(reqDTO);
-		getManagedBean().setActiveContractList(resDTO.getActiveContractList());
-		getManagedBean().setPmOrgProfile(resDTO.getPmOrgProfile());
-		populateContractList();
-		populateContractListTree();
-		
 		FacesContext fc=FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "crList?faces-redirect=true");
-		
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crList?faces-redirect=true");
 	}
 	
 	private void checkMinimumQtyItem(FlFulfilmentRequest flRequest){
