@@ -59,7 +59,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.CtActiveContractVO;
 
 import org.primefaces.model.TreeNode;
 
@@ -125,7 +124,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
-	private List<CtActiveContractVO> contractListTable;
 
 	//getSI
 	private FlShippingInstr shippingInstr;
@@ -2333,14 +2331,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setValidated(boolean validated) {
 		this.validated = validated;
-	}
-
-	public List<CtActiveContractVO> getContractListTable() {
-		return contractListTable;
-	}
-
-	public void setContractListTable(List<CtActiveContractVO> contractListTable) {
-		this.contractListTable = contractListTable;
 	}
 
 	/**
