@@ -29,6 +29,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -8919,6 +8920,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		Integer size = 1024 * 60;
 		
 		return size;
+	}
+	
+	
+	public String getInvalidFileSize(String params){
+		
+		String msg = "";
+		  Locale locale = new FacesScopes().getUserLocale();
+		  
+		   msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+params} ,
+		     ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+		
+		return msg;
 	}
 
 
