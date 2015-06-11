@@ -897,7 +897,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 	if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
 		 		 reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 		 	} else { // default to ministry
-		 		reqDTO.setOrgProfileId(retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+		 	
+		 	   reqDTO.setOrgProfileId(retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 		 	}
 		 	reqDTO.setApprovalLimit(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
 		 	resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -1548,7 +1549,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		     ctAgreementParty.setAgreementPartyType(getParameterByTypeAndCode(
 		    		 ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
 	         ctAgreementParty.setOfficer(new PmUser());
-		     ctAgreementParty.setOrgProfile(new PmOrgProfile());
+		     if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)){
+		    	 ctAgreementParty.setOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile());
+		     }else{
+		    	 ctAgreementParty.setOrgProfile(new PmOrgProfile());
+		     }
 		     getManagedBean().getCtAgencySigner().add(ctAgreementParty);
 		} else {
 			 throw new EpException(MessageConst.WARN_755003);
@@ -1648,8 +1653,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				ctParty.setOfficerPosition(null);
 			  
 			} else if (party.equals(ctParty) && ctParty.getOfficer().getUserId() != null) {
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserId(ctParty.getOfficer().getUserId());
 				UserResDTO resDTO = userSO.retrieveUserByUserId(reqDTO);
@@ -1657,9 +1661,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				party.setOfficerIc(resDTO.getPmUser().getIdentificationNo());
 				party.setOfficerPosition(resDTO.getPmUser().getDesignation());
 			}
-			if(party.getOfficer().getUserId() != null && ctParty.getOfficerIc() != null 
-					&& party.getOfficer().getIdentificationNo() != null
-					&& party.getOfficer().getIdentificationNo().equalsIgnoreCase(ctParty.getOfficerIc())) {
+			if( ctParty.getOfficer() != null  && ctParty.getOfficer().getUserId() != null 
+					&& ctParty.getOrgProfile().getOrgProfileId().equals(party.getOrgProfile().getOrgProfileId())
+					&& ctParty.getOfficer().getUserId().equals(party.getOfficer().getUserId())) {
 				counter++;
 				if (counter == 2) {
 					getManagedBean().setValidateWitness(true);
@@ -1789,22 +1793,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			ctParty.setOfficerIc(null);
 			ctParty.setOfficerPosition(null);
 		}
+	
 		int counter = 0;
 		for (CtAgreementParty party : getManagedBean().getCtSupplierSigner()) {
-			if (party.equals(ctParty) && ctParty.getOfficer().getUserId() == null) {
-				party.setOfficerIc(null);
-				party.setOfficerPosition(null);
+			if (ctParty.getOfficerName() == null) {
+			    	party.setOfficerIc(null);
+				   party.setOfficerPosition(null);
 			}
-			if (ctParty.getOfficer().getUserId() != null && party.getOfficerIc() != null
-					&& ctParty.getOfficerIc() != null && party.getOfficerIc().equalsIgnoreCase(ctParty.getOfficerIc())) {
+			if (ctParty.getOfficerIc() != null && party.getOfficerIc() != null
+					&&  party.getOfficerIc().equalsIgnoreCase(ctParty.getOfficerIc())) {
 				counter++;
 				if (counter == 2) {
 					getManagedBean().setValidateWitness(true);
 					throw new EpException(MessageConst.WARN_755007, new String[]{ctParty.getOfficerIc()});
 				}
 			} else if (getManagedBean().getSupplierOfficerIcNo() != null && ctParty.getOfficerIc() != null
-					&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() && ctParty.getOfficer().getUserId() != null
-					&& getManagedBean().getSupplierOfficerIcNo().contains(ctParty.getOfficerIc())) {
+					&& !getManagedBean().getSupplierOfficerIcNo().isEmpty() && getManagedBean().getSupplierOfficerIcNo().contains(ctParty.getOfficerIc())) {
 				getManagedBean().setValidateWitness(true);
 				throw new EpException(MessageConst.WARN_755008, new String[]{ctParty.getOfficerIc()});
 			}
