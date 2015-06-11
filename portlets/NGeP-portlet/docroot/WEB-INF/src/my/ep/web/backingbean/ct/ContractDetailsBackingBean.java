@@ -1476,7 +1476,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  			} else if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  			}
-	  		} else if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  		} else if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  			getManagedBean().setSelectedTabIndex(4);
 	  			if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  					ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
