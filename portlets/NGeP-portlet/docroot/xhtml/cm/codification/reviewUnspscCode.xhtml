@@ -87,7 +87,7 @@
 			<p:panel header="#{lbl['lbl.cm.search.recommend']}" toggleable="true">
 
 				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.cm.search']}" update="@form"
+					<p:commandButton value="#{lbl['lbl.cm.search']}" update="@form" disabled="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes.size() >=1}"
 						action="#{unspscCodeBackingBean.navigateToSearch}"
 						rendered="#{unspscCodeBackingBean.catalogueAdmin}"></p:commandButton>
 				</div>
