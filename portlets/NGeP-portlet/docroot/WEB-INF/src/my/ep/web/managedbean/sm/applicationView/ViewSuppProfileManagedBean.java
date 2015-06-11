@@ -8,6 +8,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
@@ -23,6 +24,7 @@ public class ViewSuppProfileManagedBean extends
 	 */
 	private static final long serialVersionUID = -9029253736925390560L;
 	private SmSupplier selectedSupplier;
+	private SmSupplierCategory selectedCategory;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewSuppProfileManagedBean() {
@@ -99,6 +101,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSelectedSupplier(SmSupplier selectedSupplier) {
 		this.selectedSupplier = selectedSupplier;
+	}
+
+	public SmSupplierCategory getSelectedCategory() {
+		return selectedCategory;
+	}
+
+	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
+		this.selectedCategory = selectedCategory;
 	}
 
 }
