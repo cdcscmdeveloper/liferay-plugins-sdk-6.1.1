@@ -34,6 +34,7 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SoftcertUploadSuppDocVO;
 
@@ -258,7 +259,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						getManagedBean().setFreeSoftCertPersonnel(personnel);
 					}
 				} else {
-					amountPerPersonnel = new BigDecimal(150);
+					amountPerPersonnel = new BigDecimal(SmRuleHelper
+							.getInstance().getSoftCertFee());
 				}
 				this.getManagedBean().getPaymentMap()
 						.put(personnel.getPersonnelId(), amountPerPersonnel);
@@ -371,7 +373,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							.getMessage("lbl.sm.softcert.firstfree", null)
 					+ ")";
 		} else {
-			return "150.00";
+			return new BigDecimal(SmRuleHelper.getInstance().getSoftCertFee())
+					.setScale(2, BigDecimal.ROUND_UP).toString();
 		}
 	}
 
