@@ -695,7 +695,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.openConnection();
 
 			// just want to do an HTTP POST here
-			connection.setRequestMethod("GET");
+			connection.setRequestMethod("POST");
 
 			// uncomment this if you want to write output to this url
 			connection.setDoOutput(true);
@@ -1065,9 +1065,4 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	public void setPaymentBean(PaymentBean paymentBean) {
 		this.paymentBean = paymentBean;
 	}
-	
-	public FacesScopes getFacesScope(){
-		return new FacesScopes();
-	}
-
 }
