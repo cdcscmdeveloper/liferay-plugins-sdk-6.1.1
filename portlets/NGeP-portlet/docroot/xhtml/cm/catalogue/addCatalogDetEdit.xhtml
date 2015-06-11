@@ -15,6 +15,18 @@
 
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
+
+
+	<script>
+		function clearInvalidFileMsg() {
+
+			importDevicesWidget.uploadContent.find("tr.ui-state-error")
+					.remove();
+
+		}
+	</script>
+
+
 	<h:panelGroup
 		rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
 		<script>
@@ -152,13 +164,14 @@
 						</h:panelGroup> <p:commandLink style="margin-left: 200px;padding-right: 10px;"
 							title="#{lbl['lbl.cm.upload']}"
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
-							onclick="imageDialog.show()">
+							onclick="imageDialog.show(); clearInvalidFileMsg();">
 							<p:graphicImage value="/css/images/design/upload.png"
 								style="margin-top:10px;"></p:graphicImage>
 						</p:commandLink> <p:commandLink
 							rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus != 'P' and catalogueBackingBean.managedBean.displayCatalogue and !unspscCodeBackingBean.supplierTemp}"
 							title="Delete" oncomplete="deleteImage.show()">
-							<p:graphicImage style="padding-top:10px;" value="/css/images/design/trash.png"></p:graphicImage>
+							<p:graphicImage style="padding-top:10px;"
+								value="/css/images/design/trash.png"></p:graphicImage>
 						</p:commandLink></td>
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.item.code']}" /></td>
@@ -236,16 +249,17 @@
 			width="700px" resizable="false" styleClass="pop_up_top">
 
 
-			<p:fileUpload
+			<p:fileUpload widgetVar="importDevicesWidget"
 				fileUploadListener="#{catalogueBackingBean.imageUpload}"
 				cancelLabel="#{lbl['lbl.btn.cancel']}"
+				sizeLimit="#{catalogueBackingBean.getImageSize()}"
 				uploadLabel="#{lbl['lbl.btn.upload']}"
+				invalidSizeMessage="#{catalogueBackingBean.getInvalidFileSize('60')}"
 				label="#{lbl['lbl.btn.choose']}" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP files are accepted"
 				oncomplete="refresh();" multiple="true">
 			</p:fileUpload>
-
 		</p:dialog>
 
 
