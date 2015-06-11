@@ -702,7 +702,10 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IDirectPurchaseSO.class);
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			ScQuote quote = getManagedBean().getScQuote();
-
+			
+			// validate start date and end date
+			validateStartDateAndEndDate(quote);
+			
 			if(quote.getRequestItems() == null){
 				List<ScRequestItem> requestItems = new ArrayList<ScRequestItem>();
 				ScRequestItem requestItem = new ScRequestItem();
@@ -1866,8 +1869,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quoteZone.setModified(Boolean.TRUE);
 			quoteZone.setScQuote(scQuote);
 			tplSpecZoneDtl.setTplSpecZone(quoteZone);
+			
+			if(null != getManagedBean().getZoneName() || "".equals(getManagedBean().getZoneName()) ){
+                throw new EpException(MessageConst.ERROR_716003);
+			} 
+			
 			tplSpecZoneDtl.setZoneName(getManagedBean().getZoneName());
-
 			List<PmState> states = SourcingLocationHelper
 					.getStateFromLocationDTO(locationDTOs);
 			List<PmDivision> divisions = SourcingLocationHelper
@@ -1905,7 +1912,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 					checkDuplicateStateOrDivOrDist(tplSpecZoneDtl);
 				}
 			}
-
 			beans.add(zonesBean);
 
 			if (getManagedBean().getZoneIndex() == -1) {
@@ -2731,14 +2737,32 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 */
 	public void dateListener() {
 		ScQuote quote = getManagedBean().getScQuote();
-		if (quote.getStartDate() != null &&  quote.getEndDate() != null){
-
-			if(quote.getEndDate().after(quote.getStartDate())){
-				getManagedBean().setDuration(getTimeDiff(quote.getEndDate(),  quote.getStartDate()));
-			} else{
+		
+		// validate start date and end date
+		validateStartDateAndEndDate(quote);
+		
+		// calculate duration
+		calculateDuration(quote);
+	}
+	
+	/**
+	 * Validate start date and end date.
+	 * @param quote the quote
+	 */
+	private void validateStartDateAndEndDate(ScQuote quote) {
+		if(quote.getStartDate() != null && quote.getEndDate() != null){
+			if(quote.getEndDate().before(quote.getStartDate()) || quote.getStartDate().equals(quote.getEndDate())){
 				throw new EpException(MessageConst.ERROR_760164);
 			}
 		}
+	}
+	
+	/**
+	 * Calculate duration.
+	 * @param quote the quote
+	 */
+	public void calculateDuration(ScQuote quote) {
+		getManagedBean().setDuration(getTimeDiff(quote.getEndDate(), quote.getStartDate()));
 	}
 
 	/**
@@ -2747,7 +2771,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * @param dateTwo the date two
 	 * @return the time diff
 	 */
-	public static double getTimeDiff(Date dateOne, Date dateTwo) {
+	private static double getTimeDiff(Date dateOne, Date dateTwo) {
 		long timeDiff = Math.abs(dateOne.getTime() - dateTwo.getTime());
 		String hours = String.format("%d", TimeUnit.MILLISECONDS.toHours(timeDiff));
 		String mins = String.format("%d", (TimeUnit.MILLISECONDS.toMinutes(timeDiff) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(timeDiff))));
@@ -3562,7 +3586,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				}
 			}
 			// duration calc
-			dateListener();
+			calculateDuration(scQuote);
 			procurementTypeEvent();
 
 			StatusReqDTO statusReqDTO = new StatusReqDTO();

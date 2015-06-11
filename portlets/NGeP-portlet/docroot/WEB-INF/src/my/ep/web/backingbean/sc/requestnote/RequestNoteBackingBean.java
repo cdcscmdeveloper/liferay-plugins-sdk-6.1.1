@@ -2211,8 +2211,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					ScRequestSupplierItem requestSupplierItem = scRequestNoteDtl.getScRequestSupplierItem();
 					ScRequestItem requestItem = scRequestNoteDtl.getRequestItem();
 					
-					// TODO selected ptj id for non contract item for pid
-					
+					// selected ptj id for non contract item for pid
 					purchaseInDefaultReqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 					purchaseInDefaultReqDTO.setItemCode(scRequestNoteDtl.getRequestItem().getCmItem().getExtensionCode()) ;
 					PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefaultByItemCode(purchaseInDefaultReqDTO);
@@ -2231,7 +2230,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 					// request Note Items
 					requestNoteItems.add(requestItem);
-					//TODO call initialInformation &  fulfilmentTypeEvent methods based on ptj
+					//call initialInformation &  fulfilmentTypeEvent methods based on ptj
 					//initialInformation(scRequestNoteDtl.getScRequestNote());
 					//fulfilmentTypeEvent(scRequestNoteDtl);
 				}
@@ -2303,7 +2302,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				// disable all for pid view
 				purchaseInDefaultBackingBean.getManagedBean().setPidBtnFlag(Boolean.FALSE);
 				
-				// TODO current page url for page navigation from pid to request note
+				// current page url for page navigation from pid to request note
 				purchaseInDefaultBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			} 
 		}
@@ -2380,7 +2379,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			// title checker
 			purchaseInquiryBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
-			// TODO current page url for page navigation from pid to request note
+			// current page url for page navigation from pid to request note
 			purchaseInquiryBackingBean.getManagedBean().setRnToPIFlag(Boolean.TRUE);
 			purchaseInquiryBackingBean.getManagedBean().setPageNavToRequestNote(fc.getViewRoot().getViewId());
 			fc = FacesContext.getCurrentInstance();
@@ -2534,6 +2533,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					}
 					simpleQuoteBackingBean.getManagedBean().setScQuote(scQuote);
 				}
+				
+				// duration calc
+				simpleQuoteBackingBean.calculateDuration(scQuote);
 			}
 			// country id
 			CountryReqDTO countryReqDTO = new CountryReqDTO();
@@ -2542,18 +2544,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			CountryResDTO resDTO = reqSO.retrieveCountryByCode(countryReqDTO);
 			simpleQuoteBackingBean.getManagedBean().setDefaultCountryId(resDTO.getPmCountry().getCountryId());
 			simpleQuoteBackingBean.getManagedBean().setRequestNote(getManagedBean().getRequestNote());
-			// duration calc
-			try {
-				simpleQuoteBackingBean.dateListener();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 
 			//procurementTypeEvent();
 			// title checker
 			simpleQuoteBackingBean.getManagedBean().setTitleChecker(Boolean.FALSE);
 
-			// TODO current page url for page navigation from pid to request note
+			// current page url for page navigation from sq to request note
 			simpleQuoteBackingBean.getManagedBean().setRnToSQFlag(Boolean.FALSE);
 			simpleQuoteBackingBean.getManagedBean().setNewableFlag(Boolean.FALSE);
 			simpleQuoteBackingBean.getManagedBean().setEditableFlag(Boolean.FALSE);
