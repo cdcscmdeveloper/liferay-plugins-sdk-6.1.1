@@ -2327,12 +2327,18 @@ public class QTDetailBackingBean extends
 									new ArrayList<ScQtSupplier>());
 						}
 					}
-
-					if (!isQuotationThresHold(scQt.getEstimatedAmount())
+					
+					boolean isQuotationThresHold = isQuotationThresHold(scQt
+							.getEstimatedAmount());
+					if (!isQuotationThresHold
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
-					} else {
+					}
+					
+					if (isQuotationThresHold
+							&& SourcingConstants.QT_TYPE_OPEN
+									.equalsIgnoreCase(scQt.getQtType())) {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
 							scQt.getScQtSupplierCriteria().setLocationLevel(
@@ -2381,11 +2387,16 @@ public class QTDetailBackingBean extends
 					}
 				} else {
 					ScQt scQt = this.getManagedBean().getQt();
-					if (!isQuotationThresHold(scQt.getEstimatedAmount())
+					boolean isQuotationThresHold = isQuotationThresHold(scQt
+							.getEstimatedAmount());
+					if (!isQuotationThresHold
 							&& this.getManagedBean().getAllStateCode() == PTJLocalityCode.STATE_PENINSULAR
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
-					} else {
+					}
+					if (isQuotationThresHold
+							&& SourcingConstants.QT_TYPE_OPEN
+									.equalsIgnoreCase(scQt.getQtType())) {
 						if (null == scQt.getScQtSupplierCriteria()
 								.getLocationLevel()) {
 							scQt.getScQtSupplierCriteria().setLocationLevel(
@@ -3059,7 +3070,7 @@ public class QTDetailBackingBean extends
 			ScQt scQt = this.getManagedBean().getQt();
 			if (null == scQt
 					|| (scQt.isZonal()
-							&& !scQt.isPanel()
+							/*&& !scQt.isPanel()*/
 							&& null != this.getManagedBean()
 									.getZoneGeneralTrees() && this
 							.getManagedBean().getZoneGeneralTrees().isEmpty())) {
