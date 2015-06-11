@@ -14,6 +14,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
  */
 public class SmRuleHelper {
 
+	private static SmRuleHelper instance;
+
 	public int getApplicationSubmissionDays() {
 		return 60;
 	}
@@ -115,7 +117,7 @@ public class SmRuleHelper {
 			ruleSO = null;
 		}
 	}
-	
+
 	public int getProcessingFee() {
 		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.MOF_PROCESSING_FEE);
 		if (ruleResDTO != null && ruleResDTO.isSuccessful()
@@ -128,7 +130,7 @@ public class SmRuleHelper {
 			return 50;
 		}
 	}
-	
+
 	public int getRegistrationFee() {
 		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.MOF_REGISTRATION_FEE);
 		if (ruleResDTO != null && ruleResDTO.isSuccessful()
@@ -141,7 +143,7 @@ public class SmRuleHelper {
 			return 400;
 		}
 	}
-	
+
 	public int getSoftCertFee() {
 		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.SOFT_CERT_FEE);
 		if (ruleResDTO != null && ruleResDTO.isSuccessful()
@@ -153,5 +155,12 @@ public class SmRuleHelper {
 
 			return 150;
 		}
+	}
+
+	public static SmRuleHelper getInstance() {
+		if (instance == null) {
+			instance = new SmRuleHelper();
+		}
+		return instance;
 	}
 }
