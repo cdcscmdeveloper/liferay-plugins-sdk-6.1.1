@@ -241,53 +241,21 @@
 
 				<ac:paginator for="negoTermList" />
 
-				<p:column selectionMode="multiple" style="width:2%"
-					rendered="#{!isPendingNegotiationStatus}"  disabledSelection="#{!empty scLoiTerm.pmTerm}"/>
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}">
 					<p:inputTextarea value="#{scLoiTerm.termDesc}" rows="2"
 						maxlength="500" style=" margin-bottom:5px; width:92%"
 						rendered="#{scLoiTerm.brandNew and !isPendingNegotiationStatus}" />
 
-					<h:outputText value="#{scLoiTerm.termDesc}"
-						rendered="#{!scLoiTerm.brandNew}" />
-
+					<h:outputText value="#{scLoiTerm.termDesc}" rendered="#{!scLoiTerm.brandNew}" />
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-						<h:outputText value="* " styleClass="mandatory" rendered="#{isPendingNegotiationStatus}" />
+						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.loiloa.nego.results']}" />
 					</f:facet>
-					<p:inputTextarea value="#{scLoiTerm.negoResult}" rows="2"
-						maxlength="500" rendered="#{!isPendingNegotiationStatus}"
-						style=" margin-bottom:5px; width:92%">
-						<p:ajax partialSubmit="true" process="@this" update="@this" />
-					</p:inputTextarea>
-
-					<h:outputText value="#{scLoiTerm.negoResult}"
-						rendered="#{isPendingNegotiationStatus}"></h:outputText>
+					<h:outputText value="#{scLoiTerm.negoResult}" />
 				</p:column>
 			</p:dataTable>
-
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this, negoTermList" partialSubmit="true"
-					action="#{lOIDetailBackingBean.addNegotiationTerm}"
-					oncomplete="negoTermListWidget.paginator.endLink.click();"
-					update="negoTermList"
-					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and !isPendingNegotiationStatus}" />
-
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					process="@this, negoTermList" partialSubmit="true"
-					rendered="#{!empty lOIDetailBackingBean.managedBean.scLoi and !isPendingNegotiationStatus}"
-					oncomplete="negoTermDeletePopUp.show();"
-					update="@([id$=#{negoTermDeleteId}])" />
-			</div>
-			<ac:confirmationPopup id="negoTermDeleteId"
-				widget="negoTermDeletePopUp"
-				okAction="lOIDetailBackingBean.deleteMultipleLoiNegoTerm"
-				width="400" height="100"
-				title="#{lbl['lbl.msg.confirm.delete.header']}"
-				content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 
 		</p:panel>
 	</h:panelGroup>
