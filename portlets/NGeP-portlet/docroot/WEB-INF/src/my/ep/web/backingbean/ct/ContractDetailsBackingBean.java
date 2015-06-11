@@ -819,6 +819,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() < DateUtils.getCurrentDateWithoutTime().getTime()) {
 			getManagedBean().getContractVer().setAsAtDate(getManagedBean().getContractVer().getCtContractValue().getExpDate());
 		}
+		// Default to contract effective date if the effective date is future date
+		else if (getManagedBean().getContractVer().getCtContractValue().getEffDate().getTime() > DateUtils.getCurrentDateWithoutTime().getTime()) {
+			getManagedBean().getContractVer().setAsAtDate(getManagedBean().getContractVer().getCtContractValue().getEffDate());
+		}
 		updateAsAtDate();
 		
 		// Get performance bond rule amount
