@@ -3483,6 +3483,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * Pre-render contract list
 	 */
 	public void preRenderContractList() {
+		getManagedBean().getActiveContractDataModel().resetData();
 		FacesContext fc=FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "crList?faces-redirect=true");
 	}
