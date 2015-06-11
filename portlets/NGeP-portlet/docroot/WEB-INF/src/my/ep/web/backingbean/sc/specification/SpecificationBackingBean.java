@@ -2007,8 +2007,9 @@ public class SpecificationBackingBean extends
 									scQt.getScQtSuppliers().size());
 						}
 					}
-					
-					boolean isQuotationThresHold = isQuotationThresHold(scQt.getEstimatedAmount());
+
+					boolean isQuotationThresHold = isQuotationThresHold(scQt
+							.getEstimatedAmount());
 					if (!isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
@@ -2079,8 +2080,9 @@ public class SpecificationBackingBean extends
 				} else {
 					this.getManagedBean().setPanelItemCategory("");
 					ScQt scQt = this.getManagedBean().getScQt();
-					boolean isQuotationThresHold = isQuotationThresHold(scQt.getEstimatedAmount());
-					
+					boolean isQuotationThresHold = isQuotationThresHold(scQt
+							.getEstimatedAmount());
+
 					if (!isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())
@@ -4497,6 +4499,11 @@ public class SpecificationBackingBean extends
 			}
 			TplSpecZoneDtl zone = new TplSpecZoneDtl();
 
+			if (null == getManagedBean().getZoneName()
+					|| StringUtils.isBlank(getManagedBean().getZoneName())) {
+				throw new EpException("Zone Name is Mandatory.");
+			}
+
 			zone.setZoneName(getManagedBean().getZoneName());
 
 			List<PmState> states = SourcingLocationHelper
@@ -4940,7 +4947,8 @@ public class SpecificationBackingBean extends
 			}
 
 			if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
-					&& !isQuotationThresHold(this.getManagedBean().getScQt().getEstimatedAmount())
+					&& !isQuotationThresHold(this.getManagedBean().getScQt()
+							.getEstimatedAmount())
 					&& this.getManagedBean().getScQt()
 							.getScQtSupplierCriteria().isAllState()) {
 				if (null != qtSupplierCriteria) {
@@ -5866,9 +5874,10 @@ public class SpecificationBackingBean extends
 		try {
 			parameterSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-			
-			boolean isQuotationThresHold = isQuotationThresHold(scQt.getEstimatedAmount());
-			
+
+			boolean isQuotationThresHold = isQuotationThresHold(scQt
+					.getEstimatedAmount());
+
 			if (isOneTierThresHold(scQt.getEstimatedAmount())) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
@@ -7685,7 +7694,8 @@ public class SpecificationBackingBean extends
 					if (null == document.getDisplaySeq()) {
 						scqtlist.setChecklistSeq(new Integer(10));
 					} else {
-						scqtlist.setChecklistSeq(new Integer(document.getDisplaySeq()));
+						scqtlist.setChecklistSeq(new Integer(document
+								.getDisplaySeq()));
 					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
@@ -7841,7 +7851,8 @@ public class SpecificationBackingBean extends
 					if (null == document.getDisplaySeq()) {
 						scqtlist.setChecklistSeq(new Integer(10));
 					} else {
-						scqtlist.setChecklistSeq(new Integer(document.getDisplaySeq()));
+						scqtlist.setChecklistSeq(new Integer(document
+								.getDisplaySeq()));
 					}
 					scqtlist.setScQt(this.getManagedBean().getScQt());
 
@@ -12903,7 +12914,8 @@ public class SpecificationBackingBean extends
 		recommendList.add(ParameterConst.QUOTATION_TENDER_TYPE_OPEN);
 		if (null != this.getManagedBean().getScQt()
 				&& null != this.getManagedBean().getScQt().getEstimatedAmount()
-				&& !isQuotationThresHold(this.getManagedBean().getScQt().getEstimatedAmount())) {
+				&& !isQuotationThresHold(this.getManagedBean().getScQt()
+						.getEstimatedAmount())) {
 			recommendList
 					.add(ParameterConst.QUOTATION_TENDER_TYPE_RESTRICTED_TENDER);
 		}
