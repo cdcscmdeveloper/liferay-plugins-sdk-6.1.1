@@ -951,4 +951,46 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		reqDTO.setOrgProfileId(orgProfileId);
 		return profileSO.retrievePegawaiPengawalByOrgProfileId(reqDTO).getPmOrgProfile();
 	}
+	
+	/**
+	 * Download file.
+	 */
+	public void downloadFile(String filePath) throws IOException{
+		File file = new File(filePath);
+		log.info("download file>>>>");
+		try{
+			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+			res.setHeader( "Content-Disposition", "attachment; filename=\"" + file.getName() + "\"" );//
+			res.setHeader( "Content-Transfer-Encoding", "binary" );
+			res.setContentType("application/octet-stream");
+			res.flushBuffer();
+			OutputStream out = res.getOutputStream();   
+			if(file.getPath()!=null) {
+				log.info("file path not null>>>>");
+				InputStream input = null;
+				try {
+					URLConnection uc = new URL(file.getPath()).openConnection();
+					input = new BufferedInputStream(uc.getInputStream()); 
+				} catch (Exception e) {
+					log.info("It's Local file>>>>");
+					// Cannot open connection, maybe local file
+					input = new FileInputStream(file.getPath());
+				}
+				byte[] buffer = new byte[4096];
+				int bytesRead;
+				while ((bytesRead = input.read( buffer )) != -1){ 
+					out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+				}
+				input.close();			
+			} else {
+				//out.write(attachment.getFileByte());
+			}
+			out.flush();
+			out.close(); 
+			FacesContext.getCurrentInstance().responseComplete();
+		}catch(Exception ex){
+			log.error("download exception>>>>" + ex.getMessage());
+		}
+	}
 }

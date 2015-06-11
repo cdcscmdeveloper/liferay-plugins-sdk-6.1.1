@@ -25,8 +25,10 @@ import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
+import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
+import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -313,7 +315,7 @@ public class SmServiceLookup {
 		return (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 	}
-	
+
 	/**
 	 * Get IZoneSO
 	 * 
@@ -322,5 +324,16 @@ public class SmServiceLookup {
 	public static IZoneSO getZoneSO() {
 		return (IZoneSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+	}
+
+	/**
+	 * Get ISupplierDataMaintenanceSO
+	 * 
+	 * @return ISupplierDataMaintenanceSO
+	 */
+	public static ISupplierDataMaintenanceSO getSupplierDataMaintenanceSO() {
+		return (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupplierDataMaintenanceSO.class);
 	}
 }

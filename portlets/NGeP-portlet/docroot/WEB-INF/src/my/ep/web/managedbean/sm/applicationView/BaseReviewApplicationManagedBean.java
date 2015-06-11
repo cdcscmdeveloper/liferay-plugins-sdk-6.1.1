@@ -90,6 +90,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String businessTypeVal;
 	private List<SmPersonnel> smapplShareHolders;
 	private List<SmSupplierCategory> activeCategoryList;
+	private List<SmSupplierCategory> approvedCategoryList;
 	private List<SmSupplierBank> smSupplierBankList;
 
 	// temp added for testing
@@ -104,6 +105,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean previousApproved;
 	private boolean original;
 	private boolean viewApplicationHistory;
+	private boolean overLappedCategoryExists;
+	private String overLappedCategoryMsg;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
 	private String catTypeConfirm;
@@ -123,6 +126,8 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private String portletUrl;
 	private String portletUrlLabel;
 	private String supplierIdParam;
+	private String regCatCodeConfirmHeader;
+	private String regCatCodeConfirmMsg;
 
 	private Long[] chequeSingPerId;
 	private Long selBankBranchId;
@@ -1085,6 +1090,47 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setCurrDate(Date currDate) {
 		this.currDate = currDate;
+	}
+
+	public List<SmSupplierCategory> getApprovedCategoryList() {
+		return approvedCategoryList;
+	}
+
+	public void setApprovedCategoryList(
+			List<SmSupplierCategory> approvedCategoryList) {
+		this.approvedCategoryList = approvedCategoryList;
+	}
+
+	public boolean isOverLappedCategoryExists() {
+		return overLappedCategoryExists;
+	}
+
+	public void setOverLappedCategoryExists(boolean overLappedCategoryExists) {
+		this.overLappedCategoryExists = overLappedCategoryExists;
+	}
+
+	public String getOverLappedCategoryMsg() {
+		return overLappedCategoryMsg;
+	}
+
+	public void setOverLappedCategoryMsg(String overLappedCategoryMsg) {
+		this.overLappedCategoryMsg = overLappedCategoryMsg;
+	}
+
+	public String getRegCatCodeConfirmHeader() {
+		return regCatCodeConfirmHeader;
+	}
+
+	public void setRegCatCodeConfirmHeader(String regCatCodeConfirmHeader) {
+		this.regCatCodeConfirmHeader = regCatCodeConfirmHeader;
+	}
+
+	public String getRegCatCodeConfirmMsg() {
+		return regCatCodeConfirmMsg;
+	}
+
+	public void setRegCatCodeConfirmMsg(String regCatCodeConfirmMsg) {
+		this.regCatCodeConfirmMsg = regCatCodeConfirmMsg;
 	}
 
 }

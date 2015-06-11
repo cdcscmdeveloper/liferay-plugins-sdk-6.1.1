@@ -609,9 +609,11 @@ public class SmApplicationBackingBean extends
 
 				if (applicationType
 						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF)) {
-					
-					//individual registration type cant proceed to upgrade to MOF
-					if(currSupp!=null && currSupp.getBusinessType().equals("A")){
+
+					// individual registration type cant proceed to upgrade to
+					// MOF
+					if (currSupp != null
+							&& currSupp.getBusinessType().equals("A")) {
 						throw new EpException(MessageConst.ERROR_722607);
 					}
 					smAppl.setSupplierType(getManagedBean()
@@ -7402,7 +7404,8 @@ public class SmApplicationBackingBean extends
 	private int assignMaxReviewCount(String appType, String applCatType,
 			String supplierType, String businessType) {
 		return SmApplicationUtil.assignMaxReviewCount(appType, applCatType,
-				supplierType, businessType, getManagedBean());
+				supplierType, businessType, getManagedBean()
+						.isReviewSiteVisit());
 	}
 
 	/**
