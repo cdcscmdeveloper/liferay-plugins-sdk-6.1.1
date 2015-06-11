@@ -77,15 +77,15 @@
 					</f:facet>
 					<ac:labelDateTime value="#{plan.createdDate}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.pp.type']}"> 
+				<p:column headerText="#{lbl['lbl.pp.type']}" > 
 					<p:outputLabel 
 					value="#{ppTrackingDiaryBackingBean.getParameterDesc(plan.planType)}" /> 
 	        	</p:column>
-				<p:column headerText="#{lbl['lbl.pp.plan.number']}">
+				<p:column headerText="#{lbl['lbl.pp.plan.number']}" >
 					<p:outputLabel 
 					value="#{plan.planNo}" />   
 	        	</p:column>
-				<p:column headerText="#{lbl['lbl.pp.plan.year']}">
+				<p:column headerText="#{lbl['lbl.pp.plan.year']}" >
 					<p:outputLabel 
 					value="#{plan.planYear}" />  
 	        	</p:column>
@@ -97,7 +97,7 @@
 					<p:commandLink
 						action="#{ppTrackingDiaryBackingBean.goToTrackingDiarySearch(plan)}">
 						<p:graphicImage
-							value="#{!plan.updatable ? '/css/images/design/document.png' : '/css/images/design/edit.png'}" />
+							value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}"/>
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
