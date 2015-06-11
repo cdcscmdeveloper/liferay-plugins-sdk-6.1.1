@@ -623,6 +623,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setServerName(fs.getRequest().getServerName());
 				pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
 				pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+				pymtReqDTO.setBackEndUpdate(false);
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				
@@ -671,7 +672,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		// List<NameValuePair> params = new ArrayList<NameValuePair>();
 		StringBuilder strParams = new StringBuilder();
 
-		while (resParameters.hasMoreElements()) {
+		/*while (resParameters.hasMoreElements()) {
 			String paramName = (String) resParameters.nextElement();
 			// params.add(new BasicNameValuePair(paramName,
 			// httpServletRequest.getParameter(paramName)));
@@ -680,8 +681,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			strParams.append("&");
 			log.info(paramName + " - "
 					+ httpServletRequest.getParameter(paramName));
-		}
+		}*/
 		strParams.append("treq=1");
+		strParams.append("sa="+merchantId);
 		log.info("StrParams>>>>>>" + strParams);
 		// URL url = null;
 		// BufferedReader reader = null;
@@ -693,7 +695,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.openConnection();
 
 			// just want to do an HTTP POST here
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod("GET");
 
 			// uncomment this if you want to write output to this url
 			connection.setDoOutput(true);
@@ -955,6 +957,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			pymtReqDTO.setServerName(fs.getRequest().getServerName());
 			pymtReqDTO.setServerPort(fs.getRequest().getServerPort());
 			pymtReqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+			pymtReqDTO.setBackEndUpdate(false);
 
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
@@ -1061,6 +1064,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	public void setPaymentBean(PaymentBean paymentBean) {
 		this.paymentBean = paymentBean;
+	}
+	
+	public FacesScopes getFacesScope(){
+		return new FacesScopes();
 	}
 
 }
