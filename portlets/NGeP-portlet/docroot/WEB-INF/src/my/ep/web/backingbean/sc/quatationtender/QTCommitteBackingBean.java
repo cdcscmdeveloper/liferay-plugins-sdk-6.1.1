@@ -553,12 +553,13 @@ public class QTCommitteBackingBean extends
 			resDTO = committeSO
 					.retrieveCommitteMembersByQtIdAndCommType(reqDTO);
 			this.getManagedBean().setCloneCommitteMemebers(null);
-			if (null != resDTO.getScQtCommittee()) {
-				if (null != resDTO.getScQtCommittee().getScCommittee().getScCommitteeMembers()
-						&& !resDTO.getScQtCommittee().getScCommittee().getScCommitteeMembers().isEmpty()) {
-					List<ScCommitteeMember> commMembers = resDTO.getScQtCommittee().getScCommittee().getScCommitteeMembers();
-					this.getManagedBean().setCloneCommitteMemebers(commMembers);
-				}
+			if (null != resDTO
+					&& null != resDTO.getCommMemberResultBean()
+					&& null != resDTO.getCommMemberResultBean().getResultList()
+					&& !resDTO.getCommMemberResultBean().getResultList()
+							.isEmpty()) {
+				this.getManagedBean().setCloneCommitteMemebers(
+						resDTO.getCommMemberResultBean().getResultList());
 			}
 		} finally {
 		}
