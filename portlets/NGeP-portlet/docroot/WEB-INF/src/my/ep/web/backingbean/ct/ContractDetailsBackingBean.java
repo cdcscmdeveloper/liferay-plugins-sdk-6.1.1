@@ -1400,8 +1400,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  		getManagedBean().setSelectedTabIndex(3);
 	  		getManagedBean().setItemIndex(3);
 		}
-	  	if (outputTab.equalsIgnoreCase("DE") && !getManagedBean().isDirectPurchase() 
-	  			&& !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  	if (outputTab.equalsIgnoreCase("DE") && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) {
 	  			getManagedBean().setSelectedTabIndex(4);
 	  		} else {
@@ -1412,13 +1411,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  	if (outputTab.equalsIgnoreCase("SC")&& getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  			ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) {  
-	  			if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  			} else {
 	  				getManagedBean().setSelectedTabIndex(4);
 	  			}
 	  		} else {
-	  			if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  				getManagedBean().setSelectedTabIndex(4);
 	  			} else {
 	  				getManagedBean().setSelectedTabIndex(3);
@@ -1430,7 +1429,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  			&& outputTab.equalsIgnoreCase("FT")) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) { 
 	  			getManagedBean().setSelectedTabIndex(4);
-	  			if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  				if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  						ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
@@ -1440,7 +1439,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	        			ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
 	        		getManagedBean().setSelectedTabIndex(5);	   
 	        	}
-	  		} else if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  		} else if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  			getManagedBean().setSelectedTabIndex(4);
 	  			if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  					ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
@@ -1457,7 +1456,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  	if (getManagedBean().isFlgPaymentTracking() && outputTab.equalsIgnoreCase("PY")) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) { 
 	  			getManagedBean().setSelectedTabIndex(4);
-	  			if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  				if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  						ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
@@ -1504,7 +1503,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  	if (outputTab.equalsIgnoreCase("SE")) {
 	  		if (getManagedBean().getCtContract().isZonalPricing()) { 
 	  			getManagedBean().setSelectedTabIndex(4);
-	  			if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  			if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  				if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  						ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
@@ -1542,7 +1541,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	  			} else if (getManagedBean().isFlgPaymentTracking()) {
 	  				getManagedBean().setSelectedTabIndex(5);
 	  			}
-	  		} else if (!getManagedBean().isDirectPurchase() && !getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
+	  		} else if (!getManagedBean().getContractVer().getCtDeductions().isEmpty()) {
 	  			getManagedBean().setSelectedTabIndex(4);
 	  			if (getManagedBean().getCtContract().getFulfillmentType().getParameterCode().equalsIgnoreCase(
 	  					ParameterConst.FULFILMENT_TYPE_SCHEDULED)) {
