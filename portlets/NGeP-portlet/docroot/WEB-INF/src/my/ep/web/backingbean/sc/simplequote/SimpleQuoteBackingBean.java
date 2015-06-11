@@ -2607,21 +2607,6 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	}
 
 	/**
-	 * Event for justification type drop down in simpleQuote.
-	 */
-	public void justificationTypeEvent() {
-		debugLogger("justificationTypeEvent");
-		/*if(getManagedBean().getScQuote().getJustificationType().getParameterCode() != null){
-			if (getManagedBean().getScQuote().getJustificationType().getParameterCode()
-					.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-				getManagedBean().setJustTypeOption(Boolean.TRUE);
-			} else {
-				getManagedBean().setJustTypeOption(Boolean.FALSE);
-			}
-		}*/
-	}
-
-	/**
 	 * Page navigation to catalogue search page from  simpleQuote.
 	 */
 	public void backToPrevious() {
@@ -4411,6 +4396,12 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 		return userName;
 	}
 
+	/**
+	 * Gets the mof nor.
+	 *
+	 * @param supplierId the supplier id
+	 * @return the mof nor
+	 */
 	private String getMofNor(Long supplierId) {
 		String mofNo = "";
 		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate

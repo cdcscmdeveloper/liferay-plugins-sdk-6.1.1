@@ -730,19 +730,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		}
 		getManagedBean().getRequestNoteDtl().setJustificationType(new PmParameter());
 	}
-		
-	/**
-	 * Event for justification type drop down in Purchase inquiry.
-	 */
-	public void justificationTypeEvent() {
-		log.info("justificationTypeEvent");
-		/*if (getManagedBean().getRequestNoteDtl().getJustificationType().getParameterCode()
-				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-			getManagedBean().setJustTypeOption(Boolean.TRUE);
-		} else {
-			getManagedBean().setJustTypeOption(Boolean.FALSE);
-		}*/
-	}
 	
 	/**
 	 * get task from task list to view purchase inquiry 

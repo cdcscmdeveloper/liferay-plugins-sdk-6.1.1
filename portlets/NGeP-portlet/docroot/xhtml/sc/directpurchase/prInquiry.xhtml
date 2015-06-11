@@ -184,8 +184,7 @@
 									  value="#{purchaseInquiryBackingBean.managedBean.requestNoteDtl.justificationType.parameterCode}">
 								   <f:selectItems
 										value="#{purchaseInquiryBackingBean.managedBean.justDropdown}" />
-									<p:ajax event="change" update="justiId" 
-										listener="#{purchaseInquiryBackingBean.justificationTypeEvent}" process="@this" />
+									<p:ajax event="change" update="justiId" process="@this" />
 								</p:selectOneMenu> <p:message id="justTypeMsg" for="justificationId" display="icon" /></td>
 								
 				    	 </ui:fragment>
