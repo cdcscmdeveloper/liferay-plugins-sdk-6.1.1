@@ -82,8 +82,7 @@
 								value="#{simpleQuoteBackingBean.managedBean.scQuote.justificationType.parameterCode}">
 							   <f:selectItems
 									value="#{simpleQuoteBackingBean.managedBean.justDropdown}" />
-								<p:ajax event="change" update="justId" 
-									listener="#{simpleQuoteBackingBean.justificationTypeEvent}" process="@this" />
+								<p:ajax event="change" update="justId" process="@this" />
 							</p:selectOneMenu> 
 								<p:message id="justTypeMsg" for="justificationId" display="icon" />
 							</td>

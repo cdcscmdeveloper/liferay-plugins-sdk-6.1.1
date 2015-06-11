@@ -1763,19 +1763,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Event for justification type drop down in Add to Cart.
-	 */
-	public void justificationTypeEvent() {
-		log.info("justificationTypeEvent");
-		/*if (getManagedBean().getJustificationType()
-				.equalsIgnoreCase(ParameterTypeConst.JUSTIFICATION_TYPE_OTHER)) {
-			getManagedBean().setJustTypeOption(true);
-		} else {
-			getManagedBean().setJustTypeOption(false);
-		}*/
-	}
-	
-	/**
 	 * show Item Details, Justification and Pricing details Popup in Request Note.
 	 *
 	 * @param scRequestNoteDtl the sc request note dtl
