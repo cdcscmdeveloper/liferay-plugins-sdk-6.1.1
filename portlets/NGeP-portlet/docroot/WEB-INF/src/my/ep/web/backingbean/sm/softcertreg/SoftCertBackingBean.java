@@ -259,8 +259,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						getManagedBean().setFreeSoftCertPersonnel(personnel);
 					}
 				} else {
-					amountPerPersonnel = new BigDecimal(SmRuleHelper
-							.getInstance().getSoftCertFee());
+					amountPerPersonnel = SmRuleHelper.getInstance()
+							.getSoftCertFee();
 				}
 				this.getManagedBean().getPaymentMap()
 						.put(personnel.getPersonnelId(), amountPerPersonnel);
@@ -373,7 +373,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							.getMessage("lbl.sm.softcert.firstfree", null)
 					+ ")";
 		} else {
-			return new BigDecimal(SmRuleHelper.getInstance().getSoftCertFee())
+			return SmRuleHelper.getInstance().getSoftCertFee()
 					.setScale(2, BigDecimal.ROUND_UP).toString();
 		}
 	}
