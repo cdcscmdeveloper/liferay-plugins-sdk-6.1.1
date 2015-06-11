@@ -12,12 +12,16 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-		<ui:param name="isPendingNegotiationStatus"
+	   <ui:param name="isPendingNegotiationStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
+			
+		<ui:param name="isPendingEndorsementStatus"
+			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_ENDORSEMENT}" />	
+					
 	   <ui:param name="isEditableStatus"
 			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
 			
-		<p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
+	   <p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
 					closable="true" showSummary="false" severity="error, info" />
 		
 	   <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
@@ -108,7 +112,12 @@
 						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationCommittee.xhtml"></ui:include>
 					</c:if> 
 					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
-						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml"></ui:include>
+						<c:if test="#{!isPendingEndorsementStatus}">
+							<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml"></ui:include>
+						</c:if>
+						<c:if test="#{isPendingEndorsementStatus}">
+							<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationEndorsement.xhtml"></ui:include>
+						</c:if>						
 					</c:if> <c:if
 						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3' }">
 						<ui:include src="/xhtml/sc/loi/loirequest/loiDeductionPaymentMenu.xhtml" />

@@ -128,7 +128,7 @@
 							disabled="#{!isPendingNegotiationStatus}">
 							<p:ajax event="change" partialSubmit="true" process="@this"
 								update="@this, @([id$=qtyPG])"
-								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(scQtRecommendDtl)}" />
+								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(item,scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
 						<p:commandLink update="@([id$=suppDtlPopUp])"
 							oncomplete="suppDtlWidgetVar.show();">
@@ -212,7 +212,9 @@
 						rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 						<p:column>
 							<h:inputText id="awardQty" value="#{scQtRecommendDtl.awardQty}"
-								maxlength="14" size="6" rendered="#{isPendingNegotiationStatus}"
+								maxlength="14" size="6" 
+								rendered="#{isPendingNegotiationStatus 
+												and scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}"
 								style="text-align: right;" required="true"
 								label="#{lbl['lbl.sc.quantity']}">
 								<p:ajax partialSubmit="true" process="@this"
