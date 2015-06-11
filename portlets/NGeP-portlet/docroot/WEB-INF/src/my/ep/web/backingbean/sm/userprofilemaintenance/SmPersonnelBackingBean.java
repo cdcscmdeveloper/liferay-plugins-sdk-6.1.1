@@ -53,6 +53,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang3.StringUtils;
@@ -257,7 +258,8 @@ public class SmPersonnelBackingBean extends
 						count++;
 					}
 				}
-				if (count >= 3) {
+				if (count >= SmRuleHelper.getInstance()
+						.getMaxBasicAuthorizedUser()) {
 					validPerCount = true;
 				}
 			}
