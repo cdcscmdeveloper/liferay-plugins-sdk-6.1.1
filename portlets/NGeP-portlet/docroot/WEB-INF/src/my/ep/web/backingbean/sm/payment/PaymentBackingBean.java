@@ -695,7 +695,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.openConnection();
 
 			// just want to do an HTTP POST here
-			connection.setRequestMethod("POST");
+			connection.setRequestMethod("GET");
 
 			// uncomment this if you want to write output to this url
 			connection.setDoOutput(true);
