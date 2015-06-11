@@ -1107,20 +1107,7 @@ public class CommitteBackingBean extends
 			List<ScCommitteeMember> commMembers = resDTO
 					.getCommMemberResultBean().getResultList();
 			for (ScCommitteeMember committeeMember : commMembers) {
-				System.out.println(committeeMember.getMemberName()
-						+ "*****"
-						+ committeeMember.getMemberRole()
-						+ " $$$"
-						+ committeeMember.getScCommittee().getCommitteeType()
-						+ " consolidate : "
-						+ committeeMember.getConsolidateValue()
-						+ " P&P : "
-						+ committeeMember.isPNP()
-						+ " Email : "
-						+ committeeMember.getEmail()
-						+ "Committee Type : "
-						+ committeeMember.getScCommittee().getCommitteeType()
-								.getParameterCode());
+				
 				this.getManagedBean().setCommTypeTitle(
 						ParameterHelper.getInstance().getParameterDesc(
 								ParameterTypeConst.SC_COMMITTEE_TYPE,
@@ -1129,10 +1116,9 @@ public class CommitteBackingBean extends
 						+ this.getManagedBean().getCommTypeTitle());
 			}
 			this.getManagedBean().setCloneCommitteMemebers(commMembers);
-			System.out.println("======== list size==== : "
-					+ getManagedBean().getCloneCommitteMemebers().size());
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			
+		} finally{
+			
 		}
 	}
 
