@@ -1,5 +1,7 @@
 package my.ep.web.util.sm.helper;
 
+import java.math.BigDecimal;
+
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.RuleTypeConst;
@@ -118,43 +120,19 @@ public class SmRuleHelper {
 		}
 	}
 
-	public int getProcessingFee() {
-		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.MOF_PROCESSING_FEE);
-		if (ruleResDTO != null && ruleResDTO.isSuccessful()
-				&& ruleResDTO.getRuleValueList() != null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
-					.getRuleValue()));
-		} else {
-
-			return 50;
-		}
+	public BigDecimal getProcessingFee() {
+		return SmServiceLookup.getPaymentSO()
+				.retrieveProcessingFeeRate().getProcessingFeeRate();
 	}
 
-	public int getRegistrationFee() {
-		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.MOF_REGISTRATION_FEE);
-		if (ruleResDTO != null && ruleResDTO.isSuccessful()
-				&& ruleResDTO.getRuleValueList() != null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
-					.getRuleValue()));
-		} else {
-
-			return 400;
-		}
+	public BigDecimal getRegistrationFee() {
+		return SmServiceLookup.getPaymentSO()
+				.retrieveRegistrationFeeRate().getRegistrationFeeRate();
 	}
 
-	public int getSoftCertFee() {
-		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.SOFT_CERT_FEE);
-		if (ruleResDTO != null && ruleResDTO.isSuccessful()
-				&& ruleResDTO.getRuleValueList() != null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
-					.getRuleValue()));
-		} else {
-
-			return 150;
-		}
+	public BigDecimal getSoftCertFee() {
+		return SmServiceLookup.getPaymentSO()
+				.retrieveSoftcertRate().getSoftcertRate();
 	}
 
 	public static SmRuleHelper getInstance() {
