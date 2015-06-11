@@ -20,7 +20,6 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -125,14 +124,14 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 
-		FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
-		if(coObj.getContractRequestId().intValue() == 0){
-			flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
-		}else{
-			flReqDTO.setFlRequestId(coObj.getContractRequestId());
-		}
-
-		flReqDTO.setSelectedApprovers(coObj.getApproverList());
+//		FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
+//		if(coObj.getContractRequestId().intValue() == 0){
+//			flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
+//		}else{
+//			flReqDTO.setFlRequestId(coObj.getContractRequestId());
+//		}
+//
+//		flReqDTO.setSelectedApprovers(coObj.getApproverList());
 
 		if(res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVISE_SI_HT) || res.getTaskName().equalsIgnoreCase(FLProcessNameConst.REVIEW_SI_HT)){
 			resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
@@ -151,7 +150,7 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			ContractReqDTO contractReqDTO = new ContractReqDTO();
 			contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
 
-			getManagedBean().setImportedGoodContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
+//			getManagedBean().setImportedGoodContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
 			getManagedBean().setShippingInstr(flSi);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
