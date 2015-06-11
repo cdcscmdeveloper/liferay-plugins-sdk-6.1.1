@@ -13,12 +13,14 @@
 		</p:commandButton>
 	</div>
 	
-	<p:panel header="#{lbl['lbl.sm.panHdr.comBasic']}" toggleable="true"
+	<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+	
+	<p:panel header="#{lbl['lbl.sm.supp.info']}" toggleable="true"
 		id="basHdPan">
 		<p:outputPanel id="bsInfPan" layout="block">
 			<table style="width: 100%;table-layout:fixed">
 				<p:outputPanel rendered="#{not empty viewSmApplBackingBean.managedBean.smAppl.pmStatus}">
-					<tr><td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" /> <p:outputLabel
+					<tr><td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" styleClass="outputLabel-view-label"/> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 	
 					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"

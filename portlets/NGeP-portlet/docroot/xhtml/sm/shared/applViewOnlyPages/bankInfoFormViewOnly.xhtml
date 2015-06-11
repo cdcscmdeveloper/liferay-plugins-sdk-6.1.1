@@ -9,7 +9,7 @@
 	<p:panel header="#{lbl['lbl.sm.bankDtls.panHdr']}" toggleable="true">
 		<p:outputPanel id="bankInfPan" layout="block">
 			<p:dataTable var="bankBean" widgetVar="suppBankInfoDtWidVar"
-				value="#{viewSmApplBackingBean.managedBean.smAppl.smSupplierBanks}"
+				value="#{viewSmApplBackingBean.managedBean.smSupplierBankList}"
 				rowKey="#{bankBean}" rowIndexVar="index" id="bankDt">
 				<ac:paginator for="bankDt" />
 

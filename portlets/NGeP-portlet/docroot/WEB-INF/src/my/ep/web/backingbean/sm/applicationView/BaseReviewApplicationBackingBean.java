@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +26,7 @@ import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.personnel.PersonnelReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.revision.SmApplRevisionResDTO;
 import my.ep.dto.sm.smRemarks.SmRemaksResDTO;
@@ -92,7 +92,6 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
 
 import com.liferay.compat.portal.util.PortalUtil;
-import com.liferay.portal.model.Role;
 
 public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewApplicationManagedBean>
 		extends BaseBackingBean<T> {
@@ -628,9 +627,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Initialized Bank Information step
 	 */
 	private void initStep5BankInfo() {
-		if (getManagedBean().getSmAppl().getSmSupplierBanks() == null) {
-			getManagedBean().getSmAppl().setSmSupplierBanks(
-					new ArrayList<SmSupplierBank>());
+		getManagedBean().setSmSupplierBankList(new ArrayList<SmSupplierBank>());
+		if (getManagedBean().getSmAppl().getSmSupplierBanks() != null
+				&& !getManagedBean().getSmAppl().getSmSupplierBanks().isEmpty()) {
+			for (SmSupplierBank bank : getManagedBean().getSmAppl()
+					.getSmSupplierBanks()) {
+				if (bank.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					getManagedBean().getSmSupplierBankList().add(bank);
+				}
+			}
 		}
 	}
 
@@ -1693,18 +1698,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	private void setUserLoginRole() {
 		FacesScopes sc = new FacesScopes();
-		List<Role> loginUserRoles = sc.getUserRoleList();
-		List<String> roleNames = new ArrayList<String>();
-		for (Role r : loginUserRoles) {
-			roleNames.add(r.getName());
-		}
 		if (sc.hasRoleUser(SupplierManagementConst.PO_HQ)
 				|| sc.hasRoleUser(SupplierManagementConst.PO_HQ_TEMP)) {
 			getManagedBean().setPoUser(true);
+			getManagedBean().setRoleCode(RoleCode.UPS_PO.value());
 		} else if (sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ)
 				|| sc.hasRoleUser(SupplierManagementConst.APPROVER_HQ_TEMP)
 				|| sc.hasRoleUser(SupplierManagementConst.APPROVER)) {
 			getManagedBean().setApproverUser(true);
+			getManagedBean().setRoleCode(RoleCode.UPS_APPROVER.value());
 		} else if (sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_ADMIN)
 				|| sc.hasRoleUser(SupplierManagementConst.BASIC_SUPPLIER_USER)
 				|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_ADMIN)
@@ -1716,6 +1718,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					|| sc.hasRoleUser(SupplierManagementConst.MOF_SUPPLIER_USER)) {
 				getManagedBean().setMofSupplier(true);
 			}
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setUserId((MDC.get("USER_ID") == null) ? 1 : Long
+					.valueOf(String.valueOf(MDC.get("USER_ID"))));
+			SmPersonnel loginPersonnel = SmServiceLookup.getPersonnelSO()
+					.retrievePersonnelByUserId(reqDTO).getSmPersonnel();
+			getManagedBean().setRoleCode(
+					loginPersonnel == null ? "" : loginPersonnel.getEpRole());
 		}
 	}
 
@@ -1723,6 +1732,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * Initialized supplier by login role
 	 */
 	public void initLogin() {
+		SmCommonUtil.setMDCUserId();
 		setUserLoginRole();
 		if (getManagedBean().isSupplierUser()) {
 			getManagedBean().setSearchSupplier(
@@ -1733,7 +1743,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSearchSupplier().setEpNo("");
 			getManagedBean().getSearchSupplier().setRegNo("");
 		}
-		SmCommonUtil.setMDCUserId();
 	}
 
 	/**

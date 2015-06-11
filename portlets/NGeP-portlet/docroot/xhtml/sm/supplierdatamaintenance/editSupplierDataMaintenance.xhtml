@@ -21,10 +21,21 @@
 		</p:blockUI>
 		
 		<ui:param name="viewSmApplBackingBean" value="#{supplierDataMaintenanceBackingBean}" />
+		<ui:param name="backingBean" value="#{supplierDataMaintenanceBackingBean}" />
 
 		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
-
-		<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/companyBasicInfoMaintenance.xhtml" />
+		
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.btn.back']}" 
+				action="#{viewSmApplBackingBean.backToSearchSupplierMaintenance}" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+			</p:commandButton>
+		</div>
+		
+		
+		<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/supplierInfoMaintenance.xhtml" />
+		<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />
+		<ui:include src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
 
 	</ui:define>
 </ui:composition>
