@@ -106,6 +106,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private boolean original;
 	private boolean viewApplicationHistory;
 	private boolean overLappedCategoryExists;
+	private boolean displaySearchPage;
 	private String overLappedCategoryMsg;
 	private String selectedCertType;
 	private String selectedBankAccountPurpose;
@@ -1131,6 +1132,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRegCatCodeConfirmMsg(String regCatCodeConfirmMsg) {
 		this.regCatCodeConfirmMsg = regCatCodeConfirmMsg;
+	}
+
+	public boolean isDisplaySearchPage() {
+		return displaySearchPage;
+	}
+
+	public void setDisplaySearchPage(boolean displaySearchPage) {
+		this.displaySearchPage = displaySearchPage;
 	}
 
 }

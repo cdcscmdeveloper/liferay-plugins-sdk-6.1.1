@@ -2219,45 +2219,6 @@ public class SmApplicationUtil {
 	}
 
 	/**
-	 * Set overlapped categories values.Checks if Same owner exist in different
-	 * supplier and has same one or more similar categories
-	 * 
-	 * @param SmAppl
-	 *            smAppl
-	 * @param String
-	 *            overLappedCategoryMsg
-	 * @param boolean overLappedCategoryExists
-	 */
-	public static void setOverLappingCategories(SmAppl smAppl,
-			String overLappedCategoryMsg, boolean overLappedCategoryExists) {
-		overLappedCategoryMsg = "";
-		overLappedCategoryExists = false;
-		int i = 0;
-		StringBuffer sb = new StringBuffer();
-		sb.append(SmCommonUtil.getMessage("lbl.sm.category.overlappingMsg",
-				null));
-		sb.append("<table>");
-		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-			if (cat.isOverLapCategory()
-					&& (cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0 || cat
-							.getRecordStatusFlg().compareTo(
-									SupplierManagementConst.PENDING_ACT_STATUS) == 0)) {
-				overLappedCategoryExists = true;
-				sb.append("<tr><td>").append(++i).append(".) ")
-						.append(cat.getPmCategoryL1().getCategoryL1Code())
-						.append(cat.getPmCategoryL2().getCategoryL2Code())
-						.append(cat.getPmCategoryL3().getCategoryL3Code())
-						.append("</tr></td>");
-			}
-		}
-		sb.append("</table>");
-		if (overLappedCategoryExists) {
-			overLappedCategoryMsg = sb.toString();
-		}
-	}
-
-	/**
 	 * Valid l3 category code for over lapping.Checks if Same owner exists in
 	 * differrnt supplier and has same category
 	 * 
@@ -2423,43 +2384,6 @@ public class SmApplicationUtil {
 		}
 		managedBean.setActiveCategoryList(catList);
 		managedBean.setApprovedCategoryList(apprvList);
-	}
-
-	/**
-	 * Assign active category list with status Active or Pending approval
-	 * 
-	 * @param List
-	 *            <SmSupplierCategory> activeCategoryList
-	 * @param List
-	 *            <SmSupplierCategory> approvedCategoryList
-	 * @param SmAppl
-	 *            smAppl
-	 */
-	public static void assignApplActiveAndApprovedCategoryList(
-			List<SmSupplierCategory> activeCategoryList,
-			List<SmSupplierCategory> approvedCategoryList, SmAppl smAppl) {
-		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
-		List<SmSupplierCategory> apprvList = new ArrayList<SmSupplierCategory>();
-		for (SmSupplierCategory cat : smAppl.getSmSupplierCategories()) {
-			if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.PENDING_ACT_STATUS) == 0
-					|| cat.getRecordStatusFlg().compareTo(
-							SupplierManagementConst.PENDING_RE_APPROVAL_STATUS) == 0) {
-				catList.add(cat);
-			} else if (cat.getRecordStatusFlg().compareTo(
-					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				apprvList.add(cat);
-
-			}
-		}
-		if (activeCategoryList != null && !activeCategoryList.isEmpty()) {
-			activeCategoryList.clear();
-		}
-		if (approvedCategoryList != null && !approvedCategoryList.isEmpty()) {
-			approvedCategoryList.clear();
-		}
-		activeCategoryList = catList;
-		approvedCategoryList = apprvList;
 	}
 
 	/**
@@ -4917,36 +4841,9 @@ public class SmApplicationUtil {
 
 		// added to custom confirm dialog title and msg
 		// based on category type Special or Normal
-		setRegCatCodeConfirmDialog(managedBean.getSmAppl(),
-				managedBean.getRegCatCodeConfirmHeader(),
-				managedBean.getRegCatCodeConfirmMsg());
+		setRegCatCodeConfirmDialog(managedBean);
 	}
 
-	/**
-	 * @param int activeIndex
-	 * @param boolean isPoOrApprover
-	 * @param SmAppl smAppl
-	 * @param String businessTypeVal
-	 * @param String regCatCodeConfirmHeader
-	 * @param String regCatCodeConfirmMsg
-	 * @param boolean isReviewSiteVisit
-	 */
-	public static void setCategoryCodeSelected(int activeIndex,
-			boolean isPoOrApprover, SmAppl smAppl, String businessTypeVal,
-			String regCatCodeConfirmHeader, String regCatCodeConfirmMsg,
-			boolean isReviewSiteVisit) {
-		smAppl.setCurrentActiveTab(activeIndex);
-		if (isPoOrApprover) {
-			assignMaxReviewCount(smAppl.getApplType(),
-					smAppl.getApplCategoryType(), smAppl.getSupplierType(),
-					businessTypeVal, isReviewSiteVisit);
-		}
-
-		// added to custom confirm dialog title and msg
-		// based on category type Special or Normal
-		setRegCatCodeConfirmDialog(smAppl, regCatCodeConfirmHeader,
-				regCatCodeConfirmMsg);
-	}
 
 	/**
 	 * Sets the register categor code confirm dialog text.
@@ -4954,19 +4851,21 @@ public class SmApplicationUtil {
 	 * @param managedBean
 	 *            - SmApplicationManagedBean object
 	 */
-	public static void setRegCatCodeConfirmDialog(SmAppl smAppl,
-			String regCatCodeConfirmHeader, String regCatCodeConfirmMsg) {
-		regCatCodeConfirmHeader = SmCommonUtil.getMessage(
-				"lbl.sm.regCatCode.confirm.header.normal", null);
-		regCatCodeConfirmMsg = SmCommonUtil.getMessage(
-				"lbl.sm.regCatCode.confirm.msg.normal", null);
-		if (smAppl != null) {
-			if (StringUtils.isNotBlank(smAppl.getApplCategoryType())
-					&& smAppl.getApplCategoryType().equals("S")) {
-				regCatCodeConfirmHeader = SmCommonUtil.getMessage(
-						"lbl.sm.regCatCode.confirm.header.special", null);
-				regCatCodeConfirmMsg = SmCommonUtil.getMessage(
-						"lbl.sm.regCatCode.confirm.msg.special", null);
+	public static void setRegCatCodeConfirmDialog(
+			SmApplicationManagedBean managedBean) {
+		managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
+				"lbl.sm.regCatCode.confirm.header.normal", null));
+		managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
+				"lbl.sm.regCatCode.confirm.msg.normal", null));
+		if (managedBean.getSmAppl() != null) {
+			if (StringUtils.isNotBlank(managedBean.getSmAppl()
+					.getApplCategoryType())
+					&& managedBean.getSmAppl().getApplCategoryType()
+							.equals("S")) {
+				managedBean.setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.header.special", null));
+				managedBean.setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.msg.special", null));
 			}
 		}
 	}
