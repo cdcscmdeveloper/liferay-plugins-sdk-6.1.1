@@ -43,8 +43,8 @@
         	           selection="#{contractDetailsBackingBean.selectedDeductionClauses}"  rowKey="#{data}"  > 
                        <ac:paginator for="tableClause" />   
                             <p:column selectionMode="multiple" style="width:2%;" 
-                               disabledSelection="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode !=
-        	                       ParameterConst.deductionTypeAdvancePayment}"/>
+                               rendered="#{contractDetailsBackingBean.managedBean.selectedDeduction.deductionType.parameterCode ==
+        	                         ParameterConst.deductionTypeAdvancePayment}"/>
                            
                             <p:column style="white-space:normal;width:98%;">
 			                   	<f:facet name="header">
