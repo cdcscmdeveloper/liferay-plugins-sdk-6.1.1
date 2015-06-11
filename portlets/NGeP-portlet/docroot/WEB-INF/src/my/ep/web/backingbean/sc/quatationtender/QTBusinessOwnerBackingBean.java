@@ -970,6 +970,7 @@ public class QTBusinessOwnerBackingBean extends
 							.isEmpty()) {
 						this.getManagedBean().getScCommitteeMemberList()
 								.add(committeeMember);
+						this.getManagedBean().setSelectScCommitteMember(null);
 					} else {
 						for (ScCommitteeMember committee : this
 								.getManagedBean().getScCommitteeMemberList()) {
