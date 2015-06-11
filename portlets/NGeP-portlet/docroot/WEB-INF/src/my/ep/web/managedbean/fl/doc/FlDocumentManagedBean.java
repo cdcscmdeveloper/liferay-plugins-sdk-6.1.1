@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.fl.doc;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -333,6 +334,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						reqDTO.setUserRole(RoleCode.AUDITOR_INTERNAL.value());
 					}
 				}
+				
+				// Set Financial year
+				reqDTO.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
