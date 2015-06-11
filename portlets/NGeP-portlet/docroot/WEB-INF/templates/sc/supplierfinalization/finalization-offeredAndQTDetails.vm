@@ -155,7 +155,7 @@
 	</tr>
 	<tr>
 		<td class="tdInfoTable">1.7</td>
-		<td class="tdInfoTable">Bilangan Pembekal Menyertai Taklimat Bagi</td>
+		<td class="tdInfoTable">Bilangan Pembekal Menyertai Taklimat/Lawatan Tapak</td>
 		<td class="tdInfoTable">
 			#if ($isBsvRequired)
 				#if ($isZone)
@@ -172,7 +172,7 @@
 					Total Suppliers : $supplierSize
 				#end
 			#else
-				-
+				N/A
 			#end
 		</td>
 	</tr>
@@ -228,9 +228,8 @@
 					Bil. Sample Yang Ditolak: $sampleLabelsMap.get($item).totalNotCompliant<br/>
 					Bil. Sample Yang Diterima: $sampleLabelsMap.get($item).totalCompliant<br/><br/>
 				#end
-			#end
-			#if ($isSample == "false")
-				-
+			#else
+				N/A
 			#end			
 		</td>
 	</tr>
