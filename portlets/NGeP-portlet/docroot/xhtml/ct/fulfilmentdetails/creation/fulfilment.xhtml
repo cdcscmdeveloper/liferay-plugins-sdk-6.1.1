@@ -97,7 +97,7 @@
 		
 		<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.deduction']}" 
 		     onstart="blockWidget.show()"   oncomplete="blockWidget.hide()"
-		     rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0}"
+		     rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0}"
 			 actionListener="#{contractDetailsBackingBean.setTabValue(contractDetailsBackingBean.managedBean.selectedTabIndex,'DE')}" update=":form" />
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.schedule']}"
@@ -194,7 +194,7 @@
 				</p:outputPanel>
 			   
 				<p:outputPanel id="ctMenuId9"
-				     rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0
+				     rendered="#{!contractDetailsBackingBean.managedBean.directPurchase and contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0
 				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex}">
 					<ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />
 				</p:outputPanel>
