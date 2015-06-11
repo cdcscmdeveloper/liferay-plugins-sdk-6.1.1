@@ -81,7 +81,6 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	public static final int CHECKLIST = 6;
 	
 	
-	
 	//Mapper for DDL object
 	private static Map<Long, Object> docCategoryMapper;
 	
@@ -90,7 +89,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
-	
+	private static final String LABEL_dISPLAY_PRIORITY_KEY = "lbl.pm.display.priority";
 	/**
 	 * get faces scopes
 	 * @return FacesScopes
@@ -1182,8 +1181,23 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			throw new EpException(MessageConst.ERROR_770083);
 		}
 		
-		if(validateDisplaySequence(pmDocument)){
-			throw new EpException(MessageConst.ERROR_770087);
+		if (StringUtils.isBlank(pmDocument.getDisplaySeq())) {
+			throw new EpException(MessageConst.ERROR_770086,
+					new String[] { ResourceBundleUtils.getMessage(
+							LABEL_dISPLAY_PRIORITY_KEY,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()) });
+
+		} else {
+			String displaySeq = pmDocument.getDisplaySeq();
+			pmDocument.setDisplaySeq(displaySeq.trim());
+			if (validateDisplaySequence(pmDocument)) {
+				throw new EpException(MessageConst.ERROR_770087,
+						new String[] { ResourceBundleUtils.getMessage(
+								LABEL_dISPLAY_PRIORITY_KEY,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale()) });
+			}
 		}
 		
 		if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
