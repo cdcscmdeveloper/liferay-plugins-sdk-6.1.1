@@ -1192,11 +1192,11 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			String displaySeq = pmDocument.getDisplaySeq();
 			pmDocument.setDisplaySeq(displaySeq.trim());
 			if (validateDisplaySequence(pmDocument)) {
-				throw new EpException(MessageConst.ERROR_770087,
+				throw new EpException(MessageConst.ERROR_770200,
 						new String[] { ResourceBundleUtils.getMessage(
 								LABEL_dISPLAY_PRIORITY_KEY,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale()) });
+								new FacesScopes().getUserLocale())});
 			}
 		}
 		
