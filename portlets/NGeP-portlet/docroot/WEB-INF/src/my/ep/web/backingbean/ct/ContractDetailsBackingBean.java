@@ -723,6 +723,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    }
 		// Retrieve Deduction Clauses
 	    if (this.getManagedBean().getContractVer().getCtDeductions().size() > 0) {
+	    	getManagedBean().setSelectedDeduction(null);
 	    	for (CtDeduction deduct : this.getManagedBean().getContractVer().getCtDeductions()) {
 	    		if (deduct.getDeductionType().getParameterCode().equalsIgnoreCase(ContractConst.AP_DEDUCTION_TYPE)) {
 	    			getManagedBean().setFlgPaymentTracking(true);
