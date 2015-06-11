@@ -1177,14 +1177,14 @@ public class LOIDetailBackingBean extends
 		ScLoi scLoi = resDTO.getScLoi();
 		getManagedBean().setScLoi(scLoi);
 		boolean isTermPriceFound = Boolean.FALSE;
-		boolean isBiddingAward = Boolean.FALSE;
+		//boolean isBiddingAward = Boolean.FALSE;
 
 		// online bidding
 		if (scLoi.getScLoiLoa().getRecommendBy() != null) {
 			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
 			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(recommendedBy.getParameterCode())) {
-				isBiddingAward = Boolean.TRUE;
+				//isBiddingAward = Boolean.TRUE;
 				// remove nego price recommended by - online bidding.
 				removeNegoTermPrice(scLoi);
 			}
@@ -1196,10 +1196,15 @@ public class LOIDetailBackingBean extends
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
 			isTermPriceFound = checkNegoTermPrice(scLoi);
 		}
+		
+		if (isTermPriceFound) {
+			getManagedBean().setHideColumnFlag(Boolean.TRUE);
+		}else {
+			getManagedBean().setHideColumnFlag(Boolean.FALSE);
+		}
 
 		// calc total items in award details
-		if (scLoi.getScLoiLoaItems() != null
-				&& scLoi.getScLoiLoaItems().size() > 0) {
+		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
@@ -1209,48 +1214,26 @@ public class LOIDetailBackingBean extends
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-				if (isTermPriceFound || isBiddingAward) {
-					getManagedBean().setHideColumnFlag(Boolean.TRUE);
-					if (scLoiLoaItem.getScQtRecommendDtl()
-							.getScQtProposalItem() != null) {
-						offerPrice = BigDecimal.valueOf(scLoiLoaItem
-								.getScQtRecommendDtl().getScQtProposalItem()
-								.getOfferPrice());
-						offeredPriceSubTotal = TemplateSpecHelper.getInstance()
-								.calcTotalAmount(
-										scLoiLoaItem.getScRequestItem()
-												.getTplSpecQuestion(),
-										offerPrice, scLoiLoaItem.getQty());
 
-						// offered price sub total and total
-						scLoiLoaItem
-								.setOfferedPriceSubTotal(offeredPriceSubTotal);
-						offeredPriceAmount = offeredPriceAmount
-								.add(offeredPriceSubTotal);
-					}
-				} else {
-					getManagedBean().setHideColumnFlag(Boolean.FALSE);
+				if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
+					// offered price sub total and total
+					offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
+					scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+					offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
 				}
-				afterNegoSubTotal = TemplateSpecHelper.getInstance()
-						.calcTotalAmount(
-								scLoiLoaItem.getScRequestItem()
-										.getTplSpecQuestion(),
-								scLoiLoaItem.getUnitPrice(),
-								scLoiLoaItem.getQty());
 				// after nego price sub total and total
+				afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
 				if (afterNegoSubTotal != null) {
-					afterNegoTotalAmount = afterNegoTotalAmount
-							.add(afterNegoSubTotal);
+					afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
 					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
 					scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 				}
+				scLoi.setScLoiLoaItems(scLoiLoaItems);
+				scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
+				scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
+				scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
 			}
-			scLoi.setScLoiLoaItems(scLoiLoaItems);
-			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price
-															// total
-			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
-			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
-			// priceKeyInEvent();
 		}
 		getManagedBean().setScQt(resDTO.getScQt());
 
