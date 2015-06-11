@@ -117,10 +117,41 @@ public class SmRuleHelper {
 	}
 	
 	public int getProcessingFee() {
-		return 50;
+		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.MOF_PROCESSING_FEE);
+		if (ruleResDTO != null && ruleResDTO.isSuccessful()
+				&& ruleResDTO.getRuleValueList() != null
+				&& ruleResDTO.getRuleValueList().size() > 0) {
+			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
+					.getRuleValue()));
+		} else {
+
+			return 50;
+		}
 	}
 	
 	public int getRegistrationFee() {
-		return 400;
+		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.MOF_REGISTRATION_FEE);
+		if (ruleResDTO != null && ruleResDTO.isSuccessful()
+				&& ruleResDTO.getRuleValueList() != null
+				&& ruleResDTO.getRuleValueList().size() > 0) {
+			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
+					.getRuleValue()));
+		} else {
+
+			return 400;
+		}
+	}
+	
+	public int getSoftCertFee() {
+		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.SOFT_CERT_FEE);
+		if (ruleResDTO != null && ruleResDTO.isSuccessful()
+				&& ruleResDTO.getRuleValueList() != null
+				&& ruleResDTO.getRuleValueList().size() > 0) {
+			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
+					.getRuleValue()));
+		} else {
+
+			return 150;
+		}
 	}
 }
