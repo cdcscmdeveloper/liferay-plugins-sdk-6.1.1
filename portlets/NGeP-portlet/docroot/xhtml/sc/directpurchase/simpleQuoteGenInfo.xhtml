@@ -155,6 +155,7 @@
 					      <table><tr><td><p:calendar showOn="button" id="endDate"
 									label="#{lbl['lbl.sc.end.date']}"
 									mindate="#{simpleQuoteBackingBean.managedBean.scQuote.startDate}"
+									value="#{!empty simpleQuoteBackingBean.managedBean.scQuote.startDate ? simpleQuoteBackingBean.managedBean.scQuote.startDate : simpleQuoteBackingBean.managedBean.today}"
 									readonlyInput="true" required="true"
 									disabled="#{!isPendingSubmissionStatus}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
