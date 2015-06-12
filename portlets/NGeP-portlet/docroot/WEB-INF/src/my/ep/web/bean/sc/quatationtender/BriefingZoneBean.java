@@ -17,6 +17,7 @@ import java.util.List;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsv;
 import my.ep.persistence.entity.sc.quationtender.ScQtBsvDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeliveryLoc;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 
 /**
@@ -62,6 +63,8 @@ public class BriefingZoneBean implements Serializable {
 	/** The total suppliers attended in current zone **/
 	private int totalSuppliersAttended;	
 
+	private ScQtSampleSubmission sampleAddress;
+	
 	/**
 	 * Instantiates a new briefing zone bean.
 	 *
@@ -72,13 +75,14 @@ public class BriefingZoneBean implements Serializable {
 	 */
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
 			List<ScQtBsvDtl> briefingList, List<ScQtBsvDtl> sitevisitList,
-			ScQtBsv scQtBsv) {
+			ScQtBsv scQtBsv, ScQtSampleSubmission sampleAddress) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.briefingList = briefingList;
 		this.sitevisitList = sitevisitList;
 		this.scQtBsv = scQtBsv;
 		this.selectedBriefingDtls=new ArrayList<>();
 		this.selectedSiteVisitDtls=new ArrayList<>();
+		this.sampleAddress = sampleAddress;
 	}
 
 	/**
@@ -297,5 +301,20 @@ public class BriefingZoneBean implements Serializable {
 	public void setTotalSupplierAttended(int totalSuppliersAttended) {
 		this.totalSuppliersAttended = totalSuppliersAttended;
 	}
+
+	/**
+	 * @return the sampleAddress
+	 */
+	public ScQtSampleSubmission getSampleAddress() {
+		return sampleAddress;
+	}
+
+	/**
+	 * @param sampleAddress the sampleAddress to set
+	 */
+	public void setSampleAddress(ScQtSampleSubmission sampleAddress) {
+		this.sampleAddress = sampleAddress;
+	}
+
 
 }
