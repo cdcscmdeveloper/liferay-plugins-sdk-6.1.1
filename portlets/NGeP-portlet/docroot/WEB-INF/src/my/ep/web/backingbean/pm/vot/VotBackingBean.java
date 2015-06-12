@@ -41,10 +41,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "votBackingBean")
 @ViewScoped
 public class VotBackingBean extends
-		BaseBackingBean<VotManagedBean> {
+BaseBackingBean<VotManagedBean> {
 	private static Logger log = Logger
 			.getLogger(VotBackingBean.class);
-	
+
 	public static final String NAV_TO_MAIN = "/xhtml/pm/vot/votSearchMain";
 
 	private IPagingDataModel<PmVotFund> searchVot = new SearchVotPagingDataModel();
@@ -72,7 +72,7 @@ public class VotBackingBean extends
 		this.resetVotSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_MAIN);
+		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
 	private void debugLogger(Object message) {
@@ -117,72 +117,78 @@ public class VotBackingBean extends
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("votFundCode",
 							SearchOperator.OPERATOR_EQUALS.value(), votSearchBean
-									.getVotCode().toUpperCase() , true));
+							.getVotCode().toUpperCase() , true));
 			isEmpty = false;
-			
+
 		}
 		if (StringUtils.isNotBlank(votSearchBean.getVotName())){
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("description",
 							SearchOperator.OPERATOR_LIKE.value(), votSearchBean
-									.getVotName().toUpperCase(), true));
+							.getVotName().toUpperCase(), true));
 			isEmpty = false;
 		}
-		
+
 		if (StringUtils.isNotBlank(votSearchBean.getKumpulanPtjCode())){
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgCode",
 							SearchOperator.OPERATOR_EQUALS.value(), votSearchBean
-									.getKumpulanPtjCode().toUpperCase(), true));
+							.getKumpulanPtjCode().toUpperCase(), true));
 			isEmpty = false;
 		}
-		
+
 		if (StringUtils.isNotBlank(votSearchBean.getKumpulanPtjDesc())) {
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("pmOrgProfile.pmOrgValidity.orgName",
 							SearchOperator.OPERATOR_LIKE.value(), votSearchBean
-									.getVotName().toUpperCase(), true));
+							.getVotName().toUpperCase(), true));
 			isEmpty = false;
 		}
-		
-		if(StringUtils.isNotBlank(votSearchBean.getStatus())&& votSearchBean.getStatus().equals(DbValueConst.RECORD_STATUS_ACTIVE))
+
+
+		if((StringUtils.isNotBlank(votSearchBean.getStatus()) && votSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))) ||
+				(StringUtils.isNotBlank(votSearchBean.getStatus()) && votSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_SUSPENDED))))
 		{
-		// Filter By - User effDate
-		   searchBean.getDataFilterBeans().add(
-		     new SearchFilterBean("effDate",
-		       SearchOperator.OPERATOR_LESS_EQUAL.value(),
-		       currentDate));		
-		   // Filter By - User expDate
-		   searchBean.getDataFilterBeans().add(
-		     new SearchMultiFilterBean(new SearchFilterBean(
-		       "expDate",
-		       SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-		       currentDate), new SearchFilterBean(
-		       "expDate",
-		       SearchOperator.OPERATOR_IS_NULL.value(), null,
-		       SearchCondition.CONDITION_OR.value())));
-		}
-		else{
-			 // Filter By - User expDate
-			   searchBean.getDataFilterBeans().add(
-			     new SearchMultiFilterBean(new SearchFilterBean(
-			       "expDate",
-			       SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-			       currentDate), new SearchFilterBean(
-			       "expDate",
-			       SearchOperator.OPERATOR_IS_NULL.value(), null,
-			       SearchCondition.CONDITION_OR.value())));			
-		      }
-		if(votSearchBean.getStatus() != null
-				&& !"".equals(votSearchBean.getStatus())) {
-		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						votSearchBean.getStatus()));
+			if(votSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
+				// Filter By - User effDate
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("effDate",
+								SearchOperator.OPERATOR_LESS_EQUAL.value(),
+								currentDate));		
+				// Filter By - User expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+										"expDate",
+										SearchOperator.OPERATOR_IS_NULL.value(), null,
+										SearchCondition.CONDITION_OR.value())));
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								votSearchBean.getStatus()));
+			}
+			else{
+				// Filter By - User expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+										"expDate",
+										SearchOperator.OPERATOR_IS_NULL.value(), null,
+										SearchCondition.CONDITION_OR.value())));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								votSearchBean.getStatus()));
+			}
+
 		}		
 		else{
 			List<String> activeAndInActiveStatus = new ArrayList<String>();
@@ -192,13 +198,13 @@ public class VotBackingBean extends
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_IN.value(), 
 							activeAndInActiveStatus
-			));
+							));
 		}
 		return searchBean;
 	}
 
 	private class SearchVotPagingDataModel extends
-			PagingDataModel<PmVotFund> {
+	PagingDataModel<PmVotFund> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchVotPagingDataModel() {

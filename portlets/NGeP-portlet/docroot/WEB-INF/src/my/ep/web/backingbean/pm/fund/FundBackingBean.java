@@ -41,10 +41,10 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "fundBackingBean")
 @ViewScoped
 public class FundBackingBean extends
-		BaseBackingBean<FundManagedBean> {
+BaseBackingBean<FundManagedBean> {
 	private static Logger log = Logger
 			.getLogger(FundBackingBean.class);
-	
+
 	public static final String NAV_TO_MAIN = "/xhtml/pm/fund/fundSearchMain";
 
 	private IPagingDataModel<PmVotFund> searchFund = new SearchFundPagingDataModel();
@@ -72,7 +72,7 @@ public class FundBackingBean extends
 		this.resetFundSearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_MAIN);
+		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
 	private void debugLogger(Object message) {
@@ -115,56 +115,63 @@ public class FundBackingBean extends
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("votFundCode",
 							SearchOperator.OPERATOR_EQUALS.value(), fundSearchBean
-									.getFundCode().toUpperCase() , true));
+							.getFundCode().toUpperCase() , true));
 			isEmpty = false;
-			
+
 		}
 		if (StringUtils.isNotBlank(fundSearchBean.getFundName())){
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("description",
 							SearchOperator.OPERATOR_LIKE.value(), fundSearchBean
-									.getFundName().toUpperCase(), true));
+							.getFundName().toUpperCase(), true));
 			isEmpty = false;
 		}
-		
-				
-		if(StringUtils.isNotBlank(fundSearchBean.getStatus())&& fundSearchBean.getStatus().equals(DbValueConst.RECORD_STATUS_ACTIVE))
+
+
+		if( (StringUtils.isNotBlank(fundSearchBean.getStatus()) 
+				&& (fundSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE)))) ||
+					(StringUtils.isNotBlank(fundSearchBean.getStatus()) 
+							&& (fundSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_SUSPENDED)))) )
 		{
-		// Filter By - User effDate
-		   searchBean.getDataFilterBeans().add(
-		     new SearchFilterBean("effDate",
-		       SearchOperator.OPERATOR_LESS_EQUAL.value(),
-		       currentDate));		
-		   // Filter By - User expDate
-		   searchBean.getDataFilterBeans().add(
-		     new SearchMultiFilterBean(new SearchFilterBean(
-		       "expDate",
-		       SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-		       currentDate), new SearchFilterBean(
-		       "expDate",
-		       SearchOperator.OPERATOR_IS_NULL.value(), null,
-		       SearchCondition.CONDITION_OR.value())));
-		}
-		else{
-			 // Filter By - User expDate
-			   searchBean.getDataFilterBeans().add(
-			     new SearchMultiFilterBean(new SearchFilterBean(
-			       "expDate",
-			       SearchOperator.OPERATOR_GREATER_EQUAL.value(),
-			       currentDate), new SearchFilterBean(
-			       "expDate",
-			       SearchOperator.OPERATOR_IS_NULL.value(), null,
-			       SearchCondition.CONDITION_OR.value())));			
-		      }
-		
-		if(fundSearchBean.getStatus() != null
-				&& !"".equals(fundSearchBean.getStatus())) {
-		
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("recordStatusFlg",
-						SearchOperator.OPERATOR_EQUALS.value(),
-						fundSearchBean.getStatus()));
+			if(fundSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
+				// Filter By - User effDate
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("effDate",
+								SearchOperator.OPERATOR_LESS_EQUAL.value(),
+								currentDate));		
+				// Filter By - User expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+										"expDate",
+										SearchOperator.OPERATOR_IS_NULL.value(), null,
+										SearchCondition.CONDITION_OR.value())));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								fundSearchBean.getStatus()));
+			}
+			else{
+				// Filter By - User expDate
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"expDate",
+								SearchOperator.OPERATOR_GREATER_EQUAL.value(),
+								currentDate), new SearchFilterBean(
+										"expDate",
+										SearchOperator.OPERATOR_IS_NULL.value(), null,
+										SearchCondition.CONDITION_OR.value())));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								fundSearchBean.getStatus()));
+			}
+
 		}		
 		else{
 			List<String> activeAndInActiveStatus = new ArrayList<String>();
@@ -174,13 +181,13 @@ public class FundBackingBean extends
 					new SearchFilterBean("recordStatusFlg",
 							SearchOperator.OPERATOR_IN.value(), 
 							activeAndInActiveStatus
-			));
+							));
 		}
 		return searchBean;
 	}
 
 	private class SearchFundPagingDataModel extends
-			PagingDataModel<PmVotFund> {
+	PagingDataModel<PmVotFund> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchFundPagingDataModel() {
@@ -204,7 +211,7 @@ public class FundBackingBean extends
 								IVotFundSO.class);
 				VotFundResDTO resDTO = votFundSO.searchVotFundData(votReqDTO);
 				getManagedBean().setLazy(true);
-						
+
 				if (resDTO.isSuccessful()) {
 
 					return resDTO.getVotResultBean();
