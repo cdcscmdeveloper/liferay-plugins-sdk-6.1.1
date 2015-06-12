@@ -2792,23 +2792,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	/**
-	 * Retrieve mof no based on SupplierId.
-	 *
-	 * @param smSupplier the sm supplier
-	 * @return the string
-	 */
-	public String retrieveMofNo(SmSupplier smSupplier) {
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-		reqDTO.setSupplierId(smSupplier.getSupplierId());
-		MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-		if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
-			return resDTO.getMofAccount().getMofNo();
-		}
-		return null;
-	}
-	
-	/**
 	 * Check vot fund lov.
 	 */
 	public void checkVotFundLov(){

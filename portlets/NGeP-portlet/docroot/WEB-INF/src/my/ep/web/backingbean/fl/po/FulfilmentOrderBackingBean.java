@@ -28,7 +28,6 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -50,8 +49,6 @@ import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.fc.FLFactoringRemoveReqType;
@@ -69,7 +66,6 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -913,29 +909,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		        };
 				Collections.sort(flItemAddressList, comparator);
 	    }
-		
-		/**
-		 * Retrieve mof no based on Supplier Id.
-		 *
-		 * @param smSupplier the sm supplier
-		 * @return the string
-		 */
-		public String retrieveMofNo(SmSupplier smSupplier) {
-			if(getManagedBean().getFlRequest().getCtContract() != null){
-				IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-				return ctSupplierSO.retrieveSupplierMOFNoByContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-			}else{
-				IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-				MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-				reqDTO.setSupplierId(smSupplier.getSupplierId());
-				MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-				if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
-					return resDTO.getMofAccount().getMofNo();
-				}
-			}
-			
-			return null;
-		}
 		
 		/**
 		 * Page navigation to FLDoc search page in Order.

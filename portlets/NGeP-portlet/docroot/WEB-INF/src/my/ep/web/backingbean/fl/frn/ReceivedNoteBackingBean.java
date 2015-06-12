@@ -604,29 +604,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	/**
-	 * Retrieve mof no based on Supplier Id.
-	 *
-	 * @param smSupplier the sm supplier
-	 * @return the string
-	 */
-	public String retrieveMofNo(SmSupplier smSupplier) {
-		if(getManagedBean().getFulfilmentRequest().getCtContract() != null){
-			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-			return ctSupplierSO.retrieveSupplierMOFNoByContractId(getManagedBean().getFulfilmentRequest().getCtContract().getContractId());
-		}else{
-			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(smSupplier.getSupplierId());
-			MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-			if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
-				return resDTO.getMofAccount().getMofNo();
-			}
-		}
-		
-		return null;
-	}
-	
-	/**
 	 * Page navigation to FLDoc search page in FRN.
 	 *
 	 * @return the string
