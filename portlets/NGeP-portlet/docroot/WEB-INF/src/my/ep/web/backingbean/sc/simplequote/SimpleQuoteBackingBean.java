@@ -1870,7 +1870,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			quoteZone.setScQuote(scQuote);
 			tplSpecZoneDtl.setTplSpecZone(quoteZone);
 			
-			if(null != getManagedBean().getZoneName() || "".equals(getManagedBean().getZoneName()) ){
+			if(null == getManagedBean().getZoneName() || StringUtils.isBlank(getManagedBean().getZoneName())){
                 throw new EpException(MessageConst.ERROR_716003);
 			} 
 			
