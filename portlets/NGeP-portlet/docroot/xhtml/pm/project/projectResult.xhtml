@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="projectResult"
+		header="#{lbl['lbl.pm.project.search.result']}" toggleable="true">
+		<p:dataTable id="projectSR"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{projectBackingBean.searchProject}" rows="10"
+			var="projectList" rowIndexVar="index" lazy="true">
+			<ac:paginator for="projectSR" />
+
+			<p:column headerText="#{lbl['lbl.pm.vot.project.code']}"
+				style="width:10%">
+				<h:outputText value="#{projectList.votFundCode}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.pm.vot.project.desc']}"
+				style="width:25%">
+				<h:outputText value="#{projectList.description}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.sub.setia.project.code']}" />
+				</f:facet>
+				<ui:repeat var="projectSetiaList" value="#{projectList.pmSubSetia}">
+					<h:outputText value="#{(projectSetiaList.projectCode)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.sub.setia.project.desc']}" />
+				</f:facet>
+				<ui:repeat var="projectSetiaList" value="#{projectList.pmSubSetia}">
+					<h:outputText value="#{(projectSetiaList.description)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.sub.setia.setia.code']}" />
+				</f:facet>
+				<ui:repeat var="projectSetiaList" value="#{projectList.pmSubSetia}">
+					<h:outputText value="#{(projectSetiaList.setiaCode)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.sub.setia.sub.setia.code']}" />
+				</f:facet>
+				<ui:repeat var="projectSetiaList" value="#{projectList.pmSubSetia}">
+					<h:outputText value="#{(projectSetiaList.subSetiaCode)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.sub.setia.payment']}" />
+				</f:facet>
+				<ui:repeat var="projectSetiaList" value="#{projectList.pmSubSetia}">				 
+					<h:outputText value="#{projectBackingBean.getParameterDesc(projectSetiaList.financingType)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.search.status']}" />
+				</f:facet>
+				<ui:repeat var="projectSetiaList" varStatus="projRecordStat"
+					value="#{projectList.pmSubSetia}">
+					<h:outputText value="#{lbl['lbl.pm.active']}"
+						rendered="#{projRecordStat.index == 1}" />
+					<h:outputText value="#{lbl['lbl.pm.inactive']}"
+						rendered="#{projRecordStat.index ==0}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+</ui:composition>

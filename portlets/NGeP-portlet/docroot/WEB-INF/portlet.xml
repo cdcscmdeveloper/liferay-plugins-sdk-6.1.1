@@ -4604,12 +4604,12 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>pmProgramActivity</portlet-name>
+		<portlet-name>list-program-activity</portlet-name>
 		<display-name>ProgramActivity List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/fund/preRenderProgramActivity.xhtml</value>
+			<value>/xhtml/pm/programActivity/preRenderProgramActivity.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -4636,12 +4636,12 @@
 	</portlet>	
 	
 	<portlet>
-		<portlet-name>pmProject</portlet-name>
+		<portlet-name>list-project</portlet-name>
 		<display-name>Project List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/fund/preRenderProject.xhtml</value>
+			<value>/xhtml/pm/project/preRenderProject.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
