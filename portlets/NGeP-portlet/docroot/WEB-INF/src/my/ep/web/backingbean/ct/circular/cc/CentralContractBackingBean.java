@@ -129,8 +129,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	ContractBackingBean ctBB = null;
 	private static String baseDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-	
-	 /**
+
+	/**
 		 * This constructor method used to initialize the variable on start up
 		 * Setting button if user not call from BPM
 		 * Method used to initialize approver list
@@ -272,7 +272,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		    		     }
 		         }
 		    }
-		    
+		    getManagedBean().setRemarkList(resDTO.getRemarkList());
+		     getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
