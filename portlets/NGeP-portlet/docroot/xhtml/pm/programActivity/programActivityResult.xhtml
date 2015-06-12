@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel id="programActivityResult"
+		header="#{lbl['lbl.pm.vot.program.search.result']}" toggleable="true">
+		<p:dataTable id="programActivitySR"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{programActivityBackingBean.searchVotProgramActivity}"
+			rows="10" var="programActivityList" rowIndexVar="index" lazy="true">
+			<ac:paginator for="programActivitySR" />
+
+			<p:column headerText="#{lbl['lbl.pm.vot.program.code']}"
+				style="width:10%">
+				<h:outputText value="#{programActivityList.votFundCode}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.pm.vot.program.desc']}"
+				style="width:25%">
+				<h:outputText value="#{programActivityList.description}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.program.activity.code']}" />
+				</f:facet>
+				<ui:repeat var="programActivity"
+					value="#{programActivityList.pmPrgActivities}">
+					<h:outputText value="#{(programActivity.prgActivityCode)}" />
+					<br />
+				</ui:repeat>
+			 </p:column>
+			 <p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.program.activity.desc']}" />
+				</f:facet>
+				<ui:repeat var="programActivity"
+					value="#{programActivityList.pmPrgActivities}">
+					<h:outputText value="#{(programActivity.description)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.vot.program.valid.from']}" />
+				</f:facet>
+				<ui:repeat var="programActivity"
+					value="#{programActivityList.pmPrgActivities}">
+					<h:outputText value="#{(programActivity.effDate)}" />
+					<br />
+				</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.vot.program.valid.to']}" />
+				</f:facet>
+				<ui:repeat var="programActivity"
+					value="#{programActivityList.pmPrgActivities}">
+					<h:outputText value="#{(programActivity.expDate)}" />
+					<br />
+					</ui:repeat>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.pm.search.status']}" />
+				</f:facet>
+				<ui:repeat var="programActivity" varStatus="recordStat"
+					value="#{programActivityList.pmPrgActivities}">
+							<h:outputText value="#{lbl['lbl.pm.active']}"   rendered="#{recordStat.index == 1}" />
+							<h:outputText value="#{lbl['lbl.pm.inactive']}" rendered="#{recordStat.index !=1}" />			
+					<br />
+				</ui:repeat>
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
