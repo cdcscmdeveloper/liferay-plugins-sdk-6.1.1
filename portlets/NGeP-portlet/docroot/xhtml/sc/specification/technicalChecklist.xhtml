@@ -270,9 +270,8 @@
 				<!-- <h:panelGroup id="document"> rendered="#{stageTwoTechnical.definationType.parameterId eq '184'}"-->
 				<h:panelGroup id="uploadtech">
 					<p:commandLink oncomplete="uploadDlg.show();return false;"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
 						styleClass="sample#{index}"
-						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP'}"
+						rendered="#{stageTwoTechnical.definationType.parameterCode eq 'UP' and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						update="stageTwotechProposal">
 						<h:graphicImage value="/css/images/design/upload.png" />
 						<f:setPropertyActionListener value="#{stageTwoTechnical}"
@@ -285,8 +284,7 @@
 						styleClass="blue_font" immediate="true"
 						action="#{specificationBackingBean.downloadFile(stageTwoTechnical.scQtCheckListAttachment)}" />
 					<p:commandLink
-						rendered="#{stageTwoTechnical.scQtCheckListAttachment.fileName ne null}"
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+						rendered="#{stageTwoTechnical.scQtCheckListAttachment.fileName ne null and (specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or (!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION))}"
 						action="#{specificationBackingBean.deleteCheckListAttachmentFile(stageTwoTechnical.scQtCheckListAttachment)}"
 						immediate="true" update="@form">
 						<h:graphicImage value="/css/images/design/trash.png"
