@@ -2762,7 +2762,9 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 	 * @param quote the quote
 	 */
 	public void calculateDuration(ScQuote quote) {
-		getManagedBean().setDuration(getTimeDiff(quote.getEndDate(), quote.getStartDate()));
+		if(quote.getStartDate() != null && quote.getEndDate() != null){
+			getManagedBean().setDuration(getTimeDiff(quote.getEndDate(), quote.getStartDate()));
+		}
 	}
 
 	/**
