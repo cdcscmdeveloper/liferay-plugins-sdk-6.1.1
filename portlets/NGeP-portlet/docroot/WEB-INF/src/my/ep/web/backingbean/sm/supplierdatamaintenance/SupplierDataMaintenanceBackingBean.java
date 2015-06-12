@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -200,8 +201,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 
 			}
-			getManagedBean().getSmAppl().getSmSupplierCategories()
-					.removeAll(catList);
 		} else {
 			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
 					.getSmSupplierCategories()) {
@@ -212,8 +211,6 @@ public class SupplierDataMaintenanceBackingBean extends
 				}
 
 			}
-			getManagedBean().getSmAppl().getSmSupplierCategories()
-					.removeAll(catList);
 		}
 		StringBuffer sb = new StringBuffer();
 		String desc = null;
@@ -226,7 +223,28 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 		sb.append(desc);
 		getManagedBean().setCatTypeConfirm(sb.toString());
-		// update();
+	}
+	
+	/**
+	 * Removed un select apporved categories from the list.
+	 * 
+	 * @param e
+	 *            -AjaxBehaviorEvent
+	 */
+	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
+		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
+			Iterator<SmSupplierCategory> iterator = getManagedBean()
+					.getDeleteNewApplCategoryList().iterator();
+			while (iterator.hasNext()) {
+				SmSupplierCategory cat = iterator.next();
+				if ((cat.getRecordStatusFlg() != null && cat
+						.getRecordStatusFlg().compareTo(
+								SupplierManagementConst.APPROVED_RECORD_STATUS) == 0)
+						|| (cat.getApprovedDate() != null)) {
+					iterator.remove();
+				}
+			}
+		}
 	}
 
 	private SmTrackingDairyVO assignTrackingDairyValues(SmAppl appl,
