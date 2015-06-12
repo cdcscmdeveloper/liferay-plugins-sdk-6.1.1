@@ -23,12 +23,13 @@
 			<tr>
 				<td width="15%" style="width: 190px;"><p:outputLabel value="#{lbl['lbl.td.transaction.type']}" /><p:outputLabel
 						value="*" styleClass="mandatory" /></td>
+				
 				<td width="35%"><p:selectOneMenu id="searchOrderTypeDD"
 						value="#{flTrackingDiaryBackingBean.managedBean.searchOrderType}"
 						style="width: 314px;">
 						<f:selectItems
 							value="#{flTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update="searchPanel"
+						<p:ajax event="change" update="searchPanel,searchOrderTypeCO,searchOrderTypePO"
 							listener="#{flTrackingDiaryBackingBean.selectedOrderType}" />
 					</p:selectOneMenu></td>
 <!-- 				<td style="width: 250px;"><p:outputLabel value="#{lbl['lbl.td.order.no']}" /></td> -->
@@ -37,7 +38,16 @@
 			</tr>
 			<tr>
 			<td width="15%" style="width: 190px;"><p:outputLabel value="#{lbl['lbl.td.doc.type']}"	/></td>
-			<td width="35%"><p:selectOneMenu id="searchDocTypeDD" style="width: 314px;"
+			<td width="35%"><p:selectOneMenu id="searchOrderTypeCO" style="width: 314px;" 
+					rendered="#{flTrackingDiaryBackingBean.managedBean.searchOrderType eq ParameterConst.doctypePurchaseOrder}"
+						value="#{flTrackingDiaryBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
+						<p:ajax event="change"
+							listener="#{flTrackingDiaryBackingBean.selectedDoctype}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu id="searchOrderTypePO" style="width: 314px;"
+					rendered="#{flTrackingDiaryBackingBean.managedBean.searchOrderType eq ParameterConst.doctypeContractOrder or flTrackingDiaryBackingBean.managedBean.searchOrderType eq null}"
 						value="#{flTrackingDiaryBackingBean.managedBean.searchDocType}">
 						<f:selectItems
 							value="#{flTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
@@ -51,6 +61,7 @@
 <!-- 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth" > -->
 <!-- 					<p:outputLabel value="#{lbl['lbl.td.doc.status']}" /> -->
 <!-- 					<p:selectOneMenu id="statusId" -->
+
 <!-- 						value="#{flTrackingDiaryBackingBean.managedBean.statusDescId}" -->
 <!-- 						style="width: 314px;"> -->
 <!-- 						<f:selectItems value="#{flTrackingDiaryBackingBean.getStatusDropdownValues('FL',flTrackingDiaryBackingBean.managedBean.searchDocType)}" /> -->
@@ -78,6 +89,13 @@
 			<tr><td width="15%"><p:outputLabel value="#{lbl['lbl.fl.doc.maintain.supp.name']}" /></td>	
 				<td width="35%"><p:inputText size="50"
 					value="#{flTrackingDiaryBackingBean.managedBean.searchSuppName}"></p:inputText></td>	</tr>
+			
+			<tr><td width="15%"><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>	
+				<td width="35%"><p:selectOneMenu id="searchFinancialYear" style="width: 314px;"
+						value="#{flTrackingDiaryBackingBean.managedBean.searchFinancialYear}">
+						<f:selectItems
+							value="#{flTrackingDiaryBackingBean.getFinancialYearOpt()}" />
+					</p:selectOneMenu></td>	</tr>
 <!-- 			</h:panelGrid> -->
 		</table>
 
