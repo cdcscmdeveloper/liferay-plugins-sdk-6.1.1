@@ -4,6 +4,8 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
+import my.ep.util.EpPropertiesUtils;
+
 public class IntegrationConstants {
 
 	public static final String PHIS_BUSINESS_AREA = "2014";
@@ -14,8 +16,8 @@ public class IntegrationConstants {
 	public static final String FILE_EXTENSION_GFMAS = ".GPG";
 	public static final String SEQUENCE_NO = "001";
 
-//	public static final String FILE_PATH = "/batch/Upload/";
-	public static final String FILE_PATH = "C:/Integration/Upload/";
+	public static final String FILE_PATH = "/batch/Upload/";
+//	public static final String FILE_PATH = "C:/Integration/Upload/";
 
 	public static final String GMAS_UPLOAD = "/batch/1GFMAS/OUT/";
 	public static final String GMAS_DOWNLOAD = "/batch/1GFMAS/IN/";
@@ -28,20 +30,23 @@ public class IntegrationConstants {
 	public static final String EPERUNDING_DOWNLOAD_DIR = "/batch/ePerunding/IN/";
 	public static final String EPERUNDING_ARCHIVE_DIR = "/batch/ePerunding/ARCHIVE/";
 
-//	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
-	public static final String ENCRYPTED_FILE_PATH = "C:/Integration/Encryption/encrypt/";
+	public static final String ENCRYPTED_FILE_PATH="/batch/Encryption/encrypt/";
+//	public static final String ENCRYPTED_FILE_PATH = "C:/Integration/Encryption/encrypt/";
 
-//	 public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
-	public static final String DECRYPTED_FILE_PATH = "C:/Integration/Encryption/decrypt/";
+	 public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
+//	public static final String DECRYPTED_FILE_PATH = "C:/Integration/Encryption/decrypt/";
 
-	public static final String SFTP_HOST = "192.168.62.15";    //Stg
+	public static final String SFTP_HOST = EpPropertiesUtils.getInstance().getProperty("sftp.host");    //Stg
 //	public static final String SFTP_HOST = "192.168.120.14";   //Dev
 	public static final int SFTP_PORT = 22;// Integer.parseInt("22");
-	public static final String SFTP_USER = "oracle";
-	public static final String SFTP_PASS = "welcome1";
+	public static final String SFTP_USER = EpPropertiesUtils.getInstance().getProperty("sftp.user");//"oracle";  // "support";
+	public static final String SFTP_PASS = EpPropertiesUtils.getInstance().getProperty("sftp.pass");//"welcome1"; // "suPPort!@#";
 
 	public static final String GMAS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id";
 	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet.war/encryptionKeys/privatekey";
+	
+//	public static final String GMAS_PUBLIC_KEY_PATH = "NGeP-portlet/docroot/encryptionKeys/1gfmasdev_pub.id";
+//	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet/docroot/encryptionKeys/privatekey";
 
 	public static final String GMAS_PASS_PHASE = "eperolehanpsstg";
 
@@ -96,6 +101,8 @@ public class IntegrationConstants {
 	public static final String WORK_PROGRESS_CMPLTD = "S";
 	public static final String WORK_PROGRESS_INPGRS = "P";
 	public static final String WORK_PROGRESS_FAILURE = "F";
+	
+	public static final String RECORD_DELETED_CODE = "C";
 	
 
 }

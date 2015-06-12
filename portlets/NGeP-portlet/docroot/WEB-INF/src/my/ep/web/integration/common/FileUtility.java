@@ -34,6 +34,7 @@ import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
+import my.ep.web.integration.gfmas.EPErrorResponse;
 import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.gfmas.MasterDataMaterialInfo;
 import my.ep.web.integration.gfmas.MasterDataVendor;
@@ -323,51 +324,55 @@ public class FileUtility {
 				StringBuffer line;
 				StringBuffer subLine;
 				for (MasterDataVendor mDataVendor : content) {
-					line = new StringBuffer();
-					line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
-					line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
-					if(null!=mDataVendor.getVendorIdCode())
-						line.append(formatStringField(mDataVendor.getVendorIdCode()	.replaceAll("-", ""), 20, "L"));
-					else
-						line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
-					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
-					line.append(formatStringField(mDataVendor.getName(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getName2(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getAddress(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getAddress2(),35, "L"));
-					line.append(formatStringField(mDataVendor.getAddress3(),35, "L"));
-					line.append(formatStringField(mDataVendor.getPostCode(), 5,"L"));
-					line.append(formatStringField(mDataVendor.getCity(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getRegion(), 3,"L"));
-					line.append(formatStringField(mDataVendor.getCountry(), 2,"L"));
-					line.append(formatStringField(mDataVendor.getTelephoneNo(),	15, "L"));
-					line.append(formatStringField(mDataVendor.getFaxNo(), 15,"L"));
-					line.append(formatStringField(mDataVendor.getEmailAddress(), 100, "L"));
-					line.append(formatStringField(mDataVendor.getGlReconAccount(), 10, "L"));
-					line.append(formatStringField(mDataVendor.getCurrency(), 5,"L"));
-					line.append(formatStringField(mDataVendor.getIncoTerm(), 3,"L"));
-					line.append(formatStringField(mDataVendor.getPaymentTerm(),4, "L"));
-					line.append(formatIntegerField(mDataVendor.getBankAccountInfoCount(), 3, "R"));
-					line.append(formatIntegerField(mDataVendor.getStatus(), 1,"R"));
-					line.append(formatStringField(mDataVendor.getMobileNo(), 15,"L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					if (mDataVendor.getBankAccountInfoList().size() != 0) {
-						for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
-							subLine = new StringBuffer();
-							subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
-							subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
-							subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
-							subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
-							subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
-							subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
-							subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));
-							subLine.append(System.getProperty("line.separator"));
-							writer.write(subLine.toString());
-							writer.flush();
+					
+//					if(mDataVendor.getBankAccountInfoList().size()>0 && !mDataVendor.getVendorIdCode().isEmpty()){
+						
+						line = new StringBuffer();
+						line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
+						line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
+						if(null!=mDataVendor.getVendorIdCode())
+							line.append(formatStringField(mDataVendor.getVendorIdCode()	.replaceAll("-", ""), 20, "L"));
+						else
+							line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
+						line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
+						line.append(formatStringField(mDataVendor.getName(), 35,"L"));
+						line.append(formatStringField(mDataVendor.getName2(), 35,"L"));
+						line.append(formatStringField(mDataVendor.getAddress(), 35,"L"));
+						line.append(formatStringField(mDataVendor.getAddress2(),35, "L"));
+						line.append(formatStringField(mDataVendor.getAddress3(),35, "L"));
+						line.append(formatStringField(mDataVendor.getPostCode(), 5,"L"));
+						line.append(formatStringField(mDataVendor.getCity(), 35,"L"));
+						line.append(formatStringField(mDataVendor.getRegion(), 3,"L"));
+						line.append(formatStringField(mDataVendor.getCountry(), 2,"L"));
+						line.append(formatStringField(mDataVendor.getTelephoneNo(),	15, "L"));
+						line.append(formatStringField(mDataVendor.getFaxNo(), 15,"L"));
+						line.append(formatStringField(mDataVendor.getEmailAddress(), 100, "L"));
+						line.append(formatStringField(mDataVendor.getGlReconAccount(), 10, "L"));
+						line.append(formatStringField(mDataVendor.getCurrency(), 5,"L"));
+						line.append(formatStringField(mDataVendor.getIncoTerm(), 3,"L"));
+						line.append(formatStringField(mDataVendor.getPaymentTerm(),4, "L"));
+						line.append(formatIntegerField(mDataVendor.getBankAccountInfoCount(), 3, "R"));
+						line.append(formatIntegerField(mDataVendor.getStatus(), 1,"R"));
+						line.append(formatStringField(mDataVendor.getMobileNo(), 15,"L"));
+						line.append(System.getProperty("line.separator"));
+						writer.write(line.toString());
+						if (mDataVendor.getBankAccountInfoList().size() != 0) {
+							for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
+								subLine = new StringBuffer();
+								subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
+								subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
+								subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
+								subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
+								subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
+								subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
+								subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));
+								subLine.append(System.getProperty("line.separator"));
+								writer.write(subLine.toString());
+								writer.flush();
+					}
 						}
 						
-					}
+//					}
 				}
 			}else{
 				System.out.println("content is null");
@@ -1139,10 +1144,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1232,10 +1237,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1281,10 +1286,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1352,10 +1357,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1422,10 +1427,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1478,10 +1483,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1528,10 +1533,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1586,10 +1591,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1633,10 +1638,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1699,10 +1704,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -1764,10 +1769,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
 
 		} catch (IOException e) {
 
@@ -2173,5 +2178,53 @@ public class FileUtility {
 			}
 		}
 	}*/
+	
+	
+	
+	// Error file
+	
+	public void errorFileOutPutStream(List<EPErrorResponse> content,
+			String filePath) {
+		String SERVICE_CODE = "GLMDE";
+
+		String fileName = createFileNamePhis(SERVICE_CODE);
+
+		Writer writer = null;
+
+		try {
+			writer = new BufferedWriter(new OutputStreamWriter(
+					new FileOutputStream(filePath + fileName), "utf-8"));
+
+			if (content.size() != 0) {
+				StringBuffer line;
+				for (EPErrorResponse epErrorResponse : content) {
+					line = new StringBuffer();
+//					line.append(formatIntegerField(epErrorResponse.getYear(), 4, "R"));
+//					line.append(formatStringField(epErrorResponse.getCode(), 8, "L"));
+//					line.append(formatStringField(epErrorResponse.getPtjCode(), 2,"L"));
+//					line.append(formatStringField(epErrorResponse.getDescription(),255, "L"));
+//					line.append(formatStringField(epErrorResponse.getStatus(), 1, "L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
+					writer.flush();
+				}
+
+				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
+
+			}
+		} catch (IOException e) {
+
+		} finally {
+
+			if (writer != null) {
+				try {
+					writer.close();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+	}
 
 }
