@@ -60,6 +60,7 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchPhysContractNo;
 	private Long statusDescId;
 	private Long searchProcurementTypeId;
+	private int searchFinancialYear;
 	
 	private VFlDocument vFlDocument;
 
@@ -118,6 +119,9 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				}
 				if(getSearchSuppName()!=null && getSearchSuppName()!="") {
 					reqDTO.setSupplierName(getSearchSuppName());
+				}
+				if(getSearchFinancialYear()!= 0){
+					reqDTO.setFinancialYear(getSearchFinancialYear());
 				}
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
@@ -712,6 +716,18 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void resetDocumentDataModel() {
 		this.flDocumentDataModel = new FlDocumentPagingDataModel();
+	}
+	/**
+	 * @return the searchFinancialYear
+	 */
+	public int getSearchFinancialYear() {
+		return searchFinancialYear;
+	}
+	/**
+	 * @param searchFinancialYear the searchFinancialYear to set
+	 */
+	public void setSearchFinancialYear(int searchFinancialYear) {
+		this.searchFinancialYear = searchFinancialYear;
 	}
 
 }
