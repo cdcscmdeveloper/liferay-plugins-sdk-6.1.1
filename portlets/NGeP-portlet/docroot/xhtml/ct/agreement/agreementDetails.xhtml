@@ -46,8 +46,8 @@
 						<p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 					</td> 
 					<td>
-						<p:inputText style="width:130px;" disabled="true" maxlength="30"
-				        	value="#{agreementBackingBean.managedBean.ctContract.loa.loaNo}" />
+						<p:inputTextarea autoResize="false"  style="width:130px;margin-bottom:5px;" 
+						     disabled="true" rows="2" maxlength="30" value="#{agreementBackingBean.managedBean.ctContract.loa.loaNo}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
 					</td>
 					<td class="columnWidth150">
@@ -100,7 +100,7 @@
 					</td>
 					<td colspan="3">
 						<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-							disabled="true" rows="4" style="width:450px; margin-bottom:5px;" 
+							disabled="true" rows="4" style="width:470px; margin-bottom:5px;" 
 							value="#{agreementBackingBean.managedBean.ctContract.contractName}" />
 					</td>					
 				</tr>
@@ -180,12 +180,12 @@
 	    </h:panelGrid>
 		</h:panelGrid>
 		<p:outputPanel id="justificationPanel">
-		<h:panelGrid columns="2" style="width:740px;" 
+		<h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
 			rendered="#{agreementBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
 		 	agreementBackingBean.managedBean.contractVer.ctContractValue.concession}">
 			<p:outputLabel for="justificationLbl" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
 			<p:inputTextarea id="justificationLbl" value="#{agreementBackingBean.managedBean.contractVer.ctContractValue.justification}"
-	  			rows="3" style="width:450px;" maxlength="200" autoResize="false" disabled="true" />			
+	  			rows="3" style="width:470px;" maxlength="200" autoResize="false" disabled="true" />			
 	    </h:panelGrid> 
 	  	</p:outputPanel>
 	</p:panel>
