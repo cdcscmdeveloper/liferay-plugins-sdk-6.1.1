@@ -91,6 +91,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> smapplShareHolders;
 	private List<SmSupplierCategory> activeCategoryList;
 	private List<SmSupplierCategory> approvedCategoryList;
+	private List<SmSupplierCategory> deleteNewApplCategoryList;
 	private List<SmSupplierBank> smSupplierBankList;
 
 	// temp added for testing
@@ -1132,6 +1133,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setRegCatCodeConfirmMsg(String regCatCodeConfirmMsg) {
 		this.regCatCodeConfirmMsg = regCatCodeConfirmMsg;
+	}
+
+	public List<SmSupplierCategory> getDeleteNewApplCategoryList() {
+		return deleteNewApplCategoryList;
+	}
+
+	public void setDeleteNewApplCategoryList(
+			List<SmSupplierCategory> deleteNewApplCategoryList) {
+		this.deleteNewApplCategoryList = deleteNewApplCategoryList;
 	}
 
 	public boolean isDisplaySearchPage() {
