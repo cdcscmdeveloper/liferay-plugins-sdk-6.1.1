@@ -5,6 +5,7 @@ package my.ep.web.backingbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -15,30 +16,23 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.ct.VCtDocument;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
+import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.managedbean.trackingdiary.FlTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -336,4 +330,17 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
 	}
 	
+	  /**
+		 * retrieve financial year options for current year and past 7 years
+		 * @return financial year options
+		 */
+		public static List<SelectItem> getFinancialYearOpt() {
+			int years = 0;
+			List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
+			for(Integer i = 0;i < 7;i++){
+				years = CommonMethod.getYear(-i);
+				 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
+			}
+			return financialYearOpt;
+		} 
 }
