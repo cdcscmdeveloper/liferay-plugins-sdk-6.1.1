@@ -505,7 +505,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 				List<BidItemBean> biddingItemPriceList = resDTO.getBidPriceItems();
 				if (CollectionUtils.isNotEmpty(biddingItemPriceList)) {
 					for (BidItemBean itemBean : biddingItemPriceList) {
-						String supplierName = getSupplierNameById(itemBean.getSupplierId());
+						String supplierName = getSupplierNameById(
+								itemBean.getSupplier().getSupplierId());
 						itemBean.setSupplierName(supplierName);
 					}
 				}
