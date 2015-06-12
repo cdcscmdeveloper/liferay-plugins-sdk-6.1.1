@@ -190,13 +190,13 @@
 	    </h:panelGrid>
 	</h:panelGrid>
 	<p:outputPanel id="justificationPanel">
-	 <h:panelGrid columns="2" style="width:700px;" 
+	 <h:panelGrid columns="2" style="width:765px;"  columnClasses="columnWidth150"
  		rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt or 
        	contractDetailsBackingBean.managedBean.contractVer.ctContractValue.concession}">
 	   	   <p:outputLabel id="justificationLbls" value="#{lbl['lbl.ct.justification.ap201']}"  styleClass="required"/>
 	  <h:panelGrid columns="2">
 	    <p:inputTextarea id="justificationLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-		  	rows="3" style="width:450px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+		  	rows="3" style="width:470px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
 		  	required="true" autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputTextarea>
 		   	<p:message for="justificationLbl" display="icon"/>	
 	  </h:panelGrid>	

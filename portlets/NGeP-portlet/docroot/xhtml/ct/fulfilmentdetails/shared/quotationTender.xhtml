@@ -16,8 +16,21 @@
 	    <h:panelGrid columns="4" style="width:100%;" styleClass="columnTop" columnClasses="columnWidth150,columnWidth250,columnWidth250,columnWidth200">
 		
 			<p:outputLabel value="#{lbl['lbl.ct.proc.mode']}" />
-		    <p:inputText  style="width:250px;" disabled="true" maxlength="50"
+		    <p:inputTextarea  style="width:170px;" disabled="true" maxlength="50" rows="2" autoResize="false" 
 		       value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.procurementMode)}" />
+		       
+		         <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
+			<h:panelGrid columns="3">				
+				<p:inputTextarea id="ctLoaNo" rows="2"  style="width:170px;margin-bottom: 5px;" disabled="true" maxlength="30" autoResize="false" 
+				   value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}" />
+				<p:spacer width="1"/>
+			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
+			</h:panelGrid>	
+			
+			<p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
+			<p:inputText style="width:170px;" disabled="true"  
+			  value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.fulfillmentType)}" />		
+			
 		       
 		       <p:outputLabel value="#{lbl['lbl.ct.loa.no']}" />
 			<h:panelGrid columns="3">
@@ -27,35 +40,15 @@
 			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.no']}" />
 			</h:panelGrid>
 			
-			<p:outputLabel value="#{lbl['lbl.ct.fulfilment.type']}" />
-			<p:inputText style="width:170px;" disabled="true"  
-			  value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.fulfillmentType)}" />		
-			  
-			    <p:outputLabel value="#{lbl['lbl.ct.loa.physical.no']}" />
-			<h:panelGrid columns="3">				
-				<p:inputTextarea id="ctLoaNo" rows="2"  style="width:170px;margin-bottom: 5px;" disabled="true" maxlength="30" autoResize="false" 
-				   value="#{contractDetailsBackingBean.managedBean.ctContract.loaPhysicalNo}" />
-				<p:spacer width="1"/>
-			    <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}" />
-			</h:panelGrid>	
-			
-			<p:outputLabel value="#{lbl['lbl.ct.pub.date']}" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/>
-			<p:inputText  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"
-				style="width:80px;" disabled="true" value="#{contractDetailsBackingBean.managedBean.ctContract.publishDate}">
-				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-		    </p:inputText>			
+			 <p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
+		    <p:inputText  style="width:170px;" disabled="true" maxlength="50"
+		       value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.contractType)}" />
 		    
 		    	<p:outputLabel value="#{lbl['lbl.ct.loa.ack.date']}" />
 			<p:inputText style="width:170px;" disabled="true"
 			  value="#{contractDetailsBackingBean.managedBean.ctContract.ackDate}">
 			  <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			</p:inputText>
-		    
-			
-			  <p:outputLabel value="#{lbl['lbl.ct.contract.Type']}" />
-		    <p:inputText  style="width:170px;" disabled="true" maxlength="50"
-		       value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.ctContract.contractType)}" />
-			
 		    
 		    <p:outputLabel value="#{lbl['lbl.ct.service.fee']}" />
 			<h:panelGrid columns="4">
@@ -65,6 +58,12 @@
 				<p:spacer width="1" />
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.fee']}" />
 		    </h:panelGrid>
+		    
+		    <p:outputLabel value="#{lbl['lbl.ct.pub.date']}" rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"/>
+			<p:inputText  rendered="#{!contractDetailsBackingBean.managedBean.directPurchase}"
+				style="width:80px;" disabled="true" value="#{contractDetailsBackingBean.managedBean.ctContract.publishDate}">
+				<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+		    </p:inputText>			
 		    
 	 </h:panelGrid>
    </p:panel>
