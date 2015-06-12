@@ -111,6 +111,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String gfmasErrorContent;
 	private String bpmTaskName;
 	
+	private boolean acknowledged;
+	
 	/** The from page url. */
 	private String fromPageUrl;
 	
@@ -600,5 +602,18 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 		this.bpmTaskName = bpmTaskName;
 	}
 
+	/**
+	 * @return the acknowledged
+	 */
+	public boolean isAcknowledged() {
+		return acknowledged;
+	}
+
+	/**
+	 * @param acknowledged the acknowledged to set
+	 */
+	public void setAcknowledged(boolean acknowledged) {
+		this.acknowledged = acknowledged;
+	}
 
 }

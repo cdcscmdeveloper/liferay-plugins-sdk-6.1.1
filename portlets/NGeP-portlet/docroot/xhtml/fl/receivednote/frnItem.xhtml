@@ -110,7 +110,12 @@
 				</h:panelGroup>
 			</p:column>	
 			<p:column>
-				<h:outputText id="remaingQtyTxt" styleClass="colFloatRight" value="#{receivedNoteBackingBean.getRemainingQuantity(item)}" >
+				<h:outputText id="remaingQtyTxt" styleClass="colFloatRight" rendered="#{receivedNoteBackingBean.managedBean.isAcknowledged() eq 'false'}"  value="#{receivedNoteBackingBean.getRemainingQuantity(item)}" >
+					<f:converter converterId="dynamicNumberConverter" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
+				</h:outputText>
+				<h:outputText  styleClass="colFloatRight" 
+					rendered="#{receivedNoteBackingBean.managedBean.isAcknowledged() eq 'true'}" value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty-item.receivedQty}" >
 					<f:converter converterId="dynamicNumberConverter" />
 					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, item.flDelOrderItem.flFulfilmentItemAddr.scRequestItem.uom.uomCode)}" />
 				</h:outputText>

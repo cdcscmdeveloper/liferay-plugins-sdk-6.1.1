@@ -567,6 +567,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
 				recNoteBB.getManagedBean().setFrnCancellationProcess(true);
 			}
+			recNoteBB.getManagedBean().setAcknowledged(false);
+			if(Long.parseLong(statusDesc)==FulfilmentStatusConst.FN_ACKNOWLEDGED || Long.parseLong(statusDesc)==FulfilmentStatusConst.FN_REJECTED || Long.parseLong(statusDesc)==FulfilmentStatusConst.FN_CANCELLED){
+				recNoteBB.getManagedBean().setAcknowledged(true);
+			}
+			//recNoteBB.getStatusDescById(statusDesc)
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.getManagedBean().setHideRemarks(true);
 			}
