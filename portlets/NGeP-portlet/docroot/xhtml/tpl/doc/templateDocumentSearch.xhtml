@@ -28,7 +28,7 @@
 					<td colspan="4" style="text-align:right;">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"
 							action="#{templateDocBackingBean.tempDocSearch}"
-							  process="@this,panel1" update="resultID" />
+							  process="@this,panel1" update="tplDocMasterDt" />
 
 						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{templateDocBackingBean.reset}" 
 							   update="panel1,panel2" resetValues="true" partialSubmit="true" process="@this">

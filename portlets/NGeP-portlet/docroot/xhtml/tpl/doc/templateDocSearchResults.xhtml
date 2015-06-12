@@ -5,56 +5,46 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-	
    
-		<p:panel id="panel2" header="Result" toggleable="true">
-			<table style="width:100%">
-				<tr>
-					<td>
-						<p:dataTable id="resultID" selectionMode="single" 
-							value="#{templateDocBackingBean.managedBean.templateSearchList}" 
-							var="tplMasterObj" rowKey="#{tplMasterObj.docMasterId}"  selection="#{templateDocBackingBean.managedBean.selectedTemplate}" 
-							 width="100%" editable="true">
-							   <p:columnGroup type="header">
-								<p:row>
-									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.section.title']}"></p:column>
-									<p:column rowspan="1" headerText="#{lbl['lbl.pm.procurement.category']}"></p:column>
-									<ui:remove><p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.processtype']}"></p:column>
-									 <p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.type']}"></p:column></ui:remove>
-									<p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.view.edit']}"></p:column>
-								</p:row>
-							</p:columnGroup>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.docTitle}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{templateDocBackingBean.getParameterDesc(tplMasterObj.procurementCategory)}" />
-							</p:column>
-							<ui:remove>  
-							<p:column>
-							
-								<h:outputText value="#{tplMasterObj.processType}" /> 
-							</p:column>
-							
-							 
-							<p:column>								
-							</p:column>
-							</ui:remove>
-							
-							<p:column>
-                                <p:commandLink action="#{templateDocBackingBean.goToMaint(tplMasterObj)}">
-                                      <p:graphicImage value="/css/images/design/ico-viewnedit.png" update="resultID" />
-                                </p:commandLink>
-							 </p:column>
-						</p:dataTable>
-					</td>
-				</tr>
-				<tr>
-					<td style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.btn.create']}" update="resultID"
-							action="#{templateDocBackingBean.createNewTemplate}" />
-					</td>
-				</tr>
-			</table>
-		</p:panel>
+	<p:panel id="panel2" header="Result" toggleable="true">
+		<table style="width:100%">
+			<tr>
+				<td>
+					<p:dataTable id="tplDocMasterDt" var="tplMasterObj" lazy="true" rows="10" rowIndexVar="rowIndex" styleClass="ctlisttree"
+						rowKey="#{tplMasterObj.docMasterId}" value="#{templateDocBackingBean.managedBean.docMasterDataModel}">
+						<ac:paginator for="tplDocMasterDt" />					
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="1" headerText="#{lbl['lbl.tpl.doc.section.title']}"></p:column>
+								<p:column rowspan="1" headerText="#{lbl['lbl.pm.procurement.category']}"></p:column>
+								<p:column rowspan="1" headerText="#{lbl['lbl.pm.status']}"></p:column>
+								<p:column rowspan="1" headerText="#{lbl['lbl.tpl.spec.search.action']}"></p:column>
+							</p:row>
+						</p:columnGroup>
+						<p:column>
+							<h:outputText value="#{tplMasterObj.docTitle}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{templateDocBackingBean.getParameterDesc(tplMasterObj.procurementCategory)}" />
+						</p:column>
+						<p:column>
+							#{(tplMasterObj.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
+						</p:column>
+						<p:column>
+							<p:commandButton icon="ui-icon-edit" style="background-color:transparent !important; border:0px none;"
+								action="#{templateDocBackingBean.goToMaint(tplMasterObj)}" update="tplDocMasterDt" >
+								<f:setPropertyActionListener target="#{templateDocBackingBean.managedBean.selectedTemplate}" value="#{tplMasterObj}" />
+							</p:commandButton>
+						 </p:column>
+					</p:dataTable>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.btn.create']}" update="tplDocMasterDt"
+						action="#{templateDocBackingBean.createNewTemplate}" />
+				</td>
+			</tr>
+		</table>
+	</p:panel>
 </ui:composition>
