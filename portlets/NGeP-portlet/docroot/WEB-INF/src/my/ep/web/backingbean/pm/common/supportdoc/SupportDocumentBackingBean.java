@@ -1180,16 +1180,21 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 		if(pmDocument.getDocCategoryCode().getParameterId()==null){
 			throw new EpException(MessageConst.ERROR_770083);
 		}
-		
-		if (StringUtils.isBlank(pmDocument.getDisplaySeq())) {
+		String displaySeq = pmDocument.getDisplaySeq();
+		if (StringUtils.isBlank(displaySeq)) {
 			throw new EpException(MessageConst.ERROR_770086,
 					new String[] { ResourceBundleUtils.getMessage(
 							LABEL_dISPLAY_PRIORITY_KEY,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()) });
 
+		} else if (!StringUtils.isNumeric(displaySeq)) {
+
+			throw new EpException(MessageConst.ERROR_770201, new String[] {
+					ResourceBundleUtils.getMessage(LABEL_dISPLAY_PRIORITY_KEY,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), displaySeq });
 		} else {
-			String displaySeq = pmDocument.getDisplaySeq();
 			pmDocument.setDisplaySeq(displaySeq.trim());
 			if (validateDisplaySequence(pmDocument)) {
 				throw new EpException(MessageConst.ERROR_770200,
