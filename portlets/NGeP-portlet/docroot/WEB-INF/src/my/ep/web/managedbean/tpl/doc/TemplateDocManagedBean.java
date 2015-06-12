@@ -285,6 +285,9 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	}
 
 	public List<TplDocSection> getImportedSectionList() {
+		if(importedSectionList==null) {
+			importedSectionList = new ArrayList<TplDocSection>();
+		}
 		return importedSectionList;
 	}
 
