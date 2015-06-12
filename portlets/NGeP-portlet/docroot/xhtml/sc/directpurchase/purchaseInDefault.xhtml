@@ -382,7 +382,7 @@
 			sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
 			allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
 			invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
-			update="attachmentId" oncomplete="uploadDlg.hide()">
+			update="@form" oncomplete="uploadDlg.hide()">
 		</p:fileUpload>
 	</p:dialog>
 </ui:composition>
