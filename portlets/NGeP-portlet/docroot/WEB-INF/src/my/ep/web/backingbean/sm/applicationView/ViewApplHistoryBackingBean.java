@@ -24,6 +24,7 @@ public class ViewApplHistoryBackingBean extends
 	 * Pre-render for View Application History
 	 */
 	public void preRenderViewApplicationHistory() {
+		renewSesionObject();
 		initLogin();
 		getManagedBean().setViewSupplierProfile(true);
 		getManagedBean().setReviewApplicationExist(false);

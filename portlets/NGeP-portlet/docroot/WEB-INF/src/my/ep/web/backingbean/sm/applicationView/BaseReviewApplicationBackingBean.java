@@ -802,20 +802,26 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 
 		StringBuffer sb = new StringBuffer();
 		int i = 0;
-		for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
-				.getSmChequeSignatories()) {
-			i++;
-			if (i <= 2) {
-				sb.append(smChequeSignatoryTmp.getSmPersonnel().getName())
-						.append(",");
+
+		if (shareBankBean.getSmChequeSignatories() != null
+				&& !shareBankBean.getSmChequeSignatories().isEmpty()) {
+			if (shareBankBean.getSmChequeSignatories().size() == 1) {
+				sb.append(
+						shareBankBean.getSmChequeSignatories().get(0)
+								.getSmPersonnel().getName()).append(",");
 			} else {
-				sb.append("<br />");
-				i = 0;
+				for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
+						.getSmChequeSignatories()) {
+					i++;
+					sb.append(
+							i
+									+ ") "
+									+ smChequeSignatoryTmp.getSmPersonnel()
+											.getName()).append("<br />");
+				}
 			}
 		}
-		if (sb.length() > 0) {
-			sb.deleteCharAt(sb.lastIndexOf(","));
-		}
+
 		getManagedBean().setChequeSignPersonnelName(sb.toString());
 
 		if (shareBankBean.getSmSupplierBranch() != null
