@@ -351,28 +351,6 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	}
 	
 	/**
-	 * Retrieve mof no based on supplier id.
-	 *
-	 * @param smSupplier the sm supplier
-	 * @return the string
-	 */
-	public String retrieveMofNo(SmSupplier smSupplier) {
-		if(getManagedBean().getStopInstr().getFlRequest().getCtContract() != null){
-			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-			return ctSupplierSO.retrieveSupplierMOFNoByContractId(getManagedBean().getStopInstr().getFlRequest().getCtContract().getContractId());
-		}else{
-			IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierId(smSupplier.getSupplierId());
-			MofAccountResDTO resDTO = mofAccountSO.retrieveMofNoBySupplierId(reqDTO);
-			if(resDTO.isSuccessful() && resDTO.getMofAccount()!=null) {
-				return resDTO.getMofAccount().getMofNo();
-			}
-		}
-		return null;
-	}
-	
-	/**
 	 * Page navigation to FLDoc search page in StopInstr.
 	 *
 	 * @return the string

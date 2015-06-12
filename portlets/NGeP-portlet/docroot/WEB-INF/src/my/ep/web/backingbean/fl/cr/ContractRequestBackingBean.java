@@ -1257,7 +1257,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				//getManagedBean().setGstRegistrationDate(flRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getGstRegistrationDate());
 				//getManagedBean().setGstRegistrationNo(flRequest.getSmSupplier().getSmAppl().getSmCompanyBasic().getGstRegistrationNo());
 			}
-			
+			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
+			supplierDtl.setMofNo(ctSupplierSO.retrieveSupplierMOFNoByContractId(flRequest.getCtContract().getContractId()));
 			supplierDtl.setFaxNo(ctSupplierDtl.getSupplierFaxNo());
 			supplierDtl.setFlFulfilmentRequest(flRequest);
 			supplierDtl.setPhoneNo(ctSupplierDtl.getSupplierPhoneNo());
@@ -3185,16 +3186,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		public String backToPervious() {
 			return "flDocSearch";
 		}
-		/**
-		 * Retrieve mof no based on SupplierId.
-		 *
-		 * @param smSupplier the sm supplier
-		 * @return the string
-		 */
-		public String retrieveMofNo(SmSupplier smSupplier) {
-			IContractSupplierSO ctSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSupplierSO.class);
-				return ctSupplierSO.retrieveSupplierMOFNoByContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
-		}
+		
 		/**
 		 * get the Request Item Information based on RequestNoteItemId,SupplierId and PriceType.
 		 *
