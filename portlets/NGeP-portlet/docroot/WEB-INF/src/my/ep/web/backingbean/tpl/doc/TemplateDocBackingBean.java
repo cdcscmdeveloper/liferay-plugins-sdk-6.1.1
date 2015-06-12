@@ -185,7 +185,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 	}
 
 	public void reset() {  
-		this.getManagedBean().setTemplateSearchList(null);
+		this.getManagedBean().getDocMasterDataModel().resetData();
 		this.getManagedBean().setProcurementCategoryId(null);
 		this.getManagedBean().setProcessTypeId(null);
 		this.getManagedBean().setTitle(null);
@@ -792,32 +792,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 	}
 
 	public void tempDocSearch() {
-		ITemplateDocSO  templateDocSO = null;
-		try {
-			templateDocSO = (ITemplateDocSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateDocSO.class);
-			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-			
-			SearchBean<TplDocMaster> searchBean = new SearchBean<TplDocMaster>();
-			searchBean.setNavigatable(false);
-			Long templLong = this.getManagedBean().getProcurementCategoryId();
-			if(null != templLong){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementCategory.parameterId",SearchOperator.OPERATOR_EQUALS.value(),templLong));
-			}
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD));
-			String title=this.getManagedBean().getTitle();
-			if(null != title){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_LIKE.value(),title,true));
-			}
-			String desc=this.getManagedBean().getDesc();
-			if(null != desc){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docDesc",SearchOperator.OPERATOR_LIKE.value(),desc));
-			}
-			reqDTO.setSearchBean(searchBean);
-			TemplateDocResDTO resDTO = templateDocSO.searchTemplateDoc(reqDTO);
-			this.getManagedBean().setTemplateSearchList(resDTO.getDocMasterList());
-		} finally {
-			templateDocSO = null;
-		}
+		getManagedBean().getDocMasterDataModel().reloadData();
 	}
 	
 	public String createPDF() throws Exception {

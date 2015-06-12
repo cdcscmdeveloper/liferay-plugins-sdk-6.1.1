@@ -10,10 +10,21 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.tpl.doc.ITemplateDocSO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.tpl.doc.TemplateDocReqDTO;
+import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.persistence.entity.ct.agreement.CtAgreementContent;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.model.TreeNode;
 
@@ -59,12 +70,46 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private TreeNode selectedImpSection;
 	
 	private List<TplDocMaster> importMasterList;
-	private List<TplDocMaster> templateSearchList;
 	private List<TplDocSection> variableList;
 	private List<TplDocSection> deletedList;
 	private List<TplDocSection> importedSectionList;
 	private Map<TplDocSection, TreeNode> docSectionMap;
 
+	private IPagingDataModel<TplDocMaster> docMasterDataModel = new DocMasterPagingDataModel();
+	
+	private class DocMasterPagingDataModel extends PagingDataModel<TplDocMaster> {
+		private static final long serialVersionUID = 1L;
+		public DocMasterPagingDataModel() {
+			super("tplDocMasterDt", true);
+		}
+		
+		@Override
+		public ISearchResultBean<TplDocMaster> pageChangeListener(ISearchBean<TplDocMaster> searchBean) {
+			try {
+				ITemplateDocSO templateDocSO = (ITemplateDocSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateDocSO.class);
+				TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+				
+				if(null != getProcurementCategoryId()){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementCategory.parameterId",SearchOperator.OPERATOR_EQUALS.value(), getProcurementCategoryId()));
+				}
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD));
+				if(null != getTitle()){
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_LIKE.value(), getTitle(), true));
+				}
+				
+				reqDTO.setSearchBean(searchBean);
+				TemplateDocResDTO resDTO = templateDocSO.searchTemplateDoc(reqDTO);
+				
+				if(resDTO.isSuccessful()) {
+					return resDTO.getDocMasterResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+	}
+	
 	/**
 	 * TemplateManagedBean constructor.
 	 */	
@@ -265,14 +310,6 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.selectedSectionText = selectedSectionText;
 	}
 
-	public List<TplDocMaster> getTemplateSearchList() {
-		return templateSearchList;
-	}
-
-	public void setTemplateSearchList(List<TplDocMaster> templateSearchList) {
-		this.templateSearchList = templateSearchList;
-	}
-
 	public List<TplDocSection> getDeletedList() {
 		if(deletedList==null) {
 			deletedList = new ArrayList<TplDocSection>();
@@ -325,5 +362,13 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 	public void setSelectedImpSection(TreeNode selectedImpSection) {
 		this.selectedImpSection = selectedImpSection;
+	}
+
+	public IPagingDataModel<TplDocMaster> getDocMasterDataModel() {
+		return docMasterDataModel;
+	}
+
+	public void setDocMasterDataModel(IPagingDataModel<TplDocMaster> docMasterDataModel) {
+		this.docMasterDataModel = docMasterDataModel;
 	}
 }
