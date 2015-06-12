@@ -1400,7 +1400,7 @@
 		<css-class-wrapper>fund search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmProgramActivity</portlet-name>
+		<portlet-name>list-program-activity</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 
@@ -1412,7 +1412,7 @@
 		<css-class-wrapper>programActivity search-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>pmProject</portlet-name>
+		<portlet-name>list-project</portlet-name>
 		<icon>/icon.png</icon>
 		<control-panel-entry-category>apps</control-panel-entry-category>
 		<control-panel-entry-weight>1.5</control-panel-entry-weight> 

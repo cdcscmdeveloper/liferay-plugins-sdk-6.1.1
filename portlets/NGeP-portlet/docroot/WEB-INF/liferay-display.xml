@@ -62,8 +62,8 @@
 			<portlet id="list-vot"></portlet>
 			<portlet id="list-gl-account"></portlet>
             <portlet id="list-fund"></portlet>
-            <portlet id="pmProgramActivity"></portlet>
-            <portlet id="pmProject"></portlet>					
+            <portlet id="list-program-activity"></portlet>
+            <portlet id="list-project"></portlet>					
 			
 		</category>
 		<!-- Profile Management - END -->		
