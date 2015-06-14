@@ -53,6 +53,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.sc.supplierproposal.TechnicalStaffBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -203,23 +204,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	/** The technical no of years user score. */
 	private ScQtCheckListScore technicalNoOfYearsUserScore;
 
-	/** The compliance summary qual suppliers. */
-	private List<ScQtEvaluationResultDtl> complianceSummaryQualSuppliers;
-
-	/** The compliance summary dis qual suppliers. */
-	private List<ScQtEvaluationResultDtl> complianceSummaryDisQualSuppliers;
-
 	/** The evaluation compliance list. */
 	private List<ScQtProposalChecklist> evaluationComplianceList;
 
 	/** The spec item list. */
 	private List<TplSpecQuestion> specItemList;
-
-	/** The compliance qualified suppliers. */
-	private int complianceQualifiedSuppliers;
-
-	/** The compliance dis qualified suppliers. */
-	private int complianceDisQualifiedSuppliers;
 
 	/** The prp company experience list. */
 	private List<ScQtPRPExperience> prpCompanyExperienceList;
@@ -249,34 +238,16 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtProposalScore> techGovProposalScore;
 
 	/** The evaluation summary qual suppliers. */
-	private List<ScQtEvaluationResultDtl> evaluationSummaryQualSuppliers;
+	private IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDM;
 
 	/** The evaluation summary dis qual suppliers. */
-	private List<ScQtEvaluationResultDtl> evaluationSummaryDisQualSuppliers;
+	private IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM;
 
 	/** The summary item list. */
 	private List<ScRequestItem> summaryItemList;
 
 	/** The singlesummary item list. */
 	private ScRequestItem singlesummaryItemList;
-
-	/** The item summary qual suppliers. */
-	private List<ScQtEvaluationResultDtl> itemSummaryQualSuppliers;
-
-	/** The item summary dis qual suppliers. */
-	private List<ScQtEvaluationResultDtl> itemSummaryDisQualSuppliers;
-
-	/** The item tot qual suppliers. */
-	private int itemTotQualSuppliers;
-
-	/** The item tot dis qual suppliers. */
-	private int itemTotDisQualSuppliers;
-
-	/** The eva tot qualified suppliers. */
-	private int evaTotQualifiedSuppliers;
-
-	/** The eva tot dis qualified suppliers. */
-	private int evaTotDisQualifiedSuppliers;
 
 	/** The tpl spec zone dtls. */
 	private List<TplSpecZoneDtl> tplSpecZoneDtls;
@@ -1666,45 +1637,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the compliance qualified suppliers.
-	 * 
-	 * @return the compliance qualified suppliers
-	 */
-	public int getComplianceQualifiedSuppliers() {
-		return complianceQualifiedSuppliers;
-	}
-
-	/**
-	 * Sets the compliance qualified suppliers.
-	 * 
-	 * @param complianceQualifiedSuppliers
-	 *            the new compliance qualified suppliers
-	 */
-	public void setComplianceQualifiedSuppliers(int complianceQualifiedSuppliers) {
-		this.complianceQualifiedSuppliers = complianceQualifiedSuppliers;
-	}
-
-	/**
-	 * Gets the compliance dis qualified suppliers.
-	 * 
-	 * @return the compliance dis qualified suppliers
-	 */
-	public int getComplianceDisQualifiedSuppliers() {
-		return complianceDisQualifiedSuppliers;
-	}
-
-	/**
-	 * Sets the compliance dis qualified suppliers.
-	 * 
-	 * @param complianceDisQualifiedSuppliers
-	 *            the new compliance dis qualified suppliers
-	 */
-	public void setComplianceDisQualifiedSuppliers(
-			int complianceDisQualifiedSuppliers) {
-		this.complianceDisQualifiedSuppliers = complianceDisQualifiedSuppliers;
-	}
-
-	/**
 	 * Gets the spec item list.
 	 * 
 	 * @return the spec item list
@@ -1917,44 +1849,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the eva tot qualified suppliers.
-	 * 
-	 * @return the eva tot qualified suppliers
-	 */
-	public int getEvaTotQualifiedSuppliers() {
-		return evaTotQualifiedSuppliers;
-	}
-
-	/**
-	 * Sets the eva tot qualified suppliers.
-	 * 
-	 * @param evaTotQualifiedSuppliers
-	 *            the new eva tot qualified suppliers
-	 */
-	public void setEvaTotQualifiedSuppliers(int evaTotQualifiedSuppliers) {
-		this.evaTotQualifiedSuppliers = evaTotQualifiedSuppliers;
-	}
-
-	/**
-	 * Gets the eva tot dis qualified suppliers.
-	 * 
-	 * @return the eva tot dis qualified suppliers
-	 */
-	public int getEvaTotDisQualifiedSuppliers() {
-		return evaTotDisQualifiedSuppliers;
-	}
-
-	/**
-	 * Sets the eva tot dis qualified suppliers.
-	 * 
-	 * @param evaTotDisQualifiedSuppliers
-	 *            the new eva tot dis qualified suppliers
-	 */
-	public void setEvaTotDisQualifiedSuppliers(int evaTotDisQualifiedSuppliers) {
-		this.evaTotDisQualifiedSuppliers = evaTotDisQualifiedSuppliers;
-	}
-
-	/**
 	 * Gets the summary item list.
 	 * 
 	 * @return the summary item list
@@ -1971,44 +1865,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setSummaryItemList(List<ScRequestItem> summaryItemList) {
 		this.summaryItemList = summaryItemList;
-	}
-
-	/**
-	 * Gets the item tot qual suppliers.
-	 * 
-	 * @return the item tot qual suppliers
-	 */
-	public int getItemTotQualSuppliers() {
-		return itemTotQualSuppliers;
-	}
-
-	/**
-	 * Sets the item tot qual suppliers.
-	 * 
-	 * @param itemTotQualSuppliers
-	 *            the new item tot qual suppliers
-	 */
-	public void setItemTotQualSuppliers(int itemTotQualSuppliers) {
-		this.itemTotQualSuppliers = itemTotQualSuppliers;
-	}
-
-	/**
-	 * Gets the item tot dis qual suppliers.
-	 * 
-	 * @return the item tot dis qual suppliers
-	 */
-	public int getItemTotDisQualSuppliers() {
-		return itemTotDisQualSuppliers;
-	}
-
-	/**
-	 * Sets the item tot dis qual suppliers.
-	 * 
-	 * @param itemTotDisQualSuppliers
-	 *            the new item tot dis qual suppliers
-	 */
-	public void setItemTotDisQualSuppliers(int itemTotDisQualSuppliers) {
-		this.itemTotDisQualSuppliers = itemTotDisQualSuppliers;
 	}
 
 	/**
@@ -2552,123 +2408,33 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the evaluation summary qual suppliers.
-	 * 
-	 * @return the evaluation summary qual suppliers
+	 * @return the qualifiedSuppliersDM
 	 */
-	public List<ScQtEvaluationResultDtl> getEvaluationSummaryQualSuppliers() {
-		return evaluationSummaryQualSuppliers;
+	public IPagingDataModel<ScQtEvaluationResultDtl> getQualifiedSuppliersDM() {
+		return qualifiedSuppliersDM;
 	}
 
 	/**
-	 * Sets the evaluation summary qual suppliers.
-	 * 
-	 * @param evaluationSummaryQualSuppliers
-	 *            the new evaluation summary qual suppliers
+	 * @param qualifiedSuppliersDM the qualifiedSuppliersDM to set
 	 */
-	public void setEvaluationSummaryQualSuppliers(
-			List<ScQtEvaluationResultDtl> evaluationSummaryQualSuppliers) {
-		this.evaluationSummaryQualSuppliers = evaluationSummaryQualSuppliers;
+	public void setQualifiedSuppliersDM(
+			IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDM) {
+		this.qualifiedSuppliersDM = qualifiedSuppliersDM;
 	}
 
 	/**
-	 * Gets the evaluation summary dis qual suppliers.
-	 * 
-	 * @return the evaluation summary dis qual suppliers
+	 * @return the disqualifiedSuppliersDM
 	 */
-	public List<ScQtEvaluationResultDtl> getEvaluationSummaryDisQualSuppliers() {
-		return evaluationSummaryDisQualSuppliers;
+	public IPagingDataModel<ScQtEvaluationResultDtl> getDisqualifiedSuppliersDM() {
+		return disqualifiedSuppliersDM;
 	}
 
 	/**
-	 * Sets the evaluation summary dis qual suppliers.
-	 * 
-	 * @param evaluationSummaryDisQualSuppliers
-	 *            the new evaluation summary dis qual suppliers
+	 * @param disqualifiedSuppliersDM the disqualifiedSuppliersDM to set
 	 */
-	public void setEvaluationSummaryDisQualSuppliers(
-			List<ScQtEvaluationResultDtl> evaluationSummaryDisQualSuppliers) {
-		this.evaluationSummaryDisQualSuppliers = evaluationSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * Gets the item summary qual suppliers.
-	 * 
-	 * @return the item summary qual suppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getItemSummaryQualSuppliers() {
-		return itemSummaryQualSuppliers;
-	}
-
-	/**
-	 * Sets the item summary qual suppliers.
-	 * 
-	 * @param itemSummaryQualSuppliers
-	 *            the new item summary qual suppliers
-	 */
-	public void setItemSummaryQualSuppliers(
-			List<ScQtEvaluationResultDtl> itemSummaryQualSuppliers) {
-		this.itemSummaryQualSuppliers = itemSummaryQualSuppliers;
-	}
-
-	/**
-	 * Gets the item summary dis qual suppliers.
-	 * 
-	 * @return the item summary dis qual suppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getItemSummaryDisQualSuppliers() {
-		return itemSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * Sets the item summary dis qual suppliers.
-	 * 
-	 * @param itemSummaryDisQualSuppliers
-	 *            the new item summary dis qual suppliers
-	 */
-	public void setItemSummaryDisQualSuppliers(
-			List<ScQtEvaluationResultDtl> itemSummaryDisQualSuppliers) {
-		this.itemSummaryDisQualSuppliers = itemSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * Gets the compliance summary qual suppliers.
-	 * 
-	 * @return the compliance summary qual suppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getComplianceSummaryQualSuppliers() {
-		return complianceSummaryQualSuppliers;
-	}
-
-	/**
-	 * Sets the compliance summary qual suppliers.
-	 * 
-	 * @param complianceSummaryQualSuppliers
-	 *            the new compliance summary qual suppliers
-	 */
-	public void setComplianceSummaryQualSuppliers(
-			List<ScQtEvaluationResultDtl> complianceSummaryQualSuppliers) {
-		this.complianceSummaryQualSuppliers = complianceSummaryQualSuppliers;
-	}
-
-	/**
-	 * Gets the compliance summary dis qual suppliers.
-	 * 
-	 * @return the compliance summary dis qual suppliers
-	 */
-	public List<ScQtEvaluationResultDtl> getComplianceSummaryDisQualSuppliers() {
-		return complianceSummaryDisQualSuppliers;
-	}
-
-	/**
-	 * Sets the compliance summary dis qual suppliers.
-	 * 
-	 * @param complianceSummaryDisQualSuppliers
-	 *            the new compliance summary dis qual suppliers
-	 */
-	public void setComplianceSummaryDisQualSuppliers(
-			List<ScQtEvaluationResultDtl> complianceSummaryDisQualSuppliers) {
-		this.complianceSummaryDisQualSuppliers = complianceSummaryDisQualSuppliers;
+	public void setDisqualifiedSuppliersDM(
+			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM) {
+		this.disqualifiedSuppliersDM = disqualifiedSuppliersDM;
 	}
 
 	/**

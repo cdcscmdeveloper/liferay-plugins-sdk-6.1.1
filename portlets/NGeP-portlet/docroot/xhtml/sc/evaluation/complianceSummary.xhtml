@@ -17,7 +17,8 @@
 
 		<p:dataTable var="qualifiedSupplier" id="complianceQualifiedSupplier"
 			rows="10" editable="true" rowIndexVar="index"
-			value="#{evaluationBackingBean.managedBean.complianceSummaryQualSuppliers}"
+			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
+			lazy="true"
 			rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="complianceQualifiedSupplier" />
 
@@ -43,7 +44,7 @@
 			<td><h:outputLabel
 					value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
-					value="#{evaluationBackingBean.managedBean.complianceQualifiedSuppliers}"></p:inputText></td>
+					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
 		</tr>
 
 	</table>
@@ -55,7 +56,8 @@
 		toggleable="true">
 
 		<p:dataTable var="disQualifiedSupplier"
-			value="#{evaluationBackingBean.managedBean.complianceSummaryDisQualSuppliers}"
+			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
+			lazy="true"
 			id="complianceDisQualifiedSupplier" editable="true" rows="10"
 			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="complianceDisQualifiedSupplier" />
@@ -82,7 +84,7 @@
 			<td><h:outputLabel
 					value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
-					value="#{evaluationBackingBean.managedBean.complianceDisQualifiedSuppliers}"></p:inputText></td>
+					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
 		</tr>
 
 	</table>

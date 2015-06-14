@@ -130,9 +130,9 @@
 							</c:if>
 
 							<ui:param name="qualifiedPreferenceList"
-								value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
+								value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"></ui:param>
 							<ui:param name="disQualifiedPreferenceList"
-								value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
+								value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"></ui:param>
 							<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
 						</h:panelGroup>
 					</p:tab>
@@ -146,9 +146,9 @@
 				<ui:param name="recommendationdisQualifiedPreferenceListId"
 					value="disQualifiedPreferenceMarginListId"></ui:param>
 				<ui:param name="qualifiedPreferenceList"
-					value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"></ui:param>
+					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"></ui:param>
 				<ui:param name="disQualifiedPreferenceList"
-					value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"></ui:param>
+					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"></ui:param>
 				<ui:param name="passingScore"
 					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
 				<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
