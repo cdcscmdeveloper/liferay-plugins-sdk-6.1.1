@@ -16,7 +16,8 @@
 
 		<p:dataTable var="finEvaluationqualifiedSupplier" rows="10"
 			id="qualifiedListId"
-			value="#{evaluationBackingBean.managedBean.evaluationSummaryQualSuppliers}"
+			value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM}"
+			lazy="true"
 			editable="true" rowIndexVar="index" rowKey="#{qualifiedSupplier}">
 			<ac:paginator for="qualifiedListId" />
 
@@ -54,7 +55,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true" style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
+						value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
 			</tr>
 
 		</table>
@@ -70,7 +71,8 @@
 
 		<p:dataTable var="disQualifiedSupplier" rows="10"
 			id="disQualifiedListId" editable="true"
-			value="#{evaluationBackingBean.managedBean.evaluationSummaryDisQualSuppliers}"
+			value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"
+			lazy="true"
 			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator for="disQualifiedListId" />
 
@@ -101,7 +103,7 @@
 				<td><h:outputLabel
 						value="#{lbl['lbl.sc.total']}" /></td>
 				<td><p:inputText readonly="true" disabled="true" style="text-align:right"
-						value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
+						value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
 			</tr>
 
 		</table>
