@@ -18,6 +18,7 @@
 		<p:dataTable var="prefQualSupplier"
 			id="evaluationSummaryPreferencemarginQualifiedSuppliers"
 			value="#{qualifiedPreferenceList}" rows="10" editable="true"
+			lazy="true"
 			rowIndexVar="index" rowKey="#{qualifiedPreferenceListId}">
 			<ac:paginator
 				for="evaluationSummaryPreferencemarginQualifiedSuppliers" />
@@ -135,7 +136,7 @@
 					value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right"
-					value="#{evaluationBackingBean.managedBean.evaTotQualifiedSuppliers}"></p:inputText></td>
+					value="#{evaluationBackingBean.managedBean.qualifiedSuppliersDM.rowCount}"></p:inputText></td>
 		</tr>
 
 	</table>
@@ -152,6 +153,7 @@
 		<p:dataTable var="disQualifiedSupplier"
 			id="evaluationSummaryPreferencemarginDisQualifiedSuppliers"
 			value="#{disQualifiedPreferenceList}" rows="10" editable="true"
+			lazy="true"
 			rowIndexVar="index" rowKey="#{disQualifiedSupplier}">
 			<ac:paginator
 				for="evaluationSummaryPreferencemarginDisQualifiedSuppliers" />
@@ -195,7 +197,7 @@
 					value="#{lbl['lbl.sc.total']}" /></td>
 			<td><p:inputText readonly="true" disabled="true"
 					style="text-align:right"
-					value="#{evaluationBackingBean.managedBean.evaTotDisQualifiedSuppliers}"></p:inputText></td>
+					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM.rowCount}"></p:inputText></td>
 		</tr>
 
 	</table>
