@@ -52,4 +52,11 @@ public interface IPagingDataModel<T> {
 	 * @return the list of T instance
 	 */
 	public List<T> getList();
+	
+	/**
+	 * Get total record for search result.
+	 * 
+	 * @return the total record
+	 */
+	public int getRowCount();
 }
