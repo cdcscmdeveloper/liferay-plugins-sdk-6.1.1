@@ -954,6 +954,9 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setComplianceSampleItemList(
 						resDTO.getSampleItemList());
 			}
+			
+			getManagedBean().setComplianceSummaryGenerated(false);
+			
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
@@ -1073,6 +1076,8 @@ public class EvaluationBackingBean extends
 				this.getManagedBean().setComplianceTechnicalProposalCheckList(
 						resDTO.getSaveComplianceList());
 			}
+			
+			getManagedBean().setComplianceSummaryGenerated(false);
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1105,6 +1110,8 @@ public class EvaluationBackingBean extends
 
 			this.getManagedBean().setPresentationDemoSupplierList(
 					resDTO.getSaveComplianceList());
+			
+			getManagedBean().setPresentationDemoSummaryGenerated(false);
 
 		} finally {
 
@@ -1696,7 +1703,11 @@ public class EvaluationBackingBean extends
 					|| this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)) {
-				evaluationSO.prepareComplianceSummaryResults(reqDTO);
+				if (!getManagedBean().isComplianceSummaryGenerated()) {
+					evaluationSO.prepareComplianceSummaryResults(reqDTO);
+					
+					getManagedBean().setComplianceSummaryGenerated(true);
+				}
 			}
 			
 			this.getManagedBean().setQualifiedSuppliersDM(new SummarySupplierPagingDataModel(
@@ -2036,9 +2047,11 @@ public class EvaluationBackingBean extends
 				evalReqDTO.setResultStages(resultStg);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
-						&& !this.getManagedBean().isReadOnly()) {
+						&& !this.getManagedBean().isReadOnly()
+						&& !getManagedBean().isTechnicalSummaryGenerated()) {
 					evaluationStageStatusCheck();
 					evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
+					getManagedBean().setTechnicalSummaryGenerated(true);
 				}
 				
 				this.getManagedBean().setQualifiedSuppliersDM(new SummarySupplierPagingDataModel(
@@ -2102,7 +2115,8 @@ public class EvaluationBackingBean extends
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.FEC_PENDING_EVALUATION_PROPOSAL)
-						&& !this.getManagedBean().isReadOnly()) {
+						&& !this.getManagedBean().isReadOnly()
+						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					/*
 					 * evaluationSo
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
@@ -2111,6 +2125,7 @@ public class EvaluationBackingBean extends
 					evaluationStageStatusCheck();
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					getManagedBean().setFinancialSummaryGenerated(true);
 				}
 
 			}
@@ -2135,10 +2150,12 @@ public class EvaluationBackingBean extends
 					if (this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-							&& !this.getManagedBean().isReadOnly()) {
+							&& !this.getManagedBean().isReadOnly()
+							&& !getManagedBean().isFinancialSummaryGenerated()) {
 						evaluationStageStatusCheck();
 						evaluationSo
 								.prepareFinancialEvaluationSummary(summaryReqDTO);
+						getManagedBean().setFinancialSummaryGenerated(true);
 					}
 
 					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
@@ -2168,10 +2185,12 @@ public class EvaluationBackingBean extends
 					if (this.getManagedBean()
 							.getCurrentStatusId()
 							.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-							&& !this.getManagedBean().isReadOnly()) {
+							&& !this.getManagedBean().isReadOnly()
+							&& !getManagedBean().isTechnicalSummaryGenerated()) {
 						evaluationStageStatusCheck();
 						evaluationSo
 								.prepareTechnicalEvaluationSummary(evalReqDTO);
+						getManagedBean().setTechnicalSummaryGenerated(true);
 					}
 					
 					this.getManagedBean().setQualifiedSuppliersDM(new SummarySupplierPagingDataModel(
@@ -2239,7 +2258,8 @@ public class EvaluationBackingBean extends
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-						&& !this.getManagedBean().isReadOnly()) {
+						&& !this.getManagedBean().isReadOnly()
+						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					/*
 					 * evaluationSo
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
@@ -2248,6 +2268,7 @@ public class EvaluationBackingBean extends
 					financialCheckListStatusCheck();
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					getManagedBean().setFinancialSummaryGenerated(true);
 				}
 			}
 		} finally {
@@ -2291,7 +2312,8 @@ public class EvaluationBackingBean extends
 				summaryReqDTO.setResultStages(resultStg2);
 				if (this.getManagedBean().getCurrentStatusId()
 						.equals(QTStatusConst.EC_PENDING_COMPLIANCE_PROPOSAL)
-						&& !this.getManagedBean().isReadOnly()) {
+						&& !this.getManagedBean().isReadOnly()
+						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					/*
 					 * evaluationSo
 					 * .prepareEvaluationResultsSummaryForTwoTier(summaryReqDTO
@@ -2300,6 +2322,7 @@ public class EvaluationBackingBean extends
 					financialCheckListStatusCheck();
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					getManagedBean().setFinancialSummaryGenerated(true);
 				}
 			}
 		} finally {
@@ -2334,7 +2357,8 @@ public class EvaluationBackingBean extends
 								.equalsIgnoreCase(
 										QTConstants.EVALUATION_ONE_TIER)
 						&& !this.getManagedBean().getScQt()
-								.isTechEvaluationReq()) {
+								.isTechEvaluationReq()
+						&& !getManagedBean().isFinancialSummaryGenerated()) {
 					evaluationStageStatusCheck();
 					EvaluationReqDTO summaryReqDTO = new EvaluationReqDTO();
 					summaryReqDTO.setQtId(this.getManagedBean().getScQt()
@@ -2348,6 +2372,7 @@ public class EvaluationBackingBean extends
 					summaryReqDTO.setResultStages(resultStg2);
 					evaluationSo
 							.prepareFinancialEvaluationSummary(summaryReqDTO);
+					getManagedBean().setFinancialSummaryGenerated(true);
 				}
 			}
 		} finally {
@@ -5192,8 +5217,10 @@ public class EvaluationBackingBean extends
 			evalReqDTO.setResultStages(resultStg);
 			if (this.getManagedBean().getCurrentStatusId()
 					.equals(QTStatusConst.TEC_PENDING_EVALUATION_PROPOSAL)
-					&& !this.getManagedBean().isReadOnly()) {
+					&& !this.getManagedBean().isReadOnly()
+					&& !getManagedBean().isPresentationDemoSummaryGenerated()) {
 				evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
+				getManagedBean().setPresentationDemoSummaryGenerated(true);
 			}
 			
 			this.getManagedBean().setQualifiedSuppliersDM(new SummarySupplierPagingDataModel(
@@ -7083,13 +7110,13 @@ public class EvaluationBackingBean extends
 				}
 
 			}
+			ScQtProposalChecklist qtProposalChecklist = getManagedBean().getQtProposalChecklist();
 			EvaluationReqDTO reqDtO = new EvaluationReqDTO();
 			reqDtO.setQtId(this.getManagedBean().getScQt().getQtId());
-			reqDtO.setProposalChecklist(this.getManagedBean()
-					.getQtProposalChecklist());
+			reqDtO.setProposalChecklist(qtProposalChecklist);
 			EvaluationResDTO resDto = evaluationSO.saveProposalDetails(reqDtO);
-			this.getManagedBean().setQtProposalChecklist(
-					resDto.getProposalChecklist());
+			qtProposalChecklist = resDto.getProposalChecklist();
+			getManagedBean().setQtProposalChecklist(qtProposalChecklist);
 			if (index >= 0) {
 				this.getManagedBean().getComplianceTechnicalProposalCheckList()
 						.remove(index);
@@ -7098,6 +7125,14 @@ public class EvaluationBackingBean extends
 						.add(index,
 								this.getManagedBean().getQtProposalChecklist());
 			}
+			
+			if (SourcingConstants.TECHNICAL_DOCTYPE.equals(qtProposalChecklist.getScQtCheckList().getDocCategory())) {
+				getManagedBean().setTechnicalSummaryGenerated(false);
+				getManagedBean().setPresentationDemoSummaryGenerated(false);
+			} else {
+				getManagedBean().setFinancialSummaryGenerated(false);
+			}
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -7466,6 +7501,9 @@ public class EvaluationBackingBean extends
 						.add(index,
 								this.getManagedBean().getQtProposalChecklist());
 				// evaluateTechnicalEvaluation(checklist)
+				
+				getManagedBean().setTechnicalSummaryGenerated(false);
+				getManagedBean().setPresentationDemoSummaryGenerated(false);
 			}
 			if ("F".equalsIgnoreCase(getManagedBean().getCheckListType())) {
 				financialSupplierEvaluate(evalResDTO.getProposalChecklist(),
@@ -7476,7 +7514,10 @@ public class EvaluationBackingBean extends
 						.getFinSpecSupplierList()
 						.add(index,
 								this.getManagedBean().getQtProposalChecklist());
+				
+				getManagedBean().setFinancialSummaryGenerated(false);
 			}
+			
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -9680,17 +9721,30 @@ public class EvaluationBackingBean extends
 			EvaluationResDTO resDTO = new EvaluationResDTO();
 			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
+			ScQtProposalChecklist qtProposalChecklist = null;
 			List<ScQtProposalChecklist> uploadedList = this.getManagedBean()
 					.getComplianceTechnicalProposalCheckList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
 
 				reqDTO.setComplianceList(uploadedList);
+				
+				qtProposalChecklist = uploadedList.get(0);
 			}
 			resDTO = evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 
 			this.getManagedBean().setComplianceTechnicalProposalCheckList(
 					resDTO.getSaveComplianceList());
+			
+			if (qtProposalChecklist != null) {
+				if (SourcingConstants.TECHNICAL_DOCTYPE.equals(qtProposalChecklist.getScQtCheckList().getDocCategory())) {
+					getManagedBean().setTechnicalSummaryGenerated(false);
+					getManagedBean().setPresentationDemoSummaryGenerated(false);
+				} else {
+					getManagedBean().setFinancialSummaryGenerated(false);
+				}	
+			}
+			
 			FacesContext
 					.getCurrentInstance()
 					.addMessage(
