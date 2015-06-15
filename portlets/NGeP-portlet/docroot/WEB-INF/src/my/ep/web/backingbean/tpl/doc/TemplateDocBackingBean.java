@@ -548,7 +548,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
 			paramReqDTO.setParameterType(ParameterTypeConst.TPL_DOC_PROCESS_TYPE);
-			paramReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT);
+			paramReqDTO.setParameterCode(ParameterConst.TPL_DOC_PROCESS_TYPE_STANDARD);
 			docMaster.setProcessType(parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter());
 			
 			getManagedBean().setSelectedTemplate(docMaster);
