@@ -186,18 +186,14 @@
 			#end		
 		</td>
 		<td class="tdInfoTable">
-			#if ($isBsvRequired)
-				#if ($isZone)
-					#foreach ($zone in $zoneDetails)
-						Zone Name : $zone.zoneName.toUpperCase()<br/>
-						Total Qualified Suppliers : $totalQualifiedSuppliersByZone.get($zone.specZoneId)
-						<br/><br/>
-					#end
-				#else
-					$totalQualifiedSuppliers
-				#end	
+			#if ($isZone)
+				#foreach ($zone in $zoneDetails)
+					Zone Name : $zone.zoneName.toUpperCase()<br/>
+					Total Qualified Suppliers : $totalQualifiedSuppliersByZone.get($zone.specZoneId)
+					<br/><br/>
+				#end
 			#else
-				-
+				$totalQualifiedSuppliers
 			#end		
 		</td>
 	</tr>

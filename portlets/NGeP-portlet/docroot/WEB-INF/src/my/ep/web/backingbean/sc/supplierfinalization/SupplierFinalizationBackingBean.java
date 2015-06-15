@@ -2295,47 +2295,48 @@ public class SupplierFinalizationBackingBean extends
 		
 		context.put("zoneBeansMap", zoneBeansMap);
 
-		Long totalQualifiedSuppliers = null;
-		Map<Long,Long> totalQualifiedSuppliersByZone = null;
+		Integer totalQualifiedSuppliers = null;
+		Map<Long,Integer> totalQualifiedSuppliersByZone = null;
+		
+		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
-			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
-			String languageCode = new FacesScopes().getUserLocale()
-					.getLanguage();
-			BriefingReqDTO reqDTO = new BriefingReqDTO();
+			qtSuppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setLanguageCode(languageCode);
-			if (scQt.isBsvRequired()) {
-				if (scQt.isZonal()) {
-					BriefingResDTO resDTO = qTBriefingSO
-							.retrieveBriefingSiteVisitDtl(reqDTO);
-					List<TplSpecZoneDtl> zoneDtls = resDTO.getZonesList();
-					if (null != zoneDtls) {
-						totalQualifiedSuppliersByZone = 
-										new HashMap<Long,Long>();
-						for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-							reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
-							BriefingResDTO briefingResDTO = qTBriefingSO
-									.getTotalQualifiedSupplier(reqDTO);
-							totalQualifiedSuppliers = briefingResDTO
-									.getQualifiedSupp();
-							totalQualifiedSuppliersByZone.put(
-									specZoneDtl.getSpecZoneId(), 
-									totalQualifiedSuppliers);
-						}
-						context.put("totalQualifiedSuppliersByZone", totalQualifiedSuppliersByZone);
+			
+			if (scQt.isZonal()) {
+				List<TplSpecZoneDtl> zoneDtls 
+							= this.getManagedBean().getZoneDetails();
+				if (null != zoneDtls) {
+					totalQualifiedSuppliersByZone = 
+									new HashMap<Long,Integer>();
+					for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
+						reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
+						SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+								.getCountOfTotalQualifiedSuppliersByCriteria(reqDTO);
+						totalQualifiedSuppliers 
+							= resDTO.getTotalQualifiedSuppliers();
+						
+						if (totalQualifiedSuppliers == null) {
+							totalQualifiedSuppliers = 0;
+						}						
+						totalQualifiedSuppliersByZone.put(
+								specZoneDtl.getSpecZoneId(), 
+								totalQualifiedSuppliers);
 					}
-				} else {
-					BriefingResDTO briefingResDTO = qTBriefingSO
-							.getTotalQualifiedSupplier(reqDTO);
-					totalQualifiedSuppliers = briefingResDTO
-							.getQualifiedSupp();
-					
-					if (totalQualifiedSuppliers == null) {
-						totalQualifiedSuppliers = 0l;
-					}
-					context.put("totalQualifiedSuppliers", totalQualifiedSuppliers);				
+					context.put("totalQualifiedSuppliersByZone", totalQualifiedSuppliersByZone);
 				}
+			} else {
+				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
+						.getCountOfTotalQualifiedSuppliersByCriteria(reqDTO);
+				totalQualifiedSuppliers = resDTO.getTotalQualifiedSuppliers();
+				
+				if (totalQualifiedSuppliers == null) {
+					totalQualifiedSuppliers = 0;
+				}
+				context.put("totalQualifiedSuppliers", totalQualifiedSuppliers);				
 			}
 		} finally {
 			qTBriefingSO = null;
