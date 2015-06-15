@@ -61,6 +61,7 @@ import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusReqDTO;
 import my.ep.dto.sm.workFlowStatus.SmWorkFlowStatusResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -1961,6 +1962,90 @@ public class SmCommonUtil {
 			countryList.add(si);
 		}
 		return countryList;
+	}
+	
+	
+	/**
+	 * Get supplier bank by revision no and account no
+	 * 
+	 * @param List
+	 *            <SmSupplierBank> mainList
+	 * @param SmSupplierBank
+	 *            supplierBankParam
+	 * @param int revNo
+	 * @return SmSupplierBank
+	 */
+	public static SmSupplierBank getSupplierBankByRevNoAndAccNo(
+			List<SmSupplierBank> mainList, SmSupplierBank supplierBankParam,
+			int revNo) {
+		SmSupplierBank retValSupplierBank = null;
+
+		// main list loop by accNo and recordStatus and revNo
+		for (SmSupplierBank supplierBank : mainList) {
+			if (supplierBank.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& StringUtils.isNotBlank(supplierBank.getAccountNo())
+					&& supplierBank.getAccountNo().equals(
+							supplierBankParam.getAccountNo())
+					&& supplierBankParam.getRevNo() == revNo
+					&& supplierBank.getRevNo() == revNo) {
+				retValSupplierBank = supplierBank;
+				break;
+			}
+		}
+
+		return retValSupplierBank;
+	}
+
+	/**
+	 * Get company basic by revision no
+	 * 
+	 * @param List
+	 *            <SmCompanyBasic> mainList
+	 * @param int revNo
+	 * @return SmCompanyBasic
+	 */
+	public static SmCompanyBasic getCompanyBasicByRevNo(
+			List<SmCompanyBasic> mainList, int revNo) {
+		SmCompanyBasic retValCompanyBasic = null;
+
+		for (SmCompanyBasic companyBasic : mainList) {
+			if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& companyBasic.getRevNo() == revNo) {
+				retValCompanyBasic = companyBasic;
+				break;
+			}
+		}
+		return retValCompanyBasic;
+	}
+
+	/**
+	 * Get personnel by identification no and revision no
+	 * 
+	 * @param List
+	 *            <SmPersonnel> mainList
+	 * @param SmPersonnel
+	 *            smPersonnelParam
+	 * @param int revNo
+	 * @return SmPersonnel
+	 */
+	public static SmPersonnel getSmPersonnelByRevNoAndIdentificationNo(
+			List<SmPersonnel> mainList, SmPersonnel smPersonnelParam, int revNo) {
+		SmPersonnel retValSmPersonnel = null;
+
+		// main list loop by identificationNo and recordStatus and revNo
+		for (SmPersonnel smPersonnel : mainList) {
+			if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& StringUtils
+							.isNotBlank(smPersonnel.getIdentificationNo())
+					&& smPersonnel.getIdentificationNo().equals(
+							smPersonnelParam.getIdentificationNo())
+					&& smPersonnel.getRevNo() == revNo
+					&& smPersonnelParam.getRevNo() == revNo) {
+				retValSmPersonnel = smPersonnel;
+				break;
+			}
+		}
+		return retValSmPersonnel;
 	}
 
 }
