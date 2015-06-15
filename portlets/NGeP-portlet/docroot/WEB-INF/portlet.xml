@@ -5532,7 +5532,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pm/settings/general/calendar.xhtml</value>
+			<value>/xhtml/pm/settings/general/preRenderCalendar.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
