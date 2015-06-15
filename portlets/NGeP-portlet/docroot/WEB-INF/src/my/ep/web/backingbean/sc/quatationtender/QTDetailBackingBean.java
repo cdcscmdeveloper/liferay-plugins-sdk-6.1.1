@@ -1791,6 +1791,7 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String updateBpmTask(String outcome) {
+		debugLogger("updateBpmTask");
 
 		// Code will be called if user didnt visit the approval tabs..
 		// List<TabBean> tabList = this.getManagedBean().getTabList();
@@ -4012,8 +4013,8 @@ public class QTDetailBackingBean extends
 	 * @return the string
 	 */
 	public String cancelQtDetails() {
+		debugLogger("cancelQtDetails");
 		IQTDetailSO detailSO;
-
 		try {
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
@@ -4044,14 +4045,22 @@ public class QTDetailBackingBean extends
 			} else {
 				ScQtStatus qtStatus = new ScQtStatus();
 				qtStatus.setScQt(scQt);
-				PmStatus status = new PmStatus();
-				status.setStatusId(QTStatusConst.QT_CANCELLED);
-				qtStatus.setPmStatus(status);
-				qtStatus.setCurrent(true);
+				PmStatus pmStatus = new PmStatus();
+				pmStatus.setStatusId(QTStatusConst.QT_CANCELLED);
+				qtStatus.setPmStatus(pmStatus);
+				qtStatus.setCurrent(Boolean.TRUE);
 				qtStatus.setDocType(QTConstants.DOCTYPE_QT);
-				List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
-				qtStatuses.add(qtStatus);
-				scQt.setScQtStatus(qtStatuses);
+				
+				quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+				QuationTenderResDTO resDTO1 = detailSO.retriveQtById(quationTenderReqDTO);
+				ScQt qt = resDTO1.getQtDetail();
+				for (ScQtStatus status : qt.getScQtStatus()) {
+					status.setCurrent(Boolean.FALSE);
+				}
+				qt.getScQtStatus().add(qtStatus);
+				/*List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+				qtStatuses.add(qtStatus);*/
+				scQt.setScQtStatus(qt.getScQtStatus());
 				scQt.setScQtCommittees(null);
 				scQt.setScQtApprovals(null);
 				scQt.setScQtBriefings(null);
