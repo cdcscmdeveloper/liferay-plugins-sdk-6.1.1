@@ -1441,7 +1441,7 @@ public class QTDetailBackingBean extends
 							BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
 									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv, null);
+									briefingResDTO.getSiteVisitList(), scQtBsv);
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
@@ -1465,7 +1465,7 @@ public class QTDetailBackingBean extends
 							ScQtBSVRemark.class));
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							null, resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), qtBsv, null);
+							resDTO.getSiteVisitList(), qtBsv);
 					this.getManagedBean().setBsvDtlBean(briefingZoneBean);
 
 				}
