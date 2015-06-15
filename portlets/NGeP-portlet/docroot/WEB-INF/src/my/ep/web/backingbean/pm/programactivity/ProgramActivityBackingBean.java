@@ -24,7 +24,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -32,9 +32,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.ProgramSearchBean;
-import my.ep.web.bean.pm.VotSearchBean;
 import my.ep.web.managedbean.pm.programactivity.ProgramActivityManagedBean;
-import my.ep.web.managedbean.pm.vot.VotManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -44,13 +42,13 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "programActivityBackingBean")
 @ViewScoped
 public class ProgramActivityBackingBean extends
-		BaseBackingBean<ProgramActivityManagedBean> {
+BaseBackingBean<ProgramActivityManagedBean> {
 	private static Logger log = Logger
 			.getLogger(ProgramActivityBackingBean.class);
-	
+
 	public static final String NAV_TO_MAIN = "/xhtml/pm/programActivity/programActivitySearchMain";
 
-	private IPagingDataModel<PmVotFund> searchVotProgramActivity = new SearchVotPagingDataModel();
+	private IPagingDataModel<PmPrgActivity> searchVotProgramActivity = new SearchVotPagingDataModel();
 
 	boolean result = false;
 	// Default value
@@ -75,7 +73,7 @@ public class ProgramActivityBackingBean extends
 		this.resetVotProgramActivitySearchBean();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, NAV_TO_MAIN);
+		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
 	private void debugLogger(Object message) {
@@ -98,7 +96,7 @@ public class ProgramActivityBackingBean extends
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setProgramSearchBean(new ProgramSearchBean());
 		searchVotProgramActivity = new SearchVotPagingDataModel();
-		
+
 	}
 
 	public void searchProgramActivity() {
@@ -110,46 +108,46 @@ public class ProgramActivityBackingBean extends
 		return NAV_TO_MAIN;
 	}
 
-	private ISearchBean<PmVotFund> getSearchBeanData(
-			ISearchBean<PmVotFund> searchBean) {
+	private ISearchBean<PmPrgActivity> getSearchBeanData(
+			ISearchBean<PmPrgActivity> searchBean) {
 
 		ProgramSearchBean votProgramSearchBean = this.getManagedBean().getProgramSearchBean();
-		boolean	isEmpty = true;
+
 		Date currentDate = new Date();
 		if (StringUtils.isNotBlank(votProgramSearchBean.getVotCode())) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("votFundCode",
+					new SearchFilterBean("pmVotFund.votFundCode",
 							SearchOperator.OPERATOR_EQUALS.value(), votProgramSearchBean
 							.getVotCode().toUpperCase() , true));
-			isEmpty = false;
+
 
 		}
 		if (StringUtils.isNotBlank(votProgramSearchBean.getVotName())){
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("description",
+					new SearchFilterBean("pmVotFund.description",
 							SearchOperator.OPERATOR_LIKE.value(), votProgramSearchBean
 							.getVotName().toUpperCase(), true));
-			isEmpty = false;
+
 		}
 
 		if (StringUtils.isNotBlank(votProgramSearchBean.getProgramActivityCode())){
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmPrgActivities.prgActivityCode",
+					new SearchFilterBean("prgActivityCode",
 							SearchOperator.OPERATOR_EQUALS.value(), 
 							votProgramSearchBean.getProgramActivityCode().toUpperCase(), true));
-			isEmpty = false;
+
 		}
 
 		if (StringUtils.isNotBlank(votProgramSearchBean.getProgramActivityDesc())) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmPrgActivities.description",
+					new SearchFilterBean("description",
 							SearchOperator.OPERATOR_LIKE.value(), votProgramSearchBean
 							.getProgramActivityDesc().toUpperCase(), true));
-			isEmpty = false;
+
 		}
 
 		if((StringUtils.isNotBlank(votProgramSearchBean.getStatus()) && (votProgramSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE)))) ||
@@ -170,7 +168,7 @@ public class ProgramActivityBackingBean extends
 										"expDate",
 										SearchOperator.OPERATOR_IS_NULL.value(), null,
 										SearchCondition.CONDITION_OR.value())));
-				
+
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
@@ -191,7 +189,7 @@ public class ProgramActivityBackingBean extends
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								votProgramSearchBean.getStatus()));
-		     	}
+			}
 
 		}		
 		else{
@@ -208,7 +206,7 @@ public class ProgramActivityBackingBean extends
 	}
 
 	private class SearchVotPagingDataModel extends
-			PagingDataModel<PmVotFund> {
+	PagingDataModel<PmPrgActivity> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchVotPagingDataModel() {
@@ -216,24 +214,24 @@ public class ProgramActivityBackingBean extends
 		}
 
 		@Override
-		public ISearchResultBean<PmVotFund> pageChangeListener(
-				ISearchBean<PmVotFund> searchBean) {
+		public ISearchResultBean<PmPrgActivity> pageChangeListener(
+				ISearchBean<PmPrgActivity> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IVotFundSO votFundSO;
 
 			try {
-				ISearchBean<PmVotFund> searchBeanData = getSearchBeanData(searchBean);
+				ISearchBean<PmPrgActivity> searchBeanData = getSearchBeanData(searchBean);
 				VotFundReqDTO votReqDTO = new VotFundReqDTO();
-				votReqDTO.setVotFundSearchBean(searchBeanData);
+				votReqDTO.setPmPrgActivitySearchBean(searchBeanData);
 				votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IVotFundSO.class);
 				VotFundResDTO resDTO = votFundSO.searchVotProgramActivityData(votReqDTO);
 				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {					
-					return resDTO.getVotResultBean();
+					return resDTO.getPmPrgActivityResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -251,7 +249,7 @@ public class ProgramActivityBackingBean extends
 	/**
 	 * @return the searchVotProgramActivity
 	 */
-	public IPagingDataModel<PmVotFund> getSearchVotProgramActivity() {
+	public IPagingDataModel<PmPrgActivity> getSearchVotProgramActivity() {
 		return searchVotProgramActivity;
 	}
 
@@ -259,10 +257,10 @@ public class ProgramActivityBackingBean extends
 	 * @param searchVotProgramActivity the searchVotProgramActivity to set
 	 */
 	public void setSearchVotProgramActivity(
-			IPagingDataModel<PmVotFund> searchVotProgramActivity) {
+			IPagingDataModel<PmPrgActivity> searchVotProgramActivity) {
 		this.searchVotProgramActivity = searchVotProgramActivity;
 	}
 
-	
+
 
 }

@@ -24,19 +24,15 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmVotFund;
+import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.bean.pm.ProgramSearchBean;
 import my.ep.web.bean.pm.ProjectSearchBean;
-import my.ep.web.bean.pm.VotSearchBean;
-import my.ep.web.managedbean.pm.programactivity.ProgramActivityManagedBean;
 import my.ep.web.managedbean.pm.project.ProjectManagedBean;
-import my.ep.web.managedbean.pm.vot.VotManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -52,7 +48,7 @@ BaseBackingBean<ProjectManagedBean> {
 
 	public static final String NAV_TO_MAIN = "/xhtml/pm/project/projectSearchMain";
 
-	private IPagingDataModel<PmVotFund> searchProject = new SearchProjectPagingDataModel();
+	private IPagingDataModel<PmSubSetia> searchProject = new SearchProjectPagingDataModel();
 
 
 
@@ -113,46 +109,46 @@ BaseBackingBean<ProjectManagedBean> {
 		return NAV_TO_MAIN;
 	}
 
-	private ISearchBean<PmVotFund> getSearchBeanData(
-			ISearchBean<PmVotFund> searchBean) {
+	private ISearchBean<PmSubSetia> getSearchBeanData(
+			ISearchBean<PmSubSetia> searchBean) {
 
 		ProjectSearchBean projectSearchBean = this.getManagedBean().getProjectSearchBean();
-		boolean	isEmpty = true;
+		
 		Date currentDate = new Date();
 		if (StringUtils.isNotBlank(projectSearchBean.getVotCode())) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("votFundCode",
+					new SearchFilterBean("pmVotFund.votFundCode",
 							SearchOperator.OPERATOR_EQUALS.value(), projectSearchBean
 							.getVotCode().toUpperCase() , true));
-			isEmpty = false;
+			
 
 		}
 		if (StringUtils.isNotBlank(projectSearchBean.getVotName())){
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("description",
+					new SearchFilterBean("pmVotFund.description",
 							SearchOperator.OPERATOR_LIKE.value(), projectSearchBean
 							.getVotName().toUpperCase(), true));
-			isEmpty = false;
+			
 		}
 
 		if (StringUtils.isNotBlank(projectSearchBean.getProjectCode())){
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmSubSetia.projectCode",
+					new SearchFilterBean("projectCode",
 							SearchOperator.OPERATOR_EQUALS.value(), 
 							projectSearchBean.getProjectCode().toUpperCase(), true));
-			isEmpty = false;
+			
 		}
 
 		if (StringUtils.isNotBlank(projectSearchBean.getProjectDesc())) {
 
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmSubSetia.description",
+					new SearchFilterBean("description",
 							SearchOperator.OPERATOR_LIKE.value(), projectSearchBean
 							.getProjectDesc().toUpperCase(), true));
-			isEmpty = false;
+			
 		}
 
 
@@ -214,25 +210,25 @@ BaseBackingBean<ProjectManagedBean> {
 	}
 
 	private class SearchProjectPagingDataModel extends
-	PagingDataModel<PmVotFund> {
+	PagingDataModel<PmSubSetia> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchProjectPagingDataModel() {
-			super("searchVotProgramActivity",getManagedBean().isLazy());
+			super("searchProject",getManagedBean().isLazy());
 		}
 
 		@Override
-		public ISearchResultBean<PmVotFund> pageChangeListener(
-				ISearchBean<PmVotFund> searchBean) {
+		public ISearchResultBean<PmSubSetia> pageChangeListener(
+				ISearchBean<PmSubSetia> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			IVotFundSO votFundSO;
 
 			try {
-				ISearchBean<PmVotFund> searchBeanData = getSearchBeanData(searchBean);
+				ISearchBean<PmSubSetia> searchBeanData = getSearchBeanData(searchBean);
 				VotFundReqDTO votReqDTO = new VotFundReqDTO();
-				votReqDTO.setVotFundSearchBean(searchBeanData);
+				votReqDTO.setPmSubSetiaSearchBean(searchBeanData);
 				votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IVotFundSO.class);
@@ -240,7 +236,7 @@ BaseBackingBean<ProjectManagedBean> {
 				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {
 
-					return resDTO.getVotResultBean();
+					return resDTO.getPmSubSetiaResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -258,14 +254,14 @@ BaseBackingBean<ProjectManagedBean> {
 	/**
 	 * @return the searchProject
 	 */
-	public IPagingDataModel<PmVotFund> getSearchProject() {
+	public IPagingDataModel<PmSubSetia> getSearchProject() {
 		return searchProject;
 	}
 
 	/**
 	 * @param searchProject the searchProject to set
 	 */
-	public void setSearchProject(IPagingDataModel<PmVotFund> searchProject) {
+	public void setSearchProject(IPagingDataModel<PmSubSetia> searchProject) {
 		this.searchProject = searchProject;
 	}
 
