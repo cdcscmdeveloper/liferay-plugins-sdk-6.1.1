@@ -64,7 +64,7 @@ public class MolPayServlet extends HttpServlet {
 		String currency = req.getParameter("currency");
 		String paydate = req.getParameter("paydate");
 		String skey = req.getParameter("skey");
-		//String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
+		String channel = req.getParameter("channel") != null ?  req.getParameter("channel") : null;
 
 		log.info("nbcb:" + nbcb);
 		log.info("orderId: " + orderId);
@@ -78,7 +78,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("skey:" + skey);
 		log.info("error_code:" + errorCode);
 		log.info("error_desc:" + errorDesc);
-		//log.info("channel:" + channel);
+		log.info("channel:" + channel);
 
 		if(nbcb.equals("1")){
 			//To verify the data integrity sending by MOLPay
@@ -87,7 +87,7 @@ public class MolPayServlet extends HttpServlet {
 
 			log.info("SKey>>>>" + skey);
 			log.info("Key1>>>>" + key1);
-			//if(skey.equals(key1)){
+			if(skey.equals(key1)){
 				log.info("SKey & Key1 Are Match>>>>");
 				IPaymentSO reqSO = SmServiceLookup.getPaymentSO();
 				PaymentReqDTO reqDTO = new PaymentReqDTO();
@@ -141,7 +141,7 @@ public class MolPayServlet extends HttpServlet {
 						txDate = new Date();
 						e.printStackTrace();
 					}
-					//paymentOrder.setChannelName(channel);
+					paymentOrder.setChannelName(channel);
 					smPaymentRes.setTransactionId(Long.valueOf(tranID));
 					smPaymentRes.setErrorCode(errorCode);
 					smPaymentRes.setErrorDesc(errorDesc);
@@ -184,16 +184,17 @@ public class MolPayServlet extends HttpServlet {
 					log.info("No SmPayment Object is found");
 				}
 
-//			}else{
-//				log.info("*******SKey Unmatch***********");
-//			}
+				//			}else{
+				//				log.info("*******SKey Unmatch***********");
+				//			}
+			}
 		}
-	}
 
-	/*	private void updateRecordStatus(BaseEntity entity) {
+		/*	private void updateRecordStatus(BaseEntity entity) {
 		entity.setCreatedBy(1L);
 		entity.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		entity.setChangedBy(1L);
 	}*/
 
+	}
 }
