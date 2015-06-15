@@ -2259,7 +2259,7 @@ public class SupplierFinalizationBackingBean extends
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 							briefingZoneBean = new BriefingZoneBean(specZoneDtl,
 									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
+									briefingResDTO.getSiteVisitList(), scQtBsv, null);
 							briefingZoneBean.setTotalSupplierAttended(
 									list != null ? list.size() : 0);
 							zoneBeans.add(briefingZoneBean);
@@ -2631,7 +2631,7 @@ public class SupplierFinalizationBackingBean extends
 							briefingZoneBean = new BriefingZoneBean(
 									specZoneDtl,
 									briefingResDTO.getBriefingList(),
-									briefingResDTO.getSiteVisitList(), scQtBsv);
+									briefingResDTO.getSiteVisitList(), scQtBsv, null);
 							zoneBeans.add(briefingZoneBean);
 						}
 					}
@@ -2639,7 +2639,7 @@ public class SupplierFinalizationBackingBean extends
 					qtBsv = resDTO.getScQtBsv();
 					briefingZoneBean = new BriefingZoneBean(null,
 							resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), qtBsv);
+							resDTO.getSiteVisitList(), qtBsv, null);
 					zoneBeans.add(briefingZoneBean);
 				}
 			} finally {
