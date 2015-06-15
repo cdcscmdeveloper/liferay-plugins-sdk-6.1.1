@@ -39,7 +39,6 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
-import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
@@ -1942,4 +1941,26 @@ public class SmCommonUtil {
 			String msg, String componentId) {
 		fc.addMessage(componentId, new FacesMessage(severity, null, msg));
 	}
+	
+	/**
+	 * Get states based on Country id.
+	 * 
+	 * @param countryId
+	 *            - Long
+	 * @return List<SelectItem> - contains the list of states
+	 */
+	public static List<SelectItem> getCountryList() {
+		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+		CountryResDTO resDTO = reqSO.retrieveCountryList();
+		List<SelectItem> countryList = new ArrayList<SelectItem>();
+		for (PmCountry country : resDTO.getCountryList()) {
+			SelectItem si = new SelectItem();
+			si.setLabel(country.getCountryName());
+			si.setValue(country.getCountryId());
+			countryList.add(si);
+		}
+		return countryList;
+	}
+
 }
