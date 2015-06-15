@@ -1010,7 +1010,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 * @return String(addCatalogItem)
 	 */
-	public String navigateToApprovalItemDet(int index) {
+	public String navigateToApprovalItemDet(int i) {
 
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", IUserSO.class);
@@ -1027,6 +1027,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		try{
 
+			int index= i%this.getManagedBean().getPendingApprovalTabPageSize();
+			
 			catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
