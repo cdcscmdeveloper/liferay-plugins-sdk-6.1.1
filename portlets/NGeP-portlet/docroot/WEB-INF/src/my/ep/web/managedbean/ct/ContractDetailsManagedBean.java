@@ -52,7 +52,9 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -1544,8 +1546,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 			IUserSO userSO = null;
 			try {
 				FacesScopes fc = new FacesScopes();
-				
-				if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+				if (fc.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+					// by pass authorization filtering for AUDITOR_GENERAL
+				}
+				else if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
 						|| fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
 						|| fc.hasRoleUser(RoleCode.BPK_CCA.value())) {
 					
@@ -1557,16 +1561,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 					PmOrgProfile orgProfile = null;
 					String searchBeanStr = "ctContract.ownerOrgProfile.orgProfileId";
-					if(resDTO.getUserOrgList() != null){
+					if (resDTO.getUserOrgList() != null) {
 						orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
 						
-						//if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-//							String ministrySearchBeanStr = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
-//							System.out.println("b4 ministrySearchBeanStr:"+ministrySearchBeanStr);
-//							System.out.println(ministrySearchBeanStr.lastIndexOf("orgProfileId"));
-//							searchBeanStr = ministrySearchBeanStr.substring(0, ministrySearchBeanStr.lastIndexOf("orgProfileId")) + searchBeanStr;
-//							System.out.println("aft searchBeanStr:"+searchBeanStr);
-						//}
+						if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+							searchBeanStr = "ctContract.ownerOrgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
+						}
 						
 						SearchFilterBean filterBean = new SearchFilterBean(searchBeanStr, SearchOperator.OPERATOR_EQUALS.value(),
 								orgProfile.getOrgProfileId());
@@ -1574,7 +1574,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					} else {
 						return null;
 					}
-				} else if (!fc.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+				} else {
 					return null;
 				}
 				
