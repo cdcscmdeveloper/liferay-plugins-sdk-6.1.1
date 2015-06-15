@@ -4,15 +4,12 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
@@ -33,18 +30,18 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmAppl smAppl;
 	private SmSupplier smSupp;
 
-	private List<PmCountry> countryLs;
-	private List<PmState> businessStateLs;
-	private List<PmState> residentialStateLs;
-	private List<PmState> permenantStateLs;
+	private List<SelectItem> countryLs;
+	private List<SelectItem> businessStateLs;
+	private List<SelectItem> residentialStateLs;
+	private List<SelectItem> permenantStateLs;
 
-	private List<PmDistrict> businessDistrictLs;
-	private List<PmDistrict> residentialDistrictLs;
-	private List<PmDistrict> permenantDistrictLs;
+	private List<SelectItem> businessDistrictLs;
+	private List<SelectItem> residentialDistrictLs;
+	private List<SelectItem> permenantDistrictLs;
 
-	private List<PmCity> businessCityLs;
-	private List<PmCity> residentialCityLs;
-	private List<PmCity> permenantCityLs;
+	private List<SelectItem> businessCityLs;
+	private List<SelectItem> residentialCityLs;
+	private List<SelectItem> permenantCityLs;
 
 	private boolean sameAddress;
 	private SmSupplierBank[] selectedSuppBanks;
@@ -113,83 +110,83 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smSupp = smSupp;
 	}
 
-	public List<PmCountry> getCountryLs() {
+	public List<SelectItem> getCountryLs() {
 		return countryLs;
 	}
 
-	public void setCountryLs(List<PmCountry> countryLs) {
+	public void setCountryLs(List<SelectItem> countryLs) {
 		this.countryLs = countryLs;
 	}
 
-	public List<PmState> getBusinessStateLs() {
+	public List<SelectItem> getBusinessStateLs() {
 		return businessStateLs;
 	}
 
-	public void setBusinessStateLs(List<PmState> businessStateLs) {
+	public void setBusinessStateLs(List<SelectItem> businessStateLs) {
 		this.businessStateLs = businessStateLs;
 	}
 
-	public List<PmState> getResidentialStateLs() {
+	public List<SelectItem> getResidentialStateLs() {
 		return residentialStateLs;
 	}
 
-	public void setResidentialStateLs(List<PmState> residentialStateLs) {
+	public void setResidentialStateLs(List<SelectItem> residentialStateLs) {
 		this.residentialStateLs = residentialStateLs;
 	}
 
-	public List<PmState> getPermenantStateLs() {
+	public List<SelectItem> getPermenantStateLs() {
 		return permenantStateLs;
 	}
 
-	public List<PmDistrict> getBusinessDistrictLs() {
+	public List<SelectItem> getBusinessDistrictLs() {
 		return businessDistrictLs;
 	}
 
-	public void setBusinessDistrictLs(List<PmDistrict> businessDistrictLs) {
+	public void setBusinessDistrictLs(List<SelectItem> businessDistrictLs) {
 		this.businessDistrictLs = businessDistrictLs;
 	}
 
-	public List<PmDistrict> getResidentialDistrictLs() {
+	public List<SelectItem> getResidentialDistrictLs() {
 		return residentialDistrictLs;
 	}
 
-	public void setResidentialDistrictLs(List<PmDistrict> residentialDistrictLs) {
+	public void setResidentialDistrictLs(List<SelectItem> residentialDistrictLs) {
 		this.residentialDistrictLs = residentialDistrictLs;
 	}
 
-	public List<PmDistrict> getPermenantDistrictLs() {
+	public List<SelectItem> getPermenantDistrictLs() {
 		return permenantDistrictLs;
 	}
 
-	public void setPermenantDistrictLs(List<PmDistrict> permenantDistrictLs) {
+	public void setPermenantDistrictLs(List<SelectItem> permenantDistrictLs) {
 		this.permenantDistrictLs = permenantDistrictLs;
 	}
 
-	public void setPermenantStateLs(List<PmState> permenantStateLs) {
+	public void setPermenantStateLs(List<SelectItem> permenantStateLs) {
 		this.permenantStateLs = permenantStateLs;
 	}
 
-	public List<PmCity> getBusinessCityLs() {
+	public List<SelectItem> getBusinessCityLs() {
 		return businessCityLs;
 	}
 
-	public void setBusinessCityLs(List<PmCity> businessCityLs) {
+	public void setBusinessCityLs(List<SelectItem> businessCityLs) {
 		this.businessCityLs = businessCityLs;
 	}
 
-	public List<PmCity> getResidentialCityLs() {
+	public List<SelectItem> getResidentialCityLs() {
 		return residentialCityLs;
 	}
 
-	public void setResidentialCityLs(List<PmCity> residentialCityLs) {
+	public void setResidentialCityLs(List<SelectItem> residentialCityLs) {
 		this.residentialCityLs = residentialCityLs;
 	}
 
-	public List<PmCity> getPermenantCityLs() {
+	public List<SelectItem> getPermenantCityLs() {
 		return permenantCityLs;
 	}
 
-	public void setPermenantCityLs(List<PmCity> permenantCityLs) {
+	public void setPermenantCityLs(List<SelectItem> permenantCityLs) {
 		this.permenantCityLs = permenantCityLs;
 	}
 
