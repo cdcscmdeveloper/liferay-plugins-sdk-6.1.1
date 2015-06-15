@@ -31,11 +31,10 @@
 							#{(tplMasterObj.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}
 						</p:column>
 						<p:column>
-							<p:commandButton icon="ui-icon-edit" style="background-color:transparent !important; border:0px none;"
-								action="#{templateDocBackingBean.goToMaint(tplMasterObj)}" update="tplDocMasterDt" >
-								<f:setPropertyActionListener target="#{templateDocBackingBean.managedBean.selectedTemplate}" value="#{tplMasterObj}" />
-							</p:commandButton>
-						 </p:column>
+							<p:commandLink action="#{templateDocBackingBean.goToMaint(tplMasterObj)}">
+								<p:graphicImage value="/css/images/design/ico-viewnedit.png" update="tplDocMasterDt" />
+							</p:commandLink>
+						</p:column>
 					</p:dataTable>
 				</td>
 			</tr>
