@@ -3960,9 +3960,10 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-			
-			retrieveApprovalTabDtl();
-			
+			List<TabBean> tabList = this.getManagedBean().getTabList();
+			if (CollectionUtils.isEmpty(tabList)) {
+				retrieveApprovalTabDtl();
+			}
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
