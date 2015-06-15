@@ -27,7 +27,7 @@
 			<h:panelGrid border="0" width="100%" columns="4"
 				columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth40">
 				<h:outputLabel value="#{lbl['lbl.sc.title']}" />
-				<h:outputText style="white-space: normal;word-wrap: break-word;"
+				<h:outputText style="white-space: nowrap;"
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
 				<h:outputText value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})" styleClass="lastUpdated"
 				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle ne null ? 'true':'false'}"/>
@@ -195,22 +195,22 @@
 				styleClass="test" rows="20">
 
 				<p:column headerText="#{lbl['lbl.sc.name']}"
-					style="width:25%;white-space: normal;">
+					style="width:25%;white-space: nowrap;">
 					<h:outputText value="#{contactPerson.name}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.tel.no']}"
-					style="width:25%;white-space: normal;">
+					style="width:25%;white-space: nowrap;">
 					<h:outputText value="#{contactPerson.phoneNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.fax.no']}"
-					style="width:25%;white-space: normal;">
+					style="width:25%;white-space: nowrap;">
 					<h:outputText value="#{contactPerson.faxNo}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.email']}"
-					style="width:25%;white-space: normal;">
+					style="width:25%;white-space: nowrap;">
 					<h:outputText value="#{contactPerson.email}" />
 				</p:column>
 			</p:dataTable>
