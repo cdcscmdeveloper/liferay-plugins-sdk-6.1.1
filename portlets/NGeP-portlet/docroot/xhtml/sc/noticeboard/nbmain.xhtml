@@ -133,13 +133,13 @@
 
 
 				<p:column>
-					<p:inputMask size="5" styleClass="ppNumericAlign"
+					<p:inputText size="5" styleClass="ppNumericAlign"
 						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}"
 						mask="99" style="width:111px">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
 							update="rangePubDatePG,recentPubDatePG" process="@this" />
-					</p:inputMask>
+					</p:inputText>
 
 					<h:outputText value="#{lbl['lbl.sc.notice.board.days']}"
 						style="padding-left:5px;"></h:outputText>
@@ -217,7 +217,7 @@
 					</p:commandLink>  -->
 					</p:treeNode>
 					<p:treeNode type="district">
-						<h:outputText value="#{location.districtName}" />
+						<h:outputText value="#{location.districtCode} - #{location.districtName}" />
 						<!--  <p:commandLink
 						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
 						style="padding-left:15px;">
@@ -226,16 +226,7 @@
 							value="/css/images/design/reset.png" />
 					</p:commandLink> -->
 					</p:treeNode>
-					<p:treeNode type="city">
-						<h:outputText value="#{location.cityCode} - #{location.cityName}" />
-						<!-- 	 <p:commandLink
-						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
-						style="padding-left:15px;">
-						<f:setPropertyActionListener target="#{noticeBoardBackingBean.managedBean.resetData}" value="#{reset}" />
-						<p:graphicImage library="ep/images/design" name="reset.png"
-							value="/css/images/design/reset.png" />
-					</p:commandLink>  -->
-					</p:treeNode>
+					
 				</p:tree>
 			</h:panelGrid>
 		</p:panel>
