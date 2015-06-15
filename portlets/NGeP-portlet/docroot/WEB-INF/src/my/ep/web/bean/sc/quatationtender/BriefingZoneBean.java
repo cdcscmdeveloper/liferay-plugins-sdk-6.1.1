@@ -65,6 +65,28 @@ public class BriefingZoneBean implements Serializable {
 
 	private ScQtSampleSubmission sampleAddress;
 	
+
+	/**
+	 * Instantiates a new briefing zone bean.
+	 *
+	 * @param tplSpecZoneDtl the tpl spec zone dtl
+	 * @param briefingList the briefing list
+	 * @param sitevisitList the sitevisit list
+	 * @param scQtBsv the sc qt bsv
+	 * @param ScQtSampleSubmission the sampleAddress
+	 */
+	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
+			List<ScQtBsvDtl> briefingList, List<ScQtBsvDtl> sitevisitList,
+			ScQtBsv scQtBsv,ScQtSampleSubmission sampleAddress) {
+		this.tplSpecZoneDtl = tplSpecZoneDtl;
+		this.briefingList = briefingList;
+		this.sitevisitList = sitevisitList;
+		this.scQtBsv = scQtBsv;
+		this.selectedBriefingDtls=new ArrayList<>();
+		this.selectedSiteVisitDtls=new ArrayList<>();
+		this.sampleAddress = sampleAddress;
+	}
+	
 	/**
 	 * Instantiates a new briefing zone bean.
 	 *
@@ -75,14 +97,13 @@ public class BriefingZoneBean implements Serializable {
 	 */
 	public BriefingZoneBean(TplSpecZoneDtl tplSpecZoneDtl,
 			List<ScQtBsvDtl> briefingList, List<ScQtBsvDtl> sitevisitList,
-			ScQtBsv scQtBsv, ScQtSampleSubmission sampleAddress) {
+			ScQtBsv scQtBsv ) {
 		this.tplSpecZoneDtl = tplSpecZoneDtl;
 		this.briefingList = briefingList;
 		this.sitevisitList = sitevisitList;
 		this.scQtBsv = scQtBsv;
 		this.selectedBriefingDtls=new ArrayList<>();
 		this.selectedSiteVisitDtls=new ArrayList<>();
-		this.sampleAddress = sampleAddress;
 	}
 
 	/**
