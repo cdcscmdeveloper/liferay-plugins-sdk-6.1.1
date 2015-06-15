@@ -31,7 +31,6 @@
 				<p:commandButton ajax="false" value="#{lbl['lbl.btn.download.all']}"
 					icon="ui-icon-download"
 					rendered="#{noticeBoardBackingBean.managedBean.scQtDocReports ne null and noticeBoardBackingBean.managedBean.scQtDocReports.size()>0}"
-					style="background-color:transparent !important; border:0px none;"
 					action="#{noticeBoardBackingBean.downloadAllQTDocuments(noticeBoardBackingBean.managedBean.scQt.qtId)}" />
 			</div>
 		</p:panel>
