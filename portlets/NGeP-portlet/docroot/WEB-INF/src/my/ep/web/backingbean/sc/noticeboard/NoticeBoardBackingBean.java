@@ -90,6 +90,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
+import my.ep.persistence.entity.sc.quationtender.ScQtSampleSubmission;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -216,7 +217,11 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setMinistryName(
 					retrieveMinistryByOrgProfileId(scQt.getPmOrgProfile()
 							.getOrgProfileId()));
-
+			
+			// Get sample submission details
+			List<ScQtSampleSubmission> sampleAddrList = resDTO
+					.getSampleSubmissionDtls();
+			
 			if (!scQt.isZonal()) {
 				if (null != resDTO.getLocCriteria()) {
 
@@ -226,10 +231,15 @@ public class NoticeBoardBackingBean extends
 
 				}
 				ScQtBsv scQtBsv = resDTO.getScQtBsv();
-
+				
+				ScQtSampleSubmission sampleAddr = null;
+				if (sampleAddrList != null && !sampleAddrList.isEmpty()) {
+						sampleAddr = sampleAddrList.get(0);
+				}
+				
 				BriefingZoneBean briefingZoneBean = new BriefingZoneBean(null,
 						resDTO.getBriefingResultBean(),
-						resDTO.getSiteVisitResultBean(), scQtBsv);
+						resDTO.getSiteVisitResultBean(), scQtBsv, sampleAddr);
 				this.getManagedBean().setNormalBsvBean(briefingZoneBean);
 			} else if (scQt.isZonal()) {
 				List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
@@ -260,11 +270,18 @@ public class NoticeBoardBackingBean extends
 										IQTBriefingSO.class);
 						BriefingResDTO briefingResDTO = briefingSO
 								.retrieveBriefingSiteVisitDtls(briefingReqDTO);
-
+						ScQtSampleSubmission sampleAddress = null; 
+						for (ScQtSampleSubmission sampleaddr : sampleAddrList) {
+							TplSpecZoneDtl addrZoneDtl = sampleaddr.getTplSpecZoneDtl();
+							if (addrZoneDtl != null && specZoneDtl
+									.getSpecZoneId().equals(addrZoneDtl.getSpecZoneId())) {
+								sampleAddress = sampleaddr;
+							}
+						}
 						BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 								specZoneDtl, briefingResDTO.getBriefingList(),
 								briefingResDTO.getSiteVisitList(),
-								briefingResDTO.getScQtBsv());
+								briefingResDTO.getScQtBsv(),sampleAddress);
 						bsvZoneBeans.add(briefingZoneBean);
 					}
 					this.getManagedBean().setLocationNodes(
@@ -276,7 +293,7 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setZoneBean(bsvZoneBeans);
 				this.getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));
 			}
-
+			
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 			String selectedTab = getManagedBean().getSelectedTab();
 			this.getManagedBean().setChangedDate(null);
@@ -863,6 +880,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setProposalURL(null);
 		String mofNo = this.getManagedBean().getMofNo();
 		setVisible(false);
+		IQTNoticeBoardSO boardSO = null;
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
 			throw new EpException("Mof No should not be Null or Empty");
 		}
@@ -871,7 +889,7 @@ public class NoticeBoardBackingBean extends
 		Long currentStatus = scQt.getQtStatus().getStatusId();
 		try {
 			
-			IQTNoticeBoardSO boardSO = EpEjbBusinessDelegate.getInstance()
+			boardSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTNoticeBoardSO.class);
 			NoticeBoardReqDTO reqDTO = new NoticeBoardReqDTO();
@@ -897,11 +915,29 @@ public class NoticeBoardBackingBean extends
 
 				setVisible(true);
 			}
-
+			
+			SmSupplier supplier = resDTO.getSupplier();
+			boolean isValidSupplier = false;
+			if (supplier != null && this.getManagedBean().isQualified()) {
+				NoticeBoardReqDTO supplierReqDTO = new NoticeBoardReqDTO();
+				supplierReqDTO.setSupplierId(supplier.getSupplierId());
+				supplierReqDTO.setQtId(qtId);
+				NoticeBoardResDTO supplierResDTO = boardSO
+						.retrieveQtSupplierByQtIdNSupplierId(reqDTO);
+				if(supplierResDTO.isSuccessful()){
+					// Value will be present when supplier rejected for prepare proposal
+					// while doing bsv registration by DO
+					if (null == supplierResDTO.getScQtSupplier()
+							.getDisqualifiedStage()) {
+						isValidSupplier = true;
+					}
+				}
+			}
+			
 			// construct the proposal/update url
-			if (this.getManagedBean().isQualified()
-					&& QTStatusConst.QT_PROPOSAL_PREPARATION
-							.equals(currentStatus)) {
+			if (QTStatusConst.QT_PROPOSAL_PREPARATION
+					.equals(currentStatus) && isValidSupplier ) {
+					
 				StringBuffer proposalURL = new StringBuffer(85);
 				proposalURL.append(EpPropertiesUtils.getInstance().getProperty(
 						EpPropertiesConst.PORTAL_APPLICATION_URL));
@@ -1824,7 +1860,7 @@ public class NoticeBoardBackingBean extends
 
 			BriefingZoneBean briefingZoneBean = new BriefingZoneBean(null,
 					resDTO.getBriefingResultBean(),
-					resDTO.getSiteVisitResultBean(), scQtBsv);
+					resDTO.getSiteVisitResultBean(), scQtBsv,null);
 			this.getManagedBean().setNormalBsvBean(briefingZoneBean);
 		} else if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
@@ -1854,7 +1890,7 @@ public class NoticeBoardBackingBean extends
 					BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 							specZoneDtl, briefingResDTO.getBriefingList(),
 							briefingResDTO.getSiteVisitList(),
-							briefingResDTO.getScQtBsv());
+							briefingResDTO.getScQtBsv(),null);
 					bsvZoneBeans.add(briefingZoneBean);
 
 					MenuItem zoneItem = new MenuItem();
@@ -2458,5 +2494,5 @@ public class NoticeBoardBackingBean extends
 			IPagingDataModel<ScQtCategory> categoryCodesDataModel) {
 		this.categoryCodesDataModel = categoryCodesDataModel;
 	}
-
+	
 }
