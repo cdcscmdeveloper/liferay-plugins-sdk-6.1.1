@@ -155,7 +155,7 @@ public class LOIDetailBackingBean extends
 	public static Logger log = EpLogger.getLogger(LOIDetailBackingBean.class);
 
 	/** The Constant LOI_DETAILS_MAIN_MENU. */
-	public static final String LOI_DETAILS_MAIN_MENU = "/xhtml/sc/loi/loiDetailsMain.xhtml.xhtml";
+	public static final String LOI_DETAILS_MAIN_MENU = "/xhtml/sc/loi/loiDetailsMain.xhtml";
 
 	/** The Constant LOI_DETAILS_MENU. */
 	public static final String LOI_DETAILS_MENU = "/xhtml/sc/loi/loiDetailsMenu.xhtml";
@@ -1177,14 +1177,14 @@ public class LOIDetailBackingBean extends
 		ScLoi scLoi = resDTO.getScLoi();
 		getManagedBean().setScLoi(scLoi);
 		boolean isTermPriceFound = Boolean.FALSE;
-		//boolean isBiddingAward = Boolean.FALSE;
+		boolean isBiddingAward = Boolean.FALSE;
 
 		// online bidding
 		if (scLoi.getScLoiLoa().getRecommendBy() != null) {
 			PmParameter recommendedBy = scLoi.getScLoiLoa().getRecommendBy();
 			if (ParameterConst.RECOMMEND_BY_ONLINE_BIDDING
 					.equals(recommendedBy.getParameterCode())) {
-				//isBiddingAward = Boolean.TRUE;
+				isBiddingAward = Boolean.TRUE;
 				// remove nego price recommended by - online bidding.
 				removeNegoTermPrice(scLoi);
 			}
@@ -1209,6 +1209,10 @@ public class LOIDetailBackingBean extends
 			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
 
+			BigDecimal finalPrice = BigDecimal.valueOf(0d);
+			BigDecimal finalPriceSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal finalPriceAmount = BigDecimal.valueOf(0d);
+
 			BigDecimal afterNegoSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal afterNegoTotalAmount = BigDecimal.valueOf(0d);
 
@@ -1221,19 +1225,35 @@ public class LOIDetailBackingBean extends
 					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
 					scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
 					offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+
+					// final price sub total and total - for bidding.
+					if(isBiddingAward){
+						finalPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
+						finalPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, scLoiLoaItem.getQty());
+						scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
+						finalPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+					} else{
+						// after nego price sub total and total
+						afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+						if (afterNegoSubTotal != null) {
+							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
+							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+							scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+						}
+					}
 				}
-				// after nego price sub total and total
-				afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
-				if (afterNegoSubTotal != null) {
-					afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
-					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-					scLoiLoaItem.setSubTotal(afterNegoSubTotal);
-				}
-				scLoi.setScLoiLoaItems(scLoiLoaItems);
-				scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
+			}
+			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
+			
+			if(isBiddingAward){
+				scLoi.setLoiAmt(finalPriceAmount); // unit price total
+				scLoi.setAfterNegoTotal(finalPriceAmount); // after nego total
+			} else{
 				scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
 				scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
 			}
+			
+			scLoi.setScLoiLoaItems(scLoiLoaItems);
 		}
 		getManagedBean().setScQt(resDTO.getScQt());
 
