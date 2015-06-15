@@ -503,12 +503,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					}
 				} else {
 					// get by rev no based on login role for migrated data
-					if(getManagedBean().isViewApplicationHistory()){
+					if (getManagedBean().isViewApplicationHistory()) {
 						activeCompBasic = getCompanyBasicByRevNo(compBasicList);
 					}
 				}
-				getManagedBean().getSmAppl().setSmCompanyBasic(
-						activeCompBasic);
+				getManagedBean().getSmAppl().setSmCompanyBasic(activeCompBasic);
 			}
 		}
 
@@ -572,12 +571,18 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
 		} else {
+			List<SmSupplierBranch> activeSupplierBranches = new ArrayList<SmSupplierBranch>();
 			for (SmSupplierBranch smSupplierBranch : getManagedBean()
 					.getSmAppl().getSmSupplierBranches()) {
-				if (smSupplierBranch.getSmPersonnel() == null) {
-					smSupplierBranch.setSmPersonnel(new SmPersonnel());
+				if (smSupplierBranch.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					if (smSupplierBranch.getSmPersonnel() == null) {
+						smSupplierBranch.setSmPersonnel(new SmPersonnel());
+					}
+					activeSupplierBranches.add(smSupplierBranch);
 				}
 			}
+			getManagedBean().getSmAppl().setSmSupplierBranches(
+					activeSupplierBranches);
 		}
 
 		// associatedCompanyInfoFormViewOnly
@@ -919,9 +924,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		if (shareBankBean.getSmChequeSignatories() != null
 				&& !shareBankBean.getSmChequeSignatories().isEmpty()) {
 			if (shareBankBean.getSmChequeSignatories().size() == 1) {
-				sb.append(
-						shareBankBean.getSmChequeSignatories().get(0)
-								.getSmPersonnel().getName());
+				sb.append(shareBankBean.getSmChequeSignatories().get(0)
+						.getSmPersonnel().getName());
 			} else {
 				for (SmChequeSignatory smChequeSignatoryTmp : shareBankBean
 						.getSmChequeSignatories()) {
@@ -2082,39 +2086,39 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private SmCompanyBasic getCompanyBasicByRevNo(
 			List<SmCompanyBasic> companyBasicList) {
 		SmCompanyBasic activeCompanyBasic = new SmCompanyBasic();
-		
-		if(getManagedBean().isViewApplicationHistory()){
-			//role supplier user load from rev 1
+
+		if (getManagedBean().isViewApplicationHistory()) {
+			// role supplier user load from rev 1
 			if (getManagedBean().isSupplierUser()) {
 				for (SmCompanyBasic companyBasic : companyBasicList) {
-					if (companyBasic.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 							&& companyBasic.getRevNo() == 1) {
 						activeCompanyBasic = companyBasic;
 						break;
 					}
 				}
-			} 
-			//role approver load from rev 2
+			}
+			// role approver load from rev 2
 			else {
 				for (SmCompanyBasic companyBasic : companyBasicList) {
-					if (companyBasic.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+					if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 							&& companyBasic.getRevNo() == 2) {
 						activeCompanyBasic = companyBasic;
 						break;
 					}
 				}
 			}
-		}else{
-			//for supplier profile load from rev 2
+		} else {
+			// for supplier profile load from rev 2
 			for (SmCompanyBasic companyBasic : companyBasicList) {
-				if (companyBasic.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
+				if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 						&& companyBasic.getRevNo() == 2) {
 					activeCompanyBasic = companyBasic;
 					break;
 				}
 			}
 		}
-		
+
 		activeCompanyBasic = activeCompanyBasic == null ? companyBasicList
 				.get(0) : activeCompanyBasic;
 		return activeCompanyBasic;
