@@ -70,6 +70,7 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
+import my.ep.web.backingbean.cm.catalogue.CatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -438,6 +439,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<CmSupplierItem> draftSupplierItemList;
 	
 	
+	
+	private int draftTabPageSize = 5;
+	private int pendingApprovalTabPageSize = 5;
+	private int approvedTabPageSize = 5;
+	private int publishTabPageSize = 5;
+	private int rejectedTabPageSize = 5;
+	private int expiredTabPageSize = 5;
+	
+	
 	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -470,6 +480,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setExpiredTabPageSize(this.getPageSize());
 				
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -534,6 +546,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			try {
 				
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setPublishTabPageSize(this.getPageSize());
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -598,8 +612,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			try {
 				
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setRejectedTabPageSize(this.getPageSize());
+				
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-
+				
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
 
@@ -660,6 +677,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
+				
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setApprovedTabPageSize(this.getPageSize());
 				
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -723,6 +743,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
+				
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setPendingApprovalTabPageSize(this.getPageSize());
 				
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -788,6 +811,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 			try {
 				
+				CatalogueBackingBean bb = new CatalogueBackingBean();
+				bb.getManagedBean().setDraftTabPageSize(this.getPageSize());
+
 			
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -3491,6 +3517,54 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setDraftSupplierItemList(List<CmSupplierItem> draftSupplierItemList) {
 		this.draftSupplierItemList = draftSupplierItemList;
+	}
+
+	public int getDraftTabPageSize() {
+		return draftTabPageSize;
+	}
+
+	public void setDraftTabPageSize(int draftTabPageSize) {
+		this.draftTabPageSize = draftTabPageSize;
+	}
+
+	public int getPendingApprovalTabPageSize() {
+		return pendingApprovalTabPageSize;
+	}
+
+	public void setPendingApprovalTabPageSize(int pendingApprovalTabPageSize) {
+		this.pendingApprovalTabPageSize = pendingApprovalTabPageSize;
+	}
+
+	public int getApprovedTabPageSize() {
+		return approvedTabPageSize;
+	}
+
+	public void setApprovedTabPageSize(int approvedTabPageSize) {
+		this.approvedTabPageSize = approvedTabPageSize;
+	}
+
+	public int getPublishTabPageSize() {
+		return publishTabPageSize;
+	}
+
+	public void setPublishTabPageSize(int publishTabPageSize) {
+		this.publishTabPageSize = publishTabPageSize;
+	}
+
+	public int getRejectedTabPageSize() {
+		return rejectedTabPageSize;
+	}
+
+	public void setRejectedTabPageSize(int rejectedTabPageSize) {
+		this.rejectedTabPageSize = rejectedTabPageSize;
+	}
+
+	public int getExpiredTabPageSize() {
+		return expiredTabPageSize;
+	}
+
+	public void setExpiredTabPageSize(int expiredTabPageSize) {
+		this.expiredTabPageSize = expiredTabPageSize;
 	}
 	
 	
