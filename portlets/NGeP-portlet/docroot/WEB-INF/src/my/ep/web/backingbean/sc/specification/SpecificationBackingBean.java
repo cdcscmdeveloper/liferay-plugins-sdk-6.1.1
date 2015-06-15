@@ -5124,6 +5124,11 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().setStateCode(
 								scQt.getZoneLocationLevel().getParameterCode());
 					}
+					if (!this.getManagedBean().getScQt().isPanel()) {
+						if (null == scQt.getZoneLocationLevel()) {
+							scQt.setZoneLocationLevel(new PmParameter());
+						}
+					}
 					retriveNonpanelZoneDtls(tenderResDTO.getZoneDetails());
 
 				}
