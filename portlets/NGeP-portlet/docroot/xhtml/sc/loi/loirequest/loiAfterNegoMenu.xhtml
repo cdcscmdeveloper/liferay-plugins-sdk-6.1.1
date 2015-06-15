@@ -63,8 +63,16 @@
 			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 	</p:panel>
-
-	<ui:include src="loiAfterNegoAwardDetails.xhtml" />
-
+	
+   <!-- with nego price - view award details-->
+	<h:panelGrid
+		rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
+		<ui:include src="loiAfterNegoAwardDetails.xhtml" />
+	</h:panelGrid>
+<!-- without nego price - view award details-->
+	<h:panelGrid
+		rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
+		<ui:include src="loiAwardDetailsMenu.xhtml" />
+	</h:panelGrid>
 
 </ui:composition>
