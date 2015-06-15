@@ -20,6 +20,7 @@ import my.ep.dto.pm.general.settings.calendar.CalendarResDTO;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.setting.calendar.PmHoliday;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -38,12 +39,18 @@ public class CalendarManageBean extends BaseManagedBean {
 	}
 
 	public void loadSchedule(long stateId) {
+		System.out.println("...........loadSchedule............");
+		System.out.println("...........stateId="+stateId);
 		eventModel = new DefaultScheduleModel();
 		event = new DefaultScheduleEvent();
 		
-		this.loadCountrySchedule();
-		
-		if(stateId!=0){
+//		this.loadCountrySchedule();  //always result null???!!
+	
+		if(stateId==0 || stateId== -1){
+			System.out.println("...........inside if");
+			this.setSelectedState(new PmState());
+		}else{
+			System.out.println("...........inside else");
 			this.loadStateSchedule(stateId);
 		}
 		
@@ -51,6 +58,7 @@ public class CalendarManageBean extends BaseManagedBean {
 	}
 
 	private void loadStateSchedule(long stateId) {
+		System.out.println("...........loadStateSchedule............");
 		PmState state = PmCommonUtil.retrievePmStateByStateId(stateId);
 		setSelectedState(state);
 		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
@@ -59,11 +67,12 @@ public class CalendarManageBean extends BaseManagedBean {
 		reqDTO.setStateId(stateId);
 		CalendarResDTO resDTO = calendarSO.getHolidaysForState(reqDTO);
 		List<PmHoliday> stateHolidayList = resDTO.getHolidayList();
+		System.out.println("...........resDTO.getHolidayList()="+resDTO.getHolidayList());
 		if (stateHolidayList != null) {
 			for (PmHoliday holiday : stateHolidayList) {
 				ScheduleEvent event = new DefaultScheduleEvent(
 						holiday.getHolidayName(), holiday.getStartDate(),
-						holiday.getEndDate());
+						DateUtils.minusDays(holiday.getEndDate(),1));
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				eventModel.addEvent(event);
 			}
@@ -71,11 +80,16 @@ public class CalendarManageBean extends BaseManagedBean {
 	}
 
 	private void loadCountrySchedule() {
+		System.out.println("...........loadCountrySchedule............");
 		setSelectedState(new PmState());
 		ICalendarSO calendarSO = (ICalendarSO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICalendarSO.class);
 		CalendarReqDTO reqDTO = new CalendarReqDTO();
 		CalendarResDTO resDTO = calendarSO.getHolidaysForCountry(reqDTO);
+		System.out.println("...........resDTO.getHolidayList()="+resDTO.getHolidayList());
+		if(resDTO.getHolidayList() != null){
+			System.out.println("...........resDTO.getHolidayList().size()="+resDTO.getHolidayList().size());
+		}
 		List<PmHoliday> countryHolidayList = resDTO.getHolidayList();
 
 		if (countryHolidayList != null) {
