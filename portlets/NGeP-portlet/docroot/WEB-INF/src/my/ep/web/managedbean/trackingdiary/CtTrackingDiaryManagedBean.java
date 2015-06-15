@@ -20,6 +20,7 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -63,46 +64,49 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 		 */
 		@Override
 		public ISearchResultBean<VCtDocument> pageChangeListener(ISearchBean<VCtDocument> searchBean) {
+			
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
 			try {				
 				if (getSearchTransactionType() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("transactionType",SearchOperator.OPERATOR_EQUALS.value(),getSearchTransactionType()));
-				}				
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("TRANSACTION_TYPE",SearchOperator.OPERATOR_EQUALS.value(),getSearchTransactionType()));
+				}		
+				
 				if (getSearchDocNo() != null && getSearchDocNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo());
+					SearchFilterBean filterBean = new SearchFilterBean("DOC_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (getSearchDocType() != null) {
-					SearchFilterBean filterBean = new SearchFilterBean("docType",SearchOperator.OPERATOR_LIKE.value(),getSearchDocType());
+					SearchFilterBean filterBean = new SearchFilterBean("DOC_TYPE",SearchOperator.OPERATOR_LIKE.value(),getSearchDocType());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);					
 				}
 				if (getSearchPhysicalDocNo() != null && getSearchPhysicalDocNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("physicalDocNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalDocNo());
+					SearchFilterBean filterBean = new SearchFilterBean("PHYSICAL_DOC_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalDocNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if (getSearchLoaNo() != null && getSearchLoaNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo());
+					SearchFilterBean filterBean = new SearchFilterBean("LOA_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				if (getSearchPhysicalLoaNo() != null && getSearchPhysicalLoaNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("loaPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalLoaNo());
+					SearchFilterBean filterBean = new SearchFilterBean("PHYSICAL_LOA_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalLoaNo());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);
 				}
 				
 				// Order by document number
-				searchBean.getSortColumns().add(new SearchOrderBean("docNo"));
+				searchBean.getSortColumns().add(new SearchOrderBean("DOC_NO"));
 				
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
 						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
 				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
 				
+				searchBean.setUseEntityClass(true);
 				reqDTO.setCtDocumentSearchBean(searchBean);
 				ContractIntegrationResDTO resDTO = contractIntegrationSO.searchContractDocument(reqDTO);
 				
