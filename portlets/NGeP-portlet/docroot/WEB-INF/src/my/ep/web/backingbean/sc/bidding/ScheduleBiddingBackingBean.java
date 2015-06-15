@@ -273,6 +273,14 @@ public class ScheduleBiddingBackingBean extends
 					getManagedBean().setSelectedBidItem(
 							resDTO.getBidItemsList().get(0));
 				}
+				if (!(resDTO.getScQT().isZonal())
+						&& ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(resDTO
+								.getScQtFinalization().getRecommendedTypeId()
+								.getParameterCode())) {
+					getManagedBean().setSelectedBidItem(
+							resDTO.getBidSchedules().get(0).getScBidItems()
+									.get(0));
+				}
 
 			}
 		}
