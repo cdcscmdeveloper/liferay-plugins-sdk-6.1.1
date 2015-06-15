@@ -12,17 +12,16 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+              <p:messages id="calendarMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<style type="text/css">
+.value {
+	width: 1000px;
+}
+</style>
 
-	<style type="text/css">
-		.value {
-			width: 1000px;
-		}
-	</style>
-	
-	<script type="text/javascript">	
+		<script type="text/javascript">	
 	
 		function changeWeekEndColor(){
-			
 			
 			clearDayColor();
 			
@@ -81,6 +80,7 @@
  		}
 		
 		function clearDayColor(){
+		
 			updateDayColor(document.getElementsByClassName('fc-mon'),"white");
 			updateDayColor(document.getElementsByClassName('fc-tue'),"white");
 			updateDayColor(document.getElementsByClassName('fc-wed'),"white");
@@ -91,6 +91,7 @@
 		}
 		
 		function updateDayColor(td, color){
+		
 			td[1].style.background=color;
 			td[2].style.background=color;
 			td[3].style.background=color;
@@ -100,12 +101,10 @@
 		}
 	</script>
 
-	#{calendarBackingBean.managedBean.loadSchedule(calendarBackingBean.managedBean.selectedState.stateId)}
+
 
 		<p:panel id="ruleConfigId">
-		
-			<p:messages id="calendarMsg" showDetail="true" autoUpdate="true"
-				closable="true" showSummary="false"></p:messages>
+
 
 			<h:panelGroup id="calendarId">
 				<table width="100%">
@@ -117,45 +116,53 @@
 								styleClass="ppDropDownWidthL" label="#{lbl['lbl.pm.cal.state']}"
 								value="#{calendarBackingBean.managedBean.selectedState.stateId}"
 								style="width: 275px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="-1" />
+								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+									itemValue="-1" />
 								<!--f:selectItem itemLabel="Malaysia" itemValue="0" /-->
 								<f:selectItems
 									value="#{calendarBackingBean.getStateListOfMalaysia()}"
 									var="state" itemLabel="#{state.stateName}"
 									itemValue="#{state.stateId}" />
-								<p:ajax event="change" listener="#{calendarBackingBean.updateState}" 
-								partialSubmit="true" process="@this" update="schedule, weekend1, weekend2" oncomplete="changeWeekEndColor()"/>	
-							</p:selectOneMenu>
-							<h:inputHidden id="weekend1" value="#{calendarBackingBean.managedBean.selectedState.weekend1}" />
-							<h:inputHidden id="weekend2" value="#{calendarBackingBean.managedBean.selectedState.weekend2}" />
-							</td>
+								<p:ajax event="change"
+									listener="#{calendarBackingBean.updateState}"
+									partialSubmit="true" process="@this"
+									update="schedule, weekend1, weekend2"
+									oncomplete="changeWeekEndColor()" />
+							</p:selectOneMenu> <h:inputHidden id="weekend1"
+								value="#{calendarBackingBean.managedBean.selectedState.weekend1}" />
+							<h:inputHidden id="weekend2"
+								value="#{calendarBackingBean.managedBean.selectedState.weekend2}" />
+						</td>
 						<td><p:message for="orgState" id="orgStateMsg" display="icon" /></td>
 					</tr>
 					<tr />
 					<tr>
-						<td colspan="3">
-							<p:schedule id="schedule" pattern="dd-MM-yyyy"
+						<td colspan="3"><p:schedule id="schedule"
+								pattern="dd-MM-yyyy" locale="en" timeZone="GMT+8"
 								leftHeaderTemplate="prev,next, today" rightHeaderTemplate=""
 								style="width : 700px; height : 600px;"
 								value="#{calendarBackingBean.managedBean.eventModel}"
-								widgetVar="myschedule" timeZone="GMT+8" timeFormat="">
+								widgetVar="myschedule" timeFormat="">
+
 								<p:ajax event="dateSelect"
 									listener="#{calendarBackingBean.onDateSelect}"
-									update="eventDetails, calendarMsg" oncomplete="eventDialog.show();"
-									disabled="#{calendarBackingBean.managedBean.selectedState.stateId eq '0'}" />
+									update="eventDetails, calendarMsg"
+									/>
+
 								<p:ajax event="eventSelect"
 									listener="#{calendarBackingBean.onEventSelect}"
-									update="eventDetails, calendarMsg" oncomplete="eventDialog.show();" />
+									update="eventDetails, calendarMsg"
+									oncomplete="eventDialog.show();" />
 								<p:ajax event="eventMove"
 									listener="#{calendarBackingBean.onEventMove}"
 									update="calendarMsg" />
-								<p:ajax event="eventResize" listener="#{calendarBackingBean.onEventResize}"/>
-							</p:schedule>
-						  </td>
+								<p:ajax event="eventResize"
+									listener="#{calendarBackingBean.onEventResize}" />
+							</p:schedule></td>
 					</tr>
 				</table>
 			</h:panelGroup>
-			
+
 			<p:dialog widgetVar="eventDialog"
 				header="#{lbl['lbl.pm.cal.public.haliday.details']}" width="400"
 				height="150" showEffect="clip" hideEffect="clip">
@@ -180,13 +187,14 @@
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
 							<td><p:calendar showOn="button" id="toDateId"
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
-									validatorMessage="To Date should be greater than from Date"
+									validatorMessage="To Date should be greater than from Date"  valueChangeListener="#{calendarBackingBean.updateEndDateVariable()}"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									value="#{calendarBackingBean.managedBean.event.endDate}">
 									<f:attribute name="startDate"
 										value="#{calendarBackingBean.managedBean.event.startDate}" />
 									<f:validator validatorId="primeDateRangeValidator" />
-								</p:calendar></td>
+								</p:calendar>
+								</td>
 						</tr>
 						<br />
 						<tr>
@@ -196,7 +204,7 @@
 									<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
 										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
-										update="ruleConfigId" />
+										update="ruleConfigId, calendarMsg" />
 									<p:commandButton value="#{lbl['lbl.btn.delete']}"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
@@ -207,6 +215,22 @@
 					</table>
 				</h:panelGroup>
 			</p:dialog>
+			<p:dialog widgetVar="errDialog"
+				header="#{lbl['lbl.pm.cal.warning']}" width="260"
+				height="80" showEffect="clip" hideEffect="clip">
+				<h:panelGroup id="errDetails">
+
+					<h:outputText value="#{lbl['lbl.pm.cal.err.popup.msg1']}" />
+					<br />
+					<br />
+					<div style="float: right;">
+						<p:commandButton value="#{lbl['lbl.btn.ok']}"
+							oncomplete="errDialog.hide()" update="ruleConfigId" />
+					</div>
+
+				</h:panelGroup>
+			</p:dialog>
+
 		</p:panel>
 	</ui:define>
 </ui:composition>
