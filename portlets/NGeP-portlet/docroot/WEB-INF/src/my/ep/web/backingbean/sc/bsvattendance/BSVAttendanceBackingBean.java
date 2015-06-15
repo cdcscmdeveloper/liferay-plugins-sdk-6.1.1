@@ -130,7 +130,7 @@ public class BSVAttendanceBackingBean extends
 						BriefingZoneBean briefingZoneBean = new BriefingZoneBean(
 								specZoneDtl, briefingResDTO.getBriefingList(),
 								briefingResDTO.getSiteVisitList(),
-								briefingResDTO.getScQtBsv(),null);
+								briefingResDTO.getScQtBsv());
 						bsvZoneBeans.add(briefingZoneBean);
 					}
 					// }
@@ -152,7 +152,7 @@ public class BSVAttendanceBackingBean extends
 
 					briefingZoneBean = new BriefingZoneBean(null,
 							resDTO.getBriefingList(),
-							resDTO.getSiteVisitList(), scQtBsv,null);
+							resDTO.getSiteVisitList(), scQtBsv);
 				} else {
 					throw new EpException("No Bsv Details Avalible For this");
 				}
