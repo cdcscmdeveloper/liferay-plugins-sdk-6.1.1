@@ -716,8 +716,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String navigateToCatalogDet(int i) {
 
-
-		int index = i%5;
+		System.out.println("**********this.getManagedBean().getDraftTabPageSize()************"+this.getManagedBean().getDraftTabPageSize());
+		int index = i%this.getManagedBean().getDraftTabPageSize();
 
 
 		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + this.getManagedBean().getDraftSearchDataModel().getList().get(index).getSupplierItemId());
@@ -894,7 +894,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String navigateToPublishedItemDet(int i) {
 
 
-		int index = i%5;
+		int index = i%this.getManagedBean().getPendingApprovalTabPageSize();
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
@@ -952,7 +952,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String navigateToExpiredItemDet(int i) {
 
-		int index = i%5;
+		int index = i%this.getManagedBean().getExpiredTabPageSize();
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
@@ -1092,7 +1092,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String navigateToApprovedItemDet(int i) {
 
-		int index= i%5;
+		int index= i%this.getManagedBean().getApprovedTabPageSize();
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
@@ -1123,7 +1123,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public String navigateToRejectedItemDet(int i) {
 
-		int index = i%5;
+		int index = i%this.getManagedBean().getRejectedTabPageSize();
 
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
