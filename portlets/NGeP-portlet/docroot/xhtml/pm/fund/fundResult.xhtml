@@ -20,15 +20,21 @@
 
 			<p:column headerText="#{lbl['lbl.pm.fund.desc']}" style="width:50%">
 				<h:outputText value="#{fundList.description}" />
-			</p:column>		
-			
-			
-			<p:column headerText="#{lbl['lbl.pm.fund.valid.from']}" style="width:15%">
-				<h:outputText value="#{fundList.effDate}" />
 			</p:column>
-			
+
+			<p:column headerText="#{lbl['lbl.pm.fund.valid.from']}"
+				style="width:15%">
+				<h:outputText value="#{fundList.effDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.pm.fund.valid.to']}" style="width:15%">
-				<h:outputText value="#{fundList.expDate}" />
+				<h:outputText value="#{fundList.expDate}" >
+				<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 			</p:column>			
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"

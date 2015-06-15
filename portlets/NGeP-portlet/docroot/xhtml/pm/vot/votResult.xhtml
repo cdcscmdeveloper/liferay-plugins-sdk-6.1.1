@@ -27,13 +27,20 @@
 				<p:spacer width="3%"></p:spacer>
 				<h:outputText value="#{votList.pmOrgProfile.pmOrgValidity.orgName}" />
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.pm.vot.valid.from']}" style="width:10%">
-				<h:outputText value="#{votList.effDate}" />
+
+			<p:column headerText="#{lbl['lbl.pm.vot.valid.from']}"
+				style="width:10%">
+				<h:outputText value="#{votList.effDate}">
+					<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+				</h:outputText>
 			</p:column>
-			
+
 			<p:column headerText="#{lbl['lbl.pm.vot.valid.to']}" style="width:10%">
-				<h:outputText value="#{votList.expDate}" />
+				<h:outputText value="#{votList.expDate}" >
+				<f:convertDateTime
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</h:outputText>
 			</p:column>			
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
