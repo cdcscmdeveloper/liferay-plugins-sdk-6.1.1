@@ -1274,7 +1274,7 @@ public class QTBusinessOwnerBackingBean extends
 			ScQtStatus qtStatus = new ScQtStatus();
 			qtStatus.setScQt(scQt);
 			qtStatus.setPmStatus(status);
-			qtStatus.setCurrent(true);
+			qtStatus.setCurrent(Boolean.TRUE);
 			qtStatus.setDocType(QTConstants.DOCTYPE_QT);
 			List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
 			qtStatuses.add(qtStatus);
@@ -1316,14 +1316,22 @@ public class QTBusinessOwnerBackingBean extends
 		 */
 		ScQtStatus qtStatus = new ScQtStatus();
 		qtStatus.setScQt(qt);
-		PmStatus status = new PmStatus();
-		status.setStatusId(QTStatusConst.QT_CANCELLED);
-		qtStatus.setPmStatus(status);
-		qtStatus.setCurrent(true);
+		PmStatus pmStatus = new PmStatus();
+		pmStatus.setStatusId(QTStatusConst.QT_CANCELLED);
+		qtStatus.setPmStatus(pmStatus);
+		qtStatus.setCurrent(Boolean.TRUE);
 		qtStatus.setDocType(QTConstants.DOCTYPE_QT);
-		List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
-		qtStatuses.add(qtStatus);
-		qt.setScQtStatus(qtStatuses);
+		
+		quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
+		QuationTenderResDTO resDTO1 = detailSO.retriveQtById(quationTenderReqDTO);
+		ScQt scQt = resDTO1.getQtDetail();
+		for (ScQtStatus status : scQt.getScQtStatus()) {
+			status.setCurrent(Boolean.FALSE);
+		}
+		scQt.getScQtStatus().add(qtStatus);
+		/*List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+		qtStatuses.add(qtStatus);*/
+		qt.setScQtStatus(scQt.getScQtStatus());
 
 		quationTenderReqDTO.setQtdetail(qt);
 
