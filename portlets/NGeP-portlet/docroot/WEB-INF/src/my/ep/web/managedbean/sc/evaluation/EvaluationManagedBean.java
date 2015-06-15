@@ -67,6 +67,7 @@ import org.primefaces.model.MenuModel;
 @ManagedBean(name = "evaluationMB")
 @SessionScoped
 public class EvaluationManagedBean extends BaseManagedBean {
+	private static final long serialVersionUID = 1L;
 
 	/** The sc qt meetings. */
 	private List<ScQtMeeting> scQtMeetings;
@@ -464,6 +465,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQtSampleItem sampleItemSelection;
 	private boolean checkTechnicalQualifiedOpenPopup;
 	private boolean checkFinancialQualifiedOpenPopup;
+	private boolean complianceSummaryGenerated;
+	private boolean technicalSummaryGenerated;
+	private boolean presentationDemoSummaryGenerated;
+	private boolean financialSummaryGenerated;
 	
 
 	/**
@@ -3048,6 +3053,63 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setCheckFinancialQualifiedOpenPopup(
 			boolean checkFinancialQualifiedOpenPopup) {
 		this.checkFinancialQualifiedOpenPopup = checkFinancialQualifiedOpenPopup;
+	}
+
+	/**
+	 * @return the complianceSummaryGenerated
+	 */
+	public boolean isComplianceSummaryGenerated() {
+		return complianceSummaryGenerated;
+	}
+
+	/**
+	 * @param complianceSummaryGenerated the complianceSummaryGenerated to set
+	 */
+	public void setComplianceSummaryGenerated(boolean complianceSummaryGenerated) {
+		this.complianceSummaryGenerated = complianceSummaryGenerated;
+	}
+
+	/**
+	 * @return the technicalSummaryGenerated
+	 */
+	public boolean isTechnicalSummaryGenerated() {
+		return technicalSummaryGenerated;
+	}
+
+	/**
+	 * @param technicalSummaryGenerated the technicalSummaryGenerated to set
+	 */
+	public void setTechnicalSummaryGenerated(boolean technicalSummaryGenerated) {
+		this.technicalSummaryGenerated = technicalSummaryGenerated;
+	}
+
+	/**
+	 * @return the presentationDemoSummaryGenerated
+	 */
+	public boolean isPresentationDemoSummaryGenerated() {
+		return presentationDemoSummaryGenerated;
+	}
+
+	/**
+	 * @param presentationDemoSummaryGenerated the presentationDemoSummaryGenerated to set
+	 */
+	public void setPresentationDemoSummaryGenerated(
+			boolean presentationDemoSummaryGenerated) {
+		this.presentationDemoSummaryGenerated = presentationDemoSummaryGenerated;
+	}
+
+	/**
+	 * @return the financialSummaryGenerated
+	 */
+	public boolean isFinancialSummaryGenerated() {
+		return financialSummaryGenerated;
+	}
+
+	/**
+	 * @param financialSummaryGenerated the financialSummaryGenerated to set
+	 */
+	public void setFinancialSummaryGenerated(boolean financialSummaryGenerated) {
+		this.financialSummaryGenerated = financialSummaryGenerated;
 	}
 
 }
