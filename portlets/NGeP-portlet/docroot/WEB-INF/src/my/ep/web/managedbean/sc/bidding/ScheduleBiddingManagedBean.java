@@ -55,6 +55,7 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 	private boolean selectedAllBidContacts;
 	private boolean selectedBidContact;
 
+	private ScBidItem selectedBidItem;
 	private ScBidSchedule rowSelectedBid;
 
 	private Date minStartDate;
@@ -405,4 +406,21 @@ public class ScheduleBiddingManagedBean extends BaseManagedBean {
 		this.payLoad = payLoad;
 	}
 
+
+	/**
+	 * @return the selectedBidItem
+	 */
+	public ScBidItem getSelectedBidItem() {
+		return selectedBidItem;
+	}
+
+
+	/**
+	 * @param selectedBidItem the selectedBidItem to set
+	 */
+	public void setSelectedBidItem(ScBidItem selectedBidItem) {
+		this.selectedBidItem = selectedBidItem;
+	}
+
+	
 }
