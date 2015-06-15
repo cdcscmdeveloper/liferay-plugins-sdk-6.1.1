@@ -44,6 +44,7 @@ import org.apache.log4j.Logger;
 
 /**
  * Schedule Bidding Backing Bean
+ * 
  * @author Venkat Chanumolu
  */
 
@@ -198,7 +199,8 @@ public class ScheduleBiddingBackingBean extends
 	 * @param bidItem
 	 */
 
-	public void retrieveParticipantsListAction(ScBidItem bidItem) {
+	public void retrieveParticipantsListAction() {
+		ScBidItem bidItem = this.getManagedBean().getSelectedBidItem();
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 
 		try {
@@ -211,7 +213,10 @@ public class ScheduleBiddingBackingBean extends
 					.getRequestNoteItemId());
 			reqDTO.setFinalizationId(getManagedBean().getScQtFinalization()
 					.getFinalizationId());
-
+			if (getManagedBean().getScQt().isZonal()) {
+				reqDTO.setSpecZoneId(getManagedBean().getRowSelectedBid()
+						.getTplSpecZoneDtl().getSpecZoneId());
+			}
 			SuppFinalizationResDTO resDTO = suppFinalizationSO
 					.retrieveRecommendDtlList(reqDTO);
 
@@ -256,12 +261,17 @@ public class ScheduleBiddingBackingBean extends
 				if (resDTO.getScQT().isZonal()) {
 					getManagedBean().setRowSelectedBid(
 							resDTO.getBidSchedules().get(0));
+					getManagedBean().setSelectedBidItem(
+							resDTO.getBidSchedules().get(0).getScBidItems()
+									.get(0));
 				}
-				if (ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
-						.getScQtFinalization().getRecommendedTypeId()
-						.getParameterCode())) {
+				if (!(resDTO.getScQT().isZonal())
+						&& ParameterConst.RECOMMEND_TYPE_ITEM.equals(resDTO
+								.getScQtFinalization().getRecommendedTypeId()
+								.getParameterCode())) {
 					getManagedBean().setRowSelectedBid(new ScBidSchedule());
-
+					getManagedBean().setSelectedBidItem(
+							resDTO.getBidItemsList().get(0));
 				}
 
 			}
@@ -310,7 +320,12 @@ public class ScheduleBiddingBackingBean extends
 		}
 		long durationInMills = scBidSchedule.getEndDate().getTime()
 				- scBidSchedule.getStartDate().getTime();
-		if (durationInMills == 0) {
+		if (durationInMills == 0 || durationInMills > 7200000) {
+			getManagedBean().setMinEndDate(scBidSchedule.getStartDate());
+			Calendar maxEndDate = Calendar.getInstance();
+			maxEndDate.setTime(scBidSchedule.getStartDate());
+			maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
+			getManagedBean().setMaxEndDate(maxEndDate.getTime());
 			throw new EpException("Please Select Proper End Date");
 		}
 		scBidSchedule.setDuration(durationFormatter(durationInMills));
@@ -337,7 +352,7 @@ public class ScheduleBiddingBackingBean extends
 			getManagedBean().getBidItemList().set(index, bidItem);
 		}
 	}
-	
+
 	/**
 	 * Listener for endDate selection events for Package wise bidding
 	 * 
@@ -346,7 +361,6 @@ public class ScheduleBiddingBackingBean extends
 
 	public void itemEndDateSelectListener(ScBidItem bidItem) {
 
-		// ScBidSchedule scBidSchedule = bidSchedule;
 		if (bidItem.getScBidSchedule().getStartDate() == null) {
 			bidItem.getScBidSchedule().setEndDate(null);
 			int index = getManagedBean().getBidItemList().indexOf(bidItem);
@@ -356,17 +370,24 @@ public class ScheduleBiddingBackingBean extends
 		long durationInMills = bidItem.getScBidSchedule().getEndDate()
 				.getTime()
 				- bidItem.getScBidSchedule().getStartDate().getTime();
-		if (durationInMills == 0) {
-			throw new EpException("Please Select Proper End Date");
+		if (durationInMills == 0 || durationInMills > 7200000) {
+			getManagedBean().setMinEndDate(
+					bidItem.getScBidSchedule().getStartDate());
+			Calendar maxEndDate = Calendar.getInstance();
+			maxEndDate.setTime(bidItem.getScBidSchedule().getStartDate());
+			maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
+			getManagedBean().setMaxEndDate(maxEndDate.getTime());
+			throw new EpException("Please Select Proper Start and End Dates");
 		}
 		bidItem.getScBidSchedule().setDuration(
 				durationFormatter(durationInMills));
 		int index = getManagedBean().getBidItemList().indexOf(bidItem);
 		getManagedBean().getBidItemList().set(index, bidItem);
 	}
-	
+
 	/**
-	 * Listener for multiple start Date selection events for Package wise bidding
+	 * Listener for multiple start Date selection events for Package wise
+	 * bidding
 	 * 
 	 * @param bidItem
 	 */
@@ -420,6 +441,7 @@ public class ScheduleBiddingBackingBean extends
 
 	/**
 	 * Method to submit bidding details
+	 * 
 	 * @param outCome
 	 */
 	public void submitBiddingDetails(String outCome) {
@@ -491,7 +513,7 @@ public class ScheduleBiddingBackingBean extends
 	}
 
 	/**
-	 * Listener for selection multi boolean checkbox  events 
+	 * Listener for selection multi boolean checkbox events
 	 */
 	public void selectAll() {
 
@@ -507,9 +529,9 @@ public class ScheduleBiddingBackingBean extends
 		}
 
 	}
-	
+
 	/**
-	 * Listener for selection  boolean checkbox  events 
+	 * Listener for selection boolean checkbox events
 	 */
 	public void selected(int index) {
 		if (getManagedBean().isSelected()
@@ -546,9 +568,9 @@ public class ScheduleBiddingBackingBean extends
 			getManagedBean().getMultiSelectContact().clear();
 		}
 	}
-	
+
 	/**
-	 * Listener method to select  bid contact
+	 * Listener method to select bid contact
 	 */
 
 	public void selectBidContact(int index) {
@@ -569,17 +591,9 @@ public class ScheduleBiddingBackingBean extends
 		}
 		getManagedBean().setMultiSelectContact(multiSelectContact);
 	}
-	
-	public void rowSelectListener(ScBidSchedule zoneBid){
-		zoneBid.getScBidItems();
-		int index = getManagedBean().getBidScheduleList().indexOf(getManagedBean().getRowSelectedBid());
-		getManagedBean().getBidScheduleList().set(index, getManagedBean().getRowSelectedBid());
-		getManagedBean().setRowSelectedBid(null);
-		getManagedBean().setRowSelectedBid(zoneBid);
-	}
-	
-	public void getParticipantsListAction(ScBidSchedule bidSchedule){
-		
+
+	public void getParticipantsListAction(ScBidSchedule bidSchedule) {
+
 	}
 
 }
