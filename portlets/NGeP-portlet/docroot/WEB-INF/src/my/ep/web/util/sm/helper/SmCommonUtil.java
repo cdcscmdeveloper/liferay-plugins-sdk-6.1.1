@@ -1986,9 +1986,7 @@ public class SmCommonUtil {
 			if (supplierBank.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils.isNotBlank(supplierBank.getAccountNo())
 					&& supplierBank.getAccountNo().equals(
-							supplierBankParam.getAccountNo())
-					&& supplierBankParam.getRevNo() == revNo
-					&& supplierBank.getRevNo() == revNo) {
+							supplierBankParam.getAccountNo())) {
 
 				if (supplierBankParam.getRevNo() == revNo
 						&& supplierBank.getRevNo() == revNo) {
@@ -2058,7 +2056,7 @@ public class SmCommonUtil {
 					retValSmPersonnel = smPersonnel;
 					break;
 				} else {
-					personnelNotMatchRevNo = retValSmPersonnel;
+					personnelNotMatchRevNo = smPersonnel;
 				}
 				break;
 			}
