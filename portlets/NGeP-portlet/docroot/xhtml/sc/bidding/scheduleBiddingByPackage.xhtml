@@ -7,17 +7,19 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
-		rendered="#{scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'}"
+		rendered="#{scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq ParameterConst.getRecommendTypePackage}"
 		id="scheduleBidPackageNonZonePanel">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
 		<div align="left">
 			<table style="align: left">
 				<tr>
-					<td><h:outputText value="* " styleClass="mandatory" /> <p:outputLabel id="startDateByPackage"
-							value="#{lbl['lbl.sc.bidding.start']}" /></td>
+					<td><h:outputText value="* " styleClass="mandatory" /> <p:outputLabel
+							id="startDateByPackage" value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
-					<td><p:calendar showOn="button" readonlyInput="true" required="true"
-							id="scheduleBidPackageStartDate" label="#{lbl['lbl.sc.bidding.start']}"
+					<td><p:calendar showOn="button" readonlyInput="true"
+							required="true" id="scheduleBidPackageStartDate"
+							label="#{lbl['lbl.sc.bidding.start']}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].startDate}"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -33,11 +35,12 @@
 							for="scheduleBidPackageStartDate" display="icon" /></td>
 					<TD><p:spacer width="10"></p:spacer></TD>
 
-					<td> <h:outputText value="* " styleClass="mandatory" /><p:outputLabel id="endDateByPackage"
-							value="#{lbl['lbl.sc.bidding.end']}" /></td>
+					<td><h:outputText value="* " styleClass="mandatory" /> <p:outputLabel
+							id="endDateByPackage" value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
 					<td><p:calendar showOn="button" id="scheduleBidPackageEndDate"
-							readonlyInput="true" required="true" label="#{lbl['lbl.sc.bidding.end']}"
+							readonlyInput="true" required="true"
+							label="#{lbl['lbl.sc.bidding.end']}"
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].endDate}"
@@ -63,21 +66,22 @@
 			</table>
 		</div>
 
-		<p:dataTable id="bidScheduleByPackage" var="bidItem"
-			rowKey="#{bidItem}" rowIndexVar="index"
+		<p:dataTable id="bidScheduleByPackage" var="bidItem" rows="10"
+			selectionMode="single" rowKey="#{bidItem}" rowIndexVar="index"
+			selection="#{scheduleBiddingBB.managedBean.selectedBidItem}"
 			value="#{scheduleBiddingBB.managedBean.bidScheduleList[0].scBidItems}">
+			<p:ajax event="rowSelect"
+				listener="#{scheduleBiddingBB.retrieveParticipantsListAction}"
+				process="@this" partialSubmit="true" update="@([id$=participantList])" />
+			<ac:paginator for="bidScheduleByPackage"></ac:paginator>
 
 			<p:column style="white-space : normal; width : 25%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.item.name']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.item.name.tooltip']}" />
 				</f:facet>
-				<p:commandLink id="itemNameByPackage"
-					value="#{bidItem.scRequestItem.itemName}"
-					oncomplete="participants.show();" process="@this"
-					partialSubmit="true"
-					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}"
-					update="@([id$=participants])" />
+				<h:outputText id="itemNameByPackage"
+					value="#{bidItem.scRequestItem.itemName}" />
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
@@ -101,13 +105,14 @@
 
 			<p:column style="white-space : normal; width :15%;">
 				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 				</f:facet>
-				<p:inputText id="decrementAmtByPackage" style="text-align : right" 
-					value="#{bidItem.decrementAmt }">
-					<p:ajax event="change" process="@this"
-						partialSubmit="true" />
+				<p:inputText id="decrementAmtByPackage" style="text-align : right"
+					maxlength="19" required="true" value="#{bidItem.decrementAmt }">
+					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<f:convertNumber for="decrementAmt"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
