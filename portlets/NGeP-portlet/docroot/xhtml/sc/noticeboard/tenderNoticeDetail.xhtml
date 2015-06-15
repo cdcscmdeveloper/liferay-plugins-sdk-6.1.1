@@ -168,17 +168,22 @@
 
 			</c:if>
 		</p:panel>
+		<ui:param name="isZonal" value="#{noticeBoardBackingBean.managedBean.scQt.zonal}"></ui:param>
 
-		<c:if
-			test="#{!noticeBoardBackingBean.managedBean.scQt.zonal and noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+		<c:if test="#{!isZonal}">
 			<ui:param name="bsvDetails"
 				value="#{noticeBoardBackingBean.managedBean.normalBsvBean}" />
-			<ui:include src="qtlocationbriefingdtls.xhtml" />
-			<ui:include
-				src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
+			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.bsvRequired}">
+				<ui:include src="qtlocationbriefingdtls.xhtml" />
+				<ui:include
+					src="/xhtml/sc/noticeboard/noticeboardLocationPopUp.xhtml"></ui:include>
+			</c:if>
+			<!-- Sample Submission Address -->
+			<ui:include src="/xhtml/sc/noticeboard/nbsampleaddress.xhtml"></ui:include>
 		</c:if>
+
 		<c:if
-			test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
+			test="#{isZonal}">
 			<ui:include src="nbZones.xhtml" />
 		</c:if>
 
