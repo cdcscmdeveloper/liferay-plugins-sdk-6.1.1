@@ -125,6 +125,20 @@
 					</p:column>
 					<p:column style="width:50px;text-align:center;">
 						<f:facet name="header">#{lbl['lbl.td.action']}</f:facet>
+						<p:commandButton id="addBtn" icon="ui-icon-add" style="background-color:transparent !important; border:0px none; width:10px !important; height:10px !important;"
+							partialSubmit="true" process="@this"
+							title="#{lbl['lbl.tpl.spec.content.btn.add.tooltip']}" />
+						<p:menu overlay="true" trigger="addBtn" my="left top" at="left bottom">
+				            <p:menuitem value="#{lbl['lbl.tpl.doc.import.section']}" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
+					            <f:setPropertyActionListener value="#{document}"
+									target="#{templateDocBackingBean.managedBean.selectedSection}" />
+				            </p:menuitem>
+				            <p:menuitem value="#{lbl['lbl.tpl.doc.add.section']}" update="sampleTT" action="#{templateDocBackingBean.addNode}">
+				            	<f:setPropertyActionListener value="#{document}"
+									target="#{templateDocBackingBean.managedBean.selectedSection}" />
+				            </p:menuitem>
+						</p:menu>	
+						<p:spacer width="5px" />							
 						<p:commandLink action="#{templateDocBackingBean.editContent}"
 							oncomplete="popupEdit.show();return false;" update=":form:popupEdit">
 							<h:graphicImage value="/css/images/design/ico-edit.png" />
@@ -138,17 +152,6 @@
 							<f:setPropertyActionListener value="#{document}"
 								target="#{templateDocBackingBean.managedBean.selectedSection}" />
 						</p:commandLink>
-						<p:spacer width="3px" />
-						<p:menuButton value="" id="addSecMenu" styleClass="addSecMenu">
-				            <p:menuitem value="#{lbl['lbl.tpl.doc.import.section']}" actionListener="#{templateDocBackingBean.initializeImport}" update=":form:popupImportSec" oncomplete="popupImportSec.show();return false;">
-					            <f:setPropertyActionListener value="#{document}"
-									target="#{templateDocBackingBean.managedBean.selectedSection}" />
-				            </p:menuitem>
-				            <p:menuitem value="#{lbl['lbl.tpl.doc.add.section']}" update="sampleTT" action="#{templateDocBackingBean.addNode}">
-				            	<f:setPropertyActionListener value="#{document}"
-									target="#{templateDocBackingBean.managedBean.selectedSection}" />
-				            </p:menuitem>
-			       		</p:menuButton>
 					</p:column>
 					<f:facet name="footer">
 					</f:facet>
