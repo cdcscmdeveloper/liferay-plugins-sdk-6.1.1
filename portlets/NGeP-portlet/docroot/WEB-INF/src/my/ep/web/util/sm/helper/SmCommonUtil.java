@@ -1942,7 +1942,7 @@ public class SmCommonUtil {
 			String msg, String componentId) {
 		fc.addMessage(componentId, new FacesMessage(severity, null, msg));
 	}
-	
+
 	/**
 	 * Get states based on Country id.
 	 * 
@@ -1952,7 +1952,8 @@ public class SmCommonUtil {
 	 */
 	public static List<SelectItem> getCountryList() {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						ICountrySO.class);
 		CountryResDTO resDTO = reqSO.retrieveCountryList();
 		List<SelectItem> countryList = new ArrayList<SelectItem>();
 		for (PmCountry country : resDTO.getCountryList()) {
@@ -1963,8 +1964,7 @@ public class SmCommonUtil {
 		}
 		return countryList;
 	}
-	
-	
+
 	/**
 	 * Get supplier bank by revision no and account no
 	 * 
@@ -1979,6 +1979,7 @@ public class SmCommonUtil {
 			List<SmSupplierBank> mainList, SmSupplierBank supplierBankParam,
 			int revNo) {
 		SmSupplierBank retValSupplierBank = null;
+		SmSupplierBank supplierBankNotMatchRevNo = null;
 
 		// main list loop by accNo and recordStatus and revNo
 		for (SmSupplierBank supplierBank : mainList) {
@@ -1988,12 +1989,19 @@ public class SmCommonUtil {
 							supplierBankParam.getAccountNo())
 					&& supplierBankParam.getRevNo() == revNo
 					&& supplierBank.getRevNo() == revNo) {
-				retValSupplierBank = supplierBank;
-				break;
+
+				if (supplierBankParam.getRevNo() == revNo
+						&& supplierBank.getRevNo() == revNo) {
+					retValSupplierBank = supplierBank;
+					break;
+				} else {
+					supplierBankNotMatchRevNo = supplierBank;
+				}
 			}
 		}
 
-		return retValSupplierBank;
+		return retValSupplierBank == null ? supplierBankNotMatchRevNo
+				: retValSupplierBank;
 	}
 
 	/**
@@ -2007,15 +2015,20 @@ public class SmCommonUtil {
 	public static SmCompanyBasic getCompanyBasicByRevNo(
 			List<SmCompanyBasic> mainList, int revNo) {
 		SmCompanyBasic retValCompanyBasic = null;
+		SmCompanyBasic companyBasicNotMatchRevNo = null;
 
 		for (SmCompanyBasic companyBasic : mainList) {
-			if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-					&& companyBasic.getRevNo() == revNo) {
-				retValCompanyBasic = companyBasic;
-				break;
+			if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+				if (companyBasic.getRevNo() == revNo) {
+					retValCompanyBasic = companyBasic;
+					break;
+				} else {
+					companyBasicNotMatchRevNo = companyBasic;
+				}
 			}
 		}
-		return retValCompanyBasic;
+		return retValCompanyBasic == null ? companyBasicNotMatchRevNo
+				: retValCompanyBasic;
 	}
 
 	/**
@@ -2031,6 +2044,7 @@ public class SmCommonUtil {
 	public static SmPersonnel getSmPersonnelByRevNoAndIdentificationNo(
 			List<SmPersonnel> mainList, SmPersonnel smPersonnelParam, int revNo) {
 		SmPersonnel retValSmPersonnel = null;
+		SmPersonnel personnelNotMatchRevNo = null;
 
 		// main list loop by identificationNo and recordStatus and revNo
 		for (SmPersonnel smPersonnel : mainList) {
@@ -2038,14 +2052,19 @@ public class SmCommonUtil {
 					&& StringUtils
 							.isNotBlank(smPersonnel.getIdentificationNo())
 					&& smPersonnel.getIdentificationNo().equals(
-							smPersonnelParam.getIdentificationNo())
-					&& smPersonnel.getRevNo() == revNo
-					&& smPersonnelParam.getRevNo() == revNo) {
-				retValSmPersonnel = smPersonnel;
+							smPersonnelParam.getIdentificationNo())) {
+				if (smPersonnel.getRevNo() == revNo
+						&& smPersonnelParam.getRevNo() == revNo) {
+					retValSmPersonnel = smPersonnel;
+					break;
+				} else {
+					personnelNotMatchRevNo = retValSmPersonnel;
+				}
 				break;
 			}
 		}
-		return retValSmPersonnel;
-	}
 
+		return retValSmPersonnel == null ? personnelNotMatchRevNo
+				: retValSmPersonnel;
+	}
 }
