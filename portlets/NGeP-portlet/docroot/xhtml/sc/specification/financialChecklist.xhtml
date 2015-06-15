@@ -341,7 +341,15 @@
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
 
-						<h:graphicImage value="/css/images/design/edit.png" />
+							<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
+						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
+							<h:graphicImage value="/css/images/design/edit.png" />
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+							<h:graphicImage value="/css/images/design/ico-view.png" />
+						</ui:fragment>
 						<f:setPropertyActionListener value="#{stageTwofunctional}"
 							target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
