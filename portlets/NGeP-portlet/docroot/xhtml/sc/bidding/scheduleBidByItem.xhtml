@@ -8,11 +8,17 @@
 
 	<p:panel header="#{lbl['lbl.sc.bidding.schedule']}" toggleable="true"
 		id="scheduleByItemPanel">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.bidding.schedule.instruction']}" escape="false" />
 
 		<p:dataTable id="bidScheduleByItem" var="bidItem" rowKey="#{bidItem}"
-			rowIndexVar="index"
+			selectionMode="single" rows="10" rowIndexVar="index"
+			selection="#{scheduleBiddingBB.managedBean.selectedBidItem}"
 			value="#{scheduleBiddingBB.managedBean.bidItemList}">
+			<p:ajax event="rowSelect"
+				listener="#{scheduleBiddingBB.retrieveParticipantsListAction}"
+				process="@this" partialSubmit="true" update="@([id$=participantList])" />
+			<ac:paginator for="bidScheduleByItem"></ac:paginator>
 
 			<p:column style="width:2% ;">
 				<f:facet name="header">
@@ -32,12 +38,11 @@
 			<p:column style="white-space : normal; width : 20%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.item.name']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.bidding.item.name.supplier.tooltip']}" />
 				</f:facet>
-				<p:commandLink id="itemNameByItem" partialSubmit="true"
-					value="#{bidItem.scRequestItem.itemName}" process="@this"
-					oncomplete="participants.show();" update="@([id$=participants])"
-					action="#{scheduleBiddingBB.retrieveParticipantsListAction(bidItem)}" />
+				<h:outputText id="itemNameByItem"
+					value="#{bidItem.scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.item.description']}"
 				style="white-space : normal; width : 25%;">
@@ -58,7 +63,7 @@
 			<p:column headerText="#{lbl['lbl.sc.bidding.start']}"
 				style="width : 10%;">
 				<p:calendar value="#{bidItem.scBidSchedule.startDate}"
-					showOn="button" style="width:92%" required="true"
+					showOn="button" style="width:92%" 
 					id="bidStartDateByItem" readonlyInput="true"
 					label="#{lbl['lbl.sc.bidding.start']}"
 					mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
@@ -83,7 +88,7 @@
 					value="#{bidItem.scBidSchedule.endDate}" style="width:92%"
 					mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 					label="#{lbl['lbl.sc.bidding.end']}" showOn="button"
-					readonlyInput="true" required="true"
+					readonlyInput="true" 
 					maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 					pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
 
@@ -106,13 +111,14 @@
 			</p:column>
 			<p:column style="width : 10%;">
 				<f:facet name="header">
+					<h:outputText value="* " styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.min.decrement.block']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.min.decrement.block.tooltip']}" />
 				</f:facet>
-				<p:inputText style="text-align : right" id="decrementAmtByItem" 
-					value="#{bidItem.decrementAmt }">
-					<p:ajax event="change" process="@this"
-						partialSubmit="true" />
+				<p:inputText style="text-align : right" id="decrementAmtByItem"
+					maxlength="19"  value="#{bidItem.decrementAmt }">
+					<p:ajax event="change" process="@this" partialSubmit="true" />
 					<f:convertNumber for="decrementAmtByItem"
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -129,7 +135,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.start']}" /></td>
 
 					<td><p:calendar showOn="button"
-							id="multiSelectStartDateByItem"
+							id="multiSelectStartDateByItem" readonlyInput="true"
 							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.startDate}"
 							mindate="#{scheduleBiddingBB.managedBean.minStartDate}"
 							pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}">
@@ -146,7 +152,7 @@
 
 					<td><p:outputLabel value="#{lbl['lbl.sc.bidding.end']}" /></td>
 
-					<td><p:calendar showOn="button" id="multiSelectEndDateByItem"
+					<td><p:calendar showOn="button" id="multiSelectEndDateByItem" readonlyInput="true"
 							mindate="#{scheduleBiddingBB.managedBean.minEndDate}"
 							maxdate="#{scheduleBiddingBB.managedBean.maxEndDate}"
 							value="#{scheduleBiddingBB.managedBean.rowSelectedBid.endDate}"
