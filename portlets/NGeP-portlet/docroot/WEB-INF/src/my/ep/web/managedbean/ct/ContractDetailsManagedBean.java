@@ -19,11 +19,14 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
@@ -32,7 +35,6 @@ import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.VCtContract;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
-import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.CtContractAmount;
@@ -41,6 +43,7 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -49,6 +52,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -1537,7 +1541,43 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
 			IContractSO contractSO = null;
+			IUserSO userSO = null;
 			try {
+				FacesScopes fc = new FacesScopes();
+				
+				if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
+						|| fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+						|| fc.hasRoleUser(RoleCode.BPK_CCA.value())) {
+					
+					userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+					UserReqDTO reqDTO = new UserReqDTO();
+					reqDTO.setUserId(fc.getUserSessionBean().getUserId());
+					
+					UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+					PmOrgProfile orgProfile = null;
+					String searchBeanStr = "ctContract.ownerOrgProfile.orgProfileId";
+					if(resDTO.getUserOrgList() != null){
+						orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
+						
+						//if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
+//							String ministrySearchBeanStr = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
+//							System.out.println("b4 ministrySearchBeanStr:"+ministrySearchBeanStr);
+//							System.out.println(ministrySearchBeanStr.lastIndexOf("orgProfileId"));
+//							searchBeanStr = ministrySearchBeanStr.substring(0, ministrySearchBeanStr.lastIndexOf("orgProfileId")) + searchBeanStr;
+//							System.out.println("aft searchBeanStr:"+searchBeanStr);
+						//}
+						
+						SearchFilterBean filterBean = new SearchFilterBean(searchBeanStr, SearchOperator.OPERATOR_EQUALS.value(),
+								orgProfile.getOrgProfileId());
+						searchBean.getDataFilterBeans().add(filterBean);
+					} else {
+						return null;
+					}
+				} else if (!fc.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+					return null;
+				}
+				
 				if (getCtNumber() != null && getCtNumber().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),
 													getCtNumber());
@@ -1616,7 +1656,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				if (getTerminationTypeId() != null) {
 					ParameterReqDTO reqDTO = new ParameterReqDTO();
 					reqDTO.setParameterId(getTerminationTypeId());
-					reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
+					reqDTO.setLanguageCode(fc.getUserLocale().getLanguage());
 					
 					IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
