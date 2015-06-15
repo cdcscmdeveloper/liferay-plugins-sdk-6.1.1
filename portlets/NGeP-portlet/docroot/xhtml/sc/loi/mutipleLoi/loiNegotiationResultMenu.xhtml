@@ -112,10 +112,10 @@
 						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationCommittee.xhtml"></ui:include>
 					</c:if> 
 					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
-						<c:if test="#{!isPendingEndorsementStatus}">
+						<c:if test="#{isPendingNegotiationStatus}">
 							<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml"></ui:include>
 						</c:if>
-						<c:if test="#{isPendingEndorsementStatus}">
+						<c:if test="#{!isPendingNegotiationStatus}">
 							<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationEndorsement.xhtml"></ui:include>
 						</c:if>						
 					</c:if> <c:if
