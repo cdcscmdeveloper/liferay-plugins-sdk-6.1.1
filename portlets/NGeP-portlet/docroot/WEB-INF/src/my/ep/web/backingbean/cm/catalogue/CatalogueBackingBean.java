@@ -894,7 +894,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String navigateToPublishedItemDet(int i) {
 
 
-		int index = i%this.getManagedBean().getPendingApprovalTabPageSize();
+		int index = i%this.getManagedBean().getPublishTabPageSize();
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
