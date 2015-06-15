@@ -472,6 +472,9 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(getManagedBean().getExternalPageUrl() == null) {
+			tempDocSearch();
+		}
 		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch?faces-redirect=true";
 	}
 
