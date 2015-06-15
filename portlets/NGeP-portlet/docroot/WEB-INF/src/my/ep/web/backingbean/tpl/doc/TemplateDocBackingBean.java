@@ -581,7 +581,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 		reqDTO.setCategoryId(getManagedBean().getImpCategoryId());
 		reqDTO.setProcessTypeId(getManagedBean().getImpProcessTypeId());
-		reqDTO.setTitle(getManagedBean().getImpTitle());
+		reqDTO.setTitle("%"+getManagedBean().getImpTitle()+"%");
 		reqDTO.setTemplateType(null);
 
 		TemplateDocResDTO resDTO = templateSO.getTemplateMasterList(reqDTO);
@@ -595,6 +595,11 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			}
 			getManagedBean().setDocMasterId(templateMasterSeq);
 			getManagedBean().setShowTemplateList(true);
+		} else {
+			getManagedBean().setImportMasterList(new ArrayList<TplDocMaster>());
+			getManagedBean().setImptSectionTN(new DefaultTreeNode());
+			getManagedBean().setSelectedImpMaster(null);
+			getManagedBean().setSelectedImpSection(null);
 		}
 	}
 
@@ -650,6 +655,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 
 	public void initializeImport(ActionEvent e) {
 		getManagedBean().setImpCategoryId(null);
+		getManagedBean().setImpProcessTypeId(null);
+		getManagedBean().setImpTitle(null);
 		getManagedBean().setImportMasterList(new ArrayList<TplDocMaster>());
 		getManagedBean().setImptSectionTN(new DefaultTreeNode());
 		getManagedBean().setSelectedImpMaster(null);
