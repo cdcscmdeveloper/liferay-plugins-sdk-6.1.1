@@ -38,7 +38,7 @@
 							<p:ajax event="change" update="agreementId,btnProceed" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio></td>
 						<td>&#160;
-						<p:graphicImage id="regType" value="/css/images/design/tooltips.png"  />
+						<p:graphicImage id="regType" value="/css/images/design/tooltips.png"  style="vertical-align:top"/>
 						<p:tooltip id="regiType" for="regType">
 							<p:outputLabel escape="false" value="#{lbl['tt.sm.registration.type']}"  />
 						</p:tooltip>&#160;						
@@ -48,7 +48,7 @@
 		</p:panel>
 
 		<p:panel id="agreementId">
-			<p:scrollPanel style="height:300px;" mode="native">
+			<p:scrollPanel style="height:300px;border:0;" mode="native">
 				<c:choose>
 					<c:when
 						test="${registrationBackingBean.managedBean.applType == SupplierManagementConst.ACC_MOF}">
