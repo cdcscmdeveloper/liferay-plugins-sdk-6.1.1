@@ -26,7 +26,9 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"/> 
+								<p:inputTextarea cols="40" maxlength="1000" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" disabled="#{fulfilmentBackingBean.managedBean.isHideRemarks()}"> 
+									<f:validateLength maximum="1000" />
+								</p:inputTextarea>	
 								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
 							</td>
 							<td>
