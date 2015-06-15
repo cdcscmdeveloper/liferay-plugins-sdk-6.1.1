@@ -965,8 +965,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * Retrieve Country List from PM
 	 */
 	private void retrievePmCountryList() {
-		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICountrySO.class);
 		List<SelectItem> countryLs = SmCommonUtil.getCountryList();
 		this.getManagedBean().setCountryLs(countryLs);
 	}
@@ -994,7 +992,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * @param stateId
 	 * @return List<PmDistrict>
 	 */
-	private List<PmDistrict> retrievePmDistrictList(Long stateId) {
+	/*private List<PmDistrict> retrievePmDistrictList(Long stateId) {
 		if(stateId != null){
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
 			reqDTO.setStateId(stateId);
@@ -1005,14 +1003,14 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 		
 		return null;
-	}
+	}*/
 
 	/**
 	 * retrieve City List by district Id
 	 * @param districtId
 	 * @return List<PmCity>
 	 */
-	private List<PmCity> retrievePmCityList(Long districtId) {
+/*	private List<PmCity> retrievePmCityList(Long districtId) {
 		if(districtId != null){
 			CityReqDTO reqDTO = new CityReqDTO();
 			reqDTO.setDistrictId(districtId);
@@ -1022,7 +1020,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			return resDTO.getCityList();
 		}
 		return null;
-	}
+	}*/
 
 	/**
 	 * retrieve PM FinancialOrg List 
@@ -1174,12 +1172,18 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//List<PmState> stateLs = this.retrievePmStateList(this.getManagedBean().getSmBusinessAdd().getPmCountry().getCountryId());
 			//this.getManagedBean().setBusinessStateLs(stateLs);
 			pmStateDropdownValues();
+			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
+			getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+			getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
 		} else if (typeAdd.equals("residential")) {
 			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmResAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setResidentialStateLs(stateLs);
 		} else if (typeAdd.equals("permenant")) {
 			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmPermenantAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setPermenantStateLs(stateLs);
+			//registrationBackingBean.managedBean.smPermenantAdd.pmCountry.countryId
+			getManagedBean().getSmPermenantAdd().getPmDistrict().setDistrictId(null);
+			getManagedBean().getSmPermenantAdd().getPmCity().setCityId(null);
 		}
 	}
 
