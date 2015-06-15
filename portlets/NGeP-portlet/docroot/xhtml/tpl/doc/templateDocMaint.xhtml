@@ -73,11 +73,11 @@
 					<tr>
 					<td class="TableFieldLeft" style="width: 120px;"><h:outputLabel value="#{lbl['lbl.tpl.spec.created.user']}" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}"/></td>
 					<td class="TableFieldRight" >
-						<p:inputText value="#{templateDocBackingBean.getUserNameById(tplMasterObj.createdBy)}" readonly="true" disabled="true" style="width:280px" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}" />
+						<p:inputText value="#{templateDocBackingBean.getUserNameById(templateDocBackingBean.managedBean.selectedTemplate.createdBy)}" readonly="true" disabled="true" style="width:280px" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}" />
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.date']}" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}" /></td>
 					<td class="TableFieldRight">
-						<p:inputText value="#{tplMasterObj.createdDate}" readonly="true" disabled="true" style="width:280px" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}" >
+						<p:inputText value="#{templateDocBackingBean.managedBean.selectedTemplate.createdDate}" readonly="true" disabled="true" style="width:280px" rendered="#{! templateDocBackingBean.managedBean.selectedTemplate.brandNew}" >
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 					</td>
@@ -179,7 +179,7 @@
 				<h:panelGrid width="100%">
 					<h:inputText id="sectionName"
 						value="#{templateDocBackingBean.managedBean.selectedSectionName}"
-						maxlength="100" style="width: 100%;" />
+						maxlength="100" style="width: 95%;" />
 				</h:panelGrid>
 				<h:panelGrid style="width:100%;">
 					<h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" style="float: left;" />
@@ -187,22 +187,24 @@
 				<h:panelGrid width="100%">
 					<h:inputText id="sectionTitle"
 						value="#{templateDocBackingBean.managedBean.selectedSectionTitle}"
-						maxlength="100" style="width: 100%; float: left;" />
+						maxlength="100" style="width: 95%; float: left;" />
 				</h:panelGrid>
 				<p:spacer height="5px" />
+				<ui:remove>
 				<h:panelGrid width="100%">
 					 <p:selectOneRadio id="options" style="width:130px" value="#{templateDocBackingBean.managedBean.selectedOption}" >  
            				 <f:selectItem itemLabel="#{lbl['lbl.tpl.doc.content']}" itemValue="1" /> 
-           				 <f:selectItem itemLabel="#{lbl['lbl.tpl.doc.variable']}" itemValue="2" />  
+           				 <f:selectItem itemLabel="#{lbl['lbl.tpl.doc.variable']}" itemValue="2" />    
            				 <p:ajax listener="#{templateDocBackingBean.viewContent}" update="contentID,variableID" process="@this" />
        				 </p:selectOneRadio>  
 				</h:panelGrid>
 				<p:spacer height="5px" />
+				</ui:remove>
 				<h:panelGrid width="100%">
 					<h:outputLabel value="#{lbl['lbl.tpl.doc.section.contents']}" style="float: left;" />
 				</h:panelGrid>
 				<h:panelGrid id="contentID" width="100%">
-					<p:editor id="editor" width="600" height="200"
+					<p:editor id="editor" width="600" height="250"
 						value="#{templateDocBackingBean.managedBean.selectedSectionText}"
 						controls="bold italic color underline alignleft center alignright justify" rendered="#{templateDocBackingBean.managedBean.selectedOption == '1'}">
 					</p:editor>
@@ -230,7 +232,7 @@
 					</p:dataTable>
 				</h:panelGrid>
 			</h:panelGroup>
-			<h:panelGroup>		
+			<h:panelGroup style="float:right">		
 				<p:commandButton id="editlinkM" action="#{templateDocBackingBean.saveContent}"
 					value="#{lbl['lbl.btn.ok']}" oncomplete="popupEdit.hide()" update=":form:sampleTT" />
 				<p:commandButton id="editl" action="#{templateDocBackingBean.saveContent}"
@@ -240,38 +242,39 @@
 		
 		<p:dialog id="popupImportSec" widgetVar="popupImportSec" modal="false" 
 			resizable="false" header="#{lbl['lbl.tpl.doc.import.section']}" width="850" height="460">
-			<table>
+			<table width="100%">
 				<tr>
-					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.section.name']}" /></td>
+					<td class="TableFieldLeft" style="width: 80px"><h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu id="imptTemplateCategory" style="width:100px;"
+						<p:selectOneMenu id="imptTemplateCategory" style="width:200px;"
 							value="#{templateDocBackingBean.managedBean.impCategoryId}">
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.processtype']}" /></td>
+					<td class="TableFieldLeft" style="width: 80px"><h:outputLabel value="#{lbl['lbl.tpl.doc.processtype']}" /></td>
 					<td class="TableFieldRight">
-						<p:selectOneMenu id="imptProcessType" style="width:100px;"
+						<p:selectOneMenu id="imptProcessType" style="width:120px;"
 							value="#{templateDocBackingBean.managedBean.impProcessTypeId}">
 							<f:selectItems value="#{templateDocBackingBean.getDropdownValues(ParameterTypeConst.tplDocProcessType)}" />
 						</p:selectOneMenu>
 					</td>
-					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" /></td>
+					<td class="TableFieldLeft" style="width: 80px"><h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" /></td>
 					<td class="TableFieldRight"><p:inputText id="imptTitle" style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" /></td>
 					<td>
 						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
-							process="@this,imptTemplateCategory,imptProcessType,imptTitle" update="impMasterList">
+							process="@this,imptTemplateCategory,imptProcessType,imptTitle" update="impMasterList,impSectionList">
 							<h:graphicImage value="/css/images/design/ico-search.png"/> 
 						</p:commandLink> 
 					</td>
 				</tr>
 				<tr>
 					<td colspan="7">
-						<p:dataTable id="impMasterList"
+						<p:dataTable id="impMasterList" rows="5"
 							selection="#{templateDocBackingBean.managedBean.selectedImpMaster}"
 							value="#{templateDocBackingBean.managedBean.importMasterList}"
 							var="tplMasterObj" rowKey="#{tplMasterObj.docMasterId}"
 							width="100%">
+							<ac:paginator for="impMasterList" />
 							<p:ajax event="rowSelectRadio" update=":form:impSectionList" listener="#{templateDocBackingBean.selectedSectionTree}"/>
 							<p:columnGroup type="header">
 								<p:row>
@@ -305,9 +308,10 @@
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td colspan="7" style="text-align:right">
 						<p:commandButton value="#{lbl['lbl.btn.select']}" action="#{templateDocBackingBean.addSelectedImptNodes}" 
 							update=":form:sampleTT"	oncomplete="popupImportSec.hide();" />
+						<p:commandButton value="#{lbl['lbl.btn.cancel']}" oncomplete="popupImportSec.hide();" />								
 					</td>
 				</tr>
 			</table>
@@ -320,7 +324,7 @@
 	  
 	   <p:panel style="float:right;">
             
-	   <h:commandButton id="tbls" value="#{lbl['lbl.tpl.doc.generate.doc']}" action="#{templateDocBackingBean.createPDF}" />
+	   <p:commandButton id="tbls" value="#{lbl['lbl.tpl.doc.generate.doc']}" action="#{templateDocBackingBean.createPDF}" />
 	   <p:remoteCommand name="createPdf" action="#{templateDocBackingBean.createPDF}" partialSubmit="true" />
 	
       </p:panel>
