@@ -64,7 +64,7 @@
 										mindate="#{suppFinalMeetingBackingBean.managedBean.currentDate}"
 										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" 
 										label="#{lbl['lbl.sc.meeting.date']}" 
-										required="true">
+										required="true" style="width:23%;">
 									   <p:ajax process="@this" partialSubmit="true"
 												update="@this,mtgDate" />										
 									</p:calendar>
