@@ -502,11 +502,9 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	public void unspscSearch() {
 		String unspscCode = getManagedBean().getAutoCompleteUnspscCode()
 				.getUnspscCode();
-		String unspscTitle = titleFilterBean.getSearchValue().toString();
+		String unspscTitle = this.getManagedBean().getTitleFilterBean().getSearchValue().toString();
 
-		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean="
-				+ titleFilterBean.getSearchValue());
-
+		
 		if ((unspscCode == null && (unspscTitle == null || unspscTitle
 				.isEmpty()))
 				|| ((unspscCode != null && unspscCode.isEmpty()) && (unspscTitle != null && unspscTitle
@@ -524,7 +522,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			throw new EpException(MessageConst.ERROR_715060);
 		}
 
-		searchDataModel.reloadData();
+		this.getManagedBean().getSearchDataModel().reloadData();
 	}
 
 	public void itemSearch() {
