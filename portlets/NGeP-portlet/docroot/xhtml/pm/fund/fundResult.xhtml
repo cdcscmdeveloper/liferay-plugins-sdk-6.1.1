@@ -14,23 +14,23 @@
 			var="fundList" rowIndexVar="index" lazy="true">
 			<ac:paginator for="fund" />
 
-			<p:column headerText="#{lbl['lbl.pm.fund.code']}" style="width:10%">
+			<p:column headerText="#{lbl['lbl.pm.fund.code']}" style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{fundList.votFundCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.fund.desc']}" style="width:50%">
+			<p:column headerText="#{lbl['lbl.pm.fund.desc']}" style="width:60%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{fundList.description}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.fund.valid.from']}"
-				style="width:15%">
+				style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{fundList.effDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.fund.valid.to']}" style="width:15%">
+			<p:column headerText="#{lbl['lbl.pm.fund.valid.to']}" style="width:10%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{fundList.expDate}" >
 				<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -38,7 +38,7 @@
 			</p:column>			
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
-				style="width:10%"> 
+				style="width:10%;white-space: normal;word-wrap: break-word;"> 
    	    #{(fundList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
