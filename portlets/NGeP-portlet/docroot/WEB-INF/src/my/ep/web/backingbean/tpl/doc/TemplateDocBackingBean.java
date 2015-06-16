@@ -6,12 +6,12 @@ package my.ep.web.backingbean.tpl.doc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -52,11 +52,15 @@ import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.format.AttachmentDateFormat;
+import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.tpl.doc.TemplateDocManagedBean;
 import my.ep.web.util.DateUtils;
+import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.template.MergeDocx;
 
 import org.apache.log4j.Logger;
@@ -805,65 +809,19 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 		getManagedBean().getDocMasterDataModel().reloadData();
 	}
 	
-	public String createPDF() throws Exception {
-		FacesContext context = FacesContext.getCurrentInstance();
-
-		String outputFileName = "Document" + "_"+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
-		String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), outputFileName, "P");
-		WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+	public void createPDF() throws Exception {
+		String filePath = DocumentRepositoryUtils.getBaseDir()+Calendar.getInstance().get(Calendar.YEAR)+"/temp";
+		File file = new File(filePath);
+		file.mkdirs();
 		
-		    /*XWPFDocument document = new XWPFDocument();
-		    String outputFileName = "Document" + "_"
-					+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
-		    String combinedContentHtml = MergeDocx.mergePreviewAction(
-					getManagedBean().getDocSectionTN(), outputFileName, "P");
-		 
-	        XWPFParagraph paragraphOne = document.createParagraph();
-	        XWPFRun paragraphOneRunOne = paragraphOne.createRun();
-	        paragraphOneRunOne.setText(combinedContentHtml);
-	        XWPFRun paragraphOneRunTwo = paragraphOne.createRun();
-	        paragraphOneRunTwo.setText(" ");
-	        System.out.println(combinedContentHtml);*/
-	 
-	       /* XWPFParagraph paragraphTwo = document.createParagraph();
-	        XWPFRun paragraphTwoRunOne = paragraphTwo.createRun();
-	        paragraphTwoRunOne.setText("And this is paragraph two.");*/
-	       
-	        
-		wordMLPackage.getMainDocumentPart().getContent().addAll(XHTMLImporter.convert(html, null, wordMLPackage));
-		File f = new File("sectionContent.docx");
-		wordMLPackage.save(f);
-	        
-		try {
-			// Writting to Response code
-			PortletResponse portletResponse = (PortletResponse) context
-					.getExternalContext().getResponse();
-			HttpServletResponse res = com.liferay.portal.util.PortalUtil
-					.getHttpServletResponse(portletResponse);
-			res.setContentType("application/msword");
-			res.setHeader("Expires", "0");
-			res.setHeader("Cache-Control","must-revalidate, post-check=0, pre-check=0");
-			res.setHeader("Pragma", "public");
-			res.setHeader("Content-disposition","attachment;filename=sectionContent.docx");
-			OutputStream out = res.getOutputStream();
-			FileInputStream fin=new FileInputStream(f);
-			int i=-1;
-			while( (i=fin.read())!=-1){
-				out.write(i);	
-			}
-			
-			//document.write(out);
-			out.flush();
-			res.flushBuffer();
-			out.close();
-			fin.close();
-			context.responseComplete();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return null;
+		AttachmentFormat attachmentFormat = new AttachmentDateFormat();
+		filePath = filePath + "/" + attachmentFormat.format("template_doc.pdf", null);;
+		String html = MergeDocx.mergePreviewAction(getManagedBean().getDocSectionTN(), "", "P");
+		html = html.replaceAll("&#160;","");
+		html = html.replaceAll("&lt;","(");
+		html = html.replaceAll("&gt;",")");
+		DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), html);
+		downloadFile(filePath);
 	}
 	
 	public String getUserNameById(Long userId) {
