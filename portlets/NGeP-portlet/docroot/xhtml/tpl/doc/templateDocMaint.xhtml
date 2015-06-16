@@ -322,8 +322,7 @@
 	        <table width="100%">
 	        	<tr>  
 				   	<td style="text-align:right;">
-				   		<p:commandButton id="tbls" value="#{lbl['lbl.tpl.doc.generate.doc']}" action="#{templateDocBackingBean.createPDF}" />
-				   		<p:remoteCommand name="createPdf" action="#{templateDocBackingBean.createPDF}" partialSubmit="true" />
+				   		<p:commandButton id="tbls" ajax="false" value="#{lbl['lbl.tpl.doc.generate.doc']}" action="#{templateDocBackingBean.createPDF}" />
 			      	</td>
 	      		</tr>
 	      	</table>
