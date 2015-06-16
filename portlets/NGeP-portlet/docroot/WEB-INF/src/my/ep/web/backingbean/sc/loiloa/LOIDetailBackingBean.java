@@ -4327,8 +4327,7 @@ public class LOIDetailBackingBean extends
 				scQtRecommend.getShortListedSupplierList())) {
 			
 			// Retrieve the suppliers short listed for the selected item
-			SuppFinalizationResDTO resDTO = this
-					.getShortListedSuppliersByItem(scQtRecommend);
+			SuppFinalizationResDTO resDTO = null;
 			if (this.getManagedBean().isItemized()) {
 				resDTO = this.getShortListedSuppliersByItem(scQtRecommend);	
 				shortlistedSupplierList = resDTO.getQualifiedByItemSuppliers();
