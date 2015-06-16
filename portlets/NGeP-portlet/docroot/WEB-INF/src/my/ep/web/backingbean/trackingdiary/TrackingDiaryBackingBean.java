@@ -142,9 +142,9 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 		List<String> moduleList = new ArrayList<String>();
 		moduleList.add(ParameterConst.MODULE_PROCUREMENT_PLAN);
 
-		searchBean.getDataFilterBeans().add(
+		/*searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_IN.value(), moduleList));
+						SearchOperator.OPERATOR_NOT_IN.value(), moduleList));*/
 
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.MODULE_NAME, searchBean);
