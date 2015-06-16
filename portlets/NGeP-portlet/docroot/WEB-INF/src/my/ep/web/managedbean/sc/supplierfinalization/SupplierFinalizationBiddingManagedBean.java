@@ -76,7 +76,7 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private Long supplierCode;
 	private ScBidSchedule scheduledBid;
 	private List<ScBidPrice> ScBidPriceList;
-	private List<BidItemBean> bidPriceItems;
+	private List<BidItemBean> bidItemSuppliers;
 	
 	private BigDecimal lowestNonBumiOfferedPrice;
 	private BigDecimal bumiSuppLowestOfferedPrice;
@@ -390,17 +390,17 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 		ScBidPriceList = scBidPriceList;
 	}
 	/**
-	 * @return the bidPriceItems
+	 * @return the bidItemSuppliers
 	 */
-	public List<BidItemBean> getBidPriceItems() {
-		return bidPriceItems;
+	public List<BidItemBean> getBidItemSuppliers() {
+		return bidItemSuppliers;
 	}
 	/**
-	 * @param bidPriceItems 
-	 * 				the bidPriceItems to set
+	 * @param bidItemSuppliers 
+	 * 				the bidItemSuppliers to set
 	 */
-	public void setBidPriceItems(List<BidItemBean> bidPriceItems) {
-		this.bidPriceItems = bidPriceItems;
+	public void setBidItemSuppliers(List<BidItemBean> bidItemSuppliers) {
+		this.bidItemSuppliers = bidItemSuppliers;
 	}
 	/**
 	 * @return  the lowestNonBumiOfferedPrice
