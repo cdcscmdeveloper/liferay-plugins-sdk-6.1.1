@@ -253,7 +253,8 @@ public class BPMTaskDashSumBackingBean extends
 									.getFriendlyURL().length());
 			System.out.println("commonUrl" + commonUrl);
 
-			externalContext.redirect(commonUrl + "/" + "contracted-item");
+//			externalContext.redirect(commonUrl + "/" + "contracted-item");
+			externalContext.redirect(commonUrl + "/" + "pending-codification-assignment");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
