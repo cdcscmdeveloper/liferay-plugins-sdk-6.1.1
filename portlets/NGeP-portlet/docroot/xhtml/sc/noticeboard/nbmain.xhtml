@@ -135,7 +135,7 @@
 				<p:column>
 					<p:inputText size="5" styleClass="ppNumericAlign"
 						value="#{noticeBoardBackingBean.managedBean.publishSearchDataBean.passDays}"
-						mask="99" style="width:111px">
+						mask="99" style="width:111px;text-align: right">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('PbDate')}"
 							update="rangePubDatePG,recentPubDatePG" process="@this" />
@@ -182,14 +182,14 @@
 				update="locations"></p:ajax>
 			<h:panelGrid columns="1" border="0" cellpadding="0" cellspacing="0">
 				<h:panelGroup id="resetBtn" styleClass="resetBtnCLS">
-
-
-					<p:commandButton value="#{lbl['lbl.btn.reset']}"
+					<p:commandLink 
 						style="float:right;width:80px"
 						rendered="#{noticeBoardBackingBean.managedBean.locationSearchBean ne null}"
 						update="locations,@(.resetBtnCLS)"
 						actionListener="#{noticeBoardBackingBean.clearTreeNode('location')}">
-					</p:commandButton>
+						<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/reset.png" /><ac:iconTooltip value="#{lbl['lbl.btn.reset']}"/> 
+						
+					</p:commandLink>
 				</h:panelGroup>
 				<p:tree id="locations"
 					value="#{noticeBoardBackingBean.managedBean.locationRootNode}"
