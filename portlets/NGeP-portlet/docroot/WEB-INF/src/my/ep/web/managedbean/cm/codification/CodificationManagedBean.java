@@ -7,9 +7,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import org.apache.commons.lang.StringUtils;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.biz.bean.search.SearchResultBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -17,6 +25,7 @@ import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -125,10 +134,124 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	
 	
-//	private String typeName;
-//	private String colorName;
-//	private String measurementName;
-//	private String brandName;
+	private SearchFilterBean codeFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean titleFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean levelFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
+	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
+	
+	private String itemTypeParameter;
+	
+	
+	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchPagingDataModel() {
+			super("unspscTableID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<CmUnspsc> pageChangeListener(
+				ISearchBean<CmUnspsc> searchBean) {
+			System.out
+			.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>titleFilterBean.getSearchValue()="
+					+ titleFilterBean.getSearchValue());
+			if (getAutoCompleteUnspscCode().getUnspscCode() != null
+					&& getAutoCompleteUnspscCode()
+					.getUnspscCode().trim().length() > 0) {
+				codeFilterBean.setSearchValue(getAutoCompleteUnspscCode().getUnspscCode());
+			}
+
+			if (StringUtils.isBlank((String) codeFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String) titleFilterBean
+							.getSearchValue())) {
+				return new SearchResultBean();
+			}
+
+			ICodificationSO unspscSO = null;
+			try {
+
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
+						.getServiceObject("cm", ICodificationSO.class);
+
+
+				if (getAutoCompleteUnspscCode()
+						.getUnspscCode() != null
+						&&getAutoCompleteUnspscCode()
+						.getUnspscCode().trim().length() > 0) {
+					
+					codeFilterBean.setSearchField("unspscCode");
+					codeFilterBean.setSearchValue(getAutoCompleteUnspscCode().getUnspscCode());
+					searchBean.getDataFilterBeans().add(codeFilterBean);
+				}
+
+				if (StringUtils.isNotBlank((String) titleFilterBean
+						.getSearchValue())) {
+					
+					titleFilterBean.setSearchField("unspscTitle");
+					titleFilterBean.setCaseInsensitive(true);
+					searchBean.getDataFilterBeans().add(titleFilterBean);
+				}
+				FacesScopes fs = new FacesScopes();
+				String itemType = fs.getParameter("itemType");
+
+				
+				if (itemType != null) {// save parameter first time it come from
+					// search button
+					setItemTypeParameter(itemType);
+				}
+			
+				// get parameter from backup property whenever table be reloaded
+				if (getItemTypeParameter() != null
+						&& !getItemTypeParameter().isEmpty()) {
+
+					if (getItemTypeParameter().equals("S")
+							|| getItemTypeParameter().equals("2")) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("unspscCode",
+										SearchOperator.OPERATOR_GREATER_EQUAL
+										.value(), "70000000"));
+					} else if (getItemTypeParameter().equals("P")
+							|| getItemTypeParameter().equals("1")) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("unspscCode",
+										SearchOperator.OPERATOR_LESS.value(),
+										"70000000"));
+					}
+				}
+
+				
+
+				System.out.println("this.getSortField():"+this.getSortField());
+				if(this.getSortField()==null){
+					SearchOrderBean orderBean = new SearchOrderBean("unspscCode", true);
+
+					searchBean.getSortColumns().add(orderBean);
+				}
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setSearchBean(searchBean);
+				
+				CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
+
+				
+				return resDTO.getResultBean();
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				unspscSO = null;
+			}
+			return new SearchResultBean();
+		}
+
+	}
+	
+	
+
 	
 	public Object[] getSelectedObject() {
 		return selectedObject;
@@ -711,7 +834,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 
-	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new SearchPagingDataModel();
+	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new PendingCodifiedSearchPagingDataModel();
+
+	
 
 	public IPagingDataModel<VCmPendingCodifiedItem> getvPendingCodifiedItemSearchDataModel() {
 		return vPendingCodifiedItemSearchDataModel;
@@ -722,12 +847,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.vPendingCodifiedItemSearchDataModel = vPendingCodifiedItemSearchDataModel;
 	}
 
-	private class SearchPagingDataModel extends
+	private class PendingCodifiedSearchPagingDataModel extends
 			PagingDataModel<VCmPendingCodifiedItem> {
 
 		private static final long serialVersionUID = 1L;
 
-		public SearchPagingDataModel() {
+		public PendingCodifiedSearchPagingDataModel() {
 			super("PendingCodifiedItemID");
 			// TODO Auto-generated constructor stub
 		}
@@ -808,6 +933,46 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setServiceKeyword(boolean serviceKeyword) {
 		this.serviceKeyword = serviceKeyword;
+	}
+
+	public SearchFilterBean getCodeFilterBean() {
+		return codeFilterBean;
+	}
+
+	public void setCodeFilterBean(SearchFilterBean codeFilterBean) {
+		this.codeFilterBean = codeFilterBean;
+	}
+
+	public SearchFilterBean getTitleFilterBean() {
+		return titleFilterBean;
+	}
+
+	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
+		this.titleFilterBean = titleFilterBean;
+	}
+
+	public SearchFilterBean getLevelFilterBean() {
+		return levelFilterBean;
+	}
+
+	public void setLevelFilterBean(SearchFilterBean levelFilterBean) {
+		this.levelFilterBean = levelFilterBean;
+	}
+
+	public IPagingDataModel<CmUnspsc> getSearchDataModel() {
+		return searchDataModel;
+	}
+
+	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
+		this.searchDataModel = searchDataModel;
+	}
+
+	public String getItemTypeParameter() {
+		return itemTypeParameter;
+	}
+
+	public void setItemTypeParameter(String itemTypeParameter) {
+		this.itemTypeParameter = itemTypeParameter;
 	}
 	
 	
