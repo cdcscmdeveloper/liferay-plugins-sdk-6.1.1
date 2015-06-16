@@ -40,7 +40,7 @@ public class SmTrackingDiaryBackingBean extends
 				&& (null == getManagedBean().getApplicationType())) {
 			throw new EpException(MessageConst.ERROR_716006);
 		}
-		System.out.println("SmTrackingDiaryBackingBean search");
+		log.info("SmTrackingDiaryBackingBean search");
 		getManagedBean().getSmDocumentDataModel().reloadData();
 	}
 
@@ -61,7 +61,7 @@ public class SmTrackingDiaryBackingBean extends
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),"SR"));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("docId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmSupplier().getSmAppl().getApplId()));
 //			searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSmSupplier().getSmAppl().getApplNo()));
-			System.out.println("getSmDocumentDataModel docNo " + getManagedBean().getSmSupplier().getSmAppl().getApplNo());
+			log.info("getSmDocumentDataModel docNo " + getManagedBean().getSmSupplier().getSmAppl().getApplNo());
 
 			reqDTO.setSearchBean(searchBean);
 			TrackingDiaryResDTO resDTO = new TrackingDiaryResDTO();
