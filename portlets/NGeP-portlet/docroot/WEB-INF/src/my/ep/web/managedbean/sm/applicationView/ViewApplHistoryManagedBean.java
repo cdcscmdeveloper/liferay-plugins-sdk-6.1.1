@@ -3,14 +3,10 @@ package my.ep.web.managedbean.sm.applicationView;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.commons.lang3.StringUtils;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.constant.MessageConst;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
-import my.ep.exception.EpException;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;

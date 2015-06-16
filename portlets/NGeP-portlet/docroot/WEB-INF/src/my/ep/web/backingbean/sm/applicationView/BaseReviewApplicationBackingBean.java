@@ -1143,7 +1143,10 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	private void setCategoryTypeConfirm() {
 		Locale locale = new FacesScopes().getUserLocale();
 		String[] params = { "" };
-		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+		if (StringUtils.isNotBlank(getManagedBean().getSmAppl()
+				.getApplCategoryType())
+				&& getManagedBean().getSmAppl().getApplCategoryType()
+						.equals("N")) {
 			params[0] = ResourceBundleUtils.getMessage("lbl.sm.catCodes.norm",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
 		} else {
@@ -2082,15 +2085,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmSupplierBank> objList = new ArrayList<SmSupplierBank>();
 		SmSupplierBank obj = null;
 
-		if (mainList != null
-				&& !mainList.isEmpty()) {
+		if (mainList != null && !mainList.isEmpty()) {
 			if (getManagedBean().isViewApplicationHistory()) {
 				// appl history load by supplier role for revNo=1
 				if (getManagedBean().isSupplierUser()) {
 					for (SmSupplierBank param : mainList) {
-						obj = SmCommonUtil
-								.getSupplierBankByRevNoAndAccNo(
-										mainList, param, 1);
+						obj = SmCommonUtil.getSupplierBankByRevNoAndAccNo(
+								mainList, param, 1);
 						if (obj != null && !objList.contains(obj)) {
 							objList.add(obj);
 						}
@@ -2099,9 +2100,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// appl history load by po/approver role for revNo=2
 				else {
 					for (SmSupplierBank param : mainList) {
-						obj = SmCommonUtil
-								.getSupplierBankByRevNoAndAccNo(
-										mainList, param, 2);
+						obj = SmCommonUtil.getSupplierBankByRevNoAndAccNo(
+								mainList, param, 2);
 						if (obj != null && !objList.contains(obj)) {
 							objList.add(obj);
 						}
@@ -2110,9 +2110,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				// supplier profile direct load to revNo=2
 				for (SmSupplierBank param : mainList) {
-					obj = SmCommonUtil
-							.getSupplierBankByRevNoAndAccNo(
-									mainList, param, 2);
+					obj = SmCommonUtil.getSupplierBankByRevNoAndAccNo(mainList,
+							param, 2);
 					if (obj != null && !objList.contains(obj)) {
 						objList.add(obj);
 					}
@@ -2129,8 +2128,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmPersonnel> objList = new ArrayList<SmPersonnel>();
 		SmPersonnel obj = null;
 
-		if (mainList != null
-				&& !mainList.isEmpty()) {
+		if (mainList != null && !mainList.isEmpty()) {
 			if (getManagedBean().isViewApplicationHistory()) {
 				// appl history load by supplier role for revNo=1
 				if (getManagedBean().isSupplierUser()) {
@@ -2158,8 +2156,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				// supplier profile direct load to revNo=2
 				for (SmPersonnel param : mainList) {
 					obj = SmCommonUtil
-							.getSmPersonnelByRevNoAndIdentificationNo(
-									mainList, param, 2);
+							.getSmPersonnelByRevNoAndIdentificationNo(mainList,
+									param, 2);
 					if (obj != null && !objList.contains(obj)) {
 						objList.add(obj);
 					}
@@ -2175,15 +2173,14 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		List<SmAssociateCompany> objList = new ArrayList<SmAssociateCompany>();
 		SmAssociateCompany obj = null;
 
-		if (mainList != null
-				&& !mainList.isEmpty()) {
+		if (mainList != null && !mainList.isEmpty()) {
 			if (getManagedBean().isViewApplicationHistory()) {
 				// appl history load by supplier role for revNo=1
 				if (getManagedBean().isSupplierUser()) {
 					for (SmAssociateCompany param : mainList) {
 						obj = SmCommonUtil
-								.getSmAssociateCompanyByRevNoAndRegNo(
-										mainList, param, 1);
+								.getSmAssociateCompanyByRevNoAndRegNo(mainList,
+										param, 1);
 						if (obj != null && !objList.contains(obj)) {
 							objList.add(obj);
 						}
@@ -2193,8 +2190,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				else {
 					for (SmAssociateCompany param : mainList) {
 						obj = SmCommonUtil
-								.getSmAssociateCompanyByRevNoAndRegNo(
-										mainList, param, 2);
+								.getSmAssociateCompanyByRevNoAndRegNo(mainList,
+										param, 2);
 						if (obj != null && !objList.contains(obj)) {
 							objList.add(obj);
 						}
@@ -2203,9 +2200,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			} else {
 				// supplier profile direct load to revNo=2
 				for (SmAssociateCompany param : mainList) {
-					obj = SmCommonUtil
-							.getSmAssociateCompanyByRevNoAndRegNo(
-									mainList, param, 2);
+					obj = SmCommonUtil.getSmAssociateCompanyByRevNoAndRegNo(
+							mainList, param, 2);
 					if (obj != null && !objList.contains(obj)) {
 						objList.add(obj);
 					}
