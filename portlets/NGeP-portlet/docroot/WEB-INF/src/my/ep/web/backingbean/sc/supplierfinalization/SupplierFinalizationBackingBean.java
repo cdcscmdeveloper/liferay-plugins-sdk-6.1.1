@@ -653,6 +653,9 @@ public class SupplierFinalizationBackingBean extends
 			} else if (activeIndex == 2) {
 				scQtCommittee = preparationDtlsInfo();
 				reqDTO = validateInfo(activeIndex);
+			} else {
+				scQtCommittee = preparationDtlsInfo();
+				reqDTO = validateInfo(2);
 			}
 			reqDTO.setDeletedMeetingsList(
 					this.getManagedBean().getDeletedMeetingList());
