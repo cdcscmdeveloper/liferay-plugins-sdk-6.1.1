@@ -320,6 +320,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
     	} finally {
     		statusSO = null;
     	}
+    	scPrInquiry.setCreatedBy(new FacesScopes().getUserSessionBean().getUserId());
 
     	// Initializing Remarks 
     	scPrInquiry.setRemarks(initializeRemarks(
