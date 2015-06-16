@@ -15,10 +15,12 @@ import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.type.aut.SearchCondition;
@@ -31,6 +33,7 @@ import my.ep.web.managedbean.trackingdiary.PpTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -268,6 +271,23 @@ public class PpTrackingDiaryBackingBean extends
 	public void setSearchTrackingDiaryDataModel(
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
+	}
+	
+	/**
+	 * show default status description when statusId is null
+	 */
+	public String getDefaultStatusDesc(String planType){
+		log.info("getDefaultStatusDesc");
+		Long statusId = 0L;
+		PmStatusDesc statusDesc = null;
+		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(planType)){
+			statusId = ProcurementPlanConst.PPP_PENDING_SUBMISSION;
+			statusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
+		}else{
+			statusId = ProcurementPlanConst.PPE_PENDING_SUBMISSION;
+			statusDesc = StatusHelper.getInstance().getStatusDescById(statusId);
+		}
+		return statusDesc!=null ? statusDesc.getStatusName() : "";
 	}
 
 }
