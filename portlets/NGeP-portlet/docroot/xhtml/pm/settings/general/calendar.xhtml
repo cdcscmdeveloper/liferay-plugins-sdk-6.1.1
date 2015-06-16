@@ -12,7 +12,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-              <p:messages id="calendarMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+             
 		<style type="text/css">
 .value {
 	width: 1000px;
@@ -101,8 +101,7 @@
 		}
 	</script>
 
-
-
+    <p:growl id="calendarMsg" showDetail="true" />
 		<p:panel id="ruleConfigId">
 
 
@@ -171,8 +170,7 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.title']}" /></td>
 							<td><p:inputText id="title" size="30" maxlength="30"
-									value="#{calendarBackingBean.managedBean.event.title}"
-									required="true" /></td>
+									value="#{calendarBackingBean.managedBean.event.title}" /></td>
 						</tr>
 						<tr>
 
@@ -202,9 +200,9 @@
 							<td>
 								<div style="float: right;">
 									<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
-										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
-										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
-										update="ruleConfigId, calendarMsg" />
+										actionListener="#{calendarBackingBean.addOrUpdateEvent}" 
+								    	oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
+										update="@form"/>
 									<p:commandButton value="#{lbl['lbl.btn.delete']}"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
@@ -216,7 +214,7 @@
 				</h:panelGroup>
 			</p:dialog>
 			<p:dialog widgetVar="errDialog"
-				header="#{lbl['lbl.pm.cal.warning']}" width="260"
+				header="#{lbl['lbl.pm.cal.warning']}" width="260" 
 				height="80" showEffect="clip" hideEffect="clip">
 				<h:panelGroup id="errDetails">
 
@@ -232,5 +230,6 @@
 			</p:dialog>
 
 		</p:panel>
+		
 	</ui:define>
 </ui:composition>
