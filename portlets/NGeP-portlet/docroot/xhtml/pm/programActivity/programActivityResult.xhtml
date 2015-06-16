@@ -14,7 +14,7 @@
 			rows="10" var="programActivityList" rowIndexVar="index" lazy="true">
 			<ac:paginator for="programActivitySR" />
 
-			<p:column>
+			<p:column style="width:10%;white-space: normal;word-wrap: break-word;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.pm.vot.program.code']}" />
 				</f:facet>
@@ -24,7 +24,7 @@
 				</ui:repeat>
 			</p:column>
 
-			<p:column>
+			<p:column style="width:40%;white-space: normal;word-wrap: break-word;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.pm.vot.program.desc']}" />
 				</f:facet>
@@ -35,17 +35,17 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.program.activity.code']}"
-				style="width:25%">
+				style="width:15%;white-space: normal;">
 				<h:outputText value="#{programActivityList.prgActivityCode}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.program.activity.desc']}"
-				style="width:25%">
+				style="width:40%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{programActivityList.description}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.vot.program.valid.from']}"
-				style="width:25%">
+				style="width:15%;">
 				<h:outputText value="#{programActivityList.effDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -53,7 +53,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.vot.program.valid.to']}"
-				style="width:25%">
+				style="width:15%;">
 				<h:outputText value="#{programActivityList.expDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -61,7 +61,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
-				style="width:10%"> 
+				style="width:10%;white-space: normal;word-wrap: break-word;"> 
    	    #{(programActivityList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
