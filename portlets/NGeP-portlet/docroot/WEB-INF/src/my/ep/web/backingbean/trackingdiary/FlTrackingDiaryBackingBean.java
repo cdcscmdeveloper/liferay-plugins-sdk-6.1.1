@@ -26,6 +26,7 @@ import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -35,6 +36,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.managedbean.trackingdiary.FlTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -63,9 +65,10 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 		if(null == getManagedBean().getSearchOrderType()){ 
 			throw new EpException(MessageConst.ERROR_740023);
 		}else if((null ==getManagedBean().getSearchDocType() 
-				&& "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) 
 				&& "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))){
-			throw new EpException(MessageConst.ERROR_740023);
+			throw new EpException(MessageConst.ERROR_740039, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.doc.maintain.doc.type",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.fl.doc.maintain.circular.doc.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		System.out.println("search");
 		getManagedBean().getFlDocumentDataModel().reloadData();
@@ -173,6 +176,7 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 	}
 	
 	public void reset(){
+		this.getManagedBean().setSearchDocNo(null);
 		this.getManagedBean().setSearchSuppName(null);
 		this.getManagedBean().setSearchOrderToDuration(null);
 		this.getManagedBean().setSearchOrderFromDuration(null);
@@ -343,4 +347,37 @@ public class FlTrackingDiaryBackingBean extends BaseBackingBean<FlTrackingDiaryM
 			}
 			return financialYearOpt;
 		} 
+		
+		/**
+		 * The method used for generating a list of available display type of org
+		 * type as selection.
+		 * 
+		 */
+		public SelectItem[] getOrgTypeDropdownValues() {
+			ISearchBean<PmParameterDesc> searchBean = null;
+			if(getManagedBean().getSearchOrderType() != null){
+				if (getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+					searchBean = getUserOrgTypeSearchBean("searchOrderTypePO");
+				} else if (getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER) ) {
+					searchBean = getUserOrgTypeSearchBean("searchOrderTypeCO");
+				}
+
+			}
+			
+			SelectItem[] items = null;
+			if (searchBean != null) {
+				searchBean.getSortColumns();
+				items = getDropdownCodeValuesBySearchBean(
+						ParameterTypeConst.DOCUMENT_TYPES, searchBean);
+			}
+
+			return items;
+		}
+		
+		private ISearchBean<PmParameterDesc> getUserOrgTypeSearchBean(
+				String componentId) {
+			ISearchBean<PmParameterDesc> userOrgTypeSearchBean = super
+					.createSearchBean(PmParameterDesc.class, componentId);
+			return userOrgTypeSearchBean;
+		}
 }

@@ -12,14 +12,17 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
-import my.ep.type.aut.SearchOperator;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -123,7 +126,10 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				if(getSearchFinancialYear()!= 0){
 					reqDTO.setFinancialYear(getSearchFinancialYear());
 				}
+				reqDTO.setUserRole(getUserRole());
 				
+				reqDTO.setOrgProfileId(getOrgProfile());
+				reqDTO.setOrgProfileList(getNaikTarafChild(reqDTO.getOrgProfileId()));
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
 				System.out.println("pageChangeListener");
@@ -136,6 +142,24 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 				e.printStackTrace();
 			}
 			return null;
+		}
+		
+		private Long getOrgProfile() {
+			FacesScopes facescope = new FacesScopes();
+			PmUser user = facescope.getUserSessionBean();
+			UserReqDTO uReqDTO = new UserReqDTO();
+			uReqDTO.setUserId(user.getUserId());
+			IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
+			UserResDTO uResDTO = userSO.retrieveUserOrgListByUserId(uReqDTO);
+			if(!uResDTO.getUserOrgList().isEmpty()){
+				return uResDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId();
+			}
+			return null;
+		}
+		
+		private List<Long> getNaikTarafChild(Long orgProfileId) {
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			return orgProfileSO.retrieveProfileGroupByMainOrgProfileId(orgProfileId);
 		}
 	}
 	public boolean isFlFulfilmentRequisitioner() {
@@ -728,6 +752,43 @@ public class FlTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchFinancialYear(int searchFinancialYear) {
 		this.searchFinancialYear = searchFinancialYear;
+	}
+	
+	/**
+	 * Gets the user role.
+	 *
+	 * @return the user role
+	 */
+	private String getUserRole() {
+		FacesScopes facesScopes = new FacesScopes();
+		if (facesScopes.hasRoleUser(RoleCode.AUDITOR_GENERAL.value()))
+			return RoleCode.AUDITOR_GENERAL.value();
+		else if (facesScopes.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()))
+			return RoleCode.AUDITOR_INTERNAL.value();
+		else if (facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value()))
+			return RoleCode.FL_APPROVER.value();	
+		else if (facesScopes.hasRoleUser(RoleCode.PAY_OFFICER.value()))
+			return RoleCode.PAY_OFFICER.value();
+		else if (facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value()))
+			return RoleCode.REQUISITIONER.value();	
+		else if (facesScopes.hasRoleUser(RoleCode.RECEIVING_OFFICER.value()))
+			return RoleCode.RECEIVING_OFFICER.value();	
+		else if (facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value()))
+			return RoleCode.MOF_SUPPLIER_USER.value();
+		else if (facesScopes.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value()))
+			return RoleCode.MOF_SUPPLIER_ADMIN.value();		
+		else if (facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value()))
+			return RoleCode.BASIC_SUPPLIER_USER.value();
+		else if (facesScopes.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value()))
+			return RoleCode.BASIC_SUPPLIER_ADMIN.value();			
+		else if (facesScopes.hasRoleUser(RoleCode.GOVT_SELLER.value()))
+			return RoleCode.GOVT_SELLER.value();
+		else if (facesScopes.hasRoleUser(RoleCode.FACTORING_ADMIN.value()))
+			return RoleCode.FACTORING_ADMIN.value();	
+		else if (facesScopes.hasRoleUser(RoleCode.FACTORING_USER.value()))
+			return RoleCode.FACTORING_USER.value();	
+		else
+			return null;
 	}
 
 }
