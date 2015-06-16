@@ -4420,9 +4420,11 @@ public class LOIDetailBackingBean extends
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IQTSuppFinalizationSO.class);
+			ScQt scQt = this.getManagedBean().getScQt();
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-			if (scQtRecommend.getTplSpecZoneDtl() != null) {
+			reqDTO.setQtId(scQt.getQtId());
+			if (scQt.isZonal() && 
+					scQtRecommend.getTplSpecZoneDtl() != null) {
 				reqDTO.setQtZoneCriteriaId(scQtRecommend.getTplSpecZoneDtl()
 						.getSpecZoneId());
 			}
