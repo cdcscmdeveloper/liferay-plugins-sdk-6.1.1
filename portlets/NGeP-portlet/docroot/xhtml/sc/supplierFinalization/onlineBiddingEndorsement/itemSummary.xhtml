@@ -39,38 +39,39 @@
 	
 	<p:panel header="#{lbl['lbl.sc.supplier.details']}" toggleable="true">
 		
-		<p:dataTable id="supplierItemTbl" var="price"
-			value="#{suppFinalBiddingBackingBean.managedBean.bidPriceItems}"
+		<p:dataTable id="supplierItemTbl" var="itemSupplier"
+			value="#{suppFinalBiddingBackingBean.managedBean.bidItemSuppliers}"
 			rows="10"
-			rowKey="#{price.bidPriceId}" rowIndexVar="rowIndex">
+			rowKey="#{itemSupplier.bidPriceId}" rowIndexVar="rowIndex">
 			<ac:paginator for="supplierItemTbl" />
 			
 			<p:column headerText="#{lbl['lbl.sc.ranking']}">
-				<h:outputText value="#{price.ranking}" />
+				<h:outputText value="#{itemSupplier.ranking}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 				<p:commandLink update="@([id$=suppDtlPopUp])"
-					action="#{suppFinalBiddingBackingBean.showSupplierDetails(price.supplierId)}"
+					action="#{suppFinalBiddingBackingBean.showSupplierDetails(
+								itemSupplier.supplier.supplierId)}"
 					oncomplete="suppDtlWidgetVar.show();">
-					<h:outputText value="#{price.supplierName}" />
+					<h:outputText value="#{itemSupplier.supplierName}" />
 				</p:commandLink>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
-				<h:outputText value="#{(price.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
+				<h:outputText value="#{(itemSupplier.bumi) ? lbl['lbl.txt.yes']:lbl['lbl.txt.no']}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.starting.price']}">
-				<h:outputText style="float: right;" value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(price.startingPrice)}">
+				<h:outputText style="float: right;" value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.startingPrice)}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.last.bid.price']}">
 				<div style="align: right">
-					<h:outputText style="float: right;" rendered="#{!((price.startingPrice - price.bidPrice) eq '0')}"
-						 value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(price.bidPrice)}">
+					<h:outputText style="float: right;" rendered="#{!((itemSupplier.startingPrice - itemSupplier.bidPrice) eq '0')}"
+						 value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.bidPrice)}">
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</div>
@@ -78,16 +79,16 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.difference.rm']}">
-				<h:outputText style="float: right;" rendered="#{price.bumi and !((price.startingPrice - price.bidPrice) eq '0')}" 
-					value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(price.startingPrice) - 
-										suppFinalBiddingBackingBean.getCalculatedTotalAmount(price.bidPrice)}">
+				<h:outputText style="float: right;" rendered="#{itemSupplier.bumi and !((itemSupplier.startingPrice - itemSupplier.bidPrice) eq '0')}" 
+					value="#{suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.startingPrice) - 
+										suppFinalBiddingBackingBean.getCalculatedTotalAmount(itemSupplier.bidPrice)}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.cost.saving']}">
 				<h:outputText style="float: right;" 
-					value="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem.estimatedCost - price.bidPriceTotal}">
+					value="#{suppFinalBiddingBackingBean.managedBean.selectedBiddingItem.estimatedCost - itemSupplier.bidPriceTotal}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>

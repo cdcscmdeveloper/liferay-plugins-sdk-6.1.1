@@ -510,7 +510,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 						itemBean.setSupplierName(supplierName);
 					}
 				}
-				getManagedBean().setBidPriceItems(biddingItemPriceList);
+				getManagedBean().setBidItemSuppliers(biddingItemPriceList);
 			}
 		} finally {
 			biddingSO = null;
