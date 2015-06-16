@@ -610,6 +610,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 
 				pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
+				
+				log.info("getManagedBean().getSelectedSoftCertLs()>>>>>>>>" + getManagedBean().getSelectedSoftCertLs().length != null ? getManagedBean().getSelectedSoftCertLs().length : "");
+				log.info("getPaidPersonnelBeforeProceed()>>>>>>>>" + getPaidPersonnelBeforeProceed().size());
 
 				pymtReqDTO.setValidPayment(validPayment);
 				pymtReqDTO.setSmPayment(smPayment);
@@ -626,11 +629,12 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				pymtReqDTO.setBackEndUpdate(false);
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
-				
-				try {
-					curlIPN(httpServletRequest);
-				} catch (Exception ex) {
-					log.error("curlIPN: " + ex.getMessage());
+				if(pymtResDTO.isSuccessful()){
+					try {
+						curlIPN(httpServletRequest);
+					} catch (Exception ex) {
+						log.error("curlIPN: " + ex.getMessage());
+					}
 				}
 				
 				showPaymentResponse(status, paymentId);
@@ -683,6 +687,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					+ httpServletRequest.getParameter(paramName));
 		}*/
 		strParams.append("treq=1");
+		strParams.append("&");
 		strParams.append("sa="+merchantId);
 		log.info("StrParams>>>>>>" + strParams);
 		// URL url = null;
