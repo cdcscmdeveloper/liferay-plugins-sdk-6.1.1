@@ -18,8 +18,10 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -4354,10 +4356,11 @@ public class LOIDetailBackingBean extends
 
 		// set the checkbox or radio button of supplier selected
 		// Multiple LOI or Online Bidding
-		List<Long> supplierIdList = new ArrayList<Long>();
+		Map<Long,ScQtRecommendDtl> recommendDtlsMap = new HashMap<Long,ScQtRecommendDtl>();
 		for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend
 				.getRecommendDtls()) {
-			supplierIdList.add(scQtRecommendDtl.getSupplier().getSupplierId());
+			Long supplierId = scQtRecommendDtl.getSupplier().getSupplierId();
+			recommendDtlsMap.put(supplierId, scQtRecommendDtl);
 		}
 
 		scQtRecommend
@@ -4366,7 +4369,9 @@ public class LOIDetailBackingBean extends
 			Long supplierId = scQtEvaluationResultDtl.getQtEvaluationResult()
 					.getScQtProposal().getScQtSupplier().getSmSupplier()
 					.getSupplierId();
-			if (supplierIdList.contains(supplierId)) {
+			if (recommendDtlsMap.containsKey(supplierId)) {
+				scQtEvaluationResultDtl.setScQtRecommendDtl(
+								recommendDtlsMap.get(supplierId));
 				scQtRecommend.getAwardSupplierList().add(
 						scQtEvaluationResultDtl);
 			}
