@@ -3,6 +3,9 @@ package my.ep.web.managedbean.trackingdiary;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
+
+import org.apache.log4j.Logger;
+
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
@@ -24,6 +27,8 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(SmTrackingDiaryManagedBean.class);
+	
 	private String MOFAccountNo;
 	private String applicationNo;
 	private String supplierName;
@@ -56,7 +61,7 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 
 			ISupplierSearchSO smSupplierSO = null;
 			try {
-				System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
+				log.debug("ISearchResultBean<SmSupplier> pageChangeListener");
 				smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
 						.getServiceObject("sm", ISupplierSearchSO.class);
 
@@ -64,24 +69,24 @@ public class SmTrackingDiaryManagedBean<PmTrackingDiary> extends BaseManagedBean
 				reqDTO.setSearchBean(searchBean);
 				
 				if(getMOFAccountNo()!=null && getMOFAccountNo()!="") {
-					System.out.println("getMOFAccountNo");
+					log.debug("getMOFAccountNo");
 					reqDTO.setMofAccountNo(getMOFAccountNo());
 				}
 				if(getSupplierName()!=null && getSupplierName()!="") {
-					System.out.println("getSupplierName");
+					log.debug("getSupplierName");
 					reqDTO.setCompanyName(getSupplierName());
 				}
 				if(getApplicationNo()!=null && getApplicationNo()!="") {
-					System.out.println("getApplicationNo"+getApplicationNo());
+					log.info("getApplicationNo"+getApplicationNo());
 					reqDTO.setApplnNo(getApplicationNo());
 				}
 				if(getApplicationType()!=null && getApplicationType()!="") {
-					System.out.println("getApplicationNo");
+					log.debug("getApplicationNo");
 					reqDTO.setApplType(getApplicationType());
 				}
 				// to retrieve all statuses suppliers, including inactive suppliers.
 				reqDTO.setAllStatuses(true);
-				System.out.println("*********b4***********");
+				log.debug("*********b4***********");
 				SupplierSearchResDTO res = smSupplierSO.retriveSupplierProfiles(reqDTO);
 
 //				System.out.println("*********after***********"+res.getResultBean().getTotalRecord());
