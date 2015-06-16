@@ -14,15 +14,15 @@
 			var="glAccountList" rowIndexVar="index" lazy="true">
 			<ac:paginator for="glAccountSR" />
 
-			<p:column headerText="#{lbl['lbl.pm.gl.account.code']}" style="width:7%">
+			<p:column headerText="#{lbl['lbl.pm.gl.account.code']}" style="width:10%;">
 				<h:outputText value="#{glAccountList.glAccCode}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.gl.account.desc']}" style="width:46%">
+			<p:column headerText="#{lbl['lbl.pm.gl.account.desc']}" style="width:50%;white-space: normal;word-wrap: break-word;">
 				<h:outputText value="#{glAccountList.description}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.pm.gl.account.kumpulan.ptj']}" style="width:40%">
+			<p:column headerText="#{lbl['lbl.pm.gl.account.kumpulan.ptj']}" style="width:33%;white-space: normal;word-wrap: break-word;">
 				
 				<h:outputText value="#{(glAccountList.pmOrgProfile.pmOrgValidity.orgCode)}" />
 				<p:spacer width="1%"></p:spacer>
@@ -31,7 +31,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.search.status']}"
-				style="width:7%"> 
+				style="width:10%;white-space: normal;word-wrap: break-word;"> 
    	    #{(glAccountList.recordStatusFlg==1)? lbl['lbl.pm.active'] : lbl['lbl.pm.inactive']}              
        </p:column>
 		</p:dataTable>
