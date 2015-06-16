@@ -54,6 +54,9 @@
 			margin-right: 2px;
 			margin-bottom: -1px;
 		}
+		.table2 td {
+			padding : 0;
+		}
 	</style>
 </head>
 <body>
@@ -78,37 +81,37 @@
 					<td width='50'>Offered Price (RM) </td>
 					<td width='50'>Total Score</td>
 					<td width='50'>Ranking</td>
+					<td width='50'>Quantity</td>
 				</tr>
 			</table>
 		</td>
-		<td class="tdInfoTable" width='50'>Qty</td>
 	</tr>
 	#foreach( $item in $recommendList )
 	<tr>
 		<td class="tdInfoTable" width='200'>$item.requestItem.itemName</td>
 		<td class="tdInfoTable" width='750'>
-			#foreach( $scQtRecommendDtl in $item.recommendDtls )
+			#foreach( $evalResultDtl in $item.awardSupplierList )
 				<table class="table2">
 					<tr>
-						#if ($scQtRecommendDtl.recordStatus)
-						<td width='200'>$scQtRecommendDtl.supplier.companyName</td>
-						<td width='50'>$scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo</td>
-						<td width='50'>
-							#if ($scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
-								Yes
-							#else
-								No
-							#end
-						</td>
-						<td width='50'>$scQtRecommendDtl.scQtProposalItem.offerPrice</td>
-						<td width='50'></td>
-						<td width='50'></td>
+						#if ($evalResultDtl.awareded)
+							<td width='200'>$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
+							<td width='50'>$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+							<td width='50'>
+								#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
+									Yes
+								#else
+									No
+								#end
+							</td>
+							<td width='50'>$evalResultDtl.proposalAmount.proposalAmt</td>
+							<td width='50'>$evalResultDtl.totalScore</td>
+							<td width='50'>$evalResultDtl.evalRank</td>
+							<td width='50'>$evalResultDtl.scQtRecommendDtl.awardQty</td>
 						#end
 					</tr>
 				</table>
 			#end
 		</td>
-		<td class="tdInfoTable" width='50'>$item.requestItem.quantity</td>
 	</tr>
 	#end
 </table>
