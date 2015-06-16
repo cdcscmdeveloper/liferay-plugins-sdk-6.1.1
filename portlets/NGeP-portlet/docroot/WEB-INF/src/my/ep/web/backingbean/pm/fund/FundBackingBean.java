@@ -18,6 +18,7 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.PmCodeConst;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.exception.EpException;
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.VotFundType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -135,6 +137,9 @@ BaseBackingBean<FundManagedBean> {
 							&& (fundSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_SUSPENDED)))) )
 		{
 			if(fundSearchBean.getStatus().equals(String.valueOf(DbValueConst.RECORD_STATUS_ACTIVE))){
+				
+				
+				
 				// Filter By - User effDate
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("effDate",
@@ -150,12 +155,34 @@ BaseBackingBean<FundManagedBean> {
 										SearchOperator.OPERATOR_IS_NULL.value(), null,
 										SearchCondition.CONDITION_OR.value())));
 				
-				searchBean.getDataFilterBeans().add(
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								fundSearchBean.getStatus()));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("votFundType",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								PmCodeConst.VOT_FUND_CODE_TYPE));
+				*/
+				
+				   searchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(new SearchFilterBean(
+									"recordStatusFlg",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									fundSearchBean.getStatus()), new SearchFilterBean(
+											"votFundType",
+											SearchOperator.OPERATOR_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+											SearchCondition.CONDITION_AND.value())));
+				
 			}
 			else{
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("votFundType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								PmCodeConst.VOT_FUND_CODE_TYPE));
+				
 				// Filter By - User expDate
 				searchBean.getDataFilterBeans().add(
 						new SearchMultiFilterBean(new SearchFilterBean(
@@ -166,10 +193,20 @@ BaseBackingBean<FundManagedBean> {
 										SearchOperator.OPERATOR_IS_NULL.value(), null,
 										SearchCondition.CONDITION_OR.value())));
 				
-				searchBean.getDataFilterBeans().add(
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								fundSearchBean.getStatus()));
+								fundSearchBean.getStatus()));*/
+				
+				
+				 searchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(new SearchFilterBean(
+									"recordStatusFlg",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									fundSearchBean.getStatus()), new SearchFilterBean(
+											"votFundType",
+											SearchOperator.OPERATOR_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+											SearchCondition.CONDITION_AND.value())));
 			}
 
 		}		
@@ -182,6 +219,11 @@ BaseBackingBean<FundManagedBean> {
 							SearchOperator.OPERATOR_IN.value(), 
 							activeAndInActiveStatus
 							));
+			
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("votFundType",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							PmCodeConst.VOT_FUND_CODE_TYPE));
 		}
 		return searchBean;
 	}
@@ -209,7 +251,7 @@ BaseBackingBean<FundManagedBean> {
 				votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IVotFundSO.class);
-				VotFundResDTO resDTO = votFundSO.searchVotFundData(votReqDTO);
+				VotFundResDTO resDTO = votFundSO.searchFundData(votReqDTO);
 				getManagedBean().setLazy(true);
 
 				if (resDTO.isSuccessful()) {
