@@ -617,23 +617,32 @@ public class SupplierFinalizationBiddingBackingBean extends
 			QTSupplierResDTO resDTO = this.retrieveSupplierDetails(smSupplier);
 			smSupplier = resDTO.getSmSupplier();
 			getManagedBean().setSmSupplier(smSupplier);
-			getManagedBean().setSmMofAccount(smSupplier.getSmMofAccounts().get(0));
+			
+			if (CollectionUtils.isNotEmpty(smSupplier.getSmMofAccounts())) {
+				getManagedBean().setSmMofAccount(smSupplier.getSmMofAccounts().get(0));
+			}
 			
 			SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl().getSmCompanyBasic();
 			getManagedBean().setSmCompanyBasic(smCompanyBasic);
 			
 			List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl().getSmPersonnels();
-			for (SmPersonnel smPersonnel : smPersonnelList) {
-				if (smPersonnel.isContactPerson()) {
-					getManagedBean().setSmPersonnel(smPersonnel);
-					break;
+			if (CollectionUtils.isNotEmpty(smPersonnelList)) {
+				for (SmPersonnel smPersonnel : smPersonnelList) {
+					if (smPersonnel.isContactPerson()) {
+						getManagedBean().setSmPersonnel(smPersonnel);
+						break;
+					}
 				}
 			}
-			for (SmCompanyAddress smCompanyAddress : smCompanyBasic.getSmCompanyAddresses()) {
-				if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
-					getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
-					getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
-					break;
+			if (CollectionUtils.isNotEmpty(
+							smCompanyBasic.getSmCompanyAddresses())) {
+				for (SmCompanyAddress smCompanyAddress 
+							: smCompanyBasic.getSmCompanyAddresses()) {
+					if (AddressType.CONTACT_ADDRESS.value().equals(smCompanyAddress.getAddressType())) {
+						getManagedBean().setSupplierBranch(QTConstants.SUPPLIER_INFO_HQ);
+						getManagedBean().setSupplierAddress(smCompanyAddress.getSmAddress());
+						break;
+					}
 				}
 			}
 		}
