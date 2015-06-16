@@ -1173,8 +1173,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//this.getManagedBean().setBusinessStateLs(stateLs);
 			pmStateDropdownValues();
 			//registrationBackingBean.managedBean.smBusinessAdd.pmState.
-			getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
-			getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+			if(getManagedBean().getSmBusinessAdd().isBrandNew()){
+				getManagedBean().getSmBusinessAdd().getPmDistrict().setDistrictId(null);
+				getManagedBean().getSmBusinessAdd().getPmCity().setCityId(null);
+			}
 		} else if (typeAdd.equals("residential")) {
 			List<SelectItem> stateLs = SmCommonUtil.getStateList(this.getManagedBean().getSmResAdd().getPmCountry().getCountryId());
 			this.getManagedBean().setResidentialStateLs(stateLs);
