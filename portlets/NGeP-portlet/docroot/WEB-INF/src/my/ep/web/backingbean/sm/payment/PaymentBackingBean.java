@@ -620,7 +620,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 				pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
 				
-				log.info("getManagedBean().getSelectedSoftCertLs()>>>>>>>>" + getManagedBean().getSelectedSoftCertLs().length != null ? getManagedBean().getSelectedSoftCertLs().length : "- empty");
+				//log.info("getManagedBean().getSelectedSoftCertLs()>>>>>>>>" + getManagedBean().getSelectedSoftCertLs().length != null ? getManagedBean().getSelectedSoftCertLs().length : "- empty");
 				log.info("getPaidPersonnelBeforeProceed()>>>>>>>>" + getPaidPersonnelBeforeProceed().size());
 
 				pymtReqDTO.setValidPayment(validPayment);
