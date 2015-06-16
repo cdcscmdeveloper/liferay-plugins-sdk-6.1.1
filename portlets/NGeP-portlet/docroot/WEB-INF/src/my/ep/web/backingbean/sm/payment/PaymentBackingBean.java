@@ -20,10 +20,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import my.ep.biz.service.sm.payment.IPaymentSO;
 import my.ep.constant.MessageConst;
@@ -54,6 +56,8 @@ import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "paymentBackingBean")
 @RequestScoped
@@ -416,7 +420,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					.getPaymentAmt();
 			this.setvCode(vc);
 			this.getManagedBean().setTotalAmount(ttlAmt);
-
+			
+			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
+			
 			List paymentDtls = new ArrayList();
 			paymentDtls.add(0, this.getManagedBean().getTaskId());
 			paymentDtls.add(1, this.getManagedBean().getBpmPojo());
@@ -477,6 +483,9 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			}
 		}
 
+		//Log for testing httpsession
+		getPaymentHttpSession();
+		
 		log.info("paymentBean.getPaymentTaskId(): " + paymentTaskId);
 		log.info("paymentBean.getPaymentBpmPojo(): " + paymentBpmPojo);
 		this.getManagedBean().setTaskId(paymentTaskId);
@@ -1069,5 +1078,37 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	public void setPaymentBean(PaymentBean paymentBean) {
 		this.paymentBean = paymentBean;
+	}
+	
+	private void setPaymentHttpSession(String taskId, Object bpmPojo){
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		
+		HttpSession session = httpServletRequest.getSession();
+		//session.setAttribute("paymentBpmTaskId", this.getManagedBean().getTaskId());
+		//session.setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
+		session.setAttribute("paymentBpmTaskId", taskId);
+		session.setAttribute("paymentBpmPojo", bpmPojo);
+	}
+	
+	private void getPaymentHttpSession(){
+		log.info("***********setPaymentHttpSession**********");
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		
+		HttpSession session = httpServletRequest.getSession();
+		//session.setAttribute("paymentBpmTaskId", this.getManagedBean().getTaskId());
+		//session.setAttribute("paymentBpmPojo", this.getManagedBean().getBpmPojo());
+		String taskId = (String)session.getAttribute("paymentBpmTaskId");
+		Object bpmPojo = (Object)session.getAttribute("paymentBpmPojo");
+		
+		log.info("getPaymentHttpSession taskId>>>>>>>" + taskId);
+		log.info("getPaymentHttpSession bpmPojo>>>>>>>" + bpmPojo);
+		
+		session.removeAttribute("paymentBpmTaskId");
+		session.removeAttribute("paymentBpmPojo");
+		
 	}
 }
