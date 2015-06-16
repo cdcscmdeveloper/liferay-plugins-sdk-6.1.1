@@ -22,8 +22,9 @@
 		</script>
 		<f:event listener="#{createDOBackingBean.preRenderView}"
 			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}"
+		<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="#{createDOBackingBean.managedBean.autoUpdate}"
 			closable="true" severity="error, info" />
+			
 		<table>
 			<tr>
 				<td><p:outputLabel value="1GFMAS Error: "
