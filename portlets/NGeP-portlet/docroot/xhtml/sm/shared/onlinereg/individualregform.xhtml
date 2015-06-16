@@ -112,7 +112,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.state']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="cmbPermState"
+				<td class="tdContent"><p:selectOneMenu id="cmbPermState" style="width:80%"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -135,7 +135,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.district']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict"
+				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict" style="width:80%"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -159,7 +159,7 @@
 					<p:outputLabel value="#{lbl['lbl.sm.towncity']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
-				<td class="tdContent"><p:selectOneMenu id="cmbPermCity"
+				<td class="tdContent"><p:selectOneMenu id="cmbPermCity" style="width:80%"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />

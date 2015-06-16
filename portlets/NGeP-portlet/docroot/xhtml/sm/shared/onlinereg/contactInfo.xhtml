@@ -89,7 +89,7 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResState"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.state']}"
+						label="#{lbl['lbl.sm.state']}" style="width:80%"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmState.stateId}"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -116,7 +116,7 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResDistrict"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.district']}"
+						label="#{lbl['lbl.sm.district']}" style="width:80%"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmDistrict.districtId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -143,7 +143,7 @@
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResCity"
 						required="#{!registrationBackingBean.managedBean.sameAddress and !empty param['disableValidation']}"
-						label="#{lbl['lbl.sm.towncity']}"
+						label="#{lbl['lbl.sm.towncity']}" style="width:80%"
 						disabled="#{registrationBackingBean.managedBean.sameAddress}"
 						value="#{registrationBackingBean.managedBean.smResAdd.pmCity.cityId}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />

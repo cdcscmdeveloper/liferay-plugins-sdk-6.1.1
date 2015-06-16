@@ -264,14 +264,14 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</td>
 				<td class="tdContent"><p:selectOneMenu id="compCountryId" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
-						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"
+						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.country']}"  style="width:80%"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCountry.countryId}">
 						<f:selectItems var="counLs"
 							value="#{registrationBackingBean.managedBean.countryLs}"
 							itemLabel="#{counLs.countryName}" itemValue="#{counLs.countryId}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateStateByAddType('business')}"
-							update="busState,compPostCodePanelId" />
+							update="busState,busDistrict,busCity,compPostCodePanelId" />
 					</p:selectOneMenu> <p:message id="compCountryIdMsg" for="compCountryId"
 						display="icon" /></td>
 			</tr>
@@ -290,7 +290,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busState" disabled="#{registrationBackingBean.managedBean.sabahSarawakType}"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.state']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"
-						style="width:250px">
+						style="width:80%">
 						<f:selectItem itemValue="" itemLabel="#{lbl['lbl.txt.select']}" />
 						<f:selectItems var="state"
 							value="#{registrationBackingBean.managedBean.businessStateLs}"
@@ -314,7 +314,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busDistrict"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.district']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"
-						style="width:250px">
+						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="dist"
 							value="#{registrationBackingBean.managedBean.businessDistrictLs}"
@@ -338,7 +338,7 @@
 				<td class="tdContent"><p:selectOneMenu id="busCity"
 						required="#{!empty param['disableValidation']}" label="#{lbl['lbl.sm.towncity']}"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"
-						style="width:250px">
+						style="width:80%">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 						<f:selectItems var="pcity"
 							value="#{registrationBackingBean.managedBean.businessCityLs}"
