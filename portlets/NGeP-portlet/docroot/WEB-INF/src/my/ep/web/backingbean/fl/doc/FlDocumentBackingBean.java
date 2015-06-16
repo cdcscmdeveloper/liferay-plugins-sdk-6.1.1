@@ -69,6 +69,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -164,7 +165,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		if(null == getManagedBean().getSearchOrderType()){ 
 			throw new EpException(MessageConst.ERROR_740023);
 		}else if((null ==getManagedBean().getSearchDocType() &&  "".equalsIgnoreCase(getManagedBean().getSearchOrderNo()) && "".equalsIgnoreCase(getManagedBean().getSearchDocNo()))){
-			throw new EpException(MessageConst.ERROR_740023);
+			throw new EpException(MessageConst.ERROR_740039, new String[]{
+					ResourceBundleUtils.getMessage("lbl.fl.doc.maintain.doc.type",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+					ResourceBundleUtils.getMessage("lbl.fl.do.poco",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
 		getManagedBean().getFlDocumentDataModel().reloadData();
 		if(isFlFulfilmentRequisitioner()) {
