@@ -77,22 +77,30 @@
 					</f:facet>
 					<ac:labelDateTime value="#{plan.createdDate}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.pp.type']}" > 
-					<p:outputLabel 
-					value="#{ppTrackingDiaryBackingBean.getParameterDesc(plan.planType)}" /> 
-	        	</p:column>
-				<p:column headerText="#{lbl['lbl.pp.plan.number']}" >
-					<p:outputLabel 
-					value="#{plan.planNo}" />   
-	        	</p:column>
-				<p:column headerText="#{lbl['lbl.pp.plan.year']}" >
-					<p:outputLabel 
-					value="#{plan.planYear}" />  
-	        	</p:column>
-				<p:column headerText="#{lbl['lbl.pm.status']}">
-					<p:outputLabel 
-					value="#{plan.status !=null ? ppTrackingDiaryBackingBean.getStatusDescById(plan.status.statusId) : ppTrackingDiaryBackingBean.getDefaultStatusDesc(plan.planType)}" />  
-	        	</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pp.type']}" />
+					</f:facet>
+					#{ppTrackingDiaryBackingBean.getParameterDesc(plan.planType)}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pp.plan.number']}" />
+					</f:facet>
+					#{plan.planNo}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pp.plan.year']}" />
+					</f:facet>
+					#{plan.planYear}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.status']}" />
+					</f:facet>
+					#{plan.status !=null ? ppTrackingDiaryBackingBean.getStatusDescById(plan.status.statusId) : ppTrackingDiaryBackingBean.getDefaultStatusDesc(plan.planType)}
+				</p:column>
 				<p:column headerText="#{lbl['lbl.pm.action']}">
 					<p:commandLink
 						action="#{ppTrackingDiaryBackingBean.goToTrackingDiarySearch(plan)}">
