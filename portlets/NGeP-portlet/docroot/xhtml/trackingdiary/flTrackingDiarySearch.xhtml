@@ -42,7 +42,7 @@
 					rendered="#{flTrackingDiaryBackingBean.managedBean.searchOrderType eq ParameterConst.doctypePurchaseOrder}"
 						value="#{flTrackingDiaryBackingBean.managedBean.searchDocType}">
 						<f:selectItems
-							value="#{flTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
+							value="#{flTrackingDiaryBackingBean.getOrgTypeDropdownValues()}" />
 						<p:ajax event="change"
 							listener="#{flTrackingDiaryBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
@@ -50,7 +50,7 @@
 					rendered="#{flTrackingDiaryBackingBean.managedBean.searchOrderType eq ParameterConst.doctypeContractOrder or flTrackingDiaryBackingBean.managedBean.searchOrderType eq null}"
 						value="#{flTrackingDiaryBackingBean.managedBean.searchDocType}">
 						<f:selectItems
-							value="#{flTrackingDiaryBackingBean.getDocumentTypeDropDown()}" />
+							value="#{flTrackingDiaryBackingBean.getOrgTypeDropdownValues()}" />
 						<p:ajax event="change"
 							listener="#{flTrackingDiaryBackingBean.selectedDoctype}" />
 					</p:selectOneMenu></td></tr>
