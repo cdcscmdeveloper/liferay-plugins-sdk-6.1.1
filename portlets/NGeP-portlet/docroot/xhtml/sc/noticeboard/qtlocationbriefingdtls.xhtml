@@ -12,7 +12,8 @@
 			<p:panel header="#{lbl['lbl.sc.notice.board.briefing.and.sv.dtls']}" toggleable="true">
 
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-					<h:outputText value="* #{lbl['lbl.sc.attendance.required.for.briefiing.sv']}"
+				 <h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.attendance.required.for.briefiing.sv']}"
 						style="font-weight:bold;text-align: left;" />
 				</h:panelGroup>
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
@@ -76,7 +77,8 @@
 					rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.briefingChangedDate ne null}"/>
 				</f:facet>
 				<h:panelGroup rendered="#{!bsvDetails.briefingList.isEmpty()}">
-					<h:outputText value="* #{lbl['lbl.sc.attendance.required.for.brefing']}"
+				   <h:outputText value="* " styleClass="mandatory" />
+					<h:outputText value="#{lbl['lbl.sc.attendance.required.for.brefing']}"
 						style="font-weight:bold;text-align: left;" />
 				</h:panelGroup>
 				<p:dataTable var="brfsitdtl" value="#{bsvDetails.briefingList}"
@@ -140,7 +142,8 @@
 				</f:facet>
 
 				<h:panelGroup rendered="#{!bsvDetails.sitevisitList.isEmpty()}">
-					<h:outputText value="* #{lbl['lbl.sc.all.attendance.required.for.sv']}"
+				 <h:outputText value="* " styleClass="mandatory" rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"/>
+					<h:outputText value="#{lbl['lbl.sc.all.attendance.required.for.sv']}"
 						rendered="#{bsvDetails.scQtBsv.allSiteVisitReq}"
 						style="font-weight:bold;text-align: left;" />
 
