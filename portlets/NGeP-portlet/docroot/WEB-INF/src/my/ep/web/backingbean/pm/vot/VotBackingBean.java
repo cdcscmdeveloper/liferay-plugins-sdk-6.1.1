@@ -18,6 +18,7 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.PmCodeConst;
 import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.exception.EpException;
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.VotFundType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -167,10 +169,26 @@ BaseBackingBean<VotManagedBean> {
 										"expDate",
 										SearchOperator.OPERATOR_IS_NULL.value(), null,
 										SearchCondition.CONDITION_OR.value())));
-				searchBean.getDataFilterBeans().add(
+				
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								votSearchBean.getStatus()));
+								votSearchBean.getStatus()));			
+								
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("votFundType",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								PmCodeConst.VOT_FUND_CODE_TYPE));*/
+				
+				        searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								votSearchBean.getStatus()), new SearchFilterBean(
+										"votFundType",
+										SearchOperator.OPERATOR_NOT_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+										SearchCondition.CONDITION_AND.value())));
+				
 			}
 			else{
 				// Filter By - User expDate
@@ -183,10 +201,27 @@ BaseBackingBean<VotManagedBean> {
 										SearchOperator.OPERATOR_IS_NULL.value(), null,
 										SearchCondition.CONDITION_OR.value())));
 				
-				searchBean.getDataFilterBeans().add(
+				/*searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("recordStatusFlg",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								votSearchBean.getStatus()));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("votFundType",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								PmCodeConst.VOT_FUND_CODE_TYPE));*/
+				
+				
+				 searchBean.getDataFilterBeans().add(
+							new SearchMultiFilterBean(new SearchFilterBean(
+									"recordStatusFlg",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									votSearchBean.getStatus()), new SearchFilterBean(
+											"votFundType",
+											SearchOperator.OPERATOR_NOT_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+											SearchCondition.CONDITION_AND.value())));
+			
+				
 			}
 
 		}		
@@ -199,6 +234,11 @@ BaseBackingBean<VotManagedBean> {
 							SearchOperator.OPERATOR_IN.value(), 
 							activeAndInActiveStatus
 							));
+						
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("votFundType",
+							SearchOperator.OPERATOR_NOT_EQUALS.value(),
+							PmCodeConst.VOT_FUND_CODE_TYPE));
 		}
 		return searchBean;
 	}
