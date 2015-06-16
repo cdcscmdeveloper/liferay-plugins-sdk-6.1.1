@@ -73,12 +73,15 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.sm.ApplType;
@@ -1976,30 +1979,27 @@ public class SmCommonUtil {
 	 * @return SmSupplierBank
 	 */
 	public static SmSupplierBank getSupplierBankByRevNoAndAccNo(
-			List<SmSupplierBank> mainList, SmSupplierBank supplierBankParam,
+			List<SmSupplierBank> mainList, SmSupplierBank param,
 			int revNo) {
-		SmSupplierBank retValSupplierBank = null;
-		SmSupplierBank supplierBankNotMatchRevNo = null;
+		SmSupplierBank retVal = null;
 
 		// main list loop by accNo and recordStatus and revNo
-		for (SmSupplierBank supplierBank : mainList) {
-			if (supplierBank.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-					&& StringUtils.isNotBlank(supplierBank.getAccountNo())
-					&& supplierBank.getAccountNo().equals(
-							supplierBankParam.getAccountNo())) {
+		for (SmSupplierBank tmp : mainList) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& StringUtils.isNotBlank(tmp.getAccountNo())
+					&& tmp.getAccountNo().equals(
+							param.getAccountNo())) {
 
-				if (supplierBankParam.getRevNo() == revNo
-						&& supplierBank.getRevNo() == revNo) {
-					retValSupplierBank = supplierBank;
+				if (tmp.getRevNo() == revNo) {
+					retVal = tmp;
 					break;
 				} else {
-					supplierBankNotMatchRevNo = supplierBank;
+					retVal = tmp;
 				}
 			}
 		}
 
-		return retValSupplierBank == null ? supplierBankNotMatchRevNo
-				: retValSupplierBank;
+		return retVal;
 	}
 
 	/**
@@ -2040,29 +2040,123 @@ public class SmCommonUtil {
 	 * @return SmPersonnel
 	 */
 	public static SmPersonnel getSmPersonnelByRevNoAndIdentificationNo(
-			List<SmPersonnel> mainList, SmPersonnel smPersonnelParam, int revNo) {
-		SmPersonnel retValSmPersonnel = null;
-		SmPersonnel personnelNotMatchRevNo = null;
+			List<SmPersonnel> mainList, SmPersonnel param, int revNo) {
+		SmPersonnel retVal = null;
 
 		// main list loop by identificationNo and recordStatus and revNo
-		for (SmPersonnel smPersonnel : mainList) {
-			if (smPersonnel.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+		for (SmPersonnel tmp : mainList) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils
-							.isNotBlank(smPersonnel.getIdentificationNo())
-					&& smPersonnel.getIdentificationNo().equals(
-							smPersonnelParam.getIdentificationNo())) {
-				if (smPersonnel.getRevNo() == revNo
-						&& smPersonnelParam.getRevNo() == revNo) {
-					retValSmPersonnel = smPersonnel;
+							.isNotBlank(tmp.getIdentificationNo())
+					&& tmp.getIdentificationNo().equals(
+							param.getIdentificationNo())) {
+				if (tmp.getRevNo() == revNo) {
+					retVal = tmp;
 					break;
 				} else {
-					personnelNotMatchRevNo = smPersonnel;
+					retVal = tmp;
 				}
-				break;
 			}
 		}
 
-		return retValSmPersonnel == null ? personnelNotMatchRevNo
-				: retValSmPersonnel;
+		return retVal;
+	}
+
+	/**
+	 * Get associate company by registration no and revision no
+	 * 
+	 * @param List
+	 *            <SmAssociateCompany> mainList
+	 * @param SmAssociateCompany
+	 *            smAssociateCompanyParam
+	 * @param int revNo
+	 * @return SmAssociateCompany
+	 */
+	public static SmAssociateCompany getSmAssociateCompanyByRevNoAndRegNo(
+			List<SmAssociateCompany> mainList,
+			SmAssociateCompany param, int revNo) {
+		SmAssociateCompany retVal = null;
+
+		// main list loop by regNo and recordStatus and revNo
+		for (SmAssociateCompany tmp : mainList) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& StringUtils.isNotBlank(tmp.getRegNo())
+					&& tmp.getRegNo().equals(
+							param.getRegNo())) {
+				if (tmp.getRevNo() == revNo) {
+					retVal = tmp;
+					break;
+				} else {
+					retVal = tmp;
+				}
+			}
+		}
+
+		return retVal;
+	}
+
+	/**
+	 * Get category code by level 3 code and revision no
+	 * 
+	 * @param List
+	 *            <SmSupplierCategory> mainList
+	 * @param SmSupplierCategory
+	 *            param
+	 * @param int revNo
+	 * @return SmSupplierCategory
+	 */
+	public static SmSupplierCategory getSmSupplierCategoryByRevNoAndCodeLvl(
+			List<SmSupplierCategory> mainList, SmSupplierCategory param,
+			int revNo) {
+		SmSupplierCategory retVal = null;
+
+		// main list loop by regNo and recordStatus and revNo
+		for (SmSupplierCategory tmp : mainList) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& (tmp.getPmCategoryL3() != null && tmp
+							.getPmCategoryL3()
+							.getCategoryL3Code()
+							.equals(param.getPmCategoryL3().getCategoryL3Code()))) {
+				if (tmp.getRevNo() == revNo) {
+					retVal = tmp;
+					break;
+				} else {
+					retVal = tmp;
+				}
+			}
+		}
+
+		return retVal;
+	}
+
+	/**
+	 * Get supplier branch by name and revision no
+	 * 
+	 * @param List
+	 *            <SmSupplierBranch> mainList
+	 * @param SmSupplierBranch
+	 *            param
+	 * @param int revNo
+	 * @return SmSupplierBranch
+	 */
+	public static SmSupplierBranch getSmSupplierBranchByRevNoAndName(
+			List<SmSupplierBranch> mainList, SmSupplierBranch param, int revNo) {
+		SmSupplierBranch retVal = null;
+
+		// main list loop by name and recordStatus and revNo
+		for (SmSupplierBranch tmp : mainList) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& StringUtils.isNotBlank(tmp.getBranchName())
+					&& tmp.getBranchName().equals(param.getBranchName())) {
+				if (tmp.getRevNo() == revNo) {
+					retVal = tmp;
+					break;
+				} else {
+					retVal = tmp;
+				}
+			}
+		}
+
+		return retVal;
 	}
 }
