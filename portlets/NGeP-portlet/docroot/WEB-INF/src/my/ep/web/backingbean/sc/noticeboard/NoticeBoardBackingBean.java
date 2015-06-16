@@ -518,22 +518,8 @@ public class NoticeBoardBackingBean extends
 
 				org.primefaces.model.TreeNode root = event.getTreeNode();
 				for (PmDistrict district : districList) {
-					new EpDefaultTreeNode("district", district, root);
+					new DefaultTreeNode("district", district, root);
 				}
-			} else if (obj instanceof PmDistrict) {
-				this.getManagedBean().setLocationSearchBean(null);
-				CityReqDTO reqDTO = new CityReqDTO();
-				reqDTO.setDistrictId(((PmDistrict) obj).getDistrictId());
-				ICitySO citySO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								ICitySO.class);
-				CityResDTO resDTO = citySO.retriveCityListByDistrictId(reqDTO);
-				List<PmCity> cityList = resDTO.getCityList();
-				org.primefaces.model.TreeNode root = event.getTreeNode();
-				for (PmCity city : cityList) {
-					new DefaultTreeNode("city", city, root);
-				}
-
 			}
 		}
 	}
@@ -1067,7 +1053,7 @@ public class NoticeBoardBackingBean extends
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("QT_NO",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getQtNo()));
+									getManagedBean().getQtNo().trim()));
 
 				}
 
@@ -1084,7 +1070,7 @@ public class NoticeBoardBackingBean extends
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("QT_TITLE",
 									SearchOperator.OPERATOR_LIKE.value(),
-									getManagedBean().getTitle(), true));
+									getManagedBean().getTitle().trim(), true));
 
 				}
 
