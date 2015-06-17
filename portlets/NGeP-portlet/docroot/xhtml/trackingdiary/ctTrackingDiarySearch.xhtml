@@ -95,11 +95,11 @@
 				</h:panelGroup>
 			</table>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" process="@this"
 					action="#{ctTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					update="resultPanel" />
+					update=":form:ctDocListDt" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					action="#{ctTrackingDiaryBackingBean.reset}" update=":form" />
+					action="#{ctTrackingDiaryBackingBean.reset}" update=":form"  process="@this"/>
 			</div>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
