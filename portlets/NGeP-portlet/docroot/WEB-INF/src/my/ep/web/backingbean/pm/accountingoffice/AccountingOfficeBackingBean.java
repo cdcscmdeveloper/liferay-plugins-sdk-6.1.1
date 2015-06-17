@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.accountingoffice;
 
 import java.util.ArrayList;
@@ -34,21 +44,34 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class AccountingOfficeBackingBean.
+ */
 @ManagedBean(name = "accountingOfficeBackingBean")
 @ViewScoped
 public class AccountingOfficeBackingBean extends
 		BaseBackingBean<AccountingOfficeManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger
 			.getLogger(AccountingOfficeBackingBean.class);
 	
+	/** The Constant NAV_TO_MAIN. */
 	public static final String NAV_TO_MAIN = "/xhtml/pm/accountingoffice/accountingOfficeSearchMain";
 
+	/** The search accounting office. */
 	private IPagingDataModel<PmAgOffice> searchAccountingOffice = new SearchOfficePagingDataModel();
 
+	/** The result. */
 	boolean result = false;
 	// Default value
+	/** The Constant SEARCH_DEFAULT. */
 	public static final boolean SEARCH_DEFAULT = false;
 
+	/**
+	 * Instantiates a new accounting office backing bean.
+	 */
 	public AccountingOfficeBackingBean() {
 		
 		log.info("inside AccountingOfficeBackingBean constructor");
@@ -62,6 +85,9 @@ public class AccountingOfficeBackingBean extends
 		}
 	}
 
+	/**
+	 * Pre loading accounting office.
+	 */
 	public void preLoadingAccountingOffice() {
 		log.info("preLoading AccountingOffice method");
 		renewSesionObject();
@@ -72,28 +98,40 @@ public class AccountingOfficeBackingBean extends
 	}
 
 	/**
-	 * reset search bean fields
+	 * reset search bean fields.
 	 */
 	public void resetOfficeSearchBean() {
 		
 		debugLogger("resetAccountingOfficeSearch");
 		this.getManagedBean().setAccountingOfficeSearchBean(new AccountingOfficeSearchBean());
-		this.getManagedBean().setLazy(false);
-        this.getManagedBean().setAccountingOfficceCodes(new String());
-        this.getManagedBean().setAccountingOfficeNames(new String());
-        this.getManagedBean().setStatus(null);        
+		this.getManagedBean().setLazy(false);         
         searchAccountingOffice = new SearchOfficePagingDataModel();
 	}
 
+	/**
+	 * Search accounting office.
+	 */
 	public void searchAccountingOffice() {
+		debugLogger("SearchAccountingOffice--->reloadData");
 		searchAccountingOffice.reloadData();
 	}
 
+	/**
+	 * Back to search.
+	 * 
+	 * @return the string
+	 */
 	public String backToSearch() {
 
 		return NAV_TO_MAIN;
 	}
 	
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -103,6 +141,8 @@ public class AccountingOfficeBackingBean extends
 	
 	
 	/**
+	 * Gets the search accounting office.
+	 * 
 	 * @return the searchAccountingOffice
 	 */
 	public IPagingDataModel<PmAgOffice> getSearchAccountingOffice() {
@@ -110,7 +150,10 @@ public class AccountingOfficeBackingBean extends
 	}
 
 	/**
-	 * @param searchAccountingOffice the searchAccountingOffice to set
+	 * Sets the search accounting office.
+	 * 
+	 * @param searchAccountingOffice
+	 *            the searchAccountingOffice to set
 	 */
 	public void setSearchAccountingOffice(
 			IPagingDataModel<PmAgOffice> searchAccountingOffice) {
@@ -118,7 +161,11 @@ public class AccountingOfficeBackingBean extends
 	}
 	
 	/**
-	 * get salutation info into maintenance page
+	 * get salutation info into maintenance page.
+	 * 
+	 * @param searchBean
+	 *            the search bean
+	 * @return the search bean data
 	 *//*
 	public String goToMaintaincePage(PmAgOffice pmAccountingOffice) {
 		debugLogger("goToMaintainceAction");
@@ -131,13 +178,13 @@ public class AccountingOfficeBackingBean extends
 			ISearchBean<PmAgOffice> searchBean) {
 
 		AccountingOfficeSearchBean officeSearchBean = this.getManagedBean().getAccountingOfficeSearchBean();
-		boolean	isEmpty = true;
+		debugLogger("getSearchBeanData--Search Criteria Data");
 		if (StringUtils.isNotBlank(officeSearchBean.getOfficeCode())){
 
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("officeCode",
 							SearchOperator.OPERATOR_EQUALS.value(), officeSearchBean.getOfficeCode().toUpperCase() , true));
-			isEmpty = false;
+			
 			
 		}
 		if (StringUtils.isNotBlank(officeSearchBean.getOfficeName())) {
@@ -146,7 +193,7 @@ public class AccountingOfficeBackingBean extends
 					new SearchFilterBean("officeName",
 							SearchOperator.OPERATOR_LIKE.value(), officeSearchBean
 									.getOfficeName().toUpperCase(), true));
-			isEmpty = false;
+			
 		}
 		if(StringUtils.isNotBlank(officeSearchBean.getStatus())) {
 		
@@ -168,14 +215,25 @@ public class AccountingOfficeBackingBean extends
 		return searchBean;
 	}
 
+	/**
+	 * The Class SearchOfficePagingDataModel.
+	 */
 	private class SearchOfficePagingDataModel extends
 			PagingDataModel<PmAgOffice> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search office paging data model.
+		 */
 		public SearchOfficePagingDataModel() {
 			super("searchAccountingOfficer",getManagedBean().isLazy());
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<PmAgOffice> pageChangeListener(
 				ISearchBean<PmAgOffice> searchBean) {
@@ -206,6 +264,11 @@ public class AccountingOfficeBackingBean extends
 		}
 	}
 
+	/**
+	 * Gets the status options.
+	 * 
+	 * @return the status options
+	 */
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getCommonStatusOptions();
 	}
