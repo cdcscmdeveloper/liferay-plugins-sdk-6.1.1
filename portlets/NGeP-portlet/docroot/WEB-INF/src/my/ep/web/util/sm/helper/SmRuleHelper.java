@@ -141,4 +141,12 @@ public class SmRuleHelper {
 		}
 		return instance;
 	}
+	
+	public int getMaxSupportingDocumentSize() {
+		return 20 * 1024 * 1024;
+	}
+	
+	public int getMaxSoftCertDocumentSize() {
+		return 1 * 1024 * 1024;
+	}
 }
