@@ -35,6 +35,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.model.StreamedContent;
@@ -66,6 +67,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		//this.getManagedBean().setAppId(1257696);
 		//this.getManagedBean().setAppId(1257568);
 		//this.getManagedBean().setAppId(1372507);
+		//this.getManagedBean().setAppId(1258837);
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
@@ -149,7 +151,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	 * @return String
 	 */
 	public String submitSDOReviewAction(String resAction) {
-		if(resAction != null && !resAction.equalsIgnoreCase("")){
+		if(resAction != null && StringUtils.isNotBlank(resAction)){
 			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
 				if(this.getManagedBean().getSmApplInquiry().getInquirySubject() == null 
 						|| this.getManagedBean().getSmApplInquiry().getInquirySubject().equals("")){ 
@@ -185,7 +187,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 
 			}*/
 
-			try{
+
 				String actionDesc = null;
 				if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
 					actionDesc = SupplierManagementConst.SDO_SEND_INQUIRY;
@@ -216,25 +218,34 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(resAction);
 				//reqDTO.setSmRemark(smRmk);
-								
 				this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
 				reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 				
-				SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
+				try{
+					SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
-				if (resDTO.isSuccessful()) {
-					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
-					//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
+					if (resDTO.isSuccessful()) {
+						RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+						//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
+						RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+
+						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721103,
+								new String[] {getManagedBean().getSmAppl().getApplNo()},MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+						renewSesionObject();
+
+						return CommonUIConst.ACKNOWLEDGE_PAGE;
+					} else {
+						RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+						RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+					}
+				}catch(Exception ex){
+					//RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
 					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					renewSesionObject();
-					return navigateToAck();
-				} else {
-					throw new EpException(MessageConst.ERROR_721109);
+					throw new EpException(ex.getMessage());
 				}
-			}catch(Exception ex){
-				log.info("*********ERROR submitSDOReviewAction["+ex.getMessage()+"]********************");
-				throw new EpException(MessageConst.ERROR_721108);
-			}
+
+
 		}
 		return null;
 	}
@@ -286,20 +297,9 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setBusinessTypeLs(pmDesc);
 	}*/
 	
-	/**
-	 * navigate to acknowledge page
-	 * @return
-	 */
-	public String navigateToAck(){
-		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721103,
-		MessageUtils.BUNDLE_COMMON_MESSAGES,
-		new FacesScopes().getUserLocale())));
-
-		return CommonUIConst.ACKNOWLEDGE_PAGE;
-	}
 
 	//for local testing purpose
-	/*public void preRenderView(){
+/*	public void preRenderView(){
 		if(this.getManagedBean().getSmAppl() == null){
 			viewSupportingDocument();
 		}
