@@ -1979,16 +1979,14 @@ public class SmCommonUtil {
 	 * @return SmSupplierBank
 	 */
 	public static SmSupplierBank getSupplierBankByRevNoAndAccNo(
-			List<SmSupplierBank> mainList, SmSupplierBank param,
-			int revNo) {
+			List<SmSupplierBank> mainList, SmSupplierBank param, int revNo) {
 		SmSupplierBank retVal = null;
 
 		// main list loop by accNo and recordStatus and revNo
 		for (SmSupplierBank tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils.isNotBlank(tmp.getAccountNo())
-					&& tmp.getAccountNo().equals(
-							param.getAccountNo())) {
+					&& tmp.getAccountNo().equals(param.getAccountNo())) {
 
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
@@ -2046,8 +2044,7 @@ public class SmCommonUtil {
 		// main list loop by identificationNo and recordStatus and revNo
 		for (SmPersonnel tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
-					&& StringUtils
-							.isNotBlank(tmp.getIdentificationNo())
+					&& StringUtils.isNotBlank(tmp.getIdentificationNo())
 					&& tmp.getIdentificationNo().equals(
 							param.getIdentificationNo())) {
 				if (tmp.getRevNo() == revNo) {
@@ -2073,16 +2070,15 @@ public class SmCommonUtil {
 	 * @return SmAssociateCompany
 	 */
 	public static SmAssociateCompany getSmAssociateCompanyByRevNoAndRegNo(
-			List<SmAssociateCompany> mainList,
-			SmAssociateCompany param, int revNo) {
+			List<SmAssociateCompany> mainList, SmAssociateCompany param,
+			int revNo) {
 		SmAssociateCompany retVal = null;
 
 		// main list loop by regNo and recordStatus and revNo
 		for (SmAssociateCompany tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils.isNotBlank(tmp.getRegNo())
-					&& tmp.getRegNo().equals(
-							param.getRegNo())) {
+					&& tmp.getRegNo().equals(param.getRegNo())) {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
@@ -2115,8 +2111,9 @@ public class SmCommonUtil {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& (tmp.getPmCategoryL3() != null && tmp
 							.getPmCategoryL3()
-							.getCategoryL3Code()
-							.equals(param.getPmCategoryL3().getCategoryL3Code()))) {
+							.getCategoryL3Id()
+							.compareTo(
+									param.getPmCategoryL3().getCategoryL3Id()) == 0)) {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
