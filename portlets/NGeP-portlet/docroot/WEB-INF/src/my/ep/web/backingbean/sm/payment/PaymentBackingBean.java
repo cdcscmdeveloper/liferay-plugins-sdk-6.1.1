@@ -77,8 +77,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 	private Map<String, PmParameterDesc> supplierPaymentItemMap;
 
-	@ManagedProperty(value = "#{paymentBean}")
-	private PaymentBean paymentBean;
+	/*@ManagedProperty(value = "#{paymentBean}")
+	private PaymentBean paymentBean;*/
 
 	/**
 	 * Construct and initialized PaymentBackingBean
@@ -423,10 +423,10 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			
 			setPaymentHttpSession(this.getManagedBean().getTaskId(),this.getManagedBean().getBpmPojo());
 			
-			List paymentDtls = new ArrayList();
+/*			List paymentDtls = new ArrayList();
 			paymentDtls.add(0, this.getManagedBean().getTaskId());
 			paymentDtls.add(1, this.getManagedBean().getBpmPojo());
-			paymentBean.getPaymentMap().put(orderId, paymentDtls);
+			paymentBean.getPaymentMap().put(orderId, paymentDtls);*/
 
 			return "paymentRequestSubmission";
 			// }
@@ -448,13 +448,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			SecurityException, IllegalAccessException,
 			IllegalArgumentException, InvocationTargetException {
 
-		PortletRequest pr = (PortletRequest) FacesContext.getCurrentInstance()
+/*		PortletRequest pr = (PortletRequest) FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestMap()
 				.get("javax.portlet.request");
 		Method method = pr.getClass()
 				.getMethod("getOriginalHttpServletRequest");
 		HttpServletRequest httpServletRequest = (HttpServletRequest) method
-				.invoke(pr, new Object[] {});
+				.invoke(pr, new Object[] {});*/
+		
+		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
+		PortletRequest portletRequest = (PortletRequest) extcontext.getRequest();
+		HttpServletRequest httpServletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(portletRequest));
+		HttpSession session = httpServletRequest.getSession();
 
 		String orderId = httpServletRequest.getParameter("orderid");
 		String tranID = httpServletRequest.getParameter("tranID");
@@ -475,16 +480,18 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		String paymentTaskId = null;
 		Object paymentBpmPojo = null;
 
-		if (paymentBean.getPaymentMap().containsKey(orderId)) {
+		/*if (paymentBean.getPaymentMap().containsKey(orderId)) {
 			List paymentDtls = paymentBean.getPaymentMap().get(orderId);
 			if (paymentDtls != null) {
 				paymentTaskId = (String) paymentDtls.get(0);
 				paymentBpmPojo = paymentDtls.get(1);
 			}
-		}
+		}*/
 
 		//Log for testing httpsession
 		getPaymentHttpSession();
+		paymentTaskId = (String)session.getAttribute("paymentBpmTaskId");
+		Object bpmPojo = (Object)session.getAttribute("paymentBpmPojo");
 		
 		log.info("paymentBean.getPaymentTaskId(): " + paymentTaskId);
 		log.info("paymentBean.getPaymentBpmPojo(): " + paymentBpmPojo);
@@ -636,6 +643,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 				PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 				if(pymtResDTO.isSuccessful()){
+
 					try {
 						curlIPN(httpServletRequest);
 					} catch (Exception ex) {
@@ -657,12 +665,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 		}
 
+		session.removeAttribute("paymentBpmTaskId");
+		session.removeAttribute("paymentBpmPojo");
+		
 		// paymentBean.setPaymentBpmPojo(null);
 		// paymentBean.setPaymentTaskId(null);
 
-		if (paymentBean.getPaymentMap().containsKey(orderId)) {
+/*		if (paymentBean.getPaymentMap().containsKey(orderId)) {
 			paymentBean.getPaymentMap().remove(orderId);
-		}
+		}*/
 
 	}
 
@@ -1069,13 +1080,13 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		return paidPersonnels;
 	}
 
-	public PaymentBean getPaymentBean() {
+/*	public PaymentBean getPaymentBean() {
 		return paymentBean;
 	}
 
 	public void setPaymentBean(PaymentBean paymentBean) {
 		this.paymentBean = paymentBean;
-	}
+	}*/
 	
 	private void setPaymentHttpSession(String taskId, Object bpmPojo){
 		ExternalContext extcontext = FacesContext.getCurrentInstance().getExternalContext();
@@ -1104,8 +1115,8 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 		log.info("getPaymentHttpSession taskId>>>>>>>" + taskId);
 		log.info("getPaymentHttpSession bpmPojo>>>>>>>" + bpmPojo);
 		
-		session.removeAttribute("paymentBpmTaskId");
-		session.removeAttribute("paymentBpmPojo");
+//		session.removeAttribute("paymentBpmTaskId");
+//		session.removeAttribute("paymentBpmPojo");
 		
 	}
 }
