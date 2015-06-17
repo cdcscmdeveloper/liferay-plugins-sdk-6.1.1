@@ -1,7 +1,16 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.programactivity;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
@@ -22,7 +31,6 @@ import my.ep.dto.pm.common.votfund.VotFundReqDTO;
 import my.ep.dto.pm.common.votfund.VotFundResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.logging.LogKey;
@@ -39,21 +47,34 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class ProgramActivityBackingBean.
+ */
 @ManagedBean(name = "programActivityBackingBean")
 @ViewScoped
 public class ProgramActivityBackingBean extends
 BaseBackingBean<ProgramActivityManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger
 			.getLogger(ProgramActivityBackingBean.class);
 
+	/** The Constant NAV_TO_MAIN. */
 	public static final String NAV_TO_MAIN = "/xhtml/pm/programActivity/programActivitySearchMain";
 
+	/** The search vot program activity. */
 	private IPagingDataModel<PmPrgActivity> searchVotProgramActivity = new SearchVotPagingDataModel();
 
+	/** The result. */
 	boolean result = false;
 	// Default value
+	/** The Constant SEARCH_DEFAULT. */
 	public static final boolean SEARCH_DEFAULT = false;
 
+	/**
+	 * Instantiates a new program activity backing bean.
+	 */
 	public ProgramActivityBackingBean() {
 
 		log.info("inside ProgramActivityBackingBean constructor");
@@ -68,6 +89,9 @@ BaseBackingBean<ProgramActivityManagedBean> {
 
 	}
 
+	/**
+	 * Pre loading program activity.
+	 */
 	public void preLoadingProgramActivity() {
 		log.info("preLoading ProgramActivity  method");
 		this.resetVotProgramActivitySearchBean();
@@ -76,14 +100,21 @@ BaseBackingBean<ProgramActivityManagedBean> {
 		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
 		}
 		log.info(message);
 	}	
+	
 	/**
-	 * reset search bean fields
+	 * reset search bean fields.
 	 */
 	public void resetVotProgramActivitySearchBean() {
 
@@ -99,15 +130,30 @@ BaseBackingBean<ProgramActivityManagedBean> {
 
 	}
 
+	/**
+	 * Search program activity.
+	 */
 	public void searchProgramActivity() {
 		searchVotProgramActivity.reloadData();
 	}
 
+	/**
+	 * Back to search.
+	 * 
+	 * @return the string
+	 */
 	public String backToSearch() {
 
 		return NAV_TO_MAIN;
 	}
 
+	/**
+	 * Gets the search bean data.
+	 * 
+	 * @param searchBean
+	 *            the search bean
+	 * @return the search bean data
+	 */
 	private ISearchBean<PmPrgActivity> getSearchBeanData(
 			ISearchBean<PmPrgActivity> searchBean) {
 
@@ -205,14 +251,25 @@ BaseBackingBean<ProgramActivityManagedBean> {
 		return searchBean;
 	}
 
+	/**
+	 * The Class SearchVotPagingDataModel.
+	 */
 	private class SearchVotPagingDataModel extends
 	PagingDataModel<PmPrgActivity> {
+		
+		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * Instantiates a new search vot paging data model.
+		 */
 		public SearchVotPagingDataModel() {
 			super("searchVotProgramActivity",getManagedBean().isLazy());
 		}
 
+		/* (non-Javadoc)
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
 		@Override
 		public ISearchResultBean<PmPrgActivity> pageChangeListener(
 				ISearchBean<PmPrgActivity> searchBean) {
@@ -242,11 +299,18 @@ BaseBackingBean<ProgramActivityManagedBean> {
 		}
 	}
 
+	/**
+	 * Gets the status options.
+	 * 
+	 * @return the status options
+	 */
 	public static SelectItem[] getStatusOptions() {
 		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	/**
+	 * Gets the search vot program activity.
+	 * 
 	 * @return the searchVotProgramActivity
 	 */
 	public IPagingDataModel<PmPrgActivity> getSearchVotProgramActivity() {
@@ -254,7 +318,10 @@ BaseBackingBean<ProgramActivityManagedBean> {
 	}
 
 	/**
-	 * @param searchVotProgramActivity the searchVotProgramActivity to set
+	 * Sets the search vot program activity.
+	 * 
+	 * @param searchVotProgramActivity
+	 *            the searchVotProgramActivity to set
 	 */
 	public void setSearchVotProgramActivity(
 			IPagingDataModel<PmPrgActivity> searchVotProgramActivity) {
