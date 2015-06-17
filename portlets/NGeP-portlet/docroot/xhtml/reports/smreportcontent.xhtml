@@ -230,13 +230,21 @@
 						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smCompanyNameView}">
-							<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}"
+							<p:outputLabel value="#{lbl['lbl.rpt.supplierScreen']}"
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smCompanyName}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
 						</c:if>
+						<c:if test="#{flReportBackingBean.managedBean.rptGenBean.smCompanyNameDropdownView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierScreen']}" style="margin-bottom:5px;width:160px;"/>
+									<p:selectOneMenu value="#{reportBackingBean.smCompanyName}" style="margin-bottom:5px;width:300px;">
+										<f:selectItems value="#{reportBackingBean.supplCompanyList}"></f:selectItems>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
+									</p:selectOneMenu>
+									</c:if>
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryCompanyNameView}">
 							<p:column >
@@ -1013,19 +1021,7 @@
 							<p:inputText value="#{reportBackingBean.smYearText}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
-						</c:if>
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
+						</c:if>						
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentMethodView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.paymentmethod']}"
 								style="margin-top:5px;width:160px;" />
@@ -1083,19 +1079,7 @@
 							<p:inputText maxlength="1000" value="#{reportBackingBean.smProcessingOfficerName}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
-						</c:if>
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
-						
+						</c:if>						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smExtraTwoColumnView}">
 							<p:outputLabel value="" style="margin-top:5px;width:160px;" />
@@ -1104,6 +1088,14 @@
 					</h:panelGrid></td>
 			</tr>
 			
+			
+			
+			
+			
+			
+			
+			
+					
 			<tr>
 				<td width="100%">
 				<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryCategoryView}">

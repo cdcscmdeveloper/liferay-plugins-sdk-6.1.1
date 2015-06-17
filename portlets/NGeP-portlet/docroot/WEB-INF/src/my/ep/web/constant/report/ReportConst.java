@@ -370,6 +370,7 @@ public class ReportConst {
 		public static final String SM_DAILY_EARNING_RECEIPT = "SM_055";
 		public static final String SM_DELETE_PENDING_APPL = "SM_056";
 		public static final String SM_SUPPLIER_PERFORMANCE = "SM_057";
+		public static final String SM_PERSON_BRANCH_BANK = "SM_058";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
