@@ -207,6 +207,8 @@ public class ReportsGenerateBean {
 		private boolean smPaymentMethodView = false;
 		private boolean smFromMonthView = false;
 		private boolean smToMonthView = false;
+		private boolean smSupplierView = false;
+		private boolean smCompanyNameDropdownView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -474,6 +476,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmCompanyNameDropdownView() {
+			return smCompanyNameDropdownView;
+		}
+		public void setSmCompanyNameDropdownView(boolean smCompanyNameDropdownView) {
+			this.smCompanyNameDropdownView = smCompanyNameDropdownView;
+		}
+		public boolean isSmSupplierView() {
+			return smSupplierView;
+		}
+		public void setSmSupplierView(boolean smSupplierView) {
+			this.smSupplierView = smSupplierView;
+		}
 		public boolean isSmFromMonthView() {
 			return smFromMonthView;
 		}
