@@ -356,7 +356,12 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmRegistrationTypeTwoView(true);
 				rptGenBean.setSmActiveSubmissiveFromDateView(true);
 				rptGenBean.setSmActSubmisAllDateView(true);
-				
+		 case ReportConst.SM_PERSON_BRANCH_BANK:
+			    rptGenBean.setSmZoneView(true);
+			    rptGenBean.setSmSupplierTypeView(true);
+			    rptGenBean.setSmSupplierView(true);
+			    rptGenBean.setSmRegistrationNoView(true);
+			    rptGenBean.setSmMofRegNoView(true);				
 	            break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
