@@ -62,7 +62,7 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 
 
 		FacesContext fc=FacesContext.getCurrentInstance();
-		if(!getManagedBean().getModuleSelected().equalsIgnoreCase(getManagedBean().getPreviousSelectedModule())){
+		if(getManagedBean().getModuleSelected()!=null && !getManagedBean().getModuleSelected().equalsIgnoreCase(getManagedBean().getPreviousSelectedModule())){
 			String previousSelectedModule = getManagedBean().getModuleSelected() + new String("_TRACKING_DIARY_MANAGED_BEAN");
 			System.out.println("1onModuleSelect" +getManagedBean().getPreviousSelectedModule());
 			getManagedBean().setPreviousSelectedModule(getManagedBean().getModuleSelected());
