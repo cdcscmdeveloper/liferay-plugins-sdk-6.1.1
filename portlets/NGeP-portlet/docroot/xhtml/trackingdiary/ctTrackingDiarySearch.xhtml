@@ -95,9 +95,9 @@
 				</h:panelGroup>
 			</table>
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.btn.search']}" process="@this"
+				<p:commandButton value="#{lbl['lbl.btn.search']}" 
 					action="#{ctTrackingDiaryBackingBean.search}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-					update=":form:ctDocListDt" />
+					update="resultPanel" />
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{ctTrackingDiaryBackingBean.reset}" update=":form"  process="@this"/>
 			</div>
