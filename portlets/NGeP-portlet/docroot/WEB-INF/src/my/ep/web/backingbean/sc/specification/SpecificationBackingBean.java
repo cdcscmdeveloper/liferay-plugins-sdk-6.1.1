@@ -14084,6 +14084,10 @@ public class SpecificationBackingBean extends
 			}
 			String msgCode = e.getMessage();
 			String msgParam[] = e.getParameters();
+			if (MessageConst.ERROR_100023.equalsIgnoreCase(msgCode)) {
+				msgCode = MessageConst.ERROR_760295;
+				msgParam = new String[]{"Tier Quantity"};
+			}
 			throw new EpException(msgCode, msgParam);
 		}
 
