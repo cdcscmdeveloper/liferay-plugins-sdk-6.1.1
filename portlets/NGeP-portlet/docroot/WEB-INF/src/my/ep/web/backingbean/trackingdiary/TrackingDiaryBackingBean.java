@@ -138,16 +138,13 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 	 * @return an array of Recommend By values
 	 */
 	public SelectItem[] getModulesDropDown() {
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		List<String> moduleList = new ArrayList<String>();
-		moduleList.add(ParameterConst.MODULE_PROCUREMENT_PLAN);
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "tdModulesDropdown");
 
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(
 				ParameterTypeConst.MODULE_NAME, searchBean);
 		return items;
 	}
-
-
 
 	public void resetSearchDataModelResult(){
 
