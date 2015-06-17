@@ -91,11 +91,11 @@
 				<h:outputText value="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}"/>
 			</f:facet>
 			<h:panelGroup id="freqUOMPG" style="white-space:nowrap;">
-				<p:inputText id="freqUOM" style="min-width:0px !important;width:26px; text-align:right;" 
+				<p:inputText id="freqUOM" style="min-width:0px !important;width:35px; text-align:right;" 
 					value="#{question.clUomFrequency}" 
-					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="4"
+					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
-					<ac:validateNumber  maxIntegerDigits="4" integerOnly="true" />
+					<ac:validateNumber  maxIntegerDigits="5"  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this, freqUOMMsg" />
 				</p:inputText>
 				<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
