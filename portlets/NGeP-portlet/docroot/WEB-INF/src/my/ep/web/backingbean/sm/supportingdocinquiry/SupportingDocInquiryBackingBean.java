@@ -39,7 +39,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		log.info("**********viewDocInquiry*********");
 		ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 		SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
-		//this.getManagedBean().setAppId(1257436L);
+		//this.getManagedBean().setAppId(1258837L);
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		
 		SupportingDocInquiryResDTO resDTO = reqSO.retrieveInquiryByAppId(reqDTO);
@@ -77,17 +77,19 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 				return navigateToAck();
 			}
 		}catch(Exception ex){
+			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 			throw new EpException(ex.getMessage());
 		}
 		
-		return "";
+		return null;
 	}
 	
 	public String navigateToAck(){
 		FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721102,
 		MessageUtils.BUNDLE_COMMON_MESSAGES,
 		new FacesScopes().getUserLocale())));
-
+		
+		renewSesionObject();
 		return CommonUIConst.ACKNOWLEDGE_PAGE;
 	}
 	
@@ -95,7 +97,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	public void preRenderView(){
 		log.info("**********preRenderView*********");
 		if(this.getManagedBean().getSmApplInquiry() == null){
-			//this.getManagedBean().setAppId(2765L); //TODO
+			//this.getManagedBean().setAppId(1259567L); //TODO
 			viewDocInquiry();
 		}
 	}
