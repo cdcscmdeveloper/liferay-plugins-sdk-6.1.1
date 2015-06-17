@@ -221,7 +221,7 @@
 					
 					<p:column headerText="#{lbl['lbl.sc.role']}">
 						<h:outputText
-							value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeMember.memberRole)}"
+							value="#{qTCommitteBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, committeeMember.memberRole.parameterCode)}"
 							/>
 					</p:column>
 				</p:dataTable>
