@@ -1,5 +1,18 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.bean.pm;
 
+/**
+ * The Class AccountingOfficeSearchBean.
+ */
 public class AccountingOfficeSearchBean {
 	private String officeCode;
 	private String officeName;
