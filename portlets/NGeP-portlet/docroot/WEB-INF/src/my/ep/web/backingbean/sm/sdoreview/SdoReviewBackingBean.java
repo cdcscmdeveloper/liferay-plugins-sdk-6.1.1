@@ -165,85 +165,72 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 					throw new EpException(MessageConst.ERROR_721105);
 
 				}
-				
+
 				//check the string length of get Inquiry Text
 				if(this.getManagedBean().getSmApplInquiry().getInquiryText().length() > inquiryTextLength){
 					String label = SmCommonUtil.getMessage("lbl.sm.supportingdoc.inquiry",null);
 					throw new EpException(MessageConst.ERROR_721114, new String[] {label, String.valueOf(inquiryTextLength)});
 				}
 			}
-					
-			/*else if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_VERIFY)){
-				if(this.getManagedBean().getSmAppl().getSdoReceivedDate() == null 
-						|| this.getManagedBean().getSmAppl().getSdoReceivedDate().equals("")){ 
-					RequestContext.getCurrentInstance().update("submissionMessageId");
-					throw new EpException(MessageConst.ERROR_721106);
-				}
-
-				if(this.getManagedBean().getSmRemark().getRemark()== null || this.getManagedBean().getSmRemark().getRemark() == ""){
-					RequestContext.getCurrentInstance().update("submissionMessageId");
-					throw new EpException(MessageConst.ERROR_721107);
-				}
-
-			}*/
 
 
-				String actionDesc = null;
-				if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
-					actionDesc = SupplierManagementConst.SDO_SEND_INQUIRY;
-				}else{
-					actionDesc = SupplierManagementConst.SDO_SUBMIT_APPL;
-				}
-				
-				String token = getFacesScopes().getBPMAuthenticationCtxToken();
-				SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
-				ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
-				reqDTO.setApplId(this.getManagedBean().getAppId());
-				reqDTO.setOutcome(resAction);
-				reqDTO.setTaskId(this.getManagedBean().getTaskId());
-				reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(
-						actionDesc, this.getManagedBean().getAppId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
 
-				log.info("-----------SDO----------" + reqDTO.getOutcome());
-				log.info("-----------SDO Review----------" + reqDTO.getTaskId());
+			String actionDesc = null;
+			if(resAction.equalsIgnoreCase(SupplierManagementConst.BPM_INQUIRY)){
+				actionDesc = SupplierManagementConst.SDO_SEND_INQUIRY;
+			}else{
+				actionDesc = SupplierManagementConst.SDO_SUBMIT_APPL;
+			}
 
-				//reqDTO.setBpmUserName(bpmUsrName);
-				
-/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
+			ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
+			reqDTO.setApplId(this.getManagedBean().getAppId());
+			reqDTO.setOutcome(resAction);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(
+					actionDesc, this.getManagedBean().getAppId(), this.getManagedBean().getSmAppl().getApplNo(), getUserRole()));
+
+			log.info("-----------SDO----------" + reqDTO.getOutcome());
+			log.info("-----------SDO Review----------" + reqDTO.getTaskId());
+
+			//reqDTO.setBpmUserName(bpmUsrName);
+
+			/*				SmRemark smRmk = this.getManagedBean().getSmRemark();
 				smRmk.setDocType(SupplierManagementConst.SM_RMK_DOC_TYPE_SVO);
 				smRmk.setDocId(this.getManagedBean().getSmAppl().getApplId());*/
-				
-				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-				reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
-				reqDTO.setToken(token);
-				reqDTO.setOutcome(resAction);
-				//reqDTO.setSmRemark(smRmk);
-				this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
-				reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
-				
-				try{
-					SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
-					if (resDTO.isSuccessful()) {
-						RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
-						//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
-						RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+			reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+			reqDTO.setToken(token);
+			reqDTO.setOutcome(resAction);
+			//reqDTO.setSmRemark(smRmk);
+			this.getManagedBean().getSmApplInquiry().setSmAppl(this.getManagedBean().getSmAppl());
+			reqDTO.setSmApplInquiry(this.getManagedBean().getSmApplInquiry());
 
-						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721103,
-								new String[] {getManagedBean().getSmAppl().getApplNo()},MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-						renewSesionObject();
+			try{
+				SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
-						return CommonUIConst.ACKNOWLEDGE_PAGE;
-					} else {
-						RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
-						RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					}
-				}catch(Exception ex){
-					//RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+				if (resDTO.isSuccessful()) {
+					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+					//RequestContext.getCurrentInstance().execute("submissionDlg.hide()");
 					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-					throw new EpException(ex.getMessage());
+
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils.getMessage(MessageConst.INFO_721103,
+							new String[] {getManagedBean().getSmAppl().getApplNo()},MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+					renewSesionObject();
+
+					return CommonUIConst.ACKNOWLEDGE_PAGE;
+				} else {
+					RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+					RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
 				}
+			}catch(Exception ex){
+				//RequestContext.getCurrentInstance().execute("inquiryDlg.hide()");
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(ex.getMessage());
+			}
 
 
 		}
