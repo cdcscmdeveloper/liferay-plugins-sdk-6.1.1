@@ -126,7 +126,9 @@
 								     value="#{requestNoteDtl.vCmSupplierItem.companyName}"
 									 update="@form"
 									 rendered="#{requestNoteDtl.brandNew and !requestNoteDtl.reRecommend}"  
-									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
+									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
+									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'
+									 	or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}">					
 							  </ac:lov>
 							   <ac:lov id="afterSave" lovId="SC_REQUEST_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
@@ -134,7 +136,9 @@
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].scRequestSupplierItem"
 								     value="#{requestNoteDtl.scRequestSupplierItem.smSupplier.companyName}"
 									 update="@form"
-									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' or requestNoteBackingBean.managedBean.viewOnly}" 
+									 disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.requestItem.quote.multipleQuote eq 'true' 
+									 	and requestNoteDtl.requestItem.quote.zonal eq 'false'
+									 	or requestNoteBackingBean.managedBean.viewOnly}" 
 									 conditionField="#{requestNoteDtl.conditionField}"
 			                         rendered="#{!requestNoteDtl.brandNew or requestNoteDtl.reRecommend}">    
 								</ac:lov>
