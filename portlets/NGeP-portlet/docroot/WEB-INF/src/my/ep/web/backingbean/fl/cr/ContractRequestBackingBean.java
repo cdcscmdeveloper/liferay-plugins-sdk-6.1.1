@@ -1570,7 +1570,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 			}
 			getManagedBean().setCurrentPreparedOrgId(getManagedBean().getFlRequest().getPreparedOrgProfile().getOrgProfileId());
-			if(getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
+			if(getManagedBean().getFlRequest().getPmUserGroup()==null || 
+				getManagedBean().getFlRequest().getPmUserGroup().getUserGroupId() == null){
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 						MessageUtils.getMessage(MessageConst.ERROR_745070, 
 								MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
