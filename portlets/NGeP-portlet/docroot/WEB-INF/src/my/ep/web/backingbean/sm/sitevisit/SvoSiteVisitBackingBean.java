@@ -2142,6 +2142,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			
 			if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
 				fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
+						new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo()},
 						MessageUtils.BUNDLE_COMMON_MESSAGES,
 						new FacesScopes().getUserLocale())));
 			}else{
