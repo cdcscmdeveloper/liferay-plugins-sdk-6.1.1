@@ -53,7 +53,8 @@
 
 			<p:ajax event="rowSelect" 
 				listener="#{suppFinalizationBackingBean.selectItemEvent}"
-				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
+				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])" 
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"></p:ajax>
 				
 			<p:ajax event="rowUnselect" 
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
@@ -63,12 +64,14 @@
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
-								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll)}" />
+								listener="#{suppFinalizationBackingBean.selectAllItems(suppFinalizationBackingBean.managedBean.selectAll)}" 
+								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}" disabled="#{item.awardedItem}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" 
-							listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"/>
+							listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"
+							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				</p:selectBooleanCheckbox>
 			</p:column>
  
@@ -198,7 +201,8 @@
 					partialSubmit="true"
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
 					update="@([id$=itemListTbl],[id$=supplierListTblMultiple],[id$=awardSupplier])"
-					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
+					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</h:column>
 			
 		</h:panelGrid>
