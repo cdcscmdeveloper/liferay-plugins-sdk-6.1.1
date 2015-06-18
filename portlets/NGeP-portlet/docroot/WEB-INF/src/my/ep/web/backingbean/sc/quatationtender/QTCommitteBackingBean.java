@@ -567,6 +567,7 @@ public class QTCommitteBackingBean extends
 	
 	public void addCloneCommitteeMembersApprovalsAction() {
 		debugLogger("addCloneCommitteeMembersApprovalsAction");
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		int committeTabIndex = this.getManagedBean().getSelectedTabIndex();
 		TabBean selectedCommitteTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(committeTabIndex);
