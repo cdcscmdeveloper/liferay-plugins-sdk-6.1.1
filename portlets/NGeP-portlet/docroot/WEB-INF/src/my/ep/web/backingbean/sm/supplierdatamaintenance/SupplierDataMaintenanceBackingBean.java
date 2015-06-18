@@ -10,12 +10,14 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
+import my.ep.constant.MessageConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -128,11 +130,11 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().getSmAppl().setCurrentActiveTab(
 				getManagedBean().getTabActiveIndex());
 		if (getManagedBean().isPoUser() || getManagedBean().isApproverUser()) {
-			SmApplicationUtil.assignMaxReviewCount(getManagedBean().getSmAppl().getApplType(),
-					getManagedBean().getSmAppl().getApplCategoryType(), getManagedBean()
-							.getSmAppl().getSupplierType(),
-							getManagedBean().getBusinessTypeVal(),
-							getManagedBean().isReviewSiteVisit());
+			SmApplicationUtil.assignMaxReviewCount(getManagedBean().getSmAppl()
+					.getApplType(), getManagedBean().getSmAppl()
+					.getApplCategoryType(), getManagedBean().getSmAppl()
+					.getSupplierType(), getManagedBean().getBusinessTypeVal(),
+					getManagedBean().isReviewSiteVisit());
 		}
 
 		// added to custom confirm dialog title and msg
@@ -224,14 +226,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		sb.append(desc);
 		getManagedBean().setCatTypeConfirm(sb.toString());
 	}
-	
+
 	/**
-	 * Removed un select apporved categories from the list.
+	 * Removed un select approved categories from the list.
 	 * 
 	 * @param e
 	 *            -AjaxBehaviorEvent
 	 */
-	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
+	public void unSelectApprovedCategories(AjaxBehaviorEvent e) {
 		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
 			Iterator<SmSupplierCategory> iterator = getManagedBean()
 					.getDeleteNewApplCategoryList().iterator();
@@ -247,6 +249,105 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
+	/**
+	 * Add new category selected to main list
+	 * 
+	 * @param PmCategoryL3
+	 *            pmCategoryL3
+	 */
+	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
+		SmSupplierCategory categ = new SmSupplierCategory();
+		categ.setRevNo(1);
+		categ.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+		if (getManagedBean().getSmAppl().getApplCategoryType()
+				.equalsIgnoreCase("S")) {
+			categ.setSpecialCategory(true);
+		}
+		categ.setSmAppl(getManagedBean().getSmAppl());
+		categ.setSupplierType(getManagedBean().getSmAppl().getSupplierType());
+		getManagedBean().setSelectedCategory(categ);
+
+		categ.setPmCategoryL3(pmCategoryL3);
+		categ.setPmCategoryL2(pmCategoryL3.getPmCategoryL2());
+		categ.setPmCategoryL1(pmCategoryL3.getPmCategoryL2().getPmCategoryL1());
+		getManagedBean().setSelectedCategory(categ);
+		saveSelectedCategory();
+	}
+	
+	/**
+	 * Save selected category information into SmSupplierCategory list of the
+	 * application.
+	 */
+	private void saveSelectedCategory() {
+		boolean validCat = true;
+		if (getManagedBean().getSelectedCategory().getPmCategoryL1() != null
+				&& getManagedBean().getSelectedCategory().getPmCategoryL1()
+						.getCategoryL1Id() != null) {
+			if (getManagedBean().getSelectedCategory().getPmCategoryL1()
+					.getCategoryL1Code() != null
+					&& getManagedBean()
+							.getSelectedCategory()
+							.getPmCategoryL1()
+							.getCategoryL1Code()
+							.equalsIgnoreCase(
+									SupplierManagementConst.ICT_CATEGORY_L1_CODE)) {
+				validCat = SmApplicationUtil.validateIctCatCode(
+						getManagedBean().getBusinessTypeVal(), getManagedBean()
+								.getSmAppl(), getManagedBean()
+								.getSelectedCategory());
+			}
+		}
+		boolean overLapCategory = false;
+		overLapCategory = SmApplicationUtil.validL3CategoryCodeForOverLapping(
+				getManagedBean().getSelectedCategory().getPmCategoryL3()
+						.getCategoryL3Id(), getManagedBean().getSmSupplier()
+						.getSupplierId(), getManagedBean().getSmAppl()
+						.getApplId());
+		getManagedBean().getSelectedCategory().setOverLapCategory(
+				overLapCategory);
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getPmCategoryL1()
+					.getCategoryL1Id()
+					.equals(getManagedBean().getSelectedCategory()
+							.getPmCategoryL1().getCategoryL1Id())
+					&& cat.getPmCategoryL2()
+							.getCategoryL2Id()
+							.equals(getManagedBean().getSelectedCategory()
+									.getPmCategoryL2().getCategoryL2Id())
+					&& cat.getPmCategoryL3()
+							.getCategoryL3Id()
+							.equals(getManagedBean().getSelectedCategory()
+									.getPmCategoryL3().getCategoryL3Id())) {
+				validCat = false;
+				if (cat.getRecordStatusFlg().compareTo(
+						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
+					throw new EpException(MessageConst.ERROR_722563);
+				}
+				throw new EpException(MessageConst.ERROR_722533);
+			}
+		}
+
+		if (validCat) {
+			getManagedBean().getSmAppl().getSmSupplierCategories()
+					.add(getManagedBean().getSelectedCategory());
+
+			assignApplActiveAndApprovedCategoryList();
+			setOverLappingCategories();
+			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
+
+		}
+	}
+
+	/**
+	 * Assign tracking diary values to VO
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @param String
+	 *            actionDesc
+	 * @return SmTrackingDairyVO
+	 */
 	private SmTrackingDairyVO assignTrackingDairyValues(SmAppl appl,
 			String actionDesc) {
 		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
@@ -341,29 +442,73 @@ public class SupplierDataMaintenanceBackingBean extends
 		}
 	}
 
-	
 	/**
-	 * Sets the register categor code confirm dialog text.
+	 * Sets the registered category code confirm dialog text.
 	 * 
 	 * @param managedBean
 	 *            - SmApplicationManagedBean object
 	 */
 	private void setRegCatCodeConfirmDialog() {
-		getManagedBean().setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
-				"lbl.sm.regCatCode.confirm.header.normal", null));
-		getManagedBean().setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
-				"lbl.sm.regCatCode.confirm.msg.normal", null));
+		getManagedBean().setRegCatCodeConfirmHeader(
+				SmCommonUtil.getMessage(
+						"lbl.sm.regCatCode.confirm.header.normal", null));
+		getManagedBean().setRegCatCodeConfirmMsg(
+				SmCommonUtil.getMessage("lbl.sm.regCatCode.confirm.msg.normal",
+						null));
 		if (getManagedBean().getSmAppl() != null) {
 			if (StringUtils.isNotBlank(getManagedBean().getSmAppl()
 					.getApplCategoryType())
 					&& getManagedBean().getSmAppl().getApplCategoryType()
 							.equals("S")) {
-				getManagedBean().setRegCatCodeConfirmHeader(SmCommonUtil.getMessage(
-						"lbl.sm.regCatCode.confirm.header.special", null));
-				getManagedBean().setRegCatCodeConfirmMsg(SmCommonUtil.getMessage(
-						"lbl.sm.regCatCode.confirm.msg.special", null));
+				getManagedBean().setRegCatCodeConfirmHeader(
+						SmCommonUtil.getMessage(
+								"lbl.sm.regCatCode.confirm.header.special",
+								null));
+				getManagedBean().setRegCatCodeConfirmMsg(
+						SmCommonUtil.getMessage(
+								"lbl.sm.regCatCode.confirm.msg.special", null));
 			}
 		}
+	}
+
+	/**
+	 * Delete selected category code(s) that are still pending approval from the
+	 * SmSupplierCategory list of the application.
+	 */
+	public void deleteSelectedPendingApprovalCategoryCodes() {
+		if (getManagedBean().getDeleteNewApplCategoryList() != null
+				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
+			List<SmSupplierCategory> categories = getManagedBean()
+					.getDeleteNewApplCategoryList();
+			deleteCatCodes(categories);
+
+			// API FOR LIST OF OVERLAPPING CATEGORIES
+			setOverLappingCategories();
+
+		} else {
+			throw new EpException(MessageConst.ERROR_722534,
+					new String[] { "Category Code" });
+		}
+	}
+
+	/**
+	 * Delete category codes.
+	 * 
+	 * @param categories
+	 *            - List of categories
+	 */
+	private void deleteCatCodes(List<SmSupplierCategory> categories) {
+		for (SmSupplierCategory category : categories) {
+			if (category.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
+				getManagedBean().getSmAppl().getSmSupplierCategories()
+						.remove(category);
+			} else if (category.getRecordStatusFlg().compareTo(
+					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
+				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
+			}
+		}
+		assignApplActiveAndApprovedCategoryList();
 	}
 
 }
