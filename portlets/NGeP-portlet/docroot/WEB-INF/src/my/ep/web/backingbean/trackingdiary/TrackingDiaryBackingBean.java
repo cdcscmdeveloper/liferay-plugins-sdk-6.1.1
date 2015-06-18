@@ -1,24 +1,17 @@
 package my.ep.web.backingbean.trackingdiary;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmRoleDesc;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.trackingdiary.TrackingDiaryManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -154,8 +147,11 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 		CdTrackingDiaryBackingBean cd = new CdTrackingDiaryBackingBean();
 		cd.getManagedBean().reset();
 
+		CtTrackingDiaryBackingBean ct = new CtTrackingDiaryBackingBean();
+		ct.renewSesionObject();
 
-
+		FlTrackingDiaryBackingBean fl = new FlTrackingDiaryBackingBean();
+		fl.renewSesionObject();
 	}
 }
 
