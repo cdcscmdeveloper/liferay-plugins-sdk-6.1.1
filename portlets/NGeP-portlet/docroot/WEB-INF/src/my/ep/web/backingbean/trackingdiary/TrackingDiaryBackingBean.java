@@ -68,11 +68,11 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 				System.out.println("remove ModuleSelect" +DP_TRACKING_DIARY_MANAGED_BEAN);
 			}   	 	
 			if (fc.getExternalContext().getSessionMap().containsKey(FL_TRACKING_DIARY_MANAGED_BEAN)) {
-				fc.getExternalContext().getSessionMap().remove(FL_TRACKING_DIARY_MANAGED_BEAN);
+				//fc.getExternalContext().getSessionMap().remove(FL_TRACKING_DIARY_MANAGED_BEAN);
 				System.out.println("remove ModuleSelect" +FL_TRACKING_DIARY_MANAGED_BEAN);
 			}   	 	
 			if (fc.getExternalContext().getSessionMap().containsKey(CT_TRACKING_DIARY_MANAGED_BEAN)) {
-				fc.getExternalContext().getSessionMap().remove(CT_TRACKING_DIARY_MANAGED_BEAN);
+				//fc.getExternalContext().getSessionMap().remove(CT_TRACKING_DIARY_MANAGED_BEAN);
 				System.out.println("remove ModuleSelect" +CT_TRACKING_DIARY_MANAGED_BEAN);
 			}   	 	
 			if (fc.getExternalContext().getSessionMap().containsKey(CM_TRACKING_DIARY_MANAGED_BEAN)) {
@@ -148,10 +148,10 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 		cd.getManagedBean().reset();
 
 		CtTrackingDiaryBackingBean ct = new CtTrackingDiaryBackingBean();
-		ct.renewSesionObject();
+		ct.reset();
 
 		FlTrackingDiaryBackingBean fl = new FlTrackingDiaryBackingBean();
-		fl.renewSesionObject();
+		fl.reset();
 	}
 }
 
