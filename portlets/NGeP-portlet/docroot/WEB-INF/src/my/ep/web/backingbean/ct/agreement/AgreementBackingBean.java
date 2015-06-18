@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -179,9 +180,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 */
 	private void initializeApproverList() {
 		if (getManagedBean().getApproverModel() == null) {
-			List<String> source = new ArrayList<String>();
-			List<String> target = new ArrayList<String>();
-			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			List<PmUser> source = new ArrayList<PmUser>();
+			List<PmUser> target = new ArrayList<PmUser>();
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
 	}
 
@@ -190,9 +191,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	  * 
 	  * @return sourceList  the approver list
 	 */
-	private List<String> getAvailableApproverList() {
+	private List<PmUser> getAvailableApproverList() {
 		IUserSO userSO = null;
-		List<String> sourceList = new ArrayList<String>();
+		List<PmUser> sourceList = new ArrayList<PmUser>();
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -213,8 +214,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			List<PmUser> list = resDTO.getUserList();
 			for (PmUser user : list) {
-				sourceList.add(user.getUserName());
-				getManagedBean().getUserMap().put(user.getUserName(), user);
+				sourceList.add(user);
+				getManagedBean().getUserMap().put(user.getUserId(), user);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -459,7 +460,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			for (PmUser approverUser : resDTO.getApproverList())  {
+				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+				while (sourceIt.hasNext()) {
+					PmUser user = sourceIt.next();
+					if (user.getUserId() == approverUser.getUserId()) {
+						sourceIt.remove();
+					}
+				}
+			}
 		}
 		
 		String docType = ParameterConst.DOCTYPE_AGREEMENT;

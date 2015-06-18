@@ -144,9 +144,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private List<String> yearList;
 	private List<CtAgencyAddress> selectedListOfAddress;
 	private List<PmAddressType> addressTypeList;
-	private DualListModel<String> approverModel;
+	private DualListModel<PmUser> approverModel;
 	private Map<Long, PmUserGroup> userGroupMap;
-	private Map<String, PmUser> userMap;
+	private Map<Long, PmUser> userMap;
 	private Map<String,Object> radioButtonSchedule;
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private CtContractVer contractVer;
@@ -1128,14 +1128,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	/**
 	 * @return the approverModel
 	 */
-	public DualListModel<String> getApproverModel() {
+	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
 
 	/**
 	 * @param approverModel the approverModel to set
 	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
+	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
 
@@ -1156,9 +1156,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	/**
 	 * @return the userMap
 	 */
-	public Map<String, PmUser> getUserMap() {
+	public Map<Long, PmUser> getUserMap() {
 		if (userMap == null) {
-			userMap = new HashMap<String, PmUser>();
+			userMap = new HashMap<Long, PmUser>();
 		}
 		return userMap;
 	}
@@ -1166,7 +1166,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	/**
 	 * @param userMap the userMap to set
 	 */
-	public void setUserMap(Map<String, PmUser> userMap) {
+	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
 

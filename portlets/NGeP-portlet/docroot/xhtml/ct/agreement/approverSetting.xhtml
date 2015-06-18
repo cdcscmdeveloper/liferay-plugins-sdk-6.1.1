@@ -15,8 +15,9 @@
 			<p:spacer height="1" />
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{agreementBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}" 
-					showTargetControls="true" filterMatchMode="contains">
+					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
+					showTargetControls="true" filterMatchMode="contains"
+					converter="pmUserConverter">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.available.approver']}"/>
@@ -24,10 +25,7 @@
         			<f:facet name="targetCaption">
         				#{lbl['lbl.ct.selected.approver']}
         				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.selected.approver']}"/>
-        			</f:facet> 
-					<p:column style="width:75%;">
-						<h:outputText value="#{data}" />
-					</p:column>
+        			</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 		</h:panelGrid>
