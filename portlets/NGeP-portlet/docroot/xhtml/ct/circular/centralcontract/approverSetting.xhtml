@@ -9,14 +9,12 @@
 	<p:panel id="settingId" header="#{lbl['lbl.ct.panel.approver.list']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="1">
 				<p:pickList id="approverpickList" value="#{centralContractBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}" 
+					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
 					disabled="#{centralContractBackingBean.managedBean.viewContract}"
-					showTargetControls="true" filterMatchMode="contains">
+					showTargetControls="true" filterMatchMode="contains"
+					converter="pmUserConverter">
 					<f:facet name="sourceCaption">#{lbl['lbl.ct.available.approver']}</f:facet>  
-        			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet> 
-					<p:column style="width:75%;">
-						<h:outputText value="#{data}" />
-					</p:column>
+        			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 	</p:panel>

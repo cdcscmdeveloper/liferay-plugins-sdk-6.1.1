@@ -299,7 +299,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		   
 		     if(resDTO.getApproverList()!=null && resDTO.getApproverList().size()>0) {
 			       getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			       getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			       for (PmUser approverUser : resDTO.getApproverList())  {
+						Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+						while (sourceIt.hasNext()) {
+							PmUser user = sourceIt.next();
+							if (user.getUserId() == approverUser.getUserId()) {
+								sourceIt.remove();
+							}
+						}
+					}
 		     }
 
 		     getManagedBean().setFileDirectory(baseDir+"/CT/Circulars/"+ParameterConst.DOCTYPE_PANEL_CIRCULAR);
@@ -812,9 +820,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 */
 	private void initializeApproverList() {
 		if(getManagedBean().getApproverModel() == null) {
-			List<String> source = new ArrayList<String>();
-			List<String> target = new ArrayList<String>();
-			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			List<PmUser> source = new ArrayList<PmUser>();
+			List<PmUser> target = new ArrayList<PmUser>();
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
 	}
 	
@@ -822,9 +830,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used retrieve list of approver from system
 	 * Approver info fetch from system as per rule define rule
 	 */
-	private List<String> getAvailableApproverList() {
+	private List<PmUser> getAvailableApproverList() {
 		IUserSO userSO = null;
-		List<String> sourceList = new ArrayList<String>();
+		List<PmUser> sourceList = new ArrayList<PmUser>();
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
@@ -834,8 +842,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
-				sourceList.add(user.getUserName());
-				getManagedBean().getUserMap().put(user.getUserName(), user);
+				sourceList.add(user);
+				getManagedBean().getUserMap().put(user.getUserId(), user);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

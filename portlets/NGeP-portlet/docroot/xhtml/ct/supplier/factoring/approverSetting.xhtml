@@ -13,8 +13,9 @@
 		    <f:verbatim/>
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{supplierBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}" 
+					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
 					showTargetControls="true" filterMatchMode="contains"
+					converter="pmUserConverter"
 					disabled="#{supplierBackingBean.managedBean.viewOnly}">
 					<f:facet name="sourceCaption">
 						#{lbl['lbl.ct.available.approver']}
@@ -23,10 +24,7 @@
         			<f:facet name="targetCaption">
         				#{lbl['lbl.ct.selected.approver']}
         				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.selected.approver']}"/>
-        			</f:facet> 
-					<p:column style="width:75%;">
-						<h:outputText value="#{data}" />
-					</p:column>
+        			</f:facet>
 				</p:pickList>
 			</h:panelGrid>
 		</h:panelGrid>

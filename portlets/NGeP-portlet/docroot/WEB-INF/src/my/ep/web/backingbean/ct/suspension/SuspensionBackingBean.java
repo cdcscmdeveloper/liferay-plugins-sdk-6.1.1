@@ -13,6 +13,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -123,9 +124,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 */
 	     private void initializeApproverList() {
 			if(getManagedBean().getApproverModel() == null) {
-			  	 List<String> source = new ArrayList<String>();
-				 List<String> target = new ArrayList<String>();
-				 getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			  	 List<PmUser> source = new ArrayList<PmUser>();
+				 List<PmUser> target = new ArrayList<PmUser>();
+				 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 			}
 		}
 		
@@ -134,9 +135,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			 * Setting selected and non selected approver value 
 			 * Retrieve approver for ministry and central contract
 		 */
-	  	private List<String> getAvailableApproverList() {
+	  	private List<PmUser> getAvailableApproverList() {
 			 IUserSO userSO = null;
-			 List<String> sourceList = new ArrayList<String>();
+			 List<PmUser> sourceList = new ArrayList<PmUser>();
 		
 			 try {
 				    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -156,8 +157,8 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				    List<PmUser> list = resDTO.getUserList();
 				
 				    for (PmUser user : list) {
-					    sourceList.add(user.getUserName());
-					    getManagedBean().getUserMap().put(user.getUserName(), user);
+					    sourceList.add(user);
+					    getManagedBean().getUserMap().put(user.getUserId(), user);
 				    }
 		   	  } catch (Exception e) {
 			     	e.printStackTrace();
@@ -299,7 +300,15 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			     getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			     for (PmUser approverUser : resDTO.getApproverList())  {
+					Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+					while (sourceIt.hasNext()) {
+						PmUser user = sourceIt.next();
+						if (user.getUserId() == approverUser.getUserId()) {
+							sourceIt.remove();
+						}
+					}
+				}
 			}/*End*/
 		    
 		    /*Get performance bond rule amount*/

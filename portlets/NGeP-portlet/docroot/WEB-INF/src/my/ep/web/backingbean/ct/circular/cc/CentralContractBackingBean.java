@@ -20,6 +20,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -277,10 +278,18 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			   getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
-			   getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			   for (PmUser approverUser : resDTO.getApproverList())  {
+					Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+					while (sourceIt.hasNext()) {
+						PmUser user = sourceIt.next();
+						if (user.getUserId() == approverUser.getUserId()) {
+							sourceIt.remove();
+						}
+					}
+				}
 			}
 			
-			 ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 			ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 			ctBB.initializeRemarkAndAttachement(resDTO.getCircularVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());	
 			initializeRemarks();
@@ -291,9 +300,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 */
 	private void initializeApproverList() {
 		if (getManagedBean().getApproverModel() == null) {
-			List<String> source = new ArrayList<String>();
-			List<String> target = new ArrayList<String>();
-			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			List<PmUser> source = new ArrayList<PmUser>();
+			List<PmUser> target = new ArrayList<PmUser>();
+			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
 	}
 	
@@ -800,9 +809,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	 * Setting selected and non selected approver value 
 	 * Retrieve approver for central circular
      */
-	private List<String> getAvailableApproverList() {
+	private List<PmUser> getAvailableApproverList() {
 		IUserSO userSO = null;
-		List<String> sourceList = new ArrayList<String>();
+		List<PmUser> sourceList = new ArrayList<PmUser>();
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			UserReqDTO reqDTO = new UserReqDTO();
@@ -812,8 +821,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			List<PmUser> list = resDTO.getUserList();
 			
 			for (PmUser user : list) {
-				sourceList.add(user.getUserName());
-				getManagedBean().getUserMap().put(user.getUserName(), user);
+				sourceList.add(user);
+				getManagedBean().getUserMap().put(user.getUserId(), user);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
