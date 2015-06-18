@@ -7380,9 +7380,7 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			log.info("**** THIS IS THE EXCEPTION IN CLONE APPL ****");
 			e.printStackTrace();
-			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
-			resDTO.setErrorCaued(Boolean.TRUE);
-			return resDTO;
+			throw new EpException(e.getMessage());
 		} finally {
 			mofRegistrationSO = null;
 		}

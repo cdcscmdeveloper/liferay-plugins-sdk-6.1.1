@@ -92,6 +92,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCategory> activeCategoryList;
 	private List<SmSupplierCategory> approvedCategoryList;
 	private List<SmSupplierCategory> deleteNewApplCategoryList;
+	private List<SmSupplierCategory> suppProfileOrHistoryCategoryList;
 	private List<SmSupplierBank> smSupplierBankList;
 
 	// temp added for testing
@@ -1150,6 +1151,15 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 
 	public void setDisplaySearchPage(boolean displaySearchPage) {
 		this.displaySearchPage = displaySearchPage;
+	}
+
+	public List<SmSupplierCategory> getSuppProfileOrHistoryCategoryList() {
+		return suppProfileOrHistoryCategoryList;
+	}
+
+	public void setSuppProfileOrHistoryCategoryList(
+			List<SmSupplierCategory> suppProfileOrHistoryCategoryList) {
+		this.suppProfileOrHistoryCategoryList = suppProfileOrHistoryCategoryList;
 	}
 
 }
