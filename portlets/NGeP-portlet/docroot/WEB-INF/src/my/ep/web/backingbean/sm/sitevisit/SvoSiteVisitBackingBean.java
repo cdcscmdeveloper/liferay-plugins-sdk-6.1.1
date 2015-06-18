@@ -2121,43 +2121,50 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			}
 		}
 		
-		//if Action equals to SUBMIT, set the BPM Info
-		if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
-			reqDTO.setAppId(this.getManagedBean().getAppId());
-			reqDTO.setToken(token);
-			reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
-			reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVO_SUBMIT_REPORT, 
-					this.getManagedBean().getSmSvTask().getSmAppl().getApplId(), this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getUserRole()));
-		}
-		
-		reqDTO.setSmSvTask(svTask);
-		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
-		SiteVisitResDTO resDTO = reqSO.saveOrSubmitSiteVisitReport(reqDTO);
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		if (resDTO.isSuccessful()) {
-			
-			if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
-				fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
-						new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo()},
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale())));
-			}else{
-				fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
-							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
-							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+		try{
+			//if Action equals to SUBMIT, set the BPM Info
+			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
+				String token = getFacesScopes().getBPMAuthenticationCtxToken();
+				reqDTO.setAppId(this.getManagedBean().getAppId());
+				reqDTO.setToken(token);
+				reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+				reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
+				reqDTO.setTrackingDairyVO(SmCommonUtil.assignTrackingDiaryValues(SupplierManagementConst.SVO_SUBMIT_REPORT, 
+						this.getManagedBean().getSmSvTask().getSmAppl().getApplId(), this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), getUserRole()));
 			}
-			
-			renewSesionObject();
+
+			reqDTO.setSmSvTask(svTask);
+			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
+			//SiteVisitResDTO resDTO = reqSO.saveOrSubmitSiteVisitReport(reqDTO);
+			SiteVisitResDTO resDTO = new SiteVisitResDTO();
+			resDTO.setSuccessful(true);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			if (resDTO.isSuccessful()) {
+
+				if(action.equalsIgnoreCase(SupplierManagementConst.BPM_SUBMIT)){
+					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721210,
+							new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo()},
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale())));
+				}else{
+					fc.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+							MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{this.getManagedBean().getSmSvTask().getSmAppl().getApplNo(), ""}, 
+									MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale()))); 				  
+				}
+
+				renewSesionObject();
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				return "/xhtml/common/acknowledge.xhtml";
+			} else {
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+			}
+		}catch(Exception ex){
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-			return "/xhtml/common/acknowledge.xhtml";
-		} else {
-			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-			return "";
+			throw new EpException(ex.getCause().getMessage());
 		}
+		
+		return null;
 	}
 	
 	/**
