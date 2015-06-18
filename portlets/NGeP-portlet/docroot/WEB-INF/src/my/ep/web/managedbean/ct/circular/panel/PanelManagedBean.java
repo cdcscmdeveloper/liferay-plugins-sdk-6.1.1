@@ -124,8 +124,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private List<CtAttachment> attachmentList;
 	private List<CtPanelSupplier> panelSupplierList;
 	private CtCircularVer[] selectedCircularVerList;
-	private DualListModel<String> approverModel;
-	private Map<String, PmUser> userMap;
+	private DualListModel<PmUser> approverModel;
+	private Map<Long, PmUser> userMap;
 	private List<SmSupplier> supplierList; 
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	
@@ -248,14 +248,14 @@ public class PanelManagedBean extends BaseManagedBean {
 	/**
 	 * @return the approverModel
 	 */
-	public DualListModel<String> getApproverModel() {
+	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
 
 	/**
 	 * @param approverModel the approverModel to set
 	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
+	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
 
@@ -701,9 +701,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	/**
 	 * @return the userMap
 	 */
-	public Map<String, PmUser> getUserMap() {
+	public Map<Long, PmUser> getUserMap() {
 		if(userMap==null) {
-			userMap = new HashMap<String, PmUser>();
+			userMap = new HashMap<Long, PmUser>();
 		}
 		return userMap;
 	}
@@ -711,7 +711,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	/**
 	 * @param userMap the userMap to set
 	 */
-	public void setUserMap(Map<String, PmUser> userMap) {
+	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
 

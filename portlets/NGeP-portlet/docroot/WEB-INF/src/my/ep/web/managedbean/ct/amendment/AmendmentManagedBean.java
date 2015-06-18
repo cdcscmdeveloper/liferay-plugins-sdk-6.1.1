@@ -100,8 +100,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtContractItem> ctItemList;
 	private List<CtContractItem> ctServiceItemList;
 	private List<String> finalListOfSideMenu;
-	private DualListModel<String> approverModel;
-	private Map<String, PmUser> userMap;
+	private DualListModel<PmUser> approverModel;
+	private Map<Long, PmUser> userMap;
     private CtContractItem selectedServiceItem;
 	private CtContract ctContract;
 	private CtContractVer contractVer;
@@ -867,23 +867,23 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	/**
 	 * @return the approverModel
 	 */
-	public DualListModel<String> getApproverModel() {
+	public DualListModel<PmUser> getApproverModel() {
 		return approverModel;
 	}
 	
 	/**
 	 * @param approverModel the approverModel to set
 	 */
-	public void setApproverModel(DualListModel<String> approverModel) {
+	public void setApproverModel(DualListModel<PmUser> approverModel) {
 		this.approverModel = approverModel;
 	}
 	
 	/**
 	 * @return the userMap
 	 */
-	public Map<String, PmUser> getUserMap() {
+	public Map<Long, PmUser> getUserMap() {
 		if (userMap == null) {
-			userMap = new HashMap<String, PmUser>();
+			userMap = new HashMap<Long, PmUser>();
 		}
 		return userMap;
 	}
@@ -891,7 +891,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	/**
 	 * @param userMap the userMap to set
 	 */
-	public void setUserMap(Map<String, PmUser> userMap) {
+	public void setUserMap(Map<Long, PmUser> userMap) {
 		this.userMap = userMap;
 	}
 	

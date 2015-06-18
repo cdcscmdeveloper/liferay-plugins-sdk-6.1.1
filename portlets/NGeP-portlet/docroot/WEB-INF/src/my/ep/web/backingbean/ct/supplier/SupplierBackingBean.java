@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -160,9 +161,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	 */
 	private void initializeApproverList() {
 		if(getManagedBean().getApproverModel() == null) {
-		  	 List<String> source = new ArrayList<String>();
-			 List<String> target = new ArrayList<String>();
-			 getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		  	 List<PmUser> source = new ArrayList<PmUser>();
+			 List<PmUser> target = new ArrayList<PmUser>();
+			 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
 	}
 	
@@ -171,10 +172,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	  * 
 	  * @return sourceList  the approver list
 	 */
-	private List<String> getAvailableApproverList() {
+	private List<PmUser> getAvailableApproverList() {
 		IUserSO userSO = null;
 		UserReqDTO reqDTO = null;
-		List<String> sourceList = new ArrayList<String>();
+		List<PmUser> sourceList = new ArrayList<PmUser>();
 		try {
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
@@ -195,8 +196,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			
 			List<PmUser> list = resDTO.getUserList();
 			for (PmUser user : list) {
-				sourceList.add(user.getUserName());
-				getManagedBean().getUserMap().put(user.getUserName(), user);
+				sourceList.add(user);
+				getManagedBean().getUserMap().put(user.getUserId(), user);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -495,7 +496,15 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
         getManagedBean().getApproverModel().setSource(getAvailableApproverList());
         if (csResDTO.getApproverList() != null && csResDTO.getApproverList().size() != 0) {
         	getManagedBean().getApproverModel().setTarget(csResDTO.getApproverList());
-        	getManagedBean().getApproverModel().getSource().removeAll(csResDTO.getApproverList());
+        	for (PmUser approverUser : csResDTO.getApproverList())  {
+				Iterator<PmUser> sourceIt = getManagedBean().getApproverModel().getSource().iterator();				
+				while (sourceIt.hasNext()) {
+					PmUser user = sourceIt.next();
+					if (user.getUserId() == approverUser.getUserId()) {
+						sourceIt.remove();
+					}
+				}
+			}
         }
         getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
         		ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
@@ -911,6 +920,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
 		
 		if (getManagedBean().getCtContract() != null) {
+			// branch !=null retrieve by branch
+			
+			
+			//select all if branch code == null || list from branch == null
 			if (getManagedBean().getCtContract().getSmSupplier() != null 
 					&& getManagedBean().getCtContract().getSmSupplier().getSmAppl() != null
 					&& getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
@@ -1327,9 +1340,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 				
 				if (ContractConst.TEMPLATE_FACTORING_CLAUSE_CA.equalsIgnoreCase(templateName)) {
 					PmUser user = null;
-					for (String approver : getManagedBean().getApproverModel().getTarget()) {
-						if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver) != null) {
-							user = getManagedBean().getUserMap().get(approver);
+					for (PmUser approver : getManagedBean().getApproverModel().getTarget()) {
+						if (getManagedBean().getUserMap()!=null && getManagedBean().getUserMap().get(approver.getUserId()) != null) {
+							user = getManagedBean().getUserMap().get(approver.getUserId());
 							break;
 						}
 					}
