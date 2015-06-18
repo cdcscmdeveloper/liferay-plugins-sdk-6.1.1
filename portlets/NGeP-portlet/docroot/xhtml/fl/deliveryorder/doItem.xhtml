@@ -29,7 +29,7 @@
 					<p:ajax onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />	
 				</p:selectBooleanCheckbox>
 			</p:column>
-			<p:column headerText="Delivery Address" 
+			<p:column headerText="#{lbl['lbl.fl.delivery.address']}" 
 				style="white-space:normal;width:298px" >
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
