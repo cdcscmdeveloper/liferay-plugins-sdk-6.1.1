@@ -757,9 +757,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		if (this.getManagedBean().getInvoice() != null) {
 			if(this.getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName() != null ){
-				supplierSearchReqDTO.setBranchName(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchName());
+				supplierSearchReqDTO.setBranchCode(getManagedBean().getInvoice().getFlRequest().getFlSupplierDtl().getBranchCode());
 				supplierSearchReqDTO.setSupplierId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
-				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchName (supplierSearchReqDTO);
+				SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchCode (supplierSearchReqDTO);
 				for (SmSupplierBank obj : resDTO.getSmSupplierBankList()) {
 					if(obj.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE) {
 						String account = obj.getAccountNo();
@@ -991,7 +991,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		FulfilmentResDTO resDTO = invoiceSO.retrieveInvoiceByInvoiceId(reqDTO);
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
 		statusReqDTO.setDocType(FulfilmentConst.DOC_TYPE_AP59);
-		statusReqDTO.setLanguageCode(CommonConstants.DEFAULT_LANGUAGE_CODE);
+		statusReqDTO.setLanguageCode(getFacesScopes().getUserLocale().getLanguage());
 		statusReqDTO.setModuleCode(FulfilmentConst.FULFILMENT);
 		StatusResDTO statusResDTO = statusSO.retrieveStatusDescList(statusReqDTO);
 		InvoiceBackingBean invBB = new InvoiceBackingBean();
