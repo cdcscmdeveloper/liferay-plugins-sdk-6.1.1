@@ -25,7 +25,7 @@
 						<p:outputLabel value="*" styleClass="mandatory" />
 					</td>
 					<td width="35%">
-						<p:selectOneMenu required="true" label="#{lbl['lbl.td.transaction.type']}"
+						<p:selectOneMenu required="true" label="#{lbl['lbl.td.transaction.type']}" id="transactionType"
 							value="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType}" style="width: 314px;">
 							<f:selectItems value="#{ctTrackingDiaryBackingBean.getContractType()}" />
 							<p:ajax event="change" update="searchPanel" listener="#{ctTrackingDiaryBackingBean.resetSearchCriteria}" />

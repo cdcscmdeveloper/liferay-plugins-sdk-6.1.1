@@ -23,6 +23,7 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.persistence.entity.ct.VCtDocument;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -54,49 +55,17 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	}
 	
 	/**
-	 * The method used for generating a list of available transaction type base on user role
+	 * The method used for generating a list of available transaction type
 	 * for contract module as selection.
 	 * 
 	 * @return selectItems the selection list of available transaction type
 	 */
-	public List<SelectItem> getContractType() {
-		List<SelectItem> items = null;
+	public SelectItem[] getContractType() {
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "transactionType");
 
-		try {
-			items = new ArrayList<SelectItem>();			
-
-			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
-					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale())));
-			
-			// Contract Administrator
-			if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
-				items.add(new SelectItem(new String(ParameterConst.CONTRACT_TYPE_MINISTRY), ResourceBundleUtils.getMessage(
-						"lbl.ct.ministry.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						getFacesScopes().getUserLocale())));				
-			}
-			// Central Contract Administrator
-			if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
-				items.add(new SelectItem(new String(ParameterConst.CONTRACT_TYPE_CENTRAL), ResourceBundleUtils.getMessage(
-						"lbl.ct.central.contract", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						getFacesScopes().getUserLocale())));
-				items.add(new SelectItem(new String(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR), ResourceBundleUtils.getMessage(
-						"lbl.ct.central.contract.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						getFacesScopes().getUserLocale())));
-			}
-			// Panel Contract Administrator
-			if (getFacesScopes().hasRoleUser(RoleCode.BPK_PCA.value())) {			
-				items.add(new SelectItem(new String(ParameterConst.DOCTYPE_PANEL_CIRCULAR), ResourceBundleUtils.getMessage(
-					"lbl.ct.panel.circular", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					getFacesScopes().getUserLocale())));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
-							e.getMessage()));
-		}
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.DOCUMENT_TYPES, searchBean);
 		return items;
 	}
 	
