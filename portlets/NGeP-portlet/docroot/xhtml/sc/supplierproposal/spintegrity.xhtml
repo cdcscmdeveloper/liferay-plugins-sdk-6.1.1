@@ -6,24 +6,23 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<!-- lbl.sc.integrity.pact -->
-	<p:panel header="#{lbl['lbl.sc.others']}" style="width : 870px;"
+	<p:panel header="#{lbl['lbl.sc.others']}" style="width : 100%;" 
 		toggleable="true">
-		<table border="0" cellspacing="0" cellpadding="0" width="870px">
+		<table border="0" cellspacing="0" cellpadding="0" style="width: 100%">
 			<tr>
-				<td><p:editor controls="" id="othersEditor"
-						style="overflow : auto"
+				<td><p:editor id="othersEditor" style="overflow : auto;" controls=""  width="900"
 						value="#{supplierProposalDetailBackingBean.managedBean.integrityPact}"
-						disabled="true" width="870" height="430" /></td>
+						disabled="true" height="500" /></td>
 			</tr>
 			<tr height="10">
 				<td></td>
 			</tr>
 			<tr>
 				<td><p:selectBooleanCheckbox
-						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}" />
-					<p:spacer width="2" /> <p:outputLabel
-						value="#{lbl['lbl.sc.integrity.note']}"
-						style="vertical-align:top; float: none;" /></td>
+						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithOthersTermsConditions}"
+						style="vertical-align:top; float: left;" /> <p:spacer width="2" />
+					<p:outputLabel value="#{lbl['lbl.sc.integrity.note']}"
+						style="vertical-align:top; float: left;" /></td>
 			</tr>
 		</table>
 	</p:panel>
