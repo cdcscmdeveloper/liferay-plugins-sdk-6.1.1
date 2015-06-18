@@ -95,7 +95,7 @@
 					value="#{question.clUomFrequency}" 
 					rendered="#{isQuestionTypeItem and isShowService}" required="#{!question.selected}" maxlength="5"
 					label="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}">
-					<ac:validateNumber  maxIntegerDigits="5"  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<ac:validateNumber  maxIntegerDigits="7"  pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					<p:ajax partialSubmit="true" process="@this" update="@this, freqUOMMsg" />
 				</p:inputText>
 				<p:message id="freqUOMMsg" for="freqUOM" display="icon" />
