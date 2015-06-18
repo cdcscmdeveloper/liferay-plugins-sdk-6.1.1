@@ -5,7 +5,112 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<ui:param name="backingBean" value="#{supplierDataMaintenanceBackingBean}" />
+	
+	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true">
+		
+			<p:dataTable var="aprvdCatBean"
+				widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
+				value="#{viewSmApplBackingBean.managedBean.approvedCategoryList}"
+				rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+				<ac:paginator for="catApprDt" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+							style="width : 2%;" />
+						<p:column style="width :350px;white-space : normal"
+							headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+						<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+						<p:column headerText="#{lbl['lbl.sm.status']}" />
 
-	<ui:param name="viewSmApplBackingBean" value="#{supplierDataMaintenanceBackingBean}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column style="width : 2%;">
+					<p:outputLabel value="#{index + 1}"
+						style="float: left;white-space: normal;" />
+				</p:column>
+				<p:column style="width :350px;white-space : normal">
+					<h:outputText
+						value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+					<br />
+					<h:outputText
+						value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+				</p:column>
+
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+						rendered="#{!aprvdCatBean.specialCategory}" />
+					<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+						rendered="#{aprvdCatBean.specialCategory}" />
+				</p:column>
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
+				</p:column>
+			</p:dataTable>
+			
+		<p:outputPanel id="catCodeInfPan" layout="block">
+			<c:if test="#{viewSmApplBackingBean.managedBean.overLappedCategoryExists}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel escape="false"
+								value="#{viewSmApplBackingBean.managedBean.overLappedCategoryMsg}"
+								style="color: red;font-weight: bold;float:left;" /></td>
+					</tr>
+				</table>
+			</c:if>
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
+					<td><p:selectOneRadio
+							value="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
+								itemValue="N" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
+								itemValue="S"
+								itemDisabled="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
+							<p:ajax event="change" oncomplete="typeConfirmation.show()"
+								listener="#{viewSmApplBackingBean.applicationCategorySelected}"
+								update="@([id$=typeConfirmationId])" />
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
+			<table>
+				<tr>
+					<td align="left" colspan="2"><h:outputText
+							value="#{viewSmApplBackingBean.managedBean.catTypeConfirm}"
+							rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType != null}"
+							style="color: blue; font-weight: bold;" /></td>
+
+				</tr>
+			</table>
+
+			<br />
+			
+			<ui:include src="regCatCodesEditMaintenance.xhtml" />
+			
+		</p:outputPanel>
+		
+	</p:panel>
+
+
+	<p:confirmDialog id="typeConfirmationId"
+		message="#{viewSmApplBackingBean.managedBean.regCatCodeConfirmMsg}"
+		header="#{viewSmApplBackingBean.managedBean.regCatCodeConfirmHeader}"
+		widgetVar="typeConfirmation">
+
+		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
+			process="@this" partialSubmit="true" update="@form"
+			action="#{viewSmApplBackingBean.assignApplnCategoryType}"
+			oncomplete="typeConfirmation.hide()" />
+		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
+			process="@this" partialSubmit="true" update="catCodeInfPan"
+			action="#{viewSmApplBackingBean.resetApplnCategoryType}" />
+
+	</p:confirmDialog>
 
 </ui:composition>
