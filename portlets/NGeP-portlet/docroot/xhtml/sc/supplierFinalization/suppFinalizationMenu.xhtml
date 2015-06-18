@@ -9,6 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+			
 		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.scQt.currentWorkFlowStatus.pmStatus.statusId == QTStatusConst.QT_RE_FINALIZATION}" />
 	
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
@@ -23,7 +27,8 @@
 				partialSubmit="true"
 				update="@form"
 				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" 
-				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
+				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					
 			<ui:repeat var="bpmAction" value="#{suppFinalizationBackingBean.managedBean.outComes}">
 				<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
@@ -31,9 +36,8 @@
 				<p:commandButton value="#{lbl[buttonLabel]}"  
 					styleClass="ui-button"
 					action="#{suppFinalizationBackingBean.submitSuppFinalization(bpmAction)}"
-					partialSubmit="true"
-					process="@form"
-					update="@form" />
+					partialSubmit="true" process="@form" update="@form" 
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</ui:repeat>
 		</div>	
 		
