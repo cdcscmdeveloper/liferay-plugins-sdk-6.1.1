@@ -9,7 +9,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-	  
+	  	<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<table style="border: 0px;width:100%; align:center">
 			<tr>
 				<td> 
@@ -32,7 +35,8 @@
 										style="float:right;" 
 										process="@all" 
 										partialSubmit="true"
-										action="#{suppFinalMeetingBackingBean.submitAction(bpmAction)}" />
+										action="#{suppFinalMeetingBackingBean.submitAction(bpmAction)}" 
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();"/>
 								</ui:fragment>
 							</ui:repeat>
 						</div>
