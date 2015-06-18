@@ -691,6 +691,7 @@ public class QTDetailBackingBean extends
 
 				if (this.getManagedBean().getZoneGeneralTrees().isEmpty()) {
 					if (selectedScQt.isZonal()) {
+						this.getManagedBean().setCtzones(Boolean.TRUE);
 						if (isNotNullOREmpty(resDTO.getZoneDetails())) {
 							for (TplSpecZoneDtl zone : resDTO.getZoneDetails()) {
 								getManagedBean()
