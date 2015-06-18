@@ -87,7 +87,7 @@
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" />
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
-				<td><p:selectOneMenu id="accountId" label="AccountNo" required="true"
+				<td><p:selectOneMenu id="accountId" label="#{lbl['lbl.fl.bank.acc.no']}" required="true"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
 						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}"
 						style="width:300px;margin-bottom: 5px;"
