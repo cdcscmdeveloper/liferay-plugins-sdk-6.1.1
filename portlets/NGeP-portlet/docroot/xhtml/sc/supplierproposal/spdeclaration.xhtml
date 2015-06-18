@@ -5,24 +5,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sc.integrity.pact']}"
-		style="width : 870px;" toggleable="true">
-		<table border="0" cellspacing="0" cellpadding="0" width="870px">
+	<p:panel header="#{lbl['lbl.sc.integrity.pact']}" style="width : 100%"
+		toggleable="true">
+		<table border="0" cellspacing="0" cellpadding="0" style="">
 			<tr>
-				<td><p:editor controls="" id="integrityPactEditor"
-						style="overflow : auto"
-						value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}"
-						disabled="true" width="870" height="430" /></td>
+				<td>				 
+						<p:editor controls="" id="integrityPactEditor" value="#{supplierProposalDetailBackingBean.managedBean.othersTermsConditions}"
+						style="overflow : auto;" height="500" width="900"
+						 disabled="true" /> 
+						 
+						  </td>
 			</tr>
 			<tr height="10">
 				<td></td>
 			</tr>
 			<tr>
 				<td><p:selectBooleanCheckbox
-						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithIntegrityPact}" />
-					<p:spacer width="2" /> <p:outputLabel
-						value="#{lbl['lbl.sc.others.note']}"
-						style="vertical-align:top; float: none;" /></td>
+						value="#{supplierProposalDetailBackingBean.managedBean.agreeWithIntegrityPact}"
+						style="vertical-align:top; float: left;" /> <p:spacer width="2" />
+					<p:outputLabel value="#{lbl['lbl.sc.others.note']}"
+						style="vertical-align:top; float: left;" /></td>
 			</tr>
 		</table>
 	</p:panel>
