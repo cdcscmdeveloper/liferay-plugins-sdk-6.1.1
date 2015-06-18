@@ -128,8 +128,8 @@ public class SvcSiteAssignBackingBean extends
 			if (resDTO.isSuccessful()) {
 				log.info("Submission is success>>>>>>>>"); 
 				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_721201,
-					MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
+				MessageUtils.getMessage(MessageConst.INFO_721201,new String[] {getManagedBean().getSmSvTask().getSmAppl().getApplNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			} else {
@@ -139,7 +139,7 @@ public class SvcSiteAssignBackingBean extends
 			}
 		}catch(Exception ex){
 			RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
-			throw new EpException(MessageConst.ERROR_721202);
+			throw new EpException(ex.getMessage());
 		}
 
 	}
