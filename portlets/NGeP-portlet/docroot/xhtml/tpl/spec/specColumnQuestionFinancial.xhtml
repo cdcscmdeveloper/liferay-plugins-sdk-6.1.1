@@ -40,12 +40,14 @@
 			<p:message id="estimatedCostMsg" for="estimatedCost" display="icon" />
 		</c:if>
 		<c:if test="#{isZonal}">
-			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none; text-align:center;"  
+		<div style="text-align:center;">
+			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
 				oncomplete="#{estimationPopup}.show();"
 				partialSubmit="true" process="@this" update="@([id$=estimationPopup])">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
+		</div>
 		</c:if>
 	</p:column>
 	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
