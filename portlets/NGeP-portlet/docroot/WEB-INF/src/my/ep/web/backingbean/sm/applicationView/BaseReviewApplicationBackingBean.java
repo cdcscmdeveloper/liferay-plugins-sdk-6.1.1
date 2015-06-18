@@ -1514,6 +1514,27 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	/**
+	 * Construct category list to display in category code section for Supplier
+	 * Profile or Application History
+	 * 
+	 * @param SmSupplierCategory
+	 *            cat
+	 */
+	private void setCategoryListForSuppProfileOrApplHist(SmSupplierCategory cat) {
+		getManagedBean().setSuppProfileOrHistoryCategoryList(
+				new ArrayList<SmSupplierCategory>());
+		if (getManagedBean().isViewApplicationHistory()) {
+			// for history load all category except status deleted
+			getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+		} else {
+			// for supp profile load all active category only
+			if (cat.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+				getManagedBean().getSuppProfileOrHistoryCategoryList().add(cat);
+			}
+		}
+	}
+
+	/**
 	 * Set list of active category
 	 */
 	private void setActiveCategoryList() {
@@ -1528,6 +1549,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 							SupplierManagementConst.PENDING_ACT_STATUS) == 0) {
 				catList.add(cat);
 			}
+			setCategoryListForSuppProfileOrApplHist(cat);
 		}
 		getManagedBean().setActiveCategoryList(catList);
 	}
