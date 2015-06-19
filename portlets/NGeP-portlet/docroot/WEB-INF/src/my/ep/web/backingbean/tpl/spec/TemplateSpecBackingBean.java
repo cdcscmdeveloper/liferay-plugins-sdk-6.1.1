@@ -45,6 +45,7 @@ import my.ep.dto.tpl.spec.SpecZoneLocReqDTO;
 import my.ep.dto.tpl.spec.SpecZoneLocResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -1154,16 +1155,24 @@ public class TemplateSpecBackingBean extends
 		debugLogger("tierQtyOkAction");
 
 		ITemplateSpecSO templateSpecSO = null;
+		List<TplSpecTierQty> specTierQties = templateSpecBean
+				.getSelectedSpecQuestion().getTplSpecTierQties();
 		try {
-			List<TplSpecTierQty> specTierQties = templateSpecBean
-					.getSelectedSpecQuestion().getTplSpecTierQties();
-
+			
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
 			templateSpecSO.validateTierQty(
 					templateSpecBean.getSelectedSpecQuestion(), specTierQties);
-
+			
+		} catch (EpException e) {
+			String msgCode = e.getMessage();
+			if (MessageConst.ERROR_700107.equalsIgnoreCase(msgCode)
+					&& specTierQties.size() == 1) {
+				throw new EpException(MessageConst.ERROR_760296,
+						new String[] { "Tier Quantity" });
+			}
+			throw new EpException(msgCode,e.getParameters());
 		} finally {
 			templateSpecSO = null;
 		}
