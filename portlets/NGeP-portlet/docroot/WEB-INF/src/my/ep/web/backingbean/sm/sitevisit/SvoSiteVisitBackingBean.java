@@ -1292,12 +1292,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		String lblApplType = SmCommonUtil.getApplTypeDesc(svTask.getSmAppl().getApplType());
 		//Locale locale = new Locale("en");
 		String applType = ResourceBundleUtils.getMessage(lblApplType,ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale);
+		SmAddress compAddress = svTask.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).getSmAddress();
 		
 		context.put("hostUrl", getLogoHeaderPath());
 		context.put("companyName", svTask.getSmAppl().getSmSupplier().getCompanyName());
 		context.put("applNo", svTask.getSmAppl().getApplNo());
 		context.put("applType", applType);
 		context.put("templateType",templateDesc);
+		context.put("compAddress", compAddress);
+		context.put("addressFormatter", new AddressUtils());
 
 		String vmCover = "/sm/sitevisit/sv-main.vm";
 		String fileName = fileInitName + "cover.pdf";
@@ -2248,20 +2251,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @return String
 	 */
 	private String getLogoHeaderPath(){
-		StringBuilder path = new StringBuilder();
-		FacesScopes fs = new FacesScopes();
+		String path = SmCommonUtil.getBasePortalUrl();
 		
-		//path.append("http://");
-		path.append(fs.getRequest().getServerName());
-		
-		if(fs.getRequest().getServerPort() > 0){
-			path.append(":");
-			path.append(fs.getRequest().getServerPort());
-		}		
-		
-		log.info("********HOST URL*********" +  path.toString());
-		
-		return path.toString();
+		return path;
 	}
 	
 	/**
