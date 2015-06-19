@@ -9170,7 +9170,7 @@ public class SmApplicationBackingBean extends
 
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierReqDTO.setUserId(pmUser.getUserId());
-			supplierReqDTO.setAllStatuses(false);
+			supplierReqDTO.setAllStatuses(true);
 			SupplierSearchResDTO smResDTO = supplierSearchSO
 					.retriveSupplierProfiles(supplierReqDTO);
 			smSupplier = smResDTO.getResultBean().getResultList().get(0);
