@@ -1893,6 +1893,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoBackPage() {
+		getManagedBean().setAttachmentList(null);
 		return getManagedBean().getGotoPreviewPage();
 	}
 	
