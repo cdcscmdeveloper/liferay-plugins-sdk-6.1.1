@@ -233,7 +233,7 @@ BaseBackingBean<FundManagedBean> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchFundPagingDataModel() {
-			super("searchFund",getManagedBean().isLazy());
+			super("fund",getManagedBean().isLazy());
 		}
 
 		@Override

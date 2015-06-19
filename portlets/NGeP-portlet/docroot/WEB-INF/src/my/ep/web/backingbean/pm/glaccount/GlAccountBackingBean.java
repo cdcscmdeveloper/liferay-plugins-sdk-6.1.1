@@ -145,7 +145,7 @@ public class GlAccountBackingBean extends
 		private static final long serialVersionUID = 1L;
 
 		public SearchGlAccountPagingDataModel() {
-			super("searchCtrOfficer",getManagedBean().isLazy());
+			super("glAccountSR",getManagedBean().isLazy());
 		}
 
 		@SuppressWarnings("unchecked")

@@ -214,7 +214,7 @@ BaseBackingBean<ProjectManagedBean> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchProjectPagingDataModel() {
-			super("searchProject",getManagedBean().isLazy());
+			super("projectSR",getManagedBean().isLazy());
 		}
 
 		@Override

@@ -97,6 +97,12 @@ BaseBackingBean<VotManagedBean> {
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setVotSearchBean(new VotSearchBean());
 		searchVot = new SearchVotPagingDataModel();
+		
+		/*this.setSearchVot(null);
+		searchVot = new SearchVotPagingDataModel("reset");*/
+		
+		/*DataTable dataTable = (DataTable) FacesContext.getCurrentInstance().getViewRoot().findComponent("componentId");
+		dataTable.setPaginator(_paginator)*/
 	}
 
 	public void searchVot() {
@@ -248,7 +254,7 @@ BaseBackingBean<VotManagedBean> {
 		private static final long serialVersionUID = 1L;
 
 		public SearchVotPagingDataModel() {
-			super("searchVot",getManagedBean().isLazy());
+			super("vot",getManagedBean().isLazy());
 		}
 
 		@Override

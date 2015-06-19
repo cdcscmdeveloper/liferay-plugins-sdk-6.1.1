@@ -228,7 +228,7 @@ public class AccountingOfficeBackingBean extends
 		 * Instantiates a new search office paging data model.
 		 */
 		public SearchOfficePagingDataModel() {
-			super("searchAccountingOfficer",getManagedBean().isLazy());
+			super("accountingSR",getManagedBean().isLazy());
 		}
 
 		/* (non-Javadoc)

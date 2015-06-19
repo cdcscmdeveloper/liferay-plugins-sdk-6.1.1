@@ -264,7 +264,7 @@ BaseBackingBean<ProgramActivityManagedBean> {
 		 * Instantiates a new search vot paging data model.
 		 */
 		public SearchVotPagingDataModel() {
-			super("searchVotProgramActivity",getManagedBean().isLazy());
+			super("programActivitySR",getManagedBean().isLazy());
 		}
 
 		/* (non-Javadoc)
