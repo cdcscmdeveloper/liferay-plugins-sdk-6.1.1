@@ -19,9 +19,6 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
-import my.ep.biz.service.pm.common.city.ICitySO;
-import my.ep.biz.service.pm.common.country.ICountrySO;
-import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
@@ -36,11 +33,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
-import my.ep.dto.pm.common.country.CountryResDTO;
-import my.ep.dto.pm.common.district.DistrictReqDTO;
-import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -559,6 +551,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		smSupp.getSmAppls().add(smAppl);
 		smSupp.setPmStatus(new PmStatus());
 		smSupp.getPmStatus().setStatusId(20101L);
+		smSupp.setRecordStatusFlg(DbValueConst.RECORD_STATUS_IN_PROGRESS);
 
 		smSuppOwner.setSmSupplier(this.getManagedBean().getSmSupp());
 		smSupp.getSmSupplierOwners().add(smSuppOwner);
