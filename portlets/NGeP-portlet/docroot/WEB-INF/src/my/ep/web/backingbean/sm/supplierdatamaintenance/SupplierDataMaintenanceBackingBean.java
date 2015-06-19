@@ -398,7 +398,6 @@ public class SupplierDataMaintenanceBackingBean extends
 
 			assignApplActiveAndApprovedCategoryList();
 			setOverLappingCategories();
-			RequestContext.getCurrentInstance().execute("regCatDialog.hide()");
 
 		}
 	}

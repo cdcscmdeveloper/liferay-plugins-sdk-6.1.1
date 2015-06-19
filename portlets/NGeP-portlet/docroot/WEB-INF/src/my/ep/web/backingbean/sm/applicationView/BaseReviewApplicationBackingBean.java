@@ -2105,6 +2105,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						obj = SmCommonUtil.getSupplierBankByRevNoAndAccNo(
 								mainList, param, 1);
 						if (obj != null && !objList.contains(obj)) {
+							obj.setSmChequeSignatories(getCheckSignatories(obj));
 							objList.add(obj);
 						}
 					}
@@ -2115,6 +2116,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 						obj = SmCommonUtil.getSupplierBankByRevNoAndAccNo(
 								mainList, param, 2);
 						if (obj != null && !objList.contains(obj)) {
+							obj.setSmChequeSignatories(getCheckSignatories(obj));
 							objList.add(obj);
 						}
 					}
@@ -2125,6 +2127,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 					obj = SmCommonUtil.getSupplierBankByRevNoAndAccNo(mainList,
 							param, 2);
 					if (obj != null && !objList.contains(obj)) {
+						obj.setSmChequeSignatories(getCheckSignatories(obj));
 						objList.add(obj);
 					}
 				}
@@ -2302,6 +2305,50 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				for (SmSupplierBranch param : mainList) {
 					obj = SmCommonUtil.getSmSupplierBranchByRevNoAndName(
 							mainList, param, 2);
+					if (obj != null && !objList.contains(obj)) {
+						objList.add(obj);
+					}
+				}
+			}
+		}
+		return objList;
+	}
+
+	private List<SmChequeSignatory> getCheckSignatories(SmSupplierBank bank) {
+		List<SmChequeSignatory> mainList = bank.getSmChequeSignatories();
+		List<SmChequeSignatory> objList = new ArrayList<SmChequeSignatory>();
+		SmChequeSignatory obj = null;
+
+		if (mainList != null && !mainList.isEmpty()) {
+			if (getManagedBean().isViewApplicationHistory()) {
+				// appl history load by supplier role for revNo=1
+				if (getManagedBean().isSupplierUser()) {
+					for (SmChequeSignatory param : mainList) {
+						obj = SmCommonUtil
+								.getSmChequeSignatoryByRevNoAndIdentificationNo(
+										mainList, param, 1);
+						if (obj != null && !objList.contains(obj)) {
+							objList.add(obj);
+						}
+					}
+				}
+				// appl history load by po/approver role for revNo=2
+				else {
+					for (SmChequeSignatory param : mainList) {
+						obj = SmCommonUtil
+								.getSmChequeSignatoryByRevNoAndIdentificationNo(
+										mainList, param, 2);
+						if (obj != null && !objList.contains(obj)) {
+							objList.add(obj);
+						}
+					}
+				}
+			} else {
+				// supplier profile direct load to revNo=2
+				for (SmChequeSignatory param : mainList) {
+					obj = SmCommonUtil
+							.getSmChequeSignatoryByRevNoAndIdentificationNo(
+									mainList, param, 2);
 					if (obj != null && !objList.contains(obj)) {
 						objList.add(obj);
 					}
