@@ -261,6 +261,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 				.getSuppCriteriarestrictedList();
 		if (scQtCategories == null) {
 			scQtCategories = new ArrayList<ScQtCategory>();
+			this.getManagedBean().setSuppCriteriarestrictedList(scQtCategories);
 		}
 		validateDuplicateCategoryCode(pmCategoryL3, scQtCategories);
 		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
