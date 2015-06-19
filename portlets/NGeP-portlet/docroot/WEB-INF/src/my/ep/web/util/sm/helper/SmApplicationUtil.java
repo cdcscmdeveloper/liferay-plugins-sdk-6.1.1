@@ -398,6 +398,7 @@ public class SmApplicationUtil {
 			// }
 
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			supplierSearchReqDTO.setAllStatuses(true);
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
 							ISupplierSearchSO.class);
