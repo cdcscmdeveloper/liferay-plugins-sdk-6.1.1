@@ -575,7 +575,7 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 		public SearchLocatonPagingDataModel() {
 
-			super("searchLocation",getManagedBean().isLazy());
+			super("searchLocations",getManagedBean().isLazy());
 
 		}
 
