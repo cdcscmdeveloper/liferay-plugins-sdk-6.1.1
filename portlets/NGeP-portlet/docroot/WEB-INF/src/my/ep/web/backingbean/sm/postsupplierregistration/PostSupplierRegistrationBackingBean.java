@@ -253,6 +253,7 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		if(pmUser != null){
 			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			supplierSearchReqDTO.setAllStatuses(true);
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
