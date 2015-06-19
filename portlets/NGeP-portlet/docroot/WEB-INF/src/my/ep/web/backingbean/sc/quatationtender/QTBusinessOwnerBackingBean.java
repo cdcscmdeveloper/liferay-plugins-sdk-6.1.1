@@ -1118,12 +1118,13 @@ public class QTBusinessOwnerBackingBean extends
 				getMinistrySpecificationSecretaryList();
 				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 				detailBackingBean.editAction(qt);
+				this.getManagedBean().setQt(qt);
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 								MessageUtils.getMessage(
 										MessageConst.INFO_700004, new String[] {
-												"", scQt.getQtNo() },
+												"", this.getManagedBean().getQt().getQtNo() },
 										MessageUtils.BUNDLE_COMMON_MESSAGES,
 										new FacesScopes().getUserLocale())));
 			}
@@ -1238,10 +1239,10 @@ public class QTBusinessOwnerBackingBean extends
 			scQt.setMinistrySpecSecrataryId(new PmUser());
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+			/*QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 			quationTenderReqDTO.setDocType(ParameterConst.DOCTYPE_QUOTATION);
 			QuationTenderResDTO dto = detailSO
-					.retriveQTDetails(quationTenderReqDTO);
+					.retriveQTDetails(quationTenderReqDTO);*/
 			ScQtCommittee qtCommitte = new ScQtCommittee();
 			qtCommitte.setScQt(scQt);
 			setUserDetails(qtCommitte);
@@ -1270,7 +1271,7 @@ public class QTBusinessOwnerBackingBean extends
 			status.setStatusId(QTStatusConst.QT_PENDING_APPOINT_BO);
 			scQt.setQtStatus(status);
 
-			scQt.setQtNo(dto.getQtNo());
+			/*scQt.setQtNo(dto.getQtNo());*/
 			ScQtStatus qtStatus = new ScQtStatus();
 			qtStatus.setScQt(scQt);
 			qtStatus.setPmStatus(status);
