@@ -1242,9 +1242,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			//PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
 
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
-			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-			SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0); 
+			//ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+			//SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+			SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
 			log.info("-------smResDTO-------" + smSupp.getSupplierId()); 
 
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
