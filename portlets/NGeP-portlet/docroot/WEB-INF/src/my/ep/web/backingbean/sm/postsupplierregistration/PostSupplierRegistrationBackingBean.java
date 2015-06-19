@@ -47,6 +47,7 @@ import my.ep.web.managedbean.sm.postsupplierregistration.PostSupplierRegistratio
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
@@ -249,27 +250,18 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		log.info("***pmUser name***" + pmUser.getUserName());
 		log.info("***pmUser id***" + pmUser.getUserId());
-		
-		if(pmUser != null){
-			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
-			supplierSearchReqDTO.setUserId(pmUser.getUserId());
-			supplierSearchReqDTO.setAllStatuses(true);
 
-			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
-			SupplierSearchResDTO smResDTO =supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
-			
-			if(smResDTO.getResultBean() != null){
-				if(smResDTO.getResultBean().getResultList().size() > 0){
-					SmSupplier smSupp = (SmSupplier)smResDTO.getResultBean().getResultList().get(0);
-					log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
-					return smSupp;
-				}
+		if(pmUser != null){
+			if(SmApplicationUtil.getCurrentSupplier() != null){
+				SmSupplier smSupp = SmApplicationUtil.getCurrentSupplier();
+				log.info("------getSupplierProfile--------" + smSupp.getCompanyName());
+				return smSupp;
 			}
 		}
-		
-		
+
+
+
 		return null;
-		
 	}
 	
 	/**
