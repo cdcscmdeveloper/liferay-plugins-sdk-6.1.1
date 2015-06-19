@@ -140,7 +140,7 @@
 
 				<p:column style="width:10%;text-align:right;"
 					rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<h:outputText value="#{loiLoaItem.unitPrice}">
+					<h:outputText value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -151,14 +151,14 @@
 
 				<p:column style="width:7%;text-align:right;"
 					rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<h:outputText value="#{loiLoaItem.subTotal}">
+					<h:outputText value="#{loiLoaItem.offeredPriceSubTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 
 					<f:facet name="footer">
 						<h:outputText
-							value="#{lOIDetailBackingBean.managedBean.scLoi.loiAmt}">
+							value="#{lOIDetailBackingBean.managedBean.scLoi.offeredPriceTotal}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
@@ -180,14 +180,14 @@
 
 				<p:column style="width:10%; text-align:right;"
 					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<h:outputText value="#{loiLoaItem.subTotal}">
+					<h:outputText value="#{loiLoaItem.offeredPriceSubTotal}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 
 					<f:facet name="footer">
 						<h:outputText
-							value="#{lOIDetailBackingBean.managedBean.scLoi.loiAmt}">
+							value="#{lOIDetailBackingBean.managedBean.scLoi.offeredPriceTotal}">
 							<f:convertNumber
 								pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</h:outputText>
