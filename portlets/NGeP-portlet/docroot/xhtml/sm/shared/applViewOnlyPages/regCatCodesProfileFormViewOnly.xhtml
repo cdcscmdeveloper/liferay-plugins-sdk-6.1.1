@@ -48,7 +48,7 @@
 			<p:column>
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']}" /></b></td>
+						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<p:outputPanel rendered="#{not empty aprvdCatBean.poDecFlg}">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" rendered="#{aprvdCatBean.poDecFlg eq 1}" />
@@ -58,7 +58,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']}" /></b></td>
+						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<p:outputPanel rendered="#{not empty aprvdCatBean.apprvrDecFlg}">
 								<h:outputText value="#{lbl['lbl.sm.catCodes.approved']}" rendered="#{aprvdCatBean.apprvrDecFlg eq 1}" />
@@ -72,14 +72,14 @@
 			<p:column>
 				<table style="width: 100%; border: none !important; table-layout: fixed !important;">
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']}" /></b></td>
+						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lbl.sm.po']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<h:outputText value="#{aprvdCatBean.poRemarks}" rendered="#{not empty aprvdCatBean.poDecFlg}" />
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.poDecFlg}" />
 						</td>
 					</tr>
 					<tr>
-						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']}" /></b></td>
+						<td style="border: none !important; white-space: normal;"><b><h:outputText value="#{lbl['lb.sm.approver']} :" /></b></td>
 						<td style="border: none !important; white-space: normal; word-wrap: break-word !important;">
 							<h:outputText value="#{aprvdCatBean.approverRemarks}" rendered="#{not empty aprvdCatBean.apprvrDecFlg}"/>
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty aprvdCatBean.apprvrDecFlg}" />
