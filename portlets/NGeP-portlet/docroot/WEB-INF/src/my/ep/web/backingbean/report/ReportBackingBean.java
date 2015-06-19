@@ -691,7 +691,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -807,6 +807,8 @@ public class ReportBackingBean extends
 	private String flGroupSeventeen;
 	private boolean reportCategoryView = false;
 	// sm
+	private String smThresholdFromYear;
+	private String smThresholdToYear;
 	private String smCreatedFromYear;
 	private String smCreatedToYear;
 	private String smMonthlyRptByYear;
@@ -852,6 +854,8 @@ public class ReportBackingBean extends
 	private String smCancellationBy;
 	private String smFromMonth;
 	private String smToMonth;
+	private String smUserName;
+	private String smRequestExpiryDate;
 	// CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -876,6 +880,38 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getSmRequestExpiryDate() {
+		return smRequestExpiryDate;
+	}
+
+	public void setSmRequestExpiryDate(String smRequestExpiryDate) {
+		this.smRequestExpiryDate = smRequestExpiryDate;
+	}
+
+	public String getSmUserName() {
+		return smUserName;
+	}
+
+	public void setSmUserName(String smUserName) {
+		this.smUserName = smUserName;
+	}
+
+	public String getSmThresholdFromYear() {
+		return smThresholdFromYear;
+	}
+
+	public void setSmThresholdFromYear(String smThresholdFromYear) {
+		this.smThresholdFromYear = smThresholdFromYear;
+	}
+
+	public String getSmThresholdToYear() {
+		return smThresholdToYear;
+	}
+
+	public void setSmThresholdToYear(String smThresholdToYear) {
+		this.smThresholdToYear = smThresholdToYear;
+	}
 
 	public String getSmFromMonth() {
 		return smFromMonth;
@@ -4014,7 +4050,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780011);
 		}		
 	}
-
+	public void checkOnlyYearFieldDefference(String yearFrom,String yearTo) {
+		int yearFromInt=Integer.parseInt(yearFrom);
+		int yearToInt=Integer.parseInt(yearTo);
+		if(yearFromInt>yearToInt){			
+			throw new EpException(MessageConst.ERROR_REPORT_780015);
+		}
+	}
 	public void retrieveState() {
 		stateLst = new ArrayList<SelectItem>();
 		districtLst = new ArrayList<SelectItem>();
@@ -4264,6 +4306,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setUserIdVar(ReportConst.FL_AMP_USER_ID_EQ
 						+ new FacesScopes().getUserSessionBean().getUserId()
 								.toString());
+			}
+			if (((this.getSmThresholdFromYear() != null)
+					&& (this.getSmThresholdToYear() == null))||((this.getSmThresholdFromYear() == null)
+							&& (this.getSmThresholdToYear() != null))) {
+				throw new EpException(MessageConst.ERROR_REPORT_780016);
 			}
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
@@ -4652,7 +4699,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmRegistrationStatus() != null) && (this.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMainCategory() != null) && (this.getSmMainCategory() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSubCategory() != null) && (this.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
-				|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
+				//|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
 				|| ((this.getSmSubCategoryDivision() != null) && (this.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationStatus() != null) && (this.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmState() != null) && (this.getSmState() != ReportConst.EMPTY_VAL))
@@ -4673,7 +4720,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmIdentificationNumber()!= null) && (this.getSmIdentificationNumber() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmCancellationBy()!= null) && (this.getSmCancellationBy() != ReportConst.EMPTY_VAL))
 				|| ((this.getFromDate() != null) && (this.getFromDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))) {
+				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmUserName() != null) && (this.getSmUserName().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmRequestExpiryDate() != null) && (this.getSmRequestExpiryDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmThresholdFromYear() != null) && (this.getSmThresholdFromYear().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmThresholdToYear() != null) && (this.getSmThresholdToYear().toString() != ReportConst.EMPTY_VAL))) {
 
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
@@ -4685,7 +4736,39 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}		
 			}
-							
+			if ((getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_THRESHOLD))){
+				if ((this.getSmThresholdFromYear() != null)
+						&& (this.getSmThresholdFromYear() != ReportConst.EMPTY_VAL)) {
+					rptGenBean
+							.setSmThresholdFromYearVar(ReportConst.AMP_SM_FROM_YEAR_EQ
+									+ this.getSmThresholdFromYear());
+				}
+				if ((this.getSmThresholdToYear() != null)
+						&& (this.getSmThresholdToYear() != ReportConst.EMPTY_VAL)) {
+					rptGenBean
+							.setSmThresholdToYearVar(ReportConst.AMP_SM_TO_YEAR_EQ
+									+ this.getSmThresholdToYear());
+				}
+				
+				if ((this.getSmThresholdFromYear() != null)
+						&& (this.getSmThresholdToYear() != null)) {
+				 checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
+				}
+			}
+			if ((this.getSmUserName() != null)
+					&& (this.getSmUserName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmUserNameVar(ReportConst.AMP_SM_USER_NAME_EQ
+								+ this.getSmUserName());
+			}
+			if ((this.getSmRequestExpiryDate() != null)
+					&& (this.getSmRequestExpiryDate() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmRequestExpiryDateVar(ReportConst.AMP_SM_REQ_ENQ_DATE_EQ
+								+ this.getSmRequestExpiryDate());
+			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 					CommonConstants.DEFAULT_DATE_FORMAT);
 			if ((this.getFromDate() != null)
@@ -4977,6 +5060,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSmPaymentMethodVar()
 						+ rptGenBean.getSmProcessingTypeVar()
 						+ rptGenBean.getSmReceiptNoVar()
+						+ rptGenBean.getSmThresholdFromYearVar()
+						+ rptGenBean.getSmThresholdToYearVar()						
+						+ rptGenBean.getSmUserNameVar()
+						+ rptGenBean.getSmRequestExpiryDateVar()
 						+ rptGenBean.getSmProcessingOfficerNameVar()						
 						+ rptGenBean.getApplicationTypeTotVar()
 						+ rptGenBean.getStateTotVar()
@@ -6090,6 +6177,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setSmIdentificationType(null);
 		this.setSmIdentificationNumber(null);
 		this.setSmCancellationBy(null);
+		this.setSmThresholdFromYear(null);
+		this.setSmThresholdToYear(null);
+		this.setSmRequestExpiryDate(null);
+		this.setSmUserName(null);
 		this.setFlContractOrder(null);
 		this.setFlContractRequest(null);
 		this.setFlPurchaseOrderNo(null);
