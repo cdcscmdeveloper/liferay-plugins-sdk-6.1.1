@@ -1893,7 +1893,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoBackPage() {
-		renewSesionObject();
 		return getManagedBean().getGotoPreviewPage();
 	}
 	
