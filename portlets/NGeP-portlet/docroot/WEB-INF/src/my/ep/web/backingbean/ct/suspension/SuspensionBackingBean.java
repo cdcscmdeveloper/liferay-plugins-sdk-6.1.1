@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -86,7 +87,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	    private ContractBackingBean ctBB = null;
 	    private static Logger log = Logger.getLogger(SuspensionBackingBean.class);
 	    private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
-	
+		
 	    /**
 		 * This constructor method used to initialize the variable on start up
 		 * Setting button if user not call from BPM
@@ -177,10 +178,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	 */
 	   public void preRenderView(){
 			
-		     IContractSO contractSO = null;
+		     IContractSuspensionSO contractSuspensionSO= null;
 	          try{	
 		          
-	        	       contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
+	        	       contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSuspensionSO.class);
 	        	       HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			           HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			        
@@ -194,7 +195,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				        	      reqDTO.setContractVerId(Long.parseLong(contractVerId));
 				        	      reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 				        	      reqDTO.setUpdateAction(false);
-				        	      ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+				        	      ContractResDTO resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
 				        	   
 				        	      /*Start if statement if login user not contract admin*/
 				        	      if (!getFacesScopes().getUserSessionBean().getUserId().equals(resDTO.getCtContractVer().getContractAdmin().getUserId())) {
@@ -248,7 +249,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					  /*End*/
 					  
 					  /*Retrieve contract details from database*/
-					   setSuspensionContractVer(contractSO.retrieveContractVerDtls(ctReqDTO));
+					   setSuspensionContractVer(contractSuspensionSO.retrieveSuspensionContractVerDtls(ctReqDTO));
 			          			          
 	     } catch(Exception e){
 			  e.printStackTrace();
@@ -446,35 +447,38 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		 */
 	 public String saveContractSuspension(String action){
 		  
-		 IContractSO contractSO = null;
+		 IContractSuspensionSO contractSuspensionSO = null;
 		 ContractReqDTO reqDTO = null;
 		 try{
-			 
+			     long startTime1 = System.currentTimeMillis();
+				log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime1);
 			     validateSuspensionDetails(action);		
-				 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			     contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
 		       
 				 String token = getFacesScopes().getBPMAuthenticationCtxToken();
 				 reqDTO = new ContractReqDTO();
 		         reqDTO.setToken(token);
 		         reqDTO.setOutcome(action);
-		         reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		         reqDTO.setTaskId(getManagedBean().getTaskId());
 		         this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		             
-		         reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
-		         reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
+		         reqDTO.setCtContract(getManagedBean().getContractVer().getCtContract());
+		         reqDTO.setCtContractVer(getManagedBean().getContractVer());
 		         reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		         reqDTO.setUserRole(getUserRole());
-	             reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
-			     reqDTO.setAttachments(this.getManagedBean().getAttachmentList());
+	             reqDTO.setCtRemark(getManagedBean().getRemarkList().get(0));
+			     reqDTO.setAttachments(getManagedBean().getAttachmentList());
 			     reqDTO.setUserMap(getManagedBean().getUserMap());
 		        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 		        reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			        
 				 if(this.getManagedBean().getPmDigiSign() !=null){
-					reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+					reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 				 }
-			     ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
-			  
+			     ContractResDTO resDTO = contractSuspensionSO.saveContractSuspensionDetails(reqDTO);
+			 	long endTime1 = System.currentTimeMillis();
+				log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);
+				log.info("Total Time1 >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime1));
 			     if(resDTO.isSuccessful()) {
 					 log.info("Record saved successfully");
 					 String messageId = MessageConst.INFO_700005;
@@ -501,8 +505,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				    	  ContractReqDTO ctReqDTO = new ContractReqDTO();
 				    	  ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 				    	  ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
-					    	
-				    	  ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+				     	  ContractResDTO ctResDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(ctReqDTO);
 				    	  setSuspensionContractVer(ctResDTO);
 				      }
 		   	     } else {
@@ -518,7 +521,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ContractConst.MESSAGE_NO, null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 				}
 			  }finally {
-				contractSO = null;
+				  contractSuspensionSO = null;
 			  }
 		   return null;
 	 } 
