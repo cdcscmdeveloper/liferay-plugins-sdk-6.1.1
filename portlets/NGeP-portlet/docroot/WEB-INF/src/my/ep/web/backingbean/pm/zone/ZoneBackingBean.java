@@ -367,7 +367,7 @@ public class ZoneBackingBean extends BaseBackingBean<ZoneManagedBean> {
 		 */
 		public SearchZonePagingDataModel() {
 			
-			super("searchZone",getManagedBean().isLazy());
+			super("searchZones",getManagedBean().isLazy());
 		}
 
 		
