@@ -2060,6 +2060,42 @@ public class SmCommonUtil {
 	}
 
 	/**
+	 * Get check signatory by identification no and revision no
+	 * 
+	 * @param List
+	 *            <SmChequeSignatory> mainList
+	 * @param SmChequeSignatory
+	 *            param
+	 * @param int revNo
+	 * @return SmChequeSignatory
+	 */
+	public static SmChequeSignatory getSmChequeSignatoryByRevNoAndIdentificationNo(
+			List<SmChequeSignatory> mainList, SmChequeSignatory param, int revNo) {
+		SmChequeSignatory retVal = null;
+
+		// main list loop by identificationNo and recordStatus and revNo
+		for (SmChequeSignatory tmp : mainList) {
+			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
+					&& tmp.getSmPersonnel() != null
+					&& StringUtils.isNotBlank(tmp.getSmPersonnel()
+							.getIdentificationNo())
+					&& tmp.getSmPersonnel()
+							.getIdentificationNo()
+							.equals(param.getSmPersonnel()
+									.getIdentificationNo())) {
+				if (tmp.getSmPersonnel().getRevNo() == revNo) {
+					retVal = tmp;
+					break;
+				} else {
+					retVal = tmp;
+				}
+			}
+		}
+
+		return retVal;
+	}
+
+	/**
 	 * Get associate company by registration no and revision no
 	 * 
 	 * @param List
