@@ -105,8 +105,7 @@
 			<portlet id="scTemplateMaint" />
 			<portlet id="scScheduleBidding" />
 			<portlet id="scOnlineBidding" />
-			
-			
+						
 			<portlet id="scQTMaintenance"/>
 			<portlet id="scQTReview"/>
 			<portlet id="scQTPrepareSpec"/>
@@ -132,6 +131,7 @@
 		    <portlet id="Direct Nego"></portlet>
 		    <portlet id="scAddtionalAttandance" />
 		    <portlet id="scCreateQuotationTender" />
+		    <portlet id="directNegoSupplierResponse"/>
 		    
 		</category>
 
