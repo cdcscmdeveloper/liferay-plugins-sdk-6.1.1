@@ -45,6 +45,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
@@ -163,12 +164,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
-	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true";
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
 	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml?faces-redirect=true";
+	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
+	
 	private String editorValue;
 	private BigDecimal paidAdvancePercentage = new BigDecimal(0);
 	private BigDecimal balanceToPaid;
@@ -1657,7 +1659,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoSuspendPage() {
+		
+		 long startTime1 = System.currentTimeMillis();
+		  log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime1);
+		  
 		IContractSO contractSO = null;
+		IContractSuspensionSO contractSuspensionSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
 		SuspensionBackingBean suspBB = null;
@@ -1674,15 +1681,21 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
 			reqDTO.setUpdateAction(true);
-			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
+			resDTO = contractSuspensionSO.retrieveSuspensionContractVerDtls(reqDTO);
 			
 			suspBB = new SuspensionBackingBean();
 			suspBB.getManagedBean().setViewOnly(false);
 			suspBB.setSuspensionContractVer(resDTO);
+			long endTime1 = System.currentTimeMillis();
+			log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);
+		    log.info("Total Time1 >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime1));
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
 			contractSO = null;
+			contractSuspensionSO = null;
 			resDTO = null;
 			reqDTO = null;
 			suspBB = null;
