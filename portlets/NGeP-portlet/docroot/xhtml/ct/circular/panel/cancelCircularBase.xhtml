@@ -29,13 +29,11 @@
 		     <h:panelGrid style="width:180px;"> <f:verbatim/></h:panelGrid>
 			   <h:panelGrid style="width:500px;">
 				 <p:pickList id="approverpickList" value="#{panelBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}" 
-					showTargetControls="true" filterMatchMode="contains">
+					var="data" itemValue="#{data}" itemLabel="#{data.userName}" 
+					showTargetControls="true" filterMatchMode="contains"
+					converter="pmUserConverter">
 					<f:facet name="sourceCaption">#{lbl['lbl.ct.available.approver']}</f:facet>  
-        			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet> 
-					<p:column style="width:75%;">
-						<h:outputText value="#{data}" />
-					</p:column>
+        			<f:facet name="targetCaption">#{lbl['lbl.ct.selected.approver']}</f:facet>
 				</p:pickList>
 			 </h:panelGrid>
 	 	 </h:panelGrid>
