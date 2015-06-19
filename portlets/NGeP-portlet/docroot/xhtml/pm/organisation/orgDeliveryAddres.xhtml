@@ -205,7 +205,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.pm.address.postcode']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:inputText id="dpostCode" required="#{!empty param['disableValidation']}"
-						label="#{lbl['lbl.pm.address.postcode']}" maxlength="10"
+						label="#{lbl['lbl.pm.address.postcode']}" maxlength="5"
 						value="#{organisationBackingBean.managedBean.deliveryAddress.pmAddress.postcode}" styleClass="ppDisplayTextL"
 						validatorMessage="#{lbl['lbl.pm.address.postcode']} - #{lbl['lbl.pm.profiles.invalidNo']}" >
 						<f:validateRegex pattern="^-?\d*(\.\d+)?$" /></p:inputText></td>
