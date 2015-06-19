@@ -4,23 +4,21 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
+import my.ep.biz.service.pm.common.fund.IFundSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.PmCodeConst;
-import my.ep.dto.pm.common.votfund.VotFundReqDTO;
-import my.ep.dto.pm.common.votfund.VotFundResDTO;
+import my.ep.dto.pm.common.fund.FundReqDTO;
+import my.ep.dto.pm.common.fund.FundResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -28,7 +26,6 @@ import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.VotFundType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -37,7 +34,6 @@ import my.ep.web.managedbean.pm.fund.FundManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "fundBackingBean")
@@ -88,7 +84,7 @@ BaseBackingBean<FundManagedBean> {
 	 */
 	public void resetFundSearchBean() {
 
-		debugLogger("resetVotSearchBean");		
+		debugLogger("resetFundSearchBean");		
 		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setFundCode(new String());
 		this.getManagedBean().setFundName(new String());		
@@ -110,7 +106,7 @@ BaseBackingBean<FundManagedBean> {
 			ISearchBean<PmVotFund> searchBean) {
 
 		FundSearchBean fundSearchBean = this.getManagedBean().getFundSearchBean();
-		boolean	isEmpty = true;
+		
 		Date currentDate = new Date();
 		if (StringUtils.isNotBlank(fundSearchBean.getFundCode())) {
 
@@ -118,7 +114,7 @@ BaseBackingBean<FundManagedBean> {
 					new SearchFilterBean("votFundCode",
 							SearchOperator.OPERATOR_EQUALS.value(), fundSearchBean
 							.getFundCode().toUpperCase() , true));
-			isEmpty = false;
+			
 
 		}
 		if (StringUtils.isNotBlank(fundSearchBean.getFundName())){
@@ -127,7 +123,7 @@ BaseBackingBean<FundManagedBean> {
 					new SearchFilterBean("description",
 							SearchOperator.OPERATOR_LIKE.value(), fundSearchBean
 							.getFundName().toUpperCase(), true));
-			isEmpty = false;
+			
 		}
 
 
@@ -242,21 +238,21 @@ BaseBackingBean<FundManagedBean> {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			IVotFundSO votFundSO;
+			IFundSO fundSO;
 
 			try {
 				ISearchBean<PmVotFund> searchBeanData = getSearchBeanData(searchBean);
-				VotFundReqDTO votReqDTO = new VotFundReqDTO();
-				votReqDTO.setVotFundSearchBean(searchBeanData);
-				votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
+				FundReqDTO fundReqDTO = new FundReqDTO();
+				fundReqDTO.setFundSearchBean(searchBeanData);
+				fundSO = (IFundSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IVotFundSO.class);
-				VotFundResDTO resDTO = votFundSO.searchFundData(votReqDTO);
+								IFundSO.class);
+				FundResDTO resDTO = fundSO.searchFundData(fundReqDTO);
 				getManagedBean().setLazy(true);
 
 				if (resDTO.isSuccessful()) {
 
-					return resDTO.getVotResultBean();
+					return resDTO.getFundResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
