@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
@@ -71,10 +73,23 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().searchSupplier();
 	}
 
-	public void update() {
+	/**
+	 * Submit supplier maintenance
+	 */
+	public void submit() {
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
+
+		// Check if got active application for this supplier
+		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
+		mofRegistrationReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+				.getSupplierId());
+		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
+
 		try {
+
+			// set registration status
 			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
 					.getStatusId();
 			for (PmStatusDesc desc : getManagedBean().getRegStatusDescList()) {
@@ -94,7 +109,26 @@ public class SupplierDataMaintenanceBackingBean extends
 					}
 				}
 			}
+
+			// set newly added category code
+			if (getManagedBean().getActiveCategoryList() != null
+					&& !getManagedBean().getActiveCategoryList().isEmpty()) {
+				for (SmSupplierCategory apprCat : getManagedBean()
+						.getActiveCategoryList()) {
+					apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					apprCat.setApprovedDate(new Date());
+					if (getManagedBean().isApproverUser()) {
+						apprCat.setApprvrDecFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					} else {
+						apprCat.setPoDecFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+					}
+				}
+			}
+
+			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
+			reqDTO.setNewlyAddedCategories(getManagedBean()
+					.getActiveCategoryList());
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
 					SupplierManagementConst.SUPPLIER_MAINTENANCE_REGISTRATION_STATUS);
@@ -114,8 +148,15 @@ public class SupplierDataMaintenanceBackingBean extends
 		} finally {
 			reqDTO = null;
 		}
+
+		SmCommonUtil.redirectToPage(
+				SmApplicationUtil.getApplicationErrorPage(),
+				MessageConst.INFO_721215);
 	}
 
+	/**
+	 * Back to search screen
+	 */
 	public void backToSearchSupplierMaintenance() {
 		getManagedBean().setDisplaySearchPage(true);
 	}
@@ -233,7 +274,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * @param e
 	 *            -AjaxBehaviorEvent
 	 */
-	public void unSelectApprovedCategories(AjaxBehaviorEvent e) {
+	public void unSelectApporvedCategories(AjaxBehaviorEvent e) {
 		if (getManagedBean().getDeleteNewApplCategoryList() != null) {
 			Iterator<SmSupplierCategory> iterator = getManagedBean()
 					.getDeleteNewApplCategoryList().iterator();
@@ -273,7 +314,30 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSelectedCategory(categ);
 		saveSelectedCategory();
 	}
-	
+
+	/**
+	 * Assign category re approval on other description change
+	 * 
+	 * @param SmSupplierCategory
+	 *            cat
+	 */
+	public void assignCategoryReApprovalOnOtherDescChange(SmSupplierCategory cat) {
+		if (StringUtils.isNotEmpty(cat.getOtherDesc())
+				&& cat.getApprovedDate() != null) {
+			if (!cat.getOtherDesc().trim()
+					.equalsIgnoreCase(cat.getPrevOtherDesc().trim())) {
+				cat.setRecordStatusFlg(SupplierManagementConst.PENDING_ACT_STATUS);
+				cat.setPoDecFlg(null);
+				cat.setApprvrDecFlg(null);
+			} else {
+				cat.setRecordStatusFlg(SupplierManagementConst.APPROVED_RECORD_STATUS);
+				cat.setPoDecFlg(cat.getPrevPoDecFlg());
+				cat.setApprvrDecFlg(cat.getPrevApprDecFlg());
+			}
+
+		}
+	}
+
 	/**
 	 * Save selected category information into SmSupplierCategory list of the
 	 * application.
