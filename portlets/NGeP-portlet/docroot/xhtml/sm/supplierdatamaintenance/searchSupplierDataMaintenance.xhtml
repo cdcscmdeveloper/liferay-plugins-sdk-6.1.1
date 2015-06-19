@@ -27,19 +27,19 @@
 		<p:outputPanel id="dataMainTenanceMainId">
 		
 			<p:panel header="#{lbl['lbl.sm.search.supprofile']}" toggleable="true" id="searchSupplierProfilePanelId" 
-				rendered="#{viewSuppProfileBackingBean.managedBean.displaySearchPage}">
+				rendered="#{supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
 			
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/supplierApplicationSearchCriteria.xhtml" />
 				
 			<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
 				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
-				selection="#{viewSuppProfileBackingBean.managedBean.selectedSupplier}"
+				value="#{supplierDataMaintenanceBackingBean.managedBean.smSupplierDataModel}"
+				selection="#{supplierDataMaintenanceBackingBean.managedBean.selectedSupplier}"
 				rowKey="#{smSupplier}" rowIndexVar="index" id="supplierApplHistoryDtId">
 				<ac:paginator for="supplierApplHistoryDtId" />
 				
 				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal"
-					rendered="#{!viewSuppProfileBackingBean.managedBean.supplierUser}">
+					rendered="#{!supplierDataMaintenanceBackingBean.managedBean.supplierUser}">
 					<h:outputText value="#{smSupplier.companyName}" />
 				</p:column>
 				
@@ -69,7 +69,7 @@
 				<p:column headerText="#{lbl['lbl.sm.label.action']}">
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
-						action="#{viewSuppProfileBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
+						action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
 						process="@this" partialSubmit="true" update="@([id$=dataMainTenanceMainId])"
 						style="padding-right:5px;">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
@@ -80,13 +80,19 @@
 				
 			</p:panel>
 			
-			<p:outputPanel rendered="#{!viewSuppProfileBackingBean.managedBean.displaySearchPage}">
-				<div align="left">
-					<p:commandButton value="#{lbl['lbl.btn.back']}" update="@([id$=dataMainTenanceMainId])"
-						action="#{viewSuppProfileBackingBean.backToSearchSupplierMaintenance}" 
-						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-					</p:commandButton>
-				</div>
+			<p:outputPanel rendered="#{!supplierDataMaintenanceBackingBean.managedBean.displaySearchPage}">
+				<table style="width: 100%;">
+					<tr>
+						<td>
+							<p:commandButton value="#{lbl['lbl.btn.back']}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()" 
+								action="#{supplierDataMaintenanceBackingBean.backToSearchSupplierMaintenance}" update="@([id$=dataMainTenanceMainId])"/>
+						</td>
+						<td style="white-space: nowrap; float: right;">
+						    <p:commandButton value="#{lbl['lbl.btn.submit']}" style="float:right;" id="submitBtnId" update="@([id$=dataMainTenanceMainId])"
+						    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{supplierDataMaintenanceBackingBean.submit}"/>
+						</td>
+					</tr>
+				</table>
 				
 				<ui:include src="/xhtml/sm/shared/supplierDataMaintenance/supplierInfoMaintenance.xhtml" />
 				<ui:include src="/xhtml/sm/shared/applViewOnlyPages/companyBasicInfoFormViewOnly.xhtml" />

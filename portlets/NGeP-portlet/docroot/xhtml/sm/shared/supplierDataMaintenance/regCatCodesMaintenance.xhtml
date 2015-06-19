@@ -6,13 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
-	<ui:param name="backingBean" value="#{supplierDataMaintenanceBackingBean}" />
-	
 	<p:panel header="#{lbl['lbl.sm.catCodes.panHdr']}" toggleable="true">
 		
 			<p:dataTable var="aprvdCatBean"
 				widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
-				value="#{viewSmApplBackingBean.managedBean.approvedCategoryList}"
+				value="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}"
 				rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
 				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
 				<ac:paginator for="catApprDt" />
@@ -54,11 +52,11 @@
 			</p:dataTable>
 			
 		<p:outputPanel id="catCodeInfPan" layout="block">
-			<c:if test="#{viewSmApplBackingBean.managedBean.overLappedCategoryExists}">
+			<c:if test="#{supplierDataMaintenanceBackingBean.managedBean.overLappedCategoryExists}">
 				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel escape="false"
-								value="#{viewSmApplBackingBean.managedBean.overLappedCategoryMsg}"
+								value="#{supplierDataMaintenanceBackingBean.managedBean.overLappedCategoryMsg}"
 								style="color: red;font-weight: bold;float:left;" /></td>
 					</tr>
 				</table>
@@ -67,14 +65,14 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.catCodes.catType']}" /></td>
 					<td><p:selectOneRadio
-							value="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType}">
+							value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeNrm']}"
 								itemValue="N" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.catCodes.catTypeSpl']}"
 								itemValue="S"
-								itemDisabled="#{viewSmApplBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
+								itemDisabled="#{supplierDataMaintenanceBackingBean.managedBean.basicCompanyFacility.facilityType eq 'H'}" />
 							<p:ajax event="change" oncomplete="typeConfirmation.show()"
-								listener="#{viewSmApplBackingBean.applicationCategorySelected}"
+								listener="#{supplierDataMaintenanceBackingBean.applicationCategorySelected}"
 								update="@([id$=typeConfirmationId])" />
 						</p:selectOneRadio></td>
 				</tr>
@@ -82,8 +80,8 @@
 			<table>
 				<tr>
 					<td align="left" colspan="2"><h:outputText
-							value="#{viewSmApplBackingBean.managedBean.catTypeConfirm}"
-							rendered="#{viewSmApplBackingBean.managedBean.smAppl.applCategoryType != null}"
+							value="#{supplierDataMaintenanceBackingBean.managedBean.catTypeConfirm}"
+							rendered="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.applCategoryType != null}"
 							style="color: blue; font-weight: bold;" /></td>
 
 				</tr>
@@ -99,17 +97,17 @@
 
 
 	<p:confirmDialog id="typeConfirmationId"
-		message="#{viewSmApplBackingBean.managedBean.regCatCodeConfirmMsg}"
-		header="#{viewSmApplBackingBean.managedBean.regCatCodeConfirmHeader}"
+		message="#{supplierDataMaintenanceBackingBean.managedBean.regCatCodeConfirmMsg}"
+		header="#{supplierDataMaintenanceBackingBean.managedBean.regCatCodeConfirmHeader}"
 		widgetVar="typeConfirmation">
 
 		<p:commandButton id="conf" value="#{lbl['lbl.txt.yes']}"
 			process="@this" partialSubmit="true" update="@form"
-			action="#{viewSmApplBackingBean.assignApplnCategoryType}"
+			action="#{supplierDataMaintenanceBackingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
 		<p:commandButton id="decline" value="#{lbl['lbl.txt.no']}"
-			process="@this" partialSubmit="true" update="catCodeInfPan"
-			action="#{viewSmApplBackingBean.resetApplnCategoryType}" />
+			process="@this" partialSubmit="true" update=":form:catCodeInfPan"
+			action="#{supplierDataMaintenanceBackingBean.resetApplnCategoryType}" />
 
 	</p:confirmDialog>
 
