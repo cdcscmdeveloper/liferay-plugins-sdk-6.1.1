@@ -371,6 +371,8 @@ public class ReportConst {
 		public static final String SM_DELETE_PENDING_APPL = "SM_056";
 		public static final String SM_SUPPLIER_PERFORMANCE = "SM_057";
 		public static final String SM_PERSON_BRANCH_BANK = "SM_058";
+		public static final String SM_THRESHOLD = "SM_059";
+		public static final String SM_LIST_OF_USERS = "SM_060";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
@@ -445,6 +447,10 @@ public class ReportConst {
 	public static final String AMP_SM_IDENT_TYPE_EQ = "&PIDENTYPE="; 
 	public static final String AMP_SM_IDENT_NO_EQ = "&PIDENNO="; 
 	public static final String AMP_SM_CANCEL_BY_EQ = "&PCANCELBY="; 
+	public static final String AMP_SM_FROM_YEAR_EQ = "&PFROMYEAR=";
+	public static final String AMP_SM_TO_YEAR_EQ = "&PTOYEAR=";
+	public static final String AMP_SM_USER_NAME_EQ = "&PUSERNAME=";
+	public static final String AMP_SM_REQ_ENQ_DATE_EQ = "&PDATE=";
 	public static final String KAMA = ",";
 
 	
