@@ -338,6 +338,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 			SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			supplierSearchReqDTO.setUserId(pmUser.getUserId());
+			supplierSearchReqDTO.setAllStatuses(true);
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
