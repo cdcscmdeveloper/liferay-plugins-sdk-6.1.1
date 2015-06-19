@@ -43,7 +43,7 @@
 			               <p:selectBooleanCheckbox  disabled="#{contractDetailsBackingBean.isApprover()}"
 			                   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.companyNameChange}">
 				               <p:ajax event="change" 
-				                  listener="#{contractDetailsBackingBean.retrieveCompanyName}" update="supplierCompanyName" />
+				                  listener="#{contractDetailsBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName" />
 				           </p:selectBooleanCheckbox>
 			               <p:spacer width="2" />	
 			               <p:outputLabel value="#{lbl['lbl.ct.update.name']}" style="width:100px;"/>
@@ -56,8 +56,8 @@
           
                 <p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
                 <h:panelGrid columns="3">
-	                <p:inputText disabled="true" style="width:170px;" 
-	                   value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
+	                <p:inputText id="supplierBranchName" disabled="true" style="width:310px;" 
+	                   value="#{contractDetailsBackingBean.managedBean.supplierBranchName}" />
 	           	  	<p:spacer width="1"/>
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
 				</h:panelGrid>

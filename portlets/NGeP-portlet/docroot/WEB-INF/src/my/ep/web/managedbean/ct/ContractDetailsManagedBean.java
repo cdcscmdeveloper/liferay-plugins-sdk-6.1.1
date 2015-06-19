@@ -92,6 +92,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private String ctSupplierName;
 	private String supplierAddress;
 	private String supplierCompanyName;
+	private String supplierBranchName;
 	private String externalPageUrl;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
@@ -376,6 +377,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public String getSupplierCompanyName() {
 		return supplierCompanyName;
+	}	
+
+	/**
+	 * @return the supplierBranchName
+	 */
+	public String getSupplierBranchName() {
+		return supplierBranchName;
+	}
+
+	/**
+	 * @param supplierBranchName the supplierBranchName to set
+	 */
+	public void setSupplierBranchName(String supplierBranchName) {
+		this.supplierBranchName = supplierBranchName;
 	}
 
 	/**
