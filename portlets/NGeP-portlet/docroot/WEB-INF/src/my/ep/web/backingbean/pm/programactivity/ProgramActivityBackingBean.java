@@ -23,12 +23,12 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
+import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.votfund.VotFundReqDTO;
-import my.ep.dto.pm.common.votfund.VotFundResDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
+import my.ep.dto.pm.common.programactivity.ProgramActivityResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -118,7 +118,7 @@ BaseBackingBean<ProgramActivityManagedBean> {
 	 */
 	public void resetVotProgramActivitySearchBean() {
 
-		debugLogger("resetVotSearchBean");		
+		debugLogger("resetVotProgramActivitySearchBean");		
 		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setVotCode(new String());
 		this.getManagedBean().setVotName(new String());
@@ -276,19 +276,19 @@ BaseBackingBean<ProgramActivityManagedBean> {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			IVotFundSO votFundSO;
+			IProgramActivitySO programActivitySO;
 
 			try {
 				ISearchBean<PmPrgActivity> searchBeanData = getSearchBeanData(searchBean);
-				VotFundReqDTO votReqDTO = new VotFundReqDTO();
-				votReqDTO.setPmPrgActivitySearchBean(searchBeanData);
-				votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
+				ProgramActivityReqDTO programActivityReqDTO = new ProgramActivityReqDTO();
+				programActivityReqDTO.setPmPrgActivitySearchBean(searchBeanData);
+				programActivitySO = (IProgramActivitySO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IVotFundSO.class);
-				VotFundResDTO resDTO = votFundSO.searchVotProgramActivityData(votReqDTO);
+								IProgramActivitySO.class);
+				ProgramActivityResDTO resDTO = programActivitySO.searchVotProgramActivityData(programActivityReqDTO);
 				getManagedBean().setLazy(true);
 				if (resDTO.isSuccessful()) {					
-					return resDTO.getPmPrgActivityResultBean();
+					return resDTO.getProgramActivityBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
