@@ -18,11 +18,11 @@
 		
 		<p:poll update="@form" interval="5"/>
 		
-		<p:panel header="#{schedulerManagerBB.managedBean.scheduler.schedulerName} jobs List" toggleable="true">
+		<p:panel header="#{Scheduled Jobs List" toggleable="true">
 		
 			<p:panel id="jobListPanel">
 				<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar" value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
-					rowKey="#{jobBean}" rowIndexVar="index">
+					rows="10" rowKey="#{jobBean}" rowIndexVar="index">
 				
 				<ac:paginator for="jobBeanDt" />
 				
@@ -46,7 +46,7 @@
 					<h:outputText value="#{jobBean.state}" />
 				</p:column>
 				
-				<p:column headerText="Fired Time">
+				<p:column headerText="Last Fired Time">
 					<h:outputText value="#{jobBean.trigger.previousFireTime}">
 				      <f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
