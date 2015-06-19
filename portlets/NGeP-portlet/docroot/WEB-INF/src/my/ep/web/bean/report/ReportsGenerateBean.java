@@ -209,6 +209,9 @@ public class ReportsGenerateBean {
 		private boolean smToMonthView = false;
 		private boolean smSupplierView = false;
 		private boolean smCompanyNameDropdownView = false;
+		private boolean smFromAndToYearView = false;
+		private boolean smUserNameView = false;
+		private boolean smRequestExpiryDateView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -393,6 +396,10 @@ public class ReportsGenerateBean {
 		private String smPaymentMethodVar=ReportConst.EMPTY_VAL;
 		private String smFromMonthVar=ReportConst.EMPTY_VAL;
 		private String smToMonthVar=ReportConst.EMPTY_VAL;
+		private String SmThresholdFromYearVar=ReportConst.EMPTY_VAL;
+		private String SmThresholdToYearVar=ReportConst.EMPTY_VAL;
+		private String smUserNameVar=ReportConst.EMPTY_VAL;
+		private String smRequestExpiryDateVar=ReportConst.EMPTY_VAL;
 		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
@@ -476,6 +483,48 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmRequestExpiryDateView() {
+			return smRequestExpiryDateView;
+		}
+		public void setSmRequestExpiryDateView(boolean smRequestExpiryDateView) {
+			this.smRequestExpiryDateView = smRequestExpiryDateView;
+		}
+		public String getSmRequestExpiryDateVar() {
+			return smRequestExpiryDateVar;
+		}
+		public void setSmRequestExpiryDateVar(String smRequestExpiryDateVar) {
+			this.smRequestExpiryDateVar = smRequestExpiryDateVar;
+		}
+		public boolean isSmUserNameView() {
+			return smUserNameView;
+		}
+		public void setSmUserNameView(boolean smUserNameView) {
+			this.smUserNameView = smUserNameView;
+		}
+		public String getSmUserNameVar() {
+			return smUserNameVar;
+		}
+		public void setSmUserNameVar(String smUserNameVar) {
+			this.smUserNameVar = smUserNameVar;
+		}
+		public String getSmThresholdFromYearVar() {
+			return SmThresholdFromYearVar;
+		}
+		public void setSmThresholdFromYearVar(String smThresholdFromYearVar) {
+			SmThresholdFromYearVar = smThresholdFromYearVar;
+		}
+		public String getSmThresholdToYearVar() {
+			return SmThresholdToYearVar;
+		}
+		public void setSmThresholdToYearVar(String smThresholdToYearVar) {
+			SmThresholdToYearVar = smThresholdToYearVar;
+		}
+		public boolean isSmFromAndToYearView() {
+			return smFromAndToYearView;
+		}
+		public void setSmFromAndToYearView(boolean smFromAndToYearView) {
+			this.smFromAndToYearView = smFromAndToYearView;
+		}
 		public boolean isSmCompanyNameDropdownView() {
 			return smCompanyNameDropdownView;
 		}

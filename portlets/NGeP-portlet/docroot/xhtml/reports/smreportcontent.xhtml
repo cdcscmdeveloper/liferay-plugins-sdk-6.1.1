@@ -14,7 +14,16 @@
 				<td width="100%"><h:panelGrid id="smReportCriteria" columns="4"
 						style="width:85%;">
 
-
+                        <c:if test="#{scReportBackingBean.managedBean.rptGenBean.smRequestExpiryDateView}" >			
+									<p:outputLabel value=""   style="margin-top:5px;width:160px;"/>
+									<p:selectOneRadio id="reqexpdate" style="width:300px" value="#{reportBackingBean.smRequestExpiryDate}">  
+					                    <f:selectItem itemLabel="Soft Cert Request Date" itemValue="R" />  
+					                    <f:selectItem itemLabel="Soft Cert Expiry Date" itemValue="E" />  
+					                 </p:selectOneRadio>
+					                 												
+									</c:if>
+									
+									
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smZoneView}">
 							<p:column>
@@ -70,6 +79,18 @@
 								</table>
 							</p:column>
 						</c:if>
+						
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smUserNameView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.username']}"
+								style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100"
+								value="#{reportBackingBean.smUserName}"
+								style="margin-top:5px;width:290px;">
+							</p:inputText>
+						</c:if>
+						
+						
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smRegistrationStatusView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}"
@@ -597,7 +618,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:selectOneMenu value="#{reportBackingBean.smRegistrationType}"
 								style="margin-top:5px;width:300px;">
-								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regBasic']}"
 									itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
@@ -1386,6 +1407,48 @@
 	</div>
 
 
+
+
+<div>
+		<c:if
+			test="#{reportBackingBean.managedBean.rptGenBean.smFromAndToYearView}">
+			<TABLE style="margin-top: 10px; width: 60%;">
+				<TR>
+				   
+					<TD style="width:185px;"><p:outputLabel value="#{lbl['lbl.rpt.thresholdyearfrom']}"
+							 /></TD>
+                       
+					<TD>
+					
+					<p:selectOneMenu value="#{reportBackingBean.smThresholdFromYear}" 
+							style="margin-top:5px;width:150px;">
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu>
+                    		
+					</TD>
+					
+					<TD style="width:185px;"><p:outputLabel value="#{lbl['lbl.rpt.dtRangeTo']}"
+							 /></TD>
+					<TD><p:selectOneMenu value="#{reportBackingBean.smThresholdToYear}"
+							style="margin-top:5px;width:150px;">
+							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+							<f:selectItems
+								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+						</p:selectOneMenu></TD>					
+				</TR>
+			</TABLE>
+		</c:if>
+	</div>
+
+
+
+
 		            
 		            
 	<div>
@@ -1603,10 +1666,5 @@
 						</TABLE>
 						</c:if>							
 		            </div>
-
-
-
-
-
 
 </ui:composition>
