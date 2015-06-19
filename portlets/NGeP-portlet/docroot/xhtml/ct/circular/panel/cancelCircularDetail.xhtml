@@ -15,7 +15,7 @@
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
 			<p:ajax event="change" update="@([id$=cancelCircularList])"/>
 		</p:selectOneMenu>
-		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.cancel.circular']}" />
+		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.cancel.circular']}" rendered="#{!panelBackingBean.isBPKApprover()}"/>
 		<br/>
 		<p:spacer height="10" />
 		<p:outputPanel id="cancelCircularList">
