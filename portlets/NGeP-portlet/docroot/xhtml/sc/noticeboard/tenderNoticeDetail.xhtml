@@ -19,97 +19,11 @@
 			<p:commandButton value="#{lbl['lbl.btn.back']}"
 				action="#{noticeBoardBackingBean.backBtn}" />
 		</div>
+		<!-- Quotation/Tender details -->
+		<ui:param name="isChangesTab"
+			value="#{noticeBoardBackingBean.managedBean.selectedTab == ParameterConst.noticeBoardStatusChanges}" />
+		<ui:include src="/xhtml/sc/noticeboard/nbtenderdetails.xhtml" />
 		
-		<p:panel
-			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}"
-			toggleable="true">
-
-			<h:panelGrid border="0" width="100%" columns="4"
-				columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth40">
-				<h:outputLabel value="#{lbl['lbl.sc.title']}" />
-				<h:outputText style="white-space: normal;word-wrap: break-word;"
-					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
-				<h:outputText value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})" styleClass="lastUpdated"
-				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle ne null ? 'true':'false'}"/>
-				<h:outputLabel value="" 
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean.newTitle eq null ? 'true':'false'}"/>
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.qtn.no']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.qtNo}" />
-				<h:outputLabel value="" />
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.ministry']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.ministryName}" />
-				<h:outputLabel value="" />
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.ptj']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgName}" />
-				<h:outputLabel value="" />
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.publish.date']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}">
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
-				</h:outputText>
-				<h:outputLabel value="" />
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.qt.publishing.period']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.publishPeriod}" />
-				<h:outputText value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})" styleClass="lastUpdated"
-				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays ne 0 ? 'true':'false'}"/>
-				<h:outputLabel value="" 
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays eq 0 ? 'true':'false'}"/>
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.closing.date']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}">
-					<f:convertDateTime
-						pattern="#{CommonConstants.DEFAULT_12HR_DATETIME_FORMAT}" />
-				</h:outputText>
-				<h:outputText value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})" styleClass="lastUpdated"
-				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays ne 0 ? 'true':'false'}"/>
-				<h:outputLabel value="" 
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newPublishPeriodDays eq 0 ? 'true':'false'}"/>
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" />
-				<h:outputText
-					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
-				<h:outputText value="'('#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate}')'" styleClass="lastUpdated"
-				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays ne 0 ? 'true':'false'}"/>
-				<h:outputLabel value="" 
-				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays eq 0? 'true':'false'}"/>
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.proposal.validity.until']}" />
-				<h:outputText
-					value="#{DateUtils.addDays(noticeBoardBackingBean.managedBean.scQt.closingDate,noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod)}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
-				</h:outputText>
-				<h:outputLabel value="" />
-				<h:outputLabel value="" />
-				
-				<h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
-				<h:outputText value="One Tier"
-					rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '1'}" />
-				<h:outputText value="Two Tier"
-					rendered="#{noticeBoardBackingBean.managedBean.scQt.evaluationType eq '2'}" />
-				<h:outputLabel value="" />
-			</h:panelGrid>
-		</p:panel>
-
-
 		<p:panel header="#{lbl['lbl.sc.supplier.qulification.criteria']}"
 			toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="3"
