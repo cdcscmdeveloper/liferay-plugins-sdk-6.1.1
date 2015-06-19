@@ -916,37 +916,58 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	 * 
 	 * @return populateBankAccountList  the selection list
 	 */
-	public List<SelectItem> getPopulateBankAccountList() {		
-		List<SelectItem> populateBankAccountList = new ArrayList<SelectItem>();
-		
-		if (getManagedBean().getCtContract() != null) {
-			// branch !=null retrieve by branch
-			
-			
-			//select all if branch code == null || list from branch == null
-			if (getManagedBean().getCtContract().getSmSupplier() != null 
-					&& getManagedBean().getCtContract().getSmSupplier().getSmAppl() != null
-					&& getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null
-					&& getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() > 0) {
-				for (SmSupplierBank smSupplierBank : getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks()) {
-					if (smSupplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
-						String account = smSupplierBank.getAccountNo();
+	public SelectItem[] getPopulateBankAccountList() {		
+		if (getManagedBean().getPopulateBankAccountList() == null ) {
+			SelectItem[] items = null;
+			ISupplierSearchSO supplierSearchSO = null;
+	        SupplierSearchReqDTO reqDTO = null;
+	        SupplierSearchResDTO resDTO = null;
+	        
+	        try {
+	        	if (getManagedBean().getCtContract() != null) {
+	        		int i = 0;
+	        		supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+		            reqDTO = new SupplierSearchReqDTO();
+		            resDTO = new SupplierSearchResDTO();
+		            
+		            reqDTO.setSupplierId(getManagedBean().getCtContract().getSmSupplier().getSupplierId());
+		            if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() != null) {
+		            	reqDTO.setBranchCode(getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode());
+		            	resDTO = supplierSearchSO.retrieveSupplierBranchBanksByBranchCode(reqDTO);
+		            }		            
+		            if (getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode() == null
+		            		|| resDTO.getSmSupplierBankList().isEmpty()) {
+		            	resDTO = supplierSearchSO.retrieveSmSupplierBankBySupplier(reqDTO);
+		            }
+		            
+		            List<SmSupplierBank> list = resDTO.getSmSupplierBankList();
+		            items = new SelectItem[list.size()];
+		            
+		            for (SmSupplierBank smSupplierBank : list) {
+		            	String account = smSupplierBank.getAccountNo();
 						if (smSupplierBank.getPmFinancialOrg() != null 
 								&& smSupplierBank.getPmFinancialOrg().getFinOrgName() != null) {
 							account = account + ContractConst.SPACE_SLASH + smSupplierBank.getPmFinancialOrg().getFinOrgName();
 						}
-						 if(getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().size() ==1){
-						    	getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(smSupplierBank.getAccountNo());
-						 }
-						populateBankAccountList.add(new SelectItem(smSupplierBank.getAccountNo(), account));
-						if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
+						items[i++] = new SelectItem(smSupplierBank.getAccountNo(), account);
+		            	if (!getManagedBean().getSupplierBankAccountMap().containsKey(smSupplierBank.getAccountNo())) {
 							getManagedBean().getSupplierBankAccountMap().put(smSupplierBank.getAccountNo(), smSupplierBank);
 						}
+		            	// Default the bank account no if only 1 bank account is available
+		            	if (list.size() == 1) {
+							getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(smSupplierBank.getAccountNo());
+							changeAccountActionListener();
+						}
 					}
-				}
-			}
+		            getManagedBean().setPopulateBankAccountList(items);	        		
+	        	}
+	        } finally {
+	        	supplierSearchSO = null;
+	            reqDTO = null;
+	            resDTO = null;
+	        }
 		}
-		return populateBankAccountList;
+		return getManagedBean().getPopulateBankAccountList();
 	}
 	
 	/**

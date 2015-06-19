@@ -72,6 +72,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Map<String, SmSupplierBank> supplierBankAccountMap;
 	private SelectItem[] listOfFinancialOrg;
 	private SelectItem[] populateContractList;
+	private SelectItem[] populateBankAccountList;
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();	
 	private CtContract selectedContract;
 	private CtContract ctContract;
@@ -543,8 +544,22 @@ public class SupplierManagedBean extends BaseManagedBean {
 	 */
 	public void setPopulateContractList(SelectItem[] populateContractList) {
 		this.populateContractList = populateContractList;
-	}
+	}	
 	
+	/**
+	 * @return the populateBankAccountList
+	 */
+	public SelectItem[] getPopulateBankAccountList() {
+		return populateBankAccountList;
+	}
+
+	/**
+	 * @param populateBankAccountList the populateBankAccountList to set
+	 */
+	public void setPopulateBankAccountList(SelectItem[] populateBankAccountList) {
+		this.populateBankAccountList = populateBankAccountList;
+	}
+
 	/**
 	 * @return the searchFilterBean
 	 */

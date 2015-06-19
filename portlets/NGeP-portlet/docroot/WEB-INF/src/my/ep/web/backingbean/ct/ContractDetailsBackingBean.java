@@ -51,6 +51,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -80,6 +81,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -783,6 +786,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
 		renderUpdateCheckbox(getManagedBean().getContractVer());
 		getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+		getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		
 		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
 		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
@@ -890,6 +894,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          	
          	if (ctContractVer.getCtContractValue().isCompanyNameChange()) {
          		ctContractVer.getCtContractValue().setSupplierName(getManagedBean().getSupplierCompanyName());
+         		ctContractVer.getCtContractValue().setSupplierBranch(getManagedBean().getSupplierBranchName());
          	}
          	if (ctContractVer.getCtContractValue().isAddressChange()) {
          		ctContractVer.getCtContractValue().setSupplierAddress(getManagedBean().getSmAddress());
@@ -2424,9 +2429,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
 			this.getManagedBean().setSupplierCompanyName(
 					this.getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+			
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+            reqDTO.setSmAppl(this.getManagedBean().getCtContract().getSmSupplier().getSmAppl());
+            
+            SupplierSearchResDTO resDTO = supplierSearchSO.retrieveUpdateSmSupplierBranchFromLatestApplication(reqDTO);			
+			this.getManagedBean().setSupplierBranchName(resDTO.getLatestBranch().getBranchName());
 		} else {
 			this.getManagedBean().setSupplierCompanyName(
 				this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			this.getManagedBean().setSupplierBranchName(
+					this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		}
 	}
 	
