@@ -1198,29 +1198,33 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		boolean isTechOff = false;
 		List<ScQtCheckList> uploadTechSpecList = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> techSpecList = new ArrayList<ScQtCheckList>();
-		IQTSpecSO specSO;
-		try {
-			specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			reqDTO.setScQt(qt);
-			reqDTO.setSpecType(QTConstants.TECHNICAL_DOC_TYPE);
-			SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
-			techSpecList = resDto.getTechnicalCheckList();
-			for (ScQtCheckList qtCheckList : techSpecList) {
-				if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
-						|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
-					if (!qtCheckList.getAction().getParameterCode().equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
-						uploadTechSpecList.add(qtCheckList);
-						isTechOff = true;
+		
+		if (qt.isTechEvaluationReq()) {
+			IQTSpecSO specSO;
+			try {
+				specSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				reqDTO.setScQt(qt);
+				reqDTO.setSpecType(QTConstants.TECHNICAL_DOC_TYPE);
+				SpecificationResDTO resDto = specSO.retrieveCheckLists(reqDTO);
+				techSpecList = resDto.getTechnicalCheckList();
+				for (ScQtCheckList qtCheckList : techSpecList) {
+					if (qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD)
+							|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
+						if (!qtCheckList.getAction().getParameterCode().equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
+							uploadTechSpecList.add(qtCheckList);
+							isTechOff = true;
+						}
 					}
 				}
+			} finally {
+				specSO = null;
 			}
-			context.put("isTechOff", isTechOff);
-			context.put("uploadTechSpecList", uploadTechSpecList);
-			context.put("bean", this);
-		} finally {
-			specSO = null;
 		}
+		
+		context.put("isTechOff", isTechOff);
+		context.put("uploadTechSpecList", uploadTechSpecList);
+		context.put("bean", this);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_TECH_COMPLIANCE_CHECKLIST, context, new FileOutputStream(getActualFilePath(attachment)));
 	}
