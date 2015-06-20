@@ -1799,6 +1799,8 @@ public class QTDetailBackingBean extends
 		// List<ScQtApproval> approvals =
 		// this.getManagedBean().getQt().getScQtApprovals();
 		// if (CollectionUtils.isEmpty(tabList)) {
+
+		updateApprovalDetails(this.getManagedBean().getQt());
 		retrieveApprovalTabDtl();
 		// }
 
@@ -3962,10 +3964,9 @@ public class QTDetailBackingBean extends
 			detailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
 
-			List<TabBean> tabList = this.getManagedBean().getTabList();
-			if (CollectionUtils.isEmpty(tabList)) {
-				retrieveApprovalTabDtl();
-			}
+			updateApprovalDetails(this.getManagedBean().getQt());
+			retrieveApprovalTabDtl();
+
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			ScQt qtDetails = quationTenderReqDTO.getQtdetail();
@@ -4051,16 +4052,20 @@ public class QTDetailBackingBean extends
 				qtStatus.setPmStatus(pmStatus);
 				qtStatus.setCurrent(Boolean.TRUE);
 				qtStatus.setDocType(QTConstants.DOCTYPE_QT);
-				
-				quationTenderReqDTO.setQtId(this.getManagedBean().getQt().getQtId());
-				QuationTenderResDTO resDTO1 = detailSO.retriveQtById(quationTenderReqDTO);
+
+				quationTenderReqDTO.setQtId(this.getManagedBean().getQt()
+						.getQtId());
+				QuationTenderResDTO resDTO1 = detailSO
+						.retriveQtById(quationTenderReqDTO);
 				ScQt qt = resDTO1.getQtDetail();
 				for (ScQtStatus status : qt.getScQtStatus()) {
 					status.setCurrent(Boolean.FALSE);
 				}
 				qt.getScQtStatus().add(qtStatus);
-				/*List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
-				qtStatuses.add(qtStatus);*/
+				/*
+				 * List<ScQtStatus> qtStatuses = new ArrayList<ScQtStatus>();
+				 * qtStatuses.add(qtStatus);
+				 */
 				scQt.setScQtStatus(qt.getScQtStatus());
 				scQt.setScQtCommittees(null);
 				scQt.setScQtApprovals(null);
@@ -4568,6 +4573,32 @@ public class QTDetailBackingBean extends
 
 		updateQtAmmendMentDtls(event.getComponent().getId(),
 				event.getOldValue(), event.getNewValue());
+
+	}
+
+	private void updateApprovalDetails(ScQt scQt) {
+		// Setting the Approval details to Qtdetails
+		List<TabBean> tabList = this.getManagedBean().getTabList();
+
+		if (CollectionUtils.isNotEmpty(tabList)) {
+			List<ScQtApproval> approvalList = null;
+			approvalList = new ArrayList<ScQtApproval>();
+			for (TabBean tabBean : tabList) {
+				if (tabBean.getBudgetApprovalUsers() != null) {
+					tabBean.getScQtApproval().setApproverSettings(
+							tabBean.getBudgetApprovalUsers().getTarget());
+				}
+
+				tabBean.getScQtApproval().setScQtApprovalRemarks(
+						finalizeRemarks(tabBean.getScQtApproval()
+								.getScQtApprovalRemarks()));
+				// setUserDetails(tabBean.getScQtApproval());
+
+				approvalList.add(tabBean.getScQtApproval());
+
+			}
+			scQt.setScQtApprovals(approvalList);
+		}
 
 	}
 }
