@@ -91,11 +91,10 @@
 					style="width:100px;"
 					disabled="#{evaluationBackingBean.managedBean.readOnly}"
 					label="#{lbl['lbl.sc.status']}"
-					value="#{meeting.meetingStatus.statusId}">
+					value="#{meeting.meetingStatusStr}">
 					<f:selectItems
 						value="#{evaluationMeetingBackingBean.getStatusDropdownValues('SC', 'MS')}" />
-					<p:ajax event="change" process="@this" partialSubmit="true"
-						listener="#{evaluationBackingBean.setStatusChange(index,evaluationBackingBean.managedBean.scQtMeetings)}"></p:ajax>
+					<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.changeMeetingStatus(meeting)}"/>
 				</p:selectOneMenu>
 
 			</p:column>

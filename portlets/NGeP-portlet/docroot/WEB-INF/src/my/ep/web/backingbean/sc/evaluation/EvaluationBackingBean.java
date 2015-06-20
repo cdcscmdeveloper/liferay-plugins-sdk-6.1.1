@@ -708,6 +708,11 @@ public class EvaluationBackingBean extends
 				if (resDTO.getMeetingDtls() != null
 						&& !resDTO.getMeetingDtls().isEmpty()) {
 
+					for (ScQtMeeting scQtMeeting : resDTO.getMeetingDtls()) {
+						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
+								.getMeetingStatus().getStatusId() : null;
+						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+					}
 					this.getManagedBean().setScQtMeetings(
 							resDTO.getMeetingDtls());
 
@@ -9679,35 +9684,20 @@ public class EvaluationBackingBean extends
 	}
 
 	/**
-	 * Sets the status change.Event handle to change the
-	 * status(Pending/Compelete/Done) in meetingdetails tab.
+	 * Event to update the status of the selected meeting
 	 * 
-	 * @param index
-	 *            the index
-	 * @param meeting
-	 *            the meeting
+	 * @param scQtMeeting
+	 *            the selected ScQtMeeting entity
 	 */
-	public void setStatusChange(int index, List<ScQtMeeting> meeting) {
-		ScQtMeeting list = meeting.get(index);
+	public void changeMeetingStatus(ScQtMeeting scQtMeeting) {
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		statusReqDTO.setStatusId(scQtMeeting.getMeetingStatusStr());
 
-		List<PmStatusDesc> localParamDesc = retriveStatus("SC", "MS");
-		if (null != list.getMeetingStatus().getStatusId()) {
-			for (PmStatusDesc statusDesc : localParamDesc) {
-
-				if (statusDesc
-						.getPmStatus()
-						.getStatusId()
-						.equals(Long.valueOf(list.getMeetingStatus()
-								.getStatusId()))) {
-
-					list.setMeetingStatus(statusDesc.getPmStatus());
-					break;
-				}
-			}
-		}
-
-		this.getManagedBean().getScQtMeetings().set(index, list);
-
+		StatusResDTO statusResDTO = statusSO
+				.retrieveStatusByStatusId(statusReqDTO);
+		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
 	}
 
 	/**
