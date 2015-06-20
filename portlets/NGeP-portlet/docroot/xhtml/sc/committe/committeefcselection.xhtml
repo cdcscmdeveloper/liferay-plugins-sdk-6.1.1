@@ -101,7 +101,8 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				process="@this, fcMembersId" partialSubmit="true"
 				oncomplete="fcCommitteeDeletePopUp.show();"
-				update="@([id$=#{fcCommitteeDeleteId}])" />
+				update="@([id$=#{fcCommitteeDeleteId}])"
+				rendered="#{isCommitteeRecordStatusActive}" />
 		</div>
 		<ui:param name="fcCommitteeDeleteId" value="fcCommitteeDeleteId" />
 		<ac:confirmationPopup id="#{fcCommitteeDeleteId}"
