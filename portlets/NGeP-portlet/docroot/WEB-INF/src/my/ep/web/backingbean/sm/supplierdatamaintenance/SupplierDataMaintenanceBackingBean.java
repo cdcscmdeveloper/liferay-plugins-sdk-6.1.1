@@ -337,6 +337,13 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		}
 	}
+	
+	/**
+	 * Call confirmation dialog
+	 */
+	public void showConfirmDialog() {
+		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
+	}
 
 	/**
 	 * Save selected category information into SmSupplierCategory list of the
