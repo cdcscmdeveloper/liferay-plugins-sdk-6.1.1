@@ -20,19 +20,18 @@
 		<br />
 		<br />
 		<ui:include src="evaluationHeader.xhtml" />
-		<br/>		
+		<br />
 		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="checklistHeader.xhtml" />
 		</p:panel>
 		<br />
 
 		<h:panelGroup>
-			<p:panel header="#{lbl['lbl.sc.supplier.list']}"
-				toggleable="true">
+			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 				<p:dataTable var="othersFinList" id="othersFinListId"
-					editable="true" rows="10"
-					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckList}"
+					editable="true" rows="10" lazy="true"
+					value="#{evaluationBackingBean.managedBean.complianceTechnicalProposalCheckListDM}"
 					rowIndexVar="index" style="width:100%" rowKey="#{othersFinList}">
 					<ac:paginator for="othersFinListId" />
 
@@ -60,17 +59,16 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.action']}"
-						style="width:20%">
+					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%">
 
 						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 							rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,index,'F')}" />
+							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" />
 						<p:commandButton value="#{lbl['lbl.btn.view']}"
 							rendered="#{othersFinList.evaluationStatus.statusId eq '61601'}"
 							process="@this" partialSubmit="true"
-							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,index,'F')}" />
+							action="#{evaluationBackingBean.financialSupplierEvaluate(othersFinList,'F')}" />
 					</p:column>
 				</p:dataTable>
 			</p:panel>

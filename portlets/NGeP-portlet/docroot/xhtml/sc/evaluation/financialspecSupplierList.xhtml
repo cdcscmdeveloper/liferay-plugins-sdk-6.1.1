@@ -16,7 +16,7 @@
 	<h:panelGroup>
 		<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
-			<p:dataTable var="finSpec" editable="true"
+			<p:dataTable var="finSpec" editable="true" lazy="true"
 				id="financialSpecEvaluationStage" rows="10"
 				value="#{finSpecsupplierList}" rowIndexVar="index"
 				style="width:100%" rowKey="#{finSpec}">
@@ -98,18 +98,17 @@
 
 
 
-				<p:column headerText="#{lbl['lbl.sc.action']}"
-					style="width:15%">
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%">
 
 					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 						rendered="#{finSpec.evaluationStatus.statusId eq '61600'}"
 						process="@this"
-						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,index,'F')}"
+						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
 						partialSubmit="true" />
 					<p:commandButton value="#{lbl['lbl.btn.view']}"
 						rendered="#{finSpec.evaluationStatus.statusId eq '61601'}"
 						process="@this"
-						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,index,'F')}"
+						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
 						partialSubmit="true" />
 				</p:column>
 			</p:dataTable>
