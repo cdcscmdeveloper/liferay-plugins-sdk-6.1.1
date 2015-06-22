@@ -4699,7 +4699,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmRegistrationStatus() != null) && (this.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMainCategory() != null) && (this.getSmMainCategory() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSubCategory() != null) && (this.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
-				//|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
+				|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
 				|| ((this.getSmSubCategoryDivision() != null) && (this.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationStatus() != null) && (this.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmState() != null) && (this.getSmState() != ReportConst.EMPTY_VAL))
