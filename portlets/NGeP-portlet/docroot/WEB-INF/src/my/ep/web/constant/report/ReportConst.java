@@ -373,6 +373,7 @@ public class ReportConst {
 		public static final String SM_PERSON_BRANCH_BANK = "SM_058";
 		public static final String SM_THRESHOLD = "SM_059";
 		public static final String SM_LIST_OF_USERS = "SM_060";
+		public static final String SM_DAILY_APP_SUBMITTED = "SM_061";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";

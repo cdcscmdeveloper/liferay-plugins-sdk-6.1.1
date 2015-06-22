@@ -41,6 +41,7 @@
 										itemValue="#{lbl['lbl.rpt.sabah']}"></f:selectItem>
 									<f:selectItem itemLabel="#{lbl['lbl.rpt.sarawak']}"
 										itemValue="#{lbl['lbl.rpt.sarawak']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 								</p:selectOneMenu>
 
 							</p:column>
@@ -87,6 +88,7 @@
 							<p:inputText maxlength="100"
 								value="#{reportBackingBean.smUserName}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						
@@ -101,6 +103,7 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItems value="#{reportBackingBean.registrationStatusList}"></f:selectItems>
+												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -146,6 +149,7 @@
 									itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
 									itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -162,6 +166,7 @@
 									itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.both']}"
 									itemValue="#{lbl['lbl.rpt.both']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -284,7 +289,7 @@
 												label="#{lbl['lbl.rpt.cmpName']}" id="CompanyName"
 												maxlength="100" value="#{reportBackingBean.smCompanyName}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="CompanyNameMsg" for="CompanyName"
 												display="icon" showDetail="false"/></td>
@@ -300,6 +305,7 @@
 							<p:inputText maxlength="20"
 								value="#{reportBackingBean.smMofRegNo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
                         <c:if
@@ -309,6 +315,7 @@
 							<p:inputText maxlength="20"
 								value="#{reportBackingBean.smMofRegNo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -330,7 +337,7 @@
 												label="#{lbl['lbl.rpt.mofRegNo']}" id="MOFRegNo"
 												maxlength="20" value="#{reportBackingBean.smMofRegNo}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="MOFRegNoMsg" for="MOFRegNo"
 												display="icon" showDetail="false"/></td>
@@ -368,7 +375,7 @@
 												label="#{lbl['lbl.rpt.applicationNo']}" id="smApplicationNo"
 												maxlength="16" value="#{reportBackingBean.smApplicationNo}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="smApplicationNoMsg"
 												for="smApplicationNo" display="icon" showDetail="false"/></td>
@@ -426,6 +433,7 @@
 													itemValue="#{lbl['lbl.rpt.registered']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.pendPayAppl']}"
 													itemValue="#{lbl['lbl.rpt.pendPayAppl']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -546,6 +554,7 @@
 									itemValue="#{lbl['lbl.rpt.processingFee']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regFee']}"
 									itemValue="#{lbl['lbl.rpt.regFee']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -560,6 +569,7 @@
 									itemValue="#{lbl['lbl.rpt.new']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.reNew']}"
 									itemValue="#{lbl['lbl.rpt.reNew']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -573,7 +583,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.responserpt']}"
 									itemValue="#{lbl['lbl.rpt.response']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.summaryrpt']}"
-									itemValue="#{lbl['lbl.rpt.summary']}"></f:selectItem>								
+									itemValue="#{lbl['lbl.rpt.summary']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -624,7 +635,7 @@
 									itemValue="#{lbl['lbl.rpt.regBasic']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.regMOF']}"
 									itemValue="#{lbl['lbl.rpt.regMOF']}"></f:selectItem>
-								
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						
@@ -676,6 +687,7 @@
 							<p:inputText maxlength="2000"
 								value="#{reportBackingBean.smRole}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smEpNoView}">
@@ -684,6 +696,7 @@
 							<p:inputText maxlength="12"
 								value="#{reportBackingBean.smEpNo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smRegistrationNoView}">
@@ -692,6 +705,7 @@
 							<p:inputText maxlength="20"
 								value="#{reportBackingBean.smRegistrationNo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smSupportingDocumentModeView}">
@@ -704,7 +718,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.online']}"
 									itemValue="#{lbl['lbl.rpt.online']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.offline']}"
-									itemValue="#{lbl['lbl.rpt.offline']}"></f:selectItem>								
+									itemValue="#{lbl['lbl.rpt.offline']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smSupportingDocumentStatusView}">
@@ -717,7 +732,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.complete']}"
 									itemValue="#{lbl['lbl.rpt.complete']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.inncomplete']}"
-									itemValue="#{lbl['lbl.rpt.inncomplete']}"></f:selectItem>								
+									itemValue="#{lbl['lbl.rpt.inncomplete']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoFromView}">
@@ -726,6 +742,7 @@
 							<p:inputText maxlength="22"
 								value="#{reportBackingBean.smMofRegNoFrom}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoToView}">
@@ -734,6 +751,7 @@
 							<p:inputText maxlength="22"
 								value="#{reportBackingBean.smMofRegNoTo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if
@@ -756,7 +774,7 @@
 												label="#{lbl['lbl.rpt.mofRegNoFrom']}" id="smMofRegNoFrom"
 												maxlength="16" value="#{reportBackingBean.smMofRegNoFrom}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="smMofRegNoFromMsg"
 												for="smMofRegNoFrom" display="icon" showDetail="false"/></td>
@@ -784,7 +802,7 @@
 												label="#{lbl['lbl.rpt.mofRegNoTo']}" id="smMofRegNoTo"
 												maxlength="16" value="#{reportBackingBean.smMofRegNoTo}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:inputText></td>
 										<td><p:message id="smMofRegNoToMsg"
 												for="smMofRegNoTo" display="icon" showDetail="false"/></td>
@@ -798,6 +816,7 @@
 							<p:inputText maxlength="40"
 								value="#{reportBackingBean.smPaidUpCapitalFrm}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCapitalToView}">
@@ -806,6 +825,7 @@
 							<p:inputText maxlength="40"
 								value="#{reportBackingBean.smPaidUpCapitalTo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCapitalNaccumView}">
@@ -815,7 +835,8 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.accumulatedPaidUpCptlList}"></f:selectItems>								
+								<f:selectItems value="#{reportBackingBean.accumulatedPaidUpCptlList}"></f:selectItems>
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPersonnelRoleView}">
@@ -831,7 +852,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.owner']}"
 									itemValue="#{lbl['lbl.rpt.owner']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.ceo']}"
-									itemValue="#{lbl['lbl.rpt.ceo']}"></f:selectItem>								
+									itemValue="#{lbl['lbl.rpt.ceo']}"></f:selectItem>	
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />							
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smIdentficationTypeView}">
@@ -841,7 +863,8 @@
 								style="margin-top:5px;width:300px;">
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
-								<f:selectItems value="#{reportBackingBean.identificationTypeList}"></f:selectItems>									
+								<f:selectItems value="#{reportBackingBean.identificationTypeList}"></f:selectItems>	
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smIdentificationNumberView}">
@@ -850,6 +873,7 @@
 							<p:inputText maxlength="40"
 								value="#{reportBackingBean.smIdentificationNumber}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCancellationByView}">
@@ -858,6 +882,7 @@
 							<p:inputText maxlength="40"
 								value="#{reportBackingBean.smCancellationBy}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>
 						
@@ -921,7 +946,7 @@
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems
 									value="#{smReportBackingBean.managedBean.rptGenBean.stateLst}"></f:selectItems>
-								
+								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
@@ -1041,6 +1066,7 @@
 
 							<p:inputText value="#{reportBackingBean.smYearText}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>						
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaymentMethodView}">
@@ -1054,7 +1080,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.fpx']}"
 									itemValue="#{lbl['lbl.rpt.fpx']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.creditcard']}"
-									itemValue="#{lbl['lbl.rpt.creditcard']}"></f:selectItem>								
+									itemValue="#{lbl['lbl.rpt.creditcard']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smProcessingTypeView}">
@@ -1068,7 +1095,8 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.processing']}"
 									itemValue="#{lbl['lbl.rpt.processing']}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.registrationfee']}"
-									itemValue="#{lbl['lbl.rpt.registrationfee']}"></f:selectItem>									
+									itemValue="#{lbl['lbl.rpt.registrationfee']}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />									
 							</p:selectOneMenu>
 						</c:if>						
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smReceiptNoView}">
@@ -1076,6 +1104,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="100" value="#{reportBackingBean.smReceiptNo}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>						
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smReportTypeTwoView}">
@@ -1092,6 +1121,7 @@
 									itemValue="A"></f:selectItem>	
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.deletependingapplreject']}"
 									itemValue="R"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>						
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smProcessingOfficerNameView}">
@@ -1099,6 +1129,7 @@
 								style="margin-top:5px;width:160px;" />
 							<p:inputText maxlength="1000" value="#{reportBackingBean.smProcessingOfficerName}"
 								style="margin-top:5px;width:290px;">
+								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:inputText>
 						</c:if>						
 						<c:if
