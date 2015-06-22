@@ -12,7 +12,7 @@
 	<tr>
 		<td><p:outputLabel value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
 		<td colspan="3">
-			<p:inputText id="itemSpec" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}" disabled="true" size="66" />
+			<p:inputText id="itemSpec" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}" disabled="true" size="80" />
 		</td>
 	</tr>
 	<tr>
@@ -64,8 +64,9 @@
 		</td>
 		<td>
 			<h:panelGroup rendered="#{templateSpecBean.selectedSpecQuestion.weightageReq}">
-				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{editable}" />
+				<h:outputLabel value="*" styleClass="mandatory" rendered="#{editable}" />
+				<p:outputLabel value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}" style="white-space:nowrap;"/>
+				
 			</h:panelGroup>
 		</td>
 		<td>
@@ -76,10 +77,9 @@
 					disabled="#{!editable}"
 					label="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage']}">
 					<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" maxIntegerDigits="2" />
-				</p:inputText>
-				#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.percentage']}
+				</p:inputText> <ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
 				<p:message id="weightageMsg" for="weightage" display="icon" />
-				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.settings.weightage.tooltip']}" />
+				
 			</h:panelGroup>
 		</td>
 	</tr>
