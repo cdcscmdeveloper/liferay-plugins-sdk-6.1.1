@@ -2288,7 +2288,7 @@ public class SmCommonUtil {
 	 *            supplier
 	 * @return SmAppl
 	 */
-	public SmAppl getActiveApplBySupplier(SmSupplier supplier) {
+	public static SmAppl getActiveApplBySupplier(SmSupplier supplier) {
 		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
 		mofRegistrationReqDTO.setSupplierId(supplier.getSupplierId());
 		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
