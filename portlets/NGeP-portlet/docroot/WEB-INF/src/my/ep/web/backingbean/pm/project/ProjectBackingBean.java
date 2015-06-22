@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.pm.project;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
@@ -14,15 +13,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.service.pm.common.votfund.IVotFundSO;
+import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.dto.pm.common.votfund.VotFundReqDTO;
-import my.ep.dto.pm.common.votfund.VotFundResDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaReqDTO;
+import my.ep.dto.pm.common.projectsetia.ProjectSetiaResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.logging.LogKey;
@@ -223,20 +221,20 @@ BaseBackingBean<ProjectManagedBean> {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			IVotFundSO votFundSO;
+			IProjectSetiaSO projectSO;
 
 			try {
 				ISearchBean<PmSubSetia> searchBeanData = getSearchBeanData(searchBean);
-				VotFundReqDTO votReqDTO = new VotFundReqDTO();
-				votReqDTO.setPmSubSetiaSearchBean(searchBeanData);
-				votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
+				ProjectSetiaReqDTO projectSetiaReqDTO = new ProjectSetiaReqDTO();
+				projectSetiaReqDTO.setPmSubSetiaSearchBean(searchBeanData);
+				projectSO = (IProjectSetiaSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IVotFundSO.class);
-				VotFundResDTO resDTO = votFundSO.searchProjectData(votReqDTO);
+								IProjectSetiaSO.class);
+				ProjectSetiaResDTO projectSetiResDTO = projectSO.searchProjectData(projectSetiaReqDTO);
 				getManagedBean().setLazy(true);
-				if (resDTO.isSuccessful()) {
+				if (projectSetiResDTO.isSuccessful()) {
 
-					return resDTO.getPmSubSetiaResultBean();
+					return projectSetiResDTO.getPmSubSetiaResultBean();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
