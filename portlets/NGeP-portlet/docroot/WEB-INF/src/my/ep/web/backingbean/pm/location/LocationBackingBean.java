@@ -24,6 +24,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.common.city.CityReqDTO;
 import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -147,19 +148,25 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 
 	private ISearchBean<VPmLocation> getSearchBeanData(
 			ISearchBean<VPmLocation> searchBean) {
-		boolean isSearchable = SEARCH_DEFAULT;
-		boolean isEmpty = true;
+//		boolean isSearchable = SEARCH_DEFAULT;
+//		boolean isEmpty = true;
 
 		LocationSearchBean lSearchBean = this.getManagedBean()
 				.getLocationSearchBean();
+		
+		if (lSearchBean.getCountryId() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("countryId",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							lSearchBean.getCountryId()));
+		}
 
 		if (lSearchBean.getLocationType() != null) {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationType",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							getManagedBean().getLocationSearchBean()
+							lSearchBean
 									.getLocationType()));
-			isEmpty = false;
 		}
 
 		if (lSearchBean.getLocationCode() != null
@@ -167,9 +174,8 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("locationCode",
 							SearchOperator.OPERATOR_LIKE.value(),
-							getManagedBean().getLocationSearchBean()
+							lSearchBean
 									.getLocationCode(), true));
-			isEmpty = false;
 		}
 		if (lSearchBean.getLocationName() != null
 				&& lSearchBean.getLocationName().trim().length() > 0) {
@@ -179,14 +185,13 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 							SearchOperator.OPERATOR_LIKE.value(),
 							getManagedBean().getLocationSearchBean()
 									.getLocationName(), true));
-			isEmpty = false;
 		}
 
 		if (lSearchBean.getRecordStatus() != null
 				&& lSearchBean.getRecordStatus().trim().length() > 0) {
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("status", SearchOperator.OPERATOR_EQUALS
-						.value(), getManagedBean().getLocationSearchBean()
+						.value(), lSearchBean
 						.getRecordStatus()));
 		 }else{
 				searchBean.getDataFilterBeans().add(
@@ -705,7 +710,10 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public void resetLocationSearchBean() {
 		log.info("resetLocationSearchBean");
 		getManagedBean().setLazy(false);
-		this.getManagedBean().setLocationSearchBean(new LocationSearchBean());
+		LocationSearchBean searchBean = new LocationSearchBean();
+		searchBean.setCountryId(PmCommonUtil
+				.retrieveCountryByCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE).getCountryId());
+		this.getManagedBean().setLocationSearchBean(searchBean);
 		searchLocation = new SearchLocatonPagingDataModel();
 		getManagedBean().setSelectedType(null);
 	}
@@ -717,5 +725,16 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 	public void setSearchLocation(IPagingDataModel<VPmLocation> searchLocation) {
 		this.searchLocation = searchLocation;
 	}
+	
+	/**
+	 * get all country list
+	 * 
+	 * @return List<PmCountry>
+	 */
+	public List<PmCountry> getCountryList() {
+		log.info("getCountryList");
+		return PmCommonUtil.retrievePmCountryList();
+	}
+
 
 }
