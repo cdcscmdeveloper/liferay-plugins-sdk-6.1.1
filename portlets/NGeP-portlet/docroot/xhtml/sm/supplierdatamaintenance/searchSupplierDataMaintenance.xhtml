@@ -103,13 +103,13 @@
 					<p:panel id="dPanel" style="border: none;">
 						<table style="width: 100%">
 							<tr>
-								<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.softcert.requestsoftcert.confirmation']}" style="float:left"/></td>
+								<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.supp.data.maintenance.submitoconfirm.msg']}" style="float:left"/></td>
 							</tr>
 						</table>
 					</p:panel>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{supplierDataMaintenanceBackingBean.submit}"
-							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@([id$=dataMainTenanceMainId])" />
+							onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" />
 						<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
 					</div>
 				</p:dialog>
