@@ -88,7 +88,7 @@
 							supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 			</p:column>
 
-			<p:column selectionMode="single" style="width:2%" disabledSelection="#{isPendingEndorsementStatus}" />
+			<p:column selectionMode="single" style="width:2%" disabledSelection="true" />
 		</p:dataTable>
 
 		<p:dataTable id="recommendTbl" var="item"
@@ -208,43 +208,20 @@
 						rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward 
 										and scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 						<p:column>
-							<h:outputText value="#{scQtRecommendDtl.awardQty}"
-								rendered="#{!isPendingNegotiationStatus}" />
+							<h:outputText value="#{scQtRecommendDtl.awardQty}" />
 							<br />
 						</p:column>
 					</ui:repeat>
 
 					<h:outputText value="#{item.requestItem.quantity}"
-						rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
-								and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
+						rendered="#{(item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard ||
+										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) 
+									and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
 				</h:panelGroup>
 			</p:column>
 			
-			<p:column selectionMode="multiple" style="width:2%" rendered="#{isPendingNegotiationStatus}" />			
 		</p:dataTable>
 				
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-			columnClasses="columnWidth20"  rendered="#{isPendingNegotiationStatus and 
-					lOIDetailBackingBean.managedBean.itemized}">
-			
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.award.supplier']}" />
-			</h:column>
-			<h:column>
-				<p:selectOneMenu id="awardSupplier" value="#{lOIDetailBackingBean.managedBean.awardSupplierId}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-					<f:selectItems value="#{lOIDetailBackingBean.getAwardSupplierListDropDown()}" />
-					<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
-	   			</p:selectOneMenu>
-				
-				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}" 
-					process="@this"
-					partialSubmit="true"
-					action="#{lOIDetailBackingBean.awardSupplierEvent}" 
-					update="recommendTbl"/>
-			</h:column>
-			
-		</h:panelGrid>
 	</p:panel>
 	
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">

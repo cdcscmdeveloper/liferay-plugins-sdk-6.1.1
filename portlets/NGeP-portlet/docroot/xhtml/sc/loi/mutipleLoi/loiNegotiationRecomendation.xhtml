@@ -190,8 +190,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.ranking']}"
 				style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl"
-					value="#{item.awardSupplierList}">
+				<ui:repeat var="evaluationResultDtl" value="#{item.awardSupplierList}">
 					<h:outputText value="#{evaluationResultDtl.evalRank}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
@@ -207,8 +206,7 @@
 						value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 				</f:facet>
 				<h:panelGroup id="qtyPG">
-					<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}"
-						type="none"
+					<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none"
 						rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
 						<p:column>
 							<h:inputText id="awardQty" value="#{scQtRecommendDtl.awardQty}"
@@ -232,7 +230,8 @@
 					</p:dataList>
 
 					<h:outputText value="#{item.requestItem.quantity}"
-						rendered="#{item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard 
+						rendered="#{(item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard ||
+										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) 
 								and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
 				</h:panelGroup>
 			</p:column>
