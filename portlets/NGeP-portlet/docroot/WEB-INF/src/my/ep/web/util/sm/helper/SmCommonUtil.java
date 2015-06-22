@@ -1,16 +1,23 @@
 package my.ep.web.util.sm.helper;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -24,6 +31,7 @@ import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
 import my.ep.biz.service.pm.common.city.ICitySO;
@@ -279,7 +287,7 @@ public class SmCommonUtil {
 				for (PmParameterDesc paramDesc : parameterDescs) {
 					if (paramDesc.getPmParameter() != null
 							&& paramDesc.getPmParameter().getParameterId()
-									.compareTo(pmParameter.getParameterId()) == 0) {
+							.compareTo(pmParameter.getParameterId()) == 0) {
 						desc = paramDesc.getCodeName();
 						break;
 					}
@@ -421,8 +429,8 @@ public class SmCommonUtil {
 				&& per.getPmCountry().getCountryId() != null) {
 			if (per.getPmCountry().getCountryCode() == null
 					|| (per.getPmCountry().getCountryCode() != null && per
-							.getPmCountry().getCountryCode()
-							.equalsIgnoreCase(""))) {
+					.getPmCountry().getCountryCode()
+					.equalsIgnoreCase(""))) {
 				per.setPmCountry(retrievePmCountryById(per.getPmCountry()
 						.getCountryId()));
 			}
@@ -434,7 +442,7 @@ public class SmCommonUtil {
 					ResourceBundleUtils.getMessage(
 							SupplierManagementConst.PERSONNEL_EQUI_OWNER,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale))
-					.append(",");
+							.append(",");
 			setPersonnelCountSummary(per, persCalcVo.getEquiOwnrBumiCnt(),
 					persCalcVo.getEquiOwnrNonBumiCnt(),
 					persCalcVo.getEquiOwnrFrgCnt(), persCalcVo);
@@ -451,7 +459,7 @@ public class SmCommonUtil {
 					ResourceBundleUtils.getMessage(
 							SupplierManagementConst.PERSONNEL_DIR_ROLENAME,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale))
-					.append(",");
+							.append(",");
 			setPersonnelCountSummary(per, persCalcVo.getBodBumiCnt(),
 					persCalcVo.getBodNonBumiCnt(), persCalcVo.getBodFrgCnt(),
 					persCalcVo);
@@ -468,7 +476,7 @@ public class SmCommonUtil {
 					ResourceBundleUtils.getMessage(
 							SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
 							ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale))
-					.append(",");
+							.append(",");
 			setPersonnelCountSummary(per, persCalcVo.getHghMngBumiCnt(),
 					persCalcVo.getHghMngNonBumiCnt(),
 					persCalcVo.getHghMngFrgCnt(), persCalcVo);
@@ -486,17 +494,17 @@ public class SmCommonUtil {
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				sb.append(
 						ResourceBundleUtils
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale)).append(",");
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale)).append(",");
 			} else {
 				sb.append(
 						ResourceBundleUtils
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale)).append(",");
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale)).append(",");
 			}
 
 			setPersonnelCountSummary(per, persCalcVo.getStfBumiEnterCnt(),
@@ -514,10 +522,10 @@ public class SmCommonUtil {
 			// setManagementCount(per);
 			sb.append(
 					ResourceBundleUtils
-							.getMessage(
-									SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
-									ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-									locale)).append(",");
+					.getMessage(
+							SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							locale)).append(",");
 			setPersonnelCountSummary(per, persCalcVo.getMngtBumiCnt(),
 					persCalcVo.getMngtNonBumiCnt(), persCalcVo.getMngtFrgCnt(),
 					persCalcVo);
@@ -535,10 +543,10 @@ public class SmCommonUtil {
 				// setProfEnteredCount(per);
 				sb.append(
 						ResourceBundleUtils
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale)).append(",");
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale)).append(",");
 				setPersonnelCountSummary(per, persCalcVo.getProfBumiEnterCnt(),
 						persCalcVo.getProfNonBumiEnterCnt(),
 						persCalcVo.getProfFrgEnterCnt(), persCalcVo);
@@ -555,10 +563,10 @@ public class SmCommonUtil {
 				// setSemiProfEnteredCount(per);
 				sb.append(
 						ResourceBundleUtils
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-										locale)).append(",");
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								locale)).append(",");
 				setPersonnelCountSummary(per, persCalcVo.getSemiBumiEnterCnt(),
 						persCalcVo.getSemiNonBumiEnterCnt(),
 						persCalcVo.getSemiFrgEnterCnt(), persCalcVo);
@@ -629,7 +637,7 @@ public class SmCommonUtil {
 		if (per.getPmCountry() != null
 				&& per.getPmCountry().getCountryCode() != null
 				&& per.getPmCountry().getCountryCode()
-						.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
+				.equals(SupplierManagementConst.COUNTRY_MALAYSIA_CODE)) {
 			if (per.getBumiFlg() == 1) {
 				bumiCount = bumiCount + 1;
 			} else {
@@ -765,7 +773,7 @@ public class SmCommonUtil {
 					if (persCalcVo.getTotalShrBumiShrHldrPerc().compareTo(
 							halfBumi) >= 0
 							&& persCalcVo.getTotalShrBumiShrHldrPerc()
-									.compareTo(mul) < 0) {
+							.compareTo(mul) < 0) {
 						persCalcVo.setHalfBumiStatus(true);
 					}
 
@@ -822,9 +830,9 @@ public class SmCommonUtil {
 				} else {
 					if (supplUser) {
 						persCalcVo
-								.setBumiRecommendNote(getMessage(
-										"lbl.sm.recommend.supplier.sign.nonbumi",
-										null));
+						.setBumiRecommendNote(getMessage(
+								"lbl.sm.recommend.supplier.sign.nonbumi",
+								null));
 					} else {
 						String[] params = { "" };
 						params[0] = persCalcVo.getNonBumiSignatoryBank();
@@ -897,7 +905,7 @@ public class SmCommonUtil {
 						&& sign.getSmPersonnel().getBumiFlg() == 0) {
 					bankRetVal = smSupplierBank.getPmFinancialOrg() == null ? ""
 							: smSupplierBank.getPmFinancialOrg()
-									.getFinOrgName();
+							.getFinOrgName();
 					break;
 				}
 			}
@@ -981,7 +989,7 @@ public class SmCommonUtil {
 		if (businessTypeVal
 				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_DEFAULT)
 				|| businessTypeVal
-						.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
+				.equalsIgnoreCase(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_LLP_DEFAULT)) {
 			llpOrRoc = true;
 		}
 		if (compBasic.getGovtEquity() != null && llpOrRoc) {
@@ -1061,49 +1069,49 @@ public class SmCommonUtil {
 					.getBumiEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setBumiPercentage(compBasic
 					.getBumiEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			log.debug("******* First Value of  setBumiPercent "
 					+ compBasic.getBumiPercent());
 			compBasic.setNonBumiPercent(compBasic
 					.getNonBumiEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setNonBumiPercentage(compBasic
 					.getNonBumiEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setForiegnerPercent(compBasic
 					.getForeignerEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setGovtUTPercent(compBasic
 					.getGovtUnitrustEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setGovtEquityPercent(compBasic
 					.getGovtEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setForiegnCompPercent(compBasic
 					.getForeignCompanyEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 			compBasic.setLocalCompPercent(compBasic
 					.getLocalCompanyEquity()
 					.divide(compBasic.getPaidUpCapital(), 4,
 							RoundingMode.HALF_UP).multiply(mul)
-					.setScale(2, RoundingMode.HALF_UP));
+							.setScale(2, RoundingMode.HALF_UP));
 		}
 
 	}
@@ -1120,14 +1128,14 @@ public class SmCommonUtil {
 		for (SmPersonnel person : managedBean.getSmapplShareHolders()) {
 			if (person.getShareAmt() != null
 					&& managedBean.getSmAppl().getSmCompanyBasic()
-							.getPaidUpCapital() != null
+					.getPaidUpCapital() != null
 					&& managedBean.getSmAppl().getSmCompanyBasic()
-							.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
+					.getPaidUpCapital().compareTo(new BigDecimal(0)) > 0) {
 				person.setSharePercentage(person
 						.getShareAmt()
 						.divide(managedBean.getSmAppl().getSmCompanyBasic()
 								.getPaidUpCapital(), 4, RoundingMode.HALF_UP)
-						.multiply(mul).setScale(2, RoundingMode.HALF_UP));
+								.multiply(mul).setScale(2, RoundingMode.HALF_UP));
 			} else {
 				person.setShareAmt(new BigDecimal(0).setScale(2,
 						RoundingMode.HALF_UP));
@@ -1174,19 +1182,19 @@ public class SmCommonUtil {
 			retVal = getMessage("lbl.sm.bpmtitle.review.cancelmof", null);
 			break;
 
-		// case "Review application (Escalated)":
-		// retVal = getMessage("lbl.sm.bpmtitle.reviewappl.escalated", null);
-		// break;
+			// case "Review application (Escalated)":
+			// retVal = getMessage("lbl.sm.bpmtitle.reviewappl.escalated", null);
+			// break;
 
 		case "Make Payment":
 			retVal = getMessage("lbl.sm.bpmtitle.payment.reg.fee", null);
 			break;
 
-		// case "Review Application":
-		// if(bpmProcessId.equalsIgnoreCase("MOF Supplier Registration")){
-		// retVal = getMessage("lbl.sm.bpmtitle.reviewappl.newmof", null);
-		// }
-		// break;
+			// case "Review Application":
+			// if(bpmProcessId.equalsIgnoreCase("MOF Supplier Registration")){
+			// retVal = getMessage("lbl.sm.bpmtitle.reviewappl.newmof", null);
+			// }
+			// break;
 
 		}
 
@@ -1267,8 +1275,8 @@ public class SmCommonUtil {
 		defaultAddr.setPmDistrict(new PmDistrict());
 		// defaultAddr.setPmCountry(new PmCountry());
 		defaultAddr
-				.setPmCountry(SmCommonUtil
-						.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
+		.setPmCountry(SmCommonUtil
+				.retrieveCountryByCountryCode(SupplierManagementConst.COUNTRY_MALAYSIA_CODE));
 		// defaultAddr.getPmCountry().setCountryId(1l);
 		defaultAddr.setPmState(new PmState());
 		return defaultAddr;
@@ -1489,49 +1497,49 @@ public class SmCommonUtil {
 			if (smPersonnel.isHigherManagement()) {
 				sb.append(
 						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
-										null)).append(",");
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_HGHR_ROLENAME,
+								null)).append(",");
 			}
 			if (smPersonnel.isClerical()) {
 				if (supplierType
 						.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 					sb.append(
 							SmCommonUtil
-									.getMessage(
-											SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
-											null)).append(",");
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_CLERICAL_STAFF_ROLENAME,
+									null)).append(",");
 				} else {
 					sb.append(
 							SmCommonUtil
-									.getMessage(
-											SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
-											null)).append(",");
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_STAFF_ROLENAME,
+									null)).append(",");
 				}
 			}
 			if (smPersonnel.isManagement()) {
 				sb.append(
 						SmCommonUtil
-								.getMessage(
-										SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
-										null)).append(",");
+						.getMessage(
+								SupplierManagementConst.PERSONNEL_MANAGEMENT_ROLENAME,
+								null)).append(",");
 			}
 			if (supplierType
 					.equalsIgnoreCase(SupplierManagementConst.STYPE_CONSULTANT)) {
 				if (smPersonnel.isProf()) {
 					sb.append(
 							SmCommonUtil
-									.getMessage(
-											SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
-											null)).append(",");
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_PROF_STAFF_ROLENAME,
+									null)).append(",");
 
 				}
 				if (smPersonnel.isSemiProf()) {
 					sb.append(
 							SmCommonUtil
-									.getMessage(
-											SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
-											null)).append(",");
+							.getMessage(
+									SupplierManagementConst.PERSONNEL_SEMIPROF_STAFF_ROLENAME,
+									null)).append(",");
 				}
 			}
 			if (!sb.toString().isEmpty() && sb.toString().length() > 0) {
@@ -1609,7 +1617,7 @@ public class SmCommonUtil {
 									new FacesScopes().getUserLocale())));
 		}
 		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, page);
+		.handleNavigation(fc, null, page);
 	}
 
 	/**
@@ -2146,10 +2154,10 @@ public class SmCommonUtil {
 		for (SmSupplierCategory tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& (tmp.getPmCategoryL3() != null && tmp
-							.getPmCategoryL3()
-							.getCategoryL3Id()
-							.compareTo(
-									param.getPmCategoryL3().getCategoryL3Id()) == 0)) {
+					.getPmCategoryL3()
+					.getCategoryL3Id()
+					.compareTo(
+							param.getPmCategoryL3().getCategoryL3Id()) == 0)) {
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
 					break;
@@ -2191,5 +2199,77 @@ public class SmCommonUtil {
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * post Back to payment gatewway
+	 * 
+	 * @param httpServletRequest
+	 * @param isParamRequired
+	 * @param merchantId
+	 * @param molIpnUrl
+	 * @throws Exception
+	 */
+	public static void paymentCurlIPN(HttpServletRequest httpServletRequest, boolean isParamRequire, String merchantId, String molIPNUrl)throws Exception {
+		Enumeration<String> resParameters = httpServletRequest.getParameterNames();
+		// List<NameValuePair> params = new ArrayList<NameValuePair>();
+		StringBuilder strParams = new StringBuilder();
+
+		if(isParamRequire){
+			while (resParameters.hasMoreElements()) {
+				String paramName = (String) resParameters.nextElement();
+				// params.add(new BasicNameValuePair(paramName,
+				// httpServletRequest.getParameter(paramName)));
+				strParams.append(paramName + "="
+						+ httpServletRequest.getParameter(paramName));
+				strParams.append("&");
+				log.info(paramName + " - "
+						+ httpServletRequest.getParameter(paramName));
+			}
+		}
+		strParams.append("treq=1");
+		strParams.append("&");
+		strParams.append("sa="+merchantId);
+		log.info("StrParams>>>>>>" + strParams);
+		// URL url = null;
+		// BufferedReader reader = null;
+
+		try {
+			// create the HttpURLConnection
+			URL url = new URL(molIPNUrl);
+			HttpURLConnection connection = (HttpURLConnection) url
+					.openConnection();
+
+			// just want to do an HTTP POST here
+			connection.setRequestMethod("POST");
+
+			// uncomment this if you want to write output to this url
+			connection.setDoOutput(true);
+
+			OutputStream os = connection.getOutputStream();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+					os, "UTF-8"));
+			writer.write(strParams.toString());
+			writer.flush();
+			writer.close();
+			os.close();
+			// give it 15 seconds to respond
+			
+			 connection.setReadTimeout(15*1000); connection.connect();
+			  
+			 StringBuilder stringBuilder; // read the output from the server
+			 BufferedReader reader = new BufferedReader(new
+			 InputStreamReader(connection.getInputStream())); stringBuilder =
+			 new StringBuilder();
+			 
+			 System.out.println("***********CURL Response*********"); String
+			 line = null; while ((line = reader.readLine()) != null) {
+			 stringBuilder.append(line + "\n"); } log.info(">>>"+
+			 stringBuilder.toString());
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+			// throw e;
+		}
 	}
 }
