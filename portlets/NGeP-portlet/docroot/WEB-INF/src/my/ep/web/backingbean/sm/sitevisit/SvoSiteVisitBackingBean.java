@@ -2139,9 +2139,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 			reqDTO.setSmSvTask(svTask);
 			ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISiteVisitSO.class);
-			//SiteVisitResDTO resDTO = reqSO.saveOrSubmitSiteVisitReport(reqDTO);
-			SiteVisitResDTO resDTO = new SiteVisitResDTO();
-			resDTO.setSuccessful(true);
+			SiteVisitResDTO resDTO = reqSO.saveOrSubmitSiteVisitReport(reqDTO);
+			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			if (resDTO.isSuccessful()) {
 
