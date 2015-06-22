@@ -65,7 +65,9 @@
 						action="#{suppFinalMeetingBackingBean.committeeSearchAction}"
 						update="@(.existingCommitteeResults)" 
 						partialSubmit="true"
-						process="@parent" />
+						process="@parent" 
+						onstart="blockWidget.show();"
+						oncomplete="blockWidget.hide();" />
 					<br/><br/>
 					
 					<p:panel header="#{lbl['lbl.sc.search.result']}" toggleable="true">
@@ -110,7 +112,7 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.role']}">
-								<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleMember)}"/>
+								<h:outputText value="#{suppFinalMeetingBackingBean.getRoleDesc(existingMember)}" />
 							</p:column>
 						</p:dataTable>
 					</p:panel>

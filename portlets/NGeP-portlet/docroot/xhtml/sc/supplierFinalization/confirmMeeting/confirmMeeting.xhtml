@@ -120,14 +120,14 @@
 								<p:column style="width:20px;">
 									<f:facet name="header">
 										<p:selectBooleanCheckbox id="selAllMemChk" value="#{suppFinalMeetingBackingBean.managedBean.selectAllMembers}"
-											disabled="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}">
+											disabled="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 											<p:ajax partialSubmit="true" process="@this" update="memberListTbl"  
 													listener="#{suppFinalMeetingBackingBean.selectAllMembers(
 																	suppFinalMeetingBackingBean.managedBean.selectAllMembers)}" />
 										</p:selectBooleanCheckbox>
 									</f:facet>
 									<p:selectBooleanCheckbox id="selectMember" value="#{committeeMember.selected}" 
-									 		disabled="#{committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleMember}">
+									 		disabled="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
 										<p:ajax partialSubmit="true" process="@this" update="@this" 
 												listener="#{suppFinalMeetingBackingBean.selectMemberEvent(committeeMember)}"/>
 									</p:selectBooleanCheckbox>
