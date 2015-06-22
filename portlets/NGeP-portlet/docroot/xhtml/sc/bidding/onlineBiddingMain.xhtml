@@ -12,13 +12,7 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<h:panelGroup id="pollPanelGroup"
-			rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.pendingBidding or onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
-
-			<p:poll id="pollCOmponent" interval="#{onlineBiddingBB.interval}"
-				listener="#{onlineBiddingBB.pollListener}"
-				update="itemWiseBidListOB,packageRankingPanelOB,onlineBiddingNotification" />
-		</h:panelGroup>
+	
 		<ui:include src="/xhtml/sc/bidding/onlineBiddingHeader.xhtml" />
 		<p:panel id="onLineBiddingPanel"
 			header="#{lbl['lbl.sc.bidding.bid.price.details']}" toggleable="true">
@@ -151,11 +145,11 @@
 				<p:column
 					rendered="#{onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 					<p:spinner style="width : 88%" size="8" styleClass="updateSpinner"
-						value="#{bidPriceItem.newPrice}" min="0" id="spinner" label="New Bid Price"
+						value="#{bidPriceItem.newPrice}" min="0" id="spinner" 
 						label="New Bid Price" max="#{(bidPriceItem.bidPrice ne null) and !(bidPriceItem.bidPrice le 0)? bidPriceItem.bidPrice : bidPriceItem.scBidSupplierItem.itemStartPrice}"
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this"
-							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"  oncomplete="updateTotal();"
+							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"  
 							update="@this,submitButton,newPrice,newPriceSubTotal"></p:ajax>
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
@@ -165,7 +159,7 @@
 						<p:commandLink id="submitBidOB"
 							disabled="#{(bidPriceItem.newPrice == null) or (bidPriceItem.newPrice lt bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt)}"
 							action="#{onlineBiddingBB.confirmAndSubmitBIdPrice(bidPriceItem)}"
-							process="@this" oncomplete="updateTotal();"
+							process="@this" 
 							update="@this,spinner,lastBidPrice,lastBidPriceSubTotal,newPrice,newPriceSubTotal,newRanking,:form:packageRankingPanelOB">
 							<p:graphicImage
 								value="#{CommonUIConstant.imagePathUptoDesign}/ico-submit.png" />
@@ -200,8 +194,6 @@
 						<h:outputText value="#{bidPriceItem.ranking}" />
 					</h:panelGroup>
 				</p:column>
-
-
 				<p:columnGroup type="footer">
 					<p:row>
 						<p:column colspan="4">
@@ -250,7 +242,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<p:remoteCommand name="rc"
-				update="@(.updateSpinner),itemWiseBidListOB" />
+				update="itemWiseBidListOB" />
 			<p:remoteCommand name="updateTotal" update="@(.calcTotal)" />
 		</p:panel>
 
@@ -266,12 +258,9 @@
 			</div>
 		</p:confirmDialog>
 
-
-		<!-- header="#{lbl['lbl.sc.new.bid']}"  -->
-
 		<h:panelGroup id="packageRankingPanelOB" style="width : 100%">
 
-			<h:panelGroup style="width : 100% ; align: right "
+			<h:panelGroup style="width : 100% ; align: right;"
 				rendered="#{onlineBiddingBB.scBidSchedule.scBid.recommendedTypeId.parameterCode eq onlineBiddingBB.recommendTypePackage and onlineBiddingBB.scBidSchedule.pmStatus.statusId eq onlineBiddingBB.bidInProgress}">
 
 				<div style="align: right">
