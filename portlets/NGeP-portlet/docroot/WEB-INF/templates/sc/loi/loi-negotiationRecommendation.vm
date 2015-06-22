@@ -103,7 +103,7 @@
 									No
 								#end
 							</td>
-							<td width='50'>$evalResultDtl.proposalAmount.proposalAmt</td>
+							<td width='50'>$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
 							<td width='50'>$evalResultDtl.totalScore</td>
 							<td width='50'>$evalResultDtl.evalRank</td>
 							<td width='50'>$evalResultDtl.scQtRecommendDtl.awardQty</td>
