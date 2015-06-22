@@ -859,6 +859,8 @@ public class QTDetailBackingBean extends
 				.getQtSupplierList();
 		if (qtSupplierList != null && !qtSupplierList.isEmpty()) {
 			for (ScQtSupplier scQtSupplier : qtSupplierList) {
+				scQtSupplier
+						.setInvitationType(SourcingConstants.INVITATION_TYPE_INSERT);
 				setUserDetails(scQtSupplier);
 				// qtSupplierList.add(scQtSupplier);
 			}
@@ -1131,8 +1133,6 @@ public class QTDetailBackingBean extends
 				.getToBeDelCommitteMemebers());
 		return quationTenderReqDTO;
 	}
-
-	
 
 	/**
 	 * Gets the to be remove list.
@@ -2278,7 +2278,7 @@ public class QTDetailBackingBean extends
 									new ArrayList<ScQtSupplier>());
 						}
 					}
-					
+
 					boolean isQuotationThresHold = isQuotationThresHold(scQt
 							.getEstimatedAmount());
 					if (!isQuotationThresHold
@@ -2286,7 +2286,7 @@ public class QTDetailBackingBean extends
 							&& !scQt.getScQtSupplierCriteria().isAllState()) {
 						scQt.getScQtSupplierCriteria().setAllState(true);
 					}
-					
+
 					if (isQuotationThresHold
 							&& SourcingConstants.QT_TYPE_OPEN
 									.equalsIgnoreCase(scQt.getQtType())) {
@@ -3021,9 +3021,8 @@ public class QTDetailBackingBean extends
 			ScQt scQt = this.getManagedBean().getQt();
 			if (null == scQt
 					|| (scQt.isZonal()
-							/*&& !scQt.isPanel()*/
-							&& null != this.getManagedBean()
-									.getZoneGeneralTrees() && this
+					/* && !scQt.isPanel() */
+					&& null != this.getManagedBean().getZoneGeneralTrees() && this
 							.getManagedBean().getZoneGeneralTrees().isEmpty())) {
 				tenderResDTO = QtDetailsSO.retriveQTDetails(tenderReqDTO);
 				if (tenderResDTO.getQtDetail() != null) {
