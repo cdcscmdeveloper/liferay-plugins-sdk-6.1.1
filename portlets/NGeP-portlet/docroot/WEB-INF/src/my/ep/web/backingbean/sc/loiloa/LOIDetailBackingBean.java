@@ -3783,6 +3783,7 @@ public class LOIDetailBackingBean extends
 				 */
 			}
 		}
+		context.put("bigDecimalConstant", new BigDecimal(1.0));
 		context.put("decimalFormatter", new DecimalFormat("#,###,##0.00"));
 		context.put("scLois", getManagedBean().getLois());
 		context.put("bean", this);
