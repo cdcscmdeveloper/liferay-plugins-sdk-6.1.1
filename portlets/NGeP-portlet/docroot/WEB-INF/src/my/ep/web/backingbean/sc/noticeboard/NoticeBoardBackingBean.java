@@ -25,7 +25,6 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sc.bidding.IBiddingSO;
@@ -44,8 +43,6 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.city.CityReqDTO;
-import my.ep.dto.pm.common.city.CityResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -868,7 +865,7 @@ public class NoticeBoardBackingBean extends
 		setVisible(false);
 		IQTNoticeBoardSO boardSO = null;
 		if (null == mofNo || "".equalsIgnoreCase(mofNo)) {
-			throw new EpException("Mof No should not be Null or Empty");
+			throw new EpException(MessageConst.ERROR_760297);
 		}
 		ScQt scQt = this.getManagedBean().getScQt();
 		final Long qtId = scQt.getQtId();
@@ -1479,7 +1476,10 @@ public class NoticeBoardBackingBean extends
 								null,
 								new FacesMessage(FacesMessage.SEVERITY_INFO,
 										null,
-										"You have successfully registered for the briefing/site visit"));
+										ResourceBundleUtils.getMessage(
+												"lbl.sc.notice.board.bsv.success.msg", 
+												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+												new FacesScopes().getUserLocale())));
 			}
 
 		} else {
