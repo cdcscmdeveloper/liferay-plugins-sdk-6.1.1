@@ -24,22 +24,22 @@
 		<br />
 		<br />
 		<ui:include src="evaluationHeader.xhtml" />
-		<br/>		
+		<br />
 		<p:panel header="#{lbl['lbl.sc.eva.financial.proposal.evaluation']}">
 			<ui:include src="checklistHeader.xhtml" />
 		</p:panel>
 		<br />
-		
+
 		<h:panelGroup>
 
 			<ui:param name="finSpecsupplierList"
-				value="#{evaluationBackingBean.managedBean.finSpecSupplierList}"></ui:param>
+				value="#{evaluationBackingBean.managedBean.finSpecSupplierListDM}"></ui:param>
 			<ui:param name="finSpecofferPrice"
 				value="#{evaluationBackingBean.managedBean.offerPricePackage}"></ui:param>
 			<ui:param name="finSpecSupplierId" value="finSpecSupplierWithOutzone"></ui:param>
-			
+
 			<ui:include
-					src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
+				src="/xhtml/sc/evaluation/finSpecSupplierOfferPriceList.xhtml"></ui:include>
 
 		</h:panelGroup>
 

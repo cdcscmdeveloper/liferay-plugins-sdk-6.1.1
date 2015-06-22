@@ -13,12 +13,14 @@
 	<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
 
 		<p:dataTable var="demoSupplier" id="demoSupplierId" editable="true"
-			rows="10"
-			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierList}"
+			rows="10" lazy="true"
+			value="#{evaluationBackingBean.managedBean.presentationDemoSupplierListDM}"
 			rowIndexVar="index" rowKey="#{demoSupplier}">
 			<ac:paginator for="demoSupplierId" />
 
-
+			<p:ajax event="page"
+				listener="#{evaluationBackingBean.savePresentationDemoDtls}"
+				update="demoSupplierId" />
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}"
 				style="width:30%">
 
@@ -55,6 +57,7 @@
 					<f:attribute name="min" value="0" />
 					<f:attribute name="max"
 						value="#{evaluationBackingBean.managedBean.userScores}" />
+					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 				</p:inputText>
 				<p:spacer width="5"></p:spacer>
 				<h:outputText
@@ -62,7 +65,9 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.remarks']}" style="width:40%">
-				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}"></p:inputTextarea>
+				<p:inputTextarea rows="2" cols="40" value="#{demoSupplier.remark}">
+					<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+				</p:inputTextarea>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
