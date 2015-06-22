@@ -136,9 +136,11 @@
 				bumiPercentage="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.bumiPercentage}"
 				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}" />
 
-			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId"
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
+				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList}"
 				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes}" 
-				update=":form:catCodeInfPan" partialSubmit="true"
+				update=":form:catCodeInfPan" partialSubmit="true" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				process="@this">
 			</p:commandButton>
 
