@@ -645,7 +645,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				if(pymtResDTO.isSuccessful()){
 
 					try {
-						curlIPN(httpServletRequest);
+						SmCommonUtil.paymentCurlIPN(httpServletRequest,true,merchantId,molIpnUrl);
 					} catch (Exception ex) {
 						log.error("curlIPN: " + ex.getMessage());
 					}
@@ -685,84 +685,6 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	public String back() {
 		return "portletViewMode.xhtml";
 	}
-
-	private void curlIPN(HttpServletRequest httpServletRequest)
-			throws Exception {
-		Enumeration<String> resParameters = httpServletRequest
-				.getParameterNames();
-		// List<NameValuePair> params = new ArrayList<NameValuePair>();
-		StringBuilder strParams = new StringBuilder();
-
-		/*while (resParameters.hasMoreElements()) {
-			String paramName = (String) resParameters.nextElement();
-			// params.add(new BasicNameValuePair(paramName,
-			// httpServletRequest.getParameter(paramName)));
-			strParams.append(paramName + "="
-					+ httpServletRequest.getParameter(paramName));
-			strParams.append("&");
-			log.info(paramName + " - "
-					+ httpServletRequest.getParameter(paramName));
-		}*/
-		strParams.append("treq=1");
-		strParams.append("&");
-		strParams.append("sa="+merchantId);
-		log.info("StrParams>>>>>>" + strParams);
-		// URL url = null;
-		// BufferedReader reader = null;
-
-		try {
-			// create the HttpURLConnection
-			URL url = new URL(molIpnUrl);
-			HttpURLConnection connection = (HttpURLConnection) url
-					.openConnection();
-
-			// just want to do an HTTP POST here
-			connection.setRequestMethod("GET");
-
-			// uncomment this if you want to write output to this url
-			connection.setDoOutput(true);
-
-			OutputStream os = connection.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
-					os, "UTF-8"));
-			writer.write(strParams.toString());
-			writer.flush();
-			writer.close();
-			os.close();
-			// give it 15 seconds to respond
-			/*
-			 * connection.setReadTimeout(15*1000); connection.connect();
-			 * 
-			 * StringBuilder stringBuilder; // read the output from the server
-			 * reader = new BufferedReader(new
-			 * InputStreamReader(connection.getInputStream())); stringBuilder =
-			 * new StringBuilder();
-			 * 
-			 * System.out.println("***********CURL Response*********"); String
-			 * line = null; while ((line = reader.readLine()) != null) {
-			 * stringBuilder.append(line + "\n"); } log.info(">>>"+
-			 * stringBuilder.toString());
-			 */
-		} catch (Exception e) {
-			e.printStackTrace();
-			// throw e;
-		}
-	}
-
-	/*
-	 * private boolean checkOfflinePayment(Long billId){ boolean result = false;
-	 * 
-	 * IPaymentSO reqSO = (IPaymentSO)
-	 * BusinessDelegate.getInstance().getServiceObject("sm", IPaymentSO.class);
-	 * PaymentReqDTO reqDTO = new PaymentReqDTO(); reqDTO.setBillId(billId);
-	 * reqDTO.setPaymentMode(SupplierManagementConst.OFFLINE_PAYMENT);
-	 * 
-	 * PaymentResDTO resDTO = reqSO.retrievePaymentByBillIdAndMode(reqDTO);
-	 * 
-	 * if(resDTO.getSmPaymentLs().size() > 0){ result = true; }
-	 * 
-	 * return result; }
-	 */
 
 	/**
 	 * Get payment mode list for drop down
