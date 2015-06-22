@@ -129,6 +129,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setNewlyAddedCategories(getManagedBean()
 					.getActiveCategoryList());
+			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
 					SupplierManagementConst.SUPPLIER_MAINTENANCE_REGISTRATION_STATUS);
@@ -337,7 +338,7 @@ public class SupplierDataMaintenanceBackingBean extends
 
 		}
 	}
-	
+
 	/**
 	 * Call confirmation dialog
 	 */
