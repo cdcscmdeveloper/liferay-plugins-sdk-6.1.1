@@ -129,6 +129,7 @@ import com.liferay.portal.util.PortalUtil;
 
 /**
  * Supplier Proposal Backing Bean
+ * 
  * @author Viswanath
  * @author Venkat Chanumolu
  * 
@@ -208,7 +209,7 @@ public class SPDetailBackingBean extends
 			ProposalResDTO resDTO = getProposalSO()
 					.retrieveProposalDtlBySupplierId(reqDTO);
 			getManagedBean().setQt(resDTO.getScQt());
-			
+
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
@@ -266,13 +267,13 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * Listener for tab change to retrieve Quotation/Tender Document Details 
+	 * Listener for tab change to retrieve Quotation/Tender Document Details
 	 */
 	public void retrieveQTDocumentDetails() {
 		debugLogger("retrieveTechnicalProposalList");
 		this.getManagedBean().setPrepareActiveIndex(0);
 	}
-	
+
 	/**
 	 * Listener for tab change to retrieve Technical Proposal List
 	 */
@@ -297,17 +298,19 @@ public class SPDetailBackingBean extends
 	public void retrieveDeclarationList() throws Exception {
 		debugLogger("retrieveDeclarationList");
 		this.getManagedBean().setPrepareActiveIndex(3);
-		
+
 		VelocityContext context = new VelocityContext();
 		String othersTermsConditions = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
-						SourcingConstants.SUPPLIER_PROPOSAL_DECLARATION, context);
+						SourcingConstants.SUPPLIER_PROPOSAL_DECLARATION,
+						context);
 		getManagedBean().setOthersTermsConditions(othersTermsConditions);
 
 	}
-	
+
 	/**
 	 * method to retrieve integrity details
+	 * 
 	 * @throws Exception
 	 */
 
@@ -316,16 +319,15 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setPrepareActiveIndex(4);
 		generateDeclarationFromVelocity(getManagedBean().getQt());
 	}
-	
 
 	/**
 	 * Method to submit the Supplier Proposal details
 	 */
 	public void submitSupplierProposal() {
-		
+
 		PmDigiSign digiSign = null;
 		debugLogger("submitSupplierProposal");
-		
+
 		retrievePaidUpCapitalNdDeclarationDtls();
 
 		IQTProposalSO proposalSO = null;
@@ -351,18 +353,23 @@ public class SPDetailBackingBean extends
 			scQtProposal
 					.setScQtProposalChecklists(new ArrayList<ScQtProposalChecklist>(
 							scQtProposalChecklists));
-			
-		/*	// spki 
-			RequestContext.getCurrentInstance().execute("blockWidget.hide();");
-			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-			String originalText = prepareOriginalText(getManagedBean().getSmSupplier());
-			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
-			digiSign.setSignedData(signedData);
-			
-			if (null != digiSign) {
-				updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL, 
-						scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(), originalText);
-			}*/
+
+			/*
+			 * // spki
+			 * RequestContext.getCurrentInstance().execute("blockWidget.hide();"
+			 * );
+			 * RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
+			 * String originalText =
+			 * prepareOriginalText(getManagedBean().getSmSupplier()); String
+			 * signedData =
+			 * getManagedBean().getSpkiBackingBean().spkiSignTransaction
+			 * (originalText); digiSign.setSignedData(signedData);
+			 * 
+			 * if (null != digiSign) { updateSpkiDigiSignData(digiSign,
+			 * ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL,
+			 * scQtProposal.getQtProposalId(), scQtProposal.getProposalNo(),
+			 * originalText); }
+			 */
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
 			reqDTO.setSupplierId(getManagedBean().getSupplierId());
@@ -377,7 +384,7 @@ public class SPDetailBackingBean extends
 					.isAgreeWithIntegrityPact());
 			reqDTO.setAgreeWithOthersTermsConditions(getManagedBean()
 					.isAgreeWithOthersTermsConditions());
-			//reqDTO.setDigiSignData(digiSign);
+			// reqDTO.setDigiSignData(digiSign);
 
 			ProposalResDTO resDTO = proposalSO.saveQTDtl(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -392,40 +399,42 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 	}
-	
+
 	/**
 	 * Prepare original text.
-	 *
-	 * @param smSupplier the sm supplier
+	 * 
+	 * @param smSupplier
+	 *            the sm supplier
 	 * @return the string
 	 */
-	private String prepareOriginalText(SmSupplier  smSupplier) {
-		  FacesScopes facesScopes = new FacesScopes();
-		  StringBuilder sb = new StringBuilder();
-		  String countryCode ="";
-		  String orginalText = "";
+	private String prepareOriginalText(SmSupplier smSupplier) {
+		FacesScopes facesScopes = new FacesScopes();
+		StringBuilder sb = new StringBuilder();
+		String countryCode = "";
+		String orginalText = "";
 
-		  if(smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null 
-				  && smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().size()>0){
-			  List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+		if (smSupplier.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& smSupplier.getSmAppl().getSmCompanyBasic()
+						.getSmCompanyAddresses().size() > 0) {
+			List<SmCompanyAddress> companyAddress = smSupplier.getSmAppl()
+					.getSmCompanyBasic().getSmCompanyAddresses();
 
-			  for (SmCompanyAddress compaAddress : companyAddress) {
-				  if(compaAddress.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())){
-					  countryCode = compaAddress.getSmAddress().getPmCountry().getCountryCode();
-					  break;
-				  }
-			  }
-		  }
-		  sb.append(getManagedBean().getQtProposal().getProposalNo())
-		  .append("|")
-		  .append(facesScopes.getUserSessionBean().getIdentificationNo())
-		  .append("|")
-		  .append(smSupplier.getRegNo())
-		  .append("|")
-		  .append(countryCode);
-		  orginalText  = sb.toString();
-		  return orginalText;
-	  }
+			for (SmCompanyAddress compaAddress : companyAddress) {
+				if (compaAddress.getAddressType().equalsIgnoreCase(
+						AddressType.CONTACT_ADDRESS.value())) {
+					countryCode = compaAddress.getSmAddress().getPmCountry()
+							.getCountryCode();
+					break;
+				}
+			}
+		}
+		sb.append(getManagedBean().getQtProposal().getProposalNo()).append("|")
+				.append(facesScopes.getUserSessionBean().getIdentificationNo())
+				.append("|").append(smSupplier.getRegNo()).append("|")
+				.append(countryCode);
+		orginalText = sb.toString();
+		return orginalText;
+	}
 
 	private void commonMessageAcknowledmentPage(String messageId,
 			String variable1, String variable2) {
@@ -1373,7 +1382,8 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * action method for preparing  proposal details for the technical checklist  
+	 * action method for preparing proposal details for the technical checklist
+	 * 
 	 * @param scQtProposalChecklist
 	 * @return navigation path
 	 */
@@ -1553,6 +1563,10 @@ public class SPDetailBackingBean extends
 
 			if (scQtCheckListValue != null
 					&& scQtCheckListValue.isAllEmployee()) {
+				getManagedBean().setSupplierId(
+						scQtProposalChecklist.getScQtProposal()
+								.getScQtSupplier().getSmSupplier()
+								.getSupplierId());
 				retrieveSupplierDtls();
 
 				scQtPRPEmployee.setTotalEmployees(getManagedBean().getSmAppl()
@@ -1674,7 +1688,7 @@ public class SPDetailBackingBean extends
 					.getParameterId(), parameterDesc);
 		}
 
-		//int totalYearsExp = 0;
+		// int totalYearsExp = 0;
 		for (SmPersonnel smPersonnel : getManagedBean().getSmAppl()
 				.getSmPersonnels()) {
 			TechnicalStaffBean technicalStaffBean = new TechnicalStaffBean(
@@ -1700,12 +1714,12 @@ public class SPDetailBackingBean extends
 
 			smPersonnelsList.add(technicalStaffBean);
 
-			//totalYearsExp += smPersonnel.getWorkExperienceYear().intValue();
+			// totalYearsExp += smPersonnel.getWorkExperienceYear().intValue();
 		}
 		getManagedBean().setSmPersonnelList(smPersonnelsList);
 		getManagedBean().setTotalNoOfYearsExperience(smPersonnelsList.size());
-		//getManagedBean().setTotalNoOfYearsExperience(totalYearsExp);
-		//log.info("Total No of Years Experience : " + totalYearsExp);
+		// getManagedBean().setTotalNoOfYearsExperience(totalYearsExp);
+		// log.info("Total No of Years Experience : " + totalYearsExp);
 
 		return NAV_TO_TECHNICAL_EMPL_LIST_PAGE;
 	}
@@ -2062,8 +2076,9 @@ public class SPDetailBackingBean extends
 		return proposalCheckList;
 	}
 
-	/** 
+	/**
 	 * method to retrieve financial credit facilities details
+	 * 
 	 * @param scQtProposalChecklist
 	 * @return navigation path
 	 */
@@ -2108,6 +2123,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * method to retrieve financial Cash On Hand details
+	 * 
 	 * @param scQtProposalChecklist
 	 * @return navigation path
 	 */
@@ -2142,6 +2158,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * method to retrieve financial three months bank statement details
+	 * 
 	 * @param scQtProposalChecklist
 	 * @return navigation path
 	 */
@@ -2184,9 +2201,10 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 	}
-	
+
 	/**
 	 * method to retrieve financial Assets and Liabilities details
+	 * 
 	 * @param scQtProposalChecklist
 	 * @return navigation path
 	 */
@@ -2231,6 +2249,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * method to retrieve financial supplier limited details for paid up capital
+	 * 
 	 * @return navigation path
 	 */
 	public String retrievePaidUpCapitalNdDeclarationDtls() {
@@ -2297,9 +2316,11 @@ public class SPDetailBackingBean extends
 	 * 
 	 * return null; }
 	 */
-	
+
 	/**
-	 * method to retrieve financial company experience with federal government details
+	 * method to retrieve financial company experience with federal government
+	 * details
+	 * 
 	 * @param scQtProposalChecklist
 	 * @return
 	 */
@@ -2339,14 +2360,15 @@ public class SPDetailBackingBean extends
 			proposalSO = null;
 		}
 	}
-	
+
 	/**
 	 * method to retrieve Supplier details
+	 * 
 	 * @return navigation path
 	 */
 
 	public String retrieveSupplierDtls() {
-		long supplierId = getManagedBean().getSupplierId();
+		Long supplierId = getManagedBean().getSupplierId();
 		log.info("Supplier Id : " + supplierId);
 
 		IQTProposalSO proposalSO = null;
@@ -2430,9 +2452,8 @@ public class SPDetailBackingBean extends
 		return NAV_TO_SUPPLIER_DETAILS_PAGE;
 	}
 
-	
 	/**
-	 * method to add total Credit Facilities 
+	 * method to add total Credit Facilities
 	 */
 	public void totalCreditFacilitiesSum() {
 		debugLogger("totalCreditFacilitiesSum");
@@ -2476,9 +2497,9 @@ public class SPDetailBackingBean extends
 		this.getManagedBean().setTotalAmountPaid(totalPaid);
 		this.getManagedBean().setTotalPercentagePaid(percentagePaid);
 	}
-	
+
 	/**
-	 *  method to add total cash on hand
+	 * method to add total cash on hand
 	 */
 	public void totalCashOnHandSum() {
 		debugLogger("totalAmtPaidSum");
@@ -2503,7 +2524,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to calculate total amount 
+	 * method to calculate total amount
 	 */
 	public void totalAmountSum() {
 		debugLogger("totalAmountSum");
@@ -2539,6 +2560,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Listener method for effective date selection events
+	 * 
 	 * @param prpExperience
 	 */
 	public void effectiveDateSelectListener(ScQtPRPExperience prpExperience) {
@@ -2570,6 +2592,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Listener method for expire date selection events
+	 * 
 	 * @param prpExperience
 	 */
 	public void expiryDateSelectListener(ScQtPRPExperience prpExperience) {
@@ -2610,7 +2633,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to calculate total Contract Years
+	 * method to calculate total Contract Years
 	 */
 	public void totalContractYears() {
 		debugLogger("totalContractYears");
@@ -2631,7 +2654,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to calculate total Contract Amount
+	 * method to calculate total Contract Amount
 	 */
 	public void totalContractAmount() {
 		debugLogger("totalContractAmount");
@@ -2658,7 +2681,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to calculate acid ratio
+	 * method to calculate acid ratio
 	 */
 	public void totalAcidRatio() {
 		debugLogger("totalAcidRatio");
@@ -2680,9 +2703,9 @@ public class SPDetailBackingBean extends
 		}
 
 	}
-	
+
 	/**
-	 *  method to add Non Federal Government Experience to the list
+	 * method to add Non Federal Government Experience to the list
 	 */
 
 	public void addNonFederalGovtExperience() {
@@ -2710,7 +2733,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to delete Non Federal Government Experience from the list
+	 * method to delete Non Federal Government Experience from the list
 	 */
 	public void deleteNonFederalGovtExperience() {
 		debugLogger("deleteNonFederalGovtExperience");
@@ -2760,7 +2783,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to add Credit Facility to the list
+	 * method to add Credit Facility to the list
 	 */
 	public void addCreditFacilities() {
 		debugLogger("addCreditFacilities");
@@ -2788,7 +2811,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to delete Credit Facility from the list
+	 * method to delete Credit Facility from the list
 	 */
 	public void deleteCreditFacilities() {
 		debugLogger("deleteCreditFacilities");
@@ -2842,7 +2865,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to add cash on hand to the list
+	 * method to add cash on hand to the list
 	 */
 	public void addCashOnHand() {
 		debugLogger("addCashOnHand");
@@ -2863,7 +2886,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  method to delete cash on hand from the list
+	 * method to delete cash on hand from the list
 	 */
 	public void deleteCashOnHand() {
 		debugLogger("deleteCashOnHand");
@@ -2914,6 +2937,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * action method to navigate previous page
+	 * 
 	 * @return navigation path
 	 */
 	public String supplierProposalBackAction() {
@@ -2927,7 +2951,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 *  listener method for zone tab change
+	 * listener method for zone tab change
 	 */
 	public void zoneTabChange() {
 
@@ -2983,7 +3007,7 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * method to delete no of proposals  from list
+	 * method to delete no of proposals from list
 	 */
 	public void deleteMultipleProposal() {
 		try {
@@ -3065,6 +3089,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * listener method for credit type change
+	 * 
 	 * @param creditFacility
 	 */
 	public void creditTypeChange(ScQtPRPCreditFacility creditFacility) {
@@ -3086,6 +3111,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * listener method for account type change
+	 * 
 	 * @param cashOnHand
 	 */
 	public void accountTypeChange(ScQtPRPCashOnHand cashOnHand) {
@@ -3143,8 +3169,7 @@ public class SPDetailBackingBean extends
 
 		String integrityPact = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
-						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY,
-						context);
+						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
 
 		getManagedBean().setIntegrityPact(integrityPact);
 
@@ -3323,6 +3348,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * listener method for row selection events
+	 * 
 	 * @param event
 	 */
 	public void onRowSelectionListener(SelectEvent event) {
@@ -3355,9 +3381,10 @@ public class SPDetailBackingBean extends
 		}
 
 	}
-	
+
 	/**
 	 * Listener method for boolean check box selection events
+	 * 
 	 * @param index
 	 */
 
@@ -3415,6 +3442,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Listener method for boolean check box selection events
+	 * 
 	 * @param index
 	 */
 	public void selectedCreditFacility(int index) {
@@ -3443,6 +3471,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Listener method for boolean check box selection events
+	 * 
 	 * @param index
 	 */
 	public void selectedCashOnHand(int index) {
@@ -3497,6 +3526,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * Listener method for boolean check box selection events
+	 * 
 	 * @param index
 	 */
 	public void selectedMultipleProposal(int index) {
@@ -3540,6 +3570,7 @@ public class SPDetailBackingBean extends
 
 	/**
 	 * method to validae credit facilities
+	 * 
 	 * @param index
 	 */
 	public void creditFacilityValidator(int index) {
@@ -3580,7 +3611,8 @@ public class SPDetailBackingBean extends
 	}
 
 	/**
-	 * action method for label print 
+	 * action method for label print
+	 * 
 	 * @throws Exception
 	 */
 	public void printLabelAction() throws Exception {
@@ -3642,17 +3674,17 @@ public class SPDetailBackingBean extends
 			this.getManagedBean().setProposalZonalMenuModel(zoneMenuModel);
 		}
 	}
-	
+
 	/**
-	 *Method is used to download the document from repository 
-	 *on click of download button.
+	 * Method is used to download the document from repository on click of
+	 * download button.
 	 * 
 	 * @param scQtDocReport
-	 * 			the instance of ScQtDocReport
+	 *            the instance of ScQtDocReport
 	 * @throws Exception
 	 */
 	public void downloadReport(ScQtDocReport scQtDocReport) throws Exception {
-		
+
 		log.info("** Qtn / TenderDetsils **");
 		ScQt scQt = this.getManagedBean().getQt();
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
@@ -3667,24 +3699,25 @@ public class SPDetailBackingBean extends
 		}
 		downloadFile(scQtDocReportAttachment);
 	}
-	
+
 	/**
-	 * Method is used to download all documents from repository 
-	 * on click of 'Download all' button.
+	 * Method is used to download all documents from repository on click of
+	 * 'Download all' button.
 	 * 
 	 * @param qtId
-	 *        the Long variable.
+	 *            the Long variable.
 	 * @throws Exception
 	 */
 	public void downloadAllQTDocuments() throws Exception {
-		
+
 		log.info("** Qtn / TenderDetsils **");
 		ScQt scQt = this.getManagedBean().getQt();
 		QTDocumentsBackingBean qtDocumentsBackingBean = new QTDocumentsBackingBean();
 		qtDocumentsBackingBean.getManagedBean().setQt(null);
 		qtDocumentsBackingBean.getManagedBean().setQt(scQt);
-		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReports();
-		
+		List<ScQtDocReport> scQtDocReports = getManagedBean()
+				.getScQtDocReports();
+
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
 		if (null != scQtDocReports && !scQtDocReports.isEmpty()) {
 			for (ScQtDocReport scQtDocReport : scQtDocReports) {
@@ -3707,5 +3740,5 @@ public class SPDetailBackingBean extends
 	public void spkiSignAction() {
 		RequestContext.getCurrentInstance().execute("spki_dlg.show();");
 	}
-	
+
 }
