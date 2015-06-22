@@ -3737,6 +3737,7 @@ public class LOIDetailBackingBean extends
 				 * qtRecommendDtl.getSupplier().getSupplierId()); }
 				 */
 			}
+			context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
 			context.put("recommendList", getManagedBean().getRecommendList());
 			context.put("bean", this);
 		}
@@ -3782,6 +3783,7 @@ public class LOIDetailBackingBean extends
 				 */
 			}
 		}
+		context.put("decimalFormatter", new DecimalFormat("#,###,##0.00"));
 		context.put("scLois", getManagedBean().getLois());
 		context.put("bean", this);
 
