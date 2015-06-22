@@ -8,6 +8,8 @@ package my.ep.web.bean.pm;
  *
  */
 public class LocationSearchBean {
+	
+	private Long countryId;
 
 	private String locationCode;
 
@@ -75,5 +77,21 @@ public class LocationSearchBean {
 		
 		this.recordStatus = recordStatus;
 	}
+
+	/**
+	 * @return the countryId
+	 */
+	public Long getCountryId() {
+		return countryId;
+	}
+
+	/**
+	 * @param countryId the countryId to set
+	 */
+	public void setCountryId(Long countryId) {
+		this.countryId = countryId;
+	}
+
+	
 
 }

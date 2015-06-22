@@ -9,6 +9,26 @@
 		<br />
 		<table class="ppTwoTable">
 			<tr>
+				<th width="20%">
+					<p:outputLabel
+						value="#{lbl['lbl.pm.address.country']}" /> <h:outputLabel
+						value="*" styleClass="mandatory" />
+				</th>				
+				<td>
+					<p:selectOneMenu id="dCountry" styleClass="ppDropDownWidthL"
+						required="true" label="#{lbl['lbl.pm.address.country']}" 
+						value="#{locationBackingBean.managedBean.locationSearchBean.countryId}"
+						style="width: 275px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems value="#{locationBackingBean.getCountryList()}"
+							var="country" itemLabel="#{country.countryName}" itemValue="#{country.countryId}" />
+					</p:selectOneMenu>
+				</td>
+				<td><p:message for="dCountry" id="dCountryMsg" display="icon" /></td>
+				<td>&#160;</td>
+			</tr>
+			<tr>
 				<th width="20%"><p:outputLabel value="#{lbl['lbl.pm.location.type']}" /><h:outputLabel
 							value="*" styleClass="mandatory" /></th>
 				<td><p:selectOneMenu id="locationSearchType" styleClass="ppDropDownWidthM" style="width: 135px;margin-bottom: 5px;"
