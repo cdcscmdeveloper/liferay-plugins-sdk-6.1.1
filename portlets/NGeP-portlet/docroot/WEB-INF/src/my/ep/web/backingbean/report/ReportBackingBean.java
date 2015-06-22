@@ -691,7 +691,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)25;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4699,8 +4699,23 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getSmRegistrationStatus() != null) && (this.getSmRegistrationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMainCategory() != null) && (this.getSmMainCategory() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSubCategory() != null) && (this.getSmSubCategory() != ReportConst.EMPTY_VAL))//this.getSelectedCatList()
-				|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
-				|| ((this.getSmSubCategoryDivision() != null) && (this.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))
+				//|| ((this.getSelectedCatList() != null) && (this.getSelectedCatList().size()> 0))
+				||(((getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_APPL_PEND_SITE_VISIT_RPT_VAL))
+					|| (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL))
+							|| (getManagedBean().getReportValue() != null)
+							&& (getManagedBean().getReportValue().trim()
+									.equalsIgnoreCase(ReportConst.SM_CATEGORY_STATISTIC_RPT_VAL))
+									|| (getManagedBean().getReportValue() != null)
+									&& (getManagedBean().getReportValue().trim()
+											.equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_STATE_RPT_VAL))
+											|| (getManagedBean().getReportValue() != null)
+											&& (getManagedBean().getReportValue().trim()
+													.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)))
+				|| ((this.getSmSubCategoryDivision() != null) && (this.getSmSubCategoryDivision() != ReportConst.EMPTY_VAL))&& (this.getSelectedCatList().size()> 0))
 				|| ((this.getSmApplicationStatus() != null) && (this.getSmApplicationStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmState() != null) && (this.getSmState() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmDistrict() != null) && (this.getSmDistrict() != ReportConst.EMPTY_VAL))
