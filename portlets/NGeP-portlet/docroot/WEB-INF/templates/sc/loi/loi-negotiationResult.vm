@@ -132,15 +132,17 @@
 					</tr>
 					#foreach( $loiLoaItem in $scLoi.scLoiLoaItems )	
 					<tr>
-						#set ($offer = $loiLoaItem.qty * $$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice)
-						#set ($final = $loiLoaItem.qty * $$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice)
+						#set ($offeredPrice = $bigDecimalConstant * $loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice)
+						#set ($finalPrice = $bigDecimalConstant * $loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice)						
+						#set ($totalOfferedPrice = $loiLoaItem.qty * $offeredPrice)
+						#set ($totalFinalPrice = $loiLoaItem.qty * $finalPrice)
 						<td class="tdInfoTable">$loiLoaItem.scRequestItem.itemName</td>
 						<td class="tdInfoTable">$loiLoaItem.scRequestItem.uom.uomCode</td>
 						<td class="tdInfoTable">$loiLoaItem.qty</td>
-						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
-						<td class="tdInfoTable">$offer</td>
-						<td class="tdInfoTable">$loiLoaItem.unitPrice</td>
-						<td class="tdInfoTable">$final</td>
+						<td class="tdInfoTable">$decimalFormatter.format($offeredPrice)</td>
+						<td class="tdInfoTable">$decimalFormatter.format($totalOfferedPrice)</td>
+						<td class="tdInfoTable">$decimalFormatter.format($finalPrice)</td>
+						<td class="tdInfoTable">$decimalFormatter.format($totalFinalPrice)</td>
 					</tr>
 					#end
 				</table>
