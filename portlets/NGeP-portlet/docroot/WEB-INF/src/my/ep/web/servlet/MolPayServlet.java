@@ -36,6 +36,8 @@ public class MolPayServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static Logger log = Logger.getLogger(MolPayServlet.class);
 	private final String vKey = EpPropertiesUtils.getInstance().getProperty("molpay.vkey");
+	private final String merchantId = EpPropertiesUtils.getInstance().getProperty("molpay.merchantid");
+	private final String molIpnUrl = EpPropertiesUtils.getInstance().getProperty("molpay.ipnurl");
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
@@ -80,7 +82,7 @@ public class MolPayServlet extends HttpServlet {
 		log.info("error_desc:" + errorDesc);
 		log.info("channel:" + channel);
 
-		if(nbcb.equals("1")){
+		if(nbcb != null){
 			//To verify the data integrity sending by MOLPay
 			String key0 = SmCommonUtil.md5(tranID + orderId + status + domain + amount + currency);
 			String key1 = SmCommonUtil.md5(paydate + domain + key0 + appcode + vKey);
@@ -173,12 +175,23 @@ public class MolPayServlet extends HttpServlet {
 					pymtReqDTO.setPortalBaseUrl(portalUrl);
 					pymtReqDTO.setLanguage("en");
 
-
+					log.info(">>>>Before paymentBackendUpdate<<<");
 					PaymentResDTO pymtResDTO = reqSO.paymentBackendUpdate(pymtReqDTO);
-
+					log.info(">>>>Before paymentBackendUpdate<<<");
 					if(pymtResDTO.isSuccessful()){
-						PrintWriter out = res.getWriter();
-						out.print("CBTOKEN:MPSTATOK");
+						if(nbcb.equals("1")){
+							log.info("Curl IPN - CBTOKEN:MPSTATOK " + nbcb);
+							PrintWriter out = res.getWriter();
+							out.print("CBTOKEN:MPSTATOK");
+						}else if(nbcb.equals("2")){
+							log.info("Curl IPN - nbcb " + nbcb);
+							try {
+								SmCommonUtil.paymentCurlIPN(req, true, merchantId, molIpnUrl);
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								log.info("paymentCurlIPN error>>>>>>>>>" + e.getMessage());
+							}
+						}
 					}
 				}else{
 					log.info("No SmPayment Object is found");
