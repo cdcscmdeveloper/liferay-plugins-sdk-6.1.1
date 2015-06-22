@@ -21,7 +21,7 @@
 					value="#{purchaseRequestBackingBean.getFullAddress(delAddressSummary.pmAddress)}" />
 			</p:column>
 			<p:column style="white-space:normal;" >
-			<table style="width : 100%;" styleClass="noBorders tr,noBorders td" >
+			<table style="width : 100%;" class="noBorders" >
 			<tr >
 			<td>
 			<h:outputText value="#{lbl['lbl.fl.delivery.period']}" />
@@ -37,7 +37,7 @@
 			</table>
 			</p:column>
 			<p:column style="white-space:normal;">
-			<table style="width : 100%;" styleClass="noBorders tr,noBorders td">
+			<table style="width : 100%;" class="noBorders">
 			<tr>
 			<td>
 			<h:outputText value="#{lbl['lbl.fl.delivery.start']}" />
@@ -56,14 +56,14 @@
 			</table>
 			</p:column>
 			<p:column style="white-space:normal;">
-			<table style="width : 100%;" styleClass="noBorders tr,noBorders td">
-			<tr>
-			<td>
+			<table style="width : 100%;" class="noBorders">
+			<tr class="noBorders">
+			<td class="noBorders">
 			<h:outputText value="#{lbl['lbl.fl.delivery.end']}" />
 			</td>
 			</tr>
-			<tr>
-			<td>
+			<tr class="noBorders">
+			<td class="noBorders">
 			<p:spacer width="7" />
 				<p:inputText size="8" value="#{delAddressSummary.endDate}"
 					disabled="true">
