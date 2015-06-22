@@ -1217,15 +1217,19 @@ public class LOIDetailBackingBean extends
 					// offered price sub total and total
 					offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
 					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
-					scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
-					offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+					if(offeredPriceSubTotal != null){
+						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+					}
 
 					// final price sub total and total - for bidding.
 					if(isBiddingAward){
 						finalPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
 						finalPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, scLoiLoaItem.getQty());
-						scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
-						finalPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+						if(finalPriceSubTotal != null){
+							scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
+							finalPriceAmount = finalPriceAmount.add(finalPriceAmount);
+						}
 					} else{
 						// after nego price sub total and total
 						afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
@@ -2856,8 +2860,8 @@ public class LOIDetailBackingBean extends
 
 			scLoi.setScQtDeductions(scQtDeductions);
 		}
-
 		ScQtDeduction scQtDeduction = new ScQtDeduction();
+		scQtDeduction.setScQt(getManagedBean().getScQt());
 		scQtDeduction.setScLoi(scLoi);
 		scQtDeduction.setDeductionType(new PmParameter());
 
