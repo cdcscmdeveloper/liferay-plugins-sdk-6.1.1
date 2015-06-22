@@ -65,20 +65,20 @@
 		<table>
 			<tr>
 				<td style="width:150px;"><p:outputLabel value="#{lbl['lbl.fl.dan.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentDanDocNo ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.adjustmentDanDocNo}"
 						 action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeDebitAdjustmentNote)}" immediate="true"/> </td>
 				<td style="width:390px;"><p:outputLabel value="#{lbl['lbl.fl.can.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.adjustmentCanDocNo ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.adjustmentCanDocNo}"
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeCreditAdjustmentNote)}" immediate="true"/> </td>		 	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.stop.instuc.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.stopInstrNo ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.stopInstrNo}"
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.doctypeStopDelivery)}" immediate="true"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.stop.inst.no']}"/> </td>		
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.contract.no']}" /></td>
-				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
+				<td><p:commandLink value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.ctContract.contractNo}"
 						action="#{paymentMatchBackingBean.navigateDocument(ParameterConst.contract)}" immediate="true"/></td>	
 			</tr>
 			<tr>
