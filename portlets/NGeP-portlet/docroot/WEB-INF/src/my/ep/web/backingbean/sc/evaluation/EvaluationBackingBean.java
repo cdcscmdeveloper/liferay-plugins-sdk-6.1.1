@@ -967,6 +967,7 @@ public class EvaluationBackingBean extends
 			}
 
 			getManagedBean().setComplianceSummaryGenerated(false);
+			updateSummaryGeneratedStatus();
 
 			FacesContext
 					.getCurrentInstance()
@@ -980,6 +981,27 @@ public class EvaluationBackingBean extends
 		} finally {
 			evaluationSo = null;
 		}
+	}
+	
+	private void updateSummaryGeneratedStatus() {
+		boolean technicalSummaryGenerated = getManagedBean().isTechnicalSummaryGenerated();
+		boolean presentationDemoSummaryGenerated = getManagedBean().isPresentationDemoSummaryGenerated();
+		boolean financialSummaryGenerated = getManagedBean().isFinancialSummaryGenerated();
+		
+		if (!getManagedBean().isComplianceSummaryGenerated()) {
+			technicalSummaryGenerated = false;
+			presentationDemoSummaryGenerated = false;
+			financialSummaryGenerated = false;
+		} else if (!technicalSummaryGenerated) {
+			presentationDemoSummaryGenerated = false;
+			financialSummaryGenerated = false;
+		} else if (!presentationDemoSummaryGenerated) {
+			financialSummaryGenerated = false;
+		}
+		
+		getManagedBean().setTechnicalSummaryGenerated(technicalSummaryGenerated);
+		getManagedBean().setPresentationDemoSummaryGenerated(presentationDemoSummaryGenerated);
+		getManagedBean().setFinancialSummaryGenerated(financialSummaryGenerated);
 	}
 
 	/**
@@ -1069,6 +1091,7 @@ public class EvaluationBackingBean extends
 							null, null));
 
 			getManagedBean().setComplianceSummaryGenerated(false);
+			updateSummaryGeneratedStatus();
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -1128,6 +1151,7 @@ public class EvaluationBackingBean extends
 							QTConstants.TECHNICAL_EVALUATION));
 
 			getManagedBean().setPresentationDemoSummaryGenerated(false);
+			updateSummaryGeneratedStatus();
 
 		} finally {
 
@@ -1154,127 +1178,13 @@ public class EvaluationBackingBean extends
 	 * @return navigate to evaluation main page.
 	 */
 	public String evaluationBackaction() {
-		IQTEvaluationSO evaluationSo = null;
-		try {
-			String checkListType = this.getManagedBean()
-					.getEvaluationTechnicalFinancialType();
-			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
-			EvaluationReqDTO checklistreqDTO = new EvaluationReqDTO();
-			evaluationSo = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTEvaluationSO.class);
-			checklistreqDTO.setCheckList(checkList);
-			EvaluationResDTO checkListResDTO = new EvaluationResDTO();
-
-			PmStatus evalStatus = new PmStatus();
-			if (null != checkListType && checkListType.equalsIgnoreCase("ET")) {
-				checkListResDTO = evaluationSo
-						.retrieveQtCheckList(checklistreqDTO);
-
-				if (null != checkListResDTO.getCheckList()) {
-					checkList = checkListResDTO.getCheckList();
-					// evalStatus = checkList.getPmEvalStatus();
-				}
-
-				if (this.getManagedBean().getScQt().getEvaluationType()
-						.equalsIgnoreCase(QTConstants.EVALUATION_ONE_TIER)
-						&& !this.getManagedBean().getScQt()
-								.isTechEvaluationReq()) {
-					if (null != checkList.getPmEvalStatus()
-							&& checkList
-									.getPmEvalStatus()
-									.getStatusId()
-									.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-						evalStatus = new PmStatus();
-						// evalStatus = new PmStatus();
-						evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-						// checkList.setPmEvalStatus(evalStatus);
-						setTechnicalEvaluationStatus(checkList, checkListType,
-								evalStatus);
-
-					}
-
-				} else {
-					if (null != this.getManagedBean()
-							.getEvaluationCheckListType()
-							&& this.getManagedBean()
-									.getEvaluationCheckListType()
-									.equalsIgnoreCase("TS")) {
-
-					} else {
-						if (null != checkList.getPmEvalStatus()
-								&& null != checkList.getDefinationType()
-								&& !checkList.getDefinationType()
-										.getParameterCode()
-										.equalsIgnoreCase("UP")
-								&& checkList
-										.getPmEvalStatus()
-										.getStatusId()
-										.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-
-						} else {
-							if (null != checkList.getDefinationType()
-									&& checkList.getDefinationType()
-											.getParameterCode()
-											.equalsIgnoreCase("UP")) {
-								evalStatus = new PmStatus();
-								evalStatus
-										.setStatusId(QTStatusConst.TS_COMPLETED);
-								setTechnicalEvaluationStatus(checkList,
-										checkListType, evalStatus);
-							}
-						}
-
-					}
-				}
-
-			} else if (null != checkListType
-					&& checkListType.equalsIgnoreCase("EF")) {
-				checkListResDTO = evaluationSo
-						.retrieveQtCheckList(checklistreqDTO);
-
-				if (null != checkListResDTO.getCheckList()) {
-					checkList = checkListResDTO.getCheckList();
-					// evalStatus = checkList.getPmEvalStatus();
-				}
-				if (null != this.getManagedBean().getEvaluationCheckListType()
-						&& this.getManagedBean().getEvaluationCheckListType()
-								.equalsIgnoreCase("FS")) {
-
-				} else {
-					if (null != checkList.getPmEvalStatus()
-							&& null != checkList.getDefinationType()
-							&& !checkList.getDefinationType()
-									.getParameterCode().equalsIgnoreCase("UP")
-							&& checkList
-									.getPmEvalStatus()
-									.getStatusId()
-									.equals(QTStatusConst.TS_PENDING_SUBMISSION)) {
-
-					} else {
-						if (null != checkList.getDefinationType()
-								&& checkList.getDefinationType()
-										.getParameterCode()
-										.equalsIgnoreCase("UP")) {
-							evalStatus = new PmStatus();
-							evalStatus.setStatusId(QTStatusConst.TS_COMPLETED);
-							setTechnicalEvaluationStatus(checkList,
-									checkListType, evalStatus);
-						}
-					}
-				}
-
-			}
-
-			// this.getManagedBean().setScQtChecklist(null);
-		} finally {
-			this.getManagedBean().setEvaluationTechnicalFinancialType("");
-			this.getManagedBean().setEvaluationCheckListType("");
-			this.getManagedBean().setEvaluationCheckListIndex(-1);
-			// this.getManagedBean().setCheckListType(checklistType);
-			this.getManagedBean().setComplianceCheckListIndex(-1);
-			this.getManagedBean().setCheckListType("");
-
-		}
+		this.getManagedBean().setEvaluationTechnicalFinancialType("");
+		this.getManagedBean().setEvaluationCheckListType("");
+		this.getManagedBean().setEvaluationCheckListIndex(-1);
+		// this.getManagedBean().setCheckListType(checklistType);
+		this.getManagedBean().setComplianceCheckListIndex(-1);
+		this.getManagedBean().setCheckListType("");
+		
 		return "evaluationstage1view.xhtml";
 
 	}
@@ -6970,6 +6880,7 @@ public class EvaluationBackingBean extends
 			} else {
 				getManagedBean().setFinancialSummaryGenerated(false);
 			}
+			updateSummaryGeneratedStatus();
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -7359,6 +7270,7 @@ public class EvaluationBackingBean extends
 
 				getManagedBean().setTechnicalSummaryGenerated(false);
 				getManagedBean().setPresentationDemoSummaryGenerated(false);
+				updateSummaryGeneratedStatus();
 			}
 			if (QTConstants.FINANCIAL_SPEC_TYPE
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
@@ -7376,6 +7288,7 @@ public class EvaluationBackingBean extends
 						.getQtProposalChecklist());
 
 				getManagedBean().setFinancialSummaryGenerated(false);
+				updateSummaryGeneratedStatus();
 			}
 
 			if (qtCheckLists != null) {
@@ -9708,6 +9621,7 @@ public class EvaluationBackingBean extends
 													.getEvalStage()));
 					getManagedBean().setFinancialSummaryGenerated(false);
 				}
+				updateSummaryGeneratedStatus();
 			}
 
 			FacesContext
@@ -10557,6 +10471,7 @@ public class EvaluationBackingBean extends
 			evaluationSo.saveOrUpdateSampleComplianceDtls(reqDTO);
 
 			getManagedBean().setComplianceSummaryGenerated(false);
+			updateSummaryGeneratedStatus();
 
 		} finally {
 			evaluationSo = null;
