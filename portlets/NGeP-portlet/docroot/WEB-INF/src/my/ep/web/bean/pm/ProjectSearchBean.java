@@ -1,6 +1,19 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.bean.pm;
 
 	
+/**
+ * The Class ProjectSearchBean.
+ */
 public class ProjectSearchBean {
 	private String votCode;
 	private String votName;
