@@ -20,6 +20,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -78,6 +79,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -103,7 +105,8 @@ import org.primefaces.event.SelectEvent;
 
 @ManagedBean(name = "suppFinalMeetingBackingBean")
 @RequestScoped
-public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
+public class SupplierFinalizationMeetingBackingBean extends 
+						SourcingBaseBackingBean<SupplierFinalizationMeetingManagedBean> {
 	
 	public static Logger log = EpLogger.getLogger(SupplierFinalizationMeetingBackingBean.class);
 
@@ -522,26 +525,8 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		roleCodeSearchBean.setSearchValue(roleCode);
 		searchBean.getDataFilterBeans().add(roleCodeSearchBean);*/
 		
-		if (getManagedBean().getName() != null && !"".equalsIgnoreCase(getManagedBean().getName())) {
-			SearchFilterBean usernameSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-			usernameSearchBean.setSearchField("userName");
-			usernameSearchBean.setSearchValue(getManagedBean().getName());
-			searchBean.getDataFilterBeans().add(usernameSearchBean);
-
-		}
-		if (getManagedBean().getIdentificationType() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationType())) {
-			SearchFilterBean idtypeSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-			idtypeSearchBean.setSearchField("identificationCode.parameterCode");
-			idtypeSearchBean.setSearchValue(getManagedBean().getIdentificationType());
-			searchBean.getDataFilterBeans().add(idtypeSearchBean);
-		}
-		if (getManagedBean().getIdentificationNo() != null && !"".equalsIgnoreCase(getManagedBean().getIdentificationNo())) {
-			SearchFilterBean idNoSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-			idNoSearchBean.setSearchField("identificationNo");
-			idNoSearchBean.setSearchValue(getManagedBean().getIdentificationNo());
-			searchBean.getDataFilterBeans().add(idNoSearchBean);
-		}
 		
+		populateUserSearchCriteria(getManagedBean().getScQt(), searchBean);
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setUserSearchBean(searchBean);
 		IUserSO userSO;
@@ -555,6 +540,56 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			userSO = null;
 		}
 	}
+	
+	private void populateUserSearchCriteria(ScQt scQt,
+			ISearchBean<PmUser> userSearchBean) {
+
+		if (StringUtils.isNotBlank(
+				getManagedBean().getName())) {
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(QTConstants.USER_NAME, 
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getName(), true));
+		}
+		if (StringUtils.isNotBlank(
+				getManagedBean().getIdentificationType())) {
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean("identificationCode.parameterCode", 
+							SearchOperator.OPERATOR_LIKE.value(),
+							getManagedBean().getIdentificationType(), true));			
+		}
+		if (StringUtils.isNotBlank(
+				getManagedBean().getIdentificationNo())) {
+			userSearchBean.getDataFilterBeans().add(
+					new SearchFilterBean(QTConstants.IDENTIFICATION_NO, 
+							SearchOperator.OPERATOR_EQUALS.value(),
+							getManagedBean().getIdentificationNo(), true));				
+		}
+		
+		if (null != scQt.getPmOrgProfile()) {
+			userSearchBean
+					.getDataFilterBeans()
+					.add(new SearchMultiFilterBean(
+							new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile."
+											+ OrgProfileUtil
+													.getSearchBeanParentString(OrganizationType.MINISTRY
+															.value()),
+									SearchOperator.OPERATOR_EQUALS.value(),
+									retrieveMinistryOrgProfile(
+											scQt.getPmOrgProfile()
+												.getOrgProfileId())
+												.getOrgProfileId()),
+
+							new SearchFilterBean(
+									"pmUserOrgs.pmOrgProfile.orgTypeCode.parameterCode",
+									SearchOperator.OPERATOR_EQUALS.value(),
+									ParameterConst.ORG_TYPE_OTHERS,
+									SearchCondition.CONDITION_OR.value())));
+		}
+	
+	}	
+	
 	
 	/*private ScCommitteeMember getSecretaryChaipersonList(String roleCode, ScQt scQt, ScCommittee scCommittee) {
 		IUserSO iUserSO = null;
@@ -602,7 +637,65 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		this.getManagedBean().setIdentificationNo(null);
 		this.getManagedBean().setExternalUsers(null);
 	}
+	
+	/**
+	 * 
+	 */
+	public String getRoleDesc(PmUser pmUser) {
+		String userRole = StringUtils.EMPTY;
+		
+		StringBuffer chairPersonRoleCode = new StringBuffer(
+				getManagedBean().getCommitteeType() + QTConstants.CHAIRPERSON);
+		IUserSO userSO = null;
+		
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			userSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			SearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
 
+			// Filter By - user org info
+			// User id
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmUser.userId", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							pmUser.getUserId()));
+			
+			// User Org type
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmUser.orgTypeCode.parameterCode", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							ParameterConst.ORG_TYPE_MINISTRY));			
+			
+			// Role Code
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmRole.roleCode", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							chairPersonRoleCode));
+			
+			reqDTO.setUserRoleSearchBean(searchBean);
+			UserResDTO resDTO = userSO.retrieveUserRoleBySearchBean(reqDTO);
+			if (resDTO.isSuccessful() && 
+					CollectionUtils.isNotEmpty(resDTO.getUserRoleList())) {
+				PmParameter chairPersonRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, 
+						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+				pmUser.setMemberRole(chairPersonRole);
+				userRole = getParameterDesc(chairPersonRole);
+			} else {
+				userRole = getParameterDesc(ParameterTypeConst.COMMITTEE_ROLE, 
+						ParameterConst.COMMITTEE_ROLE_MEMBER);
+			}
+		} finally {
+			userSO = null;
+		}
+		
+		return userRole;
+	}
+	
 	/**
 	 * Action to confirm the addition of selected committee members
 	 */
@@ -845,9 +938,13 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 			committeeMember.setPNP(user.isPMP());
 			committeeMember.setPmUser(user);
 			committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
-			PmParameter pmParameter = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
-			committeeMember.setMemberRole(pmParameter);	
-			committeeMember.setRepresentativeType(new PmParameter());
+			if (user.getMemberRole() == null) {
+				PmParameter memberRole = getPmParameterByTypeAndCode(
+						ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
+				user.setMemberRole(memberRole);
+				committeeMember.setRepresentativeType(new PmParameter());
+			} 
+			committeeMember.setMemberRole(user.getMemberRole());	
 			committeeMember.setAccessRight("E");
 			committeeMember.setScCommittee(this.getManagedBean().getScQtCommittee().getScCommittee());
 			setUserDetails(committeeMember);
@@ -898,10 +995,10 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 		ScQt scQt = (ScQt) event.getObject();
 
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
-
 		reqDTO.setQtId(scQt.getQtId());
 		reqDTO.setCommitteeType(this.getManagedBean().getCommitteeType());
 		CommitteResDTO resDTO = null;
+		
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1041,6 +1138,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				bean.setSearchValue(qtTitle);
 				searchFilterBean.add(bean);
 			}
+			
 			String qtNumber = qtnTenderSearchBean.getQtNo();
 			if (!StringUtils.isBlank(qtNumber)) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -1049,6 +1147,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				bean.setSearchValue(qtNumber);
 				searchFilterBean.add(bean);
 			}
+			
 			String procurementMode = qtnTenderSearchBean.getProcurementMode();
 			if (!StringUtils.isBlank(procurementMode)) {
 				SearchFilterBean bean = new SearchFilterBean();
@@ -1058,6 +1157,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				bean.setSearchValue(procurementMode);
 				searchFilterBean.add(bean);
 			}
+			
 			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
 			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
 			if (null != fromCreatedDate || toCreatedDate != null) {
@@ -1068,6 +1168,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
+			
 			Date fromPublishDate = qtnTenderSearchBean.getFromPublishDate();
 			Date toPublishDate = qtnTenderSearchBean.getToPublishDate();
 			if (null != fromPublishDate || null != toPublishDate) {
@@ -1078,6 +1179,7 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
+			
 			Date fromClosingDate = qtnTenderSearchBean.getFromClosingDate();
 			Date toClosingDate = qtnTenderSearchBean.getToClosingDate();
 			if (null != fromClosingDate || null != toClosingDate) {
@@ -1088,13 +1190,36 @@ public class SupplierFinalizationMeetingBackingBean extends SourcingBaseBackingB
 				bean.setSearchValue(betweenVal);
 				searchFilterBean.add(bean);
 			}
+			
 			String status = qtnTenderSearchBean.getQtStatus();
 			if (!StringUtils.isBlank(status) && !status.equals("60000")) {
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtStatus.pmStatus.statusId", SearchOperator.OPERATOR_EQUALS.value(), status));
-				qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtStatus.current", SearchOperator.OPERATOR_EQUALS.value(), true));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtStatus.pmStatus.statusId", SearchOperator.OPERATOR_EQUALS.value(), status));
+				qtSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("scQtStatus.current", SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
 			
-			qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtCommittees.scCommittee.committeeType.parameterCode", SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCommitteeType()));
+			if (null != this.getManagedBean().getScQt().getPmOrgProfile()) {
+				qtSearchBean
+						.getDataFilterBeans()
+						.add(new SearchFilterBean(
+								"pmOrgProfile."
+										+ OrgProfileUtil
+												.getSearchBeanParentString(OrganizationType.MINISTRY
+														.value()),
+								SearchOperator.OPERATOR_EQUALS.value(),
+
+								retrieveMinistryOrgProfile(
+										this.getManagedBean().getScQt()
+												.getPmOrgProfile()
+												.getOrgProfileId())
+										.getOrgProfileId()
+
+						));
+			}			
+			
+			qtSearchBean.getDataFilterBeans().add(new SearchFilterBean("scQtCommittees.scCommittee.committeeType.parameterCode", 
+						SearchOperator.OPERATOR_EQUALS.value(), getManagedBean().getCommitteeType()));
 			
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);

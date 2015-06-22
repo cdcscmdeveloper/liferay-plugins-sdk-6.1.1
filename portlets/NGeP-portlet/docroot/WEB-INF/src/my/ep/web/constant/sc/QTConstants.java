@@ -204,5 +204,6 @@ public interface QTConstants {
 	public static final String QT_BUMIPUTRA = "B";
 	public static final String QT_OPEN = "Open";
 	
+	public static final String CHAIRPERSON = "_CHAIRPERSON";
 
 }
