@@ -452,7 +452,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean checkReportDownload;
 
 	private BigDecimal packageScore;
-	
+
 	/** passing score */
 	private int passingScore;
 
@@ -469,7 +469,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private boolean technicalSummaryGenerated;
 	private boolean presentationDemoSummaryGenerated;
 	private boolean financialSummaryGenerated;
-	
+	private IPagingDataModel<ScQtProposalChecklist> complianceTechnicalProposalCheckListDM;
+	private IPagingDataModel<ScQtProposalChecklist> finSpecSupplierListDM;
+	private IPagingDataModel<ScQtSampleItem> complianceSampleItemListDM;
+	private IPagingDataModel<ScQtSampleLable> complianceSampleLblsupplierDM;
+	private IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM;
 
 	/**
 	 * Gets the today.
@@ -2420,7 +2424,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param qualifiedSuppliersDM the qualifiedSuppliersDM to set
+	 * @param qualifiedSuppliersDM
+	 *            the qualifiedSuppliersDM to set
 	 */
 	public void setQualifiedSuppliersDM(
 			IPagingDataModel<ScQtEvaluationResultDtl> qualifiedSuppliersDM) {
@@ -2435,7 +2440,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param disqualifiedSuppliersDM the disqualifiedSuppliersDM to set
+	 * @param disqualifiedSuppliersDM
+	 *            the disqualifiedSuppliersDM to set
 	 */
 	public void setDisqualifiedSuppliersDM(
 			IPagingDataModel<ScQtEvaluationResultDtl> disqualifiedSuppliersDM) {
@@ -2931,8 +2937,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param passingScore 
-	 * 				the passingScore to set
+	 * @param passingScore
+	 *            the passingScore to set
 	 */
 	public void setPassingScore(int passingScore) {
 		this.passingScore = passingScore;
@@ -2976,9 +2982,11 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param finSpecZoneEstimatedPrice the finSpecZoneEstimatedPrice to set
+	 * @param finSpecZoneEstimatedPrice
+	 *            the finSpecZoneEstimatedPrice to set
 	 */
-	public void setFinSpecZoneEstimatedPrice(BigDecimal finSpecZoneEstimatedPrice) {
+	public void setFinSpecZoneEstimatedPrice(
+			BigDecimal finSpecZoneEstimatedPrice) {
 		this.finSpecZoneEstimatedPrice = finSpecZoneEstimatedPrice;
 	}
 
@@ -2990,7 +2998,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleItemSpecifications the sampleItemSpecifications to set
+	 * @param sampleItemSpecifications
+	 *            the sampleItemSpecifications to set
 	 */
 	public void setSampleItemSpecifications(
 			List<TplSpecQuestion> sampleItemSpecifications) {
@@ -3005,7 +3014,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param itemName the itemName to set
+	 * @param itemName
+	 *            the itemName to set
 	 */
 	public void setItemName(String itemName) {
 		this.itemName = itemName;
@@ -3019,7 +3029,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param sampleItemSelection the sampleItemSelection to set
+	 * @param sampleItemSelection
+	 *            the sampleItemSelection to set
 	 */
 	public void setSampleItemSelection(ScQtSampleItem sampleItemSelection) {
 		this.sampleItemSelection = sampleItemSelection;
@@ -3033,7 +3044,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkTechnicalQualifiedOpenPopup the checkTechnicalQualifiedOpenPopup to set
+	 * @param checkTechnicalQualifiedOpenPopup
+	 *            the checkTechnicalQualifiedOpenPopup to set
 	 */
 	public void setCheckTechnicalQualifiedOpenPopup(
 			boolean checkTechnicalQualifiedOpenPopup) {
@@ -3048,7 +3060,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkFinancialQualifiedOpenPopup the checkFinancialQualifiedOpenPopup to set
+	 * @param checkFinancialQualifiedOpenPopup
+	 *            the checkFinancialQualifiedOpenPopup to set
 	 */
 	public void setCheckFinancialQualifiedOpenPopup(
 			boolean checkFinancialQualifiedOpenPopup) {
@@ -3063,7 +3076,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param complianceSummaryGenerated the complianceSummaryGenerated to set
+	 * @param complianceSummaryGenerated
+	 *            the complianceSummaryGenerated to set
 	 */
 	public void setComplianceSummaryGenerated(boolean complianceSummaryGenerated) {
 		this.complianceSummaryGenerated = complianceSummaryGenerated;
@@ -3077,7 +3091,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalSummaryGenerated the technicalSummaryGenerated to set
+	 * @param technicalSummaryGenerated
+	 *            the technicalSummaryGenerated to set
 	 */
 	public void setTechnicalSummaryGenerated(boolean technicalSummaryGenerated) {
 		this.technicalSummaryGenerated = technicalSummaryGenerated;
@@ -3091,7 +3106,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param presentationDemoSummaryGenerated the presentationDemoSummaryGenerated to set
+	 * @param presentationDemoSummaryGenerated
+	 *            the presentationDemoSummaryGenerated to set
 	 */
 	public void setPresentationDemoSummaryGenerated(
 			boolean presentationDemoSummaryGenerated) {
@@ -3106,10 +3122,91 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param financialSummaryGenerated the financialSummaryGenerated to set
+	 * @param financialSummaryGenerated
+	 *            the financialSummaryGenerated to set
 	 */
 	public void setFinancialSummaryGenerated(boolean financialSummaryGenerated) {
 		this.financialSummaryGenerated = financialSummaryGenerated;
+	}
+
+	/**
+	 * @return the complianceTechnicalProposalCheckListDM
+	 */
+	public IPagingDataModel<ScQtProposalChecklist> getComplianceTechnicalProposalCheckListDM() {
+		return complianceTechnicalProposalCheckListDM;
+	}
+
+	/**
+	 * @param complianceTechnicalProposalCheckListDM
+	 *            the complianceTechnicalProposalCheckListDM to set
+	 */
+	public void setComplianceTechnicalProposalCheckListDM(
+			IPagingDataModel<ScQtProposalChecklist> complianceTechnicalProposalCheckListDM) {
+		this.complianceTechnicalProposalCheckListDM = complianceTechnicalProposalCheckListDM;
+	}
+
+	/**
+	 * @return the finSpecSupplierListDM
+	 */
+	public IPagingDataModel<ScQtProposalChecklist> getFinSpecSupplierListDM() {
+		return finSpecSupplierListDM;
+	}
+
+	/**
+	 * @param finSpecSupplierListDM
+	 *            the finSpecSupplierListDM to set
+	 */
+	public void setFinSpecSupplierListDM(
+			IPagingDataModel<ScQtProposalChecklist> finSpecSupplierListDM) {
+		this.finSpecSupplierListDM = finSpecSupplierListDM;
+	}
+
+	/**
+	 * @return the complianceSampleItemListDM
+	 */
+	public IPagingDataModel<ScQtSampleItem> getComplianceSampleItemListDM() {
+		return complianceSampleItemListDM;
+	}
+
+	/**
+	 * @param complianceSampleItemListDM
+	 *            the complianceSampleItemListDM to set
+	 */
+	public void setComplianceSampleItemListDM(
+			IPagingDataModel<ScQtSampleItem> complianceSampleItemListDM) {
+		this.complianceSampleItemListDM = complianceSampleItemListDM;
+	}
+
+	/**
+	 * @return the complianceSampleLblsupplierDM
+	 */
+	public IPagingDataModel<ScQtSampleLable> getComplianceSampleLblsupplierDM() {
+		return complianceSampleLblsupplierDM;
+	}
+
+	/**
+	 * @param complianceSampleLblsupplierDM
+	 *            the complianceSampleLblsupplierDM to set
+	 */
+	public void setComplianceSampleLblsupplierDM(
+			IPagingDataModel<ScQtSampleLable> complianceSampleLblsupplierDM) {
+		this.complianceSampleLblsupplierDM = complianceSampleLblsupplierDM;
+	}
+
+	/**
+	 * @return the presentationDemoSupplierListDM
+	 */
+	public IPagingDataModel<ScQtProposalChecklist> getPresentationDemoSupplierListDM() {
+		return presentationDemoSupplierListDM;
+	}
+
+	/**
+	 * @param presentationDemoSupplierListDM
+	 *            the presentationDemoSupplierListDM to set
+	 */
+	public void setPresentationDemoSupplierListDM(
+			IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM) {
+		this.presentationDemoSupplierListDM = presentationDemoSupplierListDM;
 	}
 
 }
