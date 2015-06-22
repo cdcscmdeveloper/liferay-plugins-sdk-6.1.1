@@ -680,6 +680,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 */
 	private void initStep5BankInfo() {
 		getManagedBean().setSmSupplierBankList(getSupplierBankByRevNo());
+		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
 	}
 
 	/**
