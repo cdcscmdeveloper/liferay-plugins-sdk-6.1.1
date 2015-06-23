@@ -1415,6 +1415,17 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
     
     /**
+	 * The method used to retrieve proper portal name from property file.
+	 * 
+	 * @return portletTitle  the name of the portal
+     */
+    public String getChangeBankPortletTitle() {
+		return ResourceBundleUtils.getMessage("lbl.ct.request.change.bank.acc", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+    
+    
+    
+    /**
 	 * The method used to retrieve the contract administrator list.
 	 * This method will get the all contract administrators with 
 	 * contract owner organization profile when the loa's administrator 
