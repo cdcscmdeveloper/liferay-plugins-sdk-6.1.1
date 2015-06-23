@@ -19,5 +19,8 @@ public class ScSchedulerConstants {
 	public static final String JOB_WAIT = "WAIT";
 	public static final String JOB_RUN = "RUN";
 	
+	
+	public static final String EP_UPDATE_SUPPLIERS_JOB = "UPDATE SUPPLIERS ";
+	
 
 }
