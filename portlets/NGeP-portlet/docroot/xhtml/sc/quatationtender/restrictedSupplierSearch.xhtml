@@ -73,7 +73,11 @@
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width: 10%;">
 				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.getParameterDesc(ParameterTypeConst.recordStatus, qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).recordStatusFlg)}" />
+						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate) eq 'true'}"
+						value="#{lbl['lbl.txt.active']}" />
+				<h:outputText
+						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate) eq 'false'}"
+						value="Expired" style="font-weight: bold;color:red;" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

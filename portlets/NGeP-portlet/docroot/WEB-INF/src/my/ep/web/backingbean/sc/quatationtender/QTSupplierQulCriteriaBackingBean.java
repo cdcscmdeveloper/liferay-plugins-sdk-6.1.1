@@ -489,6 +489,22 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 		return smMofAccount;
 	}
+	
+	public boolean supplierStatusDateComparision(SmMofAccount mofAccount) {
+		Date enddate = mofAccount.getExpDate();
+		boolean isDate = false;
+		
+		Date d1 = new Date();
+
+		if (null != enddate) {
+			long days = DateUtils.getDaysDifference(d1, enddate);
+			int day = (int) days;
+			if (day > 0) {
+				isDate = true;
+			}
+		}
+		return isDate;
+	}
 
 	/**
 	 * Adds the restricted to supplier list action.
