@@ -2564,8 +2564,12 @@ public class SupplierFinalizationBackingBean extends
 			}
 			context.put("locLevel", isLocLevel);
 		} else {
+			boolean isAllState = false;
 			ScQtSupplierCriteria criteria = scQt.getScQtSupplierCriteria();
+			
 			if (criteria != null) {
+				isAllState = criteria.isAllState();
+				
 				if (criteria.getLocationLevel() != null) {
 					if (ParameterConst.LOCATION_LEVEL_STATE.equals(criteria
 							.getLocationLevel().getParameterCode())) {
@@ -2583,7 +2587,9 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 			context.put("locLevel", isLocLevel);
+			context.put("isAllState", isAllState);
 		}
+		
 		context.put("locationLevel", locationLevel);
 		IQTDetailSO qtDtlSO;
 		try {

@@ -98,43 +98,45 @@
 			<td class="tdInfoTable">Ministry</td>
 			<td class="tdInfoTable">$ministry</td>
 		</tr>
+		<!--
 		<tr>
 			<td class="tdInfoTable">4</td>
 			<td class="tdInfoTable">Jabatan</td>
 			<td class="tdInfoTable">$jabatan</td>
 		</tr>
+		-->
 		<tr>
-			<td class="tdInfoTable">5</td>
+			<td class="tdInfoTable">4</td>
 			<td class="tdInfoTable">PTJ</td>
 			<td class="tdInfoTable">$ptj</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">6</td>
+			<td class="tdInfoTable">5</td>
 			<td class="tdInfoTable">Notice Publish Date</td>
 			<td class="tdInfoTable">$publishDate</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">7</td>
+			<td class="tdInfoTable">6</td>
 			<td class="tdInfoTable">Publishing Period (Days)</td>
 			<td class="tdInfoTable">$publishPeriod</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">8</td>
+			<td class="tdInfoTable">7</td>
 			<td class="tdInfoTable">Closing Date</td>
 			<td class="tdInfoTable">$closingDate</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">9</td>
+			<td class="tdInfoTable">8</td>
 			<td class="tdInfoTable">ProposalValidity (Days)	</td>
 			<td class="tdInfoTable">$validityDays</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">10</td>
+			<td class="tdInfoTable">9</td>
 			<td class="tdInfoTable">Proposal Validity Until</td>
 			<td class="tdInfoTable">$validityDays</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">11</td>
+			<td class="tdInfoTable">10</td>
 			<td class="tdInfoTable">Evaluation Type</td>
 			<td class="tdInfoTable">
 				#if ($tier == "1")
@@ -248,33 +250,38 @@
 						</table>
 					</span>
 				#end
-				#if ($locLevel == "false")
-					#if ($subLocLevel == "true")
-						<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
-						<table class="infoTable">
-							<tr>
-								<td bgcolor="#eee">State</td>
-								#if ($locationLevel == "District")
-									<td bgcolor="#eee">District</td>
-								#end
-							</tr>
-							#foreach($tplSpecLoc in $locality)
+				
+				#if ($isAllState == "false")
+					#if ($locLevel == "false")
+						#if ($subLocLevel == "true")
+							<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
+							<table class="infoTable">
 								<tr>
-									<td>
-										$tplSpecLoc.pmState.stateName
-									</td>
+									<td bgcolor="#eee">State</td>
 									#if ($locationLevel == "District")
-										<td>
-											$tplSpecLoc.pmDistrict.districtName
-										</td>
+										<td bgcolor="#eee">District</td>
 									#end
 								</tr>
-							#end
-						</table>
-						</span>
+								#foreach($tplSpecLoc in $locality)
+									<tr>
+										<td>
+											$tplSpecLoc.pmState.stateName
+										</td>
+										#if ($locationLevel == "District")
+											<td>
+												$tplSpecLoc.pmDistrict.districtName
+											</td>
+										#end
+									</tr>
+								#end
+							</table>
+							</span>
+						#end
+						#if ($subLocLevel == "false")
+						#end
 					#end
-					#if ($subLocLevel == "false")
-					#end
+				#else
+					<span style='font-size:14px;font-family: Times New Roman;'> <b>Location : </b> All States</span>
 				#end
 			</td>
 		</tr>
