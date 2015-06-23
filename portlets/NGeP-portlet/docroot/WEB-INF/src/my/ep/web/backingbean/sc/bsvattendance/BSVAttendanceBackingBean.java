@@ -391,10 +391,11 @@ public class BSVAttendanceBackingBean extends
 			if (SourcingConstants.COMPLETE.equalsIgnoreCase(flowType)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
 				Long qtId = this.getManagedBean().getScQt().getQtId();
-
+				int bsvZoneindx = this.getManagedBean().getBsvZoneindx();
 				renewSessionWithPreviousValues();
 
 				retrieveBriefingSiteVisitList(qtId);
+				this.getManagedBean().setBsvZoneindx(bsvZoneindx);
 				url = previousPage + ".xhtml?faces-redirect=true";
 				return url;
 			}
@@ -403,12 +404,13 @@ public class BSVAttendanceBackingBean extends
 				ScQtBsvDtl bsv = resDTO.getScQtBriefing();
 				String previousPage = this.getManagedBean().getPreviousPage();
 				ScQt scQt = this.getManagedBean().getScQt();
-
+				int bsvZoneindx = this.getManagedBean().getBsvZoneindx();
 				renewSessionWithPreviousValues();
 				// this.getManagedBean().setScQtBriefing(bsv);
 				this.getManagedBean().setPreviousPage(previousPage);
 				this.getManagedBean().setScQt(scQt);
-
+				this.getManagedBean().setBsvZoneindx(bsvZoneindx);
+				
 				getregistrationDetails(bsv);
 				FacesContext
 						.getCurrentInstance()
@@ -819,7 +821,11 @@ public class BSVAttendanceBackingBean extends
 	public void onZoneTabChange(TabChangeEvent event) {
 
 		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
-		// this.getManagedBean().setBsvZoneindx(1);
+		event.getTab();
+		List<BriefingZoneBean> ZoneBeanLst = this.getManagedBean().getZoneBean();
+		if(ZoneBeanLst.contains(zoneBean)){
+			this.getManagedBean().setBsvZoneindx(ZoneBeanLst.indexOf(zoneBean));
+		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 	}
 
