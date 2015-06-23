@@ -4004,34 +4004,30 @@ public class SmApplicationUtil {
 	 * @return the sm supplier basic info vo object
 	 */
 	public static SmSupplierBasicInfoVO getSmSupplierBasicInfoVO(
-			SmApplicationManagedBean bean) {
-		SmSupplierBasicInfoVO smSupplierBasicInfoVO = bean.getBasicInfo();
+			SmSupplierBasicInfoVO basicVO, SmSupplier supplier, SmAppl smAppl) {
+		SmSupplierBasicInfoVO smSupplierBasicInfoVO = basicVO;
 		if (smSupplierBasicInfoVO == null) {
 			smSupplierBasicInfoVO = new SmSupplierBasicInfoVO();
 		}
 		// gst details
-		if (bean.getSmAppl().getSmCompanyBasic() != null) {
-			if (StringUtils.isEmpty(bean.getSmAppl().getSmCompanyBasic()
+		if (smAppl.getSmCompanyBasic() != null) {
+			if (StringUtils.isEmpty(smAppl.getSmCompanyBasic()
 					.getGstRegistrationNo())) {
 				smSupplierBasicInfoVO.setGstNum(" --");
 			} else {
-				smSupplierBasicInfoVO.setGstNum(bean.getSmAppl()
-						.getSmCompanyBasic().getGstRegistrationNo());
+				smSupplierBasicInfoVO.setGstNum(smAppl.getSmCompanyBasic()
+						.getGstRegistrationNo());
 			}
 
-			smSupplierBasicInfoVO
-					.setGstRegDate(bean.getSmAppl().getSmCompanyBasic()
-							.getGstRegistrationDate() == null ? "--"
-							: DateUtils.dateToString("dd/MM/yyyy", bean
-									.getSmAppl().getSmCompanyBasic()
-									.getGstRegistrationDate()));
+			smSupplierBasicInfoVO.setGstRegDate(smAppl.getSmCompanyBasic()
+					.getGstRegistrationDate() == null ? "--" : DateUtils
+					.dateToString("dd/MM/yyyy", smAppl.getSmCompanyBasic()
+							.getGstRegistrationDate()));
 		}
 		// mof account
-		if (bean.getSmSupplier() != null
-				&& bean.getSmSupplier().getSmMofAccounts() != null) {
-			SmMofAccount smMofAccount = getActiveMofAccount(bean
-					.getSmSupplier().getSmMofAccounts(), bean.getSmAppl()
-					.getSupplierType());
+		if (supplier != null && supplier.getSmMofAccounts() != null) {
+			SmMofAccount smMofAccount = getActiveMofAccount(
+					supplier.getSmMofAccounts(), smAppl.getSupplierType());
 			smSupplierBasicInfoVO.setMofNo(smMofAccount.getMofNo());
 			smSupplierBasicInfoVO
 					.setStartDate(smMofAccount.getEffDate() == null ? ""
@@ -4042,21 +4038,21 @@ public class SmApplicationUtil {
 							: DateUtils.dateToString("dd/MM/yyyy",
 									smMofAccount.getExpDate()));
 		}
-		smSupplierBasicInfoVO.setEpNo(bean.getSmSupplier() == null ? "" : bean
-				.getSmSupplier().getEpNo());
-		smSupplierBasicInfoVO.setRegNo(bean.getSmSupplier() == null ? "" : bean
-				.getSmSupplier().getRegNo());
+		smSupplierBasicInfoVO.setEpNo(supplier == null ? "" : supplier
+				.getEpNo());
+		smSupplierBasicInfoVO.setRegNo(supplier == null ? "" : supplier
+				.getRegNo());
 
 		// address & company
-		if (bean.getSmAppl().getSmCompanyBasic() != null
-				&& bean.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses() != null
-				&& !bean.getSmAppl().getSmCompanyBasic()
-						.getSmCompanyAddresses().isEmpty()) {
-			smSupplierBasicInfoVO.setCompanyName(bean.getSmAppl()
-					.getSmCompanyBasic() != null ? bean.getSmAppl()
-					.getSmCompanyBasic().getCompanyName() : "");
-			smSupplierBasicInfoVO.setAddress(bean.getSmAppl()
-					.getSmCompanyBasic().getSmCompanyAddresses().get(0));
+		if (smAppl.getSmCompanyBasic() != null
+				&& smAppl.getSmCompanyBasic().getSmCompanyAddresses() != null
+				&& !smAppl.getSmCompanyBasic().getSmCompanyAddresses()
+						.isEmpty()) {
+			smSupplierBasicInfoVO
+					.setCompanyName(smAppl.getSmCompanyBasic() != null ? smAppl
+							.getSmCompanyBasic().getCompanyName() : "");
+			smSupplierBasicInfoVO.setAddress(smAppl.getSmCompanyBasic()
+					.getSmCompanyAddresses().get(0));
 			if (smSupplierBasicInfoVO.getAddress().getSmAddress() != null) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(smSupplierBasicInfoVO.getAddress().getSmAddress()
@@ -4123,8 +4119,7 @@ public class SmApplicationUtil {
 			}
 
 		}
-		SmPersonnel smPersonnel = getAdminPersonnel(bean.getSmAppl()
-				.getSmPersonnels());
+		SmPersonnel smPersonnel = getAdminPersonnel(smAppl.getSmPersonnels());
 		if (smPersonnel != null) {
 			smSupplierBasicInfoVO.setAdminEmail(smPersonnel.getEmail());
 			smSupplierBasicInfoVO.setAdminPhoneNo(smPersonnel.getMobileNo());
@@ -4844,7 +4839,6 @@ public class SmApplicationUtil {
 		// based on category type Special or Normal
 		setRegCatCodeConfirmDialog(managedBean);
 	}
-
 
 	/**
 	 * Sets the register categor code confirm dialog text.

@@ -5,8 +5,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
@@ -39,23 +41,33 @@ import org.primefaces.context.RequestContext;
 public class SupplierDataMaintenanceBackingBean extends
 		BaseReviewApplicationBackingBean<ViewSuppProfileManagedBean> {
 
+	/**
+	 * Pre-render and redirect to Search Page
+	 */
 	public void preRenderSupplierDataMaintenance() {
-		renewSesionObject();
-		initLogin();
-		getManagedBean().setDisplaySearchPage(true);
-		getManagedBean().setViewSupplierProfile(true);
-		getManagedBean().setReviewApplicationExist(false);
-		getManagedBean().setViewApplicationHistory(false);
-		getManagedBean().setRegStatusDescList(retrieveRegistrationStatusList());
-		getManagedBean().setZoneList(
-				SmServiceLookup.getZoneSO().retrieveActiveZoneList()
-						.getZoneList());
+		initDataForSearchSupplier();
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
 						"");
 	}
 
+	/**
+	 * Pre-render and redirect to Search Page
+	 */
+	public void preRenderCancelMofBySupplier() {
+		initDataForSearchSupplier();
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
+				"");
+	}
+
+	/**
+	 * Navigate to Supplier Maintenance Screen
+	 * 
+	 * @param SmAppl
+	 *            selectedSmAppl
+	 */
 	public void navigateToMaintenance(SmAppl selectedSmAppl) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setApplNo(selectedSmAppl.getApplNo());
@@ -69,6 +81,38 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setDisplaySearchPage(false);
 	}
 
+	/**
+	 * Navigate to Cancel MOF By Supplier
+	 * 
+	 * @param SmAppl
+	 *            selectedSmAppl
+	 */
+	public void navigateToCancelMof(SmAppl selectedSmAppl) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(selectedSmAppl.getApplNo());
+		getManagedBean().setSmAppl(
+				SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		getManagedBean().setSmSupplier(
+				getManagedBean().getSmAppl().getSmSupplier());
+		if (SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmAppl()
+				.getSmSupplier()) != null) {
+			String[] params = { "" };
+			params[0] = getManagedBean().getSmAppl().getSmSupplier()
+					.getCompanyName();
+			throw new EpException(SmCommonUtil.getMessage(
+					"lbl.sm.cancelmof.bysupp.has.active.appl.msg", params));
+		}
+		getManagedBean().setBasicInfo(
+				SmApplicationUtil.getSmSupplierBasicInfoVO(getManagedBean()
+						.getBasicInfo(), getManagedBean().getSmSupplier(),
+						getManagedBean().getSmAppl()));
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/cancelRegWithMof/cancelMofRegistrationBySupplierPage.xhtml",
+						"");
+	}
+
 	public void search() {
 		getManagedBean().searchSupplier();
 	}
@@ -76,16 +120,13 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * Submit supplier maintenance
 	 */
-	public void submit() {
+	public void submitSupplierDataMaintenance() {
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 
 		// Check if got active application for this supplier
-		MofRegistrationReqDTO mofRegistrationReqDTO = new MofRegistrationReqDTO();
-		mofRegistrationReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-				.getSupplierId());
-		SmAppl activeAppl = SmServiceLookup.getMofRegistrationSO()
-				.retrieveActiveSmApplBySupp(mofRegistrationReqDTO).getSmAppl();
+		SmAppl activeAppl = SmCommonUtil
+				.getActiveApplBySupplier(getManagedBean().getSmSupplier());
 
 		try {
 
@@ -132,7 +173,7 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
-					SupplierManagementConst.SUPPLIER_MAINTENANCE_REGISTRATION_STATUS);
+					SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
 			reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
 
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
@@ -156,10 +197,59 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
+	 * Submit Cancel MOF Account
+	 */
+	public void submitToCancelMof() {
+		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
+		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
+		reqDTO.setSmAppl(getManagedBean().getSmAppl());
+		SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
+				getManagedBean().getSmAppl(),
+				SupplierManagementConst.APPROVER_SUBMIT_CANCEL_SUPPLIER_MOF_ACCOUNT);
+		reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
+
+		try {
+			SmServiceLookup.getSupplierDataMaintenanceSO()
+					.cancelMofRegistrationBySupplier(reqDTO);
+		} catch (OptimisticLockException opt) {
+			throw new EpException(opt.getMessage());
+		} catch (PersistenceException pers) {
+			throw new EpException(pers.getMessage());
+		} catch (NullPointerException nex) {
+			throw new EpException(nex.getMessage());
+		} finally {
+			reqDTO = null;
+		}
+
+		String[] params = { "" };
+		params[0] = getManagedBean().getSmAppl().getSmSupplier()
+				.getCompanyName();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, SmCommonUtil
+						.getMessage("lbl.sm.cancelmof.bysupp.success.msg",
+								params)));
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						SmApplicationUtil.getApplicationErrorPage());
+	}
+
+	/**
 	 * Back to search screen
 	 */
 	public void backToSearchSupplierMaintenance() {
 		getManagedBean().setDisplaySearchPage(true);
+	}
+	
+	/**
+	 * Back to Cancel MOF Search Page
+	 */
+	public void backToSearchCancelMof() {
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/cancelRegWithMof/searchSupplierCancelMofPage.xhtml",
+				"");
 	}
 
 	/**
@@ -340,10 +430,19 @@ public class SupplierDataMaintenanceBackingBean extends
 	}
 
 	/**
-	 * Call confirmation dialog
+	 * Show confirmation dialog
 	 */
 	public void showConfirmDialog() {
+		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
+	}
+	
+	/**
+	 * Hide confirmation dialog
+	 */
+	public void hideConfirmDialog() {
+		getManagedBean().setShowParentMsg(true);
+		RequestContext.getCurrentInstance().execute("confirmDialog.hide()");
 	}
 
 	/**
@@ -580,6 +679,22 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 		}
 		assignApplActiveAndApprovedCategoryList();
+	}
+
+	/**
+	 * Initialized data for search supplier
+	 */
+	private void initDataForSearchSupplier() {
+		renewSesionObject();
+		initLogin();
+		getManagedBean().setDisplaySearchPage(true);
+		getManagedBean().setViewSupplierProfile(true);
+		getManagedBean().setReviewApplicationExist(false);
+		getManagedBean().setViewApplicationHistory(false);
+		getManagedBean().setRegStatusDescList(retrieveRegistrationStatusList());
+		getManagedBean().setZoneList(
+				SmServiceLookup.getZoneSO().retrieveActiveZoneList()
+						.getZoneList());
 	}
 
 }
