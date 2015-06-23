@@ -1,5 +1,10 @@
 package my.ep.web.integration.phis;
 
+import java.util.Date;
+
+/*
+ * @author P Ganga prasad
+ */
 public class PhisProgramActivity {
 
 	private int year;
@@ -8,80 +13,64 @@ public class PhisProgramActivity {
 	private String description;
 	private String status;
 
-	
-	/**
-	 * @return the code
-	 */
-	public String getCode() {
-		return code;
-	}
+	// version 1.28
+	private Date effDate;
+	private Date expDate;
 
-	/**
-	 * @param code
-	 *            the code to set
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	/**
-	 * @return the votCode
-	 */
-	public String getVotCode() {
-		return votCode;
-	}
-
-	/**
-	 * @param votCode the votCode to set
-	 */
-	public void setVotCode(String votCode) {
-		this.votCode = votCode;
-	}
-
-	/**
-	 * @return the year
-	 */
 	public int getYear() {
 		return year;
 	}
 
-	/**
-	 * @param year the year to set
-	 */
 	public void setYear(int year) {
 		this.year = year;
 	}
 
-	
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getVotCode() {
+		return votCode;
+	}
+
+	public void setVotCode(String votCode) {
+		this.votCode = votCode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Date getEffDate() {
+		return effDate;
+	}
+
+	public void setEffDate(Date effDate) {
+		this.effDate = effDate;
+	}
+
+	public Date getExpDate() {
+		return expDate;
+	}
+
+	public void setExpDate(Date expDate) {
+		this.expDate = expDate;
+	}
 
 }
