@@ -15,6 +15,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sc.bidding.IBiddingSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.sc.BidStatusConst;
@@ -238,9 +239,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				.equals(BidStatusConst.BID_CANCELLED)
 				|| getScBidSchedule().getPmStatus().getStatusId()
 						.equals(BidStatusConst.BID_PAUSED)) {
-
-			System.out.println("bid pause remarks are "
-					+ this.getScBidAction().getRemark());
 			RequestContext.getCurrentInstance().execute(
 					"onlineBiddingNotification.show()");
 		}
@@ -323,18 +321,40 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		log.info("decrementAmountValueChangeListener");
 
-		if (scBidPrice.getNewPrice() != null
-				&& scBidPrice.getNewPrice().doubleValue() < scBidPrice
-						.getScBidSupplierItem().getScBidItem()
-						.getDecrementAmt().doubleValue()) {
-			if (scBidPrice.getNewPrice().doubleValue() > 0d
-					|| scBidPrice.getNewPrice().doubleValue() < 0d) {
-				throw new EpException(
-						"Please select a value greater than or equal to"
+		if (scBidPrice.getNewPrice() != null) {
+			if (scBidPrice.getNewPrice().doubleValue() < scBidPrice
+					.getScBidSupplierItem().getScBidItem().getDecrementAmt()
+					.doubleValue()) {
+				int index = getBidPrices().indexOf(scBidPrice);
+				scBidPrice.setNewPrice(new BigDecimal(0.0d));
+				getBidPrices().set(index, scBidPrice);
+				throw new EpException(MessageConst.ERROR_760301
 								+ scBidPrice.getScBidSupplierItem()
 										.getScBidItem().getDecrementAmt());
-			}
 
+			} else if (scBidPrice.getNewPrice().doubleValue() > scBidPrice
+					.getScBidSupplierItem().getScBidItem().getDecrementAmt()
+					.doubleValue()
+					&& (scBidPrice.getNewPrice().doubleValue() % scBidPrice
+							.getScBidSupplierItem().getScBidItem()
+							.getDecrementAmt().doubleValue()) != 0.0d) {
+				int index = getBidPrices().indexOf(scBidPrice);
+				scBidPrice.setNewPrice(new BigDecimal(0.0d));
+				getBidPrices().set(index, scBidPrice);
+				throw new EpException(MessageConst.ERROR_760301	+ scBidPrice.getScBidSupplierItem()
+										.getScBidItem().getDecrementAmt());
+			} else {
+				BigDecimal lastBidPrice = scBidPrice.getBidPrice() == null ? scBidPrice
+						.getScBidSupplierItem().getItemStartPrice()
+						: scBidPrice.getBidPrice();
+				if (scBidPrice.getNewPrice().doubleValue() > lastBidPrice
+						.doubleValue()) {
+					int index = getBidPrices().indexOf(scBidPrice);
+					scBidPrice.setNewPrice(new BigDecimal(0.0d));
+					getBidPrices().set(index, scBidPrice);
+					throw new EpException(MessageConst.ERROR_760302);
+				}
+			}
 		}
 		ScBidPrice newBidPrice = new ScBidPrice();
 		BigDecimal newPrice = null;
