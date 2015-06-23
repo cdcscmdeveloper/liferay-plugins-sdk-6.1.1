@@ -17,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -87,6 +88,7 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.persistence.entity.sm.SmStaffTotal;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -101,6 +103,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -2298,5 +2301,48 @@ public class SmCommonUtil {
 					.getSmAppl();
 		}
 		return activeAppl;
+	}
+
+	/**
+	 * Check whether soft cert is ready for renewal
+	 * 
+	 * @param Long
+	 *            supplierId
+	 * @param SmPersonnel
+	 *            personnel
+	 * @return boolean
+	 */
+	public boolean isSoftcertReadyForRenewal(Long supplierId,
+			SmPersonnel personnel) {
+		if (personnel.getPmUser() != null
+				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+			reqDTO.setSmSupplierId(supplierId);
+			reqDTO.setUserId(personnel.getPmUser().getUserId());
+			SmSoftcertRequest softcertRequest = SmServiceLookup
+					.getPersonnelSO()
+					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
+							reqDTO).getSoftcertRequest();
+			if (softcertRequest == null) {
+				return false;
+			} else {
+				if (softcertRequest.getPmDigiCert().getValidTo() != null) {
+					Calendar renewDate = Calendar.getInstance();
+					renewDate.setTime(softcertRequest.getPmDigiCert()
+							.getValidTo());
+					renewDate.add(Calendar.MONTH, -3);
+					if (DateUtils.isDateGreaterOrEqual(new Date(),
+							renewDate.getTime())) {
+						return true;
+					} else {
+						return false;
+					}
+				} else {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
 	}
 }
