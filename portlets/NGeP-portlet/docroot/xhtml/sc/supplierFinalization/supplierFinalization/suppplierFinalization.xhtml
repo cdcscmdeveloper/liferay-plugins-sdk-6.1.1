@@ -160,7 +160,9 @@
 					   			<p:message id="reasonMsg" for="reason" display="icon" />
 							</td>
 							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl[suppFinalizationBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.sf.reason.quotation.tooltip' : 'lbl.sc.sf.reason.tender.tooltip']}" />
+								<ac:iconTooltip value="#{lbl[suppFinalizationBackingBean.managedBean.scQt.procurementMode == 
+										ParameterConst.procurementModeQuotation 
+												? 'lbl.sc.sf.reason.quotation.tooltip' : 'lbl.sc.sf.reason.tender.tooltip']}" />
 							</td>
 						</tr>
 						</table>
