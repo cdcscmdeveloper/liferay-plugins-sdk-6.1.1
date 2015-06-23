@@ -220,6 +220,8 @@ public class SupplierManagementConst {
 	public static final int SOFT_CERT_ISSUED = 1;
 	public static final int SOFT_CERT_REVOKED = 5;
 	public static final int SOFT_CERT_REJECTED = 6;
+	public static final int SOFT_CERT_READY_FOR_RENEWAL = 7;
+	public static final int SOFT_CERT_EXPIRED = 8;
 	
 	//GST rule value constant
 	public static String GST_RULE_VALUE = "GST";
@@ -453,9 +455,8 @@ public class SupplierManagementConst {
 	public static final String SVC_ASSIGN_SITEVISIT = "SVC beri tugasan lawatan tapak kepada SVO";
 	public static final String SVO_SUBMIT_REPORT = "SVO hantar laporan lawatan tapak";
 	
-	public static final String SUPPLIER_MAINTENANCE_REGISTRATION_STATUS = "Selenggara Data Pembekal: Kemaskini Status Pendaftaran";
-	public static final String SUPPLIER_MAINTENANCE_ADD_CATEGORY_CODE = "Selenggara Data Pembekal: Tambah Kod Bidang";
-	public static final String SUPPLIER_MAINTENANCE_DELETE_CATEGORY_CODE = "Selenggara Data Pembekal: Hapus Kod Bidang";
+	public static final String APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE = "Pelulus hantar data pembekal yang telah diselenggara";
+	public static final String APPROVER_SUBMIT_CANCEL_SUPPLIER_MOF_ACCOUNT = "Pelulus hantar untuk batalkan akaun MOF pembekal";
 
 	public static final String SM_STATE_NAME_SABAH = "SABAH";
 	public static final String SM_STATE_NAME_SARAWAK = "SARAWAK";
