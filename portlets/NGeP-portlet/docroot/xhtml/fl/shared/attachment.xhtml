@@ -20,8 +20,8 @@
 					value="#{fulfilmentBackingBean.managedBean.attachmentList}"
 					emptyMessage ="#{lbl['lbl.datatable.msg.no.records.found']}" 
 					var="attachFile" rowIndexVar="attachFileIndex" columns="1"
-					style="width:100%">
-					<table class="noBorder">
+					style="width:100%" styleClass="noBorder">
+					<table>
 						<tr>
 							<td rowspan="2">
 							<h:graphicImage value="/css/images/design/#{fulfilmentBackingBean.determineIcon(attachFile)}"
