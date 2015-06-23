@@ -91,20 +91,20 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
-		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="text-align: center;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" style="width:9%; white-space:normal; text-align:center;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
+		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"/>
 		           	</p:row>
 		           	<p:row>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" />
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" />
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" />
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" style="width:7%; white-space:normal;"/>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
 		           	</p:row>
 		       	</p:columnGroup>
 				
@@ -116,7 +116,7 @@
 					<p:commandLink update=":form:suppDtlPopUp" action="#{suppFinalizationBackingBean.showSupplierDetails(null, null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
 					</p:commandLink>
 				</p:column>
 	
@@ -184,20 +184,20 @@
 				
 				<p:columnGroup type="header">
 		        	<p:row>
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" />
-		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" />
-		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="text-align: center;"/>
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.code']}" style="width:5%; white-space:normal;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.supplier.name']}" style="width:9%; white-space:normal; text-align:center;"/>
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.bumiputra.status']}" style="width:5%; white-space:normal;" />
+		           		<p:column rowspan="2" headerText="#{lbl['lbl.sc.offered.price']}" style="width:10%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.total.score']}" style="width:10%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
+		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"/>
 		           	</p:row>
 		           	<p:row>
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" />
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" />
-		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" />
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.performance']}" style="width:7%; white-space:normal;"/>
+		               <p:column colspan="1" headerText="#{lbl['lbl.sc.bod']}" style="width:7%; white-space:normal;" />
 		           	</p:row>
 		       	</p:columnGroup>
 				
@@ -210,7 +210,7 @@
 						action="#{suppFinalizationBackingBean.showSupplierDetails(null,null)}"
 						oncomplete="suppDtlWidgetVar.show();">
 						<f:setPropertyActionListener value="#{shortlistedSupp}" target="#{suppFinalizationBackingBean.managedBean.shortlistedSupplier}" />
-						<h:outputText style="width:180px; white-space:normal;" value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
+						<h:outputText value="#{shortlistedSupp.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"/>
 					</p:commandLink>
 				</p:column>
 	
