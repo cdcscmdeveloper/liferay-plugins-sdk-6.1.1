@@ -3,6 +3,7 @@ package my.ep.web.backingbean.sm.softcertreg;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -347,7 +348,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			while (iterator.hasNext()) {
 				SmPersonnel personnel = iterator.next();
 				if (personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_PENDING_REQ
-						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED) {
+						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_REJECTED
+						&& personnel.getSoftcertFlg() != SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL) {
 					iterator.remove();
 				} else {
 					if (personnel.getPmUser() == null) {
@@ -658,6 +660,16 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 							+ DateUtils.dateToString("dd/MM/yyyy",
 									softcertRequest.getPmDigiCert()
 											.getValidTo());
+					Calendar renewDate = Calendar.getInstance();
+					renewDate.setTime(softcertRequest.getPmDigiCert()
+							.getValidTo());
+					renewDate.add(Calendar.MONTH, -3);
+					if (DateUtils.isDateGreaterOrEqual(new Date(),
+							renewDate.getTime())) {
+						smPersonnel
+								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
+						smPersonnel.setDisableRowSelection(false);
+					}
 				}
 			}
 		}

@@ -320,6 +320,9 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.sm.person.composition.certStatus']} :" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
+							value="#{lbl['lbl.sm.person.composition.ready.renewal']}"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '7'}" />
+						<p:outputLabel styleClass="outputLabel-view"
 							value="#{lbl['lbl.sm.person.composition.rejected']}"
 							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '6'}" />
 						<p:outputLabel styleClass="outputLabel-view"
@@ -334,6 +337,9 @@
 						<p:outputLabel value="#{lbl['lbl.sm.person.composition.issued']}"
 							styleClass="outputLabel-view"
 							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '1'}" />
+						<p:outputLabel value="#{lbl['lbl.sm.person.composition.notapplied']}"
+							styleClass="outputLabel-view"
+							rendered="#{backingBean.managedBean.selectedShareHolder.softcertFlg eq '0'}" />
 					</td>
 					<td></td>
 				</tr>

@@ -13,6 +13,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 @ManagedBean(name = "viewSuppProfileMB")
 @SessionScoped
@@ -25,6 +26,9 @@ public class ViewSuppProfileManagedBean extends
 	private static final long serialVersionUID = -9029253736925390560L;
 	private SmSupplier selectedSupplier;
 	private SmSupplierCategory selectedCategory;
+	private SmSupplierBasicInfoVO basicInfo;
+	private String applnApprovalRemarks;
+	private boolean showParentMsg;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewSuppProfileManagedBean() {
@@ -109,6 +113,30 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
 		this.selectedCategory = selectedCategory;
+	}
+
+	public SmSupplierBasicInfoVO getBasicInfo() {
+		return basicInfo;
+	}
+
+	public void setBasicInfo(SmSupplierBasicInfoVO basicInfo) {
+		this.basicInfo = basicInfo;
+	}
+
+	public String getApplnApprovalRemarks() {
+		return applnApprovalRemarks;
+	}
+
+	public void setApplnApprovalRemarks(String applnApprovalRemarks) {
+		this.applnApprovalRemarks = applnApprovalRemarks;
+	}
+
+	public boolean isShowParentMsg() {
+		return showParentMsg;
+	}
+
+	public void setShowParentMsg(boolean showParentMsg) {
+		this.showParentMsg = showParentMsg;
 	}
 
 }
