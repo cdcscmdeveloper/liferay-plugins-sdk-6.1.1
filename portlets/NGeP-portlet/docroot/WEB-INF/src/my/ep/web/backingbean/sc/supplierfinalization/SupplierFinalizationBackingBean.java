@@ -4648,8 +4648,9 @@ public class SupplierFinalizationBackingBean extends
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
+					zoneItem.setOnstart("blockWidget.show();");
 					zoneItem.setOncomplete("onZoneTabChangeAction([ {name : 'selectedZoneTabIndex', value : "
-							+ zoneTabIndex + "}]);");
+							+ zoneTabIndex + "}]); blockWidget.hide();");
 					zoneMenuModel.addMenuItem(zoneItem);
 					++zoneTabIndex;
 				}
