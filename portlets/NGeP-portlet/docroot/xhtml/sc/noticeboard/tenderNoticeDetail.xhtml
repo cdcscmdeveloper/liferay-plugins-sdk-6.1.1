@@ -53,7 +53,7 @@
 			<p:spacer height="30px" />
 			<ui:include src="/xhtml/sc/noticeboard/nbcategorycodelist.xhtml" />
 			<c:if
-				test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
+				test="#{!noticeBoardBackingBean.managedBean.scQt.zonal and !noticeBoardBackingBean.managedBean.scQt.scQtSupplierCriteria.allState}">
 				<br/>
 				<h:outputText value="#{lbl['lbl.sc.notice.board.locality']}"
 					style="font-weight:bold;text-align: left;font-size:14px;" />
