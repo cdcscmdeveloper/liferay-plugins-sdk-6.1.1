@@ -396,9 +396,15 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmStaticStateView(true);				       	
 			    rptGenBean.setSmApplicationStatusView(true);
 			    rptGenBean.setSmActiveSubmissiveFromDateView(true);
-				rptGenBean.setSmSubmissionDateView(true);
-			 	
+				rptGenBean.setSmSubmissionDateView(true);			 	
          break;
+		 case ReportConst.SM_THRESHOLD_VALUE:
+				 rptGenBean.setSmSupplierView(true);
+				 rptGenBean.setSmRegistrationNoView(true);
+				 rptGenBean.setSmMofRegNoView(true);
+				 rptGenBean.setSmFromAndToYearView(true);
+				 rptGenBean.setSmThresholdYearFromView(true);			 	
+      break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;

@@ -4316,6 +4316,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 							&& (this.getSmThresholdToYear() != null))) {
 				throw new EpException(MessageConst.ERROR_REPORT_780016);
 			}
+			if ((this.getSmThresholdFromYear() != null)
+					&& (this.getSmThresholdToYear() != null)) {
+			 checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
+			}
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
 					|| this.getModuleValue().equalsIgnoreCase(
@@ -4755,10 +4759,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}		
 			}
-			if ((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_THRESHOLD)||getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))){
+			
 				if ((this.getSmThresholdFromYear() != null)
 						&& (this.getSmThresholdFromYear() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
@@ -4770,13 +4771,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					rptGenBean
 							.setSmThresholdToYearVar(ReportConst.AMP_SM_TO_YEAR_EQ
 									+ this.getSmThresholdToYear());
-				}
+				}				
 				
-				if ((this.getSmThresholdFromYear() != null)
-						&& (this.getSmThresholdToYear() != null)) {
-				 checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
-				}
-			}
+			
 			if ((this.getSmUserName() != null)
 					&& (this.getSmUserName() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
