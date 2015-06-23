@@ -75,23 +75,23 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
  
-			<p:column headerText="#{lbl['lbl.sc.item']}">
+			<p:column headerText="#{lbl['lbl.sc.item']}" style="width:15%; white-space:normal;">
 				<h:outputText value="#{item.requestItem.itemName}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.item.type']}">
+			<p:column headerText="#{lbl['lbl.sc.item.type']}" style="width:5%;">
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.requestItem.itemType)}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.uom']}">
+			<p:column headerText="#{lbl['lbl.sc.uom']}" style="width:5%;">
 				<h:outputText value="#{item.requestItem.uom.uomName}" />
 			</p:column>
 			
-			<p:column headerText="#{lbl['lbl.sc.price.type']}">
+			<p:column headerText="#{lbl['lbl.sc.price.type']}" style="width:5%;">
 				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(item.requestItem.tplSpecQuestion.clPriceTypeCode)}" />
 			</p:column>
 
-			<p:column>
+			<p:column style="width:10%; white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 					<h:outputText value="#{lbl['lbl.sc.recommend.by']}" />
@@ -99,7 +99,8 @@
 				</f:facet>
 				<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
 						required="false" label="#{lbl['lbl.sc.recommend.by']}" 
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled or item.awardedItem}">
+						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled or item.awardedItem}" 
+						style="width:95%;">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
 														item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=itemOnlineBiddingPanel])" 
@@ -108,7 +109,7 @@
 	   			</p:selectOneMenu>
 			</p:column>
 			
-			<p:column style="white-space:normal;">
+			<p:column style="width:15%;white-space:normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.recommended.supplier']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
@@ -130,7 +131,7 @@
 				</p:outputPanel>	
 			</p:column>
 
-			<p:column style="text-align: right;">
+			<p:column style="text-align:right; width:10%;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.quantity']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
@@ -172,7 +173,8 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.req.higher.authority']}" 
-					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
+					  rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}"
+					  style="width:10%;white-space:normal;">
 				<p:selectBooleanCheckbox value="#{item.higherAuthReq}" disabled="#{item.disabled or item.awardedItem}">
 					<p:ajax partialSubmit="true" process="@this" update="@this"/>
 				</p:selectBooleanCheckbox>				
@@ -197,8 +199,7 @@
 	   			</p:selectOneMenu>
 				
 				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}" 
-					process="@this"
-					partialSubmit="true"
+					process="@this" partialSubmit="true" 
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
 					update="@([id$=itemListTbl],[id$=supplierListTblMultiple],[id$=awardSupplier])"
 					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"
