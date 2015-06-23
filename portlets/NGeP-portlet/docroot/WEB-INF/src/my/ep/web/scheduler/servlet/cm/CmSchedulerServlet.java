@@ -48,7 +48,7 @@ public class CmSchedulerServlet extends HttpServlet {
 						PhisBatchCmOutboundJob.class, CmSchedulerConstants.PHIS_CM_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
 				//GFMAS PM IN bound Continuous job				
-					EpSchedulerHelper.scheduleJob(new JobKey(
+				/*EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_FL_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_FL_IN_JOB_GROUP),
 						GfmasBatchFlInboundJob.class, CmSchedulerConstants.GFMAS_FL_CONTINUOUS_JOB_DESC,
@@ -88,6 +88,6 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
-						EpPropertiesUtils.getInstance().getProperty("notification.sm.outbound"));
+						EpPropertiesUtils.getInstance().getProperty("notification.sm.outbound"));*/
 	}
 }
