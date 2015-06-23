@@ -350,12 +350,19 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmReportTypeTwoView(true);
 			    rptGenBean.setSmProcessingOfficerNameView(true);
 	            break;
-		 case ReportConst.SM_SUPPLIER_PERFORMANCE:	
-			    rptGenBean.setSmCompanyNameView(true);
+		 case ReportConst.SM_SUPPLIER_PERFORMANCE:
+			 rptGenBean.setSmRegistrationTypeView(true);
+			 rptGenBean.setSmSupplierView(true);
+			 rptGenBean.setSmEpNoView(true);
+			 rptGenBean.setSmMofRegNoView(true);
+			 rptGenBean.setSmFromAndToYearView(true);
+			 rptGenBean.setSmYearFromView(true);
+			    /*rptGenBean.setSmCompanyNameView(true);
 				rptGenBean.setSmMofRegNoTwoView(true);
 				rptGenBean.setSmRegistrationTypeTwoView(true);
 				rptGenBean.setSmActiveSubmissiveFromDateView(true);
-				rptGenBean.setSmActSubmisAllDateView(true);
+				rptGenBean.setSmActSubmisAllDateView(true);*/
+			 break;
 		 case ReportConst.SM_PERSON_BRANCH_BANK:
 			    rptGenBean.setSmZoneView(true);
 			    rptGenBean.setSmSupplierTypeView(true);
@@ -371,6 +378,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmRegistrationNoView(true);
 			    rptGenBean.setSmMofRegNoView(true);	
 			    rptGenBean.setSmFromAndToYearView(true);
+			    rptGenBean.setSmThresholdYearFromView(true);
 	            break;
 		 case ReportConst.SM_LIST_OF_USERS:	
 			    rptGenBean.setSmRequestExpiryDateView(true);
