@@ -212,6 +212,8 @@ public class ReportsGenerateBean {
 		private boolean smFromAndToYearView = false;
 		private boolean smUserNameView = false;
 		private boolean smRequestExpiryDateView = false;
+		private boolean smYearFromView = false;
+		private boolean smThresholdYearFromView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -483,6 +485,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmYearFromView() {
+			return smYearFromView;
+		}
+		public void setSmYearFromView(boolean smYearFromView) {
+			this.smYearFromView = smYearFromView;
+		}
+		public boolean isSmThresholdYearFromView() {
+			return smThresholdYearFromView;
+		}
+		public void setSmThresholdYearFromView(boolean smThresholdYearFromView) {
+			this.smThresholdYearFromView = smThresholdYearFromView;
+		}
 		public boolean isSmRequestExpiryDateView() {
 			return smRequestExpiryDateView;
 		}

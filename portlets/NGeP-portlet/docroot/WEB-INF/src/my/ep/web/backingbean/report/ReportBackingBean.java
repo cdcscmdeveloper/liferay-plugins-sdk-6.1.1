@@ -4753,7 +4753,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((getManagedBean().getReportValue() != null)
 					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SM_THRESHOLD))){
+							.equalsIgnoreCase(ReportConst.SM_THRESHOLD)||getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))){
 				if ((this.getSmThresholdFromYear() != null)
 						&& (this.getSmThresholdFromYear() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
