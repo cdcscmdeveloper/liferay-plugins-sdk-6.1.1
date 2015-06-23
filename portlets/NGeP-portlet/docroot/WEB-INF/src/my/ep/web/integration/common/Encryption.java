@@ -9,20 +9,24 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Encryption {
+	
+	SFTPUtility sftpUtility = new SFTPUtility();
+	OsbUtility osbUtility = new OsbUtility();
 
 	public void encryptGmas(String inFilePath, String outFilePath,String fileName,String processId) {
-		System.out.println("inside encryption....");
+		System.out.println("inside encryptGmas....");
 
 		File inFile = new File(inFilePath+fileName);
 		File outFile = new File(outFilePath+fileName);
-		
 		
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 		
 		System.out.println("path value with (.) :"+path);
 		
-		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
+//		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
+		
+		String substring = path.substring(0,path.indexOf("NGeP-portlet"));
 		
 		String encryptKey = substring+IntegrationConstants.GMAS_PUBLIC_KEY_PATH;
 		System.out.println("encryptKey :"+encryptKey);
@@ -42,17 +46,16 @@ public class Encryption {
 		}
 		//upload the encripted file to sftp server
 		
-				SFTPUtility sftpUtility = new SFTPUtility();
 				sftpUtility.upload(outFilePath+fileName, IntegrationConstants.GMAS_UPLOAD+fileName);
 				
 	    // call osb service	for transfering from host to 1GFMAS
-				 OsbUtility osbUtility = new OsbUtility();
 				 osbUtility.osbServiceCallOutBound(processId);
 		
 	}
 
 	// decrypt gmass
 	public void decryptGmas(String inFilePath, String outFilePath) {
+		System.out.println("inside decryptGmas");
 		System.out.println("inFilePath :"+inFilePath);
 		System.out.println("outFilePath :"+outFilePath);
 		
@@ -87,21 +90,18 @@ public class Encryption {
 	// encrypt phis
 	public void encryptPhis(String inFilePath, String outFilePath,String fileName,String processId) {
 		
+		System.out.println("inside encryptPhis");
 		File inFile = new File(inFilePath+fileName);
 		File outFile = new File(outFilePath+fileName);
 		
-		System.out.println("inFile  :"+inFile.getPath());
-		System.out.println("readFileContents :"+readFileContents(inFile));
 		
 		URL resource = getClass().getResource(".");
 		String path = resource.getPath();
 		
-		System.out.println("encryptPhis Path :"+path);
 		String substring = path.substring(0,path.indexOf("NGeP-portlet.war"));
 		
 		String encryptKey = substring+IntegrationConstants.PHIS_PUBLIC_KEY_PATH;
 
-		System.out.println("encryptPhis encryptKey :"+encryptKey);
 		
 		// encript the content
 		String encrypted;
@@ -117,11 +117,9 @@ public class Encryption {
 		
 		//upload the encripted file to sftp server
 		
-		SFTPUtility sftpUtility = new SFTPUtility();
 		sftpUtility.upload(outFilePath+fileName, IntegrationConstants.PHIS_UPLOAD_DIR+fileName);
 		
 		//once upload is done cal web service osb integration to transfer file.
-		 OsbUtility osbUtility = new OsbUtility();
 		 osbUtility.osbServiceCallOutBound(processId);
 		
 	}
@@ -144,6 +142,8 @@ public class Encryption {
 		StringBuffer sb = new StringBuffer();
 		try {
 
+			System.out.println("getAbsolutePath  :"+inFilePath.getAbsolutePath());
+			System.out.println("length  :"+inFilePath.length());
 			br = new BufferedReader(new FileReader(inFilePath));
 			String line = br.readLine();
 			System.out.println("line :"+line);
