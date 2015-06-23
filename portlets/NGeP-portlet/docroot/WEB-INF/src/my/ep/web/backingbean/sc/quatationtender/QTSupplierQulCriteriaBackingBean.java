@@ -534,7 +534,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 							}
 						}
 					} else {
-						throw new EpException(MessageConst.ERROR_760297);
+						throw new EpException(MessageConst.ERROR_760300);
 					}
 				}
 			}
