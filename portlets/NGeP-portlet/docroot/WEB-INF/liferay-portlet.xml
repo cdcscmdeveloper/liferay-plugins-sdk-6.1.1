@@ -711,6 +711,16 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smcancelmofreg-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>smCancelMofBySupplier</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>smcancelmofbysupplier-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Supplier Management Start venkat -->
 	<portlet>
 		<portlet-name>sm</portlet-name>

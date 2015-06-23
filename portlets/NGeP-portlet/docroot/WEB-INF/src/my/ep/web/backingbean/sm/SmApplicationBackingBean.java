@@ -820,8 +820,10 @@ public class SmApplicationBackingBean extends
 
 				// currently is display for ApplType C/DPA
 				getManagedBean().setBasicInfo(
-						SmApplicationUtil
-								.getSmSupplierBasicInfoVO(getManagedBean()));
+						SmApplicationUtil.getSmSupplierBasicInfoVO(
+								getManagedBean().getBasicInfo(),
+								getManagedBean().getSmSupplier(),
+								getManagedBean().getSmAppl()));
 			}
 
 			if (getManagedBean().getSmAppl().getSupplierType()
