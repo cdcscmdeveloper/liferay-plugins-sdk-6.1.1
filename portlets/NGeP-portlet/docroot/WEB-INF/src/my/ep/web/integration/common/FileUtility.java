@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,6 +35,7 @@ import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
+import my.ep.web.integration.gfmas.CompanyBranch;
 import my.ep.web.integration.gfmas.EPErrorResponse;
 import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.gfmas.MasterDataMaterialInfo;
@@ -62,13 +64,15 @@ public class FileUtility {
 	
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
+	Encryption encryption = new Encryption();
+	
 
 	/**
 	 * Write character data to a big file - use BufferedWriter
 	 */
 	public void materialClassFileOutPutStream(List<MaterialClass> content,
 			String filePath) {
-		System.out.println("inside materialClassFileOutPutStream");
+		System.out.println("inside materialClassFileOutPutStream ");
 		String SERVICE_CODE = "PHS-030";
 
 		Writer writer = null;
@@ -83,28 +87,23 @@ public class FileUtility {
 				StringBuffer line;
 				for (MaterialClass mclass : content) {
 					line = new StringBuffer();
-					line.append(formatStringField(
-							mclass.getMaterialClassCode(), 8, "L"));
-					line.append(formatStringField(
-							mclass.getMaterialClassDescription(), 200, "L"));
-					line.append(formatStringField(
-							mclass.getMaterialClassAction(), 3, "L"));
-					line.append(formatStringField(
-							mclass.getMaterialOldClassCode(), 8, "L"));
+					line.append(formatStringField(mclass.getMaterialClassCode(), 8, "L"));
+					line.append(formatStringField(mclass.getMaterialClassDescription(), 200, "L"));
+					line.append(formatStringField(mclass.getMaterialClassAction(), 3, "L"));
+					line.append(formatStringField(mclass.getMaterialOldClassCode(), 8, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
-
 			}
-			System.out.println("local fie create....");
-			Encryption encryption = new Encryption();
-			encryption.encryptPhis(filePath,
-					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
+		//  Encryption method 
+			
+//			Encryption encryption = new Encryption();
+			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
+			e.printStackTrace();
 
 		} finally {
-
 			if (writer != null) {
 				try {
 					writer.close();
@@ -132,24 +131,19 @@ public class FileUtility {
 				StringBuffer line;
 				for (MaterialBrand mbrand : content) {
 					line = new StringBuffer();
-					line.append(formatStringField(
-							mbrand.getMaterialBrandCode(), 3, "L"));
-					line.append(formatStringField(
-							mbrand.getMaterialBrandDescription(), 150, "L"));
-					line.append(formatStringField(
-							mbrand.getMaterialBrandAction(), 3, "L"));
-					line.append(formatStringField(
-							mbrand.getMaterialOldBrandCode(), 3, "L"));
+					line.append(formatStringField(mbrand.getMaterialBrandCode(), 3, "L"));
+					line.append(formatStringField(mbrand.getMaterialBrandDescription(), 150, "L"));
+					line.append(formatStringField(mbrand.getMaterialBrandAction(), 3, "L"));
+					line.append(formatStringField(mbrand.getMaterialOldBrandCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
 			}
-			System.out.println("file created.....");
-			Encryption encryption = new Encryption();
-			encryption.encryptPhis(filePath,
-					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
+		//  Encryption method 
+//			Encryption encryption = new Encryption();
+			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 
 		} finally {
@@ -166,6 +160,7 @@ public class FileUtility {
 
 	public void materialColorFileOutPutStream(List<MaterialColor> content,
 			String filePath) {
+		System.out.println("inside materialColorFileOutPutStream ");
 		String SERVICE_CODE = "PHS-050";
 		Writer writer = null;
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -179,24 +174,20 @@ public class FileUtility {
 				StringBuffer line;
 				for (MaterialColor mcolor : content) {
 					line = new StringBuffer();
-					line.append(formatStringField(
-							mcolor.getMaterialColorCode(), 2, "L"));
-					line.append(formatStringField(
-							mcolor.getMaterialColorDescription(), 150, "L"));
-					line.append(formatStringField(
-							mcolor.getMaterialColorAction(), 3, "L"));
-					line.append(formatStringField(
-							mcolor.getMaterialOldColorCode(), 2, "L"));
+					line.append(formatStringField(mcolor.getMaterialColorCode(), 2, "L"));
+					line.append(formatStringField(mcolor.getMaterialColorDescription(), 150, "L"));
+					line.append(formatStringField(mcolor.getMaterialColorAction(), 3, "L"));
+					line.append(formatStringField(mcolor.getMaterialOldColorCode(), 2, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
 			}
-			System.out.println("local fie create....");
-			Encryption encryption = new Encryption();
-			encryption.encryptPhis(filePath,
-					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
+			// Encryption method
+			
+//			Encryption encryption = new Encryption();
+			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 
 		} finally {
@@ -213,6 +204,7 @@ public class FileUtility {
 
 	public void materialMeasurementFileOutPutStream(
 			List<MaterialMeasurement> content, String filePath) {
+		System.out.println("inside materialMeasurementFileOutPutStream");
 		String SERVICE_CODE = "PHS-060";
 		Writer writer = null;
 
@@ -226,24 +218,19 @@ public class FileUtility {
 				StringBuffer line;
 				for (MaterialMeasurement mMeasurement : content) {
 					line = new StringBuffer();
-					line.append(formatStringField(
-							mMeasurement.getMeasurementCode(), 3, "L"));
-					line.append(formatStringField(
-							mMeasurement.getMeasurementDescription(), 150, "L"));
-					line.append(formatStringField(
-							mMeasurement.getMeasurementAction(), 3, "L"));
-					line.append(formatStringField(
-							mMeasurement.getMeasurementOldCode(), 3, "L"));
+					line.append(formatStringField(mMeasurement.getMeasurementCode(), 3, "L"));
+					line.append(formatStringField(mMeasurement.getMeasurementDescription(), 150, "L"));
+					line.append(formatStringField(mMeasurement.getMeasurementAction(), 3, "L"));
+					line.append(formatStringField(mMeasurement.getMeasurementOldCode(), 3, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
 			}
-			System.out.println("local fie create....");
-			Encryption encryption = new Encryption();
-			encryption.encryptPhis(filePath,
-					IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
+//			Encryption method
+//			Encryption encryption = new Encryption();
+			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 		} catch (IOException e) {
 
 		} finally {
@@ -259,6 +246,7 @@ public class FileUtility {
 	}
 
 	public void itemTypeFileOutPutStream(List<ItemType> content, String filePath) {
+		System.out.println("inside itemTypeFileOutPutStream");
 		String SERVICE_CODE = "PHS-070";
 		Writer writer = null;
 
@@ -272,24 +260,19 @@ public class FileUtility {
 				StringBuffer line;
 				for (ItemType itemType : content) {
 					line = new StringBuffer();
-					line.append(formatStringField(itemType.getItemCode(), 2,
-							"L"));
-					line.append(formatStringField(
-							itemType.getItemDescription(), 150, "L"));
-					line.append(formatStringField(itemType.getItemAction(), 3,
-							"L"));
-					line.append(formatStringField(itemType.getItemOldcode(), 3,
-							"L"));
+					line.append(formatStringField(itemType.getItemCode(), 2,"L"));
+					line.append(formatStringField(itemType.getItemDescription(), 150, "L"));
+					line.append(formatStringField(itemType.getItemAction(), 3,"L"));
+					line.append(formatStringField(itemType.getItemOldcode(), 3,	"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
 			}
-			System.out.println("local fie create....");
-			// encript the content and put in a location
+		// Encryption method
 
-			Encryption encryption = new Encryption();
+//			Encryption encryption = new Encryption();
 			encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName, SERVICE_CODE);
 
 		} catch (IOException e) {
@@ -309,6 +292,7 @@ public class FileUtility {
 	// 1GFMAS
 
 	public void masterDataVendorFileOutPutStream(List<MasterDataVendor> content, String filePath) {
+		System.out.println("inside masterDataVendorFileOutPutStream");
 		String PROCESS_ID = "APIVE";
 		
 		String fileName = createFileNameGfmas(PROCESS_ID);
@@ -322,6 +306,7 @@ public class FileUtility {
 
 			if (content.size() != 0) {
 				StringBuffer line;
+				StringBuffer branchLine;
 				StringBuffer subLine;
 				for (MasterDataVendor mDataVendor : content) {
 					
@@ -335,27 +320,39 @@ public class FileUtility {
 						else
 							line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
 						line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
-						line.append(formatStringField(mDataVendor.getName(), 35,"L"));
-						line.append(formatStringField(mDataVendor.getName2(), 35,"L"));
-						line.append(formatStringField(mDataVendor.getAddress(), 35,"L"));
-						line.append(formatStringField(mDataVendor.getAddress2(),35, "L"));
-						line.append(formatStringField(mDataVendor.getAddress3(),35, "L"));
-						line.append(formatStringField(mDataVendor.getPostCode(), 5,"L"));
-						line.append(formatStringField(mDataVendor.getCity(), 35,"L"));
-						line.append(formatStringField(mDataVendor.getRegion(), 3,"L"));
-						line.append(formatStringField(mDataVendor.getCountry(), 2,"L"));
-						line.append(formatStringField(mDataVendor.getTelephoneNo(),	15, "L"));
-						line.append(formatStringField(mDataVendor.getFaxNo(), 15,"L"));
-						line.append(formatStringField(mDataVendor.getEmailAddress(), 100, "L"));
-						line.append(formatStringField(mDataVendor.getGlReconAccount(), 10, "L"));
-						line.append(formatStringField(mDataVendor.getCurrency(), 5,"L"));
-						line.append(formatStringField(mDataVendor.getIncoTerm(), 3,"L"));
-						line.append(formatStringField(mDataVendor.getPaymentTerm(),4, "L"));
-						line.append(formatIntegerField(mDataVendor.getBankAccountInfoCount(), 3, "R"));
-						line.append(formatIntegerField(mDataVendor.getStatus(), 1,"R"));
-						line.append(formatStringField(mDataVendor.getMobileNo(), 15,"L"));
 						line.append(System.getProperty("line.separator"));
 						writer.write(line.toString());
+						
+						if (mDataVendor.getCompanyBranchs().size() != 0) {
+							for (CompanyBranch companyBranch : mDataVendor.getCompanyBranchs()) {
+								branchLine = new StringBuffer();
+								branchLine.append(formatIntegerField(companyBranch.getRecordType(),	1, "R"));
+								branchLine.append(formatStringField(companyBranch.getName(), 35,"L"));
+								branchLine.append(formatStringField(companyBranch.getName2(), 35,"L"));
+								branchLine.append(formatStringField(companyBranch.getAddress(), 35,"L"));
+								branchLine.append(formatStringField(companyBranch.getAddress2(),35, "L"));
+								branchLine.append(formatStringField(companyBranch.getAddress3(),35, "L"));
+								branchLine.append(formatStringField(companyBranch.getPostCode(), 5,"L"));
+								branchLine.append(formatStringField(companyBranch.getCity(), 35,"L"));
+								branchLine.append(formatStringField(companyBranch.getRegion(), 3,"L"));
+								branchLine.append(formatStringField(companyBranch.getCountry(), 2,"L"));
+								branchLine.append(formatStringField(companyBranch.getTelephoneNo(),	15, "L"));
+								branchLine.append(formatStringField(companyBranch.getFaxNo(), 15,"L"));
+								branchLine.append(formatStringField(companyBranch.getEmailAddress(), 100, "L"));
+								branchLine.append(formatStringField(companyBranch.getGlReconAccount(), 10, "L"));
+								branchLine.append(formatStringField(companyBranch.getCurrency(), 5,"L"));
+								branchLine.append(formatStringField(companyBranch.getIncoTerm(), 3,"L"));
+								branchLine.append(formatStringField(companyBranch.getPaymentTerm(),4, "L"));
+								branchLine.append(formatIntegerField(companyBranch.getBankAccountInfoCount(), 3, "R"));
+								branchLine.append(formatIntegerField(companyBranch.getStatus(), 1,"R"));
+								branchLine.append(formatStringField(companyBranch.getMobileNo(), 15,"L"));
+								branchLine.append(formatStringField(companyBranch.getIndicatorCode(), 3, "R"));
+								branchLine.append(formatStringField(companyBranch.getAccountActionIndicator(), 1,"R"));
+								branchLine.append(formatStringField(companyBranch.getReferenceNoGST(), 20,"L"));
+								branchLine.append(System.getProperty("line.separator"));
+								writer.write(branchLine.toString());
+							}
+						}
 						if (mDataVendor.getBankAccountInfoList().size() != 0) {
 							for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
 								subLine = new StringBuffer();
@@ -365,7 +362,8 @@ public class FileUtility {
 								subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
 								subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
 								subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
-								subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));
+								subLine.append(formatStringField(bankInfo.getBankActionIndicator(), 1, "L"));
+//								subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));   // removed in 2.7
 								subLine.append(System.getProperty("line.separator"));
 								writer.write(subLine.toString());
 								writer.flush();
@@ -377,8 +375,9 @@ public class FileUtility {
 			}else{
 				System.out.println("content is null");
 			}
-			System.out.println("local fie create....");
-			Encryption encryption = new Encryption();
+//			Encryptio method
+			
+//			Encryption encryption = new Encryption();
 			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010");
 		} catch (IOException e) {
 
@@ -422,7 +421,7 @@ public class FileUtility {
 				}
 				System.out.println("local fie create....");
 				
-				Encryption encryption = new Encryption();
+//				Encryption encryption = new Encryption();
 				encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-350");
 
 			}
@@ -442,7 +441,7 @@ public class FileUtility {
 	
 
 	public List<MasterDataVendor> masterDataVendorFileInPutStream(String filePath) {
-			String PROCESS_ID = "APOVE";
+//			String PROCESS_ID = "APOVE";
 			Path path = Paths.get(filePath);
 		    String line;
 		    List<MasterDataVendor> masterDataVendorList = new ArrayList<MasterDataVendor>();
@@ -456,27 +455,27 @@ public class FileUtility {
 			    	  line = scanner.nextLine();
 			    	  if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
 			    		  masterDataVendor = new MasterDataVendor();
-			    		 // masterDataVendor.setRecordType(Integer.parseInt(fileUtility.getValue(line,0 ,1 )));
+			    		  masterDataVendor.setRecordType(Integer.parseInt(fileUtility.getValue(line,0 ,1 )));
 			    		  masterDataVendor.setRecordType(0);
 			    		  masterDataVendor.setAgencyId(fileUtility.getValue(line,1 ,6 ));
 			    		  masterDataVendor.setVendorIdCode(fileUtility.getValue(line,7 ,20 ));
 			    		  masterDataVendor.setEntityCode(fileUtility.getValue(line,27 ,4 ));
 			    		  masterDataVendor.setSapVendorCode(fileUtility.getValue(line,31 ,10 ));
-			    		  masterDataVendor.setName(fileUtility.getValue(line,41 ,35 ));
-			    		  masterDataVendor.setName2(fileUtility.getValue(line,76 ,35 ));
-			    		  masterDataVendor.setAddress(fileUtility.getValue(line,111 ,35 ));
-			    		  masterDataVendor.setAddress2(fileUtility.getValue(line,146 ,35 ));
-			    		  masterDataVendor.setAddress3(fileUtility.getValue(line,181 ,35 ));
-			    		  masterDataVendor.setPostCode(fileUtility.getValue(line,216 ,5 ));
-			    		  masterDataVendor.setCity(fileUtility.getValue(line,221 ,35 ));
-			    		  masterDataVendor.setRegion(fileUtility.getValue(line,256 ,3 ));
-			    		  masterDataVendor.setCountry(fileUtility.getValue(line,259 ,2 ));
-			    		  masterDataVendor.setTelephoneNo(fileUtility.getValue(line,261 ,15 ));
-			    		  masterDataVendor.setFaxNo(fileUtility.getValue(line,276 ,15 ));
-			    		  masterDataVendor.setEmailAddress(fileUtility.getValue(line,291 ,100 ));
-			    		//  masterDataVendor.setCurrency(fileUtility.getValue(line,391 ,5 ));
-//			    		  masterDataVendor.setPaymentTerm(fileUtility.getValue(line,396 ,4 ));
-//			    		  masterDataVendor.setMobileNo(fileUtility.getValue(line,400 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setName(fileUtility.getValue(line,41 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setName2(fileUtility.getValue(line,76 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress(fileUtility.getValue(line,111 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress2(fileUtility.getValue(line,146 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress3(fileUtility.getValue(line,181 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setPostCode(fileUtility.getValue(line,216 ,5 ));
+			    		  masterDataVendor.getCompanyBranch().setCity(fileUtility.getValue(line,221 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setRegion(fileUtility.getValue(line,256 ,3 ));
+			    		  masterDataVendor.getCompanyBranch().setCountry(fileUtility.getValue(line,259 ,2 ));
+			    		  masterDataVendor.getCompanyBranch().setTelephoneNo(fileUtility.getValue(line,261 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setFaxNo(fileUtility.getValue(line,276 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setEmailAddress(fileUtility.getValue(line,291 ,100 ));
+			    		  masterDataVendor.getCompanyBranch().setCurrency(fileUtility.getValue(line,391 ,5 ));
+			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(fileUtility.getValue(line,396 ,4 ));
+			    		  masterDataVendor.getCompanyBranch().setMobileNo(fileUtility.getValue(line,400 ,15 ));
 			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 			    		  bankAccountInformation = new BankAccountInformation();
 			    		  bankAccountInformation.setRecordType(1);
@@ -484,9 +483,9 @@ public class FileUtility {
 			    		  bankAccountInformation.setBankCountry(fileUtility.getValue(line,4 ,2 ));
 			    		  bankAccountInformation.setBankKey(fileUtility.getValue(line,6 ,15 ));
 			    		  bankAccountInformation.setBankAccount(fileUtility.getValue(line,21 ,18 ));
-//			    		  bankAccountInformation.setCurrency(fileUtility.getValue(line,39 ,5 ));
-//			    		  bankAccountInformation.setAccountHolderName(fileUtility.getValue(line,44 ,60 ));
-//			    		  masterDataVendor.setBankAccountInformation(bankAccountInformation);
+			    		  bankAccountInformation.setCurrency(fileUtility.getValue(line,39 ,5 ));
+			    		  bankAccountInformation.setAccountHolderName(fileUtility.getValue(line,44 ,60 ));
+			    		  masterDataVendor.setBankAccountInformation(bankAccountInformation);
 			    		  masterDataVendorList.add(masterDataVendor);
 			    	  }
 			      }  
@@ -554,7 +553,7 @@ public class FileUtility {
 		}
 
 		public List<VotFund> votInPutStream(String filePath) {
-			String PROCESS_ID = "GLVOT";
+//			String PROCESS_ID = "GLVOT";
 			Path path = Paths.get(filePath);
 			String line;
 			List<VotFund> votList = new ArrayList<VotFund>();
@@ -573,8 +572,10 @@ public class FileUtility {
 				    vot.setVotFundType(fileUtility.getValue(line,4 ,1));
 					vot.setCode(fileUtility.getValue(line, 4, 3));
 					vot.setPtjCode(fileUtility.getValue(line,7 ,2));
-					vot.setDescription(fileUtility.getValue(line, 9, 255));
-					vot.setStatus(fileUtility.getValue(line, 264,1));
+					vot.setDescription(fileUtility.getValue(line, 9, 255));  
+					vot.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 264, 8)));
+					vot.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 272, 8)));
+					vot.setStatus(fileUtility.getValue(line, 280,1));
 					votList.add(vot);
 
 				}
@@ -585,25 +586,24 @@ public class FileUtility {
 		}
 
 		public List<VotFund> votDanaInPutStream(String filePath) {
-			String PROCESS_ID = "GLDNA";
+//			String PROCESS_ID = "GLDNA";
 			Path path = Paths.get(filePath);
 			String line;
 			List<VotFund> votList = new ArrayList<VotFund>();
 			VotFund vot = null;
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
-
+			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 				FileUtility fileUtility = new FileUtility();
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
-
 					vot = new VotFund();
 
 				    vot.setYear(fileUtility.getValue(line,0 ,4 ));								
 					vot.setCode(fileUtility.getValue(line,4 ,4));
 					vot.setDescription(fileUtility.getValue(line, 8, 255));
-					vot.setStatus(fileUtility.getValue(line, 263, 1));
+					vot.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 263, 8)));
+					vot.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 271, 8)));
+					vot.setStatus(fileUtility.getValue(line, 279, 1));
 					votList.add(vot);
 
 				}
@@ -614,7 +614,7 @@ public class FileUtility {
 		}
 
 		public List<ProgramActivity> programAktiviti(String filePath) {
-			String PROCESS_ID = "GLPRG";
+//			String PROCESS_ID = "GLPRG";
 			Path path = Paths.get(filePath);
 			String line;
 			List<ProgramActivity> programActivityList = new ArrayList<ProgramActivity>();
@@ -633,7 +633,9 @@ public class FileUtility {
 					programActivity.setVotCode(fileUtility.getValue(line,4 ,3 ));
 					programActivity.setCode(fileUtility.getValue(line, 7, 6));
 					programActivity.setDescription(fileUtility.getValue(line, 13, 255));
-					programActivity.setStatus(fileUtility.getValue(line, 268, 1));
+					programActivity.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 268, 8)));
+					programActivity.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 276, 8)));
+					programActivity.setStatus(fileUtility.getValue(line, 284, 1));
 					programActivityList.add(programActivity);
 
 				}
@@ -644,7 +646,7 @@ public class FileUtility {
 		}
 
 		public List<Project> project(String filePath) {
-			String PROCESS_ID = "GLPRJ";
+//			String PROCESS_ID = "GLPRJ";
 			Path path = Paths.get(filePath);
 			String line;
 			List<Project> projectList = new ArrayList<Project>();
@@ -666,7 +668,9 @@ public class FileUtility {
 					project.setSubSetiaCode(fileUtility.getValue(line,15, 4));
 					project.setPembiayaan(fileUtility.getValue(line,19, 1));
 					project.setDescription(fileUtility.getValue(line,20, 255));
-					project.setStatus(fileUtility.getValue(line,275, 1));
+					project.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 275, 8)));
+					project.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 283, 8)));
+					project.setStatus(fileUtility.getValue(line,291, 1));
 					projectList.add(project);
 
 				}
@@ -677,7 +681,7 @@ public class FileUtility {
 		}
 
 		public List<GlAccount> kodAkaun(String filePath) {
-			String PROCESS_ID = "GLGLC";
+//			String PROCESS_ID = "GLGLC";
 			Path path = Paths.get(filePath);
 			String line;
 			List<GlAccount> glAccountList = new ArrayList<GlAccount>();
@@ -696,7 +700,9 @@ public class FileUtility {
 					glAccount.setCode(fileUtility.getValue(line, 4, 8));
 					glAccount.setPtjCode(fileUtility.getValue(line,12, 2));
 					glAccount.setDescription(fileUtility.getValue(line,14, 255));
-					glAccount.setStatus(fileUtility.getValue(line,269, 1));
+//					glAccount.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 269, 8)));
+//					glAccount.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 277, 8)));
+					glAccount.setStatus(fileUtility.getValue(line,285, 1));
 					glAccountList.add(glAccount);
 
 				}
@@ -707,7 +713,7 @@ public class FileUtility {
 		}
 
 		public List<PtjGroup> kumpulanPTJ(String filePath) {
-			String PROCESS_ID = "GLPCG";
+//			String PROCESS_ID = "GLPCG";
 			Path path = Paths.get(filePath);
 			String line;
 			List<PtjGroup> ptjGroupList = new ArrayList<PtjGroup>();
@@ -725,7 +731,9 @@ public class FileUtility {
 					ptjGroup.setYear(fileUtility.getValue(line,0 ,4 ));
 					ptjGroup.setCode(fileUtility.getValue(line,4, 2));
 					ptjGroup.setDescription(fileUtility.getValue(line,6, 255));
-					ptjGroup.setStatus(fileUtility.getValue(line, 261, 1));
+					ptjGroup.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 261, 8)));
+					ptjGroup.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 269, 8)));
+					ptjGroup.setStatus(fileUtility.getValue(line, 277, 1));
 					ptjGroupList.add(ptjGroup);
 
 				}
@@ -736,7 +744,7 @@ public class FileUtility {
 		}
 
 		public List<OrgProfile> masterDatePTJ(String filePath) {
-			String PROCESS_ID = "GLPTJ";
+//			String PROCESS_ID = "GLPTJ";
 			Path path = Paths.get(filePath);
 			String line;
 			List<OrgProfile> orgProfileList = new ArrayList<OrgProfile>();
@@ -757,7 +765,9 @@ public class FileUtility {
 					orgProfile.setDescription(fileUtility.getValue(line, 12, 255));
 					orgProfile.setCtrOfficerCode(fileUtility.getValue(line,267,2));
 					orgProfile.setAgOfficeCode(fileUtility.getValue(line, 269, 4));
-					orgProfile.setStatus(fileUtility.getValue(line, 273, 1));
+					orgProfile.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 273, 8)));
+					orgProfile.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 281, 8)));
+					orgProfile.setStatus(fileUtility.getValue(line, 289, 1));
 					orgProfileList.add(orgProfile);
 
 				}
@@ -768,7 +778,7 @@ public class FileUtility {
 		}
 
 		public List<BankAccountInformation> kodBank(String filePath) {
-			String PROCESS_ID = "CMBNK";
+//			String PROCESS_ID = "CMBNK";
 			Path path = Paths.get(filePath);
 			String line;
 			List<BankAccountInformation> bankList = new ArrayList<BankAccountInformation>();
@@ -785,7 +795,8 @@ public class FileUtility {
 
 					bank.setSwiftCode(fileUtility.getValue(line, 0, 11));
 					bank.setBankName(fileUtility.getValue(line, 11, 40));
-					bank.setStatus(fileUtility.getValue(line, 51, 1));
+					bank.setKodBankIndicator(Integer.valueOf(fileUtility.getValue(line, 51, 1)));
+					bank.setStatus(fileUtility.getValue(line, 52, 1));
 					bankList.add(bank);
 
 				}
@@ -796,7 +807,7 @@ public class FileUtility {
 		}
 
 		public List<PaymentInfo> paymentInfo(String filePath) {
-			String PROCESS_ID = "AP511";
+//			String PROCESS_ID = "AP511";
 			Path path = Paths.get(filePath);
 			String line;
 			List<PaymentInfo> paymentList = new ArrayList<PaymentInfo>();
@@ -1084,10 +1095,29 @@ public class FileUtility {
 	}
 	
 	public String formatDate(Date date) {
+		String formatDate = null;
+		
+		if(null!=date){
+			SimpleDateFormat dt1 = new SimpleDateFormat("ddMMyyyy");
+
+			formatDate = String.format("%s", dt1.format(date));
+		}else{
+			formatDate = formatStringField(IntegrationConstants.EMPTY_TRING,8,"L");
+		}
+
+		return formatDate;
+	}
+	
+	public Date formatStringToDate(String date) {
 
 		SimpleDateFormat dt1 = new SimpleDateFormat("ddMMyyyy");
 
-		return String.format("%s", dt1.format(date));
+		try {
+			return dt1.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	//===============================Eperunding files creation===========================
@@ -1186,6 +1216,14 @@ public class FileUtility {
 				line.append(formatString(cProfile.getCompanyName(),100));
 				line.append(formatString(cProfile.getSSMNo(),20));
 				line.append(formatString(cProfile.getMOFNo(),20));
+				
+//				Newly added columns -start
+				line.append(formatString(cProfile.getGSTNo(),12));
+				line.append(formatString(cProfile.getVirtualCertNo(),30));
+				line.append(formatDateEperunding(cProfile.getGSTEffectiveDate(),false));
+				line.append(formatDateEperunding(cProfile.getFirstTaxablePeriod(),false));
+//				Newly added columns -end
+				
 				line.append(formatString(cProfile.getCompanyType(),5));
 				line.append(formatString(cProfile.getAddress1(),100));
 				line.append(formatString(cProfile.getAddress2(),100));
@@ -1793,6 +1831,7 @@ public class FileUtility {
 	
 	// PHIS PM Modules
 	public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
+		System.out.println("inside votFundFileOutPutStream");
 		String SERVICE_CODE = "PHS-090";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1809,14 +1848,17 @@ public class FileUtility {
 					line = new StringBuffer();
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
 					line.append(formatStringField(votFund.getCode() + votFund.getPtjCode(), 5, "L"));
-					line.append(formatStringField(votFund.getDescription(),255, "L"));   //
+					line.append(formatStringField(votFund.getDescription(),255, "L"));
+					line.append(formatDate(votFund.getEffDate()));
+					line.append(formatDate(votFund.getExpDate()));
 					line.append(formatStringField(votFund.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
-				Encryption encryption = new Encryption();
+				//Encryption method
+				//Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
@@ -1836,6 +1878,7 @@ public class FileUtility {
 
 	public void votFundDanaFileOutPutStream(List<PhisVotFund> content,
 			String filePath) {
+		System.out.println("inside votFundDanaFileOutPutStream");
 		String SERVICE_CODE = "PHS-100";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1853,16 +1896,17 @@ public class FileUtility {
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
 					line.append(formatStringField(votFund.getCode(), 4, "L"));
 					line.append(formatStringField(votFund.getDescription(),255, "L"));
+					line.append(formatDate(votFund.getEffDate()));
+					line.append(formatDate(votFund.getExpDate()));
 					line.append(formatStringField(votFund.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
-				Encryption encryption = new Encryption();
-				encryption.encryptPhis(filePath,
-						IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,
-						SERVICE_CODE);
+//				Encryption method
+//				Encryption encryption = new Encryption();
+				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
 		} catch (IOException e) {
@@ -1881,6 +1925,7 @@ public class FileUtility {
 
 	public void programActivityFileOutPutStream(List<PhisProgramActivity> content,
 			String filePath) {
+		System.out.println("inside programActivityFileOutPutStream");
 		String SERVICE_CODE = "PHS-110";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1898,13 +1943,16 @@ public class FileUtility {
 					line.append(formatIntegerField(prgActivity.getYear(), 4,"R"));
 					line.append(formatStringField(prgActivity.getVotCode()+ prgActivity.getCode(), 9, "L"));
 					line.append(formatStringField(prgActivity.getDescription(),255, "L"));
+					line.append(formatDate(prgActivity.getEffDate()));
+					line.append(formatDate(prgActivity.getExpDate()));
 					line.append(formatStringField(prgActivity.getStatus(), 1,"L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
 
-				Encryption encryption = new Encryption();
+//				Encryption method
+//				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
@@ -1923,6 +1971,7 @@ public class FileUtility {
 	}
 
 	public void projectFileOutPutStream(List<PhisProject> content, String filePath) {
+		System.out.println("inside projectFileOutPutStream");
 		String SERVICE_CODE = "PHS-120";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1939,15 +1988,17 @@ public class FileUtility {
 					line = new StringBuffer();
 					line.append(formatIntegerField(project.getYear(), 4, "R"));
 					line.append(formatStringField(project.getVotCode()+ project.getCode() + project.getSetiaCode()
-							+ project.getSubSetiaCode(), 16, "L"));
+							+ project.getSubSetiaCode()+project.getCaraPembiayaan(), 16, "L"));
 					line.append(formatStringField(project.getDescription(),255, "L"));
+					line.append(formatDate(project.getEffDate()));
+					line.append(formatDate(project.getExpDate()));
 					line.append(formatStringField(project.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
-
-				Encryption encryption = new Encryption();
+//              Encryption method
+//				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
@@ -1967,6 +2018,7 @@ public class FileUtility {
 
 	public void glAccountFileOutPutStream(List<PhisGlAccount> content,
 			String filePath) {
+		System.out.println("inside glAccountFileOutPutStream");
 		String SERVICE_CODE = "PHS-140";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1985,13 +2037,15 @@ public class FileUtility {
 					line.append(formatStringField(glAccount.getCode(), 8, "L"));
 					line.append(formatStringField(glAccount.getPtjCode(), 2,"L"));
 					line.append(formatStringField(glAccount.getDescription(),255, "L"));
+					line.append(formatDate(glAccount.getEffDate()));
+					line.append(formatDate(glAccount.getExpDate()));
 					line.append(formatStringField(glAccount.getStatus(), 1, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 					writer.flush();
 				}
-
-				Encryption encryption = new Encryption();
+//				Encryption method
+//				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
@@ -2163,7 +2217,7 @@ public class FileUtility {
 				System.out.println("content is null");
 			}
 			System.out.println("local fie create....");
-			Encryption encryption = new Encryption();
+//			Encryption encryption = new Encryption();
 			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010");
 		} catch (IOException e) {
 
@@ -2209,7 +2263,7 @@ public class FileUtility {
 					writer.flush();
 				}
 
-				Encryption encryption = new Encryption();
+//				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
