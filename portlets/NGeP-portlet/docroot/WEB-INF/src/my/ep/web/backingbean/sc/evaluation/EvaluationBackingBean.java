@@ -2847,7 +2847,7 @@ public class EvaluationBackingBean extends
 		if (CollectionUtils.isNotEmpty(this.getManagedBean().getSpecZoneDtls())) {
 			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean()
 					.getSpecZoneDtls();
-
+           this.getManagedBean().setSpecZoneTabIndex(0);
 			// Dynamically generating the tabs
 			MenuModel zoneMenuModel = new DefaultMenuModel();
 			if (CollectionUtils.isNotEmpty(zoneDtls)) {
