@@ -57,23 +57,24 @@ import my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /*
-* @ Ganga prasade
+* @author P Ganga prasad
 */
 public class PhisIntegration {
 	
 //	public static void main(String[] args) throws IOException {
 //		PhisIntegration test = new PhisIntegration();
 //		test.createFilesforPHIS();
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.masterDataVendorGfmasInbound();
-//		gfmasIntegration.votGfmasInbound();
-//		gfmasIntegration.masterDataMaterialInfoGfmas();
 //		test.masterDataMaterialInfoPHIS();
-//		gfmasIntegration.sstInformationGfmas();
-//		EperundingIntegration eperundingIntegration = new EperundingIntegration();
-//		eperundingIntegration.createFilesforEperunding();
 //		test.deliveryAddress();
+//		test.votFund();
+//		test.votFundDana();
+//		test.programActivity();
+//		test.project();
+//		test.glAccount();
+		
+//		test.masterDataMaterialInfoPHIS();
 //	}
+	
 	IVotFundSO votFundSO = BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IVotFundSO.class);
@@ -90,8 +91,8 @@ public class PhisIntegration {
 	ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 			.getInstance().getServiceObject("cm", ICodificationSO.class);
 	
-	IAddressSO addressSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IAddressSO.class);
+	IAddressSO addressSO = BusinessDelegate
+			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IAddressSO.class);
 	
 	FileUtility utility = new FileUtility();
 	String filePath = IntegrationConstants.FILE_PATH;
@@ -101,27 +102,24 @@ public class PhisIntegration {
 	// method to create file for pharmaniaga for Class,Brand,Measrement,ItemType,Color
 	
 	public void createFilesforPHIS() {
-		System.out.println("inside phis...");
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "30-03-2015";
-//		Date currentDate = new Date();
-//		try {
-//			currentDate = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
+		/*SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "23-06-2015";
+		Date currentDate = new Date();
+		try {
+			currentDate = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}*/
 
 		reqDTO.setCreateDate(currentDate);
-		//reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			
-			System.out.println("inside successful");
-		//	FileUtility utility = new FileUtility();
+			System.out.println("createFilesforPHIS : Records available");
 			List<CmType> cmTypeList = resDTO.getTypeList();
 			List<ItemType> itemTypes = new ArrayList<ItemType>();
 			ItemType itemType;
@@ -215,13 +213,10 @@ public class PhisIntegration {
 				}
 			}
 			
-	//		String filePath = IntegrationConstants.FILE_PATH;
-
 			// calling method to save data in files
 			utility.createPhisFileInLocal(itemTypes, mColors, mMeasures,mBrands,mClasses, filePath);
 			
 //			utility.setMasterDataMaterialInfo(resDTO.getCmSupplierItemsList());
-			
 
 		}else{
 			System.out.println("createFilesforPHIS : Records not available.");
@@ -264,7 +259,6 @@ public class PhisIntegration {
 				DeliveryAddress_Type deliveryAddress = null;
 				
 				for (PmAddressType addressType : addressTypeLst) {
-					System.out.println("1111111111 :");
 					
 					deliveryAddress= new DeliveryAddress_Type();
 					deliveryAddress.setAddress1(addressType.getPmAddress().getAddress1());
@@ -328,14 +322,14 @@ public class PhisIntegration {
 	public void votFund() {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();		
-//		Date currentDate = new Date();
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "20-09-2014";
-//		try {
-//			date = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
+		/*Date currentDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "20-05-2015";
+		try {
+			currentDate = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}*/
 		reqDTO.setCreatedDate(currentDate);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundByCreatedDate(reqDTO);
@@ -353,13 +347,15 @@ public class PhisIntegration {
 				votFnd = new PhisVotFund();
 				votFnd.setCode(votFund.getVotFundCode());
 				votFnd.setDescription(votFund.getDescription());
-				if(votFund.getPmOrgProfile()!=null){
-					votFnd.setPtjCode(votFund.getPmOrgProfile().getOrgCode());          // changed from pmptjgroup code to org code
+				if(votFund.getPmOrgProfile()!=null && null!=votFund.getPmOrgProfile().getPmOrgValidity()){
+					votFnd.setPtjCode(votFund.getPmOrgProfile().getOrgCode());          
 				}else{
 					votFnd.setPtjCode(IntegrationConstants.EMPTY_TRING);
 				}
 				votFnd.setYear(year);
-				votFnd.setStatus("C");
+				votFnd.setEffDate(votFund.getEffDate());
+				votFnd.setExpDate(votFund.getExpDate());
+				votFnd.setStatus(getStatusCode(votFund.getRecordStatusFlg()));    // value will be X or V
 				votFundList.add(votFnd);
 			}
 
@@ -376,14 +372,14 @@ public class PhisIntegration {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
 		
-//		Date currentDate = new Date();
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "31-03-2015";
-//		try {
-//			date = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
+		/*Date currentDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "20-05-2015";
+		try {
+			currentDate = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}*/
 		reqDTO.setCreatedDate(currentDate);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundDanaByCreatedDate(reqDTO);
@@ -401,8 +397,10 @@ public class PhisIntegration {
 				Calendar cal = Calendar.getInstance();
 				cal.setTime(effdate);
 				int year = cal.get(Calendar.YEAR);
+				votFnd.setEffDate(votFund.getEffDate());
+				votFnd.setExpDate(votFund.getExpDate());
 				votFnd.setYear(year);
-				votFnd.setStatus("C");
+				votFnd.setStatus(getStatusCode(votFund.getRecordStatusFlg()));
 				votFundList.add(votFnd);
 			}
 
@@ -417,14 +415,14 @@ public class PhisIntegration {
 	public void programActivity() {
 
 		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-//		Date currentDate = new Date();
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "20-09-2014";
-//		try {
-//			date = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
+		/*Date currentDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "20-05-2015";
+		try {
+			currentDate = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}*/
 		reqDTO.setCreatedDate(currentDate);
 
 		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityByCreateDate(reqDTO);
@@ -446,10 +444,14 @@ public class PhisIntegration {
     			prgActivity = new PhisProgramActivity();
     			prgActivity.setCode(programActvity.getPrgActivityCode());
     			prgActivity.setDescription(programActvity.getDescription());
-    			prgActivity.setVotCode(programActvity.getPmVotFund()
-    					.getVotFundCode());
+    			if(null!=programActvity.getPmVotFund())
+    				prgActivity.setVotCode(programActvity.getPmVotFund().getVotFundCode());
+    			else
+    				prgActivity.setVotCode(IntegrationConstants.EMPTY_TRING);
+    			prgActivity.setEffDate(programActvity.getEffDate());
+    			prgActivity.setExpDate(programActvity.getExpDate());
     			prgActivity.setYear(year);
-    			prgActivity.setStatus("C");
+    			prgActivity.setStatus(getStatusCode(programActvity.getRecordStatusFlg()));
     			prgActList.add(prgActivity);
     		}
 
@@ -462,14 +464,15 @@ public class PhisIntegration {
 	}
 
 	public void project() {		
-//		Date currentDate = new Date();
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "20-09-2014";
-//		try {
-//			date = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}	
+	
+		/*Date currentDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "20-05-2015";
+		try {
+			currentDate = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}	*/
 
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		
@@ -489,12 +492,22 @@ public class PhisIntegration {
 				int year = cal.get(Calendar.YEAR);
 				project = new PhisProject();
 				project.setCode(pmProject.getProjectCode());
-				project.setVotCode(pmProject.getPmVotFund().getVotFundCode());
+				if(null!=pmProject.getPmVotFund())
+					project.setVotCode(pmProject.getPmVotFund().getVotFundCode());
+				else
+					project.setVotCode(IntegrationConstants.EMPTY_TRING);
 				project.setSetiaCode(pmProject.getSetiaCode());
 				project.setSubSetiaCode(pmProject.getSubSetiaCode());
 				project.setDescription(pmProject.getDescription());
+				project.setEffDate(pmProject.getEffDate());
+				project.setExpDate(pmProject.getExpDate());
 				project.setYear(year);
-				project.setStatus("C");
+				project.setStatus(getStatusCode(pmProject.getRecordStatusFlg()));
+			
+				if(null!=pmProject.getFinancingType())
+					project.setCaraPembiayaan(pmProject.getFinancingType().getParameterCode());
+				else
+					project.setCaraPembiayaan(IntegrationConstants.EMPTY_TRING);
 				programList.add(project);
 			}
 
@@ -510,14 +523,14 @@ public class PhisIntegration {
 	public void glAccount() {
 
 		
-//		Date currentDate = new Date();
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "31-03-2015";
-//		try {
-//			date = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
+		/*Date currentDate = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		String dateInString = "20-05-2015";
+		try {
+			currentDate = sdf.parse(dateInString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}*/
 		
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
 		reqDTO.setCreatedDate(currentDate);
@@ -539,12 +552,14 @@ public class PhisIntegration {
 				glAccount.setCode(account.getGlAccCode());
 				glAccount.setDescription(account.getDescription());
 				if(account.getPmOrgProfile()!=null){
-					glAccount.setPtjCode(account.getPmOrgProfile().getOrgCode());          // changed from pmptj group code to org code
+					glAccount.setPtjCode(account.getPmOrgProfile().getOrgCode());          
 				}else{
-					glAccount.setPtjCode(IntegrationConstants.EMPTY_TRING);
+					glAccount.setPtjCode(IntegrationConstants.KUMP_PTJ_CMN_CODE);
 				}
 				glAccount.setYear(year);
-				glAccount.setStatus("C");
+				glAccount.setStatus(getStatusCode(account.getRecordStatusFlg()));
+				glAccount.setEffDate(account.getEffDate());
+				glAccount.setExpDate(account.getExpDate());
 				glAccountList.add(glAccount);
 			}
 
@@ -572,7 +587,7 @@ public class PhisIntegration {
 //		}
 
 		reqDTO.setCreateDate(currentDate);
-		//reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
+		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 		
 		List<MasterDataMaterialInfo> materilInfoList = null;
@@ -580,7 +595,7 @@ public class PhisIntegration {
 		if (resDTO.isSuccessful()) {
 			
 			materilInfoList = utility.setPHISMasterDataMaterialInfo(resDTO);
-		}
+		
 		try{
 			my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.phis.masterdatamateriainfo.EPMFRq_Type();
 		
@@ -596,7 +611,6 @@ public class PhisIntegration {
 			rqUID_Type.setRqUID(IntegrationConstants.SEQUENCE_NO);
 		
 			rqHeader_Type.setUID(rqUID_Type);
-		
 		
 		for(MasterDataMaterialInfo materialInfo:materilInfoList){
 		
@@ -629,10 +643,18 @@ public class PhisIntegration {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
-		
-	
+		}else{
+			System.out.println("Records not available masterDataMaterialInfoPHIS : PHS-220");
+		}
 	}
-
-
+	
+	public String getStatusCode(int status){
+		
+		String recordStatus = null;
+			if(status==IntegrationConstants.RECORD_STATUS_ACTIVE)
+				recordStatus = IntegrationConstants.RECORD_VALID;
+			else 
+				recordStatus = IntegrationConstants.RECORD_IN_VALID;
+		return recordStatus;
+	}
 }
