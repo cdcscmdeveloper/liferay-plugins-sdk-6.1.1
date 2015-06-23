@@ -104,5 +104,32 @@ public class IntegrationConstants {
 	
 	public static final String RECORD_DELETED_CODE = "C";
 	
+	public static final String COMPANY_ADDRESS = "C";
+
+	public static final int RECORD_TYPE_ZERO = 0;
+	
+	public static final int RECORD_TYPE_ONE = 1;
+	
+	public static final int RECORD_TYPE_TWO = 2;
+	
+	public static final String HQ_INDICATOR_CODE = "000";
+	
+	public static final String BRANCH_INDICATOR_CODE = "111";
+	
+	public static final String ACCOUNT_ACTION_CREATE = "C";
+	
+	public static final String ACCOUNT_ACTION_UPDATE = "U";
+	
+	public static final String ACCOUNT_ACTION_DELETE = "D";
+	
+	public static final String KUMP_PTJ_CMN_CODE = "00";
+	
+	public static final String RECORD_VALID = "V";
+	
+	public static final String RECORD_IN_VALID = "X";
+	
+	
+	
+	
 
 }
