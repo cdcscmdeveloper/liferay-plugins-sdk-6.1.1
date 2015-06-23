@@ -3005,16 +3005,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * @return the selected supplier branch dtl
 	 */
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
-		Integer supplierBranchId = (Integer) e.getComponent().getAttributes().get("value");
+		Long supplierBranchId = (Long) e.getComponent().getAttributes().get("value");
 		if(supplierBranchId!=null) {
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,	IFulfilmentRequestSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			reqDTO.setSupplierBranchId(new Long(supplierBranchId));
+			reqDTO.setSupplierBranchId(supplierBranchId);
 			FulfilmentResDTO resDTO = requestSO.retrieveSupplierBranchDtlByBranchId(reqDTO);
 			
 			SmSupplierBranch supplierBranch = resDTO.getSmSupplierBranch();//all this should reset into our Flrequest.FlSupplierDtl
 			FlSupplierDtl supplierDtl = getManagedBean().getFlRequest().getFlSupplierDtl();
 			supplierDtl.setBranchName(supplierBranch.getBranchName());
+			supplierDtl.setBranchCode(supplierBranch.getBranchCode());
 			supplierDtl.setFaxNo(supplierBranch.getFaxNo());
 			supplierDtl.setPhoneNo(supplierBranch.getPhoneNo());
 			supplierDtl.setSmAddress(supplierBranch.getSmAddress());
