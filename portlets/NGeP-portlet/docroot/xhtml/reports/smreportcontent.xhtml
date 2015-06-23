@@ -1444,13 +1444,16 @@
 		<c:if
 			test="#{reportBackingBean.managedBean.rptGenBean.smFromAndToYearView}">
 			<TABLE style="margin-top: 10px; width: 60%;">
-				<TR>
-				   
+				<TR>  
+				   <c:if test="#{reportBackingBean.managedBean.rptGenBean.smThresholdYearFromView}">
 					<TD style="width:185px;"><p:outputLabel value="#{lbl['lbl.rpt.thresholdyearfrom']}"
-							 /></TD>
-                       
-					<TD>
-					
+					 /></TD>				
+				   </c:if>	
+				   <c:if test="#{reportBackingBean.managedBean.rptGenBean.smYearFromView}">
+					<TD style="width:185px;"><p:outputLabel value="#{lbl['lbl.rpt.yearfrom']}"
+					 /></TD>					
+				   </c:if>
+				   <TD>
 					<p:selectOneMenu value="#{reportBackingBean.smThresholdFromYear}" 
 							style="margin-top:5px;width:150px;">
 							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
