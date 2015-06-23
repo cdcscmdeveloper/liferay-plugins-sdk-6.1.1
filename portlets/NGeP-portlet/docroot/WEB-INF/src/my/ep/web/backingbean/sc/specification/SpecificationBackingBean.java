@@ -11407,15 +11407,18 @@ public class SpecificationBackingBean extends
 		}
 
 		if (techCheckList != null && !techCheckList.isEmpty()) {
+			boolean sample = false;
+			boolean demo = false;
 			for (ScQtCheckList checkList : techCheckList) {
 				if (QTConstants.PRESENTATION_DEMO.equalsIgnoreCase(checkList
 						.getDefinationType().getParameterCode())) {
-					scQt.setDemoRequired(true);
+					demo = true;
+
 				}
 				if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SAMPLE
 						.equalsIgnoreCase(checkList.getDefinationType()
 								.getParameterCode())) {
-					scQt.setSampleReq(true);
+					sample = true;
 
 				}
 				if (!ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD
@@ -11435,6 +11438,16 @@ public class SpecificationBackingBean extends
 
 				}
 
+			}
+			if (demo) {
+				scQt.setDemoRequired(true);
+			} else if (!demo) {
+				scQt.setDemoRequired(false);
+			}
+			if (sample) {
+				scQt.setSampleReq(true);
+			} else if (!sample) {
+				scQt.setSampleReq(false);
 			}
 			localChecklist.addAll(techCheckList);
 			scQt.setScQtChecklists(localChecklist);
@@ -14086,7 +14099,7 @@ public class SpecificationBackingBean extends
 			String msgParam[] = e.getParameters();
 			if (MessageConst.ERROR_100023.equalsIgnoreCase(msgCode)) {
 				msgCode = MessageConst.ERROR_760295;
-				msgParam = new String[]{"Tier Quantity"};
+				msgParam = new String[] { "Tier Quantity" };
 			}
 			throw new EpException(msgCode, msgParam);
 		}
