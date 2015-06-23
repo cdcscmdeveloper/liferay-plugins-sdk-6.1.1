@@ -42,7 +42,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
 import my.ep.dto.ct.supplier.PanelSupplierResDTO;
@@ -535,7 +534,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 							}
 						}
 					} else {
-						log.info("before present date.");
+						throw new EpException(MessageConst.ERROR_760297);
 					}
 				}
 			}
