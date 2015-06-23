@@ -1312,12 +1312,22 @@ public class QTCommitteBackingBean extends
 					committeeMember.setPmUser(users.get(i));
 					committeeMember.setPmOrgProfile(scQt.getPmOrgProfile());
 					if (users.get(i).isPMP() == true) {
-						ParameterReqDTO reqDTO = new ParameterReqDTO();
-						reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
-						reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
-						ParameterResDTO resDTO = getParameterSO()
-								.retrieveParameterByTypeAndCode(reqDTO);
-						committeeMember.setMemberRole(resDTO.getPmParameter());
+						if (null == users.get(i).getMemberRole().getParameterId()) {
+							ParameterReqDTO reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterType(ParameterTypeConst.COMMITTEE_ROLE);
+							reqDTO.setParameterCode(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+							ParameterResDTO resDTO = getParameterSO()
+									.retrieveParameterByTypeAndCode(reqDTO);
+							committeeMember.setMemberRole(resDTO.getPmParameter());
+						} else {
+							ParameterReqDTO reqDTO = new ParameterReqDTO();
+							reqDTO.setParameterId(users.get(i).getMemberRole()
+									.getParameterId());
+							ParameterResDTO resDTO = getParameterSO()
+									.retrieveParameterById(reqDTO);
+							committeeMember.setMemberRole(resDTO
+									.getPmParameter());
+						}
 					} else {
 						if (null != users.get(i).getMemberRole()
 								.getParameterId()) {
