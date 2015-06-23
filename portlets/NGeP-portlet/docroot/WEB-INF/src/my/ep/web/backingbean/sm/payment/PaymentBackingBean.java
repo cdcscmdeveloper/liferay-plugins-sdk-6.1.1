@@ -1,24 +1,16 @@
 package my.ep.web.backingbean.sm.payment;
 
-import java.io.BufferedWriter;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -43,7 +35,6 @@ import my.ep.persistence.entity.sm.SmPaymentDtl;
 import my.ep.persistence.entity.sm.SmPaymentOrder;
 import my.ep.persistence.entity.sm.SmPaymentResponse;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.logging.LogKey;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -651,16 +642,15 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 					}
 				}
 				
-				showPaymentResponse(status, paymentId);
+				showPaymentResponse(status, paymentId,errorDesc);
 				this.renewSesionObject();
 			} else {
 				showPaymentResponse(
-						SupplierManagementConst.PAYMENT_INVALID_RES, null);
+						SupplierManagementConst.PAYMENT_INVALID_RES, null,null);
 				this.renewSesionObject();
 			}
 		} else {
-			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,
-					null);
+			showPaymentResponse(SupplierManagementConst.PAYMENT_INVALID_RES,null,null);
 			this.renewSesionObject();
 
 		}
@@ -710,7 +700,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 	 * @param Long
 	 *            paymentId
 	 */
-	public void showPaymentResponse(String status, Long paymentId) {
+	public void showPaymentResponse(String status, Long paymentId, String errorDesc) {
 		FacesContext fc = FacesContext.getCurrentInstance();
 		boolean paymentStatus = false;
 
@@ -729,7 +719,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			fc.addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-							MessageUtils.getMessage(MessageConst.ERROR_721051,
+							MessageUtils.getMessage(MessageConst.ERROR_721051,new String[]{errorDesc},
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
 			break;
@@ -905,7 +895,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 
 			PaymentResDTO pymtResDTO = reqSO.updatePayment(pymtReqDTO);
 
-			showPaymentResponse(status, ordId);
+			showPaymentResponse(status, ordId, null);
 			this.renewSesionObject();
 		}
 
