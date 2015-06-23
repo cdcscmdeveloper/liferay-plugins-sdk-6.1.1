@@ -1644,6 +1644,11 @@
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryDateView}">
 						<TABLE style="margin-top:10px;width:60%;">
 							<TR>
+							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRegisteredDateView}">
+							    <TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.registereddatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRejectedDateView}">
 							    <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.rejecteddatefrom']}" style="width:158px;"/>
