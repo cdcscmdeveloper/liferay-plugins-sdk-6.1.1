@@ -9,14 +9,14 @@ import my.ep.web.scheduler.constants.sc.ScSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.sc.BidSchedulesPoolingJob;
 import my.ep.web.scheduler.job.sc.ContinuousBidSchedulerJob;
+import my.ep.web.scheduler.job.sc.InviteSuppliersJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;
 
 public class ScSchedulerServlet extends HttpServlet {
 
-	public static Logger log = EpLogger
-			.getLogger(ScSchedulerServlet.class);
+	public static Logger log = EpLogger.getLogger(ScSchedulerServlet.class);
 
 	private static final long serialVersionUID = 2591757747850240619L;
 
@@ -26,8 +26,8 @@ public class ScSchedulerServlet extends HttpServlet {
 		EpSchedulerHelper.scheduleJob(new JobKey(
 				ScSchedulerConstants.EP_DAILY_JOB,
 				ScSchedulerConstants.EP_JOB_GROUP),
-				BidSchedulesPoolingJob.class,
-				"Job run every day at 11:55 PM", "0 55 23 * * ?");
+				BidSchedulesPoolingJob.class, "Job run every day at 11:55 PM",
+				"0 55 23 * * ?");
 
 		// daily Job to be run at server startup
 
@@ -41,6 +41,12 @@ public class ScSchedulerServlet extends HttpServlet {
 				ScSchedulerConstants.EP_JOB_GROUP),
 				ContinuousBidSchedulerJob.class, "Job to run every 60 Seconds",
 				"0/60 * * * * ?");
+
+		// Sc Daily job for published Quatation Tenders.
+		EpSchedulerHelper.scheduleJob(new JobKey(
+				ScSchedulerConstants.EP_UPDATE_SUPPLIERS_JOB,
+				ScSchedulerConstants.EP_JOB_GROUP), InviteSuppliersJob.class,
+				"Job run every day at 11:55 PM", "0 55 23 * * ?");
 
 	}
 
