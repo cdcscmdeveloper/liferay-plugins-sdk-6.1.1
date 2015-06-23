@@ -52,7 +52,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private BriefingZoneBean normalBsvBean;
 	
 	private List<SmMofAccount> mofAccounts;
-	private String bsvZoneindx="0";
+	private int bsvZoneindx = 0;
 	private boolean maintanceFlow;
 	
 	private List<ScQtBsvRegistration> toBeDeletedRegistartions;
@@ -274,14 +274,14 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	/**
 	 * @return the bsvZoneindx
 	 */
-	public String getBsvZoneindx() {
+	public int getBsvZoneindx() {
 		return bsvZoneindx;
 	}
 
 	/**
 	 * @param bsvZoneindx the bsvZoneindx to set
 	 */
-	public void setBsvZoneindx(String bsvZoneindx) {
+	public void setBsvZoneindx(int bsvZoneindx) {
 		this.bsvZoneindx = bsvZoneindx;
 	}
 
