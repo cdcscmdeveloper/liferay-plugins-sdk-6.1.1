@@ -74,7 +74,7 @@
 					<p:column headerText="#{lbl['lbl.ct.contract.no']}" style="width:10%;">
 						<h:outputText value="#{data.contractNo}" />
 					</p:column>					
-					<p:column headerText="#{lbl['lbl.ct.contract.title']}"  style="width:15%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.contract.title']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.contractName}" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.physical.circular.no']}"  style="width:10%; white-space:normal;" rendered="#{contractDetailsBackingBean.isBPKCCA()}">
@@ -86,12 +86,12 @@
 					<p:column headerText="#{lbl['lbl.ct.supplier.name']}"  style="width:10%; white-space:normal;">
 						<h:outputText value="#{data.companyName}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:5%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.start']}"  style="width:5%; white-space:normal;">
 						<h:outputText value="#{data.effDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  style="width:5%;">
+					<p:column headerText="#{lbl['lbl.ct.contract.end']}"  style="width:5%; white-space:normal;">
 						<h:outputText value="#{data.expDate}">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</h:outputText>
@@ -106,7 +106,7 @@
                	    	</f:facet>
 						<h:outputText value="#{contractDetailsBackingBean.chkContractStatusType(data.status)}" />						
 					</p:column>
-					<p:column headerText="#{lbl['lbl.ct.contract.status']}"  style="width:8%; white-space:normal;">
+					<p:column headerText="#{lbl['lbl.ct.contract.status']}"  style="width:15%; white-space:normal;">
 						<h:outputText value="#{contractDetailsBackingBean.getStatusDescById(data.ctContractVer.status.statusId)}" />
 					</p:column>
 					 	<p:column headerText="#{lbl['lbl.ct.action']}"  style="width:12%; white-space:normal;">
