@@ -391,7 +391,7 @@ public class BSVAttendanceBackingBean extends
 			if (SourcingConstants.COMPLETE.equalsIgnoreCase(flowType)) {
 				String previousPage = this.getManagedBean().getPreviousPage();
 				Long qtId = this.getManagedBean().getScQt().getQtId();
-				int bsvZoneindx = this.getManagedBean().getBsvZoneindx();
+				String bsvZoneindx = this.getManagedBean().getBsvZoneindx();
 				renewSessionWithPreviousValues();
 
 				retrieveBriefingSiteVisitList(qtId);
@@ -404,7 +404,7 @@ public class BSVAttendanceBackingBean extends
 				ScQtBsvDtl bsv = resDTO.getScQtBriefing();
 				String previousPage = this.getManagedBean().getPreviousPage();
 				ScQt scQt = this.getManagedBean().getScQt();
-				int bsvZoneindx = this.getManagedBean().getBsvZoneindx();
+				String bsvZoneindx = this.getManagedBean().getBsvZoneindx();
 				renewSessionWithPreviousValues();
 				// this.getManagedBean().setScQtBriefing(bsv);
 				this.getManagedBean().setPreviousPage(previousPage);
@@ -821,10 +821,10 @@ public class BSVAttendanceBackingBean extends
 	public void onZoneTabChange(TabChangeEvent event) {
 
 		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
-		event.getTab();
 		List<BriefingZoneBean> ZoneBeanLst = this.getManagedBean().getZoneBean();
-		if(ZoneBeanLst.contains(zoneBean)){
-			this.getManagedBean().setBsvZoneindx(ZoneBeanLst.indexOf(zoneBean));
+		if(ZoneBeanLst != null && ZoneBeanLst.contains(zoneBean)){
+			int indx = ZoneBeanLst.indexOf(zoneBean);
+			this.getManagedBean().setBsvZoneindx(Integer.toString(indx));
 		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 	}
