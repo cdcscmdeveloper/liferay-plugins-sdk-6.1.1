@@ -1871,6 +1871,7 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
+				committeReqDTO.setToBeDeletedMembers(this.getManagedBean().getToBeDelCommitteMemebers());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(taskName)) {
@@ -1910,6 +1911,7 @@ public class QTDetailBackingBean extends
 								.getUserSessionBean());
 						committeReqDTO.setRoleCode(getUserRoleCode());
 						committeReqDTO.setScQt(qt);
+						committeReqDTO.setToBeDeletedMembers(this.getManagedBean().getToBeDelCommitteMemebers());
 						committeResDto = committeSO
 								.updateBPMAction(committeReqDTO);
 					}
