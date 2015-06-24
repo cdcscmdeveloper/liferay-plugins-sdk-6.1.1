@@ -2201,7 +2201,6 @@ public class LOADetailBackingBean extends
 			}
 			parseLOADetails(scLoa, "SAVE");
 			
-			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
@@ -2505,6 +2504,15 @@ public class LOADetailBackingBean extends
 				throw new EpException(MessageConst.ERROR_750002);
 			}
 		}
+		
+		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_REVISION.equals(statusId)
+				&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
+			if(scLoa.isApprovalReq()){
+				if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
+					throw new EpException("Approver is required.");
+				}
+			}
+		}
 	}
 
 	/**
@@ -2534,12 +2542,10 @@ public class LOADetailBackingBean extends
 
 			if (approverUser.getUserId() != null) {
 				ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
-
 				if (scLoaApproval == null) {
 					scLoaApproval = new ScLoaApproval();
 					scLoaApproval.setScLoa(scLoa);
 					scLoaApproval.setApprover(approverUser);
-
 					scLoa.setScLoaApproval(scLoaApproval);
 				} else {
 					scLoaApproval.setApprover(approverUser);
@@ -2559,8 +2565,9 @@ public class LOADetailBackingBean extends
 
 			scLoaApproval.setApproverAction(action);
 			scLoaApproval.setApproverActionDate(new Date());
-
 			scLoa.setScLoaApproval(scLoaApproval);
+		} else if (!scLoa.isApprovalReq()) {
+			scLoa.setScLoaApproval(null);
 		}
 
 		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {

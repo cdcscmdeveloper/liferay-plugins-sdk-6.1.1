@@ -55,9 +55,11 @@
 		<table style="width: 100%">
 			<tr>
 				<td width="20%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" /></td>
-				<td><p:selectOneMenu id="approversId"
+				<td><p:selectOneMenu id="loiApprover"
 						value="#{lOIDetailBackingBean.managedBean.approverUser.userId}"
 						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						required="#{lOIDetailBackingBean.managedBean.scLoi.approvalReq}"
+						label="#{lbl['lbl.sc.approver']}"
 						style="width: 240px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -65,7 +67,8 @@
 							value="#{lOIDetailBackingBean.managedBean.approverNames}"
 							var="appName" itemLabel="#{appName.userName}"
 							itemValue="#{appName.userId}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu><p:message id="loiApproverMsg" for="loiApprover"
+						display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
