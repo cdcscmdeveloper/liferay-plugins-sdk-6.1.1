@@ -42,7 +42,6 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -737,9 +736,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The selected qt check lists. */
 	private List<ScQtCheckList> selectedQtCheckLists;
-
-	/** The role types. */
-	private List<PmParameterDesc> roleTypes; // Role type drop down
 
 	/** The sc committee member tab list. */
 	private List<TabBean> scCommitteeMemberTabList;
@@ -3663,24 +3659,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setCommittemembers(List<ScCommitteeMember> committemembers) {
 		this.committemembers = committemembers;
-	}
-
-	/**
-	 * Gets the role types.
-	 *
-	 * @return the role types
-	 */
-	public List<PmParameterDesc> getRoleTypes() {
-		return roleTypes;
-	}
-
-	/**
-	 * Sets the role types.
-	 *
-	 * @param roleTypes the new role types
-	 */
-	public void setRoleTypes(List<PmParameterDesc> roleTypes) {
-		this.roleTypes = roleTypes;
 	}
 
 	/**
