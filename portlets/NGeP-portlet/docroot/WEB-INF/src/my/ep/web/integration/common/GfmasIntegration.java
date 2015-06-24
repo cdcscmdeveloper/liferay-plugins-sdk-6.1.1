@@ -61,7 +61,6 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.type.pm.VotFundType;
-import my.ep.util.lookupservice.EpEjbRemoteBusinessDelegate;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
@@ -91,14 +90,14 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 
 public class GfmasIntegration {
 
-//	public static void main(String args[]) {
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.masterDataVendorGfmasOutbound(100L);
+	public static void main(String args[]) {
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.masterDataVendorGfmasOutbound(334181L);
 //		gfmasIntegration.masterDataVendorGfmasInbound();
 ////		gfmasIntegration.sstInformationGfmas();
 		
 
-//	}
+	}
 
 	FileUtility fileUtility = new FileUtility();
 	SFTPUtility sftpUtility = new SFTPUtility();
@@ -877,7 +876,7 @@ public class GfmasIntegration {
 							glAccount.setGlAccCode(account.getCode());
 							glAccount.setDescription(account.getDescription());
 					
-							if (!account.getPtjCode().equalsIgnoreCase("00")) {
+							if (!account.getPtjCode().equalsIgnoreCase(IntegrationConstants.KUMP_PTJ_CMN_CODE)) {
 						
 								OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 								Long orgProfileId = Long.parseLong(account.getPtjCode());
@@ -886,6 +885,15 @@ public class GfmasIntegration {
 								orgProfileReqDTO.setOrgProfileId(orgProfileId);
 								OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);
 								glAccount.setPmOrgProfile(orgProfileResDTO.getPmOrgProfile());
+							}else{
+								/*OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+								Long orgProfileId = Long.parseLong(account.getPtjCode());
+						
+								System.out.println("orgProfileId :"+orgProfileId);
+								orgProfileReqDTO.setOrgProfileId(orgProfileId);
+								OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgWithSupplierByProfileId(orgProfileReqDTO);*/
+								glAccount.setPmOrgProfile(null);
+								
 							}
 				
 							glAccount.setEffDate(account.getEffectiveDate());
