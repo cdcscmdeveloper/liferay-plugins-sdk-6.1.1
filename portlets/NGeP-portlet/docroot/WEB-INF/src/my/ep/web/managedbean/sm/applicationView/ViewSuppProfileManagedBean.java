@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.sm.applicationView;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -29,6 +31,7 @@ public class ViewSuppProfileManagedBean extends
 	private SmSupplierBasicInfoVO basicInfo;
 	private String applnApprovalRemarks;
 	private boolean showParentMsg;
+	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewSuppProfileManagedBean() {
@@ -137,6 +140,15 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
+	}
+
+	public List<SmSupplierCategory> getDeleteApprovedCategories() {
+		return deleteApprovedCategories;
+	}
+
+	public void setDeleteApprovedCategories(
+			List<SmSupplierCategory> deleteApprovedCategories) {
+		this.deleteApprovedCategories = deleteApprovedCategories;
 	}
 
 }
