@@ -18,14 +18,14 @@
 			rendered="#{!lOIDetailBackingBean.managedBean.itemized}">
 
 			<p:ajax event="rowSelectRadio" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" 
+				update="@this" 
 				listener="#{lOIDetailBackingBean.awardSelectedSupplierAction()}"/>
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" />
+				update="@this" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" />
+				update="@this" />
 			<p:ajax event="toggleSelect" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" />
+				update="@this" />
 
 			<ac:paginator for="recommendTblPkg" />
 
