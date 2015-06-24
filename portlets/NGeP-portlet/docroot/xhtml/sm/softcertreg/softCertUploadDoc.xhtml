@@ -17,13 +17,29 @@
 				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{softCertBackingBean.navigateToPaymentPage}"/>
 				</td>
 			</tr>
+			<tr height="10"><td height="10"></td></tr>
 		</table>
-		
-		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}"/>
 
 		<p:panel header="#{lbl['lbl.sm.softcert.selected.personnel.panheader']}" toggleable="true" id="uploadPanelId">
-			<p:dataTable id="softcertUploadDtlId" rowKey="#{upload}"
+			
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
+					<td><p:selectOneRadio id="onLnSuppDocs"
+							value="#{softCertBackingBean.managedBean.suppDocMode}">
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
+								itemValue="H" />
+							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
+								itemValue="S" />
+							<p:ajax update="@([id$=uploadPanelId])" event="change" />
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
+			
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}"/>
+			
+			<p:dataTable id="softcertUploadDtlId" rowKey="#{upload}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"
 				rowIndexVar="index" value="#{softCertBackingBean.managedBean.softcertUploadSuppDocList}"
 				var="upload" >
 				<ac:paginator for="softcertUploadDtlId" />
@@ -84,6 +100,63 @@
 								<td width="40%">
 									<h:outputText value="#{suppDoc.smSofcertDocFiles[0].fileName}"
 										style="float: left;white-space: normal;" rendered="#{not empty suppDoc.smSofcertDocFiles}"/>
+								</td>
+							</tr>
+						</ui:repeat>
+					</table>
+				</p:column>
+					
+			</p:dataTable>
+			
+			<p:dataTable id="softcertOfflineDtlId" rowKey="#{offline}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}"
+				rowIndexVar="index" value="#{softCertBackingBean.managedBean.softcertUploadSuppDocList}"
+				var="offline" >
+				<ac:paginator for="softcertOfflineDtlId" />
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.name']}" />
+					</f:facet>
+					<h:outputText value="#{offline.personnel.name}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.nationality']}" />
+					</f:facet>
+					<h:outputText value="#{offline.personnel.pmCountry.countryName}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.eprole']}" />
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppAdmin']}"
+						rendered="#{offline.personnel.epRole eq 'MOF_SUPPLIER_ADMIN' or offline.personnel.epRole eq 'BASIC_SUPPLIER_ADMIN' or offline.personnel.epRole eq 'SUPPLIER_TEMP'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.suppUser']}"
+						rendered="#{offline.personnel.epRole eq 'BASIC_SUPPLIER_USER' or offline.personnel.epRole eq 'MOF_SUPPLIER_USER'}" />
+					<h:outputText value="#{lbl['lbl.sm.person.composition.catUser']}"
+						rendered="#{offline.personnel.epRole eq 'CM_USER'}" />
+					<h:outputText value=" (#{lbl['lbl.sm.contract.signer']})"
+						rendered="#{offline.personnel.contractSigner}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.userprofile.accountstatus']}" />
+					</f:facet>
+					<h:outputText value="#{lbl['lbl.sm.accountstatus.active']}" rendered="#{offline.personnel.recordStatusFlg eq '1'}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sm.softcert.suppdoc']}" />
+					</f:facet>
+					<table width="100%">
+						<ui:repeat var="suppDoc" value="#{offline.suppDocList}">
+							<tr>
+								<td width="40%">
+									<h:outputText value="#{suppDoc.pmDocument.docName}" style="float: left;white-space: normal;" />
 								</td>
 							</tr>
 						</ui:repeat>

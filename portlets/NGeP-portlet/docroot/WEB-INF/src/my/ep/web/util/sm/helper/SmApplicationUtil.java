@@ -4674,6 +4674,21 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static void setPersonnelSoftcertRenewalStatus(SmSupplier supplier,
+			List<SmPersonnel> personnelList) {
+		if(personnelList!=null && !personnelList.isEmpty()){
+			for (SmPersonnel personnel : personnelList) {
+				if (supplier != null) {
+					if (SmCommonUtil.isSoftcertReadyForRenewal(
+							supplier.getSupplierId(), personnel)) {
+						personnel
+								.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
+					}
+				}
+			}
+		}
+	}
+
 	/**
 	 * Assign new tracking dairy values.
 	 * 
