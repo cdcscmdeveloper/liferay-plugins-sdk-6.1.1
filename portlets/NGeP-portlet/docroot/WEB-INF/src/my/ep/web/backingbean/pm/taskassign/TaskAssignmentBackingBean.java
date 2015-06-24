@@ -961,7 +961,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	//					token = getFacesScopes().getBPMAuthenticationCtxToken();
 						
 						bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-						token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+					//	token = bpmSO.authenticate("weblogic","welcome1"); //TODO
 						  
 						reqDTO = new BpmRequestDTO();
 	
@@ -970,13 +970,13 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 						log.info("BPM loginId******"+loginId);
 						log.info("BPM statusIds******"+statusIds.size());
 									
-						if(token==null){
-							throw new EpException(MessageConst.ERROR_770099);
-						}
-						log.info("BPM auth******" + token);
+//						if(token==null){
+//							throw new EpException(MessageConst.ERROR_770099);
+//						}
+//						log.info("BPM auth******" + token);
 						
 						// set useful info
-						reqDTO.setCtxToken(token);
+					//	reqDTO.setCtxToken(token);
 						reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 						reqDTO.setOffset(calculateFinalOffSet(getPageNo()));
 				        reqDTO.setStatusList(statusIds);
