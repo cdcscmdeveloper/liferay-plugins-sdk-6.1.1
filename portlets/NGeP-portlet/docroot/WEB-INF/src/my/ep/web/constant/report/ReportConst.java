@@ -375,6 +375,8 @@ public class ReportConst {
 		public static final String SM_LIST_OF_USERS = "SM_060";
 		public static final String SM_DAILY_APP_SUBMITTED = "SM_061";
 		public static final String SM_THRESHOLD_VALUE = "SM_062";
+		public static final String SM_LIST_OF_APPL_STATUS = "SM_063";
+		public static final String SM_AGENCY_STATISTICAL = "SM_064";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";

@@ -174,6 +174,7 @@ public class ReportsGenerateBean {
 		private boolean smExpiryDateView = false;
 		private boolean smCreatedDateView = false;
 		private boolean smApplicationDateView = false;
+		private boolean smApplicationTypeTwoView = false;
 		private boolean smMandatoryDateView = false;
 		private boolean smNonMandatoryDateView = false;
 		private boolean smApplicationReceivedDateView = false;
@@ -214,6 +215,7 @@ public class ReportsGenerateBean {
 		private boolean smRequestExpiryDateView = false;
 		private boolean smYearFromView = false;
 		private boolean smThresholdYearFromView = false;
+		private boolean smApprovalDateView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -485,6 +487,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmApprovalDateView() {
+			return smApprovalDateView;
+		}
+		public void setSmApprovalDateView(boolean smApprovalDateView) {
+			this.smApprovalDateView = smApprovalDateView;
+		}
+		public boolean isSmApplicationTypeTwoView() {
+			return smApplicationTypeTwoView;
+		}
+		public void setSmApplicationTypeTwoView(boolean smApplicationTypeTwoView) {
+			this.smApplicationTypeTwoView = smApplicationTypeTwoView;
+		}
 		public boolean isSmYearFromView() {
 			return smYearFromView;
 		}
