@@ -1,5 +1,10 @@
 package my.ep.web.integration.gfmas;
 
+import java.util.Date;
+
+/*
+ * @author P Ganga prasad
+ */
 public class GlAccount {
 
 	private String year;
@@ -8,79 +13,64 @@ public class GlAccount {
 	private String description;
 	private String status;
 
-	
+	// version 2.7
+	private Date effectiveDate;
+	private Date expiryDate;
 
-	/**
-	 * @return the code
-	 */
-	public String getCode() {
-		return code;
-	}
-
-	/**
-	 * @param code
-	 *            the code to set
-	 */
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	/**
-	 * @return the description
-	 */
-	public String getDescription() {
-		return description;
-	}
-
-	/**
-	 * @param description
-	 *            the description to set
-	 */
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	/**
-	 * @return the ptjCode
-	 */
-	public String getPtjCode() {
-		return ptjCode;
-	}
-
-	/**
-	 * @param ptjCode the ptjCode to set
-	 */
-	public void setPtjCode(String ptjCode) {
-		this.ptjCode = ptjCode;
-	}
-
-	/**
-	 * @return the year
-	 */
 	public String getYear() {
 		return year;
 	}
 
-	/**
-	 * @param year the year to set
-	 */
 	public void setYear(String year) {
 		this.year = year;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getPtjCode() {
+		return ptjCode;
+	}
+
+	public void setPtjCode(String ptjCode) {
+		this.ptjCode = ptjCode;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	public Date getEffectiveDate() {
+		return effectiveDate;
+	}
+
+	public void setEffectiveDate(Date effectiveDate) {
+		this.effectiveDate = effectiveDate;
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
+		this.expiryDate = expiryDate;
 	}
 
 }
