@@ -457,6 +457,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int passingScore;
 
 	private String financialSummaryView;
+	
+	private String roleCode;
 
 	private int oneTierFinancialActiveIndex;
 	private BigDecimal finSpecZoneEstimatedPrice;
@@ -2972,6 +2974,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setFinancialSummaryView(String financialSummaryView) {
 		this.financialSummaryView = financialSummaryView;
+	}
+
+	/**
+	 * @return the roleCode
+	 */
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	/**
+	 * @param roleCode the roleCode to set
+	 */
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
 	}
 
 	/**
