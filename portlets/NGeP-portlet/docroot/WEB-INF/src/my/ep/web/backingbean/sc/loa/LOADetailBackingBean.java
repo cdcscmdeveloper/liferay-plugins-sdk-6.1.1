@@ -3291,6 +3291,7 @@ public class LOADetailBackingBean extends
 		BigDecimal subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(item.getScRequestItem().getTplSpecQuestion(), 
 				item.getUnitPrice(), item.getQty());
 		totalAmount = totalAmount.add(subTotal);
+		totalAmount =  totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		jadualHarga.setTotalAmount(totalAmount.toString());
 		return jadualHarga;
 
