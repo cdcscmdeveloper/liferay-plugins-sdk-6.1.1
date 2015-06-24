@@ -573,6 +573,31 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smApplicationTypeTwoView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.applicationType']}"
+								style="margin-top:5px;width:160px;" />
+							<p:selectOneMenu value="#{reportBackingBean.smApplicationType}"
+								style="margin-top:5px;width:300px;">
+								    <f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+									itemValue="#{null}"></f:selectItem>
+								    <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforBasicOnlineAccount']}"
+									itemValue="#{'O'}"></f:selectItem>
+								    <f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.NewApplicationforMOF']}"
+									itemValue="#{'N'}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforBumiputeraStatus']}"
+									itemValue="#{'B'}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforaddCategoryCode']}"
+									itemValue="#{'A'}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.ApplicationforupdateMOFprofile']}"
+									itemValue="#{'U'}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.RenewMOFAccount']}"
+									itemValue="#{'R'}"></f:selectItem>
+									<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.CancelMOFAccount']}"
+									itemValue="#{'C'}"></f:selectItem>
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+							</p:selectOneMenu>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smReportTypeView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.reportType']}"
 								style="margin-top:5px;width:160px;" />
@@ -1644,6 +1669,16 @@
 						<c:if test="#{reportBackingBean.managedBean.rptGenBean.smNonMandatoryDateView}">
 						<TABLE style="margin-top:10px;width:60%;">
 							<TR>
+							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApprovalDateView}">
+							    <TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.approvaldatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
+							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationDateView}">
+							    <TD>
+									<p:outputLabel  value="#{lbl['lbl.rpt.applicationdatefrom']}" style="width:158px;"/>
+								</TD>
+								</c:if>
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smRegisteredDateView}">
 							    <TD>
 									<p:outputLabel  value="#{lbl['lbl.rpt.registereddatefrom']}" style="width:158px;"/>
