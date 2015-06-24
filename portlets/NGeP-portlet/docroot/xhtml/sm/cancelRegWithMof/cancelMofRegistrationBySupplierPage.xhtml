@@ -42,13 +42,17 @@
 
 
 		<p:dialog width="800px" height="250px" closable="false"
-			header="#{lbl['lbl.sm.approve.application']}"
+			header="#{lbl['lbl.sm.cancelmof.bysupp.confirm.dialog.header']}"
 			widgetVar="confirmDialog" resizable="false" showEffect="fade"
 			hideEffect="fade" modal="true">
 
 			<p:messages id="applicationApprovedRemarksMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="true" />
 			<table style="width: 100%">
+				<tr>
+					<td><h:outputText styleClass="instruction" value="#{lbl['lbl.sm.cancelmof.bysupp.instruction.confirm']}" /></td>
+				</tr>
+				<tr height="10"><td height="10"></td></tr>
 				<tr>
 					<td style="vertical-align: top"><p:outputLabel
 							value="#{lbl['lbl.sm.remarks']}" /></td>
