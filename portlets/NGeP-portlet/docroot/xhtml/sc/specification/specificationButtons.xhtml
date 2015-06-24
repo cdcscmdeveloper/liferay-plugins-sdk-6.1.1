@@ -35,6 +35,7 @@
 					</ui:repeat> <c:if
 						test="#{specificationBackingBean.managedBean.taskName ne 'Specification Approval'}">
 						<p:commandButton value="#{lbl['lbl.btn.save']}" update="@all"
+							rendered="#{!specificationBackingBean.managedBean.readOnly}"
 							style="float:right;" onstart="blockWidget.show();"
 							oncomplete="blockWidget.hide();"
 							action="#{specificationBackingBean.saveSpecificationDtls}">
@@ -45,8 +46,8 @@
 		</table>
 
 		<p:dialog id="reviceApprovalDlgs" widgetVar="reviceApprovalDlgs"
-			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}" resizable="false" width="400"
-			height="75" closable="false">
+			header="#{lbl['lbl.sc.dialog.confirm.header.revise']}"
+			resizable="false" width="400" height="75" closable="false">
 			<table>
 				<tr>
 					<td align="center"><h:graphicImage
