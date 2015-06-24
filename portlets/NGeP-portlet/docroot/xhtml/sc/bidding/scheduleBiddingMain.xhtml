@@ -13,7 +13,7 @@
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:messages id="ScheduleBiddingMainnMessage" showDetail="true"
-			showSummary="false" autoUpdate="true" closable="true" />
+			showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
 
 		<ui:param name="isRecommendByPackage"
 			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'  }" />
