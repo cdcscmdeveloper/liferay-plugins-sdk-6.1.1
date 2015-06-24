@@ -1331,6 +1331,9 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmAppl(), getManagedBean()
 								.getPrevApprovedPersonnels(), getManagedBean()
 								.isDisAllowOwnerEdit());
+				SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
+						.getManagedBean().getSmSupplier(), this
+						.getManagedBean().getSmAppl().getSmPersonnels());
 			} else {
 				valid = retriveLatestApplAfterUpdate(currentPageType,
 						outputPageType);
@@ -1362,6 +1365,9 @@ public class SmApplicationBackingBean extends
 									getManagedBean()
 											.getPrevApprovedPersonnels(),
 									getManagedBean().isDisAllowOwnerEdit());
+					SmApplicationUtil.setPersonnelSoftcertRenewalStatus(this
+							.getManagedBean().getSmSupplier(), this
+							.getManagedBean().getSmAppl().getSmPersonnels());
 					break;
 				case SupplierManagementConst.SM_APPL_PAGE_TYPE_CATEGORY:
 					SmApplicationUtil

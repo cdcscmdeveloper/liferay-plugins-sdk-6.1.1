@@ -639,6 +639,13 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 											"lbl.sm.personnel.comprole.mngmnt",
 											null)));
 				}
+				if (getManagedBean().getSmSupplier() != null
+						&& SmCommonUtil.isSoftcertReadyForRenewal(
+								getManagedBean().getSmSupplier()
+										.getSupplierId(), smPersonnel)) {
+					smPersonnel
+							.setSoftcertFlg(SupplierManagementConst.SOFT_CERT_READY_FOR_RENEWAL);
+				}
 			}
 			getManagedBean().getSmAppl().setSmPersonnels(getPersonnelByRevNo());
 			setPersonnelInfoCalculationSummary();
