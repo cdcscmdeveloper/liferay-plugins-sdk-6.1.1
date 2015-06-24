@@ -135,6 +135,13 @@
 		<servlet-class>my.ep.web.scheduler.servlet.sm.SmSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
 	</servlet> -->
+	<!--
+	<servlet>
+		<servlet-name>CtSchedulerJobServlet</servlet-name>
+		<servlet-class>my.ep.web.scheduler.servlet.ct.CtSchedulerServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	-->
 	
 	
 </web-app>
