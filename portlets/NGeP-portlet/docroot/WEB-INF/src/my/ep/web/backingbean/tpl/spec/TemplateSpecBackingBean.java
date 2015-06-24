@@ -1711,8 +1711,8 @@ public class TemplateSpecBackingBean extends
 		
 		int rowCount = 0;
 		if (!StringUtils.isEmpty(text)) {
-			int lenght = text.length();
-			rowCount = lenght / 100;
+			double lenght = text.length();
+			rowCount = (int) Math.round(lenght / 60);
 		}
 		if (rowCount == 0) {
 			rowCount = 1;
