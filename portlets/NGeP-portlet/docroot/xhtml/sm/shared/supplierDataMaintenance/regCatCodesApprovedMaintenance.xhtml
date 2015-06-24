@@ -1,0 +1,79 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supp.data.maintenance.delete.approved.cat.instruction']}" />
+	
+	<p:dataTable var="aprvdCatBean"
+		widgetVar="smApprvdCatCodesNonRenewApplDtWidVar"
+		value="#{supplierDataMaintenanceBackingBean.managedBean.approvedCategoryList}" 
+		selection="#{supplierDataMaintenanceBackingBean.managedBean.deleteApprovedCategories}"
+		rowKey="#{aprvdCatBean}" rowIndexVar="index" id="catApprDt"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}">
+		<ac:paginator for="catApprDt" />
+			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
+				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowUnselect"
+				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowSelectCheckbox"
+				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowUnselectCheckbox"
+				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+			<p:ajax event="rowDblselect"
+				update=":form:catCodeInfPan,@([id$=deletedApprBtnId])"></p:ajax>
+		<p:columnGroup type="header">
+			<p:row>
+				<p:column style="width:2%" />
+				<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+					style="width : 2%;" />
+				<p:column style="width :350px;white-space : normal"
+					headerText="#{lbl['lbl.sm.catCodes.cate']}" />
+				<p:column headerText="#{lbl['lbl.sm.catCodes.catType']}" />
+				<p:column headerText="#{lbl['lbl.sm.status']}" />
+
+			</p:row>
+		</p:columnGroup>
+		<p:column selectionMode="multiple" style="width:2%" />
+		<p:column style="width : 2%;">
+			<p:outputLabel value="#{index + 1}"
+				style="float: left;white-space: normal;" />
+		</p:column>
+		<p:column style="width :350px;white-space : normal">
+			<h:outputText
+				value="#{aprvdCatBean.pmCategoryL1.categoryL1Code} -  #{aprvdCatBean.pmCategoryL1.categoryName}" />
+			<br />
+			<h:outputText
+				value="#{aprvdCatBean.pmCategoryL2.categoryL2Code} -  #{aprvdCatBean.pmCategoryL2.categoryName}" />
+			<br />
+			<h:outputText
+				value="#{aprvdCatBean.pmCategoryL3.categoryL3Code} -  #{aprvdCatBean.pmCategoryL3.categoryName}" />
+		</p:column>
+
+		<p:column>
+			<h:outputText value="#{lbl['lbl.sm.catCodes.norm']}"
+				rendered="#{!aprvdCatBean.specialCategory}" />
+			<h:outputText value="#{lbl['lbl.sm.catCodes.spl']}"
+				rendered="#{aprvdCatBean.specialCategory}" />
+		</p:column>
+		<p:column>
+			<h:outputText value="#{lbl['lbl.sm.catCodes.registered']}" />
+		</p:column>
+	</p:dataTable>
+	
+	<div align="right">
+
+		<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedApprBtnId" 
+			disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteApprovedCategories}"
+			action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.deleteApprovedCategories)}" 
+			update="@([id$=catApprDt])" partialSubmit="true" 
+			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+			process="@this">
+		</p:commandButton>
+
+	</div>
+
+</ui:composition>

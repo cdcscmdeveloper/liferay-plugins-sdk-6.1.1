@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -14,6 +13,7 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supplierDataMaintenance.SupplierDataMaintenanceReqDTO;
@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
@@ -131,46 +132,18 @@ public class SupplierDataMaintenanceBackingBean extends
 		try {
 
 			// set registration status
-			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
-					.getStatusId();
-			for (PmStatusDesc desc : getManagedBean().getRegStatusDescList()) {
-				if (pmStatId.equals(desc.getPmStatus().getStatusId())) {
-					getManagedBean().getSmAppl()
-							.setPmStatus(desc.getPmStatus());
-					if (desc.getPmStatus().getPmRegStatus() != null) {
-						getManagedBean().getSmAppl().setPmRegStatus(
-								desc.getPmStatus().getPmRegStatus());
-						getManagedBean()
-								.getSmAppl()
-								.getSmSupplier()
-								.setBumi(
-										desc.getPmStatus().getPmRegStatus()
-												.isBumiAppl());
-						break;
-					}
-				}
-			}
+			setSupplierRegistrationAndBumiStatus();
 
-			// set newly added category code
-			if (getManagedBean().getActiveCategoryList() != null
-					&& !getManagedBean().getActiveCategoryList().isEmpty()) {
-				for (SmSupplierCategory apprCat : getManagedBean()
-						.getActiveCategoryList()) {
-					apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					apprCat.setApprovedDate(new Date());
-					if (getManagedBean().isApproverUser()) {
-						apprCat.setApprvrDecFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					} else {
-						apprCat.setPoDecFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-					}
-				}
-			}
+			// set active status for newly added category
+			setActiveStatusForNewAddedCategories();
 
 			reqDTO.setActiveAppl(activeAppl);
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setNewlyAddedCategories(getManagedBean()
 					.getActiveCategoryList());
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
+			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
+			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
 			SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 					getManagedBean().getSmAppl(),
 					SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
@@ -191,9 +164,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO = null;
 		}
 
-		SmCommonUtil.redirectToPage(
-				SmApplicationUtil.getApplicationErrorPage(),
-				MessageConst.INFO_721215);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
+				.getMessage(MessageConst.INFO_721215,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale()), null);
+
+		assignApplActiveAndApprovedCategoryList();
 	}
 
 	/**
@@ -203,6 +180,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 		reqDTO.setSmAppl(getManagedBean().getSmAppl());
+		reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
+		reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
 		SmTrackingDairyVO smTrackingDairyVO = assignTrackingDairyValues(
 				getManagedBean().getSmAppl(),
 				SupplierManagementConst.APPROVER_SUBMIT_CANCEL_SUPPLIER_MOF_ACCOUNT);
@@ -242,7 +221,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	public void backToSearchSupplierMaintenance() {
 		getManagedBean().setDisplaySearchPage(true);
 	}
-	
+
 	/**
 	 * Back to Cancel MOF Search Page
 	 */
@@ -436,7 +415,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setShowParentMsg(false);
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
 	}
-	
+
 	/**
 	 * Hide confirmation dialog
 	 */
@@ -489,12 +468,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					&& cat.getPmCategoryL3()
 							.getCategoryL3Id()
 							.equals(getManagedBean().getSelectedCategory()
-									.getPmCategoryL3().getCategoryL3Id())) {
+									.getPmCategoryL3().getCategoryL3Id())
+					&& cat.getRecordStatusFlg().compareTo(
+							SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
 				validCat = false;
-				if (cat.getRecordStatusFlg().compareTo(
-						SupplierManagementConst.DELETED_RECORD_STATUS) == 0) {
-					throw new EpException(MessageConst.ERROR_722563);
-				}
 				throw new EpException(MessageConst.ERROR_722533);
 			}
 		}
@@ -645,11 +622,10 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Delete selected category code(s) that are still pending approval from the
 	 * SmSupplierCategory list of the application.
 	 */
-	public void deleteSelectedPendingApprovalCategoryCodes() {
-		if (getManagedBean().getDeleteNewApplCategoryList() != null
-				&& getManagedBean().getDeleteNewApplCategoryList().size() > 0) {
-			List<SmSupplierCategory> categories = getManagedBean()
-					.getDeleteNewApplCategoryList();
+	public void deleteSelectedPendingApprovalCategoryCodes(
+			List<SmSupplierCategory> selectedCategories) {
+		if (selectedCategories != null && selectedCategories.size() > 0) {
+			List<SmSupplierCategory> categories = selectedCategories;
 			deleteCatCodes(categories);
 
 			// API FOR LIST OF OVERLAPPING CATEGORIES
@@ -675,10 +651,66 @@ public class SupplierDataMaintenanceBackingBean extends
 						.remove(category);
 			} else if (category.getRecordStatusFlg().compareTo(
 					SupplierManagementConst.APPROVED_RECORD_STATUS) == 0) {
-				category.setRecordStatusFlg(SupplierManagementConst.RECORD_STATUS_DELETED);
+				setDeletedApprovedCategory(category);
 			}
 		}
 		assignApplActiveAndApprovedCategoryList();
+	}
+
+	/**
+	 * Set selected deleted categories record status to deleted
+	 * 
+	 * @param SmSupplierCategory
+	 *            deletedApprCategory
+	 */
+	private void setDeletedApprovedCategory(
+			SmSupplierCategory deletedApprCategory) {
+		if (deletedApprCategory.getSupplierCategoryId() != null) {
+			for (SmSupplierCategory apprCat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (apprCat.getSupplierCategoryId() != null
+						&& apprCat.getSupplierCategoryId().compareTo(
+								deletedApprCategory.getSupplierCategoryId()) == 0) {
+					apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Set newly added categories record status to active
+	 */
+	private void setActiveStatusForNewAddedCategories() {
+		for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+				.getSmSupplierCategories()) {
+			if (cat.getRecordStatusFlg() == SupplierManagementConst.PENDING_ACT_STATUS) {
+				cat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+			}
+		}
+	}
+
+	/**
+	 * Set supplier registration status and bumi status
+	 */
+	private void setSupplierRegistrationAndBumiStatus() {
+		Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
+				.getStatusId();
+		for (PmStatusDesc desc : getManagedBean().getRegStatusDescList()) {
+			if (pmStatId.equals(desc.getPmStatus().getStatusId())) {
+				getManagedBean().getSmAppl().setPmStatus(desc.getPmStatus());
+				if (desc.getPmStatus().getPmRegStatus() != null) {
+					getManagedBean().getSmAppl().setPmRegStatus(
+							desc.getPmStatus().getPmRegStatus());
+					getManagedBean()
+							.getSmAppl()
+							.getSmSupplier()
+							.setBumi(
+									desc.getPmStatus().getPmRegStatus()
+											.isBumiAppl());
+					break;
+				}
+			}
+		}
 	}
 
 	/**

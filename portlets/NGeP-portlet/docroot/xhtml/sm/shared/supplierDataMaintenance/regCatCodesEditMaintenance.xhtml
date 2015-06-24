@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.supp.data.maintenance.add.new.cat.instruction']}" />
+		
 		<p:dataTable var="catBean" widgetVar="smCatCodesNonRenewApplDtWidVar"
 			value="#{supplierDataMaintenanceBackingBean.managedBean.activeCategoryList}"
 			rowKey="#{catBean}" rowIndexVar="index" id="catDt"
@@ -128,7 +129,7 @@
 			</p:commandButton>
 
 			<ac:lookupCategoryCode okAction="supplierDataMaintenanceBackingBean.addNewCategoryAction"
-				update=":form:catCodeInfPan"
+				update="@form"
 				supplierType="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType}"
 				facilityType="#{supplierDataMaintenanceBackingBean.managedBean.basicCompanyFacility.facilityType}"
 				paidUpCapital="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.smCompanyBasic.paidUpCapital}"
@@ -138,7 +139,7 @@
 
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
 				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList}"
-				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes}" 
+				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList)}" 
 				update=":form:catCodeInfPan" partialSubmit="true" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				process="@this">
