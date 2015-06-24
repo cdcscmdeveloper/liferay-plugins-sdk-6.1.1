@@ -289,6 +289,83 @@ public class CommitteBackingBean extends
 	public void searchUserAction() {
 		this.getManagedBean().getUserSearchQCDataModel().reloadData();
 	}
+	
+	/**
+	 * Get user role description
+	 */
+	public String getRoleDesc(PmUser pmUser) {
+		String userRole = null;
+		String orgType = null;
+		String committeeType = getManagedBean().getQtCommittee()
+				.getScCommittee().getCommitteeType().getParameterCode();
+		StringBuffer chairPersonRoleCode = new StringBuffer(
+				committeeType + QTConstants.CHAIRPERSON);
+		
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			userSO = BusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			SearchBean<PmUserRole> searchBean = new SearchBean<PmUserRole>();
+
+			// Filter By - user org info
+			// User id
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmUserOrg.pmUser.userId", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							pmUser.getUserId()));
+			
+			// User Org type
+			if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType) || 
+					ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
+							.equals(committeeType)) {
+				orgType = null;
+
+			} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType) || 
+					ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)) {
+				orgType = ParameterConst.ORG_TYPE_PTJ;
+
+			} else {
+				orgType = ParameterConst.ORG_TYPE_MINISTRY;
+			}
+			if (orgType != null) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrg.pmUser.orgTypeCode.parameterCode", 
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								orgType));	
+			}
+			
+			// Role Code
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean(
+							"pmRole.roleCode", 
+							SearchOperator.OPERATOR_EQUALS.value(), 
+							chairPersonRoleCode));
+			
+			reqDTO.setUserRoleSearchBean(searchBean);
+			UserResDTO resDTO = userSO.retrieveUserRoleBySearchBean(reqDTO);
+			if (resDTO.isSuccessful() && 
+					CollectionUtils.isNotEmpty(resDTO.getUserRoleList())) {
+				PmParameter chairPersonRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, 
+						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+				pmUser.setMemberRole(chairPersonRole);
+				userRole = getParameterDesc(chairPersonRole);
+			}
+			
+		} finally {
+			userSO = null;
+		}
+		
+		if (userRole == null) {
+			userRole = getParameterDesc(ParameterTypeConst.COMMITTEE_ROLE, 
+					ParameterConst.COMMITTEE_ROLE_MEMBER);
+		}
+		
+		return userRole;
+	}
 
 	/**
 	 * Gets the role type dropdown values.
@@ -1714,16 +1791,28 @@ public class CommitteBackingBean extends
 									ParameterTypeConst.COMMITTEE_ROLE,
 									ParameterConst.COMMITTEE_ROLE_MEMBER);
 					committeeMember.setMemberRole(roleParaMeter);
+					
+					if (user.getMemberRole() == null) {
+						PmParameter memberRole = getPmParameterByTypeAndCode(
+								ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
+						user.setMemberRole(memberRole);
+					} 
+					committeeMember.setMemberRole(user.getMemberRole());					
 	
 					committeeMember.setAccessRight("E");
-					if (null != user.getRepresentativesType().getParameterId()) {
-						committeeMember.setRepresentativeType(ParameterHelper
-								.getInstance().getPmParameterById(
-										user.getRepresentativesType()
-												.getParameterId()));
+					if (ParameterConst.COMMITTEE_ROLE_MEMBER
+							.equals(user.getMemberRole().getParameterCode())) {
+						if (null != user.getRepresentativesType().getParameterId()) {
+							committeeMember.setRepresentativeType(ParameterHelper
+									.getInstance().getPmParameterById(
+											user.getRepresentativesType()
+													.getParameterId()));
+						} else {
+							committeeMember.setRepresentativeType(user
+									.getRepresentativesType());
+						}
 					} else {
-						committeeMember.setRepresentativeType(user
-								.getRepresentativesType());
+						committeeMember.setRepresentativeType(null);						
 					}
 					committeeMember.setScCommittee(scCommittee);
 					// memberList.add(committeeMember);
@@ -2195,5 +2284,20 @@ public class CommitteBackingBean extends
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.RECORD_STATUS, searchBean);
 		return items;
 	}
+	
+	private PmParameter getPmParameterByTypeAndCode(String parameterType, String parameterCode) {
+		IParameterSO parameterSO = null;
+		try {
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterCode(parameterCode);
+			reqDTO.setParameterType(parameterType);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			return resDTO.getPmParameter();
+		} finally {
+			parameterSO = null;
+		}
+	}	
 
 }

@@ -62,7 +62,9 @@
 
 						<ac:paginator for="userexistid" />
 
-						<p:column selectionMode="multiple" style="width:2%" />
+						<p:column selectionMode="multiple" style="width:2%" 
+							disabledSelection="#{committeeMember.memberRole.parameterCode eq 
+														ParameterConst.committeeRoleSecretary}"/>
 
 						<p:column headerText="#{lbl['lbl.sc.name']}">
 							<h:outputText value="#{existcommitteeuser.userName}"
@@ -92,10 +94,11 @@
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.role']}">
 							<h:outputText
-								value="#{committeBackingBean.getParameterDesc(ParameterTypeConst.committeeRole,ParameterConst.committeeRoleMember)}" />
+								value="#{committeBackingBean.getRoleDesc(existcommitteeuser)}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.representative.type']}"
-							style="width: 15%">
+							style="width: 15%" rendered="#{existcommitteeuser.memberRole.parameterCode eq 
+																		ParameterConst.committeeRoleMember}">
 							<p:selectOneMenu
 								value="#{existcommitteeuser.representativesType.parameterId}"
 								style="width: 178px;margin-bottom: 5px;">
