@@ -22,6 +22,9 @@
 
 		<p:panel header="#{lbl['lbl.sm.softcert.selected.personnel.panheader']}" toggleable="true" id="uploadPanelId">
 			
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"/>
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}"/>
+			
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
@@ -35,9 +38,6 @@
 						</p:selectOneRadio></td>
 				</tr>
 			</table>
-			
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.upload.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"/>
-			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.offline.suppdoc.note']}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'H'}"/>
 			
 			<p:dataTable id="softcertUploadDtlId" rowKey="#{upload}" rendered="#{softCertBackingBean.managedBean.suppDocMode eq 'S'}"
 				rowIndexVar="index" value="#{softCertBackingBean.managedBean.softcertUploadSuppDocList}"
