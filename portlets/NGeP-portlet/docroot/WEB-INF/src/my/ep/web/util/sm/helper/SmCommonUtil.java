@@ -2312,9 +2312,10 @@ public class SmCommonUtil {
 	 *            personnel
 	 * @return boolean
 	 */
-	public boolean isSoftcertReadyForRenewal(Long supplierId,
+	public static boolean isSoftcertReadyForRenewal(Long supplierId,
 			SmPersonnel personnel) {
-		if (personnel.getPmUser() != null
+		if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
+				&& personnel.getPmUser() != null
 				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 			reqDTO.setSmSupplierId(supplierId);

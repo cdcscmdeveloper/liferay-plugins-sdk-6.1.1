@@ -45,6 +45,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private String token;
 	private String paymentBtnLbl;
 	private String targetPage;
+	private String suppDocMode;
 	private WorklistItemVO softCertBpmTask;
 	private List<SmPersonnel> authorizedPersonnels;
 	private boolean alreadyHadFreeSoftcert;
@@ -244,6 +245,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setSupplierTmpPersonnel(SmPersonnel supplierTmpPersonnel) {
 		this.supplierTmpPersonnel = supplierTmpPersonnel;
+	}
+
+	public String getSuppDocMode() {
+		return suppDocMode;
+	}
+
+	public void setSuppDocMode(String suppDocMode) {
+		this.suppDocMode = suppDocMode;
 	}
 
 }

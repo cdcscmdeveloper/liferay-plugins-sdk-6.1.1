@@ -70,6 +70,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		initAuthorizedPersonnels();
 		getManagedBean().setGstRate(SmCommonUtil.getGstCurrentRate());
 		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
+		getManagedBean().setSuppDocMode(
+				SupplierManagementConst.SUPPORTING_DOC_ONLINE);
 		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "");
 	}
 
@@ -164,7 +166,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @return String
 	 */
 	public void navigateToPaymentPage() {
-		validateUploadSuppDoc();
+		if (getManagedBean().getSuppDocMode().equals(
+				SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			validateUploadSuppDoc();
+		}
 		this.getManagedBean().setSoftCertPayList(
 				this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
@@ -609,7 +614,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	private List<SmSoftcertDoc> getUploadedSoftcertDocs() {
 		List<SmSoftcertDoc> softcertDocList = new ArrayList<SmSoftcertDoc>();
-		if (getManagedBean().getSoftcertUploadSuppDocList() != null
+		if (getManagedBean().getSuppDocMode().equals(
+				SupplierManagementConst.SUPPORTING_DOC_ONLINE)
+				&& getManagedBean().getSoftcertUploadSuppDocList() != null
 				&& !getManagedBean().getSoftcertUploadSuppDocList().isEmpty()) {
 			for (SoftcertUploadSuppDocVO docVO : getManagedBean()
 					.getSoftcertUploadSuppDocList()) {
