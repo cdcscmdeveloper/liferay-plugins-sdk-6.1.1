@@ -988,22 +988,10 @@ public class ApprovalBackingBean extends
 	 * @param member
 	 *            the member
 	 */
-	public void roleChangeListner(ScCommitteeMember member) {
-		List<ScCommitteeMember> members = this.getManagedBean()
-				.getSelectedTabBean().getScQtCommittee().getScCommittee()
-				.getScCommitteeMembers();
-		for (ScCommitteeMember committeeMember : members) {
-			if (committeeMember.getIcPassport().equalsIgnoreCase(
-					member.getIcPassport())) {
-				List<PmParameterDesc> roles = getManagedBean().getRoleTypes();
-				for (PmParameterDesc parameter : roles) {
-					if (parameter.getPmParameter().getParameterId()
-							.equals(member.getMemberRole().getParameterId())) {
-						member.setMemberRole(parameter.getPmParameter());
-						break;
-					}
-				}
-			}
+	public void roleChangeListner(ScCommitteeMember member) {		
+		if (member.getMemberRole() != null && member.getMemberRole().getParameterId() != null) {
+			member.setMemberRole(ParameterHelper.getInstance().getPmParameterById(
+					member.getMemberRole().getParameterId()));
 		}
 	}
 

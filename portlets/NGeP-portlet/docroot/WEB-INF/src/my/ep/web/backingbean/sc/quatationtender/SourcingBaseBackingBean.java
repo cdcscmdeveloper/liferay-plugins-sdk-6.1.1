@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
@@ -91,6 +93,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -1525,5 +1528,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		} finally {
 			ruleSO = null;
 		}
+	}
+
+	/**
+	 * Gets the role type dropdown values.
+	 * 
+	 * @return the role type dropdown values
+	 */
+	public List<PmParameterDesc> getRoleTypeDropdownValues(
+			boolean isChairPersonReq) {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		if (!isChairPersonReq) {
+			List<String> recommendList = new ArrayList<String>();
+			recommendList.add(ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
+
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_NOT_IN.value(),
+							recommendList));
+		}
+
+		return retrieveParametersBySearchBean(
+				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
+
 	}
 }
