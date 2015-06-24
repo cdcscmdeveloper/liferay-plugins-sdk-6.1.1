@@ -48,7 +48,7 @@
 		
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.itemList}"
-			rows="10" rowKey="#{item.qtRecommendId}" rowIndexVar="rowIndex" selectionMode="single">
+			rows="10" rowKey="#{item}" rowIndexVar="rowIndex" selectionMode="single">
 			<ac:paginator for="itemListTbl" />
 
 			<p:ajax event="rowSelect" 
