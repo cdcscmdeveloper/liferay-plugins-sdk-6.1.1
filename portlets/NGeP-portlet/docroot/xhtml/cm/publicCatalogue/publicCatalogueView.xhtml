@@ -51,7 +51,7 @@
 								for="itemNameId"
 								value="#{lbl['lbl.cm.pub.catalog.search.filed.watermark']}"></p:watermark></td>
 						<td style="padding-left: 5px;vertical-align: middle;"><p:commandLink title="#{lbl['lbl.cm.search']}" id="searchBtnId"
-								update=":form" action="#{pCatalogueBackingBean.searchCatalogue}">
+								update="@form" action="#{pCatalogueBackingBean.searchCatalogue}">
 								<p:graphicImage value="/css/images/design/search.png" style="20px;"></p:graphicImage>
 							</p:commandLink>
 							<p:defaultCommand target="searchBtnId" />
@@ -90,6 +90,9 @@
 						</p:dataGrid>
 					</p:panel>
 				</h:panelGroup>
+				
+				<p:remoteCommand id="refreshCatalogue" name="refreshCatalogue" update="resultpl"> </p:remoteCommand>
+				
 
 				<h:panelGroup id="resultpl"
 					rendered="#{!pCatalogueBackingBean.managedBean.frontPage}">
@@ -104,7 +107,8 @@
 												style="font-weight:bold;font-size:17px;text-align : left;float:left; vertical-align: middle;margin-left : 5px;" /></td>
 									</tr>
 									<tr>
-										<td style="padding-top: 8px; padding-bottom: 8px;"><ui:repeat
+										<td style="padding-top: 8px; padding-bottom: 8px;">
+										<ui:repeat
 												var="family"
 												value="#{pCatalogueBackingBean.managedBean.familyList}">
 												<table style="width: 100%;">
@@ -179,18 +183,18 @@
 							<td width="70%"><p:outputLabel
 									rendered="#{pCatalogueBackingBean.managedBean.keyWord}"
 									style="font-weight:bold;float:left;font-size:18px;"
-									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
+									value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.itemName}"></p:outputLabel>
 
 								<p:outputLabel
 									rendered="#{!pCatalogueBackingBean.managedBean.keyWord}"
 									style="font-weight:bold;float:left;font-size:18px;"
-									value="#{fn:length(pCatalogueBackingBean.managedBean.catalogueList)} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
+									value="#{pCatalogueBackingBean.managedBean.totalRecord} #{lbl['lbl.cm.pub.catalog.result.title']} #{pCatalogueBackingBean.managedBean.unspscTitle}"></p:outputLabel>
 								<br />
 								<hr class="horizontal_dotted_line" /> <br /> 
 								
-								<p:dataGrid style="width:100%;"
+								<p:dataGrid style="width:100%;" lazy="true"
 									columns="3" rows="9" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-									value="#{pCatalogueBackingBean.managedBean.catalogueList}"
+									value="#{pCatalogueBackingBean.managedBean.searchDataModel}"
 									id="catalogueGridViewID" var="supplierItem">
 									<ac:paginator for="catalogueGridViewID"></ac:paginator>
 									<div class="tbclass">
