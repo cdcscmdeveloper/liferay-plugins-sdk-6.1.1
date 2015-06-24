@@ -3790,10 +3790,11 @@ public class LOIDetailBackingBean extends
 		VelocityContext context = new VelocityContext();
 
 		if (getManagedBean().getRecommendList() != null) {
-			for (ScQtRecommend recommend : getManagedBean().getRecommendList()) {
+			/*			
+ 			for (ScQtRecommend recommend : getManagedBean().getRecommendList()) {
 				log.info("Item Name :"
 						+ recommend.getRequestItem().getItemName());
-				/*
+				
 				 * for (ScQtRecommendDtl qtRecommendDtl :
 				 * recommend.getRecommendDtls()) { if
 				 * (qtRecommendDtl.isRecordStatus()) {
@@ -3803,8 +3804,8 @@ public class LOIDetailBackingBean extends
 				 * qtRecommendDtl.getSupplier().getCompanyName());
 				 * System.out.println("Supplier ID : " +
 				 * qtRecommendDtl.getSupplier().getSupplierId()); }
-				 */
-			}
+				 
+			}*/
 			context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
 			context.put("recommendList", getManagedBean().getRecommendList());
 			context.put("bean", this);
