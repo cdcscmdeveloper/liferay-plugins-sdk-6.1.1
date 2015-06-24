@@ -8,6 +8,10 @@ public class ConsultantProfile {
 	private String companyName;
 	private String SSMNo;
 	private String MOFNo;
+	private String GSTNo;
+	private String virtualCertNo;
+	private Date GSTEffectiveDate;
+	private Date firstTaxablePeriod; // Start Date
 	private String companyType;
 	private String address1;
 	private String address2;
@@ -63,6 +67,38 @@ public class ConsultantProfile {
 
 	public void setMOFNo(String mOFNo) {
 		MOFNo = mOFNo;
+	}
+
+	public String getGSTNo() {
+		return GSTNo;
+	}
+
+	public void setGSTNo(String gSTNo) {
+		GSTNo = gSTNo;
+	}
+
+	public String getVirtualCertNo() {
+		return virtualCertNo;
+	}
+
+	public void setVirtualCertNo(String virtualCertNo) {
+		this.virtualCertNo = virtualCertNo;
+	}
+
+	public Date getGSTEffectiveDate() {
+		return GSTEffectiveDate;
+	}
+
+	public void setGSTEffectiveDate(Date gSTEffectiveDate) {
+		GSTEffectiveDate = gSTEffectiveDate;
+	}
+
+	public Date getFirstTaxablePeriod() {
+		return firstTaxablePeriod;
+	}
+
+	public void setFirstTaxablePeriod(Date firstTaxablePeriod) {
+		this.firstTaxablePeriod = firstTaxablePeriod;
 	}
 
 	public String getCompanyType() {
