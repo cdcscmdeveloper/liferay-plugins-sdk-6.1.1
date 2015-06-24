@@ -642,12 +642,13 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 * 
 	 */
 	public String getRoleDesc(PmUser pmUser) {
-		String userRole = StringUtils.EMPTY;
-		
+		String userRole = null;
+		String orgType = null;
+		String committeeType = getManagedBean().getCommitteeType();
 		StringBuffer chairPersonRoleCode = new StringBuffer(
-				getManagedBean().getCommitteeType() + QTConstants.CHAIRPERSON);
-		IUserSO userSO = null;
+				committeeType + QTConstants.CHAIRPERSON);
 		
+		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
 			userSO = BusinessDelegate.getInstance()
@@ -664,11 +665,25 @@ public class SupplierFinalizationMeetingBackingBean extends
 							pmUser.getUserId()));
 			
 			// User Org type
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean(
-							"pmUserOrg.pmUser.orgTypeCode.parameterCode", 
-							SearchOperator.OPERATOR_EQUALS.value(), 
-							ParameterConst.ORG_TYPE_MINISTRY));			
+			if (ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SBH.equals(committeeType) || 
+					ParameterConst.COMMITTEE_TYPE_FEDERAL_PROCUREMENT_BOARD_SWK
+							.equals(committeeType)) {
+				orgType = null;
+
+			} else if (ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B.equals(committeeType) || 
+					ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A.equals(committeeType)) {
+				orgType = ParameterConst.ORG_TYPE_PTJ;
+
+			} else {
+				orgType = ParameterConst.ORG_TYPE_MINISTRY;
+			}
+			if (orgType != null) {
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmUserOrg.pmUser.orgTypeCode.parameterCode", 
+								SearchOperator.OPERATOR_EQUALS.value(), 
+								orgType));	
+			}
 			
 			// Role Code
 			searchBean.getDataFilterBeans().add(
@@ -685,12 +700,15 @@ public class SupplierFinalizationMeetingBackingBean extends
 						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				pmUser.setMemberRole(chairPersonRole);
 				userRole = getParameterDesc(chairPersonRole);
-			} else {
-				userRole = getParameterDesc(ParameterTypeConst.COMMITTEE_ROLE, 
-						ParameterConst.COMMITTEE_ROLE_MEMBER);
 			}
+			
 		} finally {
 			userSO = null;
+		}
+		
+		if (userRole == null) {
+			userRole = getParameterDesc(ParameterTypeConst.COMMITTEE_ROLE, 
+					ParameterConst.COMMITTEE_ROLE_MEMBER);
 		}
 		
 		return userRole;
