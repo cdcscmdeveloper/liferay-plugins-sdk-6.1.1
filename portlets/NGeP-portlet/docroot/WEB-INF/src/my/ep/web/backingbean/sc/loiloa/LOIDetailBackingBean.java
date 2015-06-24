@@ -1236,7 +1236,7 @@ public class LOIDetailBackingBean extends
 						if (afterNegoSubTotal != null) {
 							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
 							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-							scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+							//scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 						}
 					}
 				}
@@ -1825,9 +1825,9 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		if (isLoiRequired) {
-			getManagedBean().setLoiRequired(Boolean.TRUE);
-		} else {
 			getManagedBean().setLoiRequired(Boolean.FALSE);
+		} else {
+			getManagedBean().setLoiRequired(Boolean.TRUE);
 		}
 	}
 
@@ -1847,9 +1847,10 @@ public class LOIDetailBackingBean extends
 					.getPayLoadData();
 
 			ScLoi scLoi = this.getManagedBean().getScLoi();
-			Long statusId = scLoi.getScWorkFlowStatus().getPmStatus()
-					.getStatusId().longValue();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
+			
+			validateLOIDetails(scLoi, outcome);
+			
 			parseLOIDetails(scLoi, outcome);
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
@@ -1867,17 +1868,65 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoi = resDTO.getScLoi();
-
+				// check whether pending loiLoas or not
+				//checkPendingLoiLoas(scLoi);
 				renewSesionObject();
 				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_INTENT, scLoi.getLoiNo(), Boolean.TRUE);
 			}
 
 		} finally {
-
 			// qtAwardSO = null;
 		}
 
 		return null;
+	}
+
+	
+	/**
+	 * Check pending loi loas.
+	 *
+	 * @param loi the loi
+	 */
+	private void checkPendingLoiLoas(ScLoi loi){
+		debugLogger("checkPendingLoiLoas");
+		boolean isloiListEnd = Boolean.TRUE;
+		List<ScLoiLoa> pendingLoiLoas = getManagedBean().getRecSupplierList();
+		for (ScLoiLoa scLoiLoa : pendingLoiLoas) {
+			if(!scLoiLoa.getLoiLoaId().equals(loi.getScLoiLoa().getLoiLoaId())){
+
+				if(scLoiLoa.isLoiRequired()){
+
+					if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
+						ScLoi scLoi  = scLoiLoa.getScLois().get(0);
+						if(scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().equals(QTStatusConst.LOI_PENDING_SUBMISSION)){
+							isloiListEnd = Boolean.FALSE;
+						}
+					} else{
+						isloiListEnd = Boolean.FALSE;
+					}
+				}
+			}
+		}
+		// end loi list task
+		if(isloiListEnd){
+			endLoiListTask();
+		}
+	}
+
+	/**
+	 * End loi list task.
+	 */
+	private void endLoiListTask(){
+		debugLogger("endLoiListTask");
+
+		ScQt scQt = getManagedBean().getScQtFinalization().getScQt();
+
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+		reqDTO.setQtId(scQt.getQtId());
+		reqDTO.setDocType(getManagedBean().getDocType());
+
+		AwardSupplierResDTO resDTO = getQtAwardSO().completeLoiListBPMTask(reqDTO);
+
 	}
 
 	/**
@@ -2550,7 +2599,7 @@ public class LOIDetailBackingBean extends
 					.getScWorkFlowStatus());
 			scLoi.setScLoiWorkFlowStatuses(workFlowStatuses);
 		}
-
+		
 		// validate
 		if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
 			for (ScLoiSupportingDoc scLoiSupportingDoc : scLoi.getScLoiSupportingDocs() ) {
@@ -2562,7 +2611,7 @@ public class LOIDetailBackingBean extends
 					throw new EpException("Please attach supporting document");
 				}
 			}
-		}
+		}	
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
 				.longValue();
@@ -2598,38 +2647,9 @@ public class LOIDetailBackingBean extends
 
 			scLoiApproval.setApproverAction(action);
 			scLoiApproval.setApproverActionDate(new Date());
-
 			scLoi.setScLoiApproval(scLoiApproval);
-		}
-
-		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
-			if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
-					|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId)) {
-				if (!scLoi.isApprovalReq()) {
-					scLoi.setScLoiApproval(null);
-				}
-
-				// validate negotiation location
-				if (scLoi.getScNegoLocations() == null
-						|| scLoi.getScNegoLocations().isEmpty()) {
-					throw new EpException(MessageConst.ERROR_760274);
-				}
-			}
-
-			// validate negotiation Term
-			boolean isSelected = Boolean.TRUE;
-			if (scLoi.getScNegoTerms() != null
-					&& scLoi.getScNegoTerms().size() > 0) {
-				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-					if (scLoiTerm.isSelected()) {
-						isSelected = Boolean.FALSE;
-					}
-				}
-
-				if (isSelected) {
-					throw new EpException(MessageConst.ERROR_760289);
-				}
-			}
+		} else if(!scLoi.isApprovalReq()){
+			scLoi.setScLoiApproval(null);
 		}
 
 		if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
@@ -2672,11 +2692,52 @@ public class LOIDetailBackingBean extends
 			}
 		}
 	}
+	
+	/**
+	 * Validate loi details.
+	 *
+	 * @param scLoi the sc loi
+	 * @param outcome the outcome
+	 */
+	private void validateLOIDetails(ScLoi scLoi, String outcome) {
+		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId().longValue();
+
+		if (BpmOutcomeConst.BPM_SUBMIT.equals(outcome) && (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
+				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId))) {
+
+			// validate negotiation location
+			if (scLoi.getScNegoLocations() == null
+					|| scLoi.getScNegoLocations().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_760274);
+			}
+		}
+
+		// validate negotiation Term
+		boolean isSelected = Boolean.TRUE;
+		if (scLoi.getScNegoTerms() != null
+				&& scLoi.getScNegoTerms().size() > 0) {
+			for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
+				if (scLoiTerm.isSelected()) {
+					isSelected = Boolean.FALSE;
+				}
+			}
+			if (isSelected) {
+				throw new EpException(MessageConst.ERROR_760289);
+			}
+		}
+
+		if(scLoi.isApprovalReq()){
+			if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
+				throw new EpException("Approver is required.");
+			}
+		}
+	}
 
 	/**
 	 * Renew session with previous values.
 	 */
 	private void renewSessionWithPreviousValues() {
+		List<ScLoiLoa>  recSupplierList = getManagedBean().getRecSupplierList();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		Object payLoadData = getManagedBean().getPayLoadData();
 		Long sourceId = getManagedBean().getSourceId();
@@ -2716,6 +2777,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setEditFlag(editButton);
 		getManagedBean().setButtonFlag(buttonFlag);
 		getManagedBean().setScQtFinalization(scQtFinalization);
+		getManagedBean().setRecSupplierList(recSupplierList);
 	}
 
 	/**
@@ -4543,9 +4605,6 @@ public class LOIDetailBackingBean extends
 	public void setFlag(boolean flag) {
 		this.flag = flag;
 	}
-	
-
-	
 	
 	/**
 	 * Success message.
