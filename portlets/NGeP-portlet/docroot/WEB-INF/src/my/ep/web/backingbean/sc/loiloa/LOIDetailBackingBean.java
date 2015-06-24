@@ -4327,7 +4327,7 @@ public class LOIDetailBackingBean extends
 		if (proposalItem != null) {
 			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
 					.calcTotalAmount(requestItem.getTplSpecQuestion(),
-							new BigDecimal(proposalItem.getOfferPrice()),
+							new BigDecimal(proposalItem.getFinalPrice()),
 							new BigDecimal(proposalItem.getOfferQuantity()));
 			evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 		}
