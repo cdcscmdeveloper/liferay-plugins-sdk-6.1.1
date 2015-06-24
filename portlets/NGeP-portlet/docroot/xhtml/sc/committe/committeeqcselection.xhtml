@@ -66,17 +66,11 @@
 				test="#{committeBackingBean.managedBean.qtCommittee.scCommittee.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}">
 				<p:column headerText="#{lbl['lbl.sc.role']}"
 					style="width: 10%">
-					<ui:fragment rendered="#{committeemember.PNP}">
-						<h:outputText value="Chairperson"
-							rendered="#{committeemember.memberRole.parameterCode eq 'C'}" />
-					</ui:fragment>
-					<ui:fragment rendered="#{!committeemember.PNP}">
-						<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
-							style="width: 110px;margin-bottom: 5px;">
-							<f:selectItems
-								value="#{committeBackingBean.managedBean.roleTypes}" />
-						</p:selectOneMenu>
-					</ui:fragment>
+					<p:selectOneMenu value="#{committeemember.memberRole.parameterId}"
+						style="width: 110px;margin-bottom: 5px;">
+						<f:selectItems
+							value="#{committeBackingBean.getRoleTypeDropdownValues(committeemember.PNP)}" />
+					</p:selectOneMenu>
 				</p:column>
 			</c:if>
 		</p:dataTable>

@@ -98,22 +98,18 @@
 							</p:column>
 
 							<p:column headerText="#{lbl['lbl.sc.role']}">
-								<ui:fragment rendered="#{existcommitteeuser.PMP == true}">
-									<h:outputText value="Chairperson" />
-								</ui:fragment>
-								<ui:fragment rendered="#{existcommitteeuser.PMP == false}">
-									<p:selectOneMenu id="appaction"
-										value="#{existcommitteeuser.memberRole.parameterId}"
-										style="width: 110px;margin-bottom: 5px;">
-										<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-										<f:selectItems var="role"
-											value="#{qTCommitteBackingBean.managedBean.roleTypes}"
-											itemLabel="#{role.codeName}"
-											itemValue="#{role.pmParameter.parameterId}" />
+								<p:selectOneMenu id="appaction"
+									value="#{existcommitteeuser.memberRole.parameterId}"
+									style="width: 110px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="#{null}" />
+									<f:selectItems var="role"
+										value="#{qTCommitteBackingBean.getRoleTypeDropdownValues(existcommitteeuser.PMP)}"
+										itemLabel="#{role.codeName}"
+										itemValue="#{role.pmParameter.parameterId}" />
 
-										<p:ajax event="change" partialSubmit="true" />
-									</p:selectOneMenu>
-								</ui:fragment>
+									<p:ajax event="change" partialSubmit="true" />
+								</p:selectOneMenu>
 							</p:column>
 						</p:dataTable>
 					</p:panel>
