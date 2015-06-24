@@ -49,7 +49,6 @@ import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
@@ -61,7 +60,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
@@ -84,6 +82,7 @@ import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 /**
@@ -983,8 +982,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				        reqDTO.setStatusList(statusIds);
 				        reqDTO.setUserId(loginId);
 				        List<String> docNumberList =  new ArrayList<String>();
-				        docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
-				        reqDTO.setDocNumberList(docNumberList);
+				        if(StringUtils.isNotBlank(getManagedBean().getTaskAssignmentSearchBean().getDocNo())){
+				        	docNumberList.add(getManagedBean().getTaskAssignmentSearchBean().getDocNo());
+				        	reqDTO.setDocNumberList(docNumberList);
+				        }
 				        
 				        if(getManagedBean().getTaskAssignmentSearchBean().getDocType() !=null && getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter() !=null ){
 				        	reqDTO.setDocType(getManagedBean().getTaskAssignmentSearchBean().getDocType().getPmParameter().getParameterCode());
