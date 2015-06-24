@@ -61,10 +61,13 @@
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 			<tr>
 				<td width="21%"><p:outputLabel value="#{lbl['lbl.sc.approver']}" />
+				<p:outputLabel value="*" styleClass="mandatory"/>
 				</td>
-				<td><p:selectOneMenu id="approver"
+				<td><p:selectOneMenu id="loaApprover"
 						value="#{lOADetailBackingBean.managedBean.approverUser.userId}"
 						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						required="#{lOADetailBackingBean.managedBean.scLoa.approvalReq}"
+						label="#{lbl['lbl.sc.approver']}"
 						style="width: 240px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
@@ -75,7 +78,8 @@
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.approverChanged()}"
 							partialSubmit="true" process="@this" update="@this" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu><p:message id="loaApproverMsg" for="loaApprover"
+						display="icon" /> </td>
 			</tr>
 		</table>
 	</p:panel>
