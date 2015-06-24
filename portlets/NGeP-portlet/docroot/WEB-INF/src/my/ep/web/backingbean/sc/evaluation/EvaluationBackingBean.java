@@ -7365,8 +7365,9 @@ public class EvaluationBackingBean extends
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		if (member.getMemberRole().getParameterCode()
-				.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+		String roleCode = member.getMemberRole().getParameterCode(); 
+		this.getManagedBean().setRoleCode(roleCode);
+		if (roleCode.equalsIgnoreCase(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 			this.getManagedBean().setLocalOutCome(outCome);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 
@@ -7441,13 +7442,16 @@ public class EvaluationBackingBean extends
 			updatePmDigiSignData(digiSign, this.getManagedBean()
 					.getCommitteeType(), scQt.getQtId(), scQt.getQtNo());
 		}
+		reqDtO.setCommType(this.getManagedBean()
+				.getCommitteeType());
 		reqDtO.setDigiSignData(digiSign);
 		reqDtO.setTaskId(this.getManagedBean().getTaskId());
 		reqDtO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		reqDtO.setToken(ctx);
-
+		reqDtO.setPmUser(facesScopes.getUserSessionBean());
+		reqDtO.setRoleCode(this.getManagedBean().getRoleCode());
 		EvaluationResDTO resDTO = null;
 		try {
 			resDTO = evaluationso.updateBPMAction(reqDtO);
