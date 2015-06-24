@@ -325,6 +325,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The selected supplier */
 	private ScQtEvaluationResultDtl selectedSupplier;
+	
+	/** The role code. */
+	private String roleCode;
 	    
     /** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1932,5 +1935,24 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setSelectedSupplier(ScQtEvaluationResultDtl selectedSupplier) {
 		this.selectedSupplier = selectedSupplier;
 	}
+
+	/**
+	 * Gets the role code.
+	 *
+	 * @return the role code
+	 */
+	public String getRoleCode() {
+		return roleCode;
+	}
+
+	/**
+	 * Sets the role code.
+	 *
+	 * @param roleCode the new role code
+	 */
+	public void setRoleCode(String roleCode) {
+		this.roleCode = roleCode;
+	}
+	
 	
 }

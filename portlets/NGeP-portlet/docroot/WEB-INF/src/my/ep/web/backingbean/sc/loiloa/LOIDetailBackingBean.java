@@ -37,6 +37,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
@@ -56,6 +57,8 @@ import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sc.committe.CommitteReqDTO;
+import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
@@ -117,6 +120,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
 import my.ep.type.sc.TermType;
 import my.ep.util.MessageUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.constant.CommonUIConst;
@@ -458,7 +462,7 @@ public class LOIDetailBackingBean extends
 			handleException(e);
 		}
 	}
-
+	
 	/**
 	 * Retrieve multiple loi dtls.
 	 * 
@@ -2202,7 +2206,8 @@ public class LOIDetailBackingBean extends
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
-		if (isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
+		String roleCode = getRoleCode();
+		if (SourcingConstants.MEMBER_ROLE_CHAIRPERSON.equalsIgnoreCase(roleCode)) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			updateMultiLoiBpmTask(outcome, null);
@@ -2601,12 +2606,15 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
+		if(null == scLoi.getSupplierAddress()){
+			//throw new EpException("No supplier address");
+		}
+
 		if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
 			for (ScLoiSupportingDoc scLoiSupportingDoc : scLoi.getScLoiSupportingDocs() ) {
 				if( null == scLoiSupportingDoc.getTitle() || StringUtils.isBlank(scLoiSupportingDoc.getTitle())){
 					throw new EpException("Please enter supporting document title");
 				}
-				
 				if( null == scLoiSupportingDoc.getScLoiSupportingDocAttachment()){
 					throw new EpException("Please attach supporting document");
 				}
@@ -4025,8 +4033,8 @@ public class LOIDetailBackingBean extends
 		List<ScLoi> localList = new ArrayList<ScLoi>();
 		if (this.getManagedBean().getLois() != null) {
 			for (ScLoi loi : this.getManagedBean().getLois()) {
-				if ("62405".equals(loi.getScWorkFlowStatus().getPmStatus()
-						.getStatusId().toString())) {
+				if (QTStatusConst.LOI_COMPLETED.equals(loi.getScWorkFlowStatus().getPmStatus()
+						.getStatusId())) {
 					localList.add(loi);
 				}
 			}
@@ -4077,15 +4085,15 @@ public class LOIDetailBackingBean extends
 	 *            the event
 	 */
 	public void selectAll(AjaxBehaviorEvent event) {
-		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScLoiTerm> scLoiTerms = getManagedBean().getScLoi()
 				.getScNegoTerms();
 		if (scLoiTerms != null && scLoiTerms.size() > 0) {
 			for (ScLoiTerm scLoiTerm : scLoiTerms) {
-				if (flag && scLoiTerm.isModified()) {
-					scLoiTerm.setDeleted(true);
+				if (isSelectAll && scLoiTerm.getPmTerm() == null) {
+					scLoiTerm.setSelectedTerm(true);
 				} else {
-					scLoiTerm.setDeleted(false);
+					scLoiTerm.setSelectedTerm(false);
 				}
 			}
 		}
@@ -4098,12 +4106,12 @@ public class LOIDetailBackingBean extends
 	 *            the event
 	 */
 	public void selectAllNegoLocations(AjaxBehaviorEvent event) {
-		boolean flag = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
 		List<ScLoiNegoLocation> scLoiLocations = getManagedBean().getScLoi()
 				.getScNegoLocations();
 		if (scLoiLocations != null && scLoiLocations.size() > 0) {
 			for (ScLoiNegoLocation scloiLocation : scLoiLocations) {
-				if (flag && scloiLocation.isSelected()) {
+				if (isSelectAll) {
 					scloiLocation.setSelected(true);
 				} else {
 					scloiLocation.setSelected(false);
@@ -4605,6 +4613,28 @@ public class LOIDetailBackingBean extends
 	 */
 	public void setFlag(boolean flag) {
 		this.flag = flag;
+	}
+	
+	/**
+	 * Gets the role code.
+	 *
+	 * @return the role code
+	 */
+	private String getRoleCode(){
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(this.getManagedBean()
+				.getCommitteeType());
+		CommitteResDTO CommitteeresDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		return member.getMemberRole().getParameterCode();
 	}
 	
 	/**
