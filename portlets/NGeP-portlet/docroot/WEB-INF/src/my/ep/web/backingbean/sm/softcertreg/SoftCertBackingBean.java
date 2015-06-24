@@ -7,8 +7,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,6 +29,7 @@ import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
@@ -44,6 +47,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "softCertBackingBean")
@@ -393,9 +397,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestChallRespUpdate();
 		} catch (Exception ex) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.ERROR_721037);
+			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
 
@@ -407,9 +409,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestResetPIN();
 		} catch (Exception ex) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.ERROR_721037);
+			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
 
@@ -421,9 +421,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			getManagedBean().getSoftCertMaintenanceBackingBean()
 					.RequestChangePIN();
 		} catch (Exception ex) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.ERROR_721037);
+			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
 
@@ -436,9 +434,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.RequestRevokeCert(smPersonnel.getIdentificationNo(),
 							smPersonnel.getSmAppl().getSmSupplier().getEpNo());
 		} catch (Exception ex) {
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.ERROR_721037);
+			throwKmcExceptionInNewPage(ex.getMessage());
 		}
 	}
 
@@ -890,6 +886,26 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			}
 		}
 		return retVal;
+	}
+
+	/**
+	 * Throw KMC Portal exception msg in new page
+	 * 
+	 * @param String
+	 *            msg
+	 */
+	private void throwKmcExceptionInNewPage(String msg) {
+		if (msg == null || StringUtils.isBlank(msg)) {
+			msg = SmCommonUtil.getMessage(
+					"lbl.sm.softcert.call.kmcportal.err.msg", null);
+		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						SmApplicationUtil.getApplicationErrorPage());
+		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+				msg));
 	}
 
 }

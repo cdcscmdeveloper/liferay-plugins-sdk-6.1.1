@@ -16,10 +16,11 @@
 				</td>
 			</tr>
 		</table>
-		
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
 
 		<p:panel header="#{lbl['lbl.sm.softcert.authpersonnel.panheader']}" toggleable="true" id="resultPanelId">
+		
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.softcert.disclaimer']}"/>
+			
 			<p:dataTable id="softCertPageDataModelId" rowKey="#{personnel}"
 				rowIndexVar="index" value="#{softCertBackingBean.managedBean.authorizedPersonnels}"
 				var="personnel" selection="#{softCertBackingBean.managedBean.softCertSelectList}">
