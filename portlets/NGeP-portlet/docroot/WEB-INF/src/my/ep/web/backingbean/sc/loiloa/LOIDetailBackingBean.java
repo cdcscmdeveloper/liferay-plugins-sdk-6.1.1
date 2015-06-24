@@ -3523,7 +3523,9 @@ public class LOIDetailBackingBean extends
 		debugLogger("downloadReport");
 		ScLoiReportAttachment scLoiReportAttachment = scLoiReport
 				.getScLoiReportAttachment();
-		if (scLoiReportAttachment == null) {
+		if (QTStatusConst.MLI_PENDING_NEGOTIATION
+				.equals(getManagedBean().getCurrentStatusId())
+							|| scLoiReportAttachment == null) {
 			scLoiReportAttachment = generateDocumentAttachment(scLoiReport);
 			scLoiReport.setScLoiReportAttachment(scLoiReportAttachment);
 		}

@@ -72,7 +72,7 @@
 	<tr>
 		<td class="tdInfoTable">$activityList.scCommitteeMember.memberName</td>
 		<td class="tdInfoTable">$activityList.scCommitteeMember.designation</td>
-		<td class="tdInfoTable">$activityList.scCommitteeMember.grade</td>
+		<td class="tdInfoTable">$!activityList.scCommitteeMember.grade</td>
 		<td class="tdInfoTable">$activityList.scCommitteeMember.icPassport</td>
 		<td class="tdInfoTable">$activityList.scCommitteeMember.pmOrgProfile.orgName</td>
 		<td class="tdInfoTable">$bean.getParameterDesc($activityList.scCommitteeMember.memberRole)</td>
