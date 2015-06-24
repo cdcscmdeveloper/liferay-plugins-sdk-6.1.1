@@ -73,6 +73,7 @@ import my.ep.web.util.pm.helper.PmCommonUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
@@ -1704,5 +1705,21 @@ public class TemplateSpecBackingBean extends
 	public void setSpecMasterDataModel(
 			IPagingDataModel<TplSpecMaster> specMasterDataModel) {
 		this.specMasterDataModel = specMasterDataModel;
+	}
+	
+	public int getNumOfRows(String text) {
+		
+		int rowCount = 0;
+		if (!StringUtils.isEmpty(text)) {
+			int lenght = text.length();
+			rowCount = lenght / 100;
+		}
+		if (rowCount == 0) {
+			rowCount = 1;
+		} else if (rowCount > 5) {
+			rowCount = 5;// max rows limit shuld be 5. if morthan 5 then display
+						// scroll bar
+		}
+		return rowCount;
 	}
 }
