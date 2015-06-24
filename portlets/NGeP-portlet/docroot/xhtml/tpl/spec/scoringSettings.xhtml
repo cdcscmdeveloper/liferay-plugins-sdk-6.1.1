@@ -8,12 +8,12 @@
 	
 	<ui:param name="isQuestionTypeItem" value="#{templateSpecBean.selectedSpecQuestion.questionType == TplSpecConst.questionTypeItem}" />
 	
-	<table border="1" cellspacing="0" cellpadding="0" width="100%">
+	<table border="0" cellspacing="0" cellpadding="0" width="100%">
 	<ui:param name="itemSpecInfo" value="#{isQuestionTypeItem ? templateSpecBean.selectedSpecQuestion.clItem : templateSpecBean.selectedSpecQuestion.clSpecDetail}"></ui:param>
 	<tr>
 		<td><p:outputLabel value="#{lbl[isQuestionTypeItem ? 'lbl.tpl.spec.content.item' : 'lbl.tpl.spec.content.specification']}" /></td>
 		<td colspan="3" >
-			<h:inputTextarea id="itemSpec" style="width:calc(100% - 156px);"
+			<h:inputTextarea id="itemSpec" style="width:calc(100% - 135px);"
 			value="#{itemSpecInfo}" 
 			disabled="true" autoResize="false" rows="#{templateSpecBackingBean.getNumOfRows(itemSpecInfo)}"/>
 		</td>
