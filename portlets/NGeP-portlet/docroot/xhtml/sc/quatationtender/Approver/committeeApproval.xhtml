@@ -52,12 +52,6 @@
 					<h:outputText value="#{lbl['lbl.sc.role']}" />
 				</f:facet>
 
-				<!-- <ui:fragment rendered="#{committeeapprover.PNP}">
-					<h:outputText value="Chairperson"
-						rendered="#{committeeapprover.memberRole.parameterCode eq 'C'}"
-						disabled="#{committe.committeStatus.statusId eq QTStatusConst.CMT_COMPLETED}" />
-				</ui:fragment>
-				<ui:fragment rendered="#{!committeeapprover.PNP}"> -->
 				<p:selectOneMenu id="roleid" label="#{lbl['lbl.sc.role']}"
 					value="#{committeeapprover.memberRole.parameterId}"
 					style="width: 110px;margin-bottom: 5px;"
@@ -67,7 +61,7 @@
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 						itemValue="#{null}" />
 					<f:selectItems var="role"
-						value="#{approvalBackingBean.managedBean.roleTypes}"
+						value="#{approvalBackingBean.getRoleTypeDropdownValues(committeeapprover.PNP)}"
 						itemLabel="#{role.codeName}"
 						itemValue="#{role.pmParameter.parameterId}" />
 				</p:selectOneMenu>
