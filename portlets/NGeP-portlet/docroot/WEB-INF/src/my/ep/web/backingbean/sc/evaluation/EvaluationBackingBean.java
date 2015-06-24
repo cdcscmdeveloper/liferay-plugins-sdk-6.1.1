@@ -6877,8 +6877,10 @@ public class EvaluationBackingBean extends
 					.getScQtCheckList().getDocCategory())) {
 				getManagedBean().setTechnicalSummaryGenerated(false);
 				getManagedBean().setPresentationDemoSummaryGenerated(false);
+				technicalSupplierEvaluate(getManagedBean().getQtProposalChecklist(), getManagedBean().getCheckListType());
 			} else {
 				getManagedBean().setFinancialSummaryGenerated(false);
+				financialSupplierEvaluate(getManagedBean().getQtProposalChecklist(), getManagedBean().getCheckListType());
 			}
 			updateSummaryGeneratedStatus();
 
