@@ -12,15 +12,16 @@
 	</p:column>
 	<p:column style="white-space:normal;" headerText="#{lbl['lbl.tpl.spec.content.specification']}" rendered="#{isSpecTypeTechnical or (isSpecTypeFinancial and !isSpecificationReq)}">
 		<c:if test="#{isContentTypeUpdateSpec}">
-			<p:inputTextarea id="specification" style="width:calc(100% - 31px);" value="#{question.clSpecDetail}" 
-				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="1" maxlength="1000"
-				label="#{lbl['lbl.tpl.spec.content.specification']}">
+			<p:inputTextarea id="specification" style="width:calc(100% - 20px);" value="#{question.clSpecDetail}" 
+				rendered="#{!isQuestionTypeItem or !isSpecificationReq}" required="#{!question.selected}" rows="5" maxlength="1000"
+				label="#{lbl['lbl.tpl.spec.content.specification']}" autoResize="false">
 				<p:ajax partialSubmit="true" process="@this" update="@this" />
 			</p:inputTextarea>
 			<p:message id="specificationMsg" for="specification" display="icon" />
 		</c:if>
 		<c:if test="#{!isContentTypeUpdateSpec}">
-			<h:outputText value="#{question.clSpecDetail}" escape="false" rendered="#{!isRepeated}" />
+			<h:outputText value="#{question.clSpecDetail}" escape="false"
+				rendered="#{!isRepeated}" style="white-space: normal;word-wrap: break-word;" />
 		</c:if>
 	</p:column>
 	<p:column style="width:75px;" headerText="#{lbl['lbl.tpl.spec.content.fulfilment.type']}" rendered="#{isItemTypeService and isFulfilmentTypeReq}">
