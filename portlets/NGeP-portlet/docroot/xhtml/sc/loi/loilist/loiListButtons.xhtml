@@ -25,7 +25,6 @@
 			update="@form"
 			onstart="blockWidget.show();"
 			oncomplete="blockWidget.hide();"
-			disabled="#{lOIDetailBackingBean.managedBean.loiRequired}"
-			rendered="#{!isMultipleLoi}" />
+			rendered="#{!isMultipleLoi and lOIDetailBackingBean.managedBean.loiRequired}" />
 	</div>
 </ui:composition>
