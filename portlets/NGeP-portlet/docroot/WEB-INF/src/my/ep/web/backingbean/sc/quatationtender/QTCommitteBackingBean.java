@@ -1062,7 +1062,14 @@ public class QTCommitteBackingBean extends
 			}
 
 		} else {
-			throw new EpException("No members to clone to EC");
+			throw new EpException(
+					MessageConst.ERROR_760308,
+					new String[] { ParameterHelper
+							.getInstance()
+							.getParameterDesc(
+									ParameterTypeConst.SC_COMMITTEE_TYPE,
+									ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE) });
+			// No members to clone to EC.
 		}
 	}
 
@@ -1154,7 +1161,14 @@ public class QTCommitteBackingBean extends
 			}
 
 		} else {
-			throw new EpException("No members to clone to TEC");
+			throw new EpException(
+					MessageConst.ERROR_760308,
+					new String[] { ParameterHelper
+							.getInstance()
+							.getParameterDesc(
+									ParameterTypeConst.SC_COMMITTEE_TYPE,
+									ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) });
+			// No members to clone to TEC.
 		}
 	}
 
@@ -1379,7 +1393,13 @@ public class QTCommitteBackingBean extends
 								.equalsIgnoreCase(
 										committeeMember.getIcPassport())) {
 							throw new EpException(
-									"Committee Member already existed in TEC.");
+									MessageConst.ERROR_760307,
+									new String[] { ParameterHelper
+											.getInstance()
+											.getParameterDesc(
+													ParameterTypeConst.SC_COMMITTEE_TYPE,
+													ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) });
+							// Committee Member already existed in TEC.
 						}
 					}
 				}
@@ -1397,7 +1417,13 @@ public class QTCommitteBackingBean extends
 								.equalsIgnoreCase(
 										committeeMember.getIcPassport())) {
 							throw new EpException(
-									"Committee Member already existed in FEC.");
+									MessageConst.ERROR_760307,
+									new String[] { ParameterHelper
+											.getInstance()
+											.getParameterDesc(
+													ParameterTypeConst.SC_COMMITTEE_TYPE,
+													ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE) });
+							// Committee Member already existed in FEC.
 						}
 					}
 				}
@@ -1424,7 +1450,13 @@ public class QTCommitteBackingBean extends
 								.equalsIgnoreCase(
 										committeeMember.getIcPassport())) {
 							throw new EpException(
-									"Committee Member already existed in OC.");
+									MessageConst.ERROR_760307,
+									new String[] { ParameterHelper
+											.getInstance()
+											.getParameterDesc(
+													ParameterTypeConst.SC_COMMITTEE_TYPE,
+													ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE) });
+							// Committee Member already existed in OC.
 						}
 					}
 				}
@@ -1442,7 +1474,13 @@ public class QTCommitteBackingBean extends
 								.equalsIgnoreCase(
 										committeeMember.getIcPassport())) {
 							throw new EpException(
-									"Committee Member already existed in FEC.");
+									MessageConst.ERROR_760307,
+									new String[] { ParameterHelper
+											.getInstance()
+											.getParameterDesc(
+													ParameterTypeConst.SC_COMMITTEE_TYPE,
+													ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE) });
+							// Committee Member already existed in FEC.
 						}
 					}
 				}
@@ -1469,7 +1507,13 @@ public class QTCommitteBackingBean extends
 								.equalsIgnoreCase(
 										committeeMember.getIcPassport())) {
 							throw new EpException(
-									"Committee Member already existed in OC.");
+									MessageConst.ERROR_760307,
+									new String[] { ParameterHelper
+											.getInstance()
+											.getParameterDesc(
+													ParameterTypeConst.SC_COMMITTEE_TYPE,
+													ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE) });
+							// Committee Member already existed in OC.
 						}
 					}
 				}
@@ -1487,7 +1531,13 @@ public class QTCommitteBackingBean extends
 								.equalsIgnoreCase(
 										committeeMember.getIcPassport())) {
 							throw new EpException(
-									"Committee Member already existed in TEC.");
+									MessageConst.ERROR_760307,
+									new String[] { ParameterHelper
+											.getInstance()
+											.getParameterDesc(
+													ParameterTypeConst.SC_COMMITTEE_TYPE,
+													ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE) });
+							// Committee Member already existed in TEC.
 						}
 					}
 				}
