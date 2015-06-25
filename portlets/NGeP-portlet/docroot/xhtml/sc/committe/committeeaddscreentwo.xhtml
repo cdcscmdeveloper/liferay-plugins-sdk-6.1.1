@@ -93,18 +93,7 @@
 								value="#{lbl[existcommitteeuser.PMP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sc.role']}">
-							<h:outputText
-								value="#{committeBackingBean.getRoleDesc(existcommitteeuser)}" />
-						</p:column>
-						<p:column headerText="#{lbl['lbl.sc.representative.type']}"
-							style="width: 15%" rendered="#{existcommitteeuser.memberRole.parameterCode eq 
-																		ParameterConst.committeeRoleMember}">
-							<p:selectOneMenu
-								value="#{existcommitteeuser.representativesType.parameterId}"
-								style="width: 178px;margin-bottom: 5px;">
-								<f:selectItems
-									value="#{committeBackingBean.managedBean.representativesTypeslist}" />
-							</p:selectOneMenu>
+							#{committeBackingBean.getRoleDesc(existcommitteeuser)}
 						</p:column>
 					</p:dataTable>
 				</p:panel>
@@ -203,18 +192,6 @@
 									<f:selectItems
 										value="#{committeBackingBean.getDropdownValues(ParameterTypeConst.committeeRole)}" />
 								</p:selectOneMenu> <p:message id="roleMsg" for="role" display="icon" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel
-									value="#{lbl['lbl.sc.representative.type']}" /> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td colspan="3"><p:selectOneMenu id="repTypeid"
-									required="true"
-									value="#{committeBackingBean.managedBean.committeMember.representativeType.parameterId}"
-									style="width: 178px;margin-bottom: 5px;">
-									<f:selectItems
-										value="#{committeBackingBean.managedBean.representativesTypeslist}" />
-								</p:selectOneMenu> <p:message id="repTypeidMsg" for="repTypeid" display="icon" /></td>
 						</tr>
 					</table>
 				</p:panel>
