@@ -6,8 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.category.code']}"
+	<p:panel header="#{lbl['lbl.sc.category.code.list']}"
 		toggleable="true">
+		
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.category.code.list.instruction']}" escape="false" />
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
 			value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategoryList}"
@@ -69,9 +71,12 @@
 	
 	<ui:param name="isQuotationThresHold" value="#{qTSupplierQulCriteriaBackingBean.isQuotationThresHold(qTSupplierQulCriteriaBackingBean.managedBean.qt.estimatedAmount)}" />
 
-	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
-		toggleable="true"
+	<p:panel toggleable="true"
 		rendered="#{((isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false')  or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal) or (!isQuotationThresHold  and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal =='false'))}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+		</f:facet>
 
 		<table style="width: 100%">
 			<h:panelGroup id="allstate"
@@ -213,8 +218,13 @@
 					content="#{lbl['lbl.sc.dialog.confirm.supplier.locations']}"
 					update="@([id$=zoneLocationDataTable])" />
 			</h:panelGroup>
-			<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}" toggleable="true"
+			<p:panel toggleable="true"
 				rendered="#{isQuotationThresHold and qTSupplierQulCriteriaBackingBean.managedBean.qt.scQtSupplierCriteria.allState=='false' and qTSupplierQulCriteriaBackingBean.managedBean.qt.zonal}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+				</f:facet>
+				
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 185px"><p:outputLabel
@@ -369,22 +379,18 @@
 			</p:dialog>
 		</h:panelGroup>
 	</h:panelGroup>
-	<p:panel id="totalSuppliersId"
-		header="#{lbl['lbl.sc.spec.qualified.suppliers']}"
-		toggleable="true">
-		<table>
-			<tr>
-				<td style="width: 185px"><p:outputLabel
-						value="#{lbl['lbl.sc.totalsup']}" /></td>
-				<td><p:inputText style="margin-right:5px;"
-						disabled="true"
-						value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
-				<td><p:commandButton value="#{lbl['lbl.btn.search']}"
-						update="totalSuppliersId" rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
-						action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
-						partialSubmit="true" process="@this" /></td>
-				<td />
-			</tr>
-		</table>
-	</p:panel>
+	<table>
+		<tr>
+			<td style="width: 193px"><p:outputLabel
+					value="#{lbl['lbl.sc.totalsup']}" /></td>
+			<td><p:inputText id="totalSuppliersId" style="margin-right:5px;" 
+					disabled="true" size="30" 
+					value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
+			<td><p:commandButton value="#{lbl['lbl.btn.search']}"
+					update="totalSuppliersId" rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
+					action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
+					partialSubmit="true" process="@this" /></td>
+			<td />
+		</tr>
+	</table>
 </ui:composition>
