@@ -47,7 +47,6 @@ import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -73,8 +72,6 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -203,14 +200,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 }
 	
 	/**
-     * This method used to retrieve login user information.
-	 */
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	
-	/**
 	 * This  method used to initialize approver list.
 	 */
 	private void initializeApproverList() {
@@ -219,47 +208,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			List<PmUser> target = new ArrayList<PmUser>();
 			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
-	}
-	
-	/**
-	 * The method used to retrieve available approver(s).
-	 *
-	 * @return sourceList  the approver list
-	 */
-	private List<PmUser> getAvailableApproverList() {
-		IUserSO userSO = null;
-		List<PmUser> sourceList = new ArrayList<PmUser>();
-		
-		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			if (resDTO.getUserOrgList().size() > 0) {
-				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-			}
-			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-			} else { // Central Contract	
-				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-			}			
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
-			
-			List<PmUser> list = resDTO.getUserList();			
-			for (PmUser user : list) {
-				sourceList.add(user);
-				getManagedBean().getUserMap().put(user.getUserId(), user);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		} finally {
-			userSO = null;
-		}
-		return sourceList;
 	}
 	
 	/**
@@ -788,7 +736,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 		getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		
-		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		getManagedBean().getApproverModel().setSource(
+				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+						getManagedBean().getUserMap()));
 		if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			for (PmUser approverUser : resDTO.getApproverList())  {
@@ -1798,6 +1748,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
 	    setValidateContractField(resDTO);
 	    getManagedBean().setSelectedTabIndex(0);
+	    getManagedBean().setShowItem(null);
 	    reqDTO.setCtContractVer(resDTO.getCtContractVer());
 	    String percentage = contractSO.checkAdvancedPaymentProgress(reqDTO).getPercentage();
 	    getManagedBean().setWarningPercentage(percentage);
@@ -2377,6 +2328,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 *         false, if contract physical no field is enabled
      */
     public boolean getConditionalValue() {
+    	//If agreement is = NO, Physical contract no. = No and please disable the text box. And
+    	//If agreement is = NO, Physical contract no. = No, Consession = Yes, enable text box for Physical contract no.
     	if (getManagedBean().isViewContract()) {
     		return true;
     	} else if (!getManagedBean().getCtContractAmount().isAgreement() 

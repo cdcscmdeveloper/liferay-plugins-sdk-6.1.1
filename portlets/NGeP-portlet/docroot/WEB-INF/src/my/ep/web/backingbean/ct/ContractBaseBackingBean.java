@@ -3,18 +3,32 @@
  */
 package my.ep.web.backingbean.ct;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
  * ContractBaseBackingBean is the Base class for contract
@@ -31,6 +45,58 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public static Logger log = EpLogger.getLogger(ContractBaseBackingBean.class);
 	
+	/**
+     * This method used to retrieve login user information.
+	 */
+	public FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
+	/**
+	 * The method used to retrieve available approver(s).
+	 *
+	 * @return sourceList  the approver list
+	 */
+	public List<PmUser> getAvailableApproverList(String contractType, Map<Long, PmUser> userMap) {
+		IUserSO userSO = null;
+		List<PmUser> sourceList = new ArrayList<PmUser>();
+		UserReqDTO reqDTO = new UserReqDTO();
+		UserResDTO resDTO = new UserResDTO();
+		
+		try {
+			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			
+			if (contractType.equalsIgnoreCase(
+					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				
+				reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());				
+				resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+				
+				if (resDTO.getUserOrgList().size() > 0) {
+					reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+				}			
+				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
+			} else { // Central Contract	
+				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
+			}			
+			resDTO = userSO.retrieveUserListByRole(reqDTO);
+			
+			List<PmUser> list = resDTO.getUserList();			
+			for (PmUser user : list) {
+				sourceList.add(user);
+				userMap.put(user.getUserId(), user);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+		return sourceList;
+	}
+		
 	/**
 	 * Sort agency list.
 	 *
@@ -99,6 +165,5 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		};
 		Collections.sort(ctItemCeilingQty, comparator);
 	}
-	
 }
 

@@ -203,14 +203,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-     * This method used to retrieve login user information.
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	
-	/**
 	 * This  method used to initialize approver list.
 	 */
 	private void initializeApproverList() {
@@ -220,47 +212,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
 	}
-	
-	/**
-	 * The method used to retrieve available approver(s).
-	 *
-	 * @return sourceList  the approver list
-	 */
-	private List<PmUser> getAvailableApproverList() {
-		IUserSO userSO = null;
-		List<PmUser> sourceList = new ArrayList<PmUser>();
-		
-		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			if (resDTO.getUserOrgList().size() > 0) {
-				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-			}
-			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-			} else { // Central Contract	
-				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-			}			
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
-			
-			List<PmUser> list = resDTO.getUserList();			
-			for (PmUser user : list) {
-				sourceList.add(user);
-				getManagedBean().getUserMap().put(user.getUserId(), user);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		} finally {
-			userSO = null;
-		}
-		return sourceList;
-	}	
 	
 	/**
 	 * @return the editorValue
@@ -762,7 +713,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    // Retrieve approver list
 			    // Skip during supplier acknowledgment
 			    if (getManagedBean().getTaskName() == null || !getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ACK_FA_HT_NAME)){
-				    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+				    getManagedBean().getApproverModel().setSource(
+							getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+									getManagedBean().getUserMap()));
 				    if (resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0) {
 				    	getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 				    	for (PmUser approverUser : resDTO.getApproverList())  {

@@ -38,7 +38,6 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.termination.IContractTerminationSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -59,8 +58,6 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -86,8 +83,8 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
@@ -120,7 +117,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean (name = "terminationBackingBean")
 @ViewScoped
-public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBean> {
+public class TerminationBackingBean extends ContractBaseBackingBean<TerminationManagedBean> {
 	
 	private static Logger log = Logger.getLogger(TerminationBackingBean.class);
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
@@ -148,14 +145,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	     }
 	}
 	
-	 /**
-     * This method used to retrieve user login  information
-	 */
-	private FacesScopes getFacesScopes(){
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-    }
-	
 	/**
 	 * This  method used to initialize approver list
 	 */
@@ -165,45 +154,6 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			 List<PmUser> target = new ArrayList<PmUser>();
 			 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
-	}
-	
-	/**
-	 * This  method used to retrieve list of active approver start
-	 * Setting selected and non selected approver value 
-	 * Retrieve approver for ministry and central contract
- */
-	 private List<PmUser> getAvailableApproverList() {
-		 IUserSO userSO = null;
-		 List<PmUser> sourceList = new ArrayList<PmUser>();
-	
-		 try {
-			    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			    UserReqDTO reqDTO = new UserReqDTO();
-			    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-			
-			    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			    if (resDTO.getUserOrgList().size() > 0)
-			    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-			
-			    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
-				     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-			    else /* Approver if central contract	*/
-				    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-			    
-                resDTO = userSO.retrieveUserListByRole(reqDTO);
-			    List<PmUser> list = resDTO.getUserList();
-			
-			    for (PmUser user : list) {
-				    sourceList.add(user);
-				    getManagedBean().getUserMap().put(user.getUserId(), user);
-			    }
-	   	  } catch (Exception e) {
-		     	e.printStackTrace();
-		    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		  } finally {
-			  userSO = null;
-		  }
-		 return sourceList;
 	}
 	 
 	 /**
@@ -348,7 +298,9 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		    getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
 		}
 		
-		getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		getManagedBean().getApproverModel().setSource(
+				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+						getManagedBean().getUserMap()));
 	    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 		     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 		     for (PmUser approverUser : resDTO.getApproverList())  {

@@ -87,8 +87,8 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
+import my.ep.web.backingbean.ct.ContractBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
@@ -118,7 +118,7 @@ import com.liferay.portal.util.PortalUtil;
  */
 @ManagedBean(name = "supplierBackingBean")
 @ViewScoped
-public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {	
+public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManagedBean> {	
 
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	private ContractBackingBean ctBB = null;
@@ -149,14 +149,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	/**
-     * This method used to retrieve login user information.
-	 */
-	private FacesScopes getFacesScopes() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes;
-	}
-	
-	/**
 	 * This  method used to initialize approver list.
 	 */
 	private void initializeApproverList() {
@@ -165,49 +157,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 List<PmUser> target = new ArrayList<PmUser>();
 			 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
-	}
-	
-	/**
-	  * The method used to retrieve available approver(s).
-	  * 
-	  * @return sourceList  the approver list
-	 */
-	private List<PmUser> getAvailableApproverList() {
-		IUserSO userSO = null;
-		UserReqDTO reqDTO = null;
-		List<PmUser> sourceList = new ArrayList<PmUser>();
-		try {
-			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			 reqDTO = new UserReqDTO();
-			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-
-			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-			if (resDTO.getUserOrgList().size() > 0) {
-				reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-			}
-			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(
-					ParameterConst.CONTRACT_TYPE_MINISTRY)) {
-				reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-			} else { // Central Contract
-				reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-			}
-			resDTO = userSO.retrieveUserListByRole(reqDTO);
-			
-			List<PmUser> list = resDTO.getUserList();
-			for (PmUser user : list) {
-				sourceList.add(user);
-				getManagedBean().getUserMap().put(user.getUserId(), user);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-		} finally {
-			userSO = null;
-			reqDTO = null;
-		}
-		return sourceList;
 	}
 	
 	/**
@@ -493,7 +442,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
         if (getManagedBean().getFactoring().getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
         	getManagedBean().setRemoveFactoring(true);
         }
-        getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+        getManagedBean().getApproverModel().setSource(
+				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+						getManagedBean().getUserMap()));
         if (csResDTO.getApproverList() != null && csResDTO.getApproverList().size() != 0) {
         	getManagedBean().getApproverModel().setTarget(csResDTO.getApproverList());
         	for (PmUser approverUser : csResDTO.getApproverList())  {
