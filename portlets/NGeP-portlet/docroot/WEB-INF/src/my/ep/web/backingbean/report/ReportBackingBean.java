@@ -691,7 +691,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)25;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4027,15 +4027,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 		}
 	}
-	public void checkYearDefference() {
+	public void checkOneYearDefference(Date fromDate,Date toDate) {
 		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
 				CommonConstants.DEFAULT_DATE_FORMAT);
-		String yearFrom=outputDateFormat.format(this.getFromDate()).substring(6, 10);
-		String yearTo=outputDateFormat.format(this.getToDate()).substring(6, 10);
-		String monthFrom=outputDateFormat.format(this.getFromDate()).substring(3, 5);
-		String monthTo=outputDateFormat.format(this.getToDate()).substring(3, 5);
-		String dayFrom=outputDateFormat.format(this.getFromDate()).substring(0, 2);
-		String dayTo=outputDateFormat.format(this.getToDate()).substring(0, 2);
+		String yearFrom=outputDateFormat.format(fromDate).substring(6, 10);
+		String yearTo=outputDateFormat.format(toDate).substring(6, 10);
+		String monthFrom=outputDateFormat.format(fromDate).substring(3, 5);
+		String monthTo=outputDateFormat.format(toDate).substring(3, 5);
+		String dayFrom=outputDateFormat.format(fromDate).substring(0, 2);
+		String dayTo=outputDateFormat.format(toDate).substring(0, 2);
 		int yearFromInt=Integer.parseInt(yearFrom);
 		int yearToInt=Integer.parseInt(yearTo);
 		int monthFromInt=Integer.parseInt(monthFrom);
@@ -4287,7 +4287,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getFromDate() != null) && (this.getToDate() != null)) {
 				if (this.getToDate().after(this.getFromDate())) {
-					checkYearDefference();
+					checkOneYearDefference(this.getFromDate(),this.getToDate());
 				}
 			}
 			
