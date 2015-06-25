@@ -597,7 +597,10 @@ public class SmApplicationUtil {
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI)
 				|| sup.getBusinessType()
 						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)) {
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)) {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT;
 		} else if (sup.getBusinessType().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
@@ -4676,7 +4679,7 @@ public class SmApplicationUtil {
 
 	public static void setPersonnelSoftcertRenewalStatus(SmSupplier supplier,
 			List<SmPersonnel> personnelList) {
-		if(personnelList!=null && !personnelList.isEmpty()){
+		if (personnelList != null && !personnelList.isEmpty()) {
 			for (SmPersonnel personnel : personnelList) {
 				if (supplier != null) {
 					if (SmCommonUtil.isSoftcertReadyForRenewal(
