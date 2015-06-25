@@ -142,12 +142,12 @@ public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplie
 		
 		
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
-						.getMessage(MessageConst.INFO_710005,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
+//		facesContext.addMessage(
+//				null,
+//				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+//						.getMessage(MessageConst.INFO_710005,
+//								MessageUtils.BUNDLE_COMMON_MESSAGES,
+//								new FacesScopes().getUserLocale())));
 
 	}
 
