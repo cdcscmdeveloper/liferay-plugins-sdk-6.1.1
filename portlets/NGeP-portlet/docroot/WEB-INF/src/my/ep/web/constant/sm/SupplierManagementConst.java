@@ -296,6 +296,7 @@ public class SupplierManagementConst {
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN = "K";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI = "L";
 	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN = "M";
+	public static final String SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2 = "O";
 
 	public static List<String> LIST_OF_BUSINESS_TYPE_ALLOWED_TO_BE_EDITED = Arrays
 			.asList(SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROB_PERKONGSIAN_SABAH,
