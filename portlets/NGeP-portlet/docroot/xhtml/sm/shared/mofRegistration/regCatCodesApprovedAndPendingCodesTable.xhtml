@@ -367,10 +367,10 @@
 			<div align="right">
 				#{lbl['lbl.sm.payment.click']}
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']}" ajax="false"
-					action="#{virtualCertBackingBean.downloadFile('/docuRepo/dev/ngep/shared/SM/Kod_Bidang_Baharu_Bekalan_Perkhidmatan.pdf')}"
+					action="#{registrationBackingBean.downloadFile('/shared/SM/Kod_Bidang_Baharu_Bekalan_Perkhidmatan.pdf')}"
 					rendered="#{backingBean.managedBean.smAppl.supplierType ne 'J'}"></p:commandLink>
 				<p:commandLink value="#{lbl['lbl.sm.payment.here']}" ajax="false"
-					action="#{virtualCertBackingBean.downloadFile('/docuRepo/dev/ngep/shared/SM/Kod_Bidang_Baharu_Perkhidmatan_Perunding.pdf')}"
+					action="#{registrationBackingBean.downloadFile('/shared/SM/Kod_Bidang_Baharu_Perkhidmatan_Perunding.pdf')}"
 					rendered="#{backingBean.managedBean.smAppl.supplierType eq 'J'}"></p:commandLink>
 				#{lbl['lbl.sm.download.categorycode']}
 				<p:commandButton value="#{lbl['lbl.sm.button.add']}"
