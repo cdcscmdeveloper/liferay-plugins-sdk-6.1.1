@@ -984,8 +984,8 @@ public class QTCommitteBackingBean extends
 		checkIsSpecCommitteFormOrNot();
 		// TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
-				.getToBeDelCommitteMemebers();
-		if (null != selectedList && !selectedList.isEmpty()) {
+				.getCommittemembers();
+		if (CollectionUtils.isNotEmpty(selectedList)) {
 			List<TabBean> tabs = this.getManagedBean()
 					.getScCommitteeMemberTabList();
 			for (int i = 0; i < tabs.size(); i++) {
@@ -1043,7 +1043,7 @@ public class QTCommitteBackingBean extends
 					}
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
-					this.getManagedBean().setToBeDelCommitteMemebers(null);
+					this.getManagedBean().setCommittemembers(null);
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1074,7 +1074,7 @@ public class QTCommitteBackingBean extends
 		checkIsSpecCommitteFormOrNot();
 		// TabBean bean = getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
-				.getToBeDelCommitteMemebers();
+				.getCommittemembers();
 		if (null != selectedList && !selectedList.isEmpty()) {
 			List<TabBean> tabs = this.getManagedBean()
 					.getScCommitteeMemberTabList();
@@ -1135,7 +1135,7 @@ public class QTCommitteBackingBean extends
 					}
 					this.getManagedBean().setSelectedTabIndex(i);
 					this.getManagedBean().setSelectedTabBean(tabBean);
-					this.getManagedBean().setToBeDelCommitteMemebers(null);
+					this.getManagedBean().setCommitteMember(null);
 					FacesContext
 							.getCurrentInstance()
 							.addMessage(
@@ -1660,9 +1660,11 @@ public class QTCommitteBackingBean extends
 	 *            the member
 	 */
 	public void roleChangeListner(ScCommitteeMember member) {
-		if (member.getMemberRole() != null && member.getMemberRole().getParameterId() != null) {
-			member.setMemberRole(ParameterHelper.getInstance().getPmParameterById(
-					member.getMemberRole().getParameterId()));
+		if (member.getMemberRole() != null
+				&& member.getMemberRole().getParameterId() != null) {
+			member.setMemberRole(ParameterHelper
+					.getInstance()
+					.getPmParameterById(member.getMemberRole().getParameterId()));
 		}
 	}
 
@@ -1729,11 +1731,12 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
-				.getToBeDelCommitteMemebers();
+				.getCommittemembers();
 		if (CollectionUtils.isEmpty(selectedList)) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
 
+		List<ScCommitteeMember> committeeMembers = new ArrayList<ScCommitteeMember>();
 		bean.getScQtCommittee().getScCommittee().getScCommitteeMembers()
 				.removeAll(selectedList);
 		if (!ParameterConst.COMMITTEE_TYPE_SPECIFICATION_COMMITTEE
@@ -1749,12 +1752,17 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().getScCommitteeMemberTabList()
 				.add(this.getManagedBean().getSelectedTabIndex(), bean);
 		for (int i = 0; i < selectedList.size(); i++) {
-			if (null == selectedList.get(i).getCommitteeMemberId()) {
-				selectedList.remove(selectedList.get(i--));
+			if (null != selectedList.get(i).getCommitteeMemberId()) {
+
+				selectedList.get(i).setDeleted(true);
+				selectedList.get(i).setRepresentativeType(null);
+				committeeMembers.add(selectedList.get(i));
 			}
+
 		}
 
-		this.getManagedBean().setToBeDelCommitteMemebers(selectedList);
+		this.getManagedBean().setToBeDelCommitteMemebers(committeeMembers);
+		this.getManagedBean().setCommitteMember(null);
 
 	}
 
