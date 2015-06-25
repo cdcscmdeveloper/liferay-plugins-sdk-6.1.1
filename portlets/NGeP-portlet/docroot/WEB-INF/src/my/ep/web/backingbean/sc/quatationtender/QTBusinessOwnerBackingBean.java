@@ -517,7 +517,7 @@ public class QTBusinessOwnerBackingBean extends
 		}
 		getManagedBean().getCommitteMember().setUserSelection(QTConstants.USER_SELECTION);
 		getSelectionTypes();
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -833,7 +833,7 @@ public class QTBusinessOwnerBackingBean extends
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setCloneBusinessTenderList(null);
 		getManagedBean().setSelectedCommitteMemebers(null);
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -1002,7 +1002,7 @@ public class QTBusinessOwnerBackingBean extends
 	 */
 	public void deleteBusinessOwner() {
 		debugLogger("deleteBusinessOwner");
-		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
+		this.getManagedBean().setAutoUpdate(true);
 		int count = 0;
 		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
 				.getScCommitteeMemberList();

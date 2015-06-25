@@ -418,7 +418,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 			getManagedBean().setSearchSupplierDataModel(new SupplierPagingDataModel("ressupplier", getManagedBean().getSupplierSearchBean()));
 		}
 		getManagedBean().getSearchSupplierDataModel().resetData();
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 	
 	/**
@@ -872,7 +872,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public void deleteRestrictedSupplierList() {
 		debugLogger("deleteRestrictedSupplierList");
-		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
+		this.getManagedBean().setAutoUpdate(true);
 		List<ScQtSupplier> list = getManagedBean().getQtSupplierList();
 		List<ScQtSupplier> selectedList = getManagedBean()
 				.getSelectedQtSupplierList();
