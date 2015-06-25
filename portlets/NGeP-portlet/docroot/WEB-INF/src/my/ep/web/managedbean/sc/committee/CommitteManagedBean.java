@@ -252,6 +252,9 @@ public class CommitteManagedBean extends BaseManagedBean {
 	/** The auto update. */
     private boolean autoUpdate = Boolean.TRUE;
     
+	/** The to be del committe memebers. */
+	private List<ScCommitteeMember> toBeDelCommitteMemebers;
+    
 	/**
 	 * Instantiates a new committe managed bean.
 	 */
@@ -1437,6 +1440,21 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the toBeDelCommitteMemebers
+	 */
+	public List<ScCommitteeMember> getToBeDelCommitteMemebers() {
+		return toBeDelCommitteMemebers;
+	}
+
+	/**
+	 * @param toBeDelCommitteMemebers the toBeDelCommitteMemebers to set
+	 */
+	public void setToBeDelCommitteMemebers(
+			List<ScCommitteeMember> toBeDelCommitteMemebers) {
+		this.toBeDelCommitteMemebers = toBeDelCommitteMemebers;
 	}
 
 }
