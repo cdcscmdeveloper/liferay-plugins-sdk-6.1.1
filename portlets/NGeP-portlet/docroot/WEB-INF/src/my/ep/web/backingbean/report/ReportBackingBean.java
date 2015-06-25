@@ -75,6 +75,7 @@ import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -2639,7 +2640,8 @@ public class ReportBackingBean extends
 			//items[0] = new SelectItem(null, "- Select One -");
 			//int i = 0;
 			SelectItem selectItem = new SelectItem();
-			selectItem.setLabel("- Select One -");
+			selectItem.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
+		 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
 			selectItem.setValue(null);
 			ministryList.add(selectItem);
 			for (PmOrgProfile orgProfile : resDTO.getOrgProfileList()) {
@@ -2750,7 +2752,8 @@ public class ReportBackingBean extends
 					docTypeStatusItemsList.add(item1);				
 			}
 			for(SelectItem item2:tempTwoStatusItems){
-				if((!item2.getLabel().equals("- Select One -"))){						
+				if((!item2.getLabel().equals(ResourceBundleUtils.getMessage("lbl.txt.select", 
+			 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())))){						
 							docTypeStatusItemsList.add(item2);					
 				}
 			}
