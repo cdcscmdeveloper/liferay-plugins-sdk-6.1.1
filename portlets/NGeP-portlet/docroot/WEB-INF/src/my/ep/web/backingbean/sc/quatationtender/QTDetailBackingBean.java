@@ -1871,7 +1871,8 @@ public class QTDetailBackingBean extends
 				committeReqDTO.setPmUser(facesScopes.getUserSessionBean());
 				committeReqDTO.setRoleCode(getUserRoleCode());
 				committeReqDTO.setScQt(qt);
-				committeReqDTO.setToBeDeletedMembers(this.getManagedBean().getToBeDelCommitteMemebers());
+				committeReqDTO.setToBeDeletedMembers(this.getManagedBean()
+						.getToBeDelCommitteMemebers());
 				committeResDto = committeSO.updateBPMAction(committeReqDTO);
 			} else if (SCProcessNameConst.ASSIGN_EC_OC_COMMITTEE
 					.equalsIgnoreCase(taskName)) {
@@ -1911,7 +1912,8 @@ public class QTDetailBackingBean extends
 								.getUserSessionBean());
 						committeReqDTO.setRoleCode(getUserRoleCode());
 						committeReqDTO.setScQt(qt);
-						committeReqDTO.setToBeDeletedMembers(this.getManagedBean().getToBeDelCommitteMemebers());
+						committeReqDTO.setToBeDeletedMembers(this
+								.getManagedBean().getToBeDelCommitteMemebers());
 						committeResDto = committeSO
 								.updateBPMAction(committeReqDTO);
 					}
@@ -3472,7 +3474,7 @@ public class QTDetailBackingBean extends
 				.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("selectedCommitteeTabIndex"));
 
-		this.getManagedBean().setToBeDelCommitteMemebers(null);
+		//this.getManagedBean().setToBeDelCommitteMemebers(null);
 		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
@@ -4334,16 +4336,21 @@ public class QTDetailBackingBean extends
 				amendMentBean.setOldEstmtPrice((BigDecimal) oldValue);
 
 			}
-
 			amendMentBean.setNewEstmtPrice((BigDecimal) newValue);
-
+			if (!amendMentBean.getOldEstmtPrice().equals(
+					amendMentBean.getNewEstmtPrice())) {
+				amendMentBean.setPTJApprovalReq(true);
+			}
 		} else if ("proposalvalidity".equalsIgnoreCase(componentId)) {
 
 			if (0 == amendMentBean.getOldValidityPeriodDays()) {
 				amendMentBean.setOldValidityPeriodDays((Integer) oldValue);
 
 			}
-
+			if (amendMentBean.getOldValidityPeriodDays() != amendMentBean
+					.getNewValidityPeriodDays()) {
+				amendMentBean.setPTJApprovalReq(true);
+			}
 			amendMentBean.setNewValidityPeriodDays((Integer) newValue);
 
 		} else if ("publishperiod".equalsIgnoreCase(componentId)) {
@@ -4354,8 +4361,12 @@ public class QTDetailBackingBean extends
 			}
 
 			amendMentBean.setNewPublishPeriodDays((Integer) newValue);
-
+			if (amendMentBean.getOldPublishPeriodDays() != amendMentBean
+					.getNewPublishPeriodDays()) {
+				amendMentBean.setPTJApprovalReq(true);
+			}
 		}
+
 		this.getManagedBean().setAmendMentBean(amendMentBean);
 	}
 
@@ -4433,8 +4444,7 @@ public class QTDetailBackingBean extends
 	 *            the request type
 	 * @return true, if is approval request exists
 	 */
-	private boolean isApprovalRequestExists(ScQtApproval qtApproval,
-			String requestType) {
+	private boolean isApprovalRequestExists(ScQtApproval qtApproval) {
 
 		if (null != qtApproval) {
 			List<ScQtApprovalRequest> approvalRequests = qtApproval
@@ -4442,16 +4452,12 @@ public class QTDetailBackingBean extends
 			if (CollectionUtils.isNotEmpty(approvalRequests)) {
 				for (ScQtApprovalRequest approvalRequest : approvalRequests) {
 
-					if (requestType.equalsIgnoreCase(approvalRequest
-							.getApprovalType().getParameterCode())) {
-						if (null != approvalRequest.getSubmissionDate()
-								&& null == approvalRequest.getApproverAction()) {
+					if (null != approvalRequest.getSubmissionDate()
+							&& null == approvalRequest.getApproverAction()) {
 
-							return true;
-						}
+						return true;
 					}
 				}
-
 			}
 
 		}
@@ -4474,40 +4480,27 @@ public class QTDetailBackingBean extends
 				.getScQtApprovals();
 
 		ScQtApproval approval = null;
-		String requestType = null;
+
 		if (!isFieldToBeEnabled) {
+
 			if (QTStatusConst.QT_BRIEFING_SITE_VISIT.compareTo(statusId) > 0) {
-				if (QTFieldConst.FILED_QT_PUBLISH_PERIOD
-						.equalsIgnoreCase(fieldName)) {
-					approval = getQtApprovalByCategory(approvals,
-							ParameterConst.APPROVAL_CATEGORY_BPK);
-					requestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PUBLISH_PERIOD;
-				} else if (QTFieldConst.FILED_QT_VALIDITY_PERIOD
-						.equalsIgnoreCase(fieldName)) {
-					approval = getQtApprovalByCategory(approvals,
-							ParameterConst.APPROVAL_CATEGORY_BPK);
-					requestType = ParameterConst.APPROVAL_REQUEST_REDUCE_PROPOSAL_VALIDITY_PERIOD;
-				}
+
+				approval = getQtApprovalByCategory(approvals,
+						ParameterConst.APPROVAL_CATEGORY_BPK);
+				return isApprovalRequestExists(approval);
 
 			} else {
-				if (!QTFieldConst.FILED_QT_VALIDITY_PERIOD
-						.equalsIgnoreCase(fieldName)) {
-					approval = getQtApprovalByCategory(approvals,
-							ParameterConst.APPROVAL_CATEGORY_PTJ);
-					requestType = ParameterConst.APPROVAL_REQUEST_EXTEND_CLOSING_DATE;
-				} else {
+				boolean isEditable = false;
+				approval = getQtApprovalByCategory(approvals,
+						ParameterConst.APPROVAL_CATEGORY_PTJ);
+				isEditable = isApprovalRequestExists(approval);
+				if (!isEditable) {
 					approval = getQtApprovalByCategory(
 							approvals,
 							ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE);
-					requestType = ParameterConst.APPROVAL_REQUEST_EXTEND_PROPOSAL_VALIDITY_PERIOD;
+					isEditable = isApprovalRequestExists(approval);
 				}
-			}
-			if (null != approval) {
-
-				return isApprovalRequestExists(approval, requestType);
-
-			} else {
-				return false;
+				return isEditable;
 			}
 
 		}
