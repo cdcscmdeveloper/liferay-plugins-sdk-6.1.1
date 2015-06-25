@@ -60,8 +60,7 @@ public class EperundingIntegration {
 
 	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
-	String path = fileUtility.createDirectory(new Date(),
-			IntegrationConstants.FILE_PATH);
+	String path = fileUtility.createDirectory(new Date(),IntegrationConstants.FILE_PATH);
 
 	IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
 
@@ -69,7 +68,7 @@ public class EperundingIntegration {
 
 	ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
-	public static void main(String args[]) {
+	/*public static void main(String args[]) {
 
 		EperundingIntegration eperundingIntegration = new EperundingIntegration();
 		 eperundingIntegration.createFilesforEperunding();
@@ -80,7 +79,7 @@ public class EperundingIntegration {
 		//
 		// TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
 		// testNtfViaEmail.sendFilestoMail(ntfSO);
-	}
+	}*/
 
 	public void createFilesforEperunding() {
 
