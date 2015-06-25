@@ -28,6 +28,7 @@ import my.ep.dto.sc.schedulebidding.ScheduleBiddingResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
@@ -454,6 +455,8 @@ public class ScheduleBiddingBackingBean extends
 	 */
 	public void submitBiddingDetails(String outCome) {
 
+		PmUser creatorUser = (PmUser) (new FacesScopes().getUserSessionBean());
+
 		String taskId = this.getManagedBean().getTaskId();
 		String token = new FacesScopes().getBPMAuthenticationCtxToken();
 		IScheduleBiddingSO scheduleBiddingSO = null;
@@ -462,24 +465,15 @@ public class ScheduleBiddingBackingBean extends
 			scheduleBiddingSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 							IScheduleBiddingSO.class);
-
+			biddingReqDTO.setCreatorUser(creatorUser);
 			biddingReqDTO.setOutcome(outCome);
 			biddingReqDTO.setToken(token);
 			biddingReqDTO.setTaskId(taskId);
 			biddingReqDTO.setRoleCode(getUserRoleCode());
 			biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			biddingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
-			// Need to call prepare save details method..
-			if (getManagedBean().getScBidContactPersonList() != null
-					&& getManagedBean().getScBidContactPersonList().size() != 0) {
-				getManagedBean().getScBid().setScBidContactPersons(
-						getManagedBean().getScBidContactPersonList());
-			} else {
-				// TODO update the message
-				throw new EpException(
-						"please enter at least one Bid Contact Person");
-			}
-
+			getManagedBean().getScBid().setScBidContactPersons(
+					getManagedBean().getScBidContactPersonList());
 			biddingReqDTO.setScQt(getManagedBean().getScQt());
 			biddingReqDTO.setScQtFinalization(getManagedBean()
 					.getScQtFinalization());
