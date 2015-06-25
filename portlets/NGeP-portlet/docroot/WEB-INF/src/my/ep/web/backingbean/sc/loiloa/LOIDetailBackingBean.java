@@ -1307,7 +1307,6 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getLois().add(resDTO.getScLoi());
 
 		// remarks
-
 		getManagedBean().getScLoi().setScLoiRemarks(
 				initializeRemarks(getManagedBean().getScLoi(), null,
 						getManagedBean().getScLoi().getScLoiRemarks(),
@@ -2607,7 +2606,7 @@ public class LOIDetailBackingBean extends
 		
 		// validate
 		if(null == scLoi.getSupplierAddress()){
-			//throw new EpException("No supplier address");
+			throw new EpException("No supplier contact address");
 		}
 
 		if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
