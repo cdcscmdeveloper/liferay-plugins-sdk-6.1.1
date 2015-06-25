@@ -11,7 +11,8 @@
 			<td align="right">
 				<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
 					action="#{committeBackingBean.viewSearchBackAction}" partialSubmit="true"
-					process="@this" update="@this" />
+					process="@this" update="@this"
+					rendered="#{empty committeBackingBean.managedBean.outComes}" />
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
 					action="#{committeBackingBean.updateCommitteDetails(null)}"
 					process="@all" rendered="#{isCommitteeRecordStatusActive}" />

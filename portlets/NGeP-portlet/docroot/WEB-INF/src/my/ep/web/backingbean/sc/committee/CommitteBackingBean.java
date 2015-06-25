@@ -349,7 +349,8 @@ public class CommitteBackingBean extends
 			UserResDTO resDTO = userSO.retrieveUserRoleBySearchBean(reqDTO);
 			if (resDTO.isSuccessful() && 
 					CollectionUtils.isNotEmpty(resDTO.getUserRoleList())) {
-				PmParameter chairPersonRole = getPmParameterByTypeAndCode(ParameterTypeConst.COMMITTEE_ROLE, 
+				PmParameter chairPersonRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
+						ParameterTypeConst.COMMITTEE_ROLE, 
 						ParameterConst.COMMITTEE_ROLE_CHAIRPERSON);
 				pmUser.setMemberRole(chairPersonRole);
 				userRole = getParameterDesc(chairPersonRole);
@@ -730,6 +731,7 @@ public class CommitteBackingBean extends
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 
 		committeReqDTO.setScQtCommittee(scQtCommittee);
+		committeReqDTO.setToBeDeletedMembers(getManagedBean().getToBeDelCommitteMemebers());
 		if (null != this.getManagedBean().getPayLoad()) {
 			SCEvaluationDataType evalDataType = (SCEvaluationDataType) this
 					.getManagedBean().getPayLoad();
@@ -1346,6 +1348,7 @@ public class CommitteBackingBean extends
 	 */
 	public void deleteCommitteeAction() {
 		debugLogger("deleteCommitteeAction");
+		List<ScCommitteeMember> toBeDelCommitteMemebers = getManagedBean().getToBeDelCommitteMemebers();
 		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		List<ScCommitteeMember> committeeMemberList = this.getManagedBean()
 				.getQtCommittee().getScCommittee().getScCommitteeMembers();
@@ -1354,14 +1357,19 @@ public class CommitteBackingBean extends
 		if (CollectionUtils.isEmpty(selectedList)) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
-		if (committeeMemberList.size() == selectedList.size()) {
-			committeeMemberList.clear();
-		} else {
-			for (int i = 0; i < selectedList.size(); i++) {
-				committeeMemberList.remove(selectedList.get(i));
-			}
+		
+		if (toBeDelCommitteMemebers == null) {
+			toBeDelCommitteMemebers = new ArrayList<ScCommitteeMember>();
+			this.getManagedBean().setToBeDelCommitteMemebers(toBeDelCommitteMemebers);	
+		}
+		
+		for (int i = 0; i < selectedList.size(); i++) {
+			committeeMemberList.remove(selectedList.get(i));
+			selectedList.get(i).setDeleted(true);
 		}
 		this.getManagedBean().setSelectedCommitteMemebers(null);
+		
+		toBeDelCommitteMemebers.addAll(selectedList);
 	}
 
 	/**
@@ -1792,8 +1800,8 @@ public class CommitteBackingBean extends
 									ParameterConst.COMMITTEE_ROLE_MEMBER);
 					committeeMember.setMemberRole(roleParaMeter);
 					
-					if (user.getMemberRole() == null) {
-						PmParameter memberRole = getPmParameterByTypeAndCode(
+					if (user.getMemberRole() == null || user.getMemberRole().getParameterId() == null) {
+						PmParameter memberRole = ParameterHelper.getInstance().getParameterByTypeAndCode(
 								ParameterTypeConst.COMMITTEE_ROLE, ParameterConst.COMMITTEE_ROLE_MEMBER);
 						user.setMemberRole(memberRole);
 					} 
@@ -1802,15 +1810,7 @@ public class CommitteBackingBean extends
 					committeeMember.setAccessRight("E");
 					if (ParameterConst.COMMITTEE_ROLE_MEMBER
 							.equals(user.getMemberRole().getParameterCode())) {
-						if (null != user.getRepresentativesType().getParameterId()) {
-							committeeMember.setRepresentativeType(ParameterHelper
-									.getInstance().getPmParameterById(
-											user.getRepresentativesType()
-													.getParameterId()));
-						} else {
-							committeeMember.setRepresentativeType(user
-									.getRepresentativesType());
-						}
+						committeeMember.setRepresentativeType(new PmParameter());
 					} else {
 						committeeMember.setRepresentativeType(null);						
 					}
@@ -2284,20 +2284,5 @@ public class CommitteBackingBean extends
 		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.RECORD_STATUS, searchBean);
 		return items;
 	}
-	
-	private PmParameter getPmParameterByTypeAndCode(String parameterType, String parameterCode) {
-		IParameterSO parameterSO = null;
-		try {
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterCode(parameterCode);
-			reqDTO.setParameterType(parameterType);
-			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT,IParameterSO.class);
-			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-			return resDTO.getPmParameter();
-		} finally {
-			parameterSO = null;
-		}
-	}	
 
 }
