@@ -256,7 +256,8 @@
 													action="#{backingBean.saveApplicationAsDraft(ParameterConst.newSmApplnForMof,backingBean.managedBean.currentPageType)}"
 													update=":form" style="margin-bottom:5px;" />
 												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-													<c:choose>
+													<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+													<!-- <c:choose>
 														<c:when
 															test="#{backingBean.managedBean.overLappedCategoryExists}">
 															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
@@ -264,8 +265,7 @@
 														<c:otherwise>
 															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 														</c:otherwise>
-													</c:choose>
-
+													</c:choose> -->
 												</c:if>
 											</div>
 										</td>
