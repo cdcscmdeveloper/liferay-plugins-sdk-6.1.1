@@ -50,6 +50,8 @@ import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -2314,6 +2316,7 @@ public class SmCommonUtil {
 	 */
 	public static boolean isSoftcertReadyForRenewal(Long supplierId,
 			SmPersonnel personnel) {
+		boolean retVal = false;
 		if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
 				&& personnel.getPmUser() != null
 				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
@@ -2324,26 +2327,33 @@ public class SmCommonUtil {
 					.getPersonnelSO()
 					.retrievePersonnelSoftcertRequestBySupplierIdAndUserId(
 							reqDTO).getSoftcertRequest();
-			if (softcertRequest == null) {
-				return false;
-			} else {
-				if (softcertRequest.getPmDigiCert().getValidTo() != null) {
-					Calendar renewDate = Calendar.getInstance();
-					renewDate.setTime(softcertRequest.getPmDigiCert()
-							.getValidTo());
-					renewDate.add(Calendar.MONTH, -3);
-					if (DateUtils.isDateGreaterOrEqual(new Date(),
-							renewDate.getTime())) {
-						return true;
-					} else {
-						return false;
-					}
-				} else {
-					return false;
+
+			if (softcertRequest != null
+					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
+				Calendar renewDate = Calendar.getInstance();
+				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
+				renewDate.add(Calendar.MONTH, -3);
+				if (DateUtils.isDateGreaterOrEqual(new Date(),
+						renewDate.getTime())) {
+					retVal = true;
 				}
 			}
-		} else {
-			return false;
+
 		}
+		return retVal;
+	}
+
+	/**
+	 * Get user by userId
+	 * 
+	 * @param userId
+	 * @return PmUser
+	 */
+	public static PmUser getUserByUserId(Long userId) {
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(userId);
+		UserResDTO resDTO = SmServiceLookup.getUserSO().retrieveUserByUserId(
+				reqDTO);
+		return resDTO.getPmUser();
 	}
 }

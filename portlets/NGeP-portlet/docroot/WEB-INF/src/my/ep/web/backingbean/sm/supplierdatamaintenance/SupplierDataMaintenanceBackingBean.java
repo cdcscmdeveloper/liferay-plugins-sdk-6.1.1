@@ -24,11 +24,13 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.applicationView.ViewSuppProfileManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -75,6 +77,14 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSmAppl(
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+
+		// compare if login user id same as latest approved application only can
+		// edit reg status
+		getManagedBean().setDisabledRegStatus(true);
+		if (isLoginUserTheApproverForAppl()) {
+			getManagedBean().setDisabledRegStatus(false);
+		}
+
 		setApplication(getManagedBean().getSmAppl());
 		assignApplActiveAndApprovedCategoryList();
 		setOverLappingCategories();
@@ -108,6 +118,14 @@ public class SupplierDataMaintenanceBackingBean extends
 				SmApplicationUtil.getSmSupplierBasicInfoVO(getManagedBean()
 						.getBasicInfo(), getManagedBean().getSmSupplier(),
 						getManagedBean().getSmAppl()));
+
+		// compare if login user id same as latest approved application only can
+		// edit reg status
+		getManagedBean().setDisabledRegStatus(true);
+		if (isLoginUserTheApproverForAppl()) {
+			getManagedBean().setDisabledRegStatus(false);
+		}
+
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/cancelRegWithMof/cancelMofRegistrationBySupplierPage.xhtml",
@@ -727,6 +745,55 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setZoneList(
 				SmServiceLookup.getZoneSO().retrieveActiveZoneList()
 						.getZoneList());
+		getManagedBean().setDisabledRegStatus(true);
 	}
 
+	/**
+	 * Check if the login user is the approver of the selected application
+	 * 
+	 * @return
+	 */
+	private boolean isLoginUserTheApproverForAppl() {
+		boolean retVal = false;
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null
+				&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
+						.isEmpty()) {
+			if (getManagedBean().getSmAppl().getSmApplSectionReviews().size() == 1) {
+				getManagedBean().setApplApprover(
+						SmCommonUtil.getUserByUserId(getManagedBean()
+								.getSmAppl().getSmApplSectionReviews().get(0)
+								.getChangedBy()));
+				getManagedBean().setApprovedDate(
+						DateUtils.dateToString("dd-MMM-yyyy", getManagedBean()
+								.getSmAppl().getSmApplSectionReviews().get(0)
+								.getChangedDate()));
+				if (getManagedBean().getSmAppl().getSmApplSectionReviews()
+						.get(0).getChangedBy().compareTo(user.getUserId()) == 0) {
+					retVal = true;
+				}
+			} else {
+				for (SmApplSectionReview rev : getManagedBean().getSmAppl()
+						.getSmApplSectionReviews()) {
+					if (rev.getRoleType().equals("A")) {
+						getManagedBean()
+								.setApplApprover(
+										SmCommonUtil.getUserByUserId(rev
+												.getChangedBy()));
+						getManagedBean().setApprovedDate(
+								DateUtils.dateToString(
+										"dd-MMM-yyyy",
+										getManagedBean().getSmAppl()
+												.getSmApplSectionReviews()
+												.get(0).getChangedDate()));
+						if (rev.getChangedBy().compareTo(user.getUserId()) == 0) {
+							retVal = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return retVal;
+	}
 }
