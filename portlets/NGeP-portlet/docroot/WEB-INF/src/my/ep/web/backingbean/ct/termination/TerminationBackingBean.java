@@ -37,6 +37,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -213,6 +214,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 */
 	public void preRenderView(){
 		
+		IContractTerminationSO contractTerminationSO = null;
+		BpmRequestDTO reqDTO = null;
+		ContractReqDTO ctReqDTO = null;
+		BpmResponseDTO res = null;
+		ContractResDTO resDTO = null;
+		
 		try{
 		
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
@@ -226,22 +233,22 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			String token =face.getBPMAuthenticationCtxToken();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
 			
-			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			ctReqDTO = new ContractReqDTO();
 			ctReqDTO.setUpdateAction(false);
 			
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
 			
-			  String[] outcome = new String[res.getAction().length + 1];
-		      outcome[0] = BpmOutcomeConst.BPM_SAVE;
-		      int i = 1;
-		      for (String action : res.getAction()) {
-			     outcome[i++] = action;
-		      }
+			 String[] outcome = new String[res.getAction().length + 1];
+		     outcome[0] = BpmOutcomeConst.BPM_SAVE;
+		     int i = 1;
+		     for (String action : res.getAction()) {
+			    outcome[i++] = action;
+		     }
 			
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setAction(outcome);
@@ -253,8 +260,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			ctReqDTO.setDocType(dataType.getDocType());
 			getManagedBean().setUserLoginId(dataType.getContractAdmin().getUserName());
 			
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
-			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+			resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
 			setTerminationContractVer(resDTO);
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -262,6 +269,13 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		
 	      } catch(Exception e){
 				e.printStackTrace();
+		 
+	      } finally {
+			   contractTerminationSO = null;
+			   reqDTO = null;
+			   ctReqDTO = null;
+			   res = null;
+			   resDTO = null;
 		  }
 	 }
 	
@@ -286,8 +300,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		ContractResDTO resDTO = null;
 		ContractAmendmentResDTO amendmentResDTO = null;
 		try {
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
 			ContractReqDTO reqDTO = new ContractReqDTO();
@@ -392,8 +405,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	 */
 	public String saveContractTermination(String action) throws Exception{
 		
-		 IContractSO contractSO = null;
+		 IContractTerminationSO contractTerminationSO = null;
 		 ContractReqDTO reqDTO = null;
+		 ContractResDTO resDTO = null;
+		 ContractReqDTO ctReqDTO = null;
+		 ContractResDTO ctResDTO = null;
 		 try{
 			 
 			validateContractTermination(action);
@@ -401,11 +417,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			reqDTO = new ContractReqDTO();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
 		   
 		    reqDTO.setToken(token);
 		    reqDTO.setOutcome(action);
-		    reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		    reqDTO.setTaskId(getManagedBean().getTaskId());
 		    reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 		  
 		    getManagedBean().getContractVer().setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
@@ -428,11 +444,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 	        reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 	        reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 	           
-			if(this.getManagedBean().getPmDigiSign() !=null){
-			   reqDTO.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+			if(getManagedBean().getPmDigiSign() !=null){
+			   reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}    
 		         
-		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
+		    resDTO = contractTerminationSO.saveContractTerminationDetails(reqDTO);
 		    if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String messageId = MessageConst.INFO_700046;
@@ -456,16 +472,20 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 					return CommonUIConst.ACKNOWLEDGE_PAGE;
 				} 
 			    else {
-			    	ContractReqDTO ctReqDTO = new ContractReqDTO();
+			    	ctReqDTO = new ContractReqDTO();
 			    	ctReqDTO.setContractVerId(resDTO.getCtContractVer().getContractVerId());
 			    	ctReqDTO.setDocType(resDTO.getCtContractVer().getDocType());
 			    	
-			    	ContractResDTO ctResDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
+			    	ctResDTO = contractTerminationSO.retrieveTerminationContractVerDtls(ctReqDTO);
 			    	setTerminationContractVer(ctResDTO);
 				}
 			  }
 		  }finally {
-			contractSO = null;
+			  contractTerminationSO = null;
+			  ctResDTO = null;
+			  ctReqDTO = null;
+			  reqDTO = null;
+			  resDTO = null;
 		  }
 		  return null;
 	 }
