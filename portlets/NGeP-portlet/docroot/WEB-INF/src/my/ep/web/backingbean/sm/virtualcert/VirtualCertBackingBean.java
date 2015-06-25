@@ -663,6 +663,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	public void downloadFile(String filePath) throws IOException{
 		File file = new File(filePath);
 		log.info("download file>>>>");
+		OutputStream out = null;
 		try{
 			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -670,7 +671,7 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			res.setHeader( "Content-Transfer-Encoding", "binary" );
 			res.setContentType("application/octet-stream");
 			res.flushBuffer();
-			OutputStream out = res.getOutputStream();   
+			out = res.getOutputStream();   
 			if(file.getPath()!=null) {
 				log.info("file path not null>>>>");
 				InputStream input = null;
@@ -691,11 +692,12 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 			} else {
 				//out.write(attachment.getFileByte());
 			}
-			out.flush();
-			out.close(); 
 			FacesContext.getCurrentInstance().responseComplete();
 		}catch(Exception ex){
 			log.error("download exception>>>>" + ex.getMessage());
+		} finally {
+			out.flush();
+			out.close(); 
 		}
 	}
 	

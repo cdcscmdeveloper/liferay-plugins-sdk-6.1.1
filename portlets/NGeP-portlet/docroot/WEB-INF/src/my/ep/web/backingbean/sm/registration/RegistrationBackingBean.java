@@ -1997,6 +1997,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
+	}
+	
 	/**
 	 * View Business Nature
 	 */
@@ -2020,7 +2027,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			this.getManagedBean().setSmSupp(resDTO.getSmSupp());
 			
-			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
+//			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 		}
 
