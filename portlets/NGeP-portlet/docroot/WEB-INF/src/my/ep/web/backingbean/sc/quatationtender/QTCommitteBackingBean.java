@@ -547,7 +547,7 @@ public class QTCommitteBackingBean extends
 
 	public void addCloneCommitteeMembersApprovalsAction() {
 		debugLogger("addCloneCommitteeMembersApprovalsAction");
-		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
+		
 		int committeTabIndex = this.getManagedBean().getSelectedTabIndex();
 		TabBean selectedCommitteTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(committeTabIndex);
@@ -612,6 +612,7 @@ public class QTCommitteBackingBean extends
 
 		// Clone Committee Approval validation
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
+		this.getManagedBean().setAutoUpdate(true);
 	}
 
 	/**
@@ -805,6 +806,7 @@ public class QTCommitteBackingBean extends
 								new FacesScopes().getUserLocale())));
 
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
+		this.getManagedBean().setAutoUpdate(true);
 	}
 
 	/**
@@ -855,7 +857,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().setCloneTenderList(null);
 		getManagedBean().setSearchcommitteeNode(null);
 		RequestContext.getCurrentInstance().execute("screen2.show()");
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -866,6 +868,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void committeeclonePopupAction(ScQtCommittee committee) {
 		debugLogger("committeeclonePopupAction");
+
 		IPagingDataModel<ScQt> cloneSearchQTDataModel = getManagedBean()
 				.getCloneSearchQTDataModel();
 
@@ -892,7 +895,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().setCommType(commType);
 		log.info("Committee Type : " + getManagedBean().getCommType());
 		RequestContext.getCurrentInstance().execute("screen2.show()");
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -929,7 +932,7 @@ public class QTCommitteBackingBean extends
 		getSelectionTypes();
 		getManagedBean().setScQtCommittee(committee);
 		getManagedBean().setTabTitle(titleName);
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -1551,6 +1554,7 @@ public class QTCommitteBackingBean extends
 		// Specification Committee validation
 		RequestContext.getCurrentInstance().execute(
 				"newspecificationcommittee.hide()");
+		this.getManagedBean().setAutoUpdate(true);
 	}
 
 	/**
@@ -1778,7 +1782,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void deleteSpecificationCommittee() {
 		debugLogger("deleteSelected Committe Mmeners");
-		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
+		
 		TabBean bean = this.getManagedBean().getSelectedTabBean();
 		List<ScCommitteeMember> selectedList = this.getManagedBean()
 				.getCommittemembers();
