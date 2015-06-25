@@ -54,11 +54,15 @@
 				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'CD'}">
 					<ui:include src="/xhtml/trackingdiary/cdTrackingDiarySearch.xhtml" />
 				</c:if>
+				<c:if test="#{trackingDiaryBackingBean.managedBean.moduleSelected == 'PM'}">
+					<ui:include src="/xhtml/trackingdiary/pmTrackingDiarySearch.xhtml" />
+				</c:if>
 			</h:panelGroup>
 
 
 			<br />
 			<br />
 		</p:panel>
+		<ac:lovPopup />
 	</ui:define>
 </ui:composition>

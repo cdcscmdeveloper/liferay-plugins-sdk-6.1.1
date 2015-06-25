@@ -30,7 +30,8 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 	public static final String CD_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
 	public static final String SM_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
 	public static final String PP_TRACKING_DIARY_MANAGED_BEAN = "smTrackingDiaryManagedBean";
-
+	public static final String PM_TRACKING_DIARY_MANAGED_BEAN = "pmTrackingDiaryManagedBean";
+	
 	public ISearchBean<PmParameterDesc> getDocTypeSearchBean() {
 		if (this.docTypeSearchBean == null) {
 			this.docTypeSearchBean = super.createSearchBean(
@@ -90,7 +91,11 @@ BaseBackingBean<TrackingDiaryManagedBean> {
 			if (fc.getExternalContext().getSessionMap().containsKey(PP_TRACKING_DIARY_MANAGED_BEAN)) {
 				fc.getExternalContext().getSessionMap().remove(PP_TRACKING_DIARY_MANAGED_BEAN);
 				System.out.println("remove ModuleSelect" +PP_TRACKING_DIARY_MANAGED_BEAN);
-			}   	 	
+			}   
+			if (fc.getExternalContext().getSessionMap().containsKey(PM_TRACKING_DIARY_MANAGED_BEAN)) {
+				fc.getExternalContext().getSessionMap().remove(PM_TRACKING_DIARY_MANAGED_BEAN);
+				System.out.println("remove ModuleSelect" +PM_TRACKING_DIARY_MANAGED_BEAN);
+			}   
 		}else{
 			//			 renewSesionObject() ;			getManagedBean().setModuleSelected("");
 			getManagedBean().setPreviousSelectedModule(getManagedBean().getModuleSelected());
