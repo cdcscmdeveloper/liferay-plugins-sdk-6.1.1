@@ -77,14 +77,14 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.GFMAS_SM_OUT_JOB_GROUP),
 						GfmasBatchSmOutboundJob.class, CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
-				//Eperunding SM Integration Continuous job
+			*/	//Eperunding SM Integration Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 						EperundingBatchIntegrationJob.class, CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound"));
 				//Notification Integration Continuous job
-				EpSchedulerHelper.scheduleJob(new JobKey(
+			/*	EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
