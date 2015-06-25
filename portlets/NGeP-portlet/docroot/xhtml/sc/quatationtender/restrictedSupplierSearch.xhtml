@@ -72,8 +72,8 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width: 10%;">
-				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate) eq 'true'}" value="Active" />
-				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate) eq 'false'}" value="Expired" style="font-weight: bold;color:red;" />
+				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate) eq 'true'}" value="#{lbl['lbl.txt.active']}" />
+				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccount(null, smSupplier).expDate) eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
