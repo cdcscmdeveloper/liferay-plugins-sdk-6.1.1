@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -44,8 +43,6 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.exception.EpException;
@@ -111,14 +108,6 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 	    		    getManagedBean().setViewOnly(true);
 
 	    }
-	 
-	    /**
-	        * This method used to retrieve login user information
-		 */
-	    private FacesScopes getFacesScopes(){
-		      FacesScopes facesScopes = new FacesScopes();
-		      return facesScopes;
-	    }
 	   
 	    /**
 		 * This  method used to initialize approver list
@@ -130,46 +119,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 			}
 		}
-		
-	     /**
-			 * This  method used to retrieve list of active approver start
-			 * Setting selected and non selected approver value 
-			 * Retrieve approver for ministry and central contract
-		 */
-	  	private List<PmUser> getAvailableApproverList() {
-			 IUserSO userSO = null;
-			 List<PmUser> sourceList = new ArrayList<PmUser>();
-		
-			 try {
-				    userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-				    UserReqDTO reqDTO = new UserReqDTO();
-				    reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
-				
-				    UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-				    if (resDTO.getUserOrgList().size() > 0)
-				    	reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
-				
-				    if(getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) 
-					     reqDTO.setRoleCode(RoleCode.CT_APPROVER.value());
-				    else /*Central Contract	*/
-					    reqDTO.setRoleCode(RoleCode.BPK_APPROVER.value());
-				    
-	                resDTO = userSO.retrieveUserListByRole(reqDTO);
-				    List<PmUser> list = resDTO.getUserList();
-				
-				    for (PmUser user : list) {
-					    sourceList.add(user);
-					    getManagedBean().getUserMap().put(user.getUserId(), user);
-				    }
-		   	  } catch (Exception e) {
-			     	e.printStackTrace();
-			    	FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(), e.getMessage()));
-			  } finally {
-				  userSO = null;
-			  }
-			 return sourceList;
-		}
-		
+	    
 	  	/**
 		 * This  method call once user call suspension page from task list
 		 * Method used to retrieve all information from BPM
@@ -298,7 +248,9 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    }/*If statement for agency end*/    
 		    
 			/*Setting to list of approver start */
-		    getManagedBean().getApproverModel().setSource(getAvailableApproverList());
+		    getManagedBean().getApproverModel().setSource(
+					getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
+							getManagedBean().getUserMap()));
 		    if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
 			     getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			     for (PmUser approverUser : resDTO.getApproverList())  {
