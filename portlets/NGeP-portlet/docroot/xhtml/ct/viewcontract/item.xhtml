@@ -43,7 +43,8 @@
 		            </h:outputText>
 		         </p:column>   
 		   
-		         <p:column style="text-align: right;width:14%;white-space:normal;">
+		         <p:column style="text-align: right;width:14%;white-space:normal;"
+		         	rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		            <f:facet name="header">
 			            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
 	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
@@ -73,6 +74,7 @@
           </h:panelGrid>
      
           <p:outputPanel id="changeField">
+          	<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		        <p:spacer height="20"/>
 		        <h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
 			         rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null}">
@@ -87,7 +89,7 @@
 			     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
 		             </h:panelGrid>
 		         </h:panelGrid>
-		 
+		 		</h:panelGroup>
 		        <p:spacer height="20"/>
 		        <h:panelGroup  style="width:100%"
 			        rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null and 
@@ -463,5 +465,118 @@
 		</p:dialog>
   	 </p:panel>
   	 <p:spacer rendered="#{contractDetailsBackingBean.managedBean.ctItemList.size() > 0}" height="50"/>
+  	 <p:panel id="serviceId" header="#{lbl['lbl.ct.panel.service']}"
+         rendered="#{contractDetailsBackingBean.managedBean.ctItemServiceList.size() > 0 }"  toggleable="true"  toggleSpeed="500">
+  	     <!-- <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.service.dtls']}"/> -->
+  	      <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.select.service.item']}" escape="false"/><br/><br/>
+  	     <h:panelGrid  style="width:100%;">
+  	       
+  	        <p:dataTable id="serviceTable" var="data"  widgetVar="serviceItemObj" 
+  	           value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
+               selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}">
+               <ac:paginator for="serviceTable"/>
+              <p:ajax event="rowSelect" update=":form:showServicePrice" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+		      
+		      <p:column filterBy="#{data.scRequestItem.itemName}" style="width:20%; white-space:normal;" filterMatchMode="contains">
+		             <f:facet name="header">
+		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
+		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
+		               </f:facet>
+		          <h:outputText value="#{data.scRequestItem.itemName}" style="float:left;"/>
+		      </p:column>       
+		      
+		      <p:column headerText="#{lbl['lbl.ct.specification']}" style="width:20%; white-space:normal;">
+		        	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clSpecDetail}" style="float:left;"/>
+		      </p:column>  
+		    
+		      <p:column headerText="#{lbl['lbl.ct.uom']}" style="width:11%; white-space:normal;">
+		         <h:outputText value="#{data.scRequestItem.uom.uomName}" style="float:left;"/>
+		      </p:column>        
+		      
+		      <p:column headerText="#{lbl['lbl.tpl.spec.content.frequency.per.uom']}" style="width:8%; white-space:normal;">
+		        	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomFrequency}" />
+		      </p:column> 
+		      
+		      <p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.day']}"  style="text-align: right;width:8%; white-space:normal;">
+		          	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerDay}" />
+		      </p:column>
+		      
+		      <p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.month']}"  style="text-align: right;width:8%; white-space:normal;">
+		          	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerMonth}" />
+		      </p:column>
+		      
+		      <p:column headerText="#{lbl['lbl.tpl.spec.content.no.uom.per.year']}"  style="text-align: right;width:8%; white-space:normal;" rendered="false">
+		          	 <h:outputText value="#{data.scRequestItem.tplSpecQuestion.clUomPerYear}" />
+		      </p:column>
+		      
+		      <p:column headerText="#{lbl['lbl.ct.quantity']}"  style="text-align: right; width:10%; white-space:normal;">
+		          <h:outputText value="#{data.minimumOrderQty}">
+     					<f:converter converterId="dynamicNumberConverter" />
+						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, data.scRequestItem.uom.uomCode)}" />					
+		          </h:outputText>		        
+		      </p:column>  
+		      
+		      <p:column headerText="#{lbl['lbl.ct.status']}" style="width:7%; white-space:normal;">
+		             <h:outputText value="#{data.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }" style="float:left;"/>
+		      </p:column>   
+		        
+    	   </p:dataTable> 
+        </h:panelGrid>
+       
+        <p:outputPanel id="showServicePrice">
+		   <p:spacer height="20"/>
+		    <h:panelGrid columns="1" style="width:100%" 
+		       rendered="#{contractDetailsBackingBean.managedBean.selectedServiceItem != null}">
+		    
+		      <p:dataTable id="servicePriceTable" var="itemPricesVar"
+		          value="#{contractDetailsBackingBean.managedBean.selectedServiceItem.ctItemPrices}">
+			      <ac:paginator for="servicePriceTable"/>
+			     
+			      <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeStandard}">
+			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right; white-space:normal;">
+			               <h:outputText value="#{itemPricesVar.unitPrice}">
+			                   <f:convertNumber
+						         pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                </h:outputText>			                   
+			            </p:column>            
+			            <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
+			                <h:outputText value="#{itemPricesVar.effDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>			            
+			            </p:column>       
+			            <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
+			                <h:outputText value="#{itemPricesVar.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>			            
+			             </p:column> 
+			     </c:if>
+			   
+			     <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
+			           <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
+			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" />
+			            </p:column>    
+			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right; white-space:normal;">
+			               <h:outputText value="#{itemPricesVar.unitPrice}">
+			                   <f:convertNumber
+						         pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+			                </h:outputText>
+			            </p:column>
+			            <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
+			                <h:outputText value="#{itemPricesVar.effDate}" style="float:left;">
+                             <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                           </h:outputText>
+			             </p:column>       
+			             <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
+			                <h:outputText value="#{itemPricesVar.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>
+			            </p:column>   
+			      </c:if>                
+		  
+		  
+		   </p:dataTable>
+	    </h:panelGrid>
+	 </p:outputPanel>
+   </p:panel>
  </ui:composition>
 

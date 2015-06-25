@@ -184,41 +184,34 @@
 				     <ui:include src="zone.xhtml" />
 			    </p:outputPanel>
 			    
-			    <p:outputPanel id="ctMenuId7" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex
-				   and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-					<ui:include src="productItem.xhtml" />
-				    <ui:include src="serviceItem.xhtml" />
+			    <p:outputPanel id="ctMenuId7" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex}">
+					<ui:include src="item.xhtml" />
 				</p:outputPanel>
-				
-				<p:outputPanel id="ctMenuId8" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.itemIndex
-				     and contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral}">
-					<ui:include src="centralItem.xhtml" />
-				</p:outputPanel>
-			   
-				<p:outputPanel id="ctMenuId9"
+							   
+				<p:outputPanel id="ctMenuId8"
 				     rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions.size() > 0
 				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.deductionIndex}">
 					<ui:include src="deduction.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId10" 
+				<p:outputPanel id="ctMenuId9" 
 				      rendered="#{contractDetailsBackingBean.managedBean.ctContract.fulfillmentType.parameterCode eq ParameterConst.fulfilmentTypeScheduled
 				       and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.scheduleIndex}">
 					 <ui:include src="schedule.xhtml" />
 				</p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId11" 
+				<p:outputPanel id="ctMenuId10" 
 				     rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored and contractDetailsBackingBean.checkFactoringExpiryDate()
 				     and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.factoring}">
 					<ui:include src="factoring.xhtml"/>
 				</p:outputPanel>
 	
-				<p:outputPanel id="ctMenuId12" rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking
+				<p:outputPanel id="ctMenuId11" rendered="#{contractDetailsBackingBean.managedBean.flgPaymentTracking
 				  and contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.paymentTracking}">
 				             	<ui:include src="paymentTracking.xhtml"/>
 				   </p:outputPanel>
 				
-				<p:outputPanel id="ctMenuId13" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex}">
+				<p:outputPanel id="ctMenuId12" rendered="#{contractDetailsBackingBean.managedBean.selectedTabIndex eq contractDetailsBackingBean.managedBean.settingIndex}">
 					<ui:include	src="approverSetting.xhtml" />
 				   <ui:include	src="fulfilmentSetting.xhtml" />
 				</p:outputPanel>
