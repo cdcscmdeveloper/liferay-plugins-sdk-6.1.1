@@ -48,7 +48,7 @@
 			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedSupplierList}"
 			rowKey="#{smSupplier.supplierId}" lazy="true" style="width : 100%;"
 			rows="10">
-
+			<ui:param name="mof" value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier)}" />
 			<ac:paginator for="ressupplier" />
 
 			<p:column selectionMode="multiple" style="width:2%" />
@@ -59,21 +59,21 @@
 
 			<p:column headerText="#{lbl['lbl.sc.mofno']}" style="width: 10%;">
 				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier).mofNo}" />
+					value="#{mof.mofNo}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.mofexp.date']}"
 				style="width: 10%;">
 				<h:outputText
-					value="#{qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier).expDate}">
+					value="#{mof.expDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width: 10%;">
-				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier).expDate) eq 'true'}" value="#{lbl['lbl.txt.active']}" />
-				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retrieveSmMofAccountFromSmSupplier(smSupplier).expDate) eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
+				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'true'}" value="#{lbl['lbl.txt.active']}" />
+				<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>
