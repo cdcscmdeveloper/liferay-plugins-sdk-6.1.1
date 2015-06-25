@@ -955,9 +955,10 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	/**
 	 * Download file.
 	 */
-	public void downloadFile(String filePath) throws IOException{
+	public void downloadFile(String filePath) throws IOException {
 		File file = new File(filePath);
 		log.info("download file>>>>");
+		OutputStream out = null;
 		try{
 			PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
 			HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
@@ -965,7 +966,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			res.setHeader( "Content-Transfer-Encoding", "binary" );
 			res.setContentType("application/octet-stream");
 			res.flushBuffer();
-			OutputStream out = res.getOutputStream();   
+			out = res.getOutputStream();   
 			if(file.getPath()!=null) {
 				log.info("file path not null>>>>");
 				InputStream input = null;
@@ -986,11 +987,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			} else {
 				//out.write(attachment.getFileByte());
 			}
-			out.flush();
-			out.close(); 
+
 			FacesContext.getCurrentInstance().responseComplete();
 		}catch(Exception ex){
 			log.error("download exception>>>>" + ex.getMessage());
+		} finally {
+			out.flush();
+			out.close(); 
 		}
 	}
 }
