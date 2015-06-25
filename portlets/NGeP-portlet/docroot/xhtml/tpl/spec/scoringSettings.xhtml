@@ -106,7 +106,7 @@
 			var="tplSpecScoring"
 			rowIndexVar="rowIndex"
 			value="#{templateSpecBean.selectedSpecQuestion.tplSpecScorings}"
-			rowKey="#{tplSpecScoring}">
+			rowKey="#{tplSpecScoring}" scrollable="#{!isCompliance and !isSpecTypeFinancial}" scrollHeight="200"> 
 			
 			<p:column style="width:20px;" rendered="#{!isCompliance and !isSpecTypeFinancial and editable}">
 				<f:facet name="header">
