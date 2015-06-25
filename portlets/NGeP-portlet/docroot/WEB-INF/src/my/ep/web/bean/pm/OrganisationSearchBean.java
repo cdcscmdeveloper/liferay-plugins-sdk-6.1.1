@@ -3,6 +3,10 @@
  */
 package my.ep.web.bean.pm;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+
 /**
  * @author venugopal
  * 
@@ -13,6 +17,8 @@ public class OrganisationSearchBean {
 	private String orgCode;
 	private String orgName;
 	private String orgStatus;
+	private PmOrgProfile orgProfile;
+	private PmParameter orgType;
 	/**
 	 * @return the orgTypeCode
 	 */
@@ -60,6 +66,33 @@ public class OrganisationSearchBean {
 	 */
 	public void setOrgStatus(String orgStatus) {
 		this.orgStatus = orgStatus;
+	}
+	/**
+	 * @return the orgType
+	 */
+	public PmParameter getOrgType() {
+		if(orgType==null){
+			orgType = new PmParameter();
+		}
+		return orgType;
+	}
+	/**
+	 * @param orgType the orgType to set
+	 */
+	public void setOrgType(PmParameter orgType) {
+		this.orgType = orgType;
+	}
+	/**
+	 * @return the orgProfile
+	 */
+	public PmOrgProfile getOrgProfile() {
+		return orgProfile;
+	}
+	/**
+	 * @param orgProfile the orgProfile to set
+	 */
+	public void setOrgProfile(PmOrgProfile orgProfile) {
+		this.orgProfile = orgProfile;
 	}
 	
 
