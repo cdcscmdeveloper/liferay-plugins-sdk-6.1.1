@@ -9,6 +9,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -26,11 +27,14 @@ public class ViewSuppProfileManagedBean extends
 	 * 
 	 */
 	private static final long serialVersionUID = -9029253736925390560L;
+	private PmUser applApprover;
+	private String approvedDate;
 	private SmSupplier selectedSupplier;
 	private SmSupplierCategory selectedCategory;
 	private SmSupplierBasicInfoVO basicInfo;
 	private String applnApprovalRemarks;
 	private boolean showParentMsg;
+	private boolean disabledRegStatus;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
@@ -149,6 +153,30 @@ public class ViewSuppProfileManagedBean extends
 	public void setDeleteApprovedCategories(
 			List<SmSupplierCategory> deleteApprovedCategories) {
 		this.deleteApprovedCategories = deleteApprovedCategories;
+	}
+
+	public boolean isDisabledRegStatus() {
+		return disabledRegStatus;
+	}
+
+	public void setDisabledRegStatus(boolean disabledRegStatus) {
+		this.disabledRegStatus = disabledRegStatus;
+	}
+
+	public PmUser getApplApprover() {
+		return applApprover;
+	}
+
+	public void setApplApprover(PmUser applApprover) {
+		this.applApprover = applApprover;
+	}
+
+	public String getApprovedDate() {
+		return approvedDate;
+	}
+
+	public void setApprovedDate(String approvedDate) {
+		this.approvedDate = approvedDate;
 	}
 
 }
