@@ -1006,7 +1006,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQt cloneBusinessSelectQt;
 	
 	 /** The auto update. */
-    private boolean autoUpdate = Boolean.TRUE;
+    private boolean autoUpdate =true;
     
     /** The clauses title. */
 	private String clausesTitle;

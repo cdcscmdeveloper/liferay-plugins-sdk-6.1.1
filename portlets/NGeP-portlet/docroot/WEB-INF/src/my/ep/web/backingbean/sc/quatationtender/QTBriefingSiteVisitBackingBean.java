@@ -274,7 +274,7 @@ public class QTBriefingSiteVisitBackingBean extends
 		bsvDtl.setBsvStatus(pmStatus);
 		this.getManagedBean().setQtBriefing(bsvDtl);
 		retrievePmStateList();
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**

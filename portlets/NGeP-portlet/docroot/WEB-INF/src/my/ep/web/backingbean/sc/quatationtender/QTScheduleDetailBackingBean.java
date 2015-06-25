@@ -481,7 +481,7 @@ public class QTScheduleDetailBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760232);
 		}
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -578,7 +578,7 @@ public class QTScheduleDetailBackingBean extends
 				.set(index, this.getManagedBean().getScQtSampleSubmission());
 		retrievePmStateList();
 		RequestContext.getCurrentInstance().execute("sampledlg.show();");
-		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().setAutoUpdate(false);
 	}
 
 	/**

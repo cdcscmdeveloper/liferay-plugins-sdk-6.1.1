@@ -26,7 +26,6 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.context.RequestContext;
 
-
 @ManagedBean(name = "gpkiBackingBean")
 @SessionScoped
 public class gpkiBackingBean {
@@ -38,21 +37,22 @@ public class gpkiBackingBean {
 	private static Logger log = Logger.getLogger(gpkiBackingBean.class);
 	private String signedText;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
-	
-	public gpkiBackingBean(){
+
+	public gpkiBackingBean() {
 
 	}
-	
+
 	private void debugLogger(Object message) {
-        if(log.isDebugEnabled()) {
-            log.debug(message);
-        }
-        log.info(message);
-    }
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
 
 	public String getGpkiEnabledProperty() {
 		EpPropertiesUtils prop = EpPropertiesUtils.getInstance();
-		System.out.println("getGpkiEnabledProperty :"+ prop.getProperty("gpki.enabled"));
+		System.out.println("getGpkiEnabledProperty :"
+				+ prop.getProperty("gpki.enabled"));
 		return prop.getProperty("gpki.enabled");
 	}
 
@@ -63,67 +63,100 @@ public class gpkiBackingBean {
 	public void setSignedText(String signedText) {
 		this.signedText = signedText;
 	}
-	
+
 	public PmDigiSign getPmDigiSign() {
 		return pmDigiSign;
 	}
-	
+
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
 	}
-	
-	public String gpkiSignAction(com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
+
+	public String gpkiSignAction(
+			com.sun.faces.facelets.el.ContextualCompositeMethodExpression obj) {
 		System.out.println("ContextualCompositeMethodExpression");
-		String textBeforeSign = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("textBeforeSign");
-	    String signedText = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("signedText");
-	    String serialNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("serialNo");
-	    String subjectDN = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("subjectDN");
-	    FacesScopes facesScope = new FacesScopes();
-	    Long userId = facesScope.getUserSessionBean().getUserId();
-//	    Long userId = (Long) MDC.get(LogKey.USER_ID);
+		String textBeforeSign = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("textBeforeSign");
+		String signedText = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("signedText");
+		String serialNo = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("serialNo");
+		String subjectDN = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("subjectDN");
+		FacesScopes facesScope = new FacesScopes();
+		Long userId = facesScope.getUserSessionBean().getUserId();
+		// Long userId = (Long) MDC.get(LogKey.USER_ID);
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		debugLogger("getUserSessionBean().getUserId();=====================================: "+ facesScope.getUserSessionBean().getUserId());		
-		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance().getServiceObject(IUserSO.class);
+		debugLogger("getUserSessionBean().getUserId();=====================================: "
+				+ facesScope.getUserSessionBean().getUserId());
+		IUserSO userSO = (IUserSO) EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
 		reqDTO.setUserId(userId);
 		userSO.retrieveUserByUserId(reqDTO);
 		UserResDTO resDTO = new UserResDTO();
 		resDTO = userSO.retrieveUserByUserId(reqDTO);
-		debugLogger("serialNo====================================: "+serialNo);
-		debugLogger("subjectDN====================================: "+subjectDN);
-		debugLogger("userId====================================: "+subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")));
-		debugLogger("getIdentificationNo=====================================: "+resDTO.getPmUser().getLoginId());	
-		System.out.println("ContextualCompositeMethodExpression  2");  
-		debugLogger("reflectAction=====================================: "+obj);		
-		if(getGpkiEnabledProperty().equalsIgnoreCase("true")){
-			if(subjectDN.substring(subjectDN.indexOf("=")+1,subjectDN.indexOf(",")).equals(resDTO.getPmUser().getIdentificationNo())){
+		debugLogger("serialNo====================================: " + serialNo);
+		debugLogger("subjectDN====================================: "
+				+ subjectDN);
+		debugLogger("userId====================================: "
+				+ subjectDN.substring(subjectDN.indexOf("=") + 1,
+						subjectDN.indexOf(",")));
+		debugLogger("getIdentificationNo=====================================: "
+				+ resDTO.getPmUser().getLoginId());
+		System.out.println("ContextualCompositeMethodExpression  2");
+		debugLogger("reflectAction=====================================: "
+				+ obj);
+		String gpkiAction = null;
+		if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
+			if (subjectDN.substring(subjectDN.indexOf("=") + 1,
+					subjectDN.indexOf(",")).equals(
+					resDTO.getPmUser().getIdentificationNo())) {
 				pmDigiSign.setCreatedBy(userId);
-		        pmDigiSign.setCreatedDate(date);
-		        pmDigiSign.setOrginalData(textBeforeSign);
-		        pmDigiSign.setSignedData(signedText);
+				pmDigiSign.setCreatedDate(date);
+				pmDigiSign.setOrginalData(textBeforeSign);
+				pmDigiSign.setSignedData(signedText);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 				debugLogger("=================================Same IC No");
-		        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString();
-		        }
-			else{
-				FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Token's certificate not match with signer identity."));	
+				gpkiAction = obj.invoke(
+						FacesContext.getCurrentInstance().getELContext(),
+						new Object[] { pmDigiSign }).toString();
+			} else {
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								"gpki",
+								new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										"",
+										"Token's certificate not match with signer identity."));
 			}
-		}else{
+		} else {
 			pmDigiSign.setCreatedBy(userId);
-	        pmDigiSign.setCreatedDate(date);
-	        pmDigiSign.setOrginalData(textBeforeSign);
-	        pmDigiSign.setSignedData(signedText);
+			pmDigiSign.setCreatedDate(date);
+			pmDigiSign.setOrginalData(textBeforeSign);
+			pmDigiSign.setSignedData(signedText);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
-	        return obj.invoke(FacesContext.getCurrentInstance().getELContext(), new Object[]{pmDigiSign}).toString(); 
+
+			gpkiAction = obj.invoke(
+					FacesContext.getCurrentInstance().getELContext(),
+					new Object[] { pmDigiSign }).toString();
 		}
-        return null; 	  
+		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
+
+		return gpkiAction;
 
 	}
-		
+
 	public void showError() {
-	    String statusCode = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusCode");
-	    String statusMsg = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusMsg");
-		FacesContext.getCurrentInstance().addMessage("gpki", new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));	
+		String statusCode = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap()
+				.get("statusCode");
+		String statusMsg = FacesContext.getCurrentInstance()
+				.getExternalContext().getRequestParameterMap().get("statusMsg");
+		FacesContext.getCurrentInstance().addMessage("gpki",
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
 
 }
