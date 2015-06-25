@@ -449,6 +449,32 @@ public class QTSupplierQulCriteriaBackingBean extends
 		}
 	}
 
+	
+	public SmMofAccount retrieveSmMofAccountFromSmSupplier(SmSupplier smSupplier) {
+		debugLogger("retrieveSmMofAccountFromSmSupplier");
+		SmMofAccount smMofAccount = null;
+		log.info("(smSupplier.getSupplierId()) : " + smSupplier.getSupplierId());
+		smMofAccount = smSupplier.getSmMofAccount();
+		if(smMofAccount != null){
+			return smMofAccount;
+		}
+		IMofAccountSO mofAccountSO;
+		try {
+			mofAccountSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, IMofAccountSO.class);
+			MofAccountReqDTO accountReqDTO = new MofAccountReqDTO();
+			accountReqDTO.setSupplierId(smSupplier.getSupplierId());
+			accountReqDTO.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
+			MofAccountResDTO mofAccountResDTO = mofAccountSO.retriveMOFAccountBySupplierIdAndType(accountReqDTO);
+			if (mofAccountResDTO.getMofAccount() != null) {
+				smMofAccount = mofAccountResDTO.getMofAccount();
+				smSupplier.setSmMofAccount(smMofAccount);
+			}
+		} finally {
+			mofAccountSO = null;
+		}
+		return smMofAccount;
+	}
+
 	/**
 	 * Retrieving smMofAccount Details from SM.
 	 *
