@@ -24,7 +24,7 @@ public class SupplierInfoUpdate {
 	public static void main(String[] args) {
 
 		Test test = new Test();
-		updateSupplierinfo(test.crmSupplierInfo());
+//		updateSupplierinfo(test.crmSupplierInfo());
 
 	}
 
@@ -39,9 +39,7 @@ public class SupplierInfoUpdate {
 			header_Type.setOrgUnit("1");
 			header_Type.setSegment("2");
 			
-			RqUID_Type rqUID_Type = new RqUID_Type(
-					"20141126",
-					IntegrationConstants.SEQUENCE_NO);
+			RqUID_Type rqUID_Type = new RqUID_Type("20141126",IntegrationConstants.SEQUENCE_NO);
 			header_Type.setUID(rqUID_Type);
 
 			UpdateSupplierInfoRq supplierInfoRq = new UpdateSupplierInfoRq();
@@ -55,15 +53,13 @@ public class SupplierInfoUpdate {
 
 //				if (supplierInfo.getBranchList().size() > 0) {
 				if (supplierInfo.getBranchList()!=null) {
-					UpdateSupplierInfoRqBranchArrayBranch[] updateBranchArray = new UpdateSupplierInfoRqBranchArrayBranch[supplierInfo
-							.getBranchList().size()];
+					UpdateSupplierInfoRqBranchArrayBranch[] updateBranchArray = new UpdateSupplierInfoRqBranchArrayBranch[supplierInfo.getBranchList().size()];
 					UpdateSupplierInfoRqBranchArrayBranch updateBranch = null;
 					int i = 0;
 					for (Branch branch : supplierInfo.getBranchList()) {
 						updateBranch = new UpdateSupplierInfoRqBranchArrayBranch();
 						updateBranch.setBranchName(branch.getBranchName());
-						updateBranch.setBranchID(new BigDecimal(branch
-								.getBranchID()));
+						updateBranch.setBranchID(new BigDecimal(branch.getBranchID()));
 						updateBranch.setAddress1(branch.getAddress1());
 						updateBranch.setAddress2(branch.getAddress2());
 						updateBranch.setAddress3(branch.getAddress3());
@@ -93,14 +89,12 @@ public class SupplierInfoUpdate {
 					for (Appl smAppl : supplierInfo.getSmApplList()) {
 						updateAppl = new UpdateSupplierInfoRqApplArrayAppl();
 						updateAppl.setApplNo(smAppl.getApplNo());
-						updateAppl.setApplStatus(new BigDecimal(smAppl
-								.getApplStatus()));
+						updateAppl.setApplStatus(new BigDecimal(smAppl.getApplStatus()));
 						updateAppl.setAppType(smAppl.getAppType());
 						updateAppl.setMofNo(smAppl.getMofNo());
 						updateAppl.setRegNo(smAppl.getRegNo());
 						updateAppl.setExpiryDate(smAppl.getExpiryDate());
-						updateAppl.setCapitalPaidUp(new BigDecimal(smAppl
-								.getCapitalPaidUp()));
+						updateAppl.setCapitalPaidUp(new BigDecimal(smAppl.getCapitalPaidUp()));
 						updateApplArray[i] = updateAppl;
 						i++;
 					}
@@ -139,18 +133,12 @@ public class SupplierInfoUpdate {
 					for (Bidang bidang : supplierInfo.getBidangList()) {
 
 						updateBidang = new UpdateSupplierInfoRqBidangArrayBidang();
-						updateBidang.setKodBidangCategoryL1(bidang
-								.getKodBidangCategoryL1());
-						updateBidang.setKodBidangCategoryL2(bidang
-								.getKodBidangCategoryL2());
-						updateBidang.setKodBidangCategoryL3(bidang
-								.getKodBidangCategoryL3());
-						updateBidang.setBidangDescriptionCategoryL1(bidang
-								.getDescriptionCategoryL1());
-						updateBidang.setBidangDescriptionCategoryL2(bidang
-								.getDescriptionCategoryL2());
-						updateBidang.setBidangDescriptionCategoryL3(bidang
-								.getDescriptionCategoryL3());
+						updateBidang.setKodBidangCategoryL1(bidang.getKodBidangCategoryL1());
+						updateBidang.setKodBidangCategoryL2(bidang.getKodBidangCategoryL2());
+						updateBidang.setKodBidangCategoryL3(bidang.getKodBidangCategoryL3());
+						updateBidang.setBidangDescriptionCategoryL1(bidang.getDescriptionCategoryL1());
+						updateBidang.setBidangDescriptionCategoryL2(bidang.getDescriptionCategoryL2());
+						updateBidang.setBidangDescriptionCategoryL3(bidang.getDescriptionCategoryL3());
 						updateBidangArray[i] = updateBidang;
 						i++;
 					}
@@ -164,10 +152,8 @@ public class SupplierInfoUpdate {
 			part.setUpdateSupplierInfoRq(supplierInfoRq);
 			EPMFRs ePMFRs = supplierInfoPortTypeProxy.update(part);
 
-			System.out.println("getStatusCode  :"
-					+ ePMFRs.getRsHeader().getStatus().getStatusCode());
-			System.out.println("getStatusDesc :"
-					+ ePMFRs.getRsHeader().getStatus().getStatusDesc());
+			System.out.println("getStatusCode  :"+ ePMFRs.getRsHeader().getStatus().getStatusCode());
+			System.out.println("getStatusDesc  :"+ ePMFRs.getRsHeader().getStatus().getStatusDesc());
 
 		} catch (RemoteException e) {
 			e.printStackTrace();
