@@ -191,6 +191,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param searchBean the search bean
 	 */
 	private void populateSupplierSearchCriteria(SupplierSearchBean supplierSearchBean, ISearchBean<SmSupplier> searchBean) {
+		debugLogger("populateSupplierSearchCriteria");
 		if (supplierSearchBean != null) {
 			List<ScQtCategory> scQtCategoryList = getManagedBean().getSuppCriteriarestrictedList();
 			if(scQtCategoryList != null && scQtCategoryList.size() > 0){
@@ -347,6 +348,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param changeEvent the change event
 	 */
 	public void handleStateChange(ValueChangeEvent changeEvent) {
+		debugLogger("handleStateChange");
 		PmState state = (PmState) changeEvent.getNewValue();
 		if (state != null && state.getStateId() != null) {
 			DistrictReqDTO reqDTO = new DistrictReqDTO();
@@ -377,6 +379,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	public void onTabChangeAction(TabChangeEvent event) {
+		debugLogger("onTabChangeAction");
 		String tabTitle = event.getTab().getTitle();
 		if (tabTitle.equalsIgnoreCase(getMessageCommon("lbl.qt.supplier.list"))) {
 			List<ScQtSupplier> sessionList = getManagedBean().getQtSupplierList();
@@ -422,6 +425,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * Method to search the supplier for Restricted Tender.
 	 */
 	public void searchRestrictedSupplierAction() {
+		debugLogger("searchRestrictedSupplierAction");
 		boolean hasSearchValue = false;
 		String supplierName = getManagedBean().getSupplierSearchBean().getSupplierName();
 		SupplierSearchBean supplierNameFilterBean = new SupplierSearchBean(SearchOperator.OPERATOR_LIKE.value(), supplierName);
@@ -463,7 +467,9 @@ public class QTSupplierQulCriteriaBackingBean extends
 				return smMofAccount;
 			}
 		} else {
+			log.info("(smSupplier.getSupplierId()) : " + smSupplier.getSupplierId());
 			supplierId = smSupplier.getSupplierId();
+			log.info("supplierId : " + supplierId);
 			smMofAccount = smSupplier.getSmMofAccount();
 			if(smMofAccount != null){
 				return smMofAccount;
@@ -491,6 +497,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 	
 	public boolean supplierStatusDateComparision(SmMofAccount mofAccount) {
+		debugLogger("supplierStatusDateComparision");
 		Date enddate = mofAccount.getExpDate();
 		boolean isDate = false;
 		
@@ -569,6 +576,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param event
 	 */
 	public void stateChange(AjaxBehaviorEvent event) {
+		debugLogger("stateChange");
 		boolean state = (boolean) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().getQt().getScQtSupplierCriteria()
@@ -587,7 +595,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 		} else {
 			this.getManagedBean().setSupplierLocationList(getManagedBean().getExistingSupplierLocationList());
 			this.getManagedBean().setZoneTrees(null);
-
 		}
 	}
 	
@@ -597,6 +604,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param event the event
 	 */
 	public void selectLocation(AjaxBehaviorEvent event) {
+		debugLogger("selectLocation");
 		Long location = (Long) event.getComponent().getAttributes()
 				.get("value");
 		if (null != location) {
@@ -682,6 +690,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @param index the index
 	 */
 	public void editZoneLocation(TreeNode rootZoneLocation, int index) {
+		debugLogger("editZoneLocation");
 		IParameterSO parameterSo = null;
 		ICountrySO countrySo = null;
 		try {
@@ -980,6 +989,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	private void checkExistingLocation(List<ScQtLocCriteria> currentLocationList,
 			List<ScQtLocCriteria> existingLocations) {
+		debugLogger("checkExistingLocation");
 		List<ScQtLocCriteria> localDeleteList = this.getManagedBean()
 				.getSupplierLocationList();
 		if (null == localDeleteList) {
