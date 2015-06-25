@@ -130,7 +130,8 @@
 			<ui:fragment
 				rendered="#{specificationBackingBean.managedBean.circularType eq 'PQ'}">
 			
-         #{specificationBackingBean.managedBean.ctCircularVer.circularNo}>#{lbl['lbl.sc.spec.circular.item.list']}
+         		#{specificationBackingBean.managedBean.ctCircularVer.circularNo}>#{lbl['lbl.sc.spec.circular.item.list']}
+         		<ac:iconTooltip value="#{lbl['lbl.sc.spec.circular.item.list.tooltip']}" />
 
 				<p:dataTable id="panelItemList" var="panelItem" rowIndexVar="index"
 					style="width:100%" rows="10"

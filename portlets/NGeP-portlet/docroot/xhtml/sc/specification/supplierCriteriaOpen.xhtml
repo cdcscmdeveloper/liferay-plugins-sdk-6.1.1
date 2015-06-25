@@ -7,8 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="#{lbl['lbl.sc.category.code']}" toggleable="true">
-
+	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.category.code.list.instruction']}" escape="false" />
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
@@ -73,9 +73,12 @@
 	</p:panel>
 
 
-	<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
-		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false')  or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal) or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false'))}">
-
+	<p:panel rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false')  or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal) or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false'))}">
+		<f:facet name="header">
+			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+		</f:facet>
+		
 		<table style="width: 100%">
 
 
@@ -238,8 +241,11 @@
 			</h:panelGroup>
 
 
-			<p:panel header="#{lbl['lbl.sc.location.list.paidup.capital']}"
-				rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
+			<p:panel rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+				</f:facet>
 				<table style="width: 100%">
 					<tr>
 						<td style="width: 185px"><p:outputLabel
@@ -420,24 +426,19 @@
 		</h:panelGroup>
 	</h:panelGroup>
 
-
-
-	<p:panel id="businessOwnerTotalSuppliers"
-		header="#{lbl['lbl.sc.spec.qualified.suppliers']}">
-		<table>
-			<tr>
-				<td style="width: 185px"><p:outputLabel
-						value="#{lbl['lbl.sc.totalsup']}" /></td>
-				<td><p:inputText style="margin-right:5px;" disabled="true"
-						value="#{specificationBackingBean.managedBean.totalSuppliers}" />
-					<p:commandButton value="#{lbl['lbl.btn.search']}"
-						update="businessOwnerTotalSuppliers"
-						action="#{specificationBackingBean.searchForSupplierCount}"
-						disabled="#{specificationBackingBean.managedBean.readOnly}"
-						partialSubmit="true" process="@this" /></td>
-			</tr>
-		</table>
-	</p:panel>
+	<table>
+		<tr>
+			<td style="width: 193px"><p:outputLabel
+					value="#{lbl['lbl.sc.totalsup']}" /></td>
+			<td><p:inputText id="businessOwnerTotalSuppliers" style="margin-right:5px;" disabled="true"
+					value="#{specificationBackingBean.managedBean.totalSuppliers}" size="30" />
+				<p:commandButton value="#{lbl['lbl.btn.search']}"
+					update="businessOwnerTotalSuppliers"
+					action="#{specificationBackingBean.searchForSupplierCount}"
+					disabled="#{specificationBackingBean.managedBean.readOnly}"
+					partialSubmit="true" process="@this" /></td>
+		</tr>
+	</table>
 	<!-- <p:panelGrid columns="1" style="width:50%;"
 		styleClass="noBorders tr,noBorders td">
 		<p:commandButton value="#{lbl['lbl.btn.search']}"
