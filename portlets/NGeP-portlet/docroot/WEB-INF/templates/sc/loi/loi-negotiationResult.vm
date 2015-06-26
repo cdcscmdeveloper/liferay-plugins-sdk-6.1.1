@@ -47,6 +47,10 @@
 			font-weight: normal;
 			font-style: inherit;
 		}
+		
+		.alignRight {
+			text-align:right;
+		}
 	</style>
 </head>
 <body>
@@ -134,11 +138,11 @@
 					<tr>
 						<td class="tdInfoTable">$loiLoaItem.scRequestItem.itemName</td>
 						<td class="tdInfoTable">$loiLoaItem.scRequestItem.uom.uomCode</td>
-						<td class="tdInfoTable">$loiLoaItem.qty</td>
-						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
-						<td class="tdInfoTable">$loiLoaItem.offeredPriceSubTotal</td>
-						<td class="tdInfoTable">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice</td>
-						<td class="tdInfoTable">$loiLoaItem.afterNegoSubTotal</td>
+						<td class="tdInfoTable alignRight">$loiLoaItem.qty</td>
+						<td class="tdInfoTable alignRight">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
+						<td class="tdInfoTable alignRight">$loiLoaItem.offeredPriceSubTotal</td>
+						<td class="tdInfoTable alignRight">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice</td>
+						<td class="tdInfoTable alignRight">$loiLoaItem.afterNegoSubTotal</td>
 					</tr>
 					#end
 				</table>
