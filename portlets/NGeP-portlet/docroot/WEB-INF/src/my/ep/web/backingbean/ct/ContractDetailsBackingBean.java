@@ -46,6 +46,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractZoneSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.suspension.IContractSuspensionSO;
+import my.ep.biz.service.ct.termination.IContractTerminationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -394,8 +395,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				Date currentDate = DateUtils.getCurrentDateWithoutTime();
 				// Filter By - Org effDate
 				searchBean.getDataFilterBeans()
-						.add(new SearchFilterBean("pmOrgValidity.effDate",
-								SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
+						.add(new SearchFilterBean("pmOrgValidity.effDate",SearchOperator.OPERATOR_LESS_EQUAL.value(), currentDate));
 
 				// Filter By - Org expDate
 				searchBean.getDataFilterBeans().add(
@@ -1578,20 +1578,22 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		IContractSO contractSO = null;
 		ContractResDTO resDTO = null;
 		ContractReqDTO reqDTO = null;
+		IContractTerminationSO contractTerminationSO;
 		TerminationBackingBean trBB = null;
 		
 		try {
 			Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
 			reqDTO = new ContractReqDTO();
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
 			reqDTO.setContractId(contractId);
 			Long contractVerId = contractSO.getLatestContractVer(reqDTO).getCtContractVer().getContractVerId();
 			
 			reqDTO.setContractVerId(contractVerId);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
 			reqDTO.setUpdateAction(true);
-			resDTO = contractSO.retrieveContractVerDtls(reqDTO);
+			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
+			
+			resDTO = contractTerminationSO.retrieveTerminationContractVerDtls(reqDTO);
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
 			trBB.getManagedBean().setExternalPageUrl(null);
@@ -1600,6 +1602,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			e.printStackTrace();
 		} finally{
 			contractSO = null;
+			contractTerminationSO = null;
 			resDTO = null;
 			reqDTO = null;
 			trBB= null;
