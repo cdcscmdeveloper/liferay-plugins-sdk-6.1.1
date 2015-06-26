@@ -24,16 +24,18 @@
 						
 						<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
 						
-						<!-- disable spki for now
-						<c:choose>
-							<c:when
-								test="#{backingBean.managedBean.smAppl.applType ne ParameterConst.newSmApplnForUpdate}">
-								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-							</c:when>
-							<c:otherwise>
-								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
-							</c:otherwise>
-						</c:choose> -->
+						<!-- disable spki for now -->
+						<ui:remove>
+							<c:choose>
+								<c:when
+									test="#{backingBean.managedBean.smAppl.applType ne ParameterConst.newSmApplnForUpdate}">
+									<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+								</c:when>
+								<c:otherwise>
+									<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
+								</c:otherwise>
+							</c:choose>
+						</ui:remove>
 
 
 
