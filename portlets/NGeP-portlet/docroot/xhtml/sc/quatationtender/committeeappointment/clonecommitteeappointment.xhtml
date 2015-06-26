@@ -184,12 +184,13 @@
 					<p:ajax event="unselect"
 						listener="#{qTCommitteBackingBean.onNodeUnselect}" />
 
-					<p:column headerText="#{lbl['lbl.sc.name']}">
+					<p:column headerText="#{lbl['lbl.sc.name']}" style="width:210px;">
+					
 						<h:outputText style="font-weight: bold;"
 							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
 							rendered="#{committeeNode.type == 'committee'}" />
 
-						<h:outputText value="#{committeeNode.object.memberName}"
+						<h:outputText value="#{qTCommitteBackingBean.chopString(committeeNode.object.memberName,25)}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
 							style="white-space: normal;word-wrap:break-word;" />
 					</p:column>
@@ -202,13 +203,13 @@
 					<p:column headerText="#{lbl['lbl.sc.designation']}">
 						<h:outputText value="#{committeeNode.object.designation}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
-							style="white-space: normal;" />
+							style="white-space: normal;word-wrap:break-word;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.email']}">
 						<h:outputText value="#{committeeNode.object.email}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
-							style="white-space: normal;" />
+							style="white-space: normal; word-wrap:break-word;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.grade']}">
