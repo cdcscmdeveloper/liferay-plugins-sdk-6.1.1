@@ -271,10 +271,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
 		//this.getManagedBean().setAppId(1257118);//Dev
-		//this.getManagedBean().setAppId(1257442);
-		//this.getManagedBean().setAppId(1257676); //FT
-		//this.getManagedBean().setAppId(1257345);//FT
-		//this.getManagedBean().setAppId(1257944);//FT
+		//this.getManagedBean().setAppId(1259054);
 		//this.getManagedBean().setAppId(1258520);//#4126 #4377
 		
 		this.getManagedBean().setActiveIndex(0);
@@ -1901,6 +1898,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 			svTemplate.setSmSvAdtMachines(new ArrayList<SmSvAdtMachine>());
 		}
 		SmSvAdtMachine adtMachine = new SmSvAdtMachine();
+		adtMachine.setValue(new BigDecimal("0.00"));
 		adtMachine.setSmSvTemplate(svTemplate);
 		
 		this.getManagedBean().setSelectedAdtMachine(adtMachine);
