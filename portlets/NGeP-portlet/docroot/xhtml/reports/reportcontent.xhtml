@@ -11,7 +11,7 @@
 		<table style="width: 100%" >
 			<tr>
 				<td>
-				<p:panel style="width: 100%;" header="REPORT CRITERIA"
+				<p:panel style="width: 100%;" header="#{lbl['lbl.rpt.rptcriteria']}"
 						 id="rptModuleId" >
 						 <table style="margin-top: 10px; width: 100%;">
 						  <tr>
@@ -166,7 +166,7 @@
 		            </div>
 					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
-		            <p:commandButton value="#{lbl['lbl.btn.generate']}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
+		            <p:commandButton value="#{lbl['lbl.rpt.generate']}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
 		            update="@form" partialSubmit="true" process="@form">
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
     				</p:commandButton> 	           
