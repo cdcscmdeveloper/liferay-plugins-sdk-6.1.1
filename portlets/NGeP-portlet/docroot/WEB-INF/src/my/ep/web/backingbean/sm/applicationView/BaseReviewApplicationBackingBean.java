@@ -295,31 +295,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	}
 
 	/**
-	 * Get drop down value for display purpose by code
-	 * 
-	 * @param String
-	 *            parameterType
-	 * @param String
-	 *            parameterCode
-	 * @return String
-	 */
-	private String getDropDownViewOnlyValueByCode(String parameterType,
-			String parameterCode) {
-		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
-				.getParameterDescListBySearchBean(parameterType, null);
-		String retVal = "";
-		for (PmParameterDesc parameterDesc : parameterDescs) {
-
-			if (parameterCode.equals(parameterDesc.getPmParameter()
-					.getParameterCode())) {
-				retVal = parameterDesc.getCodeName();
-			}
-		}
-
-		return retVal;
-	}
-
-	/**
 	 * Get drop down value for display purpose by id
 	 * 
 	 * @param String
@@ -464,7 +439,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				SmApplicationUtil.assignSupplierBusinessType(getManagedBean()
 						.getSmSupplier()));
 		getManagedBean().setSupplierBusinessTypeVal(
-				getDropDownViewOnlyValueByCode(
+				SmCommonUtil.getDropDownViewOnlyValueByCode(
 						SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
 						getManagedBean().getSmSupplier().getBusinessType()));
 		if (getManagedBean().isViewSupplierProfile()) {

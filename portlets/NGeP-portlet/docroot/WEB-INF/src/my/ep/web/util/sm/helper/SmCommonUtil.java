@@ -2356,4 +2356,29 @@ public class SmCommonUtil {
 				reqDTO);
 		return resDTO.getPmUser();
 	}
+	
+	/**
+	 * Get drop down value for display purpose by code
+	 * 
+	 * @param String
+	 *            parameterType
+	 * @param String
+	 *            parameterCode
+	 * @return String
+	 */
+	public static String getDropDownViewOnlyValueByCode(String parameterType,
+			String parameterCode) {
+		List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(parameterType, null);
+		String retVal = "";
+		for (PmParameterDesc parameterDesc : parameterDescs) {
+
+			if (parameterCode.equals(parameterDesc.getPmParameter()
+					.getParameterCode())) {
+				retVal = parameterDesc.getCodeName();
+			}
+		}
+
+		return retVal;
+	}
 }
