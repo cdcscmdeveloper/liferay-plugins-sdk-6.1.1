@@ -469,6 +469,10 @@ public class LovBackingBean implements Serializable {
 		String expressionString = this.getLovBean().getSaveObject();
 			
 		debugLogger("Save Object: " + expressionString);
+		// FL Debug. Please remove it after tested.
+		log.info("FL Debug. LovBackingBean.populateToSaveObject()");
+		log.info("Save Object: " + expressionString);
+		log.info("LOV ID:"+ getLovBean().getLovId());
 			
 		if(!FacesScopes.isValueReference(expressionString)) {
 			expressionString = "#{" + expressionString + "}";
