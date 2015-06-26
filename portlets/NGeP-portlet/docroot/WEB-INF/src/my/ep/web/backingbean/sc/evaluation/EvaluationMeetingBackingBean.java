@@ -74,6 +74,7 @@ import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteRemarks;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -1487,6 +1488,31 @@ public class EvaluationMeetingBackingBean extends
 		this.getManagedBean().setPayLoad(evaluationDataType);
 		// FacesScopes facesScopes = new FacesScopes();
 		FacesContext fc = FacesContext.getCurrentInstance();
+		IQTMeetingSO meetingso = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTMeetingSO.class);
+		MeetingReqDTO activityReqDTo = new MeetingReqDTO();
+		activityReqDTo.setQtId(evaluationDataType.getQtId().longValue());
+		activityReqDTo
+				.setCommitteType(evaluationDataType.getCommitteeType());
+		MeetingResDTO activityResDTo = meetingso
+				.retriveCommitteActivityDtls(activityReqDTo);
+		if (null != activityResDTo
+				&& !activityResDTo.getCommitteMembers().isEmpty()) {
+			MeetingReqDTO deleteActivityDao = new MeetingReqDTO();
+			List<ScQtCommitteeActivity> deleteActivityList = new ArrayList<ScQtCommitteeActivity>();
+			for (ScQtCommitteeActivity activity : activityResDTo
+					.getCommitteMembers()) {
+				if (!activity.isBrandNew()) {
+					//activity.setScCommitteeMember(null);
+					activity.setDeleted(true);
+					deleteActivityList.add(activity);
+				}
+			}
+			deleteActivityDao
+					.setDeletedCommitteeActivityMembersList(deleteActivityList);
+			meetingso.deleteCommitteeActivityDtls(deleteActivityDao);
+		}
 		retriveMeetingDetails(evaluationDataType.getQtId().longValue(),
 				evaluationDataType.getCommitteeType());
 		String taskName = this.getManagedBean().getTaskName();
