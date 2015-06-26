@@ -397,13 +397,17 @@ public class LOADetailBackingBean extends
 			if(scLoa.getContractSigner() != null){
 				getManagedBean().setContractSignerUser(scLoa.getContractSigner());
 			}
-
+			
+			// loa contract type - central
+			String contractType = scLoa.getContractType().getParameterCode();
+			if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+				getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
+			}
+			
 			generateDeclarationFromVelocity(scLoa,scQt);
 			
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
-			
-			
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -604,6 +608,12 @@ public class LOADetailBackingBean extends
 		if (!ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
 			scLoa = calcBondAmount(scLoa);
 		}
+		
+		// loa contract type - central
+		String contractType = scLoa.getContractType().getParameterCode();
+		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
+		}
 
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
@@ -646,7 +656,6 @@ public class LOADetailBackingBean extends
 		scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
 		// Fulfilment Schedule
-
 		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
 
 		if (null != scheduleList && !scheduleList.isEmpty()) {
@@ -2631,6 +2640,13 @@ public class LOADetailBackingBean extends
 			scLoa.setContractSigner(contractSignerUser);
 		}
 		
+		// loa contract type - central
+		String contractType = scLoa.getContractType().getParameterCode();
+		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
+			PmOrgProfile pmOrgProfile = retrieveOrgProfileByOrgType(getManagedBean().getSelectedContractAgency());
+			scLoa.setContractAgency(pmOrgProfile);
+		}
+
 		// supplier witness details
 		/*if(scLoa.getScLoaWitnesses() != null && scLoa.getScLoaWitnesses().size()>0){
 			List<ScLoaWitness> witnesses = scLoa.getScLoaWitnesses();
@@ -4607,13 +4623,32 @@ public class LOADetailBackingBean extends
 	}
 	
 	public void backToPrevious(int tabIndex) {
-
 		log.info("backToPrevious");
 		getManagedBean().setSelectedTabIndex(tabIndex);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOA_PAGE);
 
+	}
+	
+	/**
+	 * Retrieve org profile by org type.
+	 *
+	 * @param ortType the ort type
+	 * @return the pm org profile
+	 */
+	private PmOrgProfile retrieveOrgProfileByOrgType(String ortType){
+		PmOrgProfile pmOrgProfile = null;
+		OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+		profileReqDTO.setOrgType(ortType);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileResDTO orgProfileResDTO = orgProfileSO
+				.retrieveOrgProfileListByOrgType(profileReqDTO);
+		if(orgProfileResDTO.getOrgProfileList() != null && orgProfileResDTO.getOrgProfileList().size()>0){
+			pmOrgProfile =  orgProfileResDTO.getOrgProfileList().get(0);
+		}
+		return pmOrgProfile;
 	}
 
 }
