@@ -34,7 +34,7 @@ public class ViewSuppProfileManagedBean extends
 	private SmSupplierBasicInfoVO basicInfo;
 	private String applnApprovalRemarks;
 	private boolean showParentMsg;
-	private boolean disabledRegStatus;
+	private boolean allowedToDoMaintenance;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
@@ -155,14 +155,6 @@ public class ViewSuppProfileManagedBean extends
 		this.deleteApprovedCategories = deleteApprovedCategories;
 	}
 
-	public boolean isDisabledRegStatus() {
-		return disabledRegStatus;
-	}
-
-	public void setDisabledRegStatus(boolean disabledRegStatus) {
-		this.disabledRegStatus = disabledRegStatus;
-	}
-
 	public PmUser getApplApprover() {
 		return applApprover;
 	}
@@ -177,6 +169,14 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setApprovedDate(String approvedDate) {
 		this.approvedDate = approvedDate;
+	}
+
+	public boolean isAllowedToDoMaintenance() {
+		return allowedToDoMaintenance;
+	}
+
+	public void setAllowedToDoMaintenance(boolean allowedToDoMaintenance) {
+		this.allowedToDoMaintenance = allowedToDoMaintenance;
 	}
 
 }
