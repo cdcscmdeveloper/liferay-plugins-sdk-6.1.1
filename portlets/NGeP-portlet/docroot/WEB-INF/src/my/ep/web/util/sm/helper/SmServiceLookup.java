@@ -27,8 +27,8 @@ import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
+import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
-import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -335,5 +335,16 @@ public class SmServiceLookup {
 		return (ISupplierDataMaintenanceSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupplierDataMaintenanceSO.class);
+	}
+
+	/**
+	 * Get ISupportingDocInquirySO
+	 * 
+	 * @return ISupportingDocInquirySO
+	 */
+	public static ISupportingDocInquirySO getSupportingDocInquirySO() {
+		return (ISupportingDocInquirySO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+						ISupportingDocInquirySO.class);
 	}
 }
