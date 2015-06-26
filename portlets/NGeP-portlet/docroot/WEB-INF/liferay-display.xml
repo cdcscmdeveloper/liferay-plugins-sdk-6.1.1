@@ -249,6 +249,7 @@
 		<portlet id="viewSupplierProfile"></portlet>
 		<portlet id="viewApplicationHistory"></portlet>
 		<portlet id="supplierDataMaintenance"></portlet>
+		<portlet id="resendExpiredInquirySdo"></portlet>
 		<portlet id="SoftCertReg"></portlet>
 		<portlet id="MySoftCert"></portlet>
 		<portlet id="smDeactivateAdmin"></portlet>
