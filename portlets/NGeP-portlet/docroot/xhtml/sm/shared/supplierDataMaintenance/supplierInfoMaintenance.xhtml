@@ -9,13 +9,13 @@
 	<p:panel header="#{lbl['lbl.sm.supp.info']}" toggleable="true"
 		id="suppInfoPanelId">
 		<p:outputPanel id="suppInfoOutId" layout="block">
-			<table style="width: 75%;table-layout:fixed">
+			<table style="width: 50%;table-layout:fixed">
 				<p:outputPanel rendered="#{not empty supplierDataMaintenanceBackingBean.managedBean.smAppl.pmStatus}">
 					<tr><td><p:outputLabel value="#{lbl['lbl.rpt.rgstStatus']}" styleClass="outputLabel-view-label"/> <p:outputLabel
 							value="*" styleClass="mandatory" /></td>
 	
 					<td><p:selectOneMenu label="#{lbl['lbl.rpt.rgstStatus']}"
-							id="regStatusId" required="true" disabled="#{supplierDataMaintenanceBackingBean.managedBean.disabledRegStatus}"
+							id="regStatusId" required="true" disabled="#{supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 							value="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.pmStatus.statusId}"
 							style="width: 270px;margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -26,7 +26,6 @@
 	
 						</p:selectOneMenu> <p:message id="regStatusIdMsg" for="regStatusId"
 							showSummary="true" showDetail="false" display="icon" /></td>
-						<td>&#160;</td>
 					</tr>
 				</p:outputPanel>
 				<tr>

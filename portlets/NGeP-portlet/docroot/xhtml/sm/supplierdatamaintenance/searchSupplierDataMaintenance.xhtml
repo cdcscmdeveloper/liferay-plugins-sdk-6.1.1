@@ -70,7 +70,7 @@
 					<p:commandLink onstart="blockWidget.show()"
 						oncomplete="blockWidget.hide()"
 						action="#{supplierDataMaintenanceBackingBean.navigateToMaintenance(smSupplier.smAppl)}"
-						process="@this" partialSubmit="true" update="@([id$=dataMainTenanceMainId])"
+						process="@this" partialSubmit="true" update="@form"
 						style="padding-right:5px;">
 						<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
 					</p:commandLink>

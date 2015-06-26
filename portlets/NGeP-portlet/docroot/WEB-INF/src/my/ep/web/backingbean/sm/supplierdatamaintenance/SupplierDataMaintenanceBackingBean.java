@@ -77,19 +77,13 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setSmAppl(
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
-
-		// compare if login user id same as latest approved application only can
-		// edit reg status
-		getManagedBean().setDisabledRegStatus(true);
-		if (isLoginUserTheApproverForAppl()) {
-			getManagedBean().setDisabledRegStatus(false);
-		}
-
 		setApplication(getManagedBean().getSmAppl());
 		assignApplActiveAndApprovedCategoryList();
 		setOverLappingCategories();
 		setCategoryTypeConfirm();
 		getManagedBean().setDisplaySearchPage(false);
+		setLoginUserAllowedToDoMaintenance();
+		checkIfSupplierHasActiveTransaction(true);
 	}
 
 	/**
@@ -106,25 +100,12 @@ public class SupplierDataMaintenanceBackingBean extends
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
 		getManagedBean().setSmSupplier(
 				getManagedBean().getSmAppl().getSmSupplier());
-		if (SmCommonUtil.getActiveApplBySupplier(getManagedBean().getSmAppl()
-				.getSmSupplier()) != null) {
-			String[] params = { "" };
-			params[0] = getManagedBean().getSmAppl().getSmSupplier()
-					.getCompanyName();
-			throw new EpException(SmCommonUtil.getMessage(
-					"lbl.sm.cancelmof.bysupp.has.active.appl.msg", params));
-		}
 		getManagedBean().setBasicInfo(
 				SmApplicationUtil.getSmSupplierBasicInfoVO(getManagedBean()
 						.getBasicInfo(), getManagedBean().getSmSupplier(),
 						getManagedBean().getSmAppl()));
-
-		// compare if login user id same as latest approved application only can
-		// edit reg status
-		getManagedBean().setDisabledRegStatus(true);
-		if (isLoginUserTheApproverForAppl()) {
-			getManagedBean().setDisabledRegStatus(false);
-		}
+		setLoginUserAllowedToDoMaintenance();
+		checkIfSupplierHasActiveTransaction(true);
 
 		SmCommonUtil
 				.redirectToPage(
@@ -745,7 +726,6 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setZoneList(
 				SmServiceLookup.getZoneSO().retrieveActiveZoneList()
 						.getZoneList());
-		getManagedBean().setDisabledRegStatus(true);
 	}
 
 	/**
@@ -795,5 +775,46 @@ public class SupplierDataMaintenanceBackingBean extends
 			}
 		}
 		return retVal;
+	}
+
+	/**
+	 * Set whether the login user is allowed to do data maintenance
+	 */
+	private void setLoginUserAllowedToDoMaintenance() {
+		getManagedBean().setAllowedToDoMaintenance(false);
+		if (isLoginUserTheApproverForAppl()) {
+			getManagedBean().setAllowedToDoMaintenance(true);
+		}
+	}
+
+	/**
+	 * To check whether selected supplier has active transaction
+	 * 
+	 * @param boolean isCancelMof
+	 */
+	private void checkIfSupplierHasActiveTransaction(boolean isCancelMof) {
+		boolean alreadyHasMsg = false;
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (isCancelMof) {
+			if (SmApplicationUtil.hasActiveTransactions(getManagedBean()
+					.getSmSupplier())) {
+				getManagedBean().setAllowedToDoMaintenance(false);
+				alreadyHasMsg = true;
+				SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
+						MessageUtils.getMessage(MessageConst.ERROR_722609,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale()), null);
+			}
+
+		}
+		if (!alreadyHasMsg
+				&& SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmSupplier())) {
+			getManagedBean().setAllowedToDoMaintenance(false);
+			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
+					MessageUtils.getMessage(MessageConst.ERROR_722608,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), null);
+		}
 	}
 }
