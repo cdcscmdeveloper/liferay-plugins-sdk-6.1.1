@@ -24,15 +24,17 @@
 							update=":form" style="margin-bottom:5px;" />
 						
 						<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-						<!-- disable spki for now
-						<c:choose>
-							<c:when test="#{backingBean.managedBean.overLappedCategoryExists}">
-								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
-							</c:when>
-							<c:otherwise>
-								<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-							</c:otherwise>
-						</c:choose> -->
+						<!-- disable spki for now -->
+						<ui:remove>
+							<c:choose>
+								<c:when test="#{backingBean.managedBean.overLappedCategoryExists}">
+									<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
+								</c:when>
+								<c:otherwise>
+									<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+								</c:otherwise>
+							</c:choose>
+						</ui:remove>
 					</div>
 				</p:outputPanel> <p:outputPanel id="supDocPan">
 					<h:panelGroup
