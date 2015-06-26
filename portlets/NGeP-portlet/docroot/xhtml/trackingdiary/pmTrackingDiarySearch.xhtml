@@ -37,7 +37,7 @@
 							value="#{pmTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.profileManagementFunctionType)}" />
 						<p:ajax event="change"
 							listener="#{pmTrackingDiaryBackingBean.onFunctionSelect()}"
-							partialSubmit="true" process="@this" update="trackingSeachPanel" />
+							partialSubmit="true" process="@this" update="trackingSeachPanel, trackingSeachPanel2" />
 					</p:selectOneMenu>
 				</h:column>
 			</h:panelGrid>
@@ -48,12 +48,6 @@
 					<ui:include
 						src="/xhtml/trackingdiary/pmUserProfileTrackingDiarySearch.xhtml" />
 				</p:panel>
-				<p:panel id="sysParamSearchID"
-					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.systemParameterParamCode}">
-
-					<ui:include
-						src="/xhtml/trackingdiary/pmSysParamTrackingDiarySearch.xhtml" />
-				</p:panel>
 				<p:panel id="pmOrgSearchID"
 					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.orgProfileParamCode}">
 					<ui:include
@@ -61,6 +55,139 @@
 				</p:panel>
 			</h:panelGroup>
 		</p:panel>
+		<p:panel id="resultPanel" header="#{lbl['lbl.pm.search.result']}"
+			toggleable="true">
+			<h:panelGroup id="trackingSeachPanel2">
+
+				<p:panel id="pmUserSearchResultID"
+					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.userProfileParamCode}">
+					<p:dataTable id="dtUserProfileResult"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{pmTrackingDiaryBackingBean.managedBean.userDataModel}"
+						lazy="true" var="user" width="100%" rows="10">
+
+						<ac:paginator for="dtUserProfileResult" />
+
+						<p:column width="15%">
+							<f:facet name="header">
+								<h:outputText
+									value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
+							</f:facet>
+						#{user.loginId}
+				</p:column>
+						<p:column width="15%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.pm.profiles.userdetails.idno']}" />
+							</f:facet>
+					#{user.identificationNo}
+				</p:column>
+						<p:column width="15%">
+							<f:facet name="header">
+								<h:outputText
+									value="#{lbl['lbl.pm.profiles.userdetails.username']}" />
+							</f:facet>
+				   	#{user.userName}
+				</p:column>
+						<p:column width="5%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.td.action']}" />
+							</f:facet>
+							<p:commandLink
+								action="#{pmTrackingDiaryBackingBean.goToUserTrackingDiarySearch(user)}">
+								<p:graphicImage value="/css/images/design/ico-view.png"
+									title="#{lbl['lbl.ct.view']}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+				<p:panel id="sysParamSearchResultID"
+					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.systemParameterParamCode}">
+					<p:panelGrid styleClass="tablePanel">
+						<f:facet name="header">
+							<p:row>
+								<p:column width="80%">
+							#{lbl['lbl.pm.ta.parameter.type']}
+						</p:column>
+								<p:column>
+					#{lbl['lbl.td.action']}		
+                        </p:column>
+							</p:row>
+						</f:facet>
+
+						<p:row>
+							<p:column width="80%">
+								<h:outputText value="#{lbl['lbl.pm.settings.rule.config']}" />
+							</p:column>
+							<p:column>
+								<p:commandLink
+									action="#{pmTrackingDiaryBackingBean.goToRuleConfigTrackingDiarySearch()}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.ct.view']}" />
+								</p:commandLink>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column width="80%">
+								<h:outputText value="#{lbl['lbl.pm.settings.fee.setting']}" />
+							</p:column>
+							<p:column>
+								<p:commandLink
+									action="#{pmTrackingDiaryBackingBean.goToFeeSettTrackingDiarySearch()}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.ct.view']}" />
+								</p:commandLink>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column width="80%">
+								<h:outputText
+									value="#{lbl['lbl.pm.settings.operational.threshold']}" />
+							</p:column>
+							<p:column>
+								<p:commandLink
+									action="#{pmTrackingDiaryBackingBean.goToThresholdTrackingDiarySearch()}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.ct.view']}" />
+								</p:commandLink>
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+
+				</p:panel>
+				<p:panel id="pmOrgSearchResultID"
+					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.orgProfileParamCode}">
+					<p:dataTable id="dtOrgProfileResult"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{pmTrackingDiaryBackingBean.managedBean.userOrgDataModel}"
+						lazy="true" var="OrgProfile" width="100%" rows="10">
+
+						<ac:paginator for="dtOrgProfileResult" />
+						<p:column width="15%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.pm.ta.org.code']}" />
+							</f:facet>
+						#{OrgProfile.pmOrgValidity.orgCode}
+				</p:column>
+						<p:column width="15%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.pm.ta.org.name']}" />
+							</f:facet>
+				       	#{OrgProfile.pmOrgValidity.orgName}
+				</p:column>
+						<p:column width="5%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.td.action']}" />
+							</f:facet>
+							<p:commandLink
+								action="#{pmTrackingDiaryBackingBean.goToOrgTrackingDiarySearch(OrgProfile)}">
+								<p:graphicImage value="/css/images/design/ico-view.png"
+									title="#{lbl['lbl.ct.view']}" />
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</h:panelGroup>
+		</p:panel>
 	</h:panelGroup>
-	
+
 </ui:composition>

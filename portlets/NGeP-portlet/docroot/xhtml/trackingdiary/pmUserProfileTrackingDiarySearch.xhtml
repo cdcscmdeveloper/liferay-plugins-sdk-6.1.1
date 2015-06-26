@@ -29,51 +29,12 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
 				action="#{pmTrackingDiaryBackingBean.searchUserProfile()}" partialSubmit="true" process="pmUserSearchID @this"
-				update="dtUserProfileResult" />
+				update=":form:dtUserProfileResult" />
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{pmTrackingDiaryBackingBean.resetUserProfilesSearchBean}"
 				update="pmUserSearchID" />
 		</div>
-		<p:panel id="userResultPanel" header="#{lbl['lbl.pm.search.result']}"
-			toggleable="true">
-
-			<p:dataTable id="dtUserProfileResult" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{pmTrackingDiaryBackingBean.managedBean.userDataModel}" lazy="true"
-				var="user" width="100%" rows="10">
-              
-                <ac:paginator for="dtUserProfileResult" />
-
-				<p:column width="15%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" />
-					</f:facet>
-						#{user.loginId}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.pm.profiles.userdetails.idno']}" />
-					</f:facet>
-					#{user.identificationNo}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.pm.profiles.userdetails.username']}" />
-					</f:facet>
-				   	#{user.userName}
-				</p:column>
-				<p:column width="5%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.action']}"/>
-					</f:facet>
-					<p:commandLink
-						action="#{pmTrackingDiaryBackingBean.goToUserTrackingDiarySearch(user)}">
-						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
-					</p:commandLink>
-			</p:column>
-			</p:dataTable>
-
-		</p:panel>
 
 
 </ui:composition>
