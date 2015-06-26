@@ -3887,6 +3887,8 @@ public class LOIDetailBackingBean extends
 		// ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
 		List<ScQtCommitteeActivity> activityList = new ArrayList<ScQtCommitteeActivity>();
+		List<ScQtMeetingAttendance> meetingAttendances = new ArrayList<ScQtMeetingAttendance>();
+		List<ScQtMeetingAttendance> meetingAttendancesList = new ArrayList<ScQtMeetingAttendance>();
 
 		if (getManagedBean().getEcActivityList() != null) {
 			for (ScQtCommitteeActivity ecActivity : getManagedBean()
@@ -3951,8 +3953,22 @@ public class LOIDetailBackingBean extends
 					activityList.add(activity);
 				}
 			}
+			if (null != getManagedBean().getScQtCommittee().getMeetingAttendances()
+					&& !getManagedBean().getScQtCommittee().getMeetingAttendances().isEmpty()) {
+				meetingAttendances = getManagedBean().getScQtCommittee().getMeetingAttendances();
+				for (ScQtMeetingAttendance attendance : meetingAttendances) {
+					if (attendance.getName() == null) {
+						attendance.setName("");
+					}
+					if (attendance.getIcPassport() == null) {
+						attendance.setIcPassport("");
+					}
+					meetingAttendancesList.add(attendance);
+				}
+			}
 		}
 		context.put("activityLists", activityList);
+		context.put("meetingAttendances", meetingAttendancesList);
 		context.put("bean", this);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
