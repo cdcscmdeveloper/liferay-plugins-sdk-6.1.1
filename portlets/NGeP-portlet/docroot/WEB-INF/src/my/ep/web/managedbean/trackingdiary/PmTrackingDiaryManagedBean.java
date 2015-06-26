@@ -301,6 +301,16 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 					new SearchFilterBean("docType",
 							SearchOperator.OPERATOR_EQUALS.value(),
 							getSelectedDocType()));
+			log.info("...............isMultiRuleType()="+isMultiRuleType());
+			log.info("...............getSelectedDocType2()="+getSelectedDocType2());
+			if (isMultiRuleType() && getSelectedDocType2() != null
+					&& !getSelectedDocType2().isEmpty()) {
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("docType",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								getSelectedDocType2(), "and"));
+			}
 			if (getSelectedDocId() != null) {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docId",
@@ -320,27 +330,33 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 								ITrackingDiarySO.class);
 				resDTO = trackingDiarySO
 						.retrieveTrackingDiaryBySearchBean(reqDTO);
-				if(isMultiRuleType() && getSelectedDocType2() != null && !getSelectedDocType2().isEmpty()){
-					 SearchResultBean<PmTrackingDiary> searchResultBean = new SearchResultBean<PmTrackingDiary>();
-					 int totalRecordResult1 = resDTO.getResultBean().getTotalRecord();
-					 searchResultBean.setResultList(resDTO.getResultBean().getResultList());
-					 //retrive second round of Tracking Diary with selectedDocType2
-						TrackingDiaryReqDTO reqDTO2 = new TrackingDiaryReqDTO();
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("docType",
-										SearchOperator.OPERATOR_EQUALS.value(),
-										getSelectedDocType2()));
-						reqDTO2.setSearchBean(searchBean);
-						TrackingDiaryResDTO resDTO2 = new TrackingDiaryResDTO();
-						trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
-								.getInstance().getServiceObject("cc",
-										ITrackingDiarySO.class);
-						resDTO2 = trackingDiarySO
-								.retrieveTrackingDiaryBySearchBean(reqDTO2);
-						searchResultBean.setTotalRecord(resDTO2.getResultBean().getTotalRecord() + totalRecordResult1);
-						searchResultBean.getResultList().addAll(resDTO2.getResultBean().getResultList());//add this result to previous list
-					 return searchResultBean; 
-				}
+				// if(isMultiRuleType() && getSelectedDocType2() != null &&
+				// !getSelectedDocType2().isEmpty()){
+				// SearchResultBean<PmTrackingDiary> searchResultBean = new
+				// SearchResultBean<PmTrackingDiary>();
+				// int totalRecordResult1 =
+				// resDTO.getResultBean().getTotalRecord();
+				// searchResultBean.setResultList(resDTO.getResultBean().getResultList());
+				// //retrive second round of Tracking Diary with
+				// selectedDocType2
+				// TrackingDiaryReqDTO reqDTO2 = new TrackingDiaryReqDTO();
+				// searchBean.getDataFilterBeans().add(
+				// new SearchFilterBean("docType",
+				// SearchOperator.OPERATOR_EQUALS.value(),
+				// getSelectedDocType2()));
+				// reqDTO2.setSearchBean(searchBean);
+				// TrackingDiaryResDTO resDTO2 = new TrackingDiaryResDTO();
+				// trackingDiarySO = (ITrackingDiarySO) BusinessDelegate
+				// .getInstance().getServiceObject("cc",
+				// ITrackingDiarySO.class);
+				// resDTO2 = trackingDiarySO
+				// .retrieveTrackingDiaryBySearchBean(reqDTO2);
+				// searchResultBean.setTotalRecord(resDTO2.getResultBean().getTotalRecord()
+				// + totalRecordResult1);
+				// searchResultBean.getResultList().addAll(resDTO2.getResultBean().getResultList());//add
+				// this result to previous list
+				// return searchResultBean;
+				// }
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
