@@ -71,7 +71,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	
 	        break;
 		case ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL:	
-			    rptGenBean.generateYearList();
+			    rptGenBean.generateCommonYearList();
 				rptGenBean.setSmMandatoryCreatedFromYearView(true);	
 				rptGenBean.setSmMandatoryRegisteredReportTypeDateView(true);	
             break;
