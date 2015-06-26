@@ -130,26 +130,32 @@ public class PmTrackingDiaryBackingBean extends
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	public String goToRuleConfigTrackingDiarySearch(){
-		log.debug("**********goToRuleConfigTrackingDiarySearch************");
+		log.info("**********goToRuleConfigTrackingDiarySearch************");
+		getManagedBean().setSelectedDocType2(null);
+		getManagedBean().setMultiRuleType(false);
 		getManagedBean().setSelectedDocType("RT");
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	public String goToFeeSettTrackingDiarySearch(){
-		log.debug("**********goToFeeSettTrackingDiarySearch************");
+		log.info("**********goToFeeSettTrackingDiarySearch************");
+		getManagedBean().setSelectedDocType2(null);
+		getManagedBean().setMultiRuleType(false);
 		getManagedBean().setSelectedDocType("FI");
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	public String goToThresholdTrackingDiarySearch(){
-		log.debug("**********goToThresholdTrackingDiarySearch************");
+		log.info("**********goToThresholdTrackingDiarySearch************");
 		getManagedBean().setSelectedDocType("UT");
 		getManagedBean().setSelectedDocType2("BS");
 		getManagedBean().setMultiRuleType(true);
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		/////
+		
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	

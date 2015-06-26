@@ -40,43 +40,12 @@
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				actionListener="#{pmTrackingDiaryBackingBean.searchUserOrgProfile}" partialSubmit="true" process="pmOrgSearchID @this" update="orgResultPanel"/>
+				actionListener="#{pmTrackingDiaryBackingBean.searchUserOrgProfile}" partialSubmit="true" process="pmOrgSearchID @this" update=":form:dtOrgProfileResult"/>
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{pmTrackingDiaryBackingBean.resetOrganisationSearchBean}"
 				update=":form" />
 		</div>
-		<p:panel id="orgResultPanel" header="#{lbl['lbl.pm.search.result']}"
-			toggleable="true">
-
-			<p:dataTable id="dtOrgProfileResult" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-				value="#{pmTrackingDiaryBackingBean.managedBean.userOrgDataModel}" lazy="true"
-				var="OrgProfile" width="100%" rows="10">
-
-               <ac:paginator for="dtOrgProfileResult" />
-				<p:column width="15%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.pm.ta.org.code']}" />
-					</f:facet>
-						#{OrgProfile.pmOrgValidity.orgCode}
-				</p:column>
-				<p:column width="15%">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.pm.ta.org.name']}" />
-					</f:facet>
-				       	#{OrgProfile.pmOrgValidity.orgName}
-				</p:column>
-				<p:column width="5%">
-					<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.td.action']}"/>
-					</f:facet>
-					<p:commandLink
-						action="#{pmTrackingDiaryBackingBean.goToOrgTrackingDiarySearch(OrgProfile)}">
-						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.view']}" />
-					</p:commandLink>
-			</p:column>
-			</p:dataTable>
-
-		</p:panel>
+		
 
 </ui:composition>
