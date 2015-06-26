@@ -1346,9 +1346,7 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						if(getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size()>0){
-							generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment, getManagedBean().getSuppLoiLoaMap());
-						}
+						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
 					}
 					
 				}else if(scLoaReportAttachment != null && 
@@ -1903,20 +1901,66 @@ public class LOADetailBackingBean extends
 	 * @throws Exception the exception
 	 */
 
-	private void generateNegotiationResultPdf(ScAttachment attachment, Map<Long, List<ScLoiLoa>> suppLoiLoaMap) throws Exception {
+	private void generateNegotiationResultPdf(ScAttachment attachment) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
 		ScLoa scLoa = getManagedBean().getScLoa();
 		populateAttachmentDetails(attachment);
 		List<ScLoi> lois = new ArrayList<ScLoi>();
-		if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getSmSupplier() != null){
-			List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
-			if(loiloas != null && loiloas.size()>0){
-				for (ScLoiLoa scLoiLoa : loiloas) {
-					if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
-						lois.addAll(scLoiLoa.getScLois()) ;
+		if(getManagedBean().getSuppLoiLoaMap() != null && getManagedBean().getSuppLoiLoaMap().size()>0){
+			Map<Long, List<ScLoiLoa>> suppLoiLoaMap = getManagedBean().getSuppLoiLoaMap();
+			if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getSmSupplier() != null){
+				List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa().getSmSupplier().getSupplierId());
+				if(loiloas != null && loiloas.size()>0){
+					for (ScLoiLoa scLoiLoa : loiloas) {
+						if(scLoiLoa.getScLois() != null && scLoiLoa.getScLois().size()>0){
+							lois.addAll(scLoiLoa.getScLois()) ;
+						}
 					}
+				} 
+			}
+		} else{
+			if(scLoa.getScLoiLoa() != null && scLoa.getScLoiLoa().getScLois() != null && scLoa.getScLoiLoa().getScLois().size()>0){
+				lois  = scLoa.getScLoiLoa().getScLois();
+			}
+		}
+		
+		if(lois != null && lois.size()>0){
+			for (ScLoi scLoi : lois) {
+				if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
+					BigDecimal offerPrice = BigDecimal.valueOf(0d);
+					BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
+
+					BigDecimal finalPrice = BigDecimal.valueOf(0d);
+					BigDecimal finalPriceSubTotal = BigDecimal.valueOf(0d);
+
+					List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+					for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+
+						if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
+							// offered price sub total and total
+							offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+							offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
+							if(offeredPriceSubTotal != null){
+								offeredPriceSubTotal =  offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+								scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+							} else{
+								offeredPriceSubTotal = BigDecimal.valueOf(0d);
+							}
+
+							// final price sub total and total - for bidding.
+							finalPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
+							finalPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, scLoiLoaItem.getQty());
+							if(finalPriceSubTotal != null){
+								finalPriceSubTotal =  finalPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+								scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
+							} else{
+								finalPriceSubTotal = BigDecimal.valueOf(0d);
+							}
+						}
+					}
+					scLoi.setScLoiLoaItems(scLoiLoaItems);
 				}
-			} 
+			}	
 		}
 
 		VelocityContext context = new VelocityContext();
