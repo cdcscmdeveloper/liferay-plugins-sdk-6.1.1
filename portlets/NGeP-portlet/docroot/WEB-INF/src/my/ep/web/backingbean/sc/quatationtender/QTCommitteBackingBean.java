@@ -2059,5 +2059,19 @@ public class QTCommitteBackingBean extends
 				ParameterTypeConst.SC_PROCUREMENT_MODE, searchBean);
 		return items;
 	}
-
+	
+	/**
+	 * Method will cut the string based on cutOffIndex value.
+	 * 
+	 * @param str
+	 * @param cutOffIndex
+	 * @return formatted string
+	 */
+	public String chopString(String str, int cutOffIndex) {
+		
+		if (str.length() > cutOffIndex) {
+			str = StringUtils.substring(str, 0, cutOffIndex) + " ...";
+		}
+		return str;
+	}
 }
