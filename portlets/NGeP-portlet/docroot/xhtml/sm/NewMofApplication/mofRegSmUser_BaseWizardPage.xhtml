@@ -218,16 +218,18 @@
 												update=":form" style="margin-bottom:5px;" />
 											<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 												<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-												<!-- disable spki for now
-												<c:choose>
-													<c:when
-														test="#{backingBean.managedBean.overLappedCategoryExists}">
-														<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
-													</c:when>
-													<c:otherwise>
-														<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-													</c:otherwise>
-												</c:choose> -->
+												<!-- disable spki for now-->
+												<ui:remove>
+													<c:choose>
+														<c:when
+															test="#{backingBean.managedBean.overLappedCategoryExists}">
+															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
+														</c:when>
+														<c:otherwise>
+															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+														</c:otherwise>
+													</c:choose>
+												</ui:remove>
 
 											</c:if>
 										</div>
@@ -257,15 +259,18 @@
 													update=":form" style="margin-bottom:5px;" />
 												<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 													<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-													<!-- <c:choose>
-														<c:when
-															test="#{backingBean.managedBean.overLappedCategoryExists}">
-															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
-														</c:when>
-														<c:otherwise>
-															<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
-														</c:otherwise>
-													</c:choose> -->
+													<!-- disable spki -->
+													<ui:remove>
+														<c:choose>
+															<c:when
+																test="#{backingBean.managedBean.overLappedCategoryExists}">
+																<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithSpki.xhtml" />
+															</c:when>
+															<c:otherwise>
+																<ui:include src="/xhtml/sm/shared/mofRegistration/declareButtonWithoutSpki.xhtml" />
+															</c:otherwise>
+														</c:choose>
+													</ui:remove>
 												</c:if>
 											</div>
 										</td>
