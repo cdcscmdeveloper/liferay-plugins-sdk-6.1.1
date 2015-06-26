@@ -195,11 +195,15 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 							getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
 						}
 					}
-					
+				
+					if(svTemplate.getKey().equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_BUMIPUTERA)){
+						getManagedBean().getSmSvAddressMap().get(svTemplate.getKey()).add(smSvAddress);
+					}
 				}
 				
 			}
 		}
+		
 	}
 	
 	/**
@@ -273,6 +277,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1257118);//Dev
 		//this.getManagedBean().setAppId(1259054);
 		//this.getManagedBean().setAppId(1258520);//#4126 #4377
+		//this.getManagedBean().setAppId(1437083);
 		
 		this.getManagedBean().setActiveIndex(0);
 		
