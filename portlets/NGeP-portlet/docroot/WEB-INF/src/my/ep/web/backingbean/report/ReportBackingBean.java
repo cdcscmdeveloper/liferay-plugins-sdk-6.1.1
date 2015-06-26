@@ -4015,6 +4015,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					.substring(6, 10));
 			this.setSmCreatedToYear(outputDateFormat.format(currentDate)
 					.substring(6, 10));
+			this.setSmThresholdFromYear(outputDateFormat.format(currentDate)
+					.substring(6, 10));
+			this.setSmThresholdToYear(outputDateFormat.format(currentDate)
+					.substring(6, 10));
 		}		
 		if ((this.getModuleValue() != null) && (this.getSubModule() != null)) {
 			if ((this.getModuleValue()
@@ -4062,6 +4066,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		int yearToInt=Integer.parseInt(yearTo);
 		if(yearFromInt>yearToInt){			
 			throw new EpException(MessageConst.ERROR_REPORT_780015);
+		}
+	}
+	public void checkTwoYearsFieldDefference(String yearFrom,String yearTo) {
+		int yearFromInt=Integer.parseInt(yearFrom);
+		int yearToInt=Integer.parseInt(yearTo);
+		if(yearToInt>yearFromInt+2){	
+			throw new EpException(MessageConst.ERROR_REPORT_780017);
 		}
 	}
 	public void retrieveState() {
@@ -4323,6 +4334,22 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getSmThresholdToYear() != null)) {
 			 checkOnlyYearFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
 			}
+			if ((this.getSmCreatedFromYear() != null)
+					&& (this.getSmCreatedToYear() != null)) {
+			 checkOnlyYearFieldDefference(this.getSmCreatedFromYear(),this.getSmCreatedToYear());
+			}
+			if((this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE)))||(this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_THRESHOLD)))||(this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE)))){
+				if ((this.getSmThresholdFromYear() != null) && (this.getSmThresholdToYear() != null)) {
+					checkTwoYearsFieldDefference(this.getSmThresholdFromYear(),this.getSmThresholdToYear());
+				}
+			}
+			if(this.getReportValue()!= null && (getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SM_CAT_STATIC_BY_YEAR_RPT_VAL))){
+				if ((this.getSmCreatedFromYear() != null) && (this.getSmCreatedToYear() != null)) {
+					checkTwoYearsFieldDefference(this.getSmCreatedFromYear(),this.getSmCreatedToYear());
+				}
+			}
+			
+			
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_SELECTION)
 					|| this.getModuleValue().equalsIgnoreCase(
