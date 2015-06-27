@@ -121,6 +121,7 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -1297,6 +1298,11 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setScQtProposalAmount(recommendedSupplier.getProposalAmount());
 			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
 					.getRequestNoteItemId());
+			TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+			boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+					specQuestion.getClPriceTypeCode().getParameterCode());
+			reqDTO.setTierPricing(isPriceTypeTier);			
+			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.getQtProposalItem(reqDTO);
 			qtProposalItem = resDTO.getScQtProposalItem();
 		} finally {
@@ -1337,6 +1343,10 @@ public class SupplierFinalizationBackingBean extends
 
 		// to set the recommend details for each recommend
 		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+			TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+			boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+					specQuestion.getClPriceTypeCode().getParameterCode());
+					
 			if (isZonal
 					&& !(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId()
 							.equals(selectedZone.getSpecZoneId())) && !isSubmit) {
@@ -1351,9 +1361,11 @@ public class SupplierFinalizationBackingBean extends
 			} else if (isFwdToHighAuth &&
 							scQtRecommend.isHigherAuthReq() &&
 							scQtRecommend.getRecommendBy() == null) {
+				String defaultRecommendByStr = isPriceTypeTier ? ParameterConst.RECOMMEND_BY_AWARD 
+															   : ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 				PmParameter recommendByAward = getParameterByTypeAndCode(
 							ParameterTypeConst.FINALIZATION_RECOMMEND_BY, 
-							ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
+							defaultRecommendByStr);
 				scQtRecommend.setRecommendBy(recommendByAward);
 				scQtRecommend.setRecommendByStr(recommendByAward.getParameterCode());
 			}
@@ -2909,7 +2921,7 @@ public class SupplierFinalizationBackingBean extends
 					// disabled supplier selection by zone.
 					for (List<ScQtEvaluationResultDtl> shortlistedPackageList 
 										: shortlistedSupppliersByZone.values()) {
-						List<ScQtRecommend> scQtRecommends = new ArrayList<>();
+						List<ScQtRecommend> scQtRecommends = new ArrayList<ScQtRecommend>();
 						
 						for (TplSpecZoneDtl zoneDtl 
 								: scQtFinalization.getScQtRecommendsByZone().keySet()) {
@@ -4720,9 +4732,21 @@ public class SupplierFinalizationBackingBean extends
 					prepareToDeleteRecommendDtls(scQtRecommend);
 				}
 				scQtRecommend.setAwardSupplierList(null);
-
-				scQtRecommend.setRecommendBy(defaultRecommendBy);
-				scQtRecommend.setRecommendByStr(defaultRecommendByStr);
+				
+				TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+				boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+						specQuestion.getClPriceTypeCode().getParameterCode());
+				
+				if (isPriceTypeTier) {
+					String _defaultRecommendByStr = ParameterConst.RECOMMEND_BY_AWARD;
+					PmParameter _defaultRecommendBy = getPmParameterByTypeAndCode(
+							ParameterTypeConst.FINALIZATION_RECOMMEND_BY, _defaultRecommendByStr);
+					scQtRecommend.setRecommendBy(_defaultRecommendBy);
+					scQtRecommend.setRecommendByStr(_defaultRecommendByStr);							
+				} else {
+					scQtRecommend.setRecommendBy(defaultRecommendBy);
+					scQtRecommend.setRecommendByStr(defaultRecommendByStr);
+				}
 				
 				// To reset the selection of supplier(s) by item
 				List<ScQtEvaluationResultDtl> shortlistedSuppliersByItem 
@@ -5176,7 +5200,7 @@ public class SupplierFinalizationBackingBean extends
 						ScRequestItem requestItem = recommendDtl
 								.getScQtRecommend().getRequestItem();
 						BigDecimal offeredPrice = TemplateSpecHelper
-								.getInstance().calcTotalAmount(
+								.getInstance().calculateTotalAmount(
 										requestItem.getTplSpecQuestion(),
 										new BigDecimal(proposalItem
 												.getOfferPrice()),
@@ -5598,14 +5622,18 @@ public class SupplierFinalizationBackingBean extends
 
 					String parameterType = ParameterTypeConst.FINALIZATION_RECOMMEND_BY;
 					String recommendBy = "";
+					boolean isPriceTypeTariff = ParameterConst.PRICE_TYPE_TIER.equals(priceType);
 
 					if (priceType.equals(ParameterConst.PRICE_TYPE_TARIFF)
-							|| priceType.equals(ParameterConst.PRICE_TYPE_TIER)) {
+							|| isPriceTypeTariff) {
 						if (scQtRecommend.getAwardSupplierList().size() == 0) {
 							pmParameter = null;
 						} else if (scQtRecommend.getAwardSupplierList().size() == 1) {
-							if (pmParameter == null) {
-								recommendBy = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
+							if ( (pmParameter == null) || 
+									(!ParameterConst.RECOMMEND_BY_AWARD.equals(pmParameter.getParameterCode()) || 
+											!ParameterConst.RECOMMEND_BY_SINGLE_AWARD.equals(pmParameter.getParameterCode())) ) {
+								recommendBy = isPriceTypeTariff ? ParameterConst.RECOMMEND_BY_AWARD 
+													: ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 								pmParameter = getPmParameterByTypeAndCode(
 										parameterType, recommendBy);
 							} else {
@@ -5631,8 +5659,11 @@ public class SupplierFinalizationBackingBean extends
 							if (pmParameter == null
 									|| (pmParameter
 											.getParameterCode()
-											.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD) && 
-												activeSupplCount == 2)) {
+											.equals(ParameterConst.RECOMMEND_BY_AWARD)
+											|| pmParameter
+												.getParameterCode()
+												.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) 
+											&& activeSupplCount == 2) {
 								recommendBy = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI;
 								pmParameter = getPmParameterByTypeAndCode(
 										parameterType, recommendBy);
@@ -5698,7 +5729,7 @@ public class SupplierFinalizationBackingBean extends
 				.getScQtProposalItem();
 		if (proposalItem != null) {
 			BigDecimal offeredPrice = TemplateSpecHelper.getInstance()
-					.calcTotalAmount(requestItem.getTplSpecQuestion(),
+					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 							new BigDecimal(proposalItem.getOfferPrice()),
 							new BigDecimal(proposalItem.getOfferQuantity()));
 			evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
@@ -5741,6 +5772,11 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
 					.getRequestNoteItemId());
 			reqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
+			
+			TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+			boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+					specQuestion.getClPriceTypeCode().getParameterCode());
+			reqDTO.setTierPricing(isPriceTypeTier);
 
 			resDTO = qtSuppFinalizationSO
 					.retrieveEvaluationResultsByItem(reqDTO);
@@ -5862,6 +5898,10 @@ public class SupplierFinalizationBackingBean extends
 					continue;
 				}
 				
+				TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+				boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+						specQuestion.getClPriceTypeCode().getParameterCode());
+				
 				List<ScQtEvaluationResultDtl> recommendedItemSupplierList 
 								= getManagedBean().getRecommendedSupplierList();
 				if (recommendedItemSupplierList == null) {
@@ -5877,8 +5917,10 @@ public class SupplierFinalizationBackingBean extends
 				boolean isShortlisted = false;
 				PmParameter recommendBy = scQtRecommend.getRecommendBy();
 				if (recommendBy == null) {
+					String defaultRecommendByStr = isPriceTypeTier ? ParameterConst.RECOMMEND_BY_AWARD
+																   : ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 					String recommendByStr = StringUtils.isBlank(scQtRecommend.getRecommendByStr())
-							? ParameterConst.RECOMMEND_BY_SINGLE_AWARD : scQtRecommend.getRecommendByStr();
+							? defaultRecommendByStr : scQtRecommend.getRecommendByStr();
 					recommendBy = getParameterByTypeAndCode(
 							ParameterTypeConst.FINALIZATION_RECOMMEND_BY, 
 							recommendByStr);
@@ -5972,21 +6014,24 @@ public class SupplierFinalizationBackingBean extends
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
 		boolean isSubmit = this.getManagedBean().isSubmit();
+		TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+		boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+				specQuestion.getClPriceTypeCode().getParameterCode());		
+		String defaultRecommendByStr = isPriceTypeTier ? ParameterConst.RECOMMEND_BY_AWARD
+													   : ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 		if ((scQtRecommend.isHigherAuthReq() && getManagedBean().isSecretaryUser()
 				&& !getManagedBean().isForwardToBpk()) 
 				|| !isSubmit) {
 			if (scQtRecommend.getRecommendBy() == null) {
 				scQtRecommend.setRecommendBy(
-						getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						ParameterConst.RECOMMEND_BY_SINGLE_AWARD)
-							);
-				scQtRecommend.setRecommendByStr(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
+						getPmParameterByTypeAndCode(
+								ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
+								defaultRecommendByStr));
+				scQtRecommend.setRecommendByStr(defaultRecommendByStr);
 			}
 			return;
 		}
-		if (scQtRecommend.getRecommendBy() == null || 
-				(scQtRecommend.getRecommendBy().getParameterCode()
-					.equals(ParameterConst.RECOMMEND_BY_AWARD)) ) {
+		if (scQtRecommend.getRecommendBy() == null) {
 			if (isSubmit) {
 				scQtRecommend.setRecommendBy(null);
 				setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
@@ -5997,9 +6042,9 @@ public class SupplierFinalizationBackingBean extends
 				// if Supplier Finalization method is not selected
 				scQtRecommend.setRecommendBy(
 						getPmParameterByTypeAndCode(ParameterTypeConst.FINALIZATION_RECOMMEND_BY,
-						ParameterConst.RECOMMEND_BY_SINGLE_AWARD)
+						defaultRecommendByStr)
 							);	
-				scQtRecommend.setRecommendByStr(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);	
+				scQtRecommend.setRecommendByStr(defaultRecommendByStr);	
 				return;
 			}
 		}
@@ -6024,8 +6069,10 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}		
-		if (StringUtils.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD,
-				recommendByCode)
+		if ((StringUtils.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD,
+				recommendByCode) || 
+				StringUtils.equals(ParameterConst.RECOMMEND_BY_AWARD,
+						recommendByCode))
 				&& (activeSupplCount != 1)) {
 			setZoneAndTabIndexOnException(scQtRecommend.getTplSpecZoneDtl());
 			throw new EpException(MessageConst.ERROR_760213);
