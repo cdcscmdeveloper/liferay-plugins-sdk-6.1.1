@@ -56,16 +56,15 @@
 										  		fn:toUpperCase(supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
-				style="text-align: right;">
-				<h:outputText value="#{supplierDtl.proposalAmount.proposalAmt}">
+			<p:column headerText="#{lbl['lbl.sc.offered.price']}" style="text-align: right;">
+				<h:outputText value="#{supplierDtl.qtEvaluationResult.offeredPrice}">
 					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						pattern="#{CommonUtils.getDisplayNumberFormat(
+													CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.total.score']}"
-				style="text-align: right;">
+			<p:column headerText="#{lbl['lbl.sc.total.score']}" style="text-align: right;">
 				<h:outputText value="#{supplierDtl.totalScore}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(
