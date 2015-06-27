@@ -97,15 +97,15 @@
 			rendered="#{lOIDetailBackingBean.managedBean.itemized}">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" />
+				update="@this" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" />
+				update="@this" />
 			<p:ajax event="rowSelectCheckbox" partialSubmit="true"
-				process="@this" update="@this, :form:awardSupplier" />
+				process="@this" update="@this" />
 			<p:ajax event="rowUnselectCheckbox" partialSubmit="true"
-				process="@this" update="@this, :form:awardSupplier" />
+				process="@this" update="@this" />
 			<p:ajax event="toggleSelect" partialSubmit="true" process="@this"
-				update="@this, :form:awardSupplier" />
+				update="@this" />
 
 			<ac:paginator for="recommendTbl" />
 
@@ -203,19 +203,18 @@
 						value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 				</f:facet>
 				<h:panelGroup id="qtyPG">
-					<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}" 
-						rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward 
-										and scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
-						<p:column>
-							<h:outputText value="#{scQtRecommendDtl.awardQty}" />
+					<ui:repeat var="awardedSuppl" value="#{item.awardSupplierList}" 
+						rendered="#{item.recommendByStr eq ParameterConst.recommendByMultipleAward}">
+						<p:column rendered="#{awardedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
+							<h:outputText value="#{awardedSuppl.scQtRecommendDtl.awardQty}" />
 							<br />
 						</p:column>
 					</ui:repeat>
 
 					<h:outputText value="#{item.requestItem.quantity}"
-						rendered="#{(item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard ||
-										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) 
-									and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
+						rendered="#{(item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeStandard ||
+										item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode eq ParameterConst.priceTypeZonalStandard) 
+									and item.recommendByStr ne ParameterConst.recommendByMultipleAward}" />
 				</h:panelGroup>
 			</p:column>
 			
