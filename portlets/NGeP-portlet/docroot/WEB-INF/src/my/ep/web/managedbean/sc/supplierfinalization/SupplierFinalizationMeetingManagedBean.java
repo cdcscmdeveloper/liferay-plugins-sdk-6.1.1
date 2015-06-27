@@ -42,6 +42,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtMeeting> deletedMeetingList;
 	
 	private ScCommitteeMember committeMember;
+	private List<ScCommitteeMember> deletedCommitteeMembers;
 	private List<SelectItem> selections;
 	private String tabTitle;
 	private String name = null;
@@ -107,6 +108,20 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteMember(ScCommitteeMember committeMember) {
 		this.committeMember = committeMember;
+	}
+	/**
+	 * @return the deletedCommitteeMembers
+	 */
+	public List<ScCommitteeMember> getDeletedCommitteeMembers() {
+		return deletedCommitteeMembers;
+	}
+	/**
+	 * @param deletedCommitteeMembers 
+	 * 					the deletedCommitteeMembers to set
+	 */
+	public void setDeletedCommitteeMembers(
+			List<ScCommitteeMember> deletedCommitteeMembers) {
+		this.deletedCommitteeMembers = deletedCommitteeMembers;
 	}
 	/**
 	 * @return the selections
