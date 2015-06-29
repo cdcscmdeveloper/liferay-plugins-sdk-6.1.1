@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.faces.FacesException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -5750,8 +5749,9 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (getManagedBean().getSmAppl().isResubmit()) {
-				reqDTO.setPoLoginId(SmApplicationUtil
-						.getPOLoginId(getManagedBean()));
+				reqDTO.setPoLoginId(SmApplicationUtil.getPOLoginId(
+						getManagedBean().getSmSupplier(), getManagedBean()
+								.getSmAppl()));
 			}
 
 			// Set list of users to send to BPM

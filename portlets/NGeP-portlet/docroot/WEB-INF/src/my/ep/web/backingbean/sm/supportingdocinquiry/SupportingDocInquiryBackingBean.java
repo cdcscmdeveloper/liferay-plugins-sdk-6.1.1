@@ -1,6 +1,8 @@
 package my.ep.web.backingbean.sm.supportingdocinquiry;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -9,9 +11,17 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryReqDTO;
 import my.ep.dto.sm.supportingdocinquiry.SupportingDocInquiryResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -20,7 +30,9 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.supportingdocinquiry.SupportingDocInquiryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -33,6 +45,59 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 
 	public SupportingDocInquiryBackingBean(){
 
+	}
+	
+	/**
+	 * Pre - render Expired SDO Inquiry List Page
+	 */
+	public void preRenderExpiredInquiry() {
+		renewSesionObject();
+		List<SmAppl> applList = SmServiceLookup.getSupportingDocInquirySO()
+				.retrieveExpiredSuppDocInquiry().getExpiredInquiryApplList();
+		getManagedBean().setApplList(applList);
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
+						"");
+	}
+
+	/**
+	 * Navigate to Expired SDO Inquiry Selected Application Details Page
+	 * @param SmAppl selectedSmAppl
+	 */
+	public void navigateToExpiredInquiryApplication(SmAppl selectedSmAppl) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(selectedSmAppl.getApplNo());
+		getManagedBean().setSmAppl(
+				SmServiceLookup.getMofRegistrationSO()
+						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
+		getManagedBean().setSmSupplier(
+				getManagedBean().getSmAppl().getSmSupplier());
+		checkIfSupplierHasActiveTransaction();
+		if(getManagedBean().isAllowedToSubmit()){
+			getManagedBean().setSupplierBusinessTypeVal(
+					SmCommonUtil.getDropDownViewOnlyValueByCode(
+							SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+							getManagedBean().getSmSupplier().getBusinessType()));
+			setBumiRecommendNote();
+		}
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryApplication.xhtml",
+						"");
+	}
+	
+	/**
+	 * Back to Expired SDO Inquiry List Page
+	 */
+	public void backToExpiredSdoInquiryListPage() {
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
+				"");
+	}
+	
+	public void submitResendToSdoInquiry(){
+		
 	}
 	
 	public void viewDocInquiry(){
@@ -119,5 +184,193 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		}else{ 
 			return null;
 		}
+	}
+	
+	/**
+	 * To check whether selected supplier has active transaction
+	 * 
+	 * @param boolean isCancelMof
+	 */
+	private void checkIfSupplierHasActiveTransaction() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (SmApplicationUtil.checkActiveSmApplForSupp(getManagedBean()
+						.getSmAppl().getSmSupplier())) {
+			getManagedBean().setAllowedToSubmit(false);
+			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_ERROR,
+					MessageUtils.getMessage(MessageConst.ERROR_722608,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), null);
+		}
+	}
+	
+	/**
+	 * Initialized and construct bumi recommendation message
+	 */
+	private void setBumiRecommendNote() {
+		getManagedBean().setBumiRecommendationNote("");
+		if (getManagedBean().getSmAppl() != null) {
+			String applType = getManagedBean().getSmAppl().getApplType() == null ? ""
+					: getManagedBean().getSmAppl().getApplType();
+			String suppType = getManagedBean().getSmAppl().getSupplierType() == null ? ""
+					: getManagedBean().getSmAppl().getSupplierType();
+
+			getManagedBean().setBumiRecommendationNote(
+					SmCommonUtil.displayBumiRecommendNote(getManagedBean()
+							.getSmAppl().getSmSupplierBanks(), getManagedBean()
+							.getPersonCalc(), getManagedBean()
+							.getCurrentPageType(), applType, suppType,
+							getManagedBean().getSmAppl().getSmCompanyBasic()
+									.getBumiPercent(), getManagedBean()
+									.isSupplierUser()));
+		}
+
+	}
+	
+	/**
+	 * Make a call to the BPM to resubmit to SDO.
+	 */
+	public void initiateSmApplicationTask() {
+		try {
+			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			if (!bpmAppl.isActiveAppl()) {
+				bpmAppl.setActiveAppl(true);
+			}
+			String s = "";
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+				s = SupplierManagementConst.SUPP_SUBMIT_CANCREG_APPL;
+			} else {
+				s = SupplierManagementConst.SUPP_SUBMIT_NORM_APPL;
+			}
+
+			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
+					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
+			
+			reqDTO.setUpdateTask(false);
+
+			if (getManagedBean().getSmAppl().isResubmit()) {
+				reqDTO.setPoLoginId(SmApplicationUtil
+						.getPOLoginId(getManagedBean().getSmSupplier(),getManagedBean().getSmAppl()));
+			}
+
+			// Set list of users to send to BPM
+			if (getManagedBean().getSmAppl().getApplType()
+					.equalsIgnoreCase("N")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("A")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("B")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("U")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("R")
+					|| getManagedBean().getSmAppl().getApplType()
+							.equalsIgnoreCase("C")) {
+				reqDTO.setUserList(new ArrayList<String>());
+				PmUser pmUser = new FacesScopes().getUserSessionBean();
+				reqDTO.getUserList().add(pmUser.getLoginId());
+
+			}
+			SmServiceLookup.getMofRegistrationSO().initiateResendExpiredSdoInquiryTask(reqDTO);
+		}catch(Exception ex){
+			throw new EpException(ex.getMessage());
+		}
+	}
+	
+	/**
+	 * Get description of the parameter by parameter id
+	 * 
+	 * @param Long
+	 *            parameterId
+	 * @return String
+	 */
+	public String getParamDescByParameterId(Long parameterId) {
+		PmParameter pmParameter = null;
+		if (parameterId != null) {
+			pmParameter = SmApplicationUtil
+					.retrievePmParameterById(parameterId);
+			return pmParameter == null ? "" : SmCommonUtil
+					.getParamDescriptionByLanguageAndPmParameter(pmParameter);
+		} else {
+			return "";
+		}
+	}
+	
+	/**
+	 * Sets default values for the mof registration req dto.
+	 * 
+	 * @param bpmAppl
+	 *            - SmAppl object
+	 * 
+	 * @param outcome
+	 *            - the outcome value
+	 * @param actionDesc
+	 *            - the action desc
+	 * @return the mof registration req dto object
+	 */
+	private MofRegistrationReqDTO setMofRegistrationReqDTO(SmAppl bpmAppl,
+			String outcome, String actionDesc) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setOutcome(outcome);
+		reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+		reqDTO.setSupplierId(bpmAppl.getSmSupplier().getSupplierId());
+		reqDTO.setAppType(bpmAppl.getApplType());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setSmAppl(bpmAppl);
+		reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+		reqDTO.setSupplierType(this.getManagedBean().getSmAppl()
+				.getSupplierType().toUpperCase());
+		reqDTO.setTrackingDairyVO(assignTrackingDairyValues(getManagedBean().getSmAppl(),actionDesc));
+		PmState state = getManagedBean().getSmAppl().getSmCompanyBasic()
+				.getSmCompanyAddresses().get(0).getSmAddress().getPmState();
+		if (state != null && state.getStateId() != null) {
+			PmZone zone = SmApplicationUtil.retrieveZoneByStateId(state
+					.getStateId());
+			if (zone != null && zone.getZoneName() != null) {
+				reqDTO.setBaseOfficeState(zone.getZoneName().toUpperCase()
+						.trim());
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_722568);
+		}
+
+		if (this.getManagedBean()
+				.getSmAppl()
+				.getSupportingDocMode()
+				.equalsIgnoreCase(SupplierManagementConst.SUPPORTING_DOC_ONLINE)) {
+			reqDTO.setOnlineDoc(true);
+		} else {
+			reqDTO.setOnlineDoc(false);
+		}
+
+		reqDTO.setResubmit(bpmAppl.isResubmit());
+		reqDTO.setLangCode(new FacesScopes().getUserLocale().getLanguage());
+		return reqDTO;
+	}
+	
+	/**
+	 * Assign tracking diary values to VO
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @param String
+	 *            actionDesc
+	 * @return SmTrackingDairyVO
+	 */
+	private SmTrackingDairyVO assignTrackingDairyValues(SmAppl appl,
+			String actionDesc) {
+		SmTrackingDairyVO trckVO = new SmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getManagedBean().getRoleCode());
+		trckVO.setDocId(appl.getApplId());
+		trckVO.setDocNo(appl.getApplNo());
+		trckVO.setDocType("SR");
+		trckVO.setGroupId(null);
+		trckVO.setStatus(appl.getPmStatus());
+		trckVO.setGroupDocType(null);
+		return trckVO;
+
 	}
 }
