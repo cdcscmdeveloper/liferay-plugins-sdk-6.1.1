@@ -254,12 +254,15 @@
 						style="width: 178px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems
-							value="#{lOADetailBackingBean.getDropdownValues(ParameterTypeConst.contractType)}" />
+							value="#{lOADetailBackingBean.contractTypes}"
+							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 						<p:ajax event="change"
 							listener="#{lOADetailBackingBean.contractTypeChanged()}"
 							partialSubmit="true" process="@this"
-							update="contractDetailsId" />
+							update="contractDetailsId" />	
 					</p:selectOneMenu>
 					<p:message id="contractTypeMsg" for="contractType" display="icon" />
 				</c:if>
