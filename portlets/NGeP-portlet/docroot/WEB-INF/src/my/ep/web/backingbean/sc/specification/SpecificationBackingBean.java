@@ -14015,7 +14015,7 @@ public class SpecificationBackingBean extends
 					qtCheckList.getScQtDoc().getTplSpecMaster(),
 					qtCheckList.getScQtDoc().getTplSpecMaster()
 							.getTplSpecQuestions());
-			validateDuplicateFinancialSpecs(qtCheckList);
+			validateDuplicateFinancialSpecs(qtCheckList,flowType);
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
 			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
@@ -14154,7 +14154,7 @@ public class SpecificationBackingBean extends
 		return null;
 	}
 
-	private void validateDuplicateFinancialSpecs(ScQtCheckList financialSpecs) {
+	private void validateDuplicateFinancialSpecs(ScQtCheckList financialSpecs,String flowType) {
 		IQTSpecSO specSO;
 		SpecificationResDTO resDto;
 		// this.getManagedBean().setActiveIndex(3);
@@ -14175,13 +14175,20 @@ public class SpecificationBackingBean extends
 								.getResultList()
 						&& !resDto.getFinSpecResultBean().getResultList()
 								.isEmpty()) {
+					List<ScQtCheckList> toBeRemovedList=new ArrayList<ScQtCheckList>();
 					for (ScQtCheckList financialspec : resDto
 							.getFinSpecResultBean().getResultList()) {
 						if (financialspec.getTitle().equalsIgnoreCase(
 								financialSpecs.getTitle())) {
-							throw new EpException(MessageConst.ERROR_760310,
-									new String[] { financialSpecs.getTitle() });
+							financialspec.setDeleted(true);
+							toBeRemovedList.add(financialspec);
+							break;
+							/*throw new EpException(MessageConst.ERROR_760310,
+									new String[] { financialSpecs.getTitle() });*/
 						}
+					}
+					if(null!=toBeRemovedList && !toBeRemovedList.isEmpty()){
+						removeDuplicateFinancialSpec(flowType,toBeRemovedList);
 					}
 				}
 			}
@@ -14189,6 +14196,58 @@ public class SpecificationBackingBean extends
 			specSO = null;
 		}
 
+	}
+	
+	private void removeDuplicateFinancialSpec(String flowType,List<ScQtCheckList> toBeRemoveCheckLists){
+		IQTSpecSO specSo = null;
+		try{
+			specSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
+			specReqDTO.setCheckLists(toBeRemoveCheckLists);
+			SpecificationResDTO resDTO = specSo.deleteChecklists(specReqDTO);
+			if (resDTO.isSuccessful()) {
+				if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
+					this.getManagedBean().setScQtCheckSt2techProposal(null);
+					//this.getManagedBean().setCheckListTitle("");
+					retriveTechnicalSpecification();
+					//this.getManagedBean().setIndex(-1);
+					//return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+				} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
+						.equalsIgnoreCase(flowType)) {
+					if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType())
+							&& !this.getManagedBean().getScQt()
+									.isTechEvaluationReq()) {
+						// retriveTechnicalCheckList();
+						// this.getManagedBean().setScQtCheckSt2techProposal(null);
+						// retriveTechnicalSpecification();
+						this.getManagedBean().setScQtCheckSt2techProposal(null);
+						this.getManagedBean().setFinancialScoring(null);
+						retriveOneTierCheckList();
+					} else if (QTConstants.EVALUATION_TWO_TIER
+							.equalsIgnoreCase(this.getManagedBean().getScQt()
+									.getEvaluationType())
+							|| (QTConstants.EVALUATION_ONE_TIER
+									.equalsIgnoreCase(this.getManagedBean()
+											.getScQt().getEvaluationType()) && this
+									.getManagedBean().getScQt()
+									.isTechEvaluationReq())) {
+						// this.getManagedBean().setScQtCheckSt2techProposal(null);
+						// retriveTechnicalCheckList();
+						this.getManagedBean().setScQtCheckSt2techProposal(null);
+						this.getManagedBean().setFinancialScoring(null);
+						retriveTechnicalCheckList();
+					}
+					//this.getManagedBean().setCheckListTitle("");
+					//this.getManagedBean().setIndex(-1);
+					//return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+
+				}
+			}
+		}finally{
+			
+		}
 	}
 
 	/**
