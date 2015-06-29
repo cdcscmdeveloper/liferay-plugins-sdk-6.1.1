@@ -8,7 +8,7 @@
 	
 	<ui:define name="resourceSection">
 		<script>
-			$('#portlet_supplierDataMaintenance_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.appltype.cancelmof']}");
+			$('#portlet_smCancelMofBySupplier_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.appltype.cancelmof']}");
 		</script>
 	</ui:define>
 
@@ -33,7 +33,7 @@
 				<td style="white-space: nowrap; float: right;">
 				    <p:commandButton value="#{lbl['lbl.btn.submit']}" 
 				    	style="float:right;" id="submitBtnId" update="@form"
-				    	disabled="#{supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
+				    	disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 				    	onstart="blockWidget.show()" oncomplete="blockWidget.hide()" action="#{backingBean.showConfirmDialog()}"/>
 				</td>
 			</tr>
