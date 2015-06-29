@@ -1298,9 +1298,7 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setScQtProposalAmount(recommendedSupplier.getProposalAmount());
 			reqDTO.setRequestItemId(scQtRecommend.getRequestItem()
 					.getRequestNoteItemId());
-			TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-			boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-					specQuestion.getClPriceTypeCode().getParameterCode());
+			boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
 			reqDTO.setTierPricing(isPriceTypeTier);			
 			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.getQtProposalItem(reqDTO);
@@ -1343,9 +1341,7 @@ public class SupplierFinalizationBackingBean extends
 
 		// to set the recommend details for each recommend
 		for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-			TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-			boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-					specQuestion.getClPriceTypeCode().getParameterCode());
+			boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
 					
 			if (isZonal
 					&& !(scQtRecommend.getTplSpecZoneDtl().getSpecZoneId()
@@ -3984,6 +3980,12 @@ public class SupplierFinalizationBackingBean extends
 		List<String> recommendList = new ArrayList<String>();
 		recommendList.add(ParameterConst.RECOMMEND_BY_SINGLE_AWARD);
 		recommendList.add(ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD);
+		
+		boolean hasTierPriceItem = hasTierPriceInMixtureOfItems(
+									getManagedBean().getScQtFinalization());
+		if (hasTierPriceItem) {
+			recommendList.add(ParameterConst.RECOMMEND_BY_ONLINE_BIDDING);
+		}
 
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("pmParameter.parameterCode",
@@ -4733,9 +4735,7 @@ public class SupplierFinalizationBackingBean extends
 				}
 				scQtRecommend.setAwardSupplierList(null);
 				
-				TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-				boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-						specQuestion.getClPriceTypeCode().getParameterCode());
+				boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
 				
 				if (isPriceTypeTier) {
 					String _defaultRecommendByStr = ParameterConst.RECOMMEND_BY_AWARD;
@@ -5084,13 +5084,8 @@ public class SupplierFinalizationBackingBean extends
 			scQtRecommend.setRecommendDtls(new ArrayList<ScQtRecommendDtl>());
 
 			// reset awarded & short listed flag.
-			if (scQtRecommend.getShortListedSupplierList() != null) {
-				for (ScQtEvaluationResultDtl evaluationResultDtl : scQtRecommend
-						.getShortListedSupplierList()) {
-					evaluationResultDtl.setAwareded(false);
-					evaluationResultDtl.setShortListed(false);
-				}
-			}
+			resetShortlistedSupplierData(
+					scQtRecommend.getShortListedSupplierList());			
 		}
 
 		List<ScQtRecommend> selectedItemList 
@@ -5773,13 +5768,11 @@ public class SupplierFinalizationBackingBean extends
 					.getRequestNoteItemId());
 			reqDTO.setRecommendType(SourcingConstants.EVAL_STAGE_RECOMMENDATION_ITM);
 			
-			TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-			boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-					specQuestion.getClPriceTypeCode().getParameterCode());
+			boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
 			reqDTO.setTierPricing(isPriceTypeTier);
 
 			resDTO = qtSuppFinalizationSO
-					.retrieveEvaluationResultsByItem(reqDTO);
+							.retrieveEvaluationResultsByItem(reqDTO);
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
@@ -5898,10 +5891,7 @@ public class SupplierFinalizationBackingBean extends
 					continue;
 				}
 				
-				TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-				boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-						specQuestion.getClPriceTypeCode().getParameterCode());
-				
+				boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
 				List<ScQtEvaluationResultDtl> recommendedItemSupplierList 
 								= getManagedBean().getRecommendedSupplierList();
 				if (recommendedItemSupplierList == null) {
@@ -6014,9 +6004,7 @@ public class SupplierFinalizationBackingBean extends
 
 	private void validateAwardOfItem(ScQtRecommend scQtRecommend) {
 		boolean isSubmit = this.getManagedBean().isSubmit();
-		TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
-		boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
-				specQuestion.getClPriceTypeCode().getParameterCode());		
+		boolean isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);		
 		String defaultRecommendByStr = isPriceTypeTier ? ParameterConst.RECOMMEND_BY_AWARD
 													   : ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 		if ((scQtRecommend.isHigherAuthReq() && getManagedBean().isSecretaryUser()
@@ -6150,6 +6138,30 @@ public class SupplierFinalizationBackingBean extends
 				}
 			}
 		}
+	}
+	
+	private boolean isItemPriceTypeTier(ScQtRecommend scQtRecommend) {
+		TplSpecQuestion specQuestion = scQtRecommend.getRequestItem().getTplSpecQuestion();
+		boolean isPriceTypeTier = TemplateSpecHelper.getInstance().isPriceTypeTier(
+				specQuestion.getClPriceTypeCode().getParameterCode());
+		
+		return isPriceTypeTier;
+	}
+	
+	private boolean hasTierPriceInMixtureOfItems(ScQtFinalization scQtFinalization) {
+		boolean isPriceTypeTier = false;
+		List<ScQtRecommend> scQtRecommends 
+								= scQtFinalization.getScQtRecommends();
+		if (CollectionUtils.isNotEmpty(scQtRecommends)) {
+			for (ScQtRecommend scQtRecommend : scQtRecommends) {
+				isPriceTypeTier = isItemPriceTypeTier(scQtRecommend);
+				if (isPriceTypeTier) {
+					break;
+				}
+			}
+		}
+		
+		return isPriceTypeTier;
 	}
 
 	private FacesScopes getFacesScopes() {
