@@ -692,7 +692,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)101190;//45;//25;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)25;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4324,6 +4324,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 * Generate all modules reports
 	 */
 	public void generateReport() {
+		if ((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)){
+			mofRegNoNumericValidation();
+		}
+		
 		rptGenBean = new ReportsGenerateBean();
 		if ((this.getModuleValue() != null)
 				&& (getManagedBean().getReportValue() != null)) {
@@ -5013,8 +5017,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ this.getSmMonthlyRptByYear());
 			}
 			if ((this.getSmMofRegNoFrom() != null)
+					&& (this.getSmMofRegNoTo() != null)) {
+			  ValidateMofRegNo(this.getSmMofRegNoFrom(), this.getSmMofRegNoTo());
+			}
+			if ((this.getSmMofRegNoFrom() != null)
 					&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setSmMofRegNoFromVar(ReportConst.AMP_SM_MOF_REG_NO_FRM_EQ
+					rptGenBean.setSmMofRegNoFromVar(ReportConst.AMP_SM_MOF_REG_NO_FRM_EQ
 						+ this.getSmMofRegNoFrom());
 			}
 			if ((this.getSmMofRegNoTo() != null)
@@ -6124,6 +6132,33 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		} else {
 			this.setScQuotationNo(null);
 			throw new EpException(MessageConst.ERROR_REPORT_780006);
+		}
+	}
+	public void mofRegNoNumericValidation() {
+		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
+		Pattern pattern1 = Pattern.compile(ptString1);
+		Matcher match1 = pattern1.matcher(this.getSmMofRegNoFrom());
+		if (match1.matches()) {
+		} else {
+			this.setSmMofRegNoFrom(null);
+			this.setSmMofRegNoTo(null);
+			throw new EpException(MessageConst.ERROR_REPORT_780018);
+		}
+		String ptString2 = ReportConst.NUMERIC_PATTERN_ONLY;
+		Pattern pattern2 = Pattern.compile(ptString2);
+		Matcher match2 = pattern2.matcher(this.getSmMofRegNoTo());
+		if (match2.matches()) {
+		} else {
+			this.setSmMofRegNoFrom(null);
+			this.setSmMofRegNoTo(null);
+			throw new EpException(MessageConst.ERROR_REPORT_780018);
+		}
+	}
+	public void ValidateMofRegNo(String fromMofNo, String toMofNo) {
+		int fromMofNoInt=Integer.parseInt(fromMofNo);
+		int toMofNoInt=Integer.parseInt(toMofNo);		
+		if(fromMofNoInt>toMofNoInt){
+					throw new EpException(MessageConst.ERROR_REPORT_780019);
 		}
 	}
 
