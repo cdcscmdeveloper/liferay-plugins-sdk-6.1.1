@@ -46,7 +46,7 @@
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/onlineSupportingDocsFormViewOnly.xhtml" />
 		</p:outputPanel>
 
-		<ac:confirmPopup message="#{lbl['lbl.sm.exp.sdo.inquiry.resubmitmsg']}" okAction="#{backingBean.submitResendToSdoInquiry}"/>
+		<ac:confirmPopup message="#{lbl['lbl.sm.exp.sdo.inquiry.resubmitmsg']}" okAction="#{backingBean.submitResendToSdoInquiry()}"/>
 		
 	</ui:define>
 </ui:composition>

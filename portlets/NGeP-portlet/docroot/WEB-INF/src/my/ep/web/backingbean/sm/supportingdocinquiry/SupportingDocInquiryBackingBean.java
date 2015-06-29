@@ -63,7 +63,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 
 	/**
 	 * Navigate to Expired SDO Inquiry Selected Application Details Page
-	 * @param SmAppl selectedSmAppl
+	 * 
+	 * @param SmAppl
+	 *            selectedSmAppl
 	 */
 	public void navigateToExpiredInquiryApplication(SmAppl selectedSmAppl) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -74,11 +76,14 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		getManagedBean().setSmSupplier(
 				getManagedBean().getSmAppl().getSmSupplier());
 		checkIfSupplierHasActiveTransaction();
-		if(getManagedBean().isAllowedToSubmit()){
-			getManagedBean().setSupplierBusinessTypeVal(
-					SmCommonUtil.getDropDownViewOnlyValueByCode(
-							SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
-							getManagedBean().getSmSupplier().getBusinessType()));
+		if (getManagedBean().isAllowedToSubmit()) {
+			getManagedBean()
+					.setSupplierBusinessTypeVal(
+							SmCommonUtil
+									.getDropDownViewOnlyValueByCode(
+											SupplierManagementConst.SUPPLIER_BUSINESS_TYPE,
+											getManagedBean().getSmSupplier()
+													.getBusinessType()));
 			setBumiRecommendNote();
 		}
 		SmCommonUtil
@@ -86,18 +91,33 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryApplication.xhtml",
 						"");
 	}
-	
+
 	/**
 	 * Back to Expired SDO Inquiry List Page
 	 */
 	public void backToExpiredSdoInquiryListPage() {
-		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
-				"");
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
+						"");
 	}
-	
-	public void submitResendToSdoInquiry(){
-		
+
+	/**
+	 * Submit resend to SDO inquiry
+	 */
+	public void submitResendToSdoInquiry() {
+		initiateSmApplicationTask();
+		String[] params = { "" };
+		params[0] = getManagedBean().getSmAppl().getApplNo();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
+				.getMessage(MessageConst.INFO_700063, params,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,
+						new FacesScopes().getUserLocale()), null);
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						SmApplicationUtil.getApplicationErrorPage());
 	}
 	
 	public void viewDocInquiry(){
@@ -229,7 +249,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	/**
 	 * Make a call to the BPM to resubmit to SDO.
 	 */
-	public void initiateSmApplicationTask() {
+	private void initiateSmApplicationTask() {
 		try {
 			SmAppl bpmAppl = getManagedBean().getSmAppl();
 			if (!bpmAppl.isActiveAppl()) {
