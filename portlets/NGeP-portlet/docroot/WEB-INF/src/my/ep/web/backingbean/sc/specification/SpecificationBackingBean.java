@@ -14015,7 +14015,7 @@ public class SpecificationBackingBean extends
 					qtCheckList.getScQtDoc().getTplSpecMaster(),
 					qtCheckList.getScQtDoc().getTplSpecMaster()
 							.getTplSpecQuestions());
-
+			validateDuplicateFinancialSpecs(qtCheckList);
 			updatedCheckLists.add(scQtCheckList);
 			updatedCheckLists.add(qtCheckList);
 			List<ScQtCheckList> finanicalCheckList = this.getManagedBean()
@@ -14152,6 +14152,43 @@ public class SpecificationBackingBean extends
 			}
 		}
 		return null;
+	}
+
+	private void validateDuplicateFinancialSpecs(ScQtCheckList financialSpecs) {
+		IQTSpecSO specSO;
+		SpecificationResDTO resDto;
+		// this.getManagedBean().setActiveIndex(3);
+
+		try {
+			if (null == financialSpecs.getQtChecklistId()
+					|| financialSpecs.isBrandNew()) {
+				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setPrepareSpec(false);
+
+				specSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+				resDto = specSO.retrieveSpecDetails(reqDTO);
+
+				if (null != resDto
+						&& null != resDto.getFinSpecResultBean()
+								.getResultList()
+						&& !resDto.getFinSpecResultBean().getResultList()
+								.isEmpty()) {
+					for (ScQtCheckList financialspec : resDto
+							.getFinSpecResultBean().getResultList()) {
+						if (financialspec.getTitle().equalsIgnoreCase(
+								financialSpecs.getTitle())) {
+							throw new EpException(MessageConst.ERROR_760310,
+									new String[] { financialSpecs.getTitle() });
+						}
+					}
+				}
+			}
+		} finally {
+			specSO = null;
+		}
+
 	}
 
 	/**
