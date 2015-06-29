@@ -464,7 +464,8 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getManagedBean().setSelectedTemplate(tplDocMasterDB);
 				
 				// TODO: common save for all process type from external page
-				if (getManagedBean().getExternalPageUrl() != null && getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
+				if (getManagedBean().getExternalPageUrl() != null && getManagedBean().getProcessType()!=null 
+					&& getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
 					reqDTOS.setDocMasterId(resDTO.getTplDocMaster().getDocMasterId());
 					getManagedBean().getCtAgreementContent().setTplDocMaster(templateSO.getTemplateMaster(reqDTOS).getTplDocMaster());
 					ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();					
