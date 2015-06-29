@@ -86,6 +86,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	private String remainingHours;
 	private String remainingMinutes;
 	private String remainingSeconds;
+	private int index;
 
 	private Long servicetype = Long.parseLong(ParameterConst.ITEM_TYPE_SERVICE);
 
@@ -321,6 +322,10 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		log.info("decrementAmountValueChangeListener");
 
+		System.out
+				.println("%%%%%%%%%inside decrementAmountValueChangeListener%%%%%%% "
+						+ scBidPrice);
+
 		if (scBidPrice.getNewPrice() != null) {
 			if (scBidPrice.getNewPrice().doubleValue() < scBidPrice
 					.getScBidSupplierItem().getScBidItem().getDecrementAmt()
@@ -328,9 +333,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				int index = getBidPrices().indexOf(scBidPrice);
 				scBidPrice.setNewPrice(new BigDecimal(0.0d));
 				getBidPrices().set(index, scBidPrice);
-				throw new EpException(MessageConst.ERROR_760301
-								+ scBidPrice.getScBidSupplierItem()
-										.getScBidItem().getDecrementAmt());
+				throw new EpException(MessageConst.ERROR_760301);
 
 			} else if (scBidPrice.getNewPrice().doubleValue() > scBidPrice
 					.getScBidSupplierItem().getScBidItem().getDecrementAmt()
@@ -341,8 +344,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				int index = getBidPrices().indexOf(scBidPrice);
 				scBidPrice.setNewPrice(new BigDecimal(0.0d));
 				getBidPrices().set(index, scBidPrice);
-				throw new EpException(MessageConst.ERROR_760301	+ scBidPrice.getScBidSupplierItem()
-										.getScBidItem().getDecrementAmt());
+				throw new EpException(MessageConst.ERROR_760301);
 			} else {
 				BigDecimal lastBidPrice = scBidPrice.getBidPrice() == null ? scBidPrice
 						.getScBidSupplierItem().getItemStartPrice()
@@ -394,6 +396,9 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public void confirmAndSubmitBIdPrice(ScBidPrice scBidPrice) {
 
+		System.out.println("########inside confirmAndSubmitBIdPrice######"
+				+ scBidPrice);
+
 		log.info("confirmAndSubmitBIdPrice");
 		BigDecimal newPrice = null;
 		Double lastBidpriceTotal = null;
@@ -420,51 +425,37 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 		}
 
 		if (lastBidpriceTotal != null && newBidpriceTotal != null) {
+			this.index = this.getBidPrices().indexOf(scBidPrice);
 			Double diffPercentage = ((lastBidpriceTotal - newBidpriceTotal) / lastBidpriceTotal) * 100;
 			if (diffPercentage > 10) {
+
+				System.out
+						.println("$$$$$$$$confirm dialogue being executed$$$$$ "
+								+ scBidPrice);
 				this.setScBidPrice(scBidPrice);
 				RequestContext.getCurrentInstance().execute(
 						"newBidPriceConfirm.show()");
 			} else {
-				updateBidPriceAndCalculateRank(scBidPrice);
+				this.setScBidPrice(scBidPrice);
+				updateBidPriceAndCalculateRank();
 			}
 		}
 
 	}
 
-	/**
-	 * action method to update bid price and calculate rank
-	 * 
-	 * @param bidPriceItem
-	 */
-	public void updatePostConfirm() {
-		updateBidPriceAndCalculateRank(this.getScBidPrice());
-		RequestContext.getCurrentInstance().execute("rc();");
-	}
-
-	private void updateBidPriceAndCalculateRank(ScBidPrice bidPriceItem) {
+	public void updateBidPriceAndCalculateRank() {
+		System.out
+				.println("@@@@@@inside updateBidPriceAndCalculateRank@@@@@@@@"
+						+ this.getScBidPrice());
 		log.info("updateBidPriceNDcalculateRank");
 		ScBidPrice priceItemToPersist = null;
-		if (bidPriceItem.getNewBidPrice() != null
-				&& bidPriceItem.getNewBidPrice().getBidPrice() != null) {
-			priceItemToPersist = bidPriceItem.getNewBidPrice();
-			// TOTAL_BID_PRICE
-			priceItemToPersist.setBidTotalPrice(this.tplSpecHelper
-					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
-							.getScBidItem().getScRequestItem()
-							.getTplSpecQuestion(), bidPriceItem
-							.getNewBidPrice().getBidPrice(), bidPriceItem
-							.getScBidSupplierItem().getScBidItem().getQty()));
-
-		} else {
-			priceItemToPersist = this.getScBidPrice().getNewBidPrice();
-			priceItemToPersist.setBidTotalPrice(this.tplSpecHelper
-					.calcTotalAmount(bidPriceItem.getScBidSupplierItem()
-							.getScBidItem().getScRequestItem()
-							.getTplSpecQuestion(), bidPriceItem
-							.getNewBidPrice().getBidPrice(), bidPriceItem
-							.getScBidSupplierItem().getScBidItem().getQty()));
-		}
+		priceItemToPersist = this.getScBidPrice().getNewBidPrice();
+		priceItemToPersist.setBidTotalPrice(this.tplSpecHelper.calcTotalAmount(
+				this.getScBidPrice().getScBidSupplierItem().getScBidItem()
+						.getScRequestItem().getTplSpecQuestion(), this
+						.getScBidPrice().getNewBidPrice().getBidPrice(), this
+						.getScBidPrice().getScBidSupplierItem().getScBidItem()
+						.getQty()));
 
 		IBiddingSO biddingSO = null;
 
@@ -480,16 +471,20 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 			if (resDTO.isSuccessful()) {
 				// setScBidSchedule(resDTO.getScBidSchedule());
-				int index = getBidPrices().indexOf(bidPriceItem);
+				System.out.println("!!!!!!!!!!!just before index !!!!!!!!!!!"
+						+ this.getScBidPrice());
+				System.out.println("^^^^^^^^^^index^^^^^^" +this.index);
+
 				ScBidPrice persistedItem = resDTO.getScBidPrice();
 				persistedItem.setNewPrice(new BigDecimal(0d));
-				getBidPrices().set(index, persistedItem);
+				getBidPrices().set(this.index, persistedItem);
 
 				if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(this
 						.getScBidSchedule().getScBid().getRecommendedTypeId()
 						.getParameterCode())) {
 					setPackageRanking(resDTO.getPackageRanking());
 				}
+				RequestContext.getCurrentInstance().execute("rc()");
 			}
 
 		} finally {
@@ -1072,6 +1067,20 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	 */
 	public Long getServicetype() {
 		return servicetype;
+	}
+	
+	/**
+	 * @return the index
+	 */
+	public int getIndex() {
+		return index;
+	}
+
+	/**
+	 * @param index the index to set
+	 */
+	public void setIndex(int index) {
+		this.index = index;
 	}
 
 	public String itemNewPriceTotal(ScBidPrice bidPriceItem) {
