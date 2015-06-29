@@ -12,19 +12,19 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 
-	   <ui:param name="isPendingNegotiationStatus"
+	    <ui:param name="isPendingNegotiationStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_NEGOTIATION}" />
 			
 		<ui:param name="isPendingEndorsementStatus"
 			value="#{lOIDetailBackingBean.managedBean.currentStatusId == QTStatusConst.MLI_PENDING_ENDORSEMENT}" />	
 					
-	   <ui:param name="isEditableStatus"
+	    <ui:param name="isEditableStatus"
 			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
 			
-	   <p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
+	    <p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
 					closable="true" showSummary="false" severity="error, info" />
 		
-	   <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
+	    <ac:gpkiPopup textBeforeSign="#{lOIDetailBackingBean.textBeforeSign}"
 		   postSignAction="#{lOIDetailBackingBean.gpkiSignMultiLoiAction(gpkiBackingBean.pmDigiSign)}" />
 		
 		<div class="ppRightBtn">
@@ -106,20 +106,15 @@
 				
 				<td width="80%" valign="top">
 					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '0'}">
-						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationResult.xhtml"></ui:include>
+						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationResult.xhtml" />
 					</c:if> 
 					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '1'}">
-						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationCommittee.xhtml"></ui:include>
+						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationCommittee.xhtml" />
 					</c:if> 
 					<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '2'}">
-						<c:if test="#{isPendingNegotiationStatus}">
-							<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml"></ui:include>
-						</c:if>
-						<c:if test="#{!isPendingNegotiationStatus}">
-							<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationEndorsement.xhtml"></ui:include>
-						</c:if>						
+						<ui:include src="/xhtml/sc/loi/mutipleLoi/loiNegotiationRecomendation.xhtml" />			
 					</c:if> <c:if
-						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3' }">
+						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '3'}">
 						<ui:include src="/xhtml/sc/loi/loirequest/loiDeductionPaymentMenu.xhtml" />
 					</c:if> <c:if
 						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '4' }">
@@ -127,7 +122,7 @@
 					</c:if> <c:if
 						test="#{lOIDetailBackingBean.managedBean.selectedTabIndex eq '5'}">
 						<ui:include
-							src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml"></ui:include>
+							src="/xhtml/sc/loi/mutipleLoi/loiNegotiationReport.xhtml" />
 					</c:if>
 
 				</td>
