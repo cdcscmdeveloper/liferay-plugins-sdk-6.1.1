@@ -2067,11 +2067,22 @@ public class QTCommitteBackingBean extends
 	 * @param cutOffIndex
 	 * @return formatted string
 	 */
-	public String chopString(String str, int cutOffIndex) {
+	public String chopMemberName(String str, int cutOffIndex) {
 		
 		if (str.length() > cutOffIndex) {
 			str = StringUtils.substring(str, 0, cutOffIndex) + " ...";
 		}
 		return str;
+	}
+
+	public String splitEmail(String email) {
+		
+		if (email != null && email.length() > 19 ) {
+			String[] splitEmail = email.split("@");
+			if (splitEmail.length > 1) {
+				email = splitEmail[0] + " @ " + splitEmail[1];
+			}
+		}
+		return email;
 	}
 }
