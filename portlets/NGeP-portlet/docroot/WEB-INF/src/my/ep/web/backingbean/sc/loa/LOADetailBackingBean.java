@@ -4632,6 +4632,42 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
+	 * Contract type drop down values.
+	 * @return the list
+	 */
+	public List<PmParameterDesc> getContractTypes() {
+		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
+		boolean  isMinistry  = Boolean.TRUE;
+
+		// check logged in user org type
+		PmUser user = new FacesScopes().getUserSessionBean();
+		if (user != null) {
+			String orgType =  retrievePmUserByUserId(user.getUserId());
+			if( ParameterConst.ORG_TYPE_BPK_HQ.equalsIgnoreCase(orgType) || 
+					ParameterConst.ORG_TYPE_PMS_SABAH.equalsIgnoreCase(orgType) ||
+					ParameterConst.ORG_TYPE_PMS_SARAWAK.equalsIgnoreCase(orgType)){
+				isMinistry  = Boolean.FALSE;
+			}
+		}
+
+		if(isMinistry){
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_MINISTRY));
+		} else{
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmParameter.parameterCode",
+							SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.CONTRACT_TYPE_CENTRAL));
+		}
+
+		List<PmParameterDesc> contractTypes = ParameterHelper.getInstance()
+				.getParameterDescListBySearchBean(
+						ParameterTypeConst.CONTRACT_TYPE, searchBean);
+
+		return contractTypes;
+	}
+	
+	/**
 	 * Retrieve org profile by org type.
 	 *
 	 * @param ortType the ort type
@@ -4650,5 +4686,28 @@ public class LOADetailBackingBean extends
 		}
 		return pmOrgProfile;
 	}
-
+	
+	/**
+	 * Retrieve pm user by user id.
+	 *
+	 * @param id the id
+	 * @return the string
+	 */
+	private String retrievePmUserByUserId(Long id){
+		String  orgType  = "";
+		IUserSO userSO = null;
+		try {
+			UserReqDTO reqDTO = new UserReqDTO();
+			UserResDTO resDTO = null;
+			reqDTO.setUserId(id);
+			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			resDTO = userSO.retrieveUserProfileByUserId(reqDTO);
+			if(resDTO.isSuccessful()){
+				orgType = resDTO.getPmUser().getOrgTypeCode().getParameterCode();
+			}
+		}finally{
+			userSO = null;
+		}		
+		return orgType;
+	}
 }
