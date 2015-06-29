@@ -692,7 +692,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)45;//25;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3373,13 +3373,29 @@ public class ReportBackingBean extends
         }
 		return smUPSSVOUserList;
 	}
-	public List<SelectItem> retrievePTJ(){
+	public List<SelectItem> retrievePTJS1(){
 		scPtjList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> ptLst = reportSO.retrievePTJ(lngUserId);			
+			List<Object[]> ptLst = reportSO.retrievePTJS1(lngUserId);			
+			for (Object[] object : ptLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				scPtjList.add(selectItem);
+			}
+        }
+		return scPtjList;
+	}
+	public List<SelectItem> retrievePTJS2(){
+		scPtjList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> ptLst = reportSO.retrievePTJS2(lngUserId);			
 			for (Object[] object : ptLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
@@ -3421,13 +3437,29 @@ public class ReportBackingBean extends
         }
 		return scDescOfficerList;
 	}
-	public List<SelectItem> retrieveApprovarNaikTaraf(){
+	public List<SelectItem> retrieveApprovarNaikTarafDPS1(){
 		approverNayakTarafList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 							IPMReportSO.class);
-			List<Object[]> aprnktrfLst = reportSO.retrieveApprovarNaikTaraf(lngUserId);
+			List<Object[]> aprnktrfLst = reportSO.retrieveApprovarNaikTarafDPS1(lngUserId);
+			for (Object[] object : aprnktrfLst) {
+				SelectItem selectItem = new SelectItem();
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1]);
+				approverNayakTarafList.add(selectItem);
+			}
+		}
+		return approverNayakTarafList;
+	}
+	public List<SelectItem> retrieveApprovarNaikTarafSCS2(){
+		approverNayakTarafList = new ArrayList<SelectItem>();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> aprnktrfLst = reportSO.retrieveApprovarNaikTarafSCS2(lngUserId);
 			for (Object[] object : aprnktrfLst) {
 				SelectItem selectItem = new SelectItem();
 				selectItem.setLabel(object[0].toString());
@@ -3943,8 +3975,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			retrieveParamCodeByUser();
 			
 			roleCodeUsersSetup();
-			retrieveApprovarNaikTaraf();
-			retrievePTJ();
+			if ((this.getModuleValue()
+					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
+				retrieveApprovarNaikTarafDPS1();
+				retrievePTJS1();
+			}
+			if ((this.getModuleValue()
+							.equalsIgnoreCase(ModuleCodeConst.SUPPLIER_SELECTION))) {
+				retrieveApprovarNaikTarafSCS2();
+				retrievePTJS2();
+			}	
 			retrieveRequisitioner();
 			retrieveDescOfficer();
 			generateYearList();
