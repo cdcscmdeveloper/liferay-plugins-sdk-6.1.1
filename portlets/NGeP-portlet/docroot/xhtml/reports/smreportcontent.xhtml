@@ -780,6 +780,11 @@
 							</p:inputText>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smExtraTwoColumnTwoView}">
+							<p:outputLabel value="" style="margin-top:5px;width:160px;" />
+							<p:outputLabel value="" style="margin-top:5px;width:290px;" />
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryMofRegNoFromView}">
 							<p:column >
 								<table style="width: 182px;">
@@ -792,6 +797,7 @@
 									</tr>
 								</table>
 							</p:column>
+							
 							<p:column>
 								<table style="width: 100%">
 									<tr>
@@ -827,7 +833,8 @@
 												label="#{lbl['lbl.rpt.mofRegNoTo']}" id="smMofRegNoTo"
 												maxlength="16" value="#{reportBackingBean.smMofRegNoTo}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" listener="#{reportBackingBean.mofRegNoNumericValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>
 											</p:inputText></td>
 										<td><p:message id="smMofRegNoToMsg"
 												for="smMofRegNoTo" display="icon" showDetail="false"/></td>

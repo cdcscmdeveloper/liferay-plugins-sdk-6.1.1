@@ -300,6 +300,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryMofRegNoFromView(true);
 	        	rptGenBean.setSmMandatoryMofRegNoToView(true);
 	        	rptGenBean.setSmZoneView(true);
+	        	rptGenBean.setSmExtraTwoColumnTwoView(true);
 	            break;
 		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:
 	        	rptGenBean.setSmSupplierTypeView(true);	        	
