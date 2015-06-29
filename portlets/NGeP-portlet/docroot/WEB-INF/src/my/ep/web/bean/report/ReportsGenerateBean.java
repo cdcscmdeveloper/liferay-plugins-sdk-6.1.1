@@ -132,6 +132,7 @@ public class ReportsGenerateBean {
 		private boolean smReportTypeView = false;
 		private boolean smApplicationStatusView = false;
 		private boolean smExtraTwoColumnView = false;
+		private boolean smExtraTwoColumnTwoView = false;
 		private boolean smRegistrationTypeView = false;
 		private boolean smMofRegView = false;
 		private boolean smMandatorySupplierTypeView = false;
@@ -487,6 +488,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmExtraTwoColumnTwoView() {
+			return smExtraTwoColumnTwoView;
+		}
+		public void setSmExtraTwoColumnTwoView(boolean smExtraTwoColumnTwoView) {
+			this.smExtraTwoColumnTwoView = smExtraTwoColumnTwoView;
+		}
 		public boolean isSmApprovalDateView() {
 			return smApprovalDateView;
 		}
