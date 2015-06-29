@@ -51,7 +51,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.sc.QTFieldConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -1951,6 +1950,9 @@ public class QTDetailBackingBean extends
 					approvalCategory = ParameterConst.APPROVAL_CATEGORY_BPK;
 				} else if (SCProcessNameConst.REVISE_PCB
 						.equalsIgnoreCase(taskName)) {
+					approvalCategory = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
+				}else if (SCProcessNameConst.REVISE_QT_SCHEDULE
+						.equalsIgnoreCase(taskName)) {
 					approvalCategory = ParameterConst.APPROVAL_CATEGORY_PTJ;
 				}
 				if (null != approvalCategory) {
@@ -3474,7 +3476,7 @@ public class QTDetailBackingBean extends
 				.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("selectedCommitteeTabIndex"));
 
-		//this.getManagedBean().setToBeDelCommitteMemebers(null);
+		// this.getManagedBean().setToBeDelCommitteMemebers(null);
 		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
