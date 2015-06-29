@@ -87,7 +87,7 @@
 							supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 			</p:column>
 
-			<p:column selectionMode="single" style="width:2%" rendered="#{isPendingNegotiationStatus}" />
+			<p:column selectionMode="single" style="width:2%" disabledSelection="#{!isPendingNegotiationStatus}" />
 		</p:dataTable>
 
 		<p:dataTable id="recommendTbl" var="item"
@@ -120,15 +120,30 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
 				</f:facet>
-				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}"
-					type="none">
+				<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}"
+					type="none" rendered="#{isPendingNegotiationStatus}">
 					<p:column>
-						<p:selectBooleanCheckbox value="#{scQtRecommendDtl.recordStatus}"
+						<p:selectBooleanCheckbox value="#{recommendedSuppl.scQtRecommendDtl.recordStatus}"
 							disabled="#{!isPendingNegotiationStatus}">
 							<p:ajax event="change" partialSubmit="true" process="@this"
 								update="@this, @([id$=qtyPG])"
-								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(item,scQtRecommendDtl)}" />
+								listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
+															item,recommendedSuppl.scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
+						<p:commandLink update="@([id$=suppDtlPopUp])"
+							oncomplete="suppDtlWidgetVar.show();">
+							<f:setPropertyActionListener value="#{recommendedSuppl.scQtRecommendDtl.supplier}"
+								target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
+							<h:outputText value="#{recommendedSuppl.scQtRecommendDtl.supplier.companyName}" 
+								style="white-space:normal;"/>
+						</p:commandLink>
+						<br />
+					</p:column>
+				</p:dataList>
+				
+				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}"
+					type="none" rendered="#{!isPendingNegotiationStatus}">
+					<p:column rendered="#{scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 						<p:commandLink update="@([id$=suppDtlPopUp])"
 							oncomplete="suppDtlWidgetVar.show();">
 							<f:setPropertyActionListener value="#{scQtRecommendDtl.supplier}"
@@ -138,22 +153,22 @@
 						</p:commandLink>
 						<br />
 					</p:column>
-				</p:dataList>
+				</p:dataList> 				
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
-				<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}">
+				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
 					<h:outputText
-						value="#{scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo}" />
+						value="#{recommendedSuppl.scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo}" />
 					<br />
 				</ui:repeat>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.bumiputra.status']}">
-				<ui:repeat var="scQtRecommendDtl" value="#{item.recommendDtls}">
+				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
 					<h:outputText
 						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-					fn:toUpperCase(scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
+					fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
 					<br />
 				</ui:repeat>
 			</p:column>
@@ -165,10 +180,9 @@
 
 			<p:column headerText="#{lbl['lbl.sc.offered.price']}"
 				style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl"
-					value="#{item.awardSupplierList}">
+				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
 					<h:outputText
-						value="#{evaluationResultDtl.qtEvaluationResult.offeredPrice}">
+						value="#{recommendedSuppl.qtEvaluationResult.offeredPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -178,9 +192,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl"
-					value="#{item.awardSupplierList}">
-					<h:outputText value="#{evaluationResultDtl.totalScore}">
+				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
+					<h:outputText value="#{recommendedSuppl.totalScore}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
@@ -190,8 +203,8 @@
 
 			<p:column headerText="#{lbl['lbl.sc.ranking']}"
 				style="text-align: right;">
-				<ui:repeat var="evaluationResultDtl" value="#{item.awardSupplierList}">
-					<h:outputText value="#{evaluationResultDtl.evalRank}">
+				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
+					<h:outputText value="#{recommendedSuppl.evalRank}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
@@ -206,37 +219,49 @@
 						value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 				</f:facet>
 				<h:panelGroup id="qtyPG">
-					<p:outputPanel rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward}">
+					<p:outputPanel rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward 
+													and isPendingNegotiationStatus}">
 						<h:outputText value="#{lbl['lbl.sc.max.quantity']}" style="text-align: right;">
 						</h:outputText>[
 						<h:outputText value="#{item.requestItem.quantity}" style="text-align: right;">
 							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, 
 														item.requestItem.uom.uomCode)}" />
 						</h:outputText>]				
-						<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}" type="none">
+						<p:dataList var="recommendedSuppl" value="#{item.awardSupplierList}" type="none">
 							<p:column>
-								<h:inputText id="awardQty" value="#{scQtRecommendDtl.awardQty}"
+								<h:inputText id="awardQty" value="#{recommendedSuppl.scQtRecommendDtl.awardQty}"
 									maxlength="14" size="6" 
-									rendered="#{isPendingNegotiationStatus 
-													and scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}"
+									rendered="#{isPendingNegotiationStatus and
+										recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}"
 									style="text-align: right;" required="true"
 									label="#{lbl['lbl.sc.quantity']}">
 									<p:ajax partialSubmit="true" process="@this"
 										update="@this, awardQtyMsg" />
 									<p:ajax event="blur" partialSubmit="true" process="@this" update="@([id$=recommendTbl])" 
-											listener="#{lOIDetailBackingBean.updateOfferedPrice(item,scQtRecommendDtl)}"/>										
+											listener="#{lOIDetailBackingBean.updateOfferedPrice(item,recommendedSuppl.scQtRecommendDtl)}"/>										
 									<ac:validateNumber
 										pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, 
 												   item.requestItem.uom.uomCode)}"
 										maxIntegerDigits="10" maxFractionDigits="3"
 										max="#{item.requestItem.quantity}" />
 								</h:inputText>
-								<h:outputText value="#{scQtRecommendDtl.awardQty}"
+								<h:outputText value="#{recommendedSuppl.scQtRecommendDtl.awardQty}"
 									rendered="#{!isPendingNegotiationStatus}" />
 								<p:message id="awardQtyMsg" for="awardQty" display="icon" />
 								<br />
 							</p:column>
 						</p:dataList>
+					</p:outputPanel>
+					
+					<p:outputPanel rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward
+													and	!isPendingNegotiationStatus}">
+							<ui:repeat var="awardedSuppl" value="#{item.awardSupplierList}" 
+								rendered="#{item.recommendByStr eq ParameterConst.recommendByMultipleAward}">
+								<p:column rendered="#{awardedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
+									<h:outputText value="#{awardedSuppl.scQtRecommendDtl.awardQty}" />
+									<br />
+								</p:column>
+							</ui:repeat>
 					</p:outputPanel>
 
 					<h:outputText value="#{item.requestItem.quantity}"
