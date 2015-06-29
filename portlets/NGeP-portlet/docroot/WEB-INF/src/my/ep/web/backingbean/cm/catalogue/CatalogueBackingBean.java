@@ -8217,7 +8217,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}else if(optionListValue.intValue()==3){
 			boolean found = false;
 			for(VCmSupplierItem vCmSupplierItem: this.getManagedBean().getSelectViewItems()){
-				if(vCmSupplierItem.getRowId()==supplierItem.getRowId()){
+				if(vCmSupplierItem.getDocId()==supplierItem.getDocId()){
 					FacesContext.getCurrentInstance().addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils.getMessage(MessageConst.ERROR_715054,
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
