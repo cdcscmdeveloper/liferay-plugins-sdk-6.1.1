@@ -1747,7 +1747,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				}
 			}
 		}catch(Exception ex){
-			throw new EpException(ex.getMessage());
+			throw new EpException("MyIdentity: " + ex.getMessage());
 		}
 	}
 	
