@@ -3316,14 +3316,13 @@ public class LOADetailBackingBean extends
 	 */
 	private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item) {
 		JadualHargaBean jadualHarga = new JadualHargaBean();
-		CommonUtils commonUtils = new CommonUtils();
-		DecimalFormat nf = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		
 		jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item
 				.getTplSpecZoneDtl().getZoneName() : "N/A");
 		jadualHarga.setItem(item.getScRequestItem().getItemName());
-		jadualHarga.setUnitPrice(nf.format(item.getUnitPrice().longValue()));
+		
+		BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		jadualHarga.setUnitPrice(unitPrice.toString());
 		jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion()
 				.getClUom().getUomName());
 		jadualHarga.setFreqUom(null == item.getScRequestItem()
@@ -3342,9 +3341,7 @@ public class LOADetailBackingBean extends
 				.getTplSpecQuestion().getClDurationMonth() ? "N/A" : item
 				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
 				.toString());
-		jadualHarga.setQuantity(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClQuantity() ? "N/A" : item
-				.getScRequestItem().getTplSpecQuestion().getClQuantity()
+		jadualHarga.setQuantity(null == item.getQty()? "N/A" : item.getQty()
 				.toString());
 
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
