@@ -184,13 +184,13 @@
 					<p:ajax event="unselect"
 						listener="#{qTCommitteBackingBean.onNodeUnselect}" />
 
-					<p:column headerText="#{lbl['lbl.sc.name']}" style="width:210px;">
+					<p:column headerText="#{lbl['lbl.sc.name']}" style="width:250px;">
 					
 						<h:outputText style="font-weight: bold;"
 							value="#{qTCommitteBackingBean.getParameterDesc(committeeNode.object.committeeType)}"
 							rendered="#{committeeNode.type == 'committee'}" />
 
-						<h:outputText value="#{qTCommitteBackingBean.chopString(committeeNode.object.memberName,25)}"
+						<h:outputText value="#{qTCommitteBackingBean.chopMemberName(committeeNode.object.memberName,25)}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
 							style="white-space: normal;word-wrap:break-word;" />
 					</p:column>
@@ -207,7 +207,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.email']}">
-						<h:outputText value="#{committeeNode.object.email}"
+						<h:outputText value="#{qTCommitteBackingBean.splitEmail(committeeNode.object.email)}"
 							rendered="#{committeeNode.type == 'scCommitteeMember'}"
 							style="white-space: normal; word-wrap:break-word;" />
 					</p:column>
