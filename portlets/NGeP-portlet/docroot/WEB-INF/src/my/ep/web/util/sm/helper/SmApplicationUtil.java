@@ -2486,11 +2486,11 @@ public class SmApplicationUtil {
 	 * 
 	 * @return the PO login id
 	 */
-	public static String getPOLoginId(SmApplicationManagedBean managedBean) {
+	public static String getPOLoginId(SmSupplier supplier,SmAppl smAppl) {
 		log.info("*** This is resubmit to get po from MOF API ****** ");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setSupplierId(managedBean.getSmSupplier().getSupplierId());
-		reqDTO.setAppType(managedBean.getSmAppl().getApplType());
+		reqDTO.setSupplierId(supplier.getSupplierId());
+		reqDTO.setAppType(smAppl.getApplType());
 		StringBuilder sb = new StringBuilder();
 		sb.append("(")
 				.append(SupplierManagementConst.PM_STATUS_REJECTED_BY_PROCESSING_OFFICER)
