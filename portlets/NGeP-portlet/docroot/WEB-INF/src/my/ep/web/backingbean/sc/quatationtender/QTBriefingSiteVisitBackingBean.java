@@ -327,7 +327,9 @@ public class QTBriefingSiteVisitBackingBean extends
 			if (!siteVisitDetails.contains(bsvDetail)) {
 				siteVisitDetails.add(bsvDetail);
 			}
-			briefingBean.getScQtBsv().setAllSiteVisitReq(true);
+			if (siteVisitDetails.size() == 2) {
+				briefingBean.getScQtBsv().setAllSiteVisitReq(true);
+			}
 			briefingBean.setSitevisitList(siteVisitDetails);
 		}
 		if (this.getManagedBean().getQt().isZonal()) {
