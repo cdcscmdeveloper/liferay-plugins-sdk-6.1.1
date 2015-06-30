@@ -17,6 +17,8 @@ public class ExtensionCodeVO implements Serializable{
 	private String brandName;
 	private String measurementName;
 	private String colorName;
+	private boolean selected = false;
+	private String key;
 	
 	
 	
@@ -68,6 +70,22 @@ public class ExtensionCodeVO implements Serializable{
 	public void setColorName(String colorName) {
 		this.colorName = colorName;
 	}
+	public boolean isSelected() {
+		return selected;
+	}
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
+	}
+	
+	
+	
+	
 	
 	
 	
