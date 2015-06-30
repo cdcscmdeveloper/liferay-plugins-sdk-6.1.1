@@ -186,7 +186,7 @@
 						action="#{qTBriefingSiteVisitBackingBean.deleteBsvDetails('S')}"
 						update="@([id$=sameasbsvrequired])" />
 				</div>
-				<h:panelGroup rendered="#{bsvdtlbean.sitevisitList.size() eq 1}">
+				<h:panelGroup rendered="#{bsvdtlbean.sitevisitList.size() ge 2}">
 					<table style="width: 100%" border="0">
 						<tr>
 							<td style="width: 27px;">
@@ -207,7 +207,9 @@
 									<ui:fragment rendered="#{!bsvdtlbean.scQtBsv.allSiteVisitReq}">
 										<p:inputText id="minSiteVisitAttss" size="5" style="width: 30px;"
 											value="#{bsvdtlbean.scQtBsv.minSiteVisitAttend}"
-											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" />
+											readonly="#{bsvdtlbean.scQtBsv.allSiteVisitReq}" >
+											<p:ajax event="change" process="@this" partialSubmit="true" />
+											</p:inputText>
 									</ui:fragment>
 								</h:panelGroup></td>
 							
