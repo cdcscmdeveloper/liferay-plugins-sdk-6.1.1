@@ -13,17 +13,20 @@
 	<ui:define name="contentSection">
 		<p:messages showDetail="true" autoUpdate="true" closable="true"
 			showSummary="true"></p:messages>
-			
-		<div style="text-align: right; min-height: 40px;">	
+
+		<div style="text-align: right; min-height: 40px;">
 			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.cm.back']}" action="#{codificationBackingBean.backToPrev}" />
+				<p:commandButton value="#{lbl['lbl.cm.back']}"
+					action="#{codificationBackingBean.backToPrev}" />
 			</div>
 		</div>
-						
-		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
+
+		<h:panelGroup
+			rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.allSupplier}">
 			<table style="width: 80%">
 				<tr>
-					<td style="width: 80%;"><div class="navDiv" id="menuDiv" align="center">
+					<td style="width: 80%;"><div class="navDiv" id="menuDiv"
+							align="center">
 							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
 								<li style="width: 210px;"><h:outputText
 										value="#{lbl['lbl.cm.choose.unspsc']}" /></li>
@@ -53,44 +56,51 @@
 
 				<table style="width: 100%;">
 					<tr>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.segment.code']}" style="font-weight: bold;"></p:outputLabel></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.segment.code']}" style="font-weight: bold;"></p:outputLabel></td>
 						<td width="30%"><h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.segmentCode}"/></td>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.segment.title']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td ><h:outputText
-								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.segmentTitle}"/></td>
+								value="#{codificationBackingBean.managedBean.segmentCode}" /></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.segment.title']}"
+								style="font-weight: bold;"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.segmentTitle}" /></td>
 					</tr>
 					<tr>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.family.code']}" style="font-weight: bold;"></p:outputLabel></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.family.code']}" style="font-weight: bold;"></p:outputLabel></td>
 						<td width="30%"><h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.familyCode}"/></td>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.family.title']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td ><h:outputText
-								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.familyTitle}"/></td>
+								value="#{codificationBackingBean.managedBean.familyCode}" /></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.family.title']}" style="font-weight: bold;"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.familyTitle}" /></td>
 					</tr>
 					<tr>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.class.code']}" style="font-weight: bold;"></p:outputLabel></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.class.code']}" style="font-weight: bold;"></p:outputLabel></td>
 						<td width="30%"><h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.classCode}"/></td>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.class.title']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td ><h:outputText
-								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.classTitle}"/></td>
+								value="#{codificationBackingBean.managedBean.classCode}" /></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.class.title']}" style="font-weight: bold;"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.classTitle}" /></td>
 					</tr>
 					<tr>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.commodity.code']}" style="font-weight: bold;"></p:outputLabel></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.commodity.code']}"
+								style="font-weight: bold;"></p:outputLabel></td>
 						<td width="30%"><h:outputText
 								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"/></td>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.commodity.title']}" style="font-weight: bold;"></p:outputLabel></td>
-						<td><h:outputText
-								style="white-space: normal!important;"
-								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"/></td>
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.commodity.title']}"
+								style="font-weight: bold;"></p:outputLabel></td>
+						<td><h:outputText style="white-space: normal!important;"
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
 					</tr>
 					<tr>
 						<td><h:outputText style="font-weight: bold;"
@@ -100,7 +110,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
-								value="#{codificationBackingBean.typeFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.typeFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -108,7 +118,7 @@
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
-								value="#{codificationBackingBean.brandFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.brandFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -119,7 +129,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
-								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.measurementFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -127,7 +137,7 @@
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
 						<td><p:selectOneMenu
-								value="#{codificationBackingBean.colorFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.colorFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -137,7 +147,8 @@
 				</table>
 
 				<div style="text-align: right;">
-					<p:commandButton value="#{lbl['lbl.btn.search']}" id="searchButtonId"
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						id="searchButtonId"
 						action="#{codificationBackingBean.extensionCodeSearch}"
 						update="itemTableID" />
 				</div>
@@ -151,20 +162,32 @@
 
 
 
-
+			<p:remoteCommand name="refreshExtensionSearch" id="refreshExtensionSearch" action="#{codificationBackingBean.checkingCheckAll}" update=":form:itemTableID:selectAllCheckBoxId"></p:remoteCommand>
 
 
 			<p:panel header="#{lbl['lbl.cm.search.result']}" toggleable="true">
 
-				<p:dataTable id="itemTableID" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{codificationBackingBean.extensionSearchItemDataModel}"
+				<p:dataTable id="itemTableID"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{codificationBackingBean.managedBean.extensionSearchItemDataModel}"
 					rowKey="#{obj}" var="obj" rowIndexVar="rowIndex"
-					selection="#{codificationBackingBean.managedBean.selectedObject}"
 					lazy="true" rows="10">
 
-					<p:column selectionMode="multiple" style="width:2%" rendered="#{codificationBackingBean.allSupplier}" />
-
 					<ac:paginator for="itemTableID"></ac:paginator>
+
+					<p:column>
+						<f:facet name="header">
+							<p:selectBooleanCheckbox id="selectAllCheckBoxId" value="#{codificationBackingBean.managedBean.extensionSearchcheckBoxAll}">
+								<p:ajax event="change"
+									listener="#{codificationBackingBean.cloneAllExtensionSelection()}" update="itemTableID"></p:ajax>
+							</p:selectBooleanCheckbox>
+						</f:facet>
+						<p:selectBooleanCheckbox value="#{obj[8]}">
+							<p:ajax event="change"
+								listener="#{codificationBackingBean.cloneExtensionSelection(rowIndex)}" update="itemTableID"></p:ajax>
+						</p:selectBooleanCheckbox>
+					</p:column>
+
 
 					<p:column>
 						<f:facet name="header">

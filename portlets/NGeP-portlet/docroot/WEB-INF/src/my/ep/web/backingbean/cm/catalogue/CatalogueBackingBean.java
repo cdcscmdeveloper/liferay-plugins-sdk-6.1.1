@@ -402,7 +402,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String addToMaintain() {
 
 		CodificationBackingBean bb = new CodificationBackingBean();
-		if(bb.getManagedBean().getSelectedObject().length < 1) {
+		if(bb.getManagedBean().getCloneExtensionVOs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715014);
 		}
 
@@ -436,25 +436,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 			CodificationReqDTO codeReqDTO = new CodificationReqDTO();
 
-			log.debug("addToMaintain:" + bb.getManagedBean().getSelectedObject().length);
+			log.debug("addToMaintain:" + bb.getManagedBean().getCloneExtensionVOs().size());
 
 			bb.getManagedBean().setExtensionVoList(null);
-			for (int i = 0; i < bb.getManagedBean().getSelectedObject().length; i++) {
+			for (ExtensionCodeVO clone :bb.getManagedBean().getCloneExtensionVOs()) {
 				ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-				Object[] objects = (Object[]) bb.getManagedBean()
-						.getSelectedObject()[i];
+				
+				extCodeVO.setTypeId(clone.getTypeId());
+				extCodeVO.setBrandId(clone.getBrandId());
+				extCodeVO.setMeasurementId(Long.valueOf(clone.getMeasurementId()));
+				extCodeVO.setColorId(clone.getColorId());
 
-				extCodeVO.setTypeId(Long.valueOf(String.valueOf(objects[0])));
-				extCodeVO.setBrandId(Long.valueOf(String.valueOf(objects[1])));
-				extCodeVO
-				.setMeasurementId(Long.valueOf(String.valueOf(objects[2])));
-				extCodeVO.setColorId(Long.valueOf(String.valueOf(objects[3])));
-
-				log.info("******type NAme******" + String.valueOf(objects[4]));
-				extCodeVO.setTypeName(String.valueOf(objects[4]));
-				extCodeVO.setBrandName(String.valueOf(objects[5]));
-				extCodeVO.setMeasurementName(String.valueOf(objects[6]));
-				extCodeVO.setColorName(String.valueOf(objects[7]));
+				
+				extCodeVO.setTypeName(clone.getTypeName());
+				extCodeVO.setBrandName(clone.getBrandName());
+				extCodeVO.setMeasurementName(clone.getMeasurementName());
+				extCodeVO.setColorName(clone.getColorName());
 
 				bb.getManagedBean().getExtensionVoList().add(extCodeVO);
 
