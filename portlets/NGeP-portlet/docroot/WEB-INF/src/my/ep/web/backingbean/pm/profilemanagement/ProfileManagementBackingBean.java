@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -44,6 +45,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -53,11 +55,13 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
@@ -78,6 +82,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -94,6 +99,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -142,7 +148,7 @@ public class ProfileManagementBackingBean extends
 	public static final int OTHERS = 1;
 	String roleNameVal;
 	boolean disableDeleteRole;
-
+	
 	public boolean isDisableDeleteRole() {
 		return disableDeleteRole;
 	}
@@ -615,6 +621,8 @@ public class ProfileManagementBackingBean extends
 					: pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(pmUser.getSalutationCode() == null ? new PmSalutation()
 					: pmUser.getSalutationCode());
+			logger.info("..........pmUser.getUserName()..........."+pmUser.getUserName());
+			this.getManagedBean().setUserNameOriginalValue(pmUser.getUserName());
 			// pmUser.setOrgTypeCode(pmUser.getOrgTypeCode() == null ? new
 			// PmParameter()
 			// : pmUser.getOrgTypeCode());
@@ -3399,6 +3407,63 @@ public class ProfileManagementBackingBean extends
 		user.setMobileNo(userOrg.getMobileNo());
 
 	}
+private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO){
+	String oldDesignation = user.getDesignation();
+	String newDesignation = userOrg.getDesignation();
+	if(!oldDesignation.equalsIgnoreCase(newDesignation)){//if designation was modified
+		  logger.info("Tracking diary for user profile: edit user Designation :saveUserProfile");
+		  String messageId= MessageConst.TD_80010;
+		  String[] msgParam = new String[]{oldDesignation, newDesignation};
+			reqDTO.setTrackingStatus(true);				
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+		
+	}
+	String oldEmail = user.getEmail();
+	String newEmail = userOrg.getEmail();
+	if(!oldEmail.equalsIgnoreCase(newEmail)){
+		  logger.info("Tracking diary for user profile: edit user Email :saveUserProfile");
+		  String messageId= MessageConst.TD_80009;
+		  String[] msgParam = new String[]{oldEmail, newEmail};
+			reqDTO.setTrackingStatus(true);				
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+		
+	}
+	String oldGrade = user.getGrade();
+	String newGrade = userOrg.getGrade();
+	if(!oldGrade.equalsIgnoreCase(newGrade)){
+		  logger.info("Tracking diary for user profile: edit user Grade :saveUserProfile");
+		  String messageId= MessageConst.TD_80011;
+		  String[] msgParam = new String[]{oldGrade, newGrade};
+			reqDTO.setTrackingStatus(true);				
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+		
+	}
+	boolean oldPMP = user.isPMP();
+	boolean newPMP = userOrg.isPMP();
+	if(oldPMP != newPMP){
+		  logger.info("Tracking diary for user profile: edit user P&P :saveUserProfile");
+		  String messageId = null;
+		  if(newPMP){//if it was changed to 'yes'
+		      messageId= MessageConst.TD_80012;
+		  }else{
+			  messageId= MessageConst.TD_80013;  
+		  }
+		  String[] msgParam = new String[]{};
+			reqDTO.setTrackingStatus(true);				
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+		
+	}
+	String oldUsername = this.getManagedBean().getUserNameOriginalValue();
+	logger.info("oldUsername="+oldUsername);
+	String newUsername =user.getUserName();
+	if(!oldUsername.equalsIgnoreCase(newUsername)){
+	 logger.info("Tracking diary for user profile: edit username :saveUserProfile");
+	  String messageId= MessageConst.TD_80014;
+	  String[] msgParam = new String[]{oldUsername, newUsername};
+		reqDTO.setTrackingStatus(true);				
+		reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+	}	
+}
 
 	/**
 	 * reset user password and re-send notification to user.
@@ -3475,12 +3540,14 @@ public class ProfileManagementBackingBean extends
 			// oneActiveResponsibleOrg(user);
 			validatePreference(user);
 			validateRoles(userOrg);
-			fillUserInfoFromUserOrg(user, userOrg);
-
 			reqDTO = new UserReqDTO();
 			reqDTO.setServerName(getFacesScopes().getRequest().getServerName());
 			reqDTO.setServerPort(getFacesScopes().getRequest().getServerPort());
-
+            reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+			if(!isNewUser){	
+			    checkChangesAndFillTrackingDiary(user, userOrg , reqDTO);
+			}
+			fillUserInfoFromUserOrg(user, userOrg);
 			/*
 			 * no need check as assumed user have logged in
 			 * if(!StringUtils.isBlank(user.getConfirmPassword()) &&
@@ -3526,7 +3593,13 @@ public class ProfileManagementBackingBean extends
 				user.setChangedBy(loginSessionUserId);
 				user.setCreatedBy(loginSessionUserId);
 			}
-
+			if(isNewUser){
+			  logger.info("Tracking diary for user profile: create new user :saveUserProfile");
+			  String messageId= MessageConst.TD_80001;
+			  String[] msgParam = new String[]{userOrg.getPmOrgProfile().getOrgCode(), userOrg.getPmOrgProfile().getOrgName()};
+				reqDTO.setTrackingStatus(true);				
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+			}	
 			userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 			reqDTO.setPmUser(user);
@@ -3972,6 +4045,12 @@ public class ProfileManagementBackingBean extends
 
 	}
 
+private String getActionDesc(String messageId, String[] params){
+	Locale myLocale = new Locale("ms","MY");
+	return MessageUtils.getMessage(
+			messageId, params,
+			MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);			
+}
 	private boolean isAnyPendingTaskForUser(String loginId) {
 		logger.info("isAnyPendingTaskForUser");
 		boolean anyPendingTask = false;

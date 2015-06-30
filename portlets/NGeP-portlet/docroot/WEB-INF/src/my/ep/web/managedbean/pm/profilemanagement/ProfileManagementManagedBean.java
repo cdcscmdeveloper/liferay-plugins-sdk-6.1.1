@@ -67,6 +67,15 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private boolean isLazy = false;
 	private PmOrgProfile selectedCurrentOrgProfile;
 	private Boolean isNewUser;
+	private String userNameOriginalValue;
+
+	public String getUserNameOriginalValue() {
+		return userNameOriginalValue;
+	}
+
+	public void setUserNameOriginalValue(String userNameOriginalValue) {
+		this.userNameOriginalValue = userNameOriginalValue;
+	}
 
 	/**
 	 * @return the additionalOrgFilter
