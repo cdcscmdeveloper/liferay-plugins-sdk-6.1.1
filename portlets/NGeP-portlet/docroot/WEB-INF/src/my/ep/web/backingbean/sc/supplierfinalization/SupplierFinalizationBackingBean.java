@@ -4404,7 +4404,7 @@ public class SupplierFinalizationBackingBean extends
 									if (CollectionUtils.isNotEmpty(recommendedItemListByZone)) {
 										ScQtRecommend qtRecommend = recommendedItemListByZone.get(0);
 										List<ScQtEvaluationResultDtl> shortListedSupplierList = 
-												this.getManagedBean().getShortlistedSupppliersByZone().get(zoneDtl);
+															this.getShortlistedSuppliersByZone(zoneDtl);
 										
 										// Skip for first item (scQtRecommend) while loading data initially 
 										// as the shortlisted supplier of it would be the default to be displayed
@@ -4556,7 +4556,7 @@ public class SupplierFinalizationBackingBean extends
 									recommendedSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
 							recommendedSupplierList.add(scQtEvaluationResultDtl);
 							if (this.getManagedBean().getRecommendedSupppliersByZone().get(
-									specZoneDtl) == null) {
+									specZoneDtl.getSpecZoneId()) == null) {
 								this.getManagedBean().getRecommendedSupppliersByZone().put(
 										specZoneDtl.getSpecZoneId(), recommendedSupplierList);
 							}
