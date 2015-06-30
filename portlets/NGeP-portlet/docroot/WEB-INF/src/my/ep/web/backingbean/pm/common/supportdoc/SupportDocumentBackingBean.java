@@ -1194,21 +1194,22 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 					ResourceBundleUtils.getMessage(LABEL_dISPLAY_PRIORITY_KEY,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()), displaySeq });
-		} else {
-			pmDocument.setDisplaySeq(displaySeq.trim());
-			if (validateDisplaySequence(pmDocument)) {
-				throw new EpException(MessageConst.ERROR_770200,
-						new String[] { ResourceBundleUtils.getMessage(
-								LABEL_dISPLAY_PRIORITY_KEY,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())});
-			}
-		}
+		} 
 		
 		if(!ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(pmDocument.getDocCategoryCode().getParameterCode())){
 			if(StringUtils.isBlank(pmDocument.getDocName())){ 
 				throw new EpException(MessageConst.ERROR_770084);
 			}else{
+				
+				// validate Display Seq
+				pmDocument.setDisplaySeq(displaySeq.trim());
+				if (validateDisplaySequence(pmDocument)) {
+					throw new EpException(MessageConst.ERROR_770200,
+							new String[] { ResourceBundleUtils.getMessage(
+									LABEL_dISPLAY_PRIORITY_KEY,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())});
+				}
 				//doc name unique
 				SearchBean<PmDocument> searchBean = new SearchBean<PmDocument>();
 				
@@ -1287,6 +1288,16 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 
 			if(pmDocument.getPmZone().getZoneId() != null && pmDocument.getPmZone().getZoneId()==0) {
 				throw new EpException(MessageConst.ERROR_770088);
+			}
+			
+			// validate Display Seq
+			pmDocument.setDisplaySeq(displaySeq.trim());
+			if (validateDisplaySequence(pmDocument)) {
+				throw new EpException(MessageConst.ERROR_770200,
+						new String[] { ResourceBundleUtils.getMessage(
+								LABEL_dISPLAY_PRIORITY_KEY,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())});
 			}
 			
 			//doc name unique + zone id unique
@@ -1800,6 +1811,14 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 				new SearchFilterBean("displaySeq",
 						SearchOperator.OPERATOR_EQUALS.value(), pmDocument
 								.getDisplaySeq()));
+		// zoneId
+		if (pmDocument.getPmZone() != null) {
+			searchBean.getDataFilterBeans().add(
+					new SearchFilterBean("pmZone.zoneId",
+							SearchOperator.OPERATOR_EQUALS.value(), pmDocument
+									.getPmZone().getZoneId()));
+		}
+		
 		//documentId
 		if(!pmDocument.isBrandNew()){
 			searchBean.getDataFilterBeans().add(
@@ -1807,6 +1826,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 							SearchOperator.OPERATOR_NOT_EQUALS.value(),
 							pmDocument.getDocumentId()));
 		}
+		
 		
 		return searchDocument(searchBean);
 	}
