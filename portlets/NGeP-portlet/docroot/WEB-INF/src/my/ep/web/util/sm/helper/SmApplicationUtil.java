@@ -600,7 +600,13 @@ public class SmApplicationUtil {
 								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERSATUAN)
 				|| sup.getBusinessType()
 						.equalsIgnoreCase(
-								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)) {
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_PERTUBUHAN_LAIN2)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_KOPERASI_LAIN2)
+				|| sup.getBusinessType()
+						.equalsIgnoreCase(
+								SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_NGO)) {
 			return SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROS_DEFAULT;
 		} else if (sup.getBusinessType().equalsIgnoreCase(
 				SupplierManagementConst.SM_SUPPLIER_BUSINESS_TYPE_ROC_SDN_BHD)
@@ -2486,7 +2492,7 @@ public class SmApplicationUtil {
 	 * 
 	 * @return the PO login id
 	 */
-	public static String getPOLoginId(SmSupplier supplier,SmAppl smAppl) {
+	public static String getPOLoginId(SmSupplier supplier, SmAppl smAppl) {
 		log.info("*** This is resubmit to get po from MOF API ****** ");
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());

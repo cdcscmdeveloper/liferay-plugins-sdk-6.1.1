@@ -5,7 +5,9 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmWorkflowStatus;
 import my.ep.web.managedbean.sm.applicationView.ViewApplHistoryManagedBean;
@@ -87,6 +89,14 @@ public class ViewApplHistoryBackingBean extends
 
 	public void search() {
 		getManagedBean().searchSupplier();
+	}
+
+	public void initSmApplByApplNo(String applNo) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplNo(applNo);
+		SmAppl smAppl = SmServiceLookup.getMofRegistrationSO()
+				.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl();
+		viewApplication(smAppl);
 	}
 
 }

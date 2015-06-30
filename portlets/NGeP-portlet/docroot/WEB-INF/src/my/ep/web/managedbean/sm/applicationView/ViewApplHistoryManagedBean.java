@@ -23,13 +23,13 @@ public class ViewApplHistoryManagedBean extends
 	 */
 	private static final long serialVersionUID = 1191700333390541593L;
 	private SmAppl selectedApplHistory;
-	private IPagingDataModel<SmAppl> smSupplierDataModel = new SmSupplierPagingDataModel();
+	private IPagingDataModel<Object[]> smSupplierDataModel = new SmSupplierPagingDataModel();
 
 	public ViewApplHistoryManagedBean() {
 
 	}
 
-	private class SmSupplierPagingDataModel extends PagingDataModel<SmAppl> {
+	private class SmSupplierPagingDataModel extends PagingDataModel<Object[]> {
 		/**
 		 * 
 		 */
@@ -40,10 +40,10 @@ public class ViewApplHistoryManagedBean extends
 		}
 
 		@Override
-		protected ISearchResultBean<SmAppl> pageChangeListener(
-				ISearchBean<SmAppl> searchBean) {
+		protected ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
 			SmApplRevisionReqDTO reqDTO = new SmApplRevisionReqDTO();
-			reqDTO.setSearchBean(searchBean);
+			reqDTO.setObjArrSearchBean(searchBean);
 			reqDTO.setViewApplicationHistory(isViewApplicationHistory());
 
 			try {
@@ -63,7 +63,7 @@ public class ViewApplHistoryManagedBean extends
 			}
 		}
 
-		private ISearchResultBean<SmAppl> getApplicationHistoryResultBean(
+		private ISearchResultBean<Object[]> getApplicationHistoryResultBean(
 				SmApplRevisionReqDTO reqDTO) {
 			reqDTO.setSmSupplier(getSearchSupplier());
 			reqDTO.setMofAccountNo(getSearchMofNo());
@@ -72,8 +72,8 @@ public class ViewApplHistoryManagedBean extends
 			reqDTO.setLanguage(new FacesScopes().getUserLocale().getLanguage());
 			reqDTO.setPmZoneId(getSearchPmZoneId());
 			return SmServiceLookup.getSmApplRevisionSO()
-					.retrieveApplicationHistoryBySupplierSearchCriteria(reqDTO)
-					.getResultBean();
+					.retrieveApplicationHistoryUsingNativeQuery(reqDTO)
+					.getObjectArrResultBean();
 		}
 	}
 
@@ -84,12 +84,12 @@ public class ViewApplHistoryManagedBean extends
 		smSupplierDataModel.reloadData();
 	}
 
-	public IPagingDataModel<SmAppl> getSmSupplierDataModel() {
+	public IPagingDataModel<Object[]> getSmSupplierDataModel() {
 		return smSupplierDataModel;
 	}
 
 	public void setSmSupplierDataModel(
-			IPagingDataModel<SmAppl> smSupplierDataModel) {
+			IPagingDataModel<Object[]> smSupplierDataModel) {
 		this.smSupplierDataModel = smSupplierDataModel;
 	}
 
