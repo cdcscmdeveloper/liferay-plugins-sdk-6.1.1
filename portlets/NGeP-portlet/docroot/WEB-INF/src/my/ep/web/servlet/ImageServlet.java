@@ -47,21 +47,24 @@ public class ImageServlet extends HttpServlet {
 		File file = new File(imageUrl);
 		byte[] b = new byte[(int) file.length()];
 		
+		FileInputStream fileInputStream = null;
+		ServletOutputStream output = null;
+		
 		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
+			fileInputStream = new FileInputStream(file);
 			fileInputStream.read(b);
 	        response.reset();
 	        response.setContentType("text/comma-separated-values");
 	        response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
-	        ServletOutputStream output = response.getOutputStream();
+	        output = response.getOutputStream();
 	        output.write(b);	        
 	        output.flush();
-	        
-	        fileInputStream.close();
-	        output.close();
-	        
+	        	        
 		} catch (FileNotFoundException e) {
 			log.error("File Not Found: " + e.getMessage());
+		} finally {
+	        fileInputStream.close();
+	        output.close();			
 		}
 	}
 }
