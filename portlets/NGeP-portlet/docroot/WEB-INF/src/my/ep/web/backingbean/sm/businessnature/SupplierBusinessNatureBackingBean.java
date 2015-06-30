@@ -60,6 +60,13 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 
 			//this.getManagedBean().setBusinessNatureLs(resDTO.getBusinessNatureLs());
 			log.info("BusinessNature>>>>>" + getManagedBean().getSmSupplier().getSmSupplierBusinesses().size());
+			
+			if(getManagedBean().getSmSupplier().getSmSupplierBusinesses().size() > 0){
+				getManagedBean().setSupplierBusinessMap(new HashMap<Long, SmSupplierBusiness>());
+				for(SmSupplierBusiness supplierBusiness : getManagedBean().getSmSupplier().getSmSupplierBusinesses()){
+					getManagedBean().getSupplierBusinessMap().put(supplierBusiness.getPmBusinessNature().getBusinessNatureId(), supplierBusiness);
+				}
+			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/supplierbusinessnature/businessNatureMaint.xhtml");
@@ -114,7 +121,13 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 				SmSupplierBusiness suppBusiness = new SmSupplierBusiness();
 				suppBusiness.setPmBusinessNature(bn);
 				suppBusiness.setSmSupplier(getManagedBean().getSmSupplier());
-				getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(suppBusiness);
+				
+				if(getManagedBean().getSupplierBusinessMap().get(bn.getBusinessNatureId()) != null){
+					SmSupplierBusiness existSupplierBiz = getManagedBean().getSupplierBusinessMap().get(bn.getBusinessNatureId());
+					getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(existSupplierBiz);
+				}else{
+					getManagedBean().getSmSupplier().getSmSupplierBusinesses().add(suppBusiness);
+				}
 			}
 		
 		}
@@ -174,19 +187,22 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 	}
 	
 	public String updateBusinessNature(){
-		ISupplierBusinessNatureSO supplierBusinessSO = SmServiceLookup.getSupplierBusinessNatureSO();
-		SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
-		reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
-		
-		SupplierBusinessNatureResDTO resDTO = supplierBusinessSO.saveBusinessNature(reqDTO);
-		
-		if(resDTO.isSuccessful()){
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
-					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
-			renewSesionObject();
-			return "/xhtml/common/acknowledge.xhtml";
+		if(this.getManagedBean().getSmSupplier().getSmSupplierBusinesses().size() < 1){
+			throw new EpException(MessageConst.ERROR_721011);
+		}else{
+			ISupplierBusinessNatureSO supplierBusinessSO = SmServiceLookup.getSupplierBusinessNatureSO();
+			SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
+			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+
+			SupplierBusinessNatureResDTO resDTO = supplierBusinessSO.saveBusinessNature(reqDTO);
+
+			if(resDTO.isSuccessful()){
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
+						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
+				renewSesionObject();
+				return "/xhtml/common/acknowledge.xhtml";
+			}
 		}
-		
 		return null;
 	}
 }
