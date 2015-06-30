@@ -9743,6 +9743,8 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setSpecComplete(false);
 				retriveSupplierQualificationCriteria("BO");
 				retriveTechnicalSpecification();
+			} else {
+				retriveSupplierQualificationCriteria("BO");
 			}
 			spReqDTO = prepareSpecReq();
 			List<ScQtLocCriteria> qtLocCriteriaRemoveList = this
