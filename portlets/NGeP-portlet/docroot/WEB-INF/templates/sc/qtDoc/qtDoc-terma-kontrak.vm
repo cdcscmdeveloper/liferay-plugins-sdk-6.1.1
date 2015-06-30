@@ -198,8 +198,8 @@
 				</div>
 				<div id="u15_rtf" style="text-align:justify;">
 					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar Sewa</span>
-					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar sewa ruang premis adalah RM --- fixed deduction amount --- --- tempoh--- (Ringgit Malaysia : ------ sahaja).</span></p>
-					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar sewa peralatan adalah RM --- fixed deduction amount --- ---- tempoh --- (Ringgit Malaysia : ------ sahaja).</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar sewa ruang premis adalah RM --- $deductionAmount --- --- tempoh--- (Ringgit Malaysia : ------ sahaja).</span></p>
+					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Kadar sewa peralatan adalah RM --- $deductionAmount --- ---- tempoh --- (Ringgit Malaysia : ------ sahaja).</span></p>
 					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal dikehendaki menjelaskan bayaran sewa bulanan untuk ruangan premis dan peralatan yang digunakan kepada Kerajaan.</span></p>
 					<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Semua bayaran akan ditolak dari amoun invois pembekal.</span></p>
 				</div>
@@ -223,7 +223,7 @@
 				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>TERMA PEMBAYARAN</u></span>
 			</div>
 			<div id="u15_rtf" style="text-align:justify;">
-				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran bagi semua perkara dan skop kerja yang ditawarkan mestilah dalam Ringgit Malaysia (RM) sahaja. Harga ini mestilah sah laku dalam tempoh --- validity period ---- hari daripada tarikh tutup Tawaran.</span>
+				<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran bagi semua perkara dan skop kerja yang ditawarkan mestilah dalam Ringgit Malaysia (RM) sahaja. Harga ini mestilah sah laku dalam tempoh --- $validityPeriod ---- hari daripada tarikh tutup Tawaran.</span>
 				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembayaran akan dibuat pada tidak lewat dari 14 hari selepas menerima invois daripada pihak Pembekal.</span></p>
 				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Sebarang tuntutan kenaikan harga dalam jangkamasa sah laku Tawaran tidak akan dilayan.</span></p>
 			</div>
