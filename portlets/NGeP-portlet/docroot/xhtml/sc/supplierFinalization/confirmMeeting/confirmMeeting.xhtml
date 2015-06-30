@@ -201,8 +201,8 @@
 								<p:commandButton value="#{lbl['lbl.btn.add']}" 
 									process="@this"
 									actionListener="#{suppFinalMeetingBackingBean.addPopupAction}"
-									update=":form:newMemberDialogId"
-									oncomplete="newMemberWidgetVar.show();" />
+									update=":form:memberDialogId"
+									oncomplete="memberWidgetVar.show();" />
 								
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
 									action="#{suppFinalMeetingBackingBean.committeeDeleteAction}"
