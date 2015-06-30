@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.sc.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.sc.quatationtender.UserCommitteeSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -49,13 +50,14 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private String identificationNo = null;
 	private String identificationType;
 	private List<PmUser> externalUsers;
-	private List<PmUser> selectedPmUser;
+	private List<PmUser> selectedPmUsers;
 	private SelectItem[] roleTypes; // Role type drop down
 	private String roleName;
 	private List<ScCommitteeMember> committeeMembersList;
 	private List<ScCommitteeMember> originalCommitteeMembersList;
 	private List<ScCommitteeMember> selectedCommitteeMembersList;
 	private QtnTenderSearchBean cloneQtnTenderSearchBean;
+	private UserCommitteeSearchBean userSearchBean;
 	private List<ScQt> cloneTenderList;
 	private List<ScQt> selectedCloneTender;
 	private List<ScCommitteeMember> cloneCommitteMembers;
@@ -64,11 +66,16 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private List<ScQtCommitteRemarks> qtCommitteeRemarks;
 	
 	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
+	private IPagingDataModel<PmUser> userSearchDataModel;
 	
 	private boolean selectAll;
 	private boolean selectAllMembers;
 	
 	private Date currentDate;
+	
+	public SupplierFinalizationMeetingManagedBean() {
+		this.userSearchBean = new UserCommitteeSearchBean();
+	}
 	
 	/**
 	 * @return the scQtMeetings
@@ -204,15 +211,15 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	/**
 	 * @return the selectedPmUser
 	 */
-	public List<PmUser> getSelectedPmUser() {
-		return selectedPmUser;
+	public List<PmUser> getSelectedPmUsers() {
+		return selectedPmUsers;
 	}
 	/**
 	 * @param selectedPmUser 
 	 * 				the selectedPmUser to set
 	 */
-	public void setSelectedPmUser(List<PmUser> selectedPmUser) {
-		this.selectedPmUser = selectedPmUser;
+	public void setSelectedPmUsers(List<PmUser> selectedPmUsers) {
+		this.selectedPmUsers = selectedPmUsers;
 	}
 	/**
 	 * @return the roleTypes
@@ -266,6 +273,20 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setCloneQtnTenderSearchBean(
 			QtnTenderSearchBean cloneQtnTenderSearchBean) {
 		this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
+	}
+	/**
+	 * @return the userSearchBean
+	 */
+	public UserCommitteeSearchBean getUserSearchBean() {
+		return userSearchBean;
+	}
+	/**
+	 * @param userSearchBean 
+	 * 				the userSearchBean to set
+	 */
+	public void setUserSearchBean(
+			UserCommitteeSearchBean userSearchBean) {
+		this.userSearchBean = userSearchBean;
 	}
 	/**
 	 * @return the cloneTenderList
@@ -346,6 +367,20 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	public void setCloneSearchQTDataModel(
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
 		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
+	}
+	/**
+	 * @return the userSearchDataModel
+	 */
+	public IPagingDataModel<PmUser> getUserSearchDataModel() {
+		return userSearchDataModel;
+	}
+	/**
+	 * @param userSearchDataModel 
+	 * 				the userSearchDataModel to set
+	 */
+	public void setUserSearchDataModel(
+			IPagingDataModel<PmUser> userSearchDataModel) {
+		this.userSearchDataModel = userSearchDataModel;
 	}
 	/**
 	 * @return the cloneCommitteMembers
