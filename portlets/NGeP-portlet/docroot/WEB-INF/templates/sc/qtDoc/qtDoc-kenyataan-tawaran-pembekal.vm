@@ -49,7 +49,7 @@ th{
 				</tr>
 				<tr align="center">
 					<td><span
-						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$agency</span>
+						style="font-weight: bold; font-size: 16px; font-family: Albertus Medium;">$ptj</span>
 						<br /></td>
 				</tr>
 			</tbody>
@@ -64,7 +64,7 @@ th{
 		<tr>
 			<td>
 				<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;"><u>KENYATAAN TAWARAN</u></span>
-				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan <span style="font-family:Arial;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KEMENTERIAN KEWANGAN MALAYSIA</span> dalam kod bidang yang berkaitan and kriteria berkaitan seperti berikut:</span></p>
+				<p><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Pembekal adalah dipelawa daripada Syarikat-syarikat yang berdaftar dengan <span style="font-family:Arial;font-size:13px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KEMENTERIAN KEWANGAN MALAYSIA</span> dalam kod bidang yang berkaitan dan kriteria berkaitan seperti berikut:</span></p>
 			</td>
 		</tr>
 		<tr>
@@ -76,7 +76,13 @@ th{
 			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KETERANGAN TAWARAN :</span> $qtTitle</td>
 		</tr>
 		<tr>
-			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> $qtType</td>
+			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">JENIS TAWARAN :</span> #if ($qtType == "Open")
+				Terbuka
+			#end 
+			#if ($qtType == "Restricted") 
+				Tender Terhad
+			#end
+			</td>
 		</tr>
 		<tr>
 			<td align="left"><span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">KOD BIDANG :</span> <br />
@@ -164,7 +170,7 @@ th{
 				#end
 				#if ($locLevel == "false")
 					#if ($subLocLevel == "true")
-						<span class="headerfont"> Location </span>
+						<span class="headerfont"> lokasi </span>
 						<table width='100%' class="table2">
 						<span class="headerfont">
 							<tr>

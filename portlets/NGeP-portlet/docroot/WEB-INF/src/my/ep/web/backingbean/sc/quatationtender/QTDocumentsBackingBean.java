@@ -1094,17 +1094,25 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		populateAttachmentDetails(attachment); 
 		
 		VelocityContext context = new VelocityContext();
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		
+		String deductionAmount = "";
 		StringBuilder deductionTypes = new StringBuilder();
     	List<ScQtDeduction> scQtDeductions = qt.getScQtDeductions();
     	if (scQtDeductions != null) {
     		for (ScQtDeduction scQtDeduction : scQtDeductions) {
+    			if (scQtDeduction.getDeductionAmount() != null) {
+    				deductionAmount = amountDF.format(scQtDeduction.getDeductionAmount());	
+    	    	}
         		if (deductionTypes.length() > 0) {
         			deductionTypes.append(","); 
         		}
         		deductionTypes.append(getParameterDesc(scQtDeduction.getDeductionType()));
         	}	
     	}
+    	context.put("deductionAmount", deductionAmount);
+    	context.put("validityPeriod", qt.getQtValidityPeriod());
     	//context.put("deductionTypes", deductionTypes.toString());
     	boolean deductionType = false;
     	if (deductionTypes.toString().contains("Penalty")) {
@@ -1152,6 +1160,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
 		context.put("hostUrl", hostUrl);
 		
+		boolean isFinanceOff = false;
 		List<ScQtCheckList> uploadFinanceSpecList = new ArrayList<ScQtCheckList>();
 		List<ScQtCheckList> financeSpecList = new ArrayList<ScQtCheckList>();
 		IQTSpecSO specSO;
@@ -1167,9 +1176,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 						|| qtCheckList.getDefinationType().getParameterCode().equals(ParameterConst.DOCUMENT_DEFINITION_TYPE_NO_ACTION)) {
 					if (!qtCheckList.getAction().getParameterCode().equals(ParameterConst.CHECKLIST_ACTION_VIEW)) {
 						uploadFinanceSpecList.add(qtCheckList);
+						isFinanceOff = true;
 					}
 				}
 			}
+			context.put("isFinanceOff", isFinanceOff);
 			context.put("uploadFinanceSpecList", uploadFinanceSpecList);
 			context.put("bean", this);
 		} finally {
@@ -1598,8 +1609,16 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		context.put("hostUrl", hostUrl);
 		
     	context.put("commonUtils", commonUtils);
-    	context.put("ministry", qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
-    	context.put("agency", qt.getPmOrgProfile().getOrgName());
+    	
+    	String ministryOrgName = null;
+		if (qt.getMinistryOrgProfile() != null) {
+			ministryOrgName = qt.getMinistryOrgProfile().getOrgName();
+		} else {
+			ministryOrgName = StringUtils.EMPTY;
+		}
+		context.put("ministry", ministryOrgName);	
+    	//context.put("ministry", qt.getPmOrgProfile().getParentOrgProfile().getOrgName());
+    	context.put("ptj", qt.getPmOrgProfile().getOrgName());
     	String title = qt.getQtTitle();
 		if (title == null) {
 			title = "";

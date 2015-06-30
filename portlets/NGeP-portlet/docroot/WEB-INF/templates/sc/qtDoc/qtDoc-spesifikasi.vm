@@ -1,137 +1,165 @@
 <html>
 <head>
 	<style>
-		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
-		
-		.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
-			border: 1px solid black;
+		.header {
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:16px;
+			font-weight: bold;
+			text-align:left;
 		}
-		 th{
-			background-color: #BCE18A;
-		 }
-		 
-		.footer {
-			display: block; text-align: center;
-			position: running(footer);
+		.standard{
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			text-align:left;
 		}
-		
+		.title{
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			font-weight: bold;
+			text-align:left;
+		}
+		.border{
+			border-TOP: 1px solid #a2a2a2;
+			border-bottom: 1px solid #a2a2a2;
+		}
+		.border-bottom{
+			border-bottom: 1px solid #a2a2a2;
+		}
+		.left-right {
+			border-left: 1px solid #a2a2a2;
+			border-right: 1px solid #a2a2a2;
+		}
+		.left{
+			border-left: 1px solid #a2a2a2;
+		}
+		.right{
+			border-right: 1px solid #a2a2a2;
+		}
+		table, td, th {
+			border: 0 solid #555;
+		}
+		table{
+			width: 100%;
+		}
+		th{
+			height: 20px;
+			padding: 5px 5px 5px 10px;
+		}
+		td{
+			height: 18px;
+			padding: 5px 5px 5px 10px;
+		}
+		.white{
+			color:#fff;
+		}
 	</style>
 </head>
 <body>
-	
-	<table width="100%">
-	<tr>
-		<td align="left">
-			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Spesifikasi</span>
-			<br/> <br/>
-		</td>
-	</tr>
-	#foreach( $tplspecMaster in $masters )
-	<tr>
-        <td align="left">
-			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Title Template :</span>
-			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$tplspecMaster.specName</span>
-			<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Item Type :</span>
-			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$itemType</span>
-			<br/>
-        </td>
-    </tr>
-    <tr>
-        <td align="left">
-			<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Local Goods :</span>
-			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$localGoods</span>
-			<br/>
-        </td>
-    </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-				<table class="table2">
-					<tr>
-						<td>Item</td>
-						<td>Specification</td>
-						<td>UOM</td>
-						#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-						<td>Freq. per UOM</td>
-						<td>No. UOM per day</td>
-						<td>No. UOM per month</td>
+<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th bgcolor="#a2a2a2" class="header">Spesifikasi</th>
+		</tr>
+	</tbody>
+</table>
+<br/>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+#foreach( $tplspecMaster in $masters )
+	<tbody>
+		<tr>
+			<td width="15%" class="standard"><nobr>Tajuk Templat:</nobr></td>
+			<td class="standard">$tplspecMaster.specName</td>
+		</tr>
+		<tr>
+			<td width="15%" class="standard"><nobr>Jenis Item:</nobr></td>
+			<td class="standard">$itemType</td>
+		</tr>
+		<tr>
+			<td width="15%" class="standard"><nobr>Jenis Barangan:</nobr></td>
+			<td class="standard">$localGoods</td>
+		</tr>
+	</tbody>
+#end
+</table>
+<br/>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+#foreach( $tplspecMaster1 in $masters )
+	<tbody>
+		<tr>
+            <th bgcolor="#6d839b" class="title border left">Item</th>
+            <th bgcolor="#6d839b" class="title border left">Spesifikasi</th>
+            <th bgcolor="#6d839b" class="title border left">UOM</th>
+			#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+				<td bgcolor="#6d839b" class="title border left>Freq. per UOM</td>
+				<td bgcolor="#6d839b" class="title border left>No. UOM per day</td>
+				<td bgcolor="#6d839b" class="title border left>No. UOM per month</td>
+			#end
+            <th bgcolor="#6d839b" class="title border left">Price Type</th>
+            <th bgcolor="#6d839b" class="title border left-right">Quantity</th>
+		</tr>
+		#foreach( $tplspecQuestion in $tplspecMaster1.tplSpecQuestions )
+		<tr>
+			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" ><strong>$tplspecQuestion.clItem</strong></td>
+			<td bgcolor="#f1f1f1" class="standard border-bottom left">$tplspecQuestion.clSpecDetail</td>
+			#if ($tplspecQuestion.questionType == "I")
+				<td bgcolor="#f1f1f1" class="standard border-bottom left">$tplspecQuestion.clUom.uomName</td>
+				#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+					<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left">
+						#if ($tplspecQuestion.clUomFrequency)
+							$tplspecQuestion.clUomFrequency
 						#end
-						<td>Price Type</td>
-						<td>Quantity</td>
-					</tr>
-					#foreach( $tplspecQuestion in $tplspecMaster.tplSpecQuestions )
-						<tr>
-							<td>$tplspecQuestion.clItem</td>
-							<td>$tplspecQuestion.clSpecDetail</td>
-							#if ($tplspecQuestion.questionType == "I")
-							<td>$tplspecQuestion.clUom.uomName</td>
-							#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-							<td align="right">
-								#if ($tplspecQuestion.clUomFrequency)
-									$tplspecQuestion.clUomFrequency
-								#end
-							</td>
-							<td align="right">
-								#if ($tplspecQuestion.clUomPerDay)
-									$tplspecQuestion.clUomPerDay
-								#end
-							</td>
-							<td align="right">
-								#if ($tplspecQuestion.clUomPerMonth)
-									$tplspecQuestion.clUomPerMonth
-								#end
-							</td>
-							#end
-							<td>$bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)</td>
-							<td align="right">
-								#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03")
-									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-									#end
-								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "05")
-									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-									#end
-								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "07")
-									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-									#end
-								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "09")
-									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-									#end
-								#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "10")
-									#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
-										$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
-									#end
-								#else
-									$tplspecQuestion.clQuantity
-								#end
-							</td>
-							#else
-								#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
-									<td colspan="6"></td>
-								#else
-									<td colspan="3"></td>
-								#end
-							#end
-						</tr>
+					</td>
+					<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left">
+						#if ($tplspecQuestion.clUomPerDay)
+							$tplspecQuestion.clUomPerDay
+						#end
+					</td>
+					<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left">
+						#if ($tplspecQuestion.clUomPerMonth)
+							$tplspecQuestion.clUomPerMonth
+						#end
+					</td>
+				#end
+				<td bgcolor="#f1f1f1" class="standard border-bottom left">$bean.getParameterDesc($tplspecQuestion.clPriceTypeCode)</td>
+				<td align="right" bgcolor="#f1f1f1" class="standard border-bottom left-right">
+					#if ($tplspecQuestion.clPriceTypeCode.parameterCode == "03")
+						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+						#end
+					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "05")
+						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+						#end
+					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "07")
+						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+						#end
+					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "09")
+						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+						#end
+					#elseif ($tplspecQuestion.clPriceTypeCode.parameterCode == "10")
+						#foreach( $tplSpecTierQtie in $tplspecQuestion.tplSpecTierQties )
+							$tplSpecTierQtie.fromQty - $tplSpecTierQtie.toQty <br/>
+						#end
+					#else
+						$tplspecQuestion.clQuantity
 					#end
-				</table>
-            </span>
-        </td>
-    </tr>
-	#end
-    </table>
+				</td>
+			#else
+				#if ($tplspecMaster.itemTypeCode.parameterCode == "2")
+					<td colspan="6" bgcolor="#f1f1f1" class="standard border-bottom right"></td>
+				#else
+					<td colspan="3" bgcolor="#f1f1f1" class="standard border-bottom right"></td>
+				#end
+			#end
+		</tr>
+		#end
+	</tbody>
+#end
+</table>
 </body>
 </html>
