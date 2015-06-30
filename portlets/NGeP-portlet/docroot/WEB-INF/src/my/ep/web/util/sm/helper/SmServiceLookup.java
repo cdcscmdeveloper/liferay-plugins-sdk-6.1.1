@@ -14,6 +14,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
+import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
@@ -347,4 +348,14 @@ public class SmServiceLookup {
 				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
 						ISupportingDocInquirySO.class);
 	}
+	
+	/**
+	 * Get ISupplierBusinessNatureSO
+	 * @return ISupplierBusinessNatureSO
+	 */
+	public static ISupplierBusinessNatureSO  getSupplierBusinessNatureSO(){
+		return (ISupplierBusinessNatureSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierBusinessNatureSO.class);
+	}
+
 }
