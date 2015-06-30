@@ -4936,17 +4936,20 @@ public class SpecificationBackingBean extends
 				setUserDetails(qtSupplierCriteria);
 				scQt.setScQtSupplierCriteria(qtSupplierCriteria);
 			}
-			if (!scQt.getScQtSupplierCriteria().isAllState()) {
+			if (QTConstants.OPEN_TYPE.equals(scQt.getQtType())
+					&& !scQt.getScQtSupplierCriteria().isAllState()) {
 				List<ScQtLocCriteria> locCriteria = (List<ScQtLocCriteria>) convertTreeNodesToLocationCriteria(
 						this.getManagedBean().getZoneTrees(),
 						qtSupplierCriteria);
 				if (locCriteria != null && !locCriteria.isEmpty()) {
 					scQt.getScQtSupplierCriteria().setScQtLocCriteria(
 							locCriteria);
+				} else {
+					scQt.getScQtSupplierCriteria().setScQtLocCriteria(null);
 				}
 			}
 
-			if (scQt.getQtType().equals(QTConstants.OPEN_TYPE)
+			if (QTConstants.OPEN_TYPE.equals(scQt.getQtType())
 					&& !isQuotationThresHold(this.getManagedBean().getScQt()
 							.getEstimatedAmount())
 					&& this.getManagedBean().getScQt()
@@ -13376,7 +13379,7 @@ public class SpecificationBackingBean extends
 									.getResultList()
 							&& !resDto.getFinSpecResultBean().getResultList()
 									.isEmpty()) {
-					
+
 						for (ScQtCheckList financialspec : resDto
 								.getFinSpecResultBean().getResultList()) {
 							if (financialspec.getTitle().equalsIgnoreCase(
