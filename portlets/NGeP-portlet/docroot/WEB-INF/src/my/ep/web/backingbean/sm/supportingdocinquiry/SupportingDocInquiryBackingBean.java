@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.supportingdocinquiry;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -106,18 +107,40 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	 * Submit resend to SDO inquiry
 	 */
 	public void submitResendToSdoInquiry() {
-		initiateSmApplicationTask();
-		String[] params = { "" };
-		params[0] = getManagedBean().getSmAppl().getApplNo();
-		FacesContext fc = FacesContext.getCurrentInstance();
-		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
-				.getMessage(MessageConst.INFO_700063, params,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale()), null);
-		fc.getApplication()
-				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						SmApplicationUtil.getApplicationErrorPage());
+		try {
+			initiateSmApplicationTask();
+			String[] params = { "" };
+			params[0] = getManagedBean().getSmAppl().getApplNo();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
+					.getMessage(MessageConst.INFO_700063, params,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), null);
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							SmApplicationUtil.getApplicationErrorPage());
+		}catch(Exception ex){
+			throw new EpException(ex.getMessage());
+		}
+	}
+	
+	/**
+	 * Download supporting document
+	 * 
+	 * @param String
+	 *            fileName
+	 * @param String
+	 *            filePath
+	 */
+	public void downloadSelectedSuppDoc(String fileName, String filePath) {
+		String finalFilePath = filePath + fileName;
+		try {
+			commonDownload(finalFilePath, fileName);
+		} catch (IOException e) {
+			throw new EpException(e.getMessage());
+		}
+		finalFilePath = null;
 	}
 	
 	public void viewDocInquiry(){
@@ -250,51 +273,48 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	 * Make a call to the BPM to resubmit to SDO.
 	 */
 	private void initiateSmApplicationTask() {
-		try {
-			SmAppl bpmAppl = getManagedBean().getSmAppl();
-			if (!bpmAppl.isActiveAppl()) {
-				bpmAppl.setActiveAppl(true);
-			}
-			String s = "";
-			if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-				s = SupplierManagementConst.SUPP_SUBMIT_CANCREG_APPL;
-			} else {
-				s = SupplierManagementConst.SUPP_SUBMIT_NORM_APPL;
-			}
-
-			MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
-					SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
-			
-			reqDTO.setUpdateTask(false);
-
-			if (getManagedBean().getSmAppl().isResubmit()) {
-				reqDTO.setPoLoginId(SmApplicationUtil
-						.getPOLoginId(getManagedBean().getSmSupplier(),getManagedBean().getSmAppl()));
-			}
-
-			// Set list of users to send to BPM
-			if (getManagedBean().getSmAppl().getApplType()
-					.equalsIgnoreCase("N")
-					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("A")
-					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("B")
-					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("U")
-					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("R")
-					|| getManagedBean().getSmAppl().getApplType()
-							.equalsIgnoreCase("C")) {
-				reqDTO.setUserList(new ArrayList<String>());
-				PmUser pmUser = new FacesScopes().getUserSessionBean();
-				reqDTO.getUserList().add(pmUser.getLoginId());
-
-			}
-			SmServiceLookup.getMofRegistrationSO().initiateResendExpiredSdoInquiryTask(reqDTO);
-		}catch(Exception ex){
-			throw new EpException(ex.getMessage());
+		SmAppl bpmAppl = getManagedBean().getSmAppl();
+		if (!bpmAppl.isActiveAppl()) {
+			bpmAppl.setActiveAppl(true);
 		}
+		String s = "";
+		if (getManagedBean().getSmAppl().getApplType()
+				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
+			s = SupplierManagementConst.SUPP_SUBMIT_CANCREG_APPL;
+		} else {
+			s = SupplierManagementConst.SUPP_SUBMIT_NORM_APPL;
+		}
+
+		MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
+				SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
+
+		reqDTO.setUpdateTask(false);
+
+		if (getManagedBean().getSmAppl().isResubmit()) {
+			reqDTO.setPoLoginId(SmApplicationUtil.getPOLoginId(getManagedBean()
+					.getSmSupplier(), getManagedBean().getSmAppl()));
+		}
+
+		// Set list of users to send to BPM
+		if (getManagedBean().getSmAppl().getApplType().equalsIgnoreCase("N")
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("A")
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("B")
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("U")
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("R")
+				|| getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase("C")) {
+			reqDTO.setUserList(new ArrayList<String>());
+			PmUser pmUser = new FacesScopes().getUserSessionBean();
+			reqDTO.getUserList().add(pmUser.getLoginId());
+
+		}
+		SmServiceLookup.getMofRegistrationSO()
+				.initiateResendExpiredSdoInquiryTask(reqDTO);
+
 	}
 	
 	/**
