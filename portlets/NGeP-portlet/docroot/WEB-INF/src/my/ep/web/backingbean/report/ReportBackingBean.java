@@ -4277,6 +4277,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	public void createdToDtUpdate() {
 		this.setScCreatedToYear(this.getScCreatedFromYear());
 	}
+	public void createdToMonthUpdate(){
+		this.setScCreatedToMonth(this.getScCreatedFromMonth());
+	}
 
 	public void onSelectEffectedValues() {
 		if (this.getScProcureAllList().size() > 0) {
