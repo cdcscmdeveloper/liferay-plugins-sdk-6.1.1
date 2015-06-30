@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.businessnature;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,6 +19,7 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplier smSupplier;
 	private List<PmBusinessNature> bizNatures;
+	private Map<Long, SmSupplierBusiness> supplierBusinessMap;
 
 	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
 		return selectedBusinessNatureLs;
@@ -42,5 +44,13 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 
 	public void setBizNatures(List<PmBusinessNature> bizNatures) {
 		this.bizNatures = bizNatures;
+	}
+
+	public Map<Long, SmSupplierBusiness> getSupplierBusinessMap() {
+		return supplierBusinessMap;
+	}
+
+	public void setSupplierBusinessMap(Map<Long, SmSupplierBusiness> supplierBusinessMap) {
+		this.supplierBusinessMap = supplierBusinessMap;
 	}
 }
