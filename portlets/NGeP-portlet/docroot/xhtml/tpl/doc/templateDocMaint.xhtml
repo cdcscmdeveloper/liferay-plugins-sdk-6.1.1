@@ -51,7 +51,7 @@
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.tpl.doc.title']}" /></td>
 					<td class="TableFieldRight">
 						<p:inputText value="#{templateDocBackingBean.managedBean.selectedTemplate.docTitle}" style="width:280px" 
-							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" />
+							disabled="#{templateDocBackingBean.managedBean.externalPageUrl!=null}" required="true" label="#{lbl['lbl.tpl.doc.title']}" />
 					</td>
 					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="#{lbl['lbl.pm.recordstatus']}" /></td>
 					<td class="TableFieldRight">
