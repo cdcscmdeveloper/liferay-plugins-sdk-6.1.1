@@ -189,7 +189,7 @@
 					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
 						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPriceVar.changeZoneLabel}" />
-						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPriceVar.changeZoneLabel}" />
+						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPriceVar.changeZoneLabel}" />
 			             
 					             </p:column>
 					
@@ -428,7 +428,7 @@
 					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
 						rendered="#{amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!ItemPricesVar.changeZoneLabel}" />
-						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{ItemPricesVar.changeZoneLabel}" />
+						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{ItemPricesVar.changeZoneLabel}" />
 			       	</p:column>
 					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
 					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">

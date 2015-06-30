@@ -2858,6 +2858,45 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			}
 		}
     }
+    
+    /**
+	 * The method used to indicate the label flag for new price of service item.
+	 */
+	public void onSelectServiceItem() {
+		if (getManagedBean().getSelectedServiceItem() != null 
+				&& !getManagedBean().getSelectedServiceItem().getCtItemPrices().isEmpty()
+				&& getManagedBean().getSelectedServiceItem().getPriceType().getParameterCode().equalsIgnoreCase(
+						ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
+			for (CtItemPrice zonelOfItem : getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
+				zonelOfItem.setChangeZoneLabel(false);
+    		}
+			for (int temp = 0; temp < getManagedBean().getSelectedServiceItem().getCtItemPrices().size(); temp++) {
+				Date date = getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getEffDate();
+				int counter =0;
+			 	int index = 0;
+			   	int countRow =0;
+			   	for (CtItemPrice itemPrice1 : getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
+			   		countRow++;
+			   		if (getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
+			   				itemPrice1.getCtContractZone().getZoneName())) {
+			   			counter++;
+			   			if (counter >= 2) {
+			   				if (date.before(itemPrice1.getEffDate())) {
+			   					index = countRow;
+			   					date = itemPrice1.getEffDate();
+			   				}
+			   			}
+			   		}
+				}
+			   	if (index > 0) {
+			   		CtItemPrice priceOfItem = getManagedBean().getSelectedServiceItem().getCtItemPrices().get(index-1);
+			   		priceOfItem.setChangeZoneLabel(true);
+			    	getManagedBean().getSelectedServiceItem().getCtItemPrices().remove(index-1);
+			    	getManagedBean().getSelectedServiceItem().getCtItemPrices().add(index-1, priceOfItem);
+			   	}
+			}
+		}
+	}
 	
 	/**
 	 * The method used to add new deduction clause.
