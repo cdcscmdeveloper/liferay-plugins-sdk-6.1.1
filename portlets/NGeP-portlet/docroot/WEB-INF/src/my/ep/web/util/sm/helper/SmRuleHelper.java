@@ -65,17 +65,7 @@ public class SmRuleHelper {
 	}
 
 	public int getRenewalNotificationDays() {
-		RuleResDTO ruleResDTO = getRuleValueByRuleType(RuleTypeConst.SM_CATEGORY_MAX_LIMIT);
-		if (ruleResDTO != null && ruleResDTO.isSuccessful()
-				&& ruleResDTO.getRuleValueList() != null
-				&& ruleResDTO.getRuleValueList().size() > 0) {
-			return (Integer.parseInt(ruleResDTO.getRuleValueList().get(0)
-					.getRuleValue()));
-		} else {
-
 			return 90;
-		}
-
 	}
 
 	public int getValidRenewalDays() {
