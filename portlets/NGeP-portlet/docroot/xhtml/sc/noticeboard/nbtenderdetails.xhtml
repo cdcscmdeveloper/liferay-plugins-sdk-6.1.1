@@ -12,7 +12,7 @@
 			header="#{lbl[noticeBoardBackingBean.managedBean.scQt.procurementMode == ParameterConst.procurementModeQuotation ? 'lbl.sc.notice.board.quotation.details' : 'lbl.sc.notice.board.tender.details']}"
 			toggleable="true">
 
-			<h:panelGrid border="0" width="100%" columns="4"
+			<h:panelGrid border="0" width="100%" columns="4" id="changedTabQTDtls"
 				columnClasses="columnWidth20,columnWidth20,columnWidth20,columnWidth40" rendered="#{isChangesTab}">
 				<h:outputLabel value="#{lbl['lbl.sc.title']}" />
 				<h:outputText style="white-space: normal;word-wrap: break-word;"
@@ -105,7 +105,7 @@
 				<h:outputLabel value="" />
 			</h:panelGrid>
 			
-		<h:panelGrid border="0" width="100%" columns="3"
+		<h:panelGrid border="0" width="100%" columns="3" id="publishTabQTDtls"
 			columnClasses="columnWidth20,columnWidth100,columnWidth30" rendered="#{!isChangesTab}">
 			<h:outputLabel value="#{lbl['lbl.sc.title']}" />
 			<h:outputText style="white-space: normal;word-wrap: break-word;"
