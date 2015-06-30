@@ -16,10 +16,12 @@
 			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
 			<p:ajax event="select"
 				listener="#{contractRequestBackingBean.onNodeSelect()}"
-				update="chargeLineTbl,@(.chargeLineSection)" />
+				update="chargeLineTbl,@(.chargeLineSection)" 
+				disabled="#{contractRequestBackingBean.managedBean.selectChargeLineRow=='true'}"/>
 			<p:ajax event="unselect"
 				listener="#{contractRequestBackingBean.onNodeUnSelect()}"
-				update="chargeLineTbl,@(.chargeLineSection)"></p:ajax>
+				update="chargeLineTbl,@(.chargeLineSection)"
+				disabled="#{contractRequestBackingBean.managedBean.selectChargeLineRow=='true'}"></p:ajax>
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value=" " />
