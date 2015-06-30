@@ -167,7 +167,7 @@
 			                
 			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                   </p:column>    
 			            
 			                   <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
@@ -193,7 +193,7 @@
 			                  eq ParameterConst.priceTypeZonalTier}">
 			                 <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                          <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                   </p:column> 
 			                 <p:column style="text-align: right;">
 					             <f:facet name="header">
@@ -296,7 +296,7 @@
 			                eq ParameterConst.priceTypeZonalTariff}">            
 			                <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                  </p:column> 
 			            
 			                 <p:column style="text-align: right;">
@@ -477,7 +477,8 @@
   	           value="#{contractDetailsBackingBean.managedBean.ctItemServiceList}" rowKey="#{data}" 
                selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedServiceItem}">
                <ac:paginator for="serviceTable"/>
-              <p:ajax event="rowSelect" update=":form:showServicePrice" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+              <p:ajax event="rowSelect" update=":form:showServicePrice" listener="#{contractDetailsBackingBean.onSelectServiceItem()}" 
+              	onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		      
 		      <p:column filterBy="#{data.scRequestItem.itemName}" style="width:20%; white-space:normal;" filterMatchMode="contains">
 		             <f:facet name="header">
@@ -555,7 +556,8 @@
 			   
 			     <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 			           <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
-			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" />
+			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPricesVar.changeZoneLabel}" />
+			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPricesVar.changeZoneLabel}" />
 			            </p:column>    
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right; white-space:normal;">
 			               <h:outputText value="#{itemPricesVar.unitPrice}">
