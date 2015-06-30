@@ -258,11 +258,7 @@
 			             </c:if> 
 			           
 			             <c:if test="#{centralContractBackingBean.managedBean.selectedCircularItem.ctContractItem.priceType.parameterCode
-			                eq ParameterConst.priceTypeZonalTariff}">            
-			                <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (New Price)" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
-			                  </p:column> 
+			                eq ParameterConst.priceTypeZonalTariff}">
 			                 <p:column>
 					             <f:facet name="header">
 									<h:outputText value="#{lbl['lbl.ct.from.qty']}"/>
