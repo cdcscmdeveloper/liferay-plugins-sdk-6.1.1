@@ -1,13 +1,16 @@
 package my.ep.web.managedbean.cm.codification;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.context.RequestContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -26,6 +29,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -107,33 +111,33 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private List<ExtensionCodeVO> extensionVoList;
 	private ExtensionCodeVO[] selectedExtensionVO;
 
-	private Object[] selectedObject;
+
 	private List<VCmPendingCodifiedItem> viewPendingCodifiedItemList;
 	private VCmPendingCodifiedItem selectedVPendingCodifiedItem;
 	private List<ScRequestItem> selectedVPendingRequestItemList;
-    private ScRequestItem selectedRequestItem;
-    private Object[] selectedExtenstionForItem;
-    
-    private CmRequestCode requestExtCode;
+	private ScRequestItem selectedRequestItem;
+	private Object[] selectedExtenstionForItem;
+
+	private CmRequestCode requestExtCode;
 	private List<CmRequestCode> requestExtCodeList;
-    
-    private boolean brandDisable = true;
+
+	private boolean brandDisable = true;
 	private boolean typeDisable = true;
 	private boolean colorDisable = true;
 	private boolean measurementDisable = true;
-	
+
 	private String assignPopUpWidth="680";
 	private String assignPopUpHeight="550";
-	
+
 	private String currentTaskName;
-	
+
 	private Object selectedKeywordObject;
 	private CmItem keywordItem;
 	private boolean productKeyword =false;
 	private boolean serviceKeyword =false;
-	
-	
-	
+
+
+
 	private SearchFilterBean codeFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean titleFilterBean = new SearchFilterBean(
@@ -141,10 +145,148 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private SearchFilterBean levelFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
-	
+
 	private String itemTypeParameter;
-	
-	
+
+
+	private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
+
+	private SearchFilterBean colorFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean typeFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean brandFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean measurementFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
+
+
+	private List<ExtensionCodeVO> cloneExtensionVOs;
+
+	private boolean extensionSearchcheckBoxAll = false;
+
+
+	public IPagingDataModel<Object[]> getExtensionSearchItemDataModel() {
+		return extensionSearchItemDataModel;
+	}
+
+	public void setExtensionSearchItemDataModel(
+			IPagingDataModel<Object[]> extensionSearchItemDataModel) {
+		this.extensionSearchItemDataModel = extensionSearchItemDataModel;
+	}
+
+
+	private class ExtensionSearchItemDataModel extends
+	PagingDataModel<Object[]> {
+
+		public ExtensionSearchItemDataModel() {
+			super("itemTableID");
+		}
+
+		@Override
+		protected ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+
+			System.out.println("........search extension combination.................");
+
+			CodificationBackingBean bb = new CodificationBackingBean();
+
+			ICodificationSO codificationSO = null;
+			CodificationResDTO resDTO = null;
+			try {
+				codificationSO = (ICodificationSO) BusinessDelegate
+						.getInstance().getServiceObject("cm",
+								ICodificationSO.class);
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setExtSearchBean(searchBean);
+
+				reqDTO.setUnspscCode(getSelectedUNSPSCObj()
+						.getUnspscCode());
+
+				if (StringUtils.isNotBlank((String) colorFilterBean
+						.getSearchValue())) {
+					reqDTO.setColorId(Long.valueOf(colorFilterBean
+							.getSearchValue().toString()));
+				}
+
+
+				if (StringUtils.isNotBlank((String) typeFilterBean
+						.getSearchValue())) {
+					reqDTO.setTypeId(Long.valueOf(typeFilterBean
+							.getSearchValue().toString()));
+
+				}
+
+				if (StringUtils.isNotBlank((String) brandFilterBean
+						.getSearchValue())) {
+					reqDTO.setBrandId(Long.valueOf(brandFilterBean
+							.getSearchValue().toString()));
+
+				}
+
+				if (StringUtils.isNotBlank((String) measurementFilterBean
+						.getSearchValue())) {
+					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
+							.getSearchValue().toString()));
+				}
+
+				resDTO = codificationSO.searchExtension(reqDTO);
+
+				//int count =0;
+				Map tempMap = new HashMap();
+				for (int i = 0; i < resDTO.getExtensionResultBean().getResultList().size(); i++) {
+					Object[] objects = (Object[]) resDTO.getExtensionResultBean().getResultList().get(i);
+
+					if(bb.getManagedBean().getCloneExtensionVOs()!=null && bb.getManagedBean().getCloneExtensionVOs().size()>0){
+
+						for(ExtensionCodeVO obj : bb.getManagedBean().getCloneExtensionVOs()){
+							if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
+
+								if(!tempMap.containsKey(obj.getKey())){
+									objects[8] = true;
+									//count = count + 1;
+									//System.out.println("**loop***"+count);
+									tempMap.put(obj.getKey(), obj.getKey());
+								}
+							}
+						}
+
+					}
+
+				}
+				/*System.out.println("count:"+count);
+				System.out.println("resDTO.getExtensionResultBean().getResultList().size():"+resDTO.getExtensionResultBean().getResultList().size());
+				if(count == resDTO.getExtensionResultBean().getResultList().size()){
+					bb.getManagedBean().setExtensionSearchcheckBoxAll(true);
+				}else{
+					bb.getManagedBean().setExtensionSearchcheckBoxAll(false);
+				}*/
+
+				RequestContext.getCurrentInstance().execute("refreshExtensionSearch();");
+
+
+				//System.out.println("isExtensionSearchcheckBoxAll:"+bb.getManagedBean().isExtensionSearchcheckBoxAll());
+
+
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				codificationSO = null;
+			}
+			if (resDTO != null) {
+				System.out.println("*******end************");
+				return resDTO.getExtensionResultBean();
+			}
+			return null;
+		}
+
+	}
+
+
+
+
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
 
 		private static final long serialVersionUID = 1L;
@@ -183,7 +325,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 						.getUnspscCode() != null
 						&&getAutoCompleteUnspscCode()
 						.getUnspscCode().trim().length() > 0) {
-					
+
 					codeFilterBean.setSearchField("unspscCode");
 					codeFilterBean.setSearchValue(getAutoCompleteUnspscCode().getUnspscCode());
 					searchBean.getDataFilterBeans().add(codeFilterBean);
@@ -191,7 +333,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 				if (StringUtils.isNotBlank((String) titleFilterBean
 						.getSearchValue())) {
-					
+
 					titleFilterBean.setSearchField("unspscTitle");
 					titleFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(titleFilterBean);
@@ -199,12 +341,12 @@ public class CodificationManagedBean extends BaseManagedBean {
 				FacesScopes fs = new FacesScopes();
 				String itemType = fs.getParameter("itemType");
 
-				
+
 				if (itemType != null) {// save parameter first time it come from
 					// search button
 					setItemTypeParameter(itemType);
 				}
-			
+
 				// get parameter from backup property whenever table be reloaded
 				if (getItemTypeParameter() != null
 						&& !getItemTypeParameter().isEmpty()) {
@@ -224,7 +366,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 					}
 				}
 
-				
+
 
 				System.out.println("this.getSortField():"+this.getSortField());
 				if(this.getSortField()==null){
@@ -235,10 +377,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
 				reqDTO.setSearchBean(searchBean);
-				
+
 				CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
 
-				
+
 				return resDTO.getResultBean();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -249,18 +391,11 @@ public class CodificationManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
-	
 
-	
-	public Object[] getSelectedObject() {
-		return selectedObject;
-	}
 
-	public void setSelectedObject(Object[] selectedObject) {
-		this.selectedObject = selectedObject;
-	}
-	
+
+
+
 	public Object[] getSelectedExtenstionForItem() {
 		return selectedExtenstionForItem;
 	}
@@ -632,7 +767,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedUNSPSCObj(CmUnspsc selectedUNSPSCObj) {
 		this.selectedUNSPSCObj = selectedUNSPSCObj;
-	
+
 	}
 
 	public List<CmItem> getItemList() {
@@ -709,9 +844,9 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
 		this.selectedLovUnspscClass = selectedLovUnspscClass;
-		
+
 	}
- 
+
 	public ScRequestItem getSelectedRequestItem() {
 		return selectedRequestItem;
 	}
@@ -836,7 +971,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 	private IPagingDataModel<VCmPendingCodifiedItem> vPendingCodifiedItemSearchDataModel = new PendingCodifiedSearchPagingDataModel();
 
-	
+
 
 	public IPagingDataModel<VCmPendingCodifiedItem> getvPendingCodifiedItemSearchDataModel() {
 		return vPendingCodifiedItemSearchDataModel;
@@ -848,7 +983,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	}
 
 	private class PendingCodifiedSearchPagingDataModel extends
-			PagingDataModel<VCmPendingCodifiedItem> {
+	PagingDataModel<VCmPendingCodifiedItem> {
 
 		private static final long serialVersionUID = 1L;
 
@@ -869,7 +1004,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 						.getInstance().getServiceObject("cm",
 								IPendingCodifiedItemSO.class);
 
-		
+
 				PendingCodifiedItemReqDTO reqDTO = new PendingCodifiedItemReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
 				FacesScopes facesScopes = new FacesScopes();
@@ -879,16 +1014,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 						.searchViewPendingCodifiedItems(reqDTO);
 				for (VCmPendingCodifiedItem vCmPendingItem : resDTO
 						.getViewPendingCodifiedItemList()) {
-//					System.out.println(".................before calling");
-//					System.out.println(".................vCmPendingItem.getPmOrgProfile()="+vCmPendingItem.getPmOrgProfile());
-//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile());
-//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity());
-//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName());
-//					if (vCmPendingItem.getOrgProfileId() != null) {
-//						vCmPendingItem.setPmOrgProfile(CommonMethod
-//								.retrieveOrgProfile(vCmPendingItem
-//										.getOrgProfileId()));
-//					}
+					//					System.out.println(".................before calling");
+					//					System.out.println(".................vCmPendingItem.getPmOrgProfile()="+vCmPendingItem.getPmOrgProfile());
+					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile());
+					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getPmOrgValidity());
+					//					System.out.println(".................vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName()="+vCmPendingItem.getPmOrgProfile().getParentOrgProfile().getOrgName());
+					//					if (vCmPendingItem.getOrgProfileId() != null) {
+					//						vCmPendingItem.setPmOrgProfile(CommonMethod
+					//								.retrieveOrgProfile(vCmPendingItem
+					//										.getOrgProfileId()));
+					//					}
 				}
 				setViewPendingCodifiedItemList(resDTO
 						.getViewPendingCodifiedItemList());
@@ -974,14 +1109,67 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setItemTypeParameter(String itemTypeParameter) {
 		this.itemTypeParameter = itemTypeParameter;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	public SearchFilterBean getColorFilterBean() {
+		return colorFilterBean;
+	}
+
+	public void setColorFilterBean(SearchFilterBean colorFilterBean) {
+		this.colorFilterBean = colorFilterBean;
+	}
+
+	public SearchFilterBean getTypeFilterBean() {
+		return typeFilterBean;
+	}
+
+	public void setTypeFilterBean(SearchFilterBean typeFilterBean) {
+		this.typeFilterBean = typeFilterBean;
+	}
+
+	public SearchFilterBean getBrandFilterBean() {
+		return brandFilterBean;
+	}
+
+	public void setBrandFilterBean(SearchFilterBean brandFilterBean) {
+		this.brandFilterBean = brandFilterBean;
+	}
+
+	public SearchFilterBean getMeasurementFilterBean() {
+		return measurementFilterBean;
+	}
+
+	public void setMeasurementFilterBean(SearchFilterBean measurementFilterBean) {
+		this.measurementFilterBean = measurementFilterBean;
+	}
+
+	public List<ExtensionCodeVO> getCloneExtensionVOs() {
+		if(cloneExtensionVOs==null)
+			cloneExtensionVOs = new ArrayList<ExtensionCodeVO>();
+		return cloneExtensionVOs;
+	}
+
+	public void setCloneExtensionVOs(List<ExtensionCodeVO> cloneExtensionVOs) {
+		this.cloneExtensionVOs = cloneExtensionVOs;
+	}
+
+	public boolean isExtensionSearchcheckBoxAll() {
+		return extensionSearchcheckBoxAll;
+	}
+
+	public void setExtensionSearchcheckBoxAll(boolean extensionSearchcheckBoxAll) {
+		System.out.println("extensionSearchcheckBoxAll*******"+extensionSearchcheckBoxAll);
+		this.extensionSearchcheckBoxAll = extensionSearchcheckBoxAll;
+	}
+
+
+
+
+
+
+
+
+
+
+
 
 }
