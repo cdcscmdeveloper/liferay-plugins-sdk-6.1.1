@@ -279,6 +279,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String gstRegistrationNo;
 	private Date gstRegistrationDate;
 	
+	private boolean selectChargeLineRow=false;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2607,6 +2609,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 	public void setActiveContractDataModel(IPagingDataModel<VCtActiveContract> activeContractDataModel) {
 		this.activeContractDataModel = activeContractDataModel;
+	}
+
+	/**
+	 * @return the selectChargeLineRow
+	 */
+	public boolean isSelectChargeLineRow() {
+		return selectChargeLineRow;
+	}
+
+	/**
+	 * @param selectChargeLineRow the selectChargeLineRow to set
+	 */
+	public void setSelectChargeLineRow(boolean selectChargeLineRow) {
+		this.selectChargeLineRow = selectChargeLineRow;
 	}
 
 }

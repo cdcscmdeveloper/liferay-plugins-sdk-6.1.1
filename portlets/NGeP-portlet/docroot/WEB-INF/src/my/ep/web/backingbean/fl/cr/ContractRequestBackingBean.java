@@ -2469,7 +2469,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * Charge line apply for selected nodes.
 	 */
 	public void chargeLineApply() {
-
+		getManagedBean().setSelectChargeLineRow(false);
 		IParameterSO parameterSO = null;
 		try {
 			if(null == getManagedBean().getVotFundId()){
@@ -3062,6 +3062,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 *
 	 */
 		public void selectCheckbox(AjaxBehaviorEvent e){
+			getManagedBean().setSelectChargeLineRow(false);
 			onNodeUnSelect();
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -3072,8 +3073,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
 			if(null!=selectedNodes && selectedNodes.length>0){
 				getManagedBean().setChargeLinePanel(true);
+				getManagedBean().setSelectChargeLineRow(true);
 			}else{
 				getManagedBean().setChargeLinePanel(false);
+				getManagedBean().setSelectChargeLineRow(false);
 			}
 					 
 			//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
@@ -3119,6 +3122,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		 * chargeLine Panel enable if  checkboxes selected
 		 */
 		public void selectAllCheckboxes(){
+			getManagedBean().setSelectChargeLineRow(false);
 			onNodeUnSelect();
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
@@ -3130,7 +3134,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			if(checkValue==true){
 				getManagedBean().setChargeLinePanel(true);
+				getManagedBean().setSelectChargeLineRow(true);
 			}else{
+				getManagedBean().setSelectChargeLineRow(false);
 				getManagedBean().setChargeLinePanel(false);
 			}
 		}

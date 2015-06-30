@@ -1780,6 +1780,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void chargeLineApply() {
 		IParameterSO parameterSO = null;
 		try {
+			getManagedBean().setSelectChargeLineRow(false);
 			if(null == getManagedBean().getVotFundId()){
 				getManagedBean().setVotFundId(getManagedBean().getPmVoteFund().getVotFundId());
 			}
@@ -2718,6 +2719,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * @param e the e
 	 */
 	public void selectCheckbox(AjaxBehaviorEvent e){
+		getManagedBean().setSelectChargeLineRow(false);
 		onNodeUnSelect();
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
@@ -2728,8 +2730,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		TreeNode[] selectedNodes=getManagedBean().getSelectedNodes();
 		if(null!=selectedNodes && selectedNodes.length>0){
 			getManagedBean().setChargeLinePanel(true);
+			getManagedBean().setSelectChargeLineRow(true);
 		}else{
 			getManagedBean().setChargeLinePanel(false);
+			getManagedBean().setSelectChargeLineRow(false);
 		}
 				 
 		//If Selected node is one then display chargeline data.Otherwise clear chargeline Data.
@@ -2777,6 +2781,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 */
 	public void selectAllCheckboxes(){
 		onNodeUnSelect();
+		getManagedBean().setSelectChargeLineRow(false);
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
 		boolean checkValue=isSelectAllCheckbox();
@@ -2787,8 +2792,10 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(checkValue==true){
 			getManagedBean().setChargeLinePanel(true);
+			getManagedBean().setSelectChargeLineRow(true);
 		}else{
 			getManagedBean().setChargeLinePanel(false);
+			getManagedBean().setSelectChargeLineRow(false);
 		}
 	}
 	

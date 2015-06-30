@@ -502,6 +502,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String selectedApprover;
 	private List<String> approverList;
 	
+	private boolean selectChargeLineRow=false;
+	
 /**
  * Gets the charge line item root.
  *
@@ -3177,6 +3179,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverList(List<String> approverList) {
 		this.approverList = approverList;
+	}
+
+	/**
+	 * @return the selectChargeLineRow
+	 */
+	public boolean isSelectChargeLineRow() {
+		return selectChargeLineRow;
+	}
+
+	/**
+	 * @param selectChargeLineRow the selectChargeLineRow to set
+	 */
+	public void setSelectChargeLineRow(boolean selectChargeLineRow) {
+		this.selectChargeLineRow = selectChargeLineRow;
 	}
 
 }
