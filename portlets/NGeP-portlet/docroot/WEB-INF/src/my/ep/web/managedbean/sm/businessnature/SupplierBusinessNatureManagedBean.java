@@ -14,20 +14,10 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
-
-	private List<SmSupplierBusiness> businessNatureLs;
 	
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplier smSupplier;
 	private List<PmBusinessNature> bizNatures;
-
-	public List<SmSupplierBusiness> getBusinessNatureLs() {
-		return businessNatureLs;
-	}
-
-	public void setBusinessNatureLs(List<SmSupplierBusiness> businessNatureLs) {
-		this.businessNatureLs = businessNatureLs;
-	}
 
 	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
 		return selectedBusinessNatureLs;
