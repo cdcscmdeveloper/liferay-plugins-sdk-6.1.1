@@ -32,6 +32,7 @@ import my.ep.biz.service.pm.common.userattachment.IUserAttachmentSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -41,6 +42,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.city.CityReqDTO;
@@ -86,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.util.DateUtils;
@@ -1145,5 +1148,46 @@ public class PmCommonUtil {
 		}		
 		return items;
 	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyValues(PmUser pmUser, String actionDesc,
+			PmStatus status) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(pmUser.getUserId());
+		trckVO.setDocType(ParameterConst.USER_PROFILE_PARAM_CODE);
+		trckVO.setDocNo(pmUser.getLoginId());		
+		trckVO.setGroupId(null);		
+		trckVO.setStatus(status);				
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+	private static String getUserRoleValue() {		
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
+			return RoleCode.EP_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+			return RoleCode.MINISTRY_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.PTJ_ADMIN.value())) {
+			return RoleCode.PTJ_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.JABATAN_ADMIN.value())) {
+			return RoleCode.JABATAN_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.EP_COMMITTEE.value())) {
+			return RoleCode.EP_COMMITTEE.value();
+		} else if (sc.hasRoleUser(RoleCode.BPK_OFFICER.value())) {
+			return RoleCode.BPK_OFFICER.value();
+		} else if (sc.hasRoleUser(RoleCode.UPS_ADMIN.value())) {
+			return RoleCode.UPS_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.FACTORING_ADMIN.value())) {
+			return RoleCode.FACTORING_ADMIN.value();
+		} else if (sc.hasRoleUser(RoleCode.FPB_CHAIRPERSON.value())) {
+				return RoleCode.FPB_CHAIRPERSON.value();
+			}
+	return null;	
+	}
+
 	
 }
