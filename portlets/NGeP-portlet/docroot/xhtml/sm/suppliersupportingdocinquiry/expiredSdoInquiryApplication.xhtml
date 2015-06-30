@@ -45,8 +45,20 @@
 		<p:outputPanel id="onSupGroup" rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq SupplierManagementConst.SUPPORTING_DOC_ONLINE}">
 			<ui:include src="/xhtml/sm/shared/applViewOnlyPages/onlineSupportingDocsFormViewOnly.xhtml" />
 		</p:outputPanel>
-
-		<ac:confirmPopup message="#{lbl['lbl.sm.exp.sdo.inquiry.resubmitmsg']}" okAction="#{backingBean.submitResendToSdoInquiry()}"/>
+		
+		<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
+			widgetVar="confirmDialog" modal="true" width="500px" height="100px">
+			<table style="width: 100%">
+				<tr>
+					<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.exp.sdo.inquiry.resubmitmsg']}" style="float:left"/></td>
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{backingBean.submitResendToSdoInquiry()}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@this" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+			</div>
+		</p:dialog>
 		
 	</ui:define>
 </ui:composition>
