@@ -459,6 +459,7 @@ public class SupplierManagementConst {
 	
 	public static final String APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE = "Pelulus hantar data pembekal yang telah diselenggara";
 	public static final String APPROVER_SUBMIT_CANCEL_SUPPLIER_MOF_ACCOUNT = "Pelulus hantar untuk batalkan akaun MOF pembekal";
+	public static final String APPROVER_SUBMIT_RESEND_EXPIRED_SDO_INQUIRY = "Pelulus hantar permohonan yang telah luput pertanyaan SDO";
 
 	public static final String SM_STATE_NAME_SABAH = "SABAH";
 	public static final String SM_STATE_NAME_SARAWAK = "SARAWAK";
