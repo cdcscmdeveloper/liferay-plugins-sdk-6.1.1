@@ -277,16 +277,11 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 		if (!bpmAppl.isActiveAppl()) {
 			bpmAppl.setActiveAppl(true);
 		}
-		String s = "";
-		if (getManagedBean().getSmAppl().getApplType()
-				.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
-			s = SupplierManagementConst.SUPP_SUBMIT_CANCREG_APPL;
-		} else {
-			s = SupplierManagementConst.SUPP_SUBMIT_NORM_APPL;
-		}
 
-		MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(bpmAppl,
-				SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT, s);
+		MofRegistrationReqDTO reqDTO = setMofRegistrationReqDTO(
+				bpmAppl,
+				SupplierManagementConst.SM_APPL_BPM_OUTCOME_SUBMIT,
+				SupplierManagementConst.APPROVER_SUBMIT_RESEND_EXPIRED_SDO_INQUIRY);
 
 		reqDTO.setUpdateTask(false);
 
