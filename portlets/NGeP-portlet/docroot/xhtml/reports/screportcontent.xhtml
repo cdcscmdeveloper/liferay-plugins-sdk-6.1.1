@@ -292,8 +292,10 @@
 								</TD>
 								<TD>
 									<p:selectOneMenu value="#{reportBackingBean.scCreatedFromMonth}" style="margin-top:5px;width:90px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>																																	
+										
+										<f:selectItems value="#{reportBackingBean.scMonthList}"></f:selectItems>
+										<p:ajax event="change" listener="#{reportBackingBean.createdToMonthUpdate}" process="@this"
+					 			         partialSubmit="true" update=":form:createMonth"/>																																	
 									</p:selectOneMenu>
 								</TD>				
 								<TD>
@@ -307,8 +309,8 @@
 									<p:outputLabel  value="#{lbl['lbl.rpt.createdTo']}" style="margin-top:5px;width:145px;;margin-left:-55px"/>
 								</TD>
 								<TD>
-									<p:selectOneMenu value="#{reportBackingBean.scCreatedToMonth}" style="margin-top:5px;width:90px;">
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+									<p:selectOneMenu id="createMonth" value="#{reportBackingBean.scCreatedToMonth}" style="margin-top:5px;width:90px;">
+										
 										<f:selectItems value="#{reportBackingBean.scMonthList}" ></f:selectItems>																																	
 									</p:selectOneMenu>
 								</TD>				
