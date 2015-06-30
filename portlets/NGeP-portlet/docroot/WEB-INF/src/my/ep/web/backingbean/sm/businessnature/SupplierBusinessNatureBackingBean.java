@@ -183,6 +183,7 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 		if(resDTO.isSuccessful()){
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
 					MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
+			renewSesionObject();
 			return "/xhtml/common/acknowledge.xhtml";
 		}
 		
