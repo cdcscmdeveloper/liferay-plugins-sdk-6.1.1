@@ -35,7 +35,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
-import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -171,13 +170,9 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO = null;
 		}
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
-				.getMessage(MessageConst.INFO_721215,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,
-						new FacesScopes().getUserLocale()), null);
-
-		assignApplActiveAndApprovedCategoryList();
+		SmCommonUtil.redirectToPage(
+				"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
+				MessageConst.INFO_721215);
 	}
 
 	/**
@@ -757,6 +752,7 @@ public class SupplierDataMaintenanceBackingBean extends
 		if (getManagedBean().getSmAppl().getSmApplSectionReviews() != null
 				&& !getManagedBean().getSmAppl().getSmApplSectionReviews()
 						.isEmpty()) {
+			// if review size equals to 1 means direct approve by PO
 			if (getManagedBean().getSmAppl().getSmApplSectionReviews().size() == 1) {
 				getManagedBean().setApplApprover(
 						SmCommonUtil.getUserByUserId(getManagedBean()
@@ -771,6 +767,7 @@ public class SupplierDataMaintenanceBackingBean extends
 					retVal = true;
 				}
 			} else {
+				// if review size more than 1 means approve by Approver
 				for (SmApplSectionReview rev : getManagedBean().getSmAppl()
 						.getSmApplSectionReviews()) {
 					if (rev.getRoleType().equals("A")) {
