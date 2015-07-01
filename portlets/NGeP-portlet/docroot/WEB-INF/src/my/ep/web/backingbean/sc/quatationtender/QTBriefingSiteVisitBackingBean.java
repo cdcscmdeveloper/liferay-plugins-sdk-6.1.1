@@ -758,6 +758,7 @@ public class QTBriefingSiteVisitBackingBean extends
 				.get("value");
 		BriefingZoneBean zoneBean = this.getManagedBean().getBsvDtlBean();
 		if (selectedValue) {
+			zoneBean.getScQtBsv().setMinSiteVisitAttend(0);
 		} else {
 			zoneBean.getScQtBsv().setMinSiteVisitAttend(0);
 		}
