@@ -79,7 +79,7 @@
 		#foreach( $activityList in $activityLists )
 			<tr class="ui-content">
 				<td class="standard border-bottom left">$activityList.scCommitteeMember.memberName</td>
-				<td class="standard border-bottom left">$activityList.scCommitteeMember.designatio</td>
+				<td class="standard border-bottom left">$activityList.scCommitteeMember.designation</td>
 				<td class="standard border-bottom left">$!activityList.scCommitteeMember.grade</td>
 				<td class="standard border-bottom left">$activityList.scCommitteeMember.icPassport</td>
 				<td class="standard border-bottom left">$activityList.scCommitteeMember.pmOrgProfile.orgName</td>
