@@ -5019,8 +5019,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean.setSmMonthlyRptByYearVar(ReportConst.AMP_SM_YEAR_EQ
 						+ this.getSmMonthlyRptByYear());
 			}
-			if ((this.getSmMofRegNoFrom() != null)
-					&& (this.getSmMofRegNoTo() != null)) {
+			if ((this.getSmMofRegNoFrom() != null && (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL))
+					&& (this.getSmMofRegNoTo() != null && (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL))) {
 			  ValidateMofRegNo(this.getSmMofRegNoFrom(), this.getSmMofRegNoTo());
 			}
 			if ((this.getSmMofRegNoFrom() != null)
