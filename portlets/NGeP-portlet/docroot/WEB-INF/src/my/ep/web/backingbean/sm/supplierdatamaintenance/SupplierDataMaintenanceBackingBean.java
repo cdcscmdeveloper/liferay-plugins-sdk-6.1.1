@@ -35,6 +35,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -84,6 +85,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		getManagedBean().setDisplaySearchPage(false);
 		setLoginUserAllowedToDoMaintenance();
 		checkIfSupplierHasActiveTransaction(true);
+		getManagedBean().setExistingRegStatus(
+				getManagedBean().getSmAppl().getPmRegStatus());
+		getManagedBean().setDeleteApprovedCategories(
+				new ArrayList<SmSupplierCategory>());
 	}
 
 	/**
@@ -131,7 +136,8 @@ public class SupplierDataMaintenanceBackingBean extends
 		try {
 
 			// set registration status
-			setSupplierRegistrationAndBumiStatus();
+			reqDTO.setOldRegStatus(getManagedBean().getExistingRegStatus());
+			setSupplierRegistrationAndBumiStatusChanged();
 
 			// set active status for newly added category
 			setActiveStatusForNewAddedCategories();
@@ -140,6 +146,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO.setSmAppl(getManagedBean().getSmAppl());
 			reqDTO.setNewlyAddedCategories(getManagedBean()
 					.getActiveCategoryList());
+			reqDTO.setDeletedCategories(getManagedBean()
+					.getDeleteApprovedCategories());
 			reqDTO.setSmMofAccount(getManagedBean().getSmMofAccount());
 			reqDTO.setRemark(getManagedBean().getApplnApprovalRemarks());
 			reqDTO.setDocType(ParameterConst.SM_DATA_MAINTENANCE_RMRK_DECISION_APPROVE);
@@ -671,6 +679,7 @@ public class SupplierDataMaintenanceBackingBean extends
 						&& apprCat.getSupplierCategoryId().compareTo(
 								deletedApprCategory.getSupplierCategoryId()) == 0) {
 					apprCat.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+					getManagedBean().getDeleteApprovedCategories().add(apprCat);
 				}
 			}
 		}
@@ -691,22 +700,31 @@ public class SupplierDataMaintenanceBackingBean extends
 	/**
 	 * Set supplier registration status and bumi status
 	 */
-	private void setSupplierRegistrationAndBumiStatus() {
-		Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
-				.getStatusId();
-		for (PmStatusDesc desc : getManagedBean().getRegStatusDescList()) {
-			if (pmStatId.equals(desc.getPmStatus().getStatusId())) {
-				getManagedBean().getSmAppl().setPmStatus(desc.getPmStatus());
-				if (desc.getPmStatus().getPmRegStatus() != null) {
-					getManagedBean().getSmAppl().setPmRegStatus(
-							desc.getPmStatus().getPmRegStatus());
-					getManagedBean()
-							.getSmAppl()
-							.getSmSupplier()
-							.setBumi(
-									desc.getPmStatus().getPmRegStatus()
-											.isBumiAppl());
-					break;
+	private void setSupplierRegistrationAndBumiStatusChanged() {
+		if (getManagedBean().getSmAppl().getPmRegStatus() != null
+				&& getManagedBean()
+						.getExistingRegStatus()
+						.getRegStatusId()
+						.compareTo(
+								getManagedBean().getSmAppl().getPmRegStatus()
+										.getRegStatusId()) != 0) {
+			Long pmStatId = getManagedBean().getSmAppl().getPmStatus()
+					.getStatusId();
+			for (PmStatusDesc desc : getManagedBean().getRegStatusDescList()) {
+				if (pmStatId.equals(desc.getPmStatus().getStatusId())) {
+					getManagedBean().getSmAppl()
+							.setPmStatus(desc.getPmStatus());
+					if (desc.getPmStatus().getPmRegStatus() != null) {
+						getManagedBean().getSmAppl().setPmRegStatus(
+								desc.getPmStatus().getPmRegStatus());
+						getManagedBean()
+								.getSmAppl()
+								.getSmSupplier()
+								.setBumi(
+										desc.getPmStatus().getPmRegStatus()
+												.isBumiAppl());
+						break;
+					}
 				}
 			}
 		}
