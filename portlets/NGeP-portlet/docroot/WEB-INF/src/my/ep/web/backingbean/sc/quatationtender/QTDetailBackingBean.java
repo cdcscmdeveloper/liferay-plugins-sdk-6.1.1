@@ -1079,7 +1079,7 @@ public class QTDetailBackingBean extends
 				scQt.setScQtDocReports(docReportsList);
 			}
 			// Setting the Publication Approvals to QtDetails
-			ScQtApproval pubApproval = getManagedBean()
+			/*ScQtApproval pubApproval = getManagedBean()
 					.getPublicationApproval();
 			if (null != pubApproval) {
 
@@ -1090,6 +1090,17 @@ public class QTDetailBackingBean extends
 				finalizeRemarks(remarks);
 
 				scQt.getScQtApprovals().add(pubApproval);
+			}*/
+			
+			ScQtApproval pubApproval = getManagedBean().getPublicationApproval();
+			if (null != pubApproval) {
+				List<ScQtApproval> approvals = scQt.getScQtApprovals();
+				removePTJApproval(approvals);
+				pubApproval.setApproverSettings(this.getManagedBean().getPublicationApprovals().getTarget());
+				List<ScQtApprovalRemark> remarks = pubApproval.getScQtApprovalRemarks();
+				finalizeRemarks(remarks);
+				approvals.add(pubApproval);
+				scQt.setScQtApprovals(approvals);
 			}
 
 		}
@@ -1131,6 +1142,22 @@ public class QTDetailBackingBean extends
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
 		return quationTenderReqDTO;
+	}
+
+	/**
+	 * @param approvals
+	 */
+	private void removePTJApproval(List<ScQtApproval> approvals) {
+		if (CollectionUtils.isNotEmpty(approvals)) {
+			for (int i = 0; i < approvals.size(); i++) {
+				if (ParameterConst.APPROVAL_CATEGORY_PTJ
+						.equalsIgnoreCase(approvals.get(i)
+								.getApprovalCategory().getParameterCode())) {
+					approvals.remove(i);
+					break;
+				}
+			}
+		}
 	}
 
 	/**
