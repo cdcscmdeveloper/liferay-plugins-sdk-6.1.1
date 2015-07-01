@@ -10,6 +10,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.dto.sm.revision.SmApplRevisionReqDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmRegStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -35,6 +36,7 @@ public class ViewSuppProfileManagedBean extends
 	private String applnApprovalRemarks;
 	private boolean showParentMsg;
 	private boolean allowedToDoMaintenance;
+	private PmRegStatus existingRegStatus;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
 
@@ -146,15 +148,6 @@ public class ViewSuppProfileManagedBean extends
 		this.showParentMsg = showParentMsg;
 	}
 
-	public List<SmSupplierCategory> getDeleteApprovedCategories() {
-		return deleteApprovedCategories;
-	}
-
-	public void setDeleteApprovedCategories(
-			List<SmSupplierCategory> deleteApprovedCategories) {
-		this.deleteApprovedCategories = deleteApprovedCategories;
-	}
-
 	public PmUser getApplApprover() {
 		return applApprover;
 	}
@@ -177,6 +170,23 @@ public class ViewSuppProfileManagedBean extends
 
 	public void setAllowedToDoMaintenance(boolean allowedToDoMaintenance) {
 		this.allowedToDoMaintenance = allowedToDoMaintenance;
+	}
+
+	public PmRegStatus getExistingRegStatus() {
+		return existingRegStatus;
+	}
+
+	public void setExistingRegStatus(PmRegStatus existingRegStatus) {
+		this.existingRegStatus = existingRegStatus;
+	}
+
+	public List<SmSupplierCategory> getDeleteApprovedCategories() {
+		return deleteApprovedCategories;
+	}
+
+	public void setDeleteApprovedCategories(
+			List<SmSupplierCategory> deleteApprovedCategories) {
+		this.deleteApprovedCategories = deleteApprovedCategories;
 	}
 
 }
