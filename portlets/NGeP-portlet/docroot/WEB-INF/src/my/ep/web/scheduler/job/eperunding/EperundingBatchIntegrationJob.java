@@ -1,7 +1,10 @@
 package my.ep.web.scheduler.job.eperunding;
 
 import my.ep.factory.EpLogger;
+import my.ep.ntf.service.INtfSO;
+import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.integration.common.EperundingIntegration;
+import my.ep.web.integration.common.TestNtfViaEmail;
 
 import org.apache.log4j.Logger;
 import org.quartz.DisallowConcurrentExecution;
@@ -26,9 +29,17 @@ public class EperundingBatchIntegrationJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 		
-	  log.info("Eperunding Servrice");
-//	  EperundingIntegration eperundingIntegration = new EperundingIntegration();	
-//	  eperundingIntegration.createFilesforEperunding();
+	  log.info("EperundingBatchIntegrationJob start");
+	  EperundingIntegration eperundingIntegration = new EperundingIntegration();	
+	  eperundingIntegration.createFilesforEperunding();
+	  eperundingIntegration.createFilesAuthMgtEqtBODforEperunding();
+	  
+	  INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+				.getOSBServiceObject(INtfSO.class);
+		
+		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
+		testNtfViaEmail.sendFilestoMail(ntfSO);
+	  log.info("EperundingBatchIntegrationJob end");
        
 		
 	}
