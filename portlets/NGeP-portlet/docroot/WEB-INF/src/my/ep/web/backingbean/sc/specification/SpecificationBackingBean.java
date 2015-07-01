@@ -15672,6 +15672,48 @@ public class SpecificationBackingBean extends
 
 	// delete technical Checklist List
 	public void deleteTechnicalCheckList() {
+		IParameterSO parameterSo = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		if (null != this.getManagedBean().getScQtCheckSt2techProposal()
+				&& !this.getManagedBean().getScQtCheckSt2techProposal()
+						.isEmpty()) {
+			for (ScQtCheckList technicalCheckList : this.getManagedBean()
+					.getScQtCheckSt2techProposal()) {
+				if (null == technicalCheckList.getPmDocument()
+						&& !QTConstants.TEMPLETE_SPEC_CODE
+								.equalsIgnoreCase(technicalCheckList
+										.getDefinationType().getParameterCode())) {
+					if (null != technicalCheckList.getDefinationType()
+							&& null == technicalCheckList.getDefinationType()
+									.getParameterId()) {
+						ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+						docDefTypeReqDTO
+								.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+						docDefTypeReqDTO
+								.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+						ParameterResDTO docDefTypeResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+						technicalCheckList.setDefinationType(docDefTypeResDTO
+								.getPmParameter());
+					}
+					if (null != technicalCheckList.getAction()
+							&& null == technicalCheckList.getAction()
+									.getParameterId()) {
+						ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+						docDefTypeReqDTO
+								.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+						docDefTypeReqDTO
+								.setParameterCode(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+						ParameterResDTO docDefTypeResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+						technicalCheckList.setAction(docDefTypeResDTO
+								.getPmParameter());
+					}
+
+				}
+			}
+		}
 		markDeleteSelectedRowsActionById(this.getManagedBean()
 				.getScQtCheckSt2techProposal(), this.getManagedBean()
 				.getMarkDeletedTechChecklist());
@@ -15679,6 +15721,48 @@ public class SpecificationBackingBean extends
 
 	// delete Financial Checklist List
 	public void deleteFinancialCheckList() {
+		IParameterSO parameterSo = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IParameterSO.class);
+		if (null != this.getManagedBean().getScQtCheckSt2financeProposalList()
+				&& !this.getManagedBean().getScQtCheckSt2financeProposalList()
+						.isEmpty()) {
+			for (ScQtCheckList financialCheckList : this.getManagedBean()
+					.getScQtCheckSt2financeProposalList()) {
+				if (null == financialCheckList.getPmDocument()
+						&& !QTConstants.TEMPLETE_SPEC_CODE
+								.equalsIgnoreCase(financialCheckList
+										.getDefinationType().getParameterCode())) {
+					if (null != financialCheckList.getDefinationType()
+							&& null == financialCheckList.getDefinationType()
+									.getParameterId()) {
+						ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+						docDefTypeReqDTO
+								.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+						docDefTypeReqDTO
+								.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+						ParameterResDTO docDefTypeResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+						financialCheckList.setDefinationType(docDefTypeResDTO
+								.getPmParameter());
+					}
+					if (null != financialCheckList.getAction()
+							&& null == financialCheckList.getAction()
+									.getParameterId()) {
+						ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+						docDefTypeReqDTO
+								.setParameterType(ParameterTypeConst.SC_SUPPLIER_ACTION);
+						docDefTypeReqDTO
+								.setParameterCode(ParameterConst.CHECKLIST_ACTION_ONLINE_SUBMISSION);
+						ParameterResDTO docDefTypeResDTO = parameterSo
+								.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+						financialCheckList.setAction(docDefTypeResDTO
+								.getPmParameter());
+					}
+
+				}
+			}
+		}
 		markDeleteSelectedRowsActionById(this.getManagedBean()
 				.getScQtCheckSt2financeProposalList(), this.getManagedBean()
 				.getMarkDeletedFinChecklist());
