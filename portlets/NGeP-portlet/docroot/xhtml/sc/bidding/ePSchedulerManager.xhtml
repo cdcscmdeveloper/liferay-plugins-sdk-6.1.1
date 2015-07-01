@@ -18,49 +18,47 @@
 		
 		<p:poll update="@form" interval="5"/>
 		
-		<p:panel header="Scheduled Jobs List" toggleable="true">
-		
-			<p:panel id="jobListPanel">
+		<p:panel header="#{lbl['lbl.quartz.scheduled.jobs.list']}" toggleable="true">
 				<p:dataTable var="jobBean" id="jobBeanDt" widgetVar="jobBeanWidVar" value="#{schedulerManagerBB.managedBean.epSchedulerJobList}"
 					rows="10" rowKey="#{jobBean}" rowIndexVar="index">
 				
 				<ac:paginator for="jobBeanDt" />
 				
-				<p:column headerText="Job Name">
+				<p:column headerText="#{lbl['lbl.quartz.job.name']}">
 					<h:outputText value="#{jobBean.jobKey.name}" />
 				</p:column>
 
-				<p:column headerText="Job Group">
+				<p:column  headerText="#{lbl['lbl.quartz.job.group']}" >
 					<h:outputText value="#{jobBean.jobKey.group}" />
 				</p:column>
 				
-				<p:column headerText="Job Description">
+				<p:column  headerText="#{lbl['lbl.quartz.job.description']}">
 					<h:outputText value="#{jobBean.description}" />
 				</p:column>
 				
-				<p:column headerText="Status">
+				<p:column  headerText="#{lbl['lbl.quartz.status']}" >
 					<h:outputText value="#{jobBean.status}" />
 				</p:column>
 				
-				<p:column headerText="Health State">
+				<p:column  headerText="#{lbl['lbl.quartz.health.state']}" >
 					<h:outputText value="#{jobBean.state}" />
 				</p:column>
 				
-				<p:column headerText="Last Fired Time">
+				<p:column  headerText="#{lbl['lbl.quartz.last.fired.time']}">
 					<h:outputText value="#{jobBean.trigger.previousFireTime}">
 				      <f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 				  </h:outputText>
 				</p:column>
 				
-				<p:column headerText="Next Fire Time">
+				<p:column  headerText="#{lbl['lbl.quartz.next.fired.time']}">
 					<h:outputText value="#{jobBean.trigger.nextFireTime}" rendered="#{jobBean.trigger.nextFireTime!=null}">
 				      <f:convertDateTime
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME_WITH_SECONDS)}" />
 				  </h:outputText>
 				</p:column>
 				
-				<p:column headerText="Action">
+				<p:column  headerText="#{lbl['lbl.quartz.action']}">
 					<p:commandLink id="resumePauseActionId"
 						partialSubmit="true" process="@this"
 						action="#{schedulerManagerBB.pauseOrResumeJob(jobBean)}" update="@([id$=jobBeanDt])" 
@@ -71,13 +69,11 @@
 						partialSubmit="true" process="@this"
 						action="#{schedulerManagerBB.runNowJob(jobBean)}" update="@form" 
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
-						<h:outputText value=" | RUN NOW" />
+						<h:outputText  value="#{lbl['lbl.quartz.run.now']}" />
 					</p:commandLink>
 				</p:column>
 				
 				</p:dataTable>
-			</p:panel>
-		
 		</p:panel>
 		<p:panel id="biddingListPanel" header="#{lbl['lbl.sc.bidding.list']}"
 		toggleable="true">
