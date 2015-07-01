@@ -260,7 +260,7 @@
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
 						disabled="true"
-						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' and   stageTwofunctional.action.parameterCode eq 'O' and stageTwofunctional.action.parameterCode ne 'V') and (fn:contains(stageTwofunctional.title,'Annual') or fn:contains(stageTwofunctional.title,'Verification')))}">
+						rendered="#{((stageTwofunctional.pmDocument.docDefinitionKey eq 'UP' and   stageTwofunctional.action.parameterCode eq 'O' and stageTwofunctional.action.parameterCode ne 'V') and (fn:containsIgnoreCase(stageTwofunctional.title,'Annual') or fn:containsIgnoreCase(stageTwofunctional.title,'Verification')))}">
 
 					</p:selectBooleanCheckbox>
 					<p:selectBooleanCheckbox value="#{stageTwofunctional.scoringReq}"
