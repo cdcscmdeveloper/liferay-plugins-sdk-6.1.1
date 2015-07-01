@@ -49,7 +49,7 @@ public class Encryption {
 				sftpUtility.upload(outFilePath+fileName, IntegrationConstants.GMAS_UPLOAD+fileName);
 				
 	    // call osb service	for transfering from host to 1GFMAS
-				 osbUtility.osbServiceCallOutBound(processId);
+				 osbUtility.osbServiceCallOutBound(processId,fileName);
 		
 	}
 
@@ -120,7 +120,7 @@ public class Encryption {
 		sftpUtility.upload(outFilePath+fileName, IntegrationConstants.PHIS_UPLOAD_DIR+fileName);
 		
 		//once upload is done cal web service osb integration to transfer file.
-		 osbUtility.osbServiceCallOutBound(processId);
+		 osbUtility.osbServiceCallOutBound(processId,fileName);
 		
 	}
 
