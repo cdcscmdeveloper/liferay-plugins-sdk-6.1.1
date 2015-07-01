@@ -380,6 +380,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
 					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 					required="true"
+					readonly="true"
 					label="#{lbl[lbleffDate]}"
 					size="25"
 					disabled="#{!isEditableStatus}">
