@@ -3243,7 +3243,7 @@ public class ProfileManagementBackingBean extends
 			if (userOrg.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 				for (PmUserRole userRole : userOrg.getPmUserRoles()) {
 					String roleCode = userRole.getPmRole().getRoleCode();
-					if (userRole.getPmRole().isLimitRequired()) {
+					if (userRole.getRecordStatusFlg() == 1 && userRole.getPmRole().isLimitRequired()) {
 						if (userRole.getApprovalLimit() == null
 								|| userRole.getApprovalLimit().compareTo(
 										BigDecimal.ZERO) != 1) {
