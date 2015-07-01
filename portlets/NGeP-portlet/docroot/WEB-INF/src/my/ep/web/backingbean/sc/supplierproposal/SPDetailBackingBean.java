@@ -328,7 +328,7 @@ public class SPDetailBackingBean extends
 		PmDigiSign digiSign = null;
 		debugLogger("submitSupplierProposal");
 
-		retrievePaidUpCapitalNdDeclarationDtls();
+		//retrievePaidUpCapitalNdDeclarationDtls();
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -3155,7 +3155,7 @@ public class SPDetailBackingBean extends
 		if (pmOrgProfile != null) {
 			context.put("agency", pmOrgProfile.getOrgName());
 		}
-
+		
 		if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
 				&& !smSupplier.getSmMofAccounts().get(0).getMofNo().isEmpty()) {
 			context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
