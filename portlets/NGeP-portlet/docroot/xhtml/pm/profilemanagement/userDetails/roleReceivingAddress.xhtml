@@ -47,7 +47,7 @@
 						width="15%">
 						<p:inputText id="itAppLimit" styleClass="ppDisplayTextS"
 							value="#{role.approvalLimit}"
-							required="#{!empty param['disableValidation']} and role.pmRole.limitRequired}"
+							required="#{!empty param['disableValidation']} and role.pmRole.limitRequired and role.recordStatusFlg eq 1}"
 							label="#{lbl['lbl.pm.profiles.authorisation.apprlimit']}"
 							disabled="#{!role.pmRole.limitRequired}" maxlength="18">
 							<f:validateDoubleRange minimum="1" />
@@ -62,7 +62,7 @@
 
 						<p:inputText id="auLetterNo" styleClass="ppDisplayTextS"
 							value="#{role.letterNo}"
-							required="#{role.pmRole.roleCode eq 'FL_APPROVER'}"
+							required="#{role.pmRole.roleCode eq 'FL_APPROVER' and role.recordStatusFlg eq 1}"
 							label="#{lbl['lbl.pm.profiles.authorisation.letterno']}"
 							disabled="#{!(role.pmRole.roleCode eq 'FL_APPROVER')}"
 							maxlength="30">
@@ -78,7 +78,7 @@
 							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-							<p:ajax event="change"
+							<p:ajax event="change" immediate="true"
 								listener="#{profileManagementBackingBean.userRoleStatusChange(role)}"
 								partialSubmit="true" process="@this"
 								update=":form:tvRoleReceivingAddr" />
