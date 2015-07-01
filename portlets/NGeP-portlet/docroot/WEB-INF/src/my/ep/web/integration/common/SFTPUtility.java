@@ -10,6 +10,7 @@ import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.Selectors;
 import org.apache.commons.vfs2.impl.StandardFileSystemManager;
 import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * The class SFTPUtil containing uploading, downloading, checking if file exists
@@ -20,29 +21,31 @@ import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
  * 
  */
 public class SFTPUtility {
+	
+	private static Logger log = BatchLogger.getLogger(SFTPUtility.class);
 
 	String hostName = IntegrationConstants.SFTP_HOST;
 	String username = IntegrationConstants.SFTP_USER;
 	String password = IntegrationConstants.SFTP_PASS;
 
 	
-	  public static void main(String[] args) {
-		  /* String remoteFilePath = "/batch/1GFMAS/IN/1002APOVE40000120150102005.GPG"; 
-	  String localFilePath = "/batch/1GFMAS/ARCHIVE/1002APOVE40000120150102005.GPG"; 
-	  String localFilePath ="C:/Integration/18012014/1000APOVE40000120141003001.GPG"; 
-	   String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt"; */
+	 /* public static void main(String[] args) {
+		   String remoteFilePath = "/batch/1GFMAS/IN/1000GLGLC40000120150609001.GPG"; 
+//	  String localFilePath = "/batch/1GFMAS/ARCHIVE/1002APOVE40000120150102005.GPG"; 
+	  String localFilePath ="C:/Integration/18012014/1000GLGLC40000120150609001.GPG"; 
+//	   String	  remoteTempFilePath = "/FakeRemoteTempPath/FakeRemoteTempFile.txt";
 	  SFTPUtility sftpUtility = new SFTPUtility();
-	//  System.out.println("File Name :"+sftpUtility.findFileNameInDirectory(IntegrationConstants.PHIS_UPLOAD_DIR, "PHS-030"));
-	 /* sftpUtility.upload(localFilePath, remoteFilePath); 
+	//  log.info("File Name :"+sftpUtility.findFileNameInDirectory(IntegrationConstants.PHIS_UPLOAD_DIR, "PHS-030"));
+//	  sftpUtility.upload(localFilePath, remoteFilePath); 
 	  sftpUtility.exist(remoteFilePath); 
-	  sftpUtility.download(localFilePath,remoteFilePath); 
-	   move(hostName, username, password,remoteFilePath, remoteTempFilePath); 
-	   delete(hostName, username,password, remoteFilePath); }
-	  sftpUtility.listFilesInDirectory("");*/
+//	  sftpUtility.download(localFilePath,remoteFilePath); 
+//	   move(hostName, username, password,remoteFilePath, remoteTempFilePath); 
+//	   delete(hostName, username,password, remoteFilePath); }
+//	  sftpUtility.listFilesInDirectory("");
 	  
 	 // sftpUtility.move(remoteFilePath, localFilePath);
 	 
-	  }
+	  }*/
 	  
 	  
 	/**
@@ -51,7 +54,7 @@ public class SFTPUtility {
 	 */
 	
 	public void upload(String localFilePath, String remoteFilePath) {
-		System.out.println("inside file upload...");
+		log.info("inside file upload...");
 
 		File file = new File(localFilePath);
 		if (!file.exists())
@@ -77,7 +80,7 @@ public class SFTPUtility {
 			// Copy local file to sftp server
 			remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);
 
-			System.out.println("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
+			log.info("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -102,10 +105,10 @@ public class SFTPUtility {
 			if (remoteFile.exists()) {
 				remoteFile.moveTo(remoteDestFile);
 				;
-				System.out.println("Move remote file success");
+				log.info("Move remote file success");
 				return true;
 			} else {
-				System.out.println("Source file doesn't exist");
+				log.info("Source file doesn't exist");
 				return false;
 			}
 		} catch (Exception e) {
@@ -144,7 +147,7 @@ public class SFTPUtility {
 			// Copy local file to sftp server
 			localFile.copyFrom(remoteFile, Selectors.SELECT_SELF);
 
-			System.out.println("File download success");
+			log.info("File download success");
 			return true;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -170,7 +173,7 @@ public class SFTPUtility {
 
 			if (remoteFile.exists()) {
 				remoteFile.delete();
-				System.out.println("Delete remote file success");
+				log.info("Delete remote file success");
 			}
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -194,7 +197,7 @@ public class SFTPUtility {
 					createConnectionString(hostName, username, password,
 							remoteFilePath), createDefaultOptions());
 
-			System.out.println("File exist: " + remoteFile.exists());
+			log.info("File exist: " + remoteFile.exists());
 
 			return remoteFile.exists();
 		} catch (Exception e) {
@@ -261,7 +264,7 @@ public class SFTPUtility {
 				throw new RuntimeException("Remote file exists..");
 			} else {
 				remoteFile.createFolder();
-				System.out.println("directory creation successful :");
+				log.info("directory creation successful :");
 			}
 
 		} catch (Exception e) {
@@ -290,12 +293,12 @@ public class SFTPUtility {
 				for (int i = 0; i < exists.length; i++) {
 
 					exists[i].getName();
-					System.out.println(" Names :" + exists[i].getName());
+					log.info(" Names :" + exists[i].getName());
 				}
 			}
 			// remoteFile.createFolder();
 
-			System.out.println("directory creation successful :"+ remoteFile.exists());
+			log.info("directory creation successful :"+ remoteFile.exists());
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
@@ -324,7 +327,7 @@ public class SFTPUtility {
 						String subFile = fileName.substring(53);
 						
 						if(subFile.contains(serviceId )){
-							System.out.println("subFile :"+subFile);
+							log.info("subFile :"+subFile);
 							subFile.contains(getDateStringValue());
 							return subFile;
 						}
