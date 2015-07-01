@@ -3318,7 +3318,7 @@ public class LOADetailBackingBean extends
 		JadualHargaBean jadualHarga = new JadualHargaBean();
 		
 		jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item
-				.getTplSpecZoneDtl().getZoneName() : "N/A");
+				.getTplSpecZoneDtl().getZoneName() : "");
 		jadualHarga.setItem(item.getScRequestItem().getItemName());
 		
 		BigDecimal unitPrice = item.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -3326,22 +3326,22 @@ public class LOADetailBackingBean extends
 		jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion()
 				.getClUom().getUomName());
 		jadualHarga.setFreqUom(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClUomFrequency() ? "N/A" : item
+				.getTplSpecQuestion().getClUomFrequency() ? "" : item
 				.getScRequestItem().getTplSpecQuestion().getClUomFrequency()
 				.toString());
 		jadualHarga.setUomPerDay(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClUomPerDay() ? "N/A" : item
+				.getTplSpecQuestion().getClUomPerDay() ? "" : item
 				.getScRequestItem().getTplSpecQuestion().getClUomPerDay()
 				.toString());
 		jadualHarga.setUomPerMonth(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClUomPerMonth() ? "N/A" : item
+				.getTplSpecQuestion().getClUomPerMonth() ? "" : item
 				.getScRequestItem().getTplSpecQuestion().getClUomPerMonth()
 				.toString());
 		jadualHarga.setUomPerYear(null == item.getScRequestItem()
-				.getTplSpecQuestion().getClDurationMonth() ? "N/A" : item
+				.getTplSpecQuestion().getClDurationMonth() ? "" : item
 				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
 				.toString());
-		jadualHarga.setQuantity(null == item.getQty()? "N/A" : item.getQty()
+		jadualHarga.setQuantity(null == item.getQty()? "" : item.getQty()
 				.toString());
 
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
@@ -3555,25 +3555,25 @@ public class LOADetailBackingBean extends
 							cellIndex = 0;
 							row = productSheet.createRow(rowIndex);
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClItem() ? 
-									"N/A" : answer.getTplSpecQuestion().getClItem());
+									"" : answer.getTplSpecQuestion().getClItem());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClSpecDetail() ? 
-									"N/A" : answer.getTplSpecQuestion().getClSpecDetail());
+									"" : answer.getTplSpecQuestion().getClSpecDetail());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUom() ? 
-									"N/A" : answer.getTplSpecQuestion().getClUom().getUomName());
+									"" : answer.getTplSpecQuestion().getClUom().getUomName());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClPriceTypeCode() ? 
-									"N/A" : getParameterDesc(answer.getTplSpecQuestion().getClPriceTypeCode()));
+									"" : getParameterDesc(answer.getTplSpecQuestion().getClPriceTypeCode()));
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
-									"N/A" : answer.getTplSpecQuestion().getClQuantity().toString());
+									"" : answer.getTplSpecQuestion().getClQuantity().toString());
 							
-							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
-									"N/A" : answerType(answer));
+							/*row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
+									"" : answerType(answer));
 				
 							row.createCell(cellIndex++).setCellValue(null == answer.getAnswerRemark() ? 
-									"N/A" : answer.getAnswerRemark());
+									"" : answer.getAnswerRemark());*/
 						}
 						
 						// Auto size all the columns
@@ -3601,31 +3601,31 @@ public class LOADetailBackingBean extends
 							cellIndex = 0;
 							row = serviceSheet.createRow(rowIndex);
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClItem() ? 
-									"N/A" : answer.getTplSpecQuestion().getClItem());
+									"" : answer.getTplSpecQuestion().getClItem());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClSpecDetail() ? 
-									"N/A" : answer.getTplSpecQuestion().getClSpecDetail());
+									"" : answer.getTplSpecQuestion().getClSpecDetail());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUom() ? 
-									"N/A" : answer.getTplSpecQuestion().getClUom().getUomName());
+									"" : answer.getTplSpecQuestion().getClUom().getUomName());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomFrequency() ? 
-									"N/A" : answer.getTplSpecQuestion().getClUomFrequency().toString());
+									"" : answer.getTplSpecQuestion().getClUomFrequency().toString());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerDay() ? 
-									"N/A" : answer.getTplSpecQuestion().getClUomPerDay().toString());
+									"" : answer.getTplSpecQuestion().getClUomPerDay().toString());
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClUomPerMonth() ? 
-									"N/A" : answer.getTplSpecQuestion().getClUomPerMonth().toString());
+									"" : answer.getTplSpecQuestion().getClUomPerMonth().toString());
 
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
-									"N/A" : answer.getTplSpecQuestion().getClQuantity().toString());
+									"" : answer.getTplSpecQuestion().getClQuantity().toString());
 
-							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
-									"N/A" : answerType(answer));
+							/*row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
+									"" : answerType(answer));
 
 						    row.createCell(cellIndex++).setCellValue(null == answer.getAnswerRemark() ? 
-									"N/A" : answer.getAnswerRemark());
+									"" : answer.getAnswerRemark());*/
 						}
 
 						for (int x = 0; x < serviceSheet.getRow(0)
@@ -3662,13 +3662,13 @@ public class LOADetailBackingBean extends
 		if(ParameterConst.ANSWER_TYPE_TEXT.equals(answerTypeCode)){
 
 			if(null == answer.getAnswerText()){
-				answerType = "N/A";
+				answerType = "";
 			} else{
 				answerType = answer.getAnswerText();
 			}
 		} else if(ParameterConst.ANSWER_TYPE_NUMERIC.equals(answerTypeCode)){
 			if(null == answer.getAnswerText()){
-				answerType = "N/A";
+				answerType = "";
 			} else{
 				answerType = answer.getAnswerNumeric().toString();
 			}
@@ -3702,9 +3702,7 @@ public class LOADetailBackingBean extends
 					.retrieveStatusByStatusId(statusReqDTO);
 			scLoa.setPmStatus(statusResDTO.getPmStatus());
 			scLoa.setLoaNo(getQtAwardSO().generateDirectLoaNo());
-
-		} catch (Exception e) {
-			throw new EpException(e.toString());
+		
 		} finally {
 			statusSO = null;
 		}
@@ -3726,7 +3724,6 @@ public class LOADetailBackingBean extends
 		try {
 
 			String language = new FacesScopes().getUserLocale().getLanguage();
-
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			AwardSupplierResDTO resDTO = null;
 			reqDTO.setLanguageCode(language);
@@ -3747,8 +3744,6 @@ public class LOADetailBackingBean extends
 				}
 			}
 
-		} catch (Exception e) {
-			throw new EpException(e.toString());
 		} finally {
 			//qtAwardSO = null;
 		}
