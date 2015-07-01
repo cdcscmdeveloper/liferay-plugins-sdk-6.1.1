@@ -43,7 +43,7 @@
 						<td>$scLoi.scLoiLoa.supplierName</td>
 						#foreach( $scNegoLocation in $scLoi.scNegoLocations )
 							<td>$scNegoLocation.negoLocation</td>
-							<td>$scNegoLocation.negoDate</td>
+							<td>$commonUtils.getFormattedDate($scNegoLocation.negoDate,"dd/MM/yyyy hh:mm a")</td>
 						#end
 					</tr>
 				#end
