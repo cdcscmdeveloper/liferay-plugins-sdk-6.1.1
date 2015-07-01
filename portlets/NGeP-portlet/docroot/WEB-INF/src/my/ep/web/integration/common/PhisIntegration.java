@@ -56,10 +56,14 @@ import my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type;
 import my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
+
 /*
 * @author P Ganga prasad
 */
 public class PhisIntegration {
+	
+	private static Logger log = BatchLogger.getLogger(PhisIntegration.class);
 	
 //	public static void main(String[] args) throws IOException {
 //		PhisIntegration test = new PhisIntegration();
@@ -119,7 +123,7 @@ public class PhisIntegration {
 
 		if (resDTO.isSuccessful()) {
 			
-			System.out.println("createFilesforPHIS : Records available");
+			log.info("createFilesforPHIS : Records available");
 			List<CmType> cmTypeList = resDTO.getTypeList();
 			List<ItemType> itemTypes = new ArrayList<ItemType>();
 			ItemType itemType;
@@ -219,7 +223,7 @@ public class PhisIntegration {
 //			utility.setMasterDataMaterialInfo(resDTO.getCmSupplierItemsList());
 
 		}else{
-			System.out.println("createFilesforPHIS : Records not available.");
+			log.info("createFilesforPHIS : Records not available.");
 		}
 
 	}
@@ -288,33 +292,33 @@ public class PhisIntegration {
 				deliveryAddressRq_Type.setNoOfDeliveryAddress(address_Type.length);
 				deliveryAddressRq_Type.setDeliveryAddressArray(address_Type);
 				
-				System.out.println("address_Type.length :"+address_Type.length);
+				log.info("address_Type.length :"+address_Type.length);
 
 				PHISMasterDataDeliveryAddressPortTypeProxy typeProxy = new PHISMasterDataDeliveryAddressPortTypeProxy();
 				part.setRqHeader(header_Type);
 				part.setDeliveryAddressRq(deliveryAddressRq_Type);	
 
 				rs_Type = typeProxy.inquire(part);
-//				System.out.println("No of delivery Addreee:::"+part.getDeliveryAddressRq().getNoOfDeliveryAddress());
-//				System.out.println("Action:::"+part.getDeliveryAddressRq().getAction());
-//				System.out.println("PTJ CODe:::"+part.getDeliveryAddressRq().getPTJCode());
-//				System.out.println("No of delivery Addreee"+part.getDeliveryAddressRq().getDeliveryAddressArray());
+//				log.info("No of delivery Addreee:::"+part.getDeliveryAddressRq().getNoOfDeliveryAddress());
+//				log.info("Action:::"+part.getDeliveryAddressRq().getAction());
+//				log.info("PTJ CODe:::"+part.getDeliveryAddressRq().getPTJCode());
+//				log.info("No of delivery Addreee"+part.getDeliveryAddressRq().getDeliveryAddressArray());
 			//	DeliveryAddress_Type[] address_Type2 = part.getDeliveryAddressRq().getDeliveryAddressArray();
 //				
 //				my.ep.web.integration.phis.ptj.deliveryaddress
-			//	System.out.println("address_Type2 :"+address_Type2.length);
+			//	log.info("address_Type2 :"+address_Type2.length);
 				
 				
 //				for(DeliveryAddress_Type addr:address_Type2){
-//					System.out.println("Address1"+addr.getAddress1());
+//					log.info("Address1"+addr.getAddress1());
 //				}
 				
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
 
-			System.out.println("getStatusCode  :"+ rs_Type.getRsHeader().getStatus().getStatusCode());
-			System.out.println("getStatusDesc :"+ rs_Type.getRsHeader().getStatus().getStatusDesc());
+			log.info("getStatusCode  :"+ rs_Type.getRsHeader().getStatus().getStatusCode());
+			log.info("getStatusDesc :"+ rs_Type.getRsHeader().getStatus().getStatusDesc());
 
 		}
 	}
@@ -363,7 +367,7 @@ public class PhisIntegration {
 			utility.votFundFileOutPutStream(votFundList, filePath);
 			
 		}else{
-			System.out.println("votFund : Records not available....");
+			log.info("votFund : Records not available....");
 		}
 
 	}
@@ -408,7 +412,7 @@ public class PhisIntegration {
 			utility.votFundDanaFileOutPutStream(votFundList, filePath);
 			
 		}else{
-			System.out.println("votFundDana : Records not available....");
+			log.info("votFundDana : Records not available....");
 		}
 	}
 
@@ -431,12 +435,12 @@ public class PhisIntegration {
         	
         	List<PmPrgActivity> votlist = resDTO.getPrgActivityList();
 
-    		System.out.println("list: " + votlist.size());
+    		log.info("list: " + votlist.size());
     		List<PhisProgramActivity> prgActList = new ArrayList<PhisProgramActivity>();
     		PhisProgramActivity prgActivity;
     		for (PmPrgActivity programActvity : votlist) {
 
-    			System.out.println("VotFundId "+ programActvity.getPmVotFund().getVotFundCode());
+    			log.info("VotFundId "+ programActvity.getPmVotFund().getVotFundCode());
     			Date effdate = programActvity.getEffDate(); // your date
     			Calendar cal = Calendar.getInstance();
     			cal.setTime(effdate);
@@ -459,7 +463,7 @@ public class PhisIntegration {
     		utility.programActivityFileOutPutStream(prgActList, filePath);
         	
         }else{
-			System.out.println("programActivity : Records not available....");
+			log.info("programActivity : Records not available....");
 		}
 	}
 
@@ -515,7 +519,7 @@ public class PhisIntegration {
 			utility.projectFileOutPutStream(programList, filePath);
 			
 		}else{
-			System.out.println("project : Records not available....");
+			log.info("project : Records not available....");
 		}
 		
 	}
@@ -568,7 +572,7 @@ public class PhisIntegration {
 			
 			
 		}else{
-			System.out.println("glAccount : Records not available....");
+			log.info("glAccount : Records not available....");
 		}
 		
 	}
@@ -637,14 +641,14 @@ public class PhisIntegration {
 			
 			    my.ep.web.integration.phis.masterdatamateriainfo.EPMFRs_Type epmfRs_Type = typeProxy.inquire(epmfRq_Type);
 			
-				System.out.println("getStatusCode :"+epmfRs_Type.getRsHeader().getStatus().getStatusCode());
-				System.out.println("getStatusDesc :"+epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
+				log.info("getStatusCode :"+epmfRs_Type.getRsHeader().getStatus().getStatusCode());
+				log.info("getStatusDesc :"+epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
 		}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		}else{
-			System.out.println("Records not available masterDataMaterialInfoPHIS : PHS-220");
+			log.info("Records not available masterDataMaterialInfoPHIS : PHS-220");
 		}
 	}
 	

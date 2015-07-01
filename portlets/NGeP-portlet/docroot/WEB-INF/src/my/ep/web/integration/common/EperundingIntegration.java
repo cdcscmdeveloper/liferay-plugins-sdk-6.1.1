@@ -54,10 +54,14 @@ import my.ep.web.integration.eperunding.RegistrationHistory;
 import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
+
 /*
  *  @author Ganga prasad
  */
 public class EperundingIntegration {
+	
+	private static Logger log = BatchLogger.getLogger(EperundingIntegration.class);
 
 	OsbUtility osbUtility = new OsbUtility();
 	FileUtility fileUtility = new FileUtility();
@@ -72,8 +76,8 @@ public class EperundingIntegration {
 	/*public static void main(String args[]) {
 
 		EperundingIntegration eperundingIntegration = new EperundingIntegration();
-		 eperundingIntegration.createFilesforEperunding();
-//		eperundingIntegration.createFilesAuthMgtEqtBODforEperunding();
+//		 eperundingIntegration.createFilesforEperunding();
+		eperundingIntegration.createFilesAuthMgtEqtBODforEperunding();
 
 		// INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 		// .getOSBServiceObject(INtfSO.class);
@@ -86,14 +90,14 @@ public class EperundingIntegration {
 
 		EperundingIntegration integration = new EperundingIntegration();
 
-		integration.createConsultantProfile(retriveSmSupplierBycreationDate("22-06-2015", "6", ""));
-		 integration.createDeletedCompany(retriveSmSupplierBycreationDate("22-06-2015","1",""));
-		 integration.createGovernmentProject(retriveSmSupplierBycreationDate("22-06-2015","4",""));
-		 integration.createRegisteredCategory(retriveSmSupplierBycreationDate("22-06-2015","2",""));
+		integration.createConsultantProfile(retriveSmSupplierBycreationDate("02-06-2015", "6", ""));
+		 integration.createDeletedCompany(retriveSmSupplierBycreationDate("02-06-2015","1",""));
+		 integration.createGovernmentProject(retriveSmSupplierBycreationDate("02-06-2015","4",""));
+		 integration.createRegisteredCategory(retriveSmSupplierBycreationDate("02-06-2015","2",""));
 		
-		 integration.createCompanyOwner(retriveSmSupplierBycreationDate("22-06-2015","5","1"));
-		 integration.createAssociatedCompany(retriveSmSupplierBycreationDate("22-06-2015","5","3"));
-		 integration.createBranchCompany(retriveSmSupplierBycreationDate("22-06-2015","5","2"));
+		 integration.createCompanyOwner(retriveSmSupplierBycreationDate("02-06-2015","5","1"));
+		 integration.createAssociatedCompany(retriveSmSupplierBycreationDate("02-06-2015","5","3"));
+		 integration.createBranchCompany(retriveSmSupplierBycreationDate("02-06-2015","5","2"));
 
 	}
 
@@ -101,7 +105,7 @@ public class EperundingIntegration {
 
 		EperundingIntegration integration = new EperundingIntegration();
 
-		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate("22-06-2015", "3", "");
+		SupplierSearchResDTO resDTO = retriveSmSupplierBycreationDate("02-06-2015", "3", "");
 
 		if (resDTO.isSuccessful()) {
 			integration.createAuthorizedSignatory(resDTO);
@@ -254,7 +258,7 @@ public class EperundingIntegration {
 				// }
 				// }
 			} else {
-				System.out.println("createEquiytyOwner : MOF NOT AVAILABLE "
+				log.info("createEquiytyOwner : MOF NOT AVAILABLE "
 						+ smSupplier.getCompanyName());
 			}
 		}
@@ -425,7 +429,7 @@ public class EperundingIntegration {
 		}
 
 		fileUtility.boardOfDirectorOutPutStream(boardOfDirectorsList, path);
-		System.out.println("success");
+		log.info("success");
 	}
 
 	public void createManagementPersonnel(SupplierSearchResDTO resDTO) {
@@ -793,7 +797,7 @@ public class EperundingIntegration {
 			}
 			fileUtility.consultantProfileFileOutPutStream(consultantProfileList, path);
 		} else {
-			System.out.println("Consultant profile Records not available ");
+			log.info("Consultant profile Records not available ");
 		}
 
 	}
@@ -827,7 +831,7 @@ public class EperundingIntegration {
 								|| remaksResDTO.getRemarksList() != null) {
 							for (SmRemark smRemark : remaksResDTO
 									.getRemarksList()) {
-								// System.out.println("smRemark :"+smRemark.getRemark());
+								// log.info("smRemark :"+smRemark.getRemark());
 								deletedCompany.setReason(smRemark.getRemark());
 								deletedCompany.setDateDeleted(smRemark
 										.getCreatedDate());
@@ -845,7 +849,7 @@ public class EperundingIntegration {
 			}
 			fileUtility.deletedCompanyOutPutStream(deletedCompanyList, path);
 		} else {
-			System.out.println("Deleted Company Records not available ");
+			log.info("Deleted Company Records not available ");
 		}
 
 	}
@@ -856,7 +860,7 @@ public class EperundingIntegration {
 		GovernmentProject governmentProject = null;
 		Project project = null;
 
-		// System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
+		// log.info("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
 
 		if (resDTO.isSuccessful()) {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
@@ -893,7 +897,7 @@ public class EperundingIntegration {
 											.add(governmentProject);
 
 								} else {
-									System.out.println("createGovernmentProject : MOF NOT AVAILABLE "	+ smSupplier.getCompanyName());
+									log.info("createGovernmentProject : MOF NOT AVAILABLE "	+ smSupplier.getCompanyName());
 								}
 
 							}
@@ -904,7 +908,7 @@ public class EperundingIntegration {
 			fileUtility.governmentProjectOutPutStream(governmentProjectList,
 					path);
 		} else {
-			System.out.println("Government Projects Records not available");
+			log.info("Government Projects Records not available");
 		}
 
 	}
@@ -937,7 +941,7 @@ public class EperundingIntegration {
 									registeredCategoryList.add(registeredCategory);
 
 								} else {
-									System.out.println("createRegisteredCategory : MOF NOT AVAILABLE "+ smSupplier.getCompanyName());
+									log.info("createRegisteredCategory : MOF NOT AVAILABLE "+ smSupplier.getCompanyName());
 								}
 
 							}
@@ -948,7 +952,7 @@ public class EperundingIntegration {
 			fileUtility.registeredCategoryOutPutStream(registeredCategoryList,
 					path);
 		} else {
-			System.out.println("Registered Category Records not available ");
+			log.info("Registered Category Records not available ");
 		}
 
 	}
@@ -959,11 +963,11 @@ public class EperundingIntegration {
 		BranchCompany branchCompany = null;
 		Branch branch = null;
 
-		// System.out.println("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
+		// log.info("resDTO.getSmSuppliers() :"+resDTO.getSmSuppliers().size());
 
 		if (resDTO.isSuccessful()) {
 			for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
-//				System.out.println("smSupplier :" + smSupplier.getCompanyName());
+//				log.info("smSupplier :" + smSupplier.getCompanyName());
 				// if(!smSupplier.getSmMofAccounts().isEmpty()){
 				// if(null!=smSupplier.getSmAppl().getSmSupplierBranches()&&!(smSupplier.getSmAppl().getSmSupplierBranches().isEmpty())){
 
@@ -1018,7 +1022,7 @@ public class EperundingIntegration {
 			// }
 			// }
 		} else {
-			System.out.println("Branch company Records not available ");
+			log.info("Branch company Records not available ");
 		}
 
 	}
@@ -1100,7 +1104,7 @@ public class EperundingIntegration {
 								companyOwnerList.add(companyOwner);
 
 						} else {
-							System.out.println("createCompanyOwner : MOF NOT AVAILABLE "+ smSupplier.getCompanyName());
+							log.info("createCompanyOwner : MOF NOT AVAILABLE "+ smSupplier.getCompanyName());
 						}
 
 					}
@@ -1111,7 +1115,7 @@ public class EperundingIntegration {
 			}
 			fileUtility.companyOwnerOutPutStream(companyOwnerList, path);
 		} else {
-			System.out.println("Company owner Records not available");
+			log.info("Company owner Records not available");
 		}
 	}
 
@@ -1199,7 +1203,7 @@ public class EperundingIntegration {
 								associatedCompanyList.add(associatedCompany);
 
 						} else {
-							System.out.println("createAssociatedCompany : MOF NOT AVAILABLE " + smSupplier.getCompanyName());
+							log.info("createAssociatedCompany : MOF NOT AVAILABLE " + smSupplier.getCompanyName());
 						}
 
 					}
@@ -1209,7 +1213,7 @@ public class EperundingIntegration {
 			}
 			fileUtility.AssociatedCompanyOutPutStream(associatedCompanyList,path);
 		} else {
-			System.out.println("Associated Company Records not available ");
+			log.info("Associated Company Records not available ");
 		}
 	}
 
@@ -1220,12 +1224,12 @@ public class EperundingIntegration {
 		File file = new File(path + dt1.format(date));
 		if (!file.exists()) {
 			if (file.mkdir()) {
-				System.out.println("Directory is created!");
+				log.info("Directory is created!");
 			} else {
-				System.out.println("Failed to create directory!");
+				log.info("Failed to create directory!");
 			}
 		} else {
-			System.out.println("Directory is already exists!");
+			log.info("Directory is already exists!");
 		}
 
 		return file.getAbsolutePath() + "/";
@@ -1345,7 +1349,7 @@ public class EperundingIntegration {
 			e.printStackTrace();
 		}
 
-		System.out.println("date :" + currentDate);
+		log.info("date :" + currentDate);
 
 		reqDTO.setCreateDate(currentDate);
 		reqDTO.setTaskId(taskId);
