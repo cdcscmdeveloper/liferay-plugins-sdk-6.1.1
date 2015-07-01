@@ -4519,9 +4519,10 @@ public class LOIDetailBackingBean extends
 										recommendDtlsMap.get(supplierId));
 						scQtRecommend.getAwardSupplierList()
 									 .add(evaluationResultDtl);
-					}
-					if (isItemized) {
-						calculateOfferedPrice(evaluationResultDtl,scQtRecommend.getRequestItem());	
+						if (isItemized) {
+							calculateOfferedPrice(
+									evaluationResultDtl,scQtRecommend.getRequestItem());	
+						}						
 					}
 				}				
 			}			
