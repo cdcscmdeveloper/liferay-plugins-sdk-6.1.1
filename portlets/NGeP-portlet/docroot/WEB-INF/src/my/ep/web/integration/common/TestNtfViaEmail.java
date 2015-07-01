@@ -9,15 +9,18 @@ import my.ep.ntf.dto.Attachment;
 import my.ep.ntf.dto.NtfRequestDTO;
 import my.ep.ntf.service.INtfSO;
 
+import org.apache.log4j.Logger;
+
 /**
  * 
  */
 
 /**
- * @author MD
+ * @author P Ganga prasad
  * 
  */
 public class TestNtfViaEmail {
+	private static Logger log = BatchLogger.getLogger(TestNtfViaEmail.class);
 	
 //	public static void main(String args[]) {
 //		TestNtfViaEmail testNtfViaEmail = new TestNtfViaEmail();
@@ -29,7 +32,7 @@ public class TestNtfViaEmail {
 	
 	
 //	public static void main(String args[]) {
-//		System.out.println("initiateTask******");
+//		log.info("initiateTask******");
 //		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 //				.getOSBServiceObject(INtfSO.class);
 //
@@ -73,12 +76,12 @@ public class TestNtfViaEmail {
 //////		      if (listOfFiles[i].isFile()) {
 ////		    	  
 ////		 		  attArr[i].setData(processToByte(path+listOfFiles[i].getName()));
-////		 		  System.out.println("File " + listOfFiles[i].getName());
+////		 		  log.info("File " + listOfFiles[i].getName());
 //////		      } 
 ////		    }
 //		
 //		
-////		System.out.println("attArr :"+reqDTO.getAttachmentArr().length);
+////		log.info("attArr :"+reqDTO.getAttachmentArr().length);
 //		 
 //		 attArr[0] = new Attachment();
 //		 attArr[0].setData(processToByte(path+filename1));
@@ -105,7 +108,7 @@ public class TestNtfViaEmail {
 			FileInputStream fileInputStream = new FileInputStream(file);
 			fileInputStream.read(b);
 		} catch (Exception e1) {
-			System.out.println("Error Reading The File.");
+			log.info("Error Reading The File.");
 			e1.printStackTrace();
 		}
 		return b;
@@ -113,7 +116,7 @@ public class TestNtfViaEmail {
 	
 	public void sendFilestoMail(INtfSO ntfSO){
 		
-		System.out.println("sendFilestoMail");
+		log.info("sendFilestoMail");
 //		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
 //				.getOSBServiceObject(INtfSO.class);
 
@@ -142,7 +145,7 @@ public class TestNtfViaEmail {
 		reqDTO.setEmailToArr(emailLst.toArray(new String[emailLst.size()]));
 
 //		 Attachments
-		 String filePath = IntegrationConstants.FILE_PATH;//"C:/Integration/Upload/10062015/";
+		 String filePath = IntegrationConstants.FILE_PATH+"12062015/";//"C:/Integration/Upload/10062015/";
 		 
 		 File folder = new File(filePath);
 		 File[] listOfFiles = folder.listFiles();
@@ -154,7 +157,7 @@ public class TestNtfViaEmail {
 		    	  attArr[i] = new Attachment();
 		 		  attArr[i].setData(processToByte(filePath+listOfFiles[i].getName()));
 		 		  attArr[i].setFilename(listOfFiles[i].getName());
-		 		  System.out.println("File " + listOfFiles[i].getName());
+		 		  log.info("File " + listOfFiles[i].getName());
 		      } 
 		    }
 		
