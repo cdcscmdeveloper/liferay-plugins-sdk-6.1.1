@@ -621,8 +621,9 @@ public class ProfileManagementBackingBean extends
 					: pmUser.getIdentificationCode());
 			pmUser.setSalutationCode(pmUser.getSalutationCode() == null ? new PmSalutation()
 					: pmUser.getSalutationCode());
-			logger.info("..........pmUser.getUserName()..........."+pmUser.getUserName());
-			this.getManagedBean().setUserNameOriginalValue(pmUser.getUserName());
+			this.getManagedBean().setPmUserOriginal((PmUser) pmUser.cloneEntity());
+			this.getManagedBean().setPmUserOrgOriginal((PmUserOrg) pmUserOrg.cloneEntity());
+			
 			// pmUser.setOrgTypeCode(pmUser.getOrgTypeCode() == null ? new
 			// PmParameter()
 			// : pmUser.getOrgTypeCode());
@@ -1281,6 +1282,7 @@ public class ProfileManagementBackingBean extends
 							.getSelectedUserOrg()
 							.setRecordStatusFlg(
 									DbValueConst.RECORD_STATUS_ACTIVE);
+					
 					// hit error and exit
 					throw new EpException(MessageConst.ERROR_770167);
 				} else {
@@ -1308,7 +1310,7 @@ public class ProfileManagementBackingBean extends
 					}
 				}
 			}
-			
+						
 		}
 	}
 
@@ -3410,7 +3412,7 @@ public class ProfileManagementBackingBean extends
 private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, UserReqDTO reqDTO){
 	String oldDesignation = user.getDesignation();
 	String newDesignation = userOrg.getDesignation();
-	if(!oldDesignation.equalsIgnoreCase(newDesignation)){//if designation was modified
+	if(oldDesignation != null && !oldDesignation.equalsIgnoreCase(newDesignation)){//if designation was modified
 		  logger.info("Tracking diary for user profile: edit user Designation :saveUserProfile");
 		  String messageId= MessageConst.TD_80010;
 		  String[] msgParam = new String[]{oldDesignation, newDesignation};
@@ -3420,7 +3422,7 @@ private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, Us
 	}
 	String oldEmail = user.getEmail();
 	String newEmail = userOrg.getEmail();
-	if(!oldEmail.equalsIgnoreCase(newEmail)){
+	if(oldEmail != null && !oldEmail.equalsIgnoreCase(newEmail)){
 		  logger.info("Tracking diary for user profile: edit user Email :saveUserProfile");
 		  String messageId= MessageConst.TD_80009;
 		  String[] msgParam = new String[]{oldEmail, newEmail};
@@ -3430,7 +3432,7 @@ private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, Us
 	}
 	String oldGrade = user.getGrade();
 	String newGrade = userOrg.getGrade();
-	if(!oldGrade.equalsIgnoreCase(newGrade)){
+	if(oldGrade != null && !oldGrade.equalsIgnoreCase(newGrade)){
 		  logger.info("Tracking diary for user profile: edit user Grade :saveUserProfile");
 		  String messageId= MessageConst.TD_80011;
 		  String[] msgParam = new String[]{oldGrade, newGrade};
@@ -3453,7 +3455,7 @@ private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, Us
 			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
 		
 	}
-	String oldUsername = this.getManagedBean().getUserNameOriginalValue();
+	String oldUsername = this.getManagedBean().getPmUserOriginal().getUserName();
 	logger.info("oldUsername="+oldUsername);
 	String newUsername =user.getUserName();
 	if(!oldUsername.equalsIgnoreCase(newUsername)){
@@ -3462,7 +3464,16 @@ private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, Us
 	  String[] msgParam = new String[]{oldUsername, newUsername};
 		reqDTO.setTrackingStatus(true);				
 		reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
-	}	
+	}
+	if(this.getManagedBean().getPmUserOrgOriginal().getRecordStatusFlg() != userOrg.getRecordStatusFlg()){
+	logger.info("Tracking diary for user profile: change user state :saveUserProfile");
+	 String messageId= userOrg.getRecordStatusFlg() == 0 ? MessageConst.TD_80005 : MessageConst.TD_80006 ;
+	  String[] msgParam = new String[]{userOrg.getPmOrgProfile().getOrgCode(), userOrg.getPmOrgProfile().getOrgName()};
+		reqDTO.setTrackingStatus(true);				
+		reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyValues(user,getActionDesc(messageId, msgParam), null));
+	}
+	
+
 }
 
 	/**
@@ -3546,6 +3557,7 @@ private void checkChangesAndFillTrackingDiary(PmUser user, PmUserOrg userOrg, Us
             reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 			if(!isNewUser){	
 			    checkChangesAndFillTrackingDiary(user, userOrg , reqDTO);
+			 
 			}
 			fillUserInfoFromUserOrg(user, userOrg);
 			/*
