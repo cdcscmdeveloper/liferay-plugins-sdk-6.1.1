@@ -767,7 +767,8 @@
 							<p:inputText maxlength="22"
 								value="#{reportBackingBean.smMofRegNoFrom}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
+								<p:ajax event="blur" listener="#{reportBackingBean.mofRegNoNumericValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>
 							</p:inputText>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMofRegNoToView}">
@@ -776,7 +777,8 @@
 							<p:inputText maxlength="22"
 								value="#{reportBackingBean.smMofRegNoTo}"
 								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
+								<p:ajax event="blur" listener="#{reportBackingBean.mofRegNoNumericValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>
 							</p:inputText>
 						</c:if>
 						<c:if
