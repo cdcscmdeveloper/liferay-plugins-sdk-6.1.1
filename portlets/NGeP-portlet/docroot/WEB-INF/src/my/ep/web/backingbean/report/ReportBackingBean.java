@@ -4327,7 +4327,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 * Generate all modules reports
 	 */
 	public void generateReport() {
-		if ((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)){
+		if (((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))){
 			mofRegNoNumericValidation();
 		}
 		
@@ -4844,7 +4844,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					throw new EpException(MessageConst.ERROR_REPORT_780003);
 				}		
 			}
-			
+			if((getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_SUPPLIER_PERFORMANCE))
+					|| (getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SM_THRESHOLD))
+							|| (getManagedBean().getReportValue() != null)
+							&& (getManagedBean().getReportValue().trim()
+									.equalsIgnoreCase(ReportConst.SM_THRESHOLD_VALUE))){
 				if ((this.getSmThresholdFromYear() != null)
 						&& (this.getSmThresholdFromYear() != ReportConst.EMPTY_VAL)) {
 					rptGenBean
@@ -4857,7 +4865,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 							.setSmThresholdToYearVar(ReportConst.AMP_SM_TO_YEAR_EQ
 									+ this.getSmThresholdToYear());
 				}				
-				
+			}	
 			
 			if ((this.getSmUserName() != null)
 					&& (this.getSmUserName() != ReportConst.EMPTY_VAL)) {
@@ -6140,21 +6148,27 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	public void mofRegNoNumericValidation() {
 		String ptString1 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern1 = Pattern.compile(ptString1);
-		Matcher match1 = pattern1.matcher(this.getSmMofRegNoFrom());
-		if (match1.matches()) {
-		} else {
-			this.setSmMofRegNoFrom(null);
-			this.setSmMofRegNoTo(null);
-			throw new EpException(MessageConst.ERROR_REPORT_780018);
+		if((this.getSmMofRegNoFrom() != null)
+				&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)){
+			Matcher match1 = pattern1.matcher(this.getSmMofRegNoFrom());
+			if (match1.matches()) {
+			} else {
+				this.setSmMofRegNoFrom(null);
+				this.setSmMofRegNoTo(null);
+				throw new EpException(MessageConst.ERROR_REPORT_780018);
+			}
 		}
 		String ptString2 = ReportConst.NUMERIC_PATTERN_ONLY;
 		Pattern pattern2 = Pattern.compile(ptString2);
-		Matcher match2 = pattern2.matcher(this.getSmMofRegNoTo());
-		if (match2.matches()) {
-		} else {
-			this.setSmMofRegNoFrom(null);
-			this.setSmMofRegNoTo(null);
-			throw new EpException(MessageConst.ERROR_REPORT_780018);
+		if((this.getSmMofRegNoTo() != null)
+				&& (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL)){
+			Matcher match2 = pattern2.matcher(this.getSmMofRegNoTo());
+			if (match2.matches()) {
+			} else {
+				this.setSmMofRegNoFrom(null);
+				this.setSmMofRegNoTo(null);
+				throw new EpException(MessageConst.ERROR_REPORT_780018);
+			}
 		}
 	}
 	public void ValidateMofRegNo(String fromMofNo, String toMofNo) {
