@@ -15,6 +15,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
@@ -24,6 +25,8 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.cm.catalogue.ReviewCatalogueBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -49,6 +52,12 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 	
 	/** The cat det tab active index. */
 	private Integer catDetTabActiveIndex = 0;
+	
+	private String itemName;
+	private String supplierName;
+	
+	
+	
 	
 	
 	private IPagingDataModel<CmSupplierItem> approvalSearchDataModel = new ApprovalSearchPagingDataModel();
@@ -85,6 +94,17 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 			
 			try {
 				
+				
+				ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
+				
+				
+				
+				
+				if(bb.getManagedBean().getSupplierName()!=null && bb.getManagedBean().getSupplierName().trim().length()>0)
+				reqDTO.setSupplierName(bb.getManagedBean().getSupplierName());
+				
+				if(bb.getManagedBean().getItemName()!=null && bb.getManagedBean().getItemName().trim().length()>0)
+				reqDTO.setItemName(bb.getManagedBean().getItemName());
 				
 				reqDTO.setItemStatus("P");
 				reqDTO.setSearchBean(searchBean);
@@ -173,6 +193,24 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 			IPagingDataModel<CmSupplierItem> approvalSearchDataModel) {
 		this.approvalSearchDataModel = approvalSearchDataModel;
 	}
+
+	public String getItemName() {
+		return itemName;
+	}
+
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+	
 	
 	
 	
