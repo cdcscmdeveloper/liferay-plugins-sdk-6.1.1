@@ -119,7 +119,13 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne null and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne null and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null and stageTwofunctional.pmDocument ne null}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1  and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null and stageTwofunctional.pmDocument eq null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.definationType)}"></h:outputText>
 					</ui:fragment>
@@ -217,7 +223,13 @@
 							rendered="#{index lt specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 }" />
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1 and stageTwofunctional.title ne  null  and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null and stageTwofunctional.pmDocument ne null}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2financeProposalList.size()-1  and specificationBackingBean.managedBean.finStandaraChecklist and stageTwofunctional.qtChecklistId eq null and stageTwofunctional.pmDocument eq null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwofunctional.action)}"></h:outputText>
 					</ui:fragment>
@@ -341,7 +353,7 @@
 						action="#{specificationBackingBean.financialChecklistEditAction(index,stageTwofunctional,'F')}"
 						rendered="#{stageTwofunctional.pmDocument.docDefinitionKey eq 'SD' and stageTwofunctional.definationType.parameterCode eq 'SD' and stageTwofunctional.scoringReq}">
 
-							<ui:fragment
+						<ui:fragment
 							rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
 						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
 							<h:graphicImage value="/css/images/design/edit.png" />

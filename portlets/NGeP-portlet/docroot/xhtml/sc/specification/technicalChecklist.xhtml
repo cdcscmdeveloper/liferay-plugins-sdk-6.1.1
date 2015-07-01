@@ -116,11 +116,16 @@
 					</ui:fragment>
 
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.pmDocument ne null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
 					</ui:fragment>
 
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1  and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and  stageTwoTechnical.pmDocument eq null}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.definationType)}"></h:outputText>
+					</ui:fragment>
 
 					<ui:fragment
 						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title eq null and stageTwoTechnical.qtChecklistId eq null and !specificationBackingBean.managedBean.techStandaraChecklist}">
@@ -222,7 +227,13 @@
 
 					</ui:fragment>
 					<ui:fragment
-						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null  and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null}">
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1 and stageTwoTechnical.title ne null  and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and  stageTwoTechnical.pmDocument ne null}">
+						<h:outputText
+							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
+					</ui:fragment>
+
+					<ui:fragment
+						rendered="#{index eq specificationBackingBean.managedBean.scQtCheckSt2techProposal.size()-1   and specificationBackingBean.managedBean.techStandaraChecklist and stageTwoTechnical.qtChecklistId eq null and stageTwoTechnical.pmDocument eq null}">
 						<h:outputText
 							value="#{specificationBackingBean.getParameterDesc(stageTwoTechnical.action)}"></h:outputText>
 					</ui:fragment>
