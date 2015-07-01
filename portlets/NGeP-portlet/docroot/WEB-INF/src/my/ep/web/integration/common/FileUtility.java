@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import org.apache.log4j.Logger;
+
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -32,6 +34,10 @@ import my.ep.web.integration.eperunding.GovernmentProject;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.Signatory;
+import my.ep.web.integration.eterimaan.BillHeader;
+import my.ep.web.integration.eterimaan.BillingInformation;
+import my.ep.web.integration.eterimaan.ChargeLine;
+import my.ep.web.integration.eterimaan.CustomerInformation;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
@@ -62,6 +68,8 @@ import my.ep.web.integration.phis.PhisVotFund;
 */
 public class FileUtility {
 	
+	private static Logger log = BatchLogger.getLogger(FileUtility.class);
+	
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 	Encryption encryption = new Encryption();
@@ -72,7 +80,7 @@ public class FileUtility {
 	 */
 	public void materialClassFileOutPutStream(List<MaterialClass> content,
 			String filePath) {
-		System.out.println("inside materialClassFileOutPutStream ");
+		log.info("inside materialClassFileOutPutStream ");
 		String SERVICE_CODE = "PHS-030";
 
 		Writer writer = null;
@@ -83,7 +91,7 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
-				System.out.println("content no equal to zero....");
+				log.info("content no equal to zero....");
 				StringBuffer line;
 				for (MaterialClass mclass : content) {
 					line = new StringBuffer();
@@ -116,7 +124,7 @@ public class FileUtility {
 
 	public void materialBrandFileOutPutStream(List<MaterialBrand> content,
 			String filePath) {
-		System.out.println("inside materialBrandFileOutPutStream");
+		log.info("inside materialBrandFileOutPutStream");
 		String SERVICE_CODE = "PHS-040";
 		Writer writer = null;
 
@@ -127,7 +135,7 @@ public class FileUtility {
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
-				System.out.println("content no equal to zero....");
+				log.info("content no equal to zero....");
 				StringBuffer line;
 				for (MaterialBrand mbrand : content) {
 					line = new StringBuffer();
@@ -160,7 +168,7 @@ public class FileUtility {
 
 	public void materialColorFileOutPutStream(List<MaterialColor> content,
 			String filePath) {
-		System.out.println("inside materialColorFileOutPutStream ");
+		log.info("inside materialColorFileOutPutStream ");
 		String SERVICE_CODE = "PHS-050";
 		Writer writer = null;
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -204,7 +212,7 @@ public class FileUtility {
 
 	public void materialMeasurementFileOutPutStream(
 			List<MaterialMeasurement> content, String filePath) {
-		System.out.println("inside materialMeasurementFileOutPutStream");
+		log.info("inside materialMeasurementFileOutPutStream");
 		String SERVICE_CODE = "PHS-060";
 		Writer writer = null;
 
@@ -246,7 +254,7 @@ public class FileUtility {
 	}
 
 	public void itemTypeFileOutPutStream(List<ItemType> content, String filePath) {
-		System.out.println("inside itemTypeFileOutPutStream");
+		log.info("inside itemTypeFileOutPutStream");
 		String SERVICE_CODE = "PHS-070";
 		Writer writer = null;
 
@@ -292,7 +300,7 @@ public class FileUtility {
 	// 1GFMAS
 
 	public void masterDataVendorFileOutPutStream(List<MasterDataVendor> content, String filePath) {
-		System.out.println("inside masterDataVendorFileOutPutStream");
+		log.info("inside masterDataVendorFileOutPutStream");
 		String PROCESS_ID = "APIVE";
 		
 		String fileName = createFileNameGfmas(PROCESS_ID);
@@ -373,7 +381,7 @@ public class FileUtility {
 //					}
 				}
 			}else{
-				System.out.println("content is null");
+				log.info("content is null");
 			}
 //			Encryptio method
 			
@@ -419,7 +427,7 @@ public class FileUtility {
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 				}
-				System.out.println("local fie create....");
+				log.info("local fie create....");
 				
 //				Encryption encryption = new Encryption();
 				encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-350");
@@ -825,11 +833,11 @@ public class FileUtility {
 						invoiceArray = new String[1];
 						paymentInfo.setPaymentRefNo(fileUtility.getValue(line, 33, 18));
 						paymentInfo.setPaymentDate(fileUtility.getValue(line, 11, 8));
-						System.out.println("setPaymentRefNo  :"+fileUtility.getValue(line, 33, 18));
-						System.out.println("setPaymentDate  :"+fileUtility.getValue(line, 11, 8));
+						log.info("setPaymentRefNo  :"+fileUtility.getValue(line, 33, 18));
+						log.info("setPaymentDate  :"+fileUtility.getValue(line, 11, 8));
 					}else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 						invoiceArray[0] =fileUtility.getValue(line, 9, 17);
-						System.out.println("Invoice No  :"+fileUtility.getValue(line, 9, 17));
+						log.info("Invoice No  :"+fileUtility.getValue(line, 9, 17));
 						paymentInfo.setInvoiceArray(invoiceArray);
 						paymentList.add(paymentInfo);
 					}
@@ -946,7 +954,7 @@ public class FileUtility {
 	public String formatStringField(String input, int length, String align) {
 		String formatInput;
 		String formatInput1 = null;
-		//System.out.println("input.length() :"+input);
+		//log.info("input.length() :"+input);
 		if (!(input==null)) { 
 			formatInput = input.trim();
 			if (formatInput.length() != length) {
@@ -978,7 +986,7 @@ public class FileUtility {
 		} else if (align == "R") {
 			formatInput = String.format("%0" + length + "d", input);
 		}
-	//	System.out.println("formatInput :" + formatInput);
+	//	log.info("formatInput :" + formatInput);
 		return formatInput;
 
 	}
@@ -987,7 +995,7 @@ public class FileUtility {
 
 		String FILE_NAME;
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyMMdd");
-		//System.out.println(dt1.format(new Date()));
+		//log.info(dt1.format(new Date()));
 
 		String DATE = dt1.format(new Date());
 
@@ -1057,7 +1065,7 @@ public class FileUtility {
 			List<MaterialColor> mColors, List<MaterialMeasurement> mMeasures,
 			List<MaterialBrand> mBrands,List<MaterialClass> mClasses, String localFilePath) {
 
-		 System.out.println("createPhisFileInLocal .."+localFilePath);
+		 log.info("createPhisFileInLocal .."+localFilePath);
 
 		 itemTypeFileOutPutStream(itemTypes, localFilePath);
 		 materialBrandFileOutPutStream(mBrands, localFilePath);
@@ -1177,7 +1185,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1278,7 +1286,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1327,7 +1335,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1398,7 +1406,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1468,7 +1476,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1524,7 +1532,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1574,7 +1582,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1632,7 +1640,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1679,7 +1687,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1745,7 +1753,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1810,7 +1818,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE);
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1831,7 +1839,7 @@ public class FileUtility {
 	
 	// PHIS PM Modules
 	public void votFundFileOutPutStream(List<PhisVotFund> content, String filePath) {
-		System.out.println("inside votFundFileOutPutStream");
+		log.info("inside votFundFileOutPutStream");
 		String SERVICE_CODE = "PHS-090";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1878,7 +1886,7 @@ public class FileUtility {
 
 	public void votFundDanaFileOutPutStream(List<PhisVotFund> content,
 			String filePath) {
-		System.out.println("inside votFundDanaFileOutPutStream");
+		log.info("inside votFundDanaFileOutPutStream");
 		String SERVICE_CODE = "PHS-100";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1925,7 +1933,7 @@ public class FileUtility {
 
 	public void programActivityFileOutPutStream(List<PhisProgramActivity> content,
 			String filePath) {
-		System.out.println("inside programActivityFileOutPutStream");
+		log.info("inside programActivityFileOutPutStream");
 		String SERVICE_CODE = "PHS-110";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -1971,7 +1979,7 @@ public class FileUtility {
 	}
 
 	public void projectFileOutPutStream(List<PhisProject> content, String filePath) {
-		System.out.println("inside projectFileOutPutStream");
+		log.info("inside projectFileOutPutStream");
 		String SERVICE_CODE = "PHS-120";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -2018,7 +2026,7 @@ public class FileUtility {
 
 	public void glAccountFileOutPutStream(List<PhisGlAccount> content,
 			String filePath) {
-		System.out.println("inside glAccountFileOutPutStream");
+		log.info("inside glAccountFileOutPutStream");
 		String SERVICE_CODE = "PHS-140";
 
 		String fileName = createFileNamePhis(SERVICE_CODE);
@@ -2119,12 +2127,12 @@ public class FileUtility {
 		File file = new File(path+dt1.format(date));
 		if (!file.exists()) {
 			if (file.mkdir()) {
-				System.out.println("Directory is created!");
+				log.info("Directory is created!");
 			} else {
-				System.out.println("Failed to create directory!");
+				log.info("Failed to create directory!");
 			}
 		} else {
-			System.out.println("Directory is already exists!");
+			log.info("Directory is already exists!");
 		}
 		return file.getAbsolutePath()+"/";
 	}
@@ -2142,13 +2150,13 @@ public class FileUtility {
 				uomCode = cmSupplierItem.getPmUom().getUomCode();
 			}
 		}
-		System.out.println("uomCode :"+uomCode);
+		log.info("uomCode :"+uomCode);
 		return uomCode;
 	}
 	
 	// E- teriman Integration
 	
-	/*public void billingInformationFileOutPutStream(List<BillingInformation> content, String filePath) {
+/*	public void billingInformationFileOutPutStream(List<BillingInformation> content, String filePath) {
 		String PROCESS_ID = "AR501";
 		
 		String fileName = createFileNameGfmas(PROCESS_ID);
@@ -2156,13 +2164,13 @@ public class FileUtility {
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath
-							+ fileName), "utf-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(	new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
 				StringBuffer line;
-				StringBuffer subLine;
+				StringBuffer billHeaderLine;
+				StringBuffer customerLine;
+				StringBuffer chargeLine;
 				for (BillingInformation billingInformation : content) {
 					line = new StringBuffer();
 				
@@ -2170,55 +2178,84 @@ public class FileUtility {
 					line.append(formatStringField(billingInformation.getAgencyId(), 6,	"L"));
 					line.append(formatStringField(billingInformation.getTotalBillCount(), 3,	"L"));
 					
-					if(null!=mDataVendor.getVendorIdCode())
-						line.append(formatStringField(mDataVendor.getVendorIdCode()	.replaceAll("-", ""), 20, "L"));
-					else
-						line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
-					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
-					line.append(formatStringField(mDataVendor.getName(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getName2(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getAddress(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getAddress2(),35, "L"));
-					line.append(formatStringField(mDataVendor.getAddress3(),35, "L"));
-					line.append(formatStringField(mDataVendor.getPostCode(), 5,"L"));
-					line.append(formatStringField(mDataVendor.getCity(), 35,"L"));
-					line.append(formatStringField(mDataVendor.getRegion(), 3,"L"));
-					line.append(formatStringField(mDataVendor.getCountry(), 2,"L"));
-					line.append(formatStringField(mDataVendor.getTelephoneNo(),	15, "L"));
-					line.append(formatStringField(mDataVendor.getFaxNo(), 15,"L"));
-					line.append(formatStringField(mDataVendor.getEmailAddress(), 100, "L"));
-					line.append(formatStringField(mDataVendor.getGlReconAccount(), 10, "L"));
-					line.append(formatStringField(mDataVendor.getCurrency(), 5,"L"));
-					line.append(formatStringField(mDataVendor.getIncoTerm(), 3,"L"));
-					line.append(formatStringField(mDataVendor.getPaymentTerm(),4, "L"));
-					line.append(formatIntegerField(mDataVendor.getBankAccountInfoCount(), 3, "R"));
-					line.append(formatIntegerField(mDataVendor.getStatus(), 1,"R"));
-					line.append(formatStringField(mDataVendor.getMobileNo(), 15,"L"));
-					line.append(System.getProperty("line.separator"));
-					writer.write(line.toString());
-					if (mDataVendor.getBankAccountInfoList().size() != 0) {
-						for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
-							subLine = new StringBuffer();
-							subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
-							subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
-							subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
-							subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
-							subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
-							subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
-							subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));
-							subLine.append(System.getProperty("line.separator"));
-							writer.write(subLine.toString());
-							writer.flush();
+					if(null!=billingInformation.getBillHeaderList() && billingInformation.getBillHeaderList().size()>0){
+						
+						for(BillHeader billHeader : billingInformation.getBillHeaderList()){
+							billHeaderLine = new StringBuffer();
+							billHeaderLine.append(formatIntegerField(billHeader.getRecordType(),1,"R"));
+							billHeaderLine.append(formatStringField(billHeader.getBillType(), 1, "L"));
+							billHeaderLine.append(formatStringField(billHeader.getBillRCreditRDebitNumber(),15, "L"));
+							billHeaderLine.append(formatStringField(billHeader.getBillReference(), 15,"L"));
+							billHeaderLine.append(formatDate(billHeader.getBillReferenceDate()));
+							billHeaderLine.append(formatDate(billHeader.getBillRCreditRDebitDate()));
+							billHeaderLine.append(formatDate(billHeader.getPostingDate()));
+							billHeaderLine.append(formatStringField(billHeader.getABTIndicator(),1, "L"));
+							billHeaderLine.append(formatStringField(billHeader.getYear(), 4,"L"));
+							billHeaderLine.append(formatStringField(billHeader.getAccountingOffice(), 4,"L"));
+							billHeaderLine.append(formatStringField(billHeader.getPegawaiPengawalPembayar(), 2,"L"));
+							billHeaderLine.append(formatStringField(billHeader.getKumpulanPtj(), 8,"L"));
+							billHeaderLine.append(formatStringField(billHeader.getCurrency(),	5, "L"));
+							billHeaderLine.append(formatIntegerField(billHeader.getCustTotal(), 3,"R"));
+							billHeaderLine.append(formatIntegerField(billHeader.getChargeLineTotal(), 3, "R"));
+							billHeaderLine.append(System.getProperty("line.separator"));
+							writer.write(billHeaderLine.toString());
+						}
+					}
+				if (null!=billingInformation.getCustomerInformationList() && billingInformation.getCustomerInformationList().size() != 0) {
+					
+					for (CustomerInformation customerInformation  : billingInformation.getCustomerInformationList()) {
+						
+						customerLine = new StringBuffer();
+						customerLine.append(formatIntegerField(customerInformation.getRecordType(),1,"R"));
+						customerLine.append(formatStringField(customerInformation.getCustomerIdCode(),20,"L"));
+						customerLine.append(formatStringField(customerInformation.getEntityCode(),4,"L"));
+						customerLine.append(formatStringField(customerInformation.getName1(),35,"L"));
+						customerLine.append(formatStringField(customerInformation.getName2(),35,"L"));
+						customerLine.append(formatStringField(customerInformation.getAddress1(),35,"L"));
+						customerLine.append(formatStringField(customerInformation.getAddress2(),35,"L"));
+						customerLine.append(formatStringField(customerInformation.getAddress3(),35,"L"));
+						customerLine.append(formatStringField(customerInformation.getPostcode(),5,"L"));
+						customerLine.append(formatStringField(customerInformation.getCity(),35,"L"));
+						customerLine.append(formatStringField(customerInformation.getRegion(),3,"L"));
+						customerLine.append(formatStringField(customerInformation.getCountry(),2,"L"));
+						customerLine.append(formatStringField(customerInformation.getTelNo(),15,"L"));
+						customerLine.append(formatStringField(customerInformation.getFaxNo(),15,"L"));
+						customerLine.append(formatStringField(customerInformation.getEmailAddress(),100,"L"));
+						customerLine.append(formatBigDecimal(customerInformation.getAmount()));
+						customerLine.append(formatStringField(customerInformation.getDescription(),50,"L"));
+						customerLine.append(formatStringField(customerInformation.getDescription2(),50,"L"));
+						customerLine.append(formatStringField(customerInformation.getAltGlReconAcc(),10,"L"));
+						customerLine.append(System.getProperty("line.separator"));
+						writer.write(customerLine.toString());
 						}
 						
 					}
+				if (null!=billingInformation.getCustomerInformationList() && billingInformation.getCustomerInformationList().size() != 0) {
+					
+					for (ChargeLine chargeLineObj  : billingInformation.getChargeLineList()) {
+						chargeLine = new StringBuffer();
+						chargeLine.append(formatIntegerField(chargeLineObj.getRecordType(),1,"R"));
+						chargeLine.append(formatIntegerField(chargeLineObj.getRecordNumber(),3,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getDK(),1,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getKodPenjenisanTeriman(),15,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getVotDana(),5,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getPegawaiPengawalDipertanggug(),2,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getKumpulanPtjNptjDipertanggug(),8,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getProgramAktiviti(),9,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getProjek(),16,"L"));
+						chargeLine.append(formatStringField(chargeLineObj.getKodAkaun(),8,"L"));
+						chargeLine.append(formatBigDecimal(chargeLineObj.getAmount()));
+						chargeLine.append(System.getProperty("line.separator"));
+						writer.write(chargeLine.toString());
+						writer.flush();
+					}
 				}
-			}else{
-				System.out.println("content is null");
+				}
+				// Encryption 
+				encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,PROCESS_ID);
+				}else{
+				log.info("content is null");
 			}
-			System.out.println("local fie create....");
-//			Encryption encryption = new Encryption();
-			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010");
 		} catch (IOException e) {
 
 		} finally {
@@ -2232,8 +2269,6 @@ public class FileUtility {
 			}
 		}
 	}*/
-	
-	
 	
 	// Error file
 	
