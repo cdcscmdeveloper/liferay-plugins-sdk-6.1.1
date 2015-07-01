@@ -328,7 +328,7 @@ public class SPDetailBackingBean extends
 		PmDigiSign digiSign = null;
 		debugLogger("submitSupplierProposal");
 
-		//retrievePaidUpCapitalNdDeclarationDtls();
+		// retrievePaidUpCapitalNdDeclarationDtls();
 
 		IQTProposalSO proposalSO = null;
 		try {
@@ -2253,7 +2253,7 @@ public class SPDetailBackingBean extends
 	 * @return navigation path
 	 */
 	public String retrievePaidUpCapitalNdDeclarationDtls() {
-
+		log.info("*****retrievePaidUpCapitalNdDeclarationDtls*****");
 		long supplierId = getManagedBean().getSupplierId();
 		log.info("Supplier Id : " + supplierId);
 
@@ -3142,8 +3142,10 @@ public class SPDetailBackingBean extends
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
 		SmSupplier smSupplier = getManagedBean().getSmSupplier();
 		VelocityContext context = new VelocityContext();
-
-		context.put("title", scQt.getQtTitle());
+		if (scQt != null) {
+			context.put("title", scQt.getQtTitle());
+		}
+		
 		if (pmUser != null) {
 			context.put("userName", pmUser.getUserName());
 			context.put("icNo", pmUser.getIdentificationNo());
@@ -3151,22 +3153,20 @@ public class SPDetailBackingBean extends
 
 		if (smSupplier != null) {
 			context.put("supplierName", smSupplier.getCompanyName());
+			if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
+					&& !smSupplier.getSmMofAccounts().get(0).getMofNo().isEmpty()) {
+				context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
+						.getMofNo());
+			} else if (smSupplier.getRegNo() != null) {
+				context.put("mofNo", smSupplier.getRegNo());
+			} else {
+				context.put("mofNo", smSupplier.getEpNo());
+			}
 		}
 		if (pmOrgProfile != null) {
 			context.put("agency", pmOrgProfile.getOrgName());
 		}
-		
-		if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
-				&& !smSupplier.getSmMofAccounts().get(0).getMofNo().isEmpty()) {
-			context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
-					.getMofNo());
-		} else if (smSupplier.getRegNo() != null) {
-			context.put("mofNo", smSupplier.getRegNo());
-		} else {
-			context.put("mofNo", smSupplier.getEpNo());
-		}
 		// TODO
-
 		String integrityPact = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
 						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
