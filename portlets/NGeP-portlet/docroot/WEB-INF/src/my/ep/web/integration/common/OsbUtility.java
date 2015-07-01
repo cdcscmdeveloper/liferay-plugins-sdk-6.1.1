@@ -2,22 +2,25 @@ package my.ep.web.integration.common;
 
 import java.rmi.RemoteException;
 
+import org.apache.log4j.Logger;
+
 import my.ep.web.integration.osb.BatchPortTypeProxy;
 
 /*
 * @author P.Ganga prasad
 */
 public class OsbUtility {
+	private static Logger log = BatchLogger.getLogger(OsbUtility.class);
 
-	public void osbServiceCallOutBound(String processId) {
-		System.out.println("osb service outbound...");
+	public void osbServiceCallOutBound(String processId,String fileName) {
+		log.info("osb service outbound...");
 
 		try {
 			my.ep.web.integration.osb.RqHeader_Type header_Type = new my.ep.web.integration.osb.RqHeader_Type();
 			header_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
-			header_Type.setIpAddress(IntegrationConstants.OSB_HOST);
-			header_Type.setOrgUnit(processId);
-			header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
+//			header_Type.setIpAddress(IntegrationConstants.OSB_HOST);
+//			header_Type.setOrgUnit(processId);
+//			header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
 			my.ep.web.integration.osb.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.RqUID_Type(
 					processId,
@@ -32,14 +35,14 @@ public class OsbUtility {
 			epmfRq_Type.setRqHeader(header_Type);
 			epmfRq_Type.setBatchOutboundRq(batchOutboundRq_Type);
 
-			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy("http://192.168.120.14:8011/Batch/Generic/Outbound/v1.0?wsdl");
+//			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy("http://192.168.120.14:8011/Batch/Generic/Outbound/v1.0?wsdl");
+			
+			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy();
 
 			my.ep.web.integration.osb.EPMFRs_Type epmfRs_Type = batchPortTypeProxy.invoke(epmfRq_Type);
 
-			System.out.println("getStatusCode  :"
-					+ epmfRs_Type.getRsHeader().getStatus().getStatusCode());
-			System.out.println("getStatusDesc :"
-					+ epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
+			log.info("getStatusCode  :"+ epmfRs_Type.getRsHeader().getStatus().getStatusCode());
+			log.info("getStatusDesc :"+ epmfRs_Type.getRsHeader().getStatus().getStatusDesc());
 
 		} catch (RemoteException e) {
 			e.printStackTrace();
@@ -47,14 +50,14 @@ public class OsbUtility {
 
 	}
 	
-	public boolean osbServiceCallInBound(String processId) {
+	public boolean osbServiceCallInBound(String processId,String fileName) {
 
 		  try {
 		   my.ep.web.integration.osb.inbound.RqHeader_Type header_Type = new my.ep.web.integration.osb.inbound.RqHeader_Type();
 		   header_Type.setConsumerID(IntegrationConstants.CONSUMER_ID);
-		   header_Type.setIpAddress(IntegrationConstants.OSB_HOST);
-		   header_Type.setOrgUnit(processId);
-		   header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
+//		   header_Type.setIpAddress(IntegrationConstants.OSB_HOST);
+//		   header_Type.setOrgUnit(processId);
+//		   header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
 		   my.ep.web.integration.osb.inbound.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.inbound.RqUID_Type(processId, IntegrationConstants.SEQUENCE_NO);
 		   header_Type.setUID(rqUID_Type);
@@ -67,7 +70,7 @@ public class OsbUtility {
 		   epmfRq_Type.setRqHeader(header_Type);
 		   epmfRq_Type.setBatchInboundRq(batchOutboundRq_Type);
 
-		   my.ep.web.integration.osb.inbound.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.inbound.BatchPortTypeProxy("http://192.168.120.14:8011/Batch/Generic/Inbound/v1.0?wsdl");
+		   my.ep.web.integration.osb.inbound.BatchPortTypeProxy batchPortTypeProxy = new my.ep.web.integration.osb.inbound.BatchPortTypeProxy();
 
 		   my.ep.web.integration.osb.inbound.EPMFRs_Type epmfRs_Type =batchPortTypeProxy.invoke(epmfRq_Type);
 		   
@@ -76,6 +79,7 @@ public class OsbUtility {
 		   }
 		      
 		  } catch (RemoteException e) {
+			  log.info("Osb sysmtem down ");
 		   e.printStackTrace();
 		  }
 
