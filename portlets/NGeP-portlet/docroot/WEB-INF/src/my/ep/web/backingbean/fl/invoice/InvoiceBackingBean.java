@@ -180,6 +180,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			calInvSummary();
 			// Check is it DAN exist
 			BigDecimal adjustedAmt = new BigDecimal(0);
+			log.info("SIR6070 line183: "+getManagedBean().getInvoice().getFlInvoiceItem().size());
 			for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
 				adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
 				if(adjustedAmt.doubleValue()>0) {
@@ -576,6 +577,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 */
 	private void getInvoiceTable(FulfilmentResDTO resDTO){
 		BigDecimal invoiceAmt = new BigDecimal(0);
+		log.info("SIR6070 line579: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
 		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
 			FlInvoiceItem invoiceItem = new FlInvoiceItem();
 			invoiceItem.setFlInvoice(getManagedBean().getInvoice());
@@ -1100,6 +1102,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
 		List<FlInvoiceItem> flInvoiceItemList = null;
+		log.info("SIR6070 line1105: "+getManagedBean().getInvoice().getFlInvoiceItem().size());
 		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
 			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getItemCode())) {
 				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getItemCode());
