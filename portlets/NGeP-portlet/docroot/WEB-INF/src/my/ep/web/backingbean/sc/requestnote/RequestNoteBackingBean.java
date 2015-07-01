@@ -456,16 +456,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		List<ScRequestNoteDtl>	requestNoteDtls = null;
 		try {
 			requestNoteDtls = this.getManagedBean().getRequestNoteDtls();
-			//List<ScRequestNoteDtl>	scRequestNoteDtls = new ArrayList<ScRequestNoteDtl>();
+			// check empty Objects.
 			if (requestNoteDtls != null && requestNoteDtls.size() > 0) {
 				for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
-					/*for (ScRequestSupplierItem  supplierItem : requestNoteDtl.getRequestItem().getSupplierItems()) {
-						if(supplierItem.getSmSupplier() != null){
-							if(supplierItem.getSmSupplier().getSupplierId().equals(requestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId())){
-								requestNoteDtl.setScRequestSupplierItem(supplierItem);
-							}	
-						}
-					}*/
+					if (requestNoteDtl.getPriceType() != null && requestNoteDtl.getPriceType().getParameterId() == null) {
+						requestNoteDtl.setPriceType(null);
+					}
 					if(requestNoteDtl.getAssignedUser() != null && requestNoteDtl.getAssignedUser().getUserId() == null){
 						requestNoteDtl.setAssignedUser(null);
 					}
@@ -480,7 +476,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			requestNote.setRequestNoteDtls(requestNoteDtls);
 
-			// Target Approver
 			// Target Approver
 			if(requestNote.getApprovalUsers() == null || requestNote.getApprovalUsers().isEmpty()){
 				requestNote.setApprovalUsers(createTargetApprover(requestNote));
