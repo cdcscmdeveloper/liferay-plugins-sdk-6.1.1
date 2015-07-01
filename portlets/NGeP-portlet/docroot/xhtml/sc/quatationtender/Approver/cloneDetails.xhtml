@@ -202,8 +202,8 @@
 
 					<p:column headerText="#{lbl['lbl.sc.email']}">
 						<h:outputText
-							value="#{committeeMember.pmUser.pmAddressTypes[0].pmAddress.email}"
-							style="white-space: normal;" />
+							value="#{committeeMember.email}"
+							style="white-space: normal; word-wrap:break-word;" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.grade']}">
