@@ -1434,7 +1434,8 @@ public class NoticeBoardBackingBean extends
 
 			for (ScQtBsvDtl bsvDetail : bsvDetails) {
 				if (null != bsvDetail.getTempRegistration()) {
-
+					
+					hasSupplierRegisterAlready(bsvDetail);
 					isAttananceMarkedOrNot(bsvDetail.getTempRegistration()
 							.getBsvAttendance());
 					if (null != bsvDetail.getTempRegistration()
@@ -2481,4 +2482,44 @@ public class NoticeBoardBackingBean extends
 		this.categoryCodesDataModel = categoryCodesDataModel;
 	}
 	
+	/**
+	 * @param bsvDetail
+	 */
+	private void hasSupplierRegisterAlready(ScQtBsvDtl bsvDetail) {
+
+		IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTBriefingSO.class);
+		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
+		briefingReqDTO.setQtBriefingId(bsvDetail.getQtBsvDtlId());
+		briefingReqDTO.setSupplierId(this.getManagedBean().getSmSupplier()
+				.getSupplierId());
+		BriefingResDTO briefingResDTO = briefingSO
+				.retrieveBriefingRegistrationList(briefingReqDTO);
+		if (briefingResDTO.getBriefingRegResultBean().getTotalRecord() > 0) {
+			ScQtBsvRegistration bsvRegistration = briefingResDTO
+					.getBriefingRegResultBean().getResultList().get(0);
+			List<ScQtBsvAttendance> existedAttendences = bsvRegistration
+					.getBsvAttendance();
+			List<ScQtBsvAttendance> currentAttendences = bsvDetail
+					.getTempRegistration().getBsvAttendance();
+			if (existedAttendences != null && !existedAttendences.isEmpty()) {
+				boolean isContain = true;
+				for (ScQtBsvAttendance attendence : currentAttendences) {
+					if (existedAttendences.contains(attendence)) {
+						if (!attendence.isPreRegisterd()) {
+							isContain = false;
+							break;
+						}
+					} else if (attendence.isPreRegisterd()) {
+						isContain = false;
+						break;
+					}
+				}
+				if (isContain) {
+					throw new EpException(MessageConst.ERROR_760311);
+				}
+			}
+		}
+	}
 }
