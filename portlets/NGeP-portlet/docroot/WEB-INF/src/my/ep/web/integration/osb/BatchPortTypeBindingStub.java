@@ -65,6 +65,13 @@ public class BatchPortTypeBindingStub extends org.apache.axis.client.Stub implem
             java.lang.Class simpledf = org.apache.axis.encoding.ser.SimpleDeserializerFactory.class;
             java.lang.Class simplelistsf = org.apache.axis.encoding.ser.SimpleListSerializerFactory.class;
             java.lang.Class simplelistdf = org.apache.axis.encoding.ser.SimpleListDeserializerFactory.class;
+            qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/Batch", ">Filename");
+            cachedSerQNames.add(qName);
+            cls = java.lang.String.class;
+            cachedSerClasses.add(cls);
+            cachedSerFactories.add(org.apache.axis.encoding.ser.BaseSerializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleSerializerFactory.class, cls, qName));
+            cachedDeserFactories.add(org.apache.axis.encoding.ser.BaseDeserializerFactory.createFactory(org.apache.axis.encoding.ser.SimpleDeserializerFactory.class, cls, qName));
+
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/Batch", ">ServiceCode");
             cachedSerQNames.add(qName);
             cls = java.lang.String.class;
