@@ -68,7 +68,7 @@
 								onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
-				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}" disabled="#{item.awardedItem}">
+				<p:selectBooleanCheckbox id="selectItem" value="#{item.selected}" disabled="#{item.awardedItem or item.disabled}">
 					<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])" 
 							listener="#{suppFinalizationBackingBean.selectItemEvent(item)}"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
@@ -152,7 +152,8 @@
 											 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled or item.awardedItem}"
 											 rendered="#{rdetail.recordStatusFlg == DbValueConst.recordStatusActive}">
 									<p:ajax partialSubmit="true" process="@this" update="@this"/>
-									<p:ajax event="blur" partialSubmit="true" process="@this" update="@([id$=supplierListTblMultiple])" 
+									<p:ajax event="blur" partialSubmit="true" process="@this" 
+											update="@([id$=supplierListTblMultiple],[id$=itemSupplierListTblSingle])" 
 											listener="#{suppFinalizationBackingBean.updateOfferedPrice(rdetail)}"/>
 									<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, 
 														item.requestItem.uom.uomCode)}" maxIntegerDigits="10" maxFractionDigits="3"/>								
@@ -194,13 +195,14 @@
 					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
-					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" process="@this" update="@this"/>
+					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" 
+							process="@this" update="@this"/>
 	   			</p:selectOneMenu>
 				
 				<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}" 
 					process="@this" partialSubmit="true" 
 					action="#{suppFinalizationBackingBean.awardSupplierEvent}" 
-					update="@([id$=itemListTbl],[id$=supplierListTblMultiple],[id$=awardSupplier])"
+					update="@([id$=itemListTbl],[id$=awardSupplier])"
 					rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 			</h:column>
