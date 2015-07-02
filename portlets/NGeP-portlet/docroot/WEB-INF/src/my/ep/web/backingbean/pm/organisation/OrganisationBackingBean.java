@@ -61,6 +61,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -285,10 +286,10 @@ public class OrganisationBackingBean extends
 							getManagedBean().getOrganisationSearchBean()
 									.getOrgTypeCode()));
 			
-			PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
+			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 			PmOrgProfile orgProfile = null;
-			if(user != null){
-				orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+			if(userOrgList != null && !userOrgList.isEmpty()){
+				orgProfile = userOrgList.get(0).getPmOrgProfile();
 			}
 			
 			PmParameter orgTypeParameter = 

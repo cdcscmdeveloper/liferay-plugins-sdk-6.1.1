@@ -2644,13 +2644,13 @@ public class ProfileManagementBackingBean extends
 		// }
 
 		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmUser.orgTypeCode.parameterCode",
+				new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterCode",
 						SearchOperator.OPERATOR_NOT_EQUALS.value(),
 						ParameterConst.ORG_TYPE_SUPPLIER));
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null
 				&& upSearchBean.getSelectedOrgProfileId() != null) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmUser.orgTypeCode.parameterId",
+					new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
 									.getManagedBean().getSelectedOrgType()
 									.getParameterId()));
