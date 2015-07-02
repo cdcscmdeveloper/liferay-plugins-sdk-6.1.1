@@ -33,6 +33,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommendDtl;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -75,6 +77,18 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	/** The sm mof account. */
 	private SmMofAccount smMofAccount;
+	
+	/** The sm company basic. */
+	private SmCompanyBasic smCompanyBasic;
+	
+	/** The sm personnel. */
+	private SmPersonnel smPersonnel;
+	
+	/** The sm address. */
+	private SmAddress supplierAddress;
+	
+	/** The supplier branch. */
+	private String supplierBranch;
 	
 	/** The selected tab index. */
 	private int selectedTabIndex;
@@ -748,6 +762,66 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSmMofAccount(SmMofAccount smMofAccount) {
 		this.smMofAccount = smMofAccount;
+	}
+
+	/**
+	 * @return the smCompanyBasic
+	 */
+	public SmCompanyBasic getSmCompanyBasic() {
+		return smCompanyBasic;
+	}
+
+	/**
+	 * @param smCompanyBasic 
+	 * 				the smCompanyBasic to set
+	 */
+	public void setSmCompanyBasic(SmCompanyBasic smCompanyBasic) {
+		this.smCompanyBasic = smCompanyBasic;
+	}
+
+	/**
+	 * @return the smPersonnel
+	 */
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
+	}
+
+	/**
+	 * @param smPersonnel 
+	 * 				the smPersonnel to set
+	 */
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public SmAddress getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress 
+	 * 				the supplierAddress to set
+	 */
+	public void setSupplierAddress(SmAddress supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the supplierBranch
+	 */
+	public String getSupplierBranch() {
+		return supplierBranch;
+	}
+
+	/**
+	 * @param supplierBranch 
+	 * 				the supplierBranch to set
+	 */
+	public void setSupplierBranch(String supplierBranch) {
+		this.supplierBranch = supplierBranch;
 	}
 
 	/**
