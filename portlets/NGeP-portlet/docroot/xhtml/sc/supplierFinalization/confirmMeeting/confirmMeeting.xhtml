@@ -168,7 +168,7 @@
 									<h:outputText value="#{suppFinalMeetingBackingBean.getParameterDesc(ParameterTypeConst.committeeRole, ParameterConst.committeeRoleSecretary)}" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}" />	
 																	
-									<p:selectOneMenu id="meetingRoleId" required="true" 
+									<p:selectOneMenu id="meetingRoleId" required="#{!committeeMember.selected}" 
 										rendered="#{(committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleChairperson and
 														committeeMember.memberRole.parameterCode ne ParameterConst.committeeRoleSecretary)}"
 										label="#{lbl['lbl.sc.role']}"
@@ -181,7 +181,7 @@
 								<p:column headerText="#{lbl['lbl.sc.representative.type']}">
 									<p:selectOneMenu value="#{committeeMember.representativeType.parameterCode}" 
 										label="#{lbl['lbl.sc.representative.type']}"
-										style="width: 100%; margin-bottom: 5px; white-space:normal" required="true" 
+										style="width: 100%; margin-bottom: 5px; white-space:normal" required="#{!committeeMember.selected}" 
 										rendered="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleMember}">
 										<f:selectItems value="#{suppFinalMeetingBackingBean.getRepresentativeTypeDropdownValues()}" />
 										<p:ajax event="change" 
