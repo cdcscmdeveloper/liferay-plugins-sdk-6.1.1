@@ -22,5 +22,8 @@ public class ScSchedulerConstants {
 	
 	public static final String EP_UPDATE_SUPPLIERS_JOB = "UPDATE SUPPLIERS ";
 	
+	// QT Closed Scheduler
+	public static final String EP_QT_CLOSED_JOB = "QT_CLOSED";
+	
 
 }
