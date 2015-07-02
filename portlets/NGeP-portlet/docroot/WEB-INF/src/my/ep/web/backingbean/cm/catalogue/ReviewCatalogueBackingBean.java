@@ -26,6 +26,7 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -179,8 +180,17 @@ public void refreshCatalogueList() {
 		
 		reqDTO.setTrackingStatus(true);
 		reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+		
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+		statusReqDTO.setStatusId(CmConst.APPROVED);
+						
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+		
 		reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(
-				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,null));
+				bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 		
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
@@ -274,7 +284,16 @@ public void refreshCatalogueList() {
 								new FacesScopes().getUserLocale())));
 	
 				return "addCatalogView";
-			}			
+			}
+			
+			
+			log.info("Tracking diary for to reject the catalog items");			
+			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+			reqDTO.setTrackingStatus(true);
+			statusReqDTO.setStatusId(CmConst.REJECTED);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			System.out.println("statusResDTO.getPmStatus().getStatusId():"+statusResDTO.getPmStatus().getStatusId());
+			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(bb.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_REJECT,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			
 			catalogueSO.updateSupplierItem(reqDTO);
 			bb.getManagedBean().setRejectReason(null);
