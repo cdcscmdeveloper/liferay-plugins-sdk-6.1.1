@@ -12,6 +12,11 @@
 	<ui:define name="contentSection">
 		<p:messages id="delPendApplRootMsg" showDetail="true"
 			showSummary="false" autoUpdate="true" closable="true" escape="false" />
+			
+		<p:blockUI block=":form" widgetVar="blockWidget">
+			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+		</p:blockUI>
+		
 		<p:panel
 			header="#{lbl['lbl.sm.pending.mof.delete']} - #{backingBean.managedBean.smAppl.applNo}">
 
@@ -129,12 +134,12 @@
 			message="#{lbl['lbl.sm.delete.pending.mofAppl.confirm']}"
 			header="#{lbl['lbl.sm.delete.pending.mofAppl']}" severity="alert"
 			widgetVar="delPenRegConfirm">
-			<div align="center">
+			<div align="right">
 				<p:commandButton id="confDelPen" value="#{lbl['lbl.btn.yes']}"
-					onclick="canRegConfirm.hide()"
+					onclick="delPenRegConfirm.hide()" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 					action="#{backingBean.submitDeletePendingMofApplToBpm}" />
 				<p:commandButton id="declineDelPen" value="#{lbl['lbl.btn.no']}"
-					onclick="canRegConfirm.hide()" type="button" />
+					onclick="delPenRegConfirm.hide()" type="button" />
 			</div>
 		</p:confirmDialog>
 	</ui:define>
