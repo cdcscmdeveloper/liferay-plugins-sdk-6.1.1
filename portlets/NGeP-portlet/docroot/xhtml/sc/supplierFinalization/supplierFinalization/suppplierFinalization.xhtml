@@ -76,7 +76,8 @@
 															ParameterConst.recommendTypeItem)}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
-										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" />
+										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 
+										onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					   			</p:selectOneRadio>
 							</td>
 							<td style="margin-top: -3px">

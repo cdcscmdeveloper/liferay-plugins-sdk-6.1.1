@@ -120,12 +120,15 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isSecretaryUser;
 	private boolean isProcCategoryMedicine;
 	private boolean isZoneTabChange;
+	private boolean itemRecommendByAward;
+	private boolean disableSupplierSelection;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
 	private TplSpecZoneDtl currentZone;
 	private ScQtEvaluationResultDtl recommendedSupplier;
-	
+	private ScQtEvaluationResultDtl recommendedSupplierByItem;
+	private ScQtEvaluationResultDtl prevRecommendedSupplierByItem;
 	
 	private List<ScQtEvaluationResultDtl> shortlistedPackageList;
 	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
@@ -578,6 +581,37 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the itemRecommendByAward
+	 */
+	public boolean isItemRecommendByAward() {
+		return itemRecommendByAward;
+	}
+
+	/**
+	 * @param itemRecommendByAward 
+	 * 				the itemRecommendByAward to set
+	 */
+	public void setItemRecommendByAward(boolean itemRecommendByAward) {
+		this.itemRecommendByAward = itemRecommendByAward;
+	}
+
+	/**
+	 * @return the disableSupplierSelection
+	 */
+	public boolean isDisableSupplierSelection() {
+		return disableSupplierSelection;
+	}
+
+	/**
+	 * @param disableSupplierSelection 
+	 * 					the disableSupplierSelection to set
+	 */
+	public void setDisableSupplierSelection(
+						boolean disableSupplierSelection) {
+		this.disableSupplierSelection = disableSupplierSelection;
+	}
+
+	/**
 	 * @return the shortlistedSupplierList
 	 */
 	public List<ScQtEvaluationResultDtl> getShortlistedSupplierList() {
@@ -820,6 +854,38 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setRecommendedSupplier(ScQtEvaluationResultDtl recommendedSupplier) {
 		this.recommendedSupplier = recommendedSupplier;
+	}
+
+	/**
+	 * @return the recommendedSupplierByItem
+	 */
+	public ScQtEvaluationResultDtl getRecommendedSupplierByItem() {
+		return recommendedSupplierByItem;
+	}
+
+	/**
+	 * @param recommendedSupplierByItem 
+	 * 					the recommendedSupplierByItem to set
+	 */
+	public void setRecommendedSupplierByItem(
+			ScQtEvaluationResultDtl recommendedSupplierByItem) {
+		this.recommendedSupplierByItem = recommendedSupplierByItem;
+	}
+
+	/**
+	 * @return the prevRecommendedSupplierByItem
+	 */
+	public ScQtEvaluationResultDtl getPrevRecommendedSupplierByItem() {
+		return prevRecommendedSupplierByItem;
+	}
+
+	/**
+	 * @param prevRecommendedSupplierByItem 
+	 * 					the prevRecommendedSupplierByItem to set
+	 */
+	public void setPrevRecommendedSupplierByItem(
+			ScQtEvaluationResultDtl prevRecommendedSupplierByItem) {
+		this.prevRecommendedSupplierByItem = prevRecommendedSupplierByItem;
 	}
 
 	/**
