@@ -1297,6 +1297,13 @@ public class CommitteBackingBean extends
 					new UserQCPagingDataModel("userexistid", getManagedBean()
 							.getUserQCSearchBean()));
 		}
+		
+		UserCommitteeSearchBean userQCSearchBean 
+									= getManagedBean().getUserQCSearchBean();		
+		userQCSearchBean.setName(null);
+		userQCSearchBean.setIdentificationNo(null);
+		userQCSearchBean.setIdentificationType(null);
+		
 		getManagedBean().getUserSearchQCDataModel().resetData();
 		// getManagedBean().getUserQCSearchBean().setName(null);
 		// getManagedBean().getUserQCSearchBean().setIdentificationType(null);
@@ -1304,6 +1311,7 @@ public class CommitteBackingBean extends
 		// getManagedBean().setExternalUsers(null);
 		// getManagedBean().setSelectedPmUser(null);
 		this.getManagedBean().setCommitteMember(null);
+		this.getManagedBean().setSelectedPmUser(null);
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection(QTConstants.USER_SELECTION);
