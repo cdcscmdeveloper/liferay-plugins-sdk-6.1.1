@@ -10,12 +10,16 @@ package my.ep.web.integration.osb;
 public class BatchOutboundRq_Type  implements java.io.Serializable {
     private java.lang.String serviceCode;
 
+    private java.lang.String filename;
+
     public BatchOutboundRq_Type() {
     }
 
     public BatchOutboundRq_Type(
-           java.lang.String serviceCode) {
+           java.lang.String serviceCode,
+           java.lang.String filename) {
            this.serviceCode = serviceCode;
+           this.filename = filename;
     }
 
 
@@ -38,6 +42,26 @@ public class BatchOutboundRq_Type  implements java.io.Serializable {
         this.serviceCode = serviceCode;
     }
 
+
+    /**
+     * Gets the filename value for this BatchOutboundRq_Type.
+     * 
+     * @return filename
+     */
+    public java.lang.String getFilename() {
+        return filename;
+    }
+
+
+    /**
+     * Sets the filename value for this BatchOutboundRq_Type.
+     * 
+     * @param filename
+     */
+    public void setFilename(java.lang.String filename) {
+        this.filename = filename;
+    }
+
     private java.lang.Object __equalsCalc = null;
     public synchronized boolean equals(java.lang.Object obj) {
         if (!(obj instanceof BatchOutboundRq_Type)) return false;
@@ -52,7 +76,10 @@ public class BatchOutboundRq_Type  implements java.io.Serializable {
         _equals = true && 
             ((this.serviceCode==null && other.getServiceCode()==null) || 
              (this.serviceCode!=null &&
-              this.serviceCode.equals(other.getServiceCode())));
+              this.serviceCode.equals(other.getServiceCode()))) &&
+            ((this.filename==null && other.getFilename()==null) || 
+             (this.filename!=null &&
+              this.filename.equals(other.getFilename())));
         __equalsCalc = null;
         return _equals;
     }
@@ -66,6 +93,9 @@ public class BatchOutboundRq_Type  implements java.io.Serializable {
         int _hashCode = 1;
         if (getServiceCode() != null) {
             _hashCode += getServiceCode().hashCode();
+        }
+        if (getFilename() != null) {
+            _hashCode += getFilename().hashCode();
         }
         __hashCodeCalc = false;
         return _hashCode;
@@ -81,6 +111,12 @@ public class BatchOutboundRq_Type  implements java.io.Serializable {
         elemField.setFieldName("serviceCode");
         elemField.setXmlName(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/Batch", "ServiceCode"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/Batch", ">ServiceCode"));
+        elemField.setNillable(false);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("filename");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/Batch", "Filename"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/Batch", ">Filename"));
         elemField.setNillable(false);
         typeDesc.addFieldDesc(elemField);
     }
