@@ -206,10 +206,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				codesSearchBean.setSearchValue(new ArrayList<String>(Arrays.asList(ParameterConst.RECORD_STATUS_INACTIVE, ParameterConst.RECORD_STATUS_ACTIVE)));
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
-			PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
+			List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 			PmOrgProfile orgProfile = null;
-			if(user != null){
-				orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+			if(userOrgList != null && !userOrgList.isEmpty()){
+				orgProfile = userOrgList.get(0).getPmOrgProfile();
 			}
 			if(orgProfile != null){
 				if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {				
@@ -636,10 +636,10 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 	public String constructConditionFields(){
 		StringBuilder sb = new StringBuilder();
 		sb.append("recordStatus^1");
-		PmUser user = PmCommonUtil.retrieveUserById(getFacesScopes().getUserSessionBean().getUserId(), false);
+		List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(getFacesScopes().getUserSessionBean().getUserId());
 		PmOrgProfile orgProfile = null;
-		if(user != null){
-			orgProfile = user.getPmUserOrgs().get(0).getPmOrgProfile();
+		if(userOrgList != null && !userOrgList.isEmpty()){
+			orgProfile = userOrgList.get(0).getPmOrgProfile();
 		}
 		if(orgProfile != null){
 			if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
