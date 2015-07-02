@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
+
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -13,6 +15,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.common.PmKpiStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
+import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -32,6 +36,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Integer tabActiveIndex = 0;
 	private Integer feeExemptionIndex = 0;
 	private Integer thresholdIndex = 0;
+	private Integer gstIndex = 0;
 	private PmConfigGeneral selectedConfigGeneral;
 	private PmConfigRuleValue selectedRuleValue;
 	private PmConfigRule selectedRuleType;
@@ -62,6 +67,32 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private Number budgetThreshold;
 	private List<PmThreshold> unplannedThresholdList;
 	private List<PmThreshold> budgetThresholdList;
+	private List<PmGstItem> taxableItems;
+	private List<PmGstItem> deletedTaxableItems;
+	private PmGstItem selectedGstItem;
+	private String selectedSearchLvl;
+	private String searchTitle;
+	private List<CmUnspsc> unspscResultList;
+	private CmUnspsc selectedUnspscResult;
+	private Long selectedType;
+	private Long selectedBrand;
+	private Long selectedMeasurement;
+	private Long selectedColor;
+	private Date currentDate = new Date();
+	private List<PmDesignatedArea> designatedAreaList;
+	private PmDesignatedArea selectedDesignatedArea;
+	private List<PmDesignatedArea> deletedDesignatedAreaList;
+	private List<PmGstItem> taxableItemsForDA;
+	private List<PmGstItem> deletedTaxableItemsForDA;
+	private PmGstItem selectedGstItemForDA;
+	private SelectItem[] typeList;
+	private SelectItem[] brandList;
+	private SelectItem[] measurementList;
+	private SelectItem[] colorList;
+	private List<PmGstItem> taxableItemsForG2G;
+	private List<PmGstItem> deletedTaxableItemsForG2G;
+	private PmGstItem selectedGstItemForG2G;
+	private boolean autoUpdate = true;
 	
 	public RuleCatalogueManageBean() {
 		
@@ -378,6 +409,413 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public void setBudgetThresholdList(List<PmThreshold> budgetThresholdList) {
 		this.budgetThresholdList = budgetThresholdList;
+	}
+
+	/**
+	 * @return the taxableItems
+	 */
+	public List<PmGstItem> getTaxableItems() {
+		if(taxableItems == null){
+			taxableItems = new ArrayList<PmGstItem>();
+		}
+		return taxableItems;
+	}
+
+	/**
+	 * @param taxableItems the taxableItems to set
+	 */
+	public void setTaxableItems(List<PmGstItem> taxableItems) {
+		this.taxableItems = taxableItems;
+	}
+
+	/**
+	 * @return the selectedGstItem
+	 */
+	public PmGstItem getSelectedGstItem() {
+		return selectedGstItem;
+	}
+
+	/**
+	 * @param selectedGstItem the selectedGstItem to set
+	 */
+	public void setSelectedGstItem(PmGstItem selectedGstItem) {
+		this.selectedGstItem = selectedGstItem;
+	}
+
+	/**
+	 * @return the selectedSearchLvl
+	 */
+	public String getSelectedSearchLvl() {
+		return selectedSearchLvl;
+	}
+
+	/**
+	 * @param selectedSearchLvl the selectedSearchLvl to set
+	 */
+	public void setSelectedSearchLvl(String selectedSearchLvl) {
+		this.selectedSearchLvl = selectedSearchLvl;
+	}
+
+	/**
+	 * @return the searchTitle
+	 */
+	public String getSearchTitle() {
+		return searchTitle;
+	}
+
+	/**
+	 * @param searchTitle the searchTitle to set
+	 */
+	public void setSearchTitle(String searchTitle) {
+		this.searchTitle = searchTitle;
+	}
+
+	/**
+	 * @return the unspscResultList
+	 */
+	public List<CmUnspsc> getUnspscResultList() {
+		if(unspscResultList == null){
+			unspscResultList = new ArrayList<CmUnspsc>();
+		}
+		return unspscResultList;
+	}
+
+	/**
+	 * @param unspscResultList the unspscResultList to set
+	 */
+	public void setUnspscResultList(List<CmUnspsc> unspscResultList) {
+		this.unspscResultList = unspscResultList;
+	}
+
+	/**
+	 * @return the selectedUnspscResult
+	 */
+	public CmUnspsc getSelectedUnspscResult() {
+		return selectedUnspscResult;
+	}
+
+	/**
+	 * @param selectedUnspscResult the selectedUnspscResult to set
+	 */
+	public void setSelectedUnspscResult(CmUnspsc selectedUnspscResult) {
+		this.selectedUnspscResult = selectedUnspscResult;
+	}
+
+	/**
+	 * @return the selectedType
+	 */
+	public Long getSelectedType() {
+		return selectedType;
+	}
+
+	/**
+	 * @param selectedType the selectedType to set
+	 */
+	public void setSelectedType(Long selectedType) {
+		this.selectedType = selectedType;
+	}
+
+	/**
+	 * @return the selectedBrand
+	 */
+	public Long getSelectedBrand() {
+		return selectedBrand;
+	}
+
+	/**
+	 * @param selectedBrand the selectedBrand to set
+	 */
+	public void setSelectedBrand(Long selectedBrand) {
+		this.selectedBrand = selectedBrand;
+	}
+
+	/**
+	 * @return the selectedMeasurement
+	 */
+	public Long getSelectedMeasurement() {
+		return selectedMeasurement;
+	}
+
+	/**
+	 * @param selectedMeasurement the selectedMeasurement to set
+	 */
+	public void setSelectedMeasurement(Long selectedMeasurement) {
+		this.selectedMeasurement = selectedMeasurement;
+	}
+
+	/**
+	 * @return the selectedColor
+	 */
+	public Long getSelectedColor() {
+		return selectedColor;
+	}
+
+	/**
+	 * @param selectedColor the selectedColor to set
+	 */
+	public void setSelectedColor(Long selectedColor) {
+		this.selectedColor = selectedColor;
+	}
+
+	/**
+	 * @return the currentDate
+	 */
+	public Date getCurrentDate() {
+		return currentDate;
+	}
+
+	/**
+	 * @param currentDate the currentDate to set
+	 */
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	/**
+	 * @return the deletedTaxableItems
+	 */
+	public List<PmGstItem> getDeletedTaxableItems() {
+		if(deletedTaxableItems == null){
+			deletedTaxableItems = new ArrayList<PmGstItem>();
+		}
+		return deletedTaxableItems;
+	}
+
+	/**
+	 * @param deletedTaxableItems the deletedTaxableItems to set
+	 */
+	public void setDeletedTaxableItems(List<PmGstItem> deletedTaxableItems) {
+		this.deletedTaxableItems = deletedTaxableItems;
+	}
+
+	/**
+	 * @return the designatedAreaList
+	 */
+	public List<PmDesignatedArea> getDesignatedAreaList() {
+		if(designatedAreaList == null){
+			designatedAreaList = new ArrayList<PmDesignatedArea>();
+		}
+		return designatedAreaList;
+	}
+
+	/**
+	 * @param designatedAreaList the designatedAreaList to set
+	 */
+	public void setDesignatedAreaList(List<PmDesignatedArea> designatedAreaList) {
+		this.designatedAreaList = designatedAreaList;
+	}
+
+	/**
+	 * @return the selectedDesignatedArea
+	 */
+	public PmDesignatedArea getSelectedDesignatedArea() {
+		return selectedDesignatedArea;
+	}
+
+	/**
+	 * @param selectedDesignatedArea the selectedDesignatedArea to set
+	 */
+	public void setSelectedDesignatedArea(PmDesignatedArea selectedDesignatedArea) {
+		this.selectedDesignatedArea = selectedDesignatedArea;
+	}
+
+	/**
+	 * @return the deletedDesignatedAreaList
+	 */
+	public List<PmDesignatedArea> getDeletedDesignatedAreaList() {
+		if(deletedDesignatedAreaList == null){
+			deletedDesignatedAreaList = new ArrayList<PmDesignatedArea>();
+		}
+		return deletedDesignatedAreaList;
+	}
+
+	/**
+	 * @param deletedDesignatedAreaList the deletedDesignatedAreaList to set
+	 */
+	public void setDeletedDesignatedAreaList(
+			List<PmDesignatedArea> deletedDesignatedAreaList) {		
+		this.deletedDesignatedAreaList = deletedDesignatedAreaList;
+	}
+
+	/**
+	 * @return the taxableItemsForDA
+	 */
+	public List<PmGstItem> getTaxableItemsForDA() {
+		if(taxableItemsForDA == null){
+			taxableItemsForDA = new ArrayList<PmGstItem>();
+		}
+		return taxableItemsForDA;
+	}
+
+	/**
+	 * @param taxableItemsForDA the taxableItemsForDA to set
+	 */
+	public void setTaxableItemsForDA(List<PmGstItem> taxableItemsForDA) {
+		this.taxableItemsForDA = taxableItemsForDA;
+	}
+
+	/**
+	 * @return the deletedTaxableItemsForDA
+	 */
+	public List<PmGstItem> getDeletedTaxableItemsForDA() {
+		if(deletedTaxableItemsForDA == null){
+			deletedTaxableItemsForDA = new ArrayList<PmGstItem>();
+		}
+		return deletedTaxableItemsForDA;
+	}
+
+	/**
+	 * @param deletedTaxableItemsForDA the deletedTaxableItemsForDA to set
+	 */
+	public void setDeletedTaxableItemsDorDA(List<PmGstItem> deletedTaxableItemsForDA) {
+		this.deletedTaxableItemsForDA = deletedTaxableItemsForDA;
+	}
+
+	/**
+	 * @return the selectedGstItemForDA
+	 */
+	public PmGstItem getSelectedGstItemForDA() {
+		return selectedGstItemForDA;
+	}
+
+	/**
+	 * @param selectedGstItemForDA the selectedGstItemForDA to set
+	 */
+	public void setSelectedGstItemForDA(PmGstItem selectedGstItemForDA) {
+		this.selectedGstItemForDA = selectedGstItemForDA;
+	}
+
+	/**
+	 * @return the gstIndex
+	 */
+	public Integer getGstIndex() {
+		return gstIndex;
+	}
+
+	/**
+	 * @param gstIndex the gstIndex to set
+	 */
+	public void setGstIndex(Integer gstIndex) {
+		this.gstIndex = gstIndex;
+	}
+
+	/**
+	 * @return the typeList
+	 */
+	public SelectItem[] getTypeList() {
+		return typeList;
+	}
+
+	/**
+	 * @param typeList the typeList to set
+	 */
+	public void setTypeList(SelectItem[] typeList) {
+		this.typeList = typeList;
+	}
+
+	/**
+	 * @return the brandList
+	 */
+	public SelectItem[] getBrandList() {
+		return brandList;
+	}
+
+	/**
+	 * @param brandList the brandList to set
+	 */
+	public void setBrandList(SelectItem[] brandList) {
+		this.brandList = brandList;
+	}
+
+	/**
+	 * @return the colorList
+	 */
+	public SelectItem[] getColorList() {
+		return colorList;
+	}
+
+	/**
+	 * @param colorList the colorList to set
+	 */
+	public void setColorList(SelectItem[] colorList) {
+		this.colorList = colorList;
+	}
+
+	/**
+	 * @return the measurementList
+	 */
+	public SelectItem[] getMeasurementList() {
+		return measurementList;
+	}
+
+	/**
+	 * @param measurementList the measurementList to set
+	 */
+	public void setMeasurementList(SelectItem[] measurementList) {
+		this.measurementList = measurementList;
+	}
+
+	/**
+	 * @return the taxableItemsForG2G
+	 */
+	public List<PmGstItem> getTaxableItemsForG2G() {
+		if(taxableItemsForG2G == null){
+			taxableItemsForG2G = new ArrayList<PmGstItem>();
+		}
+		return taxableItemsForG2G;
+	}
+
+	/**
+	 * @param taxableItemsForG2G the taxableItemsForG2G to set
+	 */
+	public void setTaxableItemsForG2G(List<PmGstItem> taxableItemsForG2G) {
+		this.taxableItemsForG2G = taxableItemsForG2G;
+	}
+
+	/**
+	 * @return the deletedTaxableItemsForG2G
+	 */
+	public List<PmGstItem> getDeletedTaxableItemsForG2G() {
+		if(deletedTaxableItemsForG2G == null){
+			deletedTaxableItemsForG2G = new ArrayList<PmGstItem>();
+		}
+		return deletedTaxableItemsForG2G;
+	}
+
+	/**
+	 * @param deletedTaxableItemsForG2G the deletedTaxableItemsForG2G to set
+	 */
+	public void setDeletedTaxableItemsForG2G(
+			List<PmGstItem> deletedTaxableItemsForG2G) {
+		this.deletedTaxableItemsForG2G = deletedTaxableItemsForG2G;
+	}
+
+	/**
+	 * @return the selectedGstItemForG2G
+	 */
+	public PmGstItem getSelectedGstItemForG2G() {
+		return selectedGstItemForG2G;
+	}
+
+	/**
+	 * @param selectedGstItemForG2G the selectedGstItemForG2G to set
+	 */
+	public void setSelectedGstItemForG2G(PmGstItem selectedGstItemForG2G) {
+		this.selectedGstItemForG2G = selectedGstItemForG2G;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 
