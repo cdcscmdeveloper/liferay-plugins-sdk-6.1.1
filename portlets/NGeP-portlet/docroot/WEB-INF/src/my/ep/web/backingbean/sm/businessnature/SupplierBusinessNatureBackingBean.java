@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm.businessnature;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBusiness;
+import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.businessnature.SupplierBusinessNatureManagedBean;
@@ -35,6 +37,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 @ManagedBean(name="supplierBusinessNatureBackingBean")
 @RequestScoped
@@ -193,16 +196,28 @@ public class SupplierBusinessNatureBackingBean extends BaseBackingBean<SupplierB
 			ISupplierBusinessNatureSO supplierBusinessSO = SmServiceLookup.getSupplierBusinessNatureSO();
 			SupplierBusinessNatureReqDTO reqDTO = new SupplierBusinessNatureReqDTO();
 			reqDTO.setSmSupplier(getManagedBean().getSmSupplier());
+			try{
+				SupplierBusinessNatureResDTO resDTO = supplierBusinessSO.saveBusinessNature(reqDTO);
 
-			SupplierBusinessNatureResDTO resDTO = supplierBusinessSO.saveBusinessNature(reqDTO);
-
-			if(resDTO.isSuccessful()){
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
-						MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
-				renewSesionObject();
-				return "/xhtml/common/acknowledge.xhtml";
+				if(resDTO.isSuccessful()){
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,MessageUtils.getMessage(MessageConst.INFO_100002,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,new FacesScopes().getUserLocale())));	
+					//RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+					renewSesionObject();
+					return "/xhtml/common/acknowledge.xhtml";
+				}
+			}catch(Exception ex){
+				RequestContext.getCurrentInstance().execute("submissionConfirmDlg.hide()");
+				throw new EpException(ex.getMessage());
 			}
 		}
 		return null;
+	}
+	
+	public void downloadFile(String filePath) throws IOException {
+		StringBuilder downloadPath = new StringBuilder();
+		downloadPath.append(EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)).append(filePath);
+		
+		super.downloadFile(downloadPath.toString());
 	}
 }
