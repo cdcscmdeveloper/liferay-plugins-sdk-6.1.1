@@ -2820,7 +2820,7 @@ public class RuleCatalogueBackingBean extends
 		 for(PmGstItem gstItem : getManagedBean().getTaxableItemsForG2G()){
 			 if (gstItem.getOrgProfile() == null
 					 || gstItem.getOrgProfile().getOrgProfileId() == null) {
-					throw new EpException(MessageConst.ERROR_770132,
+					throw new EpException(MessageConst.ERROR_770175,
 							new String[] {});
 			}
 		 }
