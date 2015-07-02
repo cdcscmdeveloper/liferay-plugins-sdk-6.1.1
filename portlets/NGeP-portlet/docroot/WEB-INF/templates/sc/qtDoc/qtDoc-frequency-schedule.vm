@@ -1,69 +1,98 @@
 <html>
 <head>
-<style>
-@page {
-	size: A4 portrait;
-}
-
-@page { @bottom-center { content:element(footer)
-	
-}
-
-}
-.table2 {
-    border-collapse: collapse;
-	width:100%;
-}
-		.table2 th, .table2 td {
-			border: 1px solid black;
+	<style>
+		.header {
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:16px;
+			font-weight: bold;
+			text-align:left;
 		}
-		 th{
-			background-color: #BCE18A;
-		 }
-.footer {
-	display: block;
-	text-align: center;
-	position: running(footer);
-}
-</style>
+		.standard{
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			text-align:left;
+		}
+		.title{
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			font-weight: bold;
+			text-align:left;
+		}
+		.border{
+			border-TOP: 1px solid #a2a2a2;
+			border-bottom: 1px solid #a2a2a2;
+		}
+		.border-bottom{
+			border-bottom: 1px solid #a2a2a2;
+		}
+		.left-right {
+			border-left: 1px solid #a2a2a2;
+			border-right: 1px solid #a2a2a2;
+		}
+		.left{
+			border-left: 1px solid #a2a2a2;
+		}
+		.right{
+			border-right: 1px solid #a2a2a2;
+		}
+		table, td, th {
+			border: 0 solid #555;
+		}
+		table{
+			width: 100%;
+		}
+		th{
+			height: 20px;
+			padding: 5px 5px 5px 10px;
+		}
+		td{
+			height: 18px;
+			padding: 5px 5px 5px 10px;
+		}
+		.white{
+			color:#fff;
+		}
+	</style>
 </head>
 <body>
-	<table border="0" cellpadding="0" cellspacing="0" width="100%">
-	<tr>
-        <td>
-            <span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>Fulfilment Schedule</span>
-            <br/> <br/>
-        </td>
-    </tr>
-	<tr>
-        <td align="left">
-            Total Fulfilment : $totalFrequency<br/>
-        </td>
-    </tr>
-    <tr align='left'>
-        <td>
-            <span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-				<table class="table2" width='100%'>
-					<tr>
-						<td>No. of Schedule</td>
-						<td>Start Period</td>
-						<td>End Period</td>
-						<td>Total Months</td>
-						<td>Schedule Type</td>
-					</tr>
-					#foreach( $schedule in $scheduleList )
-					<tr>
-            			<td>$schedule.scheduleNo</td>
-            			<td>$schedule.fromDate</td>
-            			<td>$schedule.toDate</td>
-            			<td></td>
-            			<td>$bean.getParameterDesc($schedule.scheduleType)</td>
-            		</tr>
-					#end
-				</table>
-            </span>
-        </td>
-    </tr>
-	</table>
+<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th bgcolor="#a2a2a2" class="header">Fulfilment Schedule</th>
+		</tr>
+	</tbody>
+</table>
+<br/>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<td width="20%" class="standard"><nobr>Total Fulfilment : </nobr></td>
+			<td class="standard">$totalFrequency</td>
+		</tr>
+	</tbody>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th bgcolor="#6d839b" class="title border left">No. of Schedule</th>
+			<th bgcolor="#6d839b" class="title border left">Start Period</th>
+			<th bgcolor="#6d839b" class="title border left">End Period</th>
+			<th bgcolor="#6d839b" class="title border left">Total Months</th>
+			<th bgcolor="#6d839b" class="title border left-right">Schedule Type</th>
+		</tr>
+		#foreach( $schedule in $scheduleList )
+			<tr class="ui-content">
+				<td class="standard border-bottom left">$schedule.scheduleNo</td>
+				<td class="standard border-bottom left">$schedule.fromDate</td>
+				<td class="standard border-bottom left">$schedule.toDate</td>
+				<td class="standard border-bottom left"></td>
+				<td class="standard border-bottom left-right">$bean.getParameterDesc($schedule.scheduleType)</td>
+			</tr>
+		#end
+	</tbody>
+</table>
 </body>
 </html>
