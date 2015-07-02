@@ -41,6 +41,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -61,6 +62,8 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -4385,6 +4388,74 @@ public class LOIDetailBackingBean extends
 
 		return resDTO;
 	}
+	
+	/**
+	 * Set the selected supplier details in managed bean associated with the
+	 * current user session
+	 * 
+	 * @param scQtRecommend
+	 *            the scQtRecommend which holds the item
+	 * @param selectedRecommendDtl
+	 *            the selectedRecommendDtl while holds the recommended supplier
+	 */
+	public void showSupplierDetails(ScQtEvaluationResultDtl supplierDtl) {
+		debugLogger("showSuppDetails");
+
+		resetCompanyInfo();
+
+		if (supplierDtl != null) {
+			SmSupplier smSupplier = supplierDtl
+					.getQtEvaluationResult().getScQtProposal()
+					.getScQtSupplier().getSmSupplier();
+			if (smSupplier != null) {
+				QTSupplierResDTO resDTO = this
+						.retrieveSupplierDetails(smSupplier);
+				smSupplier = resDTO.getSmSupplier();
+				getManagedBean().setSmSupplier(smSupplier);
+				getManagedBean().setSmMofAccount(
+						smSupplier.getSmMofAccounts().get(0));
+
+				SmCompanyBasic smCompanyBasic = smSupplier.getSmAppl()
+						.getSmCompanyBasic();
+				getManagedBean().setSmCompanyBasic(smCompanyBasic);
+
+				List<SmPersonnel> smPersonnelList = smSupplier.getSmAppl()
+						.getSmPersonnels();
+				for (SmPersonnel smPersonnel : smPersonnelList) {
+					if (smPersonnel.isContactPerson()) {
+						getManagedBean().setSmPersonnel(smPersonnel);
+						break;
+					}
+				}
+				for (SmCompanyAddress smCompanyAddress : smCompanyBasic
+						.getSmCompanyAddresses()) {
+					if (AddressType.CONTACT_ADDRESS.value().equals(
+							smCompanyAddress.getAddressType())) {
+						getManagedBean().setSupplierBranch(
+								QTConstants.SUPPLIER_INFO_HQ);
+						getManagedBean().setSupplierAddress(
+								smCompanyAddress.getSmAddress());
+						break;
+					}
+				}
+			}
+		}
+	}	
+	
+	private QTSupplierResDTO retrieveSupplierDetails(SmSupplier smSupplier) {
+		QTSupplierResDTO resDTO = new QTSupplierResDTO();
+		IQTSupplierSO qtSupplierSO = null;
+		try {
+			qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
+			QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
+			reqDTO.setSupplierId(smSupplier.getSupplierId());
+			resDTO = qtSupplierSO.retrieveSupplierDetails(reqDTO);
+		} finally {
+			qtSupplierSO = null;
+		}
+		return resDTO;
+	}
 
 	/**
 	 * Award supplier event.
@@ -4595,4 +4666,14 @@ public class LOIDetailBackingBean extends
 			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
 	}
+	
+	private void resetCompanyInfo() {
+		this.getManagedBean().setSmSupplier(null);
+		this.getManagedBean().setSmMofAccount(null);
+		this.getManagedBean().setSmCompanyBasic(null);
+		this.getManagedBean().setSmPersonnel(null);
+		this.getManagedBean().setSupplierBranch(null);
+		this.getManagedBean().setSupplierAddress(null);
+	}
+	
 }
