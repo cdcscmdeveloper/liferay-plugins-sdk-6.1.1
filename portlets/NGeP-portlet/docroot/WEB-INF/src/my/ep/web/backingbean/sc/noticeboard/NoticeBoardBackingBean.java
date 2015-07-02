@@ -4,6 +4,7 @@ package my.ep.web.backingbean.sc.noticeboard;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -118,6 +119,7 @@ import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -643,6 +645,7 @@ public class NoticeBoardBackingBean extends
 		
 		NoticeBoardManagedBean managedBean = this.getManagedBean();
 		managedBean.setPreviousPage("noticeboardlandingpage");
+		this.getManagedBean().setSelectedZoneTabIndex(0);
 		retriveBsvDetails(qtId);
 		SmSupplier smSupplier = managedBean.getSmSupplier();
 		managedBean.setMofNumber(managedBean.getSupplierMofNo());
@@ -1429,25 +1432,42 @@ public class NoticeBoardBackingBean extends
 						IQTBriefingSO.class);
 		BriefingReqDTO reqDTO = new BriefingReqDTO();
 		List<ScQtBsvRegistration> registrations = new ArrayList<ScQtBsvRegistration>();
-
+		
 		if (!bsvDetails.isEmpty()) {
-
+			boolean isContain = true;
 			for (ScQtBsvDtl bsvDetail : bsvDetails) {
 				if (null != bsvDetail.getTempRegistration()) {
 					
-					hasSupplierRegisterAlready(bsvDetail);
-					isAttananceMarkedOrNot(bsvDetail.getTempRegistration()
-							.getBsvAttendance());
-					if (null != bsvDetail.getTempRegistration()
-							.getBsvAttendance()
-							&& !bsvDetail.getTempRegistration()
-									.getBsvAttendance().isEmpty()) {
-						registrations.add(bsvDetail.getTempRegistration());
+					isContain = hasSupplierRegisterAlready(bsvDetail, isContain);
+					
+					List<ScQtBsvAttendance> registerdAttandance = isAttananceMarkedOrNot(bsvDetail
+							.getTempRegistration().getBsvAttendance());
+					if (registerdAttandance != null
+							&& !registerdAttandance.isEmpty()) {
+						ScQtBsvRegistration scQtBsvRegistration = new ScQtBsvRegistration();
+						try {
+							BeanUtils.copyProperties(scQtBsvRegistration,
+									bsvDetail.getTempRegistration());
+						} catch (IllegalAccessException e) {
+							log.error("Exception occured while copying properties"
+									+ e.getMessage());
+						} catch (InvocationTargetException e) {
+							log.error("Exception occured while copying properties"
+									+ e.getMessage());
+						}
+						scQtBsvRegistration
+								.setBsvAttendance(registerdAttandance);
+						if (!scQtBsvRegistration.getBsvAttendance().isEmpty()) {
+							registrations.add(scQtBsvRegistration);
+						}
 					}
 				}
 			}
 			if (CollectionUtils.isEmpty(registrations)) {
 				throw new EpException(MessageConst.ERROR_760244);
+			}
+			if (isContain) {
+				throw new EpException(MessageConst.ERROR_760311);
 			}
 			reqDTO.setBriefingReqDtls(registrations);
 			ScQt currentQt = this.getManagedBean().getScQt();
@@ -1466,10 +1486,10 @@ public class NoticeBoardBackingBean extends
 				this.getManagedBean().setScQt(currentQt);
 				this.getManagedBean().setSmSupplier(supplier);
 				this.getManagedBean().setPreviousPage(prvPage);
+				this.getManagedBean().setSelectedZoneTabIndex(tabIndex);
 				retriveBsvDetails(currentQt.getQtId());
 				this.getManagedBean().setMofNumber(mofNumber);
 				this.getManagedBean().setCompanyName(companyName);
-				this.getManagedBean().setSelectedZoneTabIndex(tabIndex);
 				this.getManagedBean().setValidMofNo(isValidMofNo);
 				FacesContext
 						.getCurrentInstance()
@@ -1493,21 +1513,29 @@ public class NoticeBoardBackingBean extends
 	 * @param attandance
 	 *         the instance of ScQtBsvAttendance list
 	 */
-	private void isAttananceMarkedOrNot(
+	private List<ScQtBsvAttendance> isAttananceMarkedOrNot(
 			List<ScQtBsvAttendance> preRegisterdAttandance) {
-
+		
+		List<ScQtBsvAttendance> registerdAttandance = null;
 		if (CollectionUtils.isNotEmpty(preRegisterdAttandance)) {
-
-			for (int i = 0; i < preRegisterdAttandance.size(); i++) {
+			registerdAttandance = new ArrayList<ScQtBsvAttendance>();
+			for (ScQtBsvAttendance scQtBsvAttendance : preRegisterdAttandance) {
+				if (scQtBsvAttendance.isPreRegisterd()) {
+					scQtBsvAttendance.setAttended(true);
+					registerdAttandance.add(scQtBsvAttendance);
+				}
+			}
+			/*for (int i = 0; i < preRegisterdAttandance.size(); i++) {
 				if (preRegisterdAttandance.get(i).isPreRegisterd()) {
 					preRegisterdAttandance.get(i).setAttended(true);
-
+					registerdAttandance.add(preRegisterdAttandance);
 				} else {
 					preRegisterdAttandance.remove(i--);
 
 				}
-			}
+			}*/
 		}
+		return registerdAttandance;
 
 	}
 
@@ -1898,7 +1926,7 @@ public class NoticeBoardBackingBean extends
 
 			this.getManagedBean().setZoneMenuModel(zoneMenuModel);
 			if (bsvZoneBeans.size() > 0) {
-				getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));
+				getManagedBean().setNormalBsvBean(bsvZoneBeans.get(this.getManagedBean().getSelectedZoneTabIndex()));
 			}
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
@@ -2485,8 +2513,8 @@ public class NoticeBoardBackingBean extends
 	/**
 	 * @param bsvDetail
 	 */
-	private void hasSupplierRegisterAlready(ScQtBsvDtl bsvDetail) {
-
+	private boolean hasSupplierRegisterAlready(ScQtBsvDtl bsvDetail, boolean isContain) {
+		
 		IQTBriefingSO briefingSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTBriefingSO.class);
@@ -2504,7 +2532,7 @@ public class NoticeBoardBackingBean extends
 			List<ScQtBsvAttendance> currentAttendences = bsvDetail
 					.getTempRegistration().getBsvAttendance();
 			if (existedAttendences != null && !existedAttendences.isEmpty()) {
-				boolean isContain = true;
+				
 				for (ScQtBsvAttendance attendence : currentAttendences) {
 					if (existedAttendences.contains(attendence)) {
 						if (!attendence.isPreRegisterd()) {
@@ -2516,10 +2544,11 @@ public class NoticeBoardBackingBean extends
 						break;
 					}
 				}
-				if (isContain) {
-					throw new EpException(MessageConst.ERROR_760311);
-				}
+				
 			}
+		} else {
+			isContain = false;
 		}
+		return isContain;
 	}
 }
