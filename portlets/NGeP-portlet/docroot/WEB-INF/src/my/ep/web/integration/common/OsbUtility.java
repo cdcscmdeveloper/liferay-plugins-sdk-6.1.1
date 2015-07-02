@@ -1,6 +1,7 @@
 package my.ep.web.integration.common;
 
 import java.rmi.RemoteException;
+import java.util.UUID;
 
 import org.apache.log4j.Logger;
 
@@ -23,13 +24,14 @@ public class OsbUtility {
 //			header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
 			my.ep.web.integration.osb.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.RqUID_Type(
-					processId,
-					IntegrationConstants.SEQUENCE_NO);
+					UUID.randomUUID().toString(),
+					IntegrationConstants.EMPTY_TRING);
 			header_Type.setUID(rqUID_Type);
 
 			my.ep.web.integration.osb.BatchOutboundRq_Type batchOutboundRq_Type = new my.ep.web.integration.osb.BatchOutboundRq_Type();
 
 			batchOutboundRq_Type.setServiceCode(processId);
+			batchOutboundRq_Type.setFilename(fileName);
 
 			my.ep.web.integration.osb.EPMFRq_Type epmfRq_Type = new my.ep.web.integration.osb.EPMFRq_Type();
 			epmfRq_Type.setRqHeader(header_Type);
@@ -59,7 +61,7 @@ public class OsbUtility {
 //		   header_Type.setOrgUnit(processId);
 //		   header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
-		   my.ep.web.integration.osb.inbound.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.inbound.RqUID_Type(processId, IntegrationConstants.SEQUENCE_NO);
+		   my.ep.web.integration.osb.inbound.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.inbound.RqUID_Type(UUID.randomUUID().toString(), IntegrationConstants.EMPTY_TRING);
 		   header_Type.setUID(rqUID_Type);
 
 		   my.ep.web.integration.osb.inbound.BatchInboundRq_Type batchOutboundRq_Type = new my.ep.web.integration.osb.inbound.BatchInboundRq_Type();
