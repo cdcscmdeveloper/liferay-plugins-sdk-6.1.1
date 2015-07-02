@@ -122,7 +122,7 @@
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-				<p:ajax event="change" update="@([id$=expDateId]), @([id$=effDateId])"
+				<p:ajax event="change" update="expDateId,effDateId"
 					process="@this" />
 			</p:selectOneMenu>
 		</p:column>

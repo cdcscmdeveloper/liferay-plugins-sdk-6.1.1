@@ -111,7 +111,7 @@
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-				<p:ajax event="change" update="@([id$=tidaexpDateId]), @([id$=tidaeffDateId])"
+				<p:ajax event="change" update="tidaexpDateId,tidaeffDateId"
 					process="@this" />
 			</p:selectOneMenu>
 		</p:column>

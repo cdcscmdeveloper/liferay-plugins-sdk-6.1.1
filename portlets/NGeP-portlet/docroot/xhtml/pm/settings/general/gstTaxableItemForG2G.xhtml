@@ -40,7 +40,7 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.item.code']}" />
 			</f:facet>
-			<ac:lov id="g2gCommodityId" lovId="CM_UNSPSC" size="26" 
+			<ac:lov id="g2gCommodityId" lovId="CM_UNSPSC" size="10" 
 				disabled="#{empty tiG2GObj.orgProfile or !(tiG2GObj.brandNew)}"
 				headerText="#{lbl['lbl.cm.commodity']}" 
 				update=":form:settingTabId:gstId:opTiG2G" 
@@ -115,7 +115,7 @@
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-				<p:ajax event="change" update="@([id$=g2gExpDateId]), @([id$=g2gEffDateId])"
+				<p:ajax event="change" update="g2gExpDateId,g2gEffDateId"
 					process="@this" />
 			</p:selectOneMenu>
 		</p:column>

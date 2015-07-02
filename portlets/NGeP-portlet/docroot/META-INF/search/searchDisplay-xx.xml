@@ -1392,5 +1392,29 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="V_PM_LOCATION" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="rowNum" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.pm.common.location.LocationDAO" />
+		<property name="searchMethod" value="searchLocationData" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="locationCode" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.location.code" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="locationName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.pm.location.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 	
 </beans>
