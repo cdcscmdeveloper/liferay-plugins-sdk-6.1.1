@@ -109,7 +109,7 @@ public class gpkiBackingBean {
 		System.out.println("ContextualCompositeMethodExpression  2");
 		debugLogger("reflectAction=====================================: "
 				+ obj);
-		String gpkiAction = null;
+		Object returnObj = null;
 		if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (subjectDN.substring(subjectDN.indexOf("=") + 1,
 					subjectDN.indexOf(",")).equals(
@@ -120,9 +120,9 @@ public class gpkiBackingBean {
 				pmDigiSign.setSignedData(signedText);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 				debugLogger("=================================Same IC No");
-				gpkiAction = obj.invoke(
+				returnObj = obj.invoke(
 						FacesContext.getCurrentInstance().getELContext(),
-						new Object[] { pmDigiSign }).toString();
+						new Object[] { pmDigiSign });
 			} else {
 				FacesContext
 						.getCurrentInstance()
@@ -139,13 +139,18 @@ public class gpkiBackingBean {
 			pmDigiSign.setSignedData(signedText);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 
-			gpkiAction = obj.invoke(
+			returnObj = obj.invoke(
 					FacesContext.getCurrentInstance().getELContext(),
-					new Object[] { pmDigiSign }).toString();
+					new Object[] { pmDigiSign });
+			
 		}
 		RequestContext.getCurrentInstance().execute("gpkiBlockWidget.hide()");
 
-		return gpkiAction;
+		if (returnObj != null) {
+			return returnObj.toString();
+		} else {
+			return null;
+		}
 
 	}
 
