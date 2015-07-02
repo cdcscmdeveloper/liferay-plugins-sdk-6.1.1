@@ -1,90 +1,99 @@
 <html>
 <head>
 	<style>
-		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
-				
-		.footer {
-			display: block; text-align: center;
-			position: running(footer);
+		.header {
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:16px;
+			font-weight: bold;
+			text-align:left;
 		}
-		
-		.descTable{
-		 	border-collapse: collapse;
+		.standard{
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			text-align:left;
 		}
-		
-		.descTable td, .descTable tr, .descTable th {
-		 	border: 1px solid black;
+		.title{
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			font-weight: bold;
+			text-align:left;
 		}
-		
-		body{
-			
+		.border{
+			border-TOP: 1px solid #a2a2a2;
+			border-bottom: 1px solid #a2a2a2;
 		}
-		
-		.txtBold{
-			font-weight : bold;
+		.border-bottom{
+			border-bottom: 1px solid #a2a2a2;
 		}
-		
-		.sTable{
-			width : 80%;
+		.left-right {
+			border-left: 1px solid #a2a2a2;
+			border-right: 1px solid #a2a2a2;
 		}
-		
-		.sColTwentyPerc{
-			width : 20%;
+		.left{
+			border-left: 1px solid #a2a2a2;
 		}
-		
-		.infoTable{
-			border-collapse: collapse;
+		.right{
+			border-right: 1px solid #a2a2a2;
+		}
+		table, td, th {
+			border: 0 solid #555;
+		}
+		table{
 			width: 100%;
 		}
-		.infoTable td {
-			border: 1px solid black;
+		th{
+			height: 20px;
+			padding: 5px 5px 5px 10px;
 		}
-		.tdInfoTable {
-			border: 1px solid black;
-			font-family: Verdana;
-			font-size: 12px;
-			font-weight: normal;
-			font-style: inherit;
+		td{
+			height: 18px;
+			padding: 5px 5px 5px 10px;
+		}
+		.white{
+			color:#fff;
 		}
 	</style>
 </head>
 <body>
-<table width='100%'>
-	<tr>
-		<td align="left">
-			<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-			1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA </span>
-			<br/>
-		</td>
-	</tr>
+<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th bgcolor="#a2a2a2" class="header">1. KETERANGAN TAWARAN DAN MAKLUMAT TENDER / SEBUT HARGA</th>
+		</tr>
+	</tbody>
 </table>
-<table class="infoTable">
-	<tr>
-		<td class="tdInfoTable">1.1</td>
-		<td class="tdInfoTable">Perkara</td>
-		<td class="tdInfoTable">$title</td>
-	</tr>
-	<tr>
-		<td class="tdInfoTable">1.2</td>
-		<td class="tdInfoTable">Tempoh Perjanjian / Tempoh Penyiapan</td>
-		<td class="tdInfoTable">$fulfilmentType</td>
-	</tr>
-	<tr>
-		<td class="tdInfoTable">1.3</td>
-		<td class="tdInfoTable">Jabatan Pengguna</td>
-		<td class="tdInfoTable">$ptj</td>
-	</tr>
-	<tr>
-		<td class="tdInfoTable">1.4</td>
-		<td class="tdInfoTable">Bilangan Pembekal Dipanggil Untuk Rundingan</td>
-		<td class="tdInfoTable">$supplierSize</td>
-	</tr>
-	<tr>
-		<td class="tdInfoTable">1.5</td>
-		<td class="tdInfoTable">Bilangan Pembekal Yang Mengesahkan Surat Niat</td>
-		<td class="tdInfoTable">$statusSupplierSize</td>
-	</tr>
+<br/>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<td class="standard border left">1.1</td>
+			<td class="standard border left">Perkara</td>
+			<td class="standard border left-right">$title</td>
+		</tr>
+		<tr>
+			<td class="standard border-bottom left">1.2</td>
+			<td class="standard border-bottom left">Tempoh Perjanjian / Tempoh Penyiapan</td>
+			<td class="standard border-bottom left-right">$fulfilmentType</td>
+		</tr>
+		<tr>
+			<td class="standard border-bottom left">1.3</td>
+			<td class="standard border-bottom left">Jabatan Pengguna</td>
+			<td class="standard border-bottom left-right">$ptj</td>
+		</tr>
+		<tr>
+			<td class="standard border-bottom left">1.4</td>
+			<td class="standard border-bottom left">Bilangan Pembekal Dipanggil Untuk Rundingan</td>
+			<td class="standard border-bottom left-right">$supplierSize</td>
+		</tr>
+		<tr>
+			<td class="standard border-bottom left">1.5</td>
+			<td class="standard border-bottom left">Bilangan Pembekal Yang Mengesahkan Surat Niat</td>
+			<td class="standard border-bottom left-right">$statusSupplierSize</td>
+		</tr>
+	</tbody>
 </table>
 </body>
 </html>
