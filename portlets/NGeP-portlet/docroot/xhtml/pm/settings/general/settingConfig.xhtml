@@ -15,7 +15,8 @@
 
 	<ui:define name="contentSection">
 
-		<p:messages id="catalogFileMsg" showDetail="true" autoUpdate="true"
+		<p:messages id="catalogFileMsg" showDetail="true" 
+			autoUpdate="#{ruleCatalogueBackingBean.managedBean.autoUpdate}"
 			closable="true" showSummary="false"></p:messages>
 
 		<p:blockUI block="form" widgetVar="blockWidget">
@@ -49,6 +50,24 @@
 					</p:tabView>
 				</p:tab>
 				
+				<p:tab title="#{lbl['lbl.pm.settings.gst']}">
+                	<p:tabView id="gstId" 
+                		activeIndex="#{ruleCatalogueBackingBean.managedBean.gstIndex}">
+                		<p:tab title="#{lbl['lbl.pm.settings.gst.taxableitem']}">
+							<ui:include src="gstTaxableItem.xhtml"></ui:include>
+						</p:tab>
+						<p:tab title="#{lbl['lbl.pm.settings.gst.da']}">
+							<ui:include src="gstDesignatedArea.xhtml"></ui:include>
+						</p:tab>
+						<p:tab title="#{lbl['lbl.pm.settings.gst.taxableitem.da']}">
+							<ui:include src="gstTaxableItemForDA.xhtml"></ui:include>
+						</p:tab>
+						<p:tab title="#{lbl['lbl.pm.settings.gst.taxableitem.g2g']}">
+							<ui:include src="gstTaxableItemForG2G.xhtml"></ui:include>
+						</p:tab>
+                	</p:tabView>
+				</p:tab>
+				
                 <p:tab title="#{lbl['lbl.pm.settings.operational.threshold']}">
                 	<p:tabView id="thresholdId"
                 		activeIndex="#{ruleCatalogueBackingBean.managedBean.thresholdIndex}">
@@ -66,7 +85,9 @@
 
 
     <ac:lovPopup />
-    
+    <ui:include src="/xhtml/pm/settings/general/common/ItemCodePopUp.xhtml" />
+    <ui:include src="/xhtml/pm/settings/general/common/extensionPopUp.xhtml" />
+    <ui:include src="/xhtml/pm/settings/general/common/designatedAreaPopUp.xhtml" />
 		</p:outputPanel>
 	</ui:define>
 </ui:composition>
