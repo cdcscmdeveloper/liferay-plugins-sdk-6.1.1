@@ -106,7 +106,6 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
-import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -1403,11 +1402,11 @@ public class LOADetailBackingBean extends
 					}
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 				throw new EpException(e.getMessage());
 			}
 
-			// TODO
+			// TODOs
 			if (scLoaReportAttachment.getFileName() != null
 					&& scLoaReportAttachment.getFilePath() != null) {
 				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
@@ -1909,7 +1908,6 @@ public class LOADetailBackingBean extends
 	 * @param scLoa the sc loa
 	 * @throws Exception the exception
 	 */
-
 	private void generateNegotiationResultPdf(ScAttachment attachment) throws Exception {
 		attachment.setFileName("Negotiation_Result.pdf");
 		ScLoa scLoa = getManagedBean().getScLoa();
@@ -2550,20 +2548,28 @@ public class LOADetailBackingBean extends
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+		if(QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
 				&& BpmOutcomeConst.BPM_ACCEPT.equals(outcome)) {
 
 			if (!getManagedBean().isAgreeWithTermsConditions()) {
 				throw new EpException(MessageConst.ERROR_750002);
 			}
 		}
-		
-		if (QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_REVISION.equals(statusId)
+
+		if(QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId) || QTStatusConst.LOA_PENDING_REVISION.equals(statusId)
 				&& BpmOutcomeConst.BPM_SUBMIT.equals(outcome)) {
 			if(scLoa.isApprovalReq()){
 				if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
 					throw new EpException("Approver is required.");
 				}
+			}
+
+			if(null  == scLoa.getContractEffDate()){
+				throw new EpException("Contract Effective Date is required.");
+			}
+
+			if(null  == scLoa.getContractExpDate()){
+				throw new EpException("Contract Expiry Date is required.");
 			}
 		}
 	}
@@ -4159,218 +4165,6 @@ public class LOADetailBackingBean extends
 			}	
 		}
 		loaBackingBean.generateSuppLoiLoaList();
-	}
-
-	/**
-	 * Pre render page navigation to direct nego or loa
-	 */
-	public void preRenderDirectNegoView() {
-		debugLogger("preRenderDirectNegoView");
-        renewSesionObject();
-    	IStatusSO statusSO = null;
-		ScLoa scLoa = new ScLoa();
-		PmParameter pmParameter = new PmParameter();
-		scLoa.setContractType(pmParameter);
-				
-		ScLoiLoa  scLoiLoa = new ScLoiLoa();
-		scLoiLoa.setSmSupplier(new SmSupplier());
-		scLoa.setScLoiLoa(scLoiLoa);
-		scLoa.setContractAdmin(new PmUser());
-		scLoa.setPmOrgProfile(new PmOrgProfile());
-		
-		try {
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(QTStatusConst.LOA_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			scLoa.setPmStatus(statusResDTO.getPmStatus());
-		} catch (Exception e) {
-			throw new EpException(e.toString());
-		} finally {
-			statusSO = null;
-		}
-		
-		
-		//generate loa number
-		scLoa.setLoaNo(getQtAwardSO().generateDirectLoaNo());
-		
-		getManagedBean().setScLoa(scLoa);
-		
-		// witness
-		ScLoaWitness scLoaWitness = new ScLoaWitness();
-		getManagedBean().setLoaAgencyWitness(scLoaWitness);
-		
-		// award details
-		getManagedBean().getTplSpecMaster().setItemOriginCode(new PmParameter());
-		
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
-	}
-	
-	
-	
-	/**
-	 * Mof no listener.
-	 * Gets supplier, branch and adress details based on mof nor.
-	 * @param mofAccount the mof account
-	 */
-	public void mofNoListener(SmMofAccount mofAccount) {
-		debugLogger("mofNoListener");
-		
-		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(mofAccount.getSmSupplier());
-		getManagedBean().getScLoa().getScLoiLoa().setMofNo(mofAccount.getMofNo());
-		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(mofAccount.getSmSupplier().getCompanyName());
-		
-		AwardSupplierReqDTO reqDTO  = new AwardSupplierReqDTO();
-		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
-
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
-		
-		// smPersonnel
-		if(resDTO.getSupplierHQPersonnel() != null){
-			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());	
-			getManagedBean().setSelectedSupplierBranchName("HQ");
-			handleBranchDetailsChanged();
-		}
-	}
-	
-	/**
-	 * Supplier listener.
-	 * Gets mof no, branch and adress details based on mof nor.
-	 * @param suSmSupplier the su sm supplier
-	 */
-	public void supplierListener(SmSupplier suSmSupplier) {
-		debugLogger("supplierListener");
-		
-		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(suSmSupplier);
-		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(suSmSupplier.getCompanyName());
-		
-		AwardSupplierReqDTO reqDTO  = new AwardSupplierReqDTO();
-		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
-		
-		// mof nor
-		getManagedBean().getScLoa().getScLoiLoa().setMofNo(resDTO.getSmSupplier().getSmMofAccounts().get(0).getMofNo());
-		
-		// smPersonnel
-		if(resDTO.getSupplierHQPersonnel() != null){
-			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());	
-			getManagedBean().setSelectedSupplierBranchName("HQ");
-			handleBranchDetailsChanged();
-		}
-	}
-	
-	/**
-	 * Ptj dropdown list.
-	 *
-	 * @return the list
-	 */
-	public List<PmOrgProfile> ptjDropdownList() {
-		debugLogger("ptjDropdownList");
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null && user.getUserId() != null) {
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setUserId(user.getUserId());
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
-			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
-			this.getManagedBean().setPtjDropdownList(pmOrgProfiles);
-			return pmOrgProfiles;
-		}
-		return null;
-	}
-
-	/**
-	 * Ptj change listener.
-	 *
-	 * @param orgProfile the org profile
-	 */
-	public void ptjChangeListener(PmOrgProfile orgProfile) {
-		List<PmOrgProfile> orgProfileList = getManagedBean()
-				.getPtjDropdownList();
-		if (null != orgProfileList) {
-			for (PmOrgProfile pmOrgProfile : orgProfileList) {
-				if (pmOrgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-					getManagedBean().getScLoa().getScLoiLoa().setPmOrgProfile(pmOrgProfile);
-				}
-			}
-		} else {
-			debugLogger("org profile list should not be empty");
-		}
-	}
-	
-	/**
-	 * Retrieve parameter desc by type.
-	 * 
-	 * @param type
-	 *            (String type)
-	 * @returnList<PmParameterDesc>
-	 */
-	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
-		return ParameterHelper.getInstance().getParameterDescList(type);
-
-	}
-	
-	/**
-	 * Gets the local goods radio values.display Local goods (Local/Import)
-	 * radio values in template spec.
-	 * 
-	 * @param itemType
-	 *            (String itemType)
-	 * @return SelectItem[].
-	 */
-	public SelectItem[] getLocalGoodsRadioValues(String itemType) {
-
-		List<String> types = new ArrayList<String>();
-		types.add(ParameterConst.LOCAL_GOODS);
-		types.add(ParameterConst.IMPORTED_GOODS);
-
-		SelectItem[] items = null;
-		try {
-			items = new SelectItem[types.size()];
-			int i = 0;
-			for (String location : types) {
-				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(itemType);
-
-				for (PmParameterDesc paramDesc : localParamDesc) {
-					if (paramDesc.getPmParameter().getParameterCode()
-							.equals(location)) {
-
-						items[i++] = new SelectItem(paramDesc.getPmParameter()
-								.getParameterId(), paramDesc.getCodeName());
-
-					}
-				}
-			}
-		} finally {
-		}
-		return items;
-	}
-	
-	/**
-	 * Get item type values from pmParameter
-	 * @return list of dropdown item values.
-	 */
-	public SelectItem[] getItemTypeValues(){
-		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
-
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmParameter.parameterCode",
-						SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
-
-		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
-		return items;
 	}
 	
 	/**
