@@ -34,10 +34,11 @@
 					<ac:iconTooltip
 						value="#{lbl['lbl.sc.recommended.supplier.tooltip']}" />
 				</f:facet>
-				<p:commandLink update="@([id$=suppDtlPopUp])"
+				<p:commandLink update="@([id$=suppDtlPopUp])" 
+					action="#{lOIDetailBackingBean.showSupplierDetails(supplierDtl)}" 
 					oncomplete="suppDtlWidgetVar.show();">
 					<f:setPropertyActionListener value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
-						target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
+						target="#{lOIDetailBackingBean.managedBean.smSupplier}" />
 					<h:outputText
 						value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}" 
 						style="white-space:normal;"/>
@@ -131,9 +132,10 @@
 															item,recommendedSuppl.scQtRecommendDtl)}" />
 						</p:selectBooleanCheckbox>
 						<p:commandLink update="@([id$=suppDtlPopUp])"
+							action="#{lOIDetailBackingBean.showSupplierDetails(recommendedSuppl)}" 
 							oncomplete="suppDtlWidgetVar.show();">
 							<f:setPropertyActionListener value="#{recommendedSuppl.scQtRecommendDtl.supplier}"
-								target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
+								target="#{lOIDetailBackingBean.managedBean.smSupplier}" />
 							<h:outputText value="#{recommendedSuppl.scQtRecommendDtl.supplier.companyName}" 
 								style="white-space:normal;"/>
 						</p:commandLink>
@@ -141,14 +143,15 @@
 					</p:column>
 				</p:dataList>
 				
-				<p:dataList var="scQtRecommendDtl" value="#{item.recommendDtls}"
+				<p:dataList  var="recommendedSuppl" value="#{item.awardSupplierList}"
 					type="none" rendered="#{!isPendingNegotiationStatus}">
-					<p:column rendered="#{scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
+					<p:column rendered="#{recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 						<p:commandLink update="@([id$=suppDtlPopUp])"
+							action="#{lOIDetailBackingBean.showSupplierDetails(recommendedSuppl)}"
 							oncomplete="suppDtlWidgetVar.show();">
-							<f:setPropertyActionListener value="#{scQtRecommendDtl.supplier}"
-								target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
-							<h:outputText value="#{scQtRecommendDtl.supplier.companyName}" 
+							<f:setPropertyActionListener value="#{recommendedSuppl.scQtRecommendDtl.supplier}"
+								target="#{lOIDetailBackingBean.managedBean.smSupplier}" />
+							<h:outputText value="#{recommendedSuppl.scQtRecommendDtl.supplier.companyName}" 
 								style="white-space:normal;"/>
 						</p:commandLink>
 						<br />
