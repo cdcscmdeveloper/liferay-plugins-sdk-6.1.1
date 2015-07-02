@@ -4319,7 +4319,9 @@ public class SmApplicationBackingBean extends
 		boolean retVal = false;
 		if (smPersonnel.getEpRole().equals(RoleCode.MOF_SUPPLIER_ADMIN.value())
 				|| smPersonnel.getEpRole().equals(
-						RoleCode.SUPPLIER_TEMP.value())) {
+						RoleCode.SUPPLIER_TEMP.value())
+				|| smPersonnel.getEpRole().equals(
+						RoleCode.BASIC_SUPPLIER_ADMIN.value())) {
 			retVal = true;
 		} else if (smPersonnel.getEpRole().equals(
 				RoleCode.MOF_SUPPLIER_USER.value())
