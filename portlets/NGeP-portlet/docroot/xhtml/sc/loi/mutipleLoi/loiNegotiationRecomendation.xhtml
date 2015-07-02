@@ -36,7 +36,7 @@
 				</f:facet>
 				<p:commandLink update="@([id$=suppDtlPopUp])"
 					oncomplete="suppDtlWidgetVar.show();">
-					<f:setPropertyActionListener value="#{supplierDtl.supplier}"
+					<f:setPropertyActionListener value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier}"
 						target="#{suppFinalizationBackingBean.managedBean.smSupplier}" />
 					<h:outputText
 						value="#{supplierDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}" 
