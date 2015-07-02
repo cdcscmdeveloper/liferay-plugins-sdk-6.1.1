@@ -101,12 +101,12 @@
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:15%">
 
 					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
-						rendered="#{finSpec.scQtProposal.proposalAmount.pmEvalStatus eq null or finSpec.scQtProposal.proposalAmount.pmEvalStatus.statusId eq '61600'}"
+						rendered="#{finSpec.scQtProposal.proposalAmount.pmEvalStatus.statusId eq '61600'}"
 						process="@this"
 						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
 						partialSubmit="true" />
 					<p:commandButton value="#{lbl['lbl.btn.view']}"
-						rendered="#{finSpec.scQtProposal.proposalAmount.pmEvalStatus ne null and  finSpec.scQtProposal.proposalAmount.pmEvalStatus.statusId eq '61601'}"
+						rendered="#{finSpec.scQtProposal.proposalAmount.pmEvalStatus.statusId eq '61601'}"
 						process="@this"
 						action="#{evaluationBackingBean.financialSupplierEvaluate(finSpec,'F')}"
 						partialSubmit="true" />
