@@ -2653,7 +2653,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("Tracking diary for catalog saved items");
 			reqDTO.setTrackingStatus(true);
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
-			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(), CmConst.SUPPLIER_ITEM_STATUS_SAVED, new PmStatus()));
+			
+			
+			
+			
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+			statusReqDTO.setStatusId(CmConst.DRAFT);
+							
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			
+			
+			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(), CmConst.SUPPLIER_ITEM_STATUS_SAVED, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 			catalogueSO.updateSupplierItem(reqDTO);
 
@@ -3746,12 +3760,24 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("Tracking diary for to publish the catalog items");			
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
 			reqDTO.setTrackingStatus(true);
+			
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			
 			if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired())
 			{
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,new PmStatus()));
+				statusReqDTO.setStatusId(CmConst.PENDING);
+				
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}
 			else{
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));
+				statusReqDTO.setStatusId(CmConst.PUBLISHED);;
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}
 
 			catalogueSO.updateSupplierItem(reqDTO);
@@ -3860,12 +3886,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		try {
 			this.getManagedBean().setTabActiveIndex(0);
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
+			
+			
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			statusReqDTO.setStatusId(CmConst.PUBLISHED);
+			
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
 			for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {					
 				reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItems()[i].getSupplierItemId());	
 				//reqDTO.setItemStatus("U");
 				log.info("tracking diary for catalog Items to Publish:submitToReviewItems");
 				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItems()[i], CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,new PmStatus()));
+				
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItems()[i], CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
@@ -4618,11 +4654,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
 
 			log.info("Tracking diary for catalog approved items:publishApprovedItems");
+			
+			
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+			statusReqDTO.setStatusId(CmConst.PUBLISHED);
+							
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+
+			
+			
 			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
 				csiList.add(csi);
 				reqDTO.setTrackingStatus(true);
 				reqDTO.setSupplierId(csi.getSupplierId());				
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED, new PmStatus()));
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(csi,CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}			
 			try {
 				catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
