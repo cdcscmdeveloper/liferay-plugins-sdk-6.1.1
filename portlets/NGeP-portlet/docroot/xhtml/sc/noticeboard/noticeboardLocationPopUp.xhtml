@@ -9,18 +9,116 @@
 	<p:dialog header="#{lbl['lbl.sc.location.details']}"
 		widgetVar="popupLoc" modal="true" styleClass="locationdtls"
 		dynamic="true">
+		<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.bsvDetails}"></ui:param>
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 82px;"><p:outputLabel
+						value="#{lbl['lbl.sc.location']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText
+									value="#{noticeBoardBackingBean.managedBean.location}"
+									readonly="true" size="30"/></td> </tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 82px;"><p:outputLabel
+						value="#{lbl['lbl.sc.qt.address.one']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvaddress1" required="true"
+									label="#{lbl['lbl.sc.qt.address.one']}" readonly="true"
+									value="#{bsvDetails.address.address1}" style="margin-top:5px;"
+									size="30" maxlength="255" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.state']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvstate" required="true"
+									readonly="true" value="#{bsvDetails.address.pmState.stateName}"
+									style="margin-top:5px;" size="30" maxlength="255" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
+				<td><p:inputText readonly="true"
+						value="#{bsvDetails.address.address2}" size="30"
+						maxlength="255" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvdivision" readonly="true"
+									value="#{bsvDetails.address.pmDivision.divisionName}"
+									style="margin-top:5px;" size="30" maxlength="255" /></td>
+							<td></td>
+						</tr>
+					</table>
 
-		<h:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td" columnClasses="columnWidth20">
-			<h:outputLabel value="#{lbl['lbl.sc.location']}" />
-			<p:inputText  value="#{noticeBoardBackingBean.managedBean.location}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.address']}" />
-			<p:inputTextarea
-				value="#{noticeBoardBackingBean.managedBean.address}"
-				readonly="true" cols="50" rows="2" />
-		</h:panelGrid>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
+				<td><p:inputText readonly="true"
+						value="#{bsvDetails.address.address3}" size="30"
+						maxlength="255" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> </td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvdistrict" readonly="true"
+									value="#{bsvDetails.address.pmDistrict.districtName}"
+									style="margin-top:5px;" size="30" maxlength="255" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
+				<td><p:inputText readonly="true"
+						value="#{bsvDetails.address.address4}" size="30"
+						maxlength="255" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> </td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvtown" readonly="true"
+									value="#{bsvDetails.address.pmCity.cityName}"
+									style="margin-top:5px;" size="30" maxlength="255" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td />
+				<td />
+				<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /> </td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bvspost1" required="true"
+									readonly="true" label="#{lbl['lbl.sc.post.code']}"
+									value="#{bsvDetails.address.postcode}" size="30"
+									maxlength="10" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 
 	</p:dialog>
 	
