@@ -2,6 +2,7 @@ package my.ep.web.scheduler.helper;
 
 import my.ep.factory.EpLogger;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.CronTrigger;
@@ -30,34 +31,34 @@ public class EpSchedulerHelper {
 			Class<? extends Job> jobClass, String jobDetailDesc,
 			String cronExpression) {
 
-		try {
+		if (StringUtils.isNotBlank(cronExpression)) {
+			try {
+				// specify the job' s details..
+				final JobDetail job = JobBuilder.newJob(jobClass)
+						.withIdentity(jobKey).withDescription(jobDetailDesc)
+						.build();
 
-			// specify the job' s details..
-			final JobDetail job = JobBuilder.newJob(jobClass)
-					.withIdentity(jobKey).withDescription(jobDetailDesc)
-					.build();
+				// specify trigger
+				final CronTrigger cronTrigger = TriggerBuilder
+						.newTrigger()
+						.withSchedule(
+								CronScheduleBuilder.cronSchedule(cronExpression))
+						.build();
 
-			// specify trigger
-			final CronTrigger cronTrigger = TriggerBuilder
-					.newTrigger()
-					.withSchedule(
-							CronScheduleBuilder.cronSchedule(cronExpression))
-					.build();
+				// start scheduler if not started yet
+				if (!EpSchedulerHelper.getScheduler().isStarted()) {
+					EpSchedulerHelper.getScheduler().start();
+				}
 
-			// start scheduler if not started yet
-			if (!EpSchedulerHelper.getScheduler().isStarted()) {
-				EpSchedulerHelper.getScheduler().start();
+				// schedule the job
+				if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
+					EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
+				}
+
+			} catch (final SchedulerException e) {
+				log.error(e.getMessage());
 			}
-
-			// schedule the job
-			if (!EpSchedulerHelper.getScheduler().checkExists(jobKey)) {
-				EpSchedulerHelper.getScheduler().scheduleJob(job, cronTrigger);
-			}
-
-		} catch (final SchedulerException e) {
-			log.error(e.getMessage());
 		}
-
 	}
 
 	public static void runBuildJobNow(JobKey jobKey) {
