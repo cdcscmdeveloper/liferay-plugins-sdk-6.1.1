@@ -8450,24 +8450,6 @@ public class EvaluationBackingBean extends
 		populateAttachmentDetails(attachment);
 
 		VelocityContext context = new VelocityContext();
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateSDF = new SimpleDateFormat(
-				commonUtils
-						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
-
-		FacesScopes fs = new FacesScopes();
-		String hostUrl = fs.getRequest().getServerName() + ":"
-				+ fs.getRequest().getServerPort();
-		String userName = fs.getUserSessionBean().getUserName();
-		context.put("hostUrl", hostUrl);
-		context.put("userName", userName);
-
-		Date newDate = new Date();
-		String date = "";
-		if (newDate != null) {
-			date = dateSDF.format(newDate);
-		}
-		context.put("date", date);
 
 		String committeType = getManagedBean().getCommitteeType();
 		List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
@@ -8563,22 +8545,14 @@ public class EvaluationBackingBean extends
 			}
 		}
 
-		boolean commType = false;
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 				.equals(committeType)
 				|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
 						.equals(committeType)
 				|| ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
+						.equals(committeType)
+				|| ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 						.equals(committeType)) {
-			commType = true;
-			context.put("ec", commType);
-			context.put("committeeActivities", committeeActivities);
-			context.put("meetingAttendances", meetingAttendancesList);
-			context.put("bean", this);
-		} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
-				.equals(committeType)) {
-			commType = true;
-			context.put("oc", commType);
 			context.put("committeeActivities", committeeActivities);
 			context.put("meetingAttendances", meetingAttendancesList);
 			context.put("bean", this);
