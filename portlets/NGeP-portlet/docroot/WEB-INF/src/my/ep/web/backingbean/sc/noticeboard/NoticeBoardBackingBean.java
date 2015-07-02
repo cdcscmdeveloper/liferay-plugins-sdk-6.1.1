@@ -768,7 +768,7 @@ public class NoticeBoardBackingBean extends
 	 */
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		StringBuffer address = new StringBuffer(briefing.getAddress()
+		/*StringBuffer address = new StringBuffer(briefing.getAddress()
 				.getAddress1());
 
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
@@ -786,8 +786,8 @@ public class NoticeBoardBackingBean extends
 			address.append(briefing.getAddress().getAddress4());
 
 		}
-
-		this.getManagedBean().setAddress(address.toString());
+		briefing.getAddress().getPmState().getStateName()*/
+		this.getManagedBean().setBsvDetails(briefing);
 	}
 
 	/**
