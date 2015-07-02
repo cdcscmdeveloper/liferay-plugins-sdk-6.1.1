@@ -1182,10 +1182,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1283,10 +1283,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1332,10 +1332,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1403,10 +1403,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1473,10 +1473,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1529,10 +1529,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1579,10 +1579,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1637,10 +1637,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1684,10 +1684,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1750,10 +1750,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1815,10 +1815,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
