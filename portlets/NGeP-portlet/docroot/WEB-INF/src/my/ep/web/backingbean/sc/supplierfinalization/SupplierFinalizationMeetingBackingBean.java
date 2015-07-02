@@ -382,7 +382,14 @@ public class SupplierFinalizationMeetingBackingBean extends
 					new UserQCPagingDataModel("existingMemberTbl", getManagedBean()
 							.getUserSearchBean()));
 		}
+		UserCommitteeSearchBean userSearchBean 
+									= getManagedBean().getUserSearchBean();
+		userSearchBean.setName(null);
+		userSearchBean.setIdentificationNo(null);
+		userSearchBean.setIdentificationType(null);
+		
 		getManagedBean().getUserSearchDataModel().resetData();		
+		getManagedBean().setSelectedPmUsers(null);
 		
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
