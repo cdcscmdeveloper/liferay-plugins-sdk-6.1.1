@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<div style="text-align: right; min-height: 40px;">
+		<p:commandButton value="#{lbl['lbl.btn.update']}" id="daUpdateBtnId" partialSubmit="true"
+			process=":form:settingTabId:gstId"
+			update=":form:settingTabId:gstId"
+			action="#{ruleCatalogueBackingBean.saveDesignatedArea}"></p:commandButton>
+
+	</div>
+	
+	<p:dataTable id="designatedAreaTbl" var="daObj" rows="10"
+		widgetVar="designatedAreaTblWidVar"
+		value="#{ruleCatalogueBackingBean.managedBean.designatedAreaList}"
+		selection="#{ruleCatalogueBackingBean.managedBean.selectedDesignatedArea}"
+		rowKey="#{daObj}" rowIndexVar="rowIndex" selectionMode="single">
+		<ac:paginator for="designatedAreaTbl" />
+		<p:column style="width:15%">
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.pm.settings.gst.location.type']}" />
+			</f:facet>
+			<p:selectOneMenu required="true" 
+				disabled="#{(!daObj.brandNew)}" 
+				id="somDaLocationTypeId" value="#{daObj.locationType}"
+				label="#{lbl['lbl.pm.settings.gst.location.type']}">
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				<f:selectItems
+						value="#{ruleCatalogueBackingBean.retrieveParameterDescList(ParameterTypeConst.locationLevel)}"
+						var="parameter" itemLabel="#{parameter.codeName}"
+						itemValue="#{parameter.pmParameter.parameterCode}" />
+				<p:ajax event="change" update="@([id$=lovPmLocation])"
+					process="@this" />
+			</p:selectOneMenu>
+			<p:message id="somDaLocationTypeIdMsg" for="somDaLocationTypeId" display="icon" />
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.pm.settings.gst.da.code']}" />
+			</f:facet>
+			<ac:lov id="lovPmLocation" lovId="V_PM_LOCATION" 
+				readonly="true" required="true" 
+				label="#{lbl['lbl.pm.location.code']}"
+				disabled="#{!(daObj.brandNew) or empty daObj.locationType}"
+				update=":form:settingTabId:gstId:designatedAreaTbl"
+				size="15" headerText="#{lbl['lbl.pm.location.code']}"
+				saveObject="ruleCatalogueBackingBean.managedBean.designatedAreaList[#{rowIndex}].vPmLocation"
+				postUpdateListener="#{ruleCatalogueBackingBean.mapLocationToDa(daObj)}"
+				conditionField="status^1|locationType^#{daObj.locationType}"
+				value="#{daObj.vPmLocation.locationCode}">
+			</ac:lov>
+			<p:message id="lovPmLocationMsg" for="lovPmLocation" display="icon" />
+
+		</p:column>
+		
+		<p:column>
+			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
+				<h:outputText value="#{lbl['lbl.pm.settings.gst.da.title']}" />
+			</f:facet>
+			<h:outputText id ="daTitleId" value="#{daObj.vPmLocation.locationName}" />
+
+		</p:column>
+		
+		<p:column style="width:10%">
+			<f:facet name="header">				
+				<h:outputText value="#{lbl['lbl.pm.status']}" />
+			</f:facet>
+			<p:selectOneMenu value="#{daObj.recordStatusFlg}"
+				disabled="#{daObj.brandNew}" style="width:128px;">
+				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
+				<p:ajax event="change" partialSubmit="true"
+					process="@this" />
+			</p:selectOneMenu>
+		</p:column>
+		
+		<p:column style="width:5%">
+			<f:facet name="header">				
+				<h:outputText value="#{lbl['lbl.pm.action']}" />
+			</f:facet>
+			<p:commandLink id="deldaItemCl" partialSubmit="true"
+				process="@this"
+				disabled="#{!(daObj.brandNew)}"
+				action="#{ruleCatalogueBackingBean.deleteDesignatedArea(rowIndex)}"
+				update=":form:settingTabId:gstId">
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+			</p:commandLink>
+			
+		</p:column>
+		
+		
+	</p:dataTable>
+	
+	<br />
+	<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+			process=":form:settingTabId:gstId"
+			update=":form:settingTabId:gstId"
+			action="#{ruleCatalogueBackingBean.addDesignatedArea()}"></p:commandButton>
+	</ui:composition>
