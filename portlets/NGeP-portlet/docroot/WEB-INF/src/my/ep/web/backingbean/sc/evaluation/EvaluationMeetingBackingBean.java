@@ -1144,26 +1144,59 @@ public class EvaluationMeetingBackingBean extends
 					// searchFilterBean.add(bean);
 				}
 
+				
+				
 				Date fromPublishDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getFromPublishDate();
 				Date toPublishDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getToPublishDate();
-				if (null != fromPublishDate || null != toPublishDate) {
-					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchField(QTConstants.PUBLISH_DATE);
-					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
-							.value());
-					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-							fromPublishDate, toPublishDate);
-					bean.setSearchValue(betweenVal);
-					searchBean.getDataFilterBeans().add(bean);
-				}
+				   if (null != fromPublishDate || null != toPublishDate) {
+				    Calendar c1 = Calendar.getInstance();
+				    c1.setTime(fromPublishDate);
+				    Calendar fromDate = Calendar.getInstance();
+				    fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+				      c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+				    fromDate.set(Calendar.MILLISECOND, 0);
+				    fromPublishDate = fromDate.getTime();
+				    if (toPublishDate != null) {
+				     Calendar c2 = Calendar.getInstance();
+				     c2.setTime(toPublishDate);
+				     Calendar toDate = Calendar.getInstance();
+				     toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+				       c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+				     toDate.set(Calendar.MILLISECOND, 0);
+				     toPublishDate = toDate.getTime();
+				    }
+				    SearchFilterBean bean = new SearchFilterBean();
+				    bean.setSearchField(QTConstants.PUBLISH_DATE);
+				    bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				    SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+				      fromPublishDate, toPublishDate);
+				    bean.setSearchValue(betweenVal);
+				    searchBean.getDataFilterBeans().add(bean);
+				   }
 
 				Date fromClosingDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getFromClosingDate();
 				Date toClosingDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getToClosingDate();
 				if (null != fromClosingDate || null != toClosingDate) {
+					 Calendar c1 = Calendar.getInstance();
+					    c1.setTime(fromClosingDate);
+					    Calendar fromDate = Calendar.getInstance();
+					    fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+					      c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+					    fromDate.set(Calendar.MILLISECOND, 0);
+					    fromClosingDate = fromDate.getTime();
+					    if (toClosingDate != null) {
+					     Calendar c2 = Calendar.getInstance();
+					     c2.setTime(toClosingDate);
+					     Calendar toDate = Calendar.getInstance();
+					     toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+					       c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+					     toDate.set(Calendar.MILLISECOND, 0);
+					     toClosingDate = toDate.getTime();
+					    }
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField(QTConstants.CLOSED_DATE);
 					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
