@@ -954,6 +954,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		this.getManagedBean().setTitle(null);
 		this.getManagedBean().setContractNo(null);
 		this.getManagedBean().setLoaNo(null);
+		renewSesionObject();
 	}
 	
 	/**
