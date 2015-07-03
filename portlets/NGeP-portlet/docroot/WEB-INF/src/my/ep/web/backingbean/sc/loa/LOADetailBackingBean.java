@@ -1533,6 +1533,10 @@ public class LOADetailBackingBean extends
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		VelocityContext context = new VelocityContext();
+		
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
 
 		IAddressSO addressSO = null;
 		PmAddressType pmAddressType = null;
