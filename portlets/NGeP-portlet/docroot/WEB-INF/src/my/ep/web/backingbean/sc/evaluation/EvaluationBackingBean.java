@@ -6706,7 +6706,9 @@ public class EvaluationBackingBean extends
 				}
 			} else {
 				if (tabindex == 3
-						&& this.getManagedBean().getScQt().isDemoRequired()) {
+						&& this.getManagedBean().getScQt().isDemoRequired()
+						&& this.getManagedBean()
+								.getPresentationDemoActiveIndex() == 0) {
 					savePresentationDemoDtls();
 					renewSesionObject();
 					retriveMeetingDtls(qtId, committeeType, index);
