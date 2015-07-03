@@ -27,7 +27,8 @@
 			<p:selectOneMenu required="true" 
 				disabled="#{(!daObj.brandNew)}" 
 				id="somDaLocationTypeId" value="#{daObj.locationType}"
-				label="#{lbl['lbl.pm.settings.gst.location.type']}">
+				label="#{lbl['lbl.pm.settings.gst.location.type']}"
+				style="width:100px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems
 						value="#{ruleCatalogueBackingBean.retrieveParameterDescList(ParameterTypeConst.locationLevel)}"
@@ -38,7 +39,7 @@
 			</p:selectOneMenu>
 			<p:message id="somDaLocationTypeIdMsg" for="somDaLocationTypeId" display="icon" />
 		</p:column>
-		<p:column>
+		<p:column style="width:15%">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.da.code']}" />
@@ -50,7 +51,7 @@
 				update=":form:settingTabId:gstId:designatedAreaTbl"
 				size="15" headerText="#{lbl['lbl.pm.location.code']}"
 				saveObject="ruleCatalogueBackingBean.managedBean.designatedAreaList[#{rowIndex}].vPmLocation"
-				postUpdateListener="#{ruleCatalogueBackingBean.mapLocationToDa(daObj)}"
+				postUpdateListener="ruleCatalogueBackingBean.mapLocationToDa(daObj)"
 				conditionField="status^1|locationType^#{daObj.locationType}"
 				value="#{daObj.vPmLocation.locationCode}">
 			</ac:lov>
@@ -58,7 +59,7 @@
 
 		</p:column>
 		
-		<p:column>
+		<p:column style="width:50%">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.da.title']}" />
@@ -72,7 +73,7 @@
 				<h:outputText value="#{lbl['lbl.pm.status']}" />
 			</f:facet>
 			<p:selectOneMenu value="#{daObj.recordStatusFlg}"
-				disabled="#{daObj.brandNew}" style="width:128px;">
+				disabled="#{daObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
@@ -99,8 +100,10 @@
 	</p:dataTable>
 	
 	<br />
-	<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
-			process=":form:settingTabId:gstId"
-			update=":form:settingTabId:gstId"
-			action="#{ruleCatalogueBackingBean.addDesignatedArea()}"></p:commandButton>
+		<div style="text-align: right;">
+		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+				process=":form:settingTabId:gstId"
+				update=":form:settingTabId:gstId"
+				action="#{ruleCatalogueBackingBean.addDesignatedArea()}"></p:commandButton>
+			</div>
 	</ui:composition>
