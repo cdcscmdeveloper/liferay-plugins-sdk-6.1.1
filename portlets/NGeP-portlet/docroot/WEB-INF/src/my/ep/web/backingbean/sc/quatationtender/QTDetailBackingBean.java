@@ -3903,9 +3903,11 @@ public class QTDetailBackingBean extends
 				}
 				if (!siteVisit.isEmpty()) {
 					bsvDetils.addAll(siteVisit);
-					if (!scQtBsv.isAllSiteVisitReq()) {
-						if (scQtBsv.getMinSiteVisitAttend() < 1) {
-							throw new EpException(MessageConst.ERROR_760273);
+					if (bsvDetils.size() >= 2) {
+						if (!scQtBsv.isAllSiteVisitReq()) {
+							if (scQtBsv.getMinSiteVisitAttend() < 1) {
+								throw new EpException(MessageConst.ERROR_760273);
+							}
 						}
 					}
 				}
