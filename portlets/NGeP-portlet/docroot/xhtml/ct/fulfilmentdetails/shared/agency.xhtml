@@ -164,7 +164,7 @@
 				</p:dataTable>
 				<div class="ppRightBtn">
 					<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE"
-						postUpdateListener="contractDetailsBackingBean.addDeliveryAddress(contractDetailsBackingBean.managedBean.addressTypeList)"
+						postUpdateListener="contractDetailsBackingBean.addDeliveryAddress"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.btn.add']}"
 						selectionMode="multiple"
@@ -239,7 +239,8 @@
                  </p:selectOneMenu>
 				 <p:spacer height="1"/>
                  <p:inputText id="ptjCodeVaue"  style="width:300px;" 
-                     value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" ><p:ajax process="@this"/></p:inputText>
+                     value="#{contractDetailsBackingBean.managedBean.ptjCodeNameSearchValues}" >
+                     <p:ajax process="@this"/></p:inputText>
 			  </h:panelGrid>
 			  	<div class="ppRightBtn">
        		         <p:commandButton id="agencySearchId" value="#{lbl['lbl.btn.search']}" update=":form:tableAgency"  
