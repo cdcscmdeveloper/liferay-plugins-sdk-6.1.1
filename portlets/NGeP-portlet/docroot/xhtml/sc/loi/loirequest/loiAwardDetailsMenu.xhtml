@@ -113,9 +113,13 @@
 			</p:column>
 
 			<p:column  style="width:10%;text-align:right;">
-				<h:outputText value="#{loiLoaItem.qty}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<h:panelGroup rendered="#{!empty loiLoaItem.tplSpecTierQty}">
+					<h:outputText value="#{loiLoaItem.tplSpecTierQty.fromQty}" /> - <h:outputText
+							value="#{loiLoaItem.tplSpecTierQty.toQty}" />
+				</h:panelGroup>
+				<h:outputText value="#{loiLoaItem.qty}" rendered="#{loiLoaItem.tplSpecTierQty eq null}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
 			</p:column>
 			
@@ -133,7 +137,7 @@
 			</p:column>
 
 			<p:column style="width:7%;text-align:right;">
-				<h:outputText value="#{loiLoaItem.offeredPriceSubTotal}">
+				<h:outputText value="#{loiLoaItem.offeredPriceSubTotal}" rendered="#{loiLoaItem.tplSpecTierQty eq null}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				
