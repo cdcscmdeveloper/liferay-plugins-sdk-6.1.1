@@ -633,7 +633,7 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		StringBuffer address = new StringBuffer(briefing.getAddress()
+		/*StringBuffer address = new StringBuffer(briefing.getAddress()
 				.getAddress1());
 
 		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
@@ -651,8 +651,8 @@ public class BSVAttendanceBackingBean extends
 			address.append(briefing.getAddress().getAddress4());
 
 		}
-
-		this.getManagedBean().setAddress(address.toString());
+*/
+		this.getManagedBean().setBsvDetails(briefing);
 	}
 
 	/**
