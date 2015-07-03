@@ -469,7 +469,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			 			
 			 			  /* If agency singer  ptj */
 			 			  if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())){
-			 				    ctAgreementParty.setPtjName(retrieveJabatanByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 				    ctAgreementParty.setPtjName(ctAgreementParty.getOrgProfile().getOrgName());
 			 			   }
 			 			
 			 			  getManagedBean().getCtAgencySigner().add(ctAgreementParty);
