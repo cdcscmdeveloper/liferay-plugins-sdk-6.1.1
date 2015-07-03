@@ -1138,9 +1138,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	/**
 	 * Method used to add exempted 
     */
-	public void addExemptedOrg(){
+	public void addExemptedOrg(List<PmOrgProfile> orgProfiles){
 		
-		List<PmOrgProfile> orgProfiles = getManagedBean().getOrgProfiles();
 		try {
 			if (orgProfiles != null){
 				
