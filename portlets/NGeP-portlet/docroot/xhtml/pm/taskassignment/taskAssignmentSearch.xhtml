@@ -70,7 +70,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.loginId} &#160; #{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user.userName}" 
 						saveObject="taskAssignBackingBean.managedBean.taskAssignmentSearchBean.user"
 						conditionField="pmUserOrgs.pmOrgProfile.orgProfileId^#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.orgProfile.orgProfileId}|recordStatus^1"
-						postUpdateListener ="#{taskAssignBackingBean.onChangeUser()}"/>
+						postUpdateListener ="taskAssignBackingBean.onChangeUser"/>
 				</td>
 				
 				<td width="30%">
@@ -129,7 +129,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							label="#{lbl['lbl.pm.ta.doc.no']}" maxlength="80"
 							value="#{taskAssignBackingBean.managedBean.taskAssignmentSearchBean.docNo}"
 							size="30" >
-						<p:ajax event="blur" listener="#{taskAssignBackingBean.onChangeUser()}" 
+						<p:ajax event="blur" listener="#{taskAssignBackingBean.onChangeUser(null)}" 
 				     		update=":form:pTaskAssignSearch"/> 
 					</p:inputText>
 					<ac:iconTooltip value="#{lbl['lbl.pm.ta.docno.tooltips']}" />

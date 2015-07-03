@@ -309,13 +309,14 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		this.userGroupList = userGroupList;
 	}
 
-	public void userGroupListner(List<PmUser> users) {
+	public void userGroupListner(List<BaseEntity> users) {
 		List<PmUserGroupUser> groupUsers = this.getManagedBean()
 				.getUserGroups();
 		if (null != users) {
 			getManagedBean().setBrandNew(true);
 			PmUserGroupUser groupUser = null;
-			for (PmUser pmUser : users) {
+			for (int i = 0; i < users.size(); i++) {
+				PmUser pmUser = (PmUser) users.get(i);
 				groupUser = new PmUserGroupUser();
 				for (PmUserGroupUser userGroupUser : groupUsers) {
 					if (userGroupUser.getPmUser().getIdentificationNo()
@@ -403,13 +404,17 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		}
 		return pmUserRole;
 	}
-	public void userListner() {
-		orgProfileId = this.getManagedBean().getUserGroup().getPmOrgProfile()
+	public void userListner(BaseEntity entity) {
+		if(entity != null){
+			PmOrgProfile orgProfile = (PmOrgProfile) entity;
+			orgProfileId = orgProfile
 				.getOrgProfileId();
-		this.getManagedBean().setOrgProfileId(orgProfileId);
-		this.getManagedBean().setSelectGrp(true);
+			this.getManagedBean().setOrgProfileId(orgProfileId);
+			this.getManagedBean().setSelectGrp(true);
 		
-		RequestContext.getCurrentInstance().update("usergrouping");
+			RequestContext.getCurrentInstance().update("usergrouping");
+		}
+		
 	}
 
 	public void deleteUserGroup() {

@@ -45,7 +45,6 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.constant.cm.CmConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
@@ -61,7 +60,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmRole;
@@ -82,7 +81,6 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmSalutation;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
@@ -99,7 +97,6 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.pm.profilemanagement.ProfileManagementManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
@@ -380,17 +377,19 @@ public class ProfileManagementBackingBean extends
 		}
 	}
 
-	public void updateSearchCriteriaForRole() {
+	public void updateSearchCriteriaForRole(BaseEntity entity) {
 		logger.info("...............updateSearchCriteriaForRole...............");
-		if (this.getManagedBean().getSelectedPmRoleDesc() != null) {
-			String userRole = this.getManagedBean().getSelectedPmRoleDesc()
-					.getRoleName();
-			this.getManagedBean().getUserProfileSearchBean()
-					.setUserRole(userRole);
+		if (entity != null) {
+			PmRoleDesc pmRoleDesc = (PmRoleDesc) entity;
+			if (pmRoleDesc != null) {
+				String userRole = pmRoleDesc.getRoleName();
+				this.getManagedBean().getUserProfileSearchBean()
+						.setUserRole(userRole);
+			}
 		}
 	}
 
-	public void updateSearchCriteriaForOrgName() {
+	public void updateSearchCriteriaForOrgName(BaseEntity entity) {
 		logger.info("updateSearchCriteriaForOrgName");
 		// if (this.getManagedBean().getSelectedOrgProfile().getPmOrgValidity()
 		// != null) {
@@ -399,11 +398,9 @@ public class ProfileManagementBackingBean extends
 		//
 		// this.getManagedBean().getUserProfileSearchBean()
 		// .setUserOrganizationName(orgName);
-		this.getManagedBean()
-				.getUserProfileSearchBean()
-				.setSelectedOrgProfileId(
-						this.getManagedBean().getSelectedOrgProfile()
-								.getOrgProfileId());
+		PmOrgProfile orgProfile = (PmOrgProfile) entity;
+		this.getManagedBean().getUserProfileSearchBean()
+				.setSelectedOrgProfileId(orgProfile.getOrgProfileId());
 		// get OrgTypeCode from selected orgProfile
 		// this.getManagedBean().getSelectedOrgProfile().getOrgTypeCode()
 		// .getParameterId();
@@ -631,7 +628,17 @@ public class ProfileManagementBackingBean extends
 					(PmUser) pmUser.cloneEntity());
 			this.getManagedBean().setPmUserOrgOriginal(
 					(PmUserOrg) pmUserOrg.cloneEntity());
-			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {//put letterNo and approvalLimit in maps to check later changes for tracking diary
+			for (PmUserRole userRole : pmUserOrg.getPmUserRoles()) {// put
+																	// letterNo
+																	// and
+																	// approvalLimit
+																	// in maps
+																	// to check
+																	// later
+																	// changes
+																	// for
+																	// tracking
+																	// diary
 				if (userRole.getPmRole().getRoleCode().equals("FL_APPROVER")) {
 					this.getManagedBean()
 							.getRoleCodeToLetterNoMap()
@@ -1421,30 +1428,28 @@ public class ProfileManagementBackingBean extends
 
 	}
 
-	public void changeOrgUnit() {
+	public void changeOrgUnit(BaseEntity entity) {
 		logger.info("changeOrgUnit");
-		if (getManagedBean().getSelectedUserOrg() != null
-				&& getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null
-				&& getManagedBean().getSelectedUserOrg().getPmOrgProfile()
-						.getOrgProfileId() != null) {
-			if (getManagedBean().getSelectedCurrentOrgProfile() == null) {
-				getManagedBean()
-						.setSelectedCurrentOrgProfile(
-								getManagedBean().getSelectedUserOrg()
-										.getPmOrgProfile());
-			} else {
-				if (getManagedBean().getSelectedCurrentOrgProfile()
-						.getOrgProfileId() != getManagedBean()
-						.getSelectedUserOrg().getPmOrgProfile()
-						.getOrgProfileId()) {
-					// clear role list
-					this.getManagedBean().getSelectedUserOrg()
-							.setPmUserRoles(new ArrayList<PmUserRole>());
-					// clear reciving Addresses
-					showReceivingAddress();
+		if (entity != null) {
+			PmUserOrg selectedUserOrg = (PmUserOrg) entity;
+			if (selectedUserOrg != null
+					&& selectedUserOrg.getPmOrgProfile() != null
+					&& selectedUserOrg.getPmOrgProfile().getOrgProfileId() != null) {
+				if (getManagedBean().getSelectedCurrentOrgProfile() == null) {
 					getManagedBean().setSelectedCurrentOrgProfile(
-							getManagedBean().getSelectedUserOrg()
-									.getPmOrgProfile());
+							selectedUserOrg.getPmOrgProfile());
+				} else {
+					if (getManagedBean().getSelectedCurrentOrgProfile()
+							.getOrgProfileId() != selectedUserOrg
+							.getPmOrgProfile().getOrgProfileId()) {
+						// clear role list
+						selectedUserOrg
+								.setPmUserRoles(new ArrayList<PmUserRole>());
+						// clear reciving Addresses
+						showReceivingAddress();
+						getManagedBean().setSelectedCurrentOrgProfile(
+								selectedUserOrg.getPmOrgProfile());
+					}
 				}
 			}
 		}
@@ -2125,7 +2130,7 @@ public class ProfileManagementBackingBean extends
 	 * 
 	 * @param deliveringAddrs
 	 */
-	public void updateReceivingAddr(List<PmAddressType> deliveringAddrs) {
+	public void updateReceivingAddr(List<BaseEntity> deliveringAddrs) {
 		logger.info("updateReceivingAddr");
 		if (deliveringAddrs != null) {
 			if (this.getManagedBean().getSelectedUser().getPmAddressTypes() == null) {
@@ -2134,7 +2139,9 @@ public class ProfileManagementBackingBean extends
 			}
 			if (isUniqueAddress()) {
 				System.out.println("selected size " + deliveringAddrs.size());
-				for (PmAddressType pmAddressType : deliveringAddrs) {
+				for (int i = 0; i < deliveringAddrs.size(); i++) {
+					PmAddressType pmAddressType = (PmAddressType) deliveringAddrs
+							.get(i);
 					PmAddressType tempAddTypeObj = new PmAddressType();
 					tempAddTypeObj
 							.setAddressType(ProfileManagementConst.ADDRESS_RECEIVING);
@@ -2688,7 +2695,8 @@ public class ProfileManagementBackingBean extends
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null
 				&& upSearchBean.getSelectedOrgProfileId() != null) {
 			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterId",
+					new SearchFilterBean(
+							"pmOrgProfile.orgTypeCode.parameterId",
 							SearchOperator.OPERATOR_EQUALS.value(), this
 									.getManagedBean().getSelectedOrgType()
 									.getParameterId()));
@@ -3563,15 +3571,17 @@ public class ProfileManagementBackingBean extends
 			}
 
 			if (addedRoleNames.length() > 0) {
-				logger.info("......addedRoleNames.lenght:"+addedRoleNames.length());
-				
+				logger.info("......addedRoleNames.lenght:"
+						+ addedRoleNames.length());
+
 				addedRoleNames.replace(addedRoleNames.length() - 2,
 						addedRoleNames.length() - 1, "");// remove the last
 															// comma
-				logger.info("......addedRoleNames.toString:"+addedRoleNames.toString());
+				logger.info("......addedRoleNames.toString:"
+						+ addedRoleNames.toString());
 				logger.info("Tracking diary for user profile: add new Role :saveUserProfile");
 				String messageId = MessageConst.TD_80002;
-				String[] msgParam = new String[] {addedRoleNames.toString() };
+				String[] msgParam = new String[] { addedRoleNames.toString() };
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
 						PmCommonUtil.assignTrackingDairyValues(user,
@@ -3603,35 +3613,46 @@ public class ProfileManagementBackingBean extends
 						PmCommonUtil.assignTrackingDairyValues(user,
 								getActionDesc(messageId, msgParam), null));
 			}
-			for(PmUserRole userRole : userOrg.getPmUserRoles()){
+			for (PmUserRole userRole : userOrg.getPmUserRoles()) {
 				if (userRole.getPmRole().getRoleCode().equals("FL_APPROVER")) {
-					//getFromMap
-					String oldLetterNo = this.getManagedBean().getRoleCodeToLetterNoMap().get(userRole.getPmRole().getRoleCode());
+					// getFromMap
+					String oldLetterNo = this.getManagedBean()
+							.getRoleCodeToLetterNoMap()
+							.get(userRole.getPmRole().getRoleCode());
 					String newLetterNo = userRole.getLetterNo();
-					if(oldLetterNo != null && !oldLetterNo.isEmpty() && !oldLetterNo.equalsIgnoreCase(newLetterNo)){
+					if (oldLetterNo != null && !oldLetterNo.isEmpty()
+							&& !oldLetterNo.equalsIgnoreCase(newLetterNo)) {
 						logger.info("Tracking diary for user profile: letterNo is changed :saveUserProfile");
 						String messageId = MessageConst.TD_80008;
-						String[] msgParam = new String[] {oldLetterNo , newLetterNo};
+						String[] msgParam = new String[] { oldLetterNo,
+								newLetterNo };
 						reqDTO.setTrackingStatus(true);
 						reqDTO.getTrackDairyVOs().add(
 								PmCommonUtil.assignTrackingDairyValues(user,
-										getActionDesc(messageId, msgParam), null));
-					
+										getActionDesc(messageId, msgParam),
+										null));
+
 					}
 				}
 				if (userRole.getPmRole().isLimitRequired()) {
-					//getFromMap
-					BigDecimal oldApprovalLimit = this.getManagedBean().getRoleCodeToApprovalLimitMap().get(userRole.getPmRole().getRoleCode());
+					// getFromMap
+					BigDecimal oldApprovalLimit = this.getManagedBean()
+							.getRoleCodeToApprovalLimitMap()
+							.get(userRole.getPmRole().getRoleCode());
 					BigDecimal newApprovalLimit = userRole.getApprovalLimit();
-					if(oldApprovalLimit != null && (oldApprovalLimit.compareTo(newApprovalLimit) != 0)){
+					if (oldApprovalLimit != null
+							&& (oldApprovalLimit.compareTo(newApprovalLimit) != 0)) {
 						logger.info("Tracking diary for user profile: approvalLimit is changed :saveUserProfile");
 						String messageId = MessageConst.TD_80007;
-						String[] msgParam = new String[] {oldApprovalLimit.toString() , newApprovalLimit.toString()};
+						String[] msgParam = new String[] {
+								oldApprovalLimit.toString(),
+								newApprovalLimit.toString() };
 						reqDTO.setTrackingStatus(true);
 						reqDTO.getTrackDairyVOs().add(
 								PmCommonUtil.assignTrackingDairyValues(user,
-										getActionDesc(messageId, msgParam), null));
-					
+										getActionDesc(messageId, msgParam),
+										null));
+
 					}
 				}
 			}

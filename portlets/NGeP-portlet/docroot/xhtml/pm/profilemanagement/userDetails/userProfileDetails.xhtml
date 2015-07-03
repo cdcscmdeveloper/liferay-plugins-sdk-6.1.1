@@ -89,7 +89,7 @@
 									value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmFinancialOrg.finOrgName}" 
 									saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 									conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}" 
-									postUpdateListener="#{profileManagementBackingBean.changeOrgUnit()}" />
+									postUpdateListener="profileManagementBackingBean.changeOrgUnit" />
 									
 							</c:if>
 							<c:if test="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterCode}">
@@ -103,7 +103,7 @@
 												value="#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.pmOrgValidity.orgName}"
 												saveObject="profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile"
 												conditionField="#{profileManagementBackingBean.constructConditionFieldsForCreate()}"
-												postUpdateListener="#{profileManagementBackingBean.changeOrgUnit()}"  />
+												postUpdateListener="profileManagementBackingBean.changeOrgUnit"  />
 											
 							</c:if>
 							</div>

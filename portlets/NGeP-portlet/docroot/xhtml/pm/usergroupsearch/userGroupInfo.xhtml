@@ -44,7 +44,7 @@
 							value="#{usergroupBackingBean.managedBean.userGroup.pmOrgProfile.pmOrgValidity.orgName}"
 							saveObject="usergroupBackingBean.managedBean.userGroup.pmOrgProfile"
 							disabled="#{!usergroupBackingBean.managedBean.userGroup.brandNew}"
-							postUpdateListener="usergroupBackingBean.userListner()"
+							postUpdateListener="usergroupBackingBean.userListner"
 							readonly="true" conditionField="#{usergroupBackingBean.constructConditionFields()}">
 						</ac:lov>
 						<ac:lovPopup />
@@ -108,7 +108,7 @@
 										headerText="User Selection"
 										buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
 										saveObject="usergroupBackingBean.managedBean.users"
-										postUpdateListener="usergroupBackingBean.userGroupListner(usergroupBackingBean.managedBean.users)"
+										postUpdateListener="usergroupBackingBean.userGroupListner"
 										update="@form"
 										disabled="#{!usergroupBackingBean.managedBean.selectGrp}"
 										conditionField="#{usergroupBackingBean.constuctConditionFields()}">

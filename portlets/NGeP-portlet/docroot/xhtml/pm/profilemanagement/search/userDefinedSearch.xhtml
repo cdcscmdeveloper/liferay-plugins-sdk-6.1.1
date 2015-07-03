@@ -59,7 +59,7 @@
 		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmFinancialOrg.finOrgName}" 
-						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
+						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForOrgName"
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
 						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
 						<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
@@ -71,7 +71,7 @@
 						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.pmOrgValidity.orgName}" 
 						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
-						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForOrgName()}"
+						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForOrgName"
 						conditionField="#{profileManagementBackingBean.constructConditionFields()}"/>						
 		         	<p:message id="lovMinistryMsg" for="lovMinistry1" display="icon" />
 				</p:outputPanel>
@@ -109,7 +109,7 @@
 						headerText="#{lbl['lbl.pm.profiles.authorisation.role.opt']}"
 						saveObject="profileManagementBackingBean.managedBean.selectedPmRoleDesc"
 						value="#{profileManagementBackingBean.managedBean.selectedPmRoleDesc.roleName}" 
-						postUpdateListener="#{profileManagementBackingBean.updateSearchCriteriaForRole()}"
+						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForRole"
 						conditionField="recordStatus^1|pmRole.pmOrgRoles.orgType.parameterId^#{profileManagementBackingBean.managedBean.selectedOrgProfile.orgTypeCode.parameterId}|#{profileManagementBackingBean.roleDecriptionFilter}" 
 						/>
 				</td>

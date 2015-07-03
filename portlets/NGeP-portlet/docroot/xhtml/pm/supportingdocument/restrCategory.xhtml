@@ -8,46 +8,50 @@
 	<br />
 	<p:outputPanel
 		rendered="#{supportDocBackingBean.managedBean.selectedDocument.byCategory}">
-		<p:dataTable id="dtCat" resizableColumns="true" style="width: 100% !important;"
-			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-			rowKey="#{restrict}" rowIndexVar="rowIndex" 
+		<p:dataTable id="dtCat" resizableColumns="true"
+			style="width: 100% !important;"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}" rowKey="#{restrict}"
+			rowIndexVar="rowIndex"
 			value="#{supportDocBackingBean.managedBean.categoryRestrictions}"
 			var="restrict">
 			<ac:paginator for="dtCat" />
-		<p:column  width="10%" headerText="#{lbl['lbl.pm.category.code']}">  
+			<p:column width="10%" headerText="#{lbl['lbl.pm.category.code']}">  
 	    	#{(restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryL1Code).concat(restrict.pmCategoryL3.pmCategoryL2.categoryL2Code).concat(restrict.pmCategoryL3.categoryL3Code)}
 	    	
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l1']}" style="width: 22% !important;white-space:normal !important">  
+			<p:column headerText="#{lbl['lbl.pm.category.l1']}"
+				style="width: 22% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName}
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l2']}" style="width: 22% !important;white-space:normal !important">  
+			<p:column headerText="#{lbl['lbl.pm.category.l2']}"
+				style="width: 22% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.pmCategoryL2.categoryName}
         </p:column>
-			<p:column headerText="#{lbl['lbl.pm.category.l3']}" style="width: 22% !important;white-space:normal !important">  
+			<p:column headerText="#{lbl['lbl.pm.category.l3']}"
+				style="width: 22% !important;white-space:normal !important">  
 	    	#{restrict.pmCategoryL3.categoryName}
         </p:column>
-		
+
 			<p:column width="9%" headerText="#{lbl['lbl.pm.action']}">
-	           <p:commandLink partialSubmit="true" 
-					process="@this" action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory,rowIndex)}"
-					update="dtCat" >
+				<p:commandLink partialSubmit="true" process="@this"
+					action="#{supportDocBackingBean.deleteRestrictions(supportDocBackingBean.restrCategory,rowIndex)}"
+					update="dtCat">
 					<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 		<br />
 		<div class="ppRightBtn">
-						<!--  Popup Category Details --> <ac:lov id="lovCategory"
-							lovId="PM_CATEGORY_L3_ALL" styleClass="ppDisplayCalS"
-							readonly="true" selectionMode="multiple"
-							buttonLabel="#{lbl['lbl.btn.add']}"
-							headerText="#{lbl['lbl.pm.search.category']}"
-							update=":form:tvDocRestriction:dtCat"
-							saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
-							postUpdateListener="supportDocBackingBean.updateCategoryL3(supportDocBackingBean.managedBean.selectedCategoryL3s)"
-							conditionField="recordStatus^1" />
-				
+			<!--  Popup Category Details -->
+			<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3_ALL"
+				styleClass="ppDisplayCalS" readonly="true" selectionMode="multiple"
+				buttonLabel="#{lbl['lbl.btn.add']}"
+				headerText="#{lbl['lbl.pm.search.category']}"
+				update=":form:tvDocRestriction:dtCat"
+				saveObject="supportDocBackingBean.managedBean.selectedCategoryL3s"
+				postUpdateListener="supportDocBackingBean.updateCategoryL3"
+				conditionField="recordStatus^1" />
+
 		</div>
 	</p:outputPanel>
 </ui:composition>
