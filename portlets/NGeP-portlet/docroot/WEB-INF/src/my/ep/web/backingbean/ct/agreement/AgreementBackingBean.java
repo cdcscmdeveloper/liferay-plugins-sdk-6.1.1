@@ -44,6 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -64,6 +65,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
@@ -152,7 +155,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private CtAgreementParty[] selectedAgencySigner;
 	private CtAgreementParty[] selectedSupplierWitnes;
 	private CtAgreementParty[] selectedSupplierSigner;
-
+	
 	/**
 	 * The constructor used for initializing the variable.
 	 * This method will initialize the button and approver list.
@@ -440,18 +443,46 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 	}
 		 	
 		 	for (CtAgreementParty ctAgreementParty : getManagedBean().getCtAgreement().getCtSignParties()) {
-		 		if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(
-		 				ParameterTypeConst.AGREEMENT_AGENCY_SIGNER)) {
-		 			getManagedBean().getCtAgencySigner().add(ctAgreementParty);
-		 		} else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(
-		 				ParameterTypeConst.AGREEMENT_AGENCY_WITNESS)) {
-		 			getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
-		 		} else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(
-		 				ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER)) {
-		 			getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
-		 		} else {
-		 			getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
-				}
+		 		
+		 		   if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_SIGNER)) {
+			 			     /* If agency singer only ministry*/
+			 			     if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.MINISTRY.value())){
+			 				       ctAgreementParty.setMinistryName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 			     } else {
+					 			ctAgreementParty.setMinistryName(retrieveMinistryByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 			     }
+			 			     
+			 			    /* If agency singer  ministry and pengawai pengawal */
+			 			    if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())
+			 					 ||ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value()) ){
+			 				      ctAgreementParty.setPengawaiPengawalName(retrievePegawaiPengawalByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));	
+			 			    } else if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.PENGAWAI_PENGAWAL.value())){
+			 				      ctAgreementParty.setPengawaiPengawalName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 			    }
+			 			    
+			 			   /* If agency singer  jabatan */
+			 			   if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())){
+			 				    ctAgreementParty.setJabatanName(retrieveJabatanByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 			   } else if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DEPARTMENT.value())) {
+			 				   ctAgreementParty.setJabatanName(retrieveOrgProfileByProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 			   }
+			 			
+			 			  /* If agency singer  ptj */
+			 			  if(ctAgreementParty.getOrgProfile().getOrgTypeCode().getParameterCode().equalsIgnoreCase(OrganizationType.DIVISION.value())){
+			 				    ctAgreementParty.setPtjName(retrieveJabatanByOrgProfileId(ctAgreementParty.getOrgProfile().getOrgProfileId()));
+			 			   }
+			 			
+			 			  getManagedBean().getCtAgencySigner().add(ctAgreementParty);
+			 		
+		 		  } else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_AGENCY_WITNESS)) {
+		 			    getManagedBean().getCtSignAgencyWitness().add(ctAgreementParty);
+		 		
+		 		  } else if (ctAgreementParty.getAgreementPartyType().getParameterCode().equalsIgnoreCase(ParameterTypeConst.AGREEMENT_SUPPLIER_SIGNER)) {
+		 			   getManagedBean().getCtSupplierSigner().add(ctAgreementParty);
+		 		
+		 		  } else {
+		 			 getManagedBean().getCtSupplierWitness().add(ctAgreementParty);
+			  	  }
 		 	}
 		} else {
 			getManagedBean().setCtAgreement(new CtAgreement());
@@ -905,10 +936,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		     
 		 	if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
 		 		 reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
-		 	} else { // default to ministry
+		 	} 
 		 	
-		 	   reqDTO.setOrgProfileId(retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
-		 	}
 		 	reqDTO.setApprovalLimit(getManagedBean().getContractVer().getCtContractAmount().getContractAmount());
 		 	resDTO = userSO.retrieveUserListByRole(reqDTO);
 		 	
@@ -2128,5 +2157,265 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		  condition = condition +OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
 		  condition = condition + "^"+  retrieveMinistryOrgProfile(getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId();
 	       return condition;
+      }
+  
+  /**
+	 * The method used for generating a list of available ministry
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    if(getManagedBean().isAgencySignerDropDown()) {
+		   
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+		
+		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgProfileId(retrieveMinistryOrgProfile(
+					getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+			
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		   
+		    items = new SelectItem[list.size()+1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+		    
+		  	for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+			return items;
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return null;
+	}
+	
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getPengawaiPengawalDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    if(getManagedBean().getMinistryProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
+				    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+					reqDTO.setOrgCode(OrganizationType.PENGAWAI_PENGAWAL.value());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+					
+				    List<Object[]> list = resDTO.getOrgProfileDDList();
+				    items = new SelectItem[list.size() + 1];
+				    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					
+				     for(Object[] objects : list){
+				      items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
+					}
+				    
+				    return items;
+		      }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+		 return null;
+	}
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getJabatanDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    if(getManagedBean().getOfficerProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
+		         IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+		    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setParentOrgProfileId(getManagedBean().getOfficerProfileId());
+				reqDTO.setOrgCode(OrganizationType.DEPARTMENT.value());
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				
+			    List<Object[]> list = resDTO.getOrgProfileDDList();
+			    items = new SelectItem[list.size() + 1];
+			    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+			    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				
+			     for(Object[] objects : list){
+			         items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
+				}
+			  return items;
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return null;
+	}
+	
+	public void settingMinistryListener(){
+		getManagedBean().setOfficerProfileId(null);
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjProfileId(null);
+	}
+	
+	public void settingPengawaiPengawalListener(){
+			getManagedBean().setJabatanProfileId(null);
+			getManagedBean().setPtjProfileId(null);
+	 }
+	
+	public void settingJabatanListener(){
+		getManagedBean().setPtjProfileId(null);
+ }
+	
+	/**
+	 * The method used to reset the search criteria for agency.
+	 */
+	public void resetSignerAgencyDetails() {
+		getManagedBean().setMinistryProfileId(null);
+		getManagedBean().setOfficerProfileId(null);
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjProfileId(null);
+		getManagedBean().setAgencySignerDropDown(true);
+	}
+	
+	/**
+	 * The method used to reset the search criteria for agency.
+	 */
+	public void resetAgencySignerDetails() {
+		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
+				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
+		getManagedBean().setJabatanProfileId(null);
+		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
+		getManagedBean().setPtjCodeNameSearchValues(null);
+	}
+	
+	
+	/**
+	 * The method used for generating a list of available jabatan
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of jabatan
+	 */
+	public SelectItem[] getPtjDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    if(getManagedBean().getJabatanProfileId() != null && getManagedBean().isAgencySignerDropDown()) {
+				    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
+				    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+					reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+					reqDTO.setOrgCode(OrganizationType.DIVISION.value());
+					OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
+					
+				    List<Object[]> list = resDTO.getOrgProfileDDList();
+				    items = new SelectItem[list.size() + 1];
+				    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+				    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+					
+				     for(Object[] objects : list){
+				    	items[i++] = new SelectItem(Long.parseLong(objects[0].toString()), objects[1].toString());
+					}return items;
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return null;
+	}
+	
+	/**
+	 * The method used to add a new agency record.
+	 * This method will generate a new record in agency
+	 * list, user allow to enter the agency details. 
+	 */
+	public void addAgencySignerDetails() {
+			    
+		 long startTime1 = System.currentTimeMillis();
+		log.info("Start Time >>>>>>>>>>>>>>>>>>>>" +startTime1);
+	     IAgreementSO agreementSO = null;
+		 Long profileId = null;
+		 CtAgreementParty agreementParty = new CtAgreementParty();
+		 ContractAgreementReqDTO reqDTO = null;
+		
+		 try{
+		       
+			        if(getManagedBean().getMinistryProfileId() != null) {
+			    	    profileId = getManagedBean().getMinistryProfileId();
+			    	    agreementParty.setMinistryName(retrieveOrgProfileByProfileId(profileId));
+			        }
+			      
+			        if(getManagedBean().getOfficerProfileId() != null){
+			    	    profileId = getManagedBean().getOfficerProfileId();
+			    	    agreementParty.setPengawaiPengawalName(retrieveOrgProfileByProfileId(profileId));
+			         } 
+			      
+			        if(getManagedBean().getJabatanProfileId() != null){
+			    	    profileId = getManagedBean().getJabatanProfileId();
+			    	    agreementParty.setJabatanName(retrieveOrgProfileByProfileId(profileId));
+			        }
+			      
+			        if(getManagedBean().getPtjProfileId() != null){
+			    	    profileId = getManagedBean().getPtjProfileId();
+			    	    agreementParty.setPtjName(retrieveOrgProfileByProfileId(profileId));
+			        }
+				      
+			        agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			       reqDTO = new ContractAgreementReqDTO();
+			       reqDTO.setOrgProfileId(profileId);
+				   agreementParty.setOrgProfile(agreementSO.retrieveOrgProfileListByProfileId(reqDTO).getPmOrgProfile());
+			       	   
+				   agreementParty.setAgreementPartyType(getParameterByTypeAndCode(
+					   ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
+				   getManagedBean().getCtAgencySigner().add(agreementParty);
+				   getManagedBean().setAgencySignerDropDown(false);
+				   
+				   long endTime1 = System.currentTimeMillis();
+				   log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);
+				  log.info("Total Time1 >>>>>>>>>>>>>>>>>>>>" +(endTime1 - startTime1));
+				
+		 
+		  } catch (Exception e) {
+				e.printStackTrace();
+		  }
+	 }
+	
+    public String retrieveOrgProfileByProfileId(Long profileId){
+    	    IAgreementSO agreementSO = null;
+    	    ContractAgreementReqDTO reqDTO = null;
+    	    try {
+    	    	
+    	    	 agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+			       reqDTO = new ContractAgreementReqDTO();
+			       reqDTO.setOrgProfileId(profileId);
+				  return agreementSO.retrieveOrgProfileListByProfileId(reqDTO).getPmOrgProfile().getOrgName();
+			       	   
+    	    }catch(Exception ex){
+    	    	ex.printStackTrace();
+    	    }
+    	    return null;
       }
 }

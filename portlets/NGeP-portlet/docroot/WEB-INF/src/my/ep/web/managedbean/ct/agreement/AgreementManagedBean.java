@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
-
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -24,7 +23,6 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.web.managedbean.BaseManagedBean;
-
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
@@ -40,6 +38,12 @@ import org.primefaces.model.TreeNode;
 public class AgreementManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Long ministryProfileId;
+	private Long officerProfileId;
+	private Long jabatanProfileId;
+	private Long ptjProfileId;
+	
 	private String[] action;	
 	private String taskId;
 	private String taskName;
@@ -53,6 +57,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private boolean uploadFinalAgreement;
 	private boolean uploadStampedAndSignedPage;
 	private boolean validateWitness;
+	private boolean agencySignerDropDown;
 	private boolean autoUpdate = true;
 	private List<CtAgreementParty> ctAgencySigner;
 	private List<CtAgreementParty> ctSupplierSigner;
@@ -592,6 +597,44 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setDocSectionMap(Map<TplDocSection, TreeNode> docSectionMap) {
 		this.docSectionMap = docSectionMap;
 	}
-	
-	
+
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	public Long getOfficerProfileId() {
+		return officerProfileId;
+	}
+
+	public void setOfficerProfileId(Long officerProfileId) {
+		this.officerProfileId = officerProfileId;
+	}
+
+	public Long getJabatanProfileId() {
+		return jabatanProfileId;
+	}
+
+	public void setJabatanProfileId(Long jabatanProfileId) {
+		this.jabatanProfileId = jabatanProfileId;
+	}
+
+	public Long getPtjProfileId() {
+		return ptjProfileId;
+	}
+
+	public void setPtjProfileId(Long ptjProfileId) {
+		this.ptjProfileId = ptjProfileId;
+	}
+
+	public boolean isAgencySignerDropDown() {
+		return agencySignerDropDown;
+	}
+
+	public void setAgencySignerDropDown(boolean agencySignerDropDown) {
+		this.agencySignerDropDown = agencySignerDropDown;
+	}
 }
