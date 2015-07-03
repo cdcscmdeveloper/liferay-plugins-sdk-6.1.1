@@ -94,12 +94,31 @@
 									oncomplete="meetingDtls.paginator.endLink.click();"
 									update="meetingTbl" />
 									
-								<p:commandButton value="#{lbl['lbl.btn.delete']}" 
-									process="@this"
-									partialSubmit="true"
-									action="#{suppFinalMeetingBackingBean.meetingDeleteAction}"
-									update="@([id$=meetingDetailPanel])"/>
+								<p:commandButton value="#{lbl['lbl.btn.delete']}"  
+									onsuccess="dlgPerformMeetingDel.show();"
+									update="meetingTbl" />
 							</div>
+							
+							<!-- Dialog to prompt the user before deleting meeting records -->
+							<p:dialog id="dlgPerformMeetingDel" widgetVar="dlgPerformMeetingDel" styleClass="screen-title" 
+									  resizable="false" modal="true" width="330">
+								<h:panelGrid columns="3">
+									<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
+										styleClass="ui-icon-complain"></p:graphicImage>
+									<p:spacer width="10" />
+									<div class="confirmation-message-box" style="font-size:11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
+								</h:panelGrid>
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@([id$=meetingDetailPanel])" 
+								         process="@this, meetingTbl" 
+								         actionListener="#{suppFinalMeetingBackingBean.meetingDeleteAction}" 
+								         onclick="dlgPerformMeetingDel.hide();">
+								    </p:commandButton>
+									<p:commandButton value="#{lbl['lbl.btn.no']}"  
+										onclick="dlgPerformMeetingDel.hide();" type="button" />
+								</div>
+							</p:dialog>	
+														
 						</p:panel>
 
 						<p:panel header="#{lbl['lbl.sc.committee.member.list']}" id="memberListPanel" toggleable="true">
@@ -205,9 +224,29 @@
 									oncomplete="memberWidgetVar.show();" />
 								
 								<p:commandButton value="#{lbl['lbl.btn.delete']}"
-									action="#{suppFinalMeetingBackingBean.committeeDeleteAction}"
-									update="memberListTbl" />
+									update="memberListTbl" onsuccess="dlgPerformDel.show();" />
 							</div>
+							
+							<!-- Dialog to prompt the user before deleting member records -->
+							<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" styleClass="screen-title" 
+									  resizable="false" modal="true" width="330">
+								<h:panelGrid columns="3">
+									<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
+										styleClass="ui-icon-complain"></p:graphicImage>
+									<p:spacer width="10" />
+									<div class="confirmation-message-box" style="font-size:11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
+								</h:panelGrid>
+								<div class="ppRightBtn">
+									<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="memberListTbl" 
+								         process="@this, memberListTbl" 
+								         actionListener="#{suppFinalMeetingBackingBean.committeeDeleteAction}" 
+								         onclick="dlgPerformDel.hide();">
+								    </p:commandButton>
+									<p:commandButton value="#{lbl['lbl.btn.no']}"  
+													 onclick="dlgPerformDel.hide();" type="button" />
+								</div>
+							</p:dialog>	
+														
 						</p:panel>
 
 						<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
@@ -264,6 +303,3 @@
 		
 	</ui:define>
 </ui:composition>
-
-
-
