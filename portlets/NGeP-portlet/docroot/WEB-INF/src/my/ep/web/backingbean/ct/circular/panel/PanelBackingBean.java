@@ -1022,12 +1022,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to add list of supplier details
 	 * during panel circular item creation
 	 */
-	public void addPanelSupplier(){ //101
+	public void addPanelSupplier(List<SmSupplier> supplierList){ //101
 		log.info("PanelBackingBean.addPanelSupplier()");
 		try {
-			
-			List<SmSupplier> supplierList = getManagedBean().getSupplierList();
-			
+					
 			if (supplierList != null){
 				
 				List<CtPanelSupplier> ctPanelSuppliers = new ArrayList<CtPanelSupplier>();
@@ -1063,12 +1061,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	
-	public void addBulkPanelSupplier(){ //101
+	public void addBulkPanelSupplier(List<SmSupplier> supplierList){ //101
 		log.info("PanelBackingBean.addPanelSupplier()");
 		 String panelCoverageICode;
-		 List<SmSupplier> supplierList = getManagedBean().getSupplierList();
 		try {
-			
 			
 			if (supplierList != null){
 				
