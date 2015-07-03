@@ -122,7 +122,6 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.type.sc.LoiLoaDocType;
-import my.ep.type.sc.TermType;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -3910,13 +3909,17 @@ public class LOIDetailBackingBean extends
 		ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		VelocityContext context = new VelocityContext();
+		
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() +":" + fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
 
 		// context.put("ministry",
 		// pmOrgProfile.getParentOrgProfile().getOrgName());
 		context.put("agency", pmOrgProfile.getOrgName());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				"/sc/loi/loi-cover.vm", context,
+				SourcingConstants.LOI_COVER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
