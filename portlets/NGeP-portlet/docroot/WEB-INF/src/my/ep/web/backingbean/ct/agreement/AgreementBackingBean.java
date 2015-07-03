@@ -1110,7 +1110,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 		getManagedBean().getCtAgreement().setFileName(item.getFileName());
-		getManagedBean().getCtAgreement().setFilePath(filePath);
+		getManagedBean().getCtAgreement().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 
 	/**
