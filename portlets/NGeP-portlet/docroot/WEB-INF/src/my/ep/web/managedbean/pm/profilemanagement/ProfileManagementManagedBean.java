@@ -1,7 +1,9 @@
 package my.ep.web.managedbean.pm.profilemanagement;
 
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 
@@ -69,6 +72,8 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	private Boolean isNewUser;
 	private PmUser pmUserOriginal;
 	private PmUserOrg pmUserOrgOriginal;
+	private Map<String , String> roleCodeToLetterNoMap = new HashMap<String , String>();
+	private Map<String , BigDecimal> roleCodeToApprovalLimitMap = new HashMap<String , BigDecimal>();
 	
 	public PmUser getPmUserOriginal() {
 		return pmUserOriginal;
@@ -81,6 +86,19 @@ public class ProfileManagementManagedBean extends BaseManagedBean {
 	}
 	public void setPmUserOrgOriginal(PmUserOrg pmUserOrgOriginal) {
 		this.pmUserOrgOriginal = pmUserOrgOriginal;
+	}
+	public Map<String, String> getRoleCodeToLetterNoMap() {
+		return roleCodeToLetterNoMap;
+	}
+	public void setRoleCodeToLetterNoMap(Map<String, String> roleCodeToLetterNoMap) {
+		this.roleCodeToLetterNoMap = roleCodeToLetterNoMap;
+	}
+	public Map<String, BigDecimal> getRoleCodeToApprovalLimitMap() {
+		return roleCodeToApprovalLimitMap;
+	}
+	public void setRoleCodeToApprovalLimitMap(
+			Map<String, BigDecimal> roleCodeToApprovalLimitMap) {
+		this.roleCodeToApprovalLimitMap = roleCodeToApprovalLimitMap;
 	}
 		/**
 	 * @return the additionalOrgFilter
