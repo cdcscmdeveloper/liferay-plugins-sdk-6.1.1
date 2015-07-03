@@ -2305,8 +2305,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		getManagedBean().setMinistryProfileId(retrieveMinistryOrgProfile(
 				getManagedBean().getCtContract().getOwnerOrgProfile().getOrgProfileId()).getOrgProfileId());
 		getManagedBean().setJabatanProfileId(null);
-		getManagedBean().setPtjCodeName(ContractConst.PTJ_CODE);		
-		getManagedBean().setPtjCodeNameSearchValues(null);
 	}
 	
 	
