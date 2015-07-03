@@ -53,9 +53,10 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	 */
 	public void preRenderExpiredInquiry() {
 		renewSesionObject();
-		List<SmAppl> applList = SmServiceLookup.getSupportingDocInquirySO()
-				.retrieveExpiredSuppDocInquiry().getExpiredInquiryApplList();
-		getManagedBean().setApplList(applList);
+		getManagedBean().setExpiredSdoVerifySuppDocApplList(
+				SmServiceLookup.getSupportingDocInquirySO()
+						.retrieveExpiredSdoSuppDocVerificationAppl()
+						.getExpiredSdoInquiryApplList());
 		SmCommonUtil
 				.redirectToPage(
 						"/xhtml/sm/suppliersupportingdocinquiry/expiredSdoInquiryList.xhtml",
@@ -68,9 +69,9 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 	 * @param SmAppl
 	 *            selectedSmAppl
 	 */
-	public void navigateToExpiredInquiryApplication(SmAppl selectedSmAppl) {
+	public void navigateToExpiredInquiryApplication(String applNo) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
-		reqDTO.setApplNo(selectedSmAppl.getApplNo());
+		reqDTO.setApplNo(applNo);
 		getManagedBean().setSmAppl(
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());

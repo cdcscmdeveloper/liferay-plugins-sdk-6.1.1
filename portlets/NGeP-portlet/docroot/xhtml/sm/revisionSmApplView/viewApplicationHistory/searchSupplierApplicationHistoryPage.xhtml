@@ -30,7 +30,6 @@
 		<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
 			editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 			value="#{viewSuppProfileBackingBean.managedBean.smSupplierDataModel}"
-			selection="#{viewSuppProfileBackingBean.managedBean.selectedApplHistory}"
 			rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
 			<ac:paginator for="supplierApplHistoryDtId" />
 			
