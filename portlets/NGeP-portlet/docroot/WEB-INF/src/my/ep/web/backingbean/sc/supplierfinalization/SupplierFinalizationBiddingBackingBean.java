@@ -1006,6 +1006,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			suppFinalizationReqDTO.setPayLoad(this.getManagedBean()
 					.getPayLoad());
 			suppFinalizationReqDTO.setDigiSignData(digiSign);
+			qtSuppFinalizationSO.validateOfflineEndorsement(suppFinalizationReqDTO);
 			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
 				
 			//}
