@@ -1892,7 +1892,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 		} else{//STANDARD PRICE and ZONAL
 			if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
-				if(flItemAddr.getOrderedQty().doubleValue() > flItemAddr.getScRequestItem().getTplSpecQuestion().getClQuantity().doubleValue()){
+				if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
 					throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
 				}
 			}
