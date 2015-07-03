@@ -155,7 +155,7 @@
 							headerText="#{lbl['lbl.pm.profiles.authorisation.select.address']}"
 							update=":form:tvRoleReceivingAddr:dtReceiveAddr"
 							saveObject="profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes"
-							postUpdateListener="profileManagementBackingBean.updateReceivingAddr(profileManagementBackingBean.managedBean.selectedDeliveringAddrTypes)"
+							postUpdateListener="profileManagementBackingBean.updateReceivingAddr"
 							conditionField="pmOrgProfile.orgTypeCode.parameterId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgTypeCode.parameterId}|pmOrgProfile.orgProfileId^#{profileManagementBackingBean.managedBean.selectedUserOrg.pmOrgProfile.orgProfileId}|addressType^D|recordStatus^1" />
 					</div>
 

@@ -33,6 +33,7 @@ import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -564,14 +565,15 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 * Add selected PmCategoryL3 to categoryRestrictions
 	 * @param pmCategoryL3s
 	 */
-	public void updateCategoryL3(List<PmCategoryL3>pmCategoryL3s){
+	public void updateCategoryL3(List<BaseEntity>pmCategoryL3s){
 		log.info("updateCategoryL3");
 		if(pmCategoryL3s!=null){
 			if(this.getManagedBean().getCategoryRestrictions()==null){
 				this.getManagedBean().setCategoryRestrictions(new ArrayList<PmDocumentRestr>());
 			}
 			if(isUniqueCategoryL3()){
-				for(PmCategoryL3 pmCategoryL3: pmCategoryL3s){
+				for(int i = 0; i< pmCategoryL3s.size();i++){
+					PmCategoryL3 pmCategoryL3 = (PmCategoryL3) pmCategoryL3s.get(i);
 					PmDocumentRestr categoryRestr = new PmDocumentRestr();
 					categoryRestr.setPmCategoryL3(retrieveCategoryL3DtlById(pmCategoryL3.getCategoryL3Id()));
 					this.getManagedBean().getCategoryRestrictions().add(categoryRestr);
@@ -623,7 +625,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 *  LOV PostListener - add the selected certbody to the pmCertBodies list.
 	 *  @param pmCertBodies
 	 * **/
-	public void updateCertBody(List<PmCertBody> pmCertBodies){
+	public void updateCertBody(List<BaseEntity> pmCertBodies){
 		log.info("updateCertBody");
 		if(pmCertBodies!=null){
 			if(this.getManagedBean().getCertBodyRestrictions()==null){
@@ -631,7 +633,8 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 			}
 			if(isUniqueCertBody()){
 				PmDocumentRestr certBodyRestr = null;
-				for(PmCertBody pmCertBody: pmCertBodies){
+				for(int i =0 ;i< pmCertBodies.size(); i++){
+					PmCertBody pmCertBody = (PmCertBody)pmCertBodies.get(i);
 					certBodyRestr = new PmDocumentRestr();
 					certBodyRestr.setPmCertBody(pmCertBody);
 					this.getManagedBean().getCertBodyRestrictions().add(certBodyRestr);

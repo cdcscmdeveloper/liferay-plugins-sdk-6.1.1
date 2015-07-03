@@ -27,8 +27,6 @@
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{orgUnit.authorizedOrgProfile.pmOrgValidity.orgCode}" 
 					disabled="#{!orgUnit.brandNew}"
-					postUpdateListener="organisationBackingBean.updateOrgCode
-					(organisationBackingBean.managedBean.profileGroup[#{index}].authorizedOrgProfile, #{index})"
 					saveObject="organisationBackingBean.managedBean.profileGroup[#{index}].authorizedOrgProfile"
 					conditionField="#{organisationBackingBean.constuctConditionFields()}"
 					
