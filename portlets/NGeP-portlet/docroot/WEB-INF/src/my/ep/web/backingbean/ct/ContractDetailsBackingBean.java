@@ -2632,7 +2632,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * This method will generate new record in delivery address
 	 * list. 
 	 */	
-	public void addDeliveryAddress(List<PmAddressType> addressTypeList) {
+	public void addDeliveryAddress() {
+		
+		List<PmAddressType> addressTypeList = getManagedBean().getAddressTypeList();
 		try {
 			if (addressTypeList != null) {
 				List<CtAgencyAddress> ctAgencyAddress = new ArrayList<CtAgencyAddress>();
