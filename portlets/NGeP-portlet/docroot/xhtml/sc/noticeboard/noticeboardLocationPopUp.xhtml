@@ -8,7 +8,7 @@
 
 	<p:dialog header="#{lbl['lbl.sc.location.details']}"
 		widgetVar="popupLoc" modal="true" styleClass="locationdtls"
-		dynamic="true">
+		dynamic="true" width="580">
 		<ui:param name="bsvDetails" value="#{noticeBoardBackingBean.managedBean.bsvDetails}"></ui:param>
 		<table style="width: 100%">
 			<tr>
@@ -19,7 +19,20 @@
 						<tr>
 							<td><p:inputText
 									value="#{noticeBoardBackingBean.managedBean.location}"
-									readonly="true" size="30"/></td> </tr>
+									readonly="true" size="30" /></td>
+						</tr>
+					</table>
+				</td>
+				<td style="width: 200px;"><p:outputLabel
+						value="#{lbl['lbl.sc.state']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvstate" required="true"
+									readonly="true" value="#{bsvDetails.address.pmState.stateName}"
+									style="margin-top:5px;" size="30" /></td>
+							<td></td>
+						</tr>
 					</table>
 				</td>
 			</tr>
@@ -32,19 +45,18 @@
 							<td><p:inputText id="bsvaddress1" required="true"
 									label="#{lbl['lbl.sc.qt.address.one']}" readonly="true"
 									value="#{bsvDetails.address.address1}" style="margin-top:5px;"
-									size="30" maxlength="255" /></td>
+									size="30" /></td>
 							<td></td>
 						</tr>
 					</table>
 				</td>
-				<td style="width: 200px;"><p:outputLabel
-						value="#{lbl['lbl.sc.state']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
 				<td>
 					<table>
 						<tr>
-							<td><p:inputText id="bsvstate" required="true"
-									readonly="true" value="#{bsvDetails.address.pmState.stateName}"
-									style="margin-top:5px;" size="30" maxlength="255" /></td>
+							<td><p:inputText id="bsvdivision" readonly="true"
+									value="#{bsvDetails.address.pmDivision.divisionName}"
+									style="margin-top:5px;" size="30" /></td>
 							<td></td>
 						</tr>
 					</table>
@@ -53,33 +65,30 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.two']}" /></td>
 				<td><p:inputText readonly="true"
-						value="#{bsvDetails.address.address2}" size="30"
-						maxlength="255" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.division']}" /></td>
-				<td>
-					<table>
-						<tr>
-							<td><p:inputText id="bsvdivision" readonly="true"
-									value="#{bsvDetails.address.pmDivision.divisionName}"
-									style="margin-top:5px;" size="30" maxlength="255" /></td>
-							<td></td>
-						</tr>
-					</table>
-
-				</td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
-				<td><p:inputText readonly="true"
-						value="#{bsvDetails.address.address3}" size="30"
-						maxlength="255" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /> </td>
+						value="#{bsvDetails.address.address2}" size="30" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.district']}" /></td>
 				<td>
 					<table>
 						<tr>
 							<td><p:inputText id="bsvdistrict" readonly="true"
 									value="#{bsvDetails.address.pmDistrict.districtName}"
-									style="margin-top:5px;" size="30" maxlength="255" /></td>
+									style="margin-top:5px;" size="30" /></td>
+							<td></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
+				<td><p:inputText readonly="true"
+						value="#{bsvDetails.address.address3}" size="30" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /></td>
+				<td>
+					<table>
+						<tr>
+							<td><p:inputText id="bsvtown" readonly="true"
+									value="#{bsvDetails.address.pmCity.cityName}"
+									style="margin-top:5px;" size="30" /></td>
 							<td></td>
 						</tr>
 					</table>
@@ -88,31 +97,14 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.four']}" /></td>
 				<td><p:inputText readonly="true"
-						value="#{bsvDetails.address.address4}" size="30"
-						maxlength="255" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /> </td>
-				<td>
-					<table>
-						<tr>
-							<td><p:inputText id="bsvtown" readonly="true"
-									value="#{bsvDetails.address.pmCity.cityName}"
-									style="margin-top:5px;" size="30" maxlength="255" /></td>
-							<td></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
-			<tr>
-				<td />
-				<td />
-				<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /> </td>
+						value="#{bsvDetails.address.address4}" size="30" maxlength="255" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.post.code']}" /></td>
 				<td>
 					<table>
 						<tr>
 							<td><p:inputText id="bvspost1" required="true"
 									readonly="true" label="#{lbl['lbl.sc.post.code']}"
-									value="#{bsvDetails.address.postcode}" size="30"
-									maxlength="10" /></td>
+									value="#{bsvDetails.address.postcode}" size="30" /></td>
 							<td></td>
 						</tr>
 					</table>
