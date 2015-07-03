@@ -4001,7 +4001,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void priceKeyInEvent() {
 		ScLoi scLoi = getManagedBean().getScLoi();
-
+		BigDecimal quantity = BigDecimal.valueOf(0d);
 		// calc after nego total
 		if (scLoi.getScLoiLoaItems() != null
 				&& scLoi.getScLoiLoaItems().size() > 0) {
@@ -4010,9 +4010,17 @@ public class LOIDetailBackingBean extends
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
 
-				subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(
+				if(null == scLoiLoaItem.getTplSpecTierQty() ){
+					// with out Tier quantity
+					quantity = scLoiLoaItem.getQty();
+				} else{
+					// Tier quantity.
+					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+				}
+				
+				subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
 						scLoiLoaItem.getScRequestItem().getTplSpecQuestion(),
-						scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+						scLoiLoaItem.getUnitPrice(), quantity);
 				scLoiLoaItem.setAfterNegoSubTotal(subTotal);
 				scLoiLoaItem.setSubTotal(subTotal);
 				totalAmount = totalAmount.add(subTotal);
