@@ -5595,7 +5595,9 @@ public class EvaluationBackingBean extends
 					// .getScQtMeetings());
 					checkCommitteeMembersAttendance(this.getManagedBean()
 							.getCommitteeMemberList());
-					saveMeetingDtls(false);
+					if (currentTab == 0) {
+						saveMeetingDtls(false);
+					}
 				}
 				retriveComplianceTechnical();
 				// retrives1Details();
@@ -5707,7 +5709,9 @@ public class EvaluationBackingBean extends
 						 */
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
-						saveMeetingDtls(false);
+						if (currentTab == 0) {
+							saveMeetingDtls(false);
+						}
 						// retriveTechnicalEvaluationStage();
 					}
 					/*
@@ -5743,7 +5747,9 @@ public class EvaluationBackingBean extends
 						 */
 						checkCommitteeMembersAttendance(this.getManagedBean()
 								.getCommitteeMemberList());
-						saveMeetingDtls(false);
+						if (currentTab == 0) {
+							saveMeetingDtls(false);
+						}
 					}
 					/*
 					 * if(!this.getManagedBean().isReadOnly()){
