@@ -1016,9 +1016,13 @@ public class SupplierFinalizationBackingBean extends
 	}
 	
 	private void setForwardToHigherAuthorityStatus(ScQtRecommend scQtRecommend) {
-		if (!this.getManagedBean().isForwardToHigherAuthority() ||  
-				!this.getManagedBean().isItemize()) {
-			scQtRecommend.setHigherAuthReq(false);
+		Long loggedInUserId = getFacesScopes().getUserSessionBean()
+									  		  .getUserId();
+		if (loggedInUserId.equals(scQtRecommend.getCreatedBy())) {
+			if (!this.getManagedBean().isForwardToHigherAuthority() ||  
+					!this.getManagedBean().isItemize()) {
+				scQtRecommend.setHigherAuthReq(false);
+			}
 		}
 	}
 	
@@ -3207,6 +3211,10 @@ public class SupplierFinalizationBackingBean extends
 				Long loggedInUserId = getFacesScopes().getUserSessionBean()
 						.getUserId();
 				for (ScQtRecommend scQtRecommend : recommendList) {
+					if (scQtRecommend.isHigherAuthReq() && 
+							!(loggedInUserId.equals(scQtRecommend.getCreatedBy()))) {
+						this.getManagedBean().setItemFwdToHighAuthority(true);
+					}
 					if (this.getManagedBean().isForwardToHigherAuthority() && 
 							scQtRecommend.isHigherAuthReq() && 
 								(loggedInUserId.equals(scQtFinalization
@@ -4736,6 +4744,9 @@ public class SupplierFinalizationBackingBean extends
 			PmParameter defaultRecommendBy = getPmParameterByTypeAndCode(
 					ParameterTypeConst.FINALIZATION_RECOMMEND_BY, defaultRecommendByStr);
 			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
+				if (scQtRecommend.isDisabled()) {
+					continue;
+				}
 				List<ScQtRecommendDtl> recommendDtls = scQtRecommend
 						.getRecommendDtls();
 				if (CollectionUtils.isNotEmpty(recommendDtls)) {
