@@ -25,37 +25,36 @@
 			
 		<p:dataTable var="smAppl" widgetVar="smApplWidgetVar"
 			editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-			value="#{supportingDocInquiryBackingBean.managedBean.applList}"
-			selection="#{supportingDocInquiryBackingBean.managedBean.selectedApplHistory}"
-			rowKey="#{smSupplier}" rowIndexVar="index" id="supplierApplHistoryDtId">
+			value="#{supportingDocInquiryBackingBean.managedBean.expiredSdoVerifySuppDocApplList}"
+			rowKey="#{smAppl}" rowIndexVar="index" id="supplierApplHistoryDtId">
 			<ac:paginator for="supplierApplHistoryDtId" />
 			
 			<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal" >
-				<h:outputText value="#{smAppl.smSupplier.companyName}" />
+				<h:outputText value="#{smAppl[0]}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.application.no']}">
-				<h:outputText value="#{smAppl.applNo}" />
+				<h:outputText value="#{smAppl[1]}" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sm.applicationtype']}" style="width :25%;white-space : normal">
-				<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl.applType eq 'N'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl.applType eq 'B'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl.applType eq 'A'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl.applType eq 'U'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl.applType eq 'C'}" />
-				<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl.applType eq 'R'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.newmof']}" rendered="#{smAppl[2] eq 'N'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.bumiputera']}" rendered="#{smAppl[2] eq 'B'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.categorycode']}" rendered="#{smAppl[2] eq 'A'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.updateprofile']}" rendered="#{smAppl[2] eq 'U'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.cancelmof']}" rendered="#{smAppl[2] eq 'C'}" />
+				<h:outputText value="#{lbl['lbl.sm.appltype.renewmof']}" rendered="#{smAppl[2] eq 'R'}" />
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.rpt.supplierType']}">
-				<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl.supplierType eq 'K'}"/>
-				<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl.supplierType eq 'J'}"/>
+				<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smAppl[3] eq 'K'}"/>
+				<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smAppl[3] eq 'J'}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sm.label.action']}">
 				<p:commandLink onstart="blockWidget.show()"
 					oncomplete="blockWidget.hide()"
-					action="#{supportingDocInquiryBackingBean.navigateToExpiredInquiryApplication(smAppl)}"
+					action="#{supportingDocInquiryBackingBean.navigateToExpiredInquiryApplication(smAppl[1])}"
 					process="@this" partialSubmit="true" update="@form"
 					style="padding-right:5px;">
 					<p:graphicImage value="/css/images/design/edit.png" title="#{lbl['lbl.sm.edit']}" />
