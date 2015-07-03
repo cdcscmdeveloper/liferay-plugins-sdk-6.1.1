@@ -3215,8 +3215,7 @@ public class SupplierFinalizationBackingBean extends
 							!(loggedInUserId.equals(scQtRecommend.getCreatedBy()))) {
 						this.getManagedBean().setItemFwdToHighAuthority(true);
 					}
-					if (this.getManagedBean().isForwardToHigherAuthority() && 
-							scQtRecommend.isHigherAuthReq() && 
+					if (scQtRecommend.isHigherAuthReq() && 
 								(loggedInUserId.equals(scQtFinalization
 										.getHigherSecretary().getUserId()))) {
 						scQtRecommend.setDisabled(false);
