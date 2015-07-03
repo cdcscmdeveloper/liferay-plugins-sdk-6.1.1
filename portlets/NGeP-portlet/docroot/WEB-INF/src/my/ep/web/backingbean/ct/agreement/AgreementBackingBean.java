@@ -1862,12 +1862,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	 * @param  agencyList  the list of agency that on screen
 	 * @param  ptjProfile  the ptj profile that newly added
 	 */
-	public void validateDuplicateAgencyPtj(int index, List<CtAgreementParty> agencyList, PmOrgProfile ptjProfile) {
-		if (agencyList != null && !agencyList.isEmpty()) {
-			int counter =0;
-			for (int i = 0; i < agencyList.size(); i++) {
-				CtAgreementParty agreementParty = agencyList.get(i);
-				if (agreementParty.getOrgProfile().getOrgProfileId() == ptjProfile.getOrgProfileId()) {
+	public void validateDuplicateAgencyPtj(Long orgProfileId ) {
+		
+		    int counter =0;
+			for (int i = 0; i < getManagedBean().getCtAgencySigner().size(); i++) {
+				CtAgreementParty agreementParty = getManagedBean().getCtAgencySigner().get(i);
+				if (agreementParty.getOrgProfile().getOrgProfileId().equals(orgProfileId)) {
 					counter++;
 					if (counter == 2) {
 						throw new EpException(MessageConst.WARN_755013,
@@ -1875,13 +1875,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					}
 				}
 			}
-			CtAgreementParty agreementParty = agencyList.get(index);
-			agreementParty.setOfficerIc(null);
-			agreementParty.setOfficerPosition(null);
-			getManagedBean().getCtAgencySigner().remove(index);
-			getManagedBean().getCtAgencySigner().add(index, agreementParty);
-		}
-	}
+	 }
 	
 	/**
 	 * The method used to check whether approver setting tab menu is required to display.
@@ -2323,7 +2317,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(
 				    		ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 				    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-					reqDTO.setParentOrgProfileId(getManagedBean().getMinistryProfileId());
+					reqDTO.setParentOrgProfileId(getManagedBean().getJabatanProfileId());
 					reqDTO.setOrgCode(OrganizationType.DIVISION.value());
 					OrgProfileResDTO resDTO = orgProfileSO.retrieveChildDDListByParentOrgProfileId(reqDTO);
 					
@@ -2384,11 +2378,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			       reqDTO = new ContractAgreementReqDTO();
 			       reqDTO.setOrgProfileId(profileId);
 				   agreementParty.setOrgProfile(agreementSO.retrieveOrgProfileListByProfileId(reqDTO).getPmOrgProfile());
-			       	   
 				   agreementParty.setAgreementPartyType(getParameterByTypeAndCode(
 					   ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
 				   getManagedBean().getCtAgencySigner().add(agreementParty);
 				   getManagedBean().setAgencySignerDropDown(false);
+				//   validateDuplicateAgencyPtj(profileId);
 				   
 				   long endTime1 = System.currentTimeMillis();
 				   log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);

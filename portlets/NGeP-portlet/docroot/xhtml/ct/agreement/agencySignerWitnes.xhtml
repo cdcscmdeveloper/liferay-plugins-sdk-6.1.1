@@ -166,7 +166,6 @@
          
            <p:dialog id="dialogAgencySigner"  header="Add Agency Signer" 
                   widgetVar="dlgAgencySigner"  styleClass="pop_up_top" modal="true" width="600" height="200">
-			  
 			    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.signer']}" escape="false"/><br/><br/>
 		      <h:panelGroup  id="agencyiesSingner">
                   <h:panelGrid columns="3">
@@ -216,7 +215,7 @@
                 </h:panelGrid>
                  <div class="ppRightBtn">
        		        <p:commandButton value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
-				    action="#{agreementBackingBean.addAgencySignerDetails}" onclick="tableAgencySigner.hide();"/>
+				    action="#{agreementBackingBean.addAgencySignerDetails}"  oncomplete="tableAgencySigner.hide();"/>
 		       </div>
              </h:panelGroup>
 	      </p:dialog>  
