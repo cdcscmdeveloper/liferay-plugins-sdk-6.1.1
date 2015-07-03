@@ -55,6 +55,9 @@
 		.white{
 			color:#fff;
 		}
+		.alignRight {
+			text-align:right;
+		}
 	</style>
 </head>
 <body>
@@ -69,45 +72,45 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
-            <th bgcolor="#6d839b" class="title border left">Item</th>
-            <th bgcolor="#6d839b" class="title border right">
+            <td bgcolor="#6d839b" class="title border left">Item</td>
+            <td bgcolor="#6d839b" class="title border right">
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
-							<th bgcolor="#6d839b" class="title left">Recommended Supplier</th>
-							<th bgcolor="#6d839b" class="title left">Proposal ID</th>
-							<th bgcolor="#6d839b" class="title left">Bumiputra Status</th>
-							<th bgcolor="#6d839b" class="title left">Offered Price (RM)</th>
-							<th bgcolor="#6d839b" class="title left">Total Score</th>
-							<th bgcolor="#6d839b" class="title left">Ranking</th>
-							<th bgcolor="#6d839b" class="title left">Quantity</th>
+							<td bgcolor="#6d839b" class="title left">Recommended Supplier</td>
+							<td bgcolor="#6d839b" class="title left">Proposal ID</td>
+							<td bgcolor="#6d839b" class="title left">Bumiputra Status</td>
+							<td bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+							<td bgcolor="#6d839b" class="title left">Total Score</td>
+							<td bgcolor="#6d839b" class="title left">Ranking</td>
+							<td bgcolor="#6d839b" class="title left">Quantity</td>
 						</tr>
 					</tbody>
 				</table>
-			</th>
+			</td>
 		</tr>
 		#foreach( $item in $recommendList )
 		<tr>
-			<td valign="top" bgcolor="#f1f1f1" class="standard border-bottom left" ><strong>$item.requestItem.itemName</strong></td>
-			<td bgcolor="#f1f1f1" class="standard border-bottom right">
+			<td class="standard border-bottom left" >$item.requestItem.itemName</td>
+			<td class="standard border-bottom right">
 				#foreach( $evalResultDtl in $item.awardSupplierList )
 					<table width="100%" border="0" cellpadding="0" cellspacing="0">
 						<tbody>
 							<tr>
 								#if ($evalResultDtl.awareded)
-									<th bgcolor="#f1f1f1" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</th>
-									<th bgcolor="#f1f1f1" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</th>
-									<th bgcolor="#f1f1f1" class="standard left">
+									<td class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
+									<td class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+									<td class="standard left">
 										#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
 											Yes
 										#else
 											No
 										#end
-									</th>
-									<th bgcolor="#f1f1f1" class="standard left">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</th>
-									<th bgcolor="#f1f1f1" class="standard left">$evalResultDtl.totalScore</th>
-									<th bgcolor="#f1f1f1" class="standard left">$evalResultDtl.evalRank</th>
-									<th bgcolor="#f1f1f1" class="standard left">$evalResultDtl.scQtRecommendDtl.awardQty</th>
+									</td>
+									<td class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
+									<td class="standard left alignRight">$evalResultDtl.totalScore</td>
+									<td class="standard left">$evalResultDtl.evalRank</td>
+									<td class="standard left">$evalResultDtl.scQtRecommendDtl.awardQty</td>
 								#end
 							</tr>
 						</tbody>
