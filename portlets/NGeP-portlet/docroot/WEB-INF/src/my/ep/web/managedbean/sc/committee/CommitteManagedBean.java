@@ -254,6 +254,9 @@ public class CommitteManagedBean extends BaseManagedBean {
     
 	/** The to be del committe memebers. */
 	private List<ScCommitteeMember> toBeDelCommitteMemebers;
+	
+	/** Flag to indicate selection of all committee members **/
+	private boolean selectAllMembers;
     
 	/**
 	 * Instantiates a new committe managed bean.
@@ -1455,6 +1458,21 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setToBeDelCommitteMemebers(
 			List<ScCommitteeMember> toBeDelCommitteMemebers) {
 		this.toBeDelCommitteMemebers = toBeDelCommitteMemebers;
+	}
+
+	/**
+	 * @return the selectAllMembers
+	 */
+	public boolean isSelectAllMembers() {
+		return selectAllMembers;
+	}
+
+	/**
+	 * @param selectAllMembers 
+	 * 				the selectAllMembers to set
+	 */
+	public void setSelectAllMembers(boolean selectAllMembers) {
+		this.selectAllMembers = selectAllMembers;
 	}
 
 }
