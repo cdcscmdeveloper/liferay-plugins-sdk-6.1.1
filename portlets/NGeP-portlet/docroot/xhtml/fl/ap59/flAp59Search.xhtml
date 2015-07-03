@@ -25,9 +25,7 @@
 					<p:outputLabel value="#{lbl['lbl.fl.contract.no']}"
 						style="width: 125px;" />
 					<p:inputText size="40" value="#{invoiceBackingBean.managedBean.contractNo}"></p:inputText>
-					<p:outputLabel value="#{lbl['lbl.fl.physical.contract.no']}"
-						style="padding-left: 50px;" />
-					<p:inputText size="40"></p:inputText>
+				
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docLoaSearch">
@@ -77,10 +75,10 @@
 				</p:column>
 				<p:column
 					headerText="#{lbl['lbl.fl.ptj.name']}">
-					<h:outputText value="#{flInvoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}"/>
+					<h:outputText value="#{flInvoice.flRequest.ctContract.ownerOrgProfile.pmOrgValidity.orgName}" style="white-space:normal"/>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.fl.ap59.contract.supplier']}">
-					<h:outputText value="#{flInvoice.flRequest.smSupplier.companyName}"/>
+					<h:outputText value="#{flInvoice.flRequest.smSupplier.companyName}" style="white-space:normal"/>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.fl.doc.maintain.action.no']}"
