@@ -1270,6 +1270,69 @@ public class CommitteBackingBean extends
 		getUserTypes();
 
 	}
+	
+	/**
+	 * Event to handle selection of committee members
+	 */
+	public void selectAllMembers(boolean selectAll) {
+		debugLogger("addToSelectedMemberList");
+		
+		List<ScCommitteeMember> committeeMemberList = 
+				this.getManagedBean().getSelectedCommitteMemebers();
+		
+		if (CollectionUtils.isNotEmpty(committeeMemberList)) {
+			selectAll(selectAll, committeeMemberList);
+			if (this.getManagedBean()
+					.getSelectedCommitteMemebers() == null) {
+				this.getManagedBean().setSelectedCommitteMemebers(
+						new ArrayList<ScCommitteeMember>());
+			} 
+			if (selectAll) {
+				this.getManagedBean()
+					.getSelectedCommitteMemebers().clear();
+				this.getManagedBean()
+					.getSelectedCommitteMemebers()
+					.addAll(committeeMemberList);
+			} else {
+				this.getManagedBean()
+					.setSelectedCommitteMemebers(null);
+			}
+		}
+	}
+	
+	/**
+	 * Event to handle selection of committee members
+	 */
+	public void selectMemberEvent(SelectEvent event) {
+		debugLogger("selectMemberEvent");
+		
+		ScCommitteeMember committeeMember = 
+								(ScCommitteeMember) event.getObject();
+		if (committeeMember.getMemberRole().getParameterCode()
+				.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+			committeeMember.setSelected(true);
+			selectMemberEvent(committeeMember);
+		} else {
+			return;
+		}
+	}
+	
+	public void selectMemberEvent(ScCommitteeMember committeeMember) {
+		this.getManagedBean().setSelectAllMembers(false);
+		List<ScCommitteeMember> selectedCommitteeMembers 
+				= this.getManagedBean().getSelectedCommitteMemebers();
+		if (selectedCommitteeMembers == null) {
+			selectedCommitteeMembers = new ArrayList<ScCommitteeMember>();
+		}
+		if (committeeMember.isSelected() && 
+				!selectedCommitteeMembers.contains(committeeMember)) {
+			selectedCommitteeMembers.add(committeeMember);	
+		} else {
+			selectedCommitteeMembers.remove(committeeMember);
+		}
+		this.getManagedBean().setSelectedCommitteMemebers(
+				selectedCommitteeMembers);
+	}	
 
 	/*
 	 * public void addCommitteMember() { debugLogger("addCommitteMember");
