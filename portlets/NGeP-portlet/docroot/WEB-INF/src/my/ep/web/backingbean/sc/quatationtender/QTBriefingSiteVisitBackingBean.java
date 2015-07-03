@@ -61,6 +61,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -787,6 +789,9 @@ public class QTBriefingSiteVisitBackingBean extends
 				.getManagedBean().getCurrentStatusId())){
 			ScQtBsvDtl tempScQtBsvDtl = new ScQtBsvDtl();
 			try {
+				ConvertUtilsBean convertUtilsBean = BeanUtilsBean
+						.getInstance().getConvertUtils();
+				convertUtilsBean.register(false, true, -1);
 				BeanUtils.copyProperties(tempScQtBsvDtl, bsvDtl);
 			} catch (IllegalAccessException e) {
 				log.error("Exception occured while copying properties"
