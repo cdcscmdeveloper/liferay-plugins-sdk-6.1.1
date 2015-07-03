@@ -1,31 +1,6 @@
 <html>
 <head>
 	<style>
-		#wrapper {
-			width:660px;
-			margin:0px auto;
-			padding:10px;
-		}
-		#header {
-			height:80px;
-			padding:10px;
-		}
-		#content {
-			margin-top:10px;
-			padding-bottom:10px;
-		}
-		#content div {
-			padding:10px;
-			float:left;
-		}
-		#footer {
-			height:5px;
-			float:left;
-			margin-top:10px;
-			margin-bottom:10px;
-			padding:1px;
-			width:630px;
-		}
 		#bottom {
 			clear:both;
 			text-align:right;
@@ -47,99 +22,88 @@
 	</style>
 </head>
 <body>
-<div id="wrapper">
-	<div id="header">
-		#parse("templates/sc/shared/header.vm")
-	</div>
-	<div id="content" style="height:740px;">
-		<table width="100%">
-			<tr>
-				<td align='center' valign="top">
-					<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>SURAT NIAT</span>
-					<br /><br />
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$fileNo - $fileExtnNo</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiNo</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierName</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierAddress</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan,</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$title</span>
-					<br/>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Merujuk kepada cadangan tawaran yang tersebut di atas, Kerajaan Malaysia ingin memberitahu tuan bahawa pada amnya terma-terma cadangan tawaran tuan boleh diterima oleh Kerajaan.</span></p>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2. Walau bagaimanapun, Kerajaan tidak dapat menerima cadangan tawaran tuan tanpa perbincangan/rundingan lanjut dengan tuan berhubung dengan terma-terma tertentu untuk kontrak yang dicadangkan itu, terutama terma-terma yang berkenaan dengan perkara-perkara berikut:</span></p>
-					<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-						<table class="table2" width='100%'>
-							<tr>
-								<td>Item</td>
-								<td>Kekerapan / Unit Ukuran</td>
-								<td>Bil. Unit Ukuran Sehari</td>
-								<td>Bil Hari utk Sebulan</td>
-								<td>Tempoh (Bulan)</td>
-								<td>Kuantiti</td>
-								<td>Unit Ukuran</td>
-								<td>Harga Ditawarkan(RM)</td>
-								<td>Jumlah Kecil(RM)</td>
-							</tr>
-							#foreach( $scLoiLoaItem in $scLoiLoaItems )
-								<tr>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.itemName</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth</span></td>
-									<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$numberDF.format($scLoiLoaItem.qty)</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.uom.uomName</span></td>
-									<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.unitPrice)</span></td>
-									<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.subTotal)</span></td>
-								</tr>
-							#end
-						</table>
-					</span>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Berikut adalah terma terma yang akan di runding:-</span></p>
-						<ol type="i" style="font-size:13px;font-weight:normal;color:#333333;text-align:justify;">
-							#foreach( $scNegoTerm in $scNegoTerms )
-								<li>$scNegoTerm.termDesc</li>
-							#end
-						</ol>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan pada tarikh dan tempat seperti berikut:</span></p>
-					<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
-						<table class="table2" width='100%'>
-							<tr>
-								<td>Tempat</td>
-								<td>Masa</td>
-								<td>Catatan</td>
-							</tr>
-							#foreach( $scNegoLocation in $scNegoLocations )
-								<tr>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
-									<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.remark</span></td>
-								</tr>
-							#end
-						</table>
-					</span>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">4. Jika tuan bersetuju, sila klik butang "Terima" untuk persetujuan rundingan dan pengesahan kehadiran dalam tempoh $ackDueDays hari daripada tarikh surat ini.</span></p>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">5. Surat ini adalah RAHSIA KERAJAAN dan tidak boleh disebarkan kepada mana-mana pihak lain.</span></p>
-					<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">6. Surat ini hanyalah suatu surat niat dan hendaklah tidak ditafsirkan dalam apa-apa cara jua sebagai mengikat Kerajaan.</span></p>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya yang menurut perintah,</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSigner</span><br/>
-					<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSignerDesignation</span>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<div id="footer">
-		#parse("templates/sc/shared/footer.vm")
-	</div>
-	<div id="bottom"></div>
-</div>
+<table width="100%">
+	<tr>
+		<td align='center' valign="top">
+			<span style='font-weight:bold;font-size:20px;font-family: Albertus Medium;'>SURAT NIAT</span>
+			<br /><br />
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$fileNo - $fileExtnNo</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiNo</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierName</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$supplierAddress</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Tuan,</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$title</span>
+			<br/>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Merujuk kepada cadangan tawaran yang tersebut di atas, Kerajaan Malaysia ingin memberitahu tuan bahawa pada amnya terma-terma cadangan tawaran tuan boleh diterima oleh Kerajaan.</span></p>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">2. Walau bagaimanapun, Kerajaan tidak dapat menerima cadangan tawaran tuan tanpa perbincangan/rundingan lanjut dengan tuan berhubung dengan terma-terma tertentu untuk kontrak yang dicadangkan itu, terutama terma-terma yang berkenaan dengan perkara-perkara berikut:</span></p>
+			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+				<table class="table2" width='100%'>
+					<tr>
+						<td>Item</td>
+						<td>Kekerapan / Unit Ukuran</td>
+						<td>Bil. Unit Ukuran Sehari</td>
+						<td>Bil Hari utk Sebulan</td>
+						<td>Tempoh (Bulan)</td>
+						<td>Kuantiti</td>
+						<td>Unit Ukuran</td>
+						<td>Harga Ditawarkan(RM)</td>
+						<td>Jumlah Kecil(RM)</td>
+					</tr>
+					#foreach( $scLoiLoaItem in $scLoiLoaItems )
+						<tr>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.itemName</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$numberDF.format($scLoiLoaItem.qty)</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.uom.uomName</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.unitPrice)</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.subTotal)</span></td>
+						</tr>
+					#end
+				</table>
+			</span>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Berikut adalah terma terma yang akan di runding:-</span></p>
+				<ol type="i" style="font-size:13px;font-weight:normal;color:#333333;text-align:justify;">
+					#foreach( $scNegoTerm in $scNegoTerms )
+						<li>$scNegoTerm.termDesc</li>
+					#end
+				</ol>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">3. Kerajaan bercadang untuk mengadakan mesyuarat di antara wakil-wakil Kerajaan dengan pihak tuan pada tarikh dan tempat seperti berikut:</span></p>
+			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
+				<table class="table2" width='100%'>
+					<tr>
+						<td>Tempat</td>
+						<td>Masa</td>
+						<td>Catatan</td>
+					</tr>
+					#foreach( $scNegoLocation in $scNegoLocations )
+						<tr>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.negoLocation</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$dateSDF.format($scNegoLocation.negoDate)</span></td>
+							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scNegoLocation.remark</span></td>
+						</tr>
+					#end
+				</table>
+			</span>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">4. Jika tuan bersetuju, sila klik butang "Terima" untuk persetujuan rundingan dan pengesahan kehadiran dalam tempoh $ackDueDays hari daripada tarikh surat ini.</span></p>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">5. Surat ini adalah RAHSIA KERAJAAN dan tidak boleh disebarkan kepada mana-mana pihak lain.</span></p>
+			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">6. Surat ini hanyalah suatu surat niat dan hendaklah tidak ditafsirkan dalam apa-apa cara jua sebagai mengikat Kerajaan.</span></p>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">" BERKHIDMAT UNTUK NEGARA "</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Saya yang menurut perintah,</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSigner</span><br/>
+			<span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$loiSignerDesignation</span>
+		</td>
+	</tr>
+</table>
 </body>
 </html>
