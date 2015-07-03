@@ -120,6 +120,8 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -1446,6 +1448,9 @@ public class NoticeBoardBackingBean extends
 							&& !registerdAttandance.isEmpty()) {
 						ScQtBsvRegistration scQtBsvRegistration = new ScQtBsvRegistration();
 						try {
+							ConvertUtilsBean convertUtilsBean = BeanUtilsBean
+									.getInstance().getConvertUtils();
+							convertUtilsBean.register(false, true, -1);
 							BeanUtils.copyProperties(scQtBsvRegistration,
 									bsvDetail.getTempRegistration());
 						} catch (IllegalAccessException e) {
