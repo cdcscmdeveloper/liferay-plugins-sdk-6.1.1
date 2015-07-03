@@ -1203,14 +1203,24 @@ public class LOIDetailBackingBean extends
 
 			BigDecimal afterNegoSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal afterNegoTotalAmount = BigDecimal.valueOf(0d);
+			
+			BigDecimal quantity = BigDecimal.valueOf(0d);
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+				
+				if(null == scLoiLoaItem.getTplSpecTierQty() ){
+					// with out Tier quantity
+					quantity = scLoiLoaItem.getQty();
+				} else{
+					// Tier quantity.
+					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+				}
 
 				if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
 					// offered price sub total and total
 					offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
-					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
+					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 					if(offeredPriceSubTotal != null){
 						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
 						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
@@ -1219,14 +1229,14 @@ public class LOIDetailBackingBean extends
 					// final price sub total and total - for bidding.
 					if(isBiddingAward){
 						finalPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
-						finalPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, scLoiLoaItem.getQty());
+						finalPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
 						if(finalPriceSubTotal != null){
 							scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
-							finalPriceAmount = finalPriceAmount.add(finalPriceAmount);
+							finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal);
 						}
 					} else{
 						// after nego price sub total and total
-						afterNegoSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+						afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), quantity);
 						if (afterNegoSubTotal != null) {
 							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
 							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
