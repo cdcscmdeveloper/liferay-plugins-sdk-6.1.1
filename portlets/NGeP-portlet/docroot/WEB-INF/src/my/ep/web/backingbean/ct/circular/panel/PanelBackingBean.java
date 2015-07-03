@@ -134,7 +134,7 @@ import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
 
 /**
- * Circular Panel Backingbean
+ * Circular Panel Backing bean
  * 
  * @author alam
  * @since 9/10/2013
@@ -1022,10 +1022,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	 * Method used to add list of supplier details
 	 * during panel circular item creation
 	 */
-	public void addPanelSupplier(List<SmSupplier> supplierList){ //101
+	public void addPanelSupplier(){ //101
 		log.info("PanelBackingBean.addPanelSupplier()");
 		try {
 			
+			List<SmSupplier> supplierList = getManagedBean().getSupplierList();
 			
 			if (supplierList != null){
 				
@@ -1062,9 +1063,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	
-	public void addBulkPanelSupplier(List<SmSupplier> supplierList){ //101
+	public void addBulkPanelSupplier(){ //101
 		log.info("PanelBackingBean.addPanelSupplier()");
 		 String panelCoverageICode;
+		 List<SmSupplier> supplierList = getManagedBean().getSupplierList();
 		try {
 			
 			
