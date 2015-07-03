@@ -158,10 +158,10 @@
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.uom.uomCode</td>
 							<td class="standard border-bottom left alignRight">$loiLoaItem.qty</td>
-							<td class="standard border-bottom left alignRight">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
-							<td class="standard border-bottom left alignRight">$loiLoaItem.offeredPriceSubTotal</td>
-							<td class="standard border-bottom left alignRight">$loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice</td>
-							<td class="standard border-bottom left-right alignRight">$loiLoaItem.afterNegoSubTotal</td>
+							<td class="standard border-bottom left alignRight">$!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice</td>
+							<td class="standard border-bottom left alignRight">$!loiLoaItem.offeredPriceSubTotal</td>
+							<td class="standard border-bottom left alignRight">$!loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice</td>
+							<td class="standard border-bottom left-right alignRight">$!loiLoaItem.afterNegoSubTotal</td>
 						</tr>
 						#end
 					</tbody>
