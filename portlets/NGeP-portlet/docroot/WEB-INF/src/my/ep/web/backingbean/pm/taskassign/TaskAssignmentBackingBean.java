@@ -58,6 +58,7 @@ import my.ep.dto.sc.SourcingIntegrationResDTO;
 import my.ep.exception.EpBpmException;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -1166,12 +1167,10 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	/**
 	 * Reset Fields 
 	 * **/
-	public void onChangeUser(){
+	public void onChangeUser(BaseEntity entity){
 		if(getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles() != null && !getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().isEmpty()){
 			getManagedBean().getTaskAssignmentSearchBean().getSelectedRoles().clear();
 		}
-		
-		getManagedBean().getTaskAssignmentSearchBean().setDocType(null);
 	}
 	
 	private List<Long> getReceivingOfficerIdListByDeliveryOrderId(Long docId){

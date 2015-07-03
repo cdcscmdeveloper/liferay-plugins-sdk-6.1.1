@@ -57,6 +57,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
@@ -1822,34 +1823,33 @@ public class OrganisationBackingBean extends
 	 *            (mandatory)
 	 * 
 	 **/
-	public void updateOrgCode(PmOrgProfile pmOrgProfile, int index) {
-
-		boolean isValid = true;
-		if (pmOrgProfile != null && pmOrgProfile.getOrgProfileId() != null) {
-			if (this.getManagedBean().getSelectedProfileGroups() != null
-					&& !this.getManagedBean().getSelectedProfileGroups()
-							.isEmpty()) {
-				int i = 0;
-				for (PmProfileGroup pmUserOrg : this.getManagedBean()
-						.getSelectedProfileGroups()) {
-					if (pmUserOrg.getMainOrgProfile().getOrgProfileId()
-							.equals(pmOrgProfile.getOrgProfileId())
-							&& i != index) {
-						isValid = false;
-						break;
-					}
-					i++;
-				}
-				if (!isValid) {
-					this.getManagedBean().getSelectedProfileGroups().get(index)
-							.getAuthorizedOrgProfile()
-							.setPmOrgValidity(new PmOrgValidity());
-					throw new EpException(MessageConst.ERROR_770019);
-				}
-
-			}
-		}
-	}
+//	public void updateOrgCode(BaseEntity entity) {
+//		PmOrgProfile pmOrgProfile = (PmOrgProfile) entity;
+//		boolean isValid = true;
+//		if (pmOrgProfile != null && pmOrgProfile.getOrgProfileId() != null) {
+//			if (this.getManagedBean().getSelectedProfileGroups() != null
+//					&& !this.getManagedBean().getSelectedProfileGroups()
+//							.isEmpty()) {
+//				int i = 0;
+//				for (PmProfileGroup profileGroup : this.getManagedBean()
+//						.getSelectedProfileGroups()) {
+//					if (profileGroup.getMainOrgProfile().getOrgProfileId()
+//							.equals(pmOrgProfile.getOrgProfileId())) {
+//						isValid = false;
+//						break;
+//					}
+//					i++;
+//				}
+//				if (!isValid) {
+//					this.getManagedBean().getSelectedProfileGroups().get(i)
+//							.getAuthorizedOrgProfile()
+//							.setPmOrgValidity(new PmOrgValidity());
+//					throw new EpException(MessageConst.ERROR_770019);
+//				}
+//
+//			}
+//		}
+//	}
 
 	/**
 	 * This method used for add organisation unit in Jabatan tab.
