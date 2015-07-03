@@ -5,7 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
    
     <p:panel id="agencyPanelId"  toggleSpeed="500"  header="#{lbl['lbl.ct.panel.agency.signing']}"  toggleable="true"  >
          <h:panelGrid style="width:980px;">
@@ -28,23 +29,27 @@
 		                   <h:outputText value="#{agSignerVar.orgProfile.orgName}"/>
 		               </p:column>
 		        
-		               <p:column style="width:20%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}"
+		               <p:column style="width:15%; white-space:normal;"  headerText="#{lbl['lbl.ct.ministry']}"
 		                       rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-		                   <h:outputText value="#{agreementBackingBean.retrieveMinistryByOrgProfileId(agreementBackingBean.managedBean.ctContract.ownerOrgProfile.orgProfileId)}"/>
-		               </p:column>
-        
-                        <p:column style="width:30%;" headerText="#{lbl['lbl.ct.ptj']}" 
+		                            <h:outputText value="#{agSignerVar.ministryName}"/>
+		                   </p:column>
+		               
+		               <p:column style="width:15%;white-space:normal;" headerText="Officer Name" 
                              rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
-                              <h:panelGroup>
-                                   <ac:lov id="listOfPtj" lovId="PM_ORG_PROFILE" headerText="#{lbl['lbl.ct.ptj']}" 
-                                     saveObject="agreementBackingBean.managedBean.ctAgencySigner[#{index}].orgProfile"
-						             value="#{agSignerVar.orgProfile.orgName}" readonly="true" size="35" 
-						            conditionField="#{agreementBackingBean.retrievePtjBylovCondition()}" update="contractSigner">
-					              </ac:lov>
-					         </h:panelGroup>
-					     </p:column>
+					               <h:outputText  value="#{agSignerVar.pengawaiPengawalName}"/>
+					       </p:column>
 			
-                         <p:column style="width:15%;" headerText="#{lbl['lbl.ct.contract.signer']}" styleClass="companyHeaderGrid">
+					     <p:column style="width:15%;white-space:normal;" headerText="Jabatan Name" 
+                             rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+					               <h:outputText  value="#{agSignerVar.jabatanName}"/>
+					        </p:column>
+        
+                        <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.ptj']}" 
+                             rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
+                                 <h:outputText value="#{agSignerVar.ptjName}"/> 
+					     </p:column>
+					     
+					     <p:column style="width:15%;" headerText="#{lbl['lbl.ct.contract.signer']}" styleClass="companyHeaderGrid">
                              <p:selectOneMenu id="contractSigner" 
                                  style="width:180px;" value="#{agSignerVar.officer.userId}"   label="#{lbl['lbl.ct.contract.signer']}">
                                  <f:selectItems value="#{agreementBackingBean.getContractSignerDropdown(agSignerVar)}"/>
@@ -64,13 +69,14 @@
                  </p:dataTable>
            </h:panelGrid>
            <div class="ppRightBtn"> 
-		      <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}" 
-		          action="#{agreementBackingBean.addAgencySignerParty()}" process="@form" 
-		           update=":form:AgSignerTable"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();">
-		          <p:tooltip for="addAgencySignerBtn">
+           <p:commandButton id="addAgencySignerBtn" value="#{lbl['lbl.btn.add']}"  
+                oncomplete="dlgAgencySigner.show();"  partialSubmit="true" process="@this"
+       	        update=":form:AgSignerTable,:form:dialogAgencySigner" action="#{agreementBackingBean.resetSignerAgencyDetails()}">
+                <p:tooltip for="addAgencySignerBtn">
 			 	     <h:outputText value="#{lbl['lbl.ct.tooltip.add.agency.signer']}" escape="false" />
 			      </p:tooltip>
-		      </p:commandButton>
+       		</p:commandButton>
+       		
 		      <p:commandButton id="delAgencySignerBtn" process="@form" 
 		          value="#{lbl['lbl.btn.delete']}"   onsuccess="dlgAgSignerDel.show()">
 		  	       <p:tooltip for="delAgencySignerBtn">
@@ -88,7 +94,7 @@
                 </h:panelGrid>
                 <div class="ppRightBtn">
 		           <p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:AgSignerTable" 
-		               process="@form" actionListener="#{agreementBackingBean.deleteAgencySignerParty()}" onclick="dlgAgSignerDel.hide();"/>
+		               process="@all" actionListener="#{agreementBackingBean.deleteAgencySignerParty()}" onclick="dlgAgSignerDel.hide();"/>
 			       <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgAgSignerDel.hide();" type="button" />
 		        </div>
              </p:dialog>  
@@ -156,7 +162,64 @@
 		              process="@form"  actionListener="#{agreementBackingBean.deleteAgencyWitnes()}" onclick="dlgAgWitnessDel.hide();"/>
 			      <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgAgWitnessDel.hide();" type="button" />
 		       </div>
-           </p:dialog>  
+           </p:dialog>
+         
+           <p:dialog id="dialogAgencySigner"  header="Add Agency Signer" 
+                  widgetVar="dlgAgencySigner"  styleClass="pop_up_top" modal="true" width="600" height="200">
+			  
+			    <h:outputText styleClass="instruction" value="#{lbl['lbl.ct.instruction.add.agency.list']}" escape="false"/><br/><br/>
+		      <h:panelGroup  id="agencyiesSingner">
+                  <h:panelGrid columns="3">
+               
+                 <p:selectOneMenu for="ministry"  style="width:140px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.ministry']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="ministry" style="width:430px"
+                      value="#{agreementBackingBean.managedBean.ministryProfileId}" >
+            	   <f:selectItems value="#{agreementBackingBean.getMinistryDropdown()}"/>
+            	   <p:ajax event="change"  process="@this" 
+            	       listener="#{agreementBackingBean.settingMinistryListener}" update=":form:controllingOfficer,:form:jabatan,:form:ptjId" />
+                 </p:selectOneMenu>
+               
+                  <p:selectOneMenu for="controllingOfficer"  style="width:140px" disabled="true" >
+            	    <f:selectItem itemLabel="Controlling Officer" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="controllingOfficer" style="width:430px"
+                      value="#{agreementBackingBean.managedBean.officerProfileId}" >
+            	   <f:selectItems value="#{agreementBackingBean.getPengawaiPengawalDropdown()}"/>
+            	   <p:ajax event="change" process="@this" 
+            	       listener="#{agreementBackingBean.settingPengawaiPengawalListener}" update=":form:jabatan, :form:ptjId" />
+                 </p:selectOneMenu>
+                 
+                 <p:selectOneMenu for="jabatan"  style="width:140px" disabled="true" >
+            	    <f:selectItem itemLabel="#{lbl['lbl.ct.jabatan']}" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="jabatan" style="width:430px"
+                      value="#{agreementBackingBean.managedBean.jabatanProfileId}" >
+            	   <f:selectItems value="#{agreementBackingBean.getJabatanDropdown()}"/>
+            	    <p:ajax event="change" process="@this" 
+            	        listener="#{agreementBackingBean.settingJabatanListener}" update=":form:ptjId"/>
+                 </p:selectOneMenu>
+                 
+                 <p:selectOneMenu for="ptjId"  style="width:140px" disabled="true">
+            	    <f:selectItem itemLabel="PTJ" itemValue=""/>
+                 </p:selectOneMenu>
+                 <p:spacer height="1"/>
+                 <p:selectOneMenu id="ptjId" style="width:430px"
+                      value="#{agreementBackingBean.managedBean.ptjProfileId}" >
+            	   <f:selectItems value="#{agreementBackingBean.getPtjDropdown()}"/>
+            	    <p:ajax event="change"/>
+                 </p:selectOneMenu>
+                </h:panelGrid>
+                 <div class="ppRightBtn">
+       		        <p:commandButton value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
+				    action="#{agreementBackingBean.addAgencySignerDetails}" onclick="tableAgencySigner.hide();"/>
+		       </div>
+             </h:panelGroup>
+	      </p:dialog>  
 	   </p:panel>		
 	<ac:lovPopup />   	
 </ui:composition>
