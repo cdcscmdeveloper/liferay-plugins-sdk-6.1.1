@@ -122,6 +122,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isZoneTabChange;
 	private boolean itemRecommendByAward;
 	private boolean disableSupplierSelection;
+	private boolean itemFwdToHighAuthority;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -609,6 +610,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setDisableSupplierSelection(
 						boolean disableSupplierSelection) {
 		this.disableSupplierSelection = disableSupplierSelection;
+	}
+
+	/**
+	 * @return the itemFwdToHighAuthority
+	 */
+	public boolean isItemFwdToHighAuthority() {
+		return itemFwdToHighAuthority;
+	}
+
+	/**
+	 * @param itemFwdToHighAuthority 
+	 * 					the itemFwdToHighAuthority to set
+	 */
+	public void setItemFwdToHighAuthority(
+						boolean itemFwdToHighAuthority) {
+		this.itemFwdToHighAuthority = itemFwdToHighAuthority;
 	}
 
 	/**

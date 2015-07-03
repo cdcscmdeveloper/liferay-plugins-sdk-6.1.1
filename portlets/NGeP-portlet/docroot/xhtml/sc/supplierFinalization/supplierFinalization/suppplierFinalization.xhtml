@@ -71,6 +71,7 @@
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode}" 
 									disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser || 
 													suppFinalizationBackingBean.managedBean.procCategoryMedicine ||
+													suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority ||
 													(isQTStatusReFinalized and 
 														suppFinalizationBackingBean.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 
 															ParameterConst.recommendTypeItem)}">
