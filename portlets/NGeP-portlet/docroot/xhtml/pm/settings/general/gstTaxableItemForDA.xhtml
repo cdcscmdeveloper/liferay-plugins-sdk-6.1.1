@@ -25,7 +25,7 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.item.code']}" />
 			</f:facet>
-			<p:inputText size="10" id="unspscCodeDAId" value="#{tidaObj.unspsc.unspscCode}" disabled="true"/>
+			<p:inputText size="6" id="unspscCodeDAId" value="#{tidaObj.unspsc.unspscCode}" disabled="true"/>
 		
 			<p:commandLink id="itemCodeDALovId" partialSubmit="true"
 				process="@this"
@@ -107,7 +107,7 @@
 			</f:facet>
 			<p:selectOneMenu id="tidaRecordStatus" value="#{tidaObj.recordStatusFlg}" 
 				required="true" label="#{lbl['lbl.pm.status']}"
-				disabled="#{tidaObj.brandNew}" style="width:128px;">
+				disabled="#{tidaObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
@@ -132,9 +132,11 @@
 		
 	</p:dataTable>
 	<br />
-	<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
-			process=":form:settingTabId:gstId"
-			update=":form:settingTabId:gstId"
-			action="#{ruleCatalogueBackingBean.addTaxableItemForDA()}"></p:commandButton>
+		<div style="text-align: right;">
+		<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
+				process=":form:settingTabId:gstId"
+				update=":form:settingTabId:gstId"
+				action="#{ruleCatalogueBackingBean.addTaxableItemForDA()}"></p:commandButton>
+			</div>
 	
 	</ui:composition>
