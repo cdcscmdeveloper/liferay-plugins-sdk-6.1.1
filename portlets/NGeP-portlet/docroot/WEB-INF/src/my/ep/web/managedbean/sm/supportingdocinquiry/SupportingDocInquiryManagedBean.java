@@ -20,6 +20,7 @@ public class SupportingDocInquiryManagedBean extends ViewApplHistoryManagedBean 
 	private Object bpmPojo;
 	private String[] bpmAction;
 	private List<SmAppl> applList;
+	private List<Object[]> expiredSdoVerifySuppDocApplList;
 	private boolean allowedToSubmit;
 
 	public Object getBpmPojo() {
@@ -68,6 +69,15 @@ public class SupportingDocInquiryManagedBean extends ViewApplHistoryManagedBean 
 
 	public void setAllowedToSubmit(boolean allowedToSubmit) {
 		this.allowedToSubmit = allowedToSubmit;
+	}
+
+	public List<Object[]> getExpiredSdoVerifySuppDocApplList() {
+		return expiredSdoVerifySuppDocApplList;
+	}
+
+	public void setExpiredSdoVerifySuppDocApplList(
+			List<Object[]> expiredSdoVerifySuppDocApplList) {
+		this.expiredSdoVerifySuppDocApplList = expiredSdoVerifySuppDocApplList;
 	}
 
 }
