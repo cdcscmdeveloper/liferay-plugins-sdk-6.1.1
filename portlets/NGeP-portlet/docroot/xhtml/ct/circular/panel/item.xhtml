@@ -124,7 +124,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	 </h:panelGrid>	 
 	 <div class="ppRightBtn">
 	 	 <ac:lov id="loaBulkSupId" lovId="SM_SUPPLIER"
-						postUpdateListener="panelBackingBean.addBulkPanelSupplier(panelBackingBean.managedBean.supplierList)"
+						postUpdateListener="panelBackingBean.addBulkPanelSupplier"
 						headerText="#{lbl['lbl.ct.supplier']}" 
 						buttonLabel="Bulk Update Supplier"
 						selectionMode="multiple"
@@ -382,7 +382,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			</p:dataTable>			
 		   <div class="ppRightBtn">
 		   		<ac:lov id="loaSupId" lovId="SM_SUPPLIER"
-						postUpdateListener="panelBackingBean.addPanelSupplier(panelBackingBean.managedBean.supplierList)"
+						postUpdateListener="panelBackingBean.addPanelSupplier"
 						headerText="#{lbl['lbl.ct.supplier']}" 
 						buttonLabel="#{lbl['lbl.btn.add']}"
 						selectionMode="multiple"
