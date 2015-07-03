@@ -74,6 +74,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -250,7 +251,7 @@ public class LOADetailBackingBean extends
 							.getUserSessionBean().getLoginId());
 				} else {
 					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
-					awardDataType.setDeskOfficer(new FacesScopes()
+					awardDataType.setSecretary(new FacesScopes()
 							.getUserSessionBean().getLoginId());
 				}
 			}
@@ -1493,10 +1494,21 @@ public class LOADetailBackingBean extends
 		context.put("deductionTypes", deductionTypes.toString());
 
 		context.put("contractDuration", scLoa.getContractDuration());
-		context.put("contractEffDate",
-				dateSDF.format(scLoa.getContractEffDate()));
-		context.put("contractExpDate",
-				dateSDF.format(scLoa.getContractExpDate()));
+		
+		if(null == scLoa.getContractEffDate()){
+			context.put("contractEffDate","");
+		} else{
+			context.put("contractEffDate",
+					dateSDF.format(scLoa.getContractEffDate()));
+		}
+		
+		if(null == scLoa.getContractExpDate()){
+			context.put("contractExpDate","");
+		} else{
+			context.put("contractExpDate",
+					dateSDF.format(scLoa.getContractExpDate()));
+		}
+		
 
 		String bondAmtStr = "";
 		if (scLoa.getBondAmt() != null) {
@@ -4427,18 +4439,8 @@ public class LOADetailBackingBean extends
 	 */
 	public List<PmParameterDesc> getContractTypes() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
-		boolean  isMinistry  = Boolean.TRUE;
-
 		// check logged in user org type
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null) {
-			String orgType =  retrievePmUserByUserId(user.getUserId());
-			if( ParameterConst.ORG_TYPE_BPK_HQ.equalsIgnoreCase(orgType) || 
-					ParameterConst.ORG_TYPE_PMS_SABAH.equalsIgnoreCase(orgType) ||
-					ParameterConst.ORG_TYPE_PMS_SARAWAK.equalsIgnoreCase(orgType)){
-				isMinistry  = Boolean.FALSE;
-			}
-		}
+		boolean  isMinistry =  retrievePmUserOrgTypeByUserId();
 
 		if(isMinistry){
 			searchBean.getDataFilterBeans().add(
@@ -4456,7 +4458,7 @@ public class LOADetailBackingBean extends
 
 		return contractTypes;
 	}
-	
+
 	/**
 	 * Retrieve org profile by org type.
 	 *
@@ -4477,27 +4479,39 @@ public class LOADetailBackingBean extends
 		return pmOrgProfile;
 	}
 	
+	
 	/**
-	 * Retrieve pm user by user id.
-	 *
-	 * @param id the id
-	 * @return the string
+	 * Retrieve pm user org type by user id.
+	 * to check user org type 
+	 * @return true, if successful
 	 */
-	private String retrievePmUserByUserId(Long id){
-		String  orgType  = "";
+	private boolean retrievePmUserOrgTypeByUserId(){
+		boolean isMinistry  = Boolean.TRUE;
+		PmParameter  orgTypeCode = null;
 		IUserSO userSO = null;
 		try {
 			UserReqDTO reqDTO = new UserReqDTO();
-			UserResDTO resDTO = null;
-			reqDTO.setUserId(id);
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
 			userSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-			resDTO = userSO.retrieveUserProfileByUserId(reqDTO);
-			if(resDTO.isSuccessful()){
-				orgType = resDTO.getPmUser().getOrgTypeCode().getParameterCode();
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+			if(resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size()>0){
+				for (PmUserOrg pmUserOrg :  resDTO.getUserOrgList()) {
+					if( pmUserOrg.getPmOrgProfile().getOrgTypeCode() != null){
+						orgTypeCode   = pmUserOrg.getPmOrgProfile().getOrgTypeCode();
+						if(ParameterConst.ORG_TYPE_BPK_HQ.equalsIgnoreCase(orgTypeCode.getParameterCode()) || 
+								ParameterConst.ORG_TYPE_PMS_SABAH.equalsIgnoreCase(orgTypeCode.getParameterCode()) ||
+								ParameterConst.ORG_TYPE_PMS_SARAWAK.equalsIgnoreCase(orgTypeCode.getParameterCode())){
+							isMinistry  = Boolean.FALSE;
+						}
+					}
+
+
+				}
 			}
 		}finally{
 			userSO = null;
-		}		
-		return orgType;
+		}
+		return isMinistry;		
 	}
 }
