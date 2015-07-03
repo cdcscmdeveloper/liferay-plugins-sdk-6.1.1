@@ -43,7 +43,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private String previousPage;
 
 	private String location;
-	private String address;
+	private ScQtBsvDtl bsvDetails;
 
 	private ScQtBsv scQtBsv;
 
@@ -204,15 +204,15 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	/**
 	 * @return the address
 	 */
-	public String getAddress() {
-		return address;
+	public ScQtBsvDtl getBsvDetails() {
+		return bsvDetails;
 	}
 
 	/**
 	 * @param address the address to set
 	 */
-	public void setAddress(String address) {
-		this.address = address;
+	public void setBsvDetails(ScQtBsvDtl bsvDetails) {
+		this.bsvDetails = bsvDetails;
 	}
 
 	/**
