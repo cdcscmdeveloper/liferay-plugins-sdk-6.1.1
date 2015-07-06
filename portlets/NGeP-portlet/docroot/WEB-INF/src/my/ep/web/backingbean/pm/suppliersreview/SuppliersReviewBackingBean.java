@@ -2,8 +2,6 @@ package my.ep.web.backingbean.pm.suppliersreview;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -19,7 +17,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmBasicCategory;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.logging.LogKey;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pm.category.CategoryBackingBean;
 import my.ep.web.bean.SuppliersReviewSearchBean;
@@ -28,9 +25,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-
-
-
 
 @ManagedBean(name = "suppliersReviewBackingBean")
 @ViewScoped
@@ -98,17 +92,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		this.getManagedBean().setSuppliersReviewSearchBean(
 				new SuppliersReviewSearchBean());
 		
-		this.getManagedBean().setAllStates(false);
+		this.getManagedBean().setAllStates(false);		
 		
-		/*CategoryBackingBean categoryBackingBean = new CategoryBackingBean();
-		
-		if(categoryBackingBean.getManagedBean().getBasicCategoryList()!=null 
-				&& !categoryBackingBean.getManagedBean().getBasicCategoryList().isEmpty()){
-			
-			for(PmBasicCategory pmBasicCategory:categoryBackingBean.getManagedBean().getBasicCategoryList()){
-				pmBasicCategory.setSelected(false);
-			}
-		}*/
 		retrievePmStateList();
 
 	}
