@@ -168,7 +168,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 			}
 			else{
-				throw new EpException(MessageConst.ERROR_76001);
+				throw new EpException(MessageConst.ERROR_790001);
 				
 				/*FacesContext.getCurrentInstance().addMessage(
 						null,
