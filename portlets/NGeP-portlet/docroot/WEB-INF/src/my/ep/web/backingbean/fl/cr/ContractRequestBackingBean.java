@@ -699,7 +699,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * update UI delivery address datatable
 	 * 
 	 */
-	public void updateDeliveryAddrDt(BaseEntity entity) {
+	public void updateDeliveryAddrDt(List<BaseEntity> entity) {
 		if(getManagedBean().isAgencyAddress()) {
 			getManagedBean().setSelectedAddrTypeList(new ArrayList<PmAddressType>());
 			if(getManagedBean().getSelectedAgencyAddressList()!=null && getManagedBean().getSelectedAgencyAddressList().size()>0) {
