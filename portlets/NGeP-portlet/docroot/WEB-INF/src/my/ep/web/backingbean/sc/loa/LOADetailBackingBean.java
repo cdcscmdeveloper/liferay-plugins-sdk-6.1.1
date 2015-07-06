@@ -1351,7 +1351,7 @@ public class LOADetailBackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateBondLetterFromVelocityToPdf((ScAttachment) scLoaReportAttachment,scLoa);
-					}else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+					} else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
@@ -1359,7 +1359,7 @@ public class LOADetailBackingBean extends
 					}
 					
 				}else if(scLoaReportAttachment != null && 
-						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)){
+						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)){
 					// if pending supplier acknowledgement , always regenerate 
 					
 					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
@@ -1389,6 +1389,11 @@ public class LOADetailBackingBean extends
 						formJadualHarga((ScAttachment) scLoaReportAttachment,
 								scLoa);
 						
+					} else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
 					}
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
@@ -1961,7 +1966,7 @@ public class LOADetailBackingBean extends
 
 						if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
 							// offered price sub total and total
-							offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+							offerPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice()));
 							offeredPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
 							if(offeredPriceSubTotal != null){
 								offeredPriceSubTotal =  offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
@@ -1971,7 +1976,7 @@ public class LOADetailBackingBean extends
 							}
 
 							// final price sub total and total - for bidding.
-							finalPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
+							finalPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice()));
 							finalPriceSubTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, scLoiLoaItem.getQty());
 							if(finalPriceSubTotal != null){
 								finalPriceSubTotal =  finalPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
