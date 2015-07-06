@@ -4380,7 +4380,7 @@ public class QTDetailBackingBean extends
 			}
 			if (amendMentBean.getOldValidityPeriodDays() != amendMentBean
 					.getNewValidityPeriodDays()) {
-				amendMentBean.setPTJApprovalReq(true);
+
 			}
 			amendMentBean.setNewValidityPeriodDays((Integer) newValue);
 
