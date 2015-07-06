@@ -215,7 +215,7 @@
                 </h:panelGrid>
                  <div class="ppRightBtn">
        		        <p:commandButton value="#{lbl['lbl.btn.select']}" partialSubmit="true" process="@this" update=":form:AgSignerTable" 
-				    action="#{agreementBackingBean.addAgencySignerDetails}"  oncomplete="tableAgencySigner.hide();"/>
+				    action="#{agreementBackingBean.addAgencySignerDetails}"  onclick="tableAgencySigner.hide();"/>
 		       </div>
              </h:panelGroup>
 	      </p:dialog>  
