@@ -63,7 +63,8 @@
 			<portlet id="list-gl-account"></portlet>
             <portlet id="list-fund"></portlet>
             <portlet id="list-program-activity"></portlet>
-            <portlet id="list-project"></portlet>					
+            <portlet id="list-project"></portlet>
+            <portlet id="list-SuppliersReview"></portlet>			
 			
 		</category>
 		<!-- Profile Management - END -->		
