@@ -7,12 +7,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:dialog id="dlExtension" modal="true" widgetVar="dlgExtension"
+	<p:dialog id="dlExtension" modal="true" widgetVar="dlgExtension" 
+		header="#{lbl['lbl.pm.settings.gst.select.extension.code']}"
 		width="700" position="top">
 		<!-- Validation Message -->
 		<p:messages id="messagesExtension" showDetail="true" autoUpdate="true"
 			closable="true" showSummary="false" />
-		<p:panel header="#{lbl['lbl.pm.settings.gst.extension.details']}"
+		<p:panel header="#{lbl['lbl.pm.settings.gst.extension.item']}"
 			toggleable="true">
 			<h:panelGroup id="extensionDetailsPanel" style="width:100%;">
 				<table>
@@ -46,7 +47,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.settings.gst.type']}" />
 					</td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu disabled="#{ruleCatalogueBackingBean.disabledExtensionFields()}"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedType}"
 							styleClass="ppDropDownWidthL" style="margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -58,7 +59,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.settings.gst.brand']}" />
 					</td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu disabled="#{ruleCatalogueBackingBean.disabledExtensionFields()}"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedBrand}"
 							styleClass="ppDropDownWidthL" style="margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -70,7 +71,7 @@
 				<tr>
 					<td><p:outputLabel
 							value="#{lbl['lbl.pm.settings.gst.measurement']}" /></td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu disabled="#{ruleCatalogueBackingBean.disabledExtensionFields()}"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedMeasurement}"
 							styleClass="ppDropDownWidthL" style="margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -82,7 +83,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.pm.settings.gst.color']}" />
 					</td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu disabled="#{ruleCatalogueBackingBean.disabledExtensionFields()}"
 							value="#{ruleCatalogueBackingBean.managedBean.selectedColor}"
 							styleClass="ppDropDownWidthL" style="margin-bottom: 5px;">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
@@ -97,7 +98,8 @@
 			
 			<table style="width:100%;"><tr><td style="text-align:right;">
 				<p:commandButton 
-					id="extensionOkbtn"
+					id="extensionOkbtn" 
+					disabled="#{ruleCatalogueBackingBean.disabledExtensionFields()}"
 					value="#{lbl['lbl.btn.ok']}"
 					action="#{ruleCatalogueBackingBean.saveExtension}"
 					update=":form:settingTabId:gstId"

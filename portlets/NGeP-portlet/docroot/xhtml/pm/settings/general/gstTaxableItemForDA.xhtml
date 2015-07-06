@@ -49,7 +49,7 @@
 			</f:facet>
 			<p:commandLink id="daExtensioncl" partialSubmit="true"
 				process="@this"
-				disabled="#{(!tidaObj.brandNew) or (empty tidaObj.unspsc or empty tidaObj.unspsc.unspscId or tidaObj.unspsc.unspscLevel ne '3')}"	
+				disabled="#{(empty tidaObj.unspsc or empty tidaObj.unspsc.unspscId or tidaObj.unspsc.unspscLevel ne '3')}"	
 				action="#{ruleCatalogueBackingBean.initExtensionDetails(rowIndex)}"			
 				oncomplete="dlgExtension.show();" 
 				update=":#{p:component('dlExtension')}">
@@ -108,7 +108,6 @@
 			<p:selectOneMenu id="tidaRecordStatus" value="#{tidaObj.recordStatusFlg}" 
 				required="true" label="#{lbl['lbl.pm.status']}"
 				disabled="#{tidaObj.brandNew}" style="width:90px;">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<p:ajax event="change" update="tidaexpDateId,tidaeffDateId"

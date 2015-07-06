@@ -51,7 +51,7 @@
 			</f:facet>
 			<ac:lov id="g2gCommodityId" lovId="CM_UNSPSC" size="6" 
 				disabled="#{empty tiG2GObj.orgProfile or !(tiG2GObj.brandNew)}"
-				headerText="#{lbl['lbl.cm.commodity']}" 
+				headerText="#{lbl['lbl.cm.commodity']}"  readonly="true" 
 				update=":form:settingTabId:gstId:opTiG2G" 
 				saveObject="ruleCatalogueBackingBean.managedBean.taxableItemsForG2G[#{rowIndex}].unspsc"
 				value="#{tiG2GObj.unspsc.unspscCode}"
@@ -76,7 +76,6 @@
 			</f:facet>
 			<p:selectOneMenu id="somTiG2GScope" value="#{tiG2GObj.ruleType}" disabled="#{(!tiG2GObj.brandNew)}"
 				required="true" label="#{lbl['lbl.pm.settings.gst.scope']}" style="width:120px">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems
 						value="#{ruleCatalogueBackingBean.retrieveRuleListForTaxableItemForG2G()}"
 						var="parameter" itemLabel="#{parameter.codeName}"
@@ -121,7 +120,6 @@
 			<p:selectOneMenu id="g2gRecordStatus" value="#{tiG2GObj.recordStatusFlg}" 
 				required="true" label="#{lbl['lbl.pm.status']}"
 				disabled="#{tiG2GObj.brandNew}" style="width:90px;">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<p:ajax event="change" update="g2gexpDateId,g2geffDateId"
