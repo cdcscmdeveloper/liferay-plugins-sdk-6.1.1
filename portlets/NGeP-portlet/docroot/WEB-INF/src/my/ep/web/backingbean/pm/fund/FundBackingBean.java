@@ -168,7 +168,7 @@ BaseBackingBean<FundManagedBean> {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									fundSearchBean.getStatus()), new SearchFilterBean(
 											"votFundType",
-											SearchOperator.OPERATOR_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+											SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.VOT_FUND_CODE_TYPE,
 											SearchCondition.CONDITION_AND.value())));
 				
 			}
@@ -177,7 +177,7 @@ BaseBackingBean<FundManagedBean> {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("votFundType",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								PmCodeConst.VOT_FUND_CODE_TYPE));
+								ParameterConst.VOT_FUND_CODE_TYPE));
 				
 				// Filter By - User expDate
 				searchBean.getDataFilterBeans().add(
@@ -201,7 +201,7 @@ BaseBackingBean<FundManagedBean> {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									fundSearchBean.getStatus()), new SearchFilterBean(
 											"votFundType",
-											SearchOperator.OPERATOR_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+											SearchOperator.OPERATOR_EQUALS.value(), ParameterConst.VOT_FUND_CODE_TYPE,
 											SearchCondition.CONDITION_AND.value())));
 			}
 
@@ -219,7 +219,7 @@ BaseBackingBean<FundManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("votFundType",
 							SearchOperator.OPERATOR_EQUALS.value(),
-							PmCodeConst.VOT_FUND_CODE_TYPE));
+							ParameterConst.VOT_FUND_CODE_TYPE));
 		}
 		return searchBean;
 	}

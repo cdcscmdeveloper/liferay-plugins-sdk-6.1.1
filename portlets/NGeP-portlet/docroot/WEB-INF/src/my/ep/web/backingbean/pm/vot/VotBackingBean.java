@@ -184,7 +184,7 @@ BaseBackingBean<VotManagedBean> {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("votFundType",
 								SearchOperator.OPERATOR_NOT_EQUALS.value(),
-								PmCodeConst.VOT_FUND_CODE_TYPE));*/
+								ParameterConst.VOT_FUND_CODE_TYPE));*/
 				
 				        searchBean.getDataFilterBeans().add(
 						new SearchMultiFilterBean(new SearchFilterBean(
@@ -192,7 +192,7 @@ BaseBackingBean<VotManagedBean> {
 								SearchOperator.OPERATOR_EQUALS.value(),
 								votSearchBean.getStatus()), new SearchFilterBean(
 										"votFundType",
-										SearchOperator.OPERATOR_NOT_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+										SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.VOT_FUND_CODE_TYPE,
 										SearchCondition.CONDITION_AND.value())));
 				
 			}
@@ -224,7 +224,7 @@ BaseBackingBean<VotManagedBean> {
 									SearchOperator.OPERATOR_EQUALS.value(),
 									votSearchBean.getStatus()), new SearchFilterBean(
 											"votFundType",
-											SearchOperator.OPERATOR_NOT_EQUALS.value(), PmCodeConst.VOT_FUND_CODE_TYPE,
+											SearchOperator.OPERATOR_NOT_EQUALS.value(), ParameterConst.VOT_FUND_CODE_TYPE,
 											SearchCondition.CONDITION_AND.value())));
 			
 				
@@ -244,7 +244,7 @@ BaseBackingBean<VotManagedBean> {
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("votFundType",
 							SearchOperator.OPERATOR_NOT_EQUALS.value(),
-							PmCodeConst.VOT_FUND_CODE_TYPE));
+							ParameterConst.VOT_FUND_CODE_TYPE));
 		}
 		return searchBean;
 	}
