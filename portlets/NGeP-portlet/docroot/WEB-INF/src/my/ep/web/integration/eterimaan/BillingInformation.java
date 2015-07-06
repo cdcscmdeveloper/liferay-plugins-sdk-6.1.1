@@ -10,7 +10,7 @@ public class BillingInformation {
 
 	private int recordType;  
 	private String agencyId;
-	private String totalBillCount; // Bill Header Count
+	private int totalBillCount; // Bill Header Count
 
 	private List<BillHeader> billHeaderList;
 	private List<CustomerInformation> customerInformationList;
@@ -32,11 +32,11 @@ public class BillingInformation {
 		this.agencyId = agencyId;
 	}
 
-	public String getTotalBillCount() {
+	public int getTotalBillCount() {
 		return totalBillCount;
 	}
 
-	public void setTotalBillCount(String totalBillCount) {
+	public void setTotalBillCount(int totalBillCount) {
 		this.totalBillCount = totalBillCount;
 	}
 
