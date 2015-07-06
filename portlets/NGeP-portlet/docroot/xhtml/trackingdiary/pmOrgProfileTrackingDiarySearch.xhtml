@@ -27,20 +27,21 @@
 				<p:outputLabel value="#{lbl['lbl.pm.ta.org.name']}"/><p:outputLabel value="*" styleClass="mandatory" />
 			</h:column>
 			<h:column>
-			<ac:lov id="lovMinistry" lovId="PM_ORG_PROFILE" size="55"
+			<ac:lov id="lovMinistry2" lovId="PM_ORG_PROFILE" size="55"
 				   disabled = "#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgType.parameterId == null or !pmTrackingDiaryBackingBean.managedBean.orgProfileRequired}"
 					update="@this"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgProfile.pmOrgValidity.orgName}"
 					saveObject="pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgProfile"
 					conditionField="#{pmTrackingDiaryBackingBean.constructConditionFields()}" />
+					<p:message id="lovMinistryMsg" for="lovMinistry2" display="icon" />
 			</h:column>
 		</h:panelGrid>
 
 
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				actionListener="#{pmTrackingDiaryBackingBean.searchUserOrgProfile}" partialSubmit="true" process="pmOrgSearchID @this" update=":form:dtOrgProfileResult"/>
+				actionListener="#{pmTrackingDiaryBackingBean.searchUserOrgProfile}" partialSubmit="true" process="orgProfilePanel @this" update=":form:dtOrgProfileResult"/>
 			<p:commandButton value="#{lbl['lbl.btn.reset']}"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 				action="#{pmTrackingDiaryBackingBean.resetOrganisationSearchBean}"
