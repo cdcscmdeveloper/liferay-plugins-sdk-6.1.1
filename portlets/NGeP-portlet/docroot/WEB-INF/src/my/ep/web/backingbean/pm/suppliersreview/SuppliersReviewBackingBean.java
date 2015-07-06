@@ -92,7 +92,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		this.getManagedBean().setSuppliersReviewSearchBean(
 				new SuppliersReviewSearchBean());
 		
-		this.getManagedBean().setAllStates(false);		
+		this.getManagedBean().setAllStates(false);
+		this.getManagedBean().setDisabled(false);
 		
 		retrievePmStateList();
 
