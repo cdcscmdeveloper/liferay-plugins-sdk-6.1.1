@@ -49,7 +49,7 @@ public class Encryption {
 				sftpUtility.upload(outFilePath+fileName, IntegrationConstants.GMAS_UPLOAD+fileName);
 				
 	    // call osb service	for transfering from host to 1GFMAS
-				 osbUtility.osbServiceCallOutBound(processId,fileName);
+//				 osbUtility.osbServiceCallOutBound(processId,fileName);
 		
 	}
 
