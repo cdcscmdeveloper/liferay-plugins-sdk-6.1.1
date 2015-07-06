@@ -1839,7 +1839,16 @@ public class EvaluationBackingBean extends
 				evalReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 				evalReqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 				evalReqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
-				evalReqDTO.setRecomandationType(1);
+				// evalReqDTO.setRecomandationType(1);
+				if (this.getManagedBean().getScQt().isDemoRequired()) {
+
+					evalReqDTO
+							.setRecomandationType(QTConstants.SETTING_TYPE_DEMO);
+				} else {
+
+					evalReqDTO
+							.setRecomandationType(QTConstants.SETTING_TYPE_TECHNICAL);
+				}
 				List<String> resultStg = new ArrayList<String>();
 				resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 				evalReqDTO.setResultStages(resultStg);
@@ -1863,7 +1872,11 @@ public class EvaluationBackingBean extends
 
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
-				reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+				if (this.getManagedBean().getScQt().isDemoRequired()) {
+					reqDTO.setSettingType(getSettingType(QTConstants.PRESENTATION_DEMO_EVALUATION));
+				} else {
+					reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+				}
 				resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);
 			}
 
@@ -1972,7 +1985,7 @@ public class EvaluationBackingBean extends
 					evalReqDTO
 							.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 					evalReqDTO.setEvalStage(QTConstants.COMPLIANCE_CHECK);
-					evalReqDTO.setRecomandationType(1);
+					evalReqDTO.setRecomandationType(QTConstants.SETTING_TYPE_TECHNICAL);
 					List<String> resultStg = new ArrayList<String>();
 					resultStg.add(QTConstants.TECHNICAL_EVALUATION);
 					evalReqDTO.setResultStages(resultStg);
@@ -4952,7 +4965,8 @@ public class EvaluationBackingBean extends
 			evalReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
 			evalReqDTO.setDocCategory(SourcingConstants.TECHNICAL_DOCTYPE);
 			evalReqDTO.setEvalStage(QTConstants.TECHNICAL_EVALUATION);
-			evalReqDTO.setRecomandationType(3);
+			// evalReqDTO.setRecomandationType(3);
+			evalReqDTO.setRecomandationType(QTConstants.SETTING_TYPE_TECHNICAL);
 			List<String> resultStg = new ArrayList<String>();
 			resultStg.add(SourcingConstants.EVAL_STAGE_PRESENTATION_DEMO);
 			evalReqDTO.setResultStages(resultStg);
@@ -4963,7 +4977,12 @@ public class EvaluationBackingBean extends
 				evaluationSo.prepareTechnicalEvaluationSummary(evalReqDTO);
 				getManagedBean().setPresentationDemoSummaryGenerated(true);
 			}
-
+			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+			EvaluationResDTO resDTO = new EvaluationResDTO();
+			reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+			reqDTO.setSettingType(getSettingType(QTConstants.TECHNICAL_EVALUATION));
+			resDTO = evaluationSo.retrievePassingScoreByQT(reqDTO);
+			this.getManagedBean().setDemoPassingScore(resDTO.getPassingScore());
 			this.getManagedBean().setQualifiedSuppliersDM(
 					new SummarySupplierPagingDataModel("qualifiedListId", true,
 							false, null, evalReqDTO.getResultStages()));
