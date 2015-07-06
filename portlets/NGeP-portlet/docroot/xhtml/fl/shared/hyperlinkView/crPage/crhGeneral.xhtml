@@ -40,7 +40,7 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="true"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName" readonly="true"
-						postUpdateListener="contractRequestBackingBean.getAgAccount()"
+						postUpdateListener="contractRequestBackingBean.getAgAccount"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.ct.prepared.for.ptj']}"	>
 					</ac:lov></td>

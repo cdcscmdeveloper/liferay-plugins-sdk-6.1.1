@@ -113,6 +113,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.phis.codata.FLPHISContractOrderDataType;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -205,6 +206,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	private static Logger log =  Logger.getLogger(ContractRequestBackingBean.class);
 	private final static long MILLIS_PER_DAY = 24 * 3600 * 1000;
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
+	private static final BaseEntity entity = null;
 	private IPagingDataModel<PmUom> unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
 	
 	private boolean checkFlg = false;
@@ -697,7 +699,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * update UI delivery address datatable
 	 * 
 	 */
-	public void updateDeliveryAddrDt() {
+	public void updateDeliveryAddrDt(BaseEntity entity) {
 		if(getManagedBean().isAgencyAddress()) {
 			getManagedBean().setSelectedAddrTypeList(new ArrayList<PmAddressType>());
 			if(getManagedBean().getSelectedAgencyAddressList()!=null && getManagedBean().getSelectedAgencyAddressList().size()>0) {
@@ -1232,7 +1234,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		setFlSupplierDtl(getManagedBean().getFlRequest());
 //		setOneOffFulfilmentItemAddr(getManagedBean().getFlRequest());
 		setFulfilmentItemAddr(getManagedBean().getFlRequest());
-		getAgAccount();
+		getAgAccount(entity);
 		if(getManagedBean().getFlRequest().isBrandNew()){
 			getManagedBean().getFlRequest().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
@@ -2912,7 +2914,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 *
 	 * @return the ag account
 	 */
-	public AgOfficeResDTO getAgAccount(){
+	public AgOfficeResDTO getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFlRequest().setIssuedOrgProfile(getManagedBean().getFlRequest().getPreparedOrgProfile());
 		initializeApproverGroup();
@@ -3143,7 +3145,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		/**
 		 * Check vot fund lov.
 		 */
-		public void checkVotFundLov(){
+		public void checkVotFundLov(BaseEntity entity){
 			getManagedBean().setProgramLov(false);
 			getManagedBean().setProjectLov(false);
 			getManagedBean().setVotFundDisplay(false);
@@ -3933,7 +3935,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
-	public void comparePtjGroup(){
+	public void comparePtjGroup(BaseEntity entity){
 		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
