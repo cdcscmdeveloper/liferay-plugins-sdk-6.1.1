@@ -5038,7 +5038,25 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getSmMofRegNoFrom() != null && (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL))
 					&& (this.getSmMofRegNoTo() != null && (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL))) {
-			  ValidateMofRegNo(this.getSmMofRegNoFrom(), this.getSmMofRegNoTo());
+				String mofRegNoFrom = null;
+				String mofRegNoTo = null;
+				if(this.getSmMofRegNoFrom().contains("-")){
+					mofRegNoFrom = this.getSmMofRegNoFrom().replace("-", "");	
+				}else{
+					mofRegNoFrom = this.getSmMofRegNoFrom();
+				}
+				if(mofRegNoFrom.contains(" ")){
+					mofRegNoFrom=mofRegNoFrom.replace(" ", "");	
+				}				
+				if(this.getSmMofRegNoTo().contains("-")){
+					mofRegNoTo = this.getSmMofRegNoTo().replace("-", "");	
+				}else{
+					mofRegNoTo = this.getSmMofRegNoTo();
+				}
+				if(mofRegNoTo.contains(" ")){
+					mofRegNoTo=mofRegNoTo.replace(" ", "");	
+				}
+			  ValidateMofRegNo(mofRegNoFrom, mofRegNoTo);
 			}
 			if ((this.getSmMofRegNoFrom() != null)
 					&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)) {
@@ -6166,7 +6184,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		Pattern pattern1 = Pattern.compile(ptString1);
 		if((this.getSmMofRegNoFrom() != null)
 				&& (this.getSmMofRegNoFrom() != ReportConst.EMPTY_VAL)){
-			Matcher match1 = pattern1.matcher(this.getSmMofRegNoFrom());
+			String mofRegNoFrom = null;
+			if(this.getSmMofRegNoFrom().contains("-")){
+				mofRegNoFrom = this.getSmMofRegNoFrom().replace("-", "");	
+			}else{
+				mofRegNoFrom = this.getSmMofRegNoFrom();
+			}
+			if(mofRegNoFrom.contains(" ")){
+				mofRegNoFrom=mofRegNoFrom.replace(" ", "");	
+			}
+			//this.setSmMofRegNoFrom(mofRegNoFrom);
+			Matcher match1 = pattern1.matcher(mofRegNoFrom);
 			if (match1.matches()) {
 			} else {
 				this.setSmMofRegNoFrom(null);
@@ -6178,7 +6206,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		Pattern pattern2 = Pattern.compile(ptString2);
 		if((this.getSmMofRegNoTo() != null)
 				&& (this.getSmMofRegNoTo() != ReportConst.EMPTY_VAL)){
-			Matcher match2 = pattern2.matcher(this.getSmMofRegNoTo());
+			String mofRegNoTo = null;
+			if(this.getSmMofRegNoTo().contains("-")){
+				mofRegNoTo = this.getSmMofRegNoTo().replace("-", "");	
+			}else{
+				mofRegNoTo = this.getSmMofRegNoTo();
+			}
+			if(mofRegNoTo.contains(" ")){
+				mofRegNoTo=mofRegNoTo.replace(" ", "");	
+			}
+			//this.setSmMofRegNoTo(mofRegNoTo);
+			Matcher match2 = pattern2.matcher(mofRegNoTo);
 			if (match2.matches()) {
 			} else {
 				this.setSmMofRegNoFrom(null);
