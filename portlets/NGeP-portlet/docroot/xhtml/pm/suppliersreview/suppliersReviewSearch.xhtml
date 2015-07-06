@@ -24,33 +24,31 @@
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
-				<td><h:selectBooleanCheckbox
-						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID"
+				<td style="zoom:138%;width: 79%;"><h:selectBooleanCheckbox
+						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID" 
 						value="#{suppliersReviewBackingBean.managedBean.allStates}">
 						<p:ajax event="change"
 							listener="#{suppliersReviewBackingBean.selectAllStates}"
 							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
-					</h:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText>
+					</h:selectBooleanCheckbox> <h:outputText escape="false" value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText>
 				</td>
-
 			</tr>
+			</table>
+			<table>
 			<tr>
-				<th width="20%"><p:outputLabel
+				<th width="50%"><p:outputLabel
 						value="#{lbl['lbl.pm.sr.state']}" for="stateListId"></p:outputLabel></th>
-
 				<td><p:selectManyMenu label="#{lbl['lbl.pm.sr.state']}"
 						id="stateListId"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.selectedStatesList}"
 						style="width: 207px;margin-bottom: 5px;height:100px"
 						showCheckbox="true"
 						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
-
 						<f:selectItems var="finState"
 							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
 							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
 						</f:selectItems>
 					</p:selectManyMenu></td>
-
 				<th>&#160;</th>
 				<td>&#160;</td>
 			</tr>
