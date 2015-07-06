@@ -1446,24 +1446,22 @@ public class NoticeBoardBackingBean extends
 							.getTempRegistration().getBsvAttendance());
 					if (registerdAttandance != null
 							&& !registerdAttandance.isEmpty()) {
-						ScQtBsvRegistration scQtBsvRegistration = new ScQtBsvRegistration();
+						ScQtBsvRegistration scQtBsvRegistration = null;
 						try {
-							ConvertUtilsBean convertUtilsBean = BeanUtilsBean
-									.getInstance().getConvertUtils();
-							convertUtilsBean.register(false, true, -1);
-							BeanUtils.copyProperties(scQtBsvRegistration,
-									bsvDetail.getTempRegistration());
-						} catch (IllegalAccessException e) {
+							scQtBsvRegistration = (ScQtBsvRegistration) BeanUtils
+									.cloneBean(bsvDetail.getTempRegistration());
+							
+						} catch (Exception e) {
 							log.error("Exception occured while copying properties"
 									+ e.getMessage());
-						} catch (InvocationTargetException e) {
-							log.error("Exception occured while copying properties"
-									+ e.getMessage());
-						}
-						scQtBsvRegistration
-								.setBsvAttendance(registerdAttandance);
-						if (!scQtBsvRegistration.getBsvAttendance().isEmpty()) {
-							registrations.add(scQtBsvRegistration);
+						} 
+						if (scQtBsvRegistration != null) {
+							scQtBsvRegistration
+									.setBsvAttendance(registerdAttandance);
+							if (!scQtBsvRegistration.getBsvAttendance()
+									.isEmpty()) {
+								registrations.add(scQtBsvRegistration);
+							}
 						}
 					}
 				}
