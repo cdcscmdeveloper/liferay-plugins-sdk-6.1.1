@@ -115,20 +115,17 @@
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.prepared.date']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:inputText size="12" disabled="true" style="text-align:right"
 						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing == 'false'}" />
 					<p:spacer width="5" /> <p:inputText size="2"
 						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}"
 						disabled="true"
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing eq false}" />
-					<p:inputText size="12" disabled="true"
-						value=""
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}" />
-					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing}"/>
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}" />
 				</td>
-
+				
 				<td colspan="2"><p:outputLabel value="#{lbl['lbl.fl.submission.date']}" /></td>
 				<td><p:inputText size="25" disabled="true" 	value="#{contractRequestBackingBean.managedBean.flRequest.submissionDate}">
 						<f:convertDateTime
@@ -138,10 +135,11 @@
 					</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:calendar mode="popup" showOn="button" 
 						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal=='View'}" 
 						readonlyInput="true"
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.startDate}"
 						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -155,10 +153,11 @@
 					</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:calendar mode="popup" showOn="button" id="delEndDate" 
 						disabled="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing or contractRequestBackingBean.managedBean.buttonVal=='View'}" 
 						readonlyInput="true"
+						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.zonalPricing == 'false'}"
 						mindate="#{contractRequestBackingBean.managedBean.flRequest.startDate}" 
 						maxdate="#{contractRequestBackingBean.managedBean.maxDate}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.endDate}"
