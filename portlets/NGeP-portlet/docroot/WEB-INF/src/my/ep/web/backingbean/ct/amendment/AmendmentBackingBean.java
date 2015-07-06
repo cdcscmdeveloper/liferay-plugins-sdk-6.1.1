@@ -1603,30 +1603,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used to render the selected product item information.
-	 */
-	public void changeField() {			
-//		flushItem();
-//		if (this.getManagedBean().getShowItem() != null) {
-//			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-//				//getManagedBean().setItemPricing(true);
-//			} else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-//				//getManagedBean().setItemCeilingQuantity(true);
-//			}
-//		}	
-	}
-	
-	/**
-	 * The method used to clear the previous viewed information before
-	 * rendering the product item details.
-	 */
-	private void flushItem() {
-		//getManagedBean().setItemPricing(false);
-		//().setItemCeilingQuantity(false);
-		//getManagedBean().setProductItem(false);
-	}
-	
-	/**
 	 * The method used for rendering the related information for
 	 * different amendment type.
 	 */
@@ -2193,21 +2169,26 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getShowItem() != null 
 					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
 				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-				newItemPrice();
+				
 			} else if (getManagedBean().getShowItem() != null 
 					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
 			} else if (getManagedBean().getShowItem() != null 
 					&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
-				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
-				newItemMaxQty();
+				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);				
 			} else {
 				getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
-				newItemPrice();
 			}
 			
-			changeSelectedItemPriceAmendDate(getManagedBean().getSelectedItem());
-			changeSelectedItemMaxQtyAmendDate(getManagedBean().getSelectedItem());
+			if (getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+				newItemPrice();
+				changeSelectedItemPriceAmendDate(getManagedBean().getSelectedItem());
+			}
+			
+			if (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
+				newItemMaxQty();
+				changeSelectedItemMaxQtyAmendDate(getManagedBean().getSelectedItem());
+			}
 		}
 	}
 	
@@ -2262,8 +2243,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * of selected service item that to be displayed on screen.
 	 */
 	public void onSelectServiceItem() {
-		newServiceItemPrice();
-		changeSelectedItemPriceAmendDate(getManagedBean().getSelectedServiceItem());
+		if (getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
+			newServiceItemPrice();
+			changeSelectedItemPriceAmendDate(getManagedBean().getSelectedServiceItem());
+		}
 	}
 	
 	/**
