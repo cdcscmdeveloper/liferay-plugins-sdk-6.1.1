@@ -118,10 +118,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
     private double advancePaymentAmt;
     private double performanceBondRuleAmt;	
 	private boolean selectAll;
-	private boolean serviceItem;
-	private boolean productItem = true;
-	private boolean itemPricing = true;
-	private boolean itemCeilingQuantity;
 	private boolean directPurchase;
 	private boolean chkProgressive;
 	private boolean chkSchedule;
@@ -748,62 +744,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
-	}
-
-	/**
-	 * @return the serviceItem
-	 */
-	public boolean isServiceItem() {
-		return serviceItem;
-	}
-
-	/**
-	 * @param serviceItem the serviceItem to set
-	 */
-	public void setServiceItem(boolean serviceItem) {
-		this.serviceItem = serviceItem;
-	}
-
-	/**
-	 * @return the productItem
-	 */
-	public boolean isProductItem() {
-		return productItem;
-	}
-
-	/**
-	 * @param productItem the productItem to set
-	 */
-	public void setProductItem(boolean productItem) {
-		this.productItem = productItem;
-	}
-
-	/**
-	 * @return the itemPricing
-	 */
-	public boolean isItemPricing() {
-		return itemPricing;
-	}
-
-	/**
-	 * @param itemPricing the itemPricing to set
-	 */
-	public void setItemPricing(boolean itemPricing) {
-		this.itemPricing = itemPricing;
-	}
-
-	/**
-	 * @return the itemCeilingQuantity
-	 */
-	public boolean isItemCeilingQuantity() {
-		return itemCeilingQuantity;
-	}
-
-	/**
-	 * @param itemCeilingQuantity the itemCeilingQuantity to set
-	 */
-	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
-		this.itemCeilingQuantity = itemCeilingQuantity;
 	}
 
 	/**
