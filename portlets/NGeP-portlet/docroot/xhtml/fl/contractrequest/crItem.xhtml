@@ -92,7 +92,7 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<ac:lov id="agencyAddressId" lovId="CT_AGENCY_ADDRESS"
-						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt()"
+						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple"
@@ -102,7 +102,7 @@
 						rendered="#{contractRequestBackingBean.managedBean.agencyAddress}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"/>
 			<ac:lov id="addressTypeId" lovId="PM_ADDRESS_TYPE_FL"
-						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt()"
+						postUpdateListener="contractRequestBackingBean.updateDeliveryAddrDt"
 						headerText="#{lbl['lbl.ct.delivery.address']}" 
 						buttonLabel="#{lbl['lbl.fl.btn.ptj.address']}"
 						selectionMode="multiple" 
@@ -660,7 +660,7 @@
 					process="@this" update="searchPanel,resultPanel,messages2"  title="#{lbl['lbl.fl.tooltip.doc.maintain.reset']}"/>
 			</div>
 		</p:panel>
-		
+		giri
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<p:dataTable id="itemListResultDt" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{contractRequestBackingBean.contractItemPagingDataModel}" lazy="true"
