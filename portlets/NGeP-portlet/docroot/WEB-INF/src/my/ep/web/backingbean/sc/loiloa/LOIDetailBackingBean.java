@@ -823,9 +823,9 @@ public class LOIDetailBackingBean extends
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
 				
 				if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
-					offerPrice = BigDecimal.valueOf(scLoiLoaItem
+					offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
 							.getScQtRecommendDtl().getScQtProposalItem()
-							.getOfferPrice());
+							.getOfferPrice()));
 					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem()
 								.setOfferPrice(offerPrice.floatValue());
@@ -833,9 +833,9 @@ public class LOIDetailBackingBean extends
 					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
 							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
 
-					finalPrice = BigDecimal.valueOf(scLoiLoaItem
+					finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
 							.getScQtRecommendDtl().getScQtProposalItem()
-							.getFinalPrice());
+							.getFinalPrice()));
 					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 					scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem()
 								.setOfferPrice(finalPrice.floatValue());					
@@ -1219,7 +1219,7 @@ public class LOIDetailBackingBean extends
 
 				if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
 					// offered price sub total and total
-					offerPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice());
+					 offerPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getOfferPrice()));
 					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 					if(offeredPriceSubTotal != null){
 						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
@@ -1228,7 +1228,7 @@ public class LOIDetailBackingBean extends
 
 					// final price sub total and total - for bidding.
 					if(isBiddingAward){
-						finalPrice = BigDecimal.valueOf(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice());
+						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem().getFinalPrice()));
 						finalPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
 						if(finalPriceSubTotal != null){
 							scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
