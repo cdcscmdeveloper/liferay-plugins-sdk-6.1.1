@@ -269,6 +269,10 @@ public class ReportsGenerateBean {
 		private boolean flSupplierTextView = false;
 		private boolean flSupplierDropdownView = false;
 		private boolean flGroupSeventeenView = false;
+		private boolean flMandatoryMinistryView = false;
+		private boolean flMandatoryPtjView = false;
+		private boolean flStopInstructionNoView = false;
+		private boolean flGroupEighteenView = false;
 		
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
@@ -481,6 +485,7 @@ public class ReportsGenerateBean {
 		private String flGroupFifteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSeventeenVar=ReportConst.EMPTY_VAL;
+		private String flStopInstructionNoVar=ReportConst.EMPTY_VAL;
 		//PP
 		private String ppYearVar=ReportConst.EMPTY_VAL;
 		private String ppMinistryVar=ReportConst.EMPTY_VAL;
@@ -488,6 +493,36 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlGroupEighteenView() {
+			return flGroupEighteenView;
+		}
+		public void setFlGroupEighteenView(boolean flGroupEighteenView) {
+			this.flGroupEighteenView = flGroupEighteenView;
+		}
+		public boolean isFlStopInstructionNoView() {
+			return flStopInstructionNoView;
+		}
+		public void setFlStopInstructionNoView(boolean flStopInstructionNoView) {
+			this.flStopInstructionNoView = flStopInstructionNoView;
+		}
+		public String getFlStopInstructionNoVar() {
+			return flStopInstructionNoVar;
+		}
+		public void setFlStopInstructionNoVar(String flStopInstructionNoVar) {
+			this.flStopInstructionNoVar = flStopInstructionNoVar;
+		}
+		public boolean isFlMandatoryMinistryView() {
+			return flMandatoryMinistryView;
+		}
+		public void setFlMandatoryMinistryView(boolean flMandatoryMinistryView) {
+			this.flMandatoryMinistryView = flMandatoryMinistryView;
+		}
+		public boolean isFlMandatoryPtjView() {
+			return flMandatoryPtjView;
+		}
+		public void setFlMandatoryPtjView(boolean flMandatoryPtjView) {
+			this.flMandatoryPtjView = flMandatoryPtjView;
+		}
 		public boolean isSmExtraTwoColumnTwoView() {
 			return smExtraTwoColumnTwoView;
 		}

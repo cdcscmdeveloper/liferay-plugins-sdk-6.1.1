@@ -245,6 +245,13 @@
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>	
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flStopInstructionNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.StopInstructionNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText  value="#{reportBackingBean.flStopInstructionNo}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
+					 				</p:inputText>
+									</c:if>
+									
 									 <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupOneView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.flGroupOne}" style="margin-top:5px;width:300px;">
@@ -446,6 +453,18 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplerNm']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>										
 										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNo']}" itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
+									</p:selectOneMenu>
+								  </c:if>
+								  <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupEighteenView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.flGroupFifteen}" style="margin-top:5px;width:300px;">
+									   
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.allall']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.supplerNm']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>										
+										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNo']}" itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNo']}" itemValue="#{lbl['lbl.rpt.drpdown.GovernmentPurchaseOrderNoValue']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
 									</p:selectOneMenu>
 								  </c:if> 																				 			

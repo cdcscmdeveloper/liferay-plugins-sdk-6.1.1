@@ -692,7 +692,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)61745;//25;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -807,6 +807,7 @@ public class ReportBackingBean extends
 	private String flGroupSixteen;
 	private String flGroupSeventeen;
 	private boolean reportCategoryView = false;
+	private String flStopInstructionNo;
 	// sm
 	private String smThresholdFromYear;
 	private String smThresholdToYear;
@@ -881,6 +882,14 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getFlStopInstructionNo() {
+		return flStopInstructionNo;
+	}
+
+	public void setFlStopInstructionNo(String flStopInstructionNo) {
+		this.flStopInstructionNo = flStopInstructionNo;
+	}
 
 	public String getSmRequestExpiryDate() {
 		return smRequestExpiryDate;
@@ -4327,7 +4336,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	 * Generate all modules reports
 	 */
 	public void generateReport() {
-		if (((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))){
+		if (((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL))||((this.getReportValue() != null)&&this.getReportValue().toString().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))){
 			mofRegNoNumericValidation();
 		}
 		
@@ -5740,6 +5749,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getFlCriteria() != null) && (this.getFlCriteria() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlScoring() != null) && (this.getFlScoring() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPkpNo() != null) && (this.getFlPkpNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlStopInstructionNo() != null) && (this.getFlStopInstructionNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDeliveryOrderNo() != null) && (this.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItemCode() != null) && (this.getFlItemCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPoAmount() != null) && (this.getFlPoAmount() != ReportConst.EMPTY_VAL))
@@ -5861,6 +5871,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getFlPkpNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setPkpNoTotVar(ReportConst.FL_AMP_PKP_NO_EQ
 						+ this.getFlPkpNo());
+			}
+			if ((this.getFlStopInstructionNo() != null)
+					&& (this.getFlStopInstructionNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFlStopInstructionNoVar(ReportConst.FL_AMP_STOP_INSTR_NO_EQ
+						+ this.getFlStopInstructionNo());
 			}
 			if ((this.getFlDeliveryOrderNo() != null)
 					&& (this.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL)) {
@@ -6045,6 +6060,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getCriteriaTotVar()
 						+ rptGenBean.getScoringTotVar()
 						+ rptGenBean.getPkpNoTotVar()
+						+ rptGenBean.getFlStopInstructionNoVar()
 						+ rptGenBean.getDeliveryOrderNoTotVar()
 						+ rptGenBean.getItemCodeTotVar()
 						+ rptGenBean.getPoAmountTotVar()
@@ -6277,6 +6293,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setFlCriteria(null);
 		this.setFlScoring(null);
 		this.setFlPkpNo(null);
+		this.setFlStopInstructionNo(null);
 		this.setFlDeliveryOrderNo(null);
 		this.setFlItemCode(null);
 		this.setFlPoAmount(null);
