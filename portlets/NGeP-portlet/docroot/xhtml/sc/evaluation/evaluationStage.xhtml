@@ -56,19 +56,11 @@
 
 					</c:if>
 				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1'}">
+					rendered="#{((evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '1') or (evaluationBackingBean.managedBean.committeeType eq 'FEC' and evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'))}">
 
-						<ui:include src="financialEvaluation.xhtml"></ui:include>
-					</c:if>
-				</ui:fragment> <ui:fragment
-					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'FEC'}">
-					<c:if
-						test="#{evaluationBackingBean.managedBean.evaluatioStageActiveIndex eq '0'}">
 
-						<ui:include src="financialEvaluation.xhtml"></ui:include>
-					</c:if>
+					<ui:include src="financialEvaluation.xhtml"></ui:include>
+
 				</ui:fragment> <ui:fragment
 					rendered="#{evaluationBackingBean.managedBean.committeeType eq 'EC' and !evaluationBackingBean.managedBean.scQt.techEvaluationReq}">
 					<c:if
@@ -76,7 +68,7 @@
 
 						<ui:fragment
 							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
-							<!-- 	<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" /> -->
+
 							<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
 						</ui:fragment>
 					</c:if>
@@ -87,7 +79,7 @@
 
 						<ui:fragment
 							rendered="#{evaluationBackingBean.managedBean.committeeType ne 'TEC'}">
-							<!-- <ui:include src="financialEvaluationRecommendationSummary.xhtml" /> -->
+
 							<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" />
 
 						</ui:fragment>
@@ -110,7 +102,7 @@
 
 
 
-						<!-- 	<ui:include src="FinancialEvaluationCommitteeSummary.xhtml" /> -->
+
 						<ui:include src="financialEvaluationRecommendationSummary.xhtml" />
 
 
