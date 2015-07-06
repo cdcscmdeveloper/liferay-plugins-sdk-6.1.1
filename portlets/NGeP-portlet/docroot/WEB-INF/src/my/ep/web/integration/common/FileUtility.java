@@ -1182,10 +1182,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1283,10 +1283,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1332,10 +1332,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1403,10 +1403,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1473,10 +1473,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1529,10 +1529,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1579,10 +1579,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1637,10 +1637,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1684,10 +1684,10 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1750,10 +1750,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1815,10 +1815,10 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-//			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -2156,7 +2156,7 @@ public class FileUtility {
 	
 	// E- teriman Integration
 	
-/*	public void billingInformationFileOutPutStream(List<BillingInformation> content, String filePath) {
+	/*public void billingInformationFileOutPutStream(List<BillingInformation> content, String filePath) {
 		String PROCESS_ID = "AR501";
 		
 		String fileName = createFileNameGfmas(PROCESS_ID);
@@ -2176,7 +2176,7 @@ public class FileUtility {
 				
 					line.append(formatIntegerField(billingInformation.getRecordType(),	1, "R"));
 					line.append(formatStringField(billingInformation.getAgencyId(), 6,	"L"));
-					line.append(formatStringField(billingInformation.getTotalBillCount(), 3,	"L"));
+					line.append(formatStringField(billingInformation.getTotalBillCount()+"", 3,	"L"));
 					
 					if(null!=billingInformation.getBillHeaderList() && billingInformation.getBillHeaderList().size()>0){
 						
@@ -2214,7 +2214,7 @@ public class FileUtility {
 						customerLine.append(formatStringField(customerInformation.getAddress1(),35,"L"));
 						customerLine.append(formatStringField(customerInformation.getAddress2(),35,"L"));
 						customerLine.append(formatStringField(customerInformation.getAddress3(),35,"L"));
-						customerLine.append(formatStringField(customerInformation.getPostcode(),5,"L"));
+						customerLine.append(formatStringField(customerInformation.getPostCode(),5,"L"));
 						customerLine.append(formatStringField(customerInformation.getCity(),35,"L"));
 						customerLine.append(formatStringField(customerInformation.getRegion(),3,"L"));
 						customerLine.append(formatStringField(customerInformation.getCountry(),2,"L"));
@@ -2228,7 +2228,6 @@ public class FileUtility {
 						customerLine.append(System.getProperty("line.separator"));
 						writer.write(customerLine.toString());
 						}
-						
 					}
 				if (null!=billingInformation.getCustomerInformationList() && billingInformation.getCustomerInformationList().size() != 0) {
 					

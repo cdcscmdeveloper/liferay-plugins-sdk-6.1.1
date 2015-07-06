@@ -1,5 +1,7 @@
 package my.ep.web.integration.eterimaan;
 
+import java.math.BigDecimal;
+
 /*
  * author @Ganga prasad
 */
@@ -14,14 +16,14 @@ public class CustomerInformation {
 	private String address1;
 	private String address2;
 	private String address3;
-	private String postcode;
+	private String postCode;
 	private String city;
 	private String region;
 	private String country;
 	private String telNo;
 	private String faxNo;
 	private String emailAddress;
-	private int amount;
+	private BigDecimal amount;
 	private String description;
 	private String description2;
 	private String altGlReconAcc;                  //Mandatory if Bill Type is ‘D’
@@ -92,12 +94,12 @@ public class CustomerInformation {
 		this.address3 = address3;
 	}
 
-	public String getPostcode() {
-		return postcode;
+	public String getPostCode() {
+		return postCode;
 	}
 
-	public void setPostcode(String postcode) {
-		this.postcode = postcode;
+	public void setPostCode(String postcode) {
+		this.postCode = postcode;
 	}
 
 	public String getCity() {
@@ -148,11 +150,11 @@ public class CustomerInformation {
 		this.emailAddress = emailAddress;
 	}
 
-	public int getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
