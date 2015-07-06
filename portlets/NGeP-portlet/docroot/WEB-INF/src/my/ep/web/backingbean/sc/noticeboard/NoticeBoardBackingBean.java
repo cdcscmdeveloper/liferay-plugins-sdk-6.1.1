@@ -1439,30 +1439,23 @@ public class NoticeBoardBackingBean extends
 			boolean isContain = true;
 			for (ScQtBsvDtl bsvDetail : bsvDetails) {
 				if (null != bsvDetail.getTempRegistration()) {
-					
 					isContain = hasSupplierRegisterAlready(bsvDetail, isContain);
-					
-					List<ScQtBsvAttendance> registerdAttandance = isAttananceMarkedOrNot(bsvDetail
-							.getTempRegistration().getBsvAttendance());
-					if (registerdAttandance != null
-							&& !registerdAttandance.isEmpty()) {
-						ScQtBsvRegistration scQtBsvRegistration = null;
-						try {
-							scQtBsvRegistration = (ScQtBsvRegistration) BeanUtils
-									.cloneBean(bsvDetail.getTempRegistration());
-							
-						} catch (Exception e) {
-							log.error("Exception occured while copying properties"
-									+ e.getMessage());
-						} 
-						if (scQtBsvRegistration != null) {
-							scQtBsvRegistration
-									.setBsvAttendance(registerdAttandance);
-							if (!scQtBsvRegistration.getBsvAttendance()
-									.isEmpty()) {
-								registrations.add(scQtBsvRegistration);
-							}
-						}
+					ScQtBsvRegistration scQtBsvRegistration = null;
+					try {
+						scQtBsvRegistration = (ScQtBsvRegistration) BeanUtils
+								.cloneBean(bsvDetail.getTempRegistration());
+						scQtBsvRegistration.setBsvAttendance(isAttananceMarkedOrNot(
+								scQtBsvRegistration.getBsvAttendance(),
+								scQtBsvRegistration));
+
+					} catch (Exception e) {
+						log.error("Exception occured while clone  ScQtBsvRegistration object "
+								+ e.getMessage());
+					}
+
+					if (scQtBsvRegistration != null && scQtBsvRegistration.getBsvAttendance() != null
+							 && !scQtBsvRegistration.getBsvAttendance().isEmpty()) {
+						registrations.add(scQtBsvRegistration);
 					}
 				}
 			}
@@ -1517,7 +1510,7 @@ public class NoticeBoardBackingBean extends
 	 *         the instance of ScQtBsvAttendance list
 	 */
 	private List<ScQtBsvAttendance> isAttananceMarkedOrNot(
-			List<ScQtBsvAttendance> preRegisterdAttandance) {
+			List<ScQtBsvAttendance> preRegisterdAttandance,ScQtBsvRegistration scQtBsvRegistration) {
 		
 		List<ScQtBsvAttendance> registerdAttandance = null;
 		if (CollectionUtils.isNotEmpty(preRegisterdAttandance)) {
@@ -1525,13 +1518,13 @@ public class NoticeBoardBackingBean extends
 			for (ScQtBsvAttendance scQtBsvAttendance : preRegisterdAttandance) {
 				if (scQtBsvAttendance.isPreRegisterd()) {
 					scQtBsvAttendance.setAttended(true);
+					scQtBsvAttendance.setBsvRegistration(scQtBsvRegistration);
 					registerdAttandance.add(scQtBsvAttendance);
 				}
 			}
 			/*for (int i = 0; i < preRegisterdAttandance.size(); i++) {
 				if (preRegisterdAttandance.get(i).isPreRegisterd()) {
 					preRegisterdAttandance.get(i).setAttended(true);
-					registerdAttandance.add(preRegisterdAttandance);
 				} else {
 					preRegisterdAttandance.remove(i--);
 
