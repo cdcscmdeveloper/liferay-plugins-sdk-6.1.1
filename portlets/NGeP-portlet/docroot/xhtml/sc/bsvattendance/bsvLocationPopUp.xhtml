@@ -11,7 +11,7 @@
 		<ui:param name="bsvDetails" value="#{bsvAttendanceBackingBean.managedBean.bsvDetails}"></ui:param>
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 82px;"><p:outputLabel
+				<td style="width: 82px; white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.location']}" /></td>
 				<td>
 					<table>
@@ -22,7 +22,7 @@
 						</tr>
 					</table>
 				</td>
-				<td style="width: 200px;"><p:outputLabel
+				<td style="width: 200px; white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.state']}" /></td>
 				<td>
 					<table>
@@ -36,7 +36,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="width: 82px;"><p:outputLabel
+				<td style="width: 82px;white-space: nowrap;"><p:outputLabel
 						value="#{lbl['lbl.sc.qt.address.one']}" /></td>
 				<td>
 					<table>
@@ -81,7 +81,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sc.qt.address.three']}" /></td>
 				<td><p:inputText readonly="true"
 						value="#{bsvDetails.address.address3}" size="30" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sc.town']}" /></td>
+				<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sc.town']}" /></td>
 				<td>
 					<table>
 						<tr>
