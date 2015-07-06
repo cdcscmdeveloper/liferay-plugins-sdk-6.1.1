@@ -71,8 +71,7 @@
 					    <h:panelGrid columns="3">
 					    	<p:selectOneMenu id="show" value="#{amendmentBackingBean.managedBean.showItem}" style="width:200px;">
 					           	<f:selectItems value="#{amendmentBackingBean.getItemDisplayTypeDropdownList()}" />
-						        <p:ajax event="change" listener="#{amendmentBackingBean.changeField}" 
-						            update=":form:changeField"  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
+						        <p:ajax event="change" update=":form:changeField"  process="@form"  onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 					       	</p:selectOneMenu>
 					       	<p:spacer width="1"/>
 				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
