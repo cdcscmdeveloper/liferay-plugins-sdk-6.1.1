@@ -141,21 +141,17 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 	public void searchSuppliersReviewDetails() {
 
-		SuppliersReviewSearchBean suppliersReviewSearchBean = this
-				.getManagedBean().getSuppliersReviewSearchBean();
-
-		ISuppliersReviewSO suppliersReviewSO;
-
+		
+		    ISuppliersReviewSO suppliersReviewSO;
 		
 			SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
 			CategoryBackingBean categoryBackingBean = new CategoryBackingBean();
 
-			//List<Long> catL3List = new ArrayList<Long>();
+		
 			List<Long> stateList = new ArrayList<Long>();
 			List<Long> categoryL3L = new ArrayList<Long>();
-
-			//List<PmCategoryL3> catList = categoryBackingBean.getManagedBean().getSelectedCategoryL3List();
+			
 			List<PmBasicCategory> catList1 = categoryBackingBean.getManagedBean().getBasicCategoryList();
 
 			if(catList1!=null && !catList1.isEmpty()){
@@ -168,57 +164,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 			}
 			else{
-				throw new EpException(MessageConst.ERROR_790001);
-				
-				/*FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-								MessageUtils.getMessage(MessageConst.ERROR_76001,MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes().getUserLocale())));*/
-				
-				
-				//throw new EpException(MessageConst.ERROR_76001);
-
-			  }
-			
-			/*this.getManagedBean().setPmCategoryL3List(catList);
-			
-
-			if(catList!=null && !catList.isEmpty()){
-
-				this.getManagedBean().getSuppliersReviewSearchBean().setCategoryList(this.getManagedBean().getPmCategoryL3List());
-
-				for (PmCategoryL3 pmCategoryL3 :this.getManagedBean().getSuppliersReviewSearchBean().getCategoryList() ) {
-					catL3List.add(pmCategoryL3.getCategoryL3Id());				
-
-				}
-				this.getManagedBean().getSuppliersReviewSearchBean().setCategoryIdList(catL3List);
-				suppliersReviewReqDTO.setCategoriesListSize(catL3List.size());
-			}
-			else{	
-
-				throw new EpException("Please Add Atleast One Category Code");
-
-			}*/
-
-
-
-			/*if () {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(
-											MessageConst.ERROR_770160, new String[] {
-													getManagedBean().getPmEduField().getFieldCode(),
-													getManagedBean().getPmEduField().getFieldName()},
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
-					return NAV_TO_MAINTAIN;
-				}*/
-
-
-			//TODO to show message
-		//}
+				throw new EpException(MessageConst.ERROR_790001);				
+			    }
 
 			if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null){
 				for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
