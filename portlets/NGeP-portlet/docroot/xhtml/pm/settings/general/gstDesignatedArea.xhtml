@@ -34,8 +34,10 @@
 						value="#{ruleCatalogueBackingBean.retrieveParameterDescList(ParameterTypeConst.locationLevel)}"
 						var="parameter" itemLabel="#{parameter.codeName}"
 						itemValue="#{parameter.pmParameter.parameterCode}" />
-				<p:ajax event="change" update="@([id$=lovPmLocation])"
-					process="@this" />
+				<p:ajax event="change" 
+					update=":form:settingTabId:gstId:designatedAreaTbl" 
+					listener="#{ruleCatalogueBackingBean.resetLovLocation(daObj)}"
+					process=":form:settingTabId:gstId:designatedAreaTbl" />
 			</p:selectOneMenu>
 			<p:message id="somDaLocationTypeIdMsg" for="somDaLocationTypeId" display="icon" />
 		</p:column>
@@ -51,8 +53,7 @@
 				update=":form:settingTabId:gstId:designatedAreaTbl"
 				size="15" headerText="#{lbl['lbl.pm.location.code']}"
 				saveObject="ruleCatalogueBackingBean.managedBean.designatedAreaList[#{rowIndex}].vPmLocation"
-				postUpdateListener="ruleCatalogueBackingBean.mapLocationToDa(daObj)"
-				conditionField="status^1|locationType^#{daObj.locationType}"
+				conditionField="status^1|locationType^#{daObj.locationType}|countryId^#{ruleCatalogueBackingBean.getDefaultCountry()}"
 				value="#{daObj.vPmLocation.locationCode}">
 			</ac:lov>
 			<p:message id="lovPmLocationMsg" for="lovPmLocation" display="icon" />
@@ -74,7 +75,6 @@
 			</f:facet>
 			<p:selectOneMenu value="#{daObj.recordStatusFlg}"
 				disabled="#{daObj.brandNew}" style="width:90px;">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<p:ajax event="change" partialSubmit="true"
