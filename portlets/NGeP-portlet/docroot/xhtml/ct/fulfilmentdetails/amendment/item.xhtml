@@ -25,7 +25,7 @@
 			
 				  <p:column style="width:30%; white-space:normal;" filterBy="#{ctItemVar.scRequestItem.itemName}" filterMatchMode="contains">
 				  <f:facet name="header">
-		                    <h:outputText id="productItemDisc"  value="#{lbl['lbl.ct.item.desc']}"/>
+		                    <h:outputText id="productItemDesc"  value="#{lbl['lbl.ct.item.desc']}"/>
 		                        &#160;<p:graphicImage id="amendProductItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
 							          id="amendProductTooltip" for="amendProductItemId">
 							<h:outputText id="amendProductInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
@@ -53,32 +53,6 @@
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />		
 					  </h:outputText>
 				   </p:column>
-			
-				   <p:column style="width:10%; white-space:normal;text-align: right;">
-					   <f:facet name="header">
-			              <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
-	               		  <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
-	                   </f:facet>
-					  <h:outputText value="#{ctItemVar.maxQuantity}" >
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
-					  </h:outputText>
-				</p:column>
-			
-			
-				<p:column headerText="#{lbl['lbl.ct.new.max.order.qty']}" style="text-align: right;width:15%; white-space:normal;" 
-				   rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
-					<p:inputText style="width:75px;" value="#{ctItemVar.newMaxQuantity}" disabled="true" styleClass="ppRightBtn" label="#{lbl['lbl.ct.new.max.order.qty']}">						
-						<f:converter converterId="dynamicNumberConverter" />
-						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
-					</p:inputText>
-					<p:spacer width="5"/>
-					<p:commandLink update=":form:dlgItemMaxQty,itemTable" oncomplete="dlgItemMaxQty.show();return false;" 
-					  rendered="#{!amendmentBackingBean.managedBean.prepareLOA or !amendmentBackingBean.managedBean.disableFinalAmendDetails}">
-						<f:setPropertyActionListener value="#{ctItemVar}" target="#{amendmentBackingBean.managedBean.selectedItem}" />
-						<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" style="margin-bottom: -4px;" />
-					</p:commandLink>
-				</p:column>
 				
 				<p:column headerText="#{lbl['lbl.ct.status']}" style="width:10%; white-space:normal;">
 		             <h:outputText value="#{ctItemVar.chkStatus ? lbl['lbl.ct.active'] : lbl['lbl.ct.inactive'] }"/>
@@ -86,77 +60,7 @@
 				
 			</p:dataTable>
 			
-			<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty" 
-			     header="#{lbl['lbl.ct.amend.max.qty']}" styleClass="pop_up_top" modal="true" width="550" height="200">
-			  	    <h:panelGrid columns="1">
-				    	<p:outputLabel value="#{lbl['lbl.ct.item.desc']}" >: #{amendmentBackingBean.managedBean.selectedItem.scRequestItem.itemName}</p:outputLabel>
-				     </h:panelGrid>
-				     <p:spacer  height="5"/>
-				
-				     <p:dataTable id="ctItemMaxQtyTable" var="itemMaxQtiesVar" 
-				           value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}">
-					       <ac:paginator for="ctItemMaxQtyTable" />
-					     
-					       <p:column headerText="#{lbl['lbl.ct.max.order.qty']}">
-					        	<p:inputText value="#{itemMaxQtiesVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;width:119px;" rendered="#{itemMaxQtiesVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
-					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
-									<f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
-									<p:ajax event="blur" update="@this"/>
-						        </p:inputText>
-						        <h:outputText value="#{itemMaxQtiesVar.maxQuantity}" style="float:right;" rendered="#{!itemMaxQtiesVar.changeQuantity}">
-							        <f:converter converterId="dynamicNumberConverter" />
-									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
-						        </h:outputText>
-					       </p:column>
-				
-				     	   <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="width:10%;">
-						       <h:outputText value="#{itemMaxQtiesVar.effDate}">
-						        	<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						       </h:outputText>
-					       </p:column>
-					
-					       <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="width:10%;">
-					 	       <h:outputText value="#{itemMaxQtiesVar.expDate}">
-							       <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-						       </h:outputText>
-					       </p:column>
-				
-				    	   <p:column headerText="#{lbl['lbl.ct.action']}" styleClass="column-align-center" style="width:10%;" 
-				    	   		rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
-						           		amendmentBackingBean.managedBean.selectedItem.chkStatus}">
-						        <p:commandLink update=":form:ctItemMaxQtyTable"
-						           process="@form" disabled="#{itemMaxQtiesVar.chkIndexOfRow}" 
-						           rendered="#{!itemMaxQtiesVar.changeQuantity and itemMaxQtiesVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
-							       <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							       <p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
-						        </p:commandLink>
-					    	    <p:commandLink rendered="#{itemMaxQtiesVar.changeQuantity}" oncomplete="dlgDelItemMaxQty.show();return false;">
-							        <f:setPropertyActionListener value="#{itemMaxQtiesVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
-							        <p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
-						        </p:commandLink>
-				  	       </p:column>					
-				     </p:dataTable>
-				     <div class="ppRightBtn">
-					       <p:commandButton value="#{lbl['lbl.btn.ok']}"  update=":form:itemTable" rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails}"
-					          process="@form" action="#{amendmentBackingBean.setNewMaxQty()}" onclick="dlgItemMaxQty.hide();" />
-					       <p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="dlgItemMaxQty.hide();" type="button" />
-				      </div>
-		   	     </p:dialog>	
-				
-			     <p:dialog id="dlgDelItemMaxQty" widgetVar="dlgDelItemMaxQty" 
-			         modal="true" styleClass="screen-title" width="330">
-				      <h:panelGrid columns="3">
-					     <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
-					     <p:spacer width="10" />
-					     <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-				     </h:panelGrid>
-				     <div class="ppRightBtn">
-					     <p:commandButton value="#{lbl['lbl.btn.yes']}" update=":form:ctItemMaxQtyTable" 
-					         process="@form" action="#{amendmentBackingBean.deleteItemMaxQtyOnIndexs()}" onclick="dlgDelItemMaxQty.hide();" />
-					     <p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgDelItemMaxQty.hide();" type="button" />
-				     </div>
-			     </p:dialog>					
+							
 		       </h:panelGrid>
 		
 		       <p:outputPanel id="changeField">
@@ -174,7 +78,7 @@
 				     		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.product.dtls.show']}" />
 			             </h:panelGrid>
 			       </h:panelGrid>
-			
+				   <!-- Item Price -->
 			       <p:outputPanel style="width:100%" 
 			           rendered="#{(amendmentBackingBean.managedBean.selectedItem !=null and 
 			    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice)
@@ -189,7 +93,7 @@
 					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
 					  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
 						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPriceVar.changeZoneLabel}" />
-						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPriceVar.changeZoneLabel}" />
+						               <p:outputLabel value="#{itemPriceVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPriceVar.changeZoneLabel}" />
 			             
 					             </p:column>
 					
@@ -293,8 +197,8 @@
 					       </div>
 				      </p:dialog>
 			    </p:outputPanel>
-			
-			    <h:panelGrid columns="1" style="width:100%" 
+				<!-- Ceiling Quantity -->
+				<p:outputPanel style="width:100%" 
 			         rendered="#{amendmentBackingBean.managedBean.selectedItem!=null and
 			 		(amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty)
 			 		and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
@@ -350,21 +254,100 @@
 						</p:commandLink>
 					</p:column>
 				</p:dataTable>
-			</h:panelGrid>
-			<p:dialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" styleClass="screen-title"
-				modal="true" width="330">
-				<h:panelGrid columns="3">
-					<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
-					<p:spacer width="10" />
-					<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
-				</h:panelGrid>
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:ceilingTable" process="@form"
-						action="#{amendmentBackingBean.deleteCeilingQuantityOnIndexs()}"
-						onclick="dlgCeilQuantity.hide();" />
-					<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgCeilQuantity.hide();" type="button" />
-				</div>
-			</p:dialog>
+				<p:dialog id="dlgCeilQuantity" widgetVar="dlgCeilQuantity" styleClass="screen-title"
+					modal="true" width="330">
+					<h:panelGrid columns="3">
+						<p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"></p:graphicImage>
+						<p:spacer width="10" />
+						<div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+					</h:panelGrid>
+					<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.btn.yes']}"  update=":form:ceilingTable" process="@form"
+							action="#{amendmentBackingBean.deleteCeilingQuantityOnIndexs()}"
+							onclick="dlgCeilQuantity.hide();" />
+						<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgCeilQuantity.hide();" type="button" />
+					</div>
+				</p:dialog>
+			</p:outputPanel>
+			<!-- Maximum Order Quantity -->
+			<p:outputPanel style="width:100%" 
+		           rendered="#{(amendmentBackingBean.managedBean.selectedItem !=null and 
+		    	   amendmentBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty)
+			       and amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange}">
+			
+			            <p:dataTable id="itemMaxQtyTable" var="itemMaxQtyVar" 
+				             value="#{amendmentBackingBean.managedBean.selectedItem.ctItemMaxQties}" >
+				             <ac:paginator for="itemMaxQtyTable" />
+				 
+				             <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
+					             rendered="#{amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+				  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+				  		         amendmentBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+					               <p:outputLabel value="#{itemMaxQtyVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQtyVar.changeZoneLabel}" />
+					               <p:outputLabel value="#{itemMaxQtyVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemMaxQtyVar.changeZoneLabel}" />
+		             
+				             </p:column>
+				
+				            
+							
+							<p:column headerText="#{lbl['lbl.ct.max.order.qty']}">							  								
+								<p:inputText value="#{itemMaxQtyVar.maxQuantity}" styleClass="ppRightBtn" style="float:right;" rendered="#{itemMaxQtyVar.changeQuantity}" label="#{lbl['lbl.ct.max.order.qty']}"
+					        		maxlength="#{amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.decimalScale == 0 ? 13 : 14}" disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+									<f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+									<p:ajax event="blur" update="@this"/>
+						        </p:inputText>
+						        <h:outputText value="#{itemMaxQtyVar.maxQuantity}" style="float:right;" rendered="#{!itemMaxQtyVar.changeQuantity}">
+							        <f:converter converterId="dynamicNumberConverter" />
+									<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, amendmentBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+						        </h:outputText>
+								
+							</p:column>
+						
+							<p:column headerText="#{lbl['lbl.ct.effective.date']}">
+								<h:outputText value="#{itemMaxQtyVar.effDate}">
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{lbl['lbl.ct.expiry.date']}">
+								<h:outputText value="#{itemMaxQtyVar.expDate}">
+									<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText>
+							</p:column>
+							
+							<p:column headerText="#{lbl['lbl.ct.action']}" 
+								rendered="#{!amendmentBackingBean.managedBean.disableAmendDetails and 
+					           		amendmentBackingBean.managedBean.selectedItem.chkStatus}"
+							    styleClass="column-align-center" style="width:10%; white-space:normal;">
+								<p:commandLink update=":form:itemId" process="@form" 
+									disabled="#{itemMaxQtyVar.chkIndexOfRow}"
+								   	rendered="#{!itemMaxQtyVar.changeQuantity and itemMaxQtyVar.editable}" action="#{amendmentBackingBean.editItemMaxQtyOnIndexs()}">
+									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
+									<p:graphicImage value="/css/images/design/ico-edit.png" title="#{lbl['lbl.ct.edit']}" />
+								</p:commandLink>
+								<p:commandLink rendered="#{itemMaxQtyVar.changeQuantity}" oncomplete="dlgItemMaxQty.show();return false;">
+									<f:setPropertyActionListener value="#{itemMaxQtyVar}" target="#{amendmentBackingBean.managedBean.ctItemMaxQty}" />
+									<p:graphicImage value="/css/images/design/delete.png" title="#{lbl['lbl.btn.delete']}" />
+								</p:commandLink>
+							</p:column>
+			        
+			        </p:dataTable>
+		          	<p:dialog id="dlgItemMaxQty" widgetVar="dlgItemMaxQty"  modal="true"
+		          	    styleClass="screen-title" width="330">
+				        <h:panelGrid columns="3">
+					         <p:graphicImage value="/css/images/design/exclamation.png" styleClass="ui-icon-complain"/>
+					         <p:spacer width="10" />
+					         <div class="confirmation-message-box">#{lbl['lbl.ct.dialog.confirm.message']}</div>
+				        </h:panelGrid>
+			
+			  	        <div class="ppRightBtn">
+					       <p:commandButton value="#{lbl['lbl.btn.yes']}" 	update=":form:itemMaxQtyTable" 
+					        	process="@form" action="#{amendmentBackingBean.deleteItemMaxQtyOnIndexs()}" onclick="dlgItemMaxQty.hide();" />
+					       <p:commandButton value="#{lbl['lbl.btn.no']}" onclick="dlgItemMaxQty.hide();" type="button" />
+				       </div>
+			      </p:dialog>
+		    </p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
 	<p:panel id="serviceId" toggleable="true" toggleSpeed="500" rendered="#{amendmentBackingBean.managedBean.itemServiceExist}">
@@ -381,7 +364,7 @@
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				<p:column  style="width:20%;white-space:normal;" filterBy="#{serviceItemVar.scRequestItem.itemName}" filterMatchMode="contains">
 				      <f:facet name="header">
-		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
+		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.name']}"/>
 		                        &#160; <p:graphicImage id="amendServiceItemId" value="/css/images/design/tooltips.png" /> <p:tooltip
 							          id="amendServiceTooltip" for="amendServiceItemId">
 							<h:outputText id="amendServiceInstruction" escape="false" value="#{lbl['lbl.ct.instruction.item.search']}" />
@@ -428,7 +411,7 @@
 					<p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
 						rendered="#{amendmentBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!ItemPricesVar.changeZoneLabel}" />
-						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{ItemPricesVar.changeZoneLabel}" />
+						        <p:outputLabel value="#{ItemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{ItemPricesVar.changeZoneLabel}" />
 			       	</p:column>
 					<p:column headerText="#{lbl['lbl.ct.price']}" style="width:10%; white-space:normal;">
 					     <h:panelGroup style="float:right;"  rendered="#{ItemPricesVar.changePrice}">

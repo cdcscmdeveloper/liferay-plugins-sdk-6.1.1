@@ -83,9 +83,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean signOffDecision;
 	private boolean signUpdateDecision;
 	private boolean decisionPbQcLOA;
-	private boolean productItem = true;
-	private boolean itemPricing = true;
-	private boolean itemCeilingQuantity;
 	private boolean confirmMeeting;
 	private boolean selectAll;
 	private boolean showPrintButton;
@@ -609,48 +606,6 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setDecisionPbQcLOA(boolean decisionPbQcLOA) {
 		this.decisionPbQcLOA = decisionPbQcLOA;
-	}
-	
-	/**
-	 * @return the productItem
-	 */
-	public boolean isProductItem() {
-		return productItem;
-	}
-	
-	/**
-	 * @param productItem the productItem to set
-	 */
-	public void setProductItem(boolean productItem) {
-		this.productItem = productItem;
-	}
-	
-	/**
-	 * @return the itemPricing
-	 */
-	public boolean isItemPricing() {
-		return itemPricing;
-	}
-	
-	/**
-	 * @param itemPricing the itemPricing to set
-	 */
-	public void setItemPricing(boolean itemPricing) {
-		this.itemPricing = itemPricing;
-	}
-	
-	/**
-	 * @return the itemCeilingQuantity
-	 */
-	public boolean isItemCeilingQuantity() {
-		return itemCeilingQuantity;
-	}
-	
-	/**
-	 * @param itemCeilingQuantity the itemCeilingQuantity to set
-	 */
-	public void setItemCeilingQuantity(boolean itemCeilingQuantity) {
-		this.itemCeilingQuantity = itemCeilingQuantity;
 	}
 	
 	/**

@@ -632,6 +632,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    if (getManagedBean().getContractVer().getCtContractItems().size() > 0) {	        	   
 	    	getManagedBean().setCtItemList(new ArrayList<CtContractItem>());
 	    	getManagedBean().setCtItemServiceList(new ArrayList<CtContractItem>());
+	    	getManagedBean().setShowItem(null);
 	    	getManagedBean().setSelectedItem(null);
 	    	getManagedBean().setSelectedServiceItem(null);	    	  
  		         
@@ -915,7 +916,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
     public void validateCtContractVer(String action) throws EpException {
     	CtContractVer contractVer = getManagedBean().getContractVer();
-    	Date today = DateUtils.getCurrentDateWithoutTime();
     	getManagedBean().setAutoUpdate(true);
 		// Validation for remark
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)
@@ -1193,18 +1193,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (contractVer.getCtContractItems() != null) {
 				for (CtContractItem item : contractVer.getCtContractItems()) {
 					double totalCeilingQuantity = 0.0;
-					if (item.getCtItemMaxQties().size() != 0) {
-						BigDecimal maxCeilingQty = new BigDecimal(0);
-						for (CtItemMaxQty ctItemMaxQty : item.getCtItemMaxQties()) {
-							if (ctItemMaxQty.getEffDate().getTime()<=today.getTime() && ctItemMaxQty.getExpDate().getTime()>=today.getTime()) {
-								maxCeilingQty = ctItemMaxQty.getMaxQuantity();
-								break;
-							}
-						}
+					if (item.getCtItemMaxQties().size() != 0) {						
 						for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
 							totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 						}
-						if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
+						if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
 							throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
 						}
 					}
@@ -2709,33 +2702,19 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public void changeField() {
 		try {
-			flush();
-			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
-				getManagedBean().setItemPricing(true);
-			} else if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
-				getManagedBean().setItemCeilingQuantity(true);
+			if (getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
 				refreshAgencyCeilingQuantityList();
 			}
 		} catch (Exception e) {
 			
 		}
 	}
-	
-	/**
-	 * The method used to clear the previous viewed information before
-	 * rendering the product item details.
-	 */
-	private void flush() {
-	   this.getManagedBean().setItemPricing(false);
-	   this.getManagedBean().setItemCeilingQuantity(false);
-	   this.getManagedBean().setProductItem(false);
-	}
     
 	/**
 	 * The method used to render the ceiling quantity information
 	 * of the selected product item.
 	 */
-    public void refreshCeilingQuantity() {
+    public void onSelectProductItem() {
     	if (getManagedBean().getSelectedItem() != null) {
     		if (getManagedBean().getShowItem() != null
     				&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_PRICE)) {
@@ -2744,55 +2723,106 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     				&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY)) {
     			getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_CEIL_QTY);
     			refreshAgencyCeilingQuantityList();
+    		}  else if (getManagedBean().getShowItem() != null
+    				&& getManagedBean().getShowItem().equalsIgnoreCase(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY)) {
+    			getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_MAX_QTY);
     		} else {
     			getManagedBean().setShowItem(ParameterConst.ITEM_DISPLAY_TYPE_PRICE);
     		}
-    		if (!getManagedBean().getSelectedItem().getCtItemPrices().isEmpty()
-    				&&(getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
-    						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-    						|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF))) {
-    			for (int temp = 0;temp<getManagedBean().getSelectedItem().getCtItemPrices().size(); temp++) {
-    				Date date = getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getEffDate();
-    				int counter =0;
-    				int index=0;
-    				int countRow =0;
-    				for (CtItemPrice itemPrice1 : getManagedBean().getSelectedItem().getCtItemPrices()) {
-    					countRow++;
-    					if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
-    							|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
-    							|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
-    							|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
-    						if (getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty()) 
-    								&& getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getToQty().equals( itemPrice1.getToQty()) 
-    								&& getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-    							counter++;
-    							if (counter >= 2) {
-    								if (date.before(itemPrice1.getEffDate())) {
-    									index = countRow;
-    									date = itemPrice1.getEffDate();
-    								}	
-    							}
-    						}
-    					} else if (getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
-    						counter++;
-    						if (counter >= 2) {
-    							if (date.before(itemPrice1.getEffDate())) {
-    								index = countRow;
-    								date = itemPrice1.getEffDate();
-    							}
-    						}
-    					}
-    				}
-    				if (index > 0) {
-    					CtItemPrice priceOfItem = getManagedBean().getSelectedItem().getCtItemPrices().get(index-1);
-    					priceOfItem.setChangeZoneLabel(true);
-	    	          	getManagedBean().getSelectedItem().getCtItemPrices().remove(index-1);
-	    	          	getManagedBean().getSelectedItem().getCtItemPrices().add(index-1, priceOfItem);
-    				}
-    			}
+    		// retrieve zone label for new price
+    		if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)
+    				|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+    				|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+    			itemPriceZoneLabelList();
+    			itemMaxQtyZoneLabelList();
     		}
 	  	}
 	}
+    
+    /**
+	 * The method used to indicate the label flag for new price of product item.
+	 */
+    private void itemPriceZoneLabelList() {
+    	if (!getManagedBean().getSelectedItem().getCtItemPrices().isEmpty()) {
+			for (int temp = 0;temp<getManagedBean().getSelectedItem().getCtItemPrices().size(); temp++) {
+				Date date = getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getEffDate();
+				int counter =0;
+				int index=0;
+				int countRow =0;
+				for (CtItemPrice itemPrice1 : getManagedBean().getSelectedItem().getCtItemPrices()) {
+					countRow++;
+					if (getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)
+							|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
+							|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TARIFF)
+							|| getManagedBean().getSelectedItem().getPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TARIFF)) {
+						if (getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getFromQty().equals(itemPrice1.getFromQty()) 
+								&& getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getToQty().equals( itemPrice1.getToQty()) 
+								&& getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName() != null
+								&& getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+							counter++;
+							if (counter >= 2) {
+								if (date.before(itemPrice1.getEffDate())) {
+									index = countRow;
+									date = itemPrice1.getEffDate();
+								}	
+							}
+						}
+					} else if (getManagedBean().getSelectedItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(itemPrice1.getCtContractZone().getZoneName())) {
+						counter++;
+						if (counter >= 2) {
+							if (date.before(itemPrice1.getEffDate())) {
+								index = countRow;
+								date = itemPrice1.getEffDate();
+							}
+						}
+					}
+				}
+				if (index > 0) {
+					CtItemPrice priceOfItem = getManagedBean().getSelectedItem().getCtItemPrices().get(index-1);
+					priceOfItem.setChangeZoneLabel(true);
+    	          	getManagedBean().getSelectedItem().getCtItemPrices().remove(index-1);
+    	          	getManagedBean().getSelectedItem().getCtItemPrices().add(index-1, priceOfItem);
+				}
+			}
+		}
+    }
+    
+    /**
+	 * The method used to indicate the label flag for new max qty of product item.
+	 */
+    private void itemMaxQtyZoneLabelList() {
+    	if (!getManagedBean().getSelectedItem().getCtItemMaxQties().isEmpty()) {
+			for (CtItemMaxQty zonelOfItem : getManagedBean().getSelectedItem().getCtItemMaxQties()) {
+				zonelOfItem.setChangeZoneLabel(false);
+    		}
+			for (int temp = 0; temp < getManagedBean().getSelectedItem().getCtItemMaxQties().size(); temp++) {
+				Date date = getManagedBean().getSelectedItem().getCtItemMaxQties().get(temp).getEffDate();
+				int counter =0;
+			 	int index = 0;
+			   	int countRow =0;
+			   	for (CtItemMaxQty itemMaxQty1 : getManagedBean().getSelectedItem().getCtItemMaxQties()) {
+			   		countRow++;
+			   		if (getManagedBean().getSelectedItem().getCtItemMaxQties().get(temp).getCtContractZone() != null
+			   				&& getManagedBean().getSelectedItem().getCtItemMaxQties().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
+			   						itemMaxQty1.getCtContractZone().getZoneName())) {
+			   			counter++;
+			   			if (counter >= 2) {
+			   				if (date.before(itemMaxQty1.getEffDate())) {
+			   					index = countRow;
+			   					date = itemMaxQty1.getEffDate();
+			   				}
+			   			}
+			   		}
+				}
+			   	if (index > 0) {
+			   		CtItemMaxQty maxQtyOfItem = getManagedBean().getSelectedItem().getCtItemMaxQties().get(index-1);
+			   		maxQtyOfItem.setChangeZoneLabel(true);
+			    	getManagedBean().getSelectedItem().getCtItemMaxQties().remove(index-1);
+			    	getManagedBean().getSelectedItem().getCtItemMaxQties().add(index-1, maxQtyOfItem);
+			   	}
+			}
+		}
+    }
     
     /**
 	 * The method used to refresh the ceiling quantity information.
@@ -2839,21 +2869,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * larger than the maximum quantity of the item.
 	 */
     public void validateCeilingQty(CtItemCeilingQty ceilingQtyData) {
-    	Date today = DateUtils.getCurrentDateWithoutTime();
     	double totalCeilingQuantity = 0.0;
     	CtContractItem item = this.getManagedBean().getSelectedItem();
 		if (item.getCtItemMaxQties().size() != 0) {
-			BigDecimal maxCeilingQty = new BigDecimal(0);
-			for (CtItemMaxQty ctItemMaxQty : item.getCtItemMaxQties()) {
-				if (ctItemMaxQty.getEffDate().getTime()<=today.getTime() && ctItemMaxQty.getExpDate().getTime()>=today.getTime()) {
-					maxCeilingQty = ctItemMaxQty.getMaxQuantity();
-					break;
-				}
-			}
 			for (CtItemCeilingQty ctItemCeilingQty : item.getCtItemCeilingQties()) {
 				totalCeilingQuantity = totalCeilingQuantity + ctItemCeilingQty.getCeilingQuantity().doubleValue();
 			}
-			if (maxCeilingQty.doubleValue() < totalCeilingQuantity) {
+			if (item.getTotalMaxQuantity().doubleValue() < totalCeilingQuantity) {
 				ceilingQtyData.setCeilingQuantity(BigDecimal.valueOf(0));
 				throw new EpException(MessageConst.ERROR_750009, new String[]{item.getScRequestItem().getItemName()});
 			}
@@ -2878,8 +2900,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			   	int countRow =0;
 			   	for (CtItemPrice itemPrice1 : getManagedBean().getSelectedServiceItem().getCtItemPrices()) {
 			   		countRow++;
-			   		if (getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
-			   				itemPrice1.getCtContractZone().getZoneName())) {
+			   		if (getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName() != null
+			   				&& getManagedBean().getSelectedServiceItem().getCtItemPrices().get(temp).getCtContractZone().getZoneName().equalsIgnoreCase(
+			   						itemPrice1.getCtContractZone().getZoneName())) {
 			   			counter++;
 			   			if (counter >= 2) {
 			   				if (date.before(itemPrice1.getEffDate())) {

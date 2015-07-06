@@ -16,13 +16,13 @@
                  value="#{contractDetailsBackingBean.managedBean.ctItemList}"  widgetVar="itemTableObj"
                  selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" rowKey="#{ctItemVar}">
                  <ac:paginator for="itemTable"/>
-                 <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.refreshCeilingQuantity()}" 
+                 <p:ajax event="rowSelect" update=":form:changeField" listener="#{contractDetailsBackingBean.onSelectProductItem()}" 
                   onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 		 
 		         <p:column filterBy="#{ctItemVar.scRequestItem.itemName}"
 		              style="width:28%; white-space:normal;" filterMatchMode="contains">
 		              <f:facet name="header">
-		                    <h:outputText id="productItemDisc" value="#{lbl['lbl.ct.item.desc']}"/>
+		                    <h:outputText id="productItemDesc" value="#{lbl['lbl.ct.item.desc']}"/>
 		                     <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
 		               </f:facet>
 		               <h:outputText value="#{ctItemVar.scRequestItem.itemName}" style="float:left;"/>
@@ -46,10 +46,10 @@
 		         <p:column style="text-align: right;width:14%;white-space:normal;"
 		         	rendered="#{contractDetailsBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 		            <f:facet name="header">
-			            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
-	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
+			            <h:outputText value="#{lbl['lbl.ct.total.max.order.qty']}"/>
+	               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.total.max.order.qty']}"/>
 	               	</f:facet>
-               		<h:outputText value="#{ctItemVar.maxQuantity}">
+               		<h:outputText value="#{ctItemVar.totalMaxQuantity}">
      					<f:converter converterId="dynamicNumberConverter" />
 						<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, ctItemVar.scRequestItem.uom.uomCode)}" />
 	             	</h:outputText>
@@ -167,7 +167,7 @@
 			                
 			                   <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                   </p:column>    
 			            
 			                   <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right;">
@@ -193,7 +193,7 @@
 			                  eq ParameterConst.priceTypeZonalTier}">
 			                 <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                          <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                   </p:column> 
 			                 <p:column style="text-align: right;">
 					             <f:facet name="header">
@@ -296,7 +296,7 @@
 			                eq ParameterConst.priceTypeZonalTariff}">            
 			                <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPrice.changeZoneLabel}" />
-			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
+			                       <p:outputLabel value="#{itemPrice.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPrice.changeZoneLabel}" />
 			                  </p:column> 
 			            
 			                 <p:column style="text-align: right;">
@@ -381,6 +381,43 @@
 				     </p:column>            
 			  
 			  </p:dataTable>
+		  </h:panelGroup>
+		  <h:panelGroup  style="width:100%"
+			        rendered="#{contractDetailsBackingBean.managedBean.selectedItem != null and 
+			        contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeMaxQty}">
+		     
+		           <p:dataTable id="itemMaxQtyTbl" var="itemMaxQty" 
+		                value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemMaxQties}">
+			            <ac:paginator for="itemMaxQtyTbl"/>
+			            
+			            <p:column headerText="#{lbl['lbl.ct.zone']}" style="width:40%; white-space:normal;"
+				             rendered="#{contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard or 
+			  		         contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTier or 
+			  		         contractDetailsBackingBean.managedBean.selectedItem.priceType.parameterCode eq ParameterConst.priceTypeZonalTariff}">
+				               <p:outputLabel value="#{itemMaxQty.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemMaxQty.changeZoneLabel}" />
+				               <p:outputLabel value="#{itemMaxQty.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemMaxQty.changeZoneLabel}" />
+						</p:column>
+						<p:column style="text-align: right;" >
+				            <f:facet name="header">
+					            <h:outputText value="#{lbl['lbl.ct.max.order.qty']}"/>
+			               		<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.max.order.qty']}"/>
+			               	</f:facet>
+		               		<h:outputText value="#{itemMaxQty.maxQuantity}">
+		               			<f:converter converterId="dynamicNumberConverter" />
+								<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, contractDetailsBackingBean.managedBean.selectedItem.scRequestItem.uom.uomCode)}" />
+			             	</h:outputText>
+						</p:column> 
+			            <p:column headerText="#{lbl['lbl.ct.effective.date']}" style="white-space:normal;">
+			                <h:outputText value="#{itemMaxQty.effDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>			            
+			            </p:column>       
+			            <p:column headerText="#{lbl['lbl.ct.expiry.date']}" style="white-space:normal;">
+			                <h:outputText value="#{itemMaxQty.expDate}" style="float:left;">
+                              <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+                            </h:outputText>			            
+			 			</p:column>
+			    </p:dataTable>
 		  </h:panelGroup>
 	    </p:outputPanel> 
 		<p:dialog id="importedDialog" header="#{lbl['lbl.ct.shipping.dtls']}" widgetVar="importedDlg" 
@@ -480,7 +517,7 @@
 		      
 		      <p:column filterBy="#{data.scRequestItem.itemName}" style="width:20%; white-space:normal;" filterMatchMode="contains">
 		             <f:facet name="header">
-		                    <h:outputText id="serviceItemDisc" value="#{lbl['lbl.ct.item.name']}"/>
+		                    <h:outputText id="serviceItemDesc" value="#{lbl['lbl.ct.item.name']}"/>
 		                    <ac:iconTooltip value="#{lbl['lbl.ct.instruction.item.search']}"/>
 		               </f:facet>
 		          <h:outputText value="#{data.scRequestItem.itemName}" style="float:left;"/>
@@ -555,7 +592,7 @@
 			     <c:if test="#{contractDetailsBackingBean.managedBean.selectedServiceItem.priceType.parameterCode eq ParameterConst.priceTypeZonalStandard}">
 			           <p:column headerText="#{lbl['lbl.ct.zone']}" style="white-space:normal;">
 			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName}" style="float:left;" rendered="#{!itemPricesVar.changeZoneLabel}" />
-			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new.price']})" style="float:left;" rendered="#{itemPricesVar.changeZoneLabel}" />
+			                 <p:outputLabel value="#{itemPricesVar.ctContractZone.zoneName} (#{lbl['lbl.ct.new']})" style="float:left;" rendered="#{itemPricesVar.changeZoneLabel}" />
 			            </p:column>    
 			            <p:column headerText="#{lbl['lbl.ct.price']}" style="text-align: right; white-space:normal;">
 			               <h:outputText value="#{itemPricesVar.unitPrice}">
