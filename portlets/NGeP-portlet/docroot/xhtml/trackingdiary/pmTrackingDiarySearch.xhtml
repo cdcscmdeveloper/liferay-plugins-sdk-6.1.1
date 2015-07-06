@@ -37,31 +37,24 @@
 							value="#{pmTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.profileManagementFunctionType)}" />
 						<p:ajax event="change"
 							listener="#{pmTrackingDiaryBackingBean.onFunctionSelect()}"
-							partialSubmit="true" process="@this" update="trackingSeachPanel, trackingSeachPanel2" />
+							partialSubmit="true" process="@this" update="searchPanel resultPanel" />
 					</p:selectOneMenu>
 				</h:column>
 			</h:panelGrid>
-			<h:panelGroup id="trackingSeachPanel">
-
-				<p:panel id="pmUserSearchID"
+				<h:panelGroup id="pmUserSearchID"
 					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.userProfileParamCode}">
 					<ui:include
 						src="/xhtml/trackingdiary/pmUserProfileTrackingDiarySearch.xhtml" />
-				</p:panel>
-				<p:panel id="pmOrgSearchID"
+				</h:panelGroup>
+				<h:panelGroup id="pmOrgSearchID" 
 					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.orgProfileParamCode}">
-					<ui:include
+					<ui:include 
 						src="/xhtml/trackingdiary/pmOrgProfileTrackingDiarySearch.xhtml" />
-				</p:panel>
-			</h:panelGroup>
+				</h:panelGroup>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.pm.search.result']}"
 			toggleable="true">
-			<h:panelGroup id="trackingSeachPanel2">
-
-				<p:panel id="pmUserSearchResultID"
-					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.userProfileParamCode}">
-					<p:dataTable id="dtUserProfileResult"
+				<p:dataTable id="dtUserProfileResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.userProfileParamCode}"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{pmTrackingDiaryBackingBean.managedBean.userDataModel}"
 						lazy="true" var="user" width="100%" rows="10">
@@ -99,10 +92,8 @@
 							</p:commandLink>
 						</p:column>
 					</p:dataTable>
-				</p:panel>
-				<p:panel id="sysParamSearchResultID"
-					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.systemParameterParamCode}">
-					<p:panelGrid styleClass="tablePanel">
+				
+				<p:panelGrid id="sysParamSearchResultID" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.systemParameterParamCode}" styleClass="tablePanel">
 						<f:facet name="header">
 							<p:row>
 								<p:column width="80%">
@@ -153,10 +144,7 @@
 						</p:row>
 					</p:panelGrid>
 
-				</p:panel>
-				<p:panel id="pmOrgSearchResultID"
-					rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.orgProfileParamCode}">
-					<p:dataTable id="dtOrgProfileResult"
+				<p:dataTable id="dtOrgProfileResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.orgProfileParamCode}"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{pmTrackingDiaryBackingBean.managedBean.userOrgDataModel}"
 						lazy="true" var="OrgProfile" width="100%" rows="10">
@@ -185,8 +173,6 @@
 							</p:commandLink>
 						</p:column>
 					</p:dataTable>
-				</p:panel>
-			</h:panelGroup>
 		</p:panel>
 	</h:panelGroup>
 
