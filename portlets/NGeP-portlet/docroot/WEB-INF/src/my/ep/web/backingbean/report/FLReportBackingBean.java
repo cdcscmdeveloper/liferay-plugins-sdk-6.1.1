@@ -598,6 +598,42 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStopInstructionNoView(true);
 			rptGenBean.setFlGroupEighteenView(true);
 			break;
+		case ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL:
+			rptGenBean.setFlSupplierView(true);
+			rptGenBean.setFlPtjView(true);
+			rptGenBean.setFlContractNoView(true);	
+			rptGenBean.setFlSstView(true);
+			rptGenBean.setFlMinistryView(true);
+			rptGenBean.setFromDateView(true);
+			/*rptGenBean.setFlPkpNoView(true);*/
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlStopInstructionNoView(true);
+			rptGenBean.setFlGroupTwentyView(true);
+			break;
+		case ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL:
+			rptGenBean.setFlSupplierView(true);
+			rptGenBean.setFlPtjView(true);
+			rptGenBean.setFlContractNoView(true);	
+			rptGenBean.setFlSstView(true);
+			rptGenBean.setFlMinistryView(true);
+			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlPkpNoView(true);
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlStopInstructionNoView(true);
+			rptGenBean.setFlGroupTwentyOneView(true);
+			break;
+		case ReportConst.FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL:
+			rptGenBean.setFlSupplierView(true);
+			rptGenBean.setFlPtjView(true);
+			/*rptGenBean.setFlContractNoView(true);	
+			rptGenBean.setFlSstView(true);*/
+			rptGenBean.setFlMinistryView(true);
+			rptGenBean.setFromDateView(true);
+			rptGenBean.setFlPkpNoView(true);
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlStopInstructionNoView(true);
+			rptGenBean.setFlGroupEighteenView(true);
+			break;
 		default:
 			throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));           
 		}		
