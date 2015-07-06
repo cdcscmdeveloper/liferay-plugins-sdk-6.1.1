@@ -244,13 +244,16 @@ public class ReportConst {
 	public static final String PUR_REQ_CANC_RPT_PO_VAL = "FL_045";	
 	public static final String PUR_ORD_CANC_RPT_PO_VAL = "FL_046";	
 	public static final String DEL_ORD_CANC_RPT_PO_VAL = "FL_047";	
-	public static final String FL_REC_NOTE_CANC_RPT_PO_VAL = "FL_048";
+	public static final String FL_REC_NOTE_CANC_RPT_PO_VAL = "FL_048";	
 	public static final String INV_CANC_RPT_PO_VAL = "FL_049";
+	public static final String FL_STP_INSTR_INIT_PTJ_RPT_FL_MIN_VAL = "FL_050";
+	public static final String FL_STP_INSTR_INIT_PTJ_RPT_FL_CEN_PEN_VAL = "FL_051";
+	public static final String FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL = "FL_052";
 	public static final String YEP_RPT_PO_NAME = "lbl.rpt.fl.YEP_RPT_PO_NAME";
 	public static final String YEP_RPT_PO_VAL = "YEPReport-PO";
 	public static final String YEP_AP58A_RPT_PO_NAME = "lbl.rpt.fl.YEP_AP58A_RPT_PO_NAME";
 	public static final String YEP_AP58A_RPT_PO_VAL = "YEPReport–AP58A-PO";	
-	public static final String SUP_PERF_RPT_PO_VAL = "FL_050";	
+	//public static final String SUP_PERF_RPT_PO_VAL = "FL_050";	
 	public static final String SUMM_RPT_PAN_ITM_VAL = "FL_033";
 	//PP
 	public static final String PP_PROCUREMENT_PTJ_LEVEL_RPT_VAL = "PP_001";
@@ -624,6 +627,7 @@ public class ReportConst {
 	public static final String FL_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String FL_AMP_REPORT_ID_EQ = "&PREPORTID=";
 	public static final String FL_AMP_USER_ID_EQ = "&PUSER=";
+	public static final String FL_AMP_STOP_INSTR_NO_EQ = "&PSINO=";
 	//CT
 	public static final String CT_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String CT_AMP_PHYSICALCONTRACT_NO_EQ = "&PPHYSICALCONTRACTNO=";
