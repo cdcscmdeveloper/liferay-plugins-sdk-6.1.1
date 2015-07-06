@@ -42,18 +42,14 @@
 			</p:commandLink>
 			<p:message id="unspscCodeIdMsg" for="unspscCodeId" display="icon" />
 		</p:column>
-		<p:column  style="width:30%">
+		<p:column style="width:30%;white-space:normal">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.item.title']}" />
 			</f:facet>
-			<p:inputTextarea 
-				required="true" 
-				label="#{lbl['lbl.pm.settings.gst.item.title']}" 
-				cols="35" 
-				rows="3" 
+			<h:outputText 
 				id="unspscTitleId" 
 				value="#{ruleCatalogueBackingBean.getItemTitle(tiObj)}" 
-				disabled="true"/>
+			/>
 			<p:message id="unspscTitleIdMsg" for="unspscTitleId" display="icon" />
 		</p:column>
 		<p:column  style="width:5%">
@@ -62,7 +58,7 @@
 			</f:facet>
 			<p:commandLink id="extensioncl" partialSubmit="true"
 				process="@this"
-				disabled="#{(!tiObj.brandNew) or (empty tiObj.unspsc or empty tiObj.unspsc.unspscId or tiObj.unspsc.unspscLevel ne '3')}"	
+				disabled="#{tiObj.recordStatusFlg == 0 or (empty tiObj.unspsc or empty tiObj.unspsc.unspscId or tiObj.unspsc.unspscLevel ne '3')}"	
 				action="#{ruleCatalogueBackingBean.initExtensionDetails(rowIndex)}"			
 				oncomplete="dlgExtension.show();" 
 				update=":#{p:component('dlExtension')}">
@@ -73,9 +69,9 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.scope']}" />
 			</f:facet>
-			<p:selectOneMenu id="somTiRuleTypes" value="#{tiObj.ruleType}" disabled="#{(!tiObj.brandNew)}"
+			<p:selectOneMenu id="somTiRuleTypes" value="#{tiObj.ruleType}" 
+				disabled="#{tiObj.effDate le DateUtils.getCurrentDateWithoutTime()}"
 				required="true" label="#{lbl['lbl.pm.settings.gst.scope']}" style="width:150px" >
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems
 						value="#{ruleCatalogueBackingBean.retrieveRuleListForTaxableItem()}"
 						var="parameter" itemLabel="#{parameter.codeName}"
@@ -91,7 +87,7 @@
 			<p:calendar id="effDateId" value="#{tiObj.effDate}"
 					mindate="#{ruleCatalogueBackingBean.managedBean.currentDate}"
 					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
-					disabled = "#{(tiObj.recordStatusFlg == 0 or (tiObj.effDate lt DateUtils.getCurrentDateWithoutTime()))}"
+					disabled = "#{(tiObj.recordStatusFlg == 0 or (tiObj.effDate le DateUtils.getCurrentDateWithoutTime()))}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="c-50:c+99" showOn="button"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -105,7 +101,7 @@
 			<p:calendar id="expDateId" value="#{tiObj.expDate}" 
 					mindate="#{!(tiObj.brandNew) ? tiObj.effDate :  ruleCatalogueBackingBean.managedBean.currentDate}"
 					navigator="true"
-					disabled ="#{tiObj.recordStatusFlg == 0 or (tiObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
+					disabled ="#{tiObj.recordStatusFlg == 0 or (tiObj.expDate le DateUtils.getCurrentDateWithoutTime())}"
 					maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="c-50:c+99" showOn="button"
@@ -118,12 +114,9 @@
 				<h:outputText value="#{lbl['lbl.pm.status']}" />
 			</f:facet>
 			<p:selectOneMenu value="#{tiObj.recordStatusFlg}"
-				disabled="#{tiObj.brandNew}" style="width:90px;">
-				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+				disabled="#{tiObj.brandNew or tiObj.recordStatusFlg == 0}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-				<p:ajax event="change" update="expDateId,effDateId"
-					process="@this" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />				
 			</p:selectOneMenu>
 		</p:column>
 		<p:column style="width:5%">

@@ -16,11 +16,10 @@
 				<table>
 					<tr>
 						<td><p:outputLabel
-								value="#{lbl['lbl.pm.settings.gst.additional.rule']}" /></td>
+								value="#{lbl['lbl.pm.settings.gst.scope']}" /></td>
 						<td><p:selectOneMenu id="somTiDaRuleTypes" value="#{ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.ruleType}" 
 							disabled="#{(!ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.brandNew) and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate lt DateUtils.getCurrentDateWithoutTime()}"
-							required="true" label="#{lbl['lbl.pm.settings.gst.additional.rule']}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+							required="true" label="#{lbl['lbl.pm.settings.gst.scope']}" style="width:150px">
 							<f:selectItems
 									value="#{ruleCatalogueBackingBean.retrieveRuleListForTaxableItemForDA()}"
 									var="parameter" itemLabel="#{parameter.codeName}"

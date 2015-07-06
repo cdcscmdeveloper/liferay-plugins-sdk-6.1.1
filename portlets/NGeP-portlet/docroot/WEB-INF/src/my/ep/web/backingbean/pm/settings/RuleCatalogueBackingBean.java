@@ -33,8 +33,10 @@ import my.ep.biz.service.pm.general.settings.threshold.IOperationalThresholdSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.cm.CmConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.ct.dtl.ContractItemReqDTO;
@@ -68,6 +70,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -86,6 +89,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.settings.RuleCatalogueManageBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1938,6 +1942,7 @@ public class RuleCatalogueBackingBean extends
 			newGstItem.setExemptionType(ProfileManagementConst.EXEMPTION_GENERAL);
 			newGstItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			newGstItem.setEffDate(new Date());
+			newGstItem.setRuleType(ParameterConst.RULE_TYPE_NOT_APPLICABLE);
 			getManagedBean().getTaxableItems().add(newGstItem);
 			RequestContext.getCurrentInstance().execute(
 					"taxableItemTblWidVar.paginator.endLink.click()");
@@ -2449,7 +2454,7 @@ public class RuleCatalogueBackingBean extends
 								baseItem.getExpDate());
 						
 				} else if (ProfileManagementConst.EXEMPTION_G2G == exItem.getExemptionType() 
-						&& exItem.getUnspsc().getUnspscId() == baseItem.getUnspsc().getUnspscId() 
+						&& (exItem.getUnspsc() !=null && baseItem.getUnspsc()!=null ? exItem.getUnspsc().getUnspscId() == baseItem.getUnspsc().getUnspscId()  : true)
 						&& exItem.getOrgProfile().getOrgProfileId() == baseItem.getOrgProfile().getOrgProfileId()) {
 					//G2G
 					result = isDateOverlaped(exItem.getEffDate(), exItem.getExpDate(),
@@ -2535,6 +2540,12 @@ public class RuleCatalogueBackingBean extends
 			 log.info(".................saveDesignatedArea...................");
 			 IDesignatedAreaSO designatedAreaSO = null;
 			 try{
+				 for(PmDesignatedArea da : getManagedBean().getDesignatedAreaList()){
+					 if(da.getvPmLocation() != null && da.getvPmLocation().getLocationId() !=null){
+						da.setLocationId(da.getvPmLocation().getLocationId()); 
+					}
+				 }
+				 
 				 validateDesignatedArea();	
 				 designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate.getInstance()
 							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
@@ -2562,12 +2573,6 @@ public class RuleCatalogueBackingBean extends
 			 }
 		 }
 		 
-	public void mapLocationToDa(PmDesignatedArea da){
-		if(da.getvPmLocation() != null && da.getvPmLocation().getLocationId() !=null){
-				da.setLocationId(da.getvPmLocation().getLocationId()); 
-		}
-	}
-		 
 	public void addTaxableItemForDA() {
 		log.info(".................addTaxableItemForDA...................");
 		try {
@@ -2578,6 +2583,7 @@ public class RuleCatalogueBackingBean extends
 			newGstItem.setExemptionType(ProfileManagementConst.EXEMPTION_DA);
 			newGstItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			newGstItem.setEffDate(new Date());
+			newGstItem.setRuleType(ParameterConst.RULE_TYPE_NOT_APPLICABLE);
 			getManagedBean().getTaxableItemsForDA().add(newGstItem);
 			RequestContext.getCurrentInstance().execute(
 					"taxableItemDATblWidVar.paginator.endLink.click()");			
@@ -2798,6 +2804,7 @@ public class RuleCatalogueBackingBean extends
 			newGstItem.setExemptionType(ProfileManagementConst.EXEMPTION_G2G);
 			newGstItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			newGstItem.setEffDate(new Date());
+			newGstItem.setRuleType(ParameterConst.RULE_TYPE_NOT_APPLICABLE);
 			getManagedBean().getTaxableItemsForG2G().add(newGstItem);
 			RequestContext.getCurrentInstance().execute(
 					"taxableItemG2GTblWidVar.paginator.endLink.click()");
@@ -2902,6 +2909,33 @@ public class RuleCatalogueBackingBean extends
 	public int getTaxableItemG2gIdx() {
 		return TAXABLE_ITEM_G2G_IDX;
 	}
+	
+	public boolean disabledExtensionFields(){
+		boolean disable = false;
+		if(getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)){
+			if(getManagedBean().getSelectedGstItem()!= null 
+					&& !getManagedBean().getSelectedGstItem().isBrandNew() 
+					&& (getManagedBean().getSelectedGstItem().getEffDate().before(DateUtils.getCurrentDateWithoutTime()) ||
+							(getManagedBean().getSelectedGstItem().getEffDate().equals(DateUtils.getCurrentDateWithoutTime())))){
+				disable = true;
+			}					
+		}else if(getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)){
+			if(getManagedBean().getSelectedGstItemForDA()!= null 
+					&& !getManagedBean().getSelectedGstItemForDA().isBrandNew() 
+					&& (getManagedBean().getSelectedGstItemForDA().getEffDate().before(DateUtils.getCurrentDateWithoutTime())||
+					(getManagedBean().getSelectedGstItemForDA().getEffDate().equals(DateUtils.getCurrentDateWithoutTime())))){
+				disable = true;
+			}			
+		}
+		return disable;
+	}
 		 
+	public Long getDefaultCountry(){
+		return PmCommonUtil.retrieveCountryByCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE).getCountryId();
+	}
+	
+	public void resetLovLocation(PmDesignatedArea da){
+		da.setvPmLocation(null);
+	}
 		 
 }
