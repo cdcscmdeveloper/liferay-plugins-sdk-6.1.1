@@ -40,7 +40,7 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View' or contractRequestBackingBean.isApprover()}"
 						size="50" update=":form:preparedOrgProfileId,:form:issuedOrgCode,:form:issuedOrgName,:form:controlOff" readonly="true"
-						postUpdateListener="contractRequestBackingBean.getAgAccount()"
+						postUpdateListener="contractRequestBackingBean.getAgAccount"
 						conditionField="#{contractRequestBackingBean.getPreparedPTJCondition()}"
 						tooltip="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"	>
 					</ac:lov></td>
@@ -66,7 +66,7 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}" 
 						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 						update=":form:chargeOrgProfileId" size="50"
-						postUpdateListener="contractRequestBackingBean.comparePtjGroup()"
+						postUpdateListener="contractRequestBackingBean.comparePtjGroup"
 						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatusFlg^1|pmOrgValidity.recordStatusFlg^1"
 						tooltip="#{lbl['lbl.fl.tooltip.charge.ptj']}"	>
 					</ac:lov></td>

@@ -91,6 +91,7 @@ import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlSupplierDtl;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -591,7 +592,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * <p>
 	 * Sorts delivery addresses based on the address.
 	 */
-	public void updateDeliveryAddrDt() {
+	public void updateDeliveryAddrDt(BaseEntity entity) {
 		if (null == getManagedBean().getSelectedPmDelAddrList()
 				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
 			return;
@@ -2300,7 +2301,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 *
 	 * @return the ag account
 	 */
-	public void getAgAccount(){
+	public void getAgAccount(BaseEntity entity){
 		checkPtjGroupAndInitialize();
 		getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getPreparedOrgProfile());
 		initializeApproverGroup();
@@ -2799,7 +2800,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	/**
 	 * Check vot fund lov.
 	 */
-	public void checkVotFundLov(){
+	public void checkVotFundLov(BaseEntity entity){
 		getManagedBean().setProgramLov(false);
 		getManagedBean().setProjectLov(false);
 		getManagedBean().setVotFundDisplay(false);
@@ -3177,7 +3178,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,null,getManagedBean().getGfmasErrorContent()));
 	}
 	
-	public void comparePtjGroup(){
+	public void comparePtjGroup(BaseEntity entity){
 		IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getChargeOrgProfile().getOrgProfileId());
