@@ -1,5 +1,7 @@
 package my.ep.web.integration.eterimaan;
 
+import java.math.BigDecimal;
+
 /*
  * author @Ganga prasad
 */
@@ -15,7 +17,7 @@ public class ChargeLine {
 	private String programAktiviti;
 	private String projek;
 	private String kodAkaun;
-	private int amount;
+	private BigDecimal amount;
 
 	public int getRecordType() {
 		return recordType;
@@ -99,11 +101,11 @@ public class ChargeLine {
 		this.kodAkaun = kodAkaun;
 	}
 
-	public int getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
