@@ -322,10 +322,6 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 		log.info("decrementAmountValueChangeListener");
 
-		System.out
-				.println("%%%%%%%%%inside decrementAmountValueChangeListener%%%%%%% "
-						+ scBidPrice);
-
 		if (scBidPrice.getNewPrice() != null) {
 			if (scBidPrice.getNewPrice().doubleValue() < scBidPrice
 					.getScBidSupplierItem().getScBidItem().getDecrementAmt()
@@ -337,15 +333,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 
 			} else if (scBidPrice.getNewPrice().doubleValue() > scBidPrice
 					.getScBidSupplierItem().getScBidItem().getDecrementAmt()
-					.doubleValue()
-					&& (scBidPrice.getNewPrice().doubleValue() % scBidPrice
-							.getScBidSupplierItem().getScBidItem()
-							.getDecrementAmt().doubleValue()) != 0.0d) {
-				int index = getBidPrices().indexOf(scBidPrice);
-				scBidPrice.setNewPrice(new BigDecimal(0.0d));
-				getBidPrices().set(index, scBidPrice);
-				throw new EpException(MessageConst.ERROR_760301);
-			} else {
+					.doubleValue()) {
+
 				BigDecimal lastBidPrice = scBidPrice.getBidPrice() == null ? scBidPrice
 						.getScBidSupplierItem().getItemStartPrice()
 						: scBidPrice.getBidPrice();
@@ -355,7 +344,15 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 					scBidPrice.setNewPrice(new BigDecimal(0.0d));
 					getBidPrices().set(index, scBidPrice);
 					throw new EpException(MessageConst.ERROR_760302);
+				} else if ((scBidPrice.getNewPrice().doubleValue() % scBidPrice
+						.getScBidSupplierItem().getScBidItem()
+						.getDecrementAmt().doubleValue()) != 0.0d) {
+					int index = getBidPrices().indexOf(scBidPrice);
+					scBidPrice.setNewPrice(new BigDecimal(0.0d));
+					getBidPrices().set(index, scBidPrice);
+					throw new EpException(MessageConst.ERROR_760301);
 				}
+
 			}
 		}
 		ScBidPrice newBidPrice = new ScBidPrice();
@@ -473,7 +470,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 				// setScBidSchedule(resDTO.getScBidSchedule());
 				System.out.println("!!!!!!!!!!!just before index !!!!!!!!!!!"
 						+ this.getScBidPrice());
-				System.out.println("^^^^^^^^^^index^^^^^^" +this.index);
+				System.out.println("^^^^^^^^^^index^^^^^^" + this.index);
 
 				ScBidPrice persistedItem = resDTO.getScBidPrice();
 				persistedItem.setNewPrice(new BigDecimal(0d));
@@ -1068,7 +1065,7 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	public Long getServicetype() {
 		return servicetype;
 	}
-	
+
 	/**
 	 * @return the index
 	 */
@@ -1077,7 +1074,8 @@ public class OnlineBiddingBackingBean extends BaseBackingBean {
 	}
 
 	/**
-	 * @param index the index to set
+	 * @param index
+	 *            the index to set
 	 */
 	public void setIndex(int index) {
 		this.index = index;
