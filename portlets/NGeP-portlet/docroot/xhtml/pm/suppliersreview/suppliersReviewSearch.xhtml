@@ -11,40 +11,44 @@
 
 		<table class="ppTwoTable">
 			<tr>
-				<td width="18%"><p:outputLabel value="#{lbl['lbl.pm.sr.paid.up.capital']}"></p:outputLabel></td>
+				<td width="18%"><p:outputLabel
+						value="#{lbl['lbl.pm.sr.paid.up.capital']}"></p:outputLabel> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtFrom}"
-						size="15" /><p:outputLabel style="float:initial;width:3%;" value=" To "></p:outputLabel>				
-				<p:inputText style="text-align:left;"
+						size="15" /> <p:outputLabel style="float:initial;width:3%;"
+						value=" To "></p:outputLabel> <p:inputText
+						style="text-align:left;"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtTo}"
 						size="15" /></td>
 			</tr>
 			<tr>
-			<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
-				<td><h:selectBooleanCheckbox 
+				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
+				<td><h:selectBooleanCheckbox
 						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID"
 						value="#{suppliersReviewBackingBean.managedBean.allStates}">
-						<p:ajax event="change" 	listener="#{suppliersReviewBackingBean.selectAllStates}" 
-						update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
-					</h:selectBooleanCheckbox> 
-					<h:outputText value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText>
+						<p:ajax event="change"
+							listener="#{suppliersReviewBackingBean.selectAllStates}"
+							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
+					</h:selectBooleanCheckbox> <h:outputText value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText>
 				</td>
-				
+
 			</tr>
 			<tr>
 				<th width="20%"><p:outputLabel
 						value="#{lbl['lbl.pm.sr.state']}" for="stateListId"></p:outputLabel></th>
 
-				<td>
-				<p:selectManyMenu 						
-						label="#{lbl['lbl.pm.sr.state']}" id="stateListId"
+				<td><p:selectManyMenu label="#{lbl['lbl.pm.sr.state']}"
+						id="stateListId"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.selectedStatesList}"
-						style="width: 207px;margin-bottom: 5px;height:100px" showCheckbox="true" disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
-						
-						<f:selectItems var="finState" 
+						style="width: 207px;margin-bottom: 5px;height:100px"
+						showCheckbox="true"
+						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
+
+						<f:selectItems var="finState"
 							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
-							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}"> 
-							</f:selectItems>
+							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
+						</f:selectItems>
 					</p:selectManyMenu></td>
 
 				<th>&#160;</th>
@@ -52,7 +56,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	
+
 	<script type="text/javascript">
 	function selectAll() {
 		$(document).ready(function() {
