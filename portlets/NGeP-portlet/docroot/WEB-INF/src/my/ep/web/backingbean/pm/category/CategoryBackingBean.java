@@ -355,6 +355,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		}
 	}
 	
+	
 	/**
 	 * Adds the category.
 	 * 
@@ -1426,11 +1427,15 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		Set<PmBasicCategory> tobeAddedPmBasicCategorySet=null;//=new HashSet<PmBasicCategory>();
 		ICategoryCodeSO categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,ICategoryCodeSO.class);
 
+		
 		if(this.getManagedBean().getSelectedLOV() != null && !this.getManagedBean().getSelectedLOV().isEmpty()) {			
 
-			if(this.getManagedBean().getPmCategoryL3().getPmBasicCategory()==null){					
+			if(this.getManagedBean().getPmCategoryL3()!=null && this.getManagedBean().getPmCategoryL3().getPmBasicCategory()==null){					
 				this.getManagedBean().getPmCategoryL3().setPmBasicCategory(new ArrayList<PmBasicCategory>());
 			}
+			
+			    
+			
 			for(PmCategoryL3 pmCategoryL3: this.getManagedBean().getSelectedLOV()) {
 
 				PmBasicCategory pmBasicCategory = new PmBasicCategory();
@@ -2061,4 +2066,27 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setPmCategoryLevel(0);
 	}
+	
+	
+	/*public void deleteBasicCategory() {
+		List<PmBasicCategory> categoryList = this.getManagedBean()
+				.getBasicCategoryList();
+
+		List<PmBasicCategory> removedCategoryList=new ArrayList<PmBasicCategory>();
+		removedCategoryList.addAll(categoryList);
+
+		if(removedCategoryList!=null && !removedCategoryList.isEmpty()){			
+			for (PmBasicCategory category : removedCategoryList) {
+				if (category.isSelected()) {					
+					removedCategoryList.remove(category);
+				}
+				else{
+					throw new EpException(MessageConst.ERROR_76000);
+				    }
+
+			}
+			this.getManagedBean().setBasicCategoryList(removedCategoryList);
+		}
+
+	}*/
 }
