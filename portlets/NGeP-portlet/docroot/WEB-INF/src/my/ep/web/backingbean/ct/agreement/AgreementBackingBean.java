@@ -2382,7 +2382,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					   ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
 				   getManagedBean().getCtAgencySigner().add(agreementParty);
 				   getManagedBean().setAgencySignerDropDown(false);
-				//   validateDuplicateAgencyPtj(profileId);
 				   
 				   long endTime1 = System.currentTimeMillis();
 				   log.info("End Time1 >>>>>>>>>>>>>>>>>>>>" +endTime1);
