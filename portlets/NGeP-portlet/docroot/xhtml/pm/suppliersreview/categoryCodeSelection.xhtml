@@ -10,7 +10,7 @@
 	<table class="ppTwoTable">
 		<tr>
 			<td><h:outputText value="*" styleClass="mandatory" /> <h:outputText
-					style="text-align:left;"
+					style="text-align:left;font-weight: bold;"
 					value="#{lbl['lbl.pm.sr.cat.code.selection']}" /> &#160; <p:graphicImage
 					id="bnti" value="/css/images/design/tooltips.png" /> <p:tooltip
 					id="bntt" for="bnti">
@@ -144,7 +144,7 @@
 
 			</p:dataTable>
 			<td colspan="5" width="100%">
-				<div class="ppRightBtn">
+				<div class="ppRightBtn" style="width: 101%;">
 					<p:commandButton value="#{lbl['lbl.btn.add']}"
 						action="#{categoryBackingBean.addBasicCategory()}"
 						partialSubmit="true" process="@this"
