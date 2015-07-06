@@ -273,6 +273,8 @@ public class ReportsGenerateBean {
 		private boolean flMandatoryPtjView = false;
 		private boolean flStopInstructionNoView = false;
 		private boolean flGroupEighteenView = false;
+		private boolean flGroupNineteenView = false;
+		private boolean flGroupTwentyView = false;
 		
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
@@ -493,6 +495,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlGroupTwentyView() {
+			return flGroupTwentyView;
+		}
+		public void setFlGroupTwentyView(boolean flGroupTwentyView) {
+			this.flGroupTwentyView = flGroupTwentyView;
+		}
+		public boolean isFlGroupNineteenView() {
+			return flGroupNineteenView;
+		}
+		public void setFlGroupNineteenView(boolean flGroupNineteenView) {
+			this.flGroupNineteenView = flGroupNineteenView;
+		}
 		public boolean isFlGroupEighteenView() {
 			return flGroupEighteenView;
 		}

@@ -249,6 +249,9 @@ public class ReportConst {
 	public static final String FL_STP_INSTR_INIT_PTJ_RPT_FL_MIN_VAL = "FL_050";
 	public static final String FL_STP_INSTR_INIT_PTJ_RPT_FL_CEN_PEN_VAL = "FL_051";
 	public static final String FL_STP_INSTR_INIT_PTJ_RPT_FL_PO_VAL = "FL_052";
+	public static final String FL_STP_INSTR_INIT_SUP_RPT_FL_MIN_VAL = "FL_053";
+	public static final String FL_STP_INSTR_INIT_SUP_RPT_FL_CEN_PEN_VAL = "FL_054";
+	public static final String FL_STP_INSTR_INIT_SUP_RPT_FL_PO_VAL = "FL_055";
 	public static final String YEP_RPT_PO_NAME = "lbl.rpt.fl.YEP_RPT_PO_NAME";
 	public static final String YEP_RPT_PO_VAL = "YEPReport-PO";
 	public static final String YEP_AP58A_RPT_PO_NAME = "lbl.rpt.fl.YEP_AP58A_RPT_PO_NAME";
