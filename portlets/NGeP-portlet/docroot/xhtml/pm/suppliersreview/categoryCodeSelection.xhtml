@@ -1,0 +1,171 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<table class="ppTwoTable">
+		<tr>
+			<td><h:outputText value="*" styleClass="mandatory" /> <h:outputText
+					style="text-align:left;"
+					value="#{lbl['lbl.pm.sr.cat.code.selection']}" /> &#160; <p:graphicImage
+					id="bnti" value="/css/images/design/tooltips.png" /> <p:tooltip
+					id="bntt" for="bnti">
+					<p:outputLabel escape="false"
+						value="#{lbl['lbl.pm.sr.cat.code.data']}" />
+				</p:tooltip></td>
+		</tr>
+	</table>
+	<p:remoteCommand name="updateCategory"
+		update="panelgroupdetails,resultPanel"
+		action="#{categoryBackingBean.populateToSaveLOV}" />
+	<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
+		modal="true" width="700" position="top">
+		<p:ajax event="close" listener="#{categoryBackingBean.resetLOV}"
+			update="lovPopupCategory" />
+		<f:facet name="header">
+			<h:panelGroup id="lovTitle">#{lbl['lbl.pm.select.category']}</h:panelGroup>
+		</f:facet>
+
+		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
+			<h:panelGroup id="searchPanel" style="width:100%;">
+				<h:panelGrid columns="3" id="lovCriteria" cellpadding="0"
+					cellspacing="0">
+
+					<p:selectOneMenu
+						value="#{categoryBackingBean.managedBean.searchFieldValue[0]}">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems
+							value="#{categoryBackingBean.managedBean.searchField}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu
+						value="#{categoryBackingBean.managedBean.searchOperatorValue[0]}">
+						<f:selectItems
+							value="#{categoryBackingBean.managedBean.searchOperator}" />
+					</p:selectOneMenu>
+					<p:inputText
+						value="#{categoryBackingBean.managedBean.searchValue[0]}"
+						style="margin-top:-0.5%;" />
+				</h:panelGrid>
+
+				<table style="width: 100%;">
+					<tr>
+						<td style="text-align: right;"><p:commandButton
+								icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
+								action="#{categoryBackingBean.searchLOV}" update="lovTb2">
+							</p:commandButton> <p:commandButton icon="ui-icon-reset"
+								value="#{lbl['lbl.btn.reset']}"
+								action="#{categoryBackingBean.resetLOV}"
+								update="searchPanel,resultPanel">
+							</p:commandButton></td>
+					</tr>
+				</table>
+			</h:panelGroup>
+		</p:panel>
+
+		<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
+			<h:panelGroup id="resultPanel" style="width:100%;">
+
+				<p:dataTable id="lovTb2" var="categoryL3"
+					selection="#{categoryBackingBean.managedBean.selectedLOV}"
+					rowIndexVar="rowIndex" rows="10" lazy="true"
+					rowKey="#{categoryL3.categoryL3Id}"
+					value="#{categoryBackingBean.searchLOVPagingDataModel}">
+					<ac:paginator for="lovTb2" />
+
+					<p:column selectionMode="multiple" style="width:2%" />
+
+					<p:column headerText="#{lbl['lbl.pm.category.code']}">
+						<h:outputText value="#{categoryL3.categoryL3Code}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.pm.category.name']}">
+						<h:outputText value="#{categoryL3.categoryName}" />
+					</p:column>
+
+				</p:dataTable>
+
+			</h:panelGroup>
+
+			<table style="width: 100%;">
+				<tr>
+					<td style="text-align: right;"><p:commandButton id="slbtn"
+							value="#{lbl['lbl.btn.select']}" update="searchPanel"
+							oncomplete="updateCategory();lovPopupCategory.hide();" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</p:dialog>
+
+	<p:outputPanel id="panelgroupdetails">
+		<p:panel id="groupdetails" toggleable="true">
+			<p:dataTable id="groupdetailsId" 
+				rowKey="#{pmBasicCategory.createdDate}"
+				value="#{categoryBackingBean.managedBean.basicCategoryList}"
+				width="100%" var="pmBasicCategory">
+
+				<ac:paginator for="groupdetailsId"></ac:paginator>
+				<p:column>
+
+				<f:facet name="header">						
+					     #{lbl['lbl.pm.category.code']}					
+				</f:facet>
+					<h:outputText value="#{pmBasicCategory.codeConcatenate}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pm.category']}
+				</f:facet>
+					<h:outputText value="#{pmBasicCategory.basicCategoryL1desc}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pm.sub.category']}
+				</f:facet>
+					<h:outputText value="#{pmBasicCategory.basicCategoryL2desc}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+					#{lbl['lbl.pm.sub.category.div']}
+				</f:facet>
+					<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
+				</p:column>				
+				
+				<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
+					<p:commandLink partialSubmit="true" process="@this"
+						action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
+						update="groupdetailsId">
+						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+			<td colspan="5" width="100%">
+				<div class="ppRightBtn">
+					<p:commandButton value="#{lbl['lbl.btn.add']}"
+						action="#{categoryBackingBean.addBasicCategory()}"
+						partialSubmit="true" process="@this"
+						oncomplete="lovPopupCategory.show();" update="lovPopupCategory" />
+					&#160;
+				</div>
+			</td>
+		</p:panel>
+	</p:outputPanel>
+	<td colspan="5" width="100%">
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.search']}"
+				action="#{suppliersReviewBackingBean.searchSuppliersReviewDetails}"
+				update="suppliersReviewPanel,noOfsuppliersReviewPanel" 
+				 />
+			&#160;
+			<p:commandButton value="#{lbl['lbl.btn.reset']}"
+				action="#{suppliersReviewBackingBean.resetSuppliersReviewSearchBean}"
+				process="@this" partialSubmit="true"
+				update=":form:suppliersReviewPanel,:form:noOfsuppliersReviewPanel" />
+		</div>
+	</td>
+
+</ui:composition>
