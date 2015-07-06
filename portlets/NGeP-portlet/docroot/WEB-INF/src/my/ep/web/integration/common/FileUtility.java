@@ -429,7 +429,6 @@ public class FileUtility {
 				}
 				log.info("local fie create....");
 				
-//				Encryption encryption = new Encryption();
 				encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-350");
 
 			}
@@ -449,7 +448,6 @@ public class FileUtility {
 	
 
 	public List<MasterDataVendor> masterDataVendorFileInPutStream(String filePath) {
-//			String PROCESS_ID = "APOVE";
 			Path path = Paths.get(filePath);
 		    String line;
 		    List<MasterDataVendor> masterDataVendorList = new ArrayList<MasterDataVendor>();
@@ -458,41 +456,40 @@ public class FileUtility {
 			
 			  try (Scanner scanner =  new Scanner(path, IntegrationConstants.ENCODING.name())){
 				  
-				  FileUtility fileUtility = new FileUtility();
 			      while (scanner.hasNextLine()){
 			    	  line = scanner.nextLine();
 			    	  if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
 			    		  masterDataVendor = new MasterDataVendor();
-			    		  masterDataVendor.setRecordType(Integer.parseInt(fileUtility.getValue(line,0 ,1 )));
+			    		  masterDataVendor.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
 			    		  masterDataVendor.setRecordType(0);
-			    		  masterDataVendor.setAgencyId(fileUtility.getValue(line,1 ,6 ));
-			    		  masterDataVendor.setVendorIdCode(fileUtility.getValue(line,7 ,20 ));
-			    		  masterDataVendor.setEntityCode(fileUtility.getValue(line,27 ,4 ));
-			    		  masterDataVendor.setSapVendorCode(fileUtility.getValue(line,31 ,10 ));
-			    		  masterDataVendor.getCompanyBranch().setName(fileUtility.getValue(line,41 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setName2(fileUtility.getValue(line,76 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setAddress(fileUtility.getValue(line,111 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setAddress2(fileUtility.getValue(line,146 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setAddress3(fileUtility.getValue(line,181 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setPostCode(fileUtility.getValue(line,216 ,5 ));
-			    		  masterDataVendor.getCompanyBranch().setCity(fileUtility.getValue(line,221 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setRegion(fileUtility.getValue(line,256 ,3 ));
-			    		  masterDataVendor.getCompanyBranch().setCountry(fileUtility.getValue(line,259 ,2 ));
-			    		  masterDataVendor.getCompanyBranch().setTelephoneNo(fileUtility.getValue(line,261 ,15 ));
-			    		  masterDataVendor.getCompanyBranch().setFaxNo(fileUtility.getValue(line,276 ,15 ));
-			    		  masterDataVendor.getCompanyBranch().setEmailAddress(fileUtility.getValue(line,291 ,100 ));
-			    		  masterDataVendor.getCompanyBranch().setCurrency(fileUtility.getValue(line,391 ,5 ));
-			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(fileUtility.getValue(line,396 ,4 ));
-			    		  masterDataVendor.getCompanyBranch().setMobileNo(fileUtility.getValue(line,400 ,15 ));
+			    		  masterDataVendor.setAgencyId(getValue(line,1 ,6 ));
+			    		  masterDataVendor.setVendorIdCode(getValue(line,7 ,20 ));
+			    		  masterDataVendor.setEntityCode(getValue(line,27 ,4 ));
+			    		  masterDataVendor.setSapVendorCode(getValue(line,31 ,10 ));
+			    		  masterDataVendor.getCompanyBranch().setName(getValue(line,41 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setName2(getValue(line,76 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress(getValue(line,111 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress2(getValue(line,146 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress3(getValue(line,181 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setPostCode(getValue(line,216 ,5 ));
+			    		  masterDataVendor.getCompanyBranch().setCity(getValue(line,221 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setRegion(getValue(line,256 ,3 ));
+			    		  masterDataVendor.getCompanyBranch().setCountry(getValue(line,259 ,2 ));
+			    		  masterDataVendor.getCompanyBranch().setTelephoneNo(getValue(line,261 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setFaxNo(getValue(line,276 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setEmailAddress(getValue(line,291 ,100 ));
+			    		  masterDataVendor.getCompanyBranch().setCurrency(getValue(line,391 ,5 ));
+			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(getValue(line,396 ,4 ));
+			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,400 ,15 ));
 			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 			    		  bankAccountInformation = new BankAccountInformation();
 			    		  bankAccountInformation.setRecordType(1);
-			    		  bankAccountInformation.setRecordNumber(Integer.parseInt(fileUtility.getValue(line,1 ,3 )));
-			    		  bankAccountInformation.setBankCountry(fileUtility.getValue(line,4 ,2 ));
-			    		  bankAccountInformation.setBankKey(fileUtility.getValue(line,6 ,15 ));
-			    		  bankAccountInformation.setBankAccount(fileUtility.getValue(line,21 ,18 ));
-			    		  bankAccountInformation.setCurrency(fileUtility.getValue(line,39 ,5 ));
-			    		  bankAccountInformation.setAccountHolderName(fileUtility.getValue(line,44 ,60 ));
+			    		  bankAccountInformation.setRecordNumber(Integer.parseInt(getValue(line,1 ,3 )));
+			    		  bankAccountInformation.setBankCountry(getValue(line,4 ,2 ));
+			    		  bankAccountInformation.setBankKey(getValue(line,6 ,15 ));
+			    		  bankAccountInformation.setBankAccount(getValue(line,21 ,18 ));
+			    		  bankAccountInformation.setCurrency(getValue(line,39 ,5 ));
+			    		  bankAccountInformation.setAccountHolderName(getValue(line,44 ,60 ));
 			    		  masterDataVendor.setBankAccountInformation(bankAccountInformation);
 			    		  masterDataVendorList.add(masterDataVendor);
 			    	  }
@@ -505,14 +502,13 @@ public class FileUtility {
 	// GFMAS PM Files Start
 
 		public List<AgOffice> pejabatPerakaunanFileInPutStream(String filePath) {
-			//String PROCESS_ID = "GLBAC";
+
 			Path path = Paths.get(filePath);
 			String line;
 			List<AgOffice> agOfficeList = new ArrayList<AgOffice>();
 			AgOffice afOffice = null;
 
-			try (Scanner scanner = new Scanner(path,
-					IntegrationConstants.ENCODING.name())) {
+			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 
 				FileUtility fileUtility = new FileUtility();
 				while (scanner.hasNextLine()) {
@@ -532,7 +528,6 @@ public class FileUtility {
 		}
 
 		public List<AgCtrlOfficer> pegawaiPengawalInPutStream(String filePath) {
-			//String PROCESS_ID = "GLSEG";
 			Path path = Paths.get(filePath);
 			String line;
 			List<AgCtrlOfficer> agCtrOfficeList = new ArrayList<AgCtrlOfficer>();
@@ -561,7 +556,6 @@ public class FileUtility {
 		}
 
 		public List<VotFund> votInPutStream(String filePath) {
-//			String PROCESS_ID = "GLVOT";
 			Path path = Paths.get(filePath);
 			String line;
 			List<VotFund> votList = new ArrayList<VotFund>();
@@ -594,7 +588,6 @@ public class FileUtility {
 		}
 
 		public List<VotFund> votDanaInPutStream(String filePath) {
-//			String PROCESS_ID = "GLDNA";
 			Path path = Paths.get(filePath);
 			String line;
 			List<VotFund> votList = new ArrayList<VotFund>();
@@ -622,7 +615,6 @@ public class FileUtility {
 		}
 
 		public List<ProgramActivity> programAktiviti(String filePath) {
-//			String PROCESS_ID = "GLPRG";
 			Path path = Paths.get(filePath);
 			String line;
 			List<ProgramActivity> programActivityList = new ArrayList<ProgramActivity>();
@@ -654,7 +646,6 @@ public class FileUtility {
 		}
 
 		public List<Project> project(String filePath) {
-//			String PROCESS_ID = "GLPRJ";
 			Path path = Paths.get(filePath);
 			String line;
 			List<Project> projectList = new ArrayList<Project>();
@@ -689,7 +680,6 @@ public class FileUtility {
 		}
 
 		public List<GlAccount> kodAkaun(String filePath) {
-//			String PROCESS_ID = "GLGLC";
 			Path path = Paths.get(filePath);
 			String line;
 			List<GlAccount> glAccountList = new ArrayList<GlAccount>();
@@ -721,7 +711,6 @@ public class FileUtility {
 		}
 
 		public List<PtjGroup> kumpulanPTJ(String filePath) {
-//			String PROCESS_ID = "GLPCG";
 			Path path = Paths.get(filePath);
 			String line;
 			List<PtjGroup> ptjGroupList = new ArrayList<PtjGroup>();
@@ -752,7 +741,6 @@ public class FileUtility {
 		}
 
 		public List<OrgProfile> masterDatePTJ(String filePath) {
-//			String PROCESS_ID = "GLPTJ";
 			Path path = Paths.get(filePath);
 			String line;
 			List<OrgProfile> orgProfileList = new ArrayList<OrgProfile>();
@@ -786,7 +774,6 @@ public class FileUtility {
 		}
 
 		public List<BankAccountInformation> kodBank(String filePath) {
-//			String PROCESS_ID = "CMBNK";
 			Path path = Paths.get(filePath);
 			String line;
 			List<BankAccountInformation> bankList = new ArrayList<BankAccountInformation>();
@@ -815,7 +802,6 @@ public class FileUtility {
 		}
 
 		public List<PaymentInfo> paymentInfo(String filePath) {
-//			String PROCESS_ID = "AP511";
 			Path path = Paths.get(filePath);
 			String line;
 			List<PaymentInfo> paymentList = new ArrayList<PaymentInfo>();
@@ -850,7 +836,7 @@ public class FileUtility {
 			return paymentList;
 		}
 
-		// END OF GFMAS PM Files
+	// END OF GFMAS PM Files
 	
 	
 	// set values for masterData material Info 1gfmas
@@ -954,7 +940,6 @@ public class FileUtility {
 	public String formatStringField(String input, int length, String align) {
 		String formatInput;
 		String formatInput1 = null;
-		//log.info("input.length() :"+input);
 		if (!(input==null)) { 
 			formatInput = input.trim();
 			if (formatInput.length() != length) {
@@ -986,7 +971,6 @@ public class FileUtility {
 		} else if (align == "R") {
 			formatInput = String.format("%0" + length + "d", input);
 		}
-	//	log.info("formatInput :" + formatInput);
 		return formatInput;
 
 	}
@@ -995,7 +979,6 @@ public class FileUtility {
 
 		String FILE_NAME;
 		SimpleDateFormat dt1 = new SimpleDateFormat("yyyMMdd");
-		//log.info(dt1.format(new Date()));
 
 		String DATE = dt1.format(new Date());
 
@@ -1185,7 +1168,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1286,7 +1269,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1335,7 +1318,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1406,7 +1389,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1476,7 +1459,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1532,7 +1515,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1582,7 +1565,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1640,7 +1623,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1687,7 +1670,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1753,7 +1736,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
@@ -1818,7 +1801,7 @@ public class FileUtility {
 			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
 			
 			//once upload is done cal web service osb integration to transfer file.
-			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
+//			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
 
 		} catch (IOException e) {
 
