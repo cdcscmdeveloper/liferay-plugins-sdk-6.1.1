@@ -592,7 +592,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * <p>
 	 * Sorts delivery addresses based on the address.
 	 */
-	public void updateDeliveryAddrDt(BaseEntity entity) {
+	public void updateDeliveryAddrDt(List<BaseEntity> entity) {
 		if (null == getManagedBean().getSelectedPmDelAddrList()
 				|| getManagedBean().getSelectedPmDelAddrList().isEmpty()) {
 			return;
