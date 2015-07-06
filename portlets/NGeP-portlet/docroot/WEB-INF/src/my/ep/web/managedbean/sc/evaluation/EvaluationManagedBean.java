@@ -476,6 +476,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtSampleItem> complianceSampleItemListDM;
 	private IPagingDataModel<ScQtSampleLable> complianceSampleLblsupplierDM;
 	private IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM;
+	private int demoPassingScore;
 
 	/**
 	 * Gets the today.
@@ -3223,6 +3224,20 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setPresentationDemoSupplierListDM(
 			IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM) {
 		this.presentationDemoSupplierListDM = presentationDemoSupplierListDM;
+	}
+
+	/**
+	 * @return the demoPassingScore
+	 */
+	public int getDemoPassingScore() {
+		return demoPassingScore;
+	}
+
+	/**
+	 * @param demoPassingScore the demoPassingScore to set
+	 */
+	public void setDemoPassingScore(int demoPassingScore) {
+		this.demoPassingScore = demoPassingScore;
 	}
 
 }
