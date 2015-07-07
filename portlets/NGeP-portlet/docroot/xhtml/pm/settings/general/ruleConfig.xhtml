@@ -248,6 +248,11 @@
 					disabled="#{typeValueObj.brandNew}" style="width:100px;">
 					<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 					<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+					<p:ajax event="change" immediate="true"
+								listener="#{ruleCatalogueBackingBean.ruleValueStatusChange(typeValueObj)}"
+								partialSubmit="true" process="@this"
+								update="@this" />
+						
 				</p:selectOneMenu>
 			</p:column>
 			<p:column width="7%">
