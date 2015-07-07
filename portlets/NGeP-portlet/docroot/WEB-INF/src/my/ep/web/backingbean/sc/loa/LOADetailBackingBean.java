@@ -651,10 +651,7 @@ public class LOADetailBackingBean extends
 		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
 
 		if (null != scheduleList && !scheduleList.isEmpty()) {
-
 			this.getManagedBean().setTotalFrequency(scheduleList.size());
-			//String startMonth = "";
-			//String endMonth = "";
 			for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -664,85 +661,9 @@ public class LOADetailBackingBean extends
 				String startYear = fromdate.substring(6, fromdate.length());
 				String endMonth = todate.substring(3, 5);
 				String endYear = todate.substring(6, todate.length());
-
-				/*if (startdate.equalsIgnoreCase("01")) {
-					startMonth = "0";
-				}
-				if (startdate.equalsIgnoreCase("02")) {
-					startMonth = "1";
-				}
-				if (startdate.equalsIgnoreCase("03")) {
-					startMonth = "2";
-				}
-				if (startdate.equalsIgnoreCase("04")) {
-					startMonth = "3";
-				}
-				if (startdate.equalsIgnoreCase("05")) {
-					startMonth = "4";
-				}
-				if (startdate.equalsIgnoreCase("06")) {
-					startMonth = "5";
-				}
-
-				if (startdate.equalsIgnoreCase("07")) {
-					startMonth = "6";
-				}
-				if (startdate.equalsIgnoreCase("08")) {
-					startMonth = "7";
-				}
-				if (startdate.equalsIgnoreCase("09")) {
-					startMonth = "8";
-				}
-				if (startdate.equalsIgnoreCase("10")) {
-					startMonth = "9";
-				}
-				if (startdate.equalsIgnoreCase("11")) {
-					startMonth = "10";
-				}
-				if (startdate.equalsIgnoreCase("12")) {
-					startMonth = "11";
-				}
-
-				if (enddate.equalsIgnoreCase("01")) {
-					endMonth = "0";
-				}
-				if (enddate.equalsIgnoreCase("02")) {
-					endMonth = "1";
-				}
-				if (enddate.equalsIgnoreCase("03")) {
-					endMonth = "2";
-				}
-				if (enddate.equalsIgnoreCase("04")) {
-					endMonth = "3";
-				}
-				if (enddate.equalsIgnoreCase("05")) {
-					endMonth = "4";
-				}
-				if (enddate.equalsIgnoreCase("06")) {
-					endMonth = "5";
-				}
-
-				if (enddate.equalsIgnoreCase("07")) {
-					endMonth = "6";
-				}
-				if (enddate.equalsIgnoreCase("08")) {
-					endMonth = "7";
-				}
-				if (enddate.equalsIgnoreCase("09")) {
-					endMonth = "8";
-				}
-				if (enddate.equalsIgnoreCase("10")) {
-					endMonth = "9";
-				}
-				if (enddate.equalsIgnoreCase("11")) {
-					endMonth = "10";
-				}
-				if (enddate.equalsIgnoreCase("12")) {
-					endMonth = "11";
-				}*/
 				
-				int start = Integer.parseInt(startMonth);
-				int end = Integer.parseInt(endMonth);
+				int sMonth = Integer.parseInt(startMonth);
+				int eMonth = Integer.parseInt(endMonth);
 				int sYear = Integer.parseInt(startYear);
 				int eYear = Integer.parseInt(endYear);
 				int diffYear = 0;
@@ -752,7 +673,7 @@ public class LOADetailBackingBean extends
 					if (!endYear.equals(startYear)) {
 						diffYear = eYear - sYear;
 					}
-					for (int i = start + 1; i <= end + 1; i++) {
+					for (int i = sMonth + 1; i <= eMonth + 1; i++) {
 						count++;
 					}
 					count = count + (diffYear * 12);
@@ -760,14 +681,12 @@ public class LOADetailBackingBean extends
 				} else {
 					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
 				}
-				scQtSchedule.setStartMonth(startMonth);
-				scQtSchedule.setEndMonth(endMonth);
+				scQtSchedule.setStartMonth(String.valueOf(sMonth));
+				scQtSchedule.setEndMonth(String.valueOf(eMonth));
 				scQtSchedule.setStartYear(startYear);
 				scQtSchedule.setEndYear(endYear);
 			}
 			this.sortFrequentScheduleList(scLoa.getScQtSchedules());
-
-			// this.getManagedBean().setScheduleList(scheduleList);
 		}
 
 		if (getManagedBean().getScQt() != null) {
@@ -2292,24 +2211,8 @@ public class LOADetailBackingBean extends
 					editLOAAction(scLoa);
 				}
 
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700004,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_LETTER_OF_AWARD),
-																scLoa.getLoaNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+						scLoa.getLoaNo(), Boolean.FALSE);
 			}
 
 		} finally {
@@ -2326,7 +2229,6 @@ public class LOADetailBackingBean extends
 	 */
 	public String submitAction() {
 		debugLogger("submitAction");
-
 
 		try {
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
@@ -2358,29 +2260,9 @@ public class LOADetailBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
-
 				renewSesionObject();
-
-				FacesContext
-						.getCurrentInstance()
-						.addMessage(
-								null,
-								new FacesMessage(
-										FacesMessage.SEVERITY_INFO,
-										null,
-										MessageUtils
-												.getMessage(
-														MessageConst.INFO_700026,
-														new String[] {
-																getParameterDesc(
-																		ParameterTypeConst.DOCUMENT_TYPES,
-																		ParameterConst.DOCTYPE_LETTER_OF_AWARD),
-																scLoa.getLoaNo() },
-														MessageUtils.BUNDLE_COMMON_MESSAGES,
-														new FacesScopes()
-																.getUserLocale())));
-
-				return CommonUIConst.ACKNOWLEDGE_PAGE;
+				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
+						scLoa.getLoaNo(), Boolean.TRUE);
 			}
 
 		} finally {
@@ -2488,10 +2370,9 @@ public class LOADetailBackingBean extends
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
 				}
-
 				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo());
+						scLoa.getLoaNo() , Boolean.FALSE);
 				
 				renewSesionObject();
 			}
@@ -2831,7 +2712,6 @@ public class LOADetailBackingBean extends
 		} finally {
 			userSO = null;
 		}
-
 	}
 
 	/**
@@ -3006,7 +2886,6 @@ public class LOADetailBackingBean extends
 	public List<SelectItem> getYearsDisplayDtls() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		ScLoa loa = 	getManagedBean().getScLoa();
-
 		try {
 			//int year = Calendar.getInstance().get(Calendar.YEAR);
 			Calendar calendar = Calendar.getInstance(); 
@@ -3123,70 +3002,10 @@ public class LOADetailBackingBean extends
 				.getScQtSchedules();
 		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
 		if (freqschedule != null && !freqschedule.isEmpty()) {
-			//String startMonth = "";
-			//String endmonth = "";
 			for (ScQtSchedule schedule : freqschedule) {
-				/*if (schedule.getStartMonth().equalsIgnoreCase("0")) {
-					startMonth = "01";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("1")) {
-					startMonth = "02";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("2")) {
-					startMonth = "03";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("3")) {
-					startMonth = "04";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("4")) {
-					startMonth = "05";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("5")) {
-					startMonth = "06";
-				}
-
-				else if (schedule.getStartMonth().equalsIgnoreCase("6")) {
-					startMonth = "07";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("7")) {
-					startMonth = "08";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("8")) {
-					startMonth = "09";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("9")) {
-					startMonth = "10";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("10")) {
-					startMonth = "11";
-				} else if (schedule.getStartMonth().equalsIgnoreCase("11")) {
-					startMonth = "12";
-				}
-				if (schedule.getEndMonth().equalsIgnoreCase("0")) {
-					endmonth = "01";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("1")) {
-					endmonth = "02";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("2")) {
-					endmonth = "03";
-				}
-
-				else if (schedule.getEndMonth().equalsIgnoreCase("3")) {
-					endmonth = "04";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("4")) {
-					endmonth = "05";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("5")) {
-					endmonth = "06";
-				}
-
-				else if (schedule.getEndMonth().equalsIgnoreCase("6")) {
-					endmonth = "07";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("7")) {
-					endmonth = "08";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("8")) {
-					endmonth = "09";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("9")) {
-					endmonth = "10";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("10")) {
-					endmonth = "11";
-				} else if (schedule.getEndMonth().equalsIgnoreCase("11")) {
-					endmonth = "12";
-				}*/
-				
 				Date currentDate = new Date();
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(currentDate);
+				SimpleDateFormat df = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String localDate = df.format(currentDate);
 				String day = localDate.substring(0, 2);
 				String fromdate = day + "/" + schedule.getStartMonth() + "/"
 						+ schedule.getStartYear();
@@ -3594,12 +3413,7 @@ public class LOADetailBackingBean extends
 							
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
 									"" : answer.getTplSpecQuestion().getClQuantity().toString());
-							
-							/*row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
-									"" : answerType(answer));
-				
-							row.createCell(cellIndex++).setCellValue(null == answer.getAnswerRemark() ? 
-									"" : answer.getAnswerRemark());*/
+						
 						}
 						
 						// Auto size all the columns
@@ -3646,12 +3460,6 @@ public class LOADetailBackingBean extends
 
 							row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getClQuantity() ? 
 									"" : answer.getTplSpecQuestion().getClQuantity().toString());
-
-							/*row.createCell(cellIndex++).setCellValue(null == answer.getTplSpecQuestion().getAnswerTypeCode() ? 
-									"" : answerType(answer));
-
-						    row.createCell(cellIndex++).setCellValue(null == answer.getAnswerRemark() ? 
-									"" : answer.getAnswerRemark());*/
 						}
 
 						for (int x = 0; x < serviceSheet.getRow(0)
@@ -3675,38 +3483,6 @@ public class LOADetailBackingBean extends
 		}
 	}
 	
-	/**
-	 * Answer type.
-	 *
-	 * @param answer the answer
-	 * @return the string
-	 */
-	private String answerType(TplSpecAnswer answer){
-		String answerType="";
-		String answerTypeCode = answer.getTplSpecQuestion().getAnswerTypeCode().getParameterCode();
-
-		if(ParameterConst.ANSWER_TYPE_TEXT.equals(answerTypeCode)){
-
-			if(null == answer.getAnswerText()){
-				answerType = "";
-			} else{
-				answerType = answer.getAnswerText();
-			}
-		} else if(ParameterConst.ANSWER_TYPE_NUMERIC.equals(answerTypeCode)){
-			if(null == answer.getAnswerText()){
-				answerType = "";
-			} else{
-				answerType = answer.getAnswerNumeric().toString();
-			}
-		} else if(ParameterConst.ANSWER_TYPE_DROPDOWN.equals(answerTypeCode)){
-			if(answer.getAnswerCompliance()){
-				answerType  = SourcingConstants.SUPPLIER_REQUIREMENT_YES;
-			} else{
-				answerType  = SourcingConstants.SUPPLIER_REQUIREMENT_NO;
-			}
-		} 
-		return answerType;
-	}
 
 	/**
 	 * Creates the QT Loa.
@@ -3901,7 +3677,6 @@ public class LOADetailBackingBean extends
 						payment.setToDate(df.parse(toDate));
 					}
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				getManagedBean().getScLoa().getScQtProgPayments();
@@ -4041,34 +3816,6 @@ public class LOADetailBackingBean extends
 	public BigDecimal calcSubTotalPrice(ScLoiLoaItem scLoiLoaItem) {
 		BigDecimal total = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
 				scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
-		
-		/*		BigDecimal total = scLoiLoaItem.getUnitPrice();
-
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-				.getClUomFrequency() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem()
-					.getTplSpecQuestion().getClUomFrequency());
-		}
-
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-				.getClUomPerDay() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem()
-					.getTplSpecQuestion().getClUomPerDay());
-		}
-
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-				.getClUomPerMonth() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem()
-					.getTplSpecQuestion().getClUomPerMonth());
-		}
-
-		if (scLoiLoaItem.getScRequestItem().getTplSpecQuestion()
-				.getClDurationMonth() != null) {
-			total = total.multiply(scLoiLoaItem.getScRequestItem()
-					.getTplSpecQuestion().getClDurationMonth());
-		}
-
-		total = total.multiply(scLoiLoaItem.getQty());*/
 
 		return total;
 	}
@@ -4517,5 +4264,34 @@ public class LOADetailBackingBean extends
 			userSO = null;
 		}
 		return isMinistry;		
+	}
+	
+	/**
+	 * Success message.
+	 *
+	 * @param messageCode the message code
+	 * @param docType the doc type
+	 * @param docTypeCode the doc type code
+	 * @param docNo the doc no
+	 * @param isAcknowledgeRequired the is acknowledge required
+	 */
+	private void successMessage(String messageCode, String docType,
+			String docTypeCode, String docNo , boolean isAcknowledgeRequired) {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+						.getMessage(
+								messageCode,
+								new String[] {
+										getParameterDesc(docType, docTypeCode),
+										docNo },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+		
+		if(isAcknowledgeRequired){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler()
+			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+		}
 	}
 }
