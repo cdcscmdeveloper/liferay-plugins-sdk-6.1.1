@@ -88,15 +88,28 @@
 			value="#{backingBean.managedBean.smAppl.smFacilities}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 			rowKey="#{fac}" rowIndexVar="index" id="svcFacDt">
+			<p:ajax event="rowSelect" listener="#{backingBean.autoTickedHq}"
+				update="@([id$=svcFacDt])"></p:ajax>
+			<p:ajax event="rowUnselect"
+				listener="#{backingBean.autoTickedHq}"
+				update="@([id$=svcFacDt])"></p:ajax>
+			<p:ajax event="rowSelectCheckbox"
+				listener="#{backingBean.autoTickedHq}"
+				update="@([id$=svcFacDt])"></p:ajax>
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{backingBean.autoTickedHq}"
+				update="@([id$=svcFacDt])"></p:ajax>
+			<p:ajax event="rowDblselect"
+				listener="#{backingBean.autoTickedHq}"
+				update="@([id$=svcFacDt])"></p:ajax>
 			<ac:paginator for="svcFacDt" />
-			<p:column selectionMode="multiple" width="5%" />
+			<p:column selectionMode="multiple" width="5%" disabledSelection="#{fac.booleanValue}"/>
 
-
-			<p:column headerText="#{lbl['lbl.sm.facility.name']}">
+			<p:column headerText="#{lbl['lbl.sm.facility.name']}" disabledSelection="#{fac.booleanValue}">
 				<h:outputText value="#{fac.facilityName}" />
 			</p:column>
 
-			<p:column style="width: 60%;white-space: normal;"
+			<p:column style="width: 60%;white-space: normal;" disabledSelection="#{fac.booleanValue}"
 				headerText="#{lbl['lbl.sm.facility.workshop.dockyard.factory.address']}">
 				<h:outputText value="#{backingBean.getFullAddress(fac.smAddress)}" />
 			</p:column>

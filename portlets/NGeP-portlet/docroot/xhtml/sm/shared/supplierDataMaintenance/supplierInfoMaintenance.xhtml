@@ -45,4 +45,64 @@
 		</p:outputPanel>
 
 	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.sm.disciplinary.action.headerLbl']}" toggleable="true" id="disciplinaryActionPanelId">
+		<table style="width: 50%;table-layout:fixed">
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.action.edit']}" /></td>
+				<td>
+					<p:selectBooleanCheckbox value="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}">
+			            <p:ajax update="@form" />
+			        </p:selectBooleanCheckbox>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline" readonlyInput="true"
+						label="#{lbl['lbl.sm.disciplinary.jktt.start.date']}" id="startDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						mindate="#{CommonConstants.CURRENT_DATE}" 
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.startDate}" 
+						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" />
+					<p:message id="startDateMsg" for="startDate"
+							showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label"
+						value="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<td><p:calendar showOn="button" navigator="true"
+						display="inline" readonlyInput="true"
+						label="#{lbl['lbl.sm.disciplinary.jktt.end.date']}" id="endDate"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						mindate="#{CommonConstants.CURRENT_DATE}" 
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.endDate}" 
+						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" />
+					<p:message id="endDateMsg" for="endDate"
+							showSummary="true" showDetail="false" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.disciplinary.jktt.remarks']}" />
+					<p:outputLabel value="*" styleClass="mandatory" 
+					rendered="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"/></td>
+				<td><p:inputTextarea autoResize="false" cols="41" id="suspendRemark" 
+						disabled="#{!supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}"
+						maxlength="500" label="#{lbl['lbl.sm.disciplinary.jktt.remarks']}"
+						value="#{supplierDataMaintenanceBackingBean.managedBean.disciplineVO.smDiscplinaryAction.remark}" 
+						required="#{supplierDataMaintenanceBackingBean.managedBean.editDisciplinaryAction}" />
+					<p:message id="suspendRemarkMsg"
+					for="suspendRemark" showSummary="true" showDetail="false"
+					display="icon" />
+				</td>
+			</tr>
+		</table>
+	</p:panel>
 </ui:composition>
