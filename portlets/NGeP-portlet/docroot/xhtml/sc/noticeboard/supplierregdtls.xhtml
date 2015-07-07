@@ -67,7 +67,7 @@
 					styleClass="bsvDtls">
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
-						update=":form:attendanceDetailstbl :form:attendanceNavInfo"  />
+						update=":form:attendanceDetailstbl :form:attendanceNavInfo :form:registerBtnId"  />
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:25%;white-space: normal;">
@@ -115,7 +115,7 @@
 					<!-- <p:column style="width:2%" selectionMode="multiple" /> -->
 					<p:ajax event="rowSelect"
 						listener="#{noticeBoardBackingBean.onRowSelect}" process="@this"
-						update=":form:attendanceDetailstbl :form:attendanceNavInfo" />
+						update=":form:attendanceDetailstbl :form:attendanceNavInfo :form:registerBtnId" />
 					<p:column headerText="#{lbl['lbl.sc.description']}"
 						style="width:25%;white-space: normal;">
 						<h:outputText value="#{sitevisitDtls.bsvDesc}" />
