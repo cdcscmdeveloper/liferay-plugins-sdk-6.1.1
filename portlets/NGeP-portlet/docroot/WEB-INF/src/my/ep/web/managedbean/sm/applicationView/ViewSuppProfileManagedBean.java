@@ -17,6 +17,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.DisciplinaryActionVO;
 import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 @ManagedBean(name = "viewSuppProfileMB")
@@ -33,9 +34,11 @@ public class ViewSuppProfileManagedBean extends
 	private SmSupplier selectedSupplier;
 	private SmSupplierCategory selectedCategory;
 	private SmSupplierBasicInfoVO basicInfo;
+	private DisciplinaryActionVO disciplineVO;
 	private String applnApprovalRemarks;
 	private boolean showParentMsg;
 	private boolean allowedToDoMaintenance;
+	private boolean editDisciplinaryAction;
 	private PmRegStatus existingRegStatus;
 	private List<SmSupplierCategory> deleteApprovedCategories;
 	private IPagingDataModel<SmSupplier> smSupplierDataModel = new SmSupplierPagingDataModel();
@@ -187,6 +190,22 @@ public class ViewSuppProfileManagedBean extends
 	public void setDeleteApprovedCategories(
 			List<SmSupplierCategory> deleteApprovedCategories) {
 		this.deleteApprovedCategories = deleteApprovedCategories;
+	}
+
+	public DisciplinaryActionVO getDisciplineVO() {
+		return disciplineVO;
+	}
+
+	public void setDisciplineVO(DisciplinaryActionVO disciplineVO) {
+		this.disciplineVO = disciplineVO;
+	}
+
+	public boolean isEditDisciplinaryAction() {
+		return editDisciplinaryAction;
+	}
+
+	public void setEditDisciplinaryAction(boolean editDisciplinaryAction) {
+		this.editDisciplinaryAction = editDisciplinaryAction;
 	}
 
 }
