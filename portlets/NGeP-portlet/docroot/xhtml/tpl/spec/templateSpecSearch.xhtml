@@ -63,6 +63,8 @@
 					<td colspan="4" class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.btn.search']}"	action="#{templateSpecBackingBean.searchResult}"
 							process="@form" update="tplSpecMasterTbl" />
+							&#160;
+						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{templateSpecBackingBean.reset}" update="@form" />
 					</td>
 				</tr>
 			</table>
