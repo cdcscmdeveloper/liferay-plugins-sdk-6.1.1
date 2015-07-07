@@ -9,6 +9,7 @@ import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.suppliersreview.ISuppliersReviewSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.SuppliersReviewResDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.suppliersreview.SuppliersReviewReqDTO;
@@ -111,7 +112,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		List<PmState> stateList = new ArrayList<PmState>();
 		StateResDTO stateResDTO = stateSO.retrievePmStateList();
 		for (PmState pmState : stateResDTO.getStateList()) {
-			if (!pmState.getStateName().contains("NOT DEFINED")) {
+			if (!pmState.getStateName().contains(ParameterConst.PM_STATE_VALUE)) {
 				stateList.add(pmState);
 			}
 		}
@@ -168,7 +169,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
 		}
 		else{
-			throw new EpException(MessageConst.ERROR_790002);
+			//throw new EpException(MessageConst.ERROR_790002);
 		    }
 
 		suppliersReviewReqDTO.setStateIdList(stateList);
