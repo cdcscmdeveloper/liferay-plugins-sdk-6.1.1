@@ -14,29 +14,47 @@
 				<td width="18%"><p:outputLabel
 						value="#{lbl['lbl.pm.sr.paid.up.capital']}"></p:outputLabel> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText
+				<td colspan="3"><p:inputText maxlength="17" 
+						label="#{lbl['lbl.pm.sr.paid.up.capital']}"
+						validatorMessage="#{lbl['lbl.pm.paid.up.capital.validator.msg']}"
+						converterMessage="#{lbl['lbl.pm.paid.up.capital.num.msg']}"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtFrom}"
-						size="15" /> <p:outputLabel style="float:initial;width:3%;"
-						value=" To "></p:outputLabel> <p:inputText
-						style="text-align:left;"
+						size="15">
+						 <f:validateLength minimum="0" maximum="17" />
+						<!-- <f:validateDoubleRange minimum="#{PmConstants.MIN_AMT_RANGE}"
+							maximum="#{PmConstants.MAX_AMT_RANGE}" /> -->
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText> To <p:inputText maxlength="17" style="text-align:left;" 
+						label="#{lbl['lbl.pm.sr.paid.up.capital']}"
+						validatorMessage="#{lbl['lbl.pm.paid.up.capital.validator.msg']}"
+						converterMessage="#{lbl['lbl.pm.paid.up.capital.num.msg']}"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtTo}"
-						size="15" /></td>
+						size="15">
+						 <f:validateLength minimum="0" maximum="17" />
+						<!-- <f:validateDoubleRange minimum="#{PmConstants.MIN_AMT_RANGE}"
+							maximum="#{PmConstants.MAX_AMT_RANGE}" /> -->
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						<p:ajax process="@this" partialSubmit="true" update="@this" />
+					</p:inputText></td>
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
-				<td style="zoom:138%;width: 79%;"><h:selectBooleanCheckbox
-						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID" 
+				<td style="zoom: 185%; width: 79%; font-size: 7px;"><h:selectBooleanCheckbox
+						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID"
 						value="#{suppliersReviewBackingBean.managedBean.allStates}">
 						<p:ajax event="change"
 							listener="#{suppliersReviewBackingBean.selectAllStates}"
 							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
-					</h:selectBooleanCheckbox> <h:outputText escape="false" value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText>
-				</td>
+					</h:selectBooleanCheckbox> <h:outputText escape="false"
+						value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText></td>
 			</tr>
-			</table>
-			<table>
+		</table>
+		<table>
 			<tr>
-				<th width="50%"><p:outputLabel
+				<th width="54.5%"><p:outputLabel
 						value="#{lbl['lbl.pm.sr.state']}" for="stateListId"></p:outputLabel></th>
 				<td><p:selectManyMenu label="#{lbl['lbl.pm.sr.state']}"
 						id="stateListId"
@@ -53,26 +71,27 @@
 				<td>&#160;</td>
 			</tr>
 		</table>
-	<ui:include src="/xhtml/pm/suppliersreview/categoryCodeSelection.xhtml" />	
+		<ui:include
+			src="/xhtml/pm/suppliersreview/categoryCodeSelection.xhtml" />
 	</p:panel>
 
 	<script type="text/javascript">
-	function selectAll() {
-		$(document).ready(function() {
-		        if($('.allStatesChkID').is(':checked')) { // check select status
-		            $('.ui-chkbox-box').each(function() { //loop through each checkbox
-		                this.checked = true;  //select all checkboxes with class "checkbox1"               
-		            });
-		        }else{
-		            $('.ui-chkbox-box').each(function() { //loop through each checkbox
-		                this.checked = false; //deselect all checkboxes with class "checkbox1"                       
-		            });         
-		        }
-		    });
-		    
-		/* $(document).ready(function() {
-				$(".ui-chkbox-box").click();
-		}); */
-	}
+		function selectAll() {
+			$(document).ready(function() {
+				if ($('.allStatesChkID').is(':checked')) { // check select status
+					$('.ui-chkbox-box').each(function() { //loop through each checkbox
+						this.checked = true; //select all checkboxes with class "checkbox1"               
+					});
+				} else {
+					$('.ui-chkbox-box').each(function() { //loop through each checkbox
+						this.checked = false; //deselect all checkboxes with class "checkbox1"                       
+					});
+				}
+			});
+
+			/* $(document).ready(function() {
+					$(".ui-chkbox-box").click();
+			}); */
+		}
 	</script>
 </ui:composition>
