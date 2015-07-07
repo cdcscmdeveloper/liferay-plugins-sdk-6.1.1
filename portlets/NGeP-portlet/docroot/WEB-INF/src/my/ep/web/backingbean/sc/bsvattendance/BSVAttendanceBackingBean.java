@@ -396,9 +396,8 @@ public class BSVAttendanceBackingBean extends
 				Long qtId = this.getManagedBean().getScQt().getQtId();
 				String bsvZoneindx = this.getManagedBean().getBsvZoneindx();
 				renewSessionWithPreviousValues();
-
+				this.getManagedBean().setBsvZoneindx(bsvZoneindx);	
 				retrieveBriefingSiteVisitList(qtId);
-				this.getManagedBean().setBsvZoneindx(bsvZoneindx);
 				url = previousPage + ".xhtml?faces-redirect=true";
 				return url;
 			}
