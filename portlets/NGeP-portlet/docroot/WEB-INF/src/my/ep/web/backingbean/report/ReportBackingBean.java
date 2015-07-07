@@ -692,7 +692,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)11040;//61745;//25;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)25;//61745;//239716;//11040;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -5041,21 +5041,23 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				String mofRegNoFrom = null;
 				String mofRegNoTo = null;
 				if(this.getSmMofRegNoFrom().contains(ReportConst.PARAM_IFON)){
-					mofRegNoFrom = this.getSmMofRegNoFrom().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
+					mofRegNoFrom = this.getSmMofRegNoFrom().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);
+					if(mofRegNoFrom.contains(ReportConst.PARAM_SPACE)){
+						mofRegNoFrom=mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+					}
 				}else{
 					mofRegNoFrom = this.getSmMofRegNoFrom();
 				}
-				if(mofRegNoFrom.contains(ReportConst.PARAM_SPACE)){
-					mofRegNoFrom=mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
-				}				
+								
 				if(this.getSmMofRegNoTo().contains(ReportConst.PARAM_IFON)){
 					mofRegNoTo = this.getSmMofRegNoTo().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
+					if(mofRegNoTo.contains(ReportConst.PARAM_SPACE)){
+						mofRegNoTo=mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+					}
 				}else{
 					mofRegNoTo = this.getSmMofRegNoTo();
 				}
-				if(mofRegNoTo.contains(ReportConst.PARAM_SPACE)){
-					mofRegNoTo=mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
-				}
+				
 			  ValidateMofRegNo(mofRegNoFrom, mofRegNoTo);
 			}
 			if ((this.getSmMofRegNoFrom() != null)
@@ -6187,12 +6189,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String mofRegNoFrom = null;
 			if(this.getSmMofRegNoFrom().contains(ReportConst.PARAM_IFON)){
 				mofRegNoFrom = this.getSmMofRegNoFrom().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
+				if(mofRegNoFrom.contains(ReportConst.PARAM_SPACE)){
+					mofRegNoFrom=mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+				}
 			}else{
 				mofRegNoFrom = this.getSmMofRegNoFrom();
 			}
-			if(mofRegNoFrom.contains(ReportConst.PARAM_SPACE)){
-				mofRegNoFrom=mofRegNoFrom.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
-			}			
+						
 			Matcher match1 = pattern1.matcher(mofRegNoFrom);
 			if (match1.matches()) {
 				//this.setSmMofRegNoFrom(mofRegNoFrom);
@@ -6209,12 +6212,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			String mofRegNoTo = null;
 			if(this.getSmMofRegNoTo().contains(ReportConst.PARAM_IFON)){
 				mofRegNoTo = this.getSmMofRegNoTo().replace(ReportConst.PARAM_IFON, ReportConst.EMPTY_VAL);	
+				if(mofRegNoTo.contains(ReportConst.PARAM_SPACE)){
+					mofRegNoTo=mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
+				}
 			}else{
 				mofRegNoTo = this.getSmMofRegNoTo();
 			}
-			if(mofRegNoTo.contains(ReportConst.PARAM_SPACE)){
-				mofRegNoTo=mofRegNoTo.replace(ReportConst.PARAM_SPACE, ReportConst.EMPTY_VAL);	
-			}			
+						
 			Matcher match2 = pattern2.matcher(mofRegNoTo);
 			if (match2.matches()) {
 				//this.setSmMofRegNoTo(mofRegNoTo);
