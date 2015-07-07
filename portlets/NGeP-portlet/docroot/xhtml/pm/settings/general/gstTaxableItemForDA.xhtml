@@ -37,11 +37,13 @@
 			</p:commandLink>
 			
 		</p:column>
-		<p:column style="width:30%">
+		<p:column style="width:30%;white-space:normal">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.item.title']}" />
 			</f:facet>
-			<p:inputTextarea required="true" label="#{lbl['lbl.pm.settings.gst.item.title']}" cols="35" rows="3" id="unspscDaTitleId" value="#{ruleCatalogueBackingBean.getItemTitle(tidaObj)} " disabled="true"/>
+			<h:outputText
+				id="unspscDaTitleId" 
+				value="#{ruleCatalogueBackingBean.getItemTitle(tidaObj)}" />
 		</p:column>
 		<p:column  style="width:5%">
 			<f:facet name="header">
@@ -59,6 +61,7 @@
 		
 		<p:column  style="width:5%">
 			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.da']}" />
 			</f:facet>
 			<p:commandLink id="tidacl" partialSubmit="true"
@@ -93,7 +96,7 @@
 			<p:calendar id="tidaexpDateId" value="#{tidaObj.expDate}" 
 					navigator="true"
 					mindate="#{!(tidaObj.brandNew) ? tidaObj.effDate :  ruleCatalogueBackingBean.managedBean.currentDate}"
-					disabled ="#{tidaObj.recordStatusFlg == 0 or (tidaObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
+					disabled ="#{tidaObj.recordStatusFlg == 0 or (tidaObj.expDate le DateUtils.getCurrentDateWithoutTime())}"
 					maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="c-50:c+99" showOn="button"
@@ -107,11 +110,9 @@
 			</f:facet>
 			<p:selectOneMenu id="tidaRecordStatus" value="#{tidaObj.recordStatusFlg}" 
 				required="true" label="#{lbl['lbl.pm.status']}"
-				disabled="#{tidaObj.brandNew}" style="width:90px;">
+				disabled="#{tidaObj.recordStatusFlg == 0}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-				<p:ajax event="change" update="tidaexpDateId,tidaeffDateId"
-					process="@this" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />				
 			</p:selectOneMenu>
 		</p:column>
 		<p:column style="width:5%">

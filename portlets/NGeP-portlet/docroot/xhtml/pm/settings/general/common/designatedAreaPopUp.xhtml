@@ -15,10 +15,13 @@
 			<h:panelGroup id="daPopUpDetailsPanel" style="width:100%;">
 				<table>
 					<tr>
-						<td><p:outputLabel
+						<td><h:outputText value="*" styleClass="mandatory" />
+							<p:outputLabel
 								value="#{lbl['lbl.pm.settings.gst.scope']}" /></td>
 						<td><p:selectOneMenu id="somTiDaRuleTypes" value="#{ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.ruleType}" 
-							disabled="#{(!ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.brandNew) and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate lt DateUtils.getCurrentDateWithoutTime()}"
+							disabled="#{((!ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.brandNew) 
+									and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate le DateUtils.getCurrentDateWithoutTime())
+									or ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.recordStatusFlg == 0}"
 							required="true" label="#{lbl['lbl.pm.settings.gst.scope']}" style="width:150px">
 							<f:selectItems
 									value="#{ruleCatalogueBackingBean.retrieveRuleListForTaxableItemForDA()}"
@@ -42,7 +45,9 @@
 					</f:facet>
 					<p:selectOneMenu id="somTiDaRuleTypes" value="#{daGstObj.pmDesignatedArea.designatedAreaId}" 
 							required="true" label="#{lbl['lbl.pm.settings.gst.da.title']}"
-							disabled="#{!(daGstObj.brandNew) and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate lt DateUtils.getCurrentDateWithoutTime()}" >
+							disabled="#{(!(daGstObj.brandNew) 
+							and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate le DateUtils.getCurrentDateWithoutTime())
+							or ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.recordStatusFlg == 0}" >
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 							<f:selectItems
 									value="#{ruleCatalogueBackingBean.retrieveDesignatedAreaListForTaxableItem()}"
@@ -58,7 +63,9 @@
 					</f:facet>
 					<p:commandLink id="delDaPopUpItemCl" partialSubmit="true"
 						process="@this"
-						disabled="#{!(daGstObj.brandNew) and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate lt DateUtils.getCurrentDateWithoutTime()}"
+						disabled="#{(!(daGstObj.brandNew) 
+						and ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate le DateUtils.getCurrentDateWithoutTime())
+						or ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.recordStatusFlg == 0}"
 						action="#{ruleCatalogueBackingBean.deleteDAPopUpItem(rowIndex)}"
 						update=":form:designatedAreaPopUpTbl">
 						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
@@ -71,7 +78,8 @@
 			<table style="width:100%;"><tr><td style="text-align:right;">
 			<p:commandButton value="#{lbl['lbl.btn.add']}" partialSubmit="true"
 				process="@this"
-				disabled="#{ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate lt DateUtils.getCurrentDateWithoutTime()}"
+				disabled="#{ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.effDate le DateUtils.getCurrentDateWithoutTime() 
+				or ruleCatalogueBackingBean.managedBean.selectedGstItemForDA.recordStatusFlg == 0}"
 				update=":form:designatedAreaPopUpTbl"
 				action="#{ruleCatalogueBackingBean.addGstDaItem()}"></p:commandButton>
 			</td>

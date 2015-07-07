@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.common.PmKpiStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
 import my.ep.persistence.entity.pm.general.settings.gst.PmGstItem;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
@@ -93,6 +94,7 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private List<PmGstItem> deletedTaxableItemsForG2G;
 	private PmGstItem selectedGstItemForG2G;
 	private boolean autoUpdate = true;
+	private List<PmDaGst> deletedDaGstList;
 	
 	public RuleCatalogueManageBean() {
 		
@@ -816,6 +818,20 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
+	}
+
+	/**
+	 * @return the deletedDaGstList
+	 */
+	public List<PmDaGst> getDeletedDaGstList() {
+		return deletedDaGstList;
+	}
+
+	/**
+	 * @param deletedDaGstList the deletedDaGstList to set
+	 */
+	public void setDeletedDaGstList(List<PmDaGst> deletedDaGstList) {
+		this.deletedDaGstList = deletedDaGstList;
 	}
 
 

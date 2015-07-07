@@ -20,12 +20,12 @@
 		rowKey="#{tiG2GObj}" rowIndexVar="rowIndex" selectionMode="single"
 		widgetVar="taxableItemG2GTblWidVar">
 		<ac:paginator for="taxableItemG2GTbl" />
-		<p:column style="width:15%">
+		<p:column style="width:20%;white-space:normal">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.org.ptj']}" />
 			</f:facet>
-			<ac:lov id="lovPTJOrg" lovId="PM_ORG_PROFILE_PTJ" size="15" 
+			<ac:lov id="lovPTJOrg" lovId="PM_ORG_PROFILE_GST_PTJ" size="15" 
 				 required="true" 
 		         update=":form:settingTabId:gstId:opTiG2G" 
 		         readonly="true" 
@@ -33,19 +33,16 @@
 				 headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 				 value="#{tiG2GObj.orgProfile.orgName}"
 				 saveObject="ruleCatalogueBackingBean.managedBean.taxableItemsForG2G[#{rowIndex}].orgProfile"
-				 conditionField="govtSeller^1" rendered="#{tiG2GObj.brandNew}"/>
+				 conditionField="govtSeller^1|recordStatusFlg^1" rendered="#{tiG2GObj.brandNew}"/>
 				 
-			<p:inputTextarea 
-				required="true" 
-				label="#{lbl['lbl.pm.settings.gst.item.title']}" 
-				cols="30" rows="3" 
+			<h:outputText 
 				id="itaPTJOrg" 
 				value="#{tiG2GObj.orgProfile.orgName}" 
 				rendered="#{!(tiG2GObj.brandNew)}"
-				disabled="true"/>
+			/>
 				 <p:message id="lovPTJOrgMsg" for="lovPTJOrg" display="icon" />			
 		</p:column>
-		<p:column style="width:15%">
+		<p:column style="width:10%">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.item.code']}" />
 			</f:facet>
@@ -59,19 +56,17 @@
 			</ac:lov>
 			
 		</p:column>
-		<p:column style="width:15%">
+		<p:column style="width:15%;white-space:normal">
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.item.title']}" />
 			</f:facet>
-			<p:inputTextarea 
-				required="true" 
-				label="#{lbl['lbl.pm.settings.gst.item.title']}" 
-				cols="30" rows="3" 
+			<h:outputText 
 				id="itaG2GItemTitle" 
-				value="#{tiG2GObj.unspsc.unspscTitle}" disabled="true"/>
+				value="#{tiG2GObj.unspsc.unspscTitle}" />
 		</p:column>
 		<p:column style="width:10%">
 			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.scope']}" />
 			</f:facet>
 			<p:selectOneMenu id="somTiG2GScope" value="#{tiG2GObj.ruleType}" disabled="#{(!tiG2GObj.brandNew)}"
@@ -92,7 +87,7 @@
 			<p:calendar id="g2geffDateId" value="#{tiG2GObj.effDate}"
 					mindate="#{ruleCatalogueBackingBean.managedBean.currentDate}"
 					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
-					disabled = "#{tiG2GObj.recordStatusFlg == 0 or (tiG2GObj.effDate lt DateUtils.getCurrentDateWithoutTime())}"
+					disabled = "#{tiG2GObj.recordStatusFlg == 0 or (tiG2GObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="c-50:c+99" showOn="button"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
@@ -105,7 +100,7 @@
 			</f:facet>
 			<p:calendar id="g2gexpDateId" value="#{tiG2GObj.expDate}" 
 					navigator="true"
-					disabled ="#{tiG2GObj.recordStatusFlg == 0 or (tiG2GObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
+					disabled ="#{tiG2GObj.recordStatusFlg == 0 or (tiG2GObj.expDate le DateUtils.getCurrentDateWithoutTime())}"
 					maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 					yearRange="c-50:c+99" showOn="button"
@@ -119,11 +114,9 @@
 			</f:facet>
 			<p:selectOneMenu id="g2gRecordStatus" value="#{tiG2GObj.recordStatusFlg}" 
 				required="true" label="#{lbl['lbl.pm.status']}"
-				disabled="#{tiG2GObj.brandNew}" style="width:90px;">
+				disabled="#{tiG2GObj.brandNew or tiG2GObj.recordStatusFlg == 0}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
-				<p:ajax event="change" update="g2gexpDateId,g2geffDateId"
-					process="@this" />
+				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />				
 			</p:selectOneMenu>
 		</p:column>
 		<p:column style="width:5%">
@@ -132,7 +125,7 @@
 			</f:facet>
 			<p:commandLink id="delG2GItemCl" partialSubmit="true"
 				process="@this"
-				disabled="#{!(tiG2GObj.brandNew) and (tiG2GObj.effDate lt DateUtils.getCurrentDateWithoutTime())}"
+				disabled="#{!(tiG2GObj.brandNew) and (tiG2GObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				action="#{ruleCatalogueBackingBean.deleteTaxableItemForG2G(rowIndex)}"
 				update=":form:settingTabId:gstId:opTiG2G">
 				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
