@@ -3569,7 +3569,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	if (loaReport.getScLoaReportAttachment() == null || loaReport.getScLoaReportAttachment().getFilePath() == null) {
 		    		throw new EpException(MessageConst.INFO_100052, new String[]{loaReport.getTitle()});
 		    	}
-		    	downloadFile(loaReport.getScLoaReportAttachment().getFilePath(), loaReport.getScLoaReportAttachment().getFileName());
+		    	downloadFile(DocumentRepositoryUtils.getDBFilePath(loaReport.getScLoaReportAttachment().getFilePath()), loaReport.getScLoaReportAttachment().getFileName());
 		    }
 	    } catch(Exception e) {
 	    	e.printStackTrace();
