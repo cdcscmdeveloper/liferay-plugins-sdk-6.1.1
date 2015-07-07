@@ -91,10 +91,10 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		this.getManagedBean().setNoOfSuppliers(null);
 		this.getManagedBean().setSuppliersReviewSearchBean(
 				new SuppliersReviewSearchBean());
-		
+
 		this.getManagedBean().setAllStates(false);
 		this.getManagedBean().setDisabled(false);
-		
+
 		retrievePmStateList();
 
 	}
@@ -127,65 +127,75 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 	public void searchSuppliersReviewDetails() {
 
-		
-		    ISuppliersReviewSO suppliersReviewSO;
-		
-			SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
-			CategoryBackingBean categoryBackingBean = new CategoryBackingBean();
+		ISuppliersReviewSO suppliersReviewSO;
 
-		
-			List<Long> stateList = new ArrayList<Long>();
-			List<Long> categoryL3L = new ArrayList<Long>();
-			
-			List<PmBasicCategory> catList1 = categoryBackingBean.getManagedBean().getBasicCategoryList();
+		SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
-			if(catList1!=null && !catList1.isEmpty()){
+		CategoryBackingBean categoryBackingBean = new CategoryBackingBean();
 
-				for(PmBasicCategory pmBasicCategory:catList1){
 
-					categoryL3L.add(pmBasicCategory.getBasicCategoryL3());
-				}
-				this.getManagedBean().getSuppliersReviewSearchBean().setCategoryIdList(categoryL3L);
+		List<Long> stateList = new ArrayList<Long>();
+		List<Long> categoryL3L = new ArrayList<Long>();
 
+		List<PmBasicCategory> catList1 = categoryBackingBean.getManagedBean().getBasicCategoryList();
+
+		if(catList1!=null && !catList1.isEmpty()){
+
+			for(PmBasicCategory pmBasicCategory:catList1){
+
+				categoryL3L.add(pmBasicCategory.getBasicCategoryL3());
 			}
-			else{
-				throw new EpException(MessageConst.ERROR_790001);				
-			    }
+			this.getManagedBean().getSuppliersReviewSearchBean().setCategoryIdList(categoryL3L);
 
-			if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null){
-				for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
-					stateList.add(pmState.getStateId());
-				}
-			}			
-	   
+		}
+		else{
+			throw new EpException(MessageConst.ERROR_790001);				
+		    }
+
+		if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null){
+			for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
+				stateList.add(pmState.getStateId());
+			}
+		}			
+
+	
+		
+		if(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom()!=null 
+				&& this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo()!=null){
+			
+			suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
+			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
+		}
+		else{
+			throw new EpException(MessageConst.ERROR_790002);
+		    }
+
 		suppliersReviewReqDTO.setStateIdList(stateList);
-		suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
-		suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
 		suppliersReviewReqDTO.setCategoryIdList(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList());
 		suppliersReviewReqDTO.setCategoriesListSize(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList().size());
 		try {
-		suppliersReviewSO = (ISuppliersReviewSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.PROFILE_MANAGEMENT,
-						ISuppliersReviewSO.class);
-		SuppliersReviewResDTO suppliersReviewResDTO = suppliersReviewSO
-				.searchSuppliersReviewData(suppliersReviewReqDTO);
+			suppliersReviewSO = (ISuppliersReviewSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ISuppliersReviewSO.class);
+			SuppliersReviewResDTO suppliersReviewResDTO = suppliersReviewSO
+					.searchSuppliersReviewData(suppliersReviewReqDTO);
 
-		getManagedBean().setLazy(true);
+			getManagedBean().setLazy(true);
 
-		if (suppliersReviewResDTO.isSuccessful()) {
+			if (suppliersReviewResDTO.isSuccessful()) {
 
-			suppliersReviewResDTO.getCount();
+				suppliersReviewResDTO.getCount();
 
-			this.getManagedBean().setNoOfSuppliers(suppliersReviewResDTO.getCount().longValue());			
+				this.getManagedBean().setNoOfSuppliers(suppliersReviewResDTO.getCount().longValue());			
 
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770005);
 		}
-	} catch (Exception e) {
-		e.printStackTrace();
-		throw new EpException(MessageConst.ERROR_770005);
+
 	}
 
-}
-   
 }
