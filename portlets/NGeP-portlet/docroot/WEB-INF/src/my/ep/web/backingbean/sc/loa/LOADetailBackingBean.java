@@ -387,11 +387,15 @@ public class LOADetailBackingBean extends
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			
 			scLoa = calcBondAmount(scLoa);
-			
 			if (scLoa.getBondAmt() != null) {
 				getManagedBean().setBondAmountWord(
 						NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 			}
+			
+			// bond resp due date + 30 days.
+			Date issueDate  = scLoa.getIssueDate();
+			Date bondRespDueDate = DateUtils.addDays(issueDate, 30);
+			scLoa.setBondResDueDate(bondRespDueDate);
 			
 			// loa signer
 			if(scLoa.getContractSigner() != null){
@@ -477,7 +481,6 @@ public class LOADetailBackingBean extends
 	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
-
 		try {
 			SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
@@ -485,20 +488,9 @@ public class LOADetailBackingBean extends
 
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoad(dpDataType);
-
-			/*
-			 * String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT,
-			 * BpmOutcomeConst.BPM_REJECT};
-			 * getManagedBean().setOutComes(outComes);
-			 * getManagedBean().setTaskId("123");
-			 * 
-			 * long loaId = 299L;
-			 */
-
+		
 			editSupplierLOAAction(loaId);
-
-		} catch (Exception e) {
-			handleException(e);
+		} finally {
 		}
 	}
 
@@ -1537,12 +1529,11 @@ public class LOADetailBackingBean extends
 	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
 			ScLoa scLoa, ScQt scQt) throws Exception {
 		populateAttachmentDetails(attachment);
+		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY, CommonConstants.DEFAULT_COUNTRY_CODE);
 		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
 		PmUser ackByUser = scLoa.getAckBy();
 		CommonUtils commonUtils = new CommonUtils();
-		String DEFAULT_DATE_FORMAT = "dd MMMM yyyy";
-		SimpleDateFormat dateSDF = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -1610,7 +1601,7 @@ public class LOADetailBackingBean extends
 
 		String issueDate = "";
 		if (scLoa.getIssueDate() != null) {
-			issueDate = dateSDF.format(scLoa.getIssueDate());
+			issueDate = DateUtils.getLocalizeDate(scLoa.getIssueDate(), myLocale);
 		}
 		context.put("issueDate", issueDate);
 
@@ -1679,36 +1670,44 @@ public class LOADetailBackingBean extends
 		context.put("bondPercentage", bondPercentage);
 		context.put("bondExpDate", ""); // TODO
 
-		String bondResDueDays = "";
-		if (scLoa.getBondResDueDate() != null && scLoa.getAckDate() != null) {
-			bondResDueDays = DateUtils.getDaysDifference(
-					scLoa.getBondResDueDate(), scLoa.getAckDate())
-					+ "";
-		}
-		context.put("bondResDueDays", bondResDueDays);
+		/*
+		 * String bondResDueDays = ""; if (scLoa.getBondResDueDate() != null) {
+		 * bondResDueDays =
+		 * DateUtils.getDaysDifference(DateUtils.getCurrentDate(),
+		 * scLoa.getBondResDueDate()) + ""; }
+		 */
+
+		// bond response due days  - 30
+		context.put("bondResDueDays", 30);
 
 		String ackDate = "";
 		if (scLoa.getAckDate() != null) {
-			ackDate = dateSDF.format(scLoa.getAckDate());
+			ackDate = DateUtils.getLocalizeDate(scLoa.getAckDate(), myLocale);
 		}
 		context.put("ackDate", ackDate);
-
+		
 		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
 
 		String contractEffDate = "";
 		if (scLoa.getContractEffDate() != null) {
-			contractEffDate = dateSDF.format(scLoa.getContractEffDate());
+			contractEffDate = DateUtils.getLocalizeDate(scLoa.getContractEffDate(), myLocale);
 		}
 		context.put("contractEffDate", contractEffDate);
+		
 
+		String LoaSigner = "";
 		if(getManagedBean().getContractSignerUser() != null){
-			if(getManagedBean().getContractSignerUser().getUserName() == null){
-				context.put("loaSigner", "-");
-			}else{
-				context.put("loaSigner", getManagedBean().getContractSignerUser().getUserName());	
+			if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
+				LoaSigner = getManagedBean().getContractSignerUser().getUserName();
 			}
 		}
-		context.put("loaSignerDesignation", scLoa.getLoaSignerDesig());
+		context.put("loaSigner", LoaSigner);	
+
+		String LoaSignerDesig = "";
+		if(getManagedBean().getContractSignerUser().getUserName() != null && !getManagedBean().getContractSignerUser().getUserName().isEmpty()){
+			LoaSignerDesig = scLoa.getLoaSignerDesig();
+		}
+		context.put("loaSignerDesignation", LoaSignerDesig);
 
 		// Supplier user details
 		String supplierUser = "";
