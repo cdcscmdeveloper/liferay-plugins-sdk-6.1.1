@@ -4,7 +4,6 @@ package my.ep.web.backingbean.sc.noticeboard;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -120,8 +119,6 @@ import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtilsBean;
-import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -667,6 +664,8 @@ public class NoticeBoardBackingBean extends
 		managedBean.setActiveTabIndex(0);
 		managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
+		managedBean.setDisableRegisterBtn(false);
+		
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml";
 	}
 
@@ -1865,7 +1864,7 @@ public class NoticeBoardBackingBean extends
 		} else {
 			this.getManagedBean().setSmSupplier(new SmSupplier());
 		}
-		
+		boolean isNotRigistered = false;
 		if (!scQt.isZonal()) {
 			ScQtBsv scQtBsv = resDTO.getScQtBsv();
 
@@ -1873,6 +1872,7 @@ public class NoticeBoardBackingBean extends
 					resDTO.getBriefingResultBean(),
 					resDTO.getSiteVisitResultBean(), scQtBsv,null);
 			this.getManagedBean().setNormalBsvBean(briefingZoneBean);
+			isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 		} else if (scQt.isZonal()) {
 			List<TplSpecZoneDtl> zoneDtls = resDTO.getZones();
 			// Need to construct tab bean for zone
@@ -1903,7 +1903,7 @@ public class NoticeBoardBackingBean extends
 							briefingResDTO.getSiteVisitList(),
 							briefingResDTO.getScQtBsv(),null);
 					bsvZoneBeans.add(briefingZoneBean);
-
+					isNotRigistered = isNotRigistered(briefingZoneBean,isNotRigistered);
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName());
 					zoneItem.setUpdate("@form");
@@ -1926,6 +1926,7 @@ public class NoticeBoardBackingBean extends
 			}
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
+		this.getManagedBean().setRenderRegisterBtn(isNotRigistered);
 	}
 
 	/**
@@ -2096,6 +2097,11 @@ public class NoticeBoardBackingBean extends
 		    setSlectedHeaderName(scQtBsvDtl.getBsvDesc().concat("  ").concat(">"));
 		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
+		
+		if(this.getManagedBean().isRenderRegisterBtn()){
+			this.getManagedBean().setDisableRegisterBtn(isAttandanceEditable(scQtBsvDtl));
+		}
+		
 	}
 
 	/**
@@ -2547,4 +2553,27 @@ public class NoticeBoardBackingBean extends
 		}
 		return isContain;
 	}
+	
+	public boolean isNotRigistered(BriefingZoneBean briefingZoneBean,
+			boolean isNotRigistered) {
+
+		List<ScQtBsvDtl> briefinfDtls = briefingZoneBean.getBriefingList();
+		if (briefinfDtls != null && !briefinfDtls.isEmpty()) {
+			for (ScQtBsvDtl bsvDtl : briefinfDtls) {
+				if (bsvDtl.getToBeattand() == 0) {
+					isNotRigistered = true;
+				}
+			}
+		}
+		List<ScQtBsvDtl> svDtls = briefingZoneBean.getSitevisitList();
+		if (svDtls != null && !svDtls.isEmpty()) {
+			for (ScQtBsvDtl bsvDtl : svDtls) {
+				if (bsvDtl.getToBeattand() == 0) {
+					isNotRigistered = true;
+				}
+			}
+		}
+		return isNotRigistered;
+	}
+
 }
