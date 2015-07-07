@@ -329,7 +329,7 @@ public class QTBriefingSiteVisitBackingBean extends
 			if (!siteVisitDetails.contains(bsvDetail)) {
 				siteVisitDetails.add(bsvDetail);
 			}
-			if (siteVisitDetails.size() == 2) {
+			if (siteVisitDetails.size() == 1) {
 				briefingBean.getScQtBsv().setAllSiteVisitReq(true);
 			}
 			briefingBean.setSitevisitList(siteVisitDetails);
