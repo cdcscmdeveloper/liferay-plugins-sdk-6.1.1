@@ -21,9 +21,12 @@
 						action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
 				</p:column>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.btn.register']}" disabled="#{!noticeBoardBackingBean.managedBean.validMofNo}"
+					<p:commandButton value="#{lbl['lbl.btn.register']}"
+						disabled="#{!noticeBoardBackingBean.managedBean.validMofNo or noticeBoardBackingBean.managedBean.disableRegisterBtn}"
 						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
-						style="float:right;" process="@all" update="@all" />
+						style="float:right;" process="@all" update="@all"
+						rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}"
+						id="registerBtnId" />
 				</p:column>
 
 			</p:row>
