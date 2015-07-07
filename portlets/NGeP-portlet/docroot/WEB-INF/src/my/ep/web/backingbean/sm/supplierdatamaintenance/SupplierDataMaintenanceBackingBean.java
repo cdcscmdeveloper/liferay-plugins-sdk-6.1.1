@@ -181,12 +181,13 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(re.getMessage());
 		} finally {
 			reqDTO = null;
+			getManagedBean().setDisplaySearchPage(true);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
+					.getMessage(MessageConst.INFO_721215,
+							MessageUtils.BUNDLE_COMMON_MESSAGES,
+							new FacesScopes().getUserLocale()), null);
 		}
-
-		SmCommonUtil
-				.redirectToPage(
-						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
-						MessageConst.INFO_721215);
 	}
 
 	/**
@@ -859,6 +860,10 @@ public class SupplierDataMaintenanceBackingBean extends
 		discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
 		discipline.getSmDiscplinaryAction().setSmSupplier(
 				getManagedBean().getSmSupplier());
+		if (getManagedBean().getSmMofAccount() != null) {
+			discipline.getSmDiscplinaryAction().setMofNo(
+					getManagedBean().getSmMofAccount().getMofNo());
+		}
 		discipline.setSuspend(false);
 		if (supplier.getSmDisciplinaryActions() != null
 				&& !supplier.getSmDisciplinaryActions().isEmpty()) {
@@ -876,17 +881,21 @@ public class SupplierDataMaintenanceBackingBean extends
 			discipline.setSmDiscplinaryAction(supplier
 					.getSmDisciplinaryActions().get(0));
 
-			// still suspend so just edit existing record
-			if (!DateUtils.isDateGreaterOrEqual(discipline
-					.getSmDiscplinaryAction().getEndDate(), new Date())) {
-				discipline.setSuspend(true);
-			}
-			// already finish suspend need to insert new record
-			else {
+			// already finished suspend, need to insert new record
+			if (discipline.getSmDiscplinaryAction().getEndDate()
+					.compareTo(new Date()) <= 0) {
+				discipline.setSuspend(false);
 				discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
 				discipline.getSmDiscplinaryAction().setSmSupplier(
 						getManagedBean().getSmSupplier());
-				discipline.setSuspend(false);
+				if (getManagedBean().getSmMofAccount() != null) {
+					discipline.getSmDiscplinaryAction().setMofNo(
+							getManagedBean().getSmMofAccount().getMofNo());
+				}
+			}
+			// haven't finished or started suspend, just update record
+			else {
+				discipline.setSuspend(true);
 			}
 		}
 		getManagedBean().setDisciplineVO(discipline);
