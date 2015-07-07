@@ -141,7 +141,9 @@ public class BSVAttendanceBackingBean extends
 				}
 
 				this.getManagedBean().setZoneBean(bsvZoneBeans);
-				this.getManagedBean().setNormalBsvBean(bsvZoneBeans.get(0));
+				this.getManagedBean().setNormalBsvBean(
+						bsvZoneBeans.get(Integer.valueOf(this.getManagedBean().getBsvZoneindx())));
+								
 			} else {
 				ScQtBsv scQtBsv = resDTO.getScQtBsv();
 				BriefingZoneBean briefingZoneBean = null;
