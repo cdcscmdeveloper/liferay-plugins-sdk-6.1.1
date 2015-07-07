@@ -308,7 +308,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 
 						boolean alreadyExists = checkItemExists(selectedSupplierItem);
 						if(alreadyExists){
-							throw new EpException(MessageConst.INFO_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""}); 
+							throw new EpException(MessageConst.ERROR_700027, new String[]{selectedSupplierItem.getCmItem().getItemName(),""}); 
 						} else{
 							supplierItems.add(selectedSupplierItem);
 							prepareQuestions(null , selectedSupplierItem , Boolean.TRUE);
@@ -3122,7 +3122,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							getManagedBean().setSupplierList(supplierList);
 
 						} else{
-							//throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in the Supplier List"});
+							//throw new EpException(MessageConst.ERROR_700027, new String[]{"Supplier","in the Supplier List"});
 						}
 					}
 				}
@@ -3161,7 +3161,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							natureQuoteCriterias.add(natureQuoteCriteria);
 							getManagedBean().setBusinessNatureCriterias(natureQuoteCriterias);
 						} else{
-							throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(natureQuoteCriteria.getPmBusinessNature().getLevelName(),
+							throw new EpException(MessageConst.ERROR_700027, new String[] {ResourceBundleUtils.getMessage(natureQuoteCriteria.getPmBusinessNature().getLevelName(),
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 						}
 					}
@@ -3232,7 +3232,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 							getManagedBean().setPanelSuppliers(panelSuppliers);
 
 						} else{
-							//throw new EpException(MessageConst.INFO_700027, new String[]{"Supplier","in panel Supplier"});
+							//throw new EpException(MessageConst.ERROR_700027, new String[]{"Supplier","in panel Supplier"});
 						}
 					}
 				}
@@ -4607,7 +4607,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 				if(zone != null){
 
 					if(zone.getZoneName().equals(tplSpecZoneDtl.getZoneName())){
-						throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
+						throw new EpException(MessageConst.ERROR_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
@@ -4679,7 +4679,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						}
 					}
 					if(prevsZone.getZoneName().equals(tplSpecZoneDtl.getZoneName())){
-						throw new EpException(MessageConst.INFO_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
+						throw new EpException(MessageConst.ERROR_700027, new String[] {ResourceBundleUtils.getMessage(tplSpecZoneDtl.getZoneName(),
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}	
 				}

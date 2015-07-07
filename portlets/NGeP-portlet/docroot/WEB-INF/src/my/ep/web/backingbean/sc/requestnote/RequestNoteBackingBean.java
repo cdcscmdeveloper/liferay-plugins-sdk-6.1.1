@@ -1627,7 +1627,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			if (itemIds.size() > 0) {
 				if(itemIds.contains(scRequestNoteDtl.getRequestItem().getCmItem().getItemId())){
-					throw new EpException(MessageConst.INFO_700027, new String[]{scRequestNoteDtl.getRequestItem().getCmItem().getItemName(),""});
+					throw new EpException(MessageConst.ERROR_700027, new String[]{scRequestNoteDtl.getRequestItem().getCmItem().getItemName(),""});
 				} else {
 					requestNoteDtls.add(scRequestNoteDtl);
 					// set by default selected price type , rec.supplier and offer price
