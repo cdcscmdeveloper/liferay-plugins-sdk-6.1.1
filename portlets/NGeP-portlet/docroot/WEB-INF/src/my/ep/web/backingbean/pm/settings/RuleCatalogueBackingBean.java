@@ -71,7 +71,6 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmLanguage;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -101,6 +100,7 @@ import my.ep.web.util.pm.helper.RuleConfigHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.TabChangeEvent;
 
 @ManagedBean(name = "ruleCatalogueBackingBean")
 @ViewScoped
@@ -2840,6 +2840,13 @@ public class RuleCatalogueBackingBean extends
 			getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
 					.removeAll(invalidDaGst);
 		}
+
+		// remove deleted gstDa
+		if (!getManagedBean().getDeletedDaGstList().isEmpty()) {
+			this.getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+					.removeAll(getManagedBean().getDeletedDaGstList());
+		}
+
 		getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance()
 				.execute("dlgDesignatedArea.hide();");
@@ -2847,6 +2854,15 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public void cancelDAPopup() {
+		for (PmDaGst daGst : getManagedBean().getDeletedDaGstList()) {
+			daGst.setDeleted(false);
+			if (!getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+					.contains(daGst)) {
+				this.getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+						.add(daGst);
+			}
+		}
+
 		removeInvalidDAPopupItems();
 		getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance()
@@ -2879,6 +2895,7 @@ public class RuleCatalogueBackingBean extends
 		log.info(".................deleteDAPopUpItem...................");
 		PmDaGst deletedDaGst = getManagedBean().getSelectedGstItemForDA()
 				.getPmDaGsts().get(rowIndex);
+		getManagedBean().getDeletedDaGstList().add(deletedDaGst);
 		this.getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
 				.remove(deletedDaGst);
 	}
@@ -3084,17 +3101,19 @@ public class RuleCatalogueBackingBean extends
 					&& !getManagedBean().getSelectedGstItem().isBrandNew()
 					&& (getManagedBean().getSelectedGstItem().getEffDate()
 							.before(DateUtils.getCurrentDateWithoutTime()) || (getManagedBean()
-							.getSelectedGstItem().getEffDate().equals(DateUtils
-							.getCurrentDateWithoutTime())))) {
+							.getSelectedGstItem().getEffDate()
+							.equals(DateUtils.getCurrentDateWithoutTime()) || DbValueConst.RECORD_STATUS_ACTIVE != getManagedBean()
+							.getSelectedGstItem().getRecordStatusFlg()))) {
 				disable = true;
 			}
-		} else if (getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)) {
+		} else if (getManagedBean().getGstIndex().equals(TAXABLE_ITEM_DA_IDX)) {
 			if (getManagedBean().getSelectedGstItemForDA() != null
 					&& !getManagedBean().getSelectedGstItemForDA().isBrandNew()
 					&& (getManagedBean().getSelectedGstItemForDA().getEffDate()
 							.before(DateUtils.getCurrentDateWithoutTime()) || (getManagedBean()
 							.getSelectedGstItemForDA().getEffDate()
-							.equals(DateUtils.getCurrentDateWithoutTime())))) {
+							.equals(DateUtils.getCurrentDateWithoutTime()) || DbValueConst.RECORD_STATUS_ACTIVE != getManagedBean()
+							.getSelectedGstItemForDA().getRecordStatusFlg()))) {
 				disable = true;
 			}
 		}
@@ -3108,6 +3127,18 @@ public class RuleCatalogueBackingBean extends
 
 	public void resetLovLocation(PmDesignatedArea da) {
 		da.setvPmLocation(null);
+	}
+
+	public void onGstTabChange(TabChangeEvent event) {
+		if (event.getTab().getId().equals("taTabId")) {
+			getManagedBean().setGstIndex(TAXABLE_ITEM_IDX);
+		} else if (event.getTab().getId().equals("daTabId")) {
+			getManagedBean().setGstIndex(DESIGNATED_AREA_IDX);
+		} else if (event.getTab().getId().equals("tadaTabId")) {
+			getManagedBean().setGstIndex(TAXABLE_ITEM_DA_IDX);
+		} else if (event.getTab().getId().equals("tag2gTabId")) {
+			getManagedBean().setGstIndex(TAXABLE_ITEM_G2G_IDX);
+		}
 	}
 
 	/**

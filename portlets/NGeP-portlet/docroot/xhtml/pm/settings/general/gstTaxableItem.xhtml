@@ -58,7 +58,7 @@
 			</f:facet>
 			<p:commandLink id="extensioncl" partialSubmit="true"
 				process="@this"
-				disabled="#{tiObj.recordStatusFlg == 0 or (empty tiObj.unspsc or empty tiObj.unspsc.unspscId or tiObj.unspsc.unspscLevel ne '3')}"	
+				disabled="#{(empty tiObj.unspsc or empty tiObj.unspsc.unspscId or tiObj.unspsc.unspscLevel ne '3')}"	
 				action="#{ruleCatalogueBackingBean.initExtensionDetails(rowIndex)}"			
 				oncomplete="dlgExtension.show();" 
 				update=":#{p:component('dlExtension')}">
@@ -67,6 +67,7 @@
 		</p:column>
 		<p:column style="width:5%">
 			<f:facet name="header">
+				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.gst.scope']}" />
 			</f:facet>
 			<p:selectOneMenu id="somTiRuleTypes" value="#{tiObj.ruleType}" 
