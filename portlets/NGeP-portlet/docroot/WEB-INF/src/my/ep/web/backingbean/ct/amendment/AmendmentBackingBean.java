@@ -4136,6 +4136,9 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			ContractItemReqDTO reqDTO = new ContractItemReqDTO();
 			reqDTO.setContractItemId(productItemPrice.getCtContractItem().getContractItemId());
 			reqDTO.setEffDate(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());
+			if (productItemPrice.getCtContractZone() != null) {
+				reqDTO.setContractZoneId(productItemPrice.getCtContractZone().getContractZoneId());
+			}
 			ContractItemResDTO contractResDTO = contractItemSO.getMaxQuantity(reqDTO);
 			CtItemMaxQty ctItemMaxQty = contractResDTO.getCtItemMaxQuantity();
 			productItemPrice.setMaxQuantity(ctItemMaxQty.getMaxQuantity());
