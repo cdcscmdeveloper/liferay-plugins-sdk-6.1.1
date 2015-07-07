@@ -1133,7 +1133,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 		getManagedBean().getCtAgreement().setStampedPageName(item.getFileName());
-		getManagedBean().getCtAgreement().setStampedPagePath(filePath);
+		getManagedBean().getCtAgreement().setStampedPagePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 
 	/**
@@ -1156,7 +1156,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		fileOuputStream.write(item.getContents());
 		fileOuputStream.close();
 		getManagedBean().getCtAgreement().setSignedPageName(item.getFileName());
-		getManagedBean().getCtAgreement().setSignedPagePath(filePath);
+		getManagedBean().getCtAgreement().setSignedPagePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	}
 
 	/**

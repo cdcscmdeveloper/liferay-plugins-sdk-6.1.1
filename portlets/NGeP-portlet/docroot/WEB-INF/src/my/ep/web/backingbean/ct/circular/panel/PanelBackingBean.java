@@ -1656,7 +1656,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
 		
 		String fileName = getManagedBean().getCircularVer().getCircularFileName();
-		String filePath = getManagedBean().getCircularVer().getCircularFilePath();
+		String filePath = DocumentRepositoryUtils.getDBFilePath(getManagedBean().getCircularVer().getCircularFilePath());
 		
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
 		res.setHeader( "Content-Transfer-Encoding", "binary" );

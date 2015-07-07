@@ -1149,13 +1149,13 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	    
 	    if (getManagedBean().getIndex() == 1) {
 	    	getManagedBean().getFactoring().setFactoringPayFileName(item.getFileName());
-	    	getManagedBean().getFactoring().setFactoringPayFilePath(filePath);	  
+	    	getManagedBean().getFactoring().setFactoringPayFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
 	    } else if(getManagedBean().getIndex() == 2) {
 	    	getManagedBean().getFactoring().setFileName(item.getFileName());
-	    	getManagedBean().getFactoring().setFilePath(filePath);	  
+	    	getManagedBean().getFactoring().setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));	  
 	    } else if(getManagedBean().getIndex() == 3) {
 	    	getManagedBean().getFactoring().setRemoveFileName(item.getFileName());
-	  	    getManagedBean().getFactoring().setRemoveFilePath(filePath);
+	  	    getManagedBean().getFactoring().setRemoveFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
 	    }
     }
     
@@ -1177,6 +1177,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();   
 		if (filePath != null) {
+			filePath = DocumentRepositoryUtils.getBaseDir() + filePath;
 			InputStream input = null;
 			try {
 				URLConnection uc = new URL(filePath).openConnection();
@@ -1207,7 +1208,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
     	String filePath =  EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.TEMPLATE_DIR) + 
     			ContractConst.DOCPATH_CT_FACTORING_APPROVAL_FORM;
     	String fileName =  ContractConst.TEMPLATE_FACTORING_APPROVAL_FORM + ".pdf";
-    	downloadFile(filePath, fileName);
+    	downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
     }    
     
     /**

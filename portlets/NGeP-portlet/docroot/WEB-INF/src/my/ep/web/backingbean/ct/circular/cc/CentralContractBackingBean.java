@@ -711,7 +711,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		String filePath = null;
 		if(type==1) {
 			fileName = getManagedBean().getCircularVer().getCircularFileName();
-			filePath = getManagedBean().getCircularVer().getCircularFilePath();
+			filePath = DocumentRepositoryUtils.getDBFilePath(getManagedBean().getCircularVer().getCircularFilePath());
 		} 
 		
 		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
