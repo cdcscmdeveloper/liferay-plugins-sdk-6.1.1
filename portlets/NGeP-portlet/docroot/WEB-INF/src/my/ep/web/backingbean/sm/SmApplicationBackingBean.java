@@ -6442,6 +6442,7 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		getManagedBean().setShowParentMsg(false);
+		setHqFacilityInSelectedFacility();
 		RequestContext.getCurrentInstance().execute(dialog + ".show()");
 	}
 
@@ -9562,5 +9563,30 @@ public class SmApplicationBackingBean extends
 					.getSmCompanyAddresses().get(0).getSmAddress();
 		}
 		return hqAddress;
+	}
+
+	private void setHqFacilityInSelectedFacility() {
+		SmFacility hq = getHqFacility();
+		if (!isFacilityExistInList(hq, getManagedBean()
+				.getSelectedFactoryFacilities())) {
+			if (getManagedBean().getSelectedFactoryFacilities().isEmpty()) {
+				getManagedBean().setSelectedFactoryFacilities(
+						new ArrayList<SmFacility>());
+				getManagedBean().getSelectedFactoryFacilities().add(hq);
+			}
+		}
+	}
+
+	private boolean isFacilityExistInList(SmFacility facParam,
+			List<SmFacility> facParamList) {
+		boolean retVal = false;
+		if (facParamList != null && !facParamList.isEmpty()) {
+			for (SmFacility facTmp : facParamList) {
+				if (facParam.getFacilityId().compareTo(facTmp.getFacilityId()) == 0) {
+					retVal = true;
+				}
+			}
+		}
+		return retVal;
 	}
 }
