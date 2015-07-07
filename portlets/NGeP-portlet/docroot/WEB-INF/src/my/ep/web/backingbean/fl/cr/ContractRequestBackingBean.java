@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -65,6 +66,7 @@ import my.ep.constant.fl.FulfilmentConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
@@ -175,6 +177,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -1408,7 +1411,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		BigDecimal contractAmount = contractSO.retrieveContractAmount(contractReqDTO).getCtContractAmount().getContractAmount();
 		
 		if(checkTotalAmt.doubleValue()>contractAmount.doubleValue()) {
-			throw new EpException(MessageConst.ERROR_740002, new String[]{contractAmount.toString()});
+			CommonUtils commonUtils = new CommonUtils();
+			commonUtils.getDisplayNumberFormat(2);
+			DecimalFormat nf = new DecimalFormat(commonUtils.getDisplayNumberFormat(
+					CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+			throw new EpException(MessageConst.ERROR_740002, new String[]{nf.format(contractAmount).toString()});
 		}
 	}
 	/**
