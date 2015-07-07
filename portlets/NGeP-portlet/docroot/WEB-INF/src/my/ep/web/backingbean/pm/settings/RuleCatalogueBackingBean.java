@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -45,6 +45,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.confgeneral.ConfigGeneralReqDTO;
@@ -110,15 +111,15 @@ public class RuleCatalogueBackingBean extends
 
 	private ISearchBean<PmParameterDesc> parameterSearchBean;
 	private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
-	
+
 	private static Map<Long, Object> colorMapper;
 	private static Map<Long, Object> designatedAreaMapper;
-	
-	//GST tab index
+
+	// GST tab index
 	private static final int TAXABLE_ITEM_IDX = 0;
 	private static final int DESIGNATED_AREA_IDX = 1;
 	private static final int TAXABLE_ITEM_DA_IDX = 2;
-	private static final int TAXABLE_ITEM_G2G_IDX = 3; 
+	private static final int TAXABLE_ITEM_G2G_IDX = 3;
 
 	// private List<SortMeta> preSortOrder = new ArrayList<SortMeta>();
 
@@ -183,7 +184,8 @@ public class RuleCatalogueBackingBean extends
 		IConfigGeneralSO cgeneralSO = null;
 		try {
 			cgeneralSO = (IConfigGeneralSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IConfigGeneralSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IConfigGeneralSO.class);
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
@@ -207,8 +209,9 @@ public class RuleCatalogueBackingBean extends
 
 			// ////////////getitng FeeExemption////////////////////////////
 			IFeeExemptionSO feeSO = (IFeeExemptionSO) BusinessDelegate
-					.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IFeeExemptionSO.class);
 
 			FeeExemptionReqDTO reqFDTO = new FeeExemptionReqDTO();
 			FeeExemptionResDTO resFDTO = null;
@@ -233,8 +236,9 @@ public class RuleCatalogueBackingBean extends
 			resFDTO = feeSO.getFeeExemptionsForComodity(reqFDTO);
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
-					.getInstance()
-					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+					.getInstance().getServiceObject(
+							ModuleCodeConst.CATALOGUE_MANAGEMENT,
+							ICodificationSO.class);
 			CodificationReqDTO cReqDTO = new CodificationReqDTO();
 			for (PmFeeExemption exemption : resFDTO.getFeeExemptions()) {
 				if (exemption.getTypeId() == null) {
@@ -287,14 +291,15 @@ public class RuleCatalogueBackingBean extends
 				retrieveOrgProfileList();
 			}
 			IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
-					.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
 							IOperationalThresholdSO.class);
 
 			ThresholdReqDTO reqTDTO = new ThresholdReqDTO();
 			ThresholdResDTO resTDTO = null;
 			reqTDTO.setOrgProfileId(null);
 			resTDTO = thresholdSO.getOperationalThresholds(reqTDTO);
-			if(resTDTO.getThresholdList().isEmpty()){
+			if (resTDTO.getThresholdList().isEmpty()) {
 				throw new EpException("Default Operation Threshold is missing.");
 			}
 			getManagedBean().setThreshold(resTDTO.getThresholdList().get(0));
@@ -333,7 +338,7 @@ public class RuleCatalogueBackingBean extends
 			System.out
 					.println("...................resTDTO.getThresholdList().size()="
 							+ resTDTO.getThresholdList().size());
-			
+
 			initGst();
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -594,7 +599,8 @@ public class RuleCatalogueBackingBean extends
 
 			PmFeeExemption exemption = feeExcemptionList.get(index);
 			unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);
+					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+							ICodificationSO.class);
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity()
 					.getUnspscCode());
@@ -861,10 +867,13 @@ public class RuleCatalogueBackingBean extends
 								new String[] {});
 
 					}
+
 				}
+
 			}
 			// check validation
 			for (int i = 0; i < ruleType.getConfigRuleValues().size(); i++) {
+				// add new values to tracking Diary list
 
 				PmConfigRuleValue baseValueToCompare = ruleType
 						.getConfigRuleValues().get(i);
@@ -923,6 +932,7 @@ public class RuleCatalogueBackingBean extends
 					// }
 
 				}
+
 			}
 
 		}
@@ -932,7 +942,63 @@ public class RuleCatalogueBackingBean extends
 			ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
 			RuleReqDTO reqDTO = new RuleReqDTO();
+			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
+			for (PmConfigRule ruleType : this.getManagedBean()
+					.getConfigRuleList()) {
 
+				for (PmConfigRuleValue ruleTypeValue : ruleType
+						.getConfigRuleValues()) {
+					String messageId = null;
+					String[] msgParam = null;
+					if (ruleTypeValue.isBrandNew()) {
+						log.info("Tracking diary for System Parameter: add new value :saveRuleCatalog");
+						log.info(".............ruleTypeValue.getRuleType().getRuleTypeDesc()="
+								+ ruleTypeValue.getRuleType().getRuleTypeDesc());
+						messageId = MessageConst.TD_80015;
+						if (ruleType.getRuleDataTypeId().getParameterCode()
+								.equals("C")) {
+							msgParam = new String[] {
+									ruleTypeValue.getCategoryDisplayValue(),
+									ruleType.getRuleTypeDesc() };
+
+						} else {
+							msgParam = new String[] {
+									ruleTypeValue.getRuleValue(),
+									ruleType.getRuleTypeDesc() };
+
+						}
+					} else {
+						if (ruleTypeValue.isModified()
+								&& ruleTypeValue.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+							log.info("Tracking diary for System Parameter: de-activating status :saveRuleCatalog");
+							messageId = MessageConst.TD_80016;
+							if (ruleType.getRuleDataTypeId().getParameterCode()
+									.equals("C")) {
+								msgParam = new String[] {
+										ruleTypeValue.getCategoryDisplayValue(),
+										ruleType.getRuleTypeDesc() };
+
+							} else {
+								msgParam = new String[] {
+										ruleTypeValue.getRuleValue(),
+										ruleType.getRuleTypeDesc() };
+
+							}
+						}
+					}
+					if (messageId != null & msgParam != null) {
+						reqDTO.setTrackingStatus(true);
+						reqDTO.getTrackDairyVOs().add(
+								PmCommonUtil.assignTrackingDairyForRuleConfig(
+										ruleType,
+										getActionDesc(messageId, msgParam),
+										null));
+					}
+
+				}
+
+			}
+			// /////////////////////
 			reqDTO.setRuleTypeList(this.getManagedBean().getConfigRuleList());
 			RuleResDTO resDTO = ruleSO.updateRuleValueList(reqDTO);
 			// clear the catch and retrive updated list from DB
@@ -963,6 +1029,12 @@ public class RuleCatalogueBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getActionDesc(String messageId, String[] params) {
+		Locale myLocale = new Locale("ms", "MY");
+		return MessageUtils.getMessage(messageId, params,
+				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
 
 	private boolean ruleValueValidation(PmConfigRuleValue firstRuleValue,
@@ -1112,10 +1184,40 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		IFeeExemptionSO exemptionSO = null;
+		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		///////////////////////////////////////////add to Tracking Dairy
+		for (PmFeeExemption fee : exemptionList) {
+			String messageId = null;
+			String[] msgParam = null;
+			if (!fee.isBrandNew() && fee.isModified()
+						&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by SupplierAndItem):saveFeeExemptionForOrgItem");
+					messageId = MessageConst.TD_80022;
+					if (fee.getFeeExemptionType().equals("1")) {
+						msgParam = new String[] {fee.getOrgProfileId().getSmSupplier().getCompanyName(),""};
+
+					} else {//feeExemptionType is 4
+						msgParam = new String[] {fee.getOrgProfileId().getSmSupplier().getCompanyName(), fee.getItemId().getItemName()};
+					}
+				}
+			
+			if (messageId != null & msgParam != null) {
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs().add(
+						PmCommonUtil.assignTrackingDairyForFeeExemption(
+								fee,
+								getActionDesc(messageId, msgParam),
+								null));
+			}
+
+		}
+
+	//////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
-			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IFeeExemptionSO.class);
+
 			reqDTO.setFeeExemptionList(exemptionList);
 
 			FeeExemptionResDTO resDTO = exemptionSO
@@ -1816,7 +1918,8 @@ public class RuleCatalogueBackingBean extends
 						.getConfigRuleValues().get(markIndex).getRuleValue()
 						.isEmpty()) {
 			ruleValue.setFromValue(this.getManagedBean().getSelectedRuleType()
-					.getConfigRuleValues().get(markIndex).getToValue().add(new BigDecimal(1)));
+					.getConfigRuleValues().get(markIndex).getToValue()
+					.add(new BigDecimal(1)));
 			ruleValue.setRuleType(this.getManagedBean().getSelectedRuleType());
 			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
 					.add(markIndex + 1, ruleValue);
@@ -1930,8 +2033,7 @@ public class RuleCatalogueBackingBean extends
 		}
 		return addIndex;
 	}
-	
-	
+
 	public void addTaxableItem() {
 		log.info(".................addTaxableItem...................");
 		try {
@@ -1939,7 +2041,8 @@ public class RuleCatalogueBackingBean extends
 				getManagedBean().setTaxableItems(new ArrayList<PmGstItem>());
 			}
 			PmGstItem newGstItem = new PmGstItem();
-			newGstItem.setExemptionType(ProfileManagementConst.EXEMPTION_GENERAL);
+			newGstItem
+					.setExemptionType(ProfileManagementConst.EXEMPTION_GENERAL);
 			newGstItem.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			newGstItem.setEffDate(new Date());
 			newGstItem.setRuleType(ParameterConst.RULE_TYPE_NOT_APPLICABLE);
@@ -1950,51 +2053,53 @@ public class RuleCatalogueBackingBean extends
 			throw new IllegalArgumentException();
 		}
 	}
-	
-	
+
 	/**
-	 * get UNSPSC Levels() 
-	 * @return SelectItem[] 
+	 * get UNSPSC Levels()
+	 * 
+	 * @return SelectItem[]
 	 */
 	public static SelectItem[] getUNSPSCLevels() {
-		SelectItem[] items =  new SelectItem[3];
+		SelectItem[] items = new SelectItem[3];
 		items[0] = new SelectItem("1", ResourceBundleUtils.getMessage(
-				"lbl.cm.family.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				"lbl.cm.family.title",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 		items[1] = new SelectItem("2", ResourceBundleUtils.getMessage(
 				"lbl.cm.class.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
 		items[2] = new SelectItem("3", ResourceBundleUtils.getMessage(
-				"lbl.cm.commodity.title", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+				"lbl.cm.commodity.title",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 				new FacesScopes().getUserLocale()));
-	    return items;
+		return items;
 	}
-	
-	
-	
+
 	public void searchItemCode() {
 		log.info("searchItemCode");
 		searchDataModel.reloadData();
 	}
-	
-	
-	public void resetItemPopUp(){
+
+	public void resetItemPopUp() {
 		log.info("resetItemPopUp");
 		getManagedBean().setSelectedSearchLvl(null);
 		getManagedBean().setSearchTitle(null);
 		searchDataModel.resetData();
 		getManagedBean().setSelectedUnspscResult(null);
 	}
-	
-	public void populateToSaveObject(){
-		if(getManagedBean().getGstIndex() == TAXABLE_ITEM_IDX && getManagedBean().getSelectedGstItem() != null ){
-			getManagedBean().getSelectedGstItem().setUnspsc(getManagedBean().getSelectedUnspscResult());
-		}else if(getManagedBean().getGstIndex() == TAXABLE_ITEM_DA_IDX && getManagedBean().getSelectedGstItemForDA() != null ){
-			getManagedBean().getSelectedGstItemForDA().setUnspsc(getManagedBean().getSelectedUnspscResult());
+
+	public void populateToSaveObject() {
+		if (getManagedBean().getGstIndex() == TAXABLE_ITEM_IDX
+				&& getManagedBean().getSelectedGstItem() != null) {
+			getManagedBean().getSelectedGstItem().setUnspsc(
+					getManagedBean().getSelectedUnspscResult());
+		} else if (getManagedBean().getGstIndex() == TAXABLE_ITEM_DA_IDX
+				&& getManagedBean().getSelectedGstItemForDA() != null) {
+			getManagedBean().getSelectedGstItemForDA().setUnspsc(
+					getManagedBean().getSelectedUnspscResult());
 		}
 	}
-	
-	
+
 	/**
 	 * @return the searchDataModel
 	 */
@@ -2003,12 +2108,12 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	/**
-	 * @param searchDataModel the searchDataModel to set
+	 * @param searchDataModel
+	 *            the searchDataModel to set
 	 */
 	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
 		this.searchDataModel = searchDataModel;
 	}
-
 
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
 
@@ -2023,164 +2128,176 @@ public class RuleCatalogueBackingBean extends
 				ISearchBean<CmUnspsc> searchBean) {
 			ICodificationSO codificationSO = null;
 			try {
-				codificationSO = (ICodificationSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);				
-			
-				if(StringUtils.isNotBlank(getManagedBean().getSelectedSearchLvl())){				
+				codificationSO = (ICodificationSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.CATALOGUE_MANAGEMENT,
+								ICodificationSO.class);
+
+				if (StringUtils.isNotBlank(getManagedBean()
+						.getSelectedSearchLvl())) {
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("unspscLevel",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									getManagedBean().getSelectedSearchLvl()));
-					
-					
-					if(StringUtils.isNotBlank(getManagedBean().getSearchTitle())){
+
+					if (StringUtils.isNotBlank(getManagedBean()
+							.getSearchTitle())) {
 						searchBean.getDataFilterBeans().add(
-						new SearchFilterBean("unspscTitle",
-								SearchOperator.OPERATOR_LIKE.value(),
-								getManagedBean().getSearchTitle().toUpperCase(), true));
+								new SearchFilterBean("unspscTitle",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getManagedBean().getSearchTitle()
+												.toUpperCase(), true));
 					}
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("recordStatusFlg",
-									SearchOperator.OPERATOR_EQUALS.value(), 
-											DbValueConst.RECORD_STATUS_ACTIVE));
+									SearchOperator.OPERATOR_EQUALS.value(),
+									DbValueConst.RECORD_STATUS_ACTIVE));
 
 					CodificationReqDTO reqDTO = new CodificationReqDTO();
 					reqDTO.setSearchBean(searchBean);
 
-					CodificationResDTO resDTO = codificationSO.searchUNSPSC(reqDTO);
-					if(resDTO.isSuccessful()){
+					CodificationResDTO resDTO = codificationSO
+							.searchUNSPSC(reqDTO);
+					if (resDTO.isSuccessful()) {
 						return resDTO.getResultBean();
-					}	
+					}
 				}
 			} finally {
 				codificationSO = null;
 			}
 			return null;
-			
+
 		}
 	}
-	
-	public void initExtensionDetails(int rowIndex){
-		if(TAXABLE_ITEM_IDX == getManagedBean().getGstIndex()){
-			getManagedBean().setSelectedGstItem(getManagedBean().getTaxableItems().get(rowIndex));
-			if(getManagedBean().getSelectedGstItem() != null 
-					&& getManagedBean().getSelectedGstItem().getUnspsc() !=null ){
+
+	public void initExtensionDetails(int rowIndex) {
+		if (TAXABLE_ITEM_IDX == getManagedBean().getGstIndex()) {
+			getManagedBean().setSelectedGstItem(
+					getManagedBean().getTaxableItems().get(rowIndex));
+			if (getManagedBean().getSelectedGstItem() != null
+					&& getManagedBean().getSelectedGstItem().getUnspsc() != null) {
 				generateExtensionItems(getManagedBean().getSelectedGstItem());
 			}
-		}else if(TAXABLE_ITEM_DA_IDX == getManagedBean().getGstIndex()){
-			getManagedBean().setSelectedGstItemForDA(getManagedBean().getTaxableItemsForDA().get(rowIndex));
-			if(getManagedBean().getSelectedGstItemForDA() != null 
-					&& getManagedBean().getSelectedGstItemForDA().getUnspsc() != null){
-				generateExtensionItems(getManagedBean().getSelectedGstItemForDA());
+		} else if (TAXABLE_ITEM_DA_IDX == getManagedBean().getGstIndex()) {
+			getManagedBean().setSelectedGstItemForDA(
+					getManagedBean().getTaxableItemsForDA().get(rowIndex));
+			if (getManagedBean().getSelectedGstItemForDA() != null
+					&& getManagedBean().getSelectedGstItemForDA().getUnspsc() != null) {
+				generateExtensionItems(getManagedBean()
+						.getSelectedGstItemForDA());
 			}
 		}
-	} 
-	
-	private void generateExtensionItems(PmGstItem gstItem){
+	}
+
+	private void generateExtensionItems(PmGstItem gstItem) {
 		CmUnspsc unspsc = gstItem.getUnspsc();
 		getManagedBean().setSelectedBrand(
-				gstItem.getBrand() != null ? gstItem.getBrand().getBrandId() : null);
+				gstItem.getBrand() != null ? gstItem.getBrand().getBrandId()
+						: null);
 		getManagedBean().setSelectedType(
-				gstItem.getType() != null ? gstItem.getType().getTypeId() : null);
+				gstItem.getType() != null ? gstItem.getType().getTypeId()
+						: null);
 		getManagedBean().setSelectedMeasurement(
-				gstItem.getMeasurement() != null ? gstItem.getMeasurement().getMeasurementId() : null);
+				gstItem.getMeasurement() != null ? gstItem.getMeasurement()
+						.getMeasurementId() : null);
 		getManagedBean().setSelectedColor(
-				gstItem.getColor() != null ? gstItem.getColor().getColorId() : null);
+				gstItem.getColor() != null ? gstItem.getColor().getColorId()
+						: null);
 		generateTypeList(unspsc);
 		generateBrandList(unspsc);
 		generateMeasurementList(unspsc);
 		generateColorList(unspsc);
 	}
-	
+
 	/**
 	 * This method is to generate cmType List for select one menu
 	 * 
 	 * **/
-	private void generateTypeList(CmUnspsc unspsc){		
+	private void generateTypeList(CmUnspsc unspsc) {
 		SelectItem[] items = null;
-		if(unspsc !=null 
-				&& !unspsc.getCmType().isEmpty() ){
-			items =  new SelectItem[unspsc.getCmType().size()];
+		if (unspsc != null && !unspsc.getCmType().isEmpty()) {
+			items = new SelectItem[unspsc.getCmType().size()];
 			int counter = 0;
-			for(CmType type : unspsc.getCmType()){
-				items[counter] =  new SelectItem(counter, type.getTypeName());					
-				counter ++;
+			for (CmType type : unspsc.getCmType()) {
+				items[counter] = new SelectItem(counter, type.getTypeName());
+				counter++;
 			}
 		}
 		getManagedBean().setTypeList(items);
-		
+
 	}
-	
-	
+
 	/**
-	 * This method is to generate cmBrand List for select one menu	 * 
+	 * This method is to generate cmBrand List for select one menu *
 	 * **/
-	private void generateBrandList(CmUnspsc unspsc){		
+	private void generateBrandList(CmUnspsc unspsc) {
 		SelectItem[] items = null;
-		if(unspsc !=null 
-				&& !unspsc.getCmBrand().isEmpty() ){
-			items =  new SelectItem[unspsc.getCmBrand().size()];
+		if (unspsc != null && !unspsc.getCmBrand().isEmpty()) {
+			items = new SelectItem[unspsc.getCmBrand().size()];
 			int counter = 0;
-			for(CmBrand brand : unspsc.getCmBrand()){
-				items[counter] =  new SelectItem(counter, brand.getBrandName());					
-				counter ++;
+			for (CmBrand brand : unspsc.getCmBrand()) {
+				items[counter] = new SelectItem(counter, brand.getBrandName());
+				counter++;
 			}
 		}
 		getManagedBean().setBrandList(items);
 	}
-	
+
 	/**
 	 * This method is to generate cmMeasurement List for select one menu
 	 * 
 	 * **/
-	private void generateMeasurementList(CmUnspsc unspsc){		
+	private void generateMeasurementList(CmUnspsc unspsc) {
 		SelectItem[] items = null;
-		if(unspsc !=null 
-				&& !unspsc.getCmMeasurement().isEmpty() ){
-			items =  new SelectItem[unspsc.getCmMeasurement().size()];
+		if (unspsc != null && !unspsc.getCmMeasurement().isEmpty()) {
+			items = new SelectItem[unspsc.getCmMeasurement().size()];
 			int counter = 0;
-			for(CmMeasurement measurement : unspsc.getCmMeasurement()){
-				items[counter] =  new SelectItem(counter, measurement.getMeasurementName());					
-				counter ++;
+			for (CmMeasurement measurement : unspsc.getCmMeasurement()) {
+				items[counter] = new SelectItem(counter,
+						measurement.getMeasurementName());
+				counter++;
 			}
 		}
 		getManagedBean().setMeasurementList(items);
 	}
-	
+
 	/**
 	 * This method is to generate cmColor List for select one menu
+	 * 
 	 * @return SelectItem[]
 	 * **/
-	private void generateColorList(CmUnspsc unspsc){	
+	private void generateColorList(CmUnspsc unspsc) {
 		SelectItem[] items = null;
 		ICodificationSO codificationSO = null;
 		try {
-			if(unspsc !=null ){
-			codificationSO = (ICodificationSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT, ICodificationSO.class);				
-			CodificationReqDTO reqDTO = new CodificationReqDTO();
-			CodificationResDTO resDTO = null;
+			if (unspsc != null) {
+				codificationSO = (ICodificationSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.CATALOGUE_MANAGEMENT,
+								ICodificationSO.class);
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				CodificationResDTO resDTO = null;
 
-			ISearchBean<CmColor> colorSearchBean = new SearchBean<CmColor>();
-			
-			colorSearchBean.getDataFilterBeans().add(
-					new SearchFilterBean("recordStatusFlg",
-							SearchOperator.OPERATOR_EQUALS.value(), 
-									DbValueConst.RECORD_STATUS_ACTIVE));
-			
-			reqDTO.setColorSearchBean(colorSearchBean);
-			resDTO = codificationSO.searchColorObj(reqDTO);
-			if(resDTO.isSuccessful() && !resDTO.getColorList().isEmpty()){
-				items =  new SelectItem[resDTO.getColorList().size()];
-				int counter = 0;
-				for(CmColor color : resDTO.getColorList()){
-					items[counter] =  new SelectItem(color.getColorId(), color.getColorName());					
-					counter ++;
-				}
-				colorMapper = new HashMap<Long, Object>();
+				ISearchBean<CmColor> colorSearchBean = new SearchBean<CmColor>();
+
+				colorSearchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+
+				reqDTO.setColorSearchBean(colorSearchBean);
+				resDTO = codificationSO.searchColorObj(reqDTO);
+				if (resDTO.isSuccessful() && !resDTO.getColorList().isEmpty()) {
+					items = new SelectItem[resDTO.getColorList().size()];
+					int counter = 0;
 					for (CmColor color : resDTO.getColorList()) {
-						colorMapper.put(color.getColorId(),
-								color);
+						items[counter] = new SelectItem(color.getColorId(),
+								color.getColorName());
+						counter++;
+					}
+					colorMapper = new HashMap<Long, Object>();
+					for (CmColor color : resDTO.getColorList()) {
+						colorMapper.put(color.getColorId(), color);
 					}
 				}
 			}
@@ -2189,94 +2306,90 @@ public class RuleCatalogueBackingBean extends
 		}
 		getManagedBean().setColorList(items);
 	}
-	
-	
-	public void saveExtension(){
+
+	public void saveExtension() {
 		log.info(">> saveExtension");
 		PmGstItem item = null;
-		if(TAXABLE_ITEM_IDX == getManagedBean().getGstIndex()){
+		if (TAXABLE_ITEM_IDX == getManagedBean().getGstIndex()) {
 			item = getManagedBean().getSelectedGstItem();
-		}else if(TAXABLE_ITEM_DA_IDX == getManagedBean().getGstIndex()){
-			item = getManagedBean().getSelectedGstItemForDA(); 
+		} else if (TAXABLE_ITEM_DA_IDX == getManagedBean().getGstIndex()) {
+			item = getManagedBean().getSelectedGstItemForDA();
 		}
-		
-		if(item != null){				
-			if(getManagedBean().getSelectedType() != null){
-				item
-				.setType(item.getUnspsc().getCmType()
+
+		if (item != null) {
+			if (getManagedBean().getSelectedType() != null) {
+				item.setType(item.getUnspsc().getCmType()
 						.get(getManagedBean().getSelectedType().intValue()));
 			}
-			
-			if(getManagedBean().getSelectedBrand() != null){
-				item
-				.setBrand(item.getUnspsc().getCmBrand()
+
+			if (getManagedBean().getSelectedBrand() != null) {
+				item.setBrand(item.getUnspsc().getCmBrand()
 						.get(getManagedBean().getSelectedBrand().intValue()));
 			}
-			
-			if(getManagedBean().getSelectedMeasurement() != null){
-				item
-				.setMeasurement(item.getUnspsc().getCmMeasurement()
-						.get(getManagedBean().getSelectedMeasurement().intValue()));
+
+			if (getManagedBean().getSelectedMeasurement() != null) {
+				item.setMeasurement(item
+						.getUnspsc()
+						.getCmMeasurement()
+						.get(getManagedBean().getSelectedMeasurement()
+								.intValue()));
 			}
-			
-			if(getManagedBean().getSelectedColor() != null){
-				item
-				.setColor((CmColor)colorMapper
-						.get(getManagedBean().getSelectedColor()));
+
+			if (getManagedBean().getSelectedColor() != null) {
+				item.setColor((CmColor) colorMapper.get(getManagedBean()
+						.getSelectedColor()));
 			}
 		}
 	}
-	
-	
-	public String getItemTitle(PmGstItem item){
+
+	public String getItemTitle(PmGstItem item) {
 		StringBuilder sb = new StringBuilder();
-		if(item.getUnspsc() != null){
+		if (item.getUnspsc() != null) {
 			sb.append(item.getUnspsc().getUnspscTitle());
 		}
-		
-		if(item.getType() != null 
-				|| item.getBrand() != null 
-				|| item.getMeasurement() != null 
-				|| item.getColor() !=null){			
+
+		if (item.getType() != null || item.getBrand() != null
+				|| item.getMeasurement() != null || item.getColor() != null) {
 			sb.append("( ");
-			
-			if(item.getType() != null){
+
+			if (item.getType() != null) {
 				sb.append(item.getType().getTypeName());
 				sb.append(", ");
 			}
-			
-			if(item.getBrand() != null){
+
+			if (item.getBrand() != null) {
 				sb.append(item.getBrand().getBrandName());
 				sb.append(", ");
 			}
-			
-			if(item.getMeasurement() != null){
+
+			if (item.getMeasurement() != null) {
 				sb.append(item.getMeasurement().getMeasurementName());
 				sb.append(", ");
 			}
-			
-			if(item.getColor() != null){
+
+			if (item.getColor() != null) {
 				sb.append(item.getColor().getColorName());
 				sb.append(", ");
-			}		
+			}
 			sb.deleteCharAt(sb.length() - 2);
 			sb.append(")");
-			
+
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * Method to retrieve description of parameter
-	 * @param String type parameter types
-	 * Return String type of description
+	 * 
+	 * @param String
+	 *            type parameter types Return String type of description
 	 * */
 	public List<PmParameterDesc> retrieveParameterDescByType(String type) {
 		return ParameterHelper.getInstance().getParameterDescList(type);
 
 	}
-	
-	public List<PmParameterDesc> retrieveRuleListForTaxableItem(){
+
+	public List<PmParameterDesc> retrieveRuleListForTaxableItem() {
 		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
 				PmParameterDesc.class, "somTiRuleTypes");
 		// Filter By - status
@@ -2284,145 +2397,151 @@ public class RuleCatalogueBackingBean extends
 				new SearchFilterBean("recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						DbValueConst.RECORD_STATUS_ACTIVE));
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.GST_RULES_TYPE,searchBean);
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.GST_RULES_TYPE, searchBean);
 	}
-	
+
 	/**
 	 * get status item dropdown
 	 * 
-	 */	
-	 public SelectItem[] getSignatoryStatusList() {
-		 return PmCommonUtil.getCommonStatusOptions();
-	 }
-	 
-	 public void deleteTaxableItem(int rowIndex) {
-			log.info(".................deleteTaxableItem...................");
+	 */
+	public SelectItem[] getSignatoryStatusList() {
+		return PmCommonUtil.getCommonStatusOptions();
+	}
 
-			PmGstItem deletedItem = getManagedBean().getTaxableItems().get(rowIndex);			
-			deletedItem.setDeleted(true);
-			this.getManagedBean().getDeletedTaxableItems()
-					.add(deletedItem);
-			this.getManagedBean().getTaxableItems()
-					.remove(deletedItem);
+	public void deleteTaxableItem(int rowIndex) {
+		log.info(".................deleteTaxableItem...................");
+
+		PmGstItem deletedItem = getManagedBean().getTaxableItems()
+				.get(rowIndex);
+		deletedItem.setDeleted(true);
+		this.getManagedBean().getDeletedTaxableItems().add(deletedItem);
+		this.getManagedBean().getTaxableItems().remove(deletedItem);
 
 	}
-	 
-	 private void validateTaxableItem(){
-		 for(PmGstItem gstItem : getManagedBean().getTaxableItems()){
-			 if (gstItem.getUnspsc() == null
-					 || gstItem.getUnspsc().getUnspscId() == null) {
-					throw new EpException(MessageConst.ERROR_770132);
-				}
-		 }
-		 
-		 
-		 if(isDateOverlappedForGstItem(getManagedBean().getTaxableItems())){
-				throw new EpException(MessageConst.ERROR_770112, new String[] {});
-		 }
-		 
-	 }
-	 
-	 public void saveTaxableItem(){
-		 log.info(".................saveTaxableItem...................");
-		 IGstItemSO gstItemSO = null;
-		 try{
-			 validateTaxableItem();
-			 gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
-			 GstItemReqDTO reqDTO = new GstItemReqDTO();
-			 List<PmGstItem> gstItemList = new ArrayList<PmGstItem>();
-			 gstItemList.addAll(getManagedBean().getTaxableItems());
-			 gstItemList.addAll(this.getManagedBean()
-						.getDeletedTaxableItems());
-			 reqDTO.setGstItemList(gstItemList);
-			 GstItemResDTO resDTO = gstItemSO.updateGstItemList(reqDTO);
-			 if (resDTO.isSuccessful()) {
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_770173,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					initGstTabsItems(ProfileManagementConst.EXEMPTION_GENERAL);
-					
-				}
-		 }finally{
-			 gstItemSO = null;
-		 }
-	 }
-	 
-	 private void initGst(){
-		 // clear lists
-		 getManagedBean().getTaxableItems().clear();
-		 getManagedBean().getDeletedTaxableItems().clear();
-		 getManagedBean().getTaxableItemsForDA().clear();
-		 getManagedBean().getDeletedTaxableItemsForDA().clear();
-		 getManagedBean().getTaxableItemsForG2G().clear();
-		 getManagedBean().getDeletedTaxableItemsForG2G().clear();
-		 
-		 //init exemption type tabs 
-		 for(int exemptionType : ProfileManagementConst.GST_EXEMPTION_LIST){
-			 initGstTabsItems(exemptionType);
-		 }
-		 // init DA
-		 initDesignatedArea();
-	 }
-	 
-	 
-	 private void initGstTabsItems(int exemptionType){
-		 IGstItemSO gstItemSO = null;
-			try {				
-				gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
-				ISearchBean<PmGstItem> searchBean = new SearchBean<PmGstItem>();
-						
-				GstItemReqDTO reqDTO = new GstItemReqDTO();
-				reqDTO.setSearchBean(searchBean);
-				reqDTO.setExemptionType(exemptionType);
-				
-				GstItemResDTO resDTO = gstItemSO.retrieveGstItemsBySearchBean(reqDTO);
-				if(resDTO.isSuccessful() && resDTO.getResultBean() !=null){
-					if(ProfileManagementConst.EXEMPTION_GENERAL == exemptionType){
-						getManagedBean().setTaxableItems(resDTO.getResultBean().getResultList());
-					}else if(ProfileManagementConst.EXEMPTION_DA == exemptionType){
-						getManagedBean().setTaxableItemsForDA(resDTO.getResultBean().getResultList());
-					}else if(ProfileManagementConst.EXEMPTION_G2G == exemptionType){
-						getManagedBean().setTaxableItemsForG2G(resDTO.getResultBean().getResultList());
-					}
-				}
 
-			}finally{
-				 gstItemSO = null;
+	private void validateTaxableItem() {
+		for (PmGstItem gstItem : getManagedBean().getTaxableItems()) {
+			if (gstItem.getUnspsc() == null
+					|| gstItem.getUnspsc().getUnspscId() == null) {
+				throw new EpException(MessageConst.ERROR_770132);
 			}
-	 }
-	 
-	 private void initDesignatedArea(){
+		}
+
+		if (isDateOverlappedForGstItem(getManagedBean().getTaxableItems())) {
+			throw new EpException(MessageConst.ERROR_770112, new String[] {});
+		}
+
+	}
+
+	public void saveTaxableItem() {
+		log.info(".................saveTaxableItem...................");
+		IGstItemSO gstItemSO = null;
+		try {
+			validateTaxableItem();
+			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IGstItemSO.class);
+			GstItemReqDTO reqDTO = new GstItemReqDTO();
+			List<PmGstItem> gstItemList = new ArrayList<PmGstItem>();
+			gstItemList.addAll(getManagedBean().getTaxableItems());
+			gstItemList.addAll(this.getManagedBean().getDeletedTaxableItems());
+			reqDTO.setGstItemList(gstItemList);
+			GstItemResDTO resDTO = gstItemSO.updateGstItemList(reqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770173,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				initGstTabsItems(ProfileManagementConst.EXEMPTION_GENERAL);
+
+			}
+		} finally {
+			gstItemSO = null;
+		}
+	}
+
+	private void initGst() {
+		// clear lists
+		getManagedBean().getTaxableItems().clear();
+		getManagedBean().getDeletedTaxableItems().clear();
+		getManagedBean().getTaxableItemsForDA().clear();
+		getManagedBean().getDeletedTaxableItemsForDA().clear();
+		getManagedBean().getTaxableItemsForG2G().clear();
+		getManagedBean().getDeletedTaxableItemsForG2G().clear();
+
+		// init exemption type tabs
+		for (int exemptionType : ProfileManagementConst.GST_EXEMPTION_LIST) {
+			initGstTabsItems(exemptionType);
+		}
+		// init DA
+		initDesignatedArea();
+	}
+
+	private void initGstTabsItems(int exemptionType) {
+		IGstItemSO gstItemSO = null;
+		try {
+			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IGstItemSO.class);
+			ISearchBean<PmGstItem> searchBean = new SearchBean<PmGstItem>();
+
+			GstItemReqDTO reqDTO = new GstItemReqDTO();
+			reqDTO.setSearchBean(searchBean);
+			reqDTO.setExemptionType(exemptionType);
+
+			GstItemResDTO resDTO = gstItemSO
+					.retrieveGstItemsBySearchBean(reqDTO);
+			if (resDTO.isSuccessful() && resDTO.getResultBean() != null) {
+				if (ProfileManagementConst.EXEMPTION_GENERAL == exemptionType) {
+					getManagedBean().setTaxableItems(
+							resDTO.getResultBean().getResultList());
+				} else if (ProfileManagementConst.EXEMPTION_DA == exemptionType) {
+					getManagedBean().setTaxableItemsForDA(
+							resDTO.getResultBean().getResultList());
+				} else if (ProfileManagementConst.EXEMPTION_G2G == exemptionType) {
+					getManagedBean().setTaxableItemsForG2G(
+							resDTO.getResultBean().getResultList());
+				}
+			}
+
+		} finally {
+			gstItemSO = null;
+		}
+	}
+
+	private void initDesignatedArea() {
 		getManagedBean().getDesignatedAreaList().clear();
 		getManagedBean().getDeletedDesignatedAreaList().clear();
-			 
+
 		IDesignatedAreaSO designatedAreaSO = null;
 		try {
-				
-			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
-			ISearchBean<PmDesignatedArea> searchBean = new SearchBean<PmDesignatedArea>();				
-				
+
+			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDesignatedAreaSO.class);
+			ISearchBean<PmDesignatedArea> searchBean = new SearchBean<PmDesignatedArea>();
+
 			DesignatedAreaReqDTO reqDTO = new DesignatedAreaReqDTO();
 			reqDTO.setSearchBean(searchBean);
-				
-			DesignatedAreaResDTO resDTO = designatedAreaSO.retrieveDesignatedAreaBySearchBean(reqDTO);
-			if(resDTO.isSuccessful() && resDTO.getResultBean() !=null){
-					getManagedBean().setDesignatedAreaList(resDTO.getResultBean().getResultList());
+
+			DesignatedAreaResDTO resDTO = designatedAreaSO
+					.retrieveDesignatedAreaBySearchBean(reqDTO);
+			if (resDTO.isSuccessful() && resDTO.getResultBean() != null) {
+				getManagedBean().setDesignatedAreaList(
+						resDTO.getResultBean().getResultList());
 			}
-		}finally{
+		} finally {
 			designatedAreaSO = null;
 		}
-	 }
-	 
-	 private boolean isDateOverlappedForGstItem(
-				List<PmGstItem> gstItemList) {
+	}
+
+	private boolean isDateOverlappedForGstItem(List<PmGstItem> gstItemList) {
 		log.info("..............isDateOverlappedForGstItem................");
 		boolean result = false;
 		PmGstItem baseItem = null;
@@ -2431,153 +2550,179 @@ public class RuleCatalogueBackingBean extends
 			baseItem = gstItemList.get(i);
 			if (baseItem.getRecordStatusFlg() == 0) {
 				// if record inactive choose next one
-					continue;
+				continue;
 			}
-				
+
 			for (int j = i + 1; j <= (gstItemList.size() - 1); j++) {
 				exItem = gstItemList.get(j);
 				if (exItem.getRecordStatusFlg() == 0) {
 					// if record inactive choose next one
 					continue;
 				}
-				//General and Designated Area
-				if ((ProfileManagementConst.EXEMPTION_GENERAL == exItem.getExemptionType() || 
-						ProfileManagementConst.EXEMPTION_DA == exItem.getExemptionType())
-						&& exItem.getUnspsc().getUnspscId() == baseItem.getUnspsc().getUnspscId() 
-							&& (exItem.getType() != null && baseItem.getType() != null ? exItem.getType().getTypeId() == baseItem.getType().getTypeId() : true )
-								&& (exItem.getBrand() != null && baseItem.getBrand() != null ? exItem.getBrand().getBrandId() == baseItem.getBrand().getBrandId() : true )
-										&& (exItem.getMeasurement() != null && baseItem.getMeasurement() != null? exItem.getMeasurement().getMeasurementId() == baseItem.getMeasurement().getMeasurementId() : true)
-											&& (exItem.getColor() != null && baseItem.getColor() != null ? exItem.getColor().getColorId() == baseItem.getColor().getColorId() : true)) {
-						
-					result = isDateOverlaped(exItem.getEffDate(), exItem.getExpDate(),
-								baseItem.getEffDate(),
-								baseItem.getExpDate());
-						
-				} else if (ProfileManagementConst.EXEMPTION_G2G == exItem.getExemptionType() 
-						&& (exItem.getUnspsc() !=null && baseItem.getUnspsc()!=null ? exItem.getUnspsc().getUnspscId() == baseItem.getUnspsc().getUnspscId()  : true)
-						&& exItem.getOrgProfile().getOrgProfileId() == baseItem.getOrgProfile().getOrgProfileId()) {
-					//G2G
-					result = isDateOverlaped(exItem.getEffDate(), exItem.getExpDate(),
-								baseItem.getEffDate(),
-								baseItem.getExpDate());
+				// General and Designated Area
+				if ((ProfileManagementConst.EXEMPTION_GENERAL == exItem
+						.getExemptionType() || ProfileManagementConst.EXEMPTION_DA == exItem
+						.getExemptionType())
+						&& exItem.getUnspsc().getUnspscId() == baseItem
+								.getUnspsc().getUnspscId()
+						&& (exItem.getType() != null
+								&& baseItem.getType() != null ? exItem
+								.getType().getTypeId() == baseItem.getType()
+								.getTypeId() : true)
+						&& (exItem.getBrand() != null
+								&& baseItem.getBrand() != null ? exItem
+								.getBrand().getBrandId() == baseItem.getBrand()
+								.getBrandId() : true)
+						&& (exItem.getMeasurement() != null
+								&& baseItem.getMeasurement() != null ? exItem
+								.getMeasurement().getMeasurementId() == baseItem
+								.getMeasurement().getMeasurementId()
+								: true)
+						&& (exItem.getColor() != null
+								&& baseItem.getColor() != null ? exItem
+								.getColor().getColorId() == baseItem.getColor()
+								.getColorId() : true)) {
+
+					result = isDateOverlaped(exItem.getEffDate(),
+							exItem.getExpDate(), baseItem.getEffDate(),
+							baseItem.getExpDate());
+
+				} else if (ProfileManagementConst.EXEMPTION_G2G == exItem
+						.getExemptionType()
+						&& (exItem.getUnspsc() != null
+								&& baseItem.getUnspsc() != null ? exItem
+								.getUnspsc().getUnspscId() == baseItem
+								.getUnspsc().getUnspscId() : true)
+						&& exItem.getOrgProfile().getOrgProfileId() == baseItem
+								.getOrgProfile().getOrgProfileId()) {
+					// G2G
+					result = isDateOverlaped(exItem.getEffDate(),
+							exItem.getExpDate(), baseItem.getEffDate(),
+							baseItem.getExpDate());
 
 				}
 				if (result == true) {
 					return result;
 				}
-				}// end of second loop
+			}// end of second loop
 
-			}// end of first loop
+		}// end of first loop
 
-			return result;
-		}
-	 
-	 
-		public List<PmParameterDesc> retrieveParameterDescList(String type){	
-			return ParameterHelper.getInstance().getParameterDescList(type);
-		}
-		
-		
-		public void addDesignatedArea() {
-			log.info(".................addDesignatedArea...................");
-			try {
-				if (null == getManagedBean().getDesignatedAreaList()) {
-					getManagedBean().setDesignatedAreaList(new ArrayList<PmDesignatedArea>());
-				}
-				PmDesignatedArea newDesignatedArea = new PmDesignatedArea();
-				newDesignatedArea.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
-				getManagedBean().getDesignatedAreaList().add(newDesignatedArea);
-				RequestContext.getCurrentInstance().execute(
-						"designatedAreaTblWidVar.paginator.endLink.click()");
-			} catch (Exception e) {
-				throw new IllegalArgumentException();
+		return result;
+	}
+
+	public List<PmParameterDesc> retrieveParameterDescList(String type) {
+		return ParameterHelper.getInstance().getParameterDescList(type);
+	}
+
+	public void addDesignatedArea() {
+		log.info(".................addDesignatedArea...................");
+		try {
+			if (null == getManagedBean().getDesignatedAreaList()) {
+				getManagedBean().setDesignatedAreaList(
+						new ArrayList<PmDesignatedArea>());
 			}
+			PmDesignatedArea newDesignatedArea = new PmDesignatedArea();
+			newDesignatedArea
+					.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
+			getManagedBean().getDesignatedAreaList().add(newDesignatedArea);
+			RequestContext.getCurrentInstance().execute(
+					"designatedAreaTblWidVar.paginator.endLink.click()");
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
 		}
-		
-		
-		public void deleteDesignatedArea(int rowIndex){
-			log.info(".................deleteDesignatedArea...................");
+	}
 
-			PmDesignatedArea deletedDa = getManagedBean().getDesignatedAreaList().get(rowIndex);			
-			deletedDa.setDeleted(true);
-			this.getManagedBean().getDeletedDesignatedAreaList()
-					.add(deletedDa);
-			this.getManagedBean().getDesignatedAreaList()
-					.remove(deletedDa);
-		}
-		
-		private void validateDesignatedArea(){			
-			 PmDesignatedArea baseItem = null;
-			 PmDesignatedArea exItem = null;
-			 for (int i = 0; i < getManagedBean().getDesignatedAreaList().size(); i++) {
-				  baseItem = getManagedBean().getDesignatedAreaList().get(i);
-				  // validate if location is not inserted.
-				  if(baseItem.getLocationId() == null || StringUtils.isBlank(baseItem.getLocationType())){
-					 throw new EpException("Location is mandatory");
-				  }
-				  
-				  if (baseItem.getRecordStatusFlg() == 0) {
+	public void deleteDesignatedArea(int rowIndex) {
+		log.info(".................deleteDesignatedArea...................");
+
+		PmDesignatedArea deletedDa = getManagedBean().getDesignatedAreaList()
+				.get(rowIndex);
+		deletedDa.setDeleted(true);
+		this.getManagedBean().getDeletedDesignatedAreaList().add(deletedDa);
+		this.getManagedBean().getDesignatedAreaList().remove(deletedDa);
+	}
+
+	private void validateDesignatedArea() {
+		PmDesignatedArea baseItem = null;
+		PmDesignatedArea exItem = null;
+		for (int i = 0; i < getManagedBean().getDesignatedAreaList().size(); i++) {
+			baseItem = getManagedBean().getDesignatedAreaList().get(i);
+			// validate if location is not inserted.
+			if (baseItem.getLocationId() == null
+					|| StringUtils.isBlank(baseItem.getLocationType())) {
+				throw new EpException("Location is mandatory");
+			}
+
+			if (baseItem.getRecordStatusFlg() == 0) {
+				// if record inactive choose next one
+				continue;
+			}
+			// validate duplicate items
+			for (int j = i + 1; j <= (getManagedBean().getDesignatedAreaList()
+					.size() - 1); j++) {
+				exItem = getManagedBean().getDesignatedAreaList().get(j);
+				if (exItem.getRecordStatusFlg() == 0) {
 					// if record inactive choose next one
-						continue;
-				  }
-				  // validate duplicate items	
-				  for (int j = i + 1; j <= (getManagedBean().getDesignatedAreaList().size() - 1); j++) {
-					exItem = getManagedBean().getDesignatedAreaList().get(j);
-					if (exItem.getRecordStatusFlg() == 0) {
-						// if record inactive choose next one
-						continue;
-					}
-						
-					if(exItem.getLocationId() == baseItem.getLocationId() 
-							&& exItem.getLocationType().equals(baseItem.getLocationType())){
-						throw new EpException("Duplicate Designated Area");	
-					}
+					continue;
+				}
+
+				if (exItem.getLocationId() == baseItem.getLocationId()
+						&& exItem.getLocationType().equals(
+								baseItem.getLocationType())) {
+					throw new EpException("Duplicate Designated Area");
 				}
 			}
 		}
-		
-		 public void saveDesignatedArea(){
-			 log.info(".................saveDesignatedArea...................");
-			 IDesignatedAreaSO designatedAreaSO = null;
-			 try{
-				 for(PmDesignatedArea da : getManagedBean().getDesignatedAreaList()){
-					 if(da.getvPmLocation() != null && da.getvPmLocation().getLocationId() !=null){
-						da.setLocationId(da.getvPmLocation().getLocationId()); 
-					}
-				 }
-				 
-				 validateDesignatedArea();	
-				 designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate.getInstance()
-							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
-				 
-				  DesignatedAreaReqDTO reqDTO = new DesignatedAreaReqDTO();
-				 List<PmDesignatedArea> designatedAreaList = new ArrayList<PmDesignatedArea>();
-				 designatedAreaList.addAll(getManagedBean().getDesignatedAreaList());
-				 designatedAreaList.addAll(this.getManagedBean()
-							.getDeletedDesignatedAreaList());
-				 reqDTO.setDesignatedAreaList(designatedAreaList);
-				 DesignatedAreaResDTO resDTO = designatedAreaSO.updateDesignatedAreaList(reqDTO);
-				 if (resDTO.isSuccessful()) {
-						FacesContext facesContext = FacesContext.getCurrentInstance();
-						facesContext.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-										MessageUtils.getMessage(
-												MessageConst.INFO_770174,
-												MessageUtils.BUNDLE_COMMON_MESSAGES,
-												new FacesScopes().getUserLocale())));
-						initDesignatedArea();						
-					}
-			 }finally{
-				 designatedAreaSO = null;
-			 }
-		 }
-		 
+	}
+
+	public void saveDesignatedArea() {
+		log.info(".................saveDesignatedArea...................");
+		IDesignatedAreaSO designatedAreaSO = null;
+		try {
+			for (PmDesignatedArea da : getManagedBean().getDesignatedAreaList()) {
+				if (da.getvPmLocation() != null
+						&& da.getvPmLocation().getLocationId() != null) {
+					da.setLocationId(da.getvPmLocation().getLocationId());
+				}
+			}
+
+			validateDesignatedArea();
+			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDesignatedAreaSO.class);
+
+			DesignatedAreaReqDTO reqDTO = new DesignatedAreaReqDTO();
+			List<PmDesignatedArea> designatedAreaList = new ArrayList<PmDesignatedArea>();
+			designatedAreaList.addAll(getManagedBean().getDesignatedAreaList());
+			designatedAreaList.addAll(this.getManagedBean()
+					.getDeletedDesignatedAreaList());
+			reqDTO.setDesignatedAreaList(designatedAreaList);
+			DesignatedAreaResDTO resDTO = designatedAreaSO
+					.updateDesignatedAreaList(reqDTO);
+			if (resDTO.isSuccessful()) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770174,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				initDesignatedArea();
+			}
+		} finally {
+			designatedAreaSO = null;
+		}
+	}
+
 	public void addTaxableItemForDA() {
 		log.info(".................addTaxableItemForDA...................");
 		try {
 			if (null == getManagedBean().getTaxableItemsForDA()) {
-						getManagedBean().setTaxableItemsForDA(new ArrayList<PmGstItem>());
+				getManagedBean().setTaxableItemsForDA(
+						new ArrayList<PmGstItem>());
 			}
 			PmGstItem newGstItem = new PmGstItem();
 			newGstItem.setExemptionType(ProfileManagementConst.EXEMPTION_DA);
@@ -2586,219 +2731,239 @@ public class RuleCatalogueBackingBean extends
 			newGstItem.setRuleType(ParameterConst.RULE_TYPE_NOT_APPLICABLE);
 			getManagedBean().getTaxableItemsForDA().add(newGstItem);
 			RequestContext.getCurrentInstance().execute(
-					"taxableItemDATblWidVar.paginator.endLink.click()");			
+					"taxableItemDATblWidVar.paginator.endLink.click()");
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
 	}
-		 
-	 public void deleteTaxableItemForDA(int rowIndex) {
+
+	public void deleteTaxableItemForDA(int rowIndex) {
 		log.info(".................deleteTaxableItemForDA...................");
 
-		PmGstItem deletedItem = getManagedBean().getTaxableItemsForDA().get(rowIndex);			
+		PmGstItem deletedItem = getManagedBean().getTaxableItemsForDA().get(
+				rowIndex);
 		deletedItem.setDeleted(true);
-		this.getManagedBean().getDeletedTaxableItemsForDA()
-				.add(deletedItem);
-		this.getManagedBean().getTaxableItemsForDA()
-				.remove(deletedItem);
-	} 
-		 
-	public List<PmDesignatedArea> retrieveDesignatedAreaListForTaxableItem(){
+		this.getManagedBean().getDeletedTaxableItemsForDA().add(deletedItem);
+		this.getManagedBean().getTaxableItemsForDA().remove(deletedItem);
+	}
+
+	public List<PmDesignatedArea> retrieveDesignatedAreaListForTaxableItem() {
 		IDesignatedAreaSO designatedAreaSO = null;
 		List<PmDesignatedArea> daList = new ArrayList<PmDesignatedArea>();
 		try {
-			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDesignatedAreaSO.class);
-			ISearchBean<PmDesignatedArea> searchBean = new SearchBean<PmDesignatedArea>();				
+			designatedAreaSO = (IDesignatedAreaSO) BusinessDelegate
+					.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IDesignatedAreaSO.class);
+			ISearchBean<PmDesignatedArea> searchBean = new SearchBean<PmDesignatedArea>();
 			// Filter By - status
 			searchBean.getDataFilterBeans().add(
 					new SearchFilterBean("recordStatusFlg",
-								SearchOperator.OPERATOR_EQUALS.value(),
-								DbValueConst.RECORD_STATUS_ACTIVE));
-				
+							SearchOperator.OPERATOR_EQUALS.value(),
+							DbValueConst.RECORD_STATUS_ACTIVE));
+
 			DesignatedAreaReqDTO reqDTO = new DesignatedAreaReqDTO();
 			reqDTO.setSearchBean(searchBean);
-				
-			DesignatedAreaResDTO resDTO = designatedAreaSO.retrieveDesignatedAreaBySearchBean(reqDTO);
-			if(resDTO.isSuccessful() && resDTO.getResultBean() !=null){
+
+			DesignatedAreaResDTO resDTO = designatedAreaSO
+					.retrieveDesignatedAreaBySearchBean(reqDTO);
+			if (resDTO.isSuccessful() && resDTO.getResultBean() != null) {
 				daList = resDTO.getResultBean().getResultList();
 				designatedAreaMapper = new HashMap<Long, Object>();
 				for (PmDesignatedArea area : daList) {
-					designatedAreaMapper.put(area.getDesignatedAreaId(),
-								area);
+					designatedAreaMapper.put(area.getDesignatedAreaId(), area);
 				}
 			}
-		}finally{
+		} finally {
 			designatedAreaSO = null;
 		}
 		return daList;
 	}
-		
-		
-	public void initDesignatedAreaDetails(int rowIndex){
-		getManagedBean().setSelectedGstItemForDA(getManagedBean().getTaxableItemsForDA().get(rowIndex));
+
+	public void initDesignatedAreaDetails(int rowIndex) {
+		getManagedBean().setSelectedGstItemForDA(
+				getManagedBean().getTaxableItemsForDA().get(rowIndex));
 		getManagedBean().setAutoUpdate(false);
 		removeInvalidDAPopupItems();
-	} 
-		
-		 
-	public void addGstDaItem(){
+	}
+
+	public void addGstDaItem() {
 		log.info(".................addGstDaItem...................");
 		try {
-			if(getManagedBean().getSelectedGstItemForDA().getPmDaGsts() == null){
-				getManagedBean().getSelectedGstItemForDA().setPmDaGsts(new ArrayList<PmDaGst>());
+			if (getManagedBean().getSelectedGstItemForDA().getPmDaGsts() == null) {
+				getManagedBean().getSelectedGstItemForDA().setPmDaGsts(
+						new ArrayList<PmDaGst>());
 			}
 			PmDaGst newDaGst = new PmDaGst();
 			newDaGst.setPmGstItem(getManagedBean().getSelectedGstItemForDA());
 			newDaGst.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 			newDaGst.setPmDesignatedArea(new PmDesignatedArea());
-			getManagedBean().getSelectedGstItemForDA().getPmDaGsts().add(newDaGst);
+			getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+					.add(newDaGst);
 			RequestContext.getCurrentInstance().execute(
-					"designatedAreaPopUpTblWidVar.paginator.endLink.click()");			
+					"designatedAreaPopUpTblWidVar.paginator.endLink.click()");
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
 	}
-		
-	public void saveDAPopup(){
+
+	public void saveDAPopup() {
 		PmDesignatedArea area = null;
 		List<PmDaGst> invalidDaGst = new ArrayList<PmDaGst>();
 		Set<Long> areaSet = new HashSet<Long>();
 		List<Long> areaList = new ArrayList<Long>();
-		if(getManagedBean().getSelectedGstItemForDA().getPmDaGsts() == null || getManagedBean().getSelectedGstItemForDA().getPmDaGsts().isEmpty()){
+		if (getManagedBean().getSelectedGstItemForDA().getPmDaGsts() == null
+				|| getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+						.isEmpty()) {
 			throw new EpException("At least one Designated Area is required.");
 		}
-		
-		for(PmDaGst daGst : getManagedBean().getSelectedGstItemForDA().getPmDaGsts()){
-			if(daGst.getPmDesignatedArea().getDesignatedAreaId() != null){
-				area = (PmDesignatedArea)designatedAreaMapper.get(daGst.getPmDesignatedArea().getDesignatedAreaId());
+
+		for (PmDaGst daGst : getManagedBean().getSelectedGstItemForDA()
+				.getPmDaGsts()) {
+			if (daGst.getPmDesignatedArea().getDesignatedAreaId() != null) {
+				area = (PmDesignatedArea) designatedAreaMapper.get(daGst
+						.getPmDesignatedArea().getDesignatedAreaId());
 				daGst.setPmDesignatedArea(area);
 				areaSet.add(area.getDesignatedAreaId());
 				areaList.add(area.getDesignatedAreaId());
-			}else{
+			} else {
 				invalidDaGst.add(daGst);
 			}
 		}
-		
-		//validate duplicate records
-		if(areaList.size() != areaSet.size()){
+
+		// validate duplicate records
+		if (areaList.size() != areaSet.size()) {
 			throw new EpException("Designated Area must be unique.");
 		}
-		
-		if(!invalidDaGst.isEmpty()){
-			getManagedBean().getSelectedGstItemForDA().getPmDaGsts().removeAll(invalidDaGst);
+
+		if (!invalidDaGst.isEmpty()) {
+			getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+					.removeAll(invalidDaGst);
 		}
 		getManagedBean().setAutoUpdate(true);
-		RequestContext.getCurrentInstance().execute("dlgDesignatedArea.hide();");
-		
+		RequestContext.getCurrentInstance()
+				.execute("dlgDesignatedArea.hide();");
+
 	}
-	
-	public void cancelDAPopup(){
+
+	public void cancelDAPopup() {
 		removeInvalidDAPopupItems();
 		getManagedBean().setAutoUpdate(true);
-		RequestContext.getCurrentInstance().execute("dlgDesignatedArea.hide();");
-		
+		RequestContext.getCurrentInstance()
+				.execute("dlgDesignatedArea.hide();");
+
 	}
-	
-	private void removeInvalidDAPopupItems(){
+
+	private void removeInvalidDAPopupItems() {
 		List<PmDaGst> invalidDaGst = null;
-		if(getManagedBean().getSelectedGstItemForDA().getPmDaGsts() != null &&
-			!getManagedBean().getSelectedGstItemForDA().getPmDaGsts().isEmpty()){
+		if (getManagedBean().getSelectedGstItemForDA().getPmDaGsts() != null
+				&& !getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+						.isEmpty()) {
 			invalidDaGst = new ArrayList<PmDaGst>();
-			for(PmDaGst daGst : getManagedBean().getSelectedGstItemForDA().getPmDaGsts()){
-				if(daGst.getPmDesignatedArea().getLocationType() == null &&
-						daGst.getPmDesignatedArea().getLocationId() == null){
-				   invalidDaGst.add(daGst);
+			for (PmDaGst daGst : getManagedBean().getSelectedGstItemForDA()
+					.getPmDaGsts()) {
+				if (daGst.getPmDesignatedArea().getLocationType() == null
+						&& daGst.getPmDesignatedArea().getLocationId() == null) {
+					invalidDaGst.add(daGst);
 				}
 			}
 		}
-		
-		if(invalidDaGst != null && !invalidDaGst.isEmpty()){
-			getManagedBean().getSelectedGstItemForDA().getPmDaGsts().removeAll(invalidDaGst);
+
+		if (invalidDaGst != null && !invalidDaGst.isEmpty()) {
+			getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
+					.removeAll(invalidDaGst);
 		}
 	}
-		
-	public void deleteDAPopUpItem(int rowIndex){
+
+	public void deleteDAPopUpItem(int rowIndex) {
 		log.info(".................deleteDAPopUpItem...................");
-		PmDaGst deletedDaGst = getManagedBean().getSelectedGstItemForDA().getPmDaGsts().get(rowIndex);			
+		PmDaGst deletedDaGst = getManagedBean().getSelectedGstItemForDA()
+				.getPmDaGsts().get(rowIndex);
 		this.getManagedBean().getSelectedGstItemForDA().getPmDaGsts()
 				.remove(deletedDaGst);
 	}
-	
-	private void validateTaxableItemForDA(){
-		for(PmGstItem gstItem : getManagedBean().getTaxableItemsForDA()){
-			 if (gstItem.getUnspsc() == null
-					 || gstItem.getUnspsc().getUnspscId() == null) {
-					throw new EpException(MessageConst.ERROR_770132,
-							new String[] {});
-			 }
-			 if(CmConst.UNSPSC_COMMODITY_LVL == gstItem.getUnspsc().getUnspscLevel()){
-				if(gstItem.getPmDaGsts() == null || gstItem.getPmDaGsts().isEmpty()){
-				 		throw new EpException("At least one Designated Area is required for " + gstItem.getUnspsc().getUnspscTitle());
+
+	private void validateTaxableItemForDA() {
+		for (PmGstItem gstItem : getManagedBean().getTaxableItemsForDA()) {
+			if (gstItem.getUnspsc() == null
+					|| gstItem.getUnspsc().getUnspscId() == null) {
+				throw new EpException(MessageConst.ERROR_770132,
+						new String[] {});
+			}
+			if (CmConst.UNSPSC_COMMODITY_LVL == gstItem.getUnspsc()
+					.getUnspscLevel()) {
+				if (gstItem.getPmDaGsts() == null
+						|| gstItem.getPmDaGsts().isEmpty()) {
+					throw new EpException(
+							"At least one Designated Area is required for "
+									+ gstItem.getUnspsc().getUnspscTitle());
 				}
-				
-				if(StringUtils.isBlank(gstItem.getRuleType())){
-					 throw new EpException(" Rule Type is mandatory for "+gstItem.getUnspsc().getUnspscTitle());
+
+				if (StringUtils.isBlank(gstItem.getRuleType())) {
+					throw new EpException(" Rule Type is mandatory for "
+							+ gstItem.getUnspsc().getUnspscTitle());
 				}
-			 	
-			 }
-		 }
-		if(isDateOverlappedForGstItem(getManagedBean().getTaxableItemsForDA())){
-				throw new EpException(MessageConst.ERROR_770112, new String[] {});
+
+			}
+		}
+		if (isDateOverlappedForGstItem(getManagedBean().getTaxableItemsForDA())) {
+			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
 	}
-	
-	public void saveTaxableItemForDA(){
+
+	public void saveTaxableItemForDA() {
 		log.info(".................saveTaxableItemForDA...................");
 		IGstItemSO gstItemSO = null;
-		try{
+		try {
 			validateTaxableItemForDA();
 			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IGstItemSO.class);
 			GstItemReqDTO reqDTO = new GstItemReqDTO();
 			// mapDeletedDaGst();
 			List<PmGstItem> gstItemList = new ArrayList<PmGstItem>();
 			gstItemList.addAll(getManagedBean().getTaxableItemsForDA());
 			gstItemList.addAll(this.getManagedBean()
-						.getDeletedTaxableItemsForDA());				 
-				
+					.getDeletedTaxableItemsForDA());
+
 			reqDTO.setGstItemList(gstItemList);
 			GstItemResDTO resDTO = gstItemSO.updateGstItemList(reqDTO);
 			if (resDTO.isSuccessful()) {
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_770173,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					initGstTabsItems(ProfileManagementConst.EXEMPTION_DA);
-						
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770173,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				initGstTabsItems(ProfileManagementConst.EXEMPTION_DA);
+
 			}
-		}finally{
+		} finally {
 			gstItemSO = null;
 		}
 	}
-	
-	 public List<PmParameterDesc> retrieveRuleListForTaxableItemForDA(){
-		 ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
-					PmParameterDesc.class, "somTiDaRuleTypes");
+
+	public List<PmParameterDesc> retrieveRuleListForTaxableItemForDA() {
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somTiDaRuleTypes");
 		// Filter By - status
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						DbValueConst.RECORD_STATUS_ACTIVE));
-			
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.GST_RULES_TYPE,searchBean);
+
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.GST_RULES_TYPE, searchBean);
 	}
-		 
-		 
-	public void addTaxableItemForG2G(){
+
+	public void addTaxableItemForG2G() {
 		log.info(".................addTaxableItemForG2G...................");
 		try {
 			if (null == getManagedBean().getTaxableItemsForG2G()) {
-				getManagedBean().setTaxableItemsForG2G(new ArrayList<PmGstItem>());
+				getManagedBean().setTaxableItemsForG2G(
+						new ArrayList<PmGstItem>());
 			}
 			PmGstItem newGstItem = new PmGstItem();
 			newGstItem.setExemptionType(ProfileManagementConst.EXEMPTION_G2G);
@@ -2809,89 +2974,91 @@ public class RuleCatalogueBackingBean extends
 			RequestContext.getCurrentInstance().execute(
 					"taxableItemG2GTblWidVar.paginator.endLink.click()");
 		} catch (Exception e) {
-				throw new IllegalArgumentException();
+			throw new IllegalArgumentException();
 		}
 	}
-		
+
 	public void deleteTaxableItemForG2G(int rowIndex) {
 		log.info(".................deleteTaxableItemForG2G...................");
 
-		PmGstItem deletedItem = getManagedBean().getTaxableItemsForG2G().get(rowIndex);			
+		PmGstItem deletedItem = getManagedBean().getTaxableItemsForG2G().get(
+				rowIndex);
 		deletedItem.setDeleted(true);
-		this.getManagedBean().getDeletedTaxableItemsForG2G()
-				.add(deletedItem);
-		this.getManagedBean().getTaxableItemsForG2G()
-				.remove(deletedItem);
+		this.getManagedBean().getDeletedTaxableItemsForG2G().add(deletedItem);
+		this.getManagedBean().getTaxableItemsForG2G().remove(deletedItem);
 	}
-	private void validateTaxableItemForG2G(){
-		 for(PmGstItem gstItem : getManagedBean().getTaxableItemsForG2G()){
-			 if (gstItem.getOrgProfile() == null
-					 || gstItem.getOrgProfile().getOrgProfileId() == null) {
-					throw new EpException(MessageConst.ERROR_770175,
-							new String[] {});
+
+	private void validateTaxableItemForG2G() {
+		for (PmGstItem gstItem : getManagedBean().getTaxableItemsForG2G()) {
+			if (gstItem.getOrgProfile() == null
+					|| gstItem.getOrgProfile().getOrgProfileId() == null) {
+				throw new EpException(MessageConst.ERROR_770175,
+						new String[] {});
 			}
-		 }
-		
-		if(isDateOverlappedForGstItem(getManagedBean().getTaxableItemsForG2G())){
+		}
+
+		if (isDateOverlappedForGstItem(getManagedBean().getTaxableItemsForG2G())) {
 			throw new EpException(MessageConst.ERROR_770112, new String[] {});
 		}
-		
+
 	}
-	
-	 public void saveTaxableItemForG2G(){
+
+	public void saveTaxableItemForG2G() {
 		log.info(".................saveTaxableItemForG2G...................");
 		IGstItemSO gstItemSO = null;
-		try{
-			validateTaxableItemForG2G();	 
+		try {
+			validateTaxableItemForG2G();
 			gstItemSO = (IGstItemSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IGstItemSO.class);
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IGstItemSO.class);
 			GstItemReqDTO reqDTO = new GstItemReqDTO();
 			// mapDeletedDaGst();
 			List<PmGstItem> gstItemList = new ArrayList<PmGstItem>();
 			gstItemList.addAll(getManagedBean().getTaxableItemsForG2G());
 			gstItemList.addAll(this.getManagedBean()
-						.getDeletedTaxableItemsForG2G());				 
-				
+					.getDeletedTaxableItemsForG2G());
+
 			reqDTO.setGstItemList(gstItemList);
 			GstItemResDTO resDTO = gstItemSO.updateGstItemList(reqDTO);
 			if (resDTO.isSuccessful()) {
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_770173,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));	
-					initGstTabsItems(ProfileManagementConst.EXEMPTION_G2G);
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_770173,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				initGstTabsItems(ProfileManagementConst.EXEMPTION_G2G);
 			}
-		}finally{
+		} finally {
 			gstItemSO = null;
 		}
-	} 
-	 
-	 public List<PmParameterDesc> retrieveRuleListForTaxableItemForG2G(){
-		 ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
-					PmParameterDesc.class, "somTiG2GScope");
+	}
+
+	public List<PmParameterDesc> retrieveRuleListForTaxableItemForG2G() {
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somTiG2GScope");
 		// Filter By - status
 		searchBean.getDataFilterBeans().add(
 				new SearchFilterBean("recordStatusFlg",
 						SearchOperator.OPERATOR_EQUALS.value(),
 						DbValueConst.RECORD_STATUS_ACTIVE));
-			
-		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.GST_RULES_TYPE,searchBean);
+
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(
+				ParameterTypeConst.GST_RULES_TYPE, searchBean);
 	}
-		 
+
 	/**
-	* @return the taxableItemIdx
-	*/
+	 * @return the taxableItemIdx
+	 */
 	public int getTaxableItemIdx() {
 		return TAXABLE_ITEM_IDX;
 	}
 
 	/**
-	* @return the designatedAreaIdx
-	*/
+	 * @return the designatedAreaIdx
+	 */
 	public int getDesignatedAreaIdx() {
 		return DESIGNATED_AREA_IDX;
 	}
@@ -2904,38 +3071,59 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	/**
-	* @return the taxableItemG2gIdx
-	*/
+	 * @return the taxableItemG2gIdx
+	 */
 	public int getTaxableItemG2gIdx() {
 		return TAXABLE_ITEM_G2G_IDX;
 	}
-	
-	public boolean disabledExtensionFields(){
+
+	public boolean disabledExtensionFields() {
 		boolean disable = false;
-		if(getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)){
-			if(getManagedBean().getSelectedGstItem()!= null 
-					&& !getManagedBean().getSelectedGstItem().isBrandNew() 
-					&& (getManagedBean().getSelectedGstItem().getEffDate().before(DateUtils.getCurrentDateWithoutTime()) ||
-							(getManagedBean().getSelectedGstItem().getEffDate().equals(DateUtils.getCurrentDateWithoutTime())))){
+		if (getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)) {
+			if (getManagedBean().getSelectedGstItem() != null
+					&& !getManagedBean().getSelectedGstItem().isBrandNew()
+					&& (getManagedBean().getSelectedGstItem().getEffDate()
+							.before(DateUtils.getCurrentDateWithoutTime()) || (getManagedBean()
+							.getSelectedGstItem().getEffDate().equals(DateUtils
+							.getCurrentDateWithoutTime())))) {
 				disable = true;
-			}					
-		}else if(getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)){
-			if(getManagedBean().getSelectedGstItemForDA()!= null 
-					&& !getManagedBean().getSelectedGstItemForDA().isBrandNew() 
-					&& (getManagedBean().getSelectedGstItemForDA().getEffDate().before(DateUtils.getCurrentDateWithoutTime())||
-					(getManagedBean().getSelectedGstItemForDA().getEffDate().equals(DateUtils.getCurrentDateWithoutTime())))){
+			}
+		} else if (getManagedBean().getGstIndex().equals(TAXABLE_ITEM_IDX)) {
+			if (getManagedBean().getSelectedGstItemForDA() != null
+					&& !getManagedBean().getSelectedGstItemForDA().isBrandNew()
+					&& (getManagedBean().getSelectedGstItemForDA().getEffDate()
+							.before(DateUtils.getCurrentDateWithoutTime()) || (getManagedBean()
+							.getSelectedGstItemForDA().getEffDate()
+							.equals(DateUtils.getCurrentDateWithoutTime())))) {
 				disable = true;
-			}			
+			}
 		}
 		return disable;
 	}
-		 
-	public Long getDefaultCountry(){
-		return PmCommonUtil.retrieveCountryByCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE).getCountryId();
+
+	public Long getDefaultCountry() {
+		return PmCommonUtil.retrieveCountryByCountryCode(
+				CommonConstants.DEFAULT_COUNTRY_CODE).getCountryId();
 	}
-	
-	public void resetLovLocation(PmDesignatedArea da){
+
+	public void resetLovLocation(PmDesignatedArea da) {
 		da.setvPmLocation(null);
 	}
-		 
+
+	/**
+	 * Track rule value status
+	 * 
+	 * @param pmUserRole
+	 */
+	public void ruleValueStatusChange(PmConfigRuleValue ruleValue) {
+		log.info("ruleValueStatusChange");
+
+		if (!ruleValue.isModified()) {
+			ruleValue.setModified(true);
+		} else {
+			ruleValue.setModified(false);
+		}
+
+	}
+
 }
