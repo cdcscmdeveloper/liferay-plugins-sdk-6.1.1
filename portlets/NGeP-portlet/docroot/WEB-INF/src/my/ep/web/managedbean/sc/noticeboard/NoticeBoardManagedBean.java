@@ -164,6 +164,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private String ministryName;
 	private String jabatan;
 	private Long qtId;
+	private boolean  renderRegisterBtn = true;
+	private boolean  disableRegisterBtn;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1169,6 +1171,34 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setQtId(Long qtId) {
 		this.qtId = qtId;
+	}
+
+	/**
+	 * @return the renderRegisterBtn
+	 */
+	public boolean isRenderRegisterBtn() {
+		return renderRegisterBtn;
+	}
+
+	/**
+	 * @param renderRegisterBtn the renderRegisterBtn to set
+	 */
+	public void setRenderRegisterBtn(boolean renderRegisterBtn) {
+		this.renderRegisterBtn = renderRegisterBtn;
+	}
+
+	/**
+	 * @return the disableRegisterBtn
+	 */
+	public boolean isDisableRegisterBtn() {
+		return disableRegisterBtn;
+	}
+
+	/**
+	 * @param disableRegisterBtn the disableRegisterBtn to set
+	 */
+	public void setDisableRegisterBtn(boolean disableRegisterBtn) {
+		this.disableRegisterBtn = disableRegisterBtn;
 	}
 
 
