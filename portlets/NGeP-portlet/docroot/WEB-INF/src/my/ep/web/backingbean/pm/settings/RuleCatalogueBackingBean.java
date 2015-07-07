@@ -2783,6 +2783,7 @@ public class RuleCatalogueBackingBean extends
 	public void initDesignatedAreaDetails(int rowIndex) {
 		getManagedBean().setSelectedGstItemForDA(
 				getManagedBean().getTaxableItemsForDA().get(rowIndex));
+		getManagedBean().setDeletedDaGstList(new ArrayList<PmDaGst>());
 		getManagedBean().setAutoUpdate(false);
 		removeInvalidDAPopupItems();
 	}
