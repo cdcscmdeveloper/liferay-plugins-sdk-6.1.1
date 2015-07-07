@@ -14,27 +14,24 @@
 				<td width="18%"><p:outputLabel
 						value="#{lbl['lbl.pm.sr.paid.up.capital']}"></p:outputLabel> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
-				<td colspan="3"><p:inputText maxlength="17" 
+				<td colspan="3"><p:inputText maxlength="17" id="fromId"
 						label="#{lbl['lbl.pm.sr.paid.up.capital']}"
 						validatorMessage="#{lbl['lbl.pm.paid.up.capital.validator.msg']}"
 						converterMessage="#{lbl['lbl.pm.paid.up.capital.num.msg']}"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtFrom}"
 						size="15">
-						 <f:validateLength minimum="0" maximum="17" />
-						<!-- <f:validateDoubleRange minimum="#{PmConstants.MIN_AMT_RANGE}"
-							maximum="#{PmConstants.MAX_AMT_RANGE}" /> -->
+						<f:validateLength minimum="0" maximum="17" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
-					</p:inputText> To <p:inputText maxlength="17" style="text-align:left;" 
+					</p:inputText> To <p:inputText
+						maxlength="17" style="text-align:left;" id="toId"
 						label="#{lbl['lbl.pm.sr.paid.up.capital']}"
 						validatorMessage="#{lbl['lbl.pm.paid.up.capital.validator.msg']}"
 						converterMessage="#{lbl['lbl.pm.paid.up.capital.num.msg']}"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.paidUpCapitalAmtTo}"
 						size="15">
-						 <f:validateLength minimum="0" maximum="17" />
-						<!-- <f:validateDoubleRange minimum="#{PmConstants.MIN_AMT_RANGE}"
-							maximum="#{PmConstants.MAX_AMT_RANGE}" /> -->
+						<f:validateLength minimum="0" maximum="17" />
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax process="@this" partialSubmit="true" update="@this" />
@@ -42,7 +39,7 @@
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
-				<td style="zoom: 185%; width: 79%; font-size: 7px;"><h:selectBooleanCheckbox
+				<td style="zoom: 185%; width: 79.3%; font-size: 7px;"><h:selectBooleanCheckbox
 						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID"
 						value="#{suppliersReviewBackingBean.managedBean.allStates}">
 						<p:ajax event="change"
