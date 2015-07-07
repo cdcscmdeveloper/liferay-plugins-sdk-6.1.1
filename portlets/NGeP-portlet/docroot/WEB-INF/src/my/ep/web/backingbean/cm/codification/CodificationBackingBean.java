@@ -2962,7 +2962,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				boolean addInLs = true;
 				for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
 					System.out.println("extCodeVO.isSelected():"+extCodeVO.isSelected());
-					if(!extCodeVO.isSelected()){
+					if(!extCodeVO.isSelected() && extCodeVO.getKey().equalsIgnoreCase(obj.getKey())){
 						this.getManagedBean().getCloneExtensionVOs().remove(obj);
 						addInLs = false;
 						break;
