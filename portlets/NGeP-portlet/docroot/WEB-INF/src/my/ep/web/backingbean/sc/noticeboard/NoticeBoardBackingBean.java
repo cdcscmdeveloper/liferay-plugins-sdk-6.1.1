@@ -664,7 +664,6 @@ public class NoticeBoardBackingBean extends
 		managedBean.setActiveTabIndex(0);
 		managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
-		managedBean.setDisableRegisterBtn(false);
 		
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml";
 	}
@@ -2099,7 +2098,7 @@ public class NoticeBoardBackingBean extends
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 		
 		if(this.getManagedBean().isRenderRegisterBtn()){
-			this.getManagedBean().setDisableRegisterBtn(isAttandanceEditable(scQtBsvDtl));
+			this.getManagedBean().setRenderRegisterBtn(!isAttandanceEditable(scQtBsvDtl));
 		}
 		
 	}
