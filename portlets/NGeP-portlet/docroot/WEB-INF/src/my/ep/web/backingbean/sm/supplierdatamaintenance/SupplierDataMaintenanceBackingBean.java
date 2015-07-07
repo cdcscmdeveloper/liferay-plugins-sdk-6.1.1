@@ -1,6 +1,9 @@
 package my.ep.web.backingbean.sm.supplierdatamaintenance;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,6 +28,8 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
+import my.ep.persistence.entity.sm.SmDisciplinaryAction;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sm.applicationView.BaseReviewApplicationBackingBean;
@@ -35,6 +40,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmServiceLookup;
+import my.ep.web.vo.DisciplinaryActionVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.context.RequestContext;
@@ -78,6 +84,7 @@ public class SupplierDataMaintenanceBackingBean extends
 				SmServiceLookup.getMofRegistrationSO()
 						.retrieveSmApplWithChildByApplNo(reqDTO).getSmAppl());
 		setApplication(getManagedBean().getSmAppl());
+		initSupplierDisciplinaryAction(getManagedBean().getSmSupplier());
 		assignApplActiveAndApprovedCategoryList();
 		setOverLappingCategories();
 		setCategoryTypeConfirm();
@@ -155,6 +162,10 @@ public class SupplierDataMaintenanceBackingBean extends
 					SupplierManagementConst.APPROVER_SUBMIT_SUPPLIER_DATA_MAINTENANCE);
 			reqDTO.setSmTrackingDairyVO(smTrackingDairyVO);
 
+			if (getManagedBean().isEditDisciplinaryAction())
+				reqDTO.setSmDisciplinaryAction(getManagedBean()
+						.getDisciplineVO().getSmDiscplinaryAction());
+
 			resDTO = SmServiceLookup.getSupplierDataMaintenanceSO()
 					.updateSupplierInfo(reqDTO);
 			getManagedBean().setSmAppl(resDTO.getSmAppl());
@@ -166,13 +177,16 @@ public class SupplierDataMaintenanceBackingBean extends
 			throw new EpException(pers.getMessage());
 		} catch (NullPointerException nex) {
 			throw new EpException(nex.getMessage());
+		} catch (RuntimeException re) {
+			throw new EpException(re.getMessage());
 		} finally {
 			reqDTO = null;
 		}
 
-		SmCommonUtil.redirectToPage(
-				"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
-				MessageConst.INFO_721215);
+		SmCommonUtil
+				.redirectToPage(
+						"/xhtml/sm/supplierdatamaintenance/searchSupplierDataMaintenance.xhtml",
+						MessageConst.INFO_721215);
 	}
 
 	/**
@@ -831,5 +845,51 @@ public class SupplierDataMaintenanceBackingBean extends
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()), null);
 		}
+	}
+
+	/**
+	 * Initialized supplier disciplinary action and set to DisciplinaryActionVO
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 */
+	private void initSupplierDisciplinaryAction(SmSupplier supplier) {
+		getManagedBean().setEditDisciplinaryAction(false);
+		DisciplinaryActionVO discipline = new DisciplinaryActionVO();
+		discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
+		discipline.getSmDiscplinaryAction().setSmSupplier(
+				getManagedBean().getSmSupplier());
+		discipline.setSuspend(false);
+		if (supplier.getSmDisciplinaryActions() != null
+				&& !supplier.getSmDisciplinaryActions().isEmpty()) {
+
+			Collections.sort(supplier.getSmDisciplinaryActions(),
+					new Comparator<SmDisciplinaryAction>() {
+						public int compare(SmDisciplinaryAction o1,
+								SmDisciplinaryAction o2) {
+							if (o1.getEndDate() == null
+									|| o2.getEndDate() == null)
+								return 0;
+							return o1.getEndDate().compareTo(o2.getEndDate());
+						}
+					});
+			discipline.setSmDiscplinaryAction(supplier
+					.getSmDisciplinaryActions().get(0));
+
+			// still suspend so just edit existing record
+			if (!DateUtils.isDateGreaterOrEqual(discipline
+					.getSmDiscplinaryAction().getEndDate(), new Date())) {
+				discipline.setSuspend(true);
+			}
+			// already finish suspend need to insert new record
+			else {
+				discipline.setSmDiscplinaryAction(new SmDisciplinaryAction());
+				discipline.getSmDiscplinaryAction().setSmSupplier(
+						getManagedBean().getSmSupplier());
+				discipline.setSuspend(false);
+			}
+		}
+		getManagedBean().setDisciplineVO(discipline);
+
 	}
 }
