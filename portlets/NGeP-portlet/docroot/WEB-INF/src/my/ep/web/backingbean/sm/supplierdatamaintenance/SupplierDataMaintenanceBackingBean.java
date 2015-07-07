@@ -132,6 +132,7 @@ public class SupplierDataMaintenanceBackingBean extends
 	 * Submit supplier maintenance
 	 */
 	public void submitSupplierDataMaintenance() {
+		validateDisciplinaryAction();
 		SupplierDataMaintenanceReqDTO reqDTO = new SupplierDataMaintenanceReqDTO();
 		SupplierDataMaintenanceResDTO resDTO = new SupplierDataMaintenanceResDTO();
 
@@ -183,8 +184,8 @@ public class SupplierDataMaintenanceBackingBean extends
 			reqDTO = null;
 			getManagedBean().setDisplaySearchPage(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
-			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO, MessageUtils
-					.getMessage(MessageConst.INFO_721215,
+			SmCommonUtil.showFacesMsg(fc, FacesMessage.SEVERITY_INFO,
+					MessageUtils.getMessage(MessageConst.INFO_721215,
 							MessageUtils.BUNDLE_COMMON_MESSAGES,
 							new FacesScopes().getUserLocale()), null);
 		}
@@ -893,12 +894,34 @@ public class SupplierDataMaintenanceBackingBean extends
 							getManagedBean().getSmMofAccount().getMofNo());
 				}
 			}
-			// haven't finished or started suspend, just update record
+			// haven't finished suspend or not yet started suspend, just update
+			// record
 			else {
 				discipline.setSuspend(true);
 			}
 		}
 		getManagedBean().setDisciplineVO(discipline);
 
+	}
+
+	/**
+	 * Validate entered disciplinary action
+	 */
+	private void validateDisciplinaryAction() {
+		if (getManagedBean().isEditDisciplinaryAction()) {
+			if (getManagedBean().getDisciplineVO() != null
+					&& getManagedBean().getDisciplineVO()
+							.getSmDiscplinaryAction() != null) {
+				if (getManagedBean()
+						.getDisciplineVO()
+						.getSmDiscplinaryAction()
+						.getStartDate()
+						.compareTo(
+								getManagedBean().getDisciplineVO()
+										.getSmDiscplinaryAction().getEndDate()) > 0) {
+					throw new EpException(MessageConst.ERROR_722538);
+				}
+			}
+		}
 	}
 }
