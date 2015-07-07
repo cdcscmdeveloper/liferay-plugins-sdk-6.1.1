@@ -706,6 +706,8 @@ public class ReportConst {
 	public static final String RECENT_PRICE_RPT_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?&report=";
 	public static final String RECENT_PRICE_RPT_NEXT_URL = "&destype=cache&desformat=pdf&cmdkey=key1";
 	
+	public static final String PARAM_SPACE = " ";
+	public static final String PARAM_IFON = "-";
 	public static final String PARAM_SEPARATOR = "&";
 	public static final String VALUE_SEPARATOR = "=";
 	public static final SimpleDateFormat REPORT_DATE_TIME = new SimpleDateFormat("yyMMddHHmmss");
