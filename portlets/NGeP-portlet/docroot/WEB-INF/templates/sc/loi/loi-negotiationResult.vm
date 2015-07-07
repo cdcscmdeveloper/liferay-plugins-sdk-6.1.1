@@ -162,9 +162,17 @@
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.uom.uomCode</td>
 							<td class="standard border-bottom left alignRight">$loiLoaItem.qty</td>
-							<td class="standard border-bottom left alignRight">$String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) </td>
+							<td class="standard border-bottom left alignRight">
+							#if($!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
+	                            $String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
+                             #end
+							</td>
 							<td class="standard border-bottom left alignRight">$!loiLoaItem.offeredPriceSubTotal</td>
-							<td class="standard border-bottom left alignRight">$String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice)</td>
+							<td class="standard border-bottom left alignRight">
+							#if($!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
+							    $String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice)
+							#end	
+						     </td>
 							<td class="standard border-bottom left-right alignRight">$!loiLoaItem.afterNegoSubTotal</td>
 						</tr>
 						#end
