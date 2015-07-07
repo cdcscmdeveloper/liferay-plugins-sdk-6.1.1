@@ -4726,7 +4726,7 @@ public class SpecificationBackingBean extends
 					if (prevsZone.getZoneName().equals(
 							tplSpecZoneDtl.getZoneName())) {
 						throw new EpException(
-								MessageConst.INFO_700027,
+								MessageConst.ERROR_700027,
 								new String[] { ResourceBundleUtils.getMessage(
 										tplSpecZoneDtl.getZoneName(),
 										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
