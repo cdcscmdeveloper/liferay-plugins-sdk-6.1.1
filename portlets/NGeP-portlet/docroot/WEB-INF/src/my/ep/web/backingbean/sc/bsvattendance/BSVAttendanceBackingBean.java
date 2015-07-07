@@ -50,8 +50,8 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 
 /**
- * BSV Attendance BackingBean class is used to display Brifing, Sitevisit registration & 
- * attendance details in BSV Attendance screen.
+ * BSV Attendance BackingBean class is used to display Brifing, Sitevisit
+ * registration & attendance details in BSV Attendance screen.
  * 
  * @author sri
  */
@@ -64,7 +64,7 @@ public class BSVAttendanceBackingBean extends
 
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 	private String slectedHeaderName;
-	
+
 	public BSVAttendanceBackingBean() {
 
 	}
@@ -171,7 +171,7 @@ public class BSVAttendanceBackingBean extends
 	 * 
 	 */
 	public void addAttendanceForBSV() {
-		
+
 		if (null != this.getManagedBean().getSelectedbriefRegistration()) {
 			List<ScQtBsvAttendance> attandances = this.getManagedBean()
 					.getSelectedbriefRegistration().getBsvAttendance();
@@ -182,7 +182,7 @@ public class BSVAttendanceBackingBean extends
 			briefingAttendance.setBrandNew(false);
 			briefingAttendance.setName(StringUtils.EMPTY);
 			briefingAttendance.setIcPassPort(StringUtils.EMPTY);
-			
+
 			if (null == attandances || attandances.isEmpty()) {
 				attandances = new ArrayList<ScQtBsvAttendance>();
 				attandances.add(briefingAttendance);
@@ -198,7 +198,6 @@ public class BSVAttendanceBackingBean extends
 
 	}
 
-	
 	/**
 	 * Show registration details when user clicks register button
 	 * 
@@ -243,20 +242,20 @@ public class BSVAttendanceBackingBean extends
 			}
 
 			for (BriefingZoneBean briefingZoneBean : zoneBean) {
-
+				List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
 				ScQtBsv scQtBsv = briefingZoneBean.getScQtBsv();
 				if (null != scQtBsv && null != scQtBsv.getQtBsvId()) {
 					scQtBsv.setTplSpecZoneDtl(briefingZoneBean
 							.getTplSpecZoneDtl());
 					if (scQtBsv.isSameBsv()) {
-						scQtBsv.setScQtBsvDtls(briefingZoneBean
-								.getBriefingList());
+						bsvDetails.addAll(briefingZoneBean.getBriefingList());
+
 					} else {
-						briefingZoneBean.getBriefingList().addAll(
-								briefingZoneBean.getSitevisitList());
-						scQtBsv.setScQtBsvDtls(briefingZoneBean
-								.getBriefingList());
+						bsvDetails.addAll(briefingZoneBean.getBriefingList());
+						bsvDetails.addAll(briefingZoneBean.getSitevisitList());
+
 					}
+					scQtBsv.setScQtBsvDtls(bsvDetails);
 					finalizeRemarks(scQtBsv.getBsvRemarks());
 					// removeEmptyRemarks(scQtBsv);
 					bsvs.add(scQtBsv);
@@ -265,6 +264,7 @@ public class BSVAttendanceBackingBean extends
 		} else {
 			BriefingZoneBean normalBsv = this.getManagedBean()
 					.getNormalBsvBean();
+			List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
 			boolean flag = isAllBsvsComplete(normalBsv);
 			if (!flag) {
 				throw new EpException(MessageConst.ERROR_760210);
@@ -273,12 +273,13 @@ public class BSVAttendanceBackingBean extends
 			if (null != scQtBsv && null != scQtBsv.getQtBsvId()) {
 				scQtBsv.setTplSpecZoneDtl(normalBsv.getTplSpecZoneDtl());
 				if (scQtBsv.isSameBsv()) {
-					scQtBsv.setScQtBsvDtls(normalBsv.getBriefingList());
+					bsvDetails.addAll(normalBsv.getBriefingList());
 				} else {
-					normalBsv.getBriefingList().addAll(
-							normalBsv.getSitevisitList());
-					scQtBsv.setScQtBsvDtls(normalBsv.getBriefingList());
+					bsvDetails.addAll(normalBsv.getBriefingList());
+					bsvDetails.addAll(normalBsv.getSitevisitList());
+
 				}
+				scQtBsv.setScQtBsvDtls(bsvDetails);
 				finalizeRemarks(scQtBsv.getBsvRemarks());
 				bsvs.add(scQtBsv);
 			}
@@ -410,7 +411,7 @@ public class BSVAttendanceBackingBean extends
 				this.getManagedBean().setPreviousPage(previousPage);
 				this.getManagedBean().setScQt(scQt);
 				this.getManagedBean().setBsvZoneindx(bsvZoneindx);
-				
+
 				getregistrationDetails(bsv);
 				FacesContext
 						.getCurrentInstance()
@@ -575,7 +576,8 @@ public class BSVAttendanceBackingBean extends
 				.getObject();
 
 		getAttandanceDtlsBySelectedRegistartion(briefingRegistration);
-		setSlectedHeaderName(briefingRegistration.getSupplier().getCompanyName().concat("  ").concat(">"));
+		setSlectedHeaderName(briefingRegistration.getSupplier()
+				.getCompanyName().concat("  ").concat(">"));
 	}
 
 	/**
@@ -633,25 +635,24 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void showLocationDtls(ScQtBsvDtl briefing) {
 		this.getManagedBean().setLocation(briefing.getLocation());
-		/*StringBuffer address = new StringBuffer(briefing.getAddress()
-				.getAddress1());
-
-		if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
-			address.append(",");
-			address.append(briefing.getAddress().getAddress2());
-
-		}
-		if (!StringUtils.isBlank(briefing.getAddress().getAddress3())) {
-			address.append(",");
-			address.append(briefing.getAddress().getAddress3());
-
-		}
-		if (!StringUtils.isBlank(briefing.getAddress().getAddress4())) {
-			address.append(",");
-			address.append(briefing.getAddress().getAddress4());
-
-		}
-*/
+		/*
+		 * StringBuffer address = new StringBuffer(briefing.getAddress()
+		 * .getAddress1());
+		 * 
+		 * if (!StringUtils.isBlank(briefing.getAddress().getAddress2())) {
+		 * address.append(",");
+		 * address.append(briefing.getAddress().getAddress2());
+		 * 
+		 * } if (!StringUtils.isBlank(briefing.getAddress().getAddress3())) {
+		 * address.append(",");
+		 * address.append(briefing.getAddress().getAddress3());
+		 * 
+		 * } if (!StringUtils.isBlank(briefing.getAddress().getAddress4())) {
+		 * address.append(",");
+		 * address.append(briefing.getAddress().getAddress4());
+		 * 
+		 * }
+		 */
 		this.getManagedBean().setBsvDetails(briefing);
 	}
 
@@ -821,8 +822,9 @@ public class BSVAttendanceBackingBean extends
 	public void onZoneTabChange(TabChangeEvent event) {
 
 		BriefingZoneBean zoneBean = (BriefingZoneBean) event.getData();
-		List<BriefingZoneBean> ZoneBeanLst = this.getManagedBean().getZoneBean();
-		if(ZoneBeanLst != null && ZoneBeanLst.contains(zoneBean)){
+		List<BriefingZoneBean> ZoneBeanLst = this.getManagedBean()
+				.getZoneBean();
+		if (ZoneBeanLst != null && ZoneBeanLst.contains(zoneBean)) {
 			int indx = ZoneBeanLst.indexOf(zoneBean);
 			this.getManagedBean().setBsvZoneindx(Integer.toString(indx));
 		}
@@ -1071,11 +1073,11 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * @param slectedHeaderName the slectedHeaderName to set
+	 * @param slectedHeaderName
+	 *            the slectedHeaderName to set
 	 */
 	public void setSlectedHeaderName(String slectedHeaderName) {
 		this.slectedHeaderName = slectedHeaderName;
 	}
-
 
 }
