@@ -162,8 +162,10 @@
 			<p:column headerText="#{lbl['lbl.sc.supplier.code']}">
 				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
 					<h:outputText
-						value="#{recommendedSuppl.scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo}" />
-					<br />
+						value="#{recommendedSuppl.scQtRecommendDtl.scQtProposalAmount.scQtProposal.supplierNo}"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
+					<h:outputText escape="false" value="&#60;br &#47;&#62;"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 				</ui:repeat>
 			</p:column>
 
@@ -171,8 +173,10 @@
 				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
 					<h:outputText
 						value="#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-					fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi))}" />
-					<br />
+					fn:toUpperCase(recommendedSuppl.scQtRecommendDtl.scQtProposalAmount.scQtProposal.scQtSupplier.smSupplier.bumi))}"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
+					<h:outputText escape="false" value="&#60;br &#47;&#62;"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 				</ui:repeat>
 			</p:column>
 
@@ -185,33 +189,39 @@
 				style="text-align: right;">
 				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
 					<h:outputText
-						value="#{recommendedSuppl.qtEvaluationResult.offeredPrice}">
+						value="#{recommendedSuppl.qtEvaluationResult.offeredPrice}"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
-					<br />
+					<h:outputText escape="false" value="&#60;br &#47;&#62;"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 				</ui:repeat>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.total.score']}"
 				style="text-align: right;">
 				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
-					<h:outputText value="#{recommendedSuppl.totalScore}">
+					<h:outputText value="#{recommendedSuppl.totalScore}"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</h:outputText>
-					<br />
+					<h:outputText escape="false" value="&#60;br &#47;&#62;"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 				</ui:repeat>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.ranking']}"
 				style="text-align: right;">
 				<ui:repeat var="recommendedSuppl" value="#{item.awardSupplierList}">
-					<h:outputText value="#{recommendedSuppl.evalRank}">
+					<h:outputText value="#{recommendedSuppl.evalRank}"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 					</h:outputText>
-					<br />
+					<h:outputText escape="false" value="&#60;br &#47;&#62;"
+						rendered="#{isPendingNegotiationStatus or recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 				</ui:repeat>
 			</p:column>
 
