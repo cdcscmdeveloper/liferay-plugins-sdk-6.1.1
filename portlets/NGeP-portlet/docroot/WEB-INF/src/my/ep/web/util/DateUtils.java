@@ -5,6 +5,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+
+import my.ep.constants.CommonConstants;
 
 import org.apache.log4j.Logger;
 
@@ -398,6 +401,19 @@ public class DateUtils {
 		}
 
 		return duration;
+	}
+	
+	/**
+	 * Localize date.
+	 *
+	 * @param date the date
+	 * @param locale the locale
+	 * @return the string
+	 */
+	public static String getLocalizeDate(Date date, Locale locale) { 
+	    SimpleDateFormat localDateFormate = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT_WITH_MONTH_NAME, locale);       
+	    
+	    return localDateFormate.format(date);
 	}
 
 }
