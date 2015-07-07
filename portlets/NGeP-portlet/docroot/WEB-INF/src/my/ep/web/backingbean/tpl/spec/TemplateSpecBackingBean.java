@@ -1722,4 +1722,15 @@ public class TemplateSpecBackingBean extends
 		}
 		return rowCount;
 	}
+	
+	public void reset(){
+		
+		this.getManagedBean().setSearchSpecName(null);
+		this.getManagedBean().setSearchOrgProfileId(null);
+		this.getManagedBean().setSearchTemplateTypeId(null);
+		this.getManagedBean().setSearchSpecTypeId(null);
+		this.getManagedBean().setSearchItemTypeId(null);
+		this.getManagedBean().setSearchProcurementCategoryId(null);
+		
+	}
 }
