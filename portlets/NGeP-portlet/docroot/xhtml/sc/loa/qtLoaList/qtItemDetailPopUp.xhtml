@@ -58,10 +58,15 @@
 			
 			<p:column style="width:10%; text-align:right;"
 				headerText="#{lbl['lbl.sc.quantity']}">
-				<h:outputText value="#{scLoiLoaItem.qty}">
-					<f:convertNumber
-						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
+				<h:panelGroup rendered="#{!empty scLoiLoaItem.tplSpecTierQty}">
+					<h:outputText value="#{scLoiLoaItem.tplSpecTierQty.fromQty}" /> - <h:outputText
+							value="#{scLoiLoaItem.tplSpecTierQty.toQty}" />
+				</h:panelGroup>
+				<h:outputText value="#{scLoiLoaItem.qty}" rendered="#{scLoiLoaItem.tplSpecTierQty eq null}">
+						<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER)}" />
 				</h:outputText>
+				
 			</p:column>
 
 			<p:column style="width:15%;"
