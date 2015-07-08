@@ -718,7 +718,13 @@ public class OrganisationBackingBean extends
 			// check govSeller
 			if (this.getManagedBean().getOrgProfile().isGovtSeller()) {
 				validateSupplierBankListAndSupplierPersonnel();
+				validateGstDetails();
+			}else{
+				// reset before save
+				getManagedBean().getOrgProfile().setGstRegNo(null);
+				getManagedBean().getOrgProfile().setGstEffDate(null);
 			}
+			
 			// check group org
 			if (this.getManagedBean().getOrgProfile().isGroupOrg()) {
 				if (this.getManagedBean().getProfileGroup() == null
@@ -2211,6 +2217,37 @@ public class OrganisationBackingBean extends
 
 		if (!isUnique) {
 			throw new EpException(MessageConst.ERROR_775115);
+		}
+	}
+	
+	private void validateGstDetails(){
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
+			if(StringUtils.isNotBlank(orgProfile.getGstRegNo())){
+				//validate gst eff date
+				if(orgProfile.getGstEffDate() == null){
+					throw new EpException(MessageConst.ERROR_775118);
+				}
+				
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				if(!orgProfile.isBrandNew()){
+					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+				}
+				reqDTO.setGstRegNo(orgProfile.getGstRegNo());
+				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+				// validate unique gst registration no.
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByGstRegNo(reqDTO);
+				if(resDTO.isSuccessful() && resDTO.getOrgProfileList() !=null 
+						&&!resDTO.getOrgProfileList().isEmpty()){
+							throw new EpException(MessageConst.ERROR_775117);
+						}
+			}
+			
+		}finally{
+			orgProfileSO = null;
 		}
 	}
 
