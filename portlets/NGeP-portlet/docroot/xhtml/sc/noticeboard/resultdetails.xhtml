@@ -73,7 +73,7 @@
 					rendered="#{noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusPublish or noticeBoardBackingBean.managedBean.selectedTab eq ParameterConst.noticeBoardStatusChanges }">
 					<p:commandLink id="chkQualIcon"
 						action="#{noticeBoardBackingBean.gotoSupplierQualificationCriteria(scqt[0])}"
-						title="#{lbl['lbl.sc.notice.board.check.supplier.qualification']}">
+						title="#{lbl['lbl.sc.notice.board.check.supplier.qualification.tooltip']}">
 						<p:graphicImage 
 							value="#{CommonUIConstant.imagePathUptoDesign}/tick.png" rendered="#{noticeBoardBackingBean.displayImage}"/>
 					</p:commandLink>

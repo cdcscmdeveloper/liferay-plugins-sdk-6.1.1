@@ -97,7 +97,12 @@
 		
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title']}" />
-			<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}" />
+			<c:if test="#{!isSpecTypeFinancial}">
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.tooltip']}"  />
+			</c:if>
+			<c:if test="#{isSpecTypeFinancial}">
+				<ac:iconTooltip value="#{lbl['lbl.tpl.spec.content.scoring.scoring.title.variance.tooltip']}" />
+			</c:if>
 		</f:facet>
 		
 		<ui:param name="isCompliance" value="#{templateSpecBean.selectedSpecQuestion.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
