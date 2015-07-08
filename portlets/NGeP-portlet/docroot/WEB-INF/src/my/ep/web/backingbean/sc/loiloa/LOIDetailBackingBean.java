@@ -3871,8 +3871,14 @@ public class LOIDetailBackingBean extends
 		VelocityContext context = new VelocityContext();
 
 		context.put("title", scLoiLoa.getTitle());
-		context.put("fulfilmentType",
-				getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));
+		/*context.put("fulfilmentType",
+				getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));*/
+		StringBuilder contractDuration = new StringBuilder();
+		if (this.getManagedBean().getScQt().getContractDuration() != null) {
+			contractDuration.append(this.getManagedBean().getScQt().getContractDuration() + " " + getMessageCommon("lbl.sc.sp.month")); 
+		}
+		context.put("contractDuration", contractDuration);
+		
 		context.put("ptj", pmOrgProfile.getOrgName());
 		String totalSuppliers = "";
 		if (this.getManagedBean().getLois() != null) {

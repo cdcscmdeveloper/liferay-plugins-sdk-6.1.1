@@ -76,7 +76,7 @@
 		<tr>
 			<td class="standard border-bottom left">1.2</td>
 			<td class="standard border-bottom left">Tempoh Perjanjian / Tempoh Penyiapan</td>
-			<td class="standard border-bottom left-right">$fulfilmentType</td>
+			<td class="standard border-bottom left-right">$contractDuration</td>
 		</tr>
 		<tr>
 			<td class="standard border-bottom left">1.3</td>
