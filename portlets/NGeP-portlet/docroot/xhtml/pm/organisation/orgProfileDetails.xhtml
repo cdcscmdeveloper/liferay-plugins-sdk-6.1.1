@@ -145,7 +145,8 @@
 						size="50" styleClass="ppDisplayTextL"
 						maxlength="12" 
 						validatorMessage="#{lbl['lbl.pm.org.gst.invalid.gst']}">
-						<f:validateLength minimum="12" maximum="12"  disabled="#{empty organisationBackingBean.managedBean.orgProfile.gstRegNo}"/>
+						<f:validateRegex pattern="[0-9]+" disabled="#{empty organisationBackingBean.managedBean.orgProfile.gstRegNo}"/>
+						<f:validateLength minimum="12"  disabled="#{empty organisationBackingBean.managedBean.orgProfile.gstRegNo}"/>
 				</p:inputText></td>
 				</ui:fragment>	
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
@@ -154,7 +155,7 @@
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{lbl['lbl.pm.org.gst.na']}"
 						size="50" styleClass="ppDisplayTextL"
-						maxlength="12" /></td>
+						/></td>
 				</ui:fragment>
 				<td><p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" /></td>
 			</tr>
