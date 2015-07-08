@@ -4,6 +4,15 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<script type="text/javascript">
+		function firstDayEnabled(date){
+			if (date.getDate() == 1) {
+		           return [true, ''];
+		     }
+		     return [false, ''];
+		}
+	 </script>
 	<p:panel>
 		<table class="ppOneTable">
 			<tr>
@@ -126,15 +135,52 @@
 					<td><p:message id="zoneCodeMsg" for="zoneCode" display="icon" /></td>
 				</tr>
 			</ui:fragment>
+			
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.reg.no']}" /> </td>
+				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
+				<td><p:inputText id="gstRegNoId" 
+						label="#{lbl['lbl.pm.org.gst.reg.no']}"
+						value="#{organisationBackingBean.managedBean.orgProfile.gstRegNo}"
+						size="50" styleClass="ppDisplayTextL"
+						maxlength="12" 
+						validatorMessage="#{lbl['lbl.pm.org.gst.invalid.gst']}">
+						<f:validateLength minimum="12" maximum="12"  disabled="#{empty organisationBackingBean.managedBean.orgProfile.gstRegNo}"/>
+				</p:inputText></td>
+				</ui:fragment>	
+				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
+				<td><p:inputText id="gstRegId" 
+						disabled="true" 
+						label="#{lbl['lbl.pm.org.gst.reg.no']}"
+						value="#{lbl['lbl.pm.org.gst.na']}"
+						size="50" styleClass="ppDisplayTextL"
+						maxlength="12" /></td>
+				</ui:fragment>
+				<td><p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.eff.date']}" /> </td>
+				<td><p:calendar id="gstEffDateId"  beforeShowDay="firstDayEnabled"					
+					value="#{organisationBackingBean.managedBean.orgProfile.gstEffDate}" 
+					mindate="#{ProfileManagementConst.gstMinDate}"
+					navigator="true"
+					disabled="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}"					
+					label="#{lbl['lbl.pm.org.gst.eff.date']}" readonlyInput="true"
+					yearRange="c-50:c+99" showOn="button"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar></td>
+				<td></td>
+			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="orgStatus"
-						styleClass="ppDropDownWidthM"
+						styleClass="ppDropDownWidthM" 
 						label="#{lbl['lbl.pm.organisation.status']}"
 						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FJA'}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
-						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;">
+						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;margin-top:5px">
 						<f:selectItems
 							value="#{organisationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
