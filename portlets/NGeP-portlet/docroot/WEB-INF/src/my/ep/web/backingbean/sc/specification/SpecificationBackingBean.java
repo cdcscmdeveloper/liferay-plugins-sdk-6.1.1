@@ -263,18 +263,29 @@ public class SpecificationBackingBean extends
 		this.getManagedBean().setTempIndex(0);
 		if (this.getManagedBean().getScQt().isPanel()) {
 			retriveSupplierQualificationCriteria("BO");
-			if (null != this.getManagedBean().getCtPanelItem()) {
-
+			if (null != this.getManagedBean().getCtCircularVer()) {
+				circularListSelect(this.getManagedBean().getCtCircularVer());
 				List<CtPanelItem> panelItem = this.getManagedBean()
 						.getPanelItemList();
-				panelItem = new ArrayList<CtPanelItem>();
-				panelItem.add(this.getManagedBean().getCtPanelItem());
-				this.getManagedBean().setPanelItemList(panelItem);
-				this.getManagedBean().setSelectCtPanelItem(
-						this.getManagedBean().getCtPanelItem());
-			}
-			if (null != this.getManagedBean().getCtCircularVer()) {
-				// circularListSelect(this.getManagedBean().getCtCircularVer());
+				if (null != panelItem && !panelItem.isEmpty()) {
+					if (null != this.getManagedBean().getCtPanelItem()) {
+						for (CtPanelItem ctpanelItem : panelItem) {
+							if (ctpanelItem.getItemName().equalsIgnoreCase(
+									this.getManagedBean().getCtPanelItem()
+											.getItemName())
+									&& ctpanelItem.getPanelItemId().equals(
+											this.getManagedBean()
+													.getCtPanelItem()
+													.getPanelItemId())) {
+								this.getManagedBean().setSelectCtPanelItem(
+										ctpanelItem);
+								break;
+							}
+
+						}
+					}
+
+				}
 				getManagedBean().getCtSearchBean().setCirCularNo(
 						this.getManagedBean().getCtCircularVer()
 								.getCircularNo());
