@@ -20,12 +20,12 @@ import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;

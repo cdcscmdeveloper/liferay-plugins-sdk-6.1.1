@@ -27,6 +27,7 @@ import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -34,7 +35,6 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodyManagedBean;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 

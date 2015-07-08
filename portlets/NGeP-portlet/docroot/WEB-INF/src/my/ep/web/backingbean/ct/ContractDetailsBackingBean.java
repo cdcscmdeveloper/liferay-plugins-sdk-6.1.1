@@ -121,6 +121,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
@@ -139,7 +140,6 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 

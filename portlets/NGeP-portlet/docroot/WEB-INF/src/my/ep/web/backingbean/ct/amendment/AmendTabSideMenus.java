@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 
 /**
  * Tab Menu for Contract Amendment

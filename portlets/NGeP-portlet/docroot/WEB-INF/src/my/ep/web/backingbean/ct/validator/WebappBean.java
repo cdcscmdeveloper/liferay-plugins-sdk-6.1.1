@@ -7,8 +7,8 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 
 import java.util.Date;
 import java.util.regex.Matcher;

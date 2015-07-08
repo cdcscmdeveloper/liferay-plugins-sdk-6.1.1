@@ -96,6 +96,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -108,7 +109,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.QTFiledMapper;

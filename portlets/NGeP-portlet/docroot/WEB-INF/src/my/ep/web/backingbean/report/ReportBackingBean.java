@@ -68,6 +68,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
@@ -75,7 +76,6 @@ import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.report.ReportMangedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
