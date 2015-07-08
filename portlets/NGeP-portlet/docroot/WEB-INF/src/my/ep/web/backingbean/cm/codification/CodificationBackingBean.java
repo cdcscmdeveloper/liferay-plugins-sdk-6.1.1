@@ -2928,7 +2928,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 	
 	public void cloneAllExtensionSelection(){
 		
-		
+		Map checkDuplicateAdd = new HashMap();
 		for (int i = 0; i < this.getManagedBean().getExtensionSearchItemDataModel().getList().size(); i++) {
 			
 			
@@ -2958,9 +2958,16 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			System.out.println("objects1[8]"+objects[8]);
 
 			if(this.getManagedBean().getCloneExtensionVOs()!=null && this.getManagedBean().getCloneExtensionVOs().size()>0){
-
+				
+				
 				boolean addInLs = true;
 				for(ExtensionCodeVO obj : this.getManagedBean().getCloneExtensionVOs()){
+					
+					if(!checkDuplicateAdd.containsKey(obj.getKey())){
+						checkDuplicateAdd.put(obj.getKey(), obj.getKey());
+					}
+
+					
 					System.out.println("extCodeVO.isSelected():"+extCodeVO.isSelected());
 					if(!extCodeVO.isSelected() && extCodeVO.getKey().equalsIgnoreCase(obj.getKey())){
 						this.getManagedBean().getCloneExtensionVOs().remove(obj);
@@ -2971,13 +2978,17 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 				}
 				System.out.println("addInLs:"+addInLs);
 				if(addInLs){
-					this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+					if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
+						this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+					}
 				}
 
 			}else{
 				System.out.println("***extCodeVO.isSelected()****"+extCodeVO.isSelected());
 				if(extCodeVO.isSelected()){
-					this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+					if(!checkDuplicateAdd.containsKey(extCodeVO.getKey())){
+						this.getManagedBean().getCloneExtensionVOs().add(extCodeVO);
+					}
 				}
 			}
 
