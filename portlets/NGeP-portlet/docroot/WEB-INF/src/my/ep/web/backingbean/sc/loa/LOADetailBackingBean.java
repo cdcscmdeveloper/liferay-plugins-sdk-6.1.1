@@ -653,7 +653,7 @@ public class LOADetailBackingBean extends
 		if (null != scheduleList && !scheduleList.isEmpty()) {
 			this.getManagedBean().setTotalFrequency(scheduleList.size());
 			for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
 				String todate = dateFormat.format(scQtSchedule.getToDate());
@@ -703,8 +703,7 @@ public class LOADetailBackingBean extends
 					String endMonth = "";
 					for (ScQtProgressivePayment scQtProgressivePayment : scLoa
 							.getScQtProgPayments()) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat(
-								"dd/MM/yyyy");
+						SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 						String fromdate = dateFormat
 								.format(scQtProgressivePayment.getFromDate());
@@ -805,36 +804,6 @@ public class LOADetailBackingBean extends
 			}
 		}
 
-		// getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
-
-		/*
-		 * getManagedBean().getScLoa().setSmSupplier(
-		 * getManagedBean().getScQtEvaluationResult() .getScQtProposal()
-		 * .getScQtSupplier().getSmSupplier());
-		 */
-
-		/*
-		 * getManagedBean().getScLoa().setSupplierName(
-		 * getManagedBean().getScQtProposalRanking()
-		 * .getScQtProposalEvaluate().getScQtProposal()
-		 * .getScQtSupplier().getSmSupplier() .getSupplierName());
-		 */
-
-		/*
-		 * getManagedBean().getScLoa().setDocType(
-		 * LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-		 * getManagedBean().getScLoa().setDocId(id);
-		 */
-
-		/*
-		 * getManagedBean().getScLoa().setLoaType("Standard");
-		 * getManagedBean().getScLoa().setLoaDuration(14);
-		 * getManagedBean().getScLoa().setBondDuration(30);
-		 * getManagedBean().getScLoa().setLoaNo("12345");
-		 * getManagedBean().getScLoa().setLoaAmount( new BigDecimal(1000000));
-		 */
-		// getManagedBean().getScLoa().setMtoDuration(14);
-
 		// Contract Signer
 		PmUser contractSignerUser = scLoa.getContractSigner();
 		if (contractSignerUser == null) {
@@ -847,7 +816,7 @@ public class LOADetailBackingBean extends
 		UserReqDTO userReqDTO = new UserReqDTO();
 		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 		if(scLoa.getLoaAmt() != null) {
-			//userReqDTO.setApprovalLimit(scLoa.getLoaAmt());
+			userReqDTO.setApprovalLimit(scLoa.getLoaAmt());
 		}
 		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
 		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
@@ -881,35 +850,6 @@ public class LOADetailBackingBean extends
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
 		checkPerformanceBondMandatory();
-		/*
-		 * branch.setSmAppl(getManagedBean().getScQtProposalRanking()
-		 * .getScQtProposalEvaluate().getScQtProposal()
-		 * .getScQtSupplier().getSmSupplier().getSmAppl());
-		 */
-
-		// TODO
-		/*
-		 * if (getManagedBean().getScLoa().getLoaAmt().intValue() > 500000) {
-		 * getManagedBean().setBondPercentage("5%");
-		 * getManagedBean().setPercentageBond(0.05);
-		 * System.out.println("Bond Percentage : " +
-		 * getManagedBean().getPercentageBond()); } else if
-		 * (getManagedBean().getScLoa().getLoaAmt() .intValue() > 200000 &&
-		 * getManagedBean().getScLoa().getLoaAmt() .intValue() < 500000) {
-		 * getManagedBean().setBondPercentage("2.5%");
-		 * getManagedBean().setPercentageBond(0.025);
-		 * System.out.println("Bond Percentage : " +
-		 * getManagedBean().getPercentageBond()); }
-		 */
-
-		/*
-		 * int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
-		 * .intValue() / getManagedBean().getQt().getScQtSpec()
-		 * .getContractDuration().intValue()) * 12) * getManagedBean()
-		 * .getPercentageBond());
-		 */
-
-		// getManagedBean().setBondAmount(amt);
 		
 		// clauses title
 		getClausesTitle(null);
@@ -3828,11 +3768,19 @@ public class LOADetailBackingBean extends
 	 */
 	private BigDecimal calcTotalAmount(List<ScLoiLoaItem> scLoiLoaItems) {
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
-		BigDecimal  subTotal = null;
-
+		BigDecimal  subTotal = BigDecimal.valueOf(0d);
+		BigDecimal quantity = BigDecimal.valueOf(0d);
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-			subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-					scLoiLoaItem.getUnitPrice(), scLoiLoaItem.getQty());
+			
+			if(null == scLoiLoaItem.getTplSpecTierQty() ){
+				// without Tier quantity
+				quantity = scLoiLoaItem.getQty();
+			} else{
+				// Tier quantity.
+				quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+			}
+			subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+					scLoiLoaItem.getUnitPrice(), quantity);
 			totalAmount = totalAmount.add(subTotal);
 		}
 		return totalAmount;
