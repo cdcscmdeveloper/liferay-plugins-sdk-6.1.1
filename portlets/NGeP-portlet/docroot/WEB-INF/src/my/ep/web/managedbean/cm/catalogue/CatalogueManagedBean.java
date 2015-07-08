@@ -81,10 +81,12 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.ExtensionCodeVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 
 
 /**
@@ -168,7 +170,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private CmSupplierItem selectedMaintainItem;
 
 	/** The selected maintain items. */
-	private CmSupplierItem[] selectedMaintainItems;
+	//private CmSupplierItem[] selectedMaintainItems;
 
 	/** The supplier item list. */
 	private List<CmSupplierItem> supplierItemList;
@@ -438,6 +440,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<CmSupplierItem> draftSupplierItemList;
 	
+	private boolean supplierItemcheckBoxAll;
+	
 	
 	
 	private int draftTabPageSize = 5;
@@ -446,6 +450,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int publishTabPageSize = 5;
 	private int rejectedTabPageSize = 5;
 	private int expiredTabPageSize = 5;
+	
+	private List<CmSupplierItem> cloneCmSupplierItemLs;
 	
 	
 	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
@@ -834,6 +840,33 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
+				
+				
+				
+				Map tempMap = new HashMap();
+				for (int i = 0; i < resDTO.getSuppItemResultBean().getResultList().size(); i++) {
+					CmSupplierItem suppItem = resDTO.getSuppItemResultBean().getResultList().get(i);
+
+					if(bb.getManagedBean().getCloneCmSupplierItemLs() !=null && bb.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+
+						for(CmSupplierItem obj : bb.getManagedBean().getCloneCmSupplierItemLs()){
+							
+							if(suppItem.getSupplierItemId()==obj.getSupplierItemId()){
+							
+						
+								if(!tempMap.containsKey(obj.getSupplierItemId())){
+									suppItem.setSelected(true);	
+									tempMap.put(obj.getSupplierItemId(), obj.getSupplierItemId());
+								}
+							}
+						}
+
+					}
+
+				}
+				
+				
+				RequestContext.getCurrentInstance().execute("refreshDraftSuppItem();");
 
 				return resDTO.getSuppItemResultBean();
 
@@ -1814,24 +1847,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.selectedMaintainItem = selectedMaintainItem;
 	}
 
-	/**
+/*	*//**
 	 * Gets the selected maintain items.
 	 * 
 	 * @return the selected maintain items
-	 */
+	 *//*
 	public CmSupplierItem[] getSelectedMaintainItems() {
 		return selectedMaintainItems;
 	}
 
-	/**
+	*//**
 	 * Sets the selected maintain items.
 	 * 
 	 * @param selectedMaintainItems
 	 *            the new selected maintain items
-	 */
+	 *//*
 	public void setSelectedMaintainItems(CmSupplierItem[] selectedMaintainItems) {
 		this.selectedMaintainItems = selectedMaintainItems;
-	}
+	}*/
 
 	/**
 	 * Gets the unspsc.
@@ -3566,6 +3599,27 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setExpiredTabPageSize(int expiredTabPageSize) {
 		this.expiredTabPageSize = expiredTabPageSize;
 	}
+
+	public List<CmSupplierItem> getCloneCmSupplierItemLs() {
+		if(cloneCmSupplierItemLs==null)
+			cloneCmSupplierItemLs = new ArrayList<CmSupplierItem>();
+		return cloneCmSupplierItemLs;
+	}
+
+	public void setCloneCmSupplierItemLs(List<CmSupplierItem> cloneCmSupplierItemLs) {
+		this.cloneCmSupplierItemLs = cloneCmSupplierItemLs;
+	}
+
+	public boolean isSupplierItemcheckBoxAll() {
+		return supplierItemcheckBoxAll;
+	}
+
+	public void setSupplierItemcheckBoxAll(boolean supplierItemcheckBoxAll) {
+		this.supplierItemcheckBoxAll = supplierItemcheckBoxAll;
+	}
+	
+	
+	
 	
 	
 	

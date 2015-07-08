@@ -180,7 +180,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 //@ViewScoped
 @RequestScoped
 public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
 
 	/** The log. */
@@ -441,13 +441,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			bb.getManagedBean().setExtensionVoList(null);
 			for (ExtensionCodeVO clone :bb.getManagedBean().getCloneExtensionVOs()) {
 				ExtensionCodeVO extCodeVO = new ExtensionCodeVO();
-				
+
 				extCodeVO.setTypeId(clone.getTypeId());
 				extCodeVO.setBrandId(clone.getBrandId());
 				extCodeVO.setMeasurementId(Long.valueOf(clone.getMeasurementId()));
 				extCodeVO.setColorId(clone.getColorId());
 
-				
+
 				extCodeVO.setTypeName(clone.getTypeName());
 				extCodeVO.setBrandName(clone.getBrandName());
 				extCodeVO.setMeasurementName(clone.getMeasurementName());
@@ -1025,7 +1025,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		try{
 
 			int index= i%this.getManagedBean().getPendingApprovalTabPageSize();
-			
+
 			catalogueSO = (ICatalogueSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 
@@ -2161,10 +2161,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		CodificationReqDTO reqDTO;
 		CatalogueReqDTO catalogueReqDTO;
 
-		for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {
+		for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {
 			List dataLs = new Vector();
 			CmSupplierItem catalog = this.getManagedBean()
-					.getSelectedMaintainItems()[i];
+					.getCloneCmSupplierItemLs().get(i);
 
 			// dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscCode());
 			// dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscTitle());
@@ -2653,20 +2653,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("Tracking diary for catalog saved items");
 			reqDTO.setTrackingStatus(true);
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
-			
-			
-			
-			
+
+
+
+
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 			statusReqDTO.setStatusId(CmConst.DRAFT);
-							
+
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			
-			
-			
+
+
+
 			reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(), CmConst.SUPPLIER_ITEM_STATUS_SAVED, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 			catalogueSO.updateSupplierItem(reqDTO);
@@ -3760,18 +3760,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			log.info("Tracking diary for to publish the catalog items");			
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
 			reqDTO.setTrackingStatus(true);
-			
+
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			
-			
+
+
 			if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired())
 			{
 				statusReqDTO.setStatusId(CmConst.PENDING);
-				
+
 				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-				
+
 				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItem(),CmConst.SUPPLIER_ITEM_APPROVEL,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 			}
 			else{
@@ -3871,8 +3871,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public String submitToReviewItems() throws Exception {
 		log.debug("submitToReviewItems");
 
-		log.info("this.getManagedBean().getSelectedMaintainItems(): " + this.getManagedBean().getSelectedMaintainItems().length);
-		if(this.getManagedBean().getSelectedMaintainItems().length < 1) {
+		log.info("this.getManagedBean().getCloneCmSupplierItemLs(): " + this.getManagedBean().getCloneCmSupplierItemLs().size());
+		if(this.getManagedBean().getCloneCmSupplierItemLs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715013);
 		}
 
@@ -3886,22 +3886,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		try {
 			this.getManagedBean().setTabActiveIndex(0);
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
-			
-			
+
+
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 			statusReqDTO.setStatusId(CmConst.PUBLISHED);
-			
+
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
-			
-			for (int i = 0; i < this.getManagedBean().getSelectedMaintainItems().length; i++) {					
-				reqDTO.setSupplierItemId(this.getManagedBean().getSelectedMaintainItems()[i].getSupplierItemId());	
+
+			for (int i = 0; i < this.getManagedBean().getCloneCmSupplierItemLs().size(); i++) {					
+				reqDTO.setSupplierItemId(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getSupplierItemId());	
 				//reqDTO.setItemStatus("U");
 				log.info("tracking diary for catalog Items to Publish:submitToReviewItems");
 				reqDTO.setTrackingStatus(true);
-				
-				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getSelectedMaintainItems()[i], CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
+
+				reqDTO.getTrackDairyVOs().add(CmApplicationUtil.assignTrackingDairyValues(this.getManagedBean().getCloneCmSupplierItemLs().get(i), CmConst.SUPPLIER_ITEM_STATUS_PUBLISHED,statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 				resDTO = catalogueSO.retrieveSupplierItemById(reqDTO);
 
@@ -3909,11 +3909,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				CmSupplierItem catalog = resDTO.getSupplierItem();
 				log.info("catalog.getPmUom().getUomName():" + catalog.getPmUom().getUomName());
 
-				catalog.getCmStandardPricing().setPrice(this.getManagedBean().getSelectedMaintainItems()[i].getCmStandardPricing().getPrice());
-				catalog.getCmStandardPricing().setStartDate(this.getManagedBean().getSelectedMaintainItems()[i].getCmStandardPricing().getStartDate());
-				catalog.getCmStandardPricing().setEndDate(this.getManagedBean().getSelectedMaintainItems()[i].getCmStandardPricing().getEndDate());
-				catalog.setPmUom(this.getManagedBean().getSelectedMaintainItems()[i].getPmUom());
-
+				catalog.getCmStandardPricing().setPrice(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmStandardPricing().getPrice());
+				catalog.getCmStandardPricing().setStartDate(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmStandardPricing().getStartDate());
+				catalog.getCmStandardPricing().setEndDate(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getCmStandardPricing().getEndDate());
+				catalog.setPmUom(this.getManagedBean().getCloneCmSupplierItemLs().get(i).getPmUom());
+				System.out.println("******UOM*******"+this.getManagedBean().getCloneCmSupplierItemLs().get(i).getPmUom().getUomName());
 				//mandatory checking
 				if (catalog.getCmStandardPricing().getPrice() == null
 						|| catalog.getCmStandardPricing().getStartDate() == null
@@ -4654,18 +4654,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			reqDTO.setTrackDairyVOs(new ArrayList<CmTrackingDairyVO>());
 
 			log.info("Tracking diary for catalog approved items:publishApprovedItems");
-			
-			
+
+
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-			
+
 			StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 			statusReqDTO.setStatusId(CmConst.PUBLISHED);
-							
+
 			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
 
-			
-			
+
+
 			for(CmSupplierItem csi : this.getManagedBean().getSelectedApprovedItems()) {
 				csiList.add(csi);
 				reqDTO.setTrackingStatus(true);
@@ -8959,28 +8959,195 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		return "maintainKeywordDetail?faces-redirect=true;";
 
 	}
-	
-	
-	
+
+
+
 	public Integer getImageSize(){
-		
+
 		Integer size = 1024 * 60;
-		
+
 		return size;
 	}
-	
-	
+
+
 	public String getInvalidFileSize(String params){
-		
+
 		String msg = "";
-		  Locale locale = new FacesScopes().getUserLocale();
-		  
-		   msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+params} ,
-		     ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
-		
+		Locale locale = new FacesScopes().getUserLocale();
+
+		msg = ResourceBundleUtils.getMessage("lbl.cm.invalid.file.size", new String[] { ""+params} ,
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale);
+
 		return msg;
 	}
 
+
+
+	public void cloneItemSelection(int i){
+
+		int index = i%10;
+		System.out.println("*******getCloneCmSupplierItemLs*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
+
+
+		CmSupplierItem suppItem =  this.getManagedBean().getDraftSearchDataModel().getList().get(index);
+		System.out.println("getSupplierItemId"+suppItem.getSupplierItemId());
+
+
+
+
+		if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+
+			boolean addInLs = true;
+			for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
+
+				if(obj.getSupplierItemId() == suppItem.getSupplierItemId() && !suppItem.isSelected()){
+					this.getManagedBean().getCloneCmSupplierItemLs().remove(obj);
+					addInLs = false;
+					break;
+				}
+
+
+
+			}
+			System.out.println("addInLs:"+addInLs);
+			if(addInLs){
+				this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+			}
+
+		}else{
+			this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+		}
+
+		System.out.println("*******size*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
+
+
+
+
+		int count =0;
+		Map tempMap = new HashMap();
+		for (int j = 0; j < this.getManagedBean().getDraftSearchDataModel().getList().size(); j++) {
+			CmSupplierItem suppItemJ =  this.getManagedBean().getDraftSearchDataModel().getList().get(j);
+
+			if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+
+				for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
+
+					if(suppItemJ.getSupplierItemId()==obj.getSupplierItemId()){
+
+						if(!tempMap.containsKey(obj.getSupplierItemId())){
+							count = count + 1;
+							System.out.println("**loop***"+count);
+							tempMap.put(obj.getSupplierItemId(), obj.getSupplierItemId());
+						}
+					}
+				}
+
+			}
+
+		}
+		if(count == this.getManagedBean().getDraftSearchDataModel().getList().size()){
+			this.getManagedBean().setSupplierItemcheckBoxAll(true);
+		}else{
+			this.getManagedBean().setSupplierItemcheckBoxAll(false);
+		}
+
+
+
+		System.out.println("isSupplierItemcheckBoxAll:"+this.getManagedBean().isSupplierItemcheckBoxAll());
+
+	}
+
+
+
+	public void cloneAllSupplierItemSelection(){
+
+
+		for (int i = 0; i < this.getManagedBean().getDraftSearchDataModel().getList().size(); i++) {
+
+
+
+			CmSupplierItem suppItem = this.getManagedBean().getDraftSearchDataModel().getList().get(i);
+
+
+			if(this.getManagedBean().isSupplierItemcheckBoxAll()){
+				suppItem.setSelected(true);
+				
+			}else{
+				suppItem.setSelected(false);
+				
+			}
+
+
+			if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+
+				boolean addInLs = true;
+				for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
+
+					if(!suppItem.isSelected() && suppItem.getSupplierItemId()==obj.getSupplierItemId()){
+						this.getManagedBean().getCloneCmSupplierItemLs().remove(obj);
+						addInLs = false;
+						break;
+					}
+
+				}
+				System.out.println("addInLs:"+addInLs);
+				if(addInLs){
+					this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+				}
+
+			}else{
+
+				if(suppItem.isSelected()){
+					this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+				}
+			}
+
+			System.out.println("*******size*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
+
+		}
+
+	}
+
+
+	public void checkingCheckAll(){
+
+		System.out.println("****final****"+this.getManagedBean().isSupplierItemcheckBoxAll());
+
+
+
+		int count =0;
+		Map tempMap = new HashMap();
+		for (int i = 0; i < this.getManagedBean().getDraftSearchDataModel().getList().size(); i++) {
+			CmSupplierItem suppItem = this.getManagedBean().getDraftSearchDataModel().getList().get(i);
+
+			if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+
+				for(CmSupplierItem suppItemObj : this.getManagedBean().getCloneCmSupplierItemLs()){
+					//if((String.valueOf(objects[4])+String.valueOf(objects[5])+String.valueOf(objects[6])+String.valueOf(objects[7])).equalsIgnoreCase(obj.getKey())) {
+					if(suppItem.getSupplierItemId()==suppItemObj.getSupplierItemId()){
+						if(!tempMap.containsKey(suppItemObj.getSupplierItemId())){
+							suppItem.setSelected(true);
+							count = count + 1;
+							System.out.println("**loop***"+count);
+							tempMap.put(suppItemObj.getSupplierItemId(), suppItemObj.getSupplierItemId());
+						}
+					}
+				}
+
+			}
+
+		}
+		System.out.println("count:"+count);
+		System.out.println("resDTO.getDraftSearchDataModel().getResultList().size():"+ this.getManagedBean().getDraftSearchDataModel().getList().size());
+		if(count ==  this.getManagedBean().getDraftSearchDataModel().getList().size()){
+			this.getManagedBean().setSupplierItemcheckBoxAll(true);
+		}else{
+			this.getManagedBean().setSupplierItemcheckBoxAll(false);
+		}
+
+
+		System.out.println("****last****"+this.getManagedBean().isSupplierItemcheckBoxAll());
+	}
 
 
 
