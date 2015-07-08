@@ -44,7 +44,8 @@
 			<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
 				action="#{templateSpecBackingBean.estimationPopupAction(templateSpecBean)}"
 				oncomplete="#{estimationPopup}.show();"
-				partialSubmit="true" process="@this" update="@([id$=estimationPopup])">
+				partialSubmit="true" process="@this" update="@([id$=estimationPopup])"
+				title="#{lbl['lbl.tpl.spec.content.estimate.cost.tooltip']}">
 				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
 			</p:commandButton>
 		</div>

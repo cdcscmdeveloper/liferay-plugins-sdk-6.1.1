@@ -147,7 +147,9 @@
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.checkDemoPassingScore(specificationBackingBean.managedBean.demoScoreSetting)}" />
-						</p:inputText> <p:spacer width="5"></p:spacer></td>
+						</p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.qual.present.demo.tooltip']}" />
+					</td>
 				</tr>
 			</ui:fragment>
 
@@ -161,7 +163,9 @@
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
 						<p:ajax event="blur" process="@all" partialSubmit="true"
 							listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />
-					</p:inputText> <p:spacer width="5"></p:spacer></td>
+					</p:inputText>
+					<ac:iconTooltip value="#{lbl['lbl.sc.spec.technical.tooltip']}" />
+				</td>
 			</tr>
 		</table>
 

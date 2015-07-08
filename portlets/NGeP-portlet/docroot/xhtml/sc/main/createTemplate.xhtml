@@ -207,6 +207,9 @@
 
 		<p:panel id="listUpdate" header="#{lbl['lbl.sc.tpl.list']}"
 			toggleable="true">
+			
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.tpl.list.standard.template.instruction']}" escape="false" rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'ST'}" />
+			<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.tpl.list.existing.qt.template.instruction']}" escape="false" rendered="#{specificationBackingBean.managedBean.standardTemplate eq 'SC'}" />
 
 			<h:panelGrid style="width:100%;">
 				<p:dataTable id="createList" var="tplSpecMaster" rows="10"
