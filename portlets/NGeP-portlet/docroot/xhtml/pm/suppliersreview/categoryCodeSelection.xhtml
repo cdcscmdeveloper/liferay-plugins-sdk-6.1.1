@@ -19,153 +19,75 @@
 				</p:tooltip></td>
 		</tr>
 	</table>
-	<p:remoteCommand name="updateCategory"
-		update="panelgroupdetails,resultPanel"
-		action="#{categoryBackingBean.populateToSaveLOV}" />
-	<p:dialog id="lovPopupCategory" widgetVar="lovPopupCategory"
-		modal="true" width="700" position="top">
-		<p:ajax event="close" listener="#{categoryBackingBean.resetLOV}"
-			update="lovPopupCategory" />
-		<f:facet name="header">
-			<h:panelGroup id="lovTitle">#{lbl['lbl.pm.select.category']}</h:panelGroup>
-		</f:facet>
+	
+	<!-- category codes -->
+	<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
+			value="#{suppliersReviewBackingBean.managedBean.qtCategoryList}"
+			rowIndexVar="index" rows="10"
+			selection="#{suppliersReviewBackingBean.managedBean.selectedCategoryList}"
+			rowKey="#{cateGory}">
 
-		<p:panel header="#{lbl['lbl.btn.search']}" toggleable="true">
-			<h:panelGroup id="searchPanel" style="width:100%;">
-				<h:panelGrid columns="3" id="lovCriteria" cellpadding="0"
-					cellspacing="0">
+			<p:column selectionMode="multiple" style="width:1%" />
 
-					<p:selectOneMenu
-						value="#{categoryBackingBean.managedBean.searchFieldValue[0]}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems
-							value="#{categoryBackingBean.managedBean.searchField}" />
-					</p:selectOneMenu>
-					<!-- <p:selectOneMenu
-						value="#{categoryBackingBean.managedBean.searchOperatorValue[0]}">
-						<f:selectItems
-							value="#{categoryBackingBean.managedBean.searchOperator}" />
-					</p:selectOneMenu> -->
-					<p:inputText
-						value="#{categoryBackingBean.managedBean.searchValue[0]}"
-						style="margin-top:2.5%;" />
-				</h:panelGrid>
+			<p:column headerText="#{lbl['lbl.sc.category.code']}">
+				#{cateGory.pmCategoryL1.categoryL1Code}#{cateGory.pmCategoryL2.categoryL2Code}#{cateGory.pmCategoryL3.categoryL3Code}
+			</p:column>
 
-				<table style="width: 100%;">
-					<tr>
-						<td style="text-align: right;"><p:commandButton
-								icon="ui-icon-search" value="#{lbl['lbl.btn.search']}"
-								action="#{categoryBackingBean.searchLOV}" update="lovTb2">
-							</p:commandButton> <p:commandButton icon="ui-icon-reset"
-								value="#{lbl['lbl.btn.reset']}"
-								action="#{categoryBackingBean.resetLOV}"
-								update="searchPanel,resultPanel">
-							</p:commandButton></td>
-					</tr>
-				</table>
-			</h:panelGroup>
-		</p:panel>
+			<p:column headerText="#{lbl['lbl.sc.main.category']}"
+				style="white-space: normal;">
+				<h:outputText value="#{cateGory.pmCategoryL1.categoryName}" />
+			</p:column>
 
-		<p:panel header="#{lbl['lbl.pm.search.result']}" toggleable="true">
-			<h:panelGroup id="resultPanel" style="width:100%;">
+			<p:column headerText="#{lbl['lbl.sc.sub.category']}"
+				style="white-space: normal;">
+				<h:outputText value="#{cateGory.pmCategoryL2.categoryName}" />
+			</p:column>
 
-				<p:dataTable id="lovTb2" var="categoryL3"
-					selection="#{categoryBackingBean.managedBean.selectedLOV}"
-					rowIndexVar="rowIndex" rows="10" lazy="true"
-					rowKey="#{categoryL3.categoryL3Id}"
-					value="#{categoryBackingBean.searchLOVPagingDataModel}">
-					<ac:paginator for="lovTb2" />
+			<p:column headerText="#{lbl['lbl.sc.sub.category.division']}"
+				style="white-space: normal;">
+				<h:outputText value="#{cateGory.pmCategoryL3.categoryName}" />
+			</p:column>
 
-					<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="#{lbl['lbl.sc.category.type']}">
+				<h:outputText
+					value="#{suppliersReviewBackingBean.getParameterDesc(cateGory.pmCategoryL3.categoryTypeCode)}" />
+			</p:column>
 
-					<p:column headerText="#{lbl['lbl.pm.category.code']}">
-						<h:outputText value="#{categoryL3.categoryL3Code}" />
-					</p:column>
-
-					<p:column headerText="#{lbl['lbl.pm.category.name']}">
-						<h:outputText value="#{categoryL3.categoryName}" />
-					</p:column>
-
-				</p:dataTable>
-
-			</h:panelGroup>
-
-			<table style="width: 100%;">
-				<tr>
-					<td style="text-align: right;"><p:commandButton id="slbtn"
-							value="#{lbl['lbl.btn.select']}" update="searchPanel"
-							oncomplete="updateCategory();lovPopupCategory.hide();" /></td>
-				</tr>
-			</table>
-		</p:panel>
-	</p:dialog>
-
-	<p:outputPanel id="panelgroupdetails">
-		<p:panel id="groupdetails" toggleable="true">
-			<p:dataTable id="groupdetailsId" 
-				rowKey="#{pmBasicCategory.createdDate}"
-				value="#{categoryBackingBean.managedBean.basicCategoryList}"
-				width="100%" var="pmBasicCategory">
-
-				<ac:paginator for="groupdetailsId"></ac:paginator>
-				<p:column>
-
-				<f:facet name="header">						
-					     #{lbl['lbl.pm.category.code']}					
-				</f:facet>
-					<h:outputText value="#{pmBasicCategory.codeConcatenate}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.pm.category']}
-				</f:facet>
-					<h:outputText value="#{pmBasicCategory.basicCategoryL1desc}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.pm.sub.category']}
-				</f:facet>
-					<h:outputText value="#{pmBasicCategory.basicCategoryL2desc}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-					#{lbl['lbl.pm.sub.category.div']}
-				</f:facet>
-					<h:outputText value="#{pmBasicCategory.basicCategoryL3desc}" />
-				</p:column>				
-				
-				<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
-					<p:commandLink partialSubmit="true" process="@this"
-						action="#{categoryBackingBean.deleteBasicCategory(pmBasicCategory)}"
-						update="groupdetailsId">
-						<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
-					</p:commandLink>
-				</p:column>
-
-			</p:dataTable>
-			<td colspan="5" width="100%">
-				<div class="ppRightBtn" style="width: 101%;">
-					<p:commandButton value="#{lbl['lbl.btn.add']}"
-						action="#{categoryBackingBean.addBasicCategory()}"
-						partialSubmit="true" process="@this"
-						oncomplete="lovPopupCategory.show();" update="lovPopupCategory" />
-					&#160;
-				</div>
-			</td>
-		</p:panel>
-	</p:outputPanel>
-	<td colspan="5" width="100%">
+		</p:dataTable>
 		<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				action="#{suppliersReviewBackingBean.searchSuppliersReviewDetails}"
-				update="suppliersReviewPanel,noOfsuppliersReviewPanel" 
-				 />
-			&#160;
-			<p:commandButton value="#{lbl['lbl.btn.reset']}"
-				action="#{suppliersReviewBackingBean.resetSuppliersReviewSearchBean}"
-				process="@this" partialSubmit="true"
-				update=":form:suppliersReviewPanel,:form:noOfsuppliersReviewPanel" />
+			<p:commandButton value="#{lbl['lbl.btn.add']}" style="width:6em;"
+				process="@this, openPnlId" partialSubmit="true"
+				update="@([id$=catCodePopup])" oncomplete="catCodePopup.show();"
+				action="#{categoryCodeSearchBackingBean.renewSesionObject}" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, openPnlId" partialSubmit="true"
+				oncomplete="supplierOpencategoryDeletePopUp.show();"
+				update="@([id$=#{supplierOpencategoryDeleteId}])" />
 		</div>
-	</td>
+		<ui:param name="supplierOpencategoryDeleteId"
+			value="supplierOpencategoryDeleteId" />
+		<ac:confirmationPopup id="#{supplierOpencategoryDeleteId}"
+			widget="supplierOpencategoryDeletePopUp"
+			okAction="suppliersReviewBackingBean.deleteCategoryCodes" width="400"
+			height="200" title="#{lbl['lbl.sc.category.code']}"
+			content="#{lbl['lbl.sc.dialog.confirm.category.codes']}"
+			update="@([id$=openPnlId])" />
+
+		<ac:categoryCodePopup
+			okAction="suppliersReviewBackingBean.addNewCategoryAction"
+			update="@([id$=openPnlId])" />
+			
+	<!-- Buttons -->
+	<div class="ppRightBtn" style="width: 100%">
+		<p:commandButton value="#{lbl['lbl.btn.search']}"
+			action="#{suppliersReviewBackingBean.searchSuppliersReviewDetails}"
+			update="suppliersReviewPanel,noOfsuppliersReviewPanel" />
+		&#160;
+		<p:commandButton value="#{lbl['lbl.btn.reset']}"
+			action="#{suppliersReviewBackingBean.resetSuppliersReviewSearchBean}"
+			process="@this" partialSubmit="true"
+			update=":form:suppliersReviewPanel,:form:noOfsuppliersReviewPanel" />
+	</div>
+
 
 </ui:composition>
