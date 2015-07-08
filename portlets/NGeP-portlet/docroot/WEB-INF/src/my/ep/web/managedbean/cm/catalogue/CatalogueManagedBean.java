@@ -424,36 +424,38 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 
 	private IPagingDataModel<CmSupplierItem> draftSearchDataModel = new DraftSearchPagingDataModel();
-	
+
 	private IPagingDataModel<CmSupplierItem> approvalSearchDataModel = new ApprovalSearchPagingDataModel();
-	
+
 	private IPagingDataModel<CmSupplierItem> approvedSearchDataModel = new ApprovedSearchPagingDataModel();
-	
+
 	private IPagingDataModel<CmSupplierItem> rejectSearchDataModel = new RejectSearchPagingDataModel();
-	
+
 	private IPagingDataModel<CmSupplierItem> publishSearchDataModel = new PublishSearchPagingDataModel();
-	
+
 	private IPagingDataModel<CmSupplierItem> expiredSearchDataModel = new ExpiredSearchPagingDataModel();
-	
+
 	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	
-	
+
+
 	private List<CmSupplierItem> draftSupplierItemList;
-	
+
 	private boolean supplierItemcheckBoxAll;
-	
-	
-	
+
+	private boolean refreshDraftSuppItemFlag =true;
+
+
+
 	private int draftTabPageSize = 5;
 	private int pendingApprovalTabPageSize = 5;
 	private int approvedTabPageSize = 5;
 	private int publishTabPageSize = 5;
 	private int rejectedTabPageSize = 5;
 	private int expiredTabPageSize = 5;
-	
+
 	private List<CmSupplierItem> cloneCmSupplierItemLs;
-	
-	
+
+
 	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -488,7 +490,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			try {
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setExpiredTabPageSize(this.getPageSize());
-				
+
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -517,8 +519,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
-	
+
+
 	private class PublishSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -551,7 +553,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
-				
+
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setPublishTabPageSize(this.getPageSize());
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
@@ -582,9 +584,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
-	
-	
+
+
+
 	private class RejectSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -617,12 +619,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
-				
+
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setRejectedTabPageSize(this.getPageSize());
-				
+
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
-				
+
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
 				supplierReqDTO.setUserId(pmUser.getUserId());
 
@@ -649,8 +651,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
-	
+
+
 	private class ApprovedSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -683,10 +685,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
-				
+
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setApprovedTabPageSize(this.getPageSize());
-				
+
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -715,8 +717,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
-	
+
+
 	private class ApprovalSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -749,10 +751,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
-				
+
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setPendingApprovalTabPageSize(this.getPageSize());
-				
+
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -781,9 +783,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
-	
-	
+
+
+
 	private class DraftSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
@@ -816,11 +818,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
 
 			try {
-				
+
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setDraftTabPageSize(this.getPageSize());
 
-			
+
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
 				PmUser pmUser = new FacesScopes().getUserSessionBean();
@@ -831,18 +833,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
 						.getSupplierId());
-				
-				
-				
-				
+
+
+
+
 				reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
 				reqDTO.setSearchBean(searchBean);
 				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
-				
-				
-				
+
+
+
 				Map tempMap = new HashMap();
 				for (int i = 0; i < resDTO.getSuppItemResultBean().getResultList().size(); i++) {
 					CmSupplierItem suppItem = resDTO.getSuppItemResultBean().getResultList().get(i);
@@ -850,10 +852,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					if(bb.getManagedBean().getCloneCmSupplierItemLs() !=null && bb.getManagedBean().getCloneCmSupplierItemLs().size()>0){
 
 						for(CmSupplierItem obj : bb.getManagedBean().getCloneCmSupplierItemLs()){
-							
+
 							if(suppItem.getSupplierItemId()==obj.getSupplierItemId()){
-							
-						
+
+
 								if(!tempMap.containsKey(obj.getSupplierItemId())){
 									suppItem.setSelected(true);	
 									tempMap.put(obj.getSupplierItemId(), obj.getSupplierItemId());
@@ -864,9 +866,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					}
 
 				}
-				
-				
-				RequestContext.getCurrentInstance().execute("refreshDraftSuppItem();");
+
+				if(bb.getManagedBean().isRefreshDraftSuppItemFlag()){
+					RequestContext.getCurrentInstance().execute("refreshDraftSuppItem();");
+				}
 
 				return resDTO.getSuppItemResultBean();
 
@@ -942,15 +945,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					itemNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 				}
-				
+
 				if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
 					System.out.println("(String)keyWordFilterBean.getSearchValue()"+(String)keyWordFilterBean.getSearchValue());
 					keyWordFilterBean.setSearchField("KEYWORD");
 					keyWordFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(keyWordFilterBean);
 				}
-				
-				
+
+
 
 				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
 					itemCodeFilterBean.setSearchField("ITEM_CODE");
@@ -1067,7 +1070,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				if(catTypeFilterBean!=null && catTypeFilterBean.getSearchValue()!=null) {
 					reqDTO.setCatType(catTypeFilterBean.getSearchValue().toString());
 				}
-				
+
 				if(searchBean.getDataFilterBeans().size()<=0){
 					FacesContext.getCurrentInstance().addMessage(
 							null,
@@ -1189,7 +1192,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		if(this.getStateId() != null && this.getStateId().length > 0) {
 			hasSearchValue = true;
 		}
-		
+
 		if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
@@ -1847,7 +1850,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.selectedMaintainItem = selectedMaintainItem;
 	}
 
-/*	*//**
+	/*	*//**
 	 * Gets the selected maintain items.
 	 * 
 	 * @return the selected maintain items
@@ -1856,12 +1859,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		return selectedMaintainItems;
 	}
 
-	*//**
-	 * Sets the selected maintain items.
-	 * 
-	 * @param selectedMaintainItems
-	 *            the new selected maintain items
-	 *//*
+	  *//**
+	  * Sets the selected maintain items.
+	  * 
+	  * @param selectedMaintainItems
+	  *            the new selected maintain items
+	  *//*
 	public void setSelectedMaintainItems(CmSupplierItem[] selectedMaintainItems) {
 		this.selectedMaintainItems = selectedMaintainItems;
 	}*/
@@ -3617,21 +3620,31 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSupplierItemcheckBoxAll(boolean supplierItemcheckBoxAll) {
 		this.supplierItemcheckBoxAll = supplierItemcheckBoxAll;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
-	
+	public boolean isRefreshDraftSuppItemFlag() {
+		return refreshDraftSuppItemFlag;
+	}
+
+	public void setRefreshDraftSuppItemFlag(boolean refreshDraftSuppItemFlag) {
+		this.refreshDraftSuppItemFlag = refreshDraftSuppItemFlag;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
