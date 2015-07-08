@@ -405,6 +405,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(bb.getManagedBean().getCloneExtensionVOs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715014);
 		}
+		
+		this.getManagedBean().setRefreshDraftSuppItemFlag(false);
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -2754,6 +2756,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm", ICatalogueSO.class);
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject("sm",ISupplierSearchSO.class);
 
+		this.getManagedBean().setRefreshDraftSuppItemFlag(false);
 		try {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
@@ -3875,6 +3878,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(this.getManagedBean().getCloneCmSupplierItemLs().size() < 1) {
 			throw new EpException(MessageConst.ERROR_715013);
 		}
+		this.getManagedBean().setRefreshDraftSuppItemFlag(false);
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICatalogueSO.class);
@@ -8984,7 +8988,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 	public void cloneItemSelection(int i){
-
+		
+		this.getManagedBean().setRefreshDraftSuppItemFlag(true);
 		int index = i%10;
 		System.out.println("*******getCloneCmSupplierItemLs*************"+this.getManagedBean().getCloneCmSupplierItemLs().size());
 
@@ -9060,7 +9065,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 	public void cloneAllSupplierItemSelection(){
-
+		this.getManagedBean().setRefreshDraftSuppItemFlag(true);
 		Map checkDuplicateAdd = new HashMap();
 		for (int i = 0; i < this.getManagedBean().getDraftSearchDataModel().getList().size(); i++) {
 
@@ -9079,11 +9084,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 
 			if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
-
-
-
-
-
 
 				boolean addInLs = true;
 				for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
