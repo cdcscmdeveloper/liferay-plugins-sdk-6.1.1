@@ -491,12 +491,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		List<SelectItem> searchField = new ArrayList<SelectItem>();
 		
-		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.main.category.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
+		/*searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.main.category.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 		searchField.add(new SelectItem(2, ResourceBundleUtils.getMessage("lbl.pm.main.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 		
 		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.sub.category.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 		searchField.add(new SelectItem(2, ResourceBundleUtils.getMessage("lbl.pm.sub.category",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
-
+*/
 		searchField.add(new SelectItem(1, ResourceBundleUtils.getMessage("lbl.pm.sub.div.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 		searchField.add(new SelectItem(2, ResourceBundleUtils.getMessage("lbl.pm.sub.div.name.det",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
 				
