@@ -375,21 +375,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public void addPopupAction() {
 		debugLogger("addCommitteMember");
 
-		IPagingDataModel<PmUser> userSearhQCDataModel = getManagedBean()
-				.getUserSearchDataModel();
-		if (userSearhQCDataModel == null) {
-			this.getManagedBean().setUserSearchDataModel(
-					new UserQCPagingDataModel("existingMemberTbl", getManagedBean()
-							.getUserSearchBean()));
-		}
-		UserCommitteeSearchBean userSearchBean 
-									= getManagedBean().getUserSearchBean();
-		userSearchBean.setName(null);
-		userSearchBean.setIdentificationNo(null);
-		userSearchBean.setIdentificationType(null);
-		
-		getManagedBean().getUserSearchDataModel().resetData();		
-		getManagedBean().setSelectedPmUsers(null);
+		resetUserAction();
 		
 		ScCommitteeMember committeeMember = new ScCommitteeMember();
 		committeeMember.setPmUser(new PmUser());
@@ -518,7 +504,21 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 * reset user action.
 	 */
 	public void resetUserAction() {
-		this.getManagedBean().getUserSearchDataModel().resetData();
+		IPagingDataModel<PmUser> userSearhQCDataModel = getManagedBean()
+				.getUserSearchDataModel();
+		if (userSearhQCDataModel == null) {
+			this.getManagedBean().setUserSearchDataModel(
+					new UserQCPagingDataModel("existingMemberTbl", getManagedBean()
+							.getUserSearchBean()));
+		}
+		UserCommitteeSearchBean userSearchBean 
+									= getManagedBean().getUserSearchBean();
+		userSearchBean.setName(null);
+		userSearchBean.setIdentificationNo(null);
+		userSearchBean.setIdentificationType(null);
+		
+		getManagedBean().setSelectedPmUsers(null);	
+		getManagedBean().getUserSearchDataModel().resetData();		
 	}	
 	
 	private void populateUserSearchCriteria(UserCommitteeSearchBean userSearchBean,
