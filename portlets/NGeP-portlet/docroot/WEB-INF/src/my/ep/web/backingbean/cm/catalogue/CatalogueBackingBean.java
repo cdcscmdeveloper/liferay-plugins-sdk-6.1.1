@@ -9061,7 +9061,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 	public void cloneAllSupplierItemSelection(){
 
-
+		Map checkDuplicateAdd = new HashMap();
 		for (int i = 0; i < this.getManagedBean().getDraftSearchDataModel().getList().size(); i++) {
 
 
@@ -9071,17 +9071,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 			if(this.getManagedBean().isSupplierItemcheckBoxAll()){
 				suppItem.setSelected(true);
-				
+
 			}else{
 				suppItem.setSelected(false);
-				
+
 			}
 
 
 			if(this.getManagedBean().getCloneCmSupplierItemLs()!=null && this.getManagedBean().getCloneCmSupplierItemLs().size()>0){
 
+
+
+
+
+
 				boolean addInLs = true;
 				for(CmSupplierItem obj : this.getManagedBean().getCloneCmSupplierItemLs()){
+
+					if(!checkDuplicateAdd.containsKey(obj.getSupplierItemId())){
+						checkDuplicateAdd.put(obj.getSupplierItemId(), obj.getSupplierItemId());
+					}
 
 					if(!suppItem.isSelected() && suppItem.getSupplierItemId()==obj.getSupplierItemId()){
 						this.getManagedBean().getCloneCmSupplierItemLs().remove(obj);
@@ -9092,13 +9101,19 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 				System.out.println("addInLs:"+addInLs);
 				if(addInLs){
-					this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+					System.out.println("**add in****"+suppItem.getSupplierId());
+					System.out.println("checkDuplicateAdd:"+checkDuplicateAdd);
+					if(!checkDuplicateAdd.containsKey(suppItem.getSupplierItemId())){
+						this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+					}
 				}
 
 			}else{
 
 				if(suppItem.isSelected()){
-					this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+					if(!checkDuplicateAdd.containsKey(suppItem.getSupplierItemId())){
+						this.getManagedBean().getCloneCmSupplierItemLs().add(suppItem);
+					}
 				}
 			}
 
