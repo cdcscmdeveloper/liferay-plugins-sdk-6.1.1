@@ -20,13 +20,14 @@
 					<p:commandButton value="#{lbl['lbl.btn.back']}"
 						action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
 				</p:column>
-				<p:column width="100%" style="text-align:right" id="registerBtnId">
+				<p:column width="100%" style="text-align:right">
+				<h:panelGroup id="registerBtnId">
 					<p:commandButton value="#{lbl['lbl.btn.register']}"
 						disabled="#{!noticeBoardBackingBean.managedBean.validMofNo}"
 						action="#{noticeBoardBackingBean.registerSupplierForBSV}"
 						style="float:right;" process="@all" update="@all"
 						rendered="#{noticeBoardBackingBean.managedBean.renderRegisterBtn}" />
-						
+				</h:panelGroup>
 				</p:column>
 
 			</p:row>

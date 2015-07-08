@@ -157,6 +157,7 @@ public class NoticeBoardBackingBean extends
 	private boolean displayImage;
 	private String slectedHeaderName;
 	
+	
 	public NoticeBoardBackingBean() {
 		
 	}
@@ -1926,6 +1927,7 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setZoneBean(bsvZoneBeans);
 		}
 		this.getManagedBean().setRenderRegisterBtn(isNotRigistered);
+		this.getManagedBean().setDisableRegisterBtn(isNotRigistered);
 	}
 
 	/**
@@ -2097,7 +2099,7 @@ public class NoticeBoardBackingBean extends
 		}
 		this.getManagedBean().setNormalBsvBean(zoneBean);
 		
-		if(this.getManagedBean().isRenderRegisterBtn()){
+		if(this.getManagedBean().isDisableRegisterBtn()){
 			this.getManagedBean().setRenderRegisterBtn(!isAttandanceEditable(scQtBsvDtl));
 		}
 		
