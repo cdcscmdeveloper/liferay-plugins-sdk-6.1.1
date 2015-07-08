@@ -572,7 +572,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			/*rptGenBean.setFlPkpNoView(true);*/
 			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlStopInstructionNoView(true);
-			rptGenBean.setFlGroupTwentyView(true);
+			rptGenBean.setFlGroupTwentyTwoView(true);
 			break;
 		case ReportConst.FL_STP_INSTR_INIT_PTJ_RPT_FL_CEN_PEN_VAL:
 			rptGenBean.setFlSupplierView(true);
