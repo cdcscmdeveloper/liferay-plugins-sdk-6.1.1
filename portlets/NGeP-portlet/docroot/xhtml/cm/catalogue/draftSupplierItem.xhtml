@@ -18,7 +18,7 @@
 			onclick="excelDialog.show(); clearInvalidFileMsg();" />
 
 		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
-			disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			update=":form" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
@@ -32,31 +32,39 @@
 
 
 		<p:commandButton id="submitLink" value="#{lbl['lbl.cm.publish']}"
-			disabled="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItems)&lt;1}"
+			disabled="#{fn:length(catalogueBackingBean.managedBean.cloneCmSupplierItemLs)&lt;1}"
 			action="#{catalogueBackingBean.submitToReviewItems}" update="@form"></p:commandButton>
 	</div>
 
 	<ac:lovPopup />
+	
+	
+		<p:remoteCommand name="refreshDraftSuppItem" id="refreshDraftSuppItem" action="#{catalogueBackingBean.checkingCheckAll}" update=":form:draftSupplierItemID:selectAllCheckBoxId"></p:remoteCommand>
+	
 
-	<p:dataTable id="draftSupplierItemID" lazy="true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+	<p:dataTable id="draftSupplierItemID" lazy="true"
+		emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 		value="#{catalogueBackingBean.managedBean.draftSearchDataModel}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
-		rowKey="#{selectedSuppCat.supplierItemId}" rows="10"
-		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
+		rowKey="#{selectedSuppCat.supplierItemId}" rows="10">
 
 		<ac:paginator for="draftSupplierItemID"></ac:paginator>
 
-		<p:column selectionMode="multiple" style="width:2%" />
-
-		<p:ajax event="rowSelectCheckbox"
-			update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="rowUnselectCheckbox"
-			update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="rowUnselect"
-			update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="rowSelect" update=":form:downloadLink,:form:submitLink"></p:ajax>
-		<p:ajax event="toggleSelect"
-			update=":form:downloadLink,:form:submitLink" />
+		<p:column style="text-align: left;width:2%;">
+			<f:facet name="header">
+				<p:selectBooleanCheckbox id="selectAllCheckBoxId"
+					value="#{catalogueBackingBean.managedBean.supplierItemcheckBoxAll}">
+					<p:ajax event="change"
+						listener="#{catalogueBackingBean.cloneAllSupplierItemSelection()}"
+						update=":form:draftSupplierItemID, :form:downloadLink, :form:submitLink"></p:ajax>
+				</p:selectBooleanCheckbox>
+			</f:facet>
+			<p:selectBooleanCheckbox value="#{selectedSuppCat.selected}">
+				<p:ajax event="change"
+					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
+					update=":form:draftSupplierItemID, :form:downloadLink, :form:submitLink"></p:ajax>
+			</p:selectBooleanCheckbox>
+		</p:column>
 
 		<p:column width="5%">
 			<f:facet name="header">
@@ -91,9 +99,10 @@
 				<h:outputText value="* " styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.uom']}" />
 			</f:facet>
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="#{lbl['lbl.cm.item.table.uom']}"
-				readonly="true"
-				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{rowIndex}].pmUom"
+			<ui:param name="correctionIndexRow" value="#{rowIndex % 10}" />
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20"
+				headerText="#{lbl['lbl.cm.item.table.uom']}" readonly="true"
+				saveObject="catalogueBackingBean.managedBean.draftSearchDataModel.list[#{correctionIndexRow}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
 			</ac:lov>
