@@ -11,15 +11,17 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.SuppliersReviewResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.suppliersreview.SuppliersReviewReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmBasicCategory;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pm.category.CategoryBackingBean;
 import my.ep.web.bean.SuppliersReviewSearchBean;
 import my.ep.web.managedbean.pm.suppliersreview.SuppliersReviewManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -133,46 +135,55 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 		SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
-		CategoryBackingBean categoryBackingBean = new CategoryBackingBean();
-
-
-		List<Long> stateList = new ArrayList<Long>();
+		List<PmState> stateList = new ArrayList<PmState>();
+		List<Long> stateIdList = new ArrayList<Long>();
 		List<Long> categoryL3L = new ArrayList<Long>();
 
-		List<PmBasicCategory> catList1 = categoryBackingBean.getManagedBean().getBasicCategoryList();
+		List<ScQtCategory> catList = this.getManagedBean().getQtCategoryList();
 
-		if(catList1!=null && !catList1.isEmpty()){
+		/*IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IStateSO.class);
+		StateReqDTO stateReqDTO=new StateReqDTO();*/
 
-			for(PmBasicCategory pmBasicCategory:catList1){
+		if(catList!=null && !catList.isEmpty()){
 
-				categoryL3L.add(pmBasicCategory.getBasicCategoryL3());
+			for(ScQtCategory scQtCategory:catList){
+
+				categoryL3L.add(scQtCategory.getPmCategoryL3().getCategoryL3Id());
 			}
 			this.getManagedBean().getSuppliersReviewSearchBean().setCategoryIdList(categoryL3L);
 
 		}
 		else{
-			throw new EpException(MessageConst.ERROR_790001);				
-		    }
+			throw new EpException(MessageConst.ERROR_790001);	
+		}
 
-		if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null){
-			for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
-				stateList.add(pmState.getStateId());
+		if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null &&
+				!this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().isEmpty()){
+			for(int i=0;i<this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().size();i++){				
+				stateList.add((PmState)this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().get(i));
 			}
-		}			
+			/*for(String pmState:stateList){				
+				stateReqDTO.setStateId(Long.valueOf(pmState));
+				StateResDTO stateResDTO = stateSO.retriveStateByID(stateReqDTO);
+				stateIdList.add(stateResDTO.getPmState().getStateId());				
+			}*/
+		}
 
-	
-		
+
+
 		if(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom()!=null 
 				&& this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo()!=null){
-			
+
 			suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
 			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
 		}
 		else{
 			//throw new EpException(MessageConst.ERROR_790002);
-		    }
+		}
 
-		suppliersReviewReqDTO.setStateIdList(stateList);
+		suppliersReviewReqDTO.setStateIdList(stateIdList);
 		suppliersReviewReqDTO.setCategoryIdList(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList());
 		suppliersReviewReqDTO.setCategoriesListSize(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList().size());
 		try {
@@ -197,6 +208,43 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			throw new EpException(MessageConst.ERROR_770005);
 		}
 
+	}
+	
+	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
+		debugLogger("addNewCategoryAction");
+		List<ScQtCategory> qtCategoryList = this.getManagedBean()
+				.getQtCategoryList();	
+		if (qtCategoryList == null) {
+			qtCategoryList = new ArrayList<ScQtCategory>();
+			this.getManagedBean().setQtCategoryList(qtCategoryList);
+		}
+		//validateDuplicateCategoryCode(pmCategoryL3, qtCategoryList);	
+		PmCategoryL2 pmCategoryL2 = pmCategoryL3.getPmCategoryL2();
+		ScQtCategory category = new ScQtCategory();
+		//category.setScQt(this.getManagedBean().getQt());
+		category.setPmCategoryL1(pmCategoryL2.getPmCategoryL1());
+		category.setPmCategoryL2(pmCategoryL2);
+		category.setPmCategoryL3(pmCategoryL3);
+		qtCategoryList.add(category);
+	}
+	
+	public void deleteCategoryCodes() {
+		debugLogger("deleteCategoryCodes");
+		List<ScQtCategory> openList = this.getManagedBean().getQtCategoryList();
+		if (null == openList) {
+			openList = new ArrayList<ScQtCategory>();
+		}
+		List<ScQtCategory> openSelectList = this.getManagedBean()
+				.getSelectedCategoryList();
+		if (null == openSelectList || openSelectList.isEmpty()) {
+			throw new EpException(MessageConst.ERROR_760146);
+		}
+		if (openList.size() == openSelectList.size()) {
+			openList.clear();
+		} else {
+			for (ScQtCategory category : openSelectList)
+				openList.remove(category);
+		}
 	}
 
 }

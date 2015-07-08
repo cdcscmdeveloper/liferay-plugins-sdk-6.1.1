@@ -9,7 +9,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.dto.pm.common.SuppliersReviewResDTO;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.web.bean.SuppliersReviewSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -37,6 +37,9 @@ public class SuppliersReviewManagedBean extends BaseManagedBean {
 	private boolean disabled;
 	
 	private boolean allStates;
+	
+	private List<ScQtCategory> qtCategoryList;
+	private List<ScQtCategory> selectedCategoryList;
 	
 		/**
 	 * @return the suppliersReviewSearchBean
@@ -135,6 +138,30 @@ public class SuppliersReviewManagedBean extends BaseManagedBean {
 	 */
 	public void setAllStates(boolean allStates) {
 		this.allStates = allStates;
+	}
+	/**
+	 * @return the qtCategoryList
+	 */
+	public List<ScQtCategory> getQtCategoryList() {
+		return qtCategoryList;
+	}
+	/**
+	 * @param qtCategoryList the qtCategoryList to set
+	 */
+	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
+		this.qtCategoryList = qtCategoryList;
+	}
+	/**
+	 * @return the selectedCategoryList
+	 */
+	public List<ScQtCategory> getSelectedCategoryList() {
+		return selectedCategoryList;
+	}
+	/**
+	 * @param selectedCategoryList the selectedCategoryList to set
+	 */
+	public void setSelectedCategoryList(List<ScQtCategory> selectedCategoryList) {
+		this.selectedCategoryList = selectedCategoryList;
 	}
 	
 	
