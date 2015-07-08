@@ -1430,26 +1430,28 @@ public class ProfileManagementBackingBean extends
 
 	public void changeOrgUnit(BaseEntity entity) {
 		logger.info("changeOrgUnit");
-		if (entity != null) {
-			PmUserOrg selectedUserOrg = (PmUserOrg) entity;
-			if (selectedUserOrg != null
-					&& selectedUserOrg.getPmOrgProfile() != null
-					&& selectedUserOrg.getPmOrgProfile().getOrgProfileId() != null) {
-				if (getManagedBean().getSelectedCurrentOrgProfile() == null) {
+		if (getManagedBean().getSelectedUserOrg() != null
+				&& getManagedBean().getSelectedUserOrg().getPmOrgProfile() != null
+				&& getManagedBean().getSelectedUserOrg().getPmOrgProfile()
+						.getOrgProfileId() != null) {
+			if (getManagedBean().getSelectedCurrentOrgProfile() == null) {
+				getManagedBean()
+						.setSelectedCurrentOrgProfile(
+								getManagedBean().getSelectedUserOrg()
+										.getPmOrgProfile());
+			} else {
+				if (getManagedBean().getSelectedCurrentOrgProfile()
+						.getOrgProfileId() != getManagedBean()
+						.getSelectedUserOrg().getPmOrgProfile()
+						.getOrgProfileId()) {
+					// clear role list
+					this.getManagedBean().getSelectedUserOrg()
+							.setPmUserRoles(new ArrayList<PmUserRole>());
+					// clear reciving Addresses
+					showReceivingAddress();
 					getManagedBean().setSelectedCurrentOrgProfile(
-							selectedUserOrg.getPmOrgProfile());
-				} else {
-					if (getManagedBean().getSelectedCurrentOrgProfile()
-							.getOrgProfileId() != selectedUserOrg
-							.getPmOrgProfile().getOrgProfileId()) {
-						// clear role list
-						selectedUserOrg
-								.setPmUserRoles(new ArrayList<PmUserRole>());
-						// clear reciving Addresses
-						showReceivingAddress();
-						getManagedBean().setSelectedCurrentOrgProfile(
-								selectedUserOrg.getPmOrgProfile());
-					}
+							getManagedBean().getSelectedUserOrg()
+									.getPmOrgProfile());
 				}
 			}
 		}
