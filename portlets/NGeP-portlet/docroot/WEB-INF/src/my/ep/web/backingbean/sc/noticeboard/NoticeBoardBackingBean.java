@@ -679,6 +679,7 @@ public class NoticeBoardBackingBean extends
 
 		this.getManagedBean().setNormalBsvBean(selectedBsvBean);
 		this.getManagedBean().setSelectedZoneTabIndex(selectedZoneTabIndex);
+		this.getManagedBean().setRenderRegisterBtn(this.getManagedBean().isDisableRegisterBtn());
 		setSlectedHeaderName(null);
 	}
 
