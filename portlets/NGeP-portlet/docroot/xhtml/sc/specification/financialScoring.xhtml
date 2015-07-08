@@ -98,7 +98,7 @@
 			<table>
 
 				<tr>
-					<td style="width: 149px;"><h:outputText
+					<td style="width: 215px;"><h:outputText
 							value="#{lbl['lbl.sc.spec.total.points']} " /></td>
 					<td><p:inputText readonly="true" disabled="true"
 							style="text-align:right"
@@ -122,9 +122,11 @@
 	</p:panel>
 	<h:panelGroup id="offeredPrice">
 		<p:panel header="#{lbl['lbl.sc.by.package']}" toggleable="true">
+			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.passing.score.financial.instruction']}" escape="false" />
+			
 			<table>
 				<tr>
-					<td style="width: 150px;"><h:outputText
+					<td style="width: 215px;"><h:outputText
 							value="#{lbl['lbl.sc.passing.score']}" /></td>
 					<td><p:inputText style="text-align:right" maxlength="5"
 							disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -139,6 +141,7 @@
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.score.variance.instruction']}"
 				escape="false" />
+			<ac:iconTooltip value="#{lbl['lbl.sc.spec.scoring.offered.price.tooltip']}" />
 
 			<p:panelGrid style="margin-top:5px;width:100%;"
 				styleClass="panelGridBorders tr, panelGridBorders td">
@@ -203,10 +206,11 @@
 	</h:panelGroup>
 	<p:panel id="financialScoringItemPanle"
 		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
+		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.passing.score.financial.instruction']}" escape="false" />
 
 		<table>
 			<tr>
-				<td style="width: 150px;"><h:outputText
+				<td style="width: 215px;"><h:outputText
 						value="#{lbl['lbl.sc.passing.score']}" /></td>
 				<td><p:inputText style="text-align:right" maxlength="5"
 						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
