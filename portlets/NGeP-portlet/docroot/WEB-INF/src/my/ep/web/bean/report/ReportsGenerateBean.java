@@ -276,6 +276,7 @@ public class ReportsGenerateBean {
 		private boolean flGroupNineteenView = false;
 		private boolean flGroupTwentyView = false;
 		private boolean flGroupTwentyOneView = false;
+		private boolean flGroupTwentyTwoView = false;
 		
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
@@ -496,6 +497,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlGroupTwentyTwoView() {
+			return flGroupTwentyTwoView;
+		}
+		public void setFlGroupTwentyTwoView(boolean flGroupTwentyTwoView) {
+			this.flGroupTwentyTwoView = flGroupTwentyTwoView;
+		}
 		public boolean isFlGroupTwentyOneView() {
 			return flGroupTwentyOneView;
 		}
