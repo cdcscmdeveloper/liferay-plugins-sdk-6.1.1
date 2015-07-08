@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.pm.suppliersreview;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,7 +12,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.SuppliersReviewResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.suppliersreview.SuppliersReviewReqDTO;
 import my.ep.exception.EpException;
@@ -65,6 +65,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			this.getManagedBean().setDisabled(false);
 		}
 		RequestContext.getCurrentInstance().execute("selectAll()");
+
+
 	}
 
 	public void preLoadingSuppliersReview() {
@@ -123,10 +125,6 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		return stateList;
 	}
 
-	public String backToSearch() {
-
-		return NAV_TO_MAIN;
-	}
 
 	public void searchSuppliersReviewDetails() {
 
@@ -135,16 +133,12 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 		SuppliersReviewReqDTO suppliersReviewReqDTO = new SuppliersReviewReqDTO();
 
-		List<PmState> stateList = new ArrayList<PmState>();
+
 		List<Long> stateIdList = new ArrayList<Long>();
 		List<Long> categoryL3L = new ArrayList<Long>();
 
-		List<ScQtCategory> catList = this.getManagedBean().getQtCategoryList();
 
-		/*IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-						IStateSO.class);
-		StateReqDTO stateReqDTO=new StateReqDTO();*/
+		List<ScQtCategory> catList = this.getManagedBean().getQtCategoryList();
 
 		if(catList!=null && !catList.isEmpty()){
 
@@ -159,19 +153,12 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			throw new EpException(MessageConst.ERROR_790001);	
 		}
 
-		if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null &&
-				!this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().isEmpty()){
-			for(int i=0;i<this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().size();i++){				
-				stateList.add((PmState)this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().get(i));
-			}
-			/*for(String pmState:stateList){				
-				stateReqDTO.setStateId(Long.valueOf(pmState));
-				StateResDTO stateResDTO = stateSO.retriveStateByID(stateReqDTO);
-				stateIdList.add(stateResDTO.getPmState().getStateId());				
-			}*/
+		if(this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList()!=null &&
+				this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList().length>0){
+
+			stateIdList.addAll(Arrays.asList(this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList()));
+
 		}
-
-
 
 		if(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom()!=null 
 				&& this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo()!=null){
@@ -180,8 +167,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
 		}
 		else{
-			//throw new EpException(MessageConst.ERROR_790002);
-		}
+			throw new EpException(MessageConst.ERROR_790002);
+		    }
 
 		suppliersReviewReqDTO.setStateIdList(stateIdList);
 		suppliersReviewReqDTO.setCategoryIdList(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList());
@@ -209,7 +196,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		}
 
 	}
-	
+
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewCategoryAction");
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
@@ -227,7 +214,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		category.setPmCategoryL3(pmCategoryL3);
 		qtCategoryList.add(category);
 	}
-	
+
 	public void deleteCategoryCodes() {
 		debugLogger("deleteCategoryCodes");
 		List<ScQtCategory> openList = this.getManagedBean().getQtCategoryList();

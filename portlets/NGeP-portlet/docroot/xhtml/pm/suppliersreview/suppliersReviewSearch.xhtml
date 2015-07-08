@@ -54,10 +54,12 @@
 						value="#{lbl['lbl.pm.sr.state']}" for="stateListId"></p:outputLabel></th>
 				<td><p:selectManyMenu label="#{lbl['lbl.pm.sr.state']}"
 						id="stateListId"
-						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.selectedStatesList}"
+						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.dropDownStatesIdList}"
 						style="width: 207px;margin-bottom: 5px;height:100px"
 						showCheckbox="true"
 						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
+						<p:ajax event="select" partialSubmit="true"
+							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
 						<f:selectItems var="finState"
 							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
 							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
@@ -67,10 +69,8 @@
 				<td>&#160;</td>
 			</tr>
 		</table>
-
 		<ui:include
 			src="/xhtml/pm/suppliersreview/categoryCodeSelection.xhtml" />
-			
 	</p:panel>
 
 	<script type="text/javascript">
