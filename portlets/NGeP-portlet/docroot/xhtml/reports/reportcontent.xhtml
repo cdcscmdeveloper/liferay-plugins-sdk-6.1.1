@@ -166,7 +166,7 @@
 		            </div>
 					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
-		            <p:commandButton value="#{lbl['lbl.rpt.generate']}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
+		            <p:commandButton value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
 		            update="@form" partialSubmit="true" process="@form">
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
     				</p:commandButton> 	           

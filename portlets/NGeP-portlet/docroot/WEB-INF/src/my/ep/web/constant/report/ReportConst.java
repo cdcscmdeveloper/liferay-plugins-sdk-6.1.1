@@ -786,6 +786,19 @@ public class ReportConst {
 	public static final String ROLE_CODE_CT_APPROVER="CT_APPROVER";
 	public static final String ROLE_CODE_RN_APPROVER="RN_APPROVER";
 	public static final String ROLE_CODE_RECEIVING_OFFICER="RECEIVING_OFFICER";
+	
+	public static final String ROLE_CODE_UPS_PO="UPS_PO";
+	public static final String ROLE_CODE_UPS_APPROVER="UPS_APPROVER";
+	public static final String ROLE_CODE_UPS_ADMIN="UPS_ADMIN";
+	public static final String ROLE_CODE_UPS_SVO="UPS_SVO";
+	public static final String ROLE_CODE_UPS_SVC="UPS_SVC";
+	public static final String ROLE_CODE_UPS_SDO="UPS_SDO";
+	public static final String ROLE_CODE_EP_ADMIN="EP_ADMIN";
+	public static final String ROLE_CODE_MOF_SUPPLIER_ADMIN="MOF_SUPPLIER_ADMIN";
+	public static final String ROLE_CODE_MOF_SUPPLIER_USER="MOF_SUPPLIER_USER";
+	public static final String ROLE_CODE_BASIC_SUPPLIER_USER="BASIC_SUPPLIER_USER";
+	public static final String ROLE_CODE_BASIC_SUPPLIER_ADMIN="BASIC_SUPPLIER_ADMIN";
+
 	public static final String DOC_TYPE_CR="CR";
 	public static final String DOC_TYPE_CO="CO";
 	public static final String DOC_TYPE_DO="DO";
