@@ -43,8 +43,7 @@
 			<p:blockUI block=":form:tt:stfInfPan" widgetVar="buiPoStf"
 				id="poStfBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.staffVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.staffVerified : false)}" />
-			<p:dataGrid value="#{backingBean.managedBean.smAppl.smStaffTotals}"
-				var="staff" columns="1" rowIndexVar="index" id="dtfGrd">
+			<ui:repeat value="#{backingBean.managedBean.smAppl.smStaffTotals}" var="staff" >
 
 				<table style="width: 100%">
 					<tr>
@@ -93,7 +92,7 @@
 					</tr>
 
 				</table>
-			</p:dataGrid>
+			</ui:repeat>
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
 					<tr>
