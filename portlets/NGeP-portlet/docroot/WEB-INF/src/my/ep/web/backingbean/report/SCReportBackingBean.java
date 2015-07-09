@@ -421,7 +421,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
 	        		rptGenBean.setScPtjView(true);
 	        	}
-	    		rptGenBean.setScSupplierView(true);	    		
+	    		//rptGenBean.setScSupplierView(true);	    		
 	    		rptGenBean.setScPurchaseInDefaultStatusView(true);
 	    		rptGenBean.setScPIDNoView(true);
 	    		rptGenBean.setScContractOrPKPTypeView(true);
