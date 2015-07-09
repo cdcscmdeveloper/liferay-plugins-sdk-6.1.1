@@ -280,7 +280,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
 	        	rptGenBean.setSmSupplierTypeView(true);
-	        	rptGenBean.setSmZoneView(true);
+	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmMofRegNoFromView(true);
 	        	rptGenBean.setSmMofRegNoToView(true);
 	        	rptGenBean.setSmPersonnelRoleView(true);
@@ -299,7 +299,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMofRegNoToView(true);*/
 	        	rptGenBean.setSmMandatoryMofRegNoFromView(true);
 	        	rptGenBean.setSmMandatoryMofRegNoToView(true);
-	        	rptGenBean.setSmZoneView(true);
+	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmExtraTwoColumnTwoView(true);
 	            break;
 		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:
@@ -365,7 +365,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmActSubmisAllDateView(true);*/
 			 break;
 		 case ReportConst.SM_PERSON_BRANCH_BANK:
-			    rptGenBean.setSmZoneView(true);
+			    //rptGenBean.setSmZoneView(true);
 			    rptGenBean.setSmSupplierTypeView(true);
 			    rptGenBean.setSmSupplierView(true);
 			    rptGenBean.setSmRegistrationNoView(true);

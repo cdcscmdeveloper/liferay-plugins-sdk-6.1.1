@@ -101,6 +101,7 @@ public class ReportBackingBean extends
 	private String reportName;
 	private String reportValue;
 	private String reportCategory;
+	private String stringZone;
 	private ScQt scqt;
 	private boolean enableValue = false;
 	String parameterCodeType = new String();
@@ -146,6 +147,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> scDescOfficerList = new ArrayList<SelectItem>();
 	private List<SelectItem> smUPSSVOUserList = new ArrayList<SelectItem>();
 	private List<SelectItem> ctSubTypeList = new ArrayList<SelectItem>();
+	private List<SelectItem> zoneList = new ArrayList<SelectItem>();
 	private List<String> paramList = new ArrayList<String>();
 	private List<String> highRoleCodeList = new ArrayList<String>();
 	private List<String> paramTableRoleCodeList = new ArrayList<String>();
@@ -198,6 +200,14 @@ public class ReportBackingBean extends
 	}
 
 	
+
+	public List<SelectItem> getZoneList() {
+		return zoneList;
+	}
+
+	public void setZoneList(List<SelectItem> zoneList) {
+		this.zoneList = zoneList;
+	}
 
 	public List<String> getReportCategoryList() {
 		return reportCategoryList;
@@ -451,6 +461,15 @@ public class ReportBackingBean extends
 	public void setRegistrationStatusList(List<SelectItem> registrationStatusList) {
 		this.registrationStatusList = registrationStatusList;
 	}
+ 
+	
+	public String getStringZone() {
+		return stringZone;
+	}
+
+	public void setStringZone(String stringZone) {
+		this.stringZone = stringZone;
+	}
 
 	public boolean isValueReqd() {
 		return valueReqd;
@@ -692,7 +711,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)61745;//11040;//25;//61745;//239716;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)235459;//61745;//11040;//25;//61745;//239716;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2803,7 +2822,25 @@ public class ReportBackingBean extends
         }
 		return ctSubTypeList;
 	}
-	
+	public List<SelectItem> retrieveZoneByUser(){
+		zoneList = new ArrayList<SelectItem>();
+		this.setStringZone(null);
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {        	
+        		
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<Object[]> zoneLst = reportSO.retrieveZoneByUser(lngUserId);			
+					for (Object[] object : zoneLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setValue(object[0]);
+						selectItem.setLabel(object[1].toString());
+						stringZone =object[1].toString();
+						zoneList.add(selectItem);
+					}
+        }
+		return zoneList;
+	}
 	public List<String> retrieveHighRoleCodeByUser(){
 		highRoleCodeList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -2888,7 +2925,30 @@ public class ReportBackingBean extends
 				}
 			}
 		}
-	}	
+	}
+	public void  zoneByRolecode(){
+		if ((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
+			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
+			getManagedBean().getRptGenBean().setSmZoneView(false);
+			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_PO)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_SVO)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_SVC)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
+				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+					this.setSmZone(this.getStringZone());
+					getManagedBean().getRptGenBean().setSmZoneLabelView(true);
+				}
+				
+			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_EP_ADMIN))){
+				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+					getManagedBean().getRptGenBean().setSmZoneView(true);
+				}
+				
+			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
+				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
+					rptGenBean.setSmMandatorySupplierTypeView(false);
+					rptGenBean.setSmSupplierTypeView(false);
+				}
+			}
+		}
+	}
 	public List<String> retrieveParamCodeByUser(){
 		paramList = new ArrayList<String>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3986,12 +4046,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
 			retrieveHighRoleCodeByUser();
-			
+			retrieveZoneByUser();
 			//retrieveMinistryList();
 			retriveUserrloeByUserId(this.getModuleValue());			
 			retrieveParamCodeByUser();
 			
 			roleCodeUsersSetup();
+			
 			if ((this.getModuleValue()
 					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 				retrieveApprovarNaikTarafDPS1();
@@ -4045,12 +4106,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			getManagedBean().setRptGenBean(rptGenBean);
 			resetReportForm();			
 			retrieveDates();
-			
 			madatoryIndicator();
 			retrieveAllMinistry();
 			enableSupplierCompNameTextOrDropdown();
 			//retrieveParameterCodeType();		
-			enableCriteriaMenu();			
+			enableCriteriaMenu();
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			zoneByRolecode();
 		}
 	}
 	
@@ -4438,9 +4500,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			if (null != constructedParamString
 					&& !ReportConst.EMPTY_VAL.equals(constructedParamString)) {
 				try {
+					getManagedBean().getRptGenBean().setGenerateButtonView(true);
 					fileGenerateReport(getManagedBean().getReportJsp(),
 							constructedParamString);
+					getManagedBean().getRptGenBean().setGenerateButtonView(false);
 				} catch (IOException e) {
+					getManagedBean().getRptGenBean().setGenerateButtonView(false);
 					throw new EpException(MessageConst.ERROR_REPORT_780009);
 				}
 			} 
@@ -6463,7 +6528,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setPpYear(null);
 		this.setMinistryName(null);
 		changeReportType();
-		retrieveDates();
+		retrieveDates();		
 	}
 
 	protected void fileGenerateReport(String reportFile,
