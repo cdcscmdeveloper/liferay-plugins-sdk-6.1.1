@@ -37,7 +37,16 @@
 				style="width:10%;text-align: center;">
 				<p:commandLink process="@this" partialSubmit="true"
 					action="#{specificationBackingBean.committeeSpecEditAction(index,financialSpec,'T')}">
-					<h:graphicImage value="/css/images/design/edit.png" />
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION or 
+						!specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId == QTStatusConst.SPEC_COMMITTEE_PENDING_REVISION}">
+						<h:graphicImage value="/css/images/design/edit.png" />
+					</ui:fragment>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}">
+						<h:graphicImage value="/css/images/design/ico-view.png" />
+					</ui:fragment>
+
 
 				</p:commandLink>
 			</p:column>
