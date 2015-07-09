@@ -129,7 +129,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
-import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
@@ -139,6 +138,7 @@ import my.ep.web.backingbean.sc.requestnote.RequestNoteBackingBean;
 import my.ep.web.backingbean.sc.simplequote.SimpleQuoteBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.cm.helper.CmApplicationUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
@@ -4478,7 +4478,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					resDTO.getSupplierZoneLs());
 
 			if (status.equalsIgnoreCase("Draft")) {
-
+				this.getManagedBean().setCloneCmSupplierItemLs(null);
 				this.getManagedBean().getDraftSearchDataModel().reloadData();
 				this.getManagedBean().setTabActiveIndex(0);
 
