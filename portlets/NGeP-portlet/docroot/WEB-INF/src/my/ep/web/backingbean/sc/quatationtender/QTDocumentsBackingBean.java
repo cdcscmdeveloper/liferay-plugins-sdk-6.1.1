@@ -1391,6 +1391,8 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		    		localGoods.append(getParameterDesc(master.getItemOriginCode()));
 		    	}
 				for (TplSpecQuestion question : master.getTplSpecQuestions()) {
+					TplSpecQuestion parentQuestion = question.getParentSpecQuestion();
+					
 					if (question.getClItem() == null){
 						question.setClItem("");
 					}
@@ -1423,9 +1425,16 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 					if (question.getClReviewRemark() == null) {
 						question.setClReviewRemark("");
 					}
+					if (parentQuestion != null) {
+						int specCount = parentQuestion.getSpecCount();
+						if (specCount == 0) {
+							specCount = 1;
+						}
+						parentQuestion.setSpecCount(specCount+1);
+					}
 					newTplSpecQuestionsList.add(question); 
-					master.setTplSpecQuestions(newTplSpecQuestionsList);
 				}
+				master.setTplSpecQuestions(newTplSpecQuestionsList);
 				masters.add(master);
 				
 				context.put("localGoods", localGoods);

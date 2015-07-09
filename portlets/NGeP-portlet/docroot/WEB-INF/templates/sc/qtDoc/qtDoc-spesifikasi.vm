@@ -102,7 +102,9 @@
 		</tr>
 		#foreach( $tplspecQuestion in $tplspecMaster1.tplSpecQuestions )
 		<tr>
-			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" ><strong>$tplspecQuestion.clItem</strong></td>
+			#if ($tplspecQuestion.specCount > 0)
+			<td valign="top" bgcolor="#d0eaee" class="standard border-bottom left" rowspan="$tplspecQuestion.specCount"><strong>$tplspecQuestion.clItem</strong></td>
+			#end
 			<td bgcolor="#f1f1f1" class="standard border-bottom left">$tplspecQuestion.clSpecDetail</td>
 			#if ($tplspecQuestion.questionType == "I")
 				<td bgcolor="#f1f1f1" class="standard border-bottom left">$tplspecQuestion.clUom.uomName</td>
