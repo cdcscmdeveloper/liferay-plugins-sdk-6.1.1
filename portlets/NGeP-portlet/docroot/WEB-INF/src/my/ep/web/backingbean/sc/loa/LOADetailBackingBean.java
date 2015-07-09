@@ -2312,7 +2312,7 @@ public class LOADetailBackingBean extends
 				}
 				successMessage(messageCode, ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo() , Boolean.FALSE);
+						scLoa.getLoaNo(), Boolean.TRUE);
 				
 				renewSesionObject();
 			}
