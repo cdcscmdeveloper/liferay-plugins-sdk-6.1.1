@@ -6,6 +6,7 @@ package my.ep.web.managedbean.sc.supplierfinalization;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -135,6 +136,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResultDtl> shortlistedSupplierList;
 	private List<ScQtEvaluationResultDtl> recommendedSupplierList;
 	private List<ScQtEvaluationResultDtl> unRecommendedSupplierList;
+	private Set<ScQtEvaluationResultDtl> resetSupplierList;
 	private List<ScQtRecommend> selectedItemList; 
 	private List<ScQtRecommend> itemList;
 	private List<SmSupplier> awardSupplierList; 
@@ -1221,6 +1223,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setUnRecommendedSupplierList(
 			List<ScQtEvaluationResultDtl> unRecommendedSupplierList) {
 		this.unRecommendedSupplierList = unRecommendedSupplierList;
+	}
+
+	/**
+	 * @return the resetSupplierList
+	 */
+	public Set<ScQtEvaluationResultDtl> getResetSupplierList() {
+		return resetSupplierList;
+	}
+
+	/**
+	 * @param resetSupplierList 
+	 * 				the resetSupplierList to set
+	 */
+	public void setResetSupplierList(
+			Set<ScQtEvaluationResultDtl> resetSupplierList) {
+		this.resetSupplierList = resetSupplierList;
 	}
 
 	/**
