@@ -161,6 +161,7 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.eff.date']}" /> </td>
+				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 				<td><p:calendar id="gstEffDateId"  beforeShowDay="firstDayEnabled"					
 					value="#{organisationBackingBean.managedBean.orgProfile.gstEffDate}" 
 					mindate="#{ProfileManagementConst.gstMinDate}"
@@ -171,6 +172,15 @@
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar></td>
+				</ui:fragment>
+				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
+				<td><p:inputText id="gstEffDate" 
+						disabled="true" 
+						label="#{lbl['lbl.pm.org.gst.reg.no']}"
+						value=" "
+						size="25" styleClass="ppDisplayTextL"
+						/></td>
+				</ui:fragment>
 				<td></td>
 			</tr>
 			<tr>
@@ -181,7 +191,7 @@
 						label="#{lbl['lbl.pm.organisation.status']}"
 						disabled="#{organisationBackingBean.managedBean.orgProfile.brandNew or organisationBackingBean.managedBean.orgType eq 'FPJ' or organisationBackingBean.managedBean.orgType eq 'FJA'}"
 						value="#{organisationBackingBean.managedBean.orgProfile.recordStatusFlg}"
-						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;margin-top:5px">
+						required="#{!empty param['disableValidation']}" style="margin-bottom: 5px;">
 						<f:selectItems
 							value="#{organisationBackingBean.getStatusOptions()}" />
 					</p:selectOneMenu></td>
