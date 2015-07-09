@@ -23,7 +23,14 @@
 					                 												
 									</c:if>
 									
-									
+						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smZoneLabelView}">
+							<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:160px;" />
+							<p:inputText maxlength="100" disabled="true"
+								value="#{reportBackingBean.smZone}"
+								style="margin-top:5px;width:290px;">
+							</p:inputText>
+						</c:if>			
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smZoneView}">
 							<p:column>
@@ -146,9 +153,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
-									itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
+									itemValue="J"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
-									itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
+									itemValue="K"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 							</p:selectOneMenu>
 						</c:if>
@@ -161,9 +168,9 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
-									itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
+									itemValue="J"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
-									itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
+									itemValue="K"></f:selectItem>
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.both']}"
 									itemValue="#{lbl['lbl.rpt.both']}"></f:selectItem>
 									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
@@ -191,9 +198,9 @@
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
-													itemValue="#{lbl['lbl.rpt.consultant']}"></f:selectItem>
+													itemValue="J"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
-													itemValue="#{lbl['lbl.rpt.contractor']}"></f:selectItem>
+													itemValue="K"></f:selectItem>
 													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
 											</p:selectOneMenu></td>
 										<td><p:message id="supplierTypeMsg" for="SupplierType"

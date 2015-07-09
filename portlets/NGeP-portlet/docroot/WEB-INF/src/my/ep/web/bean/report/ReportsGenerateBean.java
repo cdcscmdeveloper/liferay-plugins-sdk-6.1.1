@@ -51,6 +51,7 @@ public class ReportsGenerateBean {
 	private boolean cmMadatoryIndicatorView= false;
 	private boolean enableCriteriaMenuView = false;
 	private boolean reportCategoryView = false;
+	private boolean generateButtonView = false;
 		//sc module
 		private boolean extraTwoColumnView = false;		
 		private boolean scQuotationNoView = false;
@@ -117,6 +118,7 @@ public class ReportsGenerateBean {
 		private boolean smCompanyNameView = false;
 		private boolean smApplicationNoView = false;
 		private boolean smZoneView = false;
+		private boolean smZoneLabelView = false;
 		private boolean smSupplierTypeView = false;
 		private boolean smMofRegNoView = false;
 		private boolean smCategoryView = false;
@@ -497,6 +499,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmZoneLabelView() {
+			return smZoneLabelView;
+		}
+		public void setSmZoneLabelView(boolean smZoneLabelView) {
+			this.smZoneLabelView = smZoneLabelView;
+		}
+		public boolean isGenerateButtonView() {
+			return generateButtonView;
+		}
+		public void setGenerateButtonView(boolean generateButtonView) {
+			this.generateButtonView = generateButtonView;
+		}
 		public boolean isFlGroupTwentyTwoView() {
 			return flGroupTwentyTwoView;
 		}
