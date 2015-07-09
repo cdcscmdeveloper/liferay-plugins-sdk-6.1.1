@@ -8719,37 +8719,14 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
-	 * Remove un selected facilities from the selected personnel list.
+	 * Auto ticked and disabled hq facility
 	 * 
 	 * @param e
 	 *            - AjaxBehaviorEvent
 	 * 
 	 */
 	public void autoTickedHq(AjaxBehaviorEvent e) {
-		SmFacility hqFacility = getHqFacility();
-		if (hqFacility != null) {
-			if (getManagedBean().getSelectedFactoryFacilities() != null
-					&& !getManagedBean().getSelectedFactoryFacilities()
-							.isEmpty()) {
-				boolean alreadyHasHqFac = false;
-				for (SmFacility fac : getManagedBean()
-						.getSelectedFactoryFacilities()) {
-					if (fac.getSmAddress()
-							.getAddressId()
-							.compareTo(hqFacility.getSmAddress().getAddressId()) == 0) {
-						alreadyHasHqFac = true;
-					}
-				}
-				if (!alreadyHasHqFac) {
-					getManagedBean().getSelectedFactoryFacilities().add(
-							hqFacility);
-				}
-			} else {
-				getManagedBean().setSelectedFactoryFacilities(
-						new ArrayList<SmFacility>());
-				getManagedBean().getSelectedFactoryFacilities().add(hqFacility);
-			}
-		}
+		setHqFacilityInSelectedFacility();
 	}
 
 	/**
@@ -9572,8 +9549,9 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSelectedFactoryFacilities().isEmpty()) {
 				getManagedBean().setSelectedFactoryFacilities(
 						new ArrayList<SmFacility>());
-				getManagedBean().getSelectedFactoryFacilities().add(hq);
+				
 			}
+			getManagedBean().getSelectedFactoryFacilities().add(hq);
 		}
 	}
 
