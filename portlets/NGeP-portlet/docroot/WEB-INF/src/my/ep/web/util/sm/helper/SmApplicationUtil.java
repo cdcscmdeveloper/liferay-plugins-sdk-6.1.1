@@ -3630,17 +3630,18 @@ public class SmApplicationUtil {
 						.getSmAddress(), managedBean.getShareHolderResdAddr()
 						.getSmAddress(), managedBean.getShareHolderResdAddr(),
 						managedBean.getDefPmCountry()));
+		managedBean.getShareHolderMailAddr().setSmAddress(
+				cloneAsPermenantAddr(managedBean.getShareHolderPermAddr()
+						.getSmAddress(), managedBean.getShareHolderMailAddr()
+						.getSmAddress(), managedBean.getShareHolderMailAddr(),
+						managedBean.getDefPmCountry()));
 		managedBean.getShareHolderOffAddr().setSmAddress(
 				cloneAsPermenantAddr(managedBean.getSmAppl()
 						.getSmCompanyBasic().getSmCompanyAddresses().get(0)
 						.getSmAddress(), managedBean.getShareHolderOffAddr()
 						.getSmAddress(), managedBean.getShareHolderOffAddr(),
 						managedBean.getDefPmCountry()));
-		managedBean.getShareHolderMailAddr().setSmAddress(
-				cloneAsPermenantAddr(managedBean.getShareHolderPermAddr()
-						.getSmAddress(), managedBean.getShareHolderMailAddr()
-						.getSmAddress(), managedBean.getShareHolderMailAddr(),
-						managedBean.getDefPmCountry()));
+
 	}
 
 	/**
@@ -5101,6 +5102,11 @@ public class SmApplicationUtil {
 			String[] dayLeftParam = { dayBal + "" };
 			Date saveDate = smAppl.getApplSaveDate() == null ? smAppl
 					.getChangedDate() : smAppl.getApplSaveDate();
+
+			// ensure that modified date display is not more than created date
+			saveDate = saveDate.compareTo(smAppl.getCreatedDate()) >= 0 ? saveDate
+					: smAppl.getCreatedDate();
+			
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString(
 					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(
