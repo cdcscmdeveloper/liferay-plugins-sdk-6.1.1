@@ -22,6 +22,7 @@ public class SuppliersReviewSearchBean {
 	private int noOfSuppliers;
 	private String stateValue;
 	private boolean categoryState;
+	private Long[] dropDownStatesIdList;
 	
 	
 	
@@ -146,6 +147,18 @@ public class SuppliersReviewSearchBean {
 	 */
 	public void setCategoryIdList(List<Long> categoryIdList) {
 		this.categoryIdList = categoryIdList;
+	}
+	/**
+	 * @return the dropDownStatesIdList
+	 */
+	public Long[] getDropDownStatesIdList() {
+		return dropDownStatesIdList;
+	}
+	/**
+	 * @param dropDownStatesIdList the dropDownStatesIdList to set
+	 */
+	public void setDropDownStatesIdList(Long[] dropDownStatesIdList) {
+		this.dropDownStatesIdList = dropDownStatesIdList;
 	}
 	
 	
