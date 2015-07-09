@@ -1902,7 +1902,12 @@ public class LOIDetailBackingBean extends
 					messageCode = MessageConst.INFO_700026;
 				} else if (QTStatusConst.LOI_PENDING_SUPPLIER_ACKNOWLEDGEMENT
 						.equals(statusId)) {
-					messageCode = MessageConst.INFO_700013;
+					if (BpmOutcomeConst.BPM_ACCEPT.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700011;
+					} else if (BpmOutcomeConst.BPM_REJECT
+							.equalsIgnoreCase(outcome)) {
+						messageCode = MessageConst.INFO_700008;
+					}
 				} else if (QTStatusConst.LOI_PENDING_NEGOTIATION
 						.equals(statusId)) {
 					messageCode = MessageConst.INFO_700001;
