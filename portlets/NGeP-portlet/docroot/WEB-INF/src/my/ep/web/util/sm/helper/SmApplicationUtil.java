@@ -3641,7 +3641,6 @@ public class SmApplicationUtil {
 						.getSmAddress(), managedBean.getShareHolderOffAddr()
 						.getSmAddress(), managedBean.getShareHolderOffAddr(),
 						managedBean.getDefPmCountry()));
-
 	}
 
 	/**
@@ -5106,7 +5105,7 @@ public class SmApplicationUtil {
 			// ensure that modified date display is not more than created date
 			saveDate = saveDate.compareTo(smAppl.getCreatedDate()) >= 0 ? saveDate
 					: smAppl.getCreatedDate();
-			
+
 			applStatusInfo.setSubmissionDate(DateUtils.dateToString(
 					"dd-MMM-yyyy", smAppl.getDraftExpiryDate()));
 			applStatusInfo.setDaysLeft(SmCommonUtil.getMessage(

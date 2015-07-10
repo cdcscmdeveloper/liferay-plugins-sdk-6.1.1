@@ -65,10 +65,8 @@
 									style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 									<f:selectItems var="shrPermCountry"
-										value="#{backingBean.managedBean.countryLs}"
-										itemValue="#{shrPermCountry.countryId}"
-										itemLabel="#{shrPermCountry.countryName}" />
-									<p:ajax event="change"
+										value="#{backingBean.managedBean.countryItems}" />
+									<p:ajax event="change" process="@this"
 										listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmState,
@@ -92,7 +90,7 @@
 										value="#{backingBean.managedBean.shrHldrPermStates}"
 										itemValue="#{shrPermState.stateId}"
 										itemLabel="#{shrPermState.stateName}" />
-									<p:ajax event="change"
+									<p:ajax event="change" process="@this"
 										listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderPermAddr.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict,
@@ -116,7 +114,7 @@
 										value="#{backingBean.managedBean.shrHldrPermDistricts}"
 										itemValue="#{shrPermDist.districtId}"
 										itemLabel="#{shrPermDist.districtName}" />
-									<p:ajax event="change"
+									<p:ajax event="change" process="@this"
 										listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderPermAddr.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_SHRHLDR_PERM_ADDR_PANEL,
 								backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity)}"
@@ -265,11 +263,8 @@
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
-											<f:selectItems var="shrMailContry"
-												value="#{backingBean.managedBean.countryLs}"
-												itemValue="#{shrMailContry.countryId}"
-												itemLabel="#{shrMailContry.countryName}" />
-											<p:ajax event="change"
+											<f:selectItems var="shrMailContry" value="#{backingBean.managedBean.countryItems}" />
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmState,
@@ -296,7 +291,7 @@
 												value="#{backingBean.managedBean.shrHldrMailStates}"
 												itemValue="#{shrMailState.stateId}"
 												itemLabel="#{shrMailState.stateName}" />
-											<p:ajax event="change"
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderMailAddr.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict,
@@ -322,7 +317,7 @@
 												value="#{backingBean.managedBean.shrHldrMailDistricts}"
 												itemValue="#{shrMailDist.districtId}"
 												itemLabel="#{shrMailDist.districtName}" />
-											<p:ajax event="change"
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderMailAddr.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_SHRHLDR_MAIL_ADDR_PANEL,
 								backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity)}"
@@ -485,11 +480,8 @@
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
-											<f:selectItems var="shrResCountry"
-												value="#{backingBean.managedBean.countryLs}"
-												itemValue="#{shrResCountry.countryId}"
-												itemLabel="#{shrResCountry.countryName}" />
-											<p:ajax event="change"
+											<f:selectItems var="shrResCountry" value="#{backingBean.managedBean.countryItems}" />
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderResdAddr.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmState,
@@ -516,7 +508,7 @@
 												value="#{backingBean.managedBean.shrHldrResdStates}"
 												itemValue="#{shrResState.stateId}"
 												itemLabel="#{shrResState.stateName}" />
-											<p:ajax event="change"
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderResdAddr.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict,
@@ -542,7 +534,7 @@
 												value="#{backingBean.managedBean.shrHldrResdDistricts}"
 												itemValue="#{shrResDist.districtId}"
 												itemLabel="#{shrResDist.districtName}" />
-											<p:ajax event="change"
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderResdAddr.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_SHRHLDR_RESD_ADDR_PANEL,
 								backingBean.managedBean.shareHolderResdAddr.smAddress.pmCity)}"
@@ -697,11 +689,8 @@
 											style="width: 207px;margin-bottom: 5px;">
 											<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 												itemValue="" />
-											<f:selectItems var="shrOffCountry"
-												value="#{backingBean.managedBean.countryLs}"
-												itemValue="#{shrOffCountry.countryId}"
-												itemLabel="#{shrOffCountry.countryName}" />
-											<p:ajax event="change"
+											<f:selectItems var="shrOffCountry" value="#{backingBean.managedBean.countryItems}" />
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.shareHolderOffAddr.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmState,
@@ -728,7 +717,7 @@
 												value="#{backingBean.managedBean.shrHldrOffStates}"
 												itemValue="#{shrOffState.stateId}"
 												itemLabel="#{shrOffState.stateName}" />
-											<p:ajax event="change"
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.shareHolderOffAddr.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict,
@@ -754,7 +743,7 @@
 												value="#{backingBean.managedBean.shrHldrOffDistricts}"
 												itemValue="#{shrOffDist.districtId}"
 												itemLabel="#{shrOffDist.districtName}" />
-											<p:ajax event="change"
+											<p:ajax event="change" process="@this"
 												listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.shareHolderOffAddr.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_SHRHLDR_OFF_ADDR_PANEL,
 								backingBean.managedBean.shareHolderOffAddr.smAddress.pmCity)}"
