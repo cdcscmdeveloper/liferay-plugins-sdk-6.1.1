@@ -1021,7 +1021,7 @@ public class SupplierFinalizationBackingBean extends
 	private void setForwardToHigherAuthorityStatus(ScQtRecommend scQtRecommend) {
 		Long loggedInUserId = getFacesScopes().getUserSessionBean()
 									  		  .getUserId();
-		if (loggedInUserId.equals(scQtRecommend.getCreatedBy())) {
+		if (scQtRecommend.getCreatedBy().equals(loggedInUserId)) {
 			if (!this.getManagedBean().isForwardToHigherAuthority() ||  
 					!this.getManagedBean().isItemize()) {
 				scQtRecommend.setHigherAuthReq(false);
@@ -3230,15 +3230,15 @@ public class SupplierFinalizationBackingBean extends
 						.getUserId();
 				for (ScQtRecommend scQtRecommend : recommendList) {
 					if (scQtRecommend.isHigherAuthReq() && 
-							!(loggedInUserId.equals(scQtRecommend.getCreatedBy()))) {
+							!(scQtRecommend.getCreatedBy().equals(loggedInUserId))) {
 						this.getManagedBean().setItemFwdToHighAuthority(true);
 					}
 					if (scQtRecommend.isHigherAuthReq() && 
-								(loggedInUserId.equals(scQtFinalization
-										.getHigherSecretary().getUserId()))) {
+								(scQtFinalization.getHigherSecretary().getUserId()
+										.equals(loggedInUserId))) {
 						scQtRecommend.setDisabled(false);
-					} else if (loggedInUserId.equals(scQtRecommend
-							.getCreatedBy())) {
+					} else if (scQtRecommend.getCreatedBy()
+											.equals(loggedInUserId)) {
 						scQtRecommend.setDisabled(false);
 					} else {
 						scQtRecommend.setDisabled(true);
