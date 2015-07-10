@@ -9618,6 +9618,24 @@ public class EvaluationBackingBean extends
 		scQtMeeting.setMeetingStatus(statusResDTO.getPmStatus());
 	}
 
+	private PmStatus getPmStatus() {
+		IStatusSO statussO = null;
+		PmStatus status = null;
+		try {
+			statussO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+			StatusReqDTO statusreq = new StatusReqDTO();
+			statusreq.setStatusId(QTStatusConst.PR_COMPLETED);
+			StatusResDTO statusres = statussO
+					.retrieveStatusByStatusId(statusreq);
+			status = statusres.getPmStatus();
+		} finally {
+
+		}
+		return status;
+
+	}
+
 	/**
 	 * Save evalution stage upload dtls.Event handle to save the evaluation
 	 * stage technical and financial uploaded checklists.
@@ -9634,6 +9652,10 @@ public class EvaluationBackingBean extends
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
+				PmStatus Status = getPmStatus();
+				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
+					uploadedChecklist.setEvaluationStatus(Status);
+				}
 
 				reqDTO.setComplianceList(uploadedList);
 
@@ -10632,6 +10654,10 @@ public class EvaluationBackingBean extends
 					.getComplianceTechnicalProposalCheckListDM().getList();
 
 			if (null != uploadedList && !uploadedList.isEmpty()) {
+				PmStatus Status = getPmStatus();
+				for (ScQtProposalChecklist uploadedChecklist : uploadedList) {
+					uploadedChecklist.setEvaluationStatus(Status);
+				}
 
 				reqDTO.setComplianceList(uploadedList);
 
