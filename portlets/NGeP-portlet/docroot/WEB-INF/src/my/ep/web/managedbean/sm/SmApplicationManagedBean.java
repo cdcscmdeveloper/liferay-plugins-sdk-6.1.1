@@ -361,6 +361,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean roleStaffAndPermAddrReqd;
 	private boolean roleStaffAndMailAddrReqd;
 	private String mofNumber;
+	private List<SelectItem> countryItems;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -2786,6 +2787,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setDeletePendingApplOtherReasonId(
 			Long deletePendingApplOtherReasonId) {
 		this.deletePendingApplOtherReasonId = deletePendingApplOtherReasonId;
+	}
+
+	public List<SelectItem> getCountryItems() {
+		return countryItems;
+	}
+
+	public void setCountryItems(List<SelectItem> countryItems) {
+		this.countryItems = countryItems;
 	}
 
 }
