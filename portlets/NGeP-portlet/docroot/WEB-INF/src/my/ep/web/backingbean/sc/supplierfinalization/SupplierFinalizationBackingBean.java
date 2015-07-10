@@ -85,6 +85,7 @@ import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -2491,6 +2492,8 @@ public class SupplierFinalizationBackingBean extends
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		VelocityContext context = new VelocityContext();
+		
+		context.put("dateSDF", dateSDF);
 
 		context.put("title", scQt.getQtTitle());
 		context.put("qtNo", scQt.getQtNo());
@@ -2539,6 +2542,19 @@ public class SupplierFinalizationBackingBean extends
 
 		context.put("categoryList", scQt.getScQtCategorys());
 		context.put("bean", this);
+		
+		boolean isPanel = false;
+		if (scQt.isPanel()) {
+			isPanel = true;
+			List<CtPanelItem> panelList = new ArrayList<CtPanelItem>();
+			panelList.add(scQt.getScQtSupplierCriteria().getCtPanelItem());
+			context.put("ctCircularVer", scQt.getScQtSupplierCriteria().getCtPanelItem().getCtCircularVer());
+			context.put("panelList", panelList);
+			context.put("bean", this);
+		} else {
+			
+		}
+		context.put("panel", isPanel);
 
 		List<ScQtCategory> categoryResults = new ArrayList<ScQtCategory>();
 		IQTDetailSO QtDetailsSO;
