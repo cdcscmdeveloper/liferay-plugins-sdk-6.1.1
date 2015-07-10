@@ -21,7 +21,9 @@ public class LovBean implements Serializable {
 	private String clientId;
 	private String update;
 	private String postUpdateListener;
+	private String postUpdateListenerWithIndex;
 	private String selectionMode;
+	private int saveObjectIndex;
 	
 
 	public String getLovId() {
@@ -96,11 +98,23 @@ public class LovBean implements Serializable {
 	public void setPostUpdateListener(String postUpdateListener) {
 		this.postUpdateListener = postUpdateListener;
 	}
+	public String getPostUpdateListenerWithIndex() {
+		return postUpdateListenerWithIndex;
+	}
+	public void setPostUpdateListenerWithIndex(String postUpdateListenerWithIndex) {
+		this.postUpdateListenerWithIndex = postUpdateListenerWithIndex;
+	}
 	public String getSelectionMode() {
 		return selectionMode;
 	}
 	public void setSelectionMode(String selectionMode) {
 		this.selectionMode = selectionMode;
+	}
+	public int getSaveObjectIndex() {
+		return saveObjectIndex;
+	}
+	public void setSaveObjectIndex(int saveObjectIndex) {
+		this.saveObjectIndex = saveObjectIndex;
 	}
 	
 	
