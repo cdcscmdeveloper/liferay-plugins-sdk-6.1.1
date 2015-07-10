@@ -31,14 +31,13 @@
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			</f:facet>
-			<ac:lov id="lovSupplier" lovId="SM_SUPPLIER_WITH_PROFILE" size="35"
+			<ac:lov id="lovSupplier" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="35"
 				readonly="true"
 				disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.settings.fee.org.suplier.name']}"
 				headerText="Supplier"
 				update=":form:settingTabId:feeSettingId:feeByOrgItemTableID"
-				postUpdateListener="ruleCatalogueBackingBean.updateOrgProfileForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem)"
-				saveObject="ruleCatalogueBackingBean.managedBean.selectedSmSupplier"
+				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].orgProfileId"
 				value="#{feeObj.orgProfileId.smSupplier.companyName}">
 			</ac:lov>
  <p:message id="lovSupplierMsg" for="lovSupplier" display="icon" />
@@ -56,8 +55,6 @@
 				conditionField="cmSupplierItems.supplierId^#{feeObj.orgProfileId.smSupplier.supplierId}"
 				value="#{feeObj.itemId.itemName}">
 			</ac:lov>
-
-
 
 		</p:column>
 		<p:column width="10%">
@@ -101,6 +98,11 @@
 				disabled="#{typeValueObj.brandNew or (feeObj.isG2G == 1)}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+				<p:ajax event="change" immediate="true"
+								listener="#{ruleCatalogueBackingBean.feeExemptionStatusChange(feeObj)}"
+								partialSubmit="true" process="@this"
+								update="@this" />
+					
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="5%">
@@ -125,8 +127,5 @@
 			action="#{ruleCatalogueBackingBean.addMoreOrgAndItemFee()}"></p:commandButton>
 
 	</div>
-
-
-
 
 </ui:composition>
