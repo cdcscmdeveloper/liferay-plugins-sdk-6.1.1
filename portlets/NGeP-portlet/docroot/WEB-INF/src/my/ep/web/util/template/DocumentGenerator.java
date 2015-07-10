@@ -6,7 +6,6 @@ package my.ep.web.util.template;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
-import java.util.Properties;
 
 import javax.faces.context.FacesContext;
 
@@ -15,7 +14,6 @@ import my.ep.factory.EpLogger;
 import org.apache.log4j.Logger;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
@@ -32,18 +30,7 @@ public class DocumentGenerator {
 private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 	
 	private static DocumentGenerator instance;
-	private static VelocityEngine ve;
-	
-	private static VelocityEngine getVelocityEngine() throws Exception {
-		if(ve==null) {
-			ve = new VelocityEngine();
-			ve.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
-			ve.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
-			ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
-			ve.init();
-		}
-		return ve;
-	}
+	private VelocityEngine ve;
 	
 	/**
 	 * Get singleton of DocumentGenerator
@@ -58,13 +45,12 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 			String myTemplatePath = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/WEB-INF/templates");
 			log.info("myTemplatePath: " + myTemplatePath);
 
-	    	Properties p = new Properties();
-//	    	p.setProperty( "file.resource.loader.path", myTemplatePath);
-	    	
-	    	p.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
-	        p.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
-	        
-	    	Velocity.init(p);
+			VelocityEngine ve = new VelocityEngine();
+			ve.setProperty(RuntimeConstants.RESOURCE_LOADER,"classpath");
+			ve.setProperty("classpath.resource.loader.class",ClasspathResourceLoader.class.getName());
+			ve.setProperty("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.NullLogSystem");
+			ve.init();
+			instance.setVelocityEngine(ve);
 		}
 		return instance;
 	}
@@ -147,6 +133,20 @@ private static Logger log = EpLogger.getLogger(DocumentGenerator.class);
 		os.close();
 	}
 	
+	/**
+	 * @return the ve
+	 */
+	public VelocityEngine getVelocityEngine() {
+		return ve;
+	}
+
+	/**
+	 * @param ve the ve to set
+	 */
+	public void setVelocityEngine(VelocityEngine ve) {
+		this.ve = ve;
+	}
+
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
