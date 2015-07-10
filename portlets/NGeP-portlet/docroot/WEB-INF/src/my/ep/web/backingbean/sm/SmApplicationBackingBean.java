@@ -528,6 +528,7 @@ public class SmApplicationBackingBean extends
 			log.info("*** Today ****" + getManagedBean().getToday());
 			getManagedBean().setCountryLs(
 					SmApplicationUtil.retrievePmCountryList());
+			getManagedBean().setCountryItems(SmCommonUtil.getCountryList());
 			// getManagedBean().setCertBodyLs(
 			// SmApplicationUtil.retrievePmCertBodyList());
 			getManagedBean().setProfBodyLs(
@@ -4590,13 +4591,12 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getShareHolderMailAddr().setSameAsPerm(true);
 		}
 
-		if (shareHolderBean.isDirector() || shareHolderBean.isDirector()
-				|| shareHolderBean.isHigherManagement()) {
-			// do nothing
-		} else {
+		if (!shareHolderBean.isDirector()
+				&& !shareHolderBean.isHigherManagement()) {
 			getManagedBean().getShareHolderOffAddr().setSameAsPerm(true);
 			getManagedBean().getShareHolderResdAddr().setSameAsPerm(true);
 		}
+
 		// clone the addrs start
 		SmApplicationUtil.cloneShareHolderAddress(getManagedBean());
 		// clone the addrs end
@@ -5349,29 +5349,25 @@ public class SmApplicationBackingBean extends
 		} else {
 			SmPersonnelAddress perm = new SmPersonnelAddress();
 			perm.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_PERM);
-			perm.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-					.getDefPmCountry()));
+			perm.setSmAddress(getDefaultNewAddress());
 			perm.setSmPersonnel(shareHolderBean);
 			perm.setSameAsPerm(false);
 
 			SmPersonnelAddress mail = new SmPersonnelAddress();
 			mail.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_MAIL);
-			mail.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-					.getDefPmCountry()));
+			mail.setSmAddress(getDefaultNewAddress());
 			mail.setSmPersonnel(shareHolderBean);
 			mail.setSameAsPerm(false);
 
 			SmPersonnelAddress off = new SmPersonnelAddress();
 			off.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_OFFICE);
-			off.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-					.getDefPmCountry()));
+			off.setSmAddress(getDefaultNewAddress());
 			off.setSmPersonnel(shareHolderBean);
 			off.setSameAsPerm(false);
 
 			SmPersonnelAddress res = new SmPersonnelAddress();
 			res.setAddressType(SupplierManagementConst.SM_PERSONNEL_ADDR_TYPE_RES);
-			res.setSmAddress(SmApplicationUtil.setDefaultAddr(getManagedBean()
-					.getDefPmCountry()));
+			res.setSmAddress(getDefaultNewAddress());
 			res.setSmPersonnel(shareHolderBean);
 			res.setSameAsPerm(false);
 
@@ -5538,6 +5534,11 @@ public class SmApplicationBackingBean extends
 
 		getManagedBean().setSelectedShareHolder(shareHolderBean);
 
+	}
+
+	private SmAddress getDefaultNewAddress() {
+		SmAddress addr = SmApplicationUtil.setDefaultAddr(null);
+		return addr;
 	}
 
 	// -- Process Common for both Personnel and Share Holder Start --
@@ -9549,7 +9550,7 @@ public class SmApplicationBackingBean extends
 			if (getManagedBean().getSelectedFactoryFacilities().isEmpty()) {
 				getManagedBean().setSelectedFactoryFacilities(
 						new ArrayList<SmFacility>());
-				
+
 			}
 			getManagedBean().getSelectedFactoryFacilities().add(hq);
 		}
