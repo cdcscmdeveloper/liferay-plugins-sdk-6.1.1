@@ -65,7 +65,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtContractNoView(true);
 	        	rptGenBean.setCtPhysicalContractNoView(true);
 	        	rptGenBean.setCtAgreementView(true);
-	        	rptGenBean.setCtStatusTwoView(true);
+	        	rptGenBean.setCtStatusThreeView(true);
 	        	rptGenBean.setCtLoanNoView(true);
 	        	rptGenBean.setCtMinistryView(true);
 	        	rptGenBean.setCtPtjView(true);
@@ -240,6 +240,38 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 				rptGenBean.setCtGroupOneView(true);
+	            break;
+           case ReportConst.CT_FULFILMENT_STATUS_RPT_VAL:	        	
+	        	rptGenBean.setCtContractNoView(true);
+	        	rptGenBean.setCtPhysicalContractNoView(true);
+	        	rptGenBean.setCtAgreementView(true);
+	        	rptGenBean.setCtStatusThreeView(true);
+	        	rptGenBean.setCtLoanNoView(true);
+	        	rptGenBean.setCtMinistryView(true);
+	        	rptGenBean.setCtPtjView(true);
+	        	rptGenBean.setCtGroupFourView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtUserTypeView(true);
+	        	rptGenBean.setCtSubTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+	            break;
+           case ReportConst.CT_CONTRACT_TRANSACTION_MONITORING_CC_RPT_VAL:	        	
+	        	rptGenBean.setCtContractNoView(true);
+	        	rptGenBean.setCtPhysicalContractNoView(true);
+	        	rptGenBean.setCtAgreementView(true);
+	        	rptGenBean.setCtStatusThreeView(true);
+	        	rptGenBean.setCtLoanNoView(true);
+	        	rptGenBean.setCtMinistryView(true);
+	        	rptGenBean.setCtPtjView(true);
+	        	rptGenBean.setCtGroupFourView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtUserTypeView(true);
+	        	rptGenBean.setCtSubTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
 	            break;
 	        
 	        default: 
