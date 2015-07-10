@@ -3,8 +3,6 @@ package my.ep.web.backingbean.pm.suppliersreview;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -23,18 +21,12 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.logging.LogKey;
-import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.SuppliersReviewSearchBean;
 import my.ep.web.managedbean.pm.suppliersreview.SuppliersReviewManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-
-import com.bea.common.security.xacml.policy.Action;
-
-import weblogic.apache.xalan.trace.SelectionEvent;
 
 @ManagedBean(name = "suppliersReviewBackingBean")
 @ViewScoped
@@ -72,7 +64,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			.getSuppliersReviewSearchBean().setSelectedStatesList(null);
 			this.getManagedBean().setDisabled(false);
 		}
-		RequestContext.getCurrentInstance().execute("selectAll()");
+		//RequestContext.getCurrentInstance().execute("selectAll()");
 
 
 	}
