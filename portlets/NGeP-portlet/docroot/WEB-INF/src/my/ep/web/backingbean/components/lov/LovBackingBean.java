@@ -204,11 +204,13 @@ public class LovBackingBean implements Serializable {
 		FacesScopes facesScopes = new FacesScopes();
 		String headerText = facesScopes.getParameter("headerText");
 		String saveObject = facesScopes.getParameter("saveObject");
+		int saveObjectIndex = extractSaveObjectIndex(saveObject);
 		String componentId = facesScopes.getParameter("componentId");
 		String conditionField = facesScopes.getParameter("conditionField");
 		String clientId = facesScopes.getParameter("clientId");
 		String update = facesScopes.getParameter("update");
 		String postUpdateListener = facesScopes.getParameter("postUpdateListener");
+		String postUpdateListenerWithIndex = facesScopes.getParameter("postUpdateListenerWithIndex");
 		String selectionMode = facesScopes.getParameter("selectionMode");
 		
 		debugLogger("headerText: " + headerText);
@@ -227,10 +229,12 @@ public class LovBackingBean implements Serializable {
 			lovBean.setLovId(lovId);
 			lovBean.setTitle(headerText);
 			lovBean.setSaveObject(saveObject);
+			lovBean.setSaveObjectIndex(saveObjectIndex);
 			lovBean.setComponentId(componentId);
 			lovBean.setConditionField(conditionField);
 			lovBean.setUpdate(update);
 			lovBean.setPostUpdateListener(postUpdateListener);
+			lovBean.setPostUpdateListenerWithIndex(postUpdateListenerWithIndex);
 			lovBean.setSelectionMode(selectionMode);
 			
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
@@ -274,6 +278,15 @@ public class LovBackingBean implements Serializable {
 		validateBeforeSearch();
 		
 		searchDataModel.reloadData();
+	}
+	
+	private int extractSaveObjectIndex(String saveObject) {
+		int index1 = saveObject.indexOf("[");
+		int index2 = saveObject.indexOf("]");
+		
+		String saveOjbectIndex = saveObject.substring(index1 + 1, index2);
+		
+		return (saveOjbectIndex == null) ? 0 : Integer.parseInt(saveOjbectIndex);
 	}
 	
 	private void validateBeforeSearch() {
@@ -489,7 +502,7 @@ public class LovBackingBean implements Serializable {
 		
 				valueExpression.setValue(context.getELContext(), selectedEntity);
 		
-				debugLogger("postUpdateListener" + this.getLovBean().getPostUpdateListener());
+				debugLogger("postUpdateListener: " + this.getLovBean().getPostUpdateListener());
 					
 				if(StringUtils.isNotEmpty(this.getLovBean().getPostUpdateListener())) {
 		
@@ -501,6 +514,20 @@ public class LovBackingBean implements Serializable {
 		            postUpdateListenerMethodExpr.invoke(context.getELContext(),
 		                        new Object[] { selectedEntity });
 				}
+				
+				debugLogger("postUpdateListenerWithIndex: " + this.getLovBean().getPostUpdateListenerWithIndex());
+				
+				if(StringUtils.isNotEmpty(this.getLovBean().getPostUpdateListenerWithIndex())) {
+					
+					MethodExpression postUpdateListenerMethodExpr = FacesScopes
+		                        .createMethodExpression(context,
+		                        		this.getLovBean().getPostUpdateListenerWithIndex(), null,
+		                                new Class[] { BaseEntity.class, int.class });
+					
+		            postUpdateListenerMethodExpr.invoke(context.getELContext(),
+		                        new Object[] { selectedEntity, this.getLovBean().getSaveObjectIndex() });
+				}
+				
 	
 				this.resetAction();
 				this.setLovBean(new LovBean());
