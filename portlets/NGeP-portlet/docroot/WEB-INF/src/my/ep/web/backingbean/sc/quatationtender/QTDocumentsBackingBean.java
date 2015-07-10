@@ -1098,36 +1098,38 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		
 		String deductionAmount = "";
-		StringBuilder deductionTypes = new StringBuilder();
+		List<String> deductionTypes = new ArrayList<String>();
+		//StringBuilder deductionTypes = new StringBuilder();
     	List<ScQtDeduction> scQtDeductions = qt.getScQtDeductions();
     	if (scQtDeductions != null) {
     		for (ScQtDeduction scQtDeduction : scQtDeductions) {
     			if (scQtDeduction.getDeductionAmount() != null) {
     				deductionAmount = amountDF.format(scQtDeduction.getDeductionAmount());	
     	    	}
-        		if (deductionTypes.length() > 0) {
-        			deductionTypes.append(","); 
-        		}
-        		deductionTypes.append(getParameterDesc(scQtDeduction.getDeductionType()));
+/*        		if (deductionTypes.size() > 0) {
+        			deductionTypes.add(","); 
+        		}*/
+        		deductionTypes.add(getParameterDesc(scQtDeduction.getDeductionType()));
+        		//deductionTypes.append(getParameterDesc(scQtDeduction.getDeductionType()));
         	}	
     	}
     	context.put("deductionAmount", deductionAmount);
     	context.put("validityPeriod", qt.getQtValidityPeriod());
     	//context.put("deductionTypes", deductionTypes.toString());
     	boolean deductionType = false;
-    	if (deductionTypes.toString().contains("Penalty")) {
+    	if (deductionTypes.contains("Penalty")) {
     		deductionType = true;
     		context.put("penalty", deductionType);
     	}
-    	if (deductionTypes.toString().contains("Royalty Fee")) {
+    	if (deductionTypes.contains("Royalty Fee")) {
     		deductionType = true;
     		context.put("royaltyFee", deductionType);
     	}
-    	if (deductionTypes.toString().contains("Fixed Deduction")) {
+    	if (deductionTypes.contains("Fixed Deduction")) {
     		deductionType = true;
     		context.put("fixedDeduction", deductionType);
     	}
-    	if (deductionTypes.toString().contains("Non Fixed Deduction")) {
+    	if (deductionTypes.contains("Non Fixed Deduction")) {
     		deductionType = true;
     		context.put("nonFixedDeduction", deductionType);
     	}
