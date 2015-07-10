@@ -59,15 +59,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 	}
 
-	/*public void checkBoxStatus()
-	{
-		if(this.getManagedBean().isAllStates()){
-			for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getStatesList()){
 
-			}
-
-		}
-	}*/
 	public void selectAllStates() {
 
 		if(this.getManagedBean().isAllStates()){
@@ -156,6 +148,16 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 		List<ScQtCategory> catList = this.getManagedBean().getQtCategoryList();
 
+		if(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom()!=null 
+				&& this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo()!=null){
+
+			suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
+			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
+		}
+		else{
+			throw new EpException(MessageConst.ERROR_790002);
+		}
+
 		if(catList!=null && !catList.isEmpty()){
 
 			for(ScQtCategory scQtCategory:catList){
@@ -180,17 +182,6 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 			stateIdList.addAll(Arrays.asList(this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList()));
 
 		}
-
-		if(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom()!=null 
-				&& this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo()!=null){
-
-			suppliersReviewReqDTO.setPaidUpCapitalAmtFrom(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtFrom());
-			suppliersReviewReqDTO.setPaidUpCapitalAmtTo(this.getManagedBean().getSuppliersReviewSearchBean().getPaidUpCapitalAmtTo());
-		}
-		else{
-			throw new EpException(MessageConst.ERROR_790002);
-		}
-
 		suppliersReviewReqDTO.setStateIdList(stateIdList);
 		suppliersReviewReqDTO.setCategoryIdList(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList());
 		suppliersReviewReqDTO.setCategoriesListSize(this.getManagedBean().getSuppliersReviewSearchBean().getCategoryIdList().size());
