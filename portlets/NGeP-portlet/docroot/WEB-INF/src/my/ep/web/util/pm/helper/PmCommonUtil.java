@@ -1200,7 +1200,7 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 	
-	private static String getUserRoleValue() {		
+	public static String getUserRoleValue() {		
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
 			return RoleCode.EP_ADMIN.value();
