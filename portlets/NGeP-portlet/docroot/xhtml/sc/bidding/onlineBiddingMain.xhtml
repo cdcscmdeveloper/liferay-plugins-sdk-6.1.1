@@ -157,7 +157,7 @@
 						stepFactor="#{bidPriceItem.scBidSupplierItem.scBidItem.decrementAmt}">
 						<p:ajax event="change" process="@this"
 							listener="#{onlineBiddingBB.decrementAmountValueChangeListener(bidPriceItem)}"
-							update="@this,submitButton,newPrice,newPriceSubTotal,:form:obMessage"></p:ajax>
+							update=":form:itemWiseBidListOB"></p:ajax>
 						<!-- <f:attribute name="bidPrice" value="#{bidPriceItem}"/>  -->
 						<!-- <f:validator validatorId="my.ep.web.validator.sc.BidPriceValidator" /> -->
 						<f:convertNumber
@@ -251,7 +251,7 @@
 				</p:columnGroup>
 			</p:dataTable>
 			<p:remoteCommand name="rc" update="itemWiseBidListOB" />
-			<p:remoteCommand name="updateTotal" update="@(.calcTotal)" />
+			
 		</p:panel>
 
 		<p:confirmDialog id="newBidPriceConfirm" width="300px"
