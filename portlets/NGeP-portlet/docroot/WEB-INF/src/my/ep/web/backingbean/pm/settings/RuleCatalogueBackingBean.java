@@ -761,6 +761,8 @@ public class RuleCatalogueBackingBean extends
 				.size();
 		this.getManagedBean().getFeeExemptionsForOrgAndItem()
 				.add(index, newFeeExemption);
+		RequestContext.getCurrentInstance().execute(
+				"feeByOrgItemTableWidVar.paginator.endLink.click()");
 
 	}
 
@@ -806,6 +808,8 @@ public class RuleCatalogueBackingBean extends
 		int index = this.getManagedBean().getFeeExemptionsForComodity().size();
 		this.getManagedBean().getFeeExemptionsForComodity()
 				.add(index, newFeeExemption);
+		RequestContext.getCurrentInstance().execute(
+				"feeByComodityTableWidVar.paginator.endLink.click()");
 
 	}
 
@@ -834,6 +838,8 @@ public class RuleCatalogueBackingBean extends
 		int index = this.getManagedBean().getFeeExemptionsForContract().size();
 		this.getManagedBean().getFeeExemptionsForContract()
 				.add(index, newFeeExemption);
+		RequestContext.getCurrentInstance().execute(
+				"feeByContractTableWidVar.paginator.endLink.click()");
 
 	}
 

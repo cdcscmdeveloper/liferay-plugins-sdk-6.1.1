@@ -21,16 +21,17 @@
 
 
 	<p:dataTable id="feeByOrgItemTableID" var="feeObj" rows="10"
+		widgetVar="feeByOrgItemTableWidVar"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
           <ac:paginator for="feeByOrgItemTableID" />
-		<p:column>
+		<p:column style="width:30%">
 			<f:facet name="header">
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.pm.settings.fee.org.suplier.name']}" />
 			</f:facet>
-			<ac:lov id="lovSupplier" lovId="SM_SUPPLIER_WITH_PROFILE" size="25"
+			<ac:lov id="lovSupplier" lovId="SM_SUPPLIER_WITH_PROFILE" size="35"
 				readonly="true"
 				disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.settings.fee.org.suplier.name']}"
@@ -43,13 +44,13 @@
  <p:message id="lovSupplierMsg" for="lovSupplier" display="icon" />
 
 		</p:column>
-		<p:column>
+		<p:column style="width:30%">
 			<f:facet name="header">
 				                	#{lbl['lbl.pm.itemname']}
 				                </f:facet>
 
 			<ac:lov id="lovItem" lovId="CM_ITEM"
-				disabled="#{feeObj.orgProfileId.smSupplier == null or !(feeObj.brandNew)}" size="30"
+				disabled="#{feeObj.orgProfileId.smSupplier == null or !(feeObj.brandNew)}" size="40"
 				readonly="true" headerText="Item"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForOrgAndItem[#{rowIndex}].itemId"
 				conditionField="cmSupplierItems.supplierId^#{feeObj.orgProfileId.smSupplier.supplierId}"
@@ -64,13 +65,13 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
-			<p:calendar showOn="button" id="effDate"
+			<p:calendar showOn="button" id="FeeOrgeffDateId"
 		    	disabled = "#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}" style="width :40px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=FeeOrgExpDateId])"
+				<p:ajax event="dateSelect" update="@([id$=FeeOrgexpDateId])"
 					process="@this" />
 			</p:calendar>
 		</p:column>
@@ -80,7 +81,7 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="FeeOrgExpDateId"
+			<p:calendar showOn="button" id="FeeOrgexpDateId"
 		    	disabled = "#{feeObj.isG2G == 1 or feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}" style="width :40px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
@@ -92,17 +93,17 @@
 			</p:calendar>
 		</p:column>
 
-		<p:column width="8%">
+		<p:column width="10%">
 			<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 			<p:selectOneMenu value="#{feeObj.recordStatusFlg}"
-				disabled="#{typeValueObj.brandNew or (feeObj.isG2G == 1)}" style="width:128px;">
+				disabled="#{typeValueObj.brandNew or (feeObj.isG2G == 1)}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 			</p:selectOneMenu>
 		</p:column>
-		<p:column width="3%">
+		<p:column width="5%">
 			<f:facet name="header">
 
 			</f:facet>
