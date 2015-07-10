@@ -135,6 +135,7 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private CmItem keywordItem;
 	private boolean productKeyword =false;
 	private boolean serviceKeyword =false;
+	private boolean refreshPageNoFlag=false;
 
 
 
@@ -1160,6 +1161,16 @@ public class CodificationManagedBean extends BaseManagedBean {
 		System.out.println("extensionSearchcheckBoxAll*******"+extensionSearchcheckBoxAll);
 		this.extensionSearchcheckBoxAll = extensionSearchcheckBoxAll;
 	}
+
+	public boolean isRefreshPageNoFlag() {
+		return refreshPageNoFlag;
+	}
+
+	public void setRefreshPageNoFlag(boolean refreshPageNoFlag) {
+		this.refreshPageNoFlag = refreshPageNoFlag;
+	}
+	
+	
 
 
 
