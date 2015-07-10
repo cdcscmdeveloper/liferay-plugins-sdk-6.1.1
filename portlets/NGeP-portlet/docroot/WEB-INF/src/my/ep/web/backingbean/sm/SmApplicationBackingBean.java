@@ -548,8 +548,9 @@ public class SmApplicationBackingBean extends
 													.value(),
 											SupplierManagementConst.SM_REASON_CODE_OTHERS));
 			getManagedBean().setRegStatusDescList(
-					SmApplicationUtil
-							.retrieveRegistrationStatusList(applicationType));
+					SmApplicationUtil.retrieveRegistrationStatusList(
+							getManagedBean().getSmAppl().getSupplierType(),
+							applicationType));
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
