@@ -305,6 +305,8 @@ public class ReportsGenerateBean {
 		private boolean ctLOAPhysicalNoView = false;
 		private boolean ctUserTypeView = false;
 		private boolean ctSubTypeView = false;
+		private boolean ctGroupFourView = false;
+		private boolean ctStatusThreeView = false;
 		//PP
 		private boolean ppYearView = false;
 		private boolean ppMinistryView = false;
@@ -499,6 +501,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isCtStatusThreeView() {
+			return ctStatusThreeView;
+		}
+		public void setCtStatusThreeView(boolean ctStatusThreeView) {
+			this.ctStatusThreeView = ctStatusThreeView;
+		}
+		public boolean isCtGroupFourView() {
+			return ctGroupFourView;
+		}
+		public void setCtGroupFourView(boolean ctGroupFourView) {
+			this.ctGroupFourView = ctGroupFourView;
+		}
 		public boolean isSmZoneLabelView() {
 			return smZoneLabelView;
 		}
