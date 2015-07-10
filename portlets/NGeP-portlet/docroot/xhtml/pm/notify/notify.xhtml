@@ -48,7 +48,7 @@
 
 									<p:column style="text-align: right;width:7%">
 										<h:graphicImage title="#{lbl['lbl.portal.notify.unreadnotice']}" value="#{CommonUIConstant.imagePathUptoDesign}/mail.png"
-											rendered="#{notify.readFlag eq '0'}" />
+											rendered="#{notify.pmAlert.isRead eq '0'}" />
 									</p:column>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
@@ -57,18 +57,18 @@
 											action="#{notifyBackingBean.selectedNotify}"
 											update=":form:pnldetail,:form:notifyTable">
 											<h:outputText
-												value="#{notify.pmNotifyDashboard.subject.length() gt 50 ? notify.pmNotifyDashboard.subject.substring(0,47).concat('...') : notify.pmNotifyDashboard.subject}"></h:outputText>
+												value="#{notify.pmNotifyLog.subject.length() gt 50 ? notify.pmNotifyLog.subject.substring(0,47).concat('...') : notify.pmNotifyLog.subject}"></h:outputText>
 											<f:setPropertyActionListener value="#{notify}"
 												target="#{notifyBackingBean.managedBean.selectedNotify}" />
 										</p:commandLink>
 									</p:column>
 									<p:column headerText="#{lbl['lbl.portal.notify.datetime']}"
 										style="text-align: right;width:2%;">
-										<h:outputText value="#{notify.changedDate}">
+										<h:outputText value="#{notify.pmNotifyLog.createdDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy" />
 										</h:outputText>
 										<br />
-										<h:outputText value="#{notify.changedDate}">
+										<h:outputText value="#{notify.pmNotifyLog.createdDate}">
 											<f:convertDateTime pattern="hh:mm:ss a" />
 										</h:outputText>
 									</p:column>
@@ -95,11 +95,11 @@
 											style="font-weight:bold;text-align: left"
 											value="#{lbl['lbl.portal.notify.sender']}"> : </h:outputText></td>
 									<td style="text-align: left"><h:outputText
-											value="#{notifyBackingBean.managedBean.selectedNotify.recipient.userName}"></h:outputText>
+											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.pmUser.userName}"></h:outputText>
 									</td>
 									<td align="right"
 										style="width: 200px; text-align: right; font-size: 12px;"><h:outputText
-											value="#{notifyBackingBean.managedBean.selectedNotify.createdDate}"
+											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.createdDate}"
 											readonly="true">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
 										</h:outputText></td>
@@ -110,7 +110,7 @@
 											value="#{lbl['lbl.portal.notify.subject']}"></h:outputText></td>
 									<td colspan="3"><h:outputText readonly="true"
 											style="width:545px"
-											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.subject}"></h:outputText>
+											value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.subject}"></h:outputText>
 									</td>
 								</tr>
 								<tr>
@@ -119,7 +119,7 @@
 											style="text-align:left;width:100%;height:240px;border:0">
 											<p:outputLabel escape="false" readonly="true"
 												style="text-align:left;width:98%;height:220px;overflow: auto;"
-												value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyDashboard.content}"></p:outputLabel>
+												value="#{notifyBackingBean.managedBean.selectedNotify.pmNotifyLog.content}"></p:outputLabel>
 										</p:scrollPanel></td>
 								</tr>
 							</c:if>
