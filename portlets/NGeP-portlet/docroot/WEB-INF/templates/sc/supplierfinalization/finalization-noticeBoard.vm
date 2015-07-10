@@ -1,51 +1,59 @@
 <html>
 <head>
 	<style>
-		@page { size: A4 portrait;}
-		@page { @bottom-center { content: element(footer) }}
-				
-		.footer {
-			display: block; text-align: center;
-			position: running(footer);
+		.header {
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:16px;
+			font-weight: bold;
+			text-align:left;
 		}
-		
-		.descTable{
-		 	border-collapse: collapse;
+		.standard{
+			color: #333; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			text-align:left;
 		}
-		
-		.descTable td, .descTable tr, .descTable th {
-		 	border: 1px solid black;
+		.title{
+			color: #fff; 
+			font-family:'Arial', sans-serif;
+			font-size:12px;
+			font-weight: bold;
+			text-align:left;
 		}
-		
-		body{
-			
+		.border{
+			border-TOP: 1px solid #a2a2a2;
+			border-bottom: 1px solid #a2a2a2;
 		}
-		
-		.txtBold{
-			font-weight : bold;
+		.border-bottom{
+			border-bottom: 1px solid #a2a2a2;
 		}
-		
-		.sTable{
-			width : 80%;
+		.left-right {
+			border-left: 1px solid #a2a2a2;
+			border-right: 1px solid #a2a2a2;
 		}
-		
-		.sColTwentyPerc{
-			width : 20%;
+		.left{
+			border-left: 1px solid #a2a2a2;
 		}
-		
-		.infoTable{
-			border-collapse: collapse;
+		.right{
+			border-right: 1px solid #a2a2a2;
+		}
+		table, td, th {
+			border: 0 solid #555;
+		}
+		table{
 			width: 100%;
 		}
-		.infoTable td {
-			border: 1px solid black;
+		th{
+			height: 20px;
+			padding: 5px 5px 5px 10px;
 		}
-		.tdInfoTable {
-			border: 1px solid black;
-			font-family: Verdana;
-			font-size: 12px;
-			font-weight: normal;
-			font-style: inherit;
+		td{
+			height: 18px;
+			padding: 5px 5px 5px 10px;
+		}
+		.white{
+			color:#fff;
 		}
 	</style>
 </head>
@@ -65,80 +73,73 @@
     </tr>
 </table>
 <br/>
-	<table width='100%'>
+<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+	<tbody>
 		<tr>
-			<td align="left">
-				<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-				<u> Notice Board </u></span>
-				<br/><br/>
-			</td>
+			<th bgcolor="#a2a2a2" class="header"><u> Notice Board </u></th>
+		</tr>
+	</tbody>
+</table>
+<br/>
+<br/>
+<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<th bgcolor="#a2a2a2" class="header">Tender Details</th>
+		</tr>
+	</tbody>
+</table>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
+		<tr>
+			<td class="standard border left">1</td>
+			<td class="standard border left">Perkara</td>
+			<td class="standard border left-right">$title</td>
 		</tr>
 		<tr>
-			<td align="left">
-				<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-				TENDER DETAILS </span>
-				<br/>
-			</td>
-		</tr>
-	</table>
-
-	<table class="infoTable">
-		<tr>
-			<td class="tdInfoTable">1</td>
-			<td class="tdInfoTable">Title</td>
-			<td class="tdInfoTable">$title</td>
+			<td class="standard border-bottom left">2</td>
+			<td class="standard border-bottom left">Quotation/Tender No</td>
+			<td class="standard border-bottom left-right">$qtNo</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">2</td>
-			<td class="tdInfoTable">Quotation/Tender No</td>
-			<td class="tdInfoTable">$qtNo</td>
+			<td class="standard border-bottom left">3</td>
+			<td class="standard border-bottom left">Ministry</td>
+			<td class="standard border-bottom left-right">$ministry</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">3</td>
-			<td class="tdInfoTable">Ministry</td>
-			<td class="tdInfoTable">$ministry</td>
-		</tr>
-		<!--
-		<tr>
-			<td class="tdInfoTable">4</td>
-			<td class="tdInfoTable">Jabatan</td>
-			<td class="tdInfoTable">$jabatan</td>
-		</tr>
-		-->
-		<tr>
-			<td class="tdInfoTable">4</td>
-			<td class="tdInfoTable">PTJ</td>
-			<td class="tdInfoTable">$ptj</td>
+			<td class="standard border-bottom left">4</td>
+			<td class="standard border-bottom left">PTJ</td>
+			<td class="standard border-bottom left-right">$ptj</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">5</td>
-			<td class="tdInfoTable">Notice Publish Date</td>
-			<td class="tdInfoTable">$publishDate</td>
+			<td class="standard border-bottom left">5</td>
+			<td class="standard border-bottom left">Notice Publish Date</td>
+			<td class="standard border-bottom left-right">$publishDate</td>
+		</tr>		
+		<tr>
+			<td class="standard border-bottom left">6</td>
+			<td class="standard border-bottom left">Publishing Period (Days)</td>
+			<td class="standard border-bottom left-right">$publishPeriod</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">6</td>
-			<td class="tdInfoTable">Publishing Period (Days)</td>
-			<td class="tdInfoTable">$publishPeriod</td>
+			<td class="standard border-bottom left">7</td>
+			<td class="standard border-bottom left">Closing Date</td>
+			<td class="standard border-bottom left-right">$closingDate</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">7</td>
-			<td class="tdInfoTable">Closing Date</td>
-			<td class="tdInfoTable">$closingDate</td>
+			<td class="standard border-bottom left">8</td>
+			<td class="standard border-bottom left">ProposalValidity (Days)</td>
+			<td class="standard border-bottom left-right">$validityDays</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">8</td>
-			<td class="tdInfoTable">ProposalValidity (Days)	</td>
-			<td class="tdInfoTable">$validityDays</td>
+			<td class="standard border-bottom left">9</td>
+			<td class="standard border-bottom left">Proposal Validity Until</td>
+			<td class="standard border-bottom left-right">$validityDays</td>
 		</tr>
 		<tr>
-			<td class="tdInfoTable">9</td>
-			<td class="tdInfoTable">Proposal Validity Until</td>
-			<td class="tdInfoTable">$validityDays</td>
-		</tr>
-		<tr>
-			<td class="tdInfoTable">10</td>
-			<td class="tdInfoTable">Evaluation Type</td>
-			<td class="tdInfoTable">
+			<td class="standard border-bottom left">10</td>
+			<td class="standard border-bottom left">Evaluation Type</td>
+			<td class="standard border-bottom left-right">
 				#if ($tier == "1")
 					One Tier
 				#else
@@ -146,243 +147,326 @@
 				#end
 			</td>
 		</tr>
+	</tbody>
+</table>
+<br/>
+#if ($panel == "true")
+	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#a2a2a2" class="header">Panel Information</th>
+			</tr>
+		</tbody>
 	</table>
 	<br/>
-	<table width='100%'>
-		<tr>
-			<td align="left">
-				<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-				SUPPLIER QUALIFICATION CRITERIA </span>
-				<br/>
-			</td>
-		</tr>
-	</table>
-	<table class="infoTable">
-		<tr>
-			<td style="width: 30%;" class="tdInfoTable">Supplier Status</td>
-			<td class="tdInfoTable">
-				#if ($openFor == "B")
-					Bumiputra
-				#else
-					All 
-				#end
-			</td>
-		</tr>
-		<tr>
-			<td style="width: 30%;" class="tdInfoTable">Min Paid Up Capital(RM)</td>
-			<td class="tdInfoTable">$paidupcapital</td>
-		</tr>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<td width="30%" class="standard"><nobr>Treasury Contract Circular No. :</nobr></td>
+				<td class="standard">$ctCircularVer.circularNo</td>
+			</tr>
+			<tr>
+				<td width="30%" class="standard"><nobr>Circular Name :</nobr></td>
+				<td class="standard">$ctCircularVer.name</td>
+			</tr>
+			<tr>
+				<td width="30%" class="standard"><nobr>Circular Expiry Date :</nobr></td>
+				<td class="standard">$dateSDF.format($ctCircularVer.endDate)</td>
+			</tr>
+		</tbody>
 	</table>
 	<br/>
-	<table width='100%'>
-		<tr>
-			<td align="left">
-				<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-				CATEGORY CODE LIST </span>
-				<br/>
-			</td>
-		</tr>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#6d839b" class="title border left">Panel Item</th>
+				<th bgcolor="#6d839b" class="title border left">Spesifikasi</th>
+				<th bgcolor="#6d839b" class="title border left">Item Category</th>
+				<th bgcolor="#6d839b" class="title border left">Panel Coverage</th>
+				<th bgcolor="#6d839b" class="title border left">UOM</th>
+				<th bgcolor="#6d839b" class="title border left">Min.Order Qty</th>
+				<th bgcolor="#6d839b" class="title border left-right">Maximum Procuremnt Amount Out of Contract (RM)</th>
+			</tr>
+			#foreach( $panelItem in $panelList)
+				<tr class="ui-content">
+					<td class="standard border-bottom left">$panelItem.itemName</td>
+					<td class="standard border-bottom left">$!panelItem.specification</td>
+					<td class="standard border-bottom left">$bean.getParameterDesc($panelItem.itemCategoryId)</td>
+					<td class="standard border-bottom left">$bean.getParameterDesc($panelItem.panelCoverageId)</td>
+					<td class="standard border-bottom left">$panelItem.pmUom.uomName</td>
+					<td class="standard border-bottom left">$panelItem.minimumOrderQty</td>
+					<td class="standard border-bottom left-right">$panelItem.maxProcureAmt</td>
+				</tr>
+			#end
+		</tbody>
 	</table>
-	<table class="infoTable">
-		<tr>
-			<td class="tdInfoTable" bgcolor="#eee">Category Code</td>
-			<td class="tdInfoTable" bgcolor="#eee">Main-Category</td>
-			<td class="tdInfoTable" bgcolor="#eee">Sub-Category</td>
-			<td class="tdInfoTable" bgcolor="#eee">Sub-Category Division</td>
-			<td class="tdInfoTable" bgcolor="#eee">Category Type</td>
-		</tr>
-		#foreach( $categoryDtls in $categoryList )
-		<tr>
-			<td class="tdInfoTable">
-				$categoryDtls.pmCategoryL1.categoryL1Code
-				$categoryDtls.pmCategoryL2.categoryL2Code
-				$categoryDtls.pmCategoryL3.categoryL3Code</td>
-			<td class="tdInfoTable">
-				$categoryDtls.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
-			<td class="tdInfoTable">
-				$categoryDtls.pmCategoryL3.pmCategoryL2.categoryName</td>
-			<td class="tdInfoTable">
-				$categoryDtls.pmCategoryL3.categoryName</td>
-			<td class="tdInfoTable">
-				$bean.getParameterDesc($categoryDtls.pmCategoryL3.categoryTypeCode)</td>
-		</tr>
-		#end
+#end 
+#if ($panel == "false")
+	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#a2a2a2" class="header">Supplier Qualification Criteria</th>
+			</tr>
+		</tbody>
+	</table>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<td width="25%" class="standard border left">Supplier Status</td>
+				<td class="standard border left-right">
+					#if ($openFor == "B")
+						Bumiputra
+					#else
+						All 
+					#end
+				</td>
+			</tr>
+			<tr>
+				<td width="25%" class="standard border-bottom left">Min Paid Up Capital(RM)</td>
+				<td class="standard border-bottom left-right">$paidupcapital</td>
+			</tr>
+		</tbody>
 	</table>
 	<br/>
-	<table width='100%'>
-		<tr>
-			<td align="left">
-				<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-				LOCATION SELECTION </span>
-				<br/>
-			</td>
-		</tr>
+	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#a2a2a2" class="header">Category Code List</th>
+			</tr>
+		</tbody>
 	</table>
-	<table>
-		<tr>
-			<td>
-				#if ($locLevel == "true")
-					<span style="font-family:Arial;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">Location Level :</span> $locationLevel <br/>
-					<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
-						<table class="infoTable">
-							<tr>
-								<td bgcolor="#eee">Zone</td>
-								<td bgcolor="#eee">State</td>
-								#if ($locationLevel == "District")
-									<td>District</td>
-								#end
-							</tr>
-							#foreach($location in $zoneLocality)
-								#foreach($locCriteria in $location.tplSpecZoneLocs)
+	<br/>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#6d839b" class="title border left">Category Code</th>
+				<th bgcolor="#6d839b" class="title border left">Main-Category</th>
+				<th bgcolor="#6d839b" class="title border left">Sub-Category</th>
+				<th bgcolor="#6d839b" class="title border left">Sub-Category Division</th>
+				<th bgcolor="#6d839b" class="title border left-right">Category Type</th>
+			</tr>
+			#foreach( $categoryDtls in $categoryList)
+				<tr class="ui-content">
+					<td class="standard border-bottom left">
+						$categoryDtls.pmCategoryL1.categoryL1Code
+						$categoryDtls.pmCategoryL2.categoryL2Code
+						$categoryDtls.pmCategoryL3.categoryL3Code
+					</td>
+					<td class="standard border-bottom left">$categoryDtls.pmCategoryL3.pmCategoryL2.pmCategoryL1.categoryName</td>
+					<td class="standard border-bottom left">$categoryDtls.pmCategoryL3.pmCategoryL2.categoryName</td>
+					<td class="standard border-bottom left">$categoryDtls.pmCategoryL3.categoryName</td>
+					<td class="standard border-bottom left-right">$bean.getParameterDesc($categoryDtls.pmCategoryL3.categoryTypeCode)</td>
+				</tr>
+			#end
+		</tbody>
+	</table>
+	<br/>
+	<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<th bgcolor="#a2a2a2" class="header">Location Selection</th>
+			</tr>
+		</tbody>
+	</table>
+	<table width="100%" border="0" cellpadding="0" cellspacing="0">
+		<tbody>
+			<tr>
+				<td>
+					#if ($locLevel == "true")
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
 								<tr>
-									<td>$location.zoneName</td>
-									<td>
-										$locCriteria.pmState.stateName
-									</td>
-									#if ($locationLevel == "District")
-										<td>
-											$locCriteria.pmDistrict.districtName
-										</td>
-									#end
+									<td width="15%" class="standard"><nobr>Location Level:</nobr></td>
+									<td class="standard">$locationLevel</td>
 								</tr>
-								#end
-							#end
+							</tbody>
 						</table>
-					</span>
-				#end
-				
-				#if ($isAllState == "false")
-					#if ($locLevel == "false")
-						#if ($subLocLevel == "true")
-							<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'> Location
-							<table class="infoTable">
+						<br/>
+						<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+							<tbody>
 								<tr>
-									<td bgcolor="#eee">State</td>
+									<th bgcolor="#a2a2a2" class="header">Location</th>
+								</tr>
+							</tbody>
+						</table>
+						<br/>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<th bgcolor="#6d839b" class="title border left">Zone</th>
+									<th bgcolor="#6d839b" class="title border left-right">State</th>
 									#if ($locationLevel == "District")
-										<td bgcolor="#eee">District</td>
+										<th bgcolor="#6d839b" class="title border left-right">District</th>
 									#end
 								</tr>
-								#foreach($tplSpecLoc in $locality)
-									<tr>
-										<td>
-											$tplSpecLoc.pmState.stateName
-										</td>
+								#foreach($location in $zoneLocality)
+									#foreach($locCriteria in $location.tplSpecZoneLocs)
+									<tr class="ui-content">
+										<td class="standard border-bottom left">$location.zoneName</td>
+										<td class="standard border-bottom left-right">$locCriteria.pmState.stateName</td>
 										#if ($locationLevel == "District")
-											<td>
-												$tplSpecLoc.pmDistrict.districtName
-											</td>
+											<td class="standard border-bottom left-right">$locCriteria.pmDistrict.districtName</td>
 										#end
 									</tr>
+									#end
 								#end
-							</table>
-							</span>
-						#end
-						#if ($subLocLevel == "false")
-						#end
+							</tbody>
+						</table>
 					#end
-				#else
-					<span style='font-size:14px;font-family: Times New Roman;'> <b>Location : </b> All States</span>
-				#end
-			</td>
-		</tr>
+					#if ($isAllState == "false")
+						#if ($locLevel == "false")
+							#if ($subLocLevel == "true")
+								<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+									<tbody>
+										<tr>
+											<th bgcolor="#a2a2a2" class="header">Location</th>
+										</tr>
+									</tbody>
+								</table>
+								<br/>
+								<table width="100%" border="0" cellpadding="0" cellspacing="0">
+									<tbody>
+										<tr>
+											<th bgcolor="#6d839b" class="title border left-right">State</th>
+											#if ($locationLevel == "District")
+												<th bgcolor="#6d839b" class="title border left-right">District</th>
+											#end
+										</tr>
+										#foreach($tplSpecLoc in $locality)
+											<tr class="ui-content">
+												<td class="standard border-bottom left-right">$tplSpecLoc.pmState.stateName</td>
+												#if ($locationLevel == "District")
+													<td class="standard border-bottom left-right">$tplSpecLoc.pmDistrict.districtName</td>
+												#end
+											</tr>
+										#end
+									</tbody>
+								</table>
+							#end
+							#if ($subLocLevel == "false")
+							#end
+						#end
+					#else
+						<br/>
+						<table width="100%" border="0" cellpadding="0" cellspacing="0">
+							<tbody>
+								<tr>
+									<td width="15%" class="standard"><nobr>Location :</nobr></td>
+									<td class="standard">All States</td>
+								</tr>
+							</tbody>
+						</table>
+					#end
+				</td>
+			</tr>
+		</tbody>
 	</table>
 	<br/>
-	<table>
-		<tr>
-			<td>
-				#if ($isbsv == "true")
-					#foreach( $zoneList in $zoneBeans )
-						#if ( $isZone)
-							$zoneList.tplSpecZoneDtl.zoneName<br/>
-						#end
-						Site Visit Same As Briefing : 
-						#if ($zoneList.scQtBsv.sameBsv)
-							Yes
-						#else 
-							No 
-						#end<br/>
-						<table class="infoTable">
-							<tr>
-								<td bgcolor="#eee">Description</td>
-								<td bgcolor="#eee">Date/Time</td>
-								<td bgcolor="#eee">Location</td>
-								<td bgcolor="#eee">Coordinationg Officer</td>
-								<td bgcolor="#eee">Max Attendance</td>
-							</tr>
-							#foreach( $briefingdtls in $zoneList.briefingList )
-							<tr>
-								<td>$briefingdtls.bsvDesc</td>
-								<td>$briefingdtls.bsvDate</td>
-								<td>$briefingdtls.location</td>
-								<td>$briefingdtls.coordinatingOfficer</td>
-								<td>$briefingdtls.maxNoOfAttendance</td>
-							</tr>
+	#if ($isbsv == "true")
+		#foreach($zoneList in $zoneBeans)
+			#if ($isZone)
+				<span style="font-family:'Arial', sans-serif;font-size:12px;text-align:left;color:#333;">$zoneList.tplSpecZoneDtl.zoneName</span><br/>
+			#end
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="15%" class="standard"><nobr>Site Visit Same As Briefing :</nobr></td>
+						<td class="standard">
+							#if ($zoneList.scQtBsv.sameBsv)
+								Yes
+							#else 
+								No 
 							#end
-						</table>
-						Attendance for Briefing : 
-						#if ($zoneList.scQtBsv.allBriefingReq)
-							Yes
-						#else 
-							No 
-						#end<br/>
-						<br />
-						<table class="infoTable">
-							<tr>
-								<td bgcolor="#eee">Description</td>
-								<td bgcolor="#eee">Date/Time</td>
-								<td bgcolor="#eee">Location</td>
-								<td bgcolor="#eee">Coordinationg Officer</td>
-								<td bgcolor="#eee">Max Attendance</td>
-							</tr>
-							#foreach( $sitevisitdtls in $zoneList.sitevisitList )
-							<tr>
-								<td>$sitevisitdtls.bsvDesc</td>
-								<td>$sitevisitdtls.bsvDate</td>
-								<td>$sitevisitdtls.location</td>
-								<td>$sitevisitdtls.coordinatingOfficer</td>
-								<td>$sitevisitdtls.maxNoOfAttendance</td>
-							</tr>
-							#end
-						</table>
-						Attendance for Site Visit : 
-						#if ($zoneList.scQtBsv.allSiteVisitReq)
-							Yes
-						#else 
-							No 
-						#end<br/>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<th bgcolor="#6d839b" class="title border left">Description</th>
+						<th bgcolor="#6d839b" class="title border left">Date/Time</th>
+						<th bgcolor="#6d839b" class="title border left">Location</th>
+						<th bgcolor="#6d839b" class="title border left">Coordinationg Officer</th>
+						<th bgcolor="#6d839b" class="title border left-right">Max Attendance</th>
+					</tr>
+					#foreach($briefingdtls in $zoneList.briefingList)
+						<tr class="ui-content">
+							<td class="standard border-bottom left">$briefingdtls.bsvDesc</td>
+							<td class="standard border-bottom left">$dateSDF.format($briefingdtls.bsvDate)</td>
+							<td class="standard border-bottom left">$briefingdtls.location</td>
+							<td class="standard border-bottom left">$briefingdtls.coordinatingOfficer</td>
+							<td class="standard border-bottom left-right">$briefingdtls.maxNoOfAttendance</td>
+						</tr>
 					#end
-				#end
-				#if ($isbsv == "false")
-				#end
-			</td>
-		</tr>
-	</table>
-	<br/>
-	<table width='100%'>
+				</tbody>
+			</table>
+			<br />
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<th bgcolor="#6d839b" class="title border left">Description</th>
+						<th bgcolor="#6d839b" class="title border left">Date/Time</th>
+						<th bgcolor="#6d839b" class="title border left">Location</th>
+						<th bgcolor="#6d839b" class="title border left">Coordinationg Officer</th>
+						<th bgcolor="#6d839b" class="title border left-right">Max Attendance</th>
+					</tr>
+					#foreach( $sitevisitdtls in $zoneList.sitevisitList )
+						<tr class="ui-content">
+							<td class="standard border-bottom left">$sitevisitdtls.bsvDesc</td>
+							<td class="standard border-bottom left">$dateSDF.format($sitevisitdtls.bsvDate)</td>
+							<td class="standard border-bottom left">$sitevisitdtls.location</td>
+							<td class="standard border-bottom left">$sitevisitdtls.coordinatingOfficer</td>
+							<td class="standard border-bottom left-right">$sitevisitdtls.maxNoOfAttendance</td>
+						</tr>
+					#end
+				</tbody>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td width="15%" class="standard"><nobr>Attendance for Site Visit :</nobr></td>
+						<td class="standard">
+							#if ($zoneList.scQtBsv.allSiteVisitReq)
+								Yes
+							#else 
+								No 
+							#end
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		#end
+	#end
+	#if ($isbsv == "false")
+	#end
+#end	
+<br/>
+<table width="100%" border="0" bordercolor="#142396" cellpadding="0" cellspacing="0">
+	<tbody>
 		<tr>
-			<td align="left">
-				<span style="font-family:Thoma;font-size:14px;font-weight:bold;font-style:normal;text-decoration:none;color:#333333;">
-				CONTACT PERSON DETAILS </span>
-				<br/>
-			</td>
+			<th bgcolor="#a2a2a2" class="header">Contact Person Details</th>
 		</tr>
-	</table>
-	<table class="infoTable">
+	</tbody>
+</table>
+<br/>
+<table width="100%" border="0" cellpadding="0" cellspacing="0">
+	<tbody>
 		<tr>
-			<td class="tdInfoTable" bgcolor="#eee">Name</td>
-			<td class="tdInfoTable" bgcolor="#eee">Tel No</td>
-			<td class="tdInfoTable" bgcolor="#eee">Fax No</td>
-			<td class="tdInfoTable" bgcolor="#eee">Email</td>
+			<th bgcolor="#6d839b" class="title border left">Name</th>
+			<th bgcolor="#6d839b" class="title border left">Tel No</th>
+			<th bgcolor="#6d839b" class="title border left">Fax No</th>
+			<th bgcolor="#6d839b" class="title border left-right">Email</th>
 		</tr>
 		#foreach( $contactPerson in $contactPersons )
-		<tr>
-			<td class="tdInfoTable">$contactPerson.name</td>
-			<td class="tdInfoTable">$contactPerson.phoneNo</td>
-			<td class="tdInfoTable">$contactPerson.faxNo</td>
-			<td class="tdInfoTable">$contactPerson.email</td>
-		</tr>
+			<tr class="ui-content">
+				<td class="standard border-bottom left">$contactPerson.name</td>
+				<td class="standard border-bottom left">$contactPerson.phoneNo</td>
+				<td class="standard border-bottom left">$contactPerson.faxNo</td>
+				<td class="standard border-bottom left-right">$contactPerson.email</td>
+			</tr>
 		#end
-	</table>
-	<br/>
+	</tbody>
+</table>
 </body>
 </html>
