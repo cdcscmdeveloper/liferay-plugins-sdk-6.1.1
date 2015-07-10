@@ -84,8 +84,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	public void selectedNotify() {
 		debugLogger("=== selectedNotify ===");
 		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
-		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
-		if (!selectedNotify.isReadFlag()) {
+		debugLogger("IsRead[" + selectedNotify.getPmAlert().getIsRead() + "]");
+		if (selectedNotify.getPmAlert().getIsRead() == 0) {
 			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", INotifySO.class);
 			NotifyReqDTO reqDTO = new NotifyReqDTO();
@@ -94,7 +94,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			debugLogger("NotifyResDTO updateIsReadNotify["
 					+ resDTO.isSuccessful() + "]");
 			if (resDTO.isSuccessful()) {
-				selectedNotify.setReadFlag(true);
+				selectedNotify.getPmAlert().setIsRead(1);
 			}
 		}
 	}
@@ -140,29 +140,30 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 									INotifySO.class);
 
 					// Filter By - Notification Mode
-					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmNotifyDashboard.notifyDashboardId",
-									SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
+					searchBean
+							.getDataFilterBeans()
+							.add(new SearchFilterBean("notificationMode",
+									SearchOperator.OPERATOR_EQUALS.value(), "A"));
 
 					// Filter By - recipient Id
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recipient.userId",
+							new SearchFilterBean("pmUser.userId",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									user.getUserId()));
 
 					// Filter By - status
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("recordStatus",
+							new SearchFilterBean("pmAlert.recordStatus",
 									SearchOperator.OPERATOR_EQUALS.value(), 1));
 
 					// Order by address Id.
 					searchBean.getSortColumns().add(
-							new SearchOrderBean("changedDate",
+							new SearchOrderBean("pmNotifyLog.createdDate",
 									false));
 
 					if (getManagedBean().isUnRead()) {
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("isReadFlag",
+								new SearchFilterBean("pmAlert.isRead",
 										SearchOperator.OPERATOR_EQUALS.value(),
 										0));
 					}
