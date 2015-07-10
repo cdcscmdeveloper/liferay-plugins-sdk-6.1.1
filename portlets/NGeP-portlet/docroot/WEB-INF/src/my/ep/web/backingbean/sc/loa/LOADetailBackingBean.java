@@ -3910,15 +3910,13 @@ public class LOADetailBackingBean extends
 	public void checkAgreementMandatory() {
 		boolean isAgreementMandatory = false;
 		ScLoa loa = getManagedBean().getScLoa();
-		ScQt qt = getManagedBean().getScQt();
+		BigDecimal loaAmt = loa.getLoaAmt();
 		String fulfilmentType = loa.getScLoiLoa().getFulfilmentTypeCode().getParameterCode();
 		
 		boolean isOneOffFulfilment = ParameterConst.FULFILMENT_TYPE_ONE_OFF.equals(fulfilmentType);
 		if(!isOneOffFulfilment) {
 			isAgreementMandatory = true;
-		} else {
-			if(qt != null && qt.getProcurementMode() != null && 
-					qt.getProcurementMode().getParameterCode().equals(ParameterConst.PROCUREMENT_MODE_TENDER))
+		} else if (isOneOffFulfilment && !isQuotationThresHold(loaAmt)){
 			isAgreementMandatory = true;
 		}
 		
