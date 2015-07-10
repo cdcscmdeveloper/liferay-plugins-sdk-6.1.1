@@ -260,7 +260,7 @@
 			<div align="right">
 				<p:commandButton id="confSubmit" value="#{lbl['lbl.btn.yes']}"
 					action="#{onlineBiddingBB.updateBidPriceAndCalculateRank}" process="@this"
-					oncomplete="newBidPriceConfirm.hide()" />
+					oncomplete="newBidPriceConfirm.hide()" update=":form:itemWiseBidListOB"/>
 				<p:commandButton id="confNotSubmit" value="#{lbl['lbl.btn.no']}"
 					process="@this" onclick="newBidPriceConfirm.hide()" oncomplete="rc();"/>
 			</div>
