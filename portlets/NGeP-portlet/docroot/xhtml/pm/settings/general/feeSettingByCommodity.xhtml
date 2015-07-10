@@ -35,7 +35,7 @@
 				disabled="#{!(feeObj.brandNew)}"
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 				size="7" headerText="unspsc commodity"
-				postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
+				postUpdateListenerWithIndex="ruleCatalogueBackingBean.updateUnspscForFee"
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedComodity"
 				conditionField="recordStatus^1|unspscLevel^3"
 				value="#{feeObj.unspscId.unspscCode}">
@@ -58,8 +58,13 @@
 				disabled="#{!(feeObj.brandNew) || feeObj.unspscId.unspscCode == null}"
 				style="width:128px;">
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}"
+				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}" 
 					itemValue="#{type.typeId}" var="type" />
+					<p:ajax event="change" immediate="true"
+								listener="#{ruleCatalogueBackingBean.typeValueChgangeListener(feeObj)}"
+								partialSubmit="true" process="@this"
+								update="@this" />
+		
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="10%">
@@ -101,8 +106,11 @@
 				disabled="#{typeValueObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<p:ajax event="change" update="comodityfeeexpDateId, comodityfeeeffDateId"
-					process="@this" />
+							<p:ajax event="change" immediate="true"
+								listener="#{ruleCatalogueBackingBean.feeExemptionStatusChange(feeObj)}"
+								partialSubmit="true" process="@this"
+								update="@this, comodityfeeexpDateId, comodityfeeeffDateId" />
+		
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="5%">

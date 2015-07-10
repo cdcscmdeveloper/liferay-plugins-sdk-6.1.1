@@ -139,16 +139,16 @@
 					                 #{lbl['lbl.pm.value']}
 				                </f:facet>
 
-				<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3"
+				<ac:lov id="lovCategory" lovId="PM_CATEGORY_L3_FOR_RULE"
 					disabled="#{!(typeValueObj.brandNew)}"
 					update=":form:settingTabId:ruleTypeValueTableID" size="15"
 					headerText="Category" readonly="true"
 					label="#{lbl['lbl.pm.category']}"
-					postUpdateListener="ruleCatalogueBackingBean.categoryCodesUpdate(#{index},ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues, ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id)"
 					saveObject="ruleCatalogueBackingBean.managedBean.selectedRuleType.configRuleValues[#{index}].categoryL3Id"
-					value="#{typeValueObj.categoryDisplayValue}">
+					value="#{typeValueObj.categoryL3Id.pmCategoryL2.pmCategoryL1.categoryL1Code}#{typeValueObj.categoryL3Id.pmCategoryL2.categoryL2Code}#{typeValueObj.categoryL3Id.categoryL3Code}">
 				</ac:lov>
 				<p:message id="lovCategoryMsg" for="lovCategory" display="icon" />
+		
 			</p:column>
 
 			<p:column width="15%" id="fromValueColumnId"
