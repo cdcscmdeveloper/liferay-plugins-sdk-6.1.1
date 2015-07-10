@@ -21,6 +21,7 @@
 	<cc:attribute name="update" default="" />
 	<cc:attribute name="size" />
 	<cc:attribute name="postUpdateListener" default="" />
+	<cc:attribute name="postUpdateListenerWithIndex" default="" />
 	<cc:attribute name="selectionMode" default="single" />
 	<cc:attribute name="uiMode" default="" />
 	<cc:attribute name="buttonLabel" default="" />
@@ -70,6 +71,7 @@
 			<f:param name="update" 			value="#{cc.attrs.update}" />
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			<f:param name="postUpdateListenerWithIndex" value="#{cc.attrs.postUpdateListenerWithIndex}" />
 			
 			<cc:insertChildren />
 			
@@ -96,6 +98,7 @@
 			<f:param name="update" 			value="#{cc.attrs.update}" />
 			<f:param name="selectionMode" 	value="#{cc.attrs.selectionMode}" />
 			<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
+			<f:param name="postUpdateListenerWithIndex" value="#{cc.attrs.postUpdateListenerWithIndex}" />
 			
 			<cc:insertChildren />
 			
