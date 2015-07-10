@@ -36,7 +36,7 @@
 						<f:selectItems
 							value="#{lOADetailBackingBean.getDeductionItemTypeDropdownList()}" />
 						<p:ajax event="change" partialSubmit="true" process="@this"
-							update=":form:deductionPayId"
+							update=":form:deductionPayId, deductionPayAmtId "
 							oncomplete="deductTblWidget.unselectAllRows(); deductTblWidget.selectRow(#{rowIndex}, true);"
 							listener="#{lOADetailBackingBean.deductionTypeChange(scQtDeduction)}" />
 					</p:selectOneMenu>
@@ -47,6 +47,21 @@
 				</c:if>
 			</p:column>
 
+			<p:column headerText="#{lbl['lbl.sc.deduction.amount']}">
+				<h:panelGroup id="deductionPayAmtId">
+					<p:inputText id="amtid" size="30" maxlength="18" required="true"
+						label="#{lbl['lbl.sc.deduction.amount']}"
+						value="#{scQtDeduction.deductionAmount}"
+						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
+						style="margin-right:5px;text-align:right;"
+						rendered="#{scQtDeduction.deductionType.parameterCode eq ParameterConst.deductionTypeFixed}">
+						<ac:validateNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}"
+							maxIntegerDigits="14"></ac:validateNumber>
+					</p:inputText>
+					<p:message id="amtidMsg" for="amtid" display="icon" />
+				</h:panelGroup>
+			</p:column>
 		</p:dataTable>
 
 		<c:if test="#{isEditableStatus}">
