@@ -1413,19 +1413,41 @@ public class NoticeBoardBackingBean extends
 		}
 		List<ScQtBsvDtl> bsvDetails = new ArrayList<ScQtBsvDtl>();
 		List<BriefingZoneBean> zoneBeans = null;
-		if (this.getManagedBean().getScQt().isZonal()) {
+		boolean isZonal = this.getManagedBean().getScQt().isZonal();
+		if (isZonal) {
 			zoneBeans = this.getManagedBean().getZoneBean();
 		} else {
 			zoneBeans = new ArrayList<BriefingZoneBean>();
 			zoneBeans.add(this.getManagedBean().getNormalBsvBean());
 		}
+		StringBuilder zoneNames = new StringBuilder(" ");
+		int count = 0;
 		for (BriefingZoneBean briefingZoneBean : zoneBeans) {
-
+			boolean isBSVPresent = false;
 			if (CollectionUtils.isNotEmpty(briefingZoneBean.getBriefingList())) {
 				bsvDetails.addAll(briefingZoneBean.getBriefingList());
+				for(ScQtBsvDtl bsvDtl:briefingZoneBean.getBriefingList()){
+					if(bsvDtl.getTempRegistration() != null){
+						isBSVPresent = true;
+					}
+				}
 			}
 			if (CollectionUtils.isNotEmpty(briefingZoneBean.getSitevisitList())) {
 				bsvDetails.addAll(briefingZoneBean.getSitevisitList());
+				for(ScQtBsvDtl bsvDtl:briefingZoneBean.getSitevisitList()){
+					if(bsvDtl.getTempRegistration() != null){
+						isBSVPresent = true;
+					}
+				}
+			}
+			if(isBSVPresent && isZonal){
+				if(count == 0){
+					zoneNames.append(briefingZoneBean.getTplSpecZoneDtl().getZoneName());
+				} else {
+					zoneNames.append(",  ").append(
+							briefingZoneBean.getTplSpecZoneDtl().getZoneName());
+				}
+				count++;
 			}
 		}
 
@@ -1494,7 +1516,7 @@ public class NoticeBoardBackingBean extends
 								new FacesMessage(FacesMessage.SEVERITY_INFO,
 										null,
 										ResourceBundleUtils.getMessage(
-												"lbl.sc.notice.board.bsv.success.msg", 
+												"lbl.sc.notice.board.bsv.success.msg",new String[] {zoneNames.toString()}, 
 												ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 												new FacesScopes().getUserLocale())));
 			}
