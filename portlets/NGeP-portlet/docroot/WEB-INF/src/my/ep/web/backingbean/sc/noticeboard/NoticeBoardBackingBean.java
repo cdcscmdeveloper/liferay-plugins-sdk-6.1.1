@@ -1442,7 +1442,7 @@ public class NoticeBoardBackingBean extends
 			}
 			if(isBSVPresent && isZonal){
 				if(count == 0){
-					zoneNames.append(briefingZoneBean.getTplSpecZoneDtl().getZoneName());
+					zoneNames.append("for  ").append(briefingZoneBean.getTplSpecZoneDtl().getZoneName());
 				} else {
 					zoneNames.append(",  ").append(
 							briefingZoneBean.getTplSpecZoneDtl().getZoneName());
