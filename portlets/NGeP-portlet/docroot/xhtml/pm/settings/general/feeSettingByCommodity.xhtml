@@ -20,13 +20,13 @@
 	</div>
 
 	<p:dataTable id="feeByComodityTableID" var="feeObj" rows="10"
+		widgetVar="feeByComodityTableWidVar"
 		value="#{ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity}"
 		selection="#{ruleCatalogueBackingBean.managedBean.selectedFeeExemption}"
 		rowKey="#{feeObj}" rowIndexVar="rowIndex" selectionMode="single">
 		<ac:paginator for="feeByComodityTableID" />
-		<p:column>
+		<p:column style="width:13%">
 			<f:facet name="header">
-
 				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.cm.unspsc.code']}" />
 			</f:facet>
@@ -34,7 +34,7 @@
 				label="#{lbl['lbl.cm.unspsc.code']}"
 				disabled="#{!(feeObj.brandNew)}"
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID"
-				size="15" headerText="unspsc commodity"
+				size="7" headerText="unspsc commodity"
 				postUpdateListener="ruleCatalogueBackingBean.updateUnspscForFee(#{rowIndex} , ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity)"
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedComodity"
 				conditionField="recordStatus^1|unspscLevel^3"
@@ -43,13 +43,13 @@
 			<p:message id="lovCommodityMsg" for="lovCommodity" display="icon" />
 
 		</p:column>
-		<p:column>
+		<p:column style="width:37%;white-space:normal">
 			<f:facet name="header">
 				                	#{lbl['lbl.cm.unspsc.title']}
 				                </f:facet>
 				               #{feeObj.unspscId.unspscTitle}
 			            </p:column>
-		<p:column id="cmTypelist">
+		<p:column id="cmTypelist" style="width:15%">
 			<f:facet name="header">
 				<h:outputText value=" #{lbl['lbl.pm.unspsc.type']}" />
 			</f:facet>
@@ -67,13 +67,13 @@
 								#{lbl['lbl.pm.as.effdate']}
 		                		</f:facet>
 
-			<p:calendar showOn="button" id="effDate" style="width :100px;"
+			<p:calendar showOn="button" id="comodityfeeeffDateId" style="width :100px;"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				disabled = "#{feeObj.recordStatusFlg == 0 or (feeObj.effDate le DateUtils.getCurrentDateWithoutTime())}"
 				label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
 				pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 				value="#{feeObj.effDate}">
-				<p:ajax event="dateSelect" update="@([id$=comodityfeeExpDateId])"
+				<p:ajax event="dateSelect" update="@([id$=comodityfeeexpDateId])"
 					process="@this" />
 			</p:calendar>
 		</p:column>
@@ -83,7 +83,7 @@
 						#{lbl['lbl.pm.as.expdate']}
 			                	</f:facet>
 
-			<p:calendar showOn="button" id="comodityfeeExpDateId"
+			<p:calendar showOn="button" id="comodityfeeexpDateId"
 				style="width :100px;" disabled ="#{feeObj.recordStatusFlg == 0 or (feeObj.expDate lt DateUtils.getCurrentDateWithoutTime())}"
 				mindate="#{ruleCatalogueBackingBean.managedBean.today}"
 				label="#{lbl['lbl.pm.as.expdate']}" readonlyInput="true"
@@ -93,19 +93,19 @@
 			</p:calendar>
 		</p:column>
 
-		<p:column width="6%">
+		<p:column width="10%">
 			<f:facet name="header">
 					                #{lbl['lbl.pm.status']}
 				                </f:facet>
 			<p:selectOneMenu value="#{feeObj.recordStatusFlg}"
-				disabled="#{typeValueObj.brandNew}" style="width:128px;">
+				disabled="#{typeValueObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
-				<p:ajax event="change" update="@([id$=comodityfeeExpDateId]), @([id$=effDate])"
+				<p:ajax event="change" update="comodityfeeexpDateId, comodityfeeeffDateId"
 					process="@this" />
 			</p:selectOneMenu>
 		</p:column>
-		<p:column width="3%">
+		<p:column width="5%">
 			<f:facet name="header">
 
 			</f:facet>
