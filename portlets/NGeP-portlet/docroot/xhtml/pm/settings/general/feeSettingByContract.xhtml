@@ -30,7 +30,7 @@
 			<ac:lov id="lovContract" lovId="CT_CONTRACT_FOR_FEE" readonly="true" disabled="#{!(feeObj.brandNew)}"
 				label="#{lbl['lbl.pm.contract.no']}" size="20" headerText="Contract"
 				update=":form:settingTabId:feeSettingId:feeByContractTableID"
-				postUpdateListener="ruleCatalogueBackingBean.updateDatesForFeeBaseOnContract(#{rowIndex} ,ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId)"
+				postUpdateListenerWithIndex="ruleCatalogueBackingBean.updateDatesForFeeBaseOnContract"
 				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].contractId"
 				conditionField="recordStatus^1"
 				value="#{feeObj.contractId.contractNo}">
@@ -46,7 +46,7 @@
 			<ac:lov id="lovContractItem" lovId="CT_CONTRACT_ITEM"
 				disabled="#{feeObj.contractId.contractNo == null || !(feeObj.brandNew)}" size="50"
 				headerText="Contract Item" readonly="true"
-				postUpdateListener="ruleCatalogueBackingBean.scRequestItemCodeUpdate(#{rowIndex},ruleCatalogueBackingBean.managedBean.feeExemptionsForContract)"
+				postUpdateListenerWithIndex="ruleCatalogueBackingBean.scRequestItemCodeUpdate"
 				conditionField="recordStatus^1|ctContractVer.ctContract.contractId^#{feeObj.contractId.contractId}"
 				saveObject="ruleCatalogueBackingBean.managedBean.selectedCtContractItem"
 				value="#{feeObj.requestItemId.itemName}">
@@ -92,6 +92,11 @@
 				disabled="#{typeValueObj.brandNew}" style="width:90px;">
 				<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 				<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
+						<p:ajax event="change" immediate="true"
+								listener="#{ruleCatalogueBackingBean.feeExemptionStatusChange(feeObj)}"
+								partialSubmit="true" process="@this"
+								update="@this" />
+		
 			</p:selectOneMenu>
 		</p:column>
 		<p:column width="5%">
