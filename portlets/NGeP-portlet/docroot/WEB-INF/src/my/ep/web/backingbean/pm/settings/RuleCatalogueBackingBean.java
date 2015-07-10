@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -62,6 +63,7 @@ import my.ep.dto.pm.general.settings.threshold.ThresholdReqDTO;
 import my.ep.dto.pm.general.settings.threshold.ThresholdResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -133,6 +135,39 @@ public class RuleCatalogueBackingBean extends
 	}
 
 	public RuleCatalogueBackingBean() {
+
+	}
+
+	public void typeValueChgangeListener(PmFeeExemption feeExemption) {
+		log.info("................updateUnspscForFee...............");
+		ICodificationSO unspscSO;
+		try {
+			 
+			if (feeExemption.getTypeId() != null) {
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+								ICodificationSO.class);
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				ISearchBean<CmType> searchBeanType = new SearchBean<CmType>();
+				SearchFilterBean typeFilterBean = new SearchFilterBean(
+						SearchOperator.OPERATOR_EQUALS.value());
+				typeFilterBean.setSearchField("typeId");
+				typeFilterBean.setSearchValue(feeExemption.getTypeId().getTypeId());
+				searchBeanType.getDataFilterBeans().add(typeFilterBean);
+				reqDTO.setTypeSearchBean(searchBeanType);
+				CodificationResDTO resDTO = unspscSO.searchTypeObj(reqDTO);
+
+
+				if (resDTO.isSuccessful()) {
+					feeExemption.setTypeId(resDTO.getTypeList().get(0));
+				}
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			unspscSO = null;
+		}
 
 	}
 
@@ -386,62 +421,97 @@ public class RuleCatalogueBackingBean extends
 			ruleSO = null;
 		}
 		// fill up category display value
-		for (PmConfigRule rule : configRules) {
-			if (rule.getRuleDataTypeId().getParameterCode()
-					.equalsIgnoreCase("c")) {
-				for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
-					PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
-					if (categoryL3 != null) {
-						String categoryL3Code = categoryL3.getCategoryL3Code();
-						String categoryL2Code = categoryL3.getPmCategoryL2()
-								.getCategoryL2Code();
-						String categoryL1Code = categoryL3.getPmCategoryL2()
-								.getPmCategoryL1().getCategoryL1Code();
-						cRule.setCategoryDisplayValue(categoryL1Code
-								+ categoryL2Code + categoryL3Code);
-					}
-				}
-			}
-		}
+		// for (PmConfigRule rule : configRules) {
+		// if (rule.getRuleDataTypeId().getParameterCode()
+		// .equalsIgnoreCase("c")) {
+		// for (PmConfigRuleValue cRule : rule.getConfigRuleValues()) {
+		// PmCategoryL3 categoryL3 = cRule.getCategoryL3Id();
+		// if (categoryL3 != null) {
+		// String categoryL3Code = categoryL3.getCategoryL3Code();
+		// String categoryL2Code = categoryL3.getPmCategoryL2()
+		// .getCategoryL2Code();
+		// String categoryL1Code = categoryL3.getPmCategoryL2()
+		// .getPmCategoryL1().getCategoryL1Code();
+		// cRule.setCategoryDisplayValue(categoryL1Code
+		// + categoryL2Code + categoryL3Code);
+		// }
+		// }
+		// }
+		// }
 		return configRules;
 	}
 
-	public void categoryCodesUpdate(int index,
-			List<PmConfigRuleValue> ruleTypeValueList, PmCategoryL3 categoryL3) {
-		log.info("................categoryCodesUpdate...............");
-		ICategoryCodeSO categoryCodeSo;
+	// public void categoryCodesUpdate(BaseEntity entity) {
+	//
+	// PmCategoryL3 categoryL3 = (PmCategoryL3) entity;
+	// log.info("in categoryCodesUpdate: " + categoryL3.getCategoryL3Code());
+	//
+	// ICategoryCodeSO categoryCodeSo;
+	//
+	// categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
+	// ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+	// CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
+	// codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
+	// CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
+	// .retrieveCategoryL3DtlById(codeReqDTO);
 
-		categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
-		CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
-		codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
-		CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
-				.retrieveCategoryL3DtlById(codeReqDTO);
-		if (CategoryCodeResDTO != null
-				&& CategoryCodeResDTO.getCategoryL3() != null) {
-			PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
-			ruleValue.setCategoryL3Id(CategoryCodeResDTO.getCategoryL3());
-			String categoryL3Code = CategoryCodeResDTO.getCategoryL3()
-					.getCategoryL3Code();
-			String categoryL2Code = CategoryCodeResDTO.getCategoryL3()
-					.getPmCategoryL2().getCategoryL2Code();
-			String categoryL1Code = CategoryCodeResDTO.getCategoryL3()
-					.getPmCategoryL2().getPmCategoryL1().getCategoryL1Code();
-			// log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
-			// + CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
-			// log.info(".............categoryL3Code=" + categoryL3Code);
-			// log.info(".............categoryL2Code=" + categoryL2Code);
-			// log.info(".............categoryL1Code=" + categoryL1Code);
-			ruleValue.setCategoryDisplayValue(categoryL1Code + categoryL2Code
-					+ categoryL3Code);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-					.remove(index);
-			this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
-					.add(index, ruleValue);
-		}
+	// if (CategoryCodeResDTO != null
+	// && CategoryCodeResDTO.getCategoryL3() != null) {
+	// String categoryL3Code =
+	// CategoryCodeResDTO.getCategoryL3().getCategoryL3Code();
+	// String categoryL2Code =
+	// CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getCategoryL2Code();
+	// String categoryL1Code =
+	// CategoryCodeResDTO.getCategoryL3().getPmCategoryL2().getPmCategoryL1().getCategoryL1Code();
+	// // //
+	// log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
+	// // // + CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
+	// // // log.info(".............categoryL3Code=" + categoryL3Code);
+	// // // log.info(".............categoryL2Code=" + categoryL2Code);
+	// // // log.info(".............categoryL1Code=" + categoryL1Code);
+	// ruleValue.setCategoryDisplayValue(categoryL1Code + categoryL2Code
+	// + categoryL3Code);
+	// /
+	// }
+	// }
 
-	}
-
+	// public void categoryCodesUpdate(int index,
+	// List<PmConfigRuleValue> ruleTypeValueList, PmCategoryL3 categoryL3) {
+	// log.info("................categoryCodesUpdate...............");
+	// ICategoryCodeSO categoryCodeSo;
+	//
+	// categoryCodeSo = BusinessDelegate.getInstance().getServiceObject(
+	// ModuleCodeConst.PROFILE_MANAGEMENT, ICategoryCodeSO.class);
+	// CategoryCodeReqDTO codeReqDTO = new CategoryCodeReqDTO();
+	// codeReqDTO.setCategoryL3Id(categoryL3.getCategoryL3Id());
+	// CategoryCodeResDTO CategoryCodeResDTO = categoryCodeSo
+	// .retrieveCategoryL3DtlById(codeReqDTO);
+	// if (CategoryCodeResDTO != null
+	// && CategoryCodeResDTO.getCategoryL3() != null) {
+	// PmConfigRuleValue ruleValue = ruleTypeValueList.get(index);
+	// ruleValue.setCategoryL3Id(CategoryCodeResDTO.getCategoryL3());
+	// String categoryL3Code = CategoryCodeResDTO.getCategoryL3()
+	// .getCategoryL3Code();
+	// String categoryL2Code = CategoryCodeResDTO.getCategoryL3()
+	// .getPmCategoryL2().getCategoryL2Code();
+	// String categoryL1Code = CategoryCodeResDTO.getCategoryL3()
+	// .getPmCategoryL2().getPmCategoryL1().getCategoryL1Code();
+	// //
+	// log.info("..................CategoryCodeResDTO.getCategoryL3().getCategoryL3Id()="
+	// // + CategoryCodeResDTO.getCategoryL3().getCategoryL3Id());
+	// // log.info(".............categoryL3Code=" + categoryL3Code);
+	// // log.info(".............categoryL2Code=" + categoryL2Code);
+	// // log.info(".............categoryL1Code=" + categoryL1Code);
+	// ruleValue.setCategoryDisplayValue(categoryL1Code + categoryL2Code
+	// + categoryL3Code);
+	// this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+	// .remove(index);
+	// this.getManagedBean().getSelectedRuleType().getConfigRuleValues()
+	// .add(index, ruleValue);
+	// }
+	//
+	// }
+	//
 	public void ruleValueUpdate(int index,
 			List<PmConfigRuleValue> ruleTypeValueList, String value) {
 		log.info("................ruleValueUpdate...............");
@@ -517,8 +587,7 @@ public class RuleCatalogueBackingBean extends
 
 	}
 
-	public void updateOrgProfileForFee(int index,
-			List<PmFeeExemption> feeExcemptionList) {
+	public void updateOrgProfileForFee(BaseEntity entity) {
 		log.info("................updateOrgProfileForFee...............");
 		IOrgProfileSO profileSO;
 		try {
@@ -536,11 +605,14 @@ public class RuleCatalogueBackingBean extends
 					.println("...............this.getManagedBean().getSelectedSmSupplier().getSupplierId()="
 							+ this.getManagedBean().getSelectedSmSupplier()
 									.getSupplierId());
-			PmFeeExemption exemption = feeExcemptionList.get(index);
+			PmFeeExemption exemption = this.getManagedBean()
+					.getSelectedFeeExemption();
+			System.out.println("..............exemption=" + exemption);
+			// PmFeeExemption exemption = feeExcemptionList.get(index);
 			exemption.setOrgProfileId(resDAO.getPmOrgProfile());
-			this.getManagedBean().getFeeExemptionsForOrgAndItem().remove(index);
-			this.getManagedBean().getFeeExemptionsForOrgAndItem()
-					.add(index, exemption);
+			// this.getManagedBean().getFeeExemptionsForOrgAndItem().remove(index);
+			// this.getManagedBean().getFeeExemptionsForOrgAndItem()
+			// .add(index, exemption);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -548,9 +620,10 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 
-	public void updateDatesForFeeBaseOnContract(int index, CtContract contract) {
+	public void updateDatesForFeeBaseOnContract(BaseEntity entity, int index) {
 		log.info("................updateDatesForFeeBaseOnContract...............");
 		Date currentDate = new Date();
+		CtContract contract = this.getManagedBean().getFeeExemptionsForContract().get(index).getContractId();
 		Date defaultEffDate = contract.getLatestContractVer()
 				.getCtContractValue().getEffDate();
 		Date defaultExpDate = contract.getLatestContractVer()
@@ -591,13 +664,13 @@ public class RuleCatalogueBackingBean extends
 		}
 	}
 
-	public void updateUnspscForFee(int index,
-			List<PmFeeExemption> feeExcemptionList) {
+	public void updateUnspscForFee(BaseEntity entity, int index) {
 		log.info("................updateUnspscForFee...............");
 		ICodificationSO unspscSO;
 		try {
 
-			PmFeeExemption exemption = feeExcemptionList.get(index);
+			PmFeeExemption exemption = this.getManagedBean()
+					.getFeeExemptionsForComodity().get(index);
 			unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
 							ICodificationSO.class);
@@ -628,6 +701,85 @@ public class RuleCatalogueBackingBean extends
 		} finally {
 			unspscSO = null;
 		}
+	}
+
+//	public void updateUnspscForFee(int index) {
+//		log.info("................updateUnspscForFee...............");
+//		ICodificationSO unspscSO;
+//		try {
+//
+//			PmFeeExemption exemption = this.getManagedBean()
+//					.getFeeExemptionsForComodity().get(index);
+//			unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
+//							ICodificationSO.class);
+//			CodificationReqDTO reqDTO = new CodificationReqDTO();
+//			reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity()
+//					.getUnspscCode());
+//			CodificationResDTO resDTO = unspscSO
+//					.retrieveUNSPSCByCommodityCode(reqDTO);
+//
+//			if (resDTO.isSuccessful()) {
+//				CmUnspsc commodity = resDTO.getCommodityObj();
+//				exemption.setTypes(new ArrayList<CmType>());
+//				for (CmType type : commodity.getCmType()) {
+//					if (!StringUtils.isBlank(type.getTypeName())) {
+//						exemption.getTypes().add(type);
+//					}
+//				}
+//
+//			}
+//
+//			exemption.setUnspscId(resDTO.getCommodityObj());
+//			this.getManagedBean().getFeeExemptionsForComodity().remove(index);
+//			this.getManagedBean().getFeeExemptionsForComodity()
+//					.add(index, exemption);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			unspscSO = null;
+//		}
+//	}
+
+	public void scRequestItemCodeUpdate(BaseEntity entity, int index) {
+		log.info("................scRequestItemCodeUpdate...............");
+		IContractItemSO contractItemSO;
+		try {
+			contractItemSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
+
+			ContractItemReqDTO reqDAO = new ContractItemReqDTO();
+			reqDAO.setContractItemId(this.getManagedBean()
+					.getSelectedCtContractItem().getContractItemId());
+			ContractItemResDTO resDAO = contractItemSO.getContractItem(reqDAO);
+			System.out
+					.println("...............this.getManagedBean().getSelectedCtContractItem().getContractItemId()="
+							+ this.getManagedBean().getSelectedCtContractItem()
+									.getContractItemId());
+			System.out
+					.println("...............resDAO.getCtContractItem().getScRequestItem()="
+							+ resDAO.getCtContractItem().getScRequestItem());
+			System.out
+					.println("...............resDAO.getCtContractItem().getScRequestItem().getRequestNoteItemId()="
+							+ resDAO.getCtContractItem().getScRequestItem()
+									.getRequestNoteItemId());
+			PmFeeExemption exemption = this.getManagedBean().getFeeExemptionsForContract().get(index);
+			exemption.setRequestItemId(resDAO.getCtContractItem()
+					.getScRequestItem());
+			System.out
+					.println(".....after set..........exemption.getRequestItemId().getRequestNoteItemId()="
+							+ exemption.getRequestItemId()
+									.getRequestNoteItemId());
+			this.getManagedBean().getFeeExemptionsForContract().remove(index);
+			this.getManagedBean().getFeeExemptionsForContract()
+					.add(index, exemption);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			contractItemSO = null;
+		}
+
 	}
 
 	public void scRequestItemCodeUpdate(int index,
@@ -872,6 +1024,21 @@ public class RuleCatalogueBackingBean extends
 						throw new EpException(MessageConst.ERROR_770133,
 								new String[] {});
 
+					} else { // fill CategoryDisplayValue for further validation
+						PmCategoryL3 categoryL3 = ruleTypeValue
+								.getCategoryL3Id();
+						if (categoryL3 != null) {
+							String categoryL3Code = categoryL3
+									.getCategoryL3Code();
+							String categoryL2Code = categoryL3
+									.getPmCategoryL2().getCategoryL2Code();
+							String categoryL1Code = categoryL3
+									.getPmCategoryL2().getPmCategoryL1()
+									.getCategoryL1Code();
+							ruleTypeValue
+									.setCategoryDisplayValue(categoryL1Code
+											+ categoryL2Code + categoryL3Code);
+						}
 					}
 
 				}
@@ -1191,34 +1358,43 @@ public class RuleCatalogueBackingBean extends
 		}
 		IFeeExemptionSO exemptionSO = null;
 		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
-		///////////////////////////////////////////add to Tracking Dairy
+		// /////////////////////////////////////////add to Tracking Dairy
 		for (PmFeeExemption fee : exemptionList) {
 			String messageId = null;
 			String[] msgParam = null;
-			if (!fee.isBrandNew() && fee.isModified()
-						&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
-					log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by SupplierAndItem):saveFeeExemptionForOrgItem");
-					messageId = MessageConst.TD_80022;
-					if (fee.getFeeExemptionType().equals("1")) {
-						msgParam = new String[] {fee.getOrgProfileId().getSmSupplier().getCompanyName(),""};
+			log.info("..............!fee.isBrandNew()=" + !fee.isBrandNew());
+			log.info("..............fee.isModified()=" + fee.isModified());
+			log.info("..............fee.getRecordStatusFlg() ="
+					+ fee.getRecordStatusFlg());
+			if (!fee.isBrandNew()
+					&& fee.isModified()
+					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by SupplierAndItem):saveFeeExemptionForOrgItem");
+				messageId = MessageConst.TD_80022;
+				if (fee.getFeeExemptionType().equals("1")) {
+					msgParam = new String[] {
+							fee.getOrgProfileId().getSmSupplier()
+									.getCompanyName(), "" };
 
-					} else {//feeExemptionType is 4
-						msgParam = new String[] {fee.getOrgProfileId().getSmSupplier().getCompanyName(), fee.getItemId().getItemName()};
-					}
+				} else {// feeExemptionType is 4
+					msgParam = new String[] {
+							fee.getOrgProfileId().getSmSupplier()
+									.getCompanyName(),
+							fee.getItemId().getItemName() };
 				}
-			
+			}
+
 			if (messageId != null & msgParam != null) {
 				reqDTO.setTrackingStatus(true);
 				reqDTO.getTrackDairyVOs().add(
-						PmCommonUtil.assignTrackingDairyForFeeExemption(
-								fee,
-								getActionDesc(messageId, msgParam),
-								null));
+						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
+								getActionDesc(messageId, msgParam), null));
 			}
 
 		}
-
-	//////////////////
+		reqDTO.setUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
+		// ////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
@@ -1260,27 +1436,22 @@ public class RuleCatalogueBackingBean extends
 
 	public boolean isDateOverlappedForExemptionType(
 			List<PmFeeExemption> feeExemptionList) {
-		log.info("..............isDateOverlappedForExemptionType................");
+		// log.info("..............isDateOverlappedForExemptionType................");
 		boolean result = false;
 
 		for (int i = 0; i < feeExemptionList.size(); i++) {
-			log.info("...................first loop");
 			PmFeeExemption baseExemption = feeExemptionList.get(i);
 			if (baseExemption.getRecordStatusFlg() == 0) {
 				// if record inactive choose next one
 				continue;
 			}
-			// log.info(".................after continue..in..first loop");
+
 			for (int j = i + 1; j <= (feeExemptionList.size() - 1); j++) {
-				log.info("...................second loop");
 				PmFeeExemption ex = feeExemptionList.get(j);
 				if (ex.getRecordStatusFlg() == 0) {
 					// if record inactive choose next one
 					continue;
 				}
-				log.info(".................after continiue..in..second loop");
-				//
-
 				if ((ex.getFeeExemptionType().equals("1") && ex
 						.getOrgProfileId().getOrgProfileId() == baseExemption
 						.getOrgProfileId().getOrgProfileId())
@@ -1387,10 +1558,45 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		IFeeExemptionSO exemptionSO = null;
+		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		for (PmFeeExemption fee : exemptionList) {
+			String messageId = null;
+			String[] msgParam = null;
+			log.info("..............!fee.isBrandNew()=" + !fee.isBrandNew());
+			log.info("..............fee.isModified()=" + fee.isModified());
+			log.info("..............fee.getRecordStatusFlg() ="
+					+ fee.getRecordStatusFlg());
+			if (!fee.isBrandNew()
+					&& fee.isModified()
+					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by contractAndItem):saveFeeExemptionForContract");
+				messageId = MessageConst.TD_80022;
+				if (fee.getFeeExemptionType().equals("2")) {
+					msgParam = new String[] {
+							fee.getContractId().getContractNo(), "" };
+
+				} else {// feeExemptionType is 5
+					msgParam = new String[] {
+							fee.getContractId().getContractNo(),
+							fee.getRequestItemId().getItemName() };
+				}
+			}
+
+			if (messageId != null & msgParam != null) {
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs().add(
+						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
+								getActionDesc(messageId, msgParam), null));
+			}
+
+		}
+		reqDTO.setUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
+		// ///////////////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IFeeExemptionSO.class);
-			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
@@ -1476,6 +1682,12 @@ public class RuleCatalogueBackingBean extends
 					exemption1.setFeeExemptionType("6");
 				} else {
 					exemption1.setFeeExemptionType("3");
+					log.info("..............exemption1.getTypeId()="
+							+ exemption1.getTypeId());
+					log.info("..............exemption1.getTypeId().getTypeName()="
+							+ exemption1.getTypeId().getTypeName());
+					log.info("..............exemption1.getTypeId().getTypeId()="
+							+ exemption1.getTypeId().getTypeId());
 				}
 			} else if (exemption1.getFeeExemptionType().equals("6")
 					&& exemption1.getTypeId() != null) {
@@ -1501,10 +1713,41 @@ public class RuleCatalogueBackingBean extends
 			}
 		}
 		IFeeExemptionSO exemptionSO = null;
+		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+		for (PmFeeExemption fee : exemptionList) {
+			String messageId = null;
+			String[] msgParam = null;
+			if (!fee.isBrandNew()
+					&& fee.isModified()
+					&& fee.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+				log.info("Tracking diary for System Parameter: de-activating feeExemption(Fee by Commodity):saveFeeExemptionForComodity");
+				messageId = MessageConst.TD_80022;
+				if (fee.getFeeExemptionType().equals("6")) {
+					msgParam = new String[] {
+							fee.getUnspscId().getUnspscTitle(), "" };
+
+				} else {// feeExemptionType is 3
+					msgParam = new String[] {
+							fee.getUnspscId().getUnspscTitle(),
+							fee.getTypeId().getTypeName() };
+				}
+			}
+
+			if (messageId != null & msgParam != null) {
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs().add(
+						PmCommonUtil.assignTrackingDairyForFeeExemption(fee,
+								getActionDesc(messageId, msgParam), null));
+			}
+
+		}
+		reqDTO.setUser(new FacesScopes().getUserSessionBean());
+		reqDTO.setUserRole(PmCommonUtil.getUserRoleValue());
+		// //////////////////
 		try {
 			exemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IFeeExemptionSO.class);
-			FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+
 			reqDTO.setFeeExemptionList(exemptionList);
 			FeeExemptionResDTO resDTO = exemptionSO
 					.updateFeeExemptionList(reqDTO);
@@ -3151,7 +3394,7 @@ public class RuleCatalogueBackingBean extends
 	/**
 	 * Track rule value status
 	 * 
-	 * @param pmUserRole
+	 * @param ruleValue
 	 */
 	public void ruleValueStatusChange(PmConfigRuleValue ruleValue) {
 		log.info("ruleValueStatusChange");
@@ -3160,6 +3403,22 @@ public class RuleCatalogueBackingBean extends
 			ruleValue.setModified(true);
 		} else {
 			ruleValue.setModified(false);
+		}
+
+	}
+
+	/**
+	 * Track fee exemption status
+	 * 
+	 * @param feeExemption
+	 */
+	public void feeExemptionStatusChange(PmFeeExemption feeExemption) {
+		log.info("feeExemptionStatusChange");
+
+		if (!feeExemption.isModified()) {
+			feeExemption.setModified(true);
+		} else {
+			feeExemption.setModified(false);
 		}
 
 	}
