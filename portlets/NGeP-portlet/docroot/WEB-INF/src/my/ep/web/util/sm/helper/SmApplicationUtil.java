@@ -143,7 +143,6 @@ import my.ep.persistence.entity.sm.SmSvCategory;
 import my.ep.persistence.entity.sm.SmSvOffice;
 import my.ep.persistence.entity.sm.SmSvTask;
 import my.ep.persistence.entity.sm.SmSvTemplate;
-import my.ep.type.pm.ReasonCategory;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -3238,22 +3237,38 @@ public class SmApplicationUtil {
 	 * @return the list if PmStatusDesc of type education field
 	 */
 	public static List<PmStatusDesc> retrieveRegistrationStatusList(
-			String applType) {
-		IStatusSO reqSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
+			String suppType, String applType) {
+		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
-		StatusResDTO resDTO = null;
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-			resDTO = reqSO.retrieveRegStatusListForBumi(reqDTO);
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
 		} else {
-			resDTO = reqSO.retrieveRegStatusList(reqDTO);
+			//consultant only load reg status non bumi
+			if(StringUtils.isNotBlank(suppType)
+						&& suppType.equalsIgnoreCase("J")){
+				for (PmStatusDesc desc : SmServiceLookup.getStatusSO()
+						.retrieveRegStatusList(reqDTO).getStatusDescList()) {
+					if(desc.getPmStatus().getPmRegStatus() != null
+						&& !desc.getPmStatus().getPmRegStatus().isBumiAppl()){
+						descList.add(desc);
+					}
+				}
+			}
+			
+			//contractor load all reg status
+			else{
+			for (PmStatusDesc desc : SmServiceLookup.getStatusSO()
+					.retrieveRegStatusList(reqDTO).getStatusDescList()) {
+				if(desc.getPmStatus().getPmRegStatus() != null){
+					descList.add(desc);
+				}
+			}
 		}
-		if (resDTO != null) {
-			return resDTO.getStatusDescList();
-		} else {
-			return null;
+			
 		}
+		return descList;
 	}
 
 	/**
