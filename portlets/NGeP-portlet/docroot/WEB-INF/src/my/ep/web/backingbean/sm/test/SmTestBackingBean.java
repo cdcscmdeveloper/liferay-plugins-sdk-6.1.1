@@ -54,9 +54,7 @@ public class SmTestBackingBean implements Serializable {
 	}
 
 	public void execute() {
-		IPersonnelSO smPersonnelSO = (IPersonnelSO) BusinessDelegate
-				.getInstance().getServiceObject("sm", IPersonnelSO.class);
-		smPersonnelSO.executeResetExpiredPersonnel();
+		
 	}
 
 	public List<SmPersonnel> getSmPersonnelPendingActivationBasicList() {
