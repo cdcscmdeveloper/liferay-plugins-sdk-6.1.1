@@ -38,13 +38,13 @@
 			</tr>
 			<tr>
 				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
-				<td style="zoom: 165%; width: 78.3%; font-size: 7px;"><h:selectBooleanCheckbox
+				<td style="zoom: 165%; width: 78.3%; font-size: 7px;"><p:selectBooleanCheckbox
 						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID"
 						value="#{suppliersReviewBackingBean.managedBean.allStates}">
 						<p:ajax event="change"
 							listener="#{suppliersReviewBackingBean.selectAllStates}"
 							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
-					</h:selectBooleanCheckbox> <h:outputText escape="false"
+					</p:selectBooleanCheckbox> <h:outputText escape="false"
 						value="#{lbl['lbl.pm.sr.all.states']}"></h:outputText></td>
 			</tr>
 		</table>
@@ -58,8 +58,6 @@
 						style="width: 207px;margin-bottom: 5px;height:100px"
 						showCheckbox="true"
 						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
-						<p:ajax event="select" partialSubmit="true"
-							update="@(.ui-selectmanymenu[id$=stateListId])" process="@this" />
 						<f:selectItems var="finState"
 							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
 							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
