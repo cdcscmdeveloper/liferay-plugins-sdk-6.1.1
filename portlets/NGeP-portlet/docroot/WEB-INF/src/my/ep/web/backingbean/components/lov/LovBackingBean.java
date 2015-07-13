@@ -283,6 +283,10 @@ public class LovBackingBean implements Serializable {
 	private int extractSaveObjectIndex(String saveObject) {
 		int index1 = saveObject.indexOf("[");
 		int index2 = saveObject.indexOf("]");
+
+		if(index1 < 0 || index2 < 0) {
+			return -1;
+		}
 		
 		String saveOjbectIndex = saveObject.substring(index1 + 1, index2);
 		
