@@ -150,6 +150,12 @@
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 									</p:inputText>
 									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flSupplierInvoiceNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.supplierinvoiceNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flSupplierInvoiceNo}" style="margin-top:5px;width:290px;" >
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
+									</p:inputText>
+									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flDeductionTypeView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.deductionType']}" style="margin-top:5px;width:160px;"/>
 									<p:inputText value="#{reportBackingBean.flDeductionType}"  style="margin-top:5px;width:290px;" >
