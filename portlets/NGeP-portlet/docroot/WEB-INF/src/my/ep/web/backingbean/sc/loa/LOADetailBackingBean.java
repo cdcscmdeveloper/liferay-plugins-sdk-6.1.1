@@ -1520,7 +1520,7 @@ public class LOADetailBackingBean extends
 			bondAmt = amountDF.format(scLoa.getBondAmt());
 		}
 		context.put("bondAmt", bondAmt);
-		context.put("bondAmtText", bondAmt); // TODO
+		context.put("bondAmtText", bondAmt); 
 
 		String bondPercentage = "";
 		if (scLoa.getBondPercentage() != null) {
@@ -2120,7 +2120,7 @@ public class LOADetailBackingBean extends
 		debugLogger("saveAction");
 
 		try {
-
+			String outcome = BpmOutcomeConst.BPM_SAVE;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
@@ -2129,11 +2129,11 @@ public class LOADetailBackingBean extends
 					freqScheduleValidation(scQtSchedule);
 				}
 			}
-			parseLOADetails(scLoa, "SAVE");
+			parseLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoa(scLoa);
-			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
+			reqDTO.setOutcome(outcome);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
@@ -2541,20 +2541,20 @@ public class LOADetailBackingBean extends
 
 				getManagedBean().setAgencyProfileDDList(
 						resDTO.getAgencyProfileDDList());
-				
+
 				if(scLoa.getScLoiLoa().getPmOrgProfile() != null){
 					boolean found = false;
 					for(Object[] object : resDTO.getAgencyProfileDDList()){
 						if(object[0].toString().equals(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId().toString())){
-						   found = true;
-						   break;
+							found = true;
+							break;
 						}
 					}
 					if(found){
 						scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
 					}
 				}
-				
+
 
 			} finally {
 				//qtAwardSO = null;
@@ -3658,7 +3658,7 @@ public class LOADetailBackingBean extends
 	private void generateBondLetterFromVelocityToPdf(ScAttachment attachment,ScLoa scLoa)
 			throws Exception {
 		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 		DecimalFormat amountDF = new DecimalFormat(
 				commonUtils
 						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
@@ -3783,6 +3783,7 @@ public class LOADetailBackingBean extends
 					scLoiLoaItem.getUnitPrice(), quantity);
 			totalAmount = totalAmount.add(subTotal);
 		}
+		totalAmount =  totalAmount.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 		return totalAmount;
 	}
 	
@@ -4202,8 +4203,6 @@ public class LOADetailBackingBean extends
 							isMinistry  = Boolean.FALSE;
 						}
 					}
-
-
 				}
 			}
 		}finally{
