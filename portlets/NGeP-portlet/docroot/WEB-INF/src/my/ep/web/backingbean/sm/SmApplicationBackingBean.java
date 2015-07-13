@@ -547,10 +547,12 @@ public class SmApplicationBackingBean extends
 											ReasonCategory.SUPPLIER_REJECTION_REASON
 													.value(),
 											SupplierManagementConst.SM_REASON_CODE_OTHERS));
-			getManagedBean().setRegStatusDescList(
-					SmApplicationUtil.retrieveRegistrationStatusList(
-							getManagedBean().getSmAppl().getSupplierType(),
-							applicationType));
+			getManagedBean()
+					.setRegStatusDescList(
+							SmApplicationUtil.getInstance()
+									.retrieveRegistrationStatusList(
+											appl.getSupplierType(),
+											applicationType));
 			getManagedBean().setEduFieldList(
 					SmApplicationUtil.retrieveEduFieldList());
 			getManagedBean().setRacesList(
