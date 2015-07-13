@@ -18,6 +18,8 @@ public class SmSchedulerConstants {
 	
 	//Payment Reminder
 	public static final int PAYMENT_REMINDER_DAY = 3;
+	public static final Long STATUS_PROCESSING_PAYMENT = 20114L;
+	public static final Long STATUS_APPLICATION_PAYMENT = 20251L;
 	
 	//Soft Cert Renewal Reminder
 	public static final String CERT_MODE_NEW = "N";
