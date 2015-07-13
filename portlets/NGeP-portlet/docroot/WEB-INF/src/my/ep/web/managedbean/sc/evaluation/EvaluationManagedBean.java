@@ -477,6 +477,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQtSampleLable> complianceSampleLblsupplierDM;
 	private IPagingDataModel<ScQtProposalChecklist> presentationDemoSupplierListDM;
 	private int demoPassingScore;
+	private boolean isProfileHide=false;
 
 	/**
 	 * Gets the today.
@@ -3239,5 +3240,21 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setDemoPassingScore(int demoPassingScore) {
 		this.demoPassingScore = demoPassingScore;
 	}
+
+	/**
+	 * @return the isProfileHide
+	 */
+	public boolean isProfileHide() {
+		return isProfileHide;
+	}
+
+	/**
+	 * @param isProfileHide the isProfileHide to set
+	 */
+	public void setProfileHide(boolean isProfileHide) {
+		this.isProfileHide = isProfileHide;
+	}
+
+	
 
 }
