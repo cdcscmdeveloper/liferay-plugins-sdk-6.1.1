@@ -2,6 +2,7 @@ package my.ep.web.managedbean.sc.loiloa;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -39,10 +40,12 @@ import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.quatationtender.LoiLoaBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.primefaces.model.MenuModel;
 import org.primefaces.model.StreamedContent;
 
 // TODO: Auto-generated Javadoc
@@ -347,6 +350,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
     
+    /** The Multi LOI Zone Details */
+    private List<TplSpecZoneDtl> multiLOIZoneDetails;
+    
+    /** Items by zone */
+    private Map<Long,List<ScQtRecommend>> scQtRecommendsByZone;
+    
+    /** The zone active index */
+	private int ZoneActiveIndex;
+	
+	/** The zone menu model */
+	private MenuModel zoneMenuModel;
+	
+	/** The select zone */
+	private TplSpecZoneDtl selectedZone;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2027,6 +2045,81 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setRoleCode(String roleCode) {
 		this.roleCode = roleCode;
 	}
-	
+
+	/**
+	 * @return the multiLOIZoneDetails
+	 */
+	public List<TplSpecZoneDtl> getMultiLOIZoneDetails() {
+		return multiLOIZoneDetails;
+	}
+
+	/**
+	 * @param multiLOIZoneDetails 
+	 * 					the multiLOIZoneDetails to set
+	 */
+	public void setMultiLOIZoneDetails(List<TplSpecZoneDtl> multiLOIZoneDetails) {
+		this.multiLOIZoneDetails = multiLOIZoneDetails;
+	}
+
+	/**
+	 * @return the scQtRecommendsByZone
+	 */
+	public Map<Long, List<ScQtRecommend>> getScQtRecommendsByZone() {
+		return scQtRecommendsByZone;
+	}
+
+	/**
+	 * @param scQtRecommendsByZone 
+	 * 					the scQtRecommendsByZone to set
+	 */
+	public void setScQtRecommendsByZone(
+			Map<Long, List<ScQtRecommend>> scQtRecommendsByZone) {
+		this.scQtRecommendsByZone = scQtRecommendsByZone;
+	}
+
+	/**
+	 * @return the zoneActiveIndex
+	 */
+	public int getZoneActiveIndex() {
+		return ZoneActiveIndex;
+	}
+
+	/**
+	 * @param zoneActiveIndex 
+	 * 				the zoneActiveIndex to set
+	 */
+	public void setZoneActiveIndex(int zoneActiveIndex) {
+		ZoneActiveIndex = zoneActiveIndex;
+	}
+
+	/**
+	 * @return the zoneMenuModel
+	 */
+	public MenuModel getZoneMenuModel() {
+		return zoneMenuModel;
+	}
+
+	/**
+	 * @param zoneMenuModel 
+	 * 				the zoneMenuModel to set
+	 */
+	public void setZoneMenuModel(MenuModel zoneMenuModel) {
+		this.zoneMenuModel = zoneMenuModel;
+	}
+
+	/**
+	 * @return the selectedZone
+	 */
+	public TplSpecZoneDtl getSelectedZone() {
+		return selectedZone;
+	}
+
+	/**
+	 * @param selectedZone 
+	 * 				the selectedZone to set
+	 */
+	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
+		this.selectedZone = selectedZone;
+	}
 	
 }
