@@ -113,15 +113,19 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
 			 break;
-		case ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL:
+		case ReportConst.INV_RPT_VIEW_PTJ_MIN_VAL:			
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			//rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlContractNoView(true);
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlStatusView(true);
+			rptGenBean.setFlInvoiceNoView(true);
+			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupSixView(true);
+			rptGenBean.setFlGroupSevenView(true);
 			 break;
 		case ReportConst.PYMT_MATCH_RPT_MIN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -288,16 +292,19 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
 			break;
-		case ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL:
+		case ReportConst.INV_RPT_VIEW_PTJ_CEN_PEN_VAL:			
+			rptGenBean.setFlPurchaseOrderNoView(true);			
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlContractNoView(true);
-			rptGenBean.setFlSstView(true);
+			//rptGenBean.setFlSstView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlStatusView(true);
+			rptGenBean.setFlInvoiceNoView(true);
+			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupSixView(true);
+			rptGenBean.setFlGroupFourteenView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_CEN_PEN_VAL:
 			rptGenBean.setFlMinistryView(true);
@@ -481,13 +488,16 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFromDateView(true);
 			break;
 		case ReportConst.INV_RPT_VIEW_PTJ_PO_VAL:
+			rptGenBean.setFlPurchaseOrderNoView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFlPkpNoView(true);
+			rptGenBean.setFlInvoiceNoView(true);
+			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupTenView(true);
+			rptGenBean.setFlGroupFourteenView(true);
 			break;
 		case ReportConst.PYMT_MATCH_RPT_PO_VAL:
 			rptGenBean.setFlMinistryView(true);
