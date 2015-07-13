@@ -70,10 +70,11 @@ public class ReactivateBasicBackingBean extends
 				SmCommonUtil.redirectToPage(
 						SmApplicationUtil.getApplicationErrorPage(),
 						MessageConst.INFO_721031);
-			}else{
-				SmCommonUtil.redirectToPage(
-						"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
-						"");
+			} else {
+				SmCommonUtil
+						.redirectToPage(
+								"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
+								"");
 			}
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
@@ -94,6 +95,7 @@ public class ReactivateBasicBackingBean extends
 		reqDTO.setEmail(reactivateBasic.getEmail());
 		reqDTO.setEstablishDate(reactivateBasic.getEstablishDate());
 		reqDTO.setRegNo(reactivateBasic.getRegNo());
+		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 
 		try {
 			RegistrationResDTO resDTO = SmServiceLookup.getRegistrationSO()
@@ -115,7 +117,8 @@ public class ReactivateBasicBackingBean extends
 	 */
 	public void activateAccount() {
 		String keyStr = basicSupplier.getSupplierId().toString()
-				+ basicSupplierAdmin.getPersonnelId().toString() + activationKey;
+				+ basicSupplierAdmin.getPersonnelId().toString()
+				+ activationKey;
 		String hashStr = SmCommonUtil.hashString(keyStr);
 		if (!hashStr.equals(encryptActivationKey)) {
 			throw new EpException(MessageConst.ERROR_721040);
