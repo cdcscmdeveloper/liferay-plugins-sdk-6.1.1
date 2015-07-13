@@ -1124,7 +1124,8 @@ public class SmApplicationUtil {
 			for (SmSupplierCategory category : appl.getSmSupplierCategories()) {
 				if (category.getPmCategoryL3().getOtherDescReq() != null
 						&& category.getPmCategoryL3().getOtherDescReq()
-								.equals(new Integer(1))) {
+								.equals(new Integer(1))
+						&& category.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_ACTIVE) {
 					if (StringUtils.isEmpty(category.getOtherDesc())) {
 						sb.append("<br/>")
 								.append(++i)
