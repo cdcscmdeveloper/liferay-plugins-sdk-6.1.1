@@ -7,8 +7,10 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<div style="float: right">
-		<p:commandLink id="updateProfileId" value="#{lbl['lbl.sc.sp.update.profile']}"
-			title="#{lbl['lbl.sc.sp.update.profile.tooltip']}" />
+		<p:commandLink id="updateProfileId"
+			value="#{lbl['lbl.sc.sp.update.profile']}"
+			title="#{lbl['lbl.sc.sp.update.profile.tooltip']}"
+			rendered="#{!profileHide}" />
 	</div>
 
 	<ui:include src="financialSupplierInformationTabList.xhtml" />
