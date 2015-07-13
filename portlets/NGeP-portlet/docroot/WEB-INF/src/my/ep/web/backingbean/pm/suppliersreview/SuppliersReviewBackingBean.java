@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.suppliersreview;
 
 import java.util.ArrayList;
@@ -28,15 +38,25 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SuppliersReviewBackingBean.
+ */
 @ManagedBean(name = "suppliersReviewBackingBean")
 @ViewScoped
 public class SuppliersReviewBackingBean extends
 BaseBackingBean<SuppliersReviewManagedBean> {
+	
+	/** The log. */
 	private static Logger log = Logger
 			.getLogger(SuppliersReviewBackingBean.class);
 
+	/** The Constant NAV_TO_MAIN. */
 	public static final String NAV_TO_MAIN = "/xhtml/pm/suppliersreview/suppliersReviewSearchMain";	
 
+	/**
+	 * Instantiates a new suppliers review backing bean.
+	 */
 	public SuppliersReviewBackingBean() {
 
 		log.info("inside SuppliersReviewBackingBean constructor");
@@ -52,8 +72,11 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	}
 
 
+	/**
+	 * Select all states.
+	 */
 	public void selectAllStates() {
-
+		log.info("selectAllStates method");
 		if(this.getManagedBean().isAllStates()){
 			this.getManagedBean()
 			.getSuppliersReviewSearchBean().setSelectedStatesList(this.getManagedBean()
@@ -69,6 +92,9 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 	}
 
+	/**
+	 * Pre loading suppliers review.
+	 */
 	public void preLoadingSuppliersReview() {
 		log.info("preLoadingSuppliersReview method");
 		this.resetSuppliersReviewSearchBean();
@@ -78,6 +104,12 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		.handleNavigation(fc, null, NAV_TO_MAIN);
 	}
 
+	/**
+	 * Debug logger.
+	 * 
+	 * @param message
+	 *            the message
+	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
 			log.debug(message);
@@ -86,7 +118,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	}
 
 	/**
-	 * reset search bean fields
+	 * reset search bean fields.
 	 */
 	public void resetSuppliersReviewSearchBean() {
 
@@ -94,6 +126,8 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		this.getManagedBean().setLazy(false);
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setNoOfSuppliers(null);
+		
+		
 		this.getManagedBean().setSuppliersReviewSearchBean(
 				new SuppliersReviewSearchBean());
 
@@ -110,6 +144,9 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	 * @return the list of PmCountry
 	 */
 	public List<PmState> retrievePmStateList() {
+		
+		debugLogger("in retrievePmStateList");
+		
 		IStateSO stateSO = (IStateSO) BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						IStateSO.class);
@@ -126,8 +163,11 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 	}
 
 
+	/**
+	 * Search suppliers review details.
+	 */
 	public void searchSuppliersReviewDetails() {
-
+		debugLogger("searchSuppliersReviewDetails");
 
 		ISuppliersReviewSO suppliersReviewSO;
 
@@ -201,6 +241,12 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 	}
 
+	/**
+	 * Adds the new category action.
+	 * 
+	 * @param pmCategoryL3
+	 *            the pm category l3
+	 */
 	public void addNewCategoryAction(PmCategoryL3 pmCategoryL3) {
 		debugLogger("addNewCategoryAction");
 		List<ScQtCategory> qtCategoryList = this.getManagedBean()
@@ -219,6 +265,9 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		qtCategoryList.add(category);
 	}
 
+	/**
+	 * Delete category codes.
+	 */
 	public void deleteCategoryCodes() {
 		debugLogger("deleteCategoryCodes");
 		List<ScQtCategory> openList = this.getManagedBean().getQtCategoryList();

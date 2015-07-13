@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.managedbean.pm.suppliersreview;
 
 import java.math.BigDecimal;
@@ -13,6 +23,9 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.web.bean.SuppliersReviewSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+/**
+ * The Class SuppliersReviewManagedBean.
+ */
 @ManagedBean(name = "suppliersReviewManagedBean")
 @SessionScoped
 public class SuppliersReviewManagedBean extends BaseManagedBean {
