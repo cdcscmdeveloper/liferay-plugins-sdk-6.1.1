@@ -18,7 +18,8 @@
 				<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 			</p:blockUI>
 			<p:messages id="financialEvaluationmsgId" autoUpdate="true"
-				closable="true" showDetail="true" showSummary="false" severity="error, info"></p:messages>
+				closable="true" showDetail="true" showSummary="false"
+				severity="error, info"></p:messages>
 			<h:panelGroup>
 				<div>
 					<p:commandButton value="#{lbl['lbl.btn.back']}" style="float:left;"
@@ -76,6 +77,8 @@
 			<h:panelGroup>
 				<ui:param name="statusHide"
 					value="#{evaluationBackingBean.managedBean.statusHide}"></ui:param>
+				<ui:param name="profileHide"
+					value="#{evaluationBackingBean.managedBean.profileHide}"></ui:param>
 				<ui:param name="checklistScoreType"
 					value="#{evaluationBackingBean.managedBean.checklistScoreType}"></ui:param>
 				<ui:param name="noOfContracts"
