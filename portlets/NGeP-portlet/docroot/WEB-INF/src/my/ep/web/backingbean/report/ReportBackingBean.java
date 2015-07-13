@@ -711,7 +711,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)229703;//192040;//235459;//61745;//11040;//25;//61745;//239716;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)192040;//229703;//192040;//235459;//61745;//11040;//25;//61745;//239716;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -792,6 +792,7 @@ public class ReportBackingBean extends
 	private String flRequisitioner;
 	private String flMtoContract;
 	private String flInvoiceNo;
+	private String flSupplierInvoiceNo;
 	private String flDeductionType;
 	private String flCrNo;
 	private String flApproverName;
@@ -901,6 +902,14 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+
+	public String getFlSupplierInvoiceNo() {
+		return flSupplierInvoiceNo;
+	}
+
+	public void setFlSupplierInvoiceNo(String flSupplierInvoiceNo) {
+		this.flSupplierInvoiceNo = flSupplierInvoiceNo;
+	}
 
 	public String getFlStopInstructionNo() {
 		return flStopInstructionNo;
@@ -5827,6 +5836,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getFlRequisitioner() != null) && (this.getFlRequisitioner() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlMtoContract() != null) && (this.getFlMtoContract() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlInvoiceNo() != null) && (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplierInvoiceNo() != null) && (this.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDeductionType() != null) && (this.getFlDeductionType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlCrNo() != null) && (this.getFlCrNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlApproverName() != null) && (this.getFlApproverName() != ReportConst.EMPTY_VAL))
@@ -5917,8 +5927,13 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getFlInvoiceNo() != null)
 					&& (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setInvoiceNoTotVar(ReportConst.AMP_INVOICE_NO_EQ
+				rptGenBean.setInvoiceNoTotVar(ReportConst.FL_AMP_INV_NO_EQ
 						+ this.getFlInvoiceNo());
+			}
+			if ((this.getFlSupplierInvoiceNo() != null)
+					&& (this.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFlSupplierInvoiceNoVar(ReportConst.FL_AMP_SUPPL_INV_NO_EQ
+						+ this.getFlSupplierInvoiceNo());
 			}
 			if ((this.getFlDeductionType() != null)
 					&& (this.getFlDeductionType() != ReportConst.EMPTY_VAL)) {
@@ -6138,6 +6153,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getRequisitionerTotVar()
 						+ rptGenBean.getMtoContractTotVar()
 						+ rptGenBean.getInvoiceNoTotVar()
+						+ rptGenBean.getFlSupplierInvoiceNoVar()
 						+ rptGenBean.getDeductionTypeTotVar()
 						+ rptGenBean.getCrNoTotVar()
 						+ rptGenBean.getApproverNameTotVar()
@@ -6401,6 +6417,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setFlScoring(null);
 		this.setFlPkpNo(null);
 		this.setFlStopInstructionNo(null);
+		this.setFlInvoiceNo(null);
+		this.setFlSupplierInvoiceNo(null);
 		this.setFlDeliveryOrderNo(null);
 		this.setFlItemCode(null);
 		this.setFlPoAmount(null);

@@ -279,6 +279,7 @@ public class ReportsGenerateBean {
 		private boolean flGroupTwentyView = false;
 		private boolean flGroupTwentyOneView = false;
 		private boolean flGroupTwentyTwoView = false;
+		private boolean flSupplierInvoiceNoView = false;
 		
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
@@ -494,6 +495,7 @@ public class ReportsGenerateBean {
 		private String flGroupSixteenVar=ReportConst.EMPTY_VAL;
 		private String flGroupSeventeenVar=ReportConst.EMPTY_VAL;
 		private String flStopInstructionNoVar=ReportConst.EMPTY_VAL;
+		private String flSupplierInvoiceNoVar=ReportConst.EMPTY_VAL;
 		//PP
 		private String ppYearVar=ReportConst.EMPTY_VAL;
 		private String ppMinistryVar=ReportConst.EMPTY_VAL;
@@ -501,6 +503,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public String getFlSupplierInvoiceNoVar() {
+			return flSupplierInvoiceNoVar;
+		}
+		public void setFlSupplierInvoiceNoVar(String flSupplierInvoiceNoVar) {
+			this.flSupplierInvoiceNoVar = flSupplierInvoiceNoVar;
+		}
+		public boolean isFlSupplierInvoiceNoView() {
+			return flSupplierInvoiceNoView;
+		}
+		public void setFlSupplierInvoiceNoView(boolean flSupplierInvoiceNoView) {
+			this.flSupplierInvoiceNoView = flSupplierInvoiceNoView;
+		}
 		public boolean isCtStatusThreeView() {
 			return ctStatusThreeView;
 		}
