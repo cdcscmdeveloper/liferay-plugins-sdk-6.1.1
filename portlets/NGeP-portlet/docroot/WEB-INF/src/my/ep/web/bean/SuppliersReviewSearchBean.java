@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.bean;
 
 import java.math.BigDecimal;
@@ -7,6 +17,9 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 
+/**
+ * The Class SuppliersReviewSearchBean.
+ */
 public class SuppliersReviewSearchBean {
 
 	/**
@@ -22,11 +35,7 @@ public class SuppliersReviewSearchBean {
 	private int noOfSuppliers;
 	private String stateValue;
 	private boolean categoryState;
-	private Long[] dropDownStatesIdList;
-	
-	
-	
-	
+	private Long[] dropDownStatesIdList;	
 	
 	/**
 	 * @return the selectedStatesList
