@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -158,12 +159,17 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
 // TODO: Auto-generated Javadoc
 public class SmApplicationUtil {
 	private static Logger log = Logger.getLogger(SmApplicationUtil.class);
+
+	private static SmApplicationUtil instance;
 
 	/**
 	 * Validate person limit.Set the max limit of authorizes personnel that can
@@ -3236,8 +3242,8 @@ public class SmApplicationUtil {
 	 * 
 	 * @return the list if PmStatusDesc of type education field
 	 */
-	public static List<PmStatusDesc> retrieveRegistrationStatusList(
-			String suppType, String applType) {
+	public List<PmStatusDesc> retrieveRegistrationStatusList(String suppType,
+			String applType) {
 		List<PmStatusDesc> descList = new ArrayList<PmStatusDesc>();
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setLanguageCode(new FacesScopes().getUserLocale().getLanguage());
@@ -3245,28 +3251,24 @@ public class SmApplicationUtil {
 			descList = SmServiceLookup.getStatusSO()
 					.retrieveRegStatusListForBumi(reqDTO).getStatusDescList();
 		} else {
-			//consultant only load reg status non bumi
-			if(StringUtils.isNotBlank(suppType)
-						&& suppType.equalsIgnoreCase("J")){
-				for (PmStatusDesc desc : SmServiceLookup.getStatusSO()
-						.retrieveRegStatusList(reqDTO).getStatusDescList()) {
-					if(desc.getPmStatus().getPmRegStatus() != null
-						&& !desc.getPmStatus().getPmRegStatus().isBumiAppl()){
-						descList.add(desc);
+			descList = SmServiceLookup.getStatusSO()
+					.retrieveRegStatusList(reqDTO).getStatusDescList();
+
+			// consultant only load reg status non bumi
+			if (StringUtils.isNotBlank(suppType)
+					&& suppType.equalsIgnoreCase("J")) {
+				for (Iterator<PmStatusDesc> it = descList.iterator(); it
+						.hasNext();) {
+					PmStatusDesc descTemp = it.next();
+					if (descTemp.getPmStatus() != null
+							&& descTemp.getPmStatus().getPmRegStatus() != null
+							&& descTemp.getPmStatus().getPmRegStatus()
+									.isBumiAppl()) {
+						it.remove();
 					}
 				}
 			}
-			
-			//contractor load all reg status
-			else{
-			for (PmStatusDesc desc : SmServiceLookup.getStatusSO()
-					.retrieveRegStatusList(reqDTO).getStatusDescList()) {
-				if(desc.getPmStatus().getPmRegStatus() != null){
-					descList.add(desc);
-				}
-			}
-		}
-			
+
 		}
 		return descList;
 	}
@@ -5443,5 +5445,17 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722606);
 			}
 		}
+	}
+
+	public static SmApplicationUtil getInstance() {
+		if (instance == null) {
+			try {
+				instance = new SmApplicationUtil();
+			} catch (Exception e) {
+				log.error(e.getMessage());
+			}
+		}
+		return instance;
+
 	}
 }
