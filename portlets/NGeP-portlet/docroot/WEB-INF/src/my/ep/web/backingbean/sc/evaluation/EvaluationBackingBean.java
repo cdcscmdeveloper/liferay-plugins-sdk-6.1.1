@@ -4814,6 +4814,7 @@ public class EvaluationBackingBean extends
 							.setStatusHide(
 									proposalCheckList.getScQtCheckList()
 											.isScoringReq());
+					this.getManagedBean().setProfileHide(true);
 					detailBackingBean.getManagedBean().setSupplierId(
 							proposalCheckList.getScQtProposal()
 									.getScQtSupplier().getSmSupplier()
