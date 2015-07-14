@@ -69,14 +69,11 @@
 		<ac:lovPopup />
 		<p:dataTable id="groupUser"
 			value="#{usergroupBackingBean.managedBean.userGroups}"
-			var="groupuser"
-			selection="#{usergroupBackingBean.managedBean.selectedUsrGrps}"
+			var="groupuser" rowIndexVar="rowIndex" 
 			rowKey="#{groupuser}">
-			<ac:paginator />
-			<p:column style="width:2%;text-align:center;"
-				selectionMode="multiple" />
+			<ac:paginator />			
 
-			<p:column style="width:68%"
+			<p:column style="width:65%"
 				headerText="#{lbl['lbl.pm.ug.info.uname']}">
 				<h:outputText value="#{groupuser.pmUser.userName}" />
 			</p:column>
@@ -88,39 +85,38 @@
 			<p:column style="width:10%"
 				headerText="#{lbl['lbl.pm.ug.result.status']}">
 				<p:selectOneMenu style="width:203px"
-					value="#{groupuser.pmUser.recordStatusFlg}"
-					disabled="#{groupuser.pmUser.brandNew or usergroupBackingBean.managedBean.brandNew}">
+					value="#{groupuser.recordStatusFlg}"
+					disabled="#{groupuser.brandNew or usergroupBackingBean.managedBean.brandNew}">
 					<f:selectItems value="#{usergroupBackingBean.getUserGroupStatus()}"></f:selectItems>
 				</p:selectOneMenu>
 			</p:column>
+			<p:column style="width:5%">
+			<f:facet name="header">				
+				<h:outputText value="#{lbl['lbl.pm.action']}" />
+			</f:facet>
+			<p:commandLink partialSubmit="true"
+				process="@this"
+				disabled="#{!(groupuser.brandNew)}"
+				action="#{usergroupBackingBean.deleteUserGroup(rowIndex)}"
+				update="groupUser">
+				<p:graphicImage value="/css/images/design/trash.png"></p:graphicImage>
+			</p:commandLink>
+			
+		</p:column>
 
 		</p:dataTable>
 		<br />
-		<div class="ppRightBtn">
-			<table style="width: 100%">
-				<tr>
-					<td class="TableFieldLeft" width="80%"></td>
-					<td>
-						<table>
-							<tr>
-								<td class="TableFieldLeft" style="padding-bottom: 5px"
-									width="100%"><ac:lov id="usergrouping" lovId="PM_USER"
-										headerText="User Selection"
-										buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
-										saveObject="usergroupBackingBean.managedBean.users"
-										postUpdateListener="usergroupBackingBean.userGroupListner"
-										update="@form"
-										disabled="#{!usergroupBackingBean.managedBean.selectGrp}"
-										conditionField="#{usergroupBackingBean.constuctConditionFields()}">
-									</ac:lov></td>
-								<td><p:commandButton value="#{lbl['lbl.btn.delete']}"
-										update="groupUser"
-										action="#{usergroupBackingBean.deleteUserGroup}" /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-			</table>
+		<br />
+		<div style="text-align: right;">
+				<ac:lov id="usergrouping" lovId="PM_USER"
+						headerText="User Selection"
+						buttonLabel="#{lbl['lbl.btn.add']}" selectionMode="multiple"
+						saveObject="usergroupBackingBean.managedBean.users"
+						postUpdateListener="usergroupBackingBean.userGroupListner"
+						update="@form"
+						disabled="#{!usergroupBackingBean.managedBean.selectGrp}"
+						conditionField="#{usergroupBackingBean.constuctConditionFields()}">
+				</ac:lov>
 		</div>
 	</p:panel>
 
