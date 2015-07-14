@@ -1501,39 +1501,94 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ContractItemResDTO ctResDTO = null;
 		ctReqDTO.setContractVerId(flRequest.getCtContract().getLatestContractVer().getContractVerId());
 		
-		Map<ScRequestItem, BigDecimal> requestItemQtyMap = new HashMap<ScRequestItem, BigDecimal>();
-		for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
-			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-				if(requestItemQtyMap.containsKey(itemAddr.getScRequestItem())) {
-					requestItemQtyMap.put(itemAddr.getScRequestItem(), requestItemQtyMap.get(itemAddr.getScRequestItem()).add(itemAddr.getOrderedQty()));
-				} else{
-					requestItemQtyMap.put(itemAddr.getScRequestItem(), itemAddr.getOrderedQty());
+		if(!flRequest.getCtContract().isZonalPricing()) {
+			Map<ScRequestItem, BigDecimal> requestItemQtyMap = new HashMap<ScRequestItem, BigDecimal>();
+			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+					if(requestItemQtyMap.containsKey(itemAddr.getScRequestItem())) {
+						requestItemQtyMap.put(itemAddr.getScRequestItem(), requestItemQtyMap.get(itemAddr.getScRequestItem()).add(itemAddr.getOrderedQty()));
+					} else{
+						requestItemQtyMap.put(itemAddr.getScRequestItem(), itemAddr.getOrderedQty());
+					}
 				}
 			}
-		}
-		
-		BigDecimal itemMaxQty = BigDecimal.ZERO;
-		BigDecimal prevSumQty = BigDecimal.ZERO;
-		BigDecimal sumQty = BigDecimal.ZERO;
-		for(ScRequestItem requestNoteItem : requestItemQtyMap.keySet()) {
-			if(requestNoteItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
-				continue;
-			}
-			ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
-			ctResDTO = contractItemSO.getItemMaxQuantity(ctReqDTO);
-			if(ctResDTO.getCtItemMaxQuantity()!=null) {
-				itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
-			}
-			if(itemMaxQty!=null) {
-				reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
-				prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
-				sumQty = requestItemQtyMap.get(requestNoteItem).add(prevSumQty);
-				if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
-					throw new EpException(MessageConst.ERROR_740038,new String[]{requestNoteItem.getItemName()});
+			
+			BigDecimal itemMaxQty = BigDecimal.ZERO;
+			BigDecimal prevSumQty = BigDecimal.ZERO;
+			BigDecimal sumQty = BigDecimal.ZERO;
+			for(ScRequestItem requestNoteItem : requestItemQtyMap.keySet()) {
+				if(requestNoteItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+					continue;
+				}
+				ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+				ctResDTO = contractItemSO.getItemMaxQuantity(ctReqDTO);
+				if(ctResDTO.getCtItemMaxQuantity()!=null) {
+					itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
+				}
+				if(itemMaxQty!=null) {
+					reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+					prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+					sumQty = requestItemQtyMap.get(requestNoteItem).add(prevSumQty);
+					if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
+						throw new EpException(MessageConst.ERROR_740038,new String[]{requestNoteItem.getItemName()});
+					}
 				}
 			}
+		} else { // in case of zonal pricing
+			IContractZoneSO contractZoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractZoneSO.class);
+			ContractZoneReqDTO czReqDTO = new ContractZoneReqDTO();
+			Map<ScRequestItem, Map<Long, BigDecimal>> requestItemZonalQtyMap = new HashMap<ScRequestItem, Map<Long, BigDecimal>>();
+			Long ctContractZoneId = null;
+			Map<Long, BigDecimal> zonalQtyMap = null;
+			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
+				czReqDTO.setContractId(flRequest.getCtContract().getContractId());
+				czReqDTO.setPmAddress(deliveryAddress.getPmAddress());
+				ctContractZoneId = contractZoneSO.retrieveContractZoneByAddress(czReqDTO).getCtContractZone().getContractZoneId();
+				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+					zonalQtyMap = null;
+					if(requestItemZonalQtyMap.containsKey(itemAddr.getScRequestItem())) {
+						zonalQtyMap = requestItemZonalQtyMap.get(itemAddr.getScRequestItem());
+						if(zonalQtyMap.containsKey(ctContractZoneId)) {
+							zonalQtyMap.put(ctContractZoneId, zonalQtyMap.get(ctContractZoneId).add(itemAddr.getOrderedQty()));
+						} else {
+							zonalQtyMap.put(ctContractZoneId, itemAddr.getOrderedQty());
+						}
+					} else{
+						zonalQtyMap = new HashMap<Long, BigDecimal>();
+						zonalQtyMap.put(ctContractZoneId, itemAddr.getOrderedQty());
+						requestItemZonalQtyMap.put(itemAddr.getScRequestItem(), zonalQtyMap);
+					}
+				}
+			}
+			
+			BigDecimal itemMaxQty = BigDecimal.ZERO;
+			BigDecimal prevSumQty = BigDecimal.ZERO;
+			BigDecimal sumQty = BigDecimal.ZERO;
+			for(ScRequestItem requestNoteItem : requestItemZonalQtyMap.keySet()) {
+				if(requestNoteItem.getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+					continue;
+				}
+				zonalQtyMap = requestItemZonalQtyMap.get(requestNoteItem);
+				for(Long contractZoneId : zonalQtyMap.keySet()) {
+					ctReqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+					ctReqDTO.setContractZoneId(contractZoneId);
+					ctResDTO = contractItemSO.getItemMaxQuantity(ctReqDTO);
+					if(ctResDTO.getCtItemMaxQuantity()!=null) {
+						itemMaxQty = ctResDTO.getCtItemMaxQuantity().getMaxQuantity();
+					}
+					if(itemMaxQty!=null) {
+						reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
+						//TODO Please uncomment this once API ready
+						reqDTO.setCtContractZoneId(contractZoneId);
+						prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
+						sumQty = zonalQtyMap.get(contractZoneId).add(prevSumQty);
+						if(sumQty.doubleValue()>itemMaxQty.doubleValue()) {
+							throw new EpException(MessageConst.ERROR_740038,new String[]{requestNoteItem.getItemName()});
+						}
+					}					
+				}
+			}			
 		}
-		
 	}
 	/**
 	 * initialize approver group.
