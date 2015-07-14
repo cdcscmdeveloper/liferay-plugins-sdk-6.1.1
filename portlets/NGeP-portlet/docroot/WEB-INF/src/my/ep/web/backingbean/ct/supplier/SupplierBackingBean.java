@@ -984,7 +984,11 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 	          	if (resDTO.isSuccessful()) {
 					getManagedBean().setContractVer(resDTO.getCtContractVer());
 					getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-				
+					
+					getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+			    			ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT, getManagedBean().getCtContract().getContractNo()));
+			    	ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+			    	
 					getManagedBean().setCurentAccNoBankName(null);
 					if(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() != null && getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() != null )
 					    getManagedBean().setCurentAccNoBankName(getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankAccountNo() +" / " + getManagedBean().getCtContract().getLatestContractVer().getCtContractValue().getBankName() );
@@ -1050,6 +1054,10 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 				resDTO = contractSO.retrieveFactoringDetailsByLoaId(reqDTO);
 				if (resDTO.isSuccessful()) {
 					getManagedBean().setCtContract(resDTO.getContract());
+					getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(
+			        		ModuleCodeConst.CONTRACT_MANAGEMENT, ParameterConst.DOCTYPE_REQUEST_FACTORING, getManagedBean().getCtContract().getContractNo()));
+					 ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
+					
 					if (getManagedBean().getCtContract().getCtFactoring() != null &&  getManagedBean().getCtContract().isFactored()
 							&& (getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_COMPLETE.longValue()
 							|| getManagedBean().getCtContract().getCtFactoring().getStatus().getStatusId().longValue() ==  ContractStatusConst.RF_ACKNOWLEDGEMENT_REJECTED.longValue()
