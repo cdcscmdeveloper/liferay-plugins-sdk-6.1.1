@@ -41,7 +41,8 @@
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
-					#{committeeDtl.scCommitteeMember.PNP}
+					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}				
 				</p:column>
 							
 				<p:column headerText="#{lbl['lbl.sc.role']}">
@@ -88,7 +89,8 @@
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
-					#{committeeDtl.scCommitteeMember.PNP}
+					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}
 				</p:column>
 							
 				<p:column headerText="#{lbl['lbl.sc.role']}">
@@ -132,7 +134,8 @@
 						<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 						<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
 					</f:facet>
-					#{committeeDtl.scCommitteeMember.PNP}
+					#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+											fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}					
 				</p:column>
 							
 				<p:column headerText="#{lbl['lbl.sc.role']}">
@@ -226,7 +229,8 @@
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
-				#{committeeDtl.scCommitteeMember.PNP}
+				#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
+										fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}				
 			</p:column>
 						
 			<p:column headerText="#{lbl['lbl.sc.role']}">
