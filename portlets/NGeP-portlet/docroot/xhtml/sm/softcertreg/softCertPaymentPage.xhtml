@@ -22,10 +22,11 @@
 			</tr>
 		</table>	
 	</p:outputPanel>
-	
-	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}"/>
 
 	<p:panel header="#{lbl['lbl.sm.payment.selection']}" toggleable="true">
+	
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}"/>
+		
 		<p:dataTable id="paymentList" rowKey="#{personnel}" rowIndexVar="index" 
 					value="#{softCertBackingBean.managedBean.softCertSelectList}" var="personnel" 
 					editable="true" style="word-wrap: break-word;table-layout: fixed;" 
