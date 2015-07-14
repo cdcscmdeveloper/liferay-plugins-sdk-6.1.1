@@ -277,7 +277,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
 		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 		    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			    getManagedBean().getContractVer().getDocType(), getManagedBean().getCtContract().getContractNo()));
+			    ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
 		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
 		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 

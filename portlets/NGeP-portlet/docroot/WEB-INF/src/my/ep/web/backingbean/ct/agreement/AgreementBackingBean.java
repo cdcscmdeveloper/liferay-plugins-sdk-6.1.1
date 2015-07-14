@@ -934,7 +934,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 	reqDTO = new UserReqDTO();
 		 	reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
 		     
-		 	if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { // PTJ
+		 	if (agreementParty.getOrgProfile() != null && agreementParty.getOrgProfile().getOrgProfileId() != null) { 
 		 		 reqDTO.setOrgProfileId(agreementParty.getOrgProfile().getOrgProfileId());
 		 	} 
 		 	
@@ -951,7 +951,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 		agencyUserMap.put(pmUser.getUserId(),pmUser);
 		 	}
 	     
-		 	//Reset the agency signer ic no and designation if record didn't exist in the drop down
+		 	/*//Reset the agency signer ic no and designation if record didn't exist in the drop down
 		 	for (CtAgreementParty agencySigner: getManagedBean().getCtAgencySigner()) {
 		 		if (agencySigner.getOfficer() == null) {
 		 			agencySigner.setOfficer(new PmUser());
@@ -961,7 +961,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		 			agencySigner.setOfficerIc(null);
 		 			agencySigner.setOfficerPosition(null);
 		 		}
-		 	}
+		 	}*/
 		} finally {
 			userSO = null;
 			reqDTO = null;
@@ -1251,7 +1251,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    	String fileName = getTemplateFileName(agreementContent.getTitle());
 			if (fileName != null) {
 				String content = null;
-				String filePath = getManagedBean().getFileDirectory() + "/temp";
+				String filePath = getManagedBean().getFileDirectory();
 				File file = new File(filePath);
 				file.mkdirs();
 
@@ -1324,7 +1324,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		String content = null;
 		String filePath = null;
-		String tempDirectory = getManagedBean().getFileDirectory() + "temp";
+		String tempDirectory = getManagedBean().getFileDirectory();
 		File file = new File(tempDirectory);
 		file.mkdirs();
 		String fileName = null;
@@ -1522,7 +1522,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	/**
 	 * The method used to convert the template into document file.
 	 */
-	private void convertHtmlToDocFile(String content, String filePath) {
+	private  void convertHtmlToDocFile(String content, String filePath) {
 		WordprocessingMLPackage wordMLPackage;
 		try {
 			wordMLPackage = WordprocessingMLPackage.createPackage();
@@ -2380,6 +2380,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				   agreementParty.setOrgProfile(agreementSO.retrieveOrgProfileListByProfileId(reqDTO).getPmOrgProfile());
 				   agreementParty.setAgreementPartyType(getParameterByTypeAndCode(
 					   ParameterTypeConst.AGREEMENT_PARTY_TYPE, ParameterTypeConst.AGREEMENT_AGENCY_SIGNER));
+				   agreementParty.setOfficer(new PmUser());
 				   getManagedBean().getCtAgencySigner().add(agreementParty);
 				   getManagedBean().setAgencySignerDropDown(false);
 				   

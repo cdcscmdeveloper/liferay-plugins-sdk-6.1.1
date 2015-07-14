@@ -1590,7 +1590,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			trBB = new TerminationBackingBean();
 			trBB.getManagedBean().setViewContract(false);
 			trBB.getManagedBean().setExternalPageUrl(null);
-			trBB.setTerminationContractVer(resDTO);
+			trBB.setTerminationContractVer(resDTO);  
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally{

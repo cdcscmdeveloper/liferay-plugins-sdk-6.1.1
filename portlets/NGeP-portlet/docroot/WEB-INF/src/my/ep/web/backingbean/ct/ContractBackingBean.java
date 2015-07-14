@@ -53,7 +53,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		log.debug("ContractBackingBean.constructor()");
 		if (getManagedBean().getFileDirectory() == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/temp");
+					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
 		}
 	}
 	
@@ -65,9 +65,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	 */
 	public ContractBackingBean(String fileDirectory) {
 		log.debug("ContractBackingBean.constructor(fileDirectory)");
-		if (getManagedBean().getFileDirectory() == null) {
+		if (fileDirectory == null) {
 			getManagedBean().setFileDirectory(EpPropertiesUtils.getInstance().getProperty(
-					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT/temp");
+					EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR)+"/CT");
 		} else {
 			getManagedBean().setFileDirectory(fileDirectory);
 		}
