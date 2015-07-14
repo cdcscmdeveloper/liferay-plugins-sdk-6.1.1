@@ -533,7 +533,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 //				throw new EpException(MessageConst.ERROR_100022, new String[]{"Circular Letter"});
 //			}
 			
-			if( !action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && !action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL))
 			       validateCircular(action);
 			
 			CtCircular circular = getManagedBean().getCircular();
@@ -626,6 +626,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
 				}*/
+			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
 					    throw new EpException(MessageConst.ERROR_100022, 
@@ -666,6 +667,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 						if(ctContract==null || ctContract.getLatestContractVer()==null) { 
 							throw new EpException(MessageConst.ERROR_750005, new String[]{circularContrart.getCtContract().getContractName()});
 						}
+					}
+				}
+			}
+			
+			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) 
+					&& getManagedBean().getCircularVer().getCtContactPersons() != null
+					&& getManagedBean().getCircularVer().getCtContactPersons().size() > 1) {
+				for(CtContactPerson contrartPerson : getManagedBean().getCircularVer().getCtContactPersons()) {	
+					if(contrartPerson.getName().isEmpty() ||contrartPerson.getAddress().isEmpty() 
+							|| contrartPerson.getEmail().isEmpty() || contrartPerson.getPhoneNo().isEmpty()) {
+						throw new EpException(MessageConst.ERROR_100022, new String[]{"Contact Person Details"});
 					}
 				}
 			}
