@@ -1,12 +1,14 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition 
+    xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-
-
+ 
+ 
  <p:messages id="rptmessagesMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />		
 		<table style="width: 100%" >
 			<tr>
@@ -128,6 +130,8 @@
 						  </c:if>
 						  <tr>
 						  <td>
+						  
+	    
 						  <ui:include src="smreportcontent.xhtml"></ui:include>
 						  <ui:include src="screportcontent.xhtml"></ui:include>
 						 <ui:include src="cmreportcontent.xhtml"></ui:include>						
@@ -135,6 +139,7 @@
 						 
 						 <ui:include src="ctreportcontent.xhtml"></ui:include>
 						 <ui:include src="ppreportcontent.xhtml"></ui:include>
+						 
 						  </td>
 						  </tr>
 							</table>
@@ -166,12 +171,14 @@
 		            </div>
 					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
-		            <p:commandButton value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
+		            
+		            <p:commandButton onstart="blkReportContent.show();" 
+				    oncomplete="blkReportContent.hide();" value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
 		            update="@form" partialSubmit="true" process="@form">
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
     				</p:commandButton> 	           
-					<p:commandButton value="#{lbl['lbl.btn.reset']}"	action="#{reportBackingBean.resetReportForm}"
-					update="@form"  partialSubmit="true" process="@form"/>					        					
+					<p:commandButton   value="#{lbl['lbl.btn.reset']}"	action="#{reportBackingBean.resetReportForm}"
+					 update="@form" partialSubmit="true" process="@form" />					        					
 				   </div>
 				   </h:panelGroup>
 				  </p:panel>
@@ -208,4 +215,5 @@
 		</td>
 	</tr>
   </table>
+ 
   </ui:composition>
