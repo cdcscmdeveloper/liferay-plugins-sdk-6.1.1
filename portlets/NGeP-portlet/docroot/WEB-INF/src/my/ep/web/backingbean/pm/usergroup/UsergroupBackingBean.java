@@ -4,10 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -33,7 +30,6 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -417,23 +413,23 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 		
 	}
 
-	public void deleteUserGroup() {
+	public void deleteUserGroup(int rowIndex) {
 
 		List<PmUserGroupUser> grpUsers = this.getManagedBean().getUserGroups();
-
-		List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
-				.getSelectedUsrGrps();
-
-		if (selectedUsrGrp.isEmpty()) {
-			throw new EpException(MessageConst.ERR_900003);
-		}
-		if (grpUsers.size() == selectedUsrGrp.size()) {
-			throw new EpException(MessageConst.ERR_900004);
-		}
-
-		for (PmUserGroupUser pmUserGroupUser : selectedUsrGrp) {
-			grpUsers.remove(pmUserGroupUser);
-		}
+		PmUserGroupUser removeGroupUser = grpUsers.get(rowIndex);
+//		List<PmUserGroupUser> selectedUsrGrp = this.getManagedBean()
+//				.getSelectedUsrGrps();
+//
+//		if (selectedUsrGrp.isEmpty()) {
+//			throw new EpException(MessageConst.ERR_900003);
+//		}
+//		if (grpUsers.size() == selectedUsrGrp.size()) {
+//			throw new EpException(MessageConst.ERR_900004);
+//		}
+		grpUsers.remove(removeGroupUser);
+//		for (PmUserGroupUser pmUserGroupUser : selectedUsrGrp) {
+//			grpUsers.remove(pmUserGroupUser);
+//		}
 
 		this.getManagedBean().setUserGroups(grpUsers);
 	}
@@ -564,21 +560,50 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 										new FacesScopes().getUserLocale())));
 			}
 		}
-		if(userGroup.isBrandNew())
+		if(userGroup.isBrandNew()){
 			return NAV_TO_MAIN;
-		else
+		}
+		else{
+			goToMaintenanceAction(userGroup);
 			return "userGroupMaintenance";
+		}
 	}
 
 	
 	
 	public String constuctConditionFields() {
+		StringBuilder sb = new StringBuilder();
 		orgProfileId = this.getManagedBean().getOrgProfileId();
 		if (null != orgProfileId) {
-			return "pmUserOrgs.pmOrgProfile.orgProfileId^" + orgProfileId + "|"
-					+ "pmUserOrgs.pmUserRoles.pmRole.roleCode^" + RoleCode.FL_APPROVER.value();
+			sb.append("pmUserOrgs.pmOrgProfile.orgProfileId^");
+			sb.append(orgProfileId);
+			sb.append("|pmUserOrgs.pmUserRoles.pmRole.roleCode^");
+			sb.append(RoleCode.FL_APPROVER.value());
+//			return "pmUserOrgs.pmOrgProfile.orgProfileId^" + orgProfileId + "|"
+//					+ "pmUserOrgs.pmUserRoles.pmRole.roleCode^" + RoleCode.FL_APPROVER.value();
 		}
-		return "";
+		
+		StringBuilder selectedUsersIds= new StringBuilder();
+		if(getManagedBean().getUserGroups() != null && !getManagedBean().getUserGroups().isEmpty()){
+			PmUserGroupUser groupUser = null;
+			for (int i = 0; i < getManagedBean().getUserGroups().size(); i++) {
+				groupUser = getManagedBean().getUserGroups()
+						.get(i);
+				if (groupUser.getPmUser() != null && groupUser.getPmUser().getUserId() != null) {
+					if (i != 0) {
+						selectedUsersIds.append(",");
+					}
+					selectedUsersIds.append(groupUser.getPmUser().getUserId());
+				}
+			}
+		}
+		if (selectedUsersIds.length() > 0) {
+			sb.append("|userId^");
+			sb.append(selectedUsersIds.toString());
+			sb.append("^");
+			sb.append(SearchOperator.OPERATOR_NOT_IN.value());
+		}
+		return sb.toString();
 	}
 
 	/*
