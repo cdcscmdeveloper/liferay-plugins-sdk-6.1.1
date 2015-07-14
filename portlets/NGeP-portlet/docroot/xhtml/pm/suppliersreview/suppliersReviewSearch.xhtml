@@ -6,6 +6,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+	<style type="text/css">
+.ui-state-disabled {
+	opacity: .45 !important;
+}
+
+/* .ui-chkbox .ui-chkbox-box .ui-icon-check {
+	background-position: -66px -146px !important;
+	 
+} */
+</style>
+
 	<p:panel id="suppliersReviewPanel"
 		header="#{lbl['lbl.pm.sr.search.location']}" toggleable="false">
 
@@ -39,7 +50,7 @@
 			<tr>
 				<td width="18%"><p:outputLabel value=""></p:outputLabel></td>
 				<td style="width: 78.3%;"><p:selectBooleanCheckbox
-						label="#{lbl['lbl.pm.sr.all.states']}" styleClass="allStatesChkID"
+						label="#{lbl['lbl.pm.sr.all.states']}"
 						value="#{suppliersReviewBackingBean.managedBean.allStates}">
 						<p:ajax event="change"
 							listener="#{suppliersReviewBackingBean.selectAllStates}"
@@ -58,7 +69,8 @@
 						style="width: 207px;margin-bottom: 5px;height:100px"
 						showCheckbox="true"
 						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
-						<f:selectItems var="finState" itemDisabled="#{suppliersReviewBackingBean.managedBean.disabled}"
+						<f:selectItems var="finState" 
+							styleClass="ui-state-disabled"
 							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
 							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
 						</f:selectItems>
@@ -90,4 +102,7 @@
 			}); */
 		}
 	</script> -->
+
+
+
 </ui:composition>
