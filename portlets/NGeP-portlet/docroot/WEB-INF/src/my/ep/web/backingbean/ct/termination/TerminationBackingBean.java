@@ -328,11 +328,13 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 	    }
 		
-		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
-		ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		   getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+				    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
+			    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
+		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
+		     ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
-		flush();
+		     flush();
 		if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
 				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
 					getManagedBean().setRemedy(true);
