@@ -82,24 +82,24 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 
 	public void selectedNotify() {
-//		debugLogger("=== selectedNotify ===");
-//		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
-//		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
-//		if (!selectedNotify.isReadFlag()) {
-//			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
-//					.getServiceObject("pm", INotifySO.class);
-//			NotifyReqDTO reqDTO = new NotifyReqDTO();
-//			reqDTO.setPmNotifyUser(selectedNotify);
-//			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
-//			debugLogger("NotifyResDTO updateIsReadNotify["
-//					+ resDTO.isSuccessful() + "]");
-//			if (resDTO.isSuccessful()) {
-//				selectedNotify.setReadFlag(true);
-//			}
-//		}
-		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance().getServiceObject("pm", INotifySO.class);
-		NotifyReqDTO reqDTO = new NotifyReqDTO();
-		reqSO.getAlertUnreadCount(reqDTO);
+		debugLogger("=== selectedNotify ===");
+		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
+		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
+		if (!selectedNotify.isReadFlag()) {
+			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", INotifySO.class);
+			NotifyReqDTO reqDTO = new NotifyReqDTO();
+			reqDTO.setPmNotifyUser(selectedNotify);
+			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
+			debugLogger("NotifyResDTO updateIsReadNotify["
+					+ resDTO.isSuccessful() + "]");
+			if (resDTO.isSuccessful()) {
+				selectedNotify.setReadFlag(true);
+			}
+		}
+//		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance().getServiceObject("pm", INotifySO.class);
+//		NotifyReqDTO reqDTO = new NotifyReqDTO();
+//		reqSO.getAlertUnreadCount(reqDTO);
 	}
 
 	/**
