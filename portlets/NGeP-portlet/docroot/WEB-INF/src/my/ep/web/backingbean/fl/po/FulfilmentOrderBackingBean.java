@@ -184,6 +184,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
 			reqDTO.setUserRole(getUserRole());
+			reqDTO.setTaskName(getManagedBean().getTaskName());
 			
 			String messagePrefix = "";
 			String messageSuffix = "";
@@ -507,6 +508,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setTaskId(taskId);
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().setDocType(resDTO.getFlOrder().getFlFulfilmentRequest().getDocType());
+				getManagedBean().setTaskName(res.getTaskName());
 				sortOrderSummaryList(getManagedBean().getFlRequest().getFlDeliveryAddresses());
 				
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean(resDTO.getFlOrder().getDocType(), resDTO.getFlOrder().getFlFulfilmentRequest().getScPurchaseRequest().getRequestNote().getRequestNoteNo());
