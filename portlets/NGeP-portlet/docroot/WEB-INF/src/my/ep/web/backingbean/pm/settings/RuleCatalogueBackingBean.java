@@ -71,6 +71,7 @@ import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmLanguage;
@@ -140,6 +141,9 @@ public class RuleCatalogueBackingBean extends
 
 	public void typeValueChgangeListener(PmFeeExemption feeExemption) {
 		log.info("................updateUnspscForFee...............");
+
+		log.info("......feeExemption.getTypeId().getTypeId()"+feeExemption.getTypeId().getTypeId());
+
 		ICodificationSO unspscSO;
 		try {
 			 
@@ -156,8 +160,6 @@ public class RuleCatalogueBackingBean extends
 				searchBeanType.getDataFilterBeans().add(typeFilterBean);
 				reqDTO.setTypeSearchBean(searchBeanType);
 				CodificationResDTO resDTO = unspscSO.searchTypeObj(reqDTO);
-
-
 				if (resDTO.isSuccessful()) {
 					feeExemption.setTypeId(resDTO.getTypeList().get(0));
 				}
@@ -668,15 +670,14 @@ public class RuleCatalogueBackingBean extends
 		log.info("................updateUnspscForFee...............");
 		ICodificationSO unspscSO;
 		try {
-
+			CmUnspsc selectedComodity = (CmUnspsc) entity;
 			PmFeeExemption exemption = this.getManagedBean()
 					.getFeeExemptionsForComodity().get(index);
 			unspscSO = (ICodificationSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.CATALOGUE_MANAGEMENT,
 							ICodificationSO.class);
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
-			reqDTO.setUnspscCode(this.getManagedBean().getSelectedComodity()
-					.getUnspscCode());
+			reqDTO.setUnspscCode(selectedComodity.getUnspscCode());
 			CodificationResDTO resDTO = unspscSO
 					.retrieveUNSPSCByCommodityCode(reqDTO);
 
@@ -745,13 +746,13 @@ public class RuleCatalogueBackingBean extends
 	public void scRequestItemCodeUpdate(BaseEntity entity, int index) {
 		log.info("................scRequestItemCodeUpdate...............");
 		IContractItemSO contractItemSO;
+		CtContractItem ctContract = (CtContractItem)entity;
 		try {
 			contractItemSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractItemSO.class);
 
 			ContractItemReqDTO reqDAO = new ContractItemReqDTO();
-			reqDAO.setContractItemId(this.getManagedBean()
-					.getSelectedCtContractItem().getContractItemId());
+			reqDAO.setContractItemId(ctContract.getContractItemId());
 			ContractItemResDTO resDAO = contractItemSO.getContractItem(reqDAO);
 			System.out
 					.println("...............this.getManagedBean().getSelectedCtContractItem().getContractItemId()="
