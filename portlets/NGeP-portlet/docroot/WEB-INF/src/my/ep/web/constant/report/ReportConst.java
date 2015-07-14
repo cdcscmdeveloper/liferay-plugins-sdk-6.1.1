@@ -796,6 +796,7 @@ public class ReportConst {
 	public static final String ROLE_CODE_UPS_SVC="UPS_SVC";
 	public static final String ROLE_CODE_UPS_SDO="UPS_SDO";
 	public static final String ROLE_CODE_EP_ADMIN="EP_ADMIN";
+	public static final String ROLE_CODE_PTJ_ADMIN="PTJ_ADMIN";
 	public static final String ROLE_CODE_MOF_SUPPLIER_ADMIN="MOF_SUPPLIER_ADMIN";
 	public static final String ROLE_CODE_MOF_SUPPLIER_USER="MOF_SUPPLIER_USER";
 	public static final String ROLE_CODE_BASIC_SUPPLIER_USER="BASIC_SUPPLIER_USER";
