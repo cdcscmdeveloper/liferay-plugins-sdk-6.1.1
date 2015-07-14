@@ -1147,8 +1147,9 @@ public class EvaluationBackingBean extends
 
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
 				reqDTO.setComplianceList(presentatiodemo);
+				evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			}
-			evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
+			
 
 			this.getManagedBean().setPresentationDemoSupplierListDM(
 					new PresentationDemoSuppliersPagingDataModel(
