@@ -5708,6 +5708,7 @@ public class EvaluationBackingBean extends
 				retriveComplianceTechnical();
 				// retrives1Details();
 			} else if (outputTab == 2) {
+				this.getManagedBean().setDemo(false);
 				this.getManagedBean().setCheckReportDownload(false);
 				// this.getManagedBean().setCheckListType("");
 				if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
@@ -6094,6 +6095,7 @@ public class EvaluationBackingBean extends
 
 			} else if (outputTab == 0) {
 				this.getManagedBean().setCheckReportDownload(false);
+				this.getManagedBean().setDemo(false);
 				retriveMeetingDtls(this.getManagedBean().getScQt().getQtId(),
 						this.getManagedBean().getCommitteeType(), 1);
 			}
