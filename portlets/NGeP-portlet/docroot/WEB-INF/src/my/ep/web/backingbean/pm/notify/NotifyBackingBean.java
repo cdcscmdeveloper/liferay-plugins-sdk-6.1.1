@@ -82,21 +82,24 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 	}
 
 	public void selectedNotify() {
-		debugLogger("=== selectedNotify ===");
-		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
-		debugLogger("IsRead[" + selectedNotify.getPmAlert().getIsRead() + "]");
-		if (selectedNotify.getPmAlert().getIsRead() == 0) {
-			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
-					.getServiceObject("pm", INotifySO.class);
-			NotifyReqDTO reqDTO = new NotifyReqDTO();
-			reqDTO.setPmNotifyUser(selectedNotify);
-			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
-			debugLogger("NotifyResDTO updateIsReadNotify["
-					+ resDTO.isSuccessful() + "]");
-			if (resDTO.isSuccessful()) {
-				selectedNotify.getPmAlert().setIsRead(1);
-			}
-		}
+//		debugLogger("=== selectedNotify ===");
+//		PmNotifyUser selectedNotify = this.getManagedBean().getSelectedNotify();
+//		debugLogger("IsRead[" + selectedNotify.isReadFlag() + "]");
+//		if (!selectedNotify.isReadFlag()) {
+//			INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance()
+//					.getServiceObject("pm", INotifySO.class);
+//			NotifyReqDTO reqDTO = new NotifyReqDTO();
+//			reqDTO.setPmNotifyUser(selectedNotify);
+//			NotifyResDTO resDTO = reqSO.updateIsReadNotify(reqDTO);
+//			debugLogger("NotifyResDTO updateIsReadNotify["
+//					+ resDTO.isSuccessful() + "]");
+//			if (resDTO.isSuccessful()) {
+//				selectedNotify.setReadFlag(true);
+//			}
+//		}
+		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance().getServiceObject("pm", INotifySO.class);
+		NotifyReqDTO reqDTO = new NotifyReqDTO();
+		reqSO.getAlertUnreadCount(reqDTO);
 	}
 
 	/**
@@ -140,30 +143,29 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 									INotifySO.class);
 
 					// Filter By - Notification Mode
-					searchBean
-							.getDataFilterBeans()
-							.add(new SearchFilterBean("notificationMode",
-									SearchOperator.OPERATOR_EQUALS.value(), "A"));
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("pmNotifyDashboard.notifyDashboardId",
+									SearchOperator.OPERATOR_IS_NOT_NULL.value(), null));
 
 					// Filter By - recipient Id
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmUser.userId",
+							new SearchFilterBean("recipient.userId",
 									SearchOperator.OPERATOR_EQUALS.value(),
 									user.getUserId()));
 
 					// Filter By - status
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("pmAlert.recordStatus",
+							new SearchFilterBean("recordStatus",
 									SearchOperator.OPERATOR_EQUALS.value(), 1));
 
 					// Order by address Id.
 					searchBean.getSortColumns().add(
-							new SearchOrderBean("pmNotifyLog.createdDate",
+							new SearchOrderBean("changedDate",
 									false));
 
 					if (getManagedBean().isUnRead()) {
 						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("pmAlert.isRead",
+								new SearchFilterBean("isReadFlag",
 										SearchOperator.OPERATOR_EQUALS.value(),
 										0));
 					}
