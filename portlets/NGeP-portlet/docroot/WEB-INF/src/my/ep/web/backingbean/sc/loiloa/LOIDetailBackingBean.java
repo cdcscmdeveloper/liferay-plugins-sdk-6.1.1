@@ -4222,11 +4222,28 @@ public class LOIDetailBackingBean extends
 	 *           	the selected supplier
 	 */
 	public void recommendSupplierSelectedAction(ScQtRecommend scQtRecommend,
-			ScQtRecommendDtl scQtRecommendDtl) {
-
+												ScQtRecommendDtl scQtRecommendDtl) {
 		scQtRecommendDtl.setRecordStatusFlg(
 				scQtRecommendDtl.isRecordStatus() ? DbValueConst.RECORD_STATUS_ACTIVE
 						: DbValueConst.RECORD_STATUS_SUSPENDED);
+		
+		PmParameter itemType = scQtRecommend.getRequestItem()
+				.getTplSpecQuestion().getTplSpecMaster().getItemTypeCode();
+		boolean isItemTypeService = StringUtils.equals(ParameterConst.ITEM_TYPE_SERVICE,
+										itemType.getParameterCode());
+		
+		// If item type is service, then disable multiple award
+		if (isItemTypeService && 
+				scQtRecommendDtl.isRecordStatus()) {
+			for (ScQtRecommendDtl recommendDtl 
+						: scQtRecommend.getRecommendDtls()) {
+				if (!recommendDtl.equals(scQtRecommendDtl)) {
+					recommendDtl.setRecordStatus(false);
+					recommendDtl.setRecordStatusFlg(
+							DbValueConst.RECORD_STATUS_SUSPENDED);
+				}
+			}
+		}
 		updateRecommendBy(scQtRecommend);
 		
 		Long selectedSupplierId = scQtRecommendDtl.getSupplier().getSupplierId();
@@ -4241,15 +4258,15 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD.equals(scQtRecommend
-				.getRecommendByStr())) {
-			for (ScQtRecommendDtl recommendDtl : scQtRecommend
-					.getRecommendDtls()) {
+		if (ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
+				.equals(scQtRecommend.getRecommendByStr())) {
+			for (ScQtRecommendDtl recommendDtl 
+						: scQtRecommend.getRecommendDtls()) {
 				recommendDtl.setAwardQty(null);
 			}
 		} else {
-			scQtRecommendDtl.setAwardQty(scQtRecommend.getRequestItem()
-					.getQuantity());
+			scQtRecommendDtl.setAwardQty(
+					scQtRecommend.getRequestItem().getQuantity());
 		}
 	}
 
@@ -4455,6 +4472,10 @@ public class LOIDetailBackingBean extends
 					.calculateTotalAmount(requestItem.getTplSpecQuestion(),
 							new BigDecimal(proposalItem.getFinalPrice()),
 							new BigDecimal(offerQuantity));
+			
+			if (offeredPrice != null) {
+				offeredPrice = offeredPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			}
 			evalResultDtl.getQtEvaluationResult().setOfferedPrice(offeredPrice);
 		}
 
