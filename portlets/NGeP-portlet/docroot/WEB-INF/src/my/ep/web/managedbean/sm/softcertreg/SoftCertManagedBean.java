@@ -49,6 +49,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private WorklistItemVO softCertBpmTask;
 	private List<SmPersonnel> authorizedPersonnels;
 	private boolean alreadyHadFreeSoftcert;
+	private boolean declare;
 	private List<SoftcertUploadSuppDocVO> softcertUploadSuppDocList;
 	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
 
@@ -253,6 +254,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setSuppDocMode(String suppDocMode) {
 		this.suppDocMode = suppDocMode;
+	}
+
+	public boolean isDeclare() {
+		return declare;
+	}
+
+	public void setDeclare(boolean declare) {
+		this.declare = declare;
 	}
 
 }
