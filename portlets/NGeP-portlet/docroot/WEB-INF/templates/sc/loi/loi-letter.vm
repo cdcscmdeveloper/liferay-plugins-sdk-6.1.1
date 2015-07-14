@@ -43,6 +43,9 @@
 			<span style='font-weight:bold;font-size:10px;font-family: Times New Roman;'>
 				<table class="table2" width='100%'>
 					<tr>
+					    #if ($isZonal)
+					       <td>Zone </td>
+					    #end
 						<td>Item</td>
 						<td>Kekerapan / Unit Ukuran</td>
 						<td>Bil. Unit Ukuran Sehari</td>
@@ -53,17 +56,34 @@
 						<td>Harga Ditawarkan(RM)</td>
 						<td>Jumlah Kecil(RM)</td>
 					</tr>
+					 #set($String = "formatter")
 					#foreach( $scLoiLoaItem in $scLoiLoaItems )
-						<tr>
+						<tr>    
+						    #if ($isZonal) 
+						    <td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+							  #if($!scLoiLoaItem.tplSpecZoneDtl) 
+							     $scLoiLoaItem.tplSpecZoneDtl.zoneName   #end </span></td> 
+							 #end    
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.itemName</span></td>
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomFrequency</span></td>
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerDay</span></td>
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clUomPerMonth</span></td>
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.tplSpecQuestion.clDurationMonth</span></td>
-							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$numberDF.format($scLoiLoaItem.qty)</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+							   
+							 #if ($!scLoiLoaItem.tplSpecTierQty )
+								   $scLoiLoaItem.tplSpecTierQty.fromQty - $scLoiLoaItem.tplSpecTierQty.toQty
+							 #else
+								   $numberDF.format($scLoiLoaItem.qty)
+						      #end
+						     </span></td>	
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.uom.uomName</span></td>
-							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.unitPrice)</span></td>
-							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.subTotal)</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+							#if($!scLoiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
+	                            $String.format("%.2f", $!scLoiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
+                             #end </span></td>
+							
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.offeredPriceSubTotal)</span></td>
 						</tr>
 					#end
 				</table>
