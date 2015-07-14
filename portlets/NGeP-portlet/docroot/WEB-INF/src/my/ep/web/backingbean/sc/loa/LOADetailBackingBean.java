@@ -1812,6 +1812,8 @@ public class LOADetailBackingBean extends
 		}
 
 		VelocityContext context = new VelocityContext();
+		
+		context.put("isZonal", getManagedBean().isZonal());
 		context.put("scLois", lois);
 		context.put("bean", this);
 
@@ -1826,6 +1828,7 @@ public class LOADetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
+		boolean isZonal = Boolean.FALSE;
 		// calc total items in award details
 		if (scLoi.getScLoiLoaItems() != null
 				&& scLoi.getScLoiLoaItems().size() > 0) {
@@ -1840,6 +1843,10 @@ public class LOADetailBackingBean extends
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+				
+				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
+					isZonal = Boolean.TRUE;
+				}
 
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
@@ -1885,11 +1892,11 @@ public class LOADetailBackingBean extends
 				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
 				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 			}
-
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
 			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
 			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
+			getManagedBean().setZonal(isZonal);
 		}		
 	}
 

@@ -145,6 +145,9 @@
 							<th colspan="2" bgcolor="#6d839b" class="title border left-right">Harga Tawaran Selepas Rundingan</th>
 						</tr>
 						<tr>
+						    #if ($isZonal)
+					          <th bgcolor="#6d839b" class="title border left">Zone</th>
+					        #end
 							<th bgcolor="#6d839b" class="title border left">Item</th>
 							<th bgcolor="#6d839b" class="title border left">UOM</th>
 							<th bgcolor="#6d839b" class="title border left-right">Kuantiti</th>
@@ -159,9 +162,21 @@
 						#foreach( $loiLoaItem in $scLoi.scLoiLoaItems )
 						<tr class="ui-content">
 						 
+						     #if ($isZonal) 
+						          <td class="standard border-bottom left">
+							    #if($!scLoiLoaItem.tplSpecZoneDtl) 
+							         $scLoiLoaItem.tplSpecZoneDtl.zoneName   #end 
+							      </td> 
+							 #end   
+						 
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.uom.uomCode</td>
-							<td class="standard border-bottom left alignRight">$loiLoaItem.qty</td>
+							<td class="standard border-bottom left alignRight">
+							 #if ($!loiLoaItem.tplSpecTierQty )
+								   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
+							 #else
+								   $numberDF.format($loiLoaItem.qty)
+						      #end </td>
 							<td class="standard border-bottom left alignRight">
 							#if($!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
 	                            $String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
