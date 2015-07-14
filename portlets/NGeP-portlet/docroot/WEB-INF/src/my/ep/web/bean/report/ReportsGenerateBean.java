@@ -164,6 +164,7 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryRejectedReportTypeView = false;
 		private boolean smMandatoryRegisteredReportTypeDateView = false;
 		private boolean smMandatoryZoneView = false;
+		private boolean smEPAdminPTJAdminZoneView = false;
 		private boolean smBasicRegView = false;
 		private boolean smMandatoryBothSupplierTypeView = false;
 		private boolean smYearTextView = false;
@@ -503,6 +504,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmEPAdminPTJAdminZoneView() {
+			return smEPAdminPTJAdminZoneView;
+		}
+		public void setSmEPAdminPTJAdminZoneView(boolean smEPAdminPTJAdminZoneView) {
+			this.smEPAdminPTJAdminZoneView = smEPAdminPTJAdminZoneView;
+		}
 		public String getFlSupplierInvoiceNoVar() {
 			return flSupplierInvoiceNoVar;
 		}

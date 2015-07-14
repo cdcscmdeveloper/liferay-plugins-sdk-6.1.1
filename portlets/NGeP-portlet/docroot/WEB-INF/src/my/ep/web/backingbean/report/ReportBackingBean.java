@@ -711,7 +711,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)192040;//229703;//192040;//235459;//61745;//11040;//25;//61745;//239716;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  240610;//241765;//--pp 240526,61410,147038; 229703,125254,242716(BASIC_SUPPLIER_ADMIN),30290(MOF_SUPPLIER_USER),125254,20854,240526--FL //213972;//240508; 220152;
+	//private Long lngUserId = (long)219490;//192040;//229703;//192040;//235459;//61745;//11040;//25;//61745;//239716;//61410;//101190;//45;//240796;//68475;//2082;//60254;//46714;// 240575;//4925,20854;//--CM 159407,220152,122768- SC//221747,72799;//--ct 240575,25,240573,241997;//--SM  
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2945,7 +2945,7 @@ public class ReportBackingBean extends
 					getManagedBean().getRptGenBean().setSmZoneLabelView(true);
 				}
 				
-			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_EP_ADMIN))){
+			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
 				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
 					getManagedBean().getRptGenBean().setSmZoneView(true);
 				}
