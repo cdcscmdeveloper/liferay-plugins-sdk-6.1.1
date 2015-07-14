@@ -133,7 +133,7 @@ public class PmTrackingDiaryBackingBean extends
 		log.info("**********goToRuleConfigTrackingDiarySearch************");
 		getManagedBean().setSelectedDocType2(null);
 		getManagedBean().setMultiRuleType(false);
-		getManagedBean().setSelectedDocType("RT");
+		getManagedBean().setSelectedDocType(ParameterConst.RULE_CONFIG_PARAM_CODE);
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
@@ -142,15 +142,15 @@ public class PmTrackingDiaryBackingBean extends
 		log.info("**********goToFeeSettTrackingDiarySearch************");
 		getManagedBean().setSelectedDocType2(null);
 		getManagedBean().setMultiRuleType(false);
-		getManagedBean().setSelectedDocType("FI");
+		getManagedBean().setSelectedDocType(ParameterConst.FEE_EXEMPTION_PARAM_CODE);
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
 	public String goToThresholdTrackingDiarySearch(){
 		log.info("**********goToThresholdTrackingDiarySearch************");
-		getManagedBean().setSelectedDocType("UT");
-		getManagedBean().setSelectedDocType2("BS");
+		getManagedBean().setSelectedDocType(ParameterConst.UNPLANDED_THRESHOLD_PARAM_CODE);
+		getManagedBean().setSelectedDocType2(ParameterConst.BUDGET_VS_SPENT_THRESHOLD_PARAM_CODE);
 		getManagedBean().setMultiRuleType(true);
 		getManagedBean().setSelectedDocId(null);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
