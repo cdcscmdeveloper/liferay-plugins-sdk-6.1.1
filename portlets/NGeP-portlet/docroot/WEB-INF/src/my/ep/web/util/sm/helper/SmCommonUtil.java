@@ -2001,7 +2001,10 @@ public class SmCommonUtil {
 		for (SmSupplierBank tmp : mainList) {
 			if (tmp.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED
 					&& StringUtils.isNotBlank(tmp.getAccountNo())
-					&& tmp.getAccountNo().equals(param.getAccountNo())) {
+					&& tmp.getAccountNo().equals(param.getAccountNo())
+					&& StringUtils.isNotBlank(tmp.getAccountPurpose())
+					&& tmp.getAccountPurpose()
+							.equals(param.getAccountPurpose())) {
 
 				if (tmp.getRevNo() == revNo) {
 					retVal = tmp;
@@ -2356,7 +2359,7 @@ public class SmCommonUtil {
 				reqDTO);
 		return resDTO.getPmUser();
 	}
-	
+
 	/**
 	 * Get drop down value for display purpose by code
 	 * 
