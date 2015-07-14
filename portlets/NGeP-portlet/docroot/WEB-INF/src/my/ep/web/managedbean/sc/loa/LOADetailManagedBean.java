@@ -244,6 +244,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	/** The template spec bean. */
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 	
+	/** The zonal. */
+	private boolean zonal;
+	
 	
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1409,4 +1412,24 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
 		this.templateSpecBean = templateSpecBean;
 	}
+
+	/**
+	 * Checks if is zonal.
+	 *
+	 * @return true, if is zonal
+	 */
+	public boolean isZonal() {
+		return zonal;
+	}
+
+	/**
+	 * Sets the zonal.
+	 *
+	 * @param zonal the new zonal
+	 */
+	public void setZonal(boolean zonal) {
+		this.zonal = zonal;
+	}
+	
+	
 }
