@@ -331,34 +331,16 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoadData(dpDataType);
 
-			// editSupplierLOIAction(loiId);
-
-			ScLoi scLoi = new ScLoi();
-
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO.setLoiId(loiId);
 			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
 					.retrieveSupplierLOIDtl(awardSupplierReqDTO);
 			if (awardSupplierResDTO.getScLoi() != null) {
-				scLoi = awardSupplierResDTO.getScLoi();
-			}
+				ScLoi scLoi = awardSupplierResDTO.getScLoi();
 
 			// calc sub total items in acceptance letter.
-			if (scLoi.getScLoiLoaItems() != null
-					&& scLoi.getScLoiLoaItems().size() > 0) {
-				BigDecimal subTotal = BigDecimal.valueOf(0d);
-				List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
-				for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-					subTotal = TemplateSpecHelper.getInstance()
-							.calcTotalAmount(
-									scLoiLoaItem.getScRequestItem()
-											.getTplSpecQuestion(),
-									scLoiLoaItem.getUnitPrice(),
-									scLoiLoaItem.getQty());
-					scLoiLoaItem.setSubTotal(subTotal);
-				}
-				scLoi.setScLoiLoaItems(scLoiLoaItems);
-			}
+			  calculateOfferedAndFinalPriceByItem(scLoi);
+			
 			// contract signer
 			if (scLoi.getContractSigner() != null) {
 				getManagedBean().setContractSignerUser(
@@ -368,11 +350,12 @@ public class LOIDetailBackingBean extends
 			generateDeclarationFromVelocity(scLoi,
 					awardSupplierResDTO.getScQt());
 			getManagedBean().setScLoi(scLoi);
+		   }
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
 					.handleNavigation(fc, null, QTConstants.SUPPLIER_LOI_PAGE);
-
+        
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -919,9 +902,18 @@ public class LOIDetailBackingBean extends
 
 			BigDecimal afterNegoSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal afterNegoTotalAmount = BigDecimal.valueOf(0d);
+			BigDecimal quantity = BigDecimal.valueOf(0d);
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+
+				if(null == scLoiLoaItem.getTplSpecTierQty() ){
+					// without Tier quantity
+					quantity = scLoiLoaItem.getQty();
+				} else{
+					// Tier - max quantity.
+					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+				}
 				
 				if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
 					offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
@@ -932,7 +924,7 @@ public class LOIDetailBackingBean extends
 								.setOfferPrice(offerPrice.floatValue());
 					
 					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, scLoiLoaItem.getQty());
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 
 					finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
 							.getScQtRecommendDtl().getScQtProposalItem()
@@ -949,7 +941,7 @@ public class LOIDetailBackingBean extends
 				}
 
 				afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, scLoiLoaItem.getQty());
+						scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
 				afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 				
 				// after nego price sub total and total
@@ -1311,10 +1303,10 @@ public class LOIDetailBackingBean extends
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
 				
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
-					// with out Tier quantity
+					// without Tier quantity
 					quantity = scLoiLoaItem.getQty();
 				} else{
-					// Tier quantity.
+					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 				}
 
@@ -1341,7 +1333,6 @@ public class LOIDetailBackingBean extends
 						if (afterNegoSubTotal != null) {
 							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
 							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-							//scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 						}
 					}
 				}
@@ -1451,8 +1442,7 @@ public class LOIDetailBackingBean extends
 
 				this.getManagedBean().setTotalFrequency(scheduleList.size());
 				for (ScQtSchedule scQtSchedule : scLoi.getScQtSchedules()) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(
-							"dd/MM/yyyy");
+					SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 					String fromdate = dateFormat.format(scQtSchedule
 							.getFromDate());
@@ -1462,8 +1452,8 @@ public class LOIDetailBackingBean extends
 					String endMonth = todate.substring(3, 5);
 					String endYear = todate.substring(6, todate.length());
 					
-					int start = Integer.parseInt(startMonth);
-					int end = Integer.parseInt(endMonth);
+					int sMonth = Integer.parseInt(startMonth);
+					int eMonth = Integer.parseInt(endMonth);
 					int sYear = Integer.parseInt(startYear);
 					int eYear = Integer.parseInt(endYear);
 					int diffYear = 0;
@@ -1473,7 +1463,7 @@ public class LOIDetailBackingBean extends
 						if (!endYear.equals(startYear)) {
 							diffYear = eYear - sYear;
 						}
-						for (int i = start + 1; i <= end + 1; i++) {
+						for (int i = sMonth + 1; i <= eMonth + 1; i++) {
 							count++;
 						}
 						count = count + (diffYear * 12);
@@ -1481,8 +1471,8 @@ public class LOIDetailBackingBean extends
 					} else {
 						scQtSchedule.setTotalMonths(BigDecimal.ZERO);
 					}
-					scQtSchedule.setStartMonth(String.valueOf(start));
-					scQtSchedule.setEndMonth(String.valueOf(end));
+					scQtSchedule.setStartMonth(String.valueOf(sMonth));
+					scQtSchedule.setEndMonth(String.valueOf(eMonth));
 					scQtSchedule.setStartYear(startYear);
 					scQtSchedule.setEndYear(endYear);
 				}
@@ -1502,8 +1492,7 @@ public class LOIDetailBackingBean extends
 					String endMonth = "";
 					for (ScQtProgressivePayment scQtProgressivePayment : scLoi
 							.getScQtProgPayments()) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat(
-								"dd/MM/yyyy");
+						SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
 						String fromdate = dateFormat
 								.format(scQtProgressivePayment.getFromDate());
@@ -2472,12 +2461,19 @@ public class LOIDetailBackingBean extends
 		String title = scLoiLoa.getTitle();
 		title = title.replaceAll("&", "&#38;");
 		context.put("title", title);
+		
+		boolean isZonal = Boolean.FALSE;
 		List<ScLoiLoaItem> loiloaItems = new ArrayList<ScLoiLoaItem>();
 		if (scLoi.getScLoiLoaItems() != null
 				&& scLoi.getScLoiLoaItems().size() > 0) {
 			loiloaItems = scLoi.getScLoiLoaItems();
 
 			for (ScLoiLoaItem scLoiLoaItem : loiloaItems) {
+				// zonal
+				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
+					isZonal = Boolean.TRUE;
+				}
+				
 				if (scLoiLoaItem.getScRequestItem().getItemName() != null
 						&& !scLoiLoaItem.getScRequestItem().getItemName()
 								.isEmpty()) {
@@ -2521,6 +2517,8 @@ public class LOIDetailBackingBean extends
 			}
 			context.put("scLoiLoaItems", loiloaItems);
 		}
+		
+		context.put("isZonal", isZonal);
 
 		if (scLoi.getScNegoLocations() != null
 				&& scLoi.getScNegoLocations().size() > 0) {
@@ -2552,15 +2550,19 @@ public class LOIDetailBackingBean extends
 		}
 		context.put("ackDueDays", ackDueDays);
 
+		String loiSigner = "";
 		if (getManagedBean().getContractSignerUser() != null) {
-			if (getManagedBean().getContractSignerUser().getUserName() == null) {
-				context.put("loiSigner", "-");
-			} else {
-				context.put("loiSigner", getManagedBean()
-						.getContractSignerUser().getUserName());
-			}
+			if (null != getManagedBean().getContractSignerUser().getUserName() && !getManagedBean().getContractSignerUser().getUserName().isEmpty()) {
+				loiSigner =  getManagedBean().getContractSignerUser().getUserName();
+			} 
 		}
-		context.put("loiSignerDesignation", scLoi.getLoiSignerDesig());
+		context.put("loiSigner", loiSigner);
+		
+		String loiSignerDesignation = "";
+		if(null != scLoi.getLoiSignerDesig() && !scLoi.getLoiSignerDesig().isEmpty()){
+			loiSignerDesignation = scLoi.getLoiSignerDesig();
+		}
+		context.put("loiSignerDesignation", loiSignerDesignation);
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOI_LETTER, context,
