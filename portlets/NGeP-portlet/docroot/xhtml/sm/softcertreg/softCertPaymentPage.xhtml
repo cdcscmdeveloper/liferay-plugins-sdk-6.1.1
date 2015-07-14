@@ -25,9 +25,7 @@
 	
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.sm.gst.disclaimer']}"/>
 
-	<h:panelGrid id="search" style="width:100%;">
-	 
-		<p:panel header="#{lbl['lbl.sm.payment.selection']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sm.payment.selection']}" toggleable="true">
 		<p:dataTable id="paymentList" rowKey="#{personnel}" rowIndexVar="index" 
 					value="#{softCertBackingBean.managedBean.softCertSelectList}" var="personnel" 
 					editable="true" style="word-wrap: break-word;table-layout: fixed;" 
@@ -75,25 +73,32 @@
 	                <p:column footerText="#{softCertBackingBean.managedBean.totalPaymentAmount}" style="text-align:left"/>
 	            </p:row>
 			</p:columnGroup>
-	       
+			
 	     </p:dataTable>
-		</p:panel>
-		
-	</h:panelGrid>
+	     
+	</p:panel>
 
-	<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.userprofile.confirmation']}"
-		widgetVar="confirmDialog" modal="true" width="500px" height="100px">
+	<p:dialog id="confirmDialog" header="#{lbl['lbl.sm.softcert.admin.declaration']}"
+		widgetVar="confirmDialog" modal="true" width="500px" height="400px">
 		<p:panel id="dPanel" style="border: none;">
 			<table style="width: 100%">
 				<tr>
-					<td style="white-space: nowrap;"><p:outputLabel value="#{lbl['lbl.sm.softcert.requestsoftcert.confirmation']}" style="float:left"/></td>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.softcert.admin.himself.declare']}" 
+							rendered="#{not empty softCertBackingBean.managedBean.supplierTmpPersonnel}" 
+							style="float: left;white-space: normal;" escape="false"/>
+						<h:outputText value="#{lbl['lbl.sm.softcert.admin.others.declare']}" 
+							rendered="#{empty softCertBackingBean.managedBean.supplierTmpPersonnel}" 
+							style="float: left;white-space: normal;" escape="false"/>
+					</td>
 				</tr>
 			</table>
 		</p:panel>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDialog.hide();" action="#{softCertBackingBean.makePayment}" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form"/>
-			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDialog.hide();" />
+			<p:commandButton value="#{lbl['lbl.sm.declare']}" onclick="confirmDialog.hide();" 
+				action="#{softCertBackingBean.makePayment}" 
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" update="@form" id="btnYes"/>
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="confirmDialog.hide();" />
 		</div>
 	</p:dialog>
 
