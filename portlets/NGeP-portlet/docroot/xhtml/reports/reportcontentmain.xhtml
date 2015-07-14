@@ -9,7 +9,9 @@
 
 		
 	<ui:define name="contentSection">
-
+            <p:blockUI widgetVar="blkReportContent"  block=":form"   >  
+			      		<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
+	      			</p:blockUI>
 			<ui:include src="reportcontent.xhtml"></ui:include>	
 	
 	</ui:define>
