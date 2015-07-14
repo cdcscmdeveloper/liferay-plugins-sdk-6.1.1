@@ -36,7 +36,7 @@
 				update=":form:settingTabId:feeSettingId:feeByComodityTableID"
 				size="7" headerText="unspsc commodity"
 				postUpdateListenerWithIndex="ruleCatalogueBackingBean.updateUnspscForFee"
-				saveObject="ruleCatalogueBackingBean.managedBean.selectedComodity"
+				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForComodity[#{rowIndex}].unspscId"
 				conditionField="recordStatus^1|unspscLevel^3"
 				value="#{feeObj.unspscId.unspscCode}">
 			</ac:lov>
@@ -60,7 +60,7 @@
 				<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 				<f:selectItems value="#{feeObj.types}" itemLabel="#{type.typeName}" 
 					itemValue="#{type.typeId}" var="type" />
-					<p:ajax event="change" immediate="true"
+					<p:ajax event="change"
 								listener="#{ruleCatalogueBackingBean.typeValueChgangeListener(feeObj)}"
 								partialSubmit="true" process="@this"
 								update="@this" />
