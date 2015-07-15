@@ -79,6 +79,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
@@ -143,7 +144,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			String committeeType = String.valueOf(dataType.getCommitteeType());
 			getManagedBean().setCommitteeType(committeeType);
 			getManagedBean().setPayLoad(dataType);
-
+			
 			retriveQTDetails(qtId);
 			retriveMeetingDetails(qtId);
 
@@ -1323,6 +1324,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_SELECTION,IQTMeetingSO.class);
 			
+			validateCommitteeMembers();
+			
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
 			boolean isValidationSuccessful = validateMeetingDtlsInfo(reqDTO);
 			if (!isValidationSuccessful) {
@@ -1498,6 +1501,29 @@ public class SupplierFinalizationMeetingBackingBean extends
 		
 		return isValidationSuccessful;
 	}
+	
+	private void validateCommitteeMembers() {
+		List<ScCommitteeMember> scCommitteeMemberList 
+					= this.getManagedBean().getCommitteeMembersList();
+		if (CollectionUtils.isNotEmpty(scCommitteeMemberList)) {
+			for (ScCommitteeMember member : scCommitteeMemberList) {
+				PmParameter memberRole = member.getMemberRole();
+				if (ParameterConst.COMMITTEE_ROLE_MEMBER
+						.equals(memberRole.getParameterCode()) && 
+							(member.getRepresentativeType() == null || 
+								StringUtils.isBlank(
+									member.getRepresentativeType()
+										  		.getParameterCode()))) {
+					
+					throw new EpException(MessageConst.ERROR_100022, new String[]{
+							ResourceBundleUtils.getMessage("lbl.sc.representative.type", 
+						 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
+						 			new FacesScopes().getUserLocale())
+					});						
+				}
+			}
+		}
+	}	
 	
 	private void commonMessageAcknowledmentPage(String messageId, String variable1, String variable2){
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(
