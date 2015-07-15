@@ -8,10 +8,8 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 
 import my.ep.constant.MessageConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -39,9 +37,6 @@ import my.ep.web.vo.ReactivateSupplierVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.primefaces.context.RequestContext;
-
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.theme.ThemeDisplay;
 
 @ManagedBean(name = "forceReplaceSuppAdminBackingBean")
 @RequestScoped
@@ -174,6 +169,8 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 * Validate before proceed to force replace admin
 	 */
 	private void validate() {
+		List<SmPersonnel> latestActivePersonnels = getManagedBean()
+				.getSmSupplier().getSmAppl().getSmPersonnels();
 
 		// check if new admin identificationNo same as existing admin
 		// identificationNo
@@ -185,9 +182,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 			throw new EpException(MessageConst.ERROR_722600);
 		}
 
-		List<SmPersonnel> latestActivePersonnels = getManagedBean()
-				.getSmSupplier().getSmAppl().getSmPersonnels();
-		if (latestActivePersonnels != null && !latestActivePersonnels.isEmpty()) {
+		else if (latestActivePersonnels != null && !latestActivePersonnels.isEmpty()) {
 			for (SmPersonnel smPersonnel : latestActivePersonnels) {
 				if (smPersonnel.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE
 						&& smPersonnel.getIdentificationNo() != null
@@ -230,16 +225,13 @@ public class ForceReplaceSuppAdminBackingBean extends
 		}
 
 		// old admin not exist
-		if (getManagedBean().getOldAdmin() == null) {
+		else if (getManagedBean().getOldAdmin() == null) {
 			throw new EpException(MessageConst.ERROR_722594);
 		}
 
 		// existing new admin
-		if (getManagedBean().isExistingUser()
-				&& getManagedBean().getNewAdmin() != null
-				&& getManagedBean().getNewAdmin().getEpRole() != null
-				&& StringUtils.isNotBlank(getManagedBean().getNewAdmin()
-						.getEpRole())) {
+		else if (getManagedBean().isExistingUser()
+				&& getManagedBean().getNewAdmin() != null) {
 
 			// check if new admin is not activated is not allowed
 			if (getManagedBean().getNewAdmin().getEpRole() == null
@@ -252,7 +244,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 
 			// check if replace with catalogue user not allowed if have supplier
 			// user
-			if (getManagedBean().getNewAdmin().getEpRole()
+			else if (getManagedBean().getNewAdmin().getEpRole()
 					.equals(RoleCode.CM_USER.value())
 					&& getManagedBean().isHasSupplierUser()) {
 				throw new EpException(MessageConst.ERROR_722595);
