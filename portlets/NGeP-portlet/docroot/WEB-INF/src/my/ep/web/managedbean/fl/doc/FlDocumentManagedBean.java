@@ -609,7 +609,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 *
 	 * @return the doc type list by role
 	 */
-	private List<String> getDocTypeListByRole() {
+	public List<String> getDocTypeListByRole() {
 		List<String> flDocTypes = new ArrayList<String>();
 		if(ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(getSearchOrderType())) {
 			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
@@ -623,6 +623,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_RELIEF_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
@@ -646,6 +647,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_RELIEF_ORDER);
 				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
@@ -662,6 +664,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
 			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
 			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+			flDocTypes.add(ParameterConst.DOCTYPE_RELIEF_ORDER);
 		}
 		return flDocTypes;
 	}

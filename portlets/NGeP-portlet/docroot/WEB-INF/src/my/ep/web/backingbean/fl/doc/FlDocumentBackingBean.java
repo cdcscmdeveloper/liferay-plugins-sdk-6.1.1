@@ -219,7 +219,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		    for(SelectItem selectItem : items) {
 		    	itemList.add(selectItem);
 		    }
-			List<String> flDocTypes = getDocTypeListByRole();
+			List<String> flDocTypes = getManagedBean().getDocTypeListByRole();
 			List<String> selectedItemCode = new ArrayList<String>();
 		    for(SelectItem selectItem : itemList) {
 		    	if(flDocTypes.contains(selectItem.getValue()) && !selectedItemCode.contains(selectItem.getValue().toString())) {
@@ -883,90 +883,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				fulfilmentItem.setSumOrderedQty(sumOrderedQty);
 			}
 		}
-	}
-	
-	/**
-	 * Gets the doc type list by role.
-	 *
-	 * @return the doc type list by role
-	 */
-	private List<String> getDocTypeListByRole() {
-		List<String> flDocTypes = new ArrayList<String>();
-		if(ParameterConst.DOCTYPE_CONTRACT_ORDER.equalsIgnoreCase(getManagedBean().getSearchOrderType())) {
-			flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
-			if(isFlFulfilmentRequisitioner()) {
-				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-			}
-			if(isFlFulfilmentApprover() || isAuditor()){
-				flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-			}
-			if(isFlFulfilmentRecevingOfficer()){
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-			}
-			if(isFlFulfilmentPaymentOfficer()){
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);	
-				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
-				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-			}
-			if(isFlFulfilmentSupplier()) {
-				flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
-			}
-		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getManagedBean().getSearchOrderType())) {
-			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
-			if(isFlFulfilmentRequisitioner()) {
-				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-			}
-			if(isFlFulfilmentApprover() || isAuditor()){
-				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-			}
-			if(isFlFulfilmentRecevingOfficer()){
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-			}
-			if(isFlFulfilmentPaymentOfficer()){
-				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);				
-				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-				flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-				flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
-				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-			}
-		}
-		if(isFlFulfilmentSupplier()) {
-			flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
-			flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
-			flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
-			flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
-			flDocTypes.add(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE);
-			flDocTypes.add(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE);	
-			flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
-		}
-		return flDocTypes;
-	}
+	}	
 	
 	/**
 	 * Generate report based on doc type.
