@@ -72,19 +72,19 @@
 				<p:tab title="#{lbl['lbl.pm.settings.gst']}">
                 	<p:tabView id="gstId" 
                 		activeIndex="#{ruleCatalogueBackingBean.managedBean.gstIndex}">
-                		<p:ajax event="tabChange" listener="#{ruleCatalogueBackingBean.onGstTabChange}"/>
+         <!--        		<p:ajax event="tabChange" listener="#{ruleCatalogueBackingBean.onGstTabChange}"/>
                 		<p:tab id="taTabId" title="#{lbl['lbl.pm.settings.gst.taxableitem']}">
 							<ui:include src="gstTaxableItem.xhtml"></ui:include>
-						</p:tab>
+						</p:tab> -->
 						<p:tab id="daTabId" title="#{lbl['lbl.pm.settings.gst.da']}">
 							<ui:include src="gstDesignatedArea.xhtml"></ui:include>
 						</p:tab>
-						<p:tab id="tadaTabId" title="#{lbl['lbl.pm.settings.gst.taxableitem.da']}">
+						 <!-- <p:tab id="tadaTabId" title="#{lbl['lbl.pm.settings.gst.taxableitem.da']}">
 							<ui:include src="gstTaxableItemForDA.xhtml"></ui:include>
 						</p:tab>
 						<p:tab id="tag2gTabId" title="#{lbl['lbl.pm.settings.gst.taxableitem.g2g']}">
 							<ui:include src="gstTaxableItemForG2G.xhtml"></ui:include>
-						</p:tab>
+						</p:tab>-->
                 	</p:tabView>
 				</p:tab>
 				

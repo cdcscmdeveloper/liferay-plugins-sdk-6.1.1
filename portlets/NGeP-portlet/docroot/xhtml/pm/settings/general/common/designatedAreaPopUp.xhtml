@@ -100,9 +100,9 @@
 					partialSubmit="true" />
 				<p:commandButton 
 					id="daCancelbtn"
-					action="#{ruleCatalogueBackingBean.cancelDAPopup}"
+					action="#{ruleCatalogueBackingBean.cancelDAPopup()}"
 					value="#{lbl['lbl.btn.cancel']}"
-					update=":#{p:component('taxableItemDATbl')},:form:dlDesignatedAreaPanel"					
+					update=":form:dlDesignatedAreaPanel"					
 					process="@this"
 					partialSubmit="true" />		
 			</td>			
@@ -111,7 +111,7 @@
 		</p:panel>
 		
 		<p:ajax event="close" process="@this"
-			listener="#{ruleCatalogueBackingBean.cancelDAPopup}" />
+			listener="#{ruleCatalogueBackingBean.cancelDAPopup()}" />
 		
 	</p:dialog>
 	
