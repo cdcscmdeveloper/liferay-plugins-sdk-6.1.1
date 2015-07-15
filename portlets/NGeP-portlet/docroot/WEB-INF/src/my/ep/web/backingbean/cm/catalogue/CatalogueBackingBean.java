@@ -6772,20 +6772,25 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 */
 	public void validatePriceValue(CmPricing pricing, List<CmPricing> pricings){
 		boolean priceInvalid = false;
-
+		boolean priceInvalidFirstRow = false;
+		
 		for(CmPricing cmPricing : pricings){
+			
 			if (pricing.getStand_group_id() == cmPricing.getStand_group_id() && (cmPricing.getPrice().compareTo(pricing.getPrice()) <= 0)){
 				priceInvalid = true;
 			}
+			
 		}	
-
+		
 		if(pricing.getPricingType().equals("04")) {
+			System.out.println("***04****"+priceInvalid);
 			if(!priceInvalid) {
 				BigDecimal promotionTierPrice = pricing.getPrice();
 				BigDecimal parentTierPrice = pricing.getParentPrice().getPrice();
-
+				System.out.println("parentTierPrice:"+parentTierPrice);
+				System.out.println("promotionTierPrice:"+promotionTierPrice);
 				if(parentTierPrice.compareTo(promotionTierPrice) <= 0) {
-					priceInvalid = true;
+					priceInvalidFirstRow = true;
 				}
 			}
 		}
@@ -6800,14 +6805,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				}
 			}
 		}
-
-		if(priceInvalid){
+		System.out.println("priceInvalidFirstRow"+priceInvalidFirstRow);
+		if(priceInvalidFirstRow){
 			pricing.setCheckOk(false);
-			this.getManagedBean().setError9(true);
-		} else {
+			this.getManagedBean().setError99(true);
+		}else{
 			pricing.setCheckOk(true);
-			this.getManagedBean().setError9(false);
+			this.getManagedBean().setError99(false);
+			
+			
+			if(priceInvalid){
+				pricing.setCheckOk(false);
+				this.getManagedBean().setError9(true);
+			} else {
+				pricing.setCheckOk(true);
+				this.getManagedBean().setError9(false);
+			}
+			
 		}
+		
+		
 	}
 
 	/**
