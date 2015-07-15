@@ -352,6 +352,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The error9. */
 	private boolean error9 = false;
+	
+	/** The error9. */
+	private boolean error99 = false;
 
 	/** The temp supplier list. */
 	private List<VCmSupplierItem> tempSupplierList;
@@ -866,7 +869,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					}
 
 				}
-
+				
+				System.out.println("bb.getManagedBean().isRefreshDraftSuppItemFlag()"+bb.getManagedBean().isRefreshDraftSuppItemFlag());
 				if(bb.getManagedBean().isRefreshDraftSuppItemFlag()){
 					RequestContext.getCurrentInstance().execute("refreshDraftSuppItem();");
 				}
@@ -3628,6 +3632,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setRefreshDraftSuppItemFlag(boolean refreshDraftSuppItemFlag) {
 		this.refreshDraftSuppItemFlag = refreshDraftSuppItemFlag;
 	}
+
+	public boolean isError99() {
+		return error99;
+	}
+
+	public void setError99(boolean error99) {
+		this.error99 = error99;
+	}
+	
+	
 
 
 
