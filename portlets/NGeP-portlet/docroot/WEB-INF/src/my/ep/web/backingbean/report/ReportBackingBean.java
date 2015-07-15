@@ -150,6 +150,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> zoneList = new ArrayList<SelectItem>();
 	private List<String> paramList = new ArrayList<String>();
 	private List<String> highRoleCodeList = new ArrayList<String>();
+	private List<String> allRoleCodesList = new ArrayList<String>();
 	private List<String> paramTableRoleCodeList = new ArrayList<String>();
 	private List<SelectItem> rolecodeRquisitionerList = new ArrayList<SelectItem>();
 	private List<SelectItem> rolecodeApproverList = new ArrayList<SelectItem>();
@@ -322,6 +323,14 @@ public class ReportBackingBean extends
 
 	public void setHighRoleCodeList(List<String> highRoleCodeList) {
 		this.highRoleCodeList = highRoleCodeList;
+	}
+
+	public List<String> getAllRoleCodesList() {
+		return allRoleCodesList;
+	}
+
+	public void setAllRoleCodesList(List<String> allRoleCodesList) {
+		this.allRoleCodesList = allRoleCodesList;
 	}
 
 	public List<String> getParamList() {
@@ -2935,22 +2944,38 @@ public class ReportBackingBean extends
 			}
 		}
 	}
+	public List<String> retrieveAllRoleCodesByUser(){
+		allRoleCodesList = new ArrayList<String>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					List<String> roleCodesLst = reportSO.retrieveAllRoleCodesByUser(lngUserId);			
+					for (int i = 0; i < roleCodesLst.size(); i++) {
+						allRoleCodesList.add(roleCodesLst.get(i));
+					}        	    
+        }
+		return allRoleCodesList;
+	}
+	
 	public void  zoneByRolecode(){
 		if ((this.getModuleValue().equalsIgnoreCase(ModuleCodeConst.SUPPLIER_MANAGEMENT))) {
 			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
 			getManagedBean().getRptGenBean().setSmZoneView(false);
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_PO)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_SVO)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_SVC)||highRoleCodeList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
-				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+			getManagedBean().getRptGenBean().setSmMandatoryZoneView(false);
+			if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_PO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVC)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
+				//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
 					this.setSmZone(this.getStringZone());
 					getManagedBean().getRptGenBean().setSmZoneLabelView(true);
-				}
+				//}
 				
-			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
-				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+			}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
+				//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
 					getManagedBean().getRptGenBean().setSmZoneView(true);
-				}
+					getManagedBean().getRptGenBean().setSmMandatoryZoneView(true);
+				//}
 				
-			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
+			}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
 				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
 					rptGenBean.setSmMandatorySupplierTypeView(false);
 					rptGenBean.setSmSupplierTypeView(false);
@@ -4055,6 +4080,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				getManagedBean().setReportJsp(pmReport.getReportFilename());
 			}
 			retrieveHighRoleCodeByUser();
+			retrieveAllRoleCodesByUser();
 			retrieveZoneByUser();
 			//retrieveMinistryList();
 			retriveUserrloeByUserId(this.getModuleValue());			

@@ -164,7 +164,9 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryRejectedReportTypeView = false;
 		private boolean smMandatoryRegisteredReportTypeDateView = false;
 		private boolean smMandatoryZoneView = false;
+		private boolean smMandatoryEPAdminPTJAdminZoneView = false;
 		private boolean smEPAdminPTJAdminZoneView = false;
+		private boolean smCommonZoneView = false;
 		private boolean smBasicRegView = false;
 		private boolean smMandatoryBothSupplierTypeView = false;
 		private boolean smYearTextView = false;
@@ -504,6 +506,19 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmMandatoryEPAdminPTJAdminZoneView() {
+			return smMandatoryEPAdminPTJAdminZoneView;
+		}
+		public void setSmMandatoryEPAdminPTJAdminZoneView(
+				boolean smMandatoryEPAdminPTJAdminZoneView) {
+			this.smMandatoryEPAdminPTJAdminZoneView = smMandatoryEPAdminPTJAdminZoneView;
+		}
+		public boolean isSmCommonZoneView() {
+			return smCommonZoneView;
+		}
+		public void setSmCommonZoneView(boolean smCommonZoneView) {
+			this.smCommonZoneView = smCommonZoneView;
+		}
 		public boolean isSmEPAdminPTJAdminZoneView() {
 			return smEPAdminPTJAdminZoneView;
 		}
