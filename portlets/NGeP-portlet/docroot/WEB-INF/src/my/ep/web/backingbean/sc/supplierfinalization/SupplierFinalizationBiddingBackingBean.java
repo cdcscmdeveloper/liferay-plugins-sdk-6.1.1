@@ -289,6 +289,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.getManagedBean().setSelectedZone(zoneDetails.get(selectedZoneTabIndex));
 		this.getManagedBean().setZoneActiveIndex(selectedZoneTabIndex);
 		retrieveBiddingSummary();
+		getManagedBean().setBidItemSuppliers(null);
 	}
 
 	/**
