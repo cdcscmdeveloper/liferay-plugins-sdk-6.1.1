@@ -14,7 +14,7 @@
 			<td>File Name</td>
 		</tr>
 		<tr align="center">
-			<td>K/KEW/PK/PS/1100/000000/165/47-( )</td>
+			<td>K/KEW/PK/PS/1100/000000/165/47-(<span style="padding-left:150px" />)</td>
 		</tr>
 	</table>
 	<br />
@@ -81,31 +81,31 @@
 		<tr align="left">
 			<td width="25%"><b>Site Visit Address</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$addressFormatter.getAddress($compAddress)</td>
 		</tr>
 		
 		<tr align="left">
 			<td width="25%"><b>Post Code</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$compAddress.postcode</td>
 		</tr>
 		
 		<tr align="left">
 			<td width="25%"><b>Town/City</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$compAddress.pmCity.cityName</td>
 		</tr>
 		
 		<tr align="left">
 			<td width="25%"><b>State</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$compAddress.pmState.stateName</td>
 		</tr>
 		
 		<tr align="left">
 			<td width="25%"><b>District</b></td>
 			<td width="5%">:</td>
-			<td width="50%"></td>
+			<td width="50%">$compAddress.pmDistrict.districtName</td>
 		</tr>
 		
 		<tr align="left">
@@ -153,7 +153,11 @@
 		
 		<tr>
 			<td>4</td>
-			<td>Pegawai Pelawat: </td>
+			<td>Pegawai Pelawat: 
+				<br />
+				i. <br />
+				ii. <br />
+			</td>
 			<td></td>
 			<td></td>
 		</tr>
@@ -161,9 +165,7 @@
 		<tr>
 			<td>5</td>
 			<td>Syor Pegawai Lawatan: <b>LULUS / TOLAK</b>
-				<br />
-				i. <br />
-				ii. <br />
+
 			</td>
 			<td></td>
 			<td></td>
