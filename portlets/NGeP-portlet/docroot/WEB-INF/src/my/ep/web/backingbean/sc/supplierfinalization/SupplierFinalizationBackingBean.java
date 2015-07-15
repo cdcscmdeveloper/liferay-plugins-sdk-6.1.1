@@ -129,6 +129,7 @@ import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.sc.quatationtender.BriefingZoneBean;
 import my.ep.web.constant.CommonUIConst;
@@ -1685,8 +1686,9 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(taskId);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
-			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setRoleCode(getCommitteeRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setCurrentFinalizationStatus(getManagedBean().getCurrentStatusId());
 //			reqDTO.setScQtCommitteeActivity(
 //					this.getManagedBean().getSignedOffCommitteeActivity());
 			
@@ -6429,6 +6431,39 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
+	}
+	
+	/**
+	 * Gets the role code.
+	 *
+	 * @return the role code
+	 */
+	private String getCommitteeRoleCode(){
+		String committeeRoleCode = null;
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser curLogedInUser = facesScopes.getUserSessionBean();
+		String committeeType = this.getManagedBean()
+				.getCommitteeType();
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						ICommitteSO.class);
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+		committeReqDTO.setUser(curLogedInUser);
+		committeReqDTO.setCommitteeType(committeeType);
+		CommitteResDTO CommitteeresDTO = committeSO
+				.retrieveCommitteMemberByUserId(committeReqDTO);
+		ScCommitteeMember member = CommitteeresDTO.getCommMember();
+		String roleCodeChar = member.getMemberRole().getParameterCode();
+		if(roleCodeChar.equals(SourcingConstants.MEMBER_ROLE_SECRATARY)) {
+			if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)) {
+				committeeRoleCode = RoleCode.QCA_SECRETARY.value();
+			}
+			else if(committeeType.equals(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+				committeeRoleCode = RoleCode.QCB_SECRETARY.value();
+			}
+		} 
+		return committeeRoleCode;
 	}
 
 	public class SampleLabelDTO {
