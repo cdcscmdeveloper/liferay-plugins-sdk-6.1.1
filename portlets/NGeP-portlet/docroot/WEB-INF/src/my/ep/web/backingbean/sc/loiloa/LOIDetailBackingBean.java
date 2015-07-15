@@ -1683,6 +1683,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setScLoi(scLoi);
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPayLoad(getManagedBean().getPayLoadData());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOIDtl(reqDTO);
