@@ -369,6 +369,9 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
 				+ SCProcessNameConst.FINALISE_FC_SELECTION,
 				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
+		temp.put(SCProcessNameConst.SUPPLIER_FINALIZATION_PROCESS_NAME
+				+ SCProcessNameConst.FINALISE_BPK,
+				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
 		temp.put(SCProcessNameConst.DIRECT_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.ENDORSE_FC_SELECTION,
 				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);
