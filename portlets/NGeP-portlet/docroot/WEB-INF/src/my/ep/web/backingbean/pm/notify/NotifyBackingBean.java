@@ -97,9 +97,8 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 				selectedNotify.setReadFlag(true);
 			}
 		}
-//		INotifySO reqSO = (INotifySO) BusinessDelegate.getInstance().getServiceObject("pm", INotifySO.class);
-//		NotifyReqDTO reqDTO = new NotifyReqDTO();
-//		reqSO.getAlertUnreadCount(reqDTO);
+		
+		notifyDataModel.reloadData();
 	}
 
 	/**
