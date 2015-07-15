@@ -22,7 +22,7 @@
 					                 </p:selectOneRadio>
 					                 												
 									</c:if>
-									
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCommonZoneView}">			
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smZoneLabelView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:160px;" />
@@ -30,7 +30,8 @@
 								value="#{reportBackingBean.smZone}"
 								style="margin-top:5px;width:290px;">
 							</p:inputText>
-						</c:if>			
+						</c:if>
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smEPAdminPTJAdminZoneView}">			
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smZoneView}">
 							<p:column>
@@ -53,6 +54,8 @@
 
 							</p:column>
 						</c:if>
+						</c:if>
+						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryEPAdminPTJAdminZoneView}">			
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryZoneView}">
 							<p:column >
@@ -87,7 +90,8 @@
 								</table>
 							</p:column>
 						</c:if>
-						
+						</c:if>
+						</c:if>
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smUserNameView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.username']}"
