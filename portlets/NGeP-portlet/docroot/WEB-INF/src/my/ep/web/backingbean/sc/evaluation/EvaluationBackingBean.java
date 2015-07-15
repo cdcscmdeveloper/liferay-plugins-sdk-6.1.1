@@ -1146,10 +1146,13 @@ public class EvaluationBackingBean extends
 					.getPresentationDemoSupplierListDM().getList();
 
 			if (null != presentatiodemo && !presentatiodemo.isEmpty()) {
+				PmStatus Status = getPmStatus();
+				for (ScQtProposalChecklist demoChecklist : presentatiodemo) {
+					demoChecklist.setEvaluationStatus(Status);
+				}
 				reqDTO.setComplianceList(presentatiodemo);
 				evaluationSo.saveOrUpdateComplianceDtls(reqDTO);
 			}
-			
 
 			this.getManagedBean().setPresentationDemoSupplierListDM(
 					new PresentationDemoSuppliersPagingDataModel(
@@ -5013,6 +5016,11 @@ public class EvaluationBackingBean extends
 					&& !this.getManagedBean().isReadOnly()) {
 				if (this.getManagedBean().getScQt().isDemoRequired()) {
 					saveMeetingDtls(false);
+					if (null == this.getManagedBean().getScQtChecklist()) {
+						retrivePresetationDemoCheckList();
+					}
+					retrivePresentationDemoChecklistSuppliersStatus(this
+							.getManagedBean().getScQtChecklist());
 					// retrivePresentationDemoSummary();
 				}
 
@@ -10698,4 +10706,38 @@ public class EvaluationBackingBean extends
 			evaluationSo = null;
 		}
 	}
+
+	// retrieve presentationdemo qualified suppliers based on technical stage.
+	private void retrivePresentationDemoChecklistSuppliersStatus(
+			ScQtCheckList checklist) {
+		IQTEvaluationSO evaluationSo = null;
+		EvaluationResDTO resDTO = null;
+		try {
+			if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())
+					|| ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())) {
+				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+				evaluationSo = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTEvaluationSO.class);
+				reqDTO.setCheckListId(checklist.getQtChecklistId());
+				reqDTO.setQtId(this.getManagedBean().getScQt().getQtId());
+				reqDTO.setEvalStage(SourcingConstants.TECHINICAL_STAGE);
+
+				resDTO = evaluationSo.checkDemoAndUploadChecklistStatus(reqDTO);
+				if (resDTO.getPendingCount() > 0) {
+					String checklistScoring = "Scoring is not completed";
+					this.getManagedBean().setPresentationDemoActiveIndex(0);
+					throw new EpException(MessageConst.ERROR_760316,
+							new String[] { checklistScoring });
+				}
+			}
+		} finally {
+
+		}
+
+	}
+
 }
