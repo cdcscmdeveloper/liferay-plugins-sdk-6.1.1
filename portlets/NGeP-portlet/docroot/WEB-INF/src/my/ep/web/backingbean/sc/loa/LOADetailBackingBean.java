@@ -2175,6 +2175,7 @@ public class LOADetailBackingBean extends
 			parseLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setOutcome(outcome);
 			reqDTO.setRoleCode(getUserRoleCode());
