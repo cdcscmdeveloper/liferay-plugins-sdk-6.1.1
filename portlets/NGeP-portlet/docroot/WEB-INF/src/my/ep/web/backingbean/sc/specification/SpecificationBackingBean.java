@@ -5896,7 +5896,11 @@ public class SpecificationBackingBean extends
 
 			boolean isQuotationThresHold = isQuotationThresHold(scQt
 					.getEstimatedAmount());
-
+			if (null == scQt.getEstimatedAmount()
+					|| scQt.getEstimatedAmount().intValue() <= 20000) {
+				throw new EpException(MessageConst.ERROR_760024,
+						new String[] { "20000" });
+			}
 			if (isOneTierThresHold(scQt.getEstimatedAmount())) {
 
 				ParameterReqDTO quotationReqDTO = new ParameterReqDTO();
