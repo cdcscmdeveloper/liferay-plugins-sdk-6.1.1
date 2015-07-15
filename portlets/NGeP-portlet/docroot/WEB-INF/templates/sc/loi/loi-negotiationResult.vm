@@ -140,7 +140,13 @@
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
-							<th colspan="3" bgcolor="#6d839b" class="title border left"></th>
+						
+							#if ($isZonal)
+								  	<th colspan="4" bgcolor="#6d839b" class="title border left"></th>
+						      #else
+								  	<th colspan="3" bgcolor="#6d839b" class="title border left"></th>
+						       #end
+						
 							<th colspan="2" bgcolor="#6d839b" class="title border left">Harga Tawaran Asal</th>
 							<th colspan="2" bgcolor="#6d839b" class="title border left-right">Harga Tawaran Selepas Rundingan</th>
 						</tr>
@@ -162,12 +168,13 @@
 						#foreach( $loiLoaItem in $scLoi.scLoiLoaItems )
 						<tr class="ui-content">
 						 
-						     #if ($isZonal) 
-						          <td class="standard border-bottom left">
-							    #if($!scLoiLoaItem.tplSpecZoneDtl) 
-							         $scLoiLoaItem.tplSpecZoneDtl.zoneName   #end 
-							      </td> 
-							 #end   
+						   #if ($isZonal) 
+						       <td class="standard border-bottom left">
+							       #if($!loiLoaItem.tplSpecZoneDtl) 
+								       #set( $zoneName = $loiLoaItem.tplSpecZoneDtl.zoneName.replace("&", "&#38;") )
+                                        $zoneName   #end 
+							     </td> 
+							 #end  
 						 
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.itemName</td>
 							<td class="standard border-bottom left">$loiLoaItem.scRequestItem.uom.uomCode</td>
@@ -175,7 +182,7 @@
 							 #if ($!loiLoaItem.tplSpecTierQty )
 								   $loiLoaItem.tplSpecTierQty.fromQty - $loiLoaItem.tplSpecTierQty.toQty
 							 #else
-								   $numberDF.format($loiLoaItem.qty)
+								 $loiLoaItem.qty
 						      #end </td>
 							<td class="standard border-bottom left alignRight">
 							#if($!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
