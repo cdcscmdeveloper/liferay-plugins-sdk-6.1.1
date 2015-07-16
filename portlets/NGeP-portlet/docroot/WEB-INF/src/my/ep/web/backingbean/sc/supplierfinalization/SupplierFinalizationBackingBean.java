@@ -1163,7 +1163,7 @@ public class SupplierFinalizationBackingBean extends
 										StringUtils.isBlank(
 											scQtFinalization.getOnlineBiddingEndorse())) {
 								setZoneAndTabIndexOnException(zoneDtl);
-								throw new EpException(MessageConst.ERROR_760315, new String[]{
+								throw new EpException(MessageConst.ERROR_100022, new String[]{
 										ResourceBundleUtils.getMessage("lbl.sc.online.bidding.endorsement", 
 									 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
 								});
