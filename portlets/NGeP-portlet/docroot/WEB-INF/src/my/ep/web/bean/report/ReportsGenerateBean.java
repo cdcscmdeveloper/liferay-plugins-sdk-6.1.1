@@ -208,6 +208,7 @@ public class ReportsGenerateBean {
 		private boolean smProcessingOfficerNameView = false;
 		private boolean smReportTypeTwoView = false;
 		private boolean smBothSupplierTypeView = false;
+		private boolean smBothMandatorySupplierTypeView = false;
 		
 		private boolean smReceiptNoView = false;
 		private boolean smProcessingTypeView = false;
@@ -506,6 +507,13 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmBothMandatorySupplierTypeView() {
+			return smBothMandatorySupplierTypeView;
+		}
+		public void setSmBothMandatorySupplierTypeView(
+				boolean smBothMandatorySupplierTypeView) {
+			this.smBothMandatorySupplierTypeView = smBothMandatorySupplierTypeView;
+		}
 		public boolean isSmMandatoryEPAdminPTJAdminZoneView() {
 			return smMandatoryEPAdminPTJAdminZoneView;
 		}
