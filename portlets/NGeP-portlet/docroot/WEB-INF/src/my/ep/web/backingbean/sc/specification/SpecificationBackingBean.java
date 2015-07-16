@@ -5987,10 +5987,6 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setScQt(scQt);
 			}
 
-			if (null != getManagedBean().getExistingSupplierLocationList()) {
-				this.getManagedBean().setSupplierLocationList(
-						getManagedBean().getExistingSupplierLocationList());
-			}
 			if (SourcingConstants.QT_TYPE_OPEN.equalsIgnoreCase(scQt
 					.getQtType())) {
 				if (!isQuotationThresHold
@@ -6008,6 +6004,18 @@ public class SpecificationBackingBean extends
 						}
 						scQt.getScQtSupplierCriteria().setAllState(false);
 					}
+				}
+			}
+			if ((scQt.getScQtSupplierCriteria().isAllState() && SourcingConstants.QT_TYPE_OPEN
+					.equalsIgnoreCase(scQt.getQtType()))
+					|| SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+							.equalsIgnoreCase(scQt.getQtType())) {
+				if (null != getManagedBean().getExistingSupplierLocationList()) {
+					this.getManagedBean().setSupplierLocationList(
+							getManagedBean().getExistingSupplierLocationList());
+					getManagedBean().setExistingSupplierLocationList(null);
+					getManagedBean().setZoneTrees(null);
+
 				}
 			}
 			getQuotationTendervalues(ParameterTypeConst.QUOTATION_TENDER_TYPE);
