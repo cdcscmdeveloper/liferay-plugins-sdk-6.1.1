@@ -34,7 +34,7 @@
 				<h:outputText
 					value="#{createDOBackingBean.getFullAddress(doDelAddress.pmAddress)}" />
 			</p:column>
-			<p:column style="white-space:normal;width:163px">
+			<p:column style="white-space:normal;width:195px;">
 				<h:outputText value="#{lbl['lbl.fl.do.start.date']}" />
 				<p:spacer width="2"/>
 				<p:inputText size="7" disabled="true"
@@ -44,6 +44,7 @@
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.start.date']}"/>
 				<br />
+				<h:outputText value="*" styleClass="mandatory" />
 				<h:outputText value="#{lbl['lbl.fl.do.end.date']}" />
 				<p:spacer width="5"/>
 				<p:inputText size="7" disabled="true"
@@ -52,6 +53,17 @@
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>
 				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.del.end.date']}"/>
+				<br />
+				<h:outputText value="#{lbl['lbl.fl.exp.del.date']}" />
+				<p:spacer width="2"/>
+				<p:calendar mode="popup" readonlyInput="true"
+						showOn="button" size="10"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+						mindate="#{doDelAddress.startDate}" 
+						maxdate="#{doDelAddress.endDate}"
+						disabled="#{createDOBackingBean.managedBean.buttonVal=='View'}"
+						value="#{doDelAddress.flTempDoAddr.estDeliveryDate}">
+					</p:calendar>
 			</p:column>
 			<p:column style="white-space:normal;">
 				<h:outputText value="*" styleClass="mandatory" />

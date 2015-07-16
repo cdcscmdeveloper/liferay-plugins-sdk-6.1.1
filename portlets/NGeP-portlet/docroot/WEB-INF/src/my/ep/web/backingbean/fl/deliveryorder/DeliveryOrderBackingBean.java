@@ -198,6 +198,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 						flDeliveryOrder.setFlDeliveryAddress(flDeliveryAddress);
 						flDeliveryOrder.setRemarkList(flDeliveryAddress.getRemarkList());
 						flDeliveryOrder.setAttachmentList(flDeliveryAddress.getAttachmentList());
+						flDeliveryOrder.setEstDeliveryDate(flDeliveryAddress.getFlTempDoAddr().getEstDeliveryDate());
 						
 						//FlDelOrderItem
 						ArrayList<FlDelOrderItem> delOrderList= new ArrayList<FlDelOrderItem>();
@@ -434,7 +435,10 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				for(FlDeliveryAddress selectedDelAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					if(selectedDelAddress.getFlTempDoAddr().isSelected()) {
 						if(selectedDelAddress.getFlTempDoAddr().getSupplierDoRef()==null || selectedDelAddress.getFlTempDoAddr().getSupplierDoRef().length()==0) {
-							throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress()),ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress())});
+							throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.frn.supp.do.no",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" ",ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress())});
+						}
+						if(selectedDelAddress.getFlTempDoAddr().getEstDeliveryDate()==null) {
+							throw new EpException(MessageConst.ERROR_100051, new String[]{ResourceBundleUtils.getMessage("lbl.fl.exp.del.date",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" ",ResourceBundleUtils.getMessage("lbl.fl.del.delivery.address",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())+" "+getFullAddress(selectedDelAddress.getPmAddress())});
 						}
 						totalDeliveryQty = 0;
 						totalDeliveryAmount = 0;

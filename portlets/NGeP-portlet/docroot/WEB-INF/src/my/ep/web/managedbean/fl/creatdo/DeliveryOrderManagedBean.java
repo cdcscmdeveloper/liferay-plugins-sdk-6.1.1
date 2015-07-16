@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.fl.creatdo;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -204,6 +205,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     
     private boolean gfmasError=false;
     private String gfmasErrorContent;
+    private Date estDeliveryDate;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1149,6 +1151,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	/**
+	 * @return the estDeliveryDate
+	 */
+	public Date getEstDeliveryDate() {
+		return estDeliveryDate;
+	}
+
+	/**
+	 * @param estDeliveryDate the estDeliveryDate to set
+	 */
+	public void setEstDeliveryDate(Date estDeliveryDate) {
+		this.estDeliveryDate = estDeliveryDate;
 	}
 
 	
