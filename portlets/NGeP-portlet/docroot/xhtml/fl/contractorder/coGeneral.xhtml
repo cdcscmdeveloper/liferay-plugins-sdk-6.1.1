@@ -172,11 +172,10 @@
 						value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" rendered="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch ne null}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
 				<td><p:inputText disabled="true" size="50"
-					rendered="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch ne null}" 
-					value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}">
-				<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}"/></p:inputText></td>
+					value="#{flOrderBB.managedBean.flRequest.flSupplierDtl.branchName}">
+				</p:inputText></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
