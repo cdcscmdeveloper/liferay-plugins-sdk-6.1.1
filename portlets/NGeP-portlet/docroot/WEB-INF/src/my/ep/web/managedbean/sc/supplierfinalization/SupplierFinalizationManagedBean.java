@@ -124,6 +124,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean itemRecommendByAward;
 	private boolean disableSupplierSelection;
 	private boolean itemFwdToHighAuthority;
+	private boolean isInitialSelectionItemized;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -628,6 +629,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setItemFwdToHighAuthority(
 						boolean itemFwdToHighAuthority) {
 		this.itemFwdToHighAuthority = itemFwdToHighAuthority;
+	}
+
+	/**
+	 * @return the isInitialSelectionItemized
+	 */
+	public boolean isInitialSelectionItemized() {
+		return isInitialSelectionItemized;
+	}
+
+	/**
+	 * @param isInitialSelectionItemized 
+	 * 				the isInitialSelectionItemized to set
+	 */
+	public void setInitialSelectionItemized(
+					boolean isInitialSelectionItemized) {
+		this.isInitialSelectionItemized = isInitialSelectionItemized;
 	}
 
 	/**
