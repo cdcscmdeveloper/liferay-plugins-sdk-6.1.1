@@ -415,5 +415,27 @@ public class DateUtils {
 	    
 	    return localDateFormate.format(date);
 	}
+	/**
+	 * Checks if is date greater or equal.
+	 * 
+	 * @param d1 the d1
+	 * @param d2 the d2
+	 * 
+	 * @return true, if is date greater or equal
+	 */
+	public static boolean isDateGreater(Date d1, Date d2) {
+		if ((d1 == null) || (d2 == null)) {
+			return false;
+		}
 
+		try {
+			if (d1.compareTo(d2) > 0) {
+				return true;
+			}
+			return false;
+		} catch (Exception e) {
+		}
+
+		return false;
+	}
 }
