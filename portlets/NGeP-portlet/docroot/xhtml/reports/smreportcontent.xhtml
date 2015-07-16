@@ -26,10 +26,10 @@
 						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smZoneLabelView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.zone']}" style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="100" disabled="true"
+							<p:outputLabel  
 								value="#{reportBackingBean.smZone}"
-								style="margin-top:5px;width:290px;">
-							</p:inputText>
+								style="float:left;text-align:left;margin-top:5px;width:290px;">
+							</p:outputLabel>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smEPAdminPTJAdminZoneView}">			
 						<c:if
