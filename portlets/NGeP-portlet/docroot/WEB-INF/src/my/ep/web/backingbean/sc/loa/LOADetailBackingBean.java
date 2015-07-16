@@ -231,31 +231,34 @@ public class LOADetailBackingBean extends
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
 			this.getManagedBean().setScQt(resDTO.getScQt());
-			if (scLoa != null
-					&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-				if (new FacesScopes()
-						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
-					awardDataType.setDeskOfficer(new FacesScopes()
-							.getUserSessionBean().getLoginId());
+			if (awardDataType != null){
+				
+				if (scLoa != null
+						&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
+					if (new FacesScopes()
+					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+						awardDataType.setDeskOfficer(new FacesScopes()
+						.getUserSessionBean().getLoginId());
+					} else {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
+						awardDataType.setRequisitioner(new FacesScopes()
+						.getUserSessionBean().getLoginId());
+					}
 				} else {
-					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
-					awardDataType.setRequisitioner(new FacesScopes()
-							.getUserSessionBean().getLoginId());
-				}
-			} else {
-				if (new FacesScopes()
-						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
-					awardDataType.setDeskOfficer(new FacesScopes()
-							.getUserSessionBean().getLoginId());
-				} else {
-					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
-					awardDataType.setSecretary(new FacesScopes()
-							.getUserSessionBean().getLoginId());
+					if (new FacesScopes()
+					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+						awardDataType.setDeskOfficer(new FacesScopes()
+						.getUserSessionBean().getLoginId());
+					} else {
+						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
+						awardDataType.setSecretary(new FacesScopes()
+						.getUserSessionBean().getLoginId());
+					}
 				}
 			}
-			
+
 			if(scLoa.isBrandNew()) {
 				setUserDetails(scLoa);
 				resDTO.setScLoa(scLoa);
@@ -464,7 +467,7 @@ public class LOADetailBackingBean extends
 			getManagedBean().setEditFlag(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-					.handleNavigation(fc, null, QTConstants.LOA_PAGE);
+			.handleNavigation(fc, null, QTConstants.LOA_PAGE);
 		} catch (Exception e) {
 			handleException(e);
 		}
@@ -1856,23 +1859,23 @@ public class LOADetailBackingBean extends
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 				}
 				
-				if (scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem() != null) {
+				if (scLoiLoaItem.getScQtProposalItem() != null) {
 					offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
-							.getScQtRecommendDtl().getScQtProposalItem()
+							.getScQtProposalItem()
 							.getOfferPrice()));
 					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem()
+					scLoiLoaItem.getScQtProposalItem()
 								.setOfferPrice(offerPrice.floatValue());
 					
 					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
 							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 
 					finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
-							.getScQtRecommendDtl().getScQtProposalItem()
+							.getScQtProposalItem()
 							.getFinalPrice()));
 					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.getScQtRecommendDtl().getScQtProposalItem()
-								.setOfferPrice(finalPrice.floatValue());					
+					scLoiLoaItem.getScQtProposalItem()
+								.setFinalPrice(finalPrice.floatValue());					
 					
 					// offered price sub total and total
 					offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
