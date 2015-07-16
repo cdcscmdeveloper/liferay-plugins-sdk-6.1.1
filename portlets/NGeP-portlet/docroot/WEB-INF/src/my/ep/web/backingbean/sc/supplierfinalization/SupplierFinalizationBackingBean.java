@@ -94,6 +94,7 @@ import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.quationtender.ScCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -2975,6 +2976,35 @@ public class SupplierFinalizationBackingBean extends
 			if (scQtFinalization != null) {
 				this.getManagedBean().setScQtFinalization(scQtFinalization);
 				
+				List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
+				if (CollectionUtils.isNotEmpty(
+								rejectedRecommendDtlIds)) {
+					SuppFinalizationReqDTO _reqDTO = new SuppFinalizationReqDTO();
+					_reqDTO.setRecommendDtlIds(rejectedRecommendDtlIds);
+					
+					SuppFinalizationResDTO _resDTO = qtSuppFinalizationSO.retrieveLoiLoaByRecommendDtlIds(_reqDTO);
+					if (_resDTO.isSuccessful()) {
+						ScLoiLoaItem scLoiLoaItem = _resDTO.getScLoiLoaItem();
+						
+						if (scLoiLoaItem != null) {
+							PmParameter recommendType = null;
+							
+							if (scLoiLoaItem.getScLoi() != null) {
+								recommendType = scLoiLoaItem.getScLoi().getScLoiLoa()
+													.getRecommendTypeCode();
+							} else if (scLoiLoaItem.getScLoa() != null) {
+								recommendType = scLoiLoaItem.getScLoa().getScLoiLoa()
+										.getRecommendTypeCode();
+							}
+							if (recommendType != null && 
+									ParameterConst.RECOMMEND_TYPE_ITEM
+										.equals(recommendType.getParameterCode())) {
+								this.getManagedBean().setInitialSelectionItemized(true);
+							}
+						}
+					}
+				}
+				
 				if (isZonal) {
 					Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> 
 							shortlistedSupppliersByZone = resDTO.getQualifiedByPackageMap();
@@ -3238,20 +3268,26 @@ public class SupplierFinalizationBackingBean extends
 					if (recommendBy.getParameterCode().equals(
 							ParameterConst.RECOMMEND_BY_AWARD)) {
 
-						// Award
-						Long selectedSupplierId = scQtRecommend
-								.getRecommendDtls().get(0).getSupplier()
-								.getSupplierId();
-						for (ScQtEvaluationResultDtl scQtEvaluationResultDtl 
-															: shortlistedSuppliers) {
-							Long supplierId = scQtEvaluationResultDtl
-									.getQtEvaluationResult().getScQtProposal()
-									.getScQtSupplier().getSmSupplier()
+						// Condition to exclude the rejected suppliers
+						if (scQtRecommend
+								.getRecommendDtls().get(0).getRecordStatusFlg()
+								.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+							
+							// Award
+							Long selectedSupplierId = scQtRecommend
+									.getRecommendDtls().get(0).getSupplier()
 									.getSupplierId();
-							if (supplierId == selectedSupplierId) {
-								scQtEvaluationResultDtl.setSelected(true);
-								getManagedBean().setRecommendedSupplier(
-										scQtEvaluationResultDtl);
+							for (ScQtEvaluationResultDtl scQtEvaluationResultDtl 
+																: shortlistedSuppliers) {
+								Long supplierId = scQtEvaluationResultDtl
+										.getQtEvaluationResult().getScQtProposal()
+										.getScQtSupplier().getSmSupplier()
+										.getSupplierId();
+								if (supplierId == selectedSupplierId) {
+									scQtEvaluationResultDtl.setSelected(true);
+									getManagedBean().setRecommendedSupplier(
+											scQtEvaluationResultDtl);
+								}
 							}
 						}
 					} else {
@@ -4142,7 +4178,7 @@ public class SupplierFinalizationBackingBean extends
 			selectedItemSet.addAll(selectedItemList);
 			selectedItemList.clear();
 			selectedItemList.addAll(selectedItemSet);
-			selectedItemSet.clear();
+			selectedItemSet = null;
 		} else {
 			return null;
 		}
@@ -4176,7 +4212,8 @@ public class SupplierFinalizationBackingBean extends
 									.getQtEvaluationResult().getScQtProposal()
 									.getScQtSupplier().getSmSupplier();
 							if (CollectionUtils.isNotEmpty(otherScQtRecommend
-									.getShortListedSupplierList())) {
+									.getShortListedSupplierList()) && 
+										!resultDtl.isSuppSelectionDisabled()) {
 								for (ScQtEvaluationResultDtl otherResultDtl 
 											: otherScQtRecommend.getShortListedSupplierList()) {
 									if (resultDtl.equals(otherResultDtl)) {
@@ -4630,34 +4667,39 @@ public class SupplierFinalizationBackingBean extends
 					return;
 				}
 				
-				// Award
-				Long selectedSupplierId = scQtRecommend
-						.getRecommendDtls().get(0).getSupplier()
-						.getSupplierId();
-				for (ScQtEvaluationResultDtl 
-						scQtEvaluationResultDtl : shortListedSuppliers) {
-					Long supplierId = scQtEvaluationResultDtl
-							.getQtEvaluationResult()
-							.getScQtProposal().getScQtSupplier()
-							.getSmSupplier().getSupplierId();
-					if (supplierId == selectedSupplierId) {
-						scQtEvaluationResultDtl.setSelected(true);
-						scQtEvaluationResultDtl.setAwareded(true);
-						scQtEvaluationResultDtl.setShortListed(false);
-						
-						getManagedBean().setRecommendedSupplier(
-								scQtEvaluationResultDtl);
-						if (isZonal) {
-							List<ScQtEvaluationResultDtl> 
-									recommendedSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
-							recommendedSupplierList.add(scQtEvaluationResultDtl);
-							if (this.getManagedBean().getRecommendedSupppliersByZone().get(
-									specZoneDtl.getSpecZoneId()) == null) {
-								this.getManagedBean().getRecommendedSupppliersByZone().put(
-										specZoneDtl.getSpecZoneId(), recommendedSupplierList);
+				// Condition to exclude the rejected suppliers
+				if (scQtRecommend.getRecommendDtls().get(0)
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					
+					// Award
+					Long selectedSupplierId = scQtRecommend
+							.getRecommendDtls().get(0).getSupplier()
+							.getSupplierId();
+					for (ScQtEvaluationResultDtl 
+							scQtEvaluationResultDtl : shortListedSuppliers) {
+						Long supplierId = scQtEvaluationResultDtl
+								.getQtEvaluationResult()
+								.getScQtProposal().getScQtSupplier()
+								.getSmSupplier().getSupplierId();
+						if (supplierId == selectedSupplierId) {
+							scQtEvaluationResultDtl.setSelected(true);
+							scQtEvaluationResultDtl.setAwareded(true);
+							scQtEvaluationResultDtl.setShortListed(false);
+							
+							getManagedBean().setRecommendedSupplier(
+									scQtEvaluationResultDtl);
+							if (isZonal) {
+								List<ScQtEvaluationResultDtl> 
+										recommendedSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
+								recommendedSupplierList.add(scQtEvaluationResultDtl);
+								if (this.getManagedBean().getRecommendedSupppliersByZone().get(
+										specZoneDtl.getSpecZoneId()) == null) {
+									this.getManagedBean().getRecommendedSupppliersByZone().put(
+											specZoneDtl.getSpecZoneId(), recommendedSupplierList);
+								}
 							}
+							break;
 						}
-						break;
 					}
 				}
 			} else {
@@ -5073,15 +5115,14 @@ public class SupplierFinalizationBackingBean extends
 			if (this.getManagedBean().getRecommendedSupppliersByZone() != null) {
 				this.getManagedBean().getRecommendedSupppliersByZone().clear();
 			}
-			this.getManagedBean().setRecommendedSupplier(null);
-			this.getManagedBean().setShortlistedSupplier(null);
 		} else {
 			resetItemDetails(scQtFinalization.getScQtRecommends());	
 			resetShortlistedSupplierData(
 					this.getManagedBean().getShortlistedPackageList());
-			this.getManagedBean().setRecommendedSupplier(null);
-			this.getManagedBean().setShortlistedSupplier(null);
 		}
+		
+		this.getManagedBean().setRecommendedSupplier(null);
+		this.getManagedBean().setShortlistedSupplier(null);		
 		scQtFinalization.setOnlineBiddingEndorse(null);
 		resetFlag();
 	}
