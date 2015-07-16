@@ -153,11 +153,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmMandatoryFromDateView(true);
 			    rptGenBean.setSmMandatoryDateView(true);
 	        	rptGenBean.setSmStateView(true);
-	        	rptGenBean.setSmDistrictView(true);
-	        	rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+	        	rptGenBean.setSmDistrictView(true);	        	
 			    rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmExtraTwoColumnView(true);
 	            break;
@@ -233,7 +231,7 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.retrieveState();
 				rptGenBean.setSmMandatoryCategoryView(true);
 				rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);       	
 	        	rptGenBean.setSmCompanyNameView(true);
 	        	rptGenBean.setFromDateView(true);
@@ -309,9 +307,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	rptGenBean.setSmSupplierTypeView(true);
+	        	rptGenBean.setSmMandatorySupplierTypeView(true);
 	        	rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmMofRegNoFromView(true);
 	        	rptGenBean.setSmMofRegNoToView(true);
@@ -326,20 +324,20 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;    
 		 case ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	rptGenBean.setSmSupplierTypeView(true);
+	        	rptGenBean.setSmMandatorySupplierTypeView(true);
 	        	/*rptGenBean.setSmMofRegNoFromView(true);
 	        	rptGenBean.setSmMofRegNoToView(true);*/
 	        	rptGenBean.setSmMandatoryMofRegNoFromView(true);
 	        	rptGenBean.setSmMandatoryMofRegNoToView(true);
 	        	rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmExtraTwoColumnTwoView(true);
 	            break;
 		 case ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL:
-	        	rptGenBean.setSmSupplierTypeView(true);	        	
+	        	rptGenBean.setSmMandatorySupplierTypeView(true);	        	
 	        	rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
@@ -387,9 +385,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_DELETE_PENDING_APPL: 				
 			    rptGenBean.setFromDateView(true);
 			    rptGenBean.setSmCompanyNameView(true);
-			    rptGenBean.setSmBothSupplierTypeView(true);
+			    rptGenBean.setSmBothMandatorySupplierTypeView(true);
 			    rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
 			    rptGenBean.setSmApplicationNoView(true);
 			    rptGenBean.setSmReportTypeTwoView(true);
@@ -410,18 +408,18 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			 break;
 		 case ReportConst.SM_PERSON_BRANCH_BANK:
 			    rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
-			    rptGenBean.setSmSupplierTypeView(true);
+			    rptGenBean.setSmMandatorySupplierTypeView(true);
 			    rptGenBean.setSmSupplierView(true);
 			    rptGenBean.setSmRegistrationNoView(true);
 			    rptGenBean.setSmMofRegNoView(true);				
 	            break;
 		 case ReportConst.SM_THRESHOLD:			 
 			    rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
-			    rptGenBean.setSmSupplierTypeView(true);
+			    rptGenBean.setSmMandatorySupplierTypeView(true);
 			    rptGenBean.setSmSupplierView(true);
 			    rptGenBean.setSmRegistrationTypeView(true);
 			    rptGenBean.setSmRegistrationNoView(true);

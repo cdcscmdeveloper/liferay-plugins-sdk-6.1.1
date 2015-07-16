@@ -181,6 +181,41 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.smBothMandatorySupplierTypeView}">
+							<p:column >
+								<table style="width: 180px;">
+									<tr style="width: 100%;">
+										<td style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}"
+												 /><p:outputLabel value="*" styleClass="mandatory"
+												/></td>
+
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:selectOneMenu
+												label="#{lbl['lbl.rpt.supplierType']}" id="bothSupplierType"
+												value="#{reportBackingBean.smSupplierType}" required="true"
+												style="margin-top:5px;width:300px;">
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.consultant']}"
+													itemValue="J"></f:selectItem>
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.contractor']}"
+													itemValue="K"></f:selectItem>
+													<f:selectItem itemLabel="#{lbl['lbl.rpt.both']}"
+									                itemValue="#{lbl['lbl.rpt.both']}"></f:selectItem>
+													<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
+											</p:selectOneMenu></td>
+										<td><p:message id="bothSupplierTypeMsg" for="bothSupplierType"
+												display="icon" showDetail="false"/></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+						<c:if
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatorySupplierTypeView}">
 							<p:column >
 								<table style="width: 180px;">
