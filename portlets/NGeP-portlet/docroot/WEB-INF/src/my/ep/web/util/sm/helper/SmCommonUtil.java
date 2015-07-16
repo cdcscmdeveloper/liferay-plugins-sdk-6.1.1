@@ -404,7 +404,7 @@ public class SmCommonUtil {
 	 *            - Long country id
 	 * @return PmCountry object
 	 */
-	private static PmCountry retrievePmCountryById(Long countryId) {
+	public static PmCountry retrievePmCountryById(Long countryId) {
 		ICountrySO reqSO = (ICountrySO) BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICountrySO.class);
 		CountryReqDTO reqDTO = new CountryReqDTO();
