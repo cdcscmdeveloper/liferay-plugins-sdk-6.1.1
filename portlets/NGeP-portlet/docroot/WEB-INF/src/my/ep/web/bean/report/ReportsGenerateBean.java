@@ -77,6 +77,7 @@ public class ReportsGenerateBean {
 		private boolean scPIDtlsPrcRptGroupView = false;
 		private boolean scProcurementTypeView = false;
 		private boolean scProcessRptQuotationNoView = false;
+		private boolean scMandatoryProcessRptQuotationNoView = false;
 		private boolean scCommonStatusView = false;
 		private boolean scLAPRNPURCHDEFAULTGroupView = false;
 		private boolean scREQUESTNOTESUMMARYGroupView = false;
@@ -507,6 +508,13 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isScMandatoryProcessRptQuotationNoView() {
+			return scMandatoryProcessRptQuotationNoView;
+		}
+		public void setScMandatoryProcessRptQuotationNoView(
+				boolean scMandatoryProcessRptQuotationNoView) {
+			this.scMandatoryProcessRptQuotationNoView = scMandatoryProcessRptQuotationNoView;
+		}
 		public boolean isSmBothMandatorySupplierTypeView() {
 			return smBothMandatorySupplierTypeView;
 		}
