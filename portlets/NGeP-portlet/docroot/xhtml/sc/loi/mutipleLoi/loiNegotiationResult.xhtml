@@ -146,7 +146,7 @@
 
 				<p:column style="width:10%;text-align:right;"
 					rendered="#{!lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					<h:outputText value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}">
+					<h:outputText value="#{loiLoaItem.scQtProposalItem.offerPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
@@ -175,7 +175,7 @@
 				<p:column style="width:10%; text-align:right;"
 					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
 					<h:outputText
-						value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}">
+						value="#{loiLoaItem.scQtProposalItem.offerPrice}">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />							
 					</h:outputText>
@@ -202,7 +202,7 @@
 
 				<p:column style="width:10%; text-align:right;"
 					rendered="#{lOIDetailBackingBean.managedBean.hideColumnFlag}">
-					 <p:inputText size="4" value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" style="text-align:right;" 
+					 <p:inputText size="4" value="#{loiLoaItem.scQtProposalItem.finalPrice}" style="text-align:right;" 
 					       disabled="true" rendered="#{isBiddingAward}">
 					   <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText>
