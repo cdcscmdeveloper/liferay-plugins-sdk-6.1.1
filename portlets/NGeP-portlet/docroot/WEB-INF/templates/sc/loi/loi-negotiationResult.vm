@@ -171,7 +171,7 @@
 						   #if ($isZonal) 
 						       <td class="standard border-bottom left">
 							       #if($!loiLoaItem.tplSpecZoneDtl) 
-								       #set( $zoneName = $loiLoaItem.tplSpecZoneDtl.zoneName.replace("&", "&#38;") )
+								       #set( $zoneName = $loiLoaItem.tplSpecZoneDtl.zoneName.replaceAll("&", "&#38;") )
                                         $zoneName   #end 
 							     </td> 
 							 #end  
@@ -185,14 +185,14 @@
 								 $loiLoaItem.qty
 						      #end </td>
 							<td class="standard border-bottom left alignRight">
-							#if($!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
-	                            $String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
+							#if($!loiLoaItem.scQtProposalItem.offerPrice) 
+	                            $String.format("%.2f", $!loiLoaItem.scQtProposalItem.offerPrice) 
                              #end
 							</td>
 							<td class="standard border-bottom left alignRight">$!loiLoaItem.offeredPriceSubTotal</td>
 							<td class="standard border-bottom left alignRight">
-							#if($!loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice) 
-							    $String.format("%.2f", $!loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice)
+							#if($!loiLoaItem.scQtProposalItem.offerPrice) 
+							    $String.format("%.2f", $!loiLoaItem.scQtProposalItem.finalPrice)
 							#end	
 						     </td>
 							<td class="standard border-bottom left-right alignRight">$!loiLoaItem.afterNegoSubTotal</td>

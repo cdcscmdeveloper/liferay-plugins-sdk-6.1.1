@@ -128,11 +128,11 @@
             </p:column>
             
             <p:column  style="width:10%;text-align:right;">
-				<h:outputText value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.finalPrice}" rendered="#{isBiddingAward}">
+				<h:outputText value="#{loiLoaItem.scQtProposalItem.finalPrice}" rendered="#{isBiddingAward}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				
-				<h:outputText value="#{loiLoaItem.scQtRecommendDtl.scQtProposalItem.offerPrice}" rendered="#{!isBiddingAward}">
+				<h:outputText value="#{loiLoaItem.scQtProposalItem.offerPrice}" rendered="#{!isBiddingAward}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 				<f:facet name="footer">
