@@ -98,7 +98,7 @@ public class NotifyBackingBean extends BaseBackingBean<NotifyManagedBean> {
 			}
 		}
 		
-		notifyDataModel.reloadData();
+		//notifyDataModel.reloadData();
 	}
 
 	/**
