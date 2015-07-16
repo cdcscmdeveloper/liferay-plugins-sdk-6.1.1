@@ -895,6 +895,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					locationDTOs.addAll(locationDTO);
 				}
 			}
+			getManagedBean().setSelectedNodes(null);
 		}
 		retrievLocationDtls(locationDTOs);
 	}

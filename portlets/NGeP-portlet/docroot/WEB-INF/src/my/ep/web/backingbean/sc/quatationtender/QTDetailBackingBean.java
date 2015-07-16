@@ -738,14 +738,14 @@ public class QTDetailBackingBean extends
 		if (!scQt.isSpecApprovalReq()) {
 			scQt.setMinistrySpecSecrataryId(null);
 		}
-		if (null != scQt.getFinalizationCommitte()
+		/*if (null != scQt.getFinalizationCommitte()
 				&& scQt.getFinalizationCommitte().getParameterId() == null) {
 			scQt.setFinalizationCommitte(null);
 		}
 		if (null != scQt.getFinalizationSecratery()
 				&& scQt.getFinalizationSecratery().getUserId() == null) {
 			scQt.setFinalizationSecratery(null);
-		}
+		}*/
 
 		scQt.setExistingContractNo(this.getManagedBean().getCtContract()
 				.getContractNo());
