@@ -549,7 +549,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	    		rptGenBean.setScContractOrPKPNameView(true);
 	            break;
 	        case ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL:
-	        	rptGenBean.setScSoneCrtdFromDateView(true);
+	        	//rptGenBean.setScSoneCrtdFromDateView(true);
 	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
@@ -558,7 +558,8 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	}
 	    		rptGenBean.setScSimpleQuoteStatusView(true);	
 	    		rptGenBean.setScProcurementTypeView(true);
-	    		rptGenBean.setScProcessRptQuotationNoView(true);	    		
+	    		rptGenBean.setScMandatoryProcessRptQuotationNoView(true);
+	    		//rptGenBean.setScProcessRptQuotationNoView(true);	    		
 	            break;
 	        default:
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	            

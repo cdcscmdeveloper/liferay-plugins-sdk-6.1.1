@@ -181,6 +181,33 @@
 									</p:inputText>																					
 									</c:if>
 									
+									<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.scMandatoryProcessRptQuotationNoView}">
+							<p:column >
+								<table style="width: 182px;">
+									<tr style="width: 100%;">
+										<td  style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"
+												/><p:outputLabel value="*" styleClass="mandatory"
+												/></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:inputText
+												label="#{lbl['lbl.rpt.scsimplequoteno']}" id="simpleQuotationNo"
+												maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}"
+												required="true" style="margin-top:5px;width:290px;">
+												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
+											</p:inputText></td>
+										<td><p:message id="simpleQuotationNoMsg" for="simpleQuotationNo"
+												display="icon" showDetail="false"/></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
+									
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequestQuoteNoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.REQQUOTENO']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText  value="#{reportBackingBean.scRequestQuoteNo}" style="margin-top:5px;width:290px;">
