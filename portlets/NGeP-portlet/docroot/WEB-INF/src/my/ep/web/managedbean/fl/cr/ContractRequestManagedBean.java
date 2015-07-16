@@ -120,6 +120,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean isFlRequestLink = false;
 	private boolean agencyAddress = false;
 	private PmOrgProfile currentChargePtjGroup;
+	private boolean declarationCheck;
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -2623,6 +2624,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectChargeLineRow(boolean selectChargeLineRow) {
 		this.selectChargeLineRow = selectChargeLineRow;
+	}
+
+	/**
+	 * @return the declarationCheck
+	 */
+	public boolean isDeclarationCheck() {
+		return declarationCheck;
+	}
+
+	/**
+	 * @param declarationCheck the declarationCheck to set
+	 */
+	public void setDeclarationCheck(boolean declarationCheck) {
+		this.declarationCheck = declarationCheck;
 	}
 
 }

@@ -339,6 +339,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(isRequisitioner()) {
 				reqDTO.setRequisitioner(Boolean.TRUE);
 			}
+			
 			flRequest.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
 			
 			// reset flTempItem
@@ -3775,6 +3776,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					if(getManagedBean().getSelectedApprover() == null){
 						throw new EpException(MessageConst.ERROR_750010);
 					}
+				}
+				if(!getManagedBean().isDeclarationCheck()){
+					throw new EpException(MessageConst.ERROR_745071);
 				}
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
 				if(flBB.getManagedBean().getRemarkList().get(0).getRemark()==null || flBB.getManagedBean().getRemarkList().get(0).getRemark().length()==0) {

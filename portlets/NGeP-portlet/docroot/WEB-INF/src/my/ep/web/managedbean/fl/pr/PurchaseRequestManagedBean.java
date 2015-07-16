@@ -186,6 +186,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/** The selected row flg. */
 	private boolean selectedRowFlg;
 	
+	private boolean declarationCheck;
+	
 	//getItems
 	/** The request note with dtls list. */
 	private List<ScRequestNoteDtl> requestNoteWithDtlsList;
@@ -3193,6 +3195,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectChargeLineRow(boolean selectChargeLineRow) {
 		this.selectChargeLineRow = selectChargeLineRow;
+	}
+
+	/**
+	 * @return the declarationCheck
+	 */
+	public boolean isDeclarationCheck() {
+		return declarationCheck;
+	}
+
+	/**
+	 * @param declarationCheck the declarationCheck to set
+	 */
+	public void setDeclarationCheck(boolean declarationCheck) {
+		this.declarationCheck = declarationCheck;
 	}
 
 }

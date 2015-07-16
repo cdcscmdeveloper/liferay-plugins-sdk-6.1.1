@@ -127,6 +127,17 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.frn.supp.do.no']}" /></td>
 				<td><p:inputText size="45" disabled="true" value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.supplierDoRef}">
 				</p:inputText></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.exp.del.date']}" /></td>
+				<td style="width: 190px;"><p:calendar mode="popup" showOn="button" id="estDate" label="#{lbl['lbl.fl.exp.del.date']}" required="true"
+						disabled="true"
+						readonlyInput="true"
+						size="10"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.flDeliveryOrder.estDeliveryDate}"
+						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					</p:calendar>
+				</td>
+				<td><p:message for="receivedDate" display="icon" /></td>
 			</tr>
 		</table>
 	</p:panel>
