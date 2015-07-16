@@ -88,7 +88,7 @@
 					<p:outputLabel value="*" styleClass="mandatory"
 						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}" /></td>
 				<td><p:selectOneMenu id="accountId" label="#{lbl['lbl.fl.bank.acc.no']}" required="true"
-						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'PO'}"
+						rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false' }"
 						disabled="#{invoiceBackingBean.managedBean.buttonVal=='Cancel' || invoiceBackingBean.managedBean.buttonVal=='ACK' || invoiceBackingBean.managedBean.buttonVal=='View'}"
 						style="width:300px;margin-bottom: 5px;"
 						value="#{invoiceBackingBean.managedBean.invoice.accountNo}">
@@ -97,8 +97,7 @@
 						<p:ajax event="change" 
 							listener="#{invoiceBackingBean.bankInfoActionListener}" />
 					</p:selectOneMenu> <p:message for="accountId" display="icon" />
-					 <p:inputText disabled="true" size="42" rendered="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.docType eq 'CO' and invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.factored eq 'false'}"
-		   				value="#{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankAccountNo}  #{invoiceBackingBean.managedBean.invoice.flRequest.ctContract.latestContractVer.ctContractValue.bankName}"></p:inputText></td>		
+					 </td>		
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
