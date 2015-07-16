@@ -392,7 +392,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(getManagedBean().getPmDigiSign() != null){
 				reqDTO.setPmDigiSign(getManagedBean().getPmDigiSign());
 			}
-
+			
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -529,7 +529,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 *
 	 * @param smSupplier the sm supplier
 	 * @return the supplier branches list
-	 */
+	 *//*
 	public List<SelectItem> getSupplierBranchesList(List<SmSupplierBranch> branches){
 		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
@@ -538,7 +538,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 		return supplierBranches;
-	}
+	}*/
 	/**
 	 * Removes the selected delivery addresses from delivery Address List.
 	 * <p>
@@ -3050,22 +3050,29 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
+	/**
+	 * Gets the supplier branches list based on SupplierId.
+	 *
+	 * @param smSupplier the sm supplier
+	 * @return the supplier branches list
+	 */
 	private void getSupplierBranchesList(SmSupplier smSupplier){
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 		
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		reqDTO.setSupplierId(smSupplier.getSupplierId());
 		SupplierSearchResDTO resDTO = supplierSearchSO.retrieveSmSupplierBranchBySupplier(reqDTO);
-		
 		List<SelectItem> supplierBranches = new ArrayList<SelectItem>();
 		for (SmSupplierBranch supplierBranch : resDTO.getSmSupplierBranchList()) {
 			supplierBranches.add(new SelectItem(supplierBranch.getSupplierBranchId(),supplierBranch.getBranchName()));
 		}
 		getManagedBean().setSupplierBranchesList(supplierBranches);
 	}
+	
 	/**
 	 * Gets the selected supplier branch details based on supplier BranchId.
 	 *
+	 * @param e the e
 	 * @return the selected supplier branch dtl
 	 */
 	public void getSelectedSupplierBranchDtl(AjaxBehaviorEvent e){
@@ -4050,5 +4057,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getApproverList().add(groupUser.getPmUser().getUserName());
 		}
 	}
+	
 	
 }

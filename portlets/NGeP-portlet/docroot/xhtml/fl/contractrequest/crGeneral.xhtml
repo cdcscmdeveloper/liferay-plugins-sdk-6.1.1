@@ -218,11 +218,23 @@
 						value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.supplierName}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}"  rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch ne null}"/></td>
-				<td><p:inputText disabled="true" size="51"
-						rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch ne null}"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch}" />
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.branch']}" rendered="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierBranch ne null}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" />
+				</td>
+				
+				<td><p:selectOneMenu id="suppBranch"
+						value="#{contractRequestBackingBean.managedBean.flRequest.flSupplierDtl.branchCode}"
+						disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+						style="width: 360px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
+						<f:selectItems var="suppBranchList"
+							value="#{contractRequestBackingBean.managedBean.supplierBranchesList}"
+							itemLabel="#{suppBranchList.branchName}"
+							itemValue="#{suppBranchList.supplierBranchId}" />
+						<p:ajax event="change"
+							listener="#{contractRequestBackingBean.getSelectedSupplierBranchDtl}"
+							update="supplierPnl" />
+					</p:selectOneMenu>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.cr.supp.branch.name.list']}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
