@@ -1096,7 +1096,9 @@ public class QTDetailBackingBean extends
 			if (null != pubApproval) {
 				List<ScQtApproval> approvals = scQt.getScQtApprovals();
 				removePTJApproval(approvals);
-				pubApproval.setApproverSettings(this.getManagedBean().getPublicationApprovals().getTarget());
+				if (null != this.getManagedBean().getPublicationApprovals()) {
+					pubApproval.setApproverSettings(this.getManagedBean().getPublicationApprovals().getTarget());
+				}
 				List<ScQtApprovalRemark> remarks = pubApproval.getScQtApprovalRemarks();
 				finalizeRemarks(remarks);
 				approvals.add(pubApproval);
@@ -1267,6 +1269,22 @@ public class QTDetailBackingBean extends
 			Date fromPublishDate = qtnTenderSearchBean.getFromPublishDate();
 			Date toPublishDate = qtnTenderSearchBean.getToPublishDate();
 			if (null != fromPublishDate || null != toPublishDate) {
+				Calendar c1 = Calendar.getInstance();
+				c1.setTime(fromPublishDate);
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+						c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+				fromDate.set(Calendar.MILLISECOND, 0);
+				fromPublishDate = fromDate.getTime();
+				if (toPublishDate != null) {
+					Calendar c2 = Calendar.getInstance();
+					c2.setTime(toPublishDate);
+					Calendar toDate = Calendar.getInstance();
+					toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
+							c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+					toDate.set(Calendar.MILLISECOND, 0);
+					toPublishDate = toDate.getTime();
+				}
 				SearchFilterBean bean = new SearchFilterBean();
 				bean.setSearchField(QTConstants.PUBLISH_DATE);
 				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
@@ -1978,7 +1996,7 @@ public class QTDetailBackingBean extends
 				} else if (SCProcessNameConst.REVISE_PCB
 						.equalsIgnoreCase(taskName)) {
 					approvalCategory = ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE;
-				}else if (SCProcessNameConst.REVISE_QT_SCHEDULE
+				} else if (SCProcessNameConst.REVISE_QT_SCHEDULE
 						.equalsIgnoreCase(taskName)) {
 					approvalCategory = ParameterConst.APPROVAL_CATEGORY_PTJ;
 				}
@@ -2102,18 +2120,20 @@ public class QTDetailBackingBean extends
 								.equals(approvalCategoryCode)) {
 							tabBeans.add(new TabBean(titleName,
 									approvalCategoryCode, qtApproval, settings));
-						} else if (scQt.getQtStatus().getStatusId() >= QTStatusConst.QT_BRIEFING_SITE_VISIT
-								&& ParameterConst.APPROVAL_CATEGORY_PTJ
-										.equals(approvalCategoryCode)) {
-
-							tabBeans.add(new TabBean(titleName,
-									approvalCategoryCode, qtApproval,
-									approverSettingDtls(
-											RoleCode.PUBLICATION_APPROVER, scQt
-													.getPmOrgProfile()
-													.getOrgProfileId(),
-											qtApproval)));
-
+						} else if (ParameterConst.APPROVAL_CATEGORY_PTJ
+								.equals(approvalCategoryCode)) {
+							if (scQt.getQtStatus().getStatusId() >= QTStatusConst.QT_BRIEFING_SITE_VISIT) {
+								tabBeans.add(new TabBean(titleName,
+										approvalCategoryCode, qtApproval,
+										approverSettingDtls(
+												RoleCode.PUBLICATION_APPROVER,
+												scQt.getPmOrgProfile()
+														.getOrgProfileId(),
+												qtApproval)));
+							} else {
+								this.getManagedBean().setPublicationApproval(
+										qtApproval);
+							}
 						} else if (ParameterConst.APPROVAL_CATEGORY_FINALIZATION_COMMITTEE
 								.equals(approvalCategoryCode)) {
 							List<ScQtApproverSettings> approvalSettings = qtApproval
