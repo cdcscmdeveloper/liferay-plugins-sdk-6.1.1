@@ -6006,8 +6006,9 @@ public class SpecificationBackingBean extends
 					}
 				}
 			}
-			if ((scQt.getScQtSupplierCriteria().isAllState() && SourcingConstants.QT_TYPE_OPEN
-					.equalsIgnoreCase(scQt.getQtType()))
+			if ((null != scQt.getScQtSupplierCriteria()
+					&& scQt.getScQtSupplierCriteria().isAllState() && SourcingConstants.QT_TYPE_OPEN
+						.equalsIgnoreCase(scQt.getQtType()))
 					|| SourcingConstants.QT_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())) {
 				if (null != getManagedBean().getExistingSupplierLocationList()) {
