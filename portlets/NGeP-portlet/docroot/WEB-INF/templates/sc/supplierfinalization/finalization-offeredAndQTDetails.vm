@@ -162,7 +162,7 @@
 					#foreach ($zone in $zones)
 						Zone Name : $zone.zoneName.toUpperCase()<br/>
 						#if ($zoneBeansMap.keySet().contains($zone.specZoneId))
-							Total Suppliers : $zoneBeansMap.get($zone.specZoneId).size()
+							Total Suppliers : $zoneBeansMap.get($zone.specZoneId).totalSupplierAttended
 						#else
 							0
 						#end
