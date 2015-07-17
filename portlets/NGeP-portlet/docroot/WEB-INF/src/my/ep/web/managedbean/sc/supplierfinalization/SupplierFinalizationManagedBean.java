@@ -125,6 +125,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean disableSupplierSelection;
 	private boolean itemFwdToHighAuthority;
 	private boolean isInitialSelectionItemized;
+	private boolean isInitialDecisionFwdHighAuth;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -162,6 +163,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private boolean selectAll;
 	private String action;
+	private Long loggedInUserId;
 
 	/**
 	 * @return the activeIndex
@@ -645,6 +647,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setInitialSelectionItemized(
 					boolean isInitialSelectionItemized) {
 		this.isInitialSelectionItemized = isInitialSelectionItemized;
+	}
+
+	/**
+	 * @return the isInitialDecisionFwdHighAuth
+	 */
+	public boolean isInitialDecisionFwdHighAuth() {
+		return isInitialDecisionFwdHighAuth;
+	}
+
+	/**
+	 * @param isInitialDecisionFwdHighAuth 
+	 * 				the isInitialDecisionFwdHighAuth to set
+	 */
+	public void setInitialDecisionFwdHighAuth(
+				boolean isInitialDecisionFwdHighAuth) {
+		this.isInitialDecisionFwdHighAuth = isInitialDecisionFwdHighAuth;
 	}
 
 	/**
@@ -1370,6 +1388,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	/**
+	 * @return the loggedInUserId
+	 */
+	public Long getLoggedInUserId() {
+		return loggedInUserId;
+	}
+
+	/**
+	 * @param loggedInUserId 
+	 * 				the loggedInUserId to set
+	 */
+	public void setLoggedInUserId(Long loggedInUserId) {
+		this.loggedInUserId = loggedInUserId;
 	}
 
 }

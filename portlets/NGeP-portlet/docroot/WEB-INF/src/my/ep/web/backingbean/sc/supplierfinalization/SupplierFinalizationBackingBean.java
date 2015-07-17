@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -211,6 +210,10 @@ public class SupplierFinalizationBackingBean extends
 			getManagedBean().setCommitteeType(committeeType);
 			getManagedBean().setPayLoad(dataType);
 			getManagedBean().setActiveIndex(0);
+			
+			Long loggedInUserId = getFacesScopes().getUserSessionBean()
+									.getUserId();
+			getManagedBean().setLoggedInUserId(loggedInUserId);
 
 			// Long qtId = 2923L;
 			// String committeeType =
@@ -330,12 +333,14 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().getScQtFinalization()
 							.getScQtRecommends());
 		}
+		
 		decisionEvent();
 		populateRecommendTypeEventDetails(false);
 		fwdHigherAuthorityEvent();
 		packageRecommendByEvent();
 		
 		if (this.getManagedBean().isItemize()) {
+			isOnlineBiddingEndorsementRequired();
 			this.getManagedBean().setShortlistedSupplierList(null);
 		}
 
@@ -404,8 +409,7 @@ public class SupplierFinalizationBackingBean extends
 
 				this.getManagedBean().setMeetingList(meetingList);
 
-				ScQtCommittee scQtCommittee = new ScQtCommittee();
-				scQtCommittee = resDTO.getQtCommittee();
+				ScQtCommittee scQtCommittee = resDTO.getQtCommittee();
 				this.getManagedBean().setScQtCommittee(scQtCommittee);
 
 				// Committee Details
@@ -672,6 +676,8 @@ public class SupplierFinalizationBackingBean extends
 			scQtCommittee.setQtCommitteRemarks(
 					reqDTO.getScQtCommittee().getQtCommitteRemarks());
 			reqDTO.setScQtCommittee(scQtCommittee);
+			reqDTO.setInitialDecisionFwdHighAuth(
+					getManagedBean().isInitialDecisionFwdHighAuth());
 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.saveSupplierFinalization(reqDTO);
@@ -905,8 +911,9 @@ public class SupplierFinalizationBackingBean extends
 			resetReEvaluate(scQtFinalization);
 			resetRepublish(scQtFinalization);
 			resetCancel(scQtFinalization);
-			resetForwardToHigherAuthority(scQtFinalization);
-
+			if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
+				resetForwardToHigherAuthority(scQtFinalization);
+			}
 		} else if (decision
 				.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
 			resetReEvaluate(scQtFinalization);
@@ -1586,10 +1593,9 @@ public class SupplierFinalizationBackingBean extends
 			throw e;
 		}	
 
-		if ( (ParameterConst.DECISION_RECOMMEND_SUPPLIER
-				.equals(decisionTypeCode) || 
+		if ( decisionRecommendSupplier || 
 					ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY
-						.equals(decisionTypeCode))) {
+						.equals(decisionTypeCode)) {
 			boolean supplierSelected = true;
 			boolean minSuppliersExist = true;
 			String recommendTypeCode = scQtFinalization.getRecommendedTypeId()
@@ -1689,7 +1695,10 @@ public class SupplierFinalizationBackingBean extends
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setRoleCode(getCommitteeRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			reqDTO.setCurrentFinalizationStatus(getManagedBean().getCurrentStatusId());
+			reqDTO.setCurrentFinalizationStatus(
+					getManagedBean().getCurrentStatusId());
+			reqDTO.setInitialDecisionFwdHighAuth(
+					getManagedBean().isInitialDecisionFwdHighAuth());
 //			reqDTO.setScQtCommitteeActivity(
 //					this.getManagedBean().getSignedOffCommitteeActivity());
 			
@@ -2293,8 +2302,8 @@ public class SupplierFinalizationBackingBean extends
 		// get Total Suppliers based on Zone
 		List<Object[]> list = new ArrayList<Object[]>();
 		BriefingZoneBean briefingZoneBean = null;
-		Map<Long,List<BriefingZoneBean>> zoneBeansMap 
-					= new HashMap<Long,List<BriefingZoneBean>>();
+		Map<Long,BriefingZoneBean> zoneBeansMap 
+					= new HashMap<Long,BriefingZoneBean>();
 		IQTBriefingSO qTBriefingSO;
 		if (scQt.isBsvRequired()) {
 			try {
@@ -2312,7 +2321,7 @@ public class SupplierFinalizationBackingBean extends
 					if (null != zoneDtls) {
 						context.put("zones", zoneDtls);
 						for (TplSpecZoneDtl specZoneDtl : zoneDtls) {
-							List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
+//							List<BriefingZoneBean> zoneBeans = new ArrayList<BriefingZoneBean>();
 							reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.getTotalAttendedSupplier(reqDTO);
@@ -2324,8 +2333,8 @@ public class SupplierFinalizationBackingBean extends
 									briefingResDTO.getSiteVisitList(), scQtBsv);
 							briefingZoneBean.setTotalSupplierAttended(
 									list != null ? list.size() : 0);
-							zoneBeans.add(briefingZoneBean);
-							zoneBeansMap.put(specZoneDtl.getSpecZoneId(),zoneBeans);
+//							zoneBeans.add(briefingZoneBean);
+							zoneBeansMap.put(specZoneDtl.getSpecZoneId(),briefingZoneBean);
 							/*
 							 * for(Object[] object : list){ TplSpecZoneDtl
 							 * tplSpecZoneDtl = (TplSpecZoneDtl) object[0]; Long
@@ -3322,6 +3331,7 @@ public class SupplierFinalizationBackingBean extends
 					} else {
 						scQtRecommend.setDisabled(true);
 					}
+					
 					if (isZonal) {
 						TplSpecZoneDtl selectedZone = this.getManagedBean()
 								.getCurrentZone();
@@ -3687,24 +3697,31 @@ public class SupplierFinalizationBackingBean extends
 	private void checkIfLoggedinUserIsSecretary() {
 		String identificationNo = getFacesScopes().getUserSessionBean()
 									.getIdentificationNo();
-		List<ScQtCommitteeActivity> committeeMembers = 
-				this.getManagedBean().getCommitteeList();
+//		List<ScQtCommitteeActivity> committeeMembers = 
+//				this.getManagedBean().getCommitteeList();
+//		
+//		if (StringUtils.isNotBlank(identificationNo) && 
+//				CollectionUtils.isNotEmpty(committeeMembers)) {
+//			for (ScQtCommitteeActivity committeeActivity :
+//					committeeMembers) {
+//				if (StringUtils.equals(identificationNo, 
+//						committeeActivity.getScCommitteeMember().getIcPassport())) {
+//					String userRole = committeeActivity.getScCommitteeMember().
+//							getMemberRole().getParameterCode();
+//					if (StringUtils.equals(userRole, 
+//							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+//						this.getManagedBean().setSecretaryUser(true);
+//					}
+//					break;
+//				}
+//			}
+//		}
 		
-		if (StringUtils.isNotBlank(identificationNo) && 
-				CollectionUtils.isNotEmpty(committeeMembers)) {
-			for (ScQtCommitteeActivity committeeActivity :
-					committeeMembers) {
-				if (StringUtils.equals(identificationNo, 
-						committeeActivity.getScCommitteeMember().getIcPassport())) {
-					String userRole = committeeActivity.getScCommitteeMember().
-							getMemberRole().getParameterCode();
-					if (StringUtils.equals(userRole, 
-							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-						this.getManagedBean().setSecretaryUser(true);
-					}
-					break;
-				}
-			}
+		SCEvaluationDataType dataType = (SCEvaluationDataType) 
+								getManagedBean().getPayLoad();
+		if (StringUtils.equals(identificationNo, 
+				dataType.getFcSecretary())) {
+			this.getManagedBean().setSecretaryUser(true);
 		}
 	}
 
@@ -4442,18 +4459,28 @@ public class SupplierFinalizationBackingBean extends
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
 		scQtFinalization.setHigherAuthReq(false);
+		
+		SCEvaluationDataType dataType = (SCEvaluationDataType) 
+				this.getManagedBean().getPayLoad();
+		if (ParameterConst.DECISION_FORWARD_TO_HIGHER_COMMITTEES
+				.equals(dataType.getFcDecision())) {
+			this.getManagedBean().setInitialDecisionFwdHighAuth(true);
+		}		
 
 		String decision = scQtFinalization.getDecision().getParameterCode();
 		if (decision == null) {
 			resetFlag();
-		} else if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)
-				|| decision
-						.equals(ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
+		} else if (decision.equals(
+					ParameterConst.DECISION_RECOMMEND_SUPPLIER) ||
+						decision.equals(
+							ParameterConst.DECISION_FORWARD_TO_HIGHER_AUTHORITY)) {
 			if (decision.equals(ParameterConst.DECISION_RECOMMEND_SUPPLIER)) {
 				this.getManagedBean().setRecommendSupplier(true);
-				scQtFinalization.setHigherCommitte(null);
-				scQtFinalization.setHigherSecretary(null);
-				scQtFinalization.setReason(null);
+				if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
+					resetForwardToHigherAuthority(scQtFinalization);
+				} else {
+					scQtFinalization.setHigherAuthReq(true);
+				}
 			} else {
 				this.getManagedBean().setForwardToHigherAuthority(true);
 				scQtFinalization.setHigherAuthReq(true);
@@ -4771,7 +4798,11 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void resetForwardToHigherAuthority(ScQtFinalization scQtFinalization) {
+		scQtFinalization.setReason(null);
+		scQtFinalization.setHigherSecretary(null);
+		scQtFinalization.setHigherCommitte(null);
 		scQtFinalization.setHigherAuthReq(false);
+		this.getManagedBean().setForwardToHigherAuthority(false);
 	}
 
 	private void resetRepublish(ScQtFinalization scQtFinalization) {
@@ -5309,9 +5340,9 @@ public class SupplierFinalizationBackingBean extends
 			// getManagedBean().setCommitteeSecretaryName(null);
 			// getManagedBean().setReason(null);
 
-			scQtFinalization.setHigherCommitte(null);
-			scQtFinalization.setHigherSecretary(null);
-			scQtFinalization.setReason(null);
+			if (!this.getManagedBean().isInitialDecisionFwdHighAuth()) {
+				resetForwardToHigherAuthority(scQtFinalization);
+			}
 		}
 		// this.getManagedBean().setForward(forward);
 	}
@@ -5802,7 +5833,7 @@ public class SupplierFinalizationBackingBean extends
 								.setRemoveSupplierList(new ArrayList<ScQtRecommendDtl>());
 					}
 					
-					Set<ScQtRecommendDtl> toBeAddedSet = null;
+					Set<ScQtRecommendDtl> toBeAddedSet = new HashSet<ScQtRecommendDtl>();
 					for (ScQtRecommendDtl recommendDtl 
 								: scQtRecommend.getRecommendDtls()) {
 						
@@ -5812,9 +5843,6 @@ public class SupplierFinalizationBackingBean extends
 									rejectedRecommendDtlsIds.contains(
 											String.valueOf(
 												recommendDtl.getRecommendDtlId()))) {
-							if (toBeAddedSet == null) {
-								toBeAddedSet = new LinkedHashSet<ScQtRecommendDtl>();
-							}
 							toBeAddedSet.add(recommendDtl);
 						}
 						//End
