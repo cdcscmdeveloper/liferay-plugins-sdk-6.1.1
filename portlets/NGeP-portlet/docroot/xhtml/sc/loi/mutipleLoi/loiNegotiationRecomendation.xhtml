@@ -22,7 +22,7 @@
 			<tr>
 				<c:if test="#{lOIDetailBackingBean.managedBean.scQt.zonal}">
 					<td width="14%" class="sidemenutd" valign="top">
-						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=packagePanel])" 
+						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=itemSupplierPanel])" 
 										 partialSubmit="true" process="@this" action="#{lOIDetailBackingBean.onZoneTabChangeAction}" />
 						
 						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
