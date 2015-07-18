@@ -107,6 +107,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -609,7 +610,19 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			
 			QTTemplateDocResDTO resDTO = qtTemplateSO.saveQtReports(reqDTO);
 			this.getManagedBean().setScQtDocReport(resDTO.getScQtDocReport());
-			
+			List<ScQtDocReport> docReportList = getManagedBean().getScQtDocReportList();
+			if (CollectionUtils.isNotEmpty(docReportList)) {
+				for (int i = 0; i < docReportList.size(); i++) {
+					docReportList.get(i).getQtReportId();
+					if (resDTO.getScQtDocReport().getQtReportId().equals(docReportList.get(i).getQtReportId())) {
+						docReportList.remove(i);
+						docReportList.add(i, resDTO.getScQtDocReport());
+						i--;
+						break;
+					}
+				}
+			}
+			getManagedBean().setScQtDocReportList(docReportList);
 			TplDocMaster tplDocMaster = getManagedBean().getScQtDocReport().getTplDocMaster();
 			return tplDocMaster;
 		}finally{
@@ -819,11 +832,11 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		debugLogger("downloadAllReports");
 		List<ScQtDocReport> scQtDocReports = getManagedBean().getScQtDocReportList();
 		List<ScQtDocReportAttachment> scAttachments = new ArrayList<ScQtDocReportAttachment>();
-		for (ScQtDocReport scQtDocReport : scQtDocReports) {
-			ScQtDocReportAttachment attachment = scQtDocReport.getScQtDocReportAttachment();
+		for (int i = 0; i < scQtDocReports.size(); i++) {
+			ScQtDocReportAttachment attachment = scQtDocReports.get(i).getScQtDocReportAttachment();
 			if(attachment == null) {
-				attachment = generateDocumentAttachment(scQtDocReport);
-				scQtDocReport.setScQtDocReportAttachment(attachment);
+				attachment = generateDocumentAttachment(scQtDocReports.get(i));
+				scQtDocReports.get(i).setScQtDocReportAttachment(attachment);
 			}
 			scAttachments.add(attachment);
 		}
