@@ -68,7 +68,7 @@
 										mindate="#{suppFinalMeetingBackingBean.managedBean.currentDate}"
 										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" 
 										label="#{lbl['lbl.sc.meeting.date']}" 
-										required="true" style="width:27%;">
+										required="#{!meeting.selected}" style="width:27%;">
 									   <p:ajax process="@this" partialSubmit="true"
 												update="@this,mtgDate" />										
 									</p:calendar>
@@ -82,7 +82,7 @@
 										<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
 									</f:facet>
 									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" cols="100" maxlength="255"
-										label="#{lbl['lbl.sc.meeting.location']}" required="true">
+										label="#{lbl['lbl.sc.meeting.location']}" required="#{!meeting.selected}">
 										<p:ajax process="@this" partialSubmit="true"
 												update="@this,mtgLoc" />
 									</p:inputTextarea>
