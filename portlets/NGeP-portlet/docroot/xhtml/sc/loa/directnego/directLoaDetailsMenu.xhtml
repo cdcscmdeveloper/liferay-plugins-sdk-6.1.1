@@ -61,7 +61,7 @@
 							partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail" />
 					</p:selectOneMenu>
 					<p:message id="branchMsg" for="branch" display="icon" />
-				
+					<ac:iconTooltip value="#{lbl['lbl.sc.branch.tooltip']}" />
 			</td>
 		</tr>
 		<tr>
@@ -239,6 +239,7 @@
 		   <td>
 			    <p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" style="float: left"/> 
 				<p:message id="checkboxMsg" for="checkbox" display="icon" />
+				<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond.tooltip']}" />
 		   </td>
 		</tr>
 		</table>
@@ -383,12 +384,21 @@
 				<p:outputLabel value="*" styleClass="mandatory"  />
 			</td>
 			<td>
-				<p:selectOneRadio id="agreementReq"
-					value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
-					label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
-					<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-				</p:selectOneRadio>
-				<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+				<table>
+				<tr>
+					<td>
+						<p:selectOneRadio id="agreementReq"
+							value="#{directLOABackingBean.managedBean.scLoa.agreementReq}"
+							label="#{lbl['lbl.sc.loiloa.loa.req.agree']}">
+							<f:selectItems value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+						</p:selectOneRadio>
+						<p:message id="agreementReqMsg" for="agreementReq" display="icon" />
+					</td>
+					<td style="margin-top: -3px">
+						<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.loa.req.agree.tooltip']}" />
+					</td>
+				</tr>
+				</table>
 			</td>
 		</tr>
 		</table>

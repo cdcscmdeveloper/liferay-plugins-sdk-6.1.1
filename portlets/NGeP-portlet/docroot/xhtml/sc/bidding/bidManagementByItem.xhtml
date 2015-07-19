@@ -106,8 +106,11 @@
 						value="#{biddingBB.itemizedStartPriceTotal(bidPriceItem)}">
 					</p:outputLabel>
 				</p:column>
-				<p:column style=" align : center; width : 14%"
-					headerText="#{lbl['lbl.sc.last.bid.price']}">
+				<p:column style=" align : center; width : 14%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.sc.last.bid.price']}" />
+						<ac:iconTooltip value="#{lbl['lbl.sc.last.bid.price.tooltip']}" />
+					</f:facet>
 					<div style="align: right">
 						<p:commandLink id="bidPriceVBI"
 							rendered="#{!((bidPriceItem.startingPrice - bidPriceItem.bidPrice) eq '0')}"

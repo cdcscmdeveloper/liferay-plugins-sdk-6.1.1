@@ -38,6 +38,7 @@
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
 								<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
+								<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
 							</f:facet>
 							<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}" required="true" rows="2" cols="50" maxlength="255"
 								value="#{meetingDtl.meetingLocation}" id="meetingLocation" 

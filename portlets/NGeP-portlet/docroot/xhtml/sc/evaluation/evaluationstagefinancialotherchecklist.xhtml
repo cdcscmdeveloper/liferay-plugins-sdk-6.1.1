@@ -28,6 +28,7 @@
 
 		<h:panelGroup>
 			<p:panel header="#{lbl['lbl.sc.supplier.list']}" toggleable="true">
+				<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.eva.evaluation.supplier.list.instruction']}" escape="false" />
 
 				<p:dataTable var="othersFinList" id="othersFinListId"
 					editable="true" rows="10" lazy="true"
@@ -59,7 +60,11 @@
 
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.action']}" style="width:20%">
+					<p:column style="width:20%">
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.sc.action']}" />
+							<ac:iconTooltip value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
+						</f:facet>
 
 						<p:commandButton value="#{lbl['lbl.btn.evaluate']}"
 							rendered="#{othersFinList.evaluationStatus.statusId eq '61600'}"
