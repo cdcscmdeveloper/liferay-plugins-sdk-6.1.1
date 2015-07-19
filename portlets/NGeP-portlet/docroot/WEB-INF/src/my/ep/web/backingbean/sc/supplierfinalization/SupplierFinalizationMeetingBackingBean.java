@@ -294,8 +294,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 				if (this.getManagedBean().isSelectAll() || meeting.isSelected()) {
 					tempDeletedList.add(meeting);
 					
-					meeting.setDeleted(true);
-					getManagedBean().getDeletedMeetingList().add(meeting);
+					if (!meeting.isBrandNew()) {
+						meeting.setDeleted(true);
+						getManagedBean().getDeletedMeetingList().add(meeting);
+					}
 				}
 			}
 			if (CollectionUtils.isNotEmpty(tempDeletedList)) {
