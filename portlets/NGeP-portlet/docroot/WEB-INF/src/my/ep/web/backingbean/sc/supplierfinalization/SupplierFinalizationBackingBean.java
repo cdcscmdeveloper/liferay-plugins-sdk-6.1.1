@@ -5574,6 +5574,7 @@ public class SupplierFinalizationBackingBean extends
 							.equals(scQtRecommend.getRecommendByStr())) {
 					this.getManagedBean().setItemRecommendByAward(true);
 				} else {
+					this.getManagedBean().setSelectionMode(QTConstants.SF_MULTIPLE);
 					this.getManagedBean().setItemRecommendByAward(false);
 				}		
 				this.getManagedBean().setRecommendedSupplierByItem(null);
@@ -5630,8 +5631,8 @@ public class SupplierFinalizationBackingBean extends
 					}
 				}
 			}
-			getManagedBean()
-					.setRecommendedSupplierList(recommendedSupplierList);
+			getManagedBean().setRecommendedSupplierList(
+					recommendedSupplierList);
 		} else {
 			getManagedBean().setShortlistedSupplierList(
 					new ArrayList<ScQtEvaluationResultDtl>());
