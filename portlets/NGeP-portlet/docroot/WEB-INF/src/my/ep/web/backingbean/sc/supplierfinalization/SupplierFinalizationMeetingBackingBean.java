@@ -186,7 +186,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 	public void retriveMeetingDetails(Long qtId) {
 		IQTMeetingSO qtMeetingSO;
 		try {
-			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			
 			MeetingReqDTO reqDTO = new MeetingReqDTO();
 			reqDTO.setQtId(qtId);
@@ -799,7 +800,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 						committeeList.remove(committeeMember);
 					}
 				}
-//				prepareToDeleteCommitteeMembers(selectedCommitteeList);
+				prepareToDeleteCommitteeMembers(selectedCommitteeList);
 			}
 		} finally {
 		}
