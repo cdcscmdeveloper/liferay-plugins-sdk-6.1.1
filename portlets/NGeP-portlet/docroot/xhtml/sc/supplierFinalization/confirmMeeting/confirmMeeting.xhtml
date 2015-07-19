@@ -75,7 +75,12 @@
 									<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>									
 								</p:column>
 								
-								<p:column headerText="#{lbl['lbl.sc.meeting.location']}">
+								<p:column>
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
+										<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
+										<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
+									</f:facet>
 									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" cols="100" maxlength="255"
 										label="#{lbl['lbl.sc.meeting.location']}" required="true">
 										<p:ajax process="@this" partialSubmit="true"

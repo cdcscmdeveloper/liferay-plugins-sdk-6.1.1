@@ -155,7 +155,11 @@
 				<p:outputLabel id="bidStatusDTBS" style="float : left"
 					value="#{biddingBB.getStatusDescById(bid.pmStatus.statusId)}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width :10%">
+			<p:column style="width :10%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.action']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.action.bidding.maintenance.tooltip']}" />
+				</f:facet>
 
 				<p:commandLink id="bidManagementNavigationBtn" size="5"
 					action="#{biddingBB.bidManagementAction(bid)}" process="@this">
