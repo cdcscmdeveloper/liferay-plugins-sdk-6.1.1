@@ -84,6 +84,8 @@
 
 	<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
 		toggleable="true">
+		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.loiloa.nego.term.instruction']}" escape="false" />
+			
 		<p:dataTable id="negoTermstbl" var="negoTerm"
 			value="#{lOIDetailBackingBean.managedBean.scLoi.scNegoTerms}"
 			rowKey="#{negoTerm}" rowIndexVar="rowIndex">
@@ -139,8 +141,11 @@
 				</c:if>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.selection']}"
-				rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
+			<p:column rendered="#{isPendingSubmissionStatus or isPendingRevisionStatus}">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.selection']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.selection.loi.negotiate.tooltip']}" />
+				</f:facet>
 				<p:selectBooleanCheckbox value="#{negoTerm.selected}"
 					disabled="#{empty negoTerm.pmTerm}">
 					<p:ajax partialSubmit="true" process="@this" update="@this" />

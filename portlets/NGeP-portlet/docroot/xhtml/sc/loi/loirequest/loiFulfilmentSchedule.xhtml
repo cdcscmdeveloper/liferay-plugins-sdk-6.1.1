@@ -17,13 +17,18 @@
 				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOIDetailBackingBean.managedBean.scQt.scheduleType == 'F')}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
-					<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
-					<p:inputText disabled="#{!isEditableStatus}" styleClass="ppNumericAlign"
-						value="#{lOIDetailBackingBean.managedBean.totalFrequency}">
-						<p:ajax event="blur" update="frequencySchedule"
-							partialSubmit="true" process="@this"
-							listener="#{lOIDetailBackingBean.addScheduleDetails}" />
-					</p:inputText>
+					<h:column>
+						<h:outputLabel value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel>
+					</h:column>
+					<h:column>
+						<p:inputText disabled="#{!isEditableStatus}" styleClass="ppNumericAlign"
+							value="#{lOIDetailBackingBean.managedBean.totalFrequency}">
+							<p:ajax event="blur" update="frequencySchedule"
+								partialSubmit="true" process="@this"
+								listener="#{lOIDetailBackingBean.addScheduleDetails}" />
+						</p:inputText>
+						<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" />
+					</h:column>
 				</h:panelGrid>
 				<p:dataTable id="frequencySchedule" var="frequency"
 					rowIndexVar="index"
