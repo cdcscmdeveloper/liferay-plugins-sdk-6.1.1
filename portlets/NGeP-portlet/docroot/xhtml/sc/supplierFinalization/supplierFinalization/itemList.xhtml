@@ -60,7 +60,8 @@
 				listener="#{suppFinalizationBackingBean.unselectItemEvent}"
 				update="@([id$=itemListTbl],[id$=supplierPanel],[id$=awardSupplier],[id$=supplierListTblPanel])"></p:ajax>
 				
-			<p:column style="width:2%;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}">
+			<p:column style="width:2%;" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
+													 suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}">
 				<f:facet name="header">
 					<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalizationBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=awardSupplier],[id$=supplierListTblPanel])"
@@ -97,16 +98,18 @@
 					<h:outputText value="#{lbl['lbl.sc.recommend.by']}" />
 					<ac:iconTooltip value="#{lbl['lbl.sc.recommend.by.item.tooltip']}" />
 				</f:facet>
-				<p:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
+				<h:selectOneMenu id="recommendByItem" value="#{item.recommendByStr}" 
 						required="false" label="#{lbl['lbl.sc.recommend.by']}" 
-						disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled or item.awardedItem}" 
+						disabled="#{item.disabled or item.awardedItem or 
+									!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}" 
 						style="width:95%;">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
 														item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
 						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=itemOnlineBiddingPanel])" 
 								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
 								process="@this" partialSubmit="true"/>
-	   			</p:selectOneMenu>
+	   			</h:selectOneMenu>
 			</p:column>
 			
 			<p:column style="width:15%;white-space:normal;">
@@ -149,7 +152,9 @@
 							<p:column>
 								<h:inputText value="#{rdetail.awardQty}" maxlength="13" size="10" required="true" 
 											 style="text-align:right; width:120px;" label="#{lbl['lbl.sc.quantity']}" 
-											 disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or item.disabled or item.awardedItem}"
+											 disabled="#{item.disabled or item.awardedItem or 
+											 				!(suppFinalizationBackingBean.managedBean.secretaryUser 
+											 					or suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}"
 											 rendered="#{rdetail.recordStatusFlg == DbValueConst.recordStatusActive}">
 									<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									<p:ajax event="blur" partialSubmit="true" process="@this" 

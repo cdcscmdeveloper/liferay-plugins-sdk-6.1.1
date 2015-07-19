@@ -126,6 +126,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean itemFwdToHighAuthority;
 	private boolean isInitialSelectionItemized;
 	private boolean isInitialDecisionFwdHighAuth;
+	private boolean isInitialDecisionFwdToBPK;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -164,6 +165,11 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean selectAll;
 	private String action;
 	private Long loggedInUserId;
+	
+	private int preparationTabIndex;
+	private int reportTabIndex;
+	private int finalizationTabIndex;
+	private int commEndorsementTabIndex;		
 
 	/**
 	 * @return the activeIndex
@@ -663,6 +669,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setInitialDecisionFwdHighAuth(
 				boolean isInitialDecisionFwdHighAuth) {
 		this.isInitialDecisionFwdHighAuth = isInitialDecisionFwdHighAuth;
+	}
+
+	/**
+	 * @return the isInitialDecisionFwdToBPK
+	 */
+	public boolean isInitialDecisionFwdToBPK() {
+		return isInitialDecisionFwdToBPK;
+	}
+
+	/**
+	 * @param isInitialDecisionFwdToBPK 
+	 * 				the isInitialDecisionFwdToBPK to set
+	 */
+	public void setInitialDecisionFwdToBPK(
+					boolean isInitialDecisionFwdToBPK) {
+		this.isInitialDecisionFwdToBPK = isInitialDecisionFwdToBPK;
 	}
 
 	/**
@@ -1403,6 +1425,68 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setLoggedInUserId(Long loggedInUserId) {
 		this.loggedInUserId = loggedInUserId;
+	}
+
+	/**
+	 * @return the preparationTabIndex
+	 */
+	public int getPreparationTabIndex() {
+		return preparationTabIndex;
+	}
+
+	/**
+	 * @param preparationTabIndex 
+	 * 				the preparationTabIndex to set
+	 */
+	public void setPreparationTabIndex(int preparationTabIndex) {
+		this.preparationTabIndex = preparationTabIndex;
+	}
+
+	/**
+	 * @return the reportTabIndex
+	 */
+	public int getReportTabIndex() {
+		return reportTabIndex;
+	}
+
+	/**
+	 * @param reportTabIndex 
+	 * 				the reportTabIndex to set
+	 */
+	public void setReportTabIndex(int reportTabIndex) {
+		this.reportTabIndex = reportTabIndex;
+	}
+
+	/**
+	 * @return the finalizationTabIndex
+	 */
+	public int getFinalizationTabIndex() {
+		return finalizationTabIndex;
+	}
+
+	/**
+	 * @param finalizationTabIndex 
+	 * 				the finalizationTabIndex to set
+	 */
+	public void setFinalizationTabIndex(
+						int finalizationTabIndex) {
+		this.finalizationTabIndex = finalizationTabIndex;
+	}
+
+	/**
+	 * @return the commEndorsementTabIndex
+	 */
+	public int getCommEndorsementTabIndex() {
+		return commEndorsementTabIndex;
+	}
+
+	/**
+	 * @param commEndorsementTabIndex 
+	 * 				the commEndorsementTabIndex to set
+	 */
+	public void setCommEndorsementTabIndex(
+						int commEndorsementTabIndex) {
+		this.commEndorsementTabIndex = commEndorsementTabIndex;
 	}
 
 }
