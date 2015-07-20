@@ -2369,7 +2369,7 @@ public class SupplierFinalizationBackingBean extends
 							briefingZoneBean = new BriefingZoneBean(specZoneDtl,
 									briefingResDTO.getBriefingList(),
 									briefingResDTO.getSiteVisitList(), scQtBsv);
-							briefingZoneBean.setTotalSupplierAttended(
+							briefingZoneBean.setTotalSuppliersAttended(
 									list != null ? list.size() : 0);
 //							zoneBeans.add(briefingZoneBean);
 							zoneBeansMap.put(specZoneDtl.getSpecZoneId(),briefingZoneBean);
