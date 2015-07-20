@@ -246,7 +246,6 @@ public class LOIDetailBackingBean extends
 			StatusResDTO resDTO = statusSO.retrieveStatusByStatusId(reqDTO);
 			getManagedBean().setDocType(resDTO.getPmStatus().getDocType());
 
-			// Long sourceId = 1450L;
 			retrieveLOIList(sourceId);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -694,8 +693,8 @@ public class LOIDetailBackingBean extends
 	 */
 	public void retrieveLOIList(Long qtId) {
 		debugLogger("retrieveLOIList");
-		boolean isMultipleLoi = Boolean.FALSE;
-		boolean isSelectedLoi = Boolean.TRUE;
+		//boolean isMultipleLoi = Boolean.FALSE;
+		//boolean isSelectedLoi = Boolean.TRUE;
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
@@ -705,34 +704,28 @@ public class LOIDetailBackingBean extends
 
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
-		
+
 			if (ParameterConst.DOCTYPE_MULTIPLE_LOI.equals(getManagedBean()
 					.getDocType())) {
-				isMultipleLoi = Boolean.TRUE;
+				//isMultipleLoi = Boolean.TRUE;
 			}
 
-			List<ScLoiLoa> loiLoas = new ArrayList<ScLoiLoa>();
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
-				for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) {
-					if (isMultipleLoi) {
-						scLoiLoa.setLoiRequired(Boolean.TRUE);
-
-					} else {
-						if (scLoiLoa.isLoiCreated()) {
-							scLoiLoa.setLoiRequired(Boolean.TRUE);
-						}
-						if (scLoiLoa.isLoiRequired()) {
-							isSelectedLoi = Boolean.FALSE;
-						} 
-					}
-					loiLoas.add(scLoiLoa);
-				}
+				// rec supplier in loi list
+				getManagedBean().setRecSupplierList(resDTO.getLoiLoas() );
+				/*
+				 * for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) { if
+				 * (isMultipleLoi) { //Boolean loiReq = Boolean.TRUE;
+				 * //scLoiLoa.setLoiRequired(loiReq);
+				 * 
+				 * } else { if (scLoiLoa.isLoiCreated()) {
+				 * //scLoiLoa.setLoiRequired(Boolean.TRUE); } if
+				 * (scLoiLoa.isLoiRequired()) { isSelectedLoi = Boolean.FALSE; }
+				 * } loiLoas.add(scLoiLoa); }
+				 * 
+				 * //getManagedBean().setLoiRequired(isSelectedLoi);
+				 */
 			}
-			getManagedBean().setLoiRequired(isSelectedLoi);			
-
-			// rec supplier in loi list
-			getManagedBean().setRecSupplierList(loiLoas);
-
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
 
@@ -1154,18 +1147,8 @@ public class LOIDetailBackingBean extends
 	 */
 	public void createLOI(ScLoiLoa scLoiLoa) {
 		try {
-
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
-			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
-					.saveLoiLoaList(reqDTO);
-
-			if (awardSupplierResDTO.isSuccessful()) {
 				renewSessionWithPreviousValues();
-				
-				// reload loi list
-				reloadLOIList(getManagedBean().getSourceId());
-
+				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				ScLoi loi = new ScLoi();
 				loi.setScLoiLoa(scLoiLoa);
 				reqDTO.setScLoi(loi);
@@ -1184,7 +1167,6 @@ public class LOIDetailBackingBean extends
 
 				fc.getApplication().getNavigationHandler()
 						.handleNavigation(fc, null, QTConstants.LOI_PAGE);
-			}
 		} finally {
 		}
 	}
@@ -1810,7 +1792,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().getRecSupplierList().set(index, scLoiLoa);
 
 		for (ScLoiLoa loiLoa : getManagedBean().getRecSupplierList()) {
-			if (loiLoa.isLoiRequired()) {
+			if (null != loiLoa.getLoiRequired() && loiLoa.getLoiRequired()) {
 				isLoiRequired = Boolean.TRUE;
 			}
 		}

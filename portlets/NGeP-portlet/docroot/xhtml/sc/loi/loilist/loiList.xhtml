@@ -54,20 +54,23 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" rendered="#{!isMultipleLoi}">
-					<h:selectOneMenu value="#{loiLoa.loiRequired}"
-					    disabled="#{loiLoa.loiCreated}"
-						id="isLoiReq" label="Is Loi Required">
+					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
+					    disabled="#{loiLoa.loiCreated and loiLoa.loiRequired ne 'null' }"
+						id="isLoiReq" label="#{lbl['lbl.sc.loiloa.is.loi.required']}">
+					    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
 						<p:ajax event="change" update="@form" partialSubmit="true" 
 						    listener="#{lOIDetailBackingBean.loiRequiredListener(loiLoa)}"
 							process="@this loiLoaDtl" />
 					</h:selectOneMenu>
+					<p:message id="isLoiReqMsg" for="isLoiReq" display="icon" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%">
-					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
-						rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired}"
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}" partialSubmit="true" 
+					    process="@form"
+						rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired ne 'null'}"
 						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 				</p:column>
 			</p:dataTable>
