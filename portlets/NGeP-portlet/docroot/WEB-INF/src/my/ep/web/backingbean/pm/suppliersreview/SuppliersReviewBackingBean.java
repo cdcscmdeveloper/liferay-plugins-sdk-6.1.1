@@ -204,9 +204,11 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 		}
 
 		if(this.getManagedBean().isAllStates()){
-			for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
-				stateIdList.add(pmState.getStateId());
-			}
+			if(this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()!=null 
+					&&!this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList().isEmpty())
+				for(PmState pmState:this.getManagedBean().getSuppliersReviewSearchBean().getSelectedStatesList()){
+					stateIdList.add(pmState.getStateId());
+				}
 		}
 		else if(this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList()!=null &&
 				this.getManagedBean().getSuppliersReviewSearchBean().getDropDownStatesIdList().length>0){
