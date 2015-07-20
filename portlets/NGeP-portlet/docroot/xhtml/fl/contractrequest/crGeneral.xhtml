@@ -185,13 +185,14 @@
 						disabled="true" rendered="false"/></td>	
 			</tr>
 		</table>
-	</p:panel>
-	<table>
+		<table>
 		<tr>
 			<td><p:selectBooleanCheckbox disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}" value="#{contractRequestBackingBean.managedBean.declarationCheck}"/></td>
 			<td><p:outputLabel style="text-align:left" value="#{lbl['lbl.fl.declaration']}"/></td>
 		</tr>
 	</table>
+	</p:panel>
+	
 	
 	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true" id="supplierPnl">
 		<table style="width: 100%">
