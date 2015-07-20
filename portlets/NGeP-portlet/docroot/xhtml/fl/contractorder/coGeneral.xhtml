@@ -85,18 +85,14 @@
 						value="#{flOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:inputText size="12" disabled="true" style="text-align:right"
 						value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
-						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing eq false}" />
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}" />
 					<p:spacer width="5" /> <p:inputText size="2"
 						value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}"
 						disabled="true"
-						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing eq false}" />
-					<p:inputText size="12" disabled="true"
-						value=""
-						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}" />
-					<p:spacer width="5" /> <p:inputText size="2" value="" disabled="true" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing}"/>
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}" />
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approved.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
@@ -108,9 +104,10 @@
 					</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true"
 						value="#{flOrderBB.managedBean.flRequest.startDate}"
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect"
 							listener="#{flOrderBB.updateDeliveryDate}"
@@ -123,9 +120,10 @@
 				</td>	
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
 				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true" id="delEndDate"
 						value="#{flOrderBB.managedBean.flRequest.endDate}"
+						rendered="#{flOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
 			</tr>
