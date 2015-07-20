@@ -3365,7 +3365,7 @@ public class SupplierFinalizationBackingBean extends
 					} else if (scQtRecommend.getCreatedBy()
 											.equals(loggedInUserId)) {
 						scQtRecommend.setDisabled(false);
-					} else {
+					} else if (this.getManagedBean().isItemFwdToHighAuthority()) {
 						scQtRecommend.setDisabled(true);
 					}
 					
