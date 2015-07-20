@@ -89,13 +89,18 @@
 						</tr>
 						#foreach( $scLoi in $scLois )
 						<tr class="ui-content">
-							<td class="standard border-bottom left">$scLoi.scLoiLoa.supplierName</td>
+							<td class="standard border-bottom left">
+				                #set( $suppName = $scLoi.scLoiLoa.supplierName.replaceAll("&", "&#38;") )
+					              $suppName
+					          </td>
 							<td class="standard border-bottom left">
 								#foreach( $scLoiTerm in $scLoi.scNegoTerms )
 									#if (! $scLoiTerm.termDesc)
 										<br/>
 									#else
-										$scLoiTerm.termDesc <br/>
+									 #set( $termDesc = $scLoiTerm.termDesc.replaceAll("&", "&#38;") )
+					                      $termDesc 
+					                     <br/>
 									#end
 								#end
 							</td>
@@ -104,7 +109,10 @@
 									#if (! $scLoiTerm.negoResult )
 										<br/>
 									#else
-										$scLoiTerm.negoResult <br/>
+									
+									 #set( $negoResult = $scLoiTerm.negoResult.replaceAll("&", "&#38;") )
+					                      $negoResult 
+					                     <br/>
 									#end
 
 								#end
@@ -131,7 +139,8 @@
 		<tr>
 			<td>
 				<span style="font-family:'Arial', sans-serif;font-size:12px;text-align:left;color:#333;">
-					Nama Pembekal : $scLoi.scLoiLoa.supplierName
+				  #set( $supplierName = $scLoi.scLoiLoa.supplierName.replaceAll("&", "&#38;") )
+					Nama Pembekal : $supplierName
 				</span>
 			</td>
 		</tr>
