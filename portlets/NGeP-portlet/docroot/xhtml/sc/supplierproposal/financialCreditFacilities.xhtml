@@ -122,7 +122,7 @@
 				<p:inputText id="creditAmt" value="#{creditfacilities.creditAmt}"
 					style="text-align:right;width:80%;"
 					rendered="#{creditfacilities.brandNew eq true}" required="true"
-					maxlength="19" label="#{lbl['lbl.sc.sp.amt.credit']}">
+					maxlength="19" label="#{lbl['lbl.sc.spec.amt.credit']}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.totalCreditFacilitiesSum}"
 						update="@this,creditAmtMsg,@([id$=totalSummaryPG])" />
@@ -147,7 +147,7 @@
 				<p:inputText id="amtPaid" value="#{creditfacilities.amtPaid}"
 					style="text-align:right;width:78%;"
 					rendered="#{creditfacilities.brandNew eq true}" required="true"
-					maxlength="19" label="#{lbl['lbl.sc.sp.amt.paid']}">
+					maxlength="19" label="#{lbl['lbl.sc.spec.amt.paid']}">
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.creditFacilityValidator(rowIndex)}"
 						update="@this,amtPaidMsg,@([id$=totalSummaryPG])" />
