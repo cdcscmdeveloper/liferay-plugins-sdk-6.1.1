@@ -11,10 +11,6 @@
 	opacity: .45 !important;
 }
 
-/* .ui-chkbox .ui-chkbox-box .ui-icon-check {
-	background-position: -66px -146px !important;
-	 
-} */
 </style>
 
 	<p:panel id="suppliersReviewPanel"
@@ -66,11 +62,10 @@
 				<td><p:selectManyMenu label="#{lbl['lbl.pm.sr.state']}"
 						id="stateListId"
 						value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.dropDownStatesIdList}"
-						style="width: 207px;margin-bottom: 5px;height:100px"
+						style="width: 252px;margin-bottom: 5px;height:100px"
 						showCheckbox="true"
 						disabled="#{suppliersReviewBackingBean.managedBean.disabled}">
-						<f:selectItems var="finState" 
-							styleClass="ui-state-disabled"
+						<f:selectItems var="finState"  styleClass="ui-state-disabled"
 							value="#{suppliersReviewBackingBean.managedBean.suppliersReviewSearchBean.statesList}"
 							itemValue="#{finState.stateId}" itemLabel="#{finState.stateName}">
 						</f:selectItems>
