@@ -2430,7 +2430,7 @@ public class NoticeBoardBackingBean extends
 		SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 		supplierSearchReqDTO.setSupplierId(supplierId);
 		return supplierSearchSO
-				.retriveSupplierById(supplierSearchReqDTO);
+				.retriveSupplierInfoById(supplierSearchReqDTO);
 		} finally {
 			supplierSearchSO = null;
 		}
