@@ -263,7 +263,10 @@ public class QTBusinessOwnerBackingBean extends
 								"identificationCode.parameterCode",
 								SearchOperator.OPERATOR_EQUALS.value(), idtype));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+
+			PmOrgProfile orgProfile = this.getManagedBean().getQt()
+					.getPmOrgProfile();
+			if (null != orgProfile && null != orgProfile.getOrgProfileId()) {
 				userSearchBean
 						.getDataFilterBeans()
 						.add(new SearchMultiFilterBean(
@@ -458,7 +461,8 @@ public class QTBusinessOwnerBackingBean extends
 						new SearchFilterBean("scQtStatus.current",
 								SearchOperator.OPERATOR_EQUALS.value(), true));
 			}
-			if (null != this.getManagedBean().getQt().getPmOrgProfile()) {
+			PmOrgProfile orgProfile = this.getManagedBean().getQt().getPmOrgProfile();
+			if (null != orgProfile && null != orgProfile.getOrgProfileId()) {
 				qtSearchBean
 						.getDataFilterBeans()
 						.add(new SearchFilterBean(
@@ -1107,17 +1111,14 @@ public class QTBusinessOwnerBackingBean extends
 			quationTenderReqDTO.setToBeRemovedCommitteMembers(this
 					.getManagedBean().getToBeDelCommitteMemebers());
 			detailSO.validateateBODetails(quationTenderReqDTO);
-			/*// setting removed committemebers list to committe.
-			if (null != this.getManagedBean().getToBeDelCommitteMemebers()
-					&& !this.getManagedBean().getToBeDelCommitteMemebers()
-							.isEmpty()) {
-				scQt.getScQtCommittees()
-						.get(0)
-						.getScCommittee()
-						.getScCommitteeMembers()
-						.addAll(this.getManagedBean()
-								.getToBeDelCommitteMemebers());
-			}*/
+			/*
+			 * // setting removed committemebers list to committe. if (null !=
+			 * this.getManagedBean().getToBeDelCommitteMemebers() &&
+			 * !this.getManagedBean().getToBeDelCommitteMemebers() .isEmpty()) {
+			 * scQt.getScQtCommittees() .get(0) .getScCommittee()
+			 * .getScCommitteeMembers() .addAll(this.getManagedBean()
+			 * .getToBeDelCommitteMemebers()); }
+			 */
 			quationTenderReqDTO.setQtdetail(scQt);
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.saveQTDtl(quationTenderReqDTO);
