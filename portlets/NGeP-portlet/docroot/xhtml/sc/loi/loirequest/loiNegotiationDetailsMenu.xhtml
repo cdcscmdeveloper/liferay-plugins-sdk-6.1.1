@@ -48,6 +48,7 @@
 				</f:facet>
 				<p:calendar id="date" readonlyInput="true" disabled="#{!isEditableStatus or afterNegotiation}" required="#{!negoloc.selected}" label="#{lbl['lbl.sc.date']}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+					mindate="#{DateUtils.getCurrentDateWithoutTime()}"
 					size="12" value="#{negoloc.negoDate}" />
 					<p:message id="dateMsg" for="date" display="icon" />
 			</p:column>
