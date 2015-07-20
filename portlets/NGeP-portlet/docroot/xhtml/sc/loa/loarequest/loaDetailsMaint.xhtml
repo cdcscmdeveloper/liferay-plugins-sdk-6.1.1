@@ -13,16 +13,19 @@
 		
 		<ui:param name="isDocTypeQuotation" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
 		<ui:param name="isPendingSubmissionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
-		
 		<ui:param name="isPendingApprovalStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL}" />
 		<ui:param name="isPendingRevisionStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION}" />
-
 		<ui:param name="isEditableStatus" value="#{isPendingSubmissionStatus || ((isPendingApprovalStatus|| isPendingRevisionStatus) and !empty lOADetailBackingBean.managedBean.taskId)}" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
 		<ui:param name="isFulfillmentType"
 			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen}" />
+		<ui:param name="isFulfillTypeAsAndWhen"
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen}" />
+		<ui:param name="isFulfillTypeOneOff"
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff}" />
+		
 		
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
@@ -48,11 +51,12 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form" disabled="#{!isAfterSupplierResponseStatus or isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" rendered="#{!isFulfillmentType}"
-					  disabled="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff or 
-					   isFulfillmentType or isPendingVerification}">	
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
+					  disabled="#{isFulfillTypeOneOff or  isFulfillTypeAsAndWhen or isPendingVerification}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
+					
+					
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!lOADetailBackingBean.managedBean.scLoa.bondReq or isPendingVerification}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
@@ -82,11 +86,11 @@
 						<ui:include src="loaPaymentDetailsMenu.xhtml" />	
 					</c:if>
 				
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4 and !isFulfillmentType}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4 and !isFulfillTypeAsAndWhen}">
 						<ui:include src="loaFulfilmentSchedule.xhtml" />
 					</c:if>
 					
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 5 : 7)}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
 						<ui:include src="loaPerformanceBondMenu.xhtml" />
 					</c:if>
 					
