@@ -1311,7 +1311,10 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		populateAttachmentDetails(attachment);
 		
 		VelocityContext context = new VelocityContext();
+		CommonUtils commonUtils = new CommonUtils();
+		context.put("commonUtils", commonUtils);
 		
+		String totalMonths = "";
 		List<ScQtSchedule> scheduleList = new ArrayList<ScQtSchedule>();
 		IQTSpecSO specSo;
 		SpecificationResDTO resDTO = null;
@@ -1322,6 +1325,12 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 			resDTO = specSo.retrieveFulFilMentScheduleDtls(reqDTO);
 			if (resDTO.getScheduleResults() != null && !resDTO.getScheduleResults().getResultList().isEmpty()) {
 				scheduleList = resDTO.getScheduleResults().getResultList();
+				for (ScQtSchedule qtSchedule : scheduleList) {
+					long days = DateUtils.getDaysDifference(qtSchedule.getFromDate(),qtSchedule.getToDate());
+					int day = (int) days;
+					int months = day / 30;
+					totalMonths = String.valueOf(months);
+				}
 			}
 		} finally {
 			specSo = null;
@@ -1332,6 +1341,7 @@ public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailMana
 		}
 		context.put("totalFrequency", totalFrequency);
 		context.put("scheduleList", scheduleList);
+		context.put("totalMonths", totalMonths);
 		context.put("bean", this);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.DOCPATH_QT_FREQUENCY_SCHEDULE, context, new FileOutputStream(getActualFilePath(attachment)));
