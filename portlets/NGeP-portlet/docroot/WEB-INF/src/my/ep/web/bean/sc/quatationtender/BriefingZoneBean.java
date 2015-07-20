@@ -317,9 +317,9 @@ public class BriefingZoneBean implements Serializable {
 
 	/**
 	 * @param totalSuppliersAttended 
-	 * 					the totalSuppliersAttended to set
+	 * 				the totalSuppliersAttended to set
 	 */
-	public void setTotalSupplierAttended(int totalSuppliersAttended) {
+	public void setTotalSuppliersAttended(int totalSuppliersAttended) {
 		this.totalSuppliersAttended = totalSuppliersAttended;
 	}
 
