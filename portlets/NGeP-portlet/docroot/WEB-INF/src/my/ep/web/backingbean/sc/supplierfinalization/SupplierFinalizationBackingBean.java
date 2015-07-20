@@ -257,6 +257,8 @@ public class SupplierFinalizationBackingBean extends
 //		retrieveCommitteeEndorsement();
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
+			getManagedBean().getScQtFinalization()
+					.setLoiLoaBy(ParameterConst.LOILOA_PREPARED_BY_DO);
 			getManagedBean().setPreparationTabIndex(-1);
 			getManagedBean().setReportTabIndex(0);
 			getManagedBean().setFinalizationTabIndex(1);
@@ -2384,6 +2386,7 @@ public class SupplierFinalizationBackingBean extends
 							 */
 						}
 					}
+					context.put("zoneBeansMap", zoneBeansMap);					
 				} else {
 					BriefingResDTO briefingResDTO = qTBriefingSO
 							.getTotalAttendedSupplier(reqDTO);
@@ -2392,15 +2395,12 @@ public class SupplierFinalizationBackingBean extends
 			} finally {
 				qTBriefingSO = null;
 			}
-		} else {
-			String supplierSize = "";
-			if (CollectionUtils.isNotEmpty(list)) {
-				supplierSize = String.valueOf(list.size());
-			}
-			context.put("supplierSize", supplierSize);
+		} 
+		String supplierSize = "";
+		if (CollectionUtils.isNotEmpty(list)) {
+			supplierSize = String.valueOf(list.size());
 		}
-		
-		context.put("zoneBeansMap", zoneBeansMap);
+		context.put("supplierSize", supplierSize);		
 
 		Integer totalQualifiedSuppliers = null;
 		Map<Long,Integer> totalQualifiedSuppliersByZone = null;
@@ -4508,6 +4508,8 @@ public class SupplierFinalizationBackingBean extends
 	public void decisionEvent() {
 		debugLogger("Decision Event ");
 
+		ScQtEvaluationResultDtl recommendedSupplier = 
+					this.getManagedBean().getRecommendedSupplier();
 		this.getManagedBean().setRecommendSupplier(false);
 		this.getManagedBean().setReEvaluate(false);
 		this.getManagedBean().setRePublish(false);
@@ -4546,12 +4548,13 @@ public class SupplierFinalizationBackingBean extends
 				fwdHigherAuthorityEvent();
 			}
 			if (StringUtils.isBlank(scQtFinalization.getLoiLoaBy())) {
-				scQtFinalization
-						.setLoiLoaBy(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+				scQtFinalization.setLoiLoaBy(
+						SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 			}
 			String recommendType = scQtFinalization.getRecommendedTypeId()
 					.getParameterCode();
-			if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType)) {
+			if (ParameterConst.RECOMMEND_TYPE_PACKAGE
+									.equals(recommendType)) {
 				if (isZonal) {
 					if (this.getManagedBean().getRecommendedSupppliersByZone() == null) {
 						this.getManagedBean().setRecommendedSupppliersByZone(
@@ -4638,8 +4641,12 @@ public class SupplierFinalizationBackingBean extends
 						setRecommendedSuppliersByRecommendType(scQtRecommend, selectedZone, 
 								shortListedSuppliers);
 					} else {
-						setRecommendedSuppliersByRecommendType(scQtRecommend, selectedZone, 
-								this.getManagedBean().getShortlistedSupplierList());
+						if (recommendedSupplier == null) {
+							setRecommendedSuppliersByRecommendType(scQtRecommend, selectedZone, 
+									this.getManagedBean().getShortlistedSupplierList());
+						} else {
+							this.getManagedBean().setRecommendedSupplier(recommendedSupplier);
+						}
 					}
 					
 					String selectionMode = setSelectionMode(recommendBy.getParameterCode());
@@ -5105,6 +5112,7 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("recommendTypeEvent");
 
 		this.getManagedBean().setOnlineBidding(false);
+		this.getManagedBean().setMultipleLoi(false);
 		this.getManagedBean().setItemRecommendByAward(false);
 		this.getManagedBean().setDisableSupplierSelection(false);
 		this.getManagedBean().setRecommendedSupplier(null);
@@ -5140,7 +5148,6 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setItemize(itemized);
 		if (itemized) {
 			selectionMode = QTConstants.SF_MULTIPLE;
-			this.getManagedBean().setMultipleLoi(false);
 			
 			// Reset the awarded supplier list (ScQtRecommendDtl) by item,
 			// when recommend type is changed to item
