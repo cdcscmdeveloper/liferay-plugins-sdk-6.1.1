@@ -1989,10 +1989,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 		this.itemized = itemized;
 	}
 
+	/**
+	 * Checks if is loi required.
+	 *
+	 * @return true, if is loi required
+	 */
 	public boolean isLoiRequired() {
 		return loiRequired;
 	}
 
+	/**
+	 * Sets the loi required.
+	 *
+	 * @param loiRequired the new loi required
+	 */
 	public void setLoiRequired(boolean loiRequired) {
 		this.loiRequired = loiRequired;
 	}
