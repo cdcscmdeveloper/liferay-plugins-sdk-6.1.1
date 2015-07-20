@@ -877,6 +877,7 @@ public class LOIDetailBackingBean extends
 		}
 			
 		calculateOfferedAndFinalPriceByItem(scLoi);
+		getManagedBean().setSelectedScQtDeduction(null);
 	}
 	
 	/**
@@ -1147,8 +1148,17 @@ public class LOIDetailBackingBean extends
 	 */
 	public void createLOI(ScLoiLoa scLoiLoa) {
 		try {
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
+			AwardSupplierResDTO awardSupplierResDTO = getQtAwardSO()
+					.saveLoiLoaList(reqDTO);
+
+			if (awardSupplierResDTO.isSuccessful()) {
 				renewSessionWithPreviousValues();
-				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+
+				// reload loi list
+				reloadLOIList(getManagedBean().getSourceId());
+
 				ScLoi loi = new ScLoi();
 				loi.setScLoiLoa(scLoiLoa);
 				reqDTO.setScLoi(loi);
@@ -1166,10 +1176,12 @@ public class LOIDetailBackingBean extends
 						fc.getViewRoot().getViewId());
 
 				fc.getApplication().getNavigationHandler()
-						.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
+			}
 		} finally {
 		}
 	}
+
 
 	/**
 	 * Edits the loi. page navigate to loi details page.
