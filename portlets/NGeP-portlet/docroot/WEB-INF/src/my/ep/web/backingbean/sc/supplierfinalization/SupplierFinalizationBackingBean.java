@@ -3257,8 +3257,8 @@ public class SupplierFinalizationBackingBean extends
 		String recommendType = scQtFinalization.getRecommendedTypeId()
 				.getParameterCode();
 		if (StringUtils.isBlank(scQtFinalization.getLoiLoaBy())) {
-			scQtFinalization
-					.setLoiLoaBy(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+			scQtFinalization.setLoiLoaBy(
+					SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
 		}
 		if (ParameterConst.RECOMMEND_TYPE_PACKAGE.equals(recommendType)) {
 			if (getManagedBean().getShortlistedSupplierList() == null) {
@@ -3365,7 +3365,11 @@ public class SupplierFinalizationBackingBean extends
 					} else if (scQtRecommend.getCreatedBy()
 											.equals(loggedInUserId)) {
 						scQtRecommend.setDisabled(false);
-					} else if (this.getManagedBean().isItemFwdToHighAuthority()) {
+					} else if (!scQtRecommend.isHigherAuthReq() && 
+									CollectionUtils.isEmpty(
+											scQtRecommend.getRecommendDtls())) {
+						scQtRecommend.setDisabled(false);
+					} else {
 						scQtRecommend.setDisabled(true);
 					}
 					
