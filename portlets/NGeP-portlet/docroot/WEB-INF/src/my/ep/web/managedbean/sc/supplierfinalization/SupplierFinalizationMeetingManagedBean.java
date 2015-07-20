@@ -71,8 +71,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	private boolean selectAll;
 	private boolean selectAllMembers;
 	
-	private Date currentDate;
-	
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
 	}
@@ -516,13 +514,6 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAllMembers(boolean selectAllMembers) {
 		this.selectAllMembers = selectAllMembers;
-	}
-	/**
-	 * @return the currentDate
-	 */
-	public Date getCurrentDate() {
-		currentDate = new Date();
-		return currentDate;
 	}
 	
 }

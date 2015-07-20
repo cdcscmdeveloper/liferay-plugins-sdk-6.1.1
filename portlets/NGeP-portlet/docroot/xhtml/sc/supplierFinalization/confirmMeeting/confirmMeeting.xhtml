@@ -64,12 +64,12 @@
 								<p:column headerText="#{lbl['lbl.sc.meeting.date']}"
 									style="width:30%;" styleClass="mandatory">
 									<p:calendar value="#{meeting.meetingDate}" id="meetingDate"
-										showOn="button"
-										mindate="#{suppFinalMeetingBackingBean.managedBean.currentDate}"
-										pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" 
+										showOn="button" readonlyInput="true"
+										mindate="#{CommonConstants.CURRENT_DATE}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 										label="#{lbl['lbl.sc.meeting.date']}" 
 										required="#{!meeting.selected}" style="width:27%;">
-									   <p:ajax process="@this" partialSubmit="true"
+									   <p:ajax event="dateSelect" process="@this" partialSubmit="true"
 												update="@this,mtgDate" />										
 									</p:calendar>
 									<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>									
