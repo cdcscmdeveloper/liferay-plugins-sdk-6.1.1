@@ -25,11 +25,12 @@
 								<h:outputText value="#{lbl['lbl.sc.meeting.date']}" />
 							</f:facet>
 							<p:calendar label="#{lbl['lbl.sc.meeting.date']}" required="true" showOn="button" 
-								mindate="#{suppFinalizationBackingBean.managedBean.currentDate}"
-								value="#{meetingDtl.meetingDate}" pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"
+								mindate="#{CommonConstants.CURRENT_DATE}"
+								value="#{meetingDtl.meetingDate}" readonlyInput="true"
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
 								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" 
 								id="meetingDate">
-								<p:ajax partialSubmit="true" process="@this" update="@this,mtgDate"/>
+								<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this,mtgDate"/>
 							</p:calendar>
 							<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>
 						</p:column>

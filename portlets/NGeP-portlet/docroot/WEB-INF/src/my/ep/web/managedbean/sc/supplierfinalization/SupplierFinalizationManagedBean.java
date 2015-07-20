@@ -160,8 +160,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private Object payLoad;
 	
-	private Date currentDate;
-	
 	private boolean selectAll;
 	private String action;
 	private Long loggedInUserId;
@@ -1372,14 +1370,6 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setPayLoad(Object payLoad) {
 		this.payLoad = payLoad;
-	}
-
-	/**
-	 * @return the currentDate
-	 */
-	public Date getCurrentDate() {
-		currentDate = new Date();
-		return currentDate;
 	}
 
 	/**
