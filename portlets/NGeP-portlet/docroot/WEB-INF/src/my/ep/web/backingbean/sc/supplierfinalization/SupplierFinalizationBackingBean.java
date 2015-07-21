@@ -3791,6 +3791,22 @@ public class SupplierFinalizationBackingBean extends
 	 * the selected quotation/tender
 	 */
 	public void sendReminder() {
+		String errorFieldLabel = null;
+		String subject = getManagedBean().getSubject();
+		String message = getManagedBean().getMessage();
+		
+		if (StringUtils.isBlank(subject)) {
+			errorFieldLabel = "lbl.sc.subject";
+		} else if (StringUtils.isBlank(message)) {
+			errorFieldLabel = "lbl.sc.message";
+		}
+		if (errorFieldLabel != null) {
+			throw new EpException(MessageConst.ERROR_100022, new String[]{
+					ResourceBundleUtils.getMessage(errorFieldLabel, 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
+			});
+		}
+		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
@@ -3802,8 +3818,8 @@ public class SupplierFinalizationBackingBean extends
 					.toString());
 			reqDTO.setCommitteMembers(getManagedBean()
 					.getCommitteeList());
-			reqDTO.setSubject(getManagedBean().getSubject());
-			reqDTO.setMessage(getManagedBean().getMessage());
+			reqDTO.setSubject(subject);
+			reqDTO.setMessage(message);
 
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.sendNotifications(reqDTO);
