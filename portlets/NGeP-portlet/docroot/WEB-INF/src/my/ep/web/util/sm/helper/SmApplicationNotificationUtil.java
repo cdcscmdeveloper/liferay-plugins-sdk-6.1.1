@@ -245,7 +245,7 @@ public class SmApplicationNotificationUtil {
 		}
 
 		rejectedCatCodes.append("</table>");
-		finalMsg.append("<p style=\"margin-left: 20px;\">")
+		finalMsg.append("<p style=\"padding-left: 2em;text-indent: -2em;\">")
 				.append(approvedCatCodes.toString()).append("</p>");
 		if (existsRejectedCodes) {
 			finalMsg.append("<div style=\"margin-left: 20px;\">")
