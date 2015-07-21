@@ -1860,12 +1860,26 @@ public class SupplierFinalizationBackingBean extends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.retrieveFinalizationReports(reqDTO);
 			ScQtFinalization _scQtFinalization = resDTO.getScQtFinalization();
+			
+			List<ScQtFinalizationReport> finalizationReports 
+								= _scQtFinalization.getScQtFinalizationReports();
+			if (getManagedBean().isInitialDecisionFwdToBPK() && 
+					CollectionUtils.isNotEmpty(
+								finalizationReports)) {
+				for (ScQtFinalizationReport report 
+									: finalizationReports) {
+					String docDefinitionKey = report.getPmDocument().getDocDefinitionKey();					
+					if (SourcingConstants.DOC_DEF_KEY_COVER
+											.equals(docDefinitionKey)) {
+						finalizationReports.remove(report);
+						break;
+					}
+				}
+			}
 
-			scQtFinalization.setScQtFinalizationReports(_scQtFinalization
-					.getScQtFinalizationReports());
-			if (scQtFinalization.getScQtFinalizationReports() != null) {
-				this.getManagedBean().setDocumentList(
-						scQtFinalization.getScQtFinalizationReports());
+			scQtFinalization.setScQtFinalizationReports(finalizationReports);
+			if (finalizationReports != null) {
+				this.getManagedBean().setDocumentList(finalizationReports);
 			}
 		} finally {
 			qtSuppFinalizationSO = null;
@@ -2513,53 +2527,59 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		context.put("existingContract", existingContract);
+		
+		boolean isInitialDecisionFwdToBPK = this.getManagedBean().isInitialDecisionFwdToBPK();
+		context.put("initialDecisionFwdToBPK", isInitialDecisionFwdToBPK);
 
-		List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
-		List<ScQtCommitteeActivity> committeeActivitiesList = new ArrayList<ScQtCommitteeActivity>();
-		ScQtCommittee scQtCommittee = new ScQtCommittee();
-		IQTMeetingSO meetingSO = null;
-		MeetingResDTO resDTO = null;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(scQt.getQtId());
-			reqDTO.setCommitteType(committeeType);
-			resDTO = meetingSO.retrieveMeetingDls(reqDTO);
-			scQtCommittee = resDTO.getQtCommittee();
-			if (null == scQtCommittee) {
-				scQtCommittee = new ScQtCommittee();
-			}
-			if (null != scQtCommittee) {
-				committeeActivitiesList = scQtCommittee.getCommitteeActivities();
-				
-				if (CollectionUtils.isNotEmpty(committeeActivitiesList)) {
-					for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
-						setDefaultValueForCommitteeActivityIfNull(committeeActivity);
-						committeeActivities.add(committeeActivity);
-					}
-				} else {
-					ScCommittee sccommittee = resDTO.getQtCommittee()
-							.getScCommittee();
-					committeeActivities = new ArrayList<ScQtCommitteeActivity>();
-					if (CollectionUtils.isNotEmpty(sccommittee.getScCommitteeMembers())) {
-						for (ScCommitteeMember scCommitteeMember : sccommittee
-								.getScCommitteeMembers()) {
-							ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
-							activity.setScQtCommittee(this.getManagedBean()
-									.getScQtCommittee());
-							activity.setScCommitteeMember(scCommitteeMember);
-							setDefaultValueForCommitteeActivityIfNull(activity);
-							committeeActivities.add(activity);
-						}
-					}
-					Collections.sort(committeeActivities);
+		if (!isInitialDecisionFwdToBPK) {
+			List<ScQtCommitteeActivity> committeeActivities = new ArrayList<ScQtCommitteeActivity>();
+			List<ScQtCommitteeActivity> committeeActivitiesList = new ArrayList<ScQtCommitteeActivity>();
+			ScQtCommittee scQtCommittee = new ScQtCommittee();
+			IQTMeetingSO meetingSO = null;
+			MeetingResDTO resDTO = null;
+			try {
+				meetingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+				MeetingReqDTO reqDTO = new MeetingReqDTO();
+				reqDTO.setQtId(scQt.getQtId());
+				reqDTO.setCommitteType(committeeType);
+				resDTO = meetingSO.retrieveMeetingDls(reqDTO);
+				scQtCommittee = resDTO.getQtCommittee();
+				if (null == scQtCommittee) {
+					scQtCommittee = new ScQtCommittee();
 				}
+				if (null != scQtCommittee) {
+					committeeActivitiesList = scQtCommittee.getCommitteeActivities();
+					
+					if (CollectionUtils.isNotEmpty(committeeActivitiesList)) {
+						for (ScQtCommitteeActivity committeeActivity : committeeActivitiesList) {
+							setDefaultValueForCommitteeActivityIfNull(committeeActivity);
+							committeeActivities.add(committeeActivity);
+						}
+					} else {
+						ScCommittee sccommittee = resDTO.getQtCommittee()
+								.getScCommittee();
+						committeeActivities = new ArrayList<ScQtCommitteeActivity>();
+						if (CollectionUtils.isNotEmpty(sccommittee.getScCommitteeMembers())) {
+							for (ScCommitteeMember scCommitteeMember : sccommittee
+									.getScCommitteeMembers()) {
+								ScQtCommitteeActivity activity = new ScQtCommitteeActivity();
+								activity.setScQtCommittee(this.getManagedBean()
+										.getScQtCommittee());
+								activity.setScCommitteeMember(scCommitteeMember);
+								setDefaultValueForCommitteeActivityIfNull(activity);
+								committeeActivities.add(activity);
+							}
+						}
+						Collections.sort(committeeActivities);
+					}
+				}
+			} finally {
+				meetingSO = null;
 			}
-		} finally {
-			meetingSO = null;
+			context.put("committeeActivities", committeeActivities);
 		}
-		context.put("committeeActivities", committeeActivities);
+		
 		context.put("bean", this);
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.DOCPATH_FZ_OFFERED_QT_DTLS, context,
@@ -5973,14 +5993,13 @@ public class SupplierFinalizationBackingBean extends
 					String parameterType = ParameterTypeConst.FINALIZATION_RECOMMEND_BY;
 					boolean isPriceTypeTariff = ParameterConst.PRICE_TYPE_TIER.equals(priceType);
 
-					if (priceType.equals(ParameterConst.PRICE_TYPE_TARIFF)
-							|| isPriceTypeTariff) {
+					if (isPriceTypeTariff) {
 						if (scQtRecommend.getAwardSupplierList().size() == 0) {
 							pmParameter = null;
 						} else if (scQtRecommend.getAwardSupplierList().size() == 1) {
 							if ( (pmParameter == null) || 
-									(!ParameterConst.RECOMMEND_BY_AWARD.equals(pmParameter.getParameterCode()) || 
-											!ParameterConst.RECOMMEND_BY_SINGLE_AWARD.equals(pmParameter.getParameterCode())) ) {
+									(ParameterConst.RECOMMEND_BY_AWARD.equals(pmParameter.getParameterCode()) || 
+											ParameterConst.RECOMMEND_BY_SINGLE_AWARD.equals(pmParameter.getParameterCode())) ) {
 								recommendBy = isPriceTypeTariff ? ParameterConst.RECOMMEND_BY_AWARD 
 													: ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 								pmParameter = getPmParameterByTypeAndCode(
@@ -6006,12 +6025,10 @@ public class SupplierFinalizationBackingBean extends
 							// user need to select multiple LOI or online
 							// bidding
 							if (pmParameter == null
-									|| (pmParameter
-											.getParameterCode()
-											.equals(ParameterConst.RECOMMEND_BY_AWARD)
-											|| pmParameter
-												.getParameterCode()
-												.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) 
+									|| (ParameterConst.RECOMMEND_BY_AWARD
+											.equals(pmParameter.getParameterCode()) ||
+												ParameterConst.RECOMMEND_BY_SINGLE_AWARD
+												.equals(pmParameter.getParameterCode())) 
 											&& activeSupplCount == 2) {
 								recommendBy = ParameterConst.RECOMMEND_BY_MULTIPLE_LOI;
 								pmParameter = getPmParameterByTypeAndCode(
@@ -6025,9 +6042,8 @@ public class SupplierFinalizationBackingBean extends
 							pmParameter = null;
 						} else if (scQtRecommend.getAwardSupplierList().size() == 1) {
 							if (pmParameter == null
-									|| pmParameter
-											.getParameterCode()
-											.equals(ParameterConst.RECOMMEND_BY_SINGLE_AWARD)) {
+									|| ParameterConst.RECOMMEND_BY_SINGLE_AWARD
+											.equals(pmParameter.getParameterCode())) {
 								recommendBy = ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 								pmParameter = getPmParameterByTypeAndCode(
 										parameterType, recommendBy);
