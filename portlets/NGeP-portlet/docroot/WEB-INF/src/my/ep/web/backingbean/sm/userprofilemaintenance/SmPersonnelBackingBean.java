@@ -1510,7 +1510,7 @@ public class SmPersonnelBackingBean extends
 				: DbValueConst.RECORD_STATUS_DELETED);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
-		resDTO = SmServiceLookup.getPersonnelSO().reassignNewSupplierAdmin(
+		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(
 				reqDTO);
 
 		if (resDTO.isSuccessful()) {
