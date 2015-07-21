@@ -23,11 +23,13 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.role']}" style="width:20%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(endorsement.scCommitteeMember.memberRole)}"/>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(
+											endorsement.scCommitteeMember.memberRole)}"/>
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.sc.representative.type']}" style="width:20%">
-				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(endorsement.scCommitteeMember.representativeType)}"/>
+				<h:outputText value="#{suppFinalizationBackingBean.getParameterDesc(
+											endorsement.scCommitteeMember.representativeType)}"/>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
@@ -44,7 +46,7 @@
 				update=":form:reminderPopup"
 				oncomplete="reminder.show();" 
 				rendered="#{(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_ENDORSEMENT) || 
-													(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_SIGN_OFF)}" />
+									(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_SIGN_OFF)}" />
 		</div>
 	</p:panel>
 	
