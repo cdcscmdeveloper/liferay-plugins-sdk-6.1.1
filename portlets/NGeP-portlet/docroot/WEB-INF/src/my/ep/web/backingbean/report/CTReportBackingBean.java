@@ -273,6 +273,54 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;
+           case ReportConst.CT_CONTRACT_UTILIZATION_MONITORING_CC_RPT_VAL:	        	
+	        	rptGenBean.setCtContractNoView(true);
+	        	rptGenBean.setCtPhysicalContractNoView(true);
+	        	rptGenBean.setCtAgreementView(true);
+	        	rptGenBean.setCtStatusThreeView(true);
+	        	rptGenBean.setCtLoanNoView(true);
+	        	rptGenBean.setCtMinistryView(true);
+	        	rptGenBean.setCtPtjView(true);
+	        	rptGenBean.setCtGroupFourView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtUserTypeView(true);
+	        	rptGenBean.setCtSubTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+	            break;
+           case ReportConst.CT_STATEMENT_OF_ORDER_REPORT_CC_PANEL_RPT_VAL:	        	
+	        	rptGenBean.setCtContractNoView(true);
+	        	rptGenBean.setCtPhysicalContractNoView(true);
+	        	rptGenBean.setCtAgreementView(true);
+	        	rptGenBean.setCtStatusThreeView(true);
+	        	rptGenBean.setCtLoanNoView(true);
+	        	rptGenBean.setCtMinistryView(true);
+	        	rptGenBean.setCtPtjView(true);
+	        	rptGenBean.setCtGroupFourView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtUserTypeView(true);
+	        	rptGenBean.setCtSubTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+	            break;
+           case ReportConst.CT_LIST_OF_CONTRACT_CC_RPT_VAL:	        	
+	        	rptGenBean.setCtContractNoView(true);
+	        	rptGenBean.setCtPhysicalContractNoView(true);
+	        	rptGenBean.setCtAgreementView(true);
+	        	rptGenBean.setCtStatusTwoView(true);
+	        	rptGenBean.setCtLoanNoView(true);
+	        	rptGenBean.setCtMinistryView(true);
+	        	rptGenBean.setCtPtjView(true);
+	        	rptGenBean.setCtGroupFourView(true);
+	        	rptGenBean.setCtProcurementModeView(true);
+	        	rptGenBean.setCtLOAPhysicalNoView(true);
+	        	rptGenBean.setCtUserTypeView(true);
+	        	rptGenBean.setCtSubTypeView(true);
+				rptGenBean.setFromDateView(true);
+				rptGenBean.setToDateView(true);
+	            break;
 	        
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));	           
