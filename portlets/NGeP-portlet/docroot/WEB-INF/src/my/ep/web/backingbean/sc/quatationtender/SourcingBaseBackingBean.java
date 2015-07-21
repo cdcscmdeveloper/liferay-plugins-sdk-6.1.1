@@ -45,6 +45,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -65,6 +66,8 @@ import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
+import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -93,6 +96,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -173,10 +178,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	public List<SelectItem> toOrgProfileSelectItems(
 			List<PmOrgProfile> orgProfile) {
 		List<SelectItem> orgProfileSelectItems = new ArrayList<SelectItem>();
-		orgProfileSelectItems.add(new SelectItem("", ResourceBundleUtils.getMessage(
-				"lbl.txt.select", 
-				ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-				new FacesScopes().getUserLocale())));
+		orgProfileSelectItems.add(new SelectItem("", ResourceBundleUtils
+				.getMessage("lbl.txt.select",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale())));
 		for (PmOrgProfile pmOrgProfile : orgProfile) {
 			orgProfileSelectItems.add(new SelectItem(pmOrgProfile
 					.getOrgProfileId().toString(), pmOrgProfile.getOrgCode()));
@@ -608,27 +613,28 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public void populateParentOrgProfile(ScQt scQt) {
 		PmOrgProfile pmOrgProfile = scQt.getPmOrgProfile();
-		
+
 		PmOrgProfile departmentOrgProfile = null;
 		PmOrgProfile ministryOrgProfile = null;
 		if (pmOrgProfile != null) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
-			
+
 			try {
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);	
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveJabatanByOrgProfileId(reqDTO);
+								IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveJabatanByOrgProfileId(reqDTO);
 				departmentOrgProfile = resDTO.getPmOrgProfile();
-				
+
 				resDTO = orgProfileSO.retrieveMinistryByOrgProfileId(reqDTO);
 				ministryOrgProfile = resDTO.getPmOrgProfile();
 			} finally {
-				
-			}			
+
+			}
 		}
-		
+
 		if (departmentOrgProfile != null) {
 			scQt.setDepartmentOrgProfile(departmentOrgProfile);
 		}
@@ -1405,14 +1411,13 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return false;
 	}
 
-	public List<String> getRequestTypes(String paramaterTypes){
-		if(StringUtils.isNotEmpty(paramaterTypes)){
+	public List<String> getRequestTypes(String paramaterTypes) {
+		if (StringUtils.isNotEmpty(paramaterTypes)) {
 			String[] paramTypes = paramaterTypes.split(",");
 			return Arrays.asList(paramTypes);
 		}
 		return null;
 	}
-	
 
 	/**
 	 * Update approval request.
@@ -1446,72 +1451,71 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	/**
-	 *  Check is multiple proposal category
+	 * Check is multiple proposal category
 	 * 
-	 * @param qtId 
-	 * 		the quotation/tender id (Mandatory),
+	 * @param qtId
+	 *            the quotation/tender id (Mandatory),
 	 * @param scQtCategories
-	 * 		the list of ScQtCategory instance (optional)
+	 *            the list of ScQtCategory instance (optional)
 	 * @return
 	 */
-	public boolean isMultiplePorposalCategory(Long qtId, List<ScQtCategory> scQtCategories) {
+	public boolean isMultiplePorposalCategory(Long qtId,
+			List<ScQtCategory> scQtCategories) {
 		IQTDetailSO qtDetailSO = null;
 		try {
 			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			
+
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 			reqDTO.setQtId(qtId);
 			reqDTO.setCategoryList(scQtCategories);
-			return qtDetailSO.isMultiplePorposalCategory(reqDTO);			
-			
+			return qtDetailSO.isMultiplePorposalCategory(reqDTO);
+
 		} finally {
 			qtDetailSO = null;
 		}
 	}
-	
+
 	public boolean isOneTierThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			
+
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.ONE_TIER_EVALUATION_THRESHOLD);
 			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
-			return ruleSO
-					.compareAValueWithRuleTypeValues(reqDTO)
+			return ruleSO.compareAValueWithRuleTypeValues(reqDTO)
 					.isCompareValueResult();
-			
+
 		} finally {
 			ruleSO = null;
 		}
 	}
-	
+
 	public boolean isOpenForBumiputraThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			
+
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.OPEN_FOR_BUMI_THRESHOLD);
 			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
-			return ruleSO
-					.compareAValueWithRuleTypeValues(reqDTO)
+			return ruleSO.compareAValueWithRuleTypeValues(reqDTO)
 					.isCompareValueResult();
-			
+
 		} finally {
 			ruleSO = null;
 		}
 	}
-	
+
 	public boolean isQuotationThresHold(BigDecimal estimatedAmount) {
 		IRuleSO ruleSO = null;
 		try {
 			ruleSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			
+
 			RuleReqDTO reqDTO = new RuleReqDTO();
 			reqDTO.setRuleType(RuleTypeConst.QUOTATION_THRESHOLD);
 			reqDTO.setCompareValue(estimatedAmount.longValue() + "");
@@ -1520,11 +1524,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.getRuleValueStrList();
 
 			if (ruleValueStrList != null && ruleValueStrList.size() > 0) {
-				return ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(ruleValueStrList.get(0));
+				return ParameterConst.PROCUREMENT_MODE_QUOTATION
+						.equals(ruleValueStrList.get(0));
 			}
-			
+
 			return true;
-			
+
 		} finally {
 			ruleSO = null;
 		}
@@ -1552,4 +1557,25 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				ParameterTypeConst.COMMITTEE_ROLE, searchBean);
 
 	}
+
+	public SmMofAccount retriveMofAccountBySupplier(SmSupplier smSupplier) {
+
+		MofAccountResDTO mofAccResDTO = new MofAccountResDTO();
+		IMofAccountSO mofAccountSO = null;
+		SmMofAccount mofAccount = new SmMofAccount();
+		try {
+
+			mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+							IMofAccountSO.class);
+			MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
+			mofAccReqDTO.setSupplierId(smSupplier.getSupplierId());
+			mofAccResDTO = mofAccountSO.retrieveMofNoBySupplierId(mofAccReqDTO);
+			mofAccount = mofAccResDTO.getMofAccount();
+		} finally {
+			mofAccountSO = null;
+		}
+		return mofAccount;
+	}
+
 }
