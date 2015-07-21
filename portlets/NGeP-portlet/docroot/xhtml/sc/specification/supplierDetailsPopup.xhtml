@@ -36,7 +36,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mofno']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true"
-						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.smMofAccounts[0].mofNo}" /></td>
+						value="#{specificationBackingBean.managedBean.smMofAccount.mofNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.spec.tax.no']}" /></td>
@@ -59,7 +59,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.mofexp.date']}" /></td>
 				<td><p:inputText size="30" readonly="true" disabled="true"
-						value="#{specificationBackingBean.managedBean.ctpanelSupplier.supplier.smMofAccounts[0].expDate}">
+						value="#{specificationBackingBean.managedBean.smMofAccount.expDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
