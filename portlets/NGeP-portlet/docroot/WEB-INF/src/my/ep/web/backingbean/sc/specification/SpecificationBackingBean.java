@@ -9929,25 +9929,36 @@ public class SpecificationBackingBean extends
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
-					PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
-					supplierreqDTO.setPanelItemId(this.getManagedBean()
+					/*
+					 * PanelSupplierReqDTO supplierreqDTO = new
+					 * PanelSupplierReqDTO();
+					 * supplierreqDTO.setPanelItemId(this.getManagedBean()
+					 * .getCtPanelItem().getPanelItemId());
+					 * supplierreqDTO.setFetchSubEntity(true);
+					 * PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
+					 * .retrievePanelItem(supplierreqDTO);
+					 */
+					IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTSupplierSO.class);
+					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
+					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
+					supplierReqDTO.setPanelItemId(this.getManagedBean()
 							.getCtPanelItem().getPanelItemId());
-					supplierreqDTO.setFetchSubEntity(true);
-					PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
-							.retrievePanelItem(supplierreqDTO);
+					supplierResDTO = supplierSo
+							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
 					this.getManagedBean().setTotalSuppliers(0);
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
-					if (null != panelSupplierResDTO.getCtPanelItem()) {
-						CtPanelItem panelItem = panelSupplierResDTO
-								.getCtPanelItem();
-						if (null != panelItem.getCtPanelSuppliers()) {
-							this.getManagedBean().setTotalSuppliers(
-									panelItem.getCtPanelSuppliers().size());
+					if (null != supplierResDTO.getCtPanelSuppliers()) {
+						// CtPanelItem panelItem =
+						// supplierResDTO.getCtPanelSuppliers();
+						this.getManagedBean().setTotalSuppliers(
+								supplierResDTO.getCtPanelSuppliers().size());
 
-							this.getManagedBean().setCtZoneSupplierList(
-									panelItem.getCtPanelSuppliers());
-						}
+						this.getManagedBean().setCtZoneSupplierList(
+								supplierResDTO.getCtPanelSuppliers());
 
 					}
 				}
@@ -10058,30 +10069,38 @@ public class SpecificationBackingBean extends
 
 		}
 
-		PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
+		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
 		if (null != tplSpecZoneDtl) {
 			this.getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
-			reqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
+			supplierReqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
 					.getPanelZoneId());
 		}
-		IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT,
-						IPanelSupplierSO.class);
-		PanelSupplierResDTO resDTO = panelSupplierSO
-				.retrieveSupplierByZone(reqDTO);
+		/*
+		 * IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO)
+		 * BusinessDelegate .getInstance().getServiceObject(
+		 * ModuleCodeConst.CONTRACT_MANAGEMENT, IPanelSupplierSO.class);
+		 * PanelSupplierResDTO resDTO = panelSupplierSO
+		 * .retrieveSupplierByZone(reqDTO);
+		 */
+		IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSupplierSO.class);
+		QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
+		supplierResDTO = supplierSo
+				.retrievePanelSuppliersByCircularZoneId(supplierReqDTO);
 		this.getManagedBean().setCtZoneSupplierList(
 				new ArrayList<CtPanelSupplier>());
 		this.getManagedBean().setTotalSuppliers(0);
 
-		if (null != resDTO.getPanelSuppliers()
-				&& !resDTO.getPanelSuppliers().isEmpty()) {
+		if (null != supplierResDTO.getCtPanelSuppliers()
+				&& !supplierResDTO.getCtPanelSuppliers().isEmpty()) {
 
 			this.getManagedBean().setTotalSuppliers(
-					resDTO.getPanelSuppliers().size());
+					supplierResDTO.getCtPanelSuppliers().size());
 
 			this.getManagedBean().setCtZoneSupplierList(
-					resDTO.getPanelSuppliers());
+					supplierResDTO.getCtPanelSuppliers());
 			List<CtPanelItem> itemList = this.getManagedBean()
 					.getSelectpanelItem();
 			itemList = new ArrayList<CtPanelItem>();
@@ -10118,18 +10137,50 @@ public class SpecificationBackingBean extends
 	 */
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
 
-		this.getManagedBean().setCtpanelSupplier(panelSupplier);
+		QTSupplierResDTO qtSupplierResDTO = new QTSupplierResDTO();
+		MofAccountResDTO mofAccResDTO = new MofAccountResDTO();
+		IQTSupplierSO qtSupplierSO = null;
+		IMofAccountSO mofAccountSO = null;
 
-		if (null != panelSupplier.getSupplier()
-				&& null != panelSupplier.getSupplier().getSmAppl()
-				&& null != panelSupplier.getSupplier().getSmAppl()
-						.getSmPersonnels()) {
-			List<SmPersonnel> list = panelSupplier.getSupplier().getSmAppl()
-					.getSmPersonnels();
-			if (null != list) {
+		try {
+			if (panelSupplier.getSupplier() != null) {
+				qtSupplierSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSupplierSO.class);
+				QTSupplierReqDTO qtSupplierReqDTO = new QTSupplierReqDTO();
+				qtSupplierReqDTO.setSupplierId(panelSupplier.getSupplier()
+						.getSupplierId());
+				qtSupplierResDTO = qtSupplierSO
+						.retrieveSupplierDetails(qtSupplierReqDTO);
+				panelSupplier.setSupplier(qtSupplierResDTO.getSmSupplier());
+				// getManagedBean().setSmSupplier(smSupplier);
+				// this.getManagedBean().setCtpanelSupplier(panelSupplier);
 
-				for (SmPersonnel smPersonnel : list) {
-					getManagedBean().setPersonnel(smPersonnel);
+				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IMofAccountSO.class);
+				MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
+				mofAccReqDTO.setSupplierId(panelSupplier.getSupplier()
+						.getSupplierId());
+				mofAccResDTO = mofAccountSO
+						.retrieveMofNoBySupplierId(mofAccReqDTO);
+				getManagedBean().setSmMofAccount(mofAccResDTO.getMofAccount());
+
+				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
+						.getSmAppl().getSmCompanyBasic();
+				// getManagedBean().setSmCompanyBasic(smCompanyBasic);
+
+				List<SmPersonnel> smPersonnelList = panelSupplier.getSupplier()
+						.getSmAppl().getSmPersonnels();
+				if (null != smPersonnelList) {
+					for (SmPersonnel smPersonnel : smPersonnelList) {
+						if (smPersonnel.isContactPerson()) {
+							// getManagedBean().setSmPersonnel(smPersonnel);
+							getManagedBean().setPersonnel(smPersonnel);
+
+							break;
+						}
+					}
 				}
 				SmPersonnel supplierHQPersonnel = this.getManagedBean()
 						.getPersonnel();
@@ -10141,36 +10192,65 @@ public class SpecificationBackingBean extends
 					getManagedBean().setSupplierEmail(
 							supplierHQPersonnel.getEmail());
 				}
-				// SmAppl appll= supplierHQPersonnel.getSmAppl();
-
-				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
-						.getSmAppl().getSmCompanyBasic();
-
-				// System.out.println("INcomeTax No : " +
-				// smCompanyBasic.getIncomeTaxNo());
-
 				if (null != smCompanyBasic) {
-					if (null != smCompanyBasic.getSmCompanyAddresses()) {
-						for (SmCompanyAddress smCompanyAddress : smCompanyBasic
-								.getSmCompanyAddresses()) {
-							if (null != smCompanyAddress) {
-								if (AddressType.CONTACT_ADDRESS.value().equals(
-										smCompanyAddress.getAddressType())) {
-
-									getManagedBean().setSupplierBranch("HQ");
-
-									getManagedBean().setSupplierAddress(
-											smCompanyAddress.getSmAddress());
-
-									break;
-
-								}
-							}
+					for (SmCompanyAddress smCompanyAddress : smCompanyBasic
+							.getSmCompanyAddresses()) {
+						if (AddressType.CONTACT_ADDRESS.value().equals(
+								smCompanyAddress.getAddressType())) {
+							getManagedBean().setSupplierBranch(
+									QTConstants.SUPPLIER_INFO_HQ);
+							getManagedBean().setSupplierAddress(
+									smCompanyAddress.getSmAddress());
+							break;
 						}
 					}
 				}
+				this.getManagedBean().setCtpanelSupplier(panelSupplier);
 			}
+		} finally {
+			qtSupplierSO = null;
+			mofAccountSO = null;
 		}
+
+		/*
+		 * if (null != panelSupplier.getSupplier() && null !=
+		 * panelSupplier.getSupplier().getSmAppl() && null !=
+		 * panelSupplier.getSupplier().getSmAppl() .getSmPersonnels()) {
+		 * List<SmPersonnel> list = panelSupplier.getSupplier().getSmAppl()
+		 * .getSmPersonnels(); if (null != list) {
+		 * 
+		 * for (SmPersonnel smPersonnel : list) {
+		 * getManagedBean().setPersonnel(smPersonnel); } SmPersonnel
+		 * supplierHQPersonnel = this.getManagedBean() .getPersonnel();
+		 * getManagedBean().setSupplierContact("");
+		 * getManagedBean().setSupplierEmail(""); if (null !=
+		 * supplierHQPersonnel) { getManagedBean().setSupplierContact(
+		 * supplierHQPersonnel.getName()); getManagedBean().setSupplierEmail(
+		 * supplierHQPersonnel.getEmail()); } // SmAppl appll=
+		 * supplierHQPersonnel.getSmAppl();
+		 * 
+		 * SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
+		 * .getSmAppl().getSmCompanyBasic();
+		 * 
+		 * // System.out.println("INcomeTax No : " + //
+		 * smCompanyBasic.getIncomeTaxNo());
+		 * 
+		 * if (null != smCompanyBasic) { if (null !=
+		 * smCompanyBasic.getSmCompanyAddresses()) { for (SmCompanyAddress
+		 * smCompanyAddress : smCompanyBasic .getSmCompanyAddresses()) { if
+		 * (null != smCompanyAddress) { if
+		 * (AddressType.CONTACT_ADDRESS.value().equals(
+		 * smCompanyAddress.getAddressType())) {
+		 * 
+		 * getManagedBean().setSupplierBranch("HQ");
+		 * 
+		 * getManagedBean().setSupplierAddress(
+		 * smCompanyAddress.getSmAddress());
+		 * 
+		 * break;
+		 * 
+		 * } } } } } } }
+		 */
 
 	}
 

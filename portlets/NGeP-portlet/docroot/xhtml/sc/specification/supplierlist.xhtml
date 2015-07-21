@@ -29,11 +29,12 @@
 					</p:commandLink>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.mofno']}">
-					<h:outputText value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}" />
+					<h:outputText
+						value="#{specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).mofNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
 					<h:outputText
-						value="#{qtSupplier.supplier.smMofAccounts[0].expDate}">
+						value="#{specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
@@ -42,10 +43,10 @@
 					<!-- <h:outputText
 						value="#{specificationBackingBean.retriveSupplierDescById(qtSupplier.supplier.supplierId)}" /> -->
 					<h:outputText
-						rendered="#{specificationBackingBean.supplierStatusDateComparision(qtSupplier.supplier.smMofAccounts[0].expDate) eq 'true'}"
+						rendered="#{specificationBackingBean.supplierStatusDateComparision(specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'true'}"
 						value="Active" />
 					<h:outputText
-						rendered="#{specificationBackingBean.supplierStatusDateComparision(qtSupplier.supplier.smMofAccounts[0].expDate) eq 'false'}"
+						rendered="#{specificationBackingBean.supplierStatusDateComparision(specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'false'}"
 						value="Expired" style="font-weight: bold;color:red;" />
 				</p:column>
 			</p:dataTable>
