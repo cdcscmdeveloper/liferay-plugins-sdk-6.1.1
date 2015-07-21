@@ -43,6 +43,7 @@ import my.ep.biz.service.sc.committe.ICommitteSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
 import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sc.quationtender.IQTSpecSO;
+import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -73,6 +74,8 @@ import my.ep.dto.sc.committe.CommitteReqDTO;
 import my.ep.dto.sc.committe.CommitteResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
+import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
+import my.ep.dto.sc.quationtender.QTSupplierResDTO;
 import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sc.quationtender.SpecificationReqDTO;
@@ -2546,24 +2549,34 @@ public class QTDetailBackingBean extends
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
-					PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
+					/*PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
 					supplierreqDTO.setPanelItemId(this.getManagedBean()
 							.getCtPanelItem().getPanelItemId());
 					supplierreqDTO.setFetchSubEntity(true);
 					PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
-							.retrievePanelItem(supplierreqDTO);
+							.retrievePanelItem(supplierreqDTO);*/
+					IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTSupplierSO.class);
+					QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
+					QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
+					supplierReqDTO.setPanelItemId(this.getManagedBean()
+							.getCtPanelItem().getPanelItemId());
+					supplierResDTO = supplierSo
+							.retrievePanelSuppliersByPanelItem(supplierReqDTO);
 					this.getManagedBean().setTotalSuppliers(0);
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
-					if (null != panelSupplierResDTO.getCtPanelItem()) {
-						CtPanelItem panelItem = panelSupplierResDTO
-								.getCtPanelItem();
-						if (null != panelItem.getCtPanelSuppliers()) {
+					if (null != supplierResDTO.getCtPanelSuppliers()) {
+						/*CtPanelItem panelItem = supplierResDTO
+								.getCtPanelItem();*/
+						/*if (null != panelItem.getCtPanelSuppliers()) {*/
 							this.getManagedBean().setTotalSuppliers(
-									panelItem.getCtPanelSuppliers().size());
+									supplierResDTO.getCtPanelSuppliers().size());
 							this.getManagedBean().setCtZoneSupplierList(
-									panelItem.getCtPanelSuppliers());
-						}
+									supplierResDTO.getCtPanelSuppliers());
+						/*}*/
 					}
 				}
 			}
