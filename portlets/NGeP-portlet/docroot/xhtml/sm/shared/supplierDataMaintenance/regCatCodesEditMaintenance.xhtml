@@ -124,7 +124,7 @@
 				rendered="#{supplierDataMaintenanceBackingBean.managedBean.smAppl.supplierType eq 'J'}"></p:commandLink>
 			#{lbl['lbl.sm.download.categorycode']}
 			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
-				partialSubmit="true" process="@this"
+				partialSubmit="true" process="@this" disabled="#{!supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 				oncomplete="catCodePopup.show();">
 			</p:commandButton>
 
@@ -138,7 +138,7 @@
 				businessTypeCode="#{supplierDataMaintenanceBackingBean.managedBean.smSupplier.businessType}" />
 
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}" id="deletedBtnId" 
-				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList}"
+				disabled="#{empty supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList and !supplierDataMaintenanceBackingBean.managedBean.allowedToDoMaintenance}"
 				action="#{supplierDataMaintenanceBackingBean.deleteSelectedPendingApprovalCategoryCodes(supplierDataMaintenanceBackingBean.managedBean.deleteNewApplCategoryList)}" 
 				update=":form:catCodeInfPan" partialSubmit="true" 
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
