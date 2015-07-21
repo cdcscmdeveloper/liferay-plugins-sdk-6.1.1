@@ -498,10 +498,6 @@ public class LOIDetailBackingBean extends
 					Map<Long, List<ScQtRecommend>> scQtRecommendsByZone 
 									= new LinkedHashMap<Long, List<ScQtRecommend>>();					
 					for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-						if (!ParameterConst.RECOMMEND_BY_MULTIPLE_LOI
-								.equals(scQtRecommend.getRecommendBy().getParameterCode())) {
-							continue;
-						}
 						specZoneDtl = scQtRecommend.getTplSpecZoneDtl();
 						
 						if (!zoneDetails.contains(specZoneDtl)) {
