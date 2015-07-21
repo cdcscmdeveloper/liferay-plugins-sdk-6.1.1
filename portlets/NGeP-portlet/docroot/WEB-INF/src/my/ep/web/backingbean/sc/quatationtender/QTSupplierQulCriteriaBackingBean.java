@@ -29,7 +29,6 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
@@ -43,8 +42,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
-import my.ep.dto.ct.supplier.PanelSupplierReqDTO;
-import my.ep.dto.ct.supplier.PanelSupplierResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
@@ -936,26 +933,27 @@ public class QTSupplierQulCriteriaBackingBean extends
 		selectedTreeNode.setSelected(true);
 		TplSpecZoneDtl ctPanelzone = (TplSpecZoneDtl) event.getTreeNode()
 				.getData();
-		PanelSupplierReqDTO reqDTO = new PanelSupplierReqDTO();
-		reqDTO.setCircularZoneId(ctPanelzone.getPanelZone().getPanelZoneId());
-		IPanelSupplierSO panelSupplierSO = (IPanelSupplierSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT,
-						IPanelSupplierSO.class);
-		PanelSupplierResDTO resDTO = panelSupplierSO
-				.retrieveSupplierByZone(reqDTO);
+		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
+		IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTSupplierSO.class);
+		QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
+		supplierReqDTO.setCircularZoneId(ctPanelzone.getPanelZone().getPanelZoneId());
+		supplierResDTO = supplierSo
+				.retrievePanelSuppliersByCircularZoneId(supplierReqDTO);
 		this.getManagedBean().setCtZoneSupplierList(
 				new ArrayList<CtPanelSupplier>());
 		this.getManagedBean().setTotalSuppliers(0);
 
-		if (null != resDTO.getPanelSuppliers()
-				&& !resDTO.getPanelSuppliers().isEmpty()) {
+		if (null != supplierResDTO.getCtPanelSuppliers()
+				&& !supplierResDTO.getCtPanelSuppliers().isEmpty()) {
 
 			this.getManagedBean().setTotalSuppliers(
-					resDTO.getPanelSuppliers().size());
+					supplierResDTO.getCtPanelSuppliers().size());
 
 			this.getManagedBean().setCtZoneSupplierList(
-					resDTO.getPanelSuppliers());
+					supplierResDTO.getCtPanelSuppliers());
 			List<CtPanelItem> itemList = this.getManagedBean()
 					.getSelectpanelItem();
 			itemList = new ArrayList<CtPanelItem>();
@@ -1536,7 +1534,82 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 *            (CtPanelSupplier panelSupplier).
 	 */
 	public void retriveSupplierDtls(CtPanelSupplier panelSupplier) {
-		this.getManagedBean().setCtpanelSupplier(panelSupplier);
+		
+		QTSupplierResDTO qtSupplierResDTO = new QTSupplierResDTO();
+		MofAccountResDTO mofAccResDTO = new MofAccountResDTO();
+		IQTSupplierSO qtSupplierSO = null;
+		IMofAccountSO mofAccountSO = null;
+
+		try {
+			if (panelSupplier.getSupplier() != null) {
+				qtSupplierSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSupplierSO.class);
+				QTSupplierReqDTO qtSupplierReqDTO = new QTSupplierReqDTO();
+				qtSupplierReqDTO.setSupplierId(panelSupplier.getSupplier()
+						.getSupplierId());
+				qtSupplierResDTO = qtSupplierSO
+						.retrieveSupplierDetails(qtSupplierReqDTO);
+				panelSupplier.setSupplier(qtSupplierResDTO.getSmSupplier());
+				// getManagedBean().setSmSupplier(smSupplier);
+				// this.getManagedBean().setCtpanelSupplier(panelSupplier);
+
+				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IMofAccountSO.class);
+				MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
+				mofAccReqDTO.setSupplierId(panelSupplier.getSupplier()
+						.getSupplierId());
+				mofAccResDTO = mofAccountSO
+						.retrieveMofNoBySupplierId(mofAccReqDTO);
+				getManagedBean().setSmMofAccount(mofAccResDTO.getMofAccount());
+
+				SmCompanyBasic smCompanyBasic = panelSupplier.getSupplier()
+						.getSmAppl().getSmCompanyBasic();
+				// getManagedBean().setSmCompanyBasic(smCompanyBasic);
+
+				List<SmPersonnel> smPersonnelList = panelSupplier.getSupplier()
+						.getSmAppl().getSmPersonnels();
+				if (null != smPersonnelList) {
+					for (SmPersonnel smPersonnel : smPersonnelList) {
+						if (smPersonnel.isContactPerson()) {
+							// getManagedBean().setSmPersonnel(smPersonnel);
+							getManagedBean().setPersonnel(smPersonnel);
+
+							break;
+						}
+					}
+				}
+				SmPersonnel supplierHQPersonnel = this.getManagedBean()
+						.getPersonnel();
+				getManagedBean().setSupplierContact("");
+				getManagedBean().setSupplierEmail("");
+				if (null != supplierHQPersonnel) {
+					getManagedBean().setSupplierContact(
+							supplierHQPersonnel.getName());
+					getManagedBean().setSupplierEmail(
+							supplierHQPersonnel.getEmail());
+				}
+				if (null != smCompanyBasic) {
+					for (SmCompanyAddress smCompanyAddress : smCompanyBasic
+							.getSmCompanyAddresses()) {
+						if (AddressType.CONTACT_ADDRESS.value().equals(
+								smCompanyAddress.getAddressType())) {
+							getManagedBean().setSupplierBranch(
+									QTConstants.SUPPLIER_INFO_HQ);
+							getManagedBean().setSupplierAddress(
+									smCompanyAddress.getSmAddress());
+							break;
+						}
+					}
+				}
+				this.getManagedBean().setCtpanelSupplier(panelSupplier);
+			}
+		} finally {
+			qtSupplierSO = null;
+			mofAccountSO = null;
+		}
+		/*this.getManagedBean().setCtpanelSupplier(panelSupplier);
 		if (null != panelSupplier.getSupplier()
 				&& null != panelSupplier.getSupplier().getSmAppl()
 				&& null != panelSupplier.getSupplier().getSmAppl()
@@ -1576,7 +1649,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	/**
