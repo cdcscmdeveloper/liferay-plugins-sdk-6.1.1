@@ -33,7 +33,8 @@
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{suppFinalizationBackingBean.downloadReport(report)}"
-					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty report.scQtFinalizationAttachment.fileName : true}" />
+					rendered="#{report.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
+														? !empty report.scQtFinalizationAttachment.fileName : true}" />
 			</p:column>
 		</p:dataTable>
 		
