@@ -111,7 +111,7 @@ public class ForceReplaceSuppAdminBackingBean extends
 	 */
 	public void replaceWithExistingUser() {
 		PersonnelResDTO resDto = SmServiceLookup.getPersonnelSO()
-				.reassignNewSupplierAdmin(getReqDTO());
+				.reassignSupplierAdmin(getReqDTO());
 		redirectToSuccessPage(resDto);
 	}
 
