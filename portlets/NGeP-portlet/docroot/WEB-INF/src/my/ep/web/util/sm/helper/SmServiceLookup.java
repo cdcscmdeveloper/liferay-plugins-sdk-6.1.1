@@ -29,6 +29,7 @@ import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
 import my.ep.biz.service.sm.supplieruseractivation.ISupplierUserActivationSO;
 import my.ep.biz.service.sm.supportingdocinquiry.ISupportingDocInquirySO;
+import my.ep.biz.service.sm.virtualcert.IVirtualCertSO;
 import my.ep.biz.service.sm.workFlowStatus.ISmWorkFlowStatusSO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ModuleCodeConst;
@@ -358,4 +359,12 @@ public class SmServiceLookup {
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierBusinessNatureSO.class);
 	}
 
+	/**
+	 * Get IVirtualCertSO
+	 * @return IVirtualCertSO
+	 */
+	public static IVirtualCertSO getVirtualCertSO(){
+		return (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, IVirtualCertSO.class);
+	}
 }
