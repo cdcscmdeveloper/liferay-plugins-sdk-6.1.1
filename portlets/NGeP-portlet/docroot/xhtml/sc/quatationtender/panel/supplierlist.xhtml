@@ -24,21 +24,22 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.mofno']}">
-					<h:outputText value="#{qtSupplier.supplier.smMofAccounts[0].mofNo}" />
+					<h:outputText
+						value="#{qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).mofNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
 					<h:outputText
-						value="#{qtSupplier.supplier.smMofAccounts[0].expDate}">
+						value="#{qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.status']}">
 					<h:outputText
-						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qtSupplier.supplier.smMofAccounts[0].expDate) eq 'true'}"
+						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'true'}"
 						value="Active" />
 					<h:outputText
-						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qtSupplier.supplier.smMofAccounts[0].expDate) eq 'false'}"
+						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'false'}"
 						value="Expired" style="font-weight: bold;color:red;" />
 				</p:column>
 			</p:dataTable>
