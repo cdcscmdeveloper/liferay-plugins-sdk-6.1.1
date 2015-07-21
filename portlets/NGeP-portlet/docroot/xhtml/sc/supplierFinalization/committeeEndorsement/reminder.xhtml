@@ -24,11 +24,11 @@
 
 		<p:panel header="#{lbl['lbl.sc.reminder']}" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
-				<h:outputLabel value="#{lbl['lbl.sc.subject']}" />
-				<p:inputText size="50"  value="#{suppFinalizationBackingBean.managedBean.subject}"></p:inputText>
+				<h:outputLabel value="#{lbl['lbl.sc.subject']}" styleClass="mandatory"/>
+				<p:inputText size="50"  value="#{suppFinalizationBackingBean.managedBean.subject}" />
 				
-				<h:outputLabel value="#{lbl['lbl.sc.message']}" />
-				<p:inputTextarea rows="5" cols="50"  value="#{suppFinalizationBackingBean.managedBean.message}"></p:inputTextarea>
+				<h:outputLabel value="#{lbl['lbl.sc.message']}" styleClass="mandatory"/>
+				<p:inputTextarea rows="5" cols="50"  value="#{suppFinalizationBackingBean.managedBean.message}" />
 			</h:panelGrid>
 		</p:panel>
 
