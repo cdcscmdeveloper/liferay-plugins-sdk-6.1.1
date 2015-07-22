@@ -860,6 +860,8 @@ public class LOIDetailBackingBean extends
 	 * multiple LOI.
 	 */
 	public void onSupplierSelectEvent() {
+		getManagedBean().setTotalFrequency(0);
+		
 		ScLoi scLoi = getManagedBean().getScLoi();
 		boolean isTermPriceFound = Boolean.FALSE;
 		getManagedBean().setItemDetailsFlag(Boolean.TRUE);
@@ -871,7 +873,12 @@ public class LOIDetailBackingBean extends
 		}  else {
 			getManagedBean().setHideColumnFlag(Boolean.FALSE);
 		}
-			
+		
+		if (CollectionUtils.isNotEmpty(
+					scLoi.getScQtSchedules())) {
+			getManagedBean().setTotalFrequency(
+					scLoi.getScQtSchedules().size());
+		} 
 		calculateOfferedAndFinalPriceByItem(scLoi);
 		
 		// Fulfilment Schedule
