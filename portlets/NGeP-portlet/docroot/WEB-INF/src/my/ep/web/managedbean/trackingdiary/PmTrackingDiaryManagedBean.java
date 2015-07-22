@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -297,19 +299,27 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			searchBean.getDataFilterBeans().add(
-					new SearchFilterBean("docType",
-							SearchOperator.OPERATOR_EQUALS.value(),
-							getSelectedDocType()));
+			
 			log.info("...............isMultiRuleType()="+isMultiRuleType());
 			log.info("...............getSelectedDocType2()="+getSelectedDocType2());
 			if (isMultiRuleType() && getSelectedDocType2() != null
 					&& !getSelectedDocType2().isEmpty()) {
-				
+			
+				searchBean.getDataFilterBeans().add(
+						new SearchMultiFilterBean(new SearchFilterBean(
+								"docType",
+								SearchOperator.OPERATOR_EQUALS
+										.value(),getSelectedDocType()),
+								new SearchFilterBean("docType",
+										SearchOperator.OPERATOR_EQUALS
+												.value(), getSelectedDocType2(),
+										SearchCondition.CONDITION_OR
+												.value())));
+			}else{
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
 								SearchOperator.OPERATOR_EQUALS.value(),
-								getSelectedDocType2(), "and"));
+								getSelectedDocType()));
 			}
 			if (getSelectedDocId() != null) {
 				searchBean.getDataFilterBeans().add(
