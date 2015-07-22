@@ -2803,6 +2803,7 @@ public class LOIDetailBackingBean extends
 		boolean editButton = getManagedBean().isEditFlag();
 		boolean buttonFlag = getManagedBean().isButtonFlag();
 		int selectedTabIndex = getManagedBean().getSelectedTabIndex();
+		boolean isSecretaryUser = getManagedBean().isSecretaryUser();
 
 		this.renewSesionObject();
 
@@ -2831,6 +2832,7 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setScQtFinalization(scQtFinalization);
 		getManagedBean().setRecSupplierList(recSupplierList);
 		getManagedBean().setSelectedTabIndex(selectedTabIndex);
+		getManagedBean().setSecretaryUser(isSecretaryUser);
 	}
 
 	/**
