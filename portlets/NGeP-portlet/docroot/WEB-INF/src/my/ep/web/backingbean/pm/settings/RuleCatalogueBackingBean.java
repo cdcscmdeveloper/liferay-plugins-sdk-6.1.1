@@ -14,6 +14,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -2026,27 +2027,169 @@ public class RuleCatalogueBackingBean extends
 			return false;
 		}
 	}
-
-	public void onChangeMainUnplannedThreshold() {
+    public void onChangeUnplannedThreshold(ValueChangeEvent event, PmThreshold threshold){
+    	log.info("onChangeUnplannedThreshold");
+		log.info("event.getOldValue()="+event.getOldValue());
+		log.info("event.getNewValue()="+event.getNewValue());
+    	//set modified for Tracking Diary and save the original unplanned of the threshold
+		Integer originalS2Unplanned = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(threshold.getThresholdId());
+		if(originalS2Unplanned != null){
+			if(originalS2Unplanned == (Integer) event.getNewValue()){
+				 this.getManagedBean().getThresholdIdToS2UnplannedMap().remove(threshold.getThresholdId());
+			}
+		}else{
+			threshold.setModified(true);
+          this.getManagedBean().getThresholdIdToS2UnplannedMap().put(threshold.getThresholdId(), (Integer) event.getOldValue());
+		}
+    }
+    
+    public void onChangeBudgetThreshold(ValueChangeEvent event){
+    	log.info("onChangeBudgetThreshold");
+		log.info("event.getOldValue()="+event.getOldValue());
+		log.info("event.getNewValue()="+event.getNewValue());
+		PmThreshold threshold = (PmThreshold) event.getComponent().getAttributes().get("threshold");
+    	//set modified for Tracking Diary and save the original budget of the threshold
+		if(threshold != null){
+		Integer originalBudget = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(threshold.getThresholdId());
+		if(originalBudget != null){
+			if(originalBudget == (Integer)event.getNewValue()){
+				 this.getManagedBean().getThresholdIdToBudgetSpentMap().remove(threshold.getThresholdId());
+			}
+		}else{
+			threshold.setModified(true);
+            this.getManagedBean().getThresholdIdToBudgetSpentMap().put(threshold.getThresholdId(), (Integer)event.getOldValue());
+		}
+		}
+    }
+    
+	public void onChangeMainUnplannedThreshold(ValueChangeEvent event) {
 		// getManagedBean().getThreshold().setS2Unplanned(getManagedBean().getUnplannedThreshold().intValue());
+		log.info("onChangeMainUnplannedThreshold");
+		log.info("event.getOldValue()="+event.getOldValue());
+		log.info("event.getNewValue()="+event.getNewValue());
 		for (PmThreshold threshold : getManagedBean()
 				.getUnplannedThresholdList()) {
-			threshold.setS2Unplanned(getManagedBean().getThreshold()
-					.getS2Unplanned());
+			threshold.setS2Unplanned((Integer)event.getNewValue());
 		}
+		//set modified for Tracking Diary and save the original unplanned of the threshold
+				Integer originalS2Unplanned = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId());
+				log.info(".......originalS2Unplanned="+originalS2Unplanned);
+				if(originalS2Unplanned != null){
+					if(originalS2Unplanned == (Integer)event.getNewValue()){
+						 this.getManagedBean().getThresholdIdToS2UnplannedMap().remove(this.getManagedBean().getThreshold().getThresholdId());
+					}
+				}else{
+		          this.getManagedBean().getThreshold().setModified(true);
+		          this.getManagedBean().getThresholdIdToS2UnplannedMap().put(this.getManagedBean().getThreshold().getThresholdId(), (Integer)event.getOldValue());
+				}
 	}
 
-	public void onChangeMainBudgetThreshold() {
+	public void onChangeMainBudgetThreshold(ValueChangeEvent event) {
+		log.info("onChangeMainBudgetThreshold");
+		log.info("event.getOldValue()="+event.getOldValue());
+		log.info("event.getNewValue()="+event.getNewValue());
 		for (PmThreshold threshold : getManagedBean().getBudgetThresholdList()) {
-			threshold.setBudgetSpent(getManagedBean().getThreshold()
-					.getBudgetSpent());
+			threshold.setBudgetSpent((Integer)event.getNewValue());
 		}
+		//set modified for Tracking Diary and save the original budgetSpent of the threshold
+		Integer originalBudgetSpent = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(this.getManagedBean().getThreshold().getThresholdId());
+		if(originalBudgetSpent != null){
+			if(originalBudgetSpent == (Integer)event.getNewValue()){
+				 this.getManagedBean().getThresholdIdToBudgetSpentMap().remove(this.getManagedBean().getThreshold().getThresholdId());
+			}
+		}else{
+          this.getManagedBean().getThreshold().setModified(true);
+          this.getManagedBean().getThresholdIdToBudgetSpentMap().put(this.getManagedBean().getThreshold().getThresholdId(), (Integer)event.getOldValue());
+		}
+
+	}
+	public void fillTrackingDairyForThreshold(int type , ThresholdReqDTO reqDTO){
+		log.info("Tracking diary for Threshold :");
+		log.info("type"+type);
+		PmThreshold centralizedLevelThreshold= this.getManagedBean().getThreshold();
+		 log.info("centralizedLevelThreshold"+centralizedLevelThreshold);
+		 log.info("centralizedLevelThreshold.isModified()="+centralizedLevelThreshold.isModified());
+		 log.info("this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId())="+this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId()));
+		// 1 - unplanned
+		// 2 - budget
+		if(type == 1){
+			
+			if(centralizedLevelThreshold.isModified()){
+			  Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(this.getManagedBean().getThreshold().getThresholdId());
+			  if(originalUnplanndthreshold != null && originalUnplanndthreshold != centralizedLevelThreshold.getS2Unplanned()){// track change
+				  log.info("Tracking diary for Threshold : Centeralized Unplanned changed");
+				  String messageId = MessageConst.TD_80018;
+					String[] msgParam = new String[] {
+							originalUnplanndthreshold.toString(),
+							centralizedLevelThreshold.getS2Unplanned().toString()};
+					reqDTO.setTrackingStatus(true);
+					reqDTO.getTrackDairyVOs().add(
+							PmCommonUtil.assignTrackingDairyForUnplannedThreshold(centralizedLevelThreshold,
+									getActionDesc(messageId, msgParam),
+									null));
+			  }
+			}
+			for(PmThreshold threshold: this.getManagedBean().getUnplannedThresholdList()){
+				if(threshold.isModified()){
+					  Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(threshold.getThresholdId());
+					  if(originalUnplanndthreshold != null && originalUnplanndthreshold != threshold.getS2Unplanned()){// track change
+						  log.info("Tracking diary for Threshold : ministery Unplanned changed");
+						  String messageId = MessageConst.TD_80017;
+							String[] msgParam = new String[] {
+									originalUnplanndthreshold.toString(),
+									threshold.getS2Unplanned().toString()};
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(
+									PmCommonUtil.assignTrackingDairyForUnplannedThreshold(threshold,
+											getActionDesc(messageId, msgParam),
+											null));
+					  }
+					}
+			}
+		}else if(type == 2){
+			if(centralizedLevelThreshold.isModified()){
+				  Integer originalBudgetThreshold = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(this.getManagedBean().getThreshold().getThresholdId());
+				  if(originalBudgetThreshold != null && originalBudgetThreshold != centralizedLevelThreshold.getBudgetSpent()){// track change
+					  log.info("Tracking diary for Threshold : Centeralized BudgetVsSpent changed");
+					  String messageId = MessageConst.TD_80020;
+						String[] msgParam = new String[] {
+								originalBudgetThreshold.toString(),
+								centralizedLevelThreshold.getBudgetSpent().toString()};
+						reqDTO.setTrackingStatus(true);
+						reqDTO.getTrackDairyVOs().add(
+								PmCommonUtil.assignTrackingDairyForBudgetThreshold(centralizedLevelThreshold,
+										getActionDesc(messageId, msgParam),
+										null));
+				  }
+				}
+			for(PmThreshold threshold: this.getManagedBean().getBudgetThresholdList()){
+				if(threshold.isModified()){
+					  Integer originalUnplanndthreshold = this.getManagedBean().getThresholdIdToBudgetSpentMap().get(threshold.getThresholdId());
+					  if(originalUnplanndthreshold != null && originalUnplanndthreshold != threshold.getBudgetSpent()){// track change
+						  log.info("Tracking diary for Threshold : ministery BudgetVsSpent changed");
+						  String messageId = MessageConst.TD_80019;
+							String[] msgParam = new String[] {
+									originalUnplanndthreshold.toString(),
+									threshold.getBudgetSpent().toString()};
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(
+									PmCommonUtil.assignTrackingDairyForBudgetThreshold(threshold,
+											getActionDesc(messageId, msgParam),
+											null));
+					  }
+					}
+			}
+		}
+		
+
+
 	}
 
 	public void saveThresholds(int type) {
 		// 1 - unplanned
 		// 2 - budget
-
+		ThresholdReqDTO reqDTO = new ThresholdReqDTO();
+		fillTrackingDairyForThreshold(type, reqDTO);
 		List<PmThreshold> saveThresholdList = new ArrayList<PmThreshold>();
 		saveThresholdList.add(getManagedBean().getThreshold());
 		if (type == 1) {
@@ -2064,7 +2207,7 @@ public class RuleCatalogueBackingBean extends
 			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 							IUserSO.class);
-			ThresholdReqDTO reqDTO = new ThresholdReqDTO();
+			
 			reqDTO.setThresholdList(saveThresholdList);
 			reqDTO.setPmConfigGeneral(getManagedBean()
 					.getSelectedConfigGeneral());
