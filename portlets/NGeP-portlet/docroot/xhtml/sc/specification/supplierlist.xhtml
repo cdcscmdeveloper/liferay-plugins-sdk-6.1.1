@@ -16,10 +16,12 @@
 			<p:dataTable id="suppliersTbl" var="qtSupplier" rows="10"
 				value="#{specificationBackingBean.managedBean.ctZoneSupplierList}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
-
+				<ui:param name="mof"
+					value="#{specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier)}" />
 				<ac:paginator for="suppliersTbl" />
 
 				<!-- 	<p:column selectionMode="multiple" style="width:5%" /> -->
+
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<p:commandLink oncomplete="suppDetails.show();"
@@ -29,12 +31,10 @@
 					</p:commandLink>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.mofno']}">
-					<h:outputText
-						value="#{specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).mofNo}" />
+					<h:outputText value="#{mof.mofNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
-					<h:outputText
-						value="#{specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate}">
+					<h:outputText value="#{mof.expDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
@@ -43,11 +43,12 @@
 					<!-- <h:outputText
 						value="#{specificationBackingBean.retriveSupplierDescById(qtSupplier.supplier.supplierId)}" /> -->
 					<h:outputText
-						rendered="#{specificationBackingBean.supplierStatusDateComparision(specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'true'}"
-						value="Active" />
+						rendered="#{specificationBackingBean.supplierStatusDateComparision(mof.expDate) eq 'true'}"
+						value="#{lbl['lbl.txt.active']}" />
 					<h:outputText
-						rendered="#{specificationBackingBean.supplierStatusDateComparision(specificationBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'false'}"
-						value="Expired" style="font-weight: bold;color:red;" />
+						rendered="#{specificationBackingBean.supplierStatusDateComparision(mof.expDate) eq 'false'}"
+						value="#{lbl['lbl.txt.expired']}"
+						style="font-weight: bold;color:red;" />
 				</p:column>
 			</p:dataTable>
 
