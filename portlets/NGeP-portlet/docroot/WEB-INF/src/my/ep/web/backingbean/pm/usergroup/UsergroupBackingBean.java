@@ -188,8 +188,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 				searchBean.getDataFilterBeans().add(codesSearchBean);
 			}
 
-			if (getManagedBean().getStatus() != null
-					&& !"".equals(getManagedBean().getStatus())) {
+			if (getManagedBean().getStatus() != null) {
 				SearchFilterBean codesSearchBean = new SearchFilterBean(
 						SearchOperator.OPERATOR_EQUALS.value());
 				codesSearchBean.setSearchField("recordStatusFlg");
