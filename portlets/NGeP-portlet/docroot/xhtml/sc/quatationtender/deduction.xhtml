@@ -79,13 +79,22 @@
 			<p:dataTable id="deductClauseTbl" widgetVar="deductClauseTblWidget"
 				var="scQtDeductionClause"
 				value="#{qTDeductionPaymentBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
-				selection="#{qTDeductionPaymentBackingBean.managedBean.selectedDeductionClauses}"
-				rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
+				rows="10" rowKey="#{scQtDeductionClause}" rowIndexVar="rowIndex">
 				
 				<ac:paginator for="deductClauseTbl" />
-
-				<p:column selectionMode="multiple" style="width:2%"
-					disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}" />
+				
+				<p:column style="width:2%" disabledSelection="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_DEDUCTIONPAYMENT)}">
+					<f:facet name="header">
+						<p:selectBooleanCheckbox id="selectAllDeductionClauseId"
+							value="#{qTDeductionPaymentBackingBean.flag}">
+							<p:ajax partialSubmit="true" process="@form" update="deductClauseTbl"
+								listener="#{qTDeductionPaymentBackingBean.selectAllDeductionClause}"/>
+						</p:selectBooleanCheckbox>
+					</f:facet>
+					<p:selectBooleanCheckbox value="#{scQtDeductionClause.selected}">
+							<p:ajax partialSubmit="true" process="@this" update="deductClauseTbl" />
+					</p:selectBooleanCheckbox>
+				</p:column>		
 				
 				<p:column style="white-space:normal">
 					<f:facet name="header">
