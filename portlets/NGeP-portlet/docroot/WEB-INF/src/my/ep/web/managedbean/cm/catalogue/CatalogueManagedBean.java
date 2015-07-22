@@ -457,6 +457,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int expiredTabPageSize = 5;
 
 	private List<CmSupplierItem> cloneCmSupplierItemLs;
+	
+	
+	private int zonalRowIndex;
 
 
 	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
@@ -3640,6 +3643,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setError99(boolean error99) {
 		this.error99 = error99;
 	}
+
+	public int getZonalRowIndex() {
+		return zonalRowIndex;
+	}
+
+	public void setZonalRowIndex(int zonalRowIndex) {
+		this.zonalRowIndex = zonalRowIndex;
+	}
+	
 	
 	
 
