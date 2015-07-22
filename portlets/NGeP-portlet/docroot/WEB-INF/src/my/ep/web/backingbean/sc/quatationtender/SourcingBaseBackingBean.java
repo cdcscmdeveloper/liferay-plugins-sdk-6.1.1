@@ -1253,30 +1253,30 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 */
 	public <ENTITY_CLASS extends BaseEntity> void markDeleteSelectedRowsActionById(
 			List<ScQtCheckList> list, List<ScQtCheckList> markDeletedList) {
-		List<Integer> toBeRemoveIndx = new ArrayList<Integer>();
+		// List<Integer> toBeRemoveIndx = new ArrayList<Integer>();
 		if (log.isDebugEnabled()) {
 			log.debug("markDeleteSelectedRowsAction");
 		}
 		try {
 			if (list != null) {
+
 				if (markDeletedList == null) {
 					markDeletedList = new ArrayList<ScQtCheckList>();
 				}
-				for (ScQtCheckList entity : list) {
-					if (entity.isSelected()) {
-						entity.setDeleted(true);
-						markDeletedList.add(entity);
-						if (entity.getIndex() != -1) {
-							toBeRemoveIndx.add(Integer.valueOf(entity
-									.getIndex()));
-						}
+				for (int i = 0; i < list.size(); i++) {
+					if (list.get(i).isSelected()) {
+						list.get(i).setDeleted(true);
+						markDeletedList.add(list.get(i));
+
+						list.remove(list.get(i));
+						i--;
 					}
 				}
 				if (markDeletedList.size() == 0) {
 					throw new EpException(MessageConst.ERROR_760146);
 				}
 
-				deleteRowsActionById(list, toBeRemoveIndx);
+				// deleteRowsActionById(list, toBeRemoveIndx);
 			} else {
 				throw new EpException(MessageConst.ERROR_760146);
 			}
@@ -1297,7 +1297,8 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			log.debug("deleteRowAction");
 		}
 
-		if (list != null && toBeRemovedList != null) {
+		if (CollectionUtils.isNotEmpty(list)
+				&& CollectionUtils.isNotEmpty(toBeRemovedList)) {
 			for (int i = 0; i < toBeRemovedList.size(); i++) {
 				list.remove(toBeRemovedList.get(i).intValue());
 			}
