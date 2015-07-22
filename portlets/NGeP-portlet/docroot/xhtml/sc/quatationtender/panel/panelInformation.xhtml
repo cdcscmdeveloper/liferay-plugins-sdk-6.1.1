@@ -14,14 +14,14 @@
 					<h:outputLabel value="#{lbl['lbl.sc.circular.no']}" />
 				</h:column>
 				<h:column>
-					<p:inputText
+					<p:inputText size="75"
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.circularNo}"
-						disabled="true" size="75" />
+						disabled="true"  />
 					<p:spacer width="5" />
 					<p:commandLink value="#{lbl['lbl.sc.circular.attach']}" 
-						style="margin-right:20px;" process="@all,yesmainpanel"
+						style="margin-right:20px;" process="@form,yesmainpanel"
 						partialSubmit="true" update="circularItemDetails"
-						actionListener="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments}" />
+						action="#{qTSupplierQulCriteriaBackingBean.viewCircularAttachments}" />
 				</h:column>
 
 				<h:column>
