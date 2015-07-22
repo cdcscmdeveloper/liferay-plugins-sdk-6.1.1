@@ -13,42 +13,36 @@
 				value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctZoneSupplierList}"
 				rowIndexVar="index" editable="true" rowKey="#{qtSupplier}">
 
+				<ui:param name="mof" value="#{qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier)}" />
+
 				<ac:paginator for="suppliersTbl" />
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<p:commandLink oncomplete="suppDetails.show();"
 						actionListener="#{qTSupplierQulCriteriaBackingBean.retriveSupplierDtls(qtSupplier)}"
-						update=":form:paneltabView:panelpopupSuppDtl" >
+						update=":form:paneltabView:panelpopupSuppDtl">
 						<h:outputText value="#{qtSupplier.supplier.companyName}" />
 					</p:commandLink>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.mofno']}">
-					<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).mofNo}" />
+					<h:outputText value="#{mof.mofNo}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.mofexp.date']}">
-					<h:outputText
-						value="#{qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate}">
-						<f:convertDateTime
-							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					<h:outputText value="#{mof.expDate}">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.status']}">
-					<h:outputText
-						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'true'}"
-						value="Active" />
-					<h:outputText
-						rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(qTSupplierQulCriteriaBackingBean.retriveMofAccountBySupplier(qtSupplier.supplier).expDate) eq 'false'}"
-						value="Expired" style="font-weight: bold;color:red;" />
+					<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'true'}" value="#{lbl['lbl.txt.active']}" />
+					<h:outputText rendered="#{qTSupplierQulCriteriaBackingBean.supplierStatusDateComparision(mof.expDate) eq 'false'}" value="#{lbl['lbl.txt.expired']}" style="font-weight: bold;color:red;" />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 		<h:outputText value="#{lbl['lbl.sc.totalsup']}" />
 		<p:spacer width="5" />
-		<p:inputText
-			value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}"
-			disabled="true" />
+		<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" disabled="true" />
 	</h:panelGroup>
-	<ui:include src="/xhtml/sc/quatationtender/panel/supplierDetailsPopup.xhtml"/>
+	<ui:include
+		src="/xhtml/sc/quatationtender/panel/supplierDetailsPopup.xhtml" />
 </ui:composition>
