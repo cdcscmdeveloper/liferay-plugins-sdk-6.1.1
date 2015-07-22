@@ -766,6 +766,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
     private int checkListYesIndex;
     private boolean technicalOtherChecklistSubmit;
     private boolean financialOtherChecklistSubmit;
+    
+    private List<ScQtSchedule> toBeRemoveSchedules;
+    private List<ScQtProgressivePayment> toBeRemoveProgPayments;
 	
 	
 
@@ -5118,6 +5121,23 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setFinancialOtherChecklistSubmit(
 			boolean financialOtherChecklistSubmit) {
 		this.financialOtherChecklistSubmit = financialOtherChecklistSubmit;
+	}
+
+	public List<ScQtSchedule> getToBeRemoveSchedules() {
+		return toBeRemoveSchedules;
+	}
+
+	public void setToBeRemoveSchedules(List<ScQtSchedule> toBeRemoveSchedules) {
+		this.toBeRemoveSchedules = toBeRemoveSchedules;
+	}
+
+	public List<ScQtProgressivePayment> getToBeRemoveProgPayments() {
+		return toBeRemoveProgPayments;
+	}
+
+	public void setToBeRemoveProgPayments(
+			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
+		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
 	}
 
 }
