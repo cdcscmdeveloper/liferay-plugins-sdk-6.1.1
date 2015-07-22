@@ -1079,7 +1079,7 @@ public class ProfileManagementBackingBean extends
 				.getParameterId() != null) {
 			PmParameter pmParameter = (PmParameter) identityTypeMapper.get(this
 					.getManagedBean().getSelectedUser().getIdentificationCode()
-					.getParameterId());
+					.getParameterCode());
 			this.getManagedBean().getSelectedUser().getIdentificationCode()
 					.setParameterCode(pmParameter.getParameterCode());
 		}
@@ -1440,10 +1440,10 @@ public class ProfileManagementBackingBean extends
 								getManagedBean().getSelectedUserOrg()
 										.getPmOrgProfile());
 			} else {
-				if (getManagedBean().getSelectedCurrentOrgProfile()
-						.getOrgProfileId() != getManagedBean()
+				if (!getManagedBean().getSelectedCurrentOrgProfile()
+						.getOrgProfileId().equals(getManagedBean()
 						.getSelectedUserOrg().getPmOrgProfile()
-						.getOrgProfileId()) {
+						.getOrgProfileId())) {
 					// clear role list
 					this.getManagedBean().getSelectedUserOrg()
 							.setPmUserRoles(new ArrayList<PmUserRole>());
@@ -1874,7 +1874,7 @@ public class ProfileManagementBackingBean extends
 				}
 			}
 
-		}
+		
 
 		// check for role restriction
 		if (DbValueConst.RECORD_STATUS_ACTIVE == pmUserRole
@@ -1888,6 +1888,7 @@ public class ProfileManagementBackingBean extends
 										.getRoleCode()) });
 
 			}
+		}
 		}
 
 	}
@@ -1920,7 +1921,7 @@ public class ProfileManagementBackingBean extends
 			List<String> noteNumberList = fulfilmentSO
 					.getNumberOfFRNByAddressAndStatus(addressType
 							.getPmAddress().getAddressId(), statusIds);
-			System.out.println("noteNumberList******" + noteNumberList.size());
+			//System.out.println("noteNumberList******" + noteNumberList.size());
 			if (noteNumberList != null && noteNumberList.size() > 0
 					&& loginId != null && loginId.length() > 0) {
 				// token = getFacesScopes().getBPMAuthenticationCtxToken();
@@ -2112,8 +2113,8 @@ public class ProfileManagementBackingBean extends
 							.equalsIgnoreCase(addressTypeObj.getAddressType())
 							&& (addressTypeObj.getPmOrgProfile() != null && this
 									.getManagedBean().getSelectedUserOrg()
-									.getPmOrgProfile().getOrgProfileId() == addressTypeObj
-									.getPmOrgProfile().getOrgProfileId())) {
+									.getPmOrgProfile().getOrgProfileId().equals(addressTypeObj
+									.getPmOrgProfile().getOrgProfileId()))) {
 						this.getManagedBean().getSelectedReceivingAddrTypes()
 								.add(addressTypeObj);
 					}
@@ -3533,8 +3534,8 @@ public class ProfileManagementBackingBean extends
 					PmCommonUtil.assignTrackingDairyValues(user,
 							getActionDesc(messageId, msgParam), null));
 		}
-		if (this.getManagedBean().getPmUserOrgOriginal().getRecordStatusFlg() != userOrg
-				.getRecordStatusFlg()) {
+		if (!this.getManagedBean().getPmUserOrgOriginal().getRecordStatusFlg().equals(userOrg
+				.getRecordStatusFlg())) {
 			logger.info("Tracking diary for user profile: change user state :saveUserProfile");
 			String messageId = userOrg.getRecordStatusFlg() == 0 ? MessageConst.TD_80005
 					: MessageConst.TD_80006;

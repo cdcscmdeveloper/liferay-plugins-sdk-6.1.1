@@ -876,7 +876,7 @@ public class RuleCatalogueBackingBean extends
 			Integer groupIdOfParent = selectedValueToDel.getGroupValueId();
 			for (PmConfigRuleValue value : this.getManagedBean()
 					.getSelectedRuleType().getConfigRuleValues()) {
-				if (value.getGroupValueId() == groupIdOfParent) {
+				if (value.getGroupValueId().equals(groupIdOfParent)) {
 					removeList.add(value);
 				}
 			}
@@ -2192,12 +2192,13 @@ public class RuleCatalogueBackingBean extends
 				.getConfigRuleValues().size() - 1) {
 			PmConfigRuleValue rulevalue = this.getManagedBean()
 					.getSelectedRuleType().getConfigRuleValues().get(index + 1);
-			if (rulevalue.getGroupValueId() == this.getManagedBean()
+			if (rulevalue.getGroupValueId().equals(this.getManagedBean()
 					.getSelectedRuleType().getConfigRuleValues().get(index)
-					.getGroupValueId())
+					.getGroupValueId())){
 				rulevalue.setFromValue(this.getManagedBean()
 						.getSelectedRuleType().getConfigRuleValues().get(index)
 						.getToValue().add(new BigDecimal(1)));
+			}
 		}
 	}
 
@@ -2220,7 +2221,7 @@ public class RuleCatalogueBackingBean extends
 
 			for (PmConfigRuleValue value : this.getManagedBean()
 					.getSelectedRuleType().getConfigRuleValues()) {
-				if (value.getGroupValueId() == ruleValue.getGroupValueId()) {
+				if (value.getGroupValueId().equals(ruleValue.getGroupValueId())) {
 					value.setEffDate(effDate);
 					value.setExpDate(expDate);
 				}
@@ -2274,7 +2275,7 @@ public class RuleCatalogueBackingBean extends
 			Integer GroupId) {
 		int addIndex = 0;
 		for (PmConfigRuleValue ruleValue : pmConfigValues) {
-			if (ruleValue.getGroupValueId() == GroupId) {
+			if (ruleValue.getGroupValueId().equals(GroupId)) {
 				addIndex = pmConfigValues.indexOf(ruleValue);
 			}
 		}
@@ -2811,12 +2812,12 @@ public class RuleCatalogueBackingBean extends
 				if ((ProfileManagementConst.EXEMPTION_GENERAL == exItem
 						.getExemptionType() || ProfileManagementConst.EXEMPTION_DA == exItem
 						.getExemptionType())
-						&& exItem.getUnspsc().getUnspscId() == baseItem
-								.getUnspsc().getUnspscId()
+						&& exItem.getUnspsc().getUnspscId().equals(baseItem
+								.getUnspsc().getUnspscId())
 						&& (exItem.getType() != null
 								&& baseItem.getType() != null ? exItem
-								.getType().getTypeId() == baseItem.getType()
-								.getTypeId() : true)
+								.getType().getTypeId().equals(baseItem.getType()
+								.getTypeId()) : true)
 						&& (exItem.getBrand() != null
 								&& baseItem.getBrand() != null ? exItem
 								.getBrand().getBrandId() == baseItem.getBrand()
@@ -2839,10 +2840,10 @@ public class RuleCatalogueBackingBean extends
 						.getExemptionType()
 						&& (exItem.getUnspsc() != null
 								&& baseItem.getUnspsc() != null ? exItem
-								.getUnspsc().getUnspscId() == baseItem
-								.getUnspsc().getUnspscId() : true)
-						&& exItem.getOrgProfile().getOrgProfileId() == baseItem
-								.getOrgProfile().getOrgProfileId()) {
+								.getUnspsc().getUnspscId().equals(baseItem
+								.getUnspsc().getUnspscId()) : true)
+						&& exItem.getOrgProfile().getOrgProfileId().equals(baseItem
+								.getOrgProfile().getOrgProfileId())) {
 					// G2G
 					result = isDateOverlaped(exItem.getEffDate(),
 							exItem.getExpDate(), baseItem.getEffDate(),
@@ -2915,7 +2916,7 @@ public class RuleCatalogueBackingBean extends
 					continue;
 				}
 
-				if (exItem.getLocationId() == baseItem.getLocationId()
+				if (exItem.getLocationId().equals(baseItem.getLocationId())
 						&& exItem.getLocationType().equals(
 								baseItem.getLocationType())) {
 					throw new EpException("Duplicate Designated Area");

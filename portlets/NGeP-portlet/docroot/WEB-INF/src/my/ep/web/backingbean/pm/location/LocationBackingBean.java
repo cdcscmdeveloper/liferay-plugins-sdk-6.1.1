@@ -539,13 +539,14 @@ public class LocationBackingBean extends BaseBackingBean<LocationManagedBean> {
 		DivisionResDTO resDTO = reqSO.retriveDivisionListByState(reqDTO);
 		getManagedBean().setDivisions(resDTO.getDivisionList());	
 		
-		
-		if(pmState.getAdoptDivision()) {
-			getManagedBean().setDivisionBox(false);
-		}
-		else{	
-			getManagedBean().getDistrict().getPmDivision().setDivisionId(null);
-			getManagedBean().setDivisionBox(true);
+		if(pmState != null){
+			if(pmState.getAdoptDivision()) {
+				getManagedBean().setDivisionBox(false);
+			}
+			else{	
+				getManagedBean().getDistrict().getPmDivision().setDivisionId(null);
+				getManagedBean().setDivisionBox(true);
+			}
 		}
 
 	}

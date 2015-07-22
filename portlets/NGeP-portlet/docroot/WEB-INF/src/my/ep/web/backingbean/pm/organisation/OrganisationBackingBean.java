@@ -1535,10 +1535,12 @@ public class OrganisationBackingBean extends
 			this.getManagedBean().getOrgProfile()
 					.setPmAddressTypes(orgAddressTypes);
 		}
-		if (address.getPmAddress().isBrandNew()) {
-			address.getPmAddress().setModified(true);
+		if (address != null) {
+			if (address.getPmAddress().isBrandNew()) {
+				address.getPmAddress().setModified(true);
+			}
+			address.setEditable(true);
 		}
-		address.setEditable(true);
 	}
 
 	/**
@@ -2070,13 +2072,15 @@ public class OrganisationBackingBean extends
 	 */
 	public void retrievePmState(PmState pmState) {
 		log.info("retrievePmState");
-		if (pmState != null && pmState.getStateId() != null) {
-			log.info("pmState.getStateId() " + pmState.getStateId());
-			PmState tempState = PmCommonUtil.retrievePmStateByStateId(pmState
-					.getStateId());
-			pmState.setStateCode(tempState.getStateCode());
-		} else {
-			pmState.setStateCode(null);
+		if(pmState != null ){
+			if (pmState.getStateId() != null) {
+				log.info("pmState.getStateId() " + pmState.getStateId());
+				PmState tempState = PmCommonUtil.retrievePmStateByStateId(pmState
+						.getStateId());
+				pmState.setStateCode(tempState.getStateCode());
+			} else {
+				pmState.setStateCode(null);
+			}
 		}
 	}
 
