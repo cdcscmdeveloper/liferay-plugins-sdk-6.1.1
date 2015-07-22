@@ -1559,23 +1559,37 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	}
 
 	public SmMofAccount retriveMofAccountBySupplier(SmSupplier smSupplier) {
+		SmMofAccount mofAccount = null;
 
 		MofAccountResDTO mofAccResDTO = new MofAccountResDTO();
 		IMofAccountSO mofAccountSO = null;
-		SmMofAccount mofAccount = new SmMofAccount();
-		try {
 
-			mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-							IMofAccountSO.class);
-			MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
-			mofAccReqDTO.setSupplierId(smSupplier.getSupplierId());
-			mofAccResDTO = mofAccountSO.retrieveMofNoBySupplierId(mofAccReqDTO);
-			mofAccount = mofAccResDTO.getMofAccount();
+		try {
+			if (null != smSupplier) {
+				log.info("===sourcingbasebackingbean mof account smsupplierid==="
+						+ smSupplier.getSupplierId());
+				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								IMofAccountSO.class);
+				MofAccountReqDTO mofAccReqDTO = new MofAccountReqDTO();
+				mofAccReqDTO.setSupplierId(smSupplier.getSupplierId());
+				mofAccReqDTO
+						.setSupplierType(ParameterConst.SUPPLIER_TYPE_CONTRACTOR);
+				mofAccResDTO = mofAccountSO
+						.retrieveMofNoBySupplierId(mofAccReqDTO);
+				if (null != mofAccResDTO.getMofAccount()) {
+					mofAccount = mofAccResDTO.getMofAccount();
+					smSupplier.setSmMofAccount(mofAccount);
+				}
+			} else {
+				mofAccount = new SmMofAccount();
+			}
+
 		} finally {
 			mofAccountSO = null;
 		}
 		return mofAccount;
+
 	}
 
 }
