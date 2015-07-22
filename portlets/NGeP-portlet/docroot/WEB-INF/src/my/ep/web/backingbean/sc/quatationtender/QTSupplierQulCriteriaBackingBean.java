@@ -1511,6 +1511,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 * @return navigate to ctcircular page.
 	 */
 	public String viewCircularAttachments() {
+		debugLogger("viewCircularAttachments");
 		List<CtPanelItem> itemList = this.getManagedBean().getSelectpanelItem();
 		itemList = new ArrayList<CtPanelItem>();
 		itemList.add(this.getManagedBean().getCtPanelItem());
@@ -1519,7 +1520,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (null != ctCircularVer) {
 			PanelBackingBean panelbackingbean = new PanelBackingBean();
 			panelbackingbean.getManagedBean().setDifferentModule(true);
-			panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/quatationtender/qtntendermain.xhtml");
+			panelbackingbean.getManagedBean().setGotoPreviewPage("/xhtml/sc/quatationtender/quatationtendercreation.xhtml");
 			pageView = panelbackingbean.gotoCommonViewPage(ctCircularVer.getCircularVerId());
 		}
 		this.getManagedBean().setSelectpanelItem(itemList);
