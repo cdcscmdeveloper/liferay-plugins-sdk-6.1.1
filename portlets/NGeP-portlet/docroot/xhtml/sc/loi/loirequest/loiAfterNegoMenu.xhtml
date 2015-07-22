@@ -22,7 +22,7 @@
 				rendered="#{isEditableStatus}" />
 
 			<p:column headerText="#{lbl['lbl.sc.document.title']}">
-				<p:inputText style="width:96%" value="#{scLoiSuppDoc.title}">
+				<p:inputText style="width:85%" value="#{scLoiSuppDoc.title}">
 					<p:ajax event="keyup" />
 				</p:inputText>
 			</p:column>
@@ -30,8 +30,9 @@
 
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment>
-					<h:outputText
-						value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" />
+					<h:commandLink value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}" styleClass="blue_font" 
+					immediate="true" action="#{lOIDetailBackingBean.downloadFile(scLoiSuppDoc.scLoiSupportingDocAttachment)}"/>
+						
 					<p:commandButton oncomplete="loiSuppAttmPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=loiSuppAttmPopup])">
