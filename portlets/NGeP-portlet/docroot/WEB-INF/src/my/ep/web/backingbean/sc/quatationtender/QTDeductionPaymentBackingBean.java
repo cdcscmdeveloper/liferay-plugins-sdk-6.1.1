@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchBean;
@@ -46,6 +47,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
@@ -74,6 +76,11 @@ public class QTDeductionPaymentBackingBean extends
 		}
 		log.info(message);
 	}
+	
+	/** The flag. */
+	private boolean flag;
+	
+	
 
 	/**
 	 * Instantiates a new QT deduction payment backing bean.
@@ -237,13 +244,32 @@ public class QTDeductionPaymentBackingBean extends
 	 * Delete deduction clause.
 	 */
 	public void deleteDeductionClause() {
-		ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
+		debugLogger("deleteDeductionClause");
+		List<ScQtDeductionClause> result = new ArrayList<ScQtDeductionClause>();
+		boolean flag = true;
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedScQtDeduction().getScQtDeductionClauses();
+		if(clauses != null && clauses.size() > 0){
+			
+			for (ScQtDeductionClause deductionClause : clauses) {
+				if (!deductionClause.isSelected()) {
+					result.add(deductionClause);
+				} else {
+					flag = false;
+				}
+			}
+		}
+		
+		if (flag) {
+			throw new EpException("Please select At least one Item");
+		}
+		getManagedBean().getSelectedScQtDeduction().setScQtDeductionClauses(result);
+		/*ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
 		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
 		if(clauses != null && clauses.size()>0){
 			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
 		} else {
 			throw new EpException("Please select At least one Item");
-		}
+		}*/
 	}
 
 	/**
@@ -323,4 +349,35 @@ public class QTDeductionPaymentBackingBean extends
 
 		return getDropdownValuesBySearchBean(ParameterTypeConst.DEDUCTION_TYPE,searchBean);
 	}
+	
+	public void selectAllDeductionClause(AjaxBehaviorEvent event) {
+		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
+		this.getManagedBean().getSelectedDeductionClauses();
+		
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
+		if (clauses != null && clauses.size() > 0) {
+			for (ScQtDeductionClause deductionClause : clauses) {
+				if (isSelectAll) {
+					deductionClause.setSelected(true);
+				} else {
+					deductionClause.setSelected(false);
+				}
+			}
+		}
+	}
+
+	/**
+	 * @return the flag
+	 */
+	public boolean isFlag() {
+		return flag;
+	}
+
+	/**
+	 * @param flag the flag to set
+	 */
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
 }
