@@ -440,6 +440,13 @@ public class LOIDetailBackingBean extends
 
 			Long sourceId = Long.valueOf(evaluationDataType.getQtId());
 			getManagedBean().setPayLoadData(evaluationDataType);
+			
+			String loggedInUserIdentificationNo = getFacesScopes().getUserSessionBean()
+														.getIdentificationNo();
+			if (StringUtils.equals(loggedInUserIdentificationNo, 
+					evaluationDataType.getFcSecretary())) {
+				this.getManagedBean().setSecretaryUser(true);
+			}
 
 			retrieveMultipleLoiDtls(sourceId,
 					evaluationDataType.getCommitteeType(),

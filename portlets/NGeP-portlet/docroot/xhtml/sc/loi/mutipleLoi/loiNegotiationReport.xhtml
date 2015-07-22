@@ -31,7 +31,19 @@
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment
 					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
+					<h:commandLink value="#{scLoiReport.scLoiReportAttachment.fileName}" styleClass="blue_font"
+								action="#{lOIDetailBackingBean.downloadFile(
+											scLoiReport.scLoiReportAttachment)}" />
+					<p:commandLink immediate="true"
+						rendered="#{!empty scLoiReport.scLoiReportAttachment and 
+											lOIDetailBackingBean.managedBean.secretaryUser}" update="reportContentsTbl">
+						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
+							styleClass="tasklist_title1" />
+
+						<f:setPropertyActionListener target="#{scLoiReport.scLoiReportAttachment}" value="#{null}" />
+					</p:commandLink>
 					<h:outputText value="#{scLoiReport.scLoiReportAttachment.fileName}" />
+					
 					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}"
 						partialSubmit="true" process="@this"
@@ -52,7 +64,8 @@
 					style="background-color:transparent !important; border:0px none;"
 					ajax="false"
 					action="#{lOIDetailBackingBean.downloadReport(scLoiReport)}"
-					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload ? !empty scLoiReport.scLoiReportAttachment.fileName : true}" />
+					rendered="#{scLoiReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload 
+									? !empty scLoiReport.scLoiReportAttachment.fileName : true}" />
 			</p:column>
 
 		</p:dataTable>

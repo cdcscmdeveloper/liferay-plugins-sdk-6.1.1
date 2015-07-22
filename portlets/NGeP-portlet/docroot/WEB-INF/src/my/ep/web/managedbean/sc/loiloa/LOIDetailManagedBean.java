@@ -365,6 +365,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The select zone */
 	private TplSpecZoneDtl selectedZone;
 	
+	/** Is FC Secretary User */
+	private boolean isSecretaryUser;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2130,6 +2133,21 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedZone(TplSpecZoneDtl selectedZone) {
 		this.selectedZone = selectedZone;
+	}
+
+	/**
+	 * @return the isSecretaryUser
+	 */
+	public boolean isSecretaryUser() {
+		return isSecretaryUser;
+	}
+
+	/**
+	 * @param isSecretaryUser 
+	 * 				the isSecretaryUser to set
+	 */
+	public void setSecretaryUser(boolean isSecretaryUser) {
+		this.isSecretaryUser = isSecretaryUser;
 	}
 	
 }
