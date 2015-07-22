@@ -47,7 +47,7 @@
 
 				<p:ajax event="rowSelect"
 					listener="#{lOIDetailBackingBean.onRowRecSupplierAction}"
-					update=":form:recSupplierListId" />
+					update=":form:loiLoaListId" />
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
 					<h:outputText value="#{loiLoa.smSupplier.companyName}" />
@@ -55,32 +55,37 @@
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.is.loi.required']}" rendered="#{!isMultipleLoi}">
 					<h:selectOneMenu value="#{loiLoa.loiRequired}" required="true"
-					    disabled="#{loiLoa.loiRequired ne 'null' }"
-						id="isLoiReq" label="#{lbl['lbl.sc.loiloa.is.loi.required']}">
+					    disabled="#{loiLoa.loiRequiredDisabled}"
+					    label="#{loiLoa.smSupplier.companyName} : #{lbl['lbl.sc.loiloa.is.loi.required']}" 
+						id="isLoiReq">
 					    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
-						<p:ajax event="change" update="@form" partialSubmit="true" 
+						<p:ajax event="change" partialSubmit="true" update="loiPrepareButton"
 						    listener="#{lOIDetailBackingBean.loiRequiredListener(loiLoa)}"
-							process="@this loiLoaDtl" />
+							process="@this" />
 					</h:selectOneMenu>
 					<p:message id="isLoiReqMsg" for="isLoiReq" display="icon" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%">
-					<p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}" partialSubmit="true" 
-					    process="@form"
-						rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired ne 'null'}"
-						actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
+                   <h:panelGroup id="loiPrepareButton">
+                          <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+							partialSubmit="true" process="@form" update="@form"
+							rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired eq true}"
+							actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
+					</h:panelGroup>
+
 				</p:column>
 			</p:dataTable>
 
             <br />
+            <h:panelGroup id="loiLoaListId"> 
 			<h:outputText value="#{lbl['lbl.sc.loiloa.recom.supp.list']} >" />
 			<h:outputText value="#{lbl['lbl.sc.loiloa.loiloalist']} " />
 			<h:outputText style="margin-left: 140px;"
 				value="#{lOIDetailBackingBean.managedBean.loiLoaListTitle}" />
-			<h:panelGroup>
+			
 				<p:dataTable id="loiLoaId" var="loiloaBean"
 					value="#{lOIDetailBackingBean.managedBean.loiLoaBeans}"
 					rowIndexVar="rowIndex">
