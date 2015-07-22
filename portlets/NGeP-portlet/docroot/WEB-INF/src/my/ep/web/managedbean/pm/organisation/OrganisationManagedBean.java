@@ -25,8 +25,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "organisationMB")
 @SessionScoped
-public class OrganisationManagedBean extends BaseManagedBean implements
-		Serializable {
+public class OrganisationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	private int activeIndex = 0;
 
@@ -93,7 +92,7 @@ public class OrganisationManagedBean extends BaseManagedBean implements
 		deliveryAddress = new PmAddressType();
 		officeContactPerson = new PmContact();
 		orgProfile = new PmOrgProfile();
-		pmAddressType.setPmAddress(officeAddress);
+		pmAddressType.setPmAddress(new PmAddress());
 		officeAddressTypeList = new ArrayList<PmAddressType>();
 		orgProfile.setParentOrgProfile(new PmOrgProfile());
 		deliveryAddress.setPmAddress(new PmAddress());

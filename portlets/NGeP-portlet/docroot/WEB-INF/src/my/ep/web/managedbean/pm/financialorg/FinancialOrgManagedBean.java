@@ -23,7 +23,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  */
 @ManagedBean(name = "financialOrgManagedBean")
 @SessionScoped
-public class FinancialOrgManagedBean extends BaseManagedBean implements Serializable {
+public class FinancialOrgManagedBean extends BaseManagedBean {
 
 
 	private static final long serialVersionUID = 1L;

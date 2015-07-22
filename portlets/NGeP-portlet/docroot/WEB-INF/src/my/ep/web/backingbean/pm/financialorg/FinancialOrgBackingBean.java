@@ -551,12 +551,14 @@ public class FinancialOrgBackingBean extends
 	 */
 	public void retrievePmState(PmState pmState){
 		log.info("retrievePmState");
-		if(pmState!=null && pmState.getStateId()!=null){
-			System.out.println("pmState.getStateId() " + pmState.getStateId());
-			PmState tempState =  PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
-			pmState.setStateCode(tempState.getStateCode());
-		}else{
-			pmState.setStateCode(null);
+		if(pmState!=null){
+			if(pmState.getStateId()!=null){
+				log.info("pmState.getStateId() " + pmState.getStateId());
+				PmState tempState =  PmCommonUtil.retrievePmStateByStateId(pmState.getStateId());
+				pmState.setStateCode(tempState.getStateCode());
+			}else{
+				pmState.setStateCode(null);
+			}
 		}
 	}
 
@@ -758,7 +760,7 @@ public class FinancialOrgBackingBean extends
 	private void validateFinancialAccount()throws Exception {
 		log.info("validateFinancialAccount");
 		List<PmFinancialAcc> pmFinancialAccList = this.getManagedBean().getFinancialOrg().getPmFinancialAccs();
-		System.out.println("pmFinancialAccList size " + pmFinancialAccList.size());
+		//System.out.println("pmFinancialAccList size " + pmFinancialAccList.size());
 		for(PmFinancialAcc pmFinancialAcc: pmFinancialAccList){
 			if(pmFinancialAcc.getPmPaymentBankOrg()==null 
 					|| pmFinancialAcc.getPmPaymentBankOrg().getFinancialOrgId()==null){

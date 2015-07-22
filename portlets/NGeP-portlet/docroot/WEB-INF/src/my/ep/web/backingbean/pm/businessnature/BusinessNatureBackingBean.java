@@ -208,7 +208,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 	 */
 	private ISearchBean<PmBusinessNature> getSearchBeanData(ISearchBean<PmBusinessNature> searchBean){		
 		
-		if (getManagedBean().getCategoryLvl() != null && !"".equals(getManagedBean().getCategoryLvl())) {
+		if (getManagedBean().getCategoryLvl() != null) {
 			SearchFilterBean codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 			codesSearchBean.setSearchField("businessLevel");
 			codesSearchBean.setSearchValue(getManagedBean().getCategoryLvl());
@@ -232,7 +232,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 					searchBean.getDataFilterBeans().add(codesSearchBean);
 				}
 				
-				if (getManagedBean().getStatus() != null && !"".equals(getManagedBean().getStatus())) {
+				if (getManagedBean().getStatus() != null) {
 					codesSearchBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 					codesSearchBean.setSearchField("recordStatusFlg");
 					codesSearchBean.setSearchValue(getManagedBean().getStatus());
@@ -552,7 +552,7 @@ public class BusinessNatureBackingBean extends BaseBackingBean<BusinessNatureMan
 		public ISearchResultBean<PmBusinessNature> pageChangeListener(ISearchBean<PmBusinessNature> searchBean) {
 
 			try {	
-				if (getManagedBean().getCategoryLvl() != null && !"".equals(getManagedBean().getCategoryLvl()) && getManagedBean().getCategoryLvl()>0L) {
+				if (getManagedBean().getCategoryLvl() != null && getManagedBean().getCategoryLvl()>0L) {
 					ISearchBean<PmBusinessNature> searchBeanData = getSearchBeanData(searchBean);
 					BusinessNatureReqDTO reqDTO = new BusinessNatureReqDTO();
 					reqDTO.setBusinessNatureSearchBean(searchBeanData);
