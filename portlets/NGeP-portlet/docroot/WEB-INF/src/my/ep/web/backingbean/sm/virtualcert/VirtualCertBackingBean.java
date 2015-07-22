@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
@@ -59,6 +60,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.sm.virtualcert.VirtualCertManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -84,6 +86,8 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 	private String tmpContent = null;
 	//private String tmpCombined = null;
 	private String tmpPath = null;
+	private final static String VIRTUAL_CERT_PATH = "SM/VIRTUAL_CERT";
+	private final static String CERT_EXT = ".pdf";
 	
 	public void viewVirtualCert(){
 		SmSupplier supp = getSmSupplier(null);
@@ -93,6 +97,19 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		log.info("viewVirtualCert appl ID>>>>" + supp.getSmAppl().getApplId());
 		log.info("isQuestionnaire>>>>" + supp.getSmAppl().isQuestionnaire());
 		log.info("Appl Type>>>>" + supp.getSmAppl().getApplType());
+		
+		SmMofCert mCert = retrieveCurrentMofCert(supp.getSmAppl().getApplId());
+		
+		// if both is null, generate the pdf and save the file name and path
+		if(mCert != null){
+			log.info("****MCert****" + mCert);
+			if(mCert.getFileName() == null || mCert.getFilePath() == null){
+				log.info("****MCert bumi****" + mCert.isBumiCert());
+				genReport(getReportType(mCert.isBumiCert()), getReportParam(mCert), mCert);
+
+			}
+		}
+		
 		
 		if(!supp.getSmAppl().getApplType().equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_BUMI)){
 			if(!supp.getSmAppl().isQuestionnaire()){
@@ -712,20 +729,103 @@ public class VirtualCertBackingBean extends BaseBackingBean<VirtualCertManagedBe
 		}
 	}
 	
-	public void printMofCertificate(String certNo) throws IOException{
-
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put("PCERTSERIALNO", certNo);
-		
-		generateReport(ReportConst.SM_VIRTUAL_VERIFICATION_jsp, paramMap);
+	
+	public void printVirtualCert(SmMofCert cert) throws IOException{
+		if(cert.getFileName() != null || cert.getFilePath() != null){
+			String file = cert.getFilePath() + "/" + cert.getFileName();
+			commonDownload(file,cert.getFileName());
+		}else{
+			SmMofCert mofCert = genReport(getReportType(cert.isBumiCert()), getReportParam(cert), cert);
+			String newfile = mofCert.getFilePath() + "/" + cert.getFileName();
+			commonDownload(newfile,mofCert.getFileName());
+		}
 	}
 	
-	public void printBumiCertificate(String certNo) throws IOException{
+	
+	private SmMofCert genReport(String reportFile,Map<String, String> paramMap, SmMofCert cert) {
+		try{
+			String reportUrl = generateReportURL(reportFile, paramMap);
+			log.info("reportUrl>>>>>>>" + reportUrl);
 
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put("PCERTSERIALNO", certNo);
+			HttpURLConnection urlConnection = null;
+			URL obj = new URL(reportUrl);
+			urlConnection = (HttpURLConnection) obj.openConnection();
+
+			BufferedInputStream buf = new BufferedInputStream(urlConnection.getInputStream());
+			//FileInputStream buf = new FileInputStream("E:/HKS/Mof_1_1402497715752.pdf");
+
+			String path = VIRTUAL_CERT_PATH + "/" +  Calendar.getInstance().get(Calendar.YEAR);
+			String fileName = String.valueOf(cert.getMofCertId()) + CERT_EXT;
+			String filePath = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+			filePath += "/" + path;
+
+			File dir = new File(filePath);
+			log.info(" dir.exists()" + dir.exists());
+			if (!dir.exists()) {
+				log.info("before make directory");
+				dir.mkdirs();
+				log.info("after make directory");
+			}
+
+			String finalFile = filePath + "/" + fileName;
+			OutputStream out =  new FileOutputStream(new File(finalFile));
+
+			byte[] b = new byte[128];
+			int size;
+			while ((size = buf.read(b, 0, b.length)) != -1) {
+				out.write(b, 0, size);
+			}
+			buf.close();
+			out.close();
+
+			//update MOF Cert with file path & name
+			cert.setFilePath(path);
+			cert.setFileName(fileName);
+			SmMofCert mofcert = updateMOFCertFilePath(cert);
+
+
+			return mofcert;
+			//commonDownload(finalFile, fileName);
+		}catch(Exception ex){
+			log.info("******genReport******" + cert.getMofCertId() + " - " + ex.getMessage());
+		}
 		
-		generateReport(ReportConst.SM_VIRTUAL_VERIFICATION_BUMI_jsp, paramMap);
+		return null;
+	}
+	
+	private SmMofCert updateMOFCertFilePath(SmMofCert mofCert){
+		IVirtualCertSO virtualCertSO = SmServiceLookup.getVirtualCertSO();
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setMofCert(mofCert);
+		
+		VirtualCertResDTO resDTO = virtualCertSO.updateMOFCert(reqDTO);
+		
+		return resDTO.getSmMofCert();
+	}
+	
+	private SmMofCert retrieveCurrentMofCert(Long applId){
+		IVirtualCertSO reqSO = SmServiceLookup.getVirtualCertSO();
+		VirtualCertReqDTO reqDTO = new VirtualCertReqDTO();
+		reqDTO.setApplId(applId);
+		
+		VirtualCertResDTO resDTO = reqSO.retrieveMofCertByApplId(reqDTO);
+		
+		return resDTO.getSmMofCert();
+	} 
+	
+	private String getReportType(boolean isBumi){
+		if(isBumi){
+			return ReportConst.SM_VIRTUAL_VERIFICATION_BUMI_jsp;
+		}else{
+			return ReportConst.SM_VIRTUAL_VERIFICATION_jsp;
+		}
+	}
+	
+	private Map<String, String> getReportParam(SmMofCert cert){
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("PAPPLID", cert.getSmAppl().getApplId().toString());
+		
+		return paramMap;
 	}
 }
 
