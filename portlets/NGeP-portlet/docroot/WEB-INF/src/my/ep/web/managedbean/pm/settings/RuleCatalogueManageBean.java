@@ -2,7 +2,9 @@ package my.ep.web.managedbean.pm.settings;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -95,6 +97,8 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmGstItem selectedGstItemForG2G;
 	private boolean autoUpdate = true;
 	private List<PmDaGst> deletedDaGstList;
+	private Map<String , Integer> thresholdIdToS2UnplannedMap = new HashMap<String , Integer>();
+	private Map<String , Integer> thresholdIdToBudgetSpentMap = new HashMap<String , Integer>();
 	
 	public RuleCatalogueManageBean() {
 		
@@ -112,6 +116,24 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 
 	public List<PmKpiStatus> getKpiStatusList() {
 		return kpiStatusList;
+	}
+
+	public Map<String, Integer> getThresholdIdToS2UnplannedMap() {
+		return thresholdIdToS2UnplannedMap;
+	}
+
+	public void setThresholdIdToS2UnplannedMap(
+			Map<String, Integer> thresholdIdToS2UnplannedMap) {
+		this.thresholdIdToS2UnplannedMap = thresholdIdToS2UnplannedMap;
+	}
+
+	public Map<String, Integer> getThresholdIdToBudgetSpentMap() {
+		return thresholdIdToBudgetSpentMap;
+	}
+
+	public void setThresholdIdToBudgetSpentMap(
+			Map<String, Integer> thresholdIdToBudgetSpentMap) {
+		this.thresholdIdToBudgetSpentMap = thresholdIdToBudgetSpentMap;
 	}
 
 	public String getCmItemName() {

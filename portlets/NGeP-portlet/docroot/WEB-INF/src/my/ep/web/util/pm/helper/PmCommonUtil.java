@@ -90,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRule;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
+import my.ep.persistence.entity.pm.general.settings.threshold.PmThreshold;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -1194,6 +1195,38 @@ public class PmCommonUtil {
         trckVO.setDocId(fee.getFeeExemptionId());
 		trckVO.setDocType(ParameterConst.FEE_EXEMPTION_PARAM_CODE);
 		trckVO.setDocNo(fee.getFeeExemptionId().toString());		
+		trckVO.setGroupId(null);		
+		trckVO.setStatus(status);				
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForUnplannedThreshold(PmThreshold threshold, String actionDesc,
+			PmStatus status) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(Long.valueOf(threshold.getThresholdId()));
+		trckVO.setDocType(ParameterConst.UNPLANDED_THRESHOLD_PARAM_CODE);
+		trckVO.setDocNo(threshold.getThresholdId().toString());		
+		trckVO.setGroupId(null);		
+		trckVO.setStatus(status);				
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForBudgetThreshold(PmThreshold threshold, String actionDesc,
+			PmStatus status) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(Long.valueOf(threshold.getThresholdId()));
+		trckVO.setDocType(ParameterConst.BUDGET_VS_SPENT_THRESHOLD_PARAM_CODE);
+		trckVO.setDocNo(threshold.getThresholdId().toString());		
 		trckVO.setGroupId(null);		
 		trckVO.setStatus(status);				
 		trckVO.setGroupDocType(null);
