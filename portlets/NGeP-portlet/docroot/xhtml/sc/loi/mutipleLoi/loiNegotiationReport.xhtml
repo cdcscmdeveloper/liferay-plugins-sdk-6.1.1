@@ -50,7 +50,8 @@
 					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}"
 						partialSubmit="true" process="@this"
-						rendered="#{isPendingNegotiationStatus}"
+						rendered="#{isPendingNegotiationStatus and 
+										empty scLoiReport.scLoiReportAttachment}"
 						update="@([id$=loiAttachmentPopupId])">
 						<f:setPropertyActionListener
 							target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}"
