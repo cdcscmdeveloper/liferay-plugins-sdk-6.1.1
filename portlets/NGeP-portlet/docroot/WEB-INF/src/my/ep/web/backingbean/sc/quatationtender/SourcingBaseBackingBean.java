@@ -1565,7 +1565,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		IMofAccountSO mofAccountSO = null;
 
 		try {
-			if (null != smSupplier) {
+			if (null != smSupplier && null != smSupplier.getSupplierId()) {
 				log.info("===sourcingbasebackingbean mof account smsupplierid==="
 						+ smSupplier.getSupplierId());
 				mofAccountSO = (IMofAccountSO) BusinessDelegate.getInstance()
