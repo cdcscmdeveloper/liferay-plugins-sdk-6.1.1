@@ -1581,6 +1581,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					mofAccount = mofAccResDTO.getMofAccount();
 					smSupplier.setSmMofAccount(mofAccount);
 				}
+				else {
+					mofAccount = new SmMofAccount();
+				}
 			} else {
 				mofAccount = new SmMofAccount();
 			}
