@@ -7282,6 +7282,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 */
 	public void updatePromotionTierErrorDialog(int index) {
+		
+		validateTierPromotionPrice(index);
 
 		CmPromotionTierPricing cmPromotionTierPricing = this.getManagedBean()
 				.getSelectedMaintainItem().getCmPromotionTierPricings()
@@ -7314,7 +7316,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 
 		this.getManagedBean().setPricingTabIndex(1);
 		this.getManagedBean().setTierPricingIndex(1);
-
+		
 	}
 
 	/**
