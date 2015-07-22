@@ -21,9 +21,13 @@
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoiReport.title}"
-					rendered="#{empty scLoiReport.pmDocument}">
+					rendered="#{empty scLoiReport.pmDocument and 
+									lOIDetailBackingBean.managedBean.secretaryUser}">
 					<p:ajax event="keyup" />
 				</h:inputText>
+				<h:outputText value="#{scLoiReport.title}"
+					rendered="#{empty scLoiReport.pmDocument and 
+									!lOIDetailBackingBean.managedBean.secretaryUser}" />		
 				<h:outputText value="#{scLoiReport.title}"
 					rendered="#{!empty scLoiReport.pmDocument}" />
 			</p:column>
@@ -42,7 +46,6 @@
 
 						<f:setPropertyActionListener target="#{scLoiReport.scLoiReportAttachment}" value="#{null}" />
 					</p:commandLink>
-					<h:outputText value="#{scLoiReport.scLoiReportAttachment.fileName}" />
 					
 					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}"
