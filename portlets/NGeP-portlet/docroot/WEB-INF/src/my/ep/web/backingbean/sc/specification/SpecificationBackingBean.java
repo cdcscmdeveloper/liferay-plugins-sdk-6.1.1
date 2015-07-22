@@ -534,8 +534,10 @@ public class SpecificationBackingBean extends
 
 			CtPanelItem panelItem = null;
 			CtCircularVer circularVer = null;
-		/*	List<CtPanelItem> panelList = this.getManagedBean()
-					.getSelectpanelItem();*/
+			/*
+			 * List<CtPanelItem> panelList = this.getManagedBean()
+			 * .getSelectpanelItem();
+			 */
 
 			panelItem = this.getManagedBean().getCtPanelItem();
 
@@ -640,13 +642,13 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean().setSupplierLocationList(
 					new ArrayList<ScQtLocCriteria>());
-			//this.getManagedBean().setSelectPanelItem(selectPanelItem);
+			// this.getManagedBean().setSelectPanelItem(selectPanelItem);
 			this.getManagedBean().setActiveIndex(activeIndex);
 			this.getManagedBean().setTaskId(taskId);
 			this.getManagedBean().setOutComes(outComes);
 			this.getManagedBean().setCtPanelItem(panelItem);
 			this.getManagedBean().setCtCircularVer(circularVer);
-			//this.getManagedBean().setSelectpanelItem(panelList);
+			// this.getManagedBean().setSelectpanelItem(panelList);
 			this.getManagedBean().setCurrentStatusId(statusId);
 			this.getManagedBean().setEvaluationTypeItem(evaluationTypeList);
 			this.getManagedBean().setStateCode(zonelocationLevel);
@@ -9964,12 +9966,13 @@ public class SpecificationBackingBean extends
 				}
 
 			}
-			/*List<CtPanelItem> itemList = this.getManagedBean()
-					.getSelectpanelItem();
-			itemList = new ArrayList<CtPanelItem>();
-			itemList.add(this.getManagedBean().getCtPanelItem());
-
-			this.getManagedBean().setSelectpanelItem(itemList);*/
+			/*
+			 * List<CtPanelItem> itemList = this.getManagedBean()
+			 * .getSelectpanelItem(); itemList = new ArrayList<CtPanelItem>();
+			 * itemList.add(this.getManagedBean().getCtPanelItem());
+			 * 
+			 * this.getManagedBean().setSelectpanelItem(itemList);
+			 */
 
 		} finally {
 
@@ -10101,12 +10104,13 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setCtZoneSupplierList(
 					supplierResDTO.getCtPanelSuppliers());
-			/*List<CtPanelItem> itemList = this.getManagedBean()
-					.getSelectpanelItem();
-			itemList = new ArrayList<CtPanelItem>();
-			itemList.add(this.getManagedBean().getCtPanelItem());
-
-			this.getManagedBean().setSelectpanelItem(itemList);*/
+			/*
+			 * List<CtPanelItem> itemList = this.getManagedBean()
+			 * .getSelectpanelItem(); itemList = new ArrayList<CtPanelItem>();
+			 * itemList.add(this.getManagedBean().getCtPanelItem());
+			 * 
+			 * this.getManagedBean().setSelectpanelItem(itemList);
+			 */
 		}
 
 	}
@@ -13550,7 +13554,19 @@ public class SpecificationBackingBean extends
 				}
 			}
 		} else {
-			this.getManagedBean().getScQtCheckSt2techProposal();
+			if (SourcingConstants.FLOW_TYPE_BO.equalsIgnoreCase(flowType)) {
+				this.getManagedBean().setCheckListTitle("");
+				this.getManagedBean().setIndex(-1);
+				this.getManagedBean().getScQtCheckSt2techProposal();
+				return "/xhtml/sc/specification/specificationCreation.xhtml?faces-redirect=true";
+			} else if (SourcingConstants.FLOW_TYPE_SPEC_COMMITTE
+					.equalsIgnoreCase(flowType)) {
+				this.getManagedBean().setCheckListTitle("");
+				this.getManagedBean().setIndex(-1);
+				this.getManagedBean().getScQtCheckSt2techProposal();
+				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
+			}
+			
 		}
 
 		return null;
