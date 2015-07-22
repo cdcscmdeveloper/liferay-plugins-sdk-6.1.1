@@ -35,13 +35,12 @@
 		</td>
 		<td style="width:1%">
 			<p:inputText id="budgetThresholdId" value="#{ruleCatalogueBackingBean.managedBean.threshold.budgetSpent}" 
-				label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}"
+				label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}" valueChangeListener="#{ruleCatalogueBackingBean.onChangeMainBudgetThreshold}"
 				disabled="#{not ruleCatalogueBackingBean.checkIsEpAdmin()}"
 				required="true">				
 				<f:validateLongRange minimum="0" maximum="100" />
-				<p:ajax update="budegetMinistryList,budgetThresholdId"
-							process="@this" 
-							listener="#{ruleCatalogueBackingBean.onChangeMainBudgetThreshold()}"></p:ajax>				
+				<p:ajax event="change" update="budegetMinistryList,budgetThresholdId"
+							process="@this" ></p:ajax>				
 			</p:inputText>
 		</td>
 		<td style="width:5%">
@@ -63,13 +62,14 @@
 			<f:facet name="header">
 				<h:outputText value="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}" />
 			</f:facet>
-			<p:inputText id="ministryBudegetThresholdId"
+			<p:inputText id="ministryBudegetThresholdId" valueChangeListener="#{ruleCatalogueBackingBean.onChangeBudgetThreshold}"
 				label="#{lbl['lbl.pm.settings.threshold.threshold.percentage']}" 
 				disabled="#{ruleCatalogueBackingBean.managedBean.selectedConfigGeneral.isBudgetThreshold == 1 ? 'true':'false' or ruleCatalogueBackingBean.checkIsEpAdmin()}" 
 				value="#{ministry.budgetSpent}"
-				required="true">				
+				required="true">		
+				<f:attribute name="threshold" value="#{ministry}" />		
 				<f:validateLongRange minimum="#{ruleCatalogueBackingBean.managedBean.budgetThreshold}" maximum="100" />
-				<p:ajax update="@this" process="@this" partialSubmit="true" ></p:ajax>	
+				<p:ajax event="change" update="@this" process="@this" partialSubmit="true" ></p:ajax>	
 			</p:inputText>
 			<p:message for="ministryBudegetThresholdId" display="icon" />
 		</p:column>

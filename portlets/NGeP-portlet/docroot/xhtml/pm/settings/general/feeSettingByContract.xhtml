@@ -43,12 +43,11 @@
 				                	#{lbl['lbl.pm.itemname']}
 				                </f:facet>
 
-			<ac:lov id="lovContractItem" lovId="CT_CONTRACT_ITEM"
+			<ac:lov id="lovContractItem" lovId="SC_REQUEST_ITEM"
 				disabled="#{feeObj.contractId.contractNo == null || !(feeObj.brandNew)}" size="50"
 				headerText="Contract Item" readonly="true"
-				postUpdateListenerWithIndex="ruleCatalogueBackingBean.scRequestItemCodeUpdate"
-				conditionField="recordStatus^1|ctContractVer.ctContract.contractId^#{feeObj.contractId.contractId}"
-				saveObject="ruleCatalogueBackingBean.managedBean.selectedCtContractItem"
+				conditionField="recordStatus^1|ctContractItem.ctContractVer.ctContract.contractId^#{feeObj.contractId.contractId}"
+				saveObject="ruleCatalogueBackingBean.managedBean.feeExemptionsForContract[#{rowIndex}].requestItemId"
 				value="#{feeObj.requestItemId.itemName}">
 			</ac:lov>
 

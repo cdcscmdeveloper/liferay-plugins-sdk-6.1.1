@@ -2027,11 +2027,13 @@ public class RuleCatalogueBackingBean extends
 			return false;
 		}
 	}
-    public void onChangeUnplannedThreshold(ValueChangeEvent event, PmThreshold threshold){
+    public void onChangeUnplannedThreshold(ValueChangeEvent event){
     	log.info("onChangeUnplannedThreshold");
 		log.info("event.getOldValue()="+event.getOldValue());
 		log.info("event.getNewValue()="+event.getNewValue());
-    	//set modified for Tracking Diary and save the original unplanned of the threshold
+		PmThreshold threshold = (PmThreshold) event.getComponent().getAttributes().get("threshold");
+		//set modified for Tracking Diary and save the original unplanned of the threshold
+		if(threshold != null){
 		Integer originalS2Unplanned = this.getManagedBean().getThresholdIdToS2UnplannedMap().get(threshold.getThresholdId());
 		if(originalS2Unplanned != null){
 			if(originalS2Unplanned == (Integer) event.getNewValue()){
@@ -2040,6 +2042,7 @@ public class RuleCatalogueBackingBean extends
 		}else{
 			threshold.setModified(true);
           this.getManagedBean().getThresholdIdToS2UnplannedMap().put(threshold.getThresholdId(), (Integer) event.getOldValue());
+		}
 		}
     }
     
