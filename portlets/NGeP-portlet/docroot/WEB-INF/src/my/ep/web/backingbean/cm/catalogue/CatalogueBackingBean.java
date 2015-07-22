@@ -1608,9 +1608,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	public void addNewZonalStandardPricing() {
 
 		CmZonalStandardPricing price = new CmZonalStandardPricing();
+		
+		if (this.getManagedBean().getSelectedMaintainItem()
+				.getzStdPrices() != null
+				&& this.getManagedBean().getSelectedMaintainItem()
+				.getzStdPrices().size() > 0) {
+			int size = this.getManagedBean().getSelectedMaintainItem()
+					.getzStdPrices().size();
+			price.setStand_group_id(this.getManagedBean()
+					.getSelectedMaintainItem().getzStdPrices()
+					.get(size - 1).getStand_group_id() + 1);
+		} else {
+			price.setStand_group_id(1);
+		}
+		
 		price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 		this.getManagedBean().getSelectedMaintainItem().getzStdPrices()
 		.add(price);
+		
+		
+		
+		
+
+		
+		
 
 	}
 
@@ -5690,6 +5711,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		this.getManagedBean().setZonalTierRowIndex(index);
 
 	}
+	
+	
+	public void setRowIndexForDelete(){
+		
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map map = context.getExternalContext().getRequestParameterMap();
+		String name1 = (String) map.get("indexDelete");
+		int index = Integer.parseInt(name1);
+		log.info("*************index***************" + index);
+
+		this.getManagedBean().setZonalRowIndex(index);
+		
+		
+	}
+	
 
 	/**
 	 * delete Tier Price.
@@ -5914,23 +5950,42 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 * @param index
 	 *            (int index(mandatory))
 	 */
-	public void deleteZonalStandardPrice(int index) {
+	public void deleteZonalStandardPrice() {
+		
+		
+		CmZonalStandardPricing pricing = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(this.getManagedBean().getZonalRowIndex());
+		
+		List<CmZonalStandardPricing> dataList = new ArrayList<CmZonalStandardPricing>();
+		
 
-		boolean zonalStdRemove = true;
-		CmZonalStandardPricing pricing = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index);
-		for(CmZonalPromotionPricing promotionPricing : this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
-			if(pricing.getCmSupplierZone() != null && promotionPricing.getCmSupplierZone() != null && pricing.getCmSupplierZone().getSuppZoneId() > 0 && promotionPricing.getCmSupplierZone().getSuppZoneId() > 0)
-				if(promotionPricing.getCmSupplierZone().getSuppZoneId() == pricing.getCmSupplierZone().getSuppZoneId()){
-					if(promotionPricing.getStartDate().compareTo(pricing.getStartDate()) == 0 && pricing.getEndDate().compareTo(promotionPricing.getEndDate()) == 0)
-						zonalStdRemove = false;
-				}
+			
+		dataList.add(pricing);
+		
+
+		List<CmZonalPromotionPricing> promotionList = this
+				.getManagedBean().getSelectedMaintainItem()
+				.getCmZonalPromotionPricings();
+		List<CmZonalPromotionPricing> childList = new ArrayList<CmZonalPromotionPricing>();
+		for (CmZonalPromotionPricing cmPricing : promotionList) {
+
+			CmZonalStandardPricing parent = (CmZonalStandardPricing) cmPricing
+					.getParentPrice();
+
+			if (dataList.contains(parent)) {
+				childList.add(cmPricing);
+			}
 		}
-		if(zonalStdRemove){
-			this.getManagedBean().getSelectedMaintainItem().getzStdPrices()
-			.remove(index);
-		} else {
-			throw new EpException(MessageConst.ERROR_715027);
+
+		for (CmZonalPromotionPricing price : childList) {
+			this.getManagedBean().getSelectedMaintainItem()
+			.getCmZonalPromotionPricings().remove(price);
 		}
+
+		for (CmZonalStandardPricing price : dataList) {
+			this.getManagedBean().getSelectedMaintainItem()
+			.getzStdPrices().remove(price);
+		}
+
 	}
 
 	/**
@@ -5940,8 +5995,40 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 */
 	public void deleteZonalPromotionPrice(int index) {
+		
+		CmZonalStandardPricing standardPricing = (CmZonalStandardPricing) this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index).getParentPrice();
+		
+		List<CmZonalPromotionPricing> promoLs = new ArrayList<CmZonalPromotionPricing>();
+		List<CmZonalStandardPricing> dataList = new ArrayList<CmZonalStandardPricing>();
+				
+		promoLs = this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings();
+		dataList.add(standardPricing);
+		
+		if(promoLs!=null && promoLs.size()>0){
+			for (CmZonalPromotionPricing cmPricing : promoLs) {
+	
+				CmZonalStandardPricing parent = (CmZonalStandardPricing) cmPricing.getParentPrice();
+	
+				if (!dataList.contains(parent)) {
+					System.out.println("no more contain children");
+					standardPricing.setStandardDisabled(false);
+					break;
+				}
+			}
+		}
+		
+		
+		
+		
 		this.getManagedBean().getSelectedMaintainItem()
 		.getCmZonalPromotionPricings().remove(index);
+		
+		
+		if(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().isEmpty()){
+			standardPricing.setStandardDisabled(false);
+		}
+		
+		System.out.println("final isStandardDisabled:"+standardPricing.isStandardDisabled());
 	}
 
 	/**
@@ -6470,21 +6557,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	 *            (int index(mandatory))
 	 */
 	public void validateZonalPromoDateOverlap(int index) {
-
+		
 		CmZonalPromotionPricing zonalPromo = this.getManagedBean()
 				.getSelectedMaintainItem().getCmZonalPromotionPricings()
 				.get(index);
 		List<CmZonalPromotionPricing> previousList = new ArrayList<CmZonalPromotionPricing>();
-		//		for (int i = 0; i < index; i++){
-		//			if(this.getManagedBean().getSelectedMaintainItem()
-		//					.getCmZonalPromotionPricings().get(i).getCmSupplierZone() != null)
-		//					if(zonalPromo.getCmSupplierZone().getSuppZoneId() == this.getManagedBean().getSelectedMaintainItem()
-		//							.getCmZonalPromotionPricings().get(i).getCmSupplierZone().getSuppZoneId()){
-		//						previousList.add(this.getManagedBean().getSelectedMaintainItem()
-		//								.getCmZonalPromotionPricings().get(i));
-		//					}
-		//		}
-
+		
 		for (int i = 0; i < index; i++)
 			previousList.add(this.getManagedBean().getSelectedMaintainItem()
 					.getCmZonalPromotionPricings().get(i));
@@ -6761,6 +6839,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			updateValidateGroupingDates(index);
 		}	
 	}
+	
+	
+	
+	public void validatePromotionPrice(int index){
+		CmPricing promotion = this.getManagedBean()
+				.getSelectedMaintainItem().getCmZonalPromotionPricings().get(index);
+		
+		List<CmPricing> pricings = new ArrayList<CmPricing>();
+
+		for(int i = 0; i < index; i++){
+			pricings.add(this.getManagedBean()
+					.getSelectedMaintainItem().getCmZonalPromotionPricings().get(i));
+		}
+		if(promotion.getPrice() != null){
+			validatePriceValue(promotion, pricings);
+			validateZonalPromoDateOverlap(index);
+		}	
+	}
+	
+	
 
 	/**
 	 * to Validate Price On Every Keyup.
@@ -6782,7 +6880,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 		}	
 		
-		if(pricing.getPricingType().equals("04")) {
+		if(pricing.getPricingType().equals("04") || pricing.getPricingType().equals("06")) {
 			System.out.println("***04****"+priceInvalid);
 			if(!priceInvalid) {
 				BigDecimal promotionTierPrice = pricing.getPrice();
@@ -6809,10 +6907,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		if(priceInvalidFirstRow){
 			pricing.setCheckOk(false);
 			this.getManagedBean().setError99(true);
+			if(pricing.getPricingType().equals("06")){
+				pricing.setDisplayAction(false);
+			}
+			
 		}else{
 			pricing.setCheckOk(true);
 			this.getManagedBean().setError99(false);
 			
+			if(pricing.getPricingType().equals("06")){
+				pricing.setDisplayAction(true);
+			}
 			
 			if(priceInvalid){
 				pricing.setCheckOk(false);
@@ -6824,7 +6929,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 			
 		}
 		
-		
+		System.out.println("isDisplayAction:"+pricing.isDisplayAction());
 	}
 
 	/**
@@ -7534,12 +7639,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 	}
 
 	/**
-	 * adds To Zonal Promotion.
+	 * adds To Zonal Tier Promotion.
 	 * 
 	 * @param index
 	 *           (int index(mandatory))
 	 */
-	public void addToZonalPromotion(int index) {
+	public void addToZonalTierPromotion(int index) {
 
 		if (this.getManagedBean().getSelectedMaintainItem()
 				.getCmZonalPromotionTierPricings() != null
@@ -7720,6 +7825,170 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		}
 
 	}
+	
+	
+	/**
+	 * adds To Zonal Promotion.
+	 * 
+	 * @param index
+	 *           (int index(mandatory))
+	 */
+	public void addToZonalPromotion(int index) {
+
+		if (this.getManagedBean().getSelectedMaintainItem()
+				.getCmZonalPromotionPricings() != null
+				&& this.getManagedBean().getSelectedMaintainItem()
+				.getCmZonalPromotionPricings().size() > 0) {
+
+			List<CmZonalStandardPricing> promotionGroup = new ArrayList<CmZonalStandardPricing>();
+			Integer stId = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).getStand_group_id();
+			
+			
+			
+			for(CmZonalStandardPricing pricing : this
+					.getManagedBean().getSelectedMaintainItem()
+					.getzStdPrices()){
+				if(pricing.getStand_group_id() == stId){
+					promotionGroup.add(pricing);
+				}
+			}
+
+			//Map<Date, List<CmZonalStandardPricing>> tierMap = groupingTier(promotionGroup);
+
+			if (promotionGroup!=null && promotionGroup.size() > 0) {
+
+				/*List<CmZonalStandardPricing> dataList = (List) tierMap.get(this
+						.getManagedBean().getSelectedMaintainItem()
+						.getzStdPrices().get(index).getStand_group_id());*/
+
+					int tempIndex = index;
+					int promo_group_id = this
+							.getManagedBean()
+							.getSelectedMaintainItem()
+							.getCmZonalPromotionPricings()
+							.get(this.getManagedBean()
+									.getSelectedMaintainItem()
+									.getCmZonalPromotionPricings().size() - 1)
+									.getPromo_group_id();
+					for (CmZonalStandardPricing pricing : promotionGroup) {
+						CmZonalPromotionPricing price = new CmZonalPromotionPricing();
+						price.setCmSupplierZone(pricing.getCmSupplierZone());
+						price.setStartDate(pricing.getStartDate());
+						price.setEndDate(pricing.getEndDate());
+						price.setMinDate(pricing.getStartDate());
+						price.setMaxDate(pricing.getEndDate());
+						price.setShowFlag(pricing.isShowFlag());
+						price.setStandardDisabled(true);
+						price.setDisplayAction(false);
+						price.setParentPrice(this.getManagedBean()
+								.getSelectedMaintainItem()
+								.getzStdPrices().get(tempIndex++));
+						price.setPromo_group_id(promo_group_id + 1);
+						price.setStand_group_id(pricing.getStand_group_id());
+						price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().add(price);
+
+					}
+					for(CmZonalStandardPricing price : promotionGroup){
+						price.setStandardDisabled(true);
+					}
+					FacesContext facesContext = FacesContext
+							.getCurrentInstance();
+					facesContext
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils
+									.getMessage(
+											MessageConst.INFO_710003,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes()
+											.getUserLocale())));
+				
+			}
+
+		} else {
+			log.info("**********1st copy*******");
+
+			/*List<CmZonalTierPricing> tierList = this.getManagedBean()
+					.getSelectedMaintainItem().getCmZonalTierPricings();
+
+			List<CmZonalTierPricing> checkList = new ArrayList<CmZonalTierPricing>();
+
+			Date stDate = this.getManagedBean().getSelectedMaintainItem()
+					.getCmZonalTierPricings().get(index).getStartDate();
+
+			for (CmZonalTierPricing cmPricing : tierList) {
+				if (cmPricing.getStartDate() != null && cmPricing.getStartDate().compareTo(stDate) == 0) {
+					checkList.add(cmPricing);
+				}
+			}*/
+
+			List<CmZonalStandardPricing> promotionGroup = new ArrayList<CmZonalStandardPricing>();
+			Integer stId = this.getManagedBean().getSelectedMaintainItem().getzStdPrices().get(index).getStand_group_id();
+			for(CmZonalStandardPricing pricing : this
+					.getManagedBean().getSelectedMaintainItem()
+					.getzStdPrices()){
+				if(pricing.getStand_group_id() == stId){
+					promotionGroup.add(pricing);
+				}
+			}
+
+			//Map<Date, List<CmZonalStandardPricing>> tierMap = groupingTier(promotionGroup);
+
+				if (promotionGroup!=null && promotionGroup.size() > 0) {
+
+					/*List<CmZonalStandardPricing> dataList = (List) tierMap
+							.get(this.getManagedBean()
+									.getSelectedMaintainItem()
+									.getzStdPrices().get(index)
+									.getStand_group_id());*/
+
+					int tempIndex = index;
+
+					int promo_group_id = 1;
+
+					for (CmPricing pricing : promotionGroup) {
+						CmZonalPromotionPricing price = new CmZonalPromotionPricing();
+						price.setCmSupplierZone(pricing.getCmSupplierZone());
+						price.setStartDate(pricing.getStartDate());
+						price.setEndDate(pricing.getEndDate());
+						price.setShowFlag(pricing.isShowFlag());
+						price.setMinDate(pricing.getStartDate());
+						price.setMaxDate(pricing.getEndDate());
+						price.setStandardDisabled(true);
+						price.setDisplayAction(false);
+						price.setParentPrice(this.getManagedBean()
+								.getSelectedMaintainItem()
+								.getzStdPrices().get(tempIndex++));
+						price.setPromo_group_id(promo_group_id);
+						price.setStand_group_id(pricing.getStand_group_id());
+						price.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+
+						this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().add(price);
+					}
+					for(CmZonalStandardPricing price : promotionGroup){
+						price.setStandardDisabled(true);
+					}
+				}
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+								MessageUtils.getMessage(
+										MessageConst.INFO_710003,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+
+			
+		}
+
+	}
+	
+	
 
 	/*
 	 * public void duplicateZonalStandardPrice(int index){

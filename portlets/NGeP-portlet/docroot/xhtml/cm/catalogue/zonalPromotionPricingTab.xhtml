@@ -42,9 +42,8 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:inputText value="#{zPromotion.price}" size="10"
-					disabled="#{zPromotion.standardDisabled}" style="text-align:right">
-					<p:ajax event="keyup" update="zonalPromoErrorLink" />
+				<p:inputText value="#{zPromotion.price}" size="10" style="text-align:right">
+					<p:ajax event="keyup" listener="#{catalogueBackingBean.validatePromotionPrice(rowIndex)}" update="zonalPromoErrorLink" />
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
@@ -54,7 +53,6 @@
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
 				<p:calendar value="#{zPromotion.startDate}" showOn="button"
-					disabled="#{zPromotion.standardDisabled}"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}" size="10"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup"
@@ -71,7 +69,6 @@
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
 				<p:calendar value="#{zPromotion.endDate}" showOn="button" size="10"
-					disabled="#{zPromotion.standardDisabled}"
 					mindate="#{catalogueBackingBean.managedBean.currentDate}"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}">
 					<p:ajax event="keyup"
@@ -91,9 +88,8 @@
 				</f:facet>
 				<p:commandLink 
 					title="#{lbl['lbl.btn.delete']}"
-					disabled="#{zPromotion.standardDisabled}"
 					action="#{catalogueBackingBean.deleteZonalPromotionPrice(rowIndex)}"
-					update=":form:pricingTabID:headerTabId:zonalId:cmZonalPromotionPricingsId">
+					update=":form">
 					<p:graphicImage value="/css/images/design/trash.png" style="padding-right:10px;"></p:graphicImage>
 				</p:commandLink>
 
@@ -113,16 +109,6 @@
 
 
 		</p:dataTable>
-
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}"
-				rendered="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'D' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'R' || catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'E'}"
-				action="#{catalogueBackingBean.addNewZonalPromotionPricing}"
-				update="cmZonalPromotionPricingsId"
-				process="cmZonalPromotionPricingsId @this"></p:commandButton>
-		</div>
-
-
 
 
 	</p:outputPanel>
