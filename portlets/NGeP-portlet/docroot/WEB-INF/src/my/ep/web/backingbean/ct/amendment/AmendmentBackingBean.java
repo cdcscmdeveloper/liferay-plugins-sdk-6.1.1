@@ -877,8 +877,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 						if (getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
 							messageId = MessageConst.INFO_700007; 
 						} else {
-							messageId = getManagedBean().getContractVer().getCtAmendment().isComplyAP201() 
-									? MessageConst.INFO_700051 : MessageConst.INFO_700050;
+							messageId = getManagedBean().getContractVer().getCtAmendment().isRouteToBPK() 
+									? MessageConst.INFO_700050 : MessageConst.INFO_700051;
 						}
 					}
 				} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)) {
@@ -1071,7 +1071,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
 				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() 
-					&& getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
+					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
 				if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
 						&& getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
 					if (getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
@@ -1518,7 +1518,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	private void setSecretary() {
 		if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() 
-					&& getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {
+					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
 				// Direct Nego
 	    		if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
 	    				&& getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
@@ -1623,35 +1623,69 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	}
 	
 	/**
-	 * The method used for rendering the Breaching of AP201 Approval screen
+	 * The method used to retrieve proper quantity label for AP201 Approval screen
 	 * to be viewed by BPK approver.
-	 */
-	public boolean renderAP201Limit(int quotationFlg) {
-		BigDecimal originalContractAmount = null;
-		if (quotationFlg == 1) { // use limit additional 250k and total 750k
-			if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-					ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
-				return true;
-			} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-					ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-				originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
-				if (originalContractAmount != null && originalContractAmount.doubleValue() <= ContractConst.CONTRACT_THRESHOLD_500k) {
-					return true;
-				}
+	 * 
+	 * @return labelString  the additional quantity label
+     */
+	public String getAdditionalQtyLabel() {
+		String labelString = "lbl.ct.additional.qty.exceed.quotation";
+		
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			labelString = "lbl.ct.additional.qty.exceed.quotation";
+		} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			labelString = "lbl.ct.additional.qty.exceed";
+		} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+			BigDecimal originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+			if (originalContractAmount != null) {
+				labelString = (originalContractAmount.doubleValue() <= ContractConst.CONTRACT_THRESHOLD_500k) ? "lbl.ct.additional.qty.exceed.quotation" : "lbl.ct.additional.qty.exceed";
 			}
-		} else { // use limit additional 7.5m and total 75m
-			if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-					ParameterConst.PROCUREMENT_MODE_TENDER)) {
-				return true;
-			} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
-					ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
-				originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
-				if (originalContractAmount != null && originalContractAmount.doubleValue() > ContractConst.CONTRACT_THRESHOLD_500k) {
-					return true;
-				}
+		}		
+		
+		return ResourceBundleUtils.getMessage(labelString, 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+	
+	/**
+	 * The method used to retrieve proper additional value label for AP201 Approval screen
+	 * to be viewed by BPK approver.
+	 * 
+	 * @return labelString  the additional value label
+     */
+	public String getAdditionalValueLabel() {
+		String labelString = "lbl.ct.additional.contract.value.exceed.quotation";
+		
+		if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+			labelString = "lbl.ct.additional.contract.value.exceed.quotation";
+		} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_TENDER)) {
+			labelString = "lbl.ct.additional.contract.value.exceed";
+		} else if (getManagedBean().getContractVer().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
+				ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+			BigDecimal originalContractAmount = getManagedBean().getContractVer().getCtContract().getLoa().getLoaAmt();
+			if (originalContractAmount != null) {
+				labelString = (originalContractAmount.doubleValue() <= ContractConst.CONTRACT_THRESHOLD_500k) ? "lbl.ct.additional.contract.value.exceed.quotation" : "lbl.ct.additional.contract.value.exceed";
 			}
-		}
-		return false;
+		}		
+		
+		return ResourceBundleUtils.getMessage(labelString, 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+	}
+	
+	/**
+	 * The method used to retrieve proper contract value label for AP201 Approval screen
+	 * to be viewed by BPK approver.
+	 * 
+	 * @return labelString  the contract value label
+     */
+	public String getValueLabel() {
+		String labelString = ResourceBundleUtils.getMessage("lbl.ct.contract.amendment", 
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		return labelString;
 	}
 	
 	/**
