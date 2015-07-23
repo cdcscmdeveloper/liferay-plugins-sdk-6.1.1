@@ -2029,7 +2029,6 @@ public class SmCommonUtil {
 	public static SmCompanyBasic getCompanyBasicByRevNo(
 			List<SmCompanyBasic> mainList, int revNo) {
 		SmCompanyBasic retValCompanyBasic = null;
-		SmCompanyBasic companyBasicNotMatchRevNo = null;
 
 		for (SmCompanyBasic companyBasic : mainList) {
 			if (companyBasic.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
@@ -2037,12 +2036,11 @@ public class SmCommonUtil {
 					retValCompanyBasic = companyBasic;
 					break;
 				} else {
-					companyBasicNotMatchRevNo = companyBasic;
+					retValCompanyBasic = companyBasic;
 				}
 			}
 		}
-		return retValCompanyBasic == null ? companyBasicNotMatchRevNo
-				: retValCompanyBasic;
+		return retValCompanyBasic;
 	}
 
 	/**
