@@ -33,6 +33,9 @@
 				<td><p:inputText size="45" id="ptjGroup"
 						value="#{invoiceBackingBean.retrieveJabatanByOrgProfileId(invoiceBackingBean.managedBean.invoice.flRequest.preparedOrgProfile.orgProfileId)}"
 						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="50" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.getParameterDesc(invoiceBackingBean.managedBean.invoice.flRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.for.ptj']}" /></td>
@@ -79,6 +82,26 @@
 						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
 				<td style="width:295px;"><p:inputText size="15" disabled="true" 
 									value="#{invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.managedBean.invoice.flRequest.smSupplier.epNo}"></p:inputText></td>		
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.managedBean.invoice.flRequest.gstRegNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.managedBean.invoice.flRequest.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{invoiceBackingBean.managedBean.invoice.flRequest.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : invoiceBackingBean.managedBean.invoice.flRequest.gstEffectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
