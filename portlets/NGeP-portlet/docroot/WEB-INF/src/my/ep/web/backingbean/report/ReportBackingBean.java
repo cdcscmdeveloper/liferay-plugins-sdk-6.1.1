@@ -158,6 +158,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> identificationTypeList = new ArrayList<SelectItem>();
 	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
+	private List<String> simpleQuoteNoList = new ArrayList<String>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -720,7 +721,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//45;//62114;//235459;
+	//private Long lngUserId = (long)220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3162,7 +3163,26 @@ public class ReportBackingBean extends
 				}
 				return reportCategoryList;	
 		}
-	
+		public List<String>  retrieveSimpleQuoteNo() {
+			
+			simpleQuoteNoList = new ArrayList<String>();	
+					
+			if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
+						IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+								.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+										IPMReportSO.class);
+						List<String> smplQtNoList = reportSO.retrieveSimpleQuoteNo(this.getScProcessRptQuotationNo());
+						if(smplQtNoList.size()>0){
+							for (int i = 0; i < smplQtNoList.size(); i++) {
+								simpleQuoteNoList.add(smplQtNoList.get(i));
+							}
+						}else{
+							this.setScProcessRptQuotationNo(null);
+							throw new EpException(MessageConst.ERROR_REPORT_780021);
+						}
+					}
+					return simpleQuoteNoList;	
+			}
 	public List<SelectItem>  retrieveReportListBySubModule() {
 		reportList = new ArrayList<SelectItem>();			
 		this.setReportName(null);
@@ -5500,6 +5520,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getScProcessRptQuotationNo() != null)
 					&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
+				simpleQuoteNoValidation();
 				rptGenBean
 						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_QT_NO_EQ
 								+ this.getScProcessRptQuotationNo());
@@ -6276,15 +6297,37 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			specialCharValidation();
 		}
 	}
+	public void simpleQuoteNoValidation() {
+		if ((this.getScProcessRptQuotationNo() != null)
+				&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
+			specialCharValidation();
+		}
+	}
 
 	public void specialCharValidation() {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
-		Matcher match = pattern.matcher(this.getScQuotationNo());
+		Matcher match;
+		if((getManagedBean().getReportValue() != null)
+				&& (getManagedBean().getReportValue().trim()
+						.equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
+			match = pattern.matcher(this.getScProcessRptQuotationNo());
+		}else {
+			match = pattern.matcher(this.getScQuotationNo());
+		}
 		if (match.matches()) {
-			getQuotationNumber();
+			if((getManagedBean().getReportValue() != null)
+					&& (getManagedBean().getReportValue().trim()
+							.equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
+				retrieveSimpleQuoteNo();
+			}else {
+				getQuotationNumber();
+			}
+			
+			
 		} else {
 			this.setScQuotationNo(null);
+			this.setScProcessRptQuotationNo(null);
 			throw new EpException(MessageConst.ERROR_REPORT_780006);
 		}
 	}

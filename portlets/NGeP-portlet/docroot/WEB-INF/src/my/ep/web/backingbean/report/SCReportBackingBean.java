@@ -550,15 +550,16 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	            break;
 	        case ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL:
 	        	//rptGenBean.setScSoneCrtdFromDateView(true);
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
+	        	/*if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.RN_APPROVER)))){
 	        		rptGenBean.setScRequisenerIdView(true);
 	        	}
 	    		if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
 	        		rptGenBean.setScPtjView(true);
 	        	}
 	    		rptGenBean.setScSimpleQuoteStatusView(true);	
-	    		rptGenBean.setScProcurementTypeView(true);
+	    		rptGenBean.setScProcurementTypeView(true);*/
 	    		rptGenBean.setScMandatoryProcessRptQuotationNoView(true);
+	    		rptGenBean.setExtraTwoColumnView(true);
 	    		//rptGenBean.setScProcessRptQuotationNoView(true);	    		
 	            break;
 	        default:

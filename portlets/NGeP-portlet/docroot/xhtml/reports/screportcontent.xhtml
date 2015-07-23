@@ -164,10 +164,7 @@
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																															
 									</p:selectOneMenu>
 								  </c:if>
-								   <c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
-								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
-									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
-								  </c:if>
+								   
 									 <c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPInoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.PINO']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="40" value="#{reportBackingBean.scPIno}" style="margin-top:5px;width:290px;">
@@ -199,7 +196,8 @@
 												label="#{lbl['lbl.rpt.scsimplequoteno']}" id="simpleQuotationNo"
 												maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}"
 												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
+												<p:ajax event="blur" listener="#{reportBackingBean.simpleQuoteNoValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>
 											</p:inputText></td>
 										<td><p:message id="simpleQuotationNoMsg" for="simpleQuotationNo"
 												display="icon" showDetail="false"/></td>
@@ -207,7 +205,10 @@
 								</table>
 							</p:column>
 						</c:if>
-									
+									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
+								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
+									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
+								  </c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scRequestQuoteNoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.REQQUOTENO']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText  value="#{reportBackingBean.scRequestQuoteNo}" style="margin-top:5px;width:290px;">
