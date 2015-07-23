@@ -365,6 +365,9 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
+			
+			// Fulfilment Schedule
+			formFulfilmentSchedule(scLoa);
 
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
@@ -656,46 +659,7 @@ public class LOADetailBackingBean extends
 		scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
 		// Fulfilment Schedule
-		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
-
-		if (null != scheduleList && !scheduleList.isEmpty()) {
-			this.getManagedBean().setTotalFrequency(scheduleList.size());
-			for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-
-				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
-				String todate = dateFormat.format(scQtSchedule.getToDate());
-				String startMonth = fromdate.substring(3, 5);
-				String startYear = fromdate.substring(6, fromdate.length());
-				String endMonth = todate.substring(3, 5);
-				String endYear = todate.substring(6, todate.length());
-				
-				int sMonth = Integer.parseInt(startMonth);
-				int eMonth = Integer.parseInt(endMonth);
-				int sYear = Integer.parseInt(startYear);
-				int eYear = Integer.parseInt(endYear);
-				int diffYear = 0;
-				int count = 0;
-
-				if (eYear >= sYear) {
-					if (!endYear.equals(startYear)) {
-						diffYear = eYear - sYear;
-					}
-					for (int i = sMonth + 1; i <= eMonth + 1; i++) {
-						count++;
-					}
-					count = count + (diffYear * 12);
-					scQtSchedule.setTotalMonths(new BigDecimal(count));
-				} else {
-					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
-				}
-				scQtSchedule.setStartMonth(String.valueOf(sMonth));
-				scQtSchedule.setEndMonth(String.valueOf(eMonth));
-				scQtSchedule.setStartYear(startYear);
-				scQtSchedule.setEndYear(endYear);
-			}
-			this.sortFrequentScheduleList(scLoa.getScQtSchedules());
-		}
+		formFulfilmentSchedule(scLoa);
 
 		if (getManagedBean().getScQt() != null) {
 			List<ScQtProgressivePayment> progressivePayment = this
@@ -863,6 +827,54 @@ public class LOADetailBackingBean extends
 		getClausesTitle(null);
 		
 	}
+	
+	/**
+	 * Form fulfilment schedule.
+	 *
+	 * @param scLoa the sc loa
+	 */
+	private void formFulfilmentSchedule(ScLoa scLoa){
+		if(null != scLoa.getScQtSchedules() && scLoa.getScQtSchedules().size()>0){
+		this.getManagedBean().setTotalFrequency(scLoa.getScQtSchedules().size());
+		for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+			String fromdate = dateFormat.format(scQtSchedule.getFromDate());
+			String todate = dateFormat.format(scQtSchedule.getToDate());
+			String startMonth = fromdate.substring(3, 5);
+			String startYear = fromdate.substring(6, fromdate.length());
+			String endMonth = todate.substring(3, 5);
+			String endYear = todate.substring(6, todate.length());
+			
+			int sMonth = Integer.parseInt(startMonth);
+			int eMonth = Integer.parseInt(endMonth);
+			int sYear = Integer.parseInt(startYear);
+			int eYear = Integer.parseInt(endYear);
+			int diffYear = 0;
+			int count = 0;
+
+			if (eYear >= sYear) {
+				if (!endYear.equals(startYear)) {
+					diffYear = eYear - sYear;
+				}
+				for (int i = sMonth + 1; i <= eMonth + 1; i++) {
+					count++;
+				}
+				count = count + (diffYear * 12);
+				scQtSchedule.setTotalMonths(new BigDecimal(count));
+			} else {
+				scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+			}
+			scQtSchedule.setStartMonth(String.valueOf(sMonth));
+			scQtSchedule.setEndMonth(String.valueOf(eMonth));
+			scQtSchedule.setStartYear(startYear);
+			scQtSchedule.setEndYear(endYear);
+		}
+		this.sortFrequentScheduleList(scLoa.getScQtSchedules());
+		} else{
+			this.getManagedBean().setTotalFrequency(0);
+		}
+	}
 
 	/**
 	 * Deduction type change.
@@ -871,7 +883,7 @@ public class LOADetailBackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
-		getManagedBean().setSelectedScQtDeduction(null);
+		//getManagedBean().setSelectedScQtDeduction(null);
 
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
