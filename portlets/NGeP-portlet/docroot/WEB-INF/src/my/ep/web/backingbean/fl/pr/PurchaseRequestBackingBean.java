@@ -898,7 +898,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 						||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 					newItem.setUnitPrice(new BigDecimal(0));
 				}
-				
+				if(newItem.getScRequestItem().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+					newItem.setGst(true);
+				}
 				itemsList.add(newItem);
 			}
 		}
