@@ -16,7 +16,6 @@
 			selectionMode="single">
 
 			<p:ajax event="rowSelect" partialSubmit="true" process="@this"
-			    listener="#{lOADetailBackingBean.deductionTypeChange(scQtDeduction)}"
 				update=":form:clausePnl" />
 			<p:ajax event="rowUnselect" partialSubmit="true" process="@this"
 				update=":form:clausePnl" />
