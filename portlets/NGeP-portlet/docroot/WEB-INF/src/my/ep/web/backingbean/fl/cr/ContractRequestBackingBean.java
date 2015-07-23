@@ -562,6 +562,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					flItemAddr.setUnitPrice(BigDecimal.ZERO);
 					flItemAddr.setOrderedQty(BigDecimal.ZERO);
 					flItemAddr.setOrderedAmt(BigDecimal.ZERO);
+					flItemAddr.setGstAmount(BigDecimal.ZERO);
+					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				}
 			}
 			if(getManagedBean().getSelectedDelAddr()!=null) {
@@ -958,10 +960,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					resDTO = contractItemSO.getItemPrice(reqDTO);
 					if(resDTO.getItemPrice().doubleValue() == -1){
 						flItemAddr.setUnitPrice(BigDecimal.ZERO);
+						flItemAddr.setGstAmount(BigDecimal.ZERO);
+						flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
+					}else{
+						
+						flItemAddr.setUnitPrice(resDTO.getItemPrice());
+						setGstPrice(flItemAddr,resDTO.getItemPrice().doubleValue());
 					}
-					flItemAddr.setUnitPrice(resDTO.getItemPrice());
+					
 				} else {
 					flItemAddr.setUnitPrice(BigDecimal.ZERO);
+					flItemAddr.setGstAmount(BigDecimal.ZERO);
+					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				}
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
@@ -1310,6 +1320,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_TIER)
 					||getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_TIER)){
 					newItem.setUnitPrice(BigDecimal.ZERO);
+					newItem.setGstAmount(BigDecimal.ZERO);
+					newItem.setGstUnitPrice(BigDecimal.ZERO);
 				} else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_ZONAL_STANDARD)) {
 					if(getManagedBean().getSelectedDelAddr()!=null && getManagedBean().getSelectedDelAddr().getStartDate()!=null && getManagedBean().getSelectedDelAddr().getEndDate()!=null) {
 						long day = (getManagedBean().getSelectedDelAddr().getEndDate().getTime() - getManagedBean().getSelectedDelAddr().getStartDate().getTime()) / MILLIS_PER_DAY;
@@ -1321,12 +1333,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					if(itemResDTO.getContractZoneId() == null){
 						newItem.setZoneId(itemResDTO.getContractZoneId());
 						newItem.setUnitPrice(BigDecimal.ZERO);
+						newItem.setGstAmount(BigDecimal.ZERO);
+						newItem.setGstUnitPrice(BigDecimal.ZERO);
 					}else{
 						newItem.setZoneId(itemResDTO.getContractZoneId());
 						if(itemResDTO.getItemPrice().doubleValue() == -1){
 							newItem.setUnitPrice(BigDecimal.ZERO);
+							newItem.setGstAmount(BigDecimal.ZERO);
+							newItem.setGstUnitPrice(BigDecimal.ZERO);
 						}else{
 							newItem.setUnitPrice(itemResDTO.getItemPrice());
+							setGstPrice(newItem, itemResDTO.getItemPrice().doubleValue());
 						}
 					}
 				}
@@ -1579,7 +1596,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 					if(itemMaxQty!=null) {
 						reqDTO.setItemId(requestNoteItem.getRequestNoteItemId());
-						//TODO Please uncomment this once API ready
 						reqDTO.setCtContractZoneId(contractZoneId);
 						prevSumQty = itemSummarySO.retrieveContractAgencyAccumulatedQty(reqDTO);
 						sumQty = zonalQtyMap.get(contractZoneId).add(prevSumQty);
@@ -1767,11 +1783,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(tierResDTO.getItemPrice());
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					setGstPrice(itemAddr, tierResDTO.getItemPrice().doubleValue());
+					//TODO 1 more API to check supplier gst eff date is valid and < current date
+					if(itemAddr.isGst()){
+						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}else{
+						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}
 				}
 			}else{
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(BigDecimal.ZERO);
+					itemAddr.setGstAmount(BigDecimal.ZERO);
+					itemAddr.setGstUnitPrice(BigDecimal.ZERO);
 					itemAddr.setOrderedAmt(BigDecimal.ZERO);
 				}
 			}
@@ -1782,12 +1806,23 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			if(tierResDTO.getItemPrice() == null || tierResDTO.getItemPrice().doubleValue() == -1){
 				oriItemAddr.setUnitPrice(BigDecimal.ZERO);
+				oriItemAddr.setGstAmount(BigDecimal.ZERO);
+				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				oriItemAddr.setOrderedAmt(BigDecimal.ZERO);
 			}else{
 				oriItemAddr.setUnitPrice(tierResDTO.getItemPrice());
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				 setGstPrice(oriItemAddr, tierResDTO.getItemPrice().doubleValue());
+				//TODO 1 more API to check supplier gst eff date is valid and < current date
+				if(oriItemAddr.isGst()){
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}else{
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+				 
 			}
 			if(oriItemAddr.getOrderedQty().doubleValue() == 0){
+				oriItemAddr.setGstAmount(BigDecimal.ZERO);
+				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				oriItemAddr.setUnitPrice(BigDecimal.ZERO);
 			}
 			if(sumOrderQty.intValue() > 0 && tierResDTO.getItemPrice().intValue() == -1){
@@ -1801,10 +1836,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					ContractItemResDTO reCalculateUnitPrice = contractItemSO.getItemPrice(reqDTO);
 					for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 						itemAddr.setUnitPrice(reCalculateUnitPrice.getItemPrice());
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						setGstPrice(itemAddr, reCalculateUnitPrice.getItemPrice().doubleValue());
+						//TODO 1 more API to check supplier gst eff date is valid and < current date
+						if(itemAddr.isGst()){
+							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						}else{
+							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						}
+						
 					}
 				}else{
 					for(FlFulfilmentItemAddr itemAddr : itemAddrList){
+						itemAddr.setGstAmount(BigDecimal.ZERO);
+						itemAddr.setGstUnitPrice(BigDecimal.ZERO);
 						itemAddr.setUnitPrice(BigDecimal.ZERO);
 						itemAddr.setOrderedAmt(BigDecimal.ZERO);
 					}
@@ -1889,11 +1933,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(tierResDTO.getItemPrice());
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					setGstPrice(itemAddr, tierResDTO.getItemPrice().doubleValue());
+					//TODO 1 more API to check supplier gst eff date is valid and < current date
+					if(itemAddr.isGst()){
+						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}else{
+						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}
+					
 				}
 			}else{
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(BigDecimal.ZERO);
+					itemAddr.setGstAmount(BigDecimal.ZERO);
+					itemAddr.setGstUnitPrice(BigDecimal.ZERO);
 					itemAddr.setOrderedAmt(BigDecimal.ZERO);
 				}
 			}
@@ -1904,13 +1957,24 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			if(tierResDTO.getItemPrice() == null || tierResDTO.getItemPrice().doubleValue() == -1){
 				oriItemAddr.setUnitPrice(BigDecimal.ZERO);
+				oriItemAddr.setGstAmount(BigDecimal.ZERO);
+				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				oriItemAddr.setOrderedAmt(BigDecimal.ZERO);
 			}else{
 				oriItemAddr.setUnitPrice(tierResDTO.getItemPrice());
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				setGstPrice(oriItemAddr, tierResDTO.getItemPrice().doubleValue());
+				//TODO 1 more API to check supplier gst eff date is valid and < current date
+				if(oriItemAddr.isGst()){
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}else{
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+				
 			}
 			if(oriItemAddr.getOrderedQty().doubleValue() == 0){
 				oriItemAddr.setUnitPrice(BigDecimal.ZERO);
+				oriItemAddr.setGstAmount(BigDecimal.ZERO);
+				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 			}
 			if(sumOrderQty.intValue() > 0 && tierResDTO.getItemPrice().intValue() == -1){
 				BigDecimal reCalSumOrderQty = BigDecimal.ZERO;
@@ -1923,11 +1987,20 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					ContractItemResDTO reCalculateUnitPrice = contractItemSO.getItemPrice(reqDTO);
 					for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 						itemAddr.setUnitPrice(reCalculateUnitPrice.getItemPrice());
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						setGstPrice(itemAddr,reCalculateUnitPrice.getItemPrice().doubleValue());
+						//TODO 1 more API to check supplier gst eff date is valid and < current date
+						if(itemAddr.isGst()){
+							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						}else{
+							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						}
+						
 					}
 				}else{
 					for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 						itemAddr.setUnitPrice(BigDecimal.ZERO);
+						itemAddr.setGstAmount(BigDecimal.ZERO);
+						itemAddr.setGstUnitPrice(BigDecimal.ZERO);
 						itemAddr.setOrderedAmt(BigDecimal.ZERO);
 					}
 				}
@@ -1953,6 +2026,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 				flItemAddr.setOrderedAmt(getTariffAmount(flItemAddr));
 				oriItemAddr.setUnitPrice(BigDecimal.ZERO);
+				oriItemAddr.setGstAmount(BigDecimal.ZERO);
+				oriItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				oriItemAddr.setOrderedAmt(flItemAddr.getOrderedAmt());
 			}
 		} else{//STANDARD PRICE and ZONAL
@@ -1990,12 +2065,24 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				}
 				flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				if(flItemAddr.isGst()){
+					flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}else{
+					flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+				
 				if(oriItemAddr.getOrderedQty() == null){
 					oriItemAddr.setOrderedQty(BigDecimal.ZERO);
 				}
 				oriItemAddr.setUnitPrice(flItemAddr.getUnitPrice());
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				setGstPrice(oriItemAddr,flItemAddr.getUnitPrice().doubleValue());
+				//TODO 1 more API to check supplier gst eff date is valid and < current date
+				if(oriItemAddr.isGst()){
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}else{
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+				
 			}
 		}
 		// add  or remove items to Selected delivery address
@@ -3513,8 +3600,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					reqDTO.setOrderedQty(BigDecimal.ZERO);
 					resDTO = contractItemSO.getItemPrice(reqDTO);
 					flItemAddr.setUnitPrice(resDTO.getItemPrice());
+					setGstPrice(flItemAddr, resDTO.getItemPrice().doubleValue());
 				} else {
 					flItemAddr.setUnitPrice(BigDecimal.ZERO);
+					flItemAddr.setGstAmount(BigDecimal.ZERO);
+					flItemAddr.setGstUnitPrice(BigDecimal.ZERO);
 				}
 				flItemAddr.setOrderedQty(BigDecimal.ZERO);
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
@@ -4062,5 +4152,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 	
+	private void setGstPrice(FlFulfilmentItemAddr flItemAddr,Double itemPrice) {
+		if(getManagedBean().getFlRequest().getGstRate() == null){
+			getManagedBean().getFlRequest().setGstRate(BigDecimal.ZERO);
+		}
+		Double gstAmt = new Double(0);
+		gstAmt = itemPrice / 100;
+		flItemAddr.setGstUnitPrice(new BigDecimal(gstAmt).multiply(getManagedBean().getFlRequest().getGstRate()));
+		if(flItemAddr.getGstUnitPrice().doubleValue() > 0){
+			flItemAddr.setGstAmount(flItemAddr.getUnitPrice().add(flItemAddr.getGstUnitPrice()));
+		}
+	}
 	
 }

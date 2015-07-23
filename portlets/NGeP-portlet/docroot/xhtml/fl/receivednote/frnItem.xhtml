@@ -29,6 +29,8 @@
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;"/>
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.uom']}" />
 				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;"/>
+				<p:column rowspan="3" headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;"/>
                 <p:column colspan="2" headerText="#{lbl['lbl.fl.ordered']}"  style="white-space:normal;text-align:center;"/>
                 <p:column colspan="2" headerText="#{lbl['lbl.fl.delivery']}"  style="white-space:normal;text-align:center;"/>	
                 <p:column rowspan="3">
@@ -82,6 +84,16 @@
 			</p:column>
 			<p:column style="white-space:normal;text-align:right;">
 				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.gstAmount}">
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<h:outputText styleClass="colFloatRight" value="#{item.flDelOrderItem.flFulfilmentItemAddr.gstUnitPrice}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>

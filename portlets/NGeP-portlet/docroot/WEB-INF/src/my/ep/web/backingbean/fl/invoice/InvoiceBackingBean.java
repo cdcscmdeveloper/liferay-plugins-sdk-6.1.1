@@ -1099,7 +1099,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
 		List<FlInvoiceItem> flInvoiceItemList = null;
-		log.info("SIR6070 line1105: "+getManagedBean().getInvoice().getFlInvoiceItem().size());
 		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
 			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getItemCode())) {
 				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getItemCode());
