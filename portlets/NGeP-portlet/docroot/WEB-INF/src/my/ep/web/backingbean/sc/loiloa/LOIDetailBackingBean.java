@@ -1572,7 +1572,6 @@ public class LOIDetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void formFulfilmentSchedule(ScLoi scLoi){
-
 		if(null != scLoi.getScQtSchedules() && scLoi.getScQtSchedules().size()>0){
 			this.getManagedBean().setTotalFrequency(scLoi.getScQtSchedules().size());
 			for (ScQtSchedule scQtSchedule : scLoi.getScQtSchedules()) {
@@ -2886,7 +2885,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
-		getManagedBean().setSelectedScQtDeduction(null);
+		//getManagedBean().setSelectedScQtDeduction(null);
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
 		try {
