@@ -4293,13 +4293,8 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
+		if (!ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
 				.equals(scQtRecommend.getRecommendByStr())) {
-			for (ScQtRecommendDtl recommendDtl 
-						: scQtRecommend.getRecommendDtls()) {
-				recommendDtl.setAwardQty(null);
-			}
-		} else {
 			scQtRecommendDtl.setAwardQty(
 					scQtRecommend.getRequestItem().getQuantity());
 		}
