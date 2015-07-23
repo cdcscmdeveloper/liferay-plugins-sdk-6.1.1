@@ -45,6 +45,15 @@
 						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/>
 					<ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+					<td><p:inputText size="36" disabled="true"
+						value="#{danBackingBean.managedBean.adjustment.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.getParameterDesc(danBackingBean.managedBean.adjustment.flRequest.procurementTypeCategory)}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
+						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
 					<td style="width: 320px;"><p:inputText size="36"
 							value="#{danBackingBean.managedBean.adjustment.flInvoice.supplierInvoiceRef}"
@@ -52,30 +61,24 @@
 							value="#{lbl['lbl.fl.tooltip.supp.inv.no']}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
-						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.issued.ptj']}"/></td>
+						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
 					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
 					<td><p:commandLink value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}" immediate="true"
 							action="#{danBackingBean.navigateDocument(ParameterConst.doctypeInvoice)}"/>
 							<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.invoice.no']}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.fl.charge.ptj']}" /></td>
-					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:396px;" 
-						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.ptj']}"/></td>
-					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
-					<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flOrder.factored}" disabled="true" />
-					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>
-				</tr>
-				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
 					<td><p:inputText size="66"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.requistioner.userName}"
 							disabled="true" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
+					<td><p:selectBooleanCheckbox value="#{danBackingBean.managedBean.adjustment.flOrder.factored}" disabled="true" />
+					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.factored']}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
@@ -87,7 +90,7 @@
 			</table>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
-			<table  style="width: 100%">
+			<table>
 				<tr>
 					<td ><p:outputLabel
 							value="#{lbl['lbl.fl.supp.buss.reg.no']}" /></td>
@@ -98,7 +101,7 @@
 										value="#{danBackingBean.managedBean.adjustment.flRequest.smSupplier.regNo}" />
 									<ac:iconTooltip
 										value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}" /></td>
-								<td><p:outputLabel
+								<td style="width:35px;"><p:outputLabel
 										value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
 								<td><p:inputText size="14"
 										disabled="true"
@@ -111,6 +114,26 @@
 					<td style="width: 295px;"><p:inputText size="15"
 							disabled="true"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.managedBean.adjustment.flRequest.smSupplier.epNo}"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+					<td><p:inputText size="15" disabled="true"
+							value="#{danBackingBean.managedBean.adjustment.flInvoice.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.managedBean.adjustment.flInvoice.gstRegNo}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+					<td><p:inputText size="15" disabled="true"
+							value="#{danBackingBean.managedBean.adjustment.flInvoice.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.managedBean.adjustment.flInvoice.gstDeclaredDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+					<td><p:inputText size="15" disabled="true"
+							value="#{danBackingBean.managedBean.adjustment.flInvoice.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.managedBean.adjustment.flInvoice.gstEffectiveDate}">
+							<f:convertDateTime
+								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>
+
 				</tr>
 				<tr>
 					<td style="width: 134px;white-space:nowrap;"><p:outputLabel

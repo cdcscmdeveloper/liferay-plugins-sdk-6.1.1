@@ -44,11 +44,9 @@
 					<td><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:327px;" 
 						value="#{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.preparedOrgProfile.orgName}"/><ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
-					<td style="width: 320px;"><p:inputText size="40"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.supplierInvoiceRef}"
-							disabled="true" /> <ac:iconTooltip
-							value="#{lbl['lbl.fl.tooltip.supp.inv.no']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+					<td><p:inputText size="36" disabled="true"
+						value="#{danBackingBean.managedBean.adjustment.flRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : danBackingBean.getParameterDesc(danBackingBean.managedBean.adjustment.flRequest.procurementTypeCategory)}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -56,11 +54,11 @@
 						value="#{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.issuedOrgProfile.orgName}"/>
 						<ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.issued.ptj']}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
-					<td><p:inputText size="20"
-							value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}"
+					<td><p:outputLabel value="#{lbl['lbl.fl.supp.invoice.no']}" /></td>
+					<td style="width: 320px;"><p:inputText size="40"
+							value="#{danBackingBean.managedBean.adjustment.flInvoice.supplierInvoiceRef}"
 							disabled="true" /> <ac:iconTooltip
-							value="#{lbl['lbl.fl.tooltip.invoice.no']}" /></td>
+							value="#{lbl['lbl.fl.tooltip.supp.inv.no']}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.charge.ptj']}" /></td>
@@ -68,17 +66,22 @@
 						value="#{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.pmOrgValidity.orgCode} #{danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile eq null ? '' : danBackingBean.managedBean.adjustment.flRequest.chargeOrgProfile.orgName}"/>
 						 <ac:iconTooltip
 							value="#{lbl['lbl.fl.tooltip.charge.ptj']}" /></td>
-					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
-					<td><p:selectBooleanCheckbox
-							value="#{danBackingBean.managedBean.adjustment.flOrder.factored}"
+					<td><p:outputLabel value="#{lbl['lbl.fl.invoice.no']}" /></td>
+					<td><p:inputText size="20"
+							value="#{danBackingBean.managedBean.adjustment.flInvoice.invoiceNo}"
 							disabled="true" /> <ac:iconTooltip
-							value="#{lbl['lbl.fl.tooltip.factored']}" /></td>
+							value="#{lbl['lbl.fl.tooltip.invoice.no']}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.do.requisitioner']}" /></td>
 					<td><p:inputText size="50"
 							value="#{danBackingBean.managedBean.adjustment.flRequest.requistioner.userName}"
 							disabled="true" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.fl.dan.factored']}" /></td>
+					<td><p:selectBooleanCheckbox
+							value="#{danBackingBean.managedBean.adjustment.flOrder.factored}"
+							disabled="true" /> <ac:iconTooltip
+							value="#{lbl['lbl.fl.tooltip.factored']}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>

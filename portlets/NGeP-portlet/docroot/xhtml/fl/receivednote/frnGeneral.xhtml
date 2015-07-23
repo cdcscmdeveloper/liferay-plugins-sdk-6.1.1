@@ -39,6 +39,9 @@
 				<td width="460px"><p:inputTextarea rows="2" readonly="true" autoResize="false" style="resize:none;width:380px;" 
 						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.pmOrgValidity.orgCode} #{receivedNoteBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgName}"/>
 						<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.prepared.for.ptj']}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="50" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.getParameterDesc(receivedNoteBackingBean.managedBean.fulfilmentRequest.procurementTypeCategory)}" /></td>				
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.ptj']}" /></td>
@@ -161,6 +164,26 @@
 						value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
 				<td style="width:274px;"><p:inputText size="15" disabled="true" 
 									value="#{receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}"></p:inputText></td>		
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstRegNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{receivedNoteBackingBean.managedBean.fulfilmentNote.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : receivedNoteBackingBean.managedBean.fulfilmentNote.gstEffectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>

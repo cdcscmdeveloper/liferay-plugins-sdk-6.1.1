@@ -216,6 +216,26 @@
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.smSupplier.epNo}"></p:inputText></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.gstRegNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.gstEffectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
 				<td><p:inputText disabled="true" size="53"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flRequest.flSupplierDtl.supplierName}" /></td>
