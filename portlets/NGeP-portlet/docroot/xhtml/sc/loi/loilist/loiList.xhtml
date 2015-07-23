@@ -61,7 +61,7 @@
 					    <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
-						<p:ajax event="change" partialSubmit="true" update="loiPrepareButton"
+						<p:ajax event="change" partialSubmit="true" update="@form"
 						    listener="#{lOIDetailBackingBean.loiRequiredListener(loiLoa)}"
 							process="@this" />
 					</h:selectOneMenu>
