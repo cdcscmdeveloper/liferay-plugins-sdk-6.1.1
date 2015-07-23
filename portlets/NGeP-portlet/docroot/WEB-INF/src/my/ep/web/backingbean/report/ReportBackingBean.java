@@ -5520,7 +5520,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getScProcessRptQuotationNo() != null)
 					&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
-				simpleQuoteNoValidation();
+				
 				rptGenBean
 						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_QT_NO_EQ
 								+ this.getScProcessRptQuotationNo());
@@ -6308,17 +6308,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
 		Matcher match;
-		if((getManagedBean().getReportValue() != null)
-				&& (getManagedBean().getReportValue().trim()
-						.equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
+		if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL))
+				||(getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL))
+				||(getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
 			match = pattern.matcher(this.getScProcessRptQuotationNo());
 		}else {
 			match = pattern.matcher(this.getScQuotationNo());
 		}
 		if (match.matches()) {
-			if((getManagedBean().getReportValue() != null)
-					&& (getManagedBean().getReportValue().trim()
-							.equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
+			if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL))
+					||(getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL))
+					||(getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
 				retrieveSimpleQuoteNo();
 			}else {
 				getQuotationNumber();
