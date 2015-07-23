@@ -3399,7 +3399,7 @@ public class SpecificationBackingBean extends
 			List<ScQtProgressivePayment> paymentList = this.getManagedBean()
 					.getProgressivePaymentList();
 
-			if (scheduleList == null) {
+			if (null == scheduleList) {
 				scheduleList = new ArrayList<ScQtSchedule>();
 				if (null != resDTO.getScheduleResults()
 						&& null != resDTO.getScheduleResults().getResultList()
@@ -3447,10 +3447,9 @@ public class SpecificationBackingBean extends
 
 						scheduleList.add(scQtSchedule);
 
-						this.getManagedBean().setScheduleList(scheduleList);
-
 					}
 				}
+				this.getManagedBean().setScheduleList(scheduleList);
 			}
 
 			// this.getManagedBean().setProgressivePaymentList(resDTO.getProgressivePaymentResults().getResultList());
@@ -3489,9 +3488,9 @@ public class SpecificationBackingBean extends
 						paymentList.add(payment);
 
 					}
-					this.getManagedBean()
-							.setProgressivePaymentList(paymentList);
+
 				}
+				this.getManagedBean().setProgressivePaymentList(paymentList);
 			}
 
 		} finally {
@@ -6048,6 +6047,9 @@ public class SpecificationBackingBean extends
 
 					this.getManagedBean().setFulfilmentType(
 							paramDesc.getPmParameter().getParameterCode());
+					this.getManagedBean().getScQt()
+							.setFulfilmentType(paramDesc.getPmParameter());
+					break;
 				}
 			}
 
@@ -6060,13 +6062,18 @@ public class SpecificationBackingBean extends
 					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean().getScQt()
 						.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+				this.getManagedBean().setTotalProgressivePayment(0);
 
 			} else if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
 					.equalsIgnoreCase(this.getManagedBean().getFulfilmentType())) {
 				this.getManagedBean().getScQt()
 						.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+				this.getManagedBean().setTotalFrequency(0);
+				this.getManagedBean().setTotalProgressivePayment(0);
 
 			}
+			this.getManagedBean().getScQt().setScQtSchedules(null);
+			this.getManagedBean().getScQt().setScQtProgressivePayments(null);
 			removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
 			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
 
@@ -8617,18 +8624,18 @@ public class SpecificationBackingBean extends
 		IParameterSO parameterSo = null;
 		try {
 
-			removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
+			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
 
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
 
-			//int year = Calendar.getInstance().get(Calendar.YEAR);
+			// int year = Calendar.getInstance().get(Calendar.YEAR);
 
 			for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
 
 				ScQtSchedule schedule = new ScQtSchedule();
-				//schedule.setStartYear(String.valueOf(year));
-				//schedule.setEndYear(String.valueOf(year));
+				// schedule.setStartYear(String.valueOf(year));
+				// schedule.setEndYear(String.valueOf(year));
 
 				if (StringUtils.isNotBlank(this.getManagedBean()
 						.getFulfilmentType())
@@ -8890,7 +8897,7 @@ public class SpecificationBackingBean extends
 	public void addProgressiveDetails() {
 
 		try {
-			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+			removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getProgressivePaymentList();
 
@@ -13482,7 +13489,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().getScQtCheckSt2techProposal();
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 			}
-			
+
 		}
 
 		return null;
@@ -15971,17 +15978,12 @@ public class SpecificationBackingBean extends
 
 	private void removefullfillmentDetails(String scheduleType) {
 
-		if (SourcingConstants.PROGRESSIVE_PAYMENT
-				.equalsIgnoreCase(scheduleType)) {
+		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
 			List<ScQtSchedule> scheduleList = this.getManagedBean()
 					.getScheduleList();
 
 			if (CollectionUtils.isNotEmpty(scheduleList)) {
-				List<ScQtSchedule> toBeRemoveList = this.getManagedBean()
-						.getToBeRemoveSchedules();
-				if (null == toBeRemoveList) {
-					toBeRemoveList = new ArrayList<ScQtSchedule>();
-				}
+				List<ScQtSchedule> toBeRemoveList = new ArrayList<ScQtSchedule>();
 
 				for (ScQtSchedule qtSchedule : scheduleList) {
 					if (null != qtSchedule.getQtScheduleId()) {
@@ -15994,16 +15996,13 @@ public class SpecificationBackingBean extends
 			}
 			this.getManagedBean()
 					.setScheduleList(new ArrayList<ScQtSchedule>());
-		} else if (SourcingConstants.FREQUENCY_SCHEDULE
+		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
 				.equalsIgnoreCase(scheduleType)) {
 			List<ScQtProgressivePayment> payments = this.getManagedBean()
 					.getProgressivePaymentList();
 			if (CollectionUtils.isNotEmpty(payments)) {
-				List<ScQtProgressivePayment> toBeRemoveList = this
-						.getManagedBean().getToBeRemoveProgPayments();
-				if (null == toBeRemoveList) {
-					toBeRemoveList = new ArrayList<ScQtProgressivePayment>();
-				}
+				List<ScQtProgressivePayment> toBeRemoveList = new ArrayList<ScQtProgressivePayment>();
+
 				for (ScQtProgressivePayment payment : payments) {
 					if (null != payment.getQtPaymentId()) {
 						payment.setDeleted(true);
