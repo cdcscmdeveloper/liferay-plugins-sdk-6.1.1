@@ -29,8 +29,22 @@
 				<h:outputText value="#{doItems.scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}"
-				style="text-align:right">
+				style="text-align:right;white-space:normal">
 				<h:outputText disabled="true" value="#{doItems.unitPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.gst.amt']}"
+				style="text-align:right;white-space:normal">
+				<h:outputText disabled="true" value="#{doItems.gstAmount}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}"
+				style="text-align:right;white-space:normal">
+				<h:outputText disabled="true" value="#{doItems.gstUnitPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
