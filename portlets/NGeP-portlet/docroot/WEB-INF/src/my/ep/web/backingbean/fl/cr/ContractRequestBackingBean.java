@@ -1347,6 +1347,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 					}
 				}
+				if(newItem.getScRequestItem().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+					newItem.setGst(true);
+				}
 				itemsList.add(newItem);
 			}
 		}
