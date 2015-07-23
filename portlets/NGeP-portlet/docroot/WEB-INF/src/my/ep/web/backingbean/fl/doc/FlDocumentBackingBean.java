@@ -67,6 +67,7 @@ import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
+import my.ep.web.constant.report.CommonMethod;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -922,4 +923,18 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			throw new EpException("Report is not available for this document.");
 		}
 	}
+	
+	 /**
+	 * retrieve financial year options for current year and past 7 years
+	 * @return financial year options
+	 */
+	public static List<SelectItem> getFinancialYearOpt() {
+		int years = 0;
+		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
+		for(Integer i = 0;i < 7;i++){
+			years = CommonMethod.getYear(-i);
+			 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
+		}
+		return financialYearOpt;
+	} 
 }
