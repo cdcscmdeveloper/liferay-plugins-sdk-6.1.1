@@ -35,18 +35,12 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.breachAP201Rules(2)}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.additional.qty.exceed.quotation']}" 
-					rendered="#{amendmentBackingBean.renderAP201Limit(1)}" />
-				<p:outputLabel value="#{lbl['lbl.ct.additional.qty.exceed']}" 
-					rendered="#{amendmentBackingBean.renderAP201Limit(0)}" />
+				<p:outputLabel value="#{amendmentBackingBean.getAdditionalQtyLabel()}" />
 			</h:panelGrid>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="true" value="#{amendmentBackingBean.breachAP201Rules(3)}" />
 				<p:spacer width="2" />
-				<p:outputLabel value="#{lbl['lbl.ct.additional.contract.value.exceed.quotation']}" 
-					rendered="#{amendmentBackingBean.renderAP201Limit(1)}" />
-				<p:outputLabel value="#{lbl['lbl.ct.additional.contract.value.exceed']}" 
-					rendered="#{amendmentBackingBean.renderAP201Limit(0)}" />				
+				<p:outputLabel value="#{amendmentBackingBean.getAdditionalValueLabel()}" />			
 			</h:panelGrid>
 		</h:panelGrid>
 	</p:panel>
