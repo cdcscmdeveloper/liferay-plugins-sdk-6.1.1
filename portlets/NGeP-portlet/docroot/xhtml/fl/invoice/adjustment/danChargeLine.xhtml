@@ -66,8 +66,20 @@
 			<p:column headerText="#{lbl['lbl.fl.uom']}">
 				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right;white-space:normal">
 				<h:outputText value="#{danItem.flItem.unitPrice}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right;white-space:normal">
+				<h:outputText value="#{danItem.flItem.gstAmount}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right;white-space:normal">
+				<h:outputText value="#{danItem.flItem.gstUnitPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
