@@ -871,6 +871,7 @@ public class LOADetailBackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
+		getManagedBean().setSelectedScQtDeduction(null);
 
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
@@ -915,8 +916,8 @@ public class LOADetailBackingBean extends
 			} else {
 				scQtDeduction.setScQtDeductionClauses(null);
 			}
-
 			getManagedBean().setSelectedScQtDeduction(scQtDeduction);
+			
 		} finally {
 			parameterSO = null;
 		}

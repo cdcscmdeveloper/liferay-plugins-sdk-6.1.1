@@ -533,11 +533,6 @@ public class LOIDetailBackingBean extends
 				} else {
 					processMultiLOIDetails(recommendType, scQtRecommendList);
 				}
-//				if (scQtRecommendList != null) {
-//					for (ScQtRecommend scQtRecommend : scQtRecommendList) {
-//						updateRecommendBy(scQtRecommend);
-//					}
-//				}
 
 				// Committee Details
 				ScQtCommittee scQtCommittee = resDTO.getScQtCommittee();
@@ -889,9 +884,7 @@ public class LOIDetailBackingBean extends
 		calculateOfferedAndFinalPriceByItem(scLoi);
 		
 		// Fulfilment Schedule
-		if (null != scLoi.getScQtSchedules() && !scLoi.getScQtSchedules().isEmpty()) {
-			formFulfilmentSchedule(scLoi);
-		}
+		formFulfilmentSchedule(scLoi);
 		
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
@@ -1241,7 +1234,7 @@ public class LOIDetailBackingBean extends
 			getManagedBean()
 					.setBackToPreviousPage(fc.getViewRoot().getViewId());
 		}
-
+		getManagedBean().setSelectedTabIndex(0);
 		fc.getApplication().getNavigationHandler()
 				.handleNavigation(fc, null, QTConstants.LOI_PAGE);
 	}
@@ -1580,42 +1573,46 @@ public class LOIDetailBackingBean extends
 	 */
 	private void formFulfilmentSchedule(ScLoi scLoi){
 
-		this.getManagedBean().setTotalFrequency(scLoi.getScQtSchedules().size());
-		for (ScQtSchedule scQtSchedule : scLoi.getScQtSchedules()) {
-			SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-			String fromdate = dateFormat.format(scQtSchedule
-					.getFromDate());
-			String todate = dateFormat.format(scQtSchedule.getToDate());
-			String startMonth = fromdate.substring(3, 5);
-			String startYear = fromdate.substring(6, fromdate.length());
-			String endMonth = todate.substring(3, 5);
-			String endYear = todate.substring(6, todate.length());
+		if(null != scLoi.getScQtSchedules() && scLoi.getScQtSchedules().size()>0){
+			this.getManagedBean().setTotalFrequency(scLoi.getScQtSchedules().size());
+			for (ScQtSchedule scQtSchedule : scLoi.getScQtSchedules()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String fromdate = dateFormat.format(scQtSchedule
+						.getFromDate());
+				String todate = dateFormat.format(scQtSchedule.getToDate());
+				String startMonth = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String endMonth = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
 
-			int sMonth = Integer.parseInt(startMonth);
-			int eMonth = Integer.parseInt(endMonth);
-			int sYear = Integer.parseInt(startYear);
-			int eYear = Integer.parseInt(endYear);
-			int diffYear = 0;
-			int count = 0;
+				int sMonth = Integer.parseInt(startMonth);
+				int eMonth = Integer.parseInt(endMonth);
+				int sYear = Integer.parseInt(startYear);
+				int eYear = Integer.parseInt(endYear);
+				int diffYear = 0;
+				int count = 0;
 
-			if (eYear >= sYear) {
-				if (!endYear.equals(startYear)) {
-					diffYear = eYear - sYear;
+				if (eYear >= sYear) {
+					if (!endYear.equals(startYear)) {
+						diffYear = eYear - sYear;
+					}
+					for (int i = sMonth + 1; i <= eMonth + 1; i++) {
+						count++;
+					}
+					count = count + (diffYear * 12);
+					scQtSchedule.setTotalMonths(new BigDecimal(count));
+				} else {
+					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
 				}
-				for (int i = sMonth + 1; i <= eMonth + 1; i++) {
-					count++;
-				}
-				count = count + (diffYear * 12);
-				scQtSchedule.setTotalMonths(new BigDecimal(count));
-			} else {
-				scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+				scQtSchedule.setStartMonth(String.valueOf(sMonth));
+				scQtSchedule.setEndMonth(String.valueOf(eMonth));
+				scQtSchedule.setStartYear(startYear);
+				scQtSchedule.setEndYear(endYear);
 			}
-			scQtSchedule.setStartMonth(String.valueOf(sMonth));
-			scQtSchedule.setEndMonth(String.valueOf(eMonth));
-			scQtSchedule.setStartYear(startYear);
-			scQtSchedule.setEndYear(endYear);
+			this.sortFrequentScheduleList(scLoi.getScQtSchedules());
+		} else{
+			this.getManagedBean().setTotalFrequency(0);
 		}
-		this.sortFrequentScheduleList(scLoi.getScQtSchedules());
 	}
 
 	/**
@@ -2163,8 +2160,8 @@ public class LOIDetailBackingBean extends
 				retrieveMultipleLoiDtls(scQtFinalization.getScQt().getQtId(),
 						getManagedBean().getCommitteeType(), getManagedBean()
 								.getRecommendDtlIds());
-
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_MULTIPLE_LOI, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
+				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_MULTIPLE_LOI, 
+						scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
 			}
 
 		} finally {
@@ -2227,7 +2224,20 @@ public class LOIDetailBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setPayLoad(evaluationDataType);
 			reqDTO.setDigiSignData(digiSign);
-			saveScheduleList(); // Prepare Fulfilment Schedule
+			
+			 // Prepare Fulfilment Schedule or Progressive payment
+			Long statusId  = getManagedBean().getCurrentStatusId();
+			if (QTStatusConst.MLI_PENDING_NEGOTIATION.equals(statusId)) {
+				if (getManagedBean().getScQt() != null) {
+					if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+						this.saveProgressivePaymntList();
+					} else if (("F").equals(getManagedBean().getScQt()
+							.getScheduleType())) {
+						this.saveScheduleList();
+					}
+				}
+			}
+			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
 					reqDTO);
@@ -2253,10 +2263,11 @@ public class LOIDetailBackingBean extends
 	 * @return the award supplier req dto
 	 */
 	private AwardSupplierReqDTO parseMultipleLoiDtls(boolean isSubmit) {
+		Long statusId  = getManagedBean().getCurrentStatusId();
 		if (QTStatusConst.MLI_PENDING_NEGOTIATION
-				.equals(this.getManagedBean().getCurrentStatusId())) {
+				.equals(statusId)) {
 			for (ScQtRecommend scQtRecommend 
-						: this.getManagedBean().getRecommendList()) {
+					: this.getManagedBean().getRecommendList()) {
 				if (ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD
 						.equals(scQtRecommend.getRecommendBy().getParameterCode())) {
 					validateAwardQuantity(scQtRecommend);
@@ -2266,7 +2277,7 @@ public class LOIDetailBackingBean extends
 						&& isSubmit) {
 					int recommendedSupplierCount = 0;
 					for (ScQtRecommendDtl recommendDtl 
-								: scQtRecommend.getRecommendDtls()) {
+							: scQtRecommend.getRecommendDtls()) {
 						if (recommendDtl.isRecordStatus()) {
 							++recommendedSupplierCount;
 						}
@@ -2279,11 +2290,21 @@ public class LOIDetailBackingBean extends
 							throw new EpException(MessageConst.ERROR_760318, 
 									new String[] {scQtRecommend.getRequestItem().getItemName()});
 						}
-						
+
 					}
 				}
 			}
+			// prepare fulfillment schedule
+			if (getManagedBean().getScQt() != null) {
+				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+					this.saveProgressivePaymntList();
+				} else if (("F").equals(getManagedBean().getScQt()
+						.getScheduleType())) {
+					this.saveScheduleList();
+				}
+			}
 		}
+		
 		ScQtFinalization scQtFinalization = getManagedBean()
 				.getScQtFinalization();
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -2865,7 +2886,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
-
+		getManagedBean().setSelectedScQtDeduction(null);
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
 		try {
@@ -3282,9 +3303,7 @@ public class LOIDetailBackingBean extends
 			for (ScQtSchedule schedule : freqschedule) {
 				
 				Date currentDate = new Date();
-
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 				String localDate = format.format(currentDate);
 				String day = localDate.substring(0, 2);
 				String fromdate = day + "/" + schedule.getStartMonth() + "/"
@@ -3295,11 +3314,11 @@ public class LOIDetailBackingBean extends
 				schedule.setScheduleNo(schedule.getScheduleNo());
 
 				try {
-					if (df.parse(fromdate).after(df.parse(toDate))) {
+					if (format.parse(fromdate).after(format.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
 					} else {
-						schedule.setFromDate(df.parse(fromdate));
-						schedule.setToDate(df.parse(toDate));
+						schedule.setFromDate(format.parse(fromdate));
+						schedule.setToDate(format.parse(toDate));
 					}
 				} catch (ParseException e) {
 					throw new EpException(e.toString());
@@ -4800,6 +4819,7 @@ public class LOIDetailBackingBean extends
 	 * @return the role code
 	 */
 	private String getRoleCode(){
+		String roleCode="";
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser curLogedInUser = facesScopes.getUserSessionBean();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -4813,7 +4833,10 @@ public class LOIDetailBackingBean extends
 		CommitteResDTO CommitteeresDTO = committeSO
 				.retrieveCommitteMemberByUserId(committeReqDTO);
 		ScCommitteeMember member = CommitteeresDTO.getCommMember();
-		return member.getMemberRole().getParameterCode();
+		if(member != null){
+			roleCode =  member.getMemberRole().getParameterCode();
+		}
+		return roleCode;
 	}
 	
 	/**
