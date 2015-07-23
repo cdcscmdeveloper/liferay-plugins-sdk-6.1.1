@@ -75,6 +75,14 @@
 				<p:inputText size="45"
 					value="#{flDocumentBackingBean.managedBean.searchSuppName}"></p:inputText>
 			</h:panelGrid>
+			<h:panelGrid columns="4" columnClasses="flDocSearchWidth" >
+				<p:outputLabel value="#{lbl['lbl.fl.financial.year']}" />
+				<p:selectOneMenu id="searchFinancialYear" style="width: 314px;"
+						value="#{flDocumentBackingBean.managedBean.searchFinancialYear}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getFinancialYearOpt()}" />
+					</p:selectOneMenu>
+			</h:panelGrid>
 			<h:panelGroup id="docDoStatusSearch">
 				<h:panelGrid columns="4" columnClasses="flDocSearchWidth"
 					rendered="#{flDocumentBackingBean.managedBean.checkDoDocType}">

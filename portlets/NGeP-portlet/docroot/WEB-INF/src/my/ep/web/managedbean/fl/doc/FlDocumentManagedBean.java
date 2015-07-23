@@ -195,6 +195,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	
 	/** The fl document data model. */
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
+	
+	private int searchFinancialYear;
 
 	/**
 	 * Gets the temp login id.
@@ -294,6 +296,9 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 				if(getSearchContractToDuration()!=null) {
 					reqDTO.setContractEndDate(searchContractToDuration);
 				}
+				if(getSearchFinancialYear()!= 0){
+					reqDTO.setFinancialYear(getSearchFinancialYear());
+				}
 				
 				if(isFlFulfilmentSupplier()){
 					FacesScopes facesScopes = new FacesScopes();
@@ -334,9 +339,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 						reqDTO.setUserRole(RoleCode.AUDITOR_INTERNAL.value());
 					}
 				}
-				
-				// Set Financial year
-				reqDTO.setFinancialYear(Calendar.getInstance().get(Calendar.YEAR));
 				
 				IFulfilmentDocumentSO flDocumentSO = (IFulfilmentDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentDocumentSO.class);
 				FlDocumentResDTO resDTO = flDocumentSO.searchFulfilmentDoc(reqDTO);
@@ -1478,6 +1480,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPhysContractNo(String searchPhysContractNo) {
 		this.searchPhysContractNo = searchPhysContractNo;
+	}
+
+	/**
+	 * @return the searchFinancialYear
+	 */
+	public int getSearchFinancialYear() {
+		return searchFinancialYear;
+	}
+
+	/**
+	 * @param searchFinancialYear the searchFinancialYear to set
+	 */
+	public void setSearchFinancialYear(int searchFinancialYear) {
+		this.searchFinancialYear = searchFinancialYear;
 	}
 
 }
