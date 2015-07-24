@@ -5869,12 +5869,17 @@ public class SupplierFinalizationBackingBean extends
 					Map<Long, List<ScQtEvaluationResultDtl>> recommendedSuppliersByZone =
 							this.getManagedBean().getRecommendedSupppliersByZone();
 					
-					// Add the recommended suppliers to recommended zonal map 
-					// when the supplier is selected
-					if (MapUtils.isNotEmpty(recommendedSuppliersByZone)) {
-						prepareRecommendedSuppliers(currentZone, recommendedSuppliersByZone, 
-								recommendedSupplierList);
+					if (recommendedSuppliersByZone == null) {
+						recommendedSuppliersByZone =
+								new LinkedHashMap<Long, List<ScQtEvaluationResultDtl>>();
+						this.getManagedBean().setRecommendedSupppliersByZone(
+								recommendedSuppliersByZone);
 					}
+					
+					// Add the recommended suppliers to recommended suppliers zonal map 
+					// when the supplier is selected
+					prepareRecommendedSuppliers(currentZone, recommendedSuppliersByZone, 
+							recommendedSupplierList);
 				}
 			} else {
 				recommendedSupplierList.remove(evaluationResultDtl);
