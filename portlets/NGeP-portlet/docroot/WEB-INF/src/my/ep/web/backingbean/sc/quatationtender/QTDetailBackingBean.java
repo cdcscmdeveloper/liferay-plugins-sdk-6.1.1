@@ -741,24 +741,10 @@ public class QTDetailBackingBean extends
 		if (!scQt.isSpecApprovalReq()) {
 			scQt.setMinistrySpecSecrataryId(null);
 		}
-		/*if (null != scQt.getFinalizationCommitte()
-				&& scQt.getFinalizationCommitte().getParameterId() == null) {
-			scQt.setFinalizationCommitte(null);
-		}
-		if (null != scQt.getFinalizationSecratery()
-				&& scQt.getFinalizationSecratery().getUserId() == null) {
-			scQt.setFinalizationSecratery(null);
-		}*/
 
 		scQt.setExistingContractNo(this.getManagedBean().getCtContract()
 				.getContractNo());
 
-		// No need to set the below fields automatically set by listener
-		// PmUser users = new FacesScopes().getUserSessionBean();
-		/*
-		 * scQt.setCreatedBy(users.getUserId());
-		 * scQt.setChangedBy(users.getUserId());
-		 */
 		// Setting the pm status for qt details
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(1l);
@@ -974,24 +960,7 @@ public class QTDetailBackingBean extends
 						&& !sampleSubmissionList.isEmpty()) {
 					for (ScQtSampleSubmission scQtSampleSubmission : sampleSubmissionList) {
 						PmAddress pmAddress = scQtSampleSubmission.getAddress();
-						/*
-						 * if (null != pmAddress) {
-						 * pmAddress.setPmCity(getPmCity
-						 * (pmAddress.getPmCity().getCityId()));
-						 * pmAddress.setPmState
-						 * (getPmState(pmAddress.getPmState().getStateId()));
-						 * pmAddress
-						 * .setPmDistrict(getPmDistrict(pmAddress.getPmDistrict
-						 * ().getDistrictId()));
-						 * pmAddress.setPmCountry(retrieveCountry()); if (null
-						 * != pmAddress.getPmDivision() && null !=
-						 * pmAddress.getPmDivision().getDivisionId()) {
-						 * pmAddress
-						 * .setPmDivision(getPmDivision(pmAddress.getPmDivision
-						 * ().getDivisionId())); } else {
-						 * pmAddress.setPmDivision(null); } }
-						 * scQtSampleSubmission.setAddress(pmAddress);
-						 */
+
 						if (null != pmAddress) {
 							if (pmAddress.getPmDivision() != null
 									&& pmAddress.getPmDivision()
@@ -1010,25 +979,7 @@ public class QTDetailBackingBean extends
 				if (null != this.getManagedBean().getScQtSampleSubmission()) {
 					PmAddress pmAddress = this.getManagedBean()
 							.getScQtSampleSubmission().getAddress();
-					/*
-					 * if (null != pmAddress) {
-					 * pmAddress.setPmCity(getPmCity(pmAddress
-					 * .getPmCity().getCityId()));
-					 * pmAddress.setPmState(getPmState
-					 * (pmAddress.getPmState().getStateId()));
-					 * pmAddress.setPmDistrict
-					 * (getPmDistrict(pmAddress.getPmDistrict
-					 * ().getDistrictId()));
-					 * pmAddress.setPmCountry(retrieveCountry()); if (null !=
-					 * pmAddress.getPmDivision() && null !=
-					 * pmAddress.getPmDivision().getDivisionId()) {
-					 * pmAddress.setPmDivision
-					 * (getPmDivision(pmAddress.getPmDivision
-					 * ().getDivisionId())); } else {
-					 * pmAddress.setPmDivision(null); } }
-					 * this.getManagedBean().getScQtSampleSubmission
-					 * ().setAddress(pmAddress);
-					 */
+
 					if (pmAddress.getPmDivision() != null
 							&& pmAddress.getPmDivision().getDivisionId() == null) {
 						this.getManagedBean().getScQtSampleSubmission()
@@ -1081,28 +1032,26 @@ public class QTDetailBackingBean extends
 			if (docReportsList != null && !docReportsList.isEmpty()) {
 				scQt.setScQtDocReports(docReportsList);
 			}
-			// Setting the Publication Approvals to QtDetails
-			/*ScQtApproval pubApproval = getManagedBean()
+
+			ScQtApproval pubApproval = this.getManagedBean()
 					.getPublicationApproval();
-			if (null != pubApproval) {
-
-				pubApproval.setApproverSettings(this.getManagedBean()
-						.getPublicationApprovals().getTarget());
-				List<ScQtApprovalRemark> remarks = pubApproval
-						.getScQtApprovalRemarks();
-				finalizeRemarks(remarks);
-
-				scQt.getScQtApprovals().add(pubApproval);
-			}*/
-			
-			ScQtApproval pubApproval = getManagedBean().getPublicationApproval();
 			if (null != pubApproval) {
 				List<ScQtApproval> approvals = scQt.getScQtApprovals();
 				removePTJApproval(approvals);
 				if (null != this.getManagedBean().getPublicationApprovals()) {
-					pubApproval.setApproverSettings(this.getManagedBean().getPublicationApprovals().getTarget());
+					List<ScQtApproverSettings> approvalSettings = this
+							.getManagedBean().getPublicationApprovals()
+							.getTarget();
+					if (CollectionUtils.isNotEmpty(approvalSettings)) {
+						for (ScQtApproverSettings approverSettings : approvalSettings) {
+							approverSettings.setQtApproval(pubApproval);
+						}
+						pubApproval.setApproverSettings(approvalSettings);
+					}
+
 				}
-				List<ScQtApprovalRemark> remarks = pubApproval.getScQtApprovalRemarks();
+				List<ScQtApprovalRemark> remarks = pubApproval
+						.getScQtApprovalRemarks();
 				finalizeRemarks(remarks);
 				approvals.add(pubApproval);
 				scQt.setScQtApprovals(approvals);
@@ -2209,12 +2158,10 @@ public class QTDetailBackingBean extends
 						if (this.getManagedBean().getToBeRemoveList() == null) {
 							this.getManagedBean().setToBeRemoveList(
 									new ArrayList<ScQtApproval>());
-							this.getManagedBean().getToBeRemoveList()
-									.add(qtApproval);
-						} else {
-							this.getManagedBean().getToBeRemoveList()
-									.add(qtApproval);
+
 						}
+						this.getManagedBean().getToBeRemoveList()
+								.add(qtApproval);
 					}
 				}
 			}
@@ -2549,12 +2496,15 @@ public class QTDetailBackingBean extends
 					getManagedBean().setZoneGeneralTrees(
 							new ArrayList<TreeNode>());
 					this.getManagedBean().setCtzones(false);
-					/*PanelSupplierReqDTO supplierreqDTO = new PanelSupplierReqDTO();
-					supplierreqDTO.setPanelItemId(this.getManagedBean()
-							.getCtPanelItem().getPanelItemId());
-					supplierreqDTO.setFetchSubEntity(true);
-					PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
-							.retrievePanelItem(supplierreqDTO);*/
+					/*
+					 * PanelSupplierReqDTO supplierreqDTO = new
+					 * PanelSupplierReqDTO();
+					 * supplierreqDTO.setPanelItemId(this.getManagedBean()
+					 * .getCtPanelItem().getPanelItemId());
+					 * supplierreqDTO.setFetchSubEntity(true);
+					 * PanelSupplierResDTO panelSupplierResDTO = panelSupplierSO
+					 * .retrievePanelItem(supplierreqDTO);
+					 */
 					IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
 							.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_SELECTION,
@@ -2569,14 +2519,16 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setCtZoneSupplierList(
 							new ArrayList<CtPanelSupplier>());
 					if (null != supplierResDTO.getCtPanelSuppliers()) {
-						/*CtPanelItem panelItem = supplierResDTO
-								.getCtPanelItem();*/
-						/*if (null != panelItem.getCtPanelSuppliers()) {*/
-							this.getManagedBean().setTotalSuppliers(
-									supplierResDTO.getCtPanelSuppliers().size());
-							this.getManagedBean().setCtZoneSupplierList(
-									supplierResDTO.getCtPanelSuppliers());
-						/*}*/
+						/*
+						 * CtPanelItem panelItem = supplierResDTO
+						 * .getCtPanelItem();
+						 */
+						/* if (null != panelItem.getCtPanelSuppliers()) { */
+						this.getManagedBean().setTotalSuppliers(
+								supplierResDTO.getCtPanelSuppliers().size());
+						this.getManagedBean().setCtZoneSupplierList(
+								supplierResDTO.getCtPanelSuppliers());
+						/* } */
 					}
 				}
 			}
@@ -4138,9 +4090,9 @@ public class QTDetailBackingBean extends
 				scQt.setScQtApprovals(null);
 				scQt.setScQtBriefings(null);
 				quationTenderReqDTO.setQtdetail(scQt);
-
+				quationTenderReqDTO.setPublished(false);
 				QuationTenderResDTO resDTO = detailSO
-						.saveQTDtl(quationTenderReqDTO);
+						.cancleQT(quationTenderReqDTO);
 				if (resDTO.isSuccessful()) {
 
 					FacesContext
@@ -4158,8 +4110,7 @@ public class QTDetailBackingBean extends
 																			ParameterTypeConst.DOCUMENT_TYPES,
 																			ParameterConst.DOCTYPE_QUOTATION),
 																	resDTO.getQtDetail()
-																			.getQtId()
-																			.toString() },
+																			.getQtNo() },
 															MessageUtils.BUNDLE_COMMON_MESSAGES,
 															new FacesScopes()
 																	.getUserLocale())));
@@ -4290,6 +4241,7 @@ public class QTDetailBackingBean extends
 			scQtApprovals.add(approval);
 			qt.setScQtApprovals(scQtApprovals);
 			quationTenderReqDTO.setQtdetail(qt);
+			quationTenderReqDTO.setPublished(true);
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.cancleQT(quationTenderReqDTO);
 
