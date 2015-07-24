@@ -52,8 +52,7 @@
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcessRptQuotationNoView}" >			
 									<p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"   style="margin-top:5px;width:160px;"/>
 									<p:inputText maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}" style="margin-top:5px;width:290px;">
-									<p:ajax event="blur" listener="#{reportBackingBean.simpleQuoteNoValidation()}" process="@form"
-					 				partialSubmit="true" update="@form"/>										
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
 									</p:inputText>																					
 									</c:if>
 									
