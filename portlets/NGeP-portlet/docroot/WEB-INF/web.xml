@@ -130,11 +130,11 @@
 		<servlet-class>my.ep.web.scheduler.servlet.pm.PmSchedulerServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet> -->
-	<!-- <servlet>
+	<servlet>
 		<servlet-name>SmBatchJobServlet</servlet-name>
 		<servlet-class>my.ep.web.scheduler.servlet.sm.SmSchedulerServlet</servlet-class>
 		<load-on-startup>4</load-on-startup>
-	</servlet> -->
+	</servlet>
 	<!--
 	<servlet>
 		<servlet-name>CtSchedulerJobServlet</servlet-name>

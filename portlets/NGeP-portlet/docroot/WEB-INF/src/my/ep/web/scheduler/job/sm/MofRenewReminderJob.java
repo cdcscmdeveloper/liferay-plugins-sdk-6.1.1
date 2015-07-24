@@ -1,11 +1,9 @@
 package my.ep.web.scheduler.job.sm;
 
-import my.ep.biz.service.sm.ISmSchedulerSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
 import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -21,11 +19,8 @@ public class MofRenewReminderJob implements Job {
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
 
 		SmSchedulerReqDTO reqDTO = new SmSchedulerReqDTO();
-		ISmSchedulerSO schedulerSO = (ISmSchedulerSO) BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						ISmSchedulerSO.class);
 		
-		SmSchedulerResDTO resDTO = schedulerSO.retriveMOFAccountsForRenewalNotification(reqDTO);
+		SmSchedulerResDTO resDTO = SmServiceLookup.getSmSchedulerSO().retriveMOFAccountsForRenewalNotification(reqDTO);
 		
 		if(resDTO.isSuccessful()) {
 			log.info("MOF Renew Reminders successfully sent.");
