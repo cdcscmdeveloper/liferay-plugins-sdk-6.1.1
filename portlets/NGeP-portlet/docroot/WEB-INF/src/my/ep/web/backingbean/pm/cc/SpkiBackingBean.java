@@ -113,42 +113,44 @@ public class SpkiBackingBean  extends BaseBackingBean{
 		return prop.getProperty("spki.enabled");
 	}
 
-	public void getChallengeQuestions() { 
-	try{
-			KMCClient client = getClient();
-			
-			// Request service for user selected question for authentication
-			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(getDigiCertUserId(), 1));
-//			List<String> challs = null;
-			switch(res.getStatusCode())
-			{
-			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-				// show to the user to allow user answer the challenge
-				if(challs.size() == 0)
+	public void getChallengeQuestions() {
+		if(getSpkiEnabledProperty().equalsIgnoreCase("true")){
+			try{
+				KMCClient client = getClient();
+				
+				// Request service for user selected question for authentication
+				IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions(getDigiCertUserId(), 1));
+//				List<String> challs = null;
+				switch(res.getStatusCode())
 				{
-					System.err.println("No challanges found for the user! ");
-//					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+				case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+					challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+					// show to the user to allow user answer the challenge
+					if(challs.size() == 0)
+					{
+						System.err.println("No challanges found for the user! ");
+//						FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "", "Signing error."));	
+//						throw new EpException(MessageConst.ERROR_776051);
+//						return;
+					}else{
+						setChallengeQues1(challs.get(0));
+						RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+					}
+					
+					break;
+
+					default:
+					System.err.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
 //					throw new EpException(MessageConst.ERROR_776051);
 //					return;
-				}else{
-					setChallengeQues1(challs.get(0));
-					RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 				}
-				
-				break;
 
-				default:
-				System.err.println("GetChallengeQuestions API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-//				throw new EpException(MessageConst.ERROR_776051);
-//				return;
-			}
-
-				
-		} catch (Exception ex)
-		{
-			throw new EpException(MessageConst.ERROR_776051);
-//			ex.printStackTrace();
+					
+			} catch (Exception ex)
+			{
+				throw new EpException(MessageConst.ERROR_776051);
+//				ex.printStackTrace();
+			}	
 		}
 	}
 	
