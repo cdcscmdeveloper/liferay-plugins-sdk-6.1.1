@@ -5520,7 +5520,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getScProcessRptQuotationNo() != null)
 					&& (this.getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL)) {
-				
+				simpleQuoteNoValidation();
 				rptGenBean
 						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_QT_NO_EQ
 								+ this.getScProcessRptQuotationNo());
@@ -5528,7 +5528,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			if ((this.getScProcurementType() != null)
 					&& (this.getScProcurementType() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
-						.setScProcessRptQuotationNoVar(ReportConst.SC_AMP_PROC_TYPE_EQ
+						.setScProcurementTypeVar(ReportConst.SC_AMP_PROC_TYPE_EQ
 								+ this.getScProcurementType());
 			}
 			StringBuilder procureMethod = new StringBuilder();

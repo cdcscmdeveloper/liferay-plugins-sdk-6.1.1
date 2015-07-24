@@ -49,6 +49,41 @@
 					 				partialSubmit="true" update="@form"/>	
 									</p:inputText>																					
 									</c:if>
+									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcessRptQuotationNoView}" >			
+									<p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"   style="margin-top:5px;width:160px;"/>
+									<p:inputText maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}" style="margin-top:5px;width:290px;">
+									<p:ajax event="blur" listener="#{reportBackingBean.simpleQuoteNoValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>										
+									</p:inputText>																					
+									</c:if>
+									
+									<c:if
+							test="#{smReportBackingBean.managedBean.rptGenBean.scMandatoryProcessRptQuotationNoView}">
+							<p:column >
+								<table style="width: 182px;">
+									<tr style="width: 100%;">
+										<td  style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"
+												/><p:outputLabel value="*" styleClass="mandatory"
+												/></td>
+									</tr>
+								</table>
+							</p:column>
+							<p:column>
+								<table style="width: 100%">
+									<tr>
+										<td style="width: 84%"><p:inputText
+												label="#{lbl['lbl.rpt.scsimplequoteno']}" id="simpleQuotationNo"
+												maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}"
+												required="true" style="margin-top:5px;width:290px;">
+												<p:ajax event="blur" listener="#{reportBackingBean.simpleQuoteNoValidation()}" process="@form"
+					 				partialSubmit="true" update="@form"/>
+											</p:inputText></td>
+										<td><p:message id="simpleQuotationNoMsg" for="simpleQuotationNo"
+												display="icon" showDetail="false"/></td>
+									</tr>
+								</table>
+							</p:column>
+						</c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scPurchaseInDefaultStatusView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu value="#{reportBackingBean.scPurchaseInDefaultStatus}" style="margin-top:5px;width:300px;">
@@ -171,41 +206,7 @@
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />										
 									</p:inputText>																					
 									</c:if>	
-									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.scProcessRptQuotationNoView}" >			
-									<p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"   style="margin-top:5px;width:160px;"/>
-									<p:inputText maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}" style="margin-top:5px;width:290px;">
-									<p:ajax event="blur" listener="#{reportBackingBean.simpleQuoteNoValidation()}" process="@form"
-					 				partialSubmit="true" update="@form"/>										
-									</p:inputText>																					
-									</c:if>
 									
-									<c:if
-							test="#{smReportBackingBean.managedBean.rptGenBean.scMandatoryProcessRptQuotationNoView}">
-							<p:column >
-								<table style="width: 182px;">
-									<tr style="width: 100%;">
-										<td  style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.scsimplequoteno']}"
-												/><p:outputLabel value="*" styleClass="mandatory"
-												/></td>
-									</tr>
-								</table>
-							</p:column>
-							<p:column>
-								<table style="width: 100%">
-									<tr>
-										<td style="width: 84%"><p:inputText
-												label="#{lbl['lbl.rpt.scsimplequoteno']}" id="simpleQuotationNo"
-												maxlength="40" value="#{reportBackingBean.scProcessRptQuotationNo}"
-												required="true" style="margin-top:5px;width:290px;">
-												<p:ajax event="blur" listener="#{reportBackingBean.simpleQuoteNoValidation()}" process="@form"
-					 				partialSubmit="true" update="@form"/>
-											</p:inputText></td>
-										<td><p:message id="simpleQuotationNoMsg" for="simpleQuotationNo"
-												display="icon" showDetail="false"/></td>
-									</tr>
-								</table>
-							</p:column>
-						</c:if>
 									<c:if test="#{scReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
 								  <p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
 									<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
