@@ -1447,6 +1447,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				recNoteBB.getManagedBean().setSelectedItem(fulfilmentNoteItem);
 			}
 			recNoteBB.getManagedBean().getFulfilmentNote().setFlFulfilmentNoteItem(resDTO.getFulfilmentNote().getFlFulfilmentNoteItem());
+			recNoteBB.getManagedBean().setAcknowledged(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			recNoteBB.getManagedBean().setFromPageUrl(fc.getViewRoot().getViewId());
 			
