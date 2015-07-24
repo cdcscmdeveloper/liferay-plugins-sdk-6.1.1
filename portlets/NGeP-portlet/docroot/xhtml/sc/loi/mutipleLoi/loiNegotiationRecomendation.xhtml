@@ -113,7 +113,10 @@
 												supplierDtl.smMofAccount.recordStatusFlg eq DbValueConst.recordStatusActive}" />
 								</p:column>
 					
-								<p:column selectionMode="single" style="width:2%" disabledSelection="#{!isPendingNegotiationStatus}" />
+								<p:column selectionMode="single" style="width:2%" 
+										  disabledSelection="#{!isPendingNegotiationStatus or 
+															  (supplierDtl.scQtRecommendDtl.recordStatusFlg eq 
+																				DbValueConst.recordStatusCancelled)}" />
 							</p:dataTable>
 					
 							<p:dataTable id="recommendTbl" var="item"
@@ -150,9 +153,11 @@
 										type="none" rendered="#{isPendingNegotiationStatus}">
 										<p:column>
 											<p:selectBooleanCheckbox value="#{recommendedSuppl.scQtRecommendDtl.recordStatus}"
-												disabled="#{!isPendingNegotiationStatus}">
+												disabled="#{!isPendingNegotiationStatus or 
+													(recommendedSuppl.scQtRecommendDtl.recordStatusFlg eq 
+															DbValueConst.recordStatusCancelled)}">
 												<p:ajax event="change" partialSubmit="true" process="@this"
-													update="@this, @([id$=qtyPG])"
+													update="@this, @([id$=recommendTbl])"
 													listener="#{lOIDetailBackingBean.recommendSupplierSelectedAction(
 																				item,recommendedSuppl.scQtRecommendDtl)}" />
 											</p:selectBooleanCheckbox>
