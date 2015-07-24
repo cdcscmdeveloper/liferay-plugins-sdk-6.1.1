@@ -45,6 +45,7 @@ import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseRequestSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -85,6 +86,8 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestReqDTO;
 import my.ep.dto.sc.directpurchase.PurchaseRequestResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -141,6 +144,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.fl.helper.LocationSingleton;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -821,13 +825,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
 							reCalculate.setUnitPrice(purResDTO.getUnitPrice());
 							setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
-							//TODO 1 more API to check supplier gst eff date is valid and < current date
-							if(reCalculate.isGst()){
-								reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-							}else{
+							if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+								if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+										&& reCalculate.isGst()){
+									reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+								}
+							}
+							if(!reCalculate.isGst()){
 								reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 							}
-							
 						}
 					}	
 				}else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
@@ -844,13 +850,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
 							reCalculate.setUnitPrice(purResDTO.getUnitPrice());
 							setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
-							//TODO 1 more API to check supplier gst eff date is valid and < current date
-							if(reCalculate.isGst()){
-								reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-							}else{
+							if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+								if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+										&& reCalculate.isGst()){
+									reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+								}
+							}
+							if(!reCalculate.isGst()){
 								reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 							}
-							
 						}
 					}	
 				}
@@ -1126,26 +1134,30 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 				setGstPrice(itemAddr, purResDTO.getUnitPrice().doubleValue());
-				//TODO 1 more API to check supplier gst eff date is valid and < current date
-				if(itemAddr.isGst()){
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}else{
+				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+							&& itemAddr.isGst()){
+						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}
+				}
+				if(!itemAddr.isGst()){
 					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 				}
-				
 			}
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			oriItemAddr.setUnitPrice(purResDTO.getUnitPrice());
 			setGstPrice(oriItemAddr, purResDTO.getUnitPrice().doubleValue());
-			//TODO 1 more API to check supplier gst eff date is valid and < current date
-			if(oriItemAddr.isGst()){
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}else{
+			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+						&& oriItemAddr.isGst()){
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+			}
+			if(!oriItemAddr.isGst()){
 				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			}
-			
 			if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
 				BigDecimal reCalSumOrderQty = new BigDecimal(0);
 				flItemAddr.setOrderedQty(new BigDecimal(0));
@@ -1160,10 +1172,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(reCalculateUnitPrice.getUnitPrice());
 					setGstPrice(itemAddr, reCalculateUnitPrice.getUnitPrice().doubleValue());
-					//TODO 1 more API to check supplier gst eff date is valid and < current date
-					if(itemAddr.isGst()){
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-					}else{
+					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+						if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+								&& itemAddr.isGst()){
+							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						}
+					}
+					if(!itemAddr.isGst()){
 						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 					}
 					
@@ -1256,23 +1271,28 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 				setGstPrice(itemAddr, purResDTO.getUnitPrice().doubleValue());
-				//TODO 1 more API to check supplier gst eff date is valid and < current date
-				if(itemAddr.isGst()){
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}else{
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));	
+				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+							&& itemAddr.isGst()){
+						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+					}
 				}
-				
+				if(!itemAddr.isGst()){
+					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
 			}
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			oriItemAddr.setUnitPrice(purResDTO.getUnitPrice());
 			setGstPrice(oriItemAddr, purResDTO.getUnitPrice().doubleValue());
-			//TODO 1 more API to check supplier gst eff date is valid and < current date
-			if(oriItemAddr.isGst()){
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}else{
+			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+						&& oriItemAddr.isGst()){
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+			}
+			if(!oriItemAddr.isGst()){
 				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			}
 			
@@ -1292,13 +1312,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(reCalculateUnitPrice.getUnitPrice());
 					setGstPrice(itemAddr, reCalculateUnitPrice.getUnitPrice().doubleValue());
-					//TODO 1 more API to check supplier gst eff date is valid and < current date
-					if(itemAddr.isGst()){
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-					}else{
+					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+						if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+								&& itemAddr.isGst()){
+							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+						}
+					}
+					if(!itemAddr.isGst()){
 						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 					}
-					
 				}
 				itemAddrList.remove(flItemAddr);
 				//					getManagedBean().getZonalTierMap().put(flItemAddr.getZoneId()+" "+flItemAddr.getScRequestItem().getRequestNoteItemId(), itemAddrList);
@@ -1326,25 +1348,29 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				flItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-			//TODO 1 more API to check supplier gst eff date is valid and < current date
-			if(flItemAddr.isGst()){
-				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}else{
-				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));	
+			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+						&& flItemAddr.isGst()){
+					flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
+			}
+			if(!flItemAddr.isGst()){
+				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			}
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			oriItemAddr.setUnitPrice(flItemAddr.getUnitPrice());
 			setGstPrice(oriItemAddr, flItemAddr.getUnitPrice().doubleValue());
-			//TODO 1 more API to check supplier gst eff date is valid and < current date
-			if(oriItemAddr.isGst()){
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}else{
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));	
+			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
+				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
+						&& oriItemAddr.isGst()){
+					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+				}
 			}
-			
-			
+		 if(!oriItemAddr.isGst()){
+			 oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
+		 }
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
 		}
@@ -1448,6 +1474,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FulfilmentResDTO resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			
 			setFulfilmentRequestField(resDTO);
+			getSupplierGst(getManagedBean().getFulfilmentRequest());
 		}
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "prBasePage.xhtml");
@@ -3333,6 +3360,21 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(flItemAddr.getGstUnitPrice().doubleValue() > 0){
 			flItemAddr.setGstAmount(flItemAddr.getUnitPrice().add(flItemAddr.getGstUnitPrice()));
 		}
+	}
+	
+	private void getSupplierGst(FlFulfilmentRequest flRequest) {
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		
+		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+		reqDTO.setBranchCode(flRequest.getFlSupplierDtl().getBranchCode());
+		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
+		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		if(resDTO.getSmGstSupplier() != null){
+			flRequest.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
+			flRequest.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
+			flRequest.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
+		}
+		
 	}
 	
 }
