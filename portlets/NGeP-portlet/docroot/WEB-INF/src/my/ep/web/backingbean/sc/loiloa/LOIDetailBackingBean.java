@@ -4410,7 +4410,8 @@ public class LOIDetailBackingBean extends
 	 */
 	private void updateRecommendBy(ScQtRecommend scQtRecommend) {
 		int activeCount = 0;
-		for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
+		for (ScQtRecommendDtl recommendDtl 
+						: scQtRecommend.getRecommendDtls()) {
 			if (recommendDtl.isRecordStatus()) {
 				activeCount++;
 			}

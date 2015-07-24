@@ -40,19 +40,18 @@
 								action="#{lOIDetailBackingBean.downloadFile(
 											scLoiReport.scLoiReportAttachment)}" />
 					<p:commandLink immediate="true"
-						rendered="#{!(empty scLoiReport) and
-										!(empty scLoiReport.scLoiReportAttachment) and
+						rendered="#{(!empty scLoiReport.scLoiReportAttachment.fileName) and
 											lOIDetailBackingBean.managedBean.secretaryUser}" update="reportContentsTbl">
 						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
 							styleClass="tasklist_title1" />
 
 						<f:setPropertyActionListener target="#{scLoiReport.scLoiReportAttachment}" value="#{null}" />
 					</p:commandLink>
-					
+
 					<p:commandButton oncomplete="loiAttachmentPopupDlg.show();"
 						value="#{lbl['lbl.txt.attachment']}"
 						partialSubmit="true" process="@this"
-						rendered="#{isPendingNegotiationStatus}"
+						rendered="#{isPendingNegotiationStatus and empty scLoiReport.scLoiReportAttachment.fileName}"
 						update="@([id$=loiAttachmentPopupId])">
 						<f:setPropertyActionListener
 							target="#{lOIDetailBackingBean.managedBean.selectedScLoiReport}"
