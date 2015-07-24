@@ -22,6 +22,10 @@
 	    <ui:param name="isEditableStatus"
 			value="#{isPendingNegotiationStatus  and !empty lOIDetailBackingBean.managedBean.taskId}" />
 			
+	    <ui:param name="isFulfillmentTypeOneOff"
+			value="#{lOIDetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode eq 
+						ParameterConst.fulfilmentTypeOneOff}" />			
+			
 	    <p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
 					closable="true" showSummary="false" severity="error, info" />
 		
@@ -83,7 +87,8 @@
 					value="3" />
 			</p:menuitem>
 
-			<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form">
+			<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
+						disabled="#{isFulfillmentTypeOneOff}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="4" />
