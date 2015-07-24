@@ -286,6 +286,12 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 		//extensionSearchItemDataModel.reloadData();
 
 	}
+	
+	public void extensionCodeSearchForAssign() {
+	
+		extensionSearchItemDataModel.reloadData();
+
+	}
 
 	private class SearchItemPagingDataModel extends PagingDataModel<CmItem> {
 
