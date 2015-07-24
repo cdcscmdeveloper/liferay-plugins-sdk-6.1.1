@@ -24,6 +24,7 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.sm.remarks.ISmRemarksSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
+import my.ep.biz.service.sm.scheduler.ISmSchedulerSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
 import my.ep.biz.service.sm.supplierDataMaintenance.ISupplierDataMaintenanceSO;
@@ -367,4 +368,15 @@ public class SmServiceLookup {
 		return (IVirtualCertSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, IVirtualCertSO.class);
 	}
+	
+	
+	/**
+	 * Get ISmSchedulerSO
+	 * @return ISmSchedulerSO
+	 */
+	public static ISmSchedulerSO getSmSchedulerSO(){
+		return (ISmSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmSchedulerSO.class);
+	}
+	
 }

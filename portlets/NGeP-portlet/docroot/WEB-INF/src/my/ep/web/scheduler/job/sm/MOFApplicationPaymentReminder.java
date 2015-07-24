@@ -5,13 +5,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import my.ep.biz.service.sm.ISmSchedulerSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sm.scheduler.SmSchedulerReqDTO;
-import my.ep.dto.sm.scheduler.SmSchedulerResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.web.scheduler.constants.sm.SmSchedulerConstants;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.sm.helper.SmServiceLookup;
 
 import org.apache.log4j.Logger;
 import org.quartz.Job;
@@ -23,10 +20,6 @@ public class MOFApplicationPaymentReminder implements Job{
 	
 	@Override
 	public void execute(JobExecutionContext arg0) throws JobExecutionException {
-		// TODO Auto-generated method stub
-		ISmSchedulerSO reqSO = (ISmSchedulerSO) BusinessDelegate.getInstance().
-				getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,ISmSchedulerSO.class);
-		
 		Date d1 = new Date();
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(d1);
@@ -42,11 +35,11 @@ public class MOFApplicationPaymentReminder implements Job{
 		
 		
 		try{
-			reqSO.mofApplicationPaymentReminder(reqDTO);
+			SmServiceLookup.getSmSchedulerSO().mofApplicationPaymentReminder(reqDTO);
 		}catch(Exception ex){
 			log.info("********SoftCertRenewalReminder Exception**********" + ex.getMessage());
 		}finally{
-			reqSO = null;
+			d1 = null;
 		}
 	}
 
