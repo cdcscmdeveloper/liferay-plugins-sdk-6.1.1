@@ -825,15 +825,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
 							reCalculate.setUnitPrice(purResDTO.getUnitPrice());
 							setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
-							if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-								if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-										&& reCalculate.isGst()){
-									reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-								}
-							}
-							if(!reCalculate.isGst()){
-								reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-							}
+							reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 						}
 					}	
 				}else if(getManagedBean().getPmPriceType().getParameterCode().equalsIgnoreCase(ParameterConst.PRICE_TYPE_PROMOTION_TIER) 
@@ -850,15 +842,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 							reCalculate.setScSupplierItemPrice(purResDTO.getSupplierItemPrice());
 							reCalculate.setUnitPrice(purResDTO.getUnitPrice());
 							setGstPrice(reCalculate, purResDTO.getUnitPrice().doubleValue());
-							if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-								if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-										&& reCalculate.isGst()){
-									reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-								}
-							}
-							if(!reCalculate.isGst()){
-								reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-							}
+							reCalculate.setOrderedAmt(reCalculate.getOrderedQty().multiply(reCalculate.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 						}
 					}	
 				}
@@ -908,6 +892,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 				if(newItem.getScRequestItem().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
 					newItem.setGst(true);
+					setGstPrice(newItem, newItem.getUnitPrice().doubleValue());
 				}
 				itemsList.add(newItem);
 			}
@@ -1134,30 +1119,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 				setGstPrice(itemAddr, purResDTO.getUnitPrice().doubleValue());
-				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-							&& itemAddr.isGst()){
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-					}
-				}
-				if(!itemAddr.isGst()){
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}
+				itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			}
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			oriItemAddr.setUnitPrice(purResDTO.getUnitPrice());
 			setGstPrice(oriItemAddr, purResDTO.getUnitPrice().doubleValue());
-			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-						&& oriItemAddr.isGst()){
-					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}
-			}
-			if(!oriItemAddr.isGst()){
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}
+			oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
 				BigDecimal reCalSumOrderQty = new BigDecimal(0);
 				flItemAddr.setOrderedQty(new BigDecimal(0));
@@ -1172,15 +1141,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(reCalculateUnitPrice.getUnitPrice());
 					setGstPrice(itemAddr, reCalculateUnitPrice.getUnitPrice().doubleValue());
-					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-						if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-								&& itemAddr.isGst()){
-							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-						}
-					}
-					if(!itemAddr.isGst()){
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-					}
+					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 					
 				}
 				itemAddrList.remove(flItemAddr);
@@ -1271,30 +1232,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 				itemAddr.setUnitPrice(purResDTO.getUnitPrice());
 				setGstPrice(itemAddr, purResDTO.getUnitPrice().doubleValue());
-				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-							&& itemAddr.isGst()){
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-					}
-				}
-				if(!itemAddr.isGst()){
-					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}
+				itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			}
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			oriItemAddr.setUnitPrice(purResDTO.getUnitPrice());
 			setGstPrice(oriItemAddr, purResDTO.getUnitPrice().doubleValue());
-			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-						&& oriItemAddr.isGst()){
-					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}
-			}
-			if(!oriItemAddr.isGst()){
-				oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}
+			oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			
 			if(sumOrderQty.intValue() > 0 && purResDTO.getUnitPrice().intValue() == 0){
 				BigDecimal reCalSumOrderQty = new BigDecimal(0);
@@ -1312,15 +1257,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				for(FlFulfilmentItemAddr itemAddr : itemAddrList){
 					itemAddr.setUnitPrice(reCalculateUnitPrice.getUnitPrice());
 					setGstPrice(itemAddr, reCalculateUnitPrice.getUnitPrice().doubleValue());
-					if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-						if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-								&& itemAddr.isGst()){
-							itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-						}
-					}
-					if(!itemAddr.isGst()){
-						itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-					}
+					itemAddr.setOrderedAmt(itemAddr.getOrderedQty().multiply(itemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 				}
 				itemAddrList.remove(flItemAddr);
 				//					getManagedBean().getZonalTierMap().put(flItemAddr.getZoneId()+" "+flItemAddr.getScRequestItem().getRequestNoteItemId(), itemAddrList);
@@ -1348,29 +1285,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				flItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
-			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-						&& flItemAddr.isGst()){
-					flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}
-			}
-			if(!flItemAddr.isGst()){
-				flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-			}
+			flItemAddr.setOrderedAmt(flItemAddr.getOrderedQty().multiply(flItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			if(oriItemAddr.getOrderedQty() == null){
 				oriItemAddr.setOrderedQty(new BigDecimal(0));
 			}
 			oriItemAddr.setUnitPrice(flItemAddr.getUnitPrice());
 			setGstPrice(oriItemAddr, flItemAddr.getUnitPrice().doubleValue());
-			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate() != null){
-				if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <=(DateUtils.getCurrentDateWithoutTime().getTime())
-						&& oriItemAddr.isGst()){
-					oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-				}
-			}
-		 if(!oriItemAddr.isGst()){
-			 oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getUnitPrice()).setScale(2, RoundingMode.HALF_UP));
-		 }
+			oriItemAddr.setOrderedAmt(oriItemAddr.getOrderedQty().multiply(oriItemAddr.getGstUnitPrice()).setScale(2, RoundingMode.HALF_UP));
 			// add  or remove items to Selected delivery address
 			itemsToSelectedAddress(flItemAddr);
 		}
@@ -3356,9 +3277,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		Double gstAmt = new Double(0);
 		gstAmt = itemPrice / 100;
-		flItemAddr.setGstUnitPrice(new BigDecimal(gstAmt).multiply(getManagedBean().getFulfilmentRequest().getGstRate()));
-		if(flItemAddr.getGstUnitPrice().doubleValue() > 0){
-			flItemAddr.setGstAmount(flItemAddr.getUnitPrice().add(flItemAddr.getGstUnitPrice()));
+		if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate()!=null){
+			if(getManagedBean().getFulfilmentRequest().getGstEffectiveDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime() 
+					&& flItemAddr.isGst()){
+				flItemAddr.setGstAmount(new BigDecimal(gstAmt).multiply(getManagedBean().getFulfilmentRequest().getGstRate()));
+			}
+		}
+		if(!flItemAddr.isGst()){
+			flItemAddr.setGstAmount(BigDecimal.ZERO);
+		}
+		
+		if(flItemAddr.getGstAmount().doubleValue() > 0){
+			flItemAddr.setGstUnitPrice(flItemAddr.getUnitPrice().add(flItemAddr.getGstAmount()));
+		}else{
+			flItemAddr.setGstUnitPrice(flItemAddr.getUnitPrice());
 		}
 	}
 	
