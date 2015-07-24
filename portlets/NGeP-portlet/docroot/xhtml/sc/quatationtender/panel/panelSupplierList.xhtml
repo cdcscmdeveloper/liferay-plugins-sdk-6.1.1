@@ -18,6 +18,9 @@
 					<p:tree value="#{ctZones}" var="location" selectionMode="single">
 						<p:ajax event="select" update=":form:paneltabView:totalSupplierid"
 							listener="#{qTSupplierQulCriteriaBackingBean.retriveZoneBySupplier}" />
+						<p:ajax event="unselect"
+							listener="#{qTSupplierQulCriteriaBackingBean.unSelectPanelYesTreenode}" />
+							
 						<p:treeNode type="zone">
 							<h:outputText value="#{location.zoneName}" />
 						</p:treeNode>
