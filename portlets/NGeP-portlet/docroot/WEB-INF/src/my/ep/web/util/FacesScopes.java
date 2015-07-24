@@ -338,7 +338,7 @@ public class FacesScopes {
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 				ctxToken = bpmSO.authenticate(loginId);
-				setSessionScope(SESS_USER_SESSION_BEAN, ctxToken);
+				setSessionScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
 			}
 		}
 		return (String) ctxToken;
