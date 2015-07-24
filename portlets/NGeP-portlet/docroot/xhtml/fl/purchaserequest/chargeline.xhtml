@@ -81,7 +81,7 @@
 				<h:outputText value="#{chargeLineNode.scRequestItem.uom.uomName}"
 					rendered="#{chargeLineNode.parent == 'true'}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right;white-space:normal">
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
@@ -91,7 +91,7 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right;white-space:normal">
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
@@ -101,7 +101,7 @@
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right">
+			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right;white-space:normal">
 				<f:facet name="footer">
 					<h:outputText value=""></h:outputText>			
 				</f:facet>
