@@ -959,11 +959,17 @@
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smCancellationByView}">
 							<p:outputLabel value="#{lbl['lbl.rpt.cancellationby']}"
 								style="margin-top:5px;width:160px;" />
-							<p:inputText maxlength="40"
-								value="#{reportBackingBean.smCancellationBy}"
-								style="margin-top:5px;width:290px;">
-								<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />
-							</p:inputText>
+							
+							<p:selectOneMenu value="#{reportBackingBean.smCancellationBy}"
+								style="margin-top:5px;width:300px;">
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}"
+									itemValue="#{null}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.suppler']}"
+									itemValue="#{lbl['lbl.rpt.drpdown.suppler']}"></f:selectItem>
+								<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.system']}"
+									itemValue="#{lbl['lbl.rpt.drpdown.system']}"></f:selectItem>	
+									<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />							
+							</p:selectOneMenu>
 						</c:if>
 						
 						
