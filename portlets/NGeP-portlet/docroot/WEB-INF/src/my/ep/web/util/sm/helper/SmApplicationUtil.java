@@ -2398,8 +2398,38 @@ public class SmApplicationUtil {
 				&& !managedBean.getApprovedCategoryList().isEmpty()) {
 			managedBean.getApprovedCategoryList().clear();
 		}
+		sortSupplierCategory(apprvList);
 		managedBean.setActiveCategoryList(catList);
 		managedBean.setApprovedCategoryList(apprvList);
+	}
+
+	/**
+	 * Sort SmSupplierCategory by category type and category level code
+	 * 
+	 * @param apprvList
+	 */
+	public static void sortSupplierCategory(List<SmSupplierCategory> apprvList) {
+		// sort by code
+		Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
+			@Override
+			public int compare(final SmSupplierCategory s1,
+					final SmSupplierCategory s2) {
+				return (s1.getPmCategoryL1().getCategoryL1Code() + s1
+						.getPmCategoryL2().getCategoryL2Code()).compareTo(s2
+						.getPmCategoryL1().getCategoryL1Code()
+						+ s2.getPmCategoryL2().getCategoryL2Code());
+			}
+		});
+
+		// sort by category type
+		Collections.sort(apprvList, new Comparator<SmSupplierCategory>() {
+			@Override
+			public int compare(final SmSupplierCategory s1,
+					final SmSupplierCategory s2) {
+				return Boolean.compare(s1.isSpecialCategory(),
+						s2.isSpecialCategory());
+			}
+		});
 	}
 
 	/**
