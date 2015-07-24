@@ -23,7 +23,7 @@
 				listener="#{purchaseRequestBackingBean.onNodeUnSelect()}"
 				update="chargeLineTbl,@(.chargeLineSection)"
 				disabled="#{purchaseRequestBackingBean.managedBean.selectChargeLineRow=='true'}"></p:ajax>
-			<p:column style="width:5%">
+			<p:column style="white-space:normal;width:5%">
 				<f:facet name="header">
 					<h:outputText value=" " />
 					<p:spacer width="15" />
@@ -44,7 +44,7 @@
 				</p:selectBooleanCheckbox>
 			</p:column>
 			<p:column>
-				<f:facet name="header" style="width:8%;">
+				<f:facet name="header" style="white-space:normal;width:8%;">
 					<h:outputText value="#{lbl['lbl.fl.charge.line.coa']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.charge.complete']}"/>
 				</f:facet>
@@ -57,7 +57,7 @@
 					value="/css/images/design/ico-reject.png" title="#{chargeLineNode.coaValue}" />								
 			</p:column>
 			<p:column sortBy="#{chargeLineNode.cmItem.extensionCode}">
-				<f:facet name="header" style="width:8%;">
+				<f:facet name="header" style="white-space:normal;width:8%;">
 					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
