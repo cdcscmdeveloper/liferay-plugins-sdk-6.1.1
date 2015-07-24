@@ -15992,7 +15992,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				this.getManagedBean().setToBeRemoveSchedules(toBeRemoveList);
-
+				this.getManagedBean().getScQt().setScQtSchedules(null);
 			}
 			this.getManagedBean()
 					.setScheduleList(new ArrayList<ScQtSchedule>());
@@ -16010,7 +16010,7 @@ public class SpecificationBackingBean extends
 					}
 				}
 				this.getManagedBean().setToBeRemoveProgPayments(toBeRemoveList);
-
+				this.getManagedBean().getScQt().setScQtProgressivePayments(null);
 			}
 			this.getManagedBean().setProgressivePaymentList(
 					new ArrayList<ScQtProgressivePayment>());
