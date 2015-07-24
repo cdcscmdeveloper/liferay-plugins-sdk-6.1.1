@@ -1160,6 +1160,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			// Validation for AP178 agency
 			if (contractVer.getCtAgencies().size()>0) {
 				double ceilingAmt = 0.0;
+				DecimalFormat df = new DecimalFormat("#.00");
 				for (CtAgency ctAgency : contractVer.getCtAgencies()) {
 					ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 					if (ctAgency.isAp178() == true && (ctAgency.getFileName() == null  || ctAgency.getFileName().equalsIgnoreCase(""))) {
@@ -1173,11 +1174,14 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	           							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 					}
 				}
+				ceilingAmt = Double.valueOf(df.format(ceilingAmt));
+				
 				double latestContractAmount = 0.0;
 				for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 		    		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 		    				&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
 		    			latestContractAmount = contractAmt.getContractAmount().doubleValue();
+		    			latestContractAmount = Double.valueOf(df.format(latestContractAmount));
 		    			break;
 		    		}
 		    	}
@@ -2675,14 +2679,18 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	List<CtAgency> agencyList = this.getManagedBean().getContractVer().getCtAgencies();
     	if (agencyList.size() > 0) {
 			double ceilingAmt = 0.0;
+			DecimalFormat df = new DecimalFormat("#.00");
 			for (CtAgency ctAgency : agencyList) {
 				ceilingAmt = ceilingAmt + ctAgency.getCeilingAmount().doubleValue();
 			}
+			ceilingAmt = Double.valueOf(df.format(ceilingAmt));
+			
 			double latestContractAmount = 0.0;
 			for (CtContractAmount contractAmt : getManagedBean().getContractVer().getCtContractAmounts()){
 	    		if (getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() >= contractAmt.getEffDate().getTime() 
 	    				&& getManagedBean().getContractVer().getCtContractValue().getExpDate().getTime() <= contractAmt.getExpDate().getTime()){
 	    			latestContractAmount = contractAmt.getContractAmount().doubleValue();
+	    			latestContractAmount = Double.valueOf(df.format(latestContractAmount));
 	    			break;
 	    		}
 	    	}
