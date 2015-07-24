@@ -178,7 +178,7 @@
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="text-align:right">
+				<p:column headerText="#{lbl['lbl.fl.ordered.qty']}" style="width:124px;text-align:right">
 					<p:commandLink oncomplete="reqItemInfo.show();" process="@this" 
 					action="#{purchaseRequestBackingBean.reqItemInfoList(flItem)}"
 					update=":form:reqItemInfoDialog,@(.orderSummaryChange)">
