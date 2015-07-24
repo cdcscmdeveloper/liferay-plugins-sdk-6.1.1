@@ -171,9 +171,7 @@ public class FacesScopes {
 	 * @return The UserSessionBean instance
 	 */
 	public PmUser getUserSessionBean() {
-		FacesScopes facesScopes = new FacesScopes();
-		PmUser user = (PmUser) facesScopes
-				.getSessionScope(SESS_USER_SESSION_BEAN);
+		PmUser user = (PmUser) getSessionScope(SESS_USER_SESSION_BEAN);
 		
 		if (user == null) {
 			try {
@@ -202,7 +200,7 @@ public class FacesScopes {
 				
 				log.info("stored in user session:" + (user != null ? user.getUserId() : null));
 				
-				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
+				setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
 				log.error(e.getMessage());
 				
@@ -331,8 +329,7 @@ public class FacesScopes {
 	}
 
 	public String getBPMAuthenticationCtxToken() {
-		Object ctxToken = portletSession.getAttribute(BPM_AUTH_CONTEXT_TOKEN,
-				PortletSession.APPLICATION_SCOPE);
+		Object ctxToken = getSessionScope(BPM_AUTH_CONTEXT_TOKEN);
 		if (null == ctxToken) {
 			String loginId = getUserScreenName();
 			System.out.println("loginId: " + loginId);
@@ -341,8 +338,7 @@ public class FacesScopes {
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 						.getServiceObject(IBpmSO.class);
 				ctxToken = bpmSO.authenticate(loginId);
-				portletSession.setAttribute(BPM_AUTH_CONTEXT_TOKEN, ctxToken,
-						PortletSession.APPLICATION_SCOPE);	
+				setSessionScope(SESS_USER_SESSION_BEAN, ctxToken);
 			}
 		}
 		return (String) ctxToken;
