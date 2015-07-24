@@ -91,6 +91,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private boolean disableAmendDetails;
 	private boolean disableEndorseAmendDetails;
 	private boolean disableFinalAmendDetails;
+	private boolean secretaryExist = false;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private List<CtContractVer> amendHistoryList;
@@ -718,8 +719,22 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableFinalAmendDetails(boolean disableFinalAmendDetails) {
 		this.disableFinalAmendDetails = disableFinalAmendDetails;
-	}
+	}	
 	
+	/**
+	 * @return the secretaryExist
+	 */
+	public boolean isSecretaryExist() {
+		return secretaryExist;
+	}
+
+	/**
+	 * @param secretaryExist the secretaryExist to set
+	 */
+	public void setSecretaryExist(boolean secretaryExist) {
+		this.secretaryExist = secretaryExist;
+	}
+
 	/**
 	 * @return the remarkList
 	 */

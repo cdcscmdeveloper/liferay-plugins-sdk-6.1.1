@@ -772,6 +772,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    		getManagedBean().setSecretaryId((Long)secretaryList[1].getValue());
 			    	}
 			    }
+			    //secretary exist
+			    if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()) {
+				    if (getManagedBean().getSecretaryId() != null) {
+				    	getManagedBean().setSecretaryExist(true);
+				    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(false);
+				    } else {
+				    	if (retrieveSecretary() != null) {
+				    		getManagedBean().setSecretaryExist(true);
+					    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(false);
+				    	} else {
+				    		getManagedBean().setSecretaryExist(false);
+					    	getManagedBean().getContractVer().getCtAmendment().setRouteToBPK(true);
+				    	}
+				    }
+			    }
 			}
 	  	} finally {
 	  		contractSO = null;
@@ -1067,10 +1082,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 		}
 		//Validation for committee
-		if ((action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId() == null)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)
-				|| action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() 
+		if ((getManagedBean().getTaskName() != null 
+				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME))
+				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
 					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
 				if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
 						&& getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
@@ -1517,50 +1532,59 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
      */
 	private void setSecretary() {
 		if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
-			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt() 
-					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
-				// Direct Nego
-	    		if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
-	    				&& getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
-	    			UserReqDTO userReqDTO = new UserReqDTO();
-	    			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-	    					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-	    			// PBA or PBB or FSB or FSW (Not QCA or QCB)
-	    			if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
-	    					&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
-	   			   	  	userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");	
-	   			   	  	
-	   			   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-	   			   	  	if (ministryOrgProfile != null) {
-	   			   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
-	   			   	  	} else {
-	   			   	  		userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
-	   			   	  	}
-	   			   	  	List<PmUser> list = userSO.retrieveUserListByRole(userReqDTO).getUserList();
-	   			   	  	if (list.size() > 0) {
-	   			   	  		getManagedBean().getContractVer().getCtAmendment().setSecretary(list.get(0));
-	   			   	  	}
-	    			} else { // QCA or QCB
-	    				if (getManagedBean().getSecretaryId() != null) {
-	    					userReqDTO.setUserId(getManagedBean().getSecretaryId());
-	    					getManagedBean().getContractVer().getCtAmendment().setSecretary(userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser());
-	    				}
-	    			}
-	    		} else { // QT or Tender
-	    			if (getManagedBean().getContractVer().getCtContract().getQuotationTender() != null) {
-	    				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-	    				ICommitteSO committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(
-	    						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
-	    				committeReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
-	    				committeReqDTO.setIshigerCommitte(false);
-	    				CommitteResDTO committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(committeReqDTO);
-	    				if (committeResDTO.getHigherCommitteSecratary() != null) {
-	    					getManagedBean().getContractVer().getCtAmendment().setSecretary(committeResDTO.getHigherCommitteSecratary());
-	    				}
-	    			}
-	    		}
+			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
+					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {				
+				getManagedBean().getContractVer().getCtAmendment().setSecretary(retrieveSecretary());
 			}
 		}
+	}
+	
+	/**
+	 * The method used to retrieve the secretary for different committee type.
+     */
+	private PmUser retrieveSecretary() {
+		PmUser pmUser = null;		
+		// Direct Nego
+		if (getManagedBean().getContractVer().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
+				&& getManagedBean().getContractVer().getCtContract().getLoa().getScLoiLoa().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DIRECT_NEGO)) {
+			UserReqDTO userReqDTO = new UserReqDTO();
+			IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			// PBA or PBB or FSB or FSW (Not QCA or QCB)
+			if (!getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_A)
+					&& !getManagedBean().getCommitteeType().equalsIgnoreCase(ParameterConst.COMMITTEE_TYPE_QUOTATION_COMMITTEE_B)) {
+			   	  	userReqDTO.setRoleCode(getManagedBean().getCommitteeType() + "_SECRETARY");	
+			   	  	
+			   	  	PmOrgProfile ministryOrgProfile = retrieveMinistryOrgProfile(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			   	  	if (ministryOrgProfile != null) {
+			   	  		userReqDTO.setOrgProfileId(ministryOrgProfile.getOrgProfileId());
+			   	  	} else {
+			   	  		userReqDTO.setOrgProfileId(getManagedBean().getContractVer().getCtContract().getOwnerOrgProfile().getOrgProfileId());
+			   	  	}
+			   	  	List<PmUser> list = userSO.retrieveUserListByRole(userReqDTO).getUserList();
+			   	  	if (list.size() > 0) {
+			   	  		pmUser = list.get(0);
+			   	  	}
+			} else { // QCA or QCB
+				if (getManagedBean().getSecretaryId() != null) {
+					userReqDTO.setUserId(getManagedBean().getSecretaryId());
+					pmUser = userSO.retrieveUserProfileByUserId(userReqDTO).getPmUser();
+				}
+			}
+		} else { // QT or Tender
+			if (getManagedBean().getContractVer().getCtContract().getQuotationTender() != null) {
+				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+				ICommitteSO committeSO = (ICommitteSO) BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, ICommitteSO.class);
+				committeReqDTO.setQtId(getManagedBean().getContractVer().getCtContract().getQuotationTender().getQtId());
+				committeReqDTO.setIshigerCommitte(false);
+				CommitteResDTO committeResDTO =  committeSO.retrieveHigherCommitteOrSecrataryByQtId(committeReqDTO);
+				if (committeResDTO.getHigherCommitteSecratary() != null) {
+					pmUser = committeResDTO.getHigherCommitteSecratary();
+				}
+			}
+		}		
+		return pmUser;
 	}
 	
 	/**
