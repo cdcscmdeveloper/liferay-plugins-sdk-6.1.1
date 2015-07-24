@@ -929,17 +929,30 @@ public class QTSupplierQulCriteriaBackingBean extends
 	public void retriveZoneBySupplier(NodeSelectEvent event) {
 		debugLogger("retriveZoneBySupplier");
 		TreeNode selectedTreeNode = event.getTreeNode();
+		TplSpecZoneDtl tplSpecZoneDtl = null;
+		selectedTreeNode.setSelected(true);
+		if (null != selectedTreeNode) {
+			tplSpecZoneDtl = retriveTplSpecZoneDtls(selectedTreeNode);
+
+		}
+		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
+		if (null != tplSpecZoneDtl) {
+			this.getManagedBean().setTplSpecZoneDtl(tplSpecZoneDtl);
+			supplierReqDTO.setCircularZoneId(tplSpecZoneDtl.getPanelZone()
+					.getPanelZoneId());
+		}
+		
+		/*TreeNode selectedTreeNode = event.getTreeNode();
 
 		selectedTreeNode.setSelected(true);
 		TplSpecZoneDtl ctPanelzone = (TplSpecZoneDtl) event.getTreeNode()
 				.getData();
-		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();
+		QTSupplierReqDTO supplierReqDTO = new QTSupplierReqDTO();*/
 		IQTSupplierSO supplierSo = (IQTSupplierSO) BusinessDelegate
 				.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTSupplierSO.class);
 		QTSupplierResDTO supplierResDTO = new QTSupplierResDTO();
-		supplierReqDTO.setCircularZoneId(ctPanelzone.getPanelZone().getPanelZoneId());
 		supplierResDTO = supplierSo
 				.retrievePanelSuppliersByCircularZoneId(supplierReqDTO);
 		this.getManagedBean().setCtZoneSupplierList(
@@ -961,6 +974,79 @@ public class QTSupplierQulCriteriaBackingBean extends
 
 			this.getManagedBean().setSelectpanelItem(itemList);
 		}
+	}
+
+	/**
+	 * Retrive tpl spec zone dtls.
+	 * 
+	 * @param selectedTreeNode
+	 *            the selected tree node
+	 * @return the tpl spec zone dtl
+	 */
+	private TplSpecZoneDtl retriveTplSpecZoneDtls(TreeNode selectedTreeNode) {
+		TplSpecZoneDtl tplSpecZoneDtl = null;
+		List<TreeNode> zoneNodes = selectedTreeNode.getChildren();
+
+		if (null != zoneNodes && zoneNodes.size() > 0) {
+			for (TreeNode treeNode1 : zoneNodes) {
+
+				List<TreeNode> stateNodes = treeNode1.getChildren();
+
+				for (TreeNode treeNode2 : stateNodes) {
+
+					List<TreeNode> district = treeNode2.getChildren();
+					if (null != district && !district.isEmpty()) {
+						for (TreeNode devision : district) {
+
+							if (devision.getChildCount() > 0) {
+								for (TreeNode districtNode : devision
+										.getChildren()) {
+
+									TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
+											.getData();
+
+									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+											.getData()));
+									tplSpecZoneDtl = criteria
+											.getTplSpecZoneDtl();
+
+								}
+
+							} else {
+
+								TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
+										.getData();
+
+								criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+										.getData()));
+								tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+
+							}
+
+						}
+					} else {
+
+						TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
+								.getData();
+
+						criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+								.getData()));
+						tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+
+					}
+
+				}
+				if (null != stateNodes && stateNodes.size() == 0) {
+					TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode1
+							.getData();
+					criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) selectedTreeNode
+							.getData()));
+					tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+				}
+
+			}
+		}
+		return tplSpecZoneDtl;
 	}
 
 	/**
