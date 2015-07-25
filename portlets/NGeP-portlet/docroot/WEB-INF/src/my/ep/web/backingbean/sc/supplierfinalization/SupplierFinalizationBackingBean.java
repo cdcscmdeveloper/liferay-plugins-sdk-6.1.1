@@ -1127,32 +1127,33 @@ public class SupplierFinalizationBackingBean extends
 		List<ScQtRecommend> toBeValidatedRecommendList = null;
 		if (isSubmit && toBeValidated) {
 			toBeValidatedRecommendList = new ArrayList<ScQtRecommend>();
-		} else {
-			boolean isSingleAward = this.getManagedBean().isSingleAward();
-			
-			// If the current zone recommend by is Award, 
-			// then have to add the recommended supplier to the recommendedSupppliersByZone map
-			// before saving the data
-			if (isSingleAward) {
-				if (this.getManagedBean().getRecommendedSupplier() != null) {
-					List<ScQtEvaluationResultDtl> awardedSupplierList = 
-										new ArrayList<ScQtEvaluationResultDtl>();
-					awardedSupplierList.add(this.getManagedBean().getRecommendedSupplier());
-					recommendedSuppliersByZone.put(
-							currentZone.getSpecZoneId(), awardedSupplierList);
-					this.getManagedBean().getResetSupplierList()
-						.remove(this.getManagedBean().getRecommendedSupplier());					
-				} else {
-					recommendedSuppliersByZone.remove(currentZone.getSpecZoneId());
-				}
-			} else if (!isSingleAward) {
-				if (CollectionUtils.isEmpty(
-						this.getManagedBean().getRecommendedSupplierList())) {
-					recommendedSuppliersByZone.remove(currentZone.getSpecZoneId());
-				} else {
-					this.getManagedBean().getResetSupplierList()
-						.removeAll(this.getManagedBean().getRecommendedSupplierList());			
-				}
+		} 
+		
+
+		boolean isSingleAward = this.getManagedBean().isSingleAward();
+		
+		// If the current zone recommend by is Award, 
+		// then have to add the recommended supplier to the recommendedSupppliersByZone map
+		// before saving the data
+		if (isSingleAward) {
+			if (this.getManagedBean().getRecommendedSupplier() != null) {
+				List<ScQtEvaluationResultDtl> awardedSupplierList = 
+									new ArrayList<ScQtEvaluationResultDtl>();
+				awardedSupplierList.add(this.getManagedBean().getRecommendedSupplier());
+				recommendedSuppliersByZone.put(
+						currentZone.getSpecZoneId(), awardedSupplierList);
+				this.getManagedBean().getResetSupplierList()
+					.remove(this.getManagedBean().getRecommendedSupplier());					
+			} else {
+				recommendedSuppliersByZone.remove(currentZone.getSpecZoneId());
+			}
+		} else if (!isSingleAward) {
+			if (CollectionUtils.isEmpty(
+					this.getManagedBean().getRecommendedSupplierList())) {
+				recommendedSuppliersByZone.remove(currentZone.getSpecZoneId());
+			} else {
+				this.getManagedBean().getResetSupplierList()
+					.removeAll(this.getManagedBean().getRecommendedSupplierList());			
 			}
 		}
 		
@@ -1520,14 +1521,14 @@ public class SupplierFinalizationBackingBean extends
 					if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
 							.equals(getFacesScopes().getUserSessionBean().getUserId())) {
 						if (scQtCommitteeActivity.getScCommitteeMember()
-								.getMemberRole()
-								.equals(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+								.getMemberRole().getParameterCode().equals(
+										SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 							isChairperson = true;
 						}
 					}					
 					if (scQtCommitteeActivity.isSignedOff() && 
 							!scQtCommitteeActivity.getScCommitteeMember()
-							.getMemberRole().equals(
+							.getMemberRole().getParameterCode().equals(
 									SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 						++totalMembersEndorsed;
 					}
