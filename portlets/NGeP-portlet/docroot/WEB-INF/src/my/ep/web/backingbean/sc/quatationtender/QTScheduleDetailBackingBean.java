@@ -433,7 +433,7 @@ public class QTScheduleDetailBackingBean extends
 				if (user.getUserId()
 						.equals(contactPerson.getUser().getUserId())) {
 
-					if (doaaList != null && doaaList.size() > 0) {
+					if (doaaList != null && doaaList.size() > 1) {
 						if (doaaIdList.contains(contactPerson.getUser()
 								.getUserId())) {
 							throw new EpException(MessageConst.ERROR_760125);
