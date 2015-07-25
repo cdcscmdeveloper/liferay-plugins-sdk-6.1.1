@@ -776,8 +776,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser()
 						.equals(getFacesScopes().getUserSessionBean())) {
 					if (scQtCommitteeActivity.getScCommitteeMember()
-							.getMemberRole()
-							.equals(SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
+							.getMemberRole().getParameterCode().equals(
+									SourcingConstants.MEMBER_ROLE_CHAIRPERSON)) {
 						isChairperson = true;
 					}
 
