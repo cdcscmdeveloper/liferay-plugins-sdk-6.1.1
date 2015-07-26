@@ -271,6 +271,7 @@ public class LOADetailBackingBean extends
 
 			if(scLoa.isBrandNew()) {
 				setUserDetails(scLoa);
+				scLoa.setContractAgency(null);
 				resDTO.setScLoa(scLoa);
 			}
 
@@ -598,6 +599,7 @@ public class LOADetailBackingBean extends
 	 * @param resDTO the res dto
 	 */
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
+
 		ScLoa scLoa = resDTO.getScLoa();
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -634,10 +636,7 @@ public class LOADetailBackingBean extends
 			handleBranchDetailsChanged();
 		}
 
-		if (scLoa.getContractType().getParameterId() != null) {
-			contractTypeChanged();
-		}
-
+		
 		// Agency & Supplier Witness
 		ScLoaWitness loaAgencyWitness = null;
 		ScLoaWitness loaSupplierWitness = null;
@@ -658,123 +657,26 @@ public class LOADetailBackingBean extends
 		scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 		scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
-		// Fulfilment Schedule
-		formFulfilmentSchedule(scLoa);
-
 		if (getManagedBean().getScQt() != null) {
-			List<ScQtProgressivePayment> progressivePayment = this
-					.getManagedBean().getProgressivePaymentList();
-			if (progressivePayment == null) {
-				progressivePayment = new ArrayList<ScQtProgressivePayment>();
-
-				if (null != scLoa.getScQtProgPayments()
-						&& !scLoa.getScQtProgPayments().isEmpty()) {
-					this.getManagedBean().setTotalProgressivePayment(
-							scLoa.getScQtProgPayments().size());
-					String startMonth = "";
-					String endMonth = "";
-					for (ScQtProgressivePayment scQtProgressivePayment : scLoa
-							.getScQtProgPayments()) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-
-						String fromdate = dateFormat
-								.format(scQtProgressivePayment.getFromDate());
-						String todate = dateFormat
-								.format(scQtProgressivePayment.getToDate());
-						String startdate = fromdate.substring(3, 5);
-						String startYear = fromdate.substring(6,
-								fromdate.length());
-						String enddate = todate.substring(3, 5);
-						String endYear = todate.substring(6, todate.length());
-
-						if (startdate.equalsIgnoreCase("01")) {
-							startMonth = "0";
-						}
-						if (startdate.equalsIgnoreCase("02")) {
-							startMonth = "1";
-						}
-						if (startdate.equalsIgnoreCase("03")) {
-							startMonth = "2";
-						}
-						if (startdate.equalsIgnoreCase("04")) {
-							startMonth = "3";
-						}
-						if (startdate.equalsIgnoreCase("05")) {
-							startMonth = "4";
-						}
-						if (startdate.equalsIgnoreCase("06")) {
-							startMonth = "5";
-						}
-
-						if (startdate.equalsIgnoreCase("07")) {
-							startMonth = "6";
-						}
-						if (startdate.equalsIgnoreCase("08")) {
-							startMonth = "7";
-						}
-						if (startdate.equalsIgnoreCase("09")) {
-							startMonth = "8";
-						}
-						if (startdate.equalsIgnoreCase("10")) {
-							startMonth = "9";
-						}
-						if (startdate.equalsIgnoreCase("11")) {
-							startMonth = "10";
-						}
-						if (startdate.equalsIgnoreCase("12")) {
-							startMonth = "11";
-						}
-
-						if (enddate.equalsIgnoreCase("01")) {
-							endMonth = "0";
-						}
-						if (enddate.equalsIgnoreCase("02")) {
-							endMonth = "1";
-						}
-						if (enddate.equalsIgnoreCase("03")) {
-							endMonth = "2";
-						}
-						if (enddate.equalsIgnoreCase("04")) {
-							endMonth = "3";
-						}
-						if (enddate.equalsIgnoreCase("05")) {
-							endMonth = "4";
-						}
-						if (enddate.equalsIgnoreCase("06")) {
-							endMonth = "5";
-						}
-
-						if (enddate.equalsIgnoreCase("07")) {
-							endMonth = "6";
-						}
-						if (enddate.equalsIgnoreCase("08")) {
-							endMonth = "7";
-						}
-						if (enddate.equalsIgnoreCase("09")) {
-							endMonth = "8";
-						}
-						if (enddate.equalsIgnoreCase("10")) {
-							endMonth = "9";
-						}
-						if (enddate.equalsIgnoreCase("11")) {
-							endMonth = "10";
-						}
-						if (enddate.equalsIgnoreCase("12")) {
-							endMonth = "11";
-						}
-						scQtProgressivePayment.setStartMonth(startMonth);
-						scQtProgressivePayment.setEndMonth(endMonth);
-						scQtProgressivePayment.setStartYear(startYear);
-						scQtProgressivePayment.setEndYear(endYear);
-						progressivePayment.add(scQtProgressivePayment);
-
-					}
-					this.sortProgressivePaymentList(progressivePayment);
-					this.getManagedBean().setProgressivePaymentList(
-							progressivePayment);
-				}
+			if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+                // progressive payment.
+				formProgressivePayment(scLoa);
+			} else if (("F").equals(getManagedBean().getScQt()
+					.getScheduleType())) {
+				// Fulfilment Schedule
+				formFulfilmentSchedule(scLoa);
 			}
 		}
+
+		// contract agency
+		if(scLoa.getContractAgency() != null){
+			scLoa.setAgencyId(scLoa.getContractAgency().getOrgProfileId());
+		}
+		
+		if (scLoa.getContractType().getParameterId() != null) {
+			contractTypeChanged();
+		}
+
 
 		// Contract Signer
 		PmUser contractSignerUser = scLoa.getContractSigner();
@@ -873,6 +775,49 @@ public class LOADetailBackingBean extends
 		this.sortFrequentScheduleList(scLoa.getScQtSchedules());
 		} else{
 			this.getManagedBean().setTotalFrequency(0);
+		}
+	}
+	
+	/**
+	 * Form progressive payment.
+	 *
+	 * @param scLoi the sc loi
+	 */
+	private void formProgressivePayment(ScLoa scLoa){
+		List<ScQtProgressivePayment> progressivePayment = this
+				.getManagedBean().getProgressivePaymentList();
+		if (progressivePayment == null) {
+			progressivePayment = new ArrayList<ScQtProgressivePayment>();
+
+			if (null != scLoa.getScQtProgPayments() && scLoa.getScQtProgPayments().size()>0) {
+				this.getManagedBean().setTotalProgressivePayment(
+						scLoa.getScQtProgPayments().size());
+				for (ScQtProgressivePayment scQtProgressivePayment : scLoa
+						.getScQtProgPayments()) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
+					String todate = dateFormat.format(scQtProgressivePayment.getToDate());
+					
+					String startMonth = fromdate.substring(3, 5);
+					String startYear = fromdate.substring(6, fromdate.length());
+					String endMonth = todate.substring(3, 5);
+					String endYear = todate.substring(6, todate.length());
+					
+					int sMonth = Integer.parseInt(startMonth);
+					int eMonth = Integer.parseInt(endMonth);
+					
+					scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
+					scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
+					scQtProgressivePayment.setStartYear(startYear);
+					scQtProgressivePayment.setEndYear(endYear);
+					progressivePayment.add(scQtProgressivePayment);
+
+				}
+				this.sortProgressivePaymentList(progressivePayment);
+				this.getManagedBean().setProgressivePaymentList(
+						progressivePayment);
+			}
 		}
 	}
 
@@ -2621,7 +2566,10 @@ public class LOADetailBackingBean extends
 						}
 					}
 					if(found){
-						scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
+						if(null == scLoa.getContractAgency()){
+							scLoa.setAgencyId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
+							scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
+						}
 					}
 				}
 
@@ -2668,16 +2616,18 @@ public class LOADetailBackingBean extends
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getContractAgency() != null || getManagedBean().getSelectedContractAgency() !=null) {
+			if (scLoa.getAgencyId() != null || getManagedBean().getSelectedContractAgency() !=null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-					reqDTO.setOrgProfileId(scLoa.getContractAgency()
-							.getOrgProfileId());
-
+					reqDTO.setOrgProfileId(scLoa.getAgencyId());
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-
 					userList = resDTO.getUserList();
+					
+                    // update agency
+					PmOrgProfile pmOrgProfile =  retrieveOrgProfileByOrgProfileId(scLoa.getAgencyId());
+					getManagedBean().getScLoa().setContractAgency(pmOrgProfile);
+
 
 				} else if (ParameterConst.CONTRACT_TYPE_CENTRAL
 						.equals(contractType)) {
@@ -4246,6 +4196,27 @@ public class LOADetailBackingBean extends
 		}
 		return pmOrgProfile;
 	}
+	
+	/**
+	 * Retrieve org profile by org profile id.
+	 *
+	 * @param ortType the ort type
+	 * @return the pm org profile
+	 */
+	private PmOrgProfile retrieveOrgProfileByOrgProfileId(Long orgProfileId){
+		PmOrgProfile pmOrgProfile = null;
+		OrgProfileReqDTO profileReqDTO = new OrgProfileReqDTO();
+		profileReqDTO.setOrgProfileId(orgProfileId);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+		OrgProfileResDTO orgProfileResDTO = orgProfileSO
+				.retrieveOrgProfileDtlByProfileId(profileReqDTO);
+		if(orgProfileResDTO.getPmOrgProfile() != null){
+			pmOrgProfile =  orgProfileResDTO.getPmOrgProfile();
+		}
+		return pmOrgProfile;
+	}
+	
 	
 	
 	/**
