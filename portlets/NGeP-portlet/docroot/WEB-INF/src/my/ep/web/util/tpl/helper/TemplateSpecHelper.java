@@ -484,7 +484,9 @@ public class TemplateSpecHelper {
 		specMaster.setTplSpecZone(specZone);
 		
 		for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
-			resetPriceType(specMaster, specQuestion);
+			if (TemplateSpecConst.QUESTION_TYPE_ITEM.equals(specQuestion.getQuestionType())) {
+				resetPriceType(specMaster, specQuestion);
+			}
 		}
 	}
 	
@@ -518,7 +520,9 @@ public class TemplateSpecHelper {
 		}
 		specQuestion.setClPriceTypeCode(newPriceTypeCode);	
 		
-		resetEstimations(specQuestion);
+		if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster.getSpecTypeCode().getParameterCode())) {
+			resetEstimations(specQuestion);	
+		}
 	}
 	
 	private PmParameter getStandardPriceType(boolean isZonal) {		

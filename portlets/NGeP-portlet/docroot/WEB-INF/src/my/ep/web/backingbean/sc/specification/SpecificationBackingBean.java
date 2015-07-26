@@ -2567,12 +2567,14 @@ public class SpecificationBackingBean extends
 						.getScQt().getScQtSupplierCriteria();
 				if (null != supplierCriteria
 						&& null != supplierCriteria.getQtZoneCriterias()) {
-					specMaster.setTplSpecZone(supplierCriteria
+					TemplateSpecHelper.getInstance().updateZoneDtl(specMaster, supplierCriteria
 							.getQtZoneCriterias());
 				} else {
 					throw new EpException(
 							"Please choose the zones before proceed.");
 				}
+			} else {
+				TemplateSpecHelper.getInstance().updateZoneDtl(specMaster, null);
 			}
 
 			QTTemplateDocReqDTO docReqDTO = new QTTemplateDocReqDTO();
@@ -14377,12 +14379,14 @@ public class SpecificationBackingBean extends
 						.getScQt().getScQtSupplierCriteria();
 				if (null != supplierCriteria
 						&& null != supplierCriteria.getQtZoneCriterias()) {
-					specMaster.setTplSpecZone(supplierCriteria
+					TemplateSpecHelper.getInstance().updateZoneDtl(specMaster, supplierCriteria
 							.getQtZoneCriterias());
 				} else {
 					throw new EpException(
 							"Please choose the zones before proceed.");
 				}
+			} else {
+				TemplateSpecHelper.getInstance().updateZoneDtl(specMaster, null);
 			}
 
 			ScQtCheckList qtCheckList = constructQtDocByType(specMaster,
