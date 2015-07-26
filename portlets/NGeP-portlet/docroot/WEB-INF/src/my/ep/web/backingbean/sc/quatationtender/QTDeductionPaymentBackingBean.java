@@ -352,9 +352,9 @@ public class QTDeductionPaymentBackingBean extends
 	
 	public void selectAllDeductionClause(AjaxBehaviorEvent event) {
 		boolean isSelectAll = ((SelectBooleanCheckbox) event.getSource()).isSelected();
-		this.getManagedBean().getSelectedDeductionClauses();
+		this.getManagedBean().getSelectedScQtDeduction().getScQtDeductionClauses();
 		
-		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
+		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedScQtDeduction().getScQtDeductionClauses();
 		if (clauses != null && clauses.size() > 0) {
 			for (ScQtDeductionClause deductionClause : clauses) {
 				if (isSelectAll) {
