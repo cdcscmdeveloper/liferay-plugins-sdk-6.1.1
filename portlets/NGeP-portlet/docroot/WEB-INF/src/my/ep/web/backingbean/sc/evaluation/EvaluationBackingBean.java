@@ -6929,8 +6929,27 @@ public class EvaluationBackingBean extends
 			}
 			if (null != getManagedBean().getMeetingAttendanceList()
 					&& !getManagedBean().getMeetingAttendanceList().isEmpty()) {
-				qtCommittee.setMeetingAttendances(getManagedBean()
-						.getMeetingAttendanceList());
+
+				List<ScQtMeetingAttendance> meetingAttendanceList = getManagedBean()
+						.getMeetingAttendanceList();
+				if (CollectionUtils.isNotEmpty(meetingAttendanceList)) {
+					if (meetingAttendanceList.size() > 1) {
+						List<String> userIdentificationNos = new ArrayList<String>();
+						for (ScQtMeetingAttendance meetingAttendance : meetingAttendanceList) {
+							if (userIdentificationNos
+									.contains(meetingAttendance.getIcPassport())) {
+								// this.getManagedBean().setActiveIndex(o);
+								// this.getManagedBean().setPrepareActiveIndex(2);
+								throw new EpException(MessageConst.ERROR_760320);
+							}
+							userIdentificationNos.add(meetingAttendance
+									.getIcPassport());
+						}
+					}
+					qtCommittee.setMeetingAttendances(getManagedBean()
+							.getMeetingAttendanceList());
+				}
+				
 			} else {
 				qtCommittee.setMeetingAttendances(null);
 			}
