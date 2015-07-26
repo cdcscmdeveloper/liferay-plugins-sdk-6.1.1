@@ -883,8 +883,16 @@ public class LOIDetailBackingBean extends
 		} 
 		calculateOfferedAndFinalPriceByItem(scLoi);
 		
-		// Fulfilment Schedule
-		formFulfilmentSchedule(scLoi);
+		if (getManagedBean().getScQt() != null) {
+			if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+				// progressive payment.
+				formProgressivePayment(scLoi);
+			} else if (("F").equals(getManagedBean().getScQt()
+					.getScheduleType())) {
+				// Fulfilment Schedule
+				formFulfilmentSchedule(scLoi);
+			}
+		}
 		
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
@@ -1171,7 +1179,7 @@ public class LOIDetailBackingBean extends
 			populateLOIDetails(resDTO);
 			getManagedBean().setEditFlag(true);
 			getManagedBean().setButtonFlag(true);
-
+			getManagedBean().setSelectedTabIndex(0);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			getManagedBean().setBackToPreviousPage(
 					fc.getViewRoot().getViewId());
@@ -1446,123 +1454,18 @@ public class LOIDetailBackingBean extends
 
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
 				.getScWorkFlowStatus().getPmStatus().getStatusId())) {
-			// Fulfilment Schedule
-			if (null != scLoi.getScQtSchedules() && !scLoi.getScQtSchedules().isEmpty()) {
-				formFulfilmentSchedule(scLoi);
-			}
 
-			List<ScQtProgressivePayment> progressivePayment = this
-					.getManagedBean().getProgressivePaymentList();
-			if (progressivePayment == null) {
-				progressivePayment = new ArrayList<ScQtProgressivePayment>();
-
-				if (null != scLoi.getScQtProgPayments()
-						&& !scLoi.getScQtProgPayments().isEmpty()) {
-					this.getManagedBean().setTotalProgressivePayment(
-							scLoi.getScQtProgPayments().size());
-					String startMonth = "";
-					String endMonth = "";
-					for (ScQtProgressivePayment scQtProgressivePayment : scLoi
-							.getScQtProgPayments()) {
-						SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-
-						String fromdate = dateFormat
-								.format(scQtProgressivePayment.getFromDate());
-						String todate = dateFormat
-								.format(scQtProgressivePayment.getToDate());
-						String startdate = fromdate.substring(3, 5);
-						String startYear = fromdate.substring(6,
-								fromdate.length());
-						String enddate = todate.substring(3, 5);
-						String endYear = todate.substring(6, todate.length());
-
-						if (startdate.equalsIgnoreCase("01")) {
-							startMonth = "0";
-						}
-						if (startdate.equalsIgnoreCase("02")) {
-							startMonth = "1";
-						}
-						if (startdate.equalsIgnoreCase("03")) {
-							startMonth = "2";
-						}
-						if (startdate.equalsIgnoreCase("04")) {
-							startMonth = "3";
-						}
-						if (startdate.equalsIgnoreCase("05")) {
-							startMonth = "4";
-						}
-						if (startdate.equalsIgnoreCase("06")) {
-							startMonth = "5";
-						}
-
-						if (startdate.equalsIgnoreCase("07")) {
-							startMonth = "6";
-						}
-						if (startdate.equalsIgnoreCase("08")) {
-							startMonth = "7";
-						}
-						if (startdate.equalsIgnoreCase("09")) {
-							startMonth = "8";
-						}
-						if (startdate.equalsIgnoreCase("10")) {
-							startMonth = "9";
-						}
-						if (startdate.equalsIgnoreCase("11")) {
-							startMonth = "10";
-						}
-						if (startdate.equalsIgnoreCase("12")) {
-							startMonth = "11";
-						}
-
-						if (enddate.equalsIgnoreCase("01")) {
-							endMonth = "0";
-						}
-						if (enddate.equalsIgnoreCase("02")) {
-							endMonth = "1";
-						}
-						if (enddate.equalsIgnoreCase("03")) {
-							endMonth = "2";
-						}
-						if (enddate.equalsIgnoreCase("04")) {
-							endMonth = "3";
-						}
-						if (enddate.equalsIgnoreCase("05")) {
-							endMonth = "4";
-						}
-						if (enddate.equalsIgnoreCase("06")) {
-							endMonth = "5";
-						}
-
-						if (enddate.equalsIgnoreCase("07")) {
-							endMonth = "6";
-						}
-						if (enddate.equalsIgnoreCase("08")) {
-							endMonth = "7";
-						}
-						if (enddate.equalsIgnoreCase("09")) {
-							endMonth = "8";
-						}
-						if (enddate.equalsIgnoreCase("10")) {
-							endMonth = "9";
-						}
-						if (enddate.equalsIgnoreCase("11")) {
-							endMonth = "10";
-						}
-						if (enddate.equalsIgnoreCase("12")) {
-							endMonth = "11";
-						}
-						scQtProgressivePayment.setStartMonth(startMonth);
-						scQtProgressivePayment.setEndMonth(endMonth);
-						scQtProgressivePayment.setStartYear(startYear);
-						scQtProgressivePayment.setEndYear(endYear);
-						progressivePayment.add(scQtProgressivePayment);
-
-					}
-					this.sortProgressivePaymentList(progressivePayment);
-					this.getManagedBean().setProgressivePaymentList(
-							progressivePayment);
+			if (getManagedBean().getScQt() != null) {
+				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+					// progressive payment.
+					formProgressivePayment(scLoi);
+				} else if (("F").equals(getManagedBean().getScQt()
+						.getScheduleType())) {
+					// Fulfilment Schedule
+					formFulfilmentSchedule(scLoi);
 				}
 			}
+
 		}
 	}
 	
@@ -1579,6 +1482,7 @@ public class LOIDetailBackingBean extends
 				String fromdate = dateFormat.format(scQtSchedule
 						.getFromDate());
 				String todate = dateFormat.format(scQtSchedule.getToDate());
+				
 				String startMonth = fromdate.substring(3, 5);
 				String startYear = fromdate.substring(6, fromdate.length());
 				String endMonth = todate.substring(3, 5);
@@ -1611,6 +1515,49 @@ public class LOIDetailBackingBean extends
 			this.sortFrequentScheduleList(scLoi.getScQtSchedules());
 		} else{
 			this.getManagedBean().setTotalFrequency(0);
+		}
+	}
+	
+	/**
+	 * Form progressive payment.
+	 *
+	 * @param scLoi the sc loi
+	 */
+	private void formProgressivePayment(ScLoi scLoi){
+		List<ScQtProgressivePayment> progressivePayment = this
+				.getManagedBean().getProgressivePaymentList();
+		if (progressivePayment == null) {
+			progressivePayment = new ArrayList<ScQtProgressivePayment>();
+
+			if (null != scLoi.getScQtProgPayments() && scLoi.getScQtProgPayments().size()>0) {
+				this.getManagedBean().setTotalProgressivePayment(
+						scLoi.getScQtProgPayments().size());
+				for (ScQtProgressivePayment scQtProgressivePayment : scLoi
+						.getScQtProgPayments()) {
+					SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+
+					String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
+					String todate = dateFormat.format(scQtProgressivePayment.getToDate());
+					
+					String startMonth = fromdate.substring(3, 5);
+					String startYear = fromdate.substring(6, fromdate.length());
+					String endMonth = todate.substring(3, 5);
+					String endYear = todate.substring(6, todate.length());
+					
+					int sMonth = Integer.parseInt(startMonth);
+					int eMonth = Integer.parseInt(endMonth);
+					
+					scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
+					scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
+					scQtProgressivePayment.setStartYear(startYear);
+					scQtProgressivePayment.setEndYear(endYear);
+					progressivePayment.add(scQtProgressivePayment);
+
+				}
+				this.sortProgressivePaymentList(progressivePayment);
+				this.getManagedBean().setProgressivePaymentList(
+						progressivePayment);
+			}
 		}
 	}
 
