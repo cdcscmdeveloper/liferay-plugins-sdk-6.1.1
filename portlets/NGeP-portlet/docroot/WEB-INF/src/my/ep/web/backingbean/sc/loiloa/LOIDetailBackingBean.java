@@ -2832,7 +2832,6 @@ public class LOIDetailBackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
-		//getManagedBean().setSelectedScQtDeduction(null);
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
 		try {
@@ -2843,11 +2842,11 @@ public class LOIDetailBackingBean extends
 					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 			clauseSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.PROFILE_MANAGEMENT, IClauseSO.class);
-
 			ParameterReqDTO reqDTO = new ParameterReqDTO();
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			validateDeductionPayment(scQtDeduction);
 			getClausesTitle(scQtDeduction);
 			ScQtDeductionClause deductionClause = null;
 			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
@@ -2881,6 +2880,26 @@ public class LOIDetailBackingBean extends
 		} finally {
 			parameterSO = null;
 		}
+	}
+
+	/**
+	 * Validate deduction payment.
+	 *
+	 * @param scQtDeduction the sc qt deduction
+	 */
+	private void validateDeductionPayment(ScQtDeduction scQtDeduction) {
+		List<ScQtDeduction> scQtDeductions = getManagedBean().getScLoi().getScQtDeductions();
+		if(scQtDeductions != null && scQtDeductions.size()>1){
+			for (ScQtDeduction qtDeduction : scQtDeductions) {
+				if(!qtDeduction.equals(scQtDeduction)){
+					if(qtDeduction.getDeductionType().getParameterId() == scQtDeduction.getDeductionType().getParameterId()){
+						throw new EpException(MessageConst.ERROR_700027, new String[] {ResourceBundleUtils.getMessage(getParameterDesc(scQtDeduction.getDeductionType()),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+			}
+		}
+
 	}
 
 	/**

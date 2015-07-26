@@ -828,8 +828,6 @@ public class LOADetailBackingBean extends
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
-		//getManagedBean().setSelectedScQtDeduction(null);
-
 		IParameterSO parameterSO = null;
 		IClauseSO clauseSO = null;
 		try {
@@ -845,6 +843,7 @@ public class LOADetailBackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scQtDeduction.setDeductionType(resDTO.getPmParameter());
+			validateDeductionPayment(scQtDeduction);
 			getClausesTitle(scQtDeduction);
 			ScQtDeductionClause deductionClause = null;
 			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
@@ -880,6 +879,26 @@ public class LOADetailBackingBean extends
 		}
 	}
 	
+	/**
+	 * Validate deduction payment.
+	 *
+	 * @param scQtDeduction the sc qt deduction
+	 */
+	private void validateDeductionPayment(ScQtDeduction scQtDeduction) {
+		List<ScQtDeduction> scQtDeductions = getManagedBean().getScLoa().getScQtDeductions();
+		if(scQtDeductions != null && scQtDeductions.size()>1){
+			for (ScQtDeduction qtDeduction : scQtDeductions) {
+				if(!qtDeduction.equals(scQtDeduction)){
+					if(qtDeduction.getDeductionType().getParameterId() == scQtDeduction.getDeductionType().getParameterId()){
+						throw new EpException(MessageConst.ERROR_700027, new String[] {ResourceBundleUtils.getMessage(getParameterDesc(scQtDeduction.getDeductionType()),
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
+				}
+				
+			}
+		}
+	}
+
 
 	/**
 	 * Gets the clauses title.
