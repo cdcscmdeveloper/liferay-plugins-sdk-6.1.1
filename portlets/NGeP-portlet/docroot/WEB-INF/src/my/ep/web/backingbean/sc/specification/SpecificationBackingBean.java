@@ -7240,6 +7240,21 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					if (null == checkList.getScQtCheckListValue()) {
+
+						this.getManagedBean()
+								.setStartYear(String.valueOf(year));
+						this.getManagedBean().setEndYear(String.valueOf(year));
+
+						// this.getManagedBean().setChecklistScoreType(null);
+
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
+
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
+
+					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "bankStatement.xhtml?faces-redirect=true";
 				}
@@ -16010,7 +16025,8 @@ public class SpecificationBackingBean extends
 					}
 				}
 				this.getManagedBean().setToBeRemoveProgPayments(toBeRemoveList);
-				this.getManagedBean().getScQt().setScQtProgressivePayments(null);
+				this.getManagedBean().getScQt()
+						.setScQtProgressivePayments(null);
 			}
 			this.getManagedBean().setProgressivePaymentList(
 					new ArrayList<ScQtProgressivePayment>());
