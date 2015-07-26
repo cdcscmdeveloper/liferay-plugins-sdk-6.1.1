@@ -13,6 +13,9 @@
 		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<ui:param name="isEditableStatus" value="false" />
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+	
+		<ui:param name="isFulfilmentTypeScheduled"
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
 		
 		<ui:include src="loaSupplierButtons.xhtml" />
 		
@@ -35,7 +38,7 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form">	
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form">
