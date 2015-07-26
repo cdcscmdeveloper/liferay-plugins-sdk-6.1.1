@@ -13483,6 +13483,7 @@ public class SpecificationBackingBean extends
 						// retriveTechnicalCheckList();
 						this.getManagedBean().setScQtCheckSt2techProposal(null);
 						this.getManagedBean().setFinancialScoring(null);
+						this.getManagedBean().setOfferPricePackage(null);
 						retriveTechnicalCheckList();
 					}
 					this.getManagedBean().setCheckListTitle("");
@@ -14228,6 +14229,7 @@ public class SpecificationBackingBean extends
 				this.getManagedBean().setIndex(-1);
 				this.getManagedBean().setCheckListTitle("");
 				this.getManagedBean().setFinancialScoring(null);
+				this.getManagedBean().setOfferPricePackage(null);
 				return "/xhtml/sc/specification/specificationCommitteeView.xhtml?faces-redirect=true";
 
 			}
