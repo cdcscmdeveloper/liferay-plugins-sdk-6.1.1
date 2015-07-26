@@ -24,7 +24,10 @@
 			
 	    <ui:param name="isFulfillmentTypeOneOff"
 			value="#{lOIDetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode eq 
-						ParameterConst.fulfilmentTypeOneOff}" />			
+						ParameterConst.fulfilmentTypeOneOff}" />		
+						
+		<ui:param name="isFulfillTypeAsAndWhen"
+			value="#{lOIDetailBackingBean.managedBean.scQt.fulfilmentType.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen}" />
 			
 	    <p:messages id="suppFinalMsg" showDetail="true" autoUpdate="true" 
 					closable="true" showSummary="false" severity="error, info" />
@@ -88,7 +91,7 @@
 			</p:menuitem>
 
 			<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
-						disabled="#{isFulfillmentTypeOneOff}">
+						disabled="#{isFulfillmentTypeOneOff or isFulfillTypeAsAndWhen}">
 				<f:setPropertyActionListener
 					target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 					value="4" />
