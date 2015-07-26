@@ -354,9 +354,9 @@ public class QTScheduleDetailBackingBean extends
 				.getPmuserContactpersonList();
 		if (null == doaaList) {
 			doaaList = new ArrayList<ScQtContactPerson>();
-		} else {
+		/*} else {
 			// do validation before add a new one.
-			validationDeskOfficerAdminAssistant(doaaList);
+			validationDeskOfficerAdminAssistant(doaaList);*/
 		}
 		contactPerson.setUser(new PmUser());
 		contactPerson
@@ -372,7 +372,7 @@ public class QTScheduleDetailBackingBean extends
 	 * @param doaaList
 	 *            the doaa list
 	 */
-	private void validationDeskOfficerAdminAssistant(
+	/*private void validationDeskOfficerAdminAssistant(
 			List<ScQtContactPerson> doaaList) {
 		IQTDetailSO detailSO = null;
 		try {
@@ -385,7 +385,7 @@ public class QTScheduleDetailBackingBean extends
 		} finally {
 			detailSO = null;
 		}
-	}
+	}*/
 
 	/**
 	 * Delete desk officer admin assistant from list.
@@ -434,16 +434,16 @@ public class QTScheduleDetailBackingBean extends
 						.equals(contactPerson.getUser().getUserId())) {
 
 					if (doaaList != null && doaaList.size() > 1) {
-						if (doaaIdList.contains(contactPerson.getUser()
+						/*if (doaaIdList.contains(contactPerson.getUser()
 								.getUserId())) {
 							throw new EpException(MessageConst.ERROR_760125);
-						} else {
+						} else {*/
 							contactPerson.setName(user.getUserName());
 							contactPerson.setEmail(user.getEmail());
 							contactPerson.setPhoneNo(user.getPhoneNo());
 							contactPerson.setFaxNo(user.getFaxNo());
 							contactPerson.setUser(user);
-						}
+						/*}*/
 					}
 					break;
 				}
