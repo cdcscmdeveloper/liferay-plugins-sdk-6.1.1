@@ -19,13 +19,8 @@
 		<ui:param name="isSupplierAckStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isAfterSupplierResponseStatus" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 		<ui:param name="isPendingVerification" value="#{lOADetailBackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
-		
-		<ui:param name="isFulfillTypeAsAndWhen"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeAsAndWhen}" />
-			
-		<ui:param name="isFulfillTypeOneOff"
-			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeOneOff}" />
-		
+		<ui:param name="isFulfilmentTypeScheduled"
+			value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode eq ParameterConst.fulfilmentTypeScheduled}" />
 		
 		<ui:include src="loaButtons.xhtml" />
 		<ui:include src="loaHeader.xhtml" />
@@ -52,7 +47,7 @@
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
-					  disabled="#{isFulfillTypeOneOff or isFulfillTypeAsAndWhen or isPendingVerification}">	
+					  disabled="#{!isFulfilmentTypeScheduled or isPendingVerification}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					
@@ -85,7 +80,7 @@
 						<ui:include src="loaPaymentDetailsMenu.xhtml" />	
 					</c:if>
 				
-					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4 and !isFulfillTypeAsAndWhen}">
+					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 4}">
 						<ui:include src="loaFulfilmentSchedule.xhtml" />
 					</c:if>
 					
