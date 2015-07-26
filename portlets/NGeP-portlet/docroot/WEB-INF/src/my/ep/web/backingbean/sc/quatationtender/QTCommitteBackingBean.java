@@ -804,7 +804,8 @@ public class QTCommitteBackingBean extends
 						.getMessage(MessageConst.ERROR_760155,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-
+		this.getManagedBean().setSelectSearchcommitteeNode(null);
+		this.getManagedBean().setSearchcommitteeNode(null);
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 		this.getManagedBean().setAutoUpdate(true);
 	}
@@ -1896,10 +1897,10 @@ public class QTCommitteBackingBean extends
 	 * @return true, if is committe info editable
 	 */
 	public boolean isCommitteInfoEditable(Long committeStatus, String commType) {
-		if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(this
+		/*if (QTStatusConst.QT_EVALUATION_PROPOSAL.compareTo(this
 				.getManagedBean().getQt().getQtStatus().getStatusId()) <= 0) {
 			return true;
-		}
+		}*/
 
 		if (this.getManagedBean().isMaintanceFlow()) {
 			if (QTStatusConst.QT_PENDING_QT_SUBMISSION.equals(this
