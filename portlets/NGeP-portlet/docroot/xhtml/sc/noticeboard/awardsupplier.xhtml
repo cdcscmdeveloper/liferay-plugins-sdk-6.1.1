@@ -61,8 +61,10 @@
 
 			</h:panelGrid>
 		</p:panel>
-		
-			<c:if test="#{null ne noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId}">
+
+		<c:if
+			test="#{null ne noticeBoardBackingBean.managedBean.scQt.finalization.recommendedTypeId}">
+			<c:if test="#{!noticeBoardBackingBean.managedBean.scQt.zonal}">
 				<ui:include src="/xhtml/sc/noticeboard/awarddetails.xhtml"></ui:include>
 			</c:if>
 			<c:if test="#{noticeBoardBackingBean.managedBean.scQt.zonal}">
@@ -72,7 +74,7 @@
 					<p:ajax event="tabChange"
 						listener="#{noticeBoardBackingBean.offeredPriceTabChange}"></p:ajax>
 					<p:tab title="#{zones.zoneName}">
-					
+
 						<ui:include src="/xhtml/sc/noticeboard/awarddetails.xhtml"></ui:include>
 
 					</p:tab>
@@ -80,5 +82,6 @@
 
 				</p:tabView>
 			</c:if>
+		</c:if>
 	</ui:define>
 </ui:composition>
