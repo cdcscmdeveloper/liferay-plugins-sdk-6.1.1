@@ -798,6 +798,7 @@ public class LOIDetailBackingBean extends
 			getLoiLoaListTitle(scLoiLoa.getSmSupplier());
 			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			reqDTO.setViewSupplierLoiLoa(true);
+			reqDTO.setAwardType(getManagedBean().getDocType());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(
 					reqDTO);
 
