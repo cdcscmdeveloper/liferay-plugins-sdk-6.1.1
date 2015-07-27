@@ -62,7 +62,6 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		for (SmQuestion smQues : resDTO.getSmQuestionList()) {
 			SmSupplierAnswer smSuppAns = new SmSupplierAnswer();
-			smSuppAns.setSmSupplier(this.getManagedBean().getSmSupp());
 			smSuppAns.setSmAppl(this.getManagedBean().getSmAppl());
 			smSuppAns.setSmQuestion(smQues);
 			smSuppAns.setSmAnswer(getApplicationTypeAnswer(smQues));
@@ -86,11 +85,10 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
 
-		this.getManagedBean().getSmSupp().setSmSupplierAnswers(new ArrayList<SmSupplierAnswer>());
-		this.getManagedBean().getSmSupp().setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		this.getManagedBean().getSmAppl().setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
 		reqDTO.setSmAppl(this.getManagedBean().getSmAppl());
+		reqDTO.setOriResubmitSmAppl(this.getManagedBean().getRejectedAppl());
 		IQuestionnaireSO reqSO = (IQuestionnaireSO) BusinessDelegate.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
 	
 		for(SmSupplierAnswer suppAns : this.getManagedBean().getSmSuppAnswerLs()){
