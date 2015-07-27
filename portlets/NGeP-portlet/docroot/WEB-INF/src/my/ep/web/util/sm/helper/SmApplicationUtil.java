@@ -5452,6 +5452,15 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static SmAppl getLatesResubmitApplicationByRejectedAppl(
+			SmAppl rejectedAppl) {
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setSmAppl(rejectedAppl);
+		return SmServiceLookup.getMofRegistrationSO()
+				.retrieveLatestResubmitApplicationByRejectedAppl(reqDTO)
+				.getSmAppl();
+	}
+
 	private static void validateRenewalApplTypeForSpecialCategory(SmAppl smAppl) {
 		if (!smAppl.getApplCategoryType().equals(
 				ParameterConst.CATEGORY_TYPE_NORMAL)
