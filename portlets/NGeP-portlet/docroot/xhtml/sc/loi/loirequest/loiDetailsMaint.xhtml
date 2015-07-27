@@ -88,7 +88,7 @@
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" disabled="#{!isFulfilmentTypeScheduled}"
-							update="@form">
+							update="@form" rendered="#{isPendingNegotiation}">
 							<f:setPropertyActionListener
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="5"  />
