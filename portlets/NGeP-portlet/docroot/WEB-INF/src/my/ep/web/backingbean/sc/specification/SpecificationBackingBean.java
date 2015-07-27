@@ -13472,6 +13472,7 @@ public class SpecificationBackingBean extends
 						// retriveTechnicalSpecification();
 						this.getManagedBean().setScQtCheckSt2techProposal(null);
 						this.getManagedBean().setFinancialScoring(null);
+						this.getManagedBean().setOfferPricePackage(null);
 						retriveOneTierCheckList();
 					} else if (QTConstants.EVALUATION_TWO_TIER
 							.equalsIgnoreCase(this.getManagedBean().getScQt()
@@ -13647,6 +13648,7 @@ public class SpecificationBackingBean extends
 					// retriveTechnicalCheckList();
 					// settemplateSpecList(savedCheckLists);
 					this.getManagedBean().setFinancialScoring(null);
+					this.getManagedBean().setOfferPricePackage(null);
 					if (SourcingConstants.TECHNICAL_DOCTYPE
 							.equalsIgnoreCase(specType)) {
 						// settemplateSpecList(savedCheckLists);
@@ -13666,6 +13668,7 @@ public class SpecificationBackingBean extends
 								.getManagedBean().getScQt()
 								.isTechEvaluationReq())) {
 					this.getManagedBean().setFinancialScoring(null);
+					this.getManagedBean().setOfferPricePackage(null);
 					// settemplateSpecList(savedCheckLists);
 					setTechnicalCheckList(savedCheckLists.get(0));
 
