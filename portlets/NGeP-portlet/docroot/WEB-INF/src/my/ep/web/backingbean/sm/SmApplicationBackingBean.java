@@ -313,32 +313,48 @@ public class SmApplicationBackingBean extends
 						this.getManagedBean().setValidResubmit(false);
 					}
 					if (this.getManagedBean().isValidResubmit()) {
-						FacesContext fc = FacesContext.getCurrentInstance();
-						MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
-						mofReqDto.setApplId(Long.parseLong(applId));
-						mofReqDto.setSmSupplier(supplierProfile);
-						MofRegistrationResDTO mofRespDto = mofRegistrationSO
-								.cloneSmApplicationForResubmissionDraft(mofReqDto);
-						SmAppl clnAppl = mofRespDto.getSmAppl();
-						SmSupplier supp = mofRespDto.getSmSupplier();
-						if (!clnAppl.getApplType().equalsIgnoreCase(
-								ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
-							QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-							quesBackingBean.getManagedBean()
-									.setTargetUrl(xhtml);
-							quesBackingBean.getManagedBean().setSmSupp(
-									supplierProfile);
-							quesBackingBean.getManagedBean().setSmAppl(clnAppl);
-							quesBackingBean.retrieveQuestionnaire();
-							fc.getApplication()
-									.getNavigationHandler()
-									.handleNavigation(fc, null,
-											"/xhtml/sm/questionnaire/questionnaireView.xhtml");
-							getManagedBean().setSmAppl(clnAppl);
-							getManagedBean().setSmSupplier(supp);
-						} else {
-							getManagedBean().setSmAppl(clnAppl);
-							getManagedBean().setSmSupplier(supp);
+						SmAppl rejectedAppl = SmApplicationUtil
+								.retriveApplicationById(
+										Integer.parseInt(applId)).getSmAppl();
+						SmAppl latestResubmitAppl = null;
+						if (rejectedAppl.isQuestionnaire()) {
+							latestResubmitAppl = SmApplicationUtil
+									.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
+						}
+						if(latestResubmitAppl==null){
+							FacesContext fc = FacesContext.getCurrentInstance();
+							MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
+							mofReqDto.setApplId(Long.parseLong(applId));
+							mofReqDto.setSmSupplier(supplierProfile);
+							MofRegistrationResDTO mofRespDto = mofRegistrationSO
+									.cloneSmApplicationForResubmissionDraft(mofReqDto);
+							SmAppl clnAppl = mofRespDto.getSmAppl();
+							SmSupplier supp = mofRespDto.getSmSupplier();
+							
+							if (!clnAppl.getApplType().equalsIgnoreCase(
+									ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
+								QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
+								quesBackingBean.getManagedBean()
+										.setTargetUrl(xhtml);
+								quesBackingBean.getManagedBean().setSmSupp(
+										supplierProfile);
+								quesBackingBean.getManagedBean().setSmAppl(clnAppl);
+								quesBackingBean.getManagedBean().setRejectedAppl(rejectedAppl);
+								quesBackingBean.retrieveQuestionnaire();
+								fc.getApplication()
+										.getNavigationHandler()
+										.handleNavigation(fc, null,
+												"/xhtml/sm/questionnaire/questionnaireView.xhtml");
+								getManagedBean().setSmAppl(clnAppl);
+								getManagedBean().setSmSupplier(supp);
+							}else{
+								getManagedBean().setSmAppl(clnAppl);
+								getManagedBean().setSmSupplier(supp);
+								prerenderApplicationForResubmission();
+							}
+						}else{
+							getManagedBean().setSmAppl(latestResubmitAppl);
+							getManagedBean().setSmSupplier(supplierProfile);
 							prerenderApplicationForResubmission();
 						}
 					}

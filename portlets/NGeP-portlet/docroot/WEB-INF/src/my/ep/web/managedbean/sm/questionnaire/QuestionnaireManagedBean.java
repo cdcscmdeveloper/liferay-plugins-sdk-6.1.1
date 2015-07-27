@@ -32,6 +32,7 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	private String regDate;
 	private String targetUrl;
 	private SmAppl smAppl;
+	private SmAppl rejectedAppl;
 	
 	public List<SmQuestion> getSmQuestionLs() {
 		return smQuestionLs;
@@ -137,5 +138,13 @@ public class QuestionnaireManagedBean extends BaseManagedBean{
 	 */
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
+	}
+
+	public SmAppl getRejectedAppl() {
+		return rejectedAppl;
+	}
+
+	public void setRejectedAppl(SmAppl rejectedAppl) {
+		this.rejectedAppl = rejectedAppl;
 	}
 }
