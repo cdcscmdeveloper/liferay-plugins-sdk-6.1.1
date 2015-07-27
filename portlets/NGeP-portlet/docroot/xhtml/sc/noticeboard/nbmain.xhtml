@@ -286,7 +286,7 @@
 
 					<p:inputText styleClass="ppNumericAlign" id="bsvdate" size="5"
 						value="#{noticeBoardBackingBean.managedBean.briefSearchDataBean.passDays}"
-						style="text-align:right;">
+						style="width:111px; text-align:right;">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('Brief')}"
 							update="recentBriefDatePG" process="@this" />
@@ -353,7 +353,7 @@
 
 					<p:inputText  styleClass="ppNumericAlign" id="sitevisitdate"
 						size="5"
-						value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}" style="text-align:right;">
+						value="#{noticeBoardBackingBean.managedBean.siteVisitDataBean.passDays}" style="width:111px; text-align:right;">
 						<p:ajax event="blur"
 							listener="#{noticeBoardBackingBean.hideAndShowDates('SiteVisit')}"
 							update="recentSiteVisitDatePG" process="@this" />
