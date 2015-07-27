@@ -583,7 +583,8 @@ public class ApprovalBackingBean extends
 					.getManagedBean().getApprovalType())) {
 
 				this.setDefaultDateTime(reqDTO.getQtdetail());
-				detailSO.validateScheduleDetails(reqDTO);
+				detailSO.validatePublicationScheduleDetails(reqDTO);
+				// detailSO.validateScheduleDetails(reqDTO);
 			}
 			if (SCProcessNameConst.BPK_APPROVAL_PROCESS_NAME
 					.equalsIgnoreCase(this.getManagedBean().getApprovalType())) {
