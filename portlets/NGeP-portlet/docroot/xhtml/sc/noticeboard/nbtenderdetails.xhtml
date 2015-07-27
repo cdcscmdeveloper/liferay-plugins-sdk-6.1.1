@@ -83,7 +83,7 @@
 			<h:outputLabel value="#{lbl['lbl.sc.qt.proposal.validity']}" />
 				<h:outputText
 					value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" />
-				<h:outputText value="'('#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate}')'" styleClass="lastUpdated"
+				<h:outputText value="(#{lbl['lbl.sc.updated.on']} #{noticeBoardBackingBean.managedBean.changedDate})" styleClass="lastUpdated"
 				 rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean ne null and noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays ne 0 ? 'true':'false'}"/>
 				<h:outputLabel value="" 
 				rendered="#{noticeBoardBackingBean.managedBean.qtAmendMentBean eq null or noticeBoardBackingBean.managedBean.qtAmendMentBean.newValidityPeriodDays eq 0? 'true':'false'}"/>
