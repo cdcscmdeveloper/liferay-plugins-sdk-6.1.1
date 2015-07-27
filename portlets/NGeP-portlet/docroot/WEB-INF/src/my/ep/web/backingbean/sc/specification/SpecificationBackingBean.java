@@ -864,6 +864,9 @@ public class SpecificationBackingBean extends
 				scQt.setQtType(QTConstants.OPEN_TYPE);
 				this.getManagedBean().setCtZoneSuppliers(
 						new ArrayList<TreeNode>());
+				this.getManagedBean().setTotalSuppliers(0);
+				this.getManagedBean().setCtZoneSupplierList(
+						new ArrayList<CtPanelSupplier>());
 				ScQtSupplierCriteria supplierCriteria = scQt
 						.getScQtSupplierCriteria();
 
@@ -879,6 +882,11 @@ public class SpecificationBackingBean extends
 					supplierCriteria.setScQt(scQt);
 					supplierCriteria.setCtPanelItem(this.getManagedBean()
 							.getCtPanelItem());
+					if (null == scQt.getZoneLocationLevel()) {
+						scQt.setZoneLocationLevel(new PmParameter());
+					}
+					scQt.setZoneLocationLevel(this.getManagedBean()
+							.getCtPanelItem().getLocationLevelId());
 					setUserDetails(supplierCriteria);
 					this.getManagedBean().getScQt()
 							.setScQtSupplierCriteria(supplierCriteria);
@@ -916,6 +924,11 @@ public class SpecificationBackingBean extends
 													.getPanelItemId())) {
 								supplierCriteria.setCtPanelItem(this
 										.getManagedBean().getCtPanelItem());
+								if (null == scQt.getZoneLocationLevel()) {
+									scQt.setZoneLocationLevel(new PmParameter());
+								}
+								scQt.setZoneLocationLevel(this.getManagedBean()
+										.getCtPanelItem().getLocationLevelId());
 								removespecDtls();
 								if (null == this.getManagedBean().getScQt()
 										.getPmProcurementCategory()) {
@@ -2557,7 +2570,7 @@ public class SpecificationBackingBean extends
 			}
 			specMaster.setTplSpecQuestions(questionsList);
 
-			this.getManagedBean().getScQt().setZoneLocationLevel(null);
+			// this.getManagedBean().getScQt().setZoneLocationLevel(null);
 			this.getManagedBean().getScQt().getScQtSupplierCriteria()
 					.setLocationLevel(null);
 			this.getManagedBean().getScQt().setFulfilmentType(null);
@@ -5040,7 +5053,8 @@ public class SpecificationBackingBean extends
 						zoneLocal);
 
 			}
-			scQt.setZoneLocationLevel(null);
+			
+			// scQt.setZoneLocationLevel(null);
 			scQt.getScQtSupplierCriteria().setLocationLevel(null);
 			scQt.setQtType(QTConstants.OPEN_TYPE);
 
@@ -5138,7 +5152,8 @@ public class SpecificationBackingBean extends
 						&& null != this.getManagedBean().getZoneGeneralTrees()
 						&& this.getManagedBean().getZoneGeneralTrees()
 								.isEmpty()) {
-					if (null != scQt.getZoneLocationLevel()) {
+					if (null != scQt.getZoneLocationLevel()
+							&& !this.getManagedBean().getScQt().isPanel()) {
 						this.getManagedBean().setStateCode(
 								scQt.getZoneLocationLevel().getParameterCode());
 					}
@@ -5323,11 +5338,17 @@ public class SpecificationBackingBean extends
 			if (this.getManagedBean().getScQt().isPanel() != this
 					.getManagedBean().isPanelChange()) {
 				this.getManagedBean().getScQt().setZonal(false);
+				this.getManagedBean().getScQt().setZoneLocationLevel(null);
 				removespecDtls();
 				if (null == this.getManagedBean().getScQt()
 						.getPmProcurementCategory()) {
 					this.getManagedBean().getScQt()
 							.setPmProcurementCategory(new PmParameter());
+				}
+				if (null == this.getManagedBean().getScQt()
+						.getZoneLocationLevel()) {
+					this.getManagedBean().getScQt()
+							.setZoneLocationLevel(new PmParameter());
 				}
 				this.getManagedBean().getScQt().setZonal(false);
 				getManagedBean().setZoneGeneralTrees(null);
@@ -5359,6 +5380,9 @@ public class SpecificationBackingBean extends
 				scQt.setQtType(QTConstants.OPEN_TYPE);
 				this.getManagedBean().setCtZoneSuppliers(
 						new ArrayList<TreeNode>());
+				this.getManagedBean().setTotalSuppliers(0);
+				this.getManagedBean().setCtZoneSupplierList(
+						new ArrayList<CtPanelSupplier>());
 				ScQtSupplierCriteria supplierCriteria = scQt
 						.getScQtSupplierCriteria();
 				if (supplierCriteria != null
@@ -5366,6 +5390,11 @@ public class SpecificationBackingBean extends
 								.getManagedBean().isPanelChange()) {
 					supplierCriteria.setCtPanelItem(this.getManagedBean()
 							.getCtPanelItem());
+					if (null == scQt.getZoneLocationLevel()) {
+						scQt.setZoneLocationLevel(new PmParameter());
+					}
+					scQt.setZoneLocationLevel(this.getManagedBean()
+							.getCtPanelItem().getLocationLevelId());
 					removespecDtls();
 					if (null == this.getManagedBean().getScQt()
 							.getPmProcurementCategory()) {
@@ -5382,6 +5411,11 @@ public class SpecificationBackingBean extends
 											.getCtPanelItem())) {
 						supplierCriteria.setCtPanelItem(this.getManagedBean()
 								.getCtPanelItem());
+						if (null == scQt.getZoneLocationLevel()) {
+							scQt.setZoneLocationLevel(new PmParameter());
+						}
+						scQt.setZoneLocationLevel(this.getManagedBean()
+								.getCtPanelItem().getLocationLevelId());
 						removespecDtls();
 						if (null == this.getManagedBean().getScQt()
 								.getPmProcurementCategory()) {
