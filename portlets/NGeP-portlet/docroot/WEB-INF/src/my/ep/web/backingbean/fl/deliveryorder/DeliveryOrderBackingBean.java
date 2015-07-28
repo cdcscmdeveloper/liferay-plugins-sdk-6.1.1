@@ -24,12 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -44,8 +43,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.jaxb.fl.maintenace.modification.dofulfillment.FLDOFulfillmentModificationReqType;
@@ -60,7 +59,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmUom;
-import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -76,6 +75,7 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -209,6 +209,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 							flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
 							flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
 							flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
+							flDelOrderItem.setGstAmount(itemAddress.getGstAmount());
+							flDelOrderItem.setGstUnitPrice(itemAddress.getGstUnitPrice());
 							delOrderList.add(flDelOrderItem);
 						}
 						flDeliveryOrder.setFlDelOrderItem(delOrderList);
@@ -218,6 +220,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				for(FlDeliveryAddress flDeliveryAddress : getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses()){
 					flDeliveryAddress.getFlTempDoAddr().setFlDeliveryAddress(flDeliveryAddress);
+					flDeliveryAddress.getFlTempDoAddr().setEstDeliveryDate(flDeliveryAddress.getFlTempDoAddr().getEstDeliveryDate());
 					for(FlFulfilmentItemAddr itemAddress : flDeliveryAddress.getFlFulfilmentItemAddr()){
 						itemAddress.getFlTempDoItem().setFlFulfilmentItemAddr(itemAddress);
 						itemAddress.getFlTempDoItem().setDeliveryQty(itemAddress.getDeliveredQty());
@@ -473,9 +476,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 *
 	 * @param delOrder the del order
 	 */
-	public void calculateDelAmt(FlDeliveryOrder delOrder){
+	public void calculateDelAmt(FlDeliveryOrder delOrder){//TODO i checked there's nthg calling this
 		for(FlDelOrderItem orderItem : delOrder.getFlDelOrderItem()){
-			orderItem.setDeliveredAmt(new BigDecimal(orderItem.getFlFulfilmentItemAddr().getUnitPrice().intValue() * orderItem.getDeliveredQty().intValue()));
+			orderItem.setDeliveredAmt(new BigDecimal(orderItem.getFlFulfilmentItemAddr().getGstUnitPrice().intValue() * orderItem.getDeliveredQty().intValue()));
 		}
 	}
 	
@@ -504,7 +507,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		BigDecimal delAmtCal= BigDecimal.ZERO;
 		BigDecimal remainingQty = BigDecimal.ZERO;
 		
-		unitPriceCal=itemAddress.getUnitPrice();		
+		unitPriceCal=itemAddress.getGstUnitPrice();		
 		if(null != itemAddress.getDeliveredQty()){
 			BigDecimal formattedDeliveredQty = itemAddress.getDeliveredQty().setScale(
 					itemAddress.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
@@ -602,7 +605,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().setDocProcess(res.getDocType());
 				getManagedBean().setDocType(res.getDocType());
 				getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
-				resDTO.getFlDeliveryOrder().getFlDeliveryAddress().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemName();
 				getManagedBean().setFulfilmentRequest(resDTO.getFlDeliveryOrder().getFlRequest());
 				getManagedBean().setFulfilmentOrder(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder());
 				getManagedBean().getFulfilmentOrder().setStatus(deliveryOrderSO.retrieveDelOrderStatus(reqDTO).getPmStatus());
@@ -610,7 +612,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				getManagedBean().setTaskId(taskId);
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.initializeRemarkAndAttachement(resDTO.getFlDeliveryOrder().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
-			
+				
+				
 		}
 	}
 
@@ -1169,5 +1172,65 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				return true;
 		 else
 		return false;
+	}
+	
+	
+	public void getSupplierGst(FlFulfilmentRequest flRequest) {
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		
+		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+		reqDTO.setBranchCode(flRequest.getFlSupplierDtl().getBranchCode());
+		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
+		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		boolean amtChanged = false;
+		if(resDTO.getSmGstSupplier() != null){
+			if(getManagedBean().getFulfilmentRequest().getGstRegNo() == null){
+				amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged,flRequest);
+			}
+		}
+//		if(getManagedBean().getFulfilmentRequest().getGstRegNo() != null){
+//			if(resDTO.getSmGstSupplier() == null){
+//				reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged);
+//			}
+//		}
+		//if from GST to non-GST direct set to default
+		if(amtChanged == false){
+			for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
+				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+					itemAddr.setDoGstAmt(BigDecimal.ZERO);
+					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice());
+				}
+			}
+		}
+		if(amtChanged == true){//TODO not working yet later do..
+//			getManagedBean().setAutoUpdate(Boolean.FALSE);
+//			RequestContext.getCurrentInstance().update("@form");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,null,"Unit price have changed"));
+		}
+	}
+	
+	private boolean reCalculateGstUnitPrice(SmGstSupplier smGstSupplier, boolean amtChanged,FlFulfilmentRequest flRequest){
+		if(flRequest.getGstRate() == null){
+			flRequest.setGstRate(BigDecimal.ZERO);
+		}
+		
+		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
+			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
+				if(smGstSupplier != null){
+					Double gstAmt = new Double(0);
+					gstAmt = itemAddr.getUnitPrice().doubleValue() / 100;
+					if(smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
+							&& itemAddr.isGst()){
+						itemAddr.setDoGstAmt(new BigDecimal(gstAmt).multiply(flRequest.getGstRate()));
+						
+						if(itemAddr.getDoGstAmt().doubleValue() > 0){
+							itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getDoGstAmt()));
+							amtChanged = true;
+						}
+					}
+				}
+			}
+		}
+		return amtChanged;
 	}
 }

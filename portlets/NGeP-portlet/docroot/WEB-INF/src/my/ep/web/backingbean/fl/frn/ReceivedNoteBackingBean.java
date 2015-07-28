@@ -21,14 +21,13 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.criteria.ICriteriaSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -44,8 +43,8 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.criteria.CriteriaReqDTO;
 import my.ep.dto.pm.common.criteria.CriteriaResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.frndata.FLFulFillmentRecievedNoteDataType;
 import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
@@ -59,7 +58,7 @@ import my.ep.persistence.entity.pm.common.PmCriteria;
 import my.ep.persistence.entity.pm.common.PmCriteriaDesc;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -73,6 +72,7 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -400,6 +400,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
+				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
 			
 			getManagedBean().setSelectedTabIndex(0);
@@ -445,10 +446,10 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					item.getFlDelOrderItem().getFlFulfilmentItemAddr().getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
 			item.setReceivedQty(formattedReceivedQty);
 		}
-		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
-		if(item.getReceivedQty().doubleValue() == item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
-			receivedAmt = item.getFlDelOrderItem().getDeliveredAmt();
-		}
+		BigDecimal receivedAmt = item.getReceivedQty().multiply(item.getGstUnitPrice());
+//		if(item.getReceivedQty().doubleValue() == item.getFlDelOrderItem().getDeliveredQty().doubleValue()) {
+//			receivedAmt = item.getFlDelOrderItem().getDeliveredAmt();
+//		}
 		item.setReceivedAmt(receivedAmt.setScale(2, RoundingMode.HALF_UP));
 	}
 	 
@@ -849,6 +850,56 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		}else
 			return null;
 		
+	}
+	
+	private void getSupplierGst(FlFulfilmentNote fulfilmentNote) {
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		
+		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+		reqDTO.setBranchCode(fulfilmentNote.getFlRequest().getFlSupplierDtl().getBranchCode());
+		reqDTO.setSupplierId(fulfilmentNote.getFlRequest().getSmSupplier().getSupplierId());
+		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		boolean amtChanged = false;
+		if(resDTO.getSmGstSupplier() != null){
+			if(getManagedBean().getFulfilmentRequest().getGstRegNo() == null){
+				amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged,fulfilmentNote);
+			}
+		}
+		//if from GST to non-GST direct set to default
+		if(amtChanged == false){
+			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+				noteItem.setGstAmount(BigDecimal.ZERO);
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+			}
+		}
+		if(amtChanged == true){
+//			getManagedBean().setAutoUpdate(Boolean.FALSE);
+//			RequestContext.getCurrentInstance().update("@form");
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,null,"Unit price have changed"));
+		}
+	}
+	
+	private boolean reCalculateGstUnitPrice(SmGstSupplier smGstSupplier, boolean amtChanged,FlFulfilmentNote fulfilmentNote){
+		if(fulfilmentNote.getFlRequest().getGstRate() == null){
+			fulfilmentNote.getFlRequest().setGstRate(BigDecimal.ZERO);
+		}
+		
+		for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+				if(smGstSupplier != null){
+					Double gstAmt = new Double(0);
+					gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().doubleValue() / 100;
+					if(smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
+							&& noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){
+						noteItem.setGstAmount(new BigDecimal(gstAmt).multiply(fulfilmentNote.getFlRequest().getGstRate()));
+						
+						if(noteItem.getGstAmount().doubleValue() > 0){
+							noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().add(noteItem.getGstAmount()));
+							amtChanged = true;
+						}
+					}
+				}
+		}
+		return amtChanged;
 	}
 	
 }
