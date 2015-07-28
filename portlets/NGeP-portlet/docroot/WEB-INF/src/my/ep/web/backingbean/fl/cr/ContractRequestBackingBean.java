@@ -1232,6 +1232,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 			}
 			getGstRate(getManagedBean().getFlRequest());
+			getManagedBean().getFlRequest().setProcurementTypeCategory(contractResDTO.getContract().getLatestContractVer().getCtContractValue().getProcurementTypeCategory());
+		}
+		
+		//Default procurement type category to Supply of Goods in case of null
+		if(getManagedBean().getFlRequest().getProcurementTypeCategory()==null) {
+			ParameterReqDTO paramReqDTO = new ParameterReqDTO();
+			paramReqDTO.setParameterType(ParameterTypeConst.PROCUREMENT_TYPE_CATEGORY);
+			paramReqDTO.setParameterCode(ParameterConst.PROCUREMENT_TYPE_CODE_SUPPLY);
+			IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			PmParameter procurementTypeCategory = parameterSO.retrieveParameterByTypeAndCode(paramReqDTO).getPmParameter();
+			getManagedBean().getFlRequest().setProcurementTypeCategory(procurementTypeCategory);
 		}
 		
 		if(getManagedBean().getFlRequest().getCtContract().isZonalPricing()){
