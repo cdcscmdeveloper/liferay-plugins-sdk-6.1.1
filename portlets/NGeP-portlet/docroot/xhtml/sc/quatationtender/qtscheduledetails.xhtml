@@ -156,13 +156,15 @@
 						action="#{qTScheduleDetailBackingBean.editAddress(samplesubmissiondtl,rowIndex)}"
 						style="margin-right:20px;" partialSubmit="true" process="@this"
 						update="@(.sampleSubmitionAddrUpdate)">
-						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
+						<h:graphicImage
+							value="#{CommonUIConstant.imagePathUptoDesign}/edit.png"
 							styleClass="tasklist_title1" />
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
 			<div class="ppRightBtn">
-				<p:commandButton id="samplesubaddId" value="#{lbl['lbl.sc.qt.btn.same.address']}"
+				<p:commandButton id="samplesubaddId"
+					value="#{lbl['lbl.sc.qt.btn.same.address']}"
 					rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 					process="@this,sampleid"
 					action="#{qTScheduleDetailBackingBean.applyAddessToSelectedZonesAction}"
@@ -391,14 +393,16 @@
 
 			<p:column headerText="#{lbl['lbl.sc.name']}">
 				<p:selectOneMenu value="#{deskofficeradmin.user.userId}"
+					id="doaaUserId"
 					readonly="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems
 						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
-					<p:ajax event="change" update="doaaid"
-						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin)}" />
+					<p:ajax event="change" partialSubmit="true" process="doaaUserId"
+						update="doaaUserId"
+						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
 				</p:selectOneMenu>
 			</p:column>
 		</p:dataTable>
