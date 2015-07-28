@@ -1369,7 +1369,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 						}
 					}
 				}
-				if(newItem.getScRequestItem().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)){
+				if(getManagedBean().getFlRequest().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE)){
 					newItem.setGst(true);
 					setGstPrice(newItem, newItem.getUnitPrice().doubleValue());
 				}
