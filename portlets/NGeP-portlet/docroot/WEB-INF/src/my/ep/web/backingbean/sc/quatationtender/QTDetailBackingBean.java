@@ -2697,6 +2697,7 @@ public class QTDetailBackingBean extends
 				List<ScQtDeduction> deductionList = resDTO
 						.getDeductionResultBean().getResultList();
 				this.getManagedBean().setScQtDeductionList(deductionList);
+				getManagedBean().setSelectedScQtDeduction(null);
 				/*
 				 * if (null != deductionList && !deductionList.isEmpty()) {
 				 * this.
@@ -3623,7 +3624,7 @@ public class QTDetailBackingBean extends
 		case 6:
 			if (isinvokeValidations(getManagedBean().getQt())) {
 				reqDTO = prepareQTInfo();
-				// detailSO.validateDeductionDtls(reqDTO);
+				detailSO.validateDeductionDtls(reqDTO);
 				resDTO = detailSO.saveQTDtl(reqDTO);
 				reqDTO.setSaveFlow(true);
 				renewSesionObject();
@@ -3724,7 +3725,7 @@ public class QTDetailBackingBean extends
 
 			case 6:
 				if (isinvokeValidations(getManagedBean().getQt())) {
-					// detailSO.validateDeductionDtls(reqDTO);
+					detailSO.validateDeductionDtls(reqDTO);
 				}
 				break;
 
