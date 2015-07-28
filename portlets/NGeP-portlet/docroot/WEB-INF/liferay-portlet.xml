@@ -2016,6 +2016,16 @@
 		<css-class-wrapper>smdeactivateadmin-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>updateGstInfo</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>updategstinfo-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>supplierBusinessNature</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
