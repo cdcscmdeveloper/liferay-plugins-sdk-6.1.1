@@ -2402,4 +2402,31 @@ public class SmCommonUtil {
 		return SmServiceLookup.getMofAccountSO()
 				.retriveMOFAccountBySupplierIdAndType(reqDTO).getMofAccount();
 	}
+
+	/**
+	 * Get latest revision company basic by application id
+	 * 
+	 * @param Long
+	 *            applId
+	 * @return SmCompanyBasic
+	 */
+	public static SmCompanyBasic getLatestRevCompBasicByApplId(Long applId) {
+		SmCompanyBasic activeCompanyBasic = new SmCompanyBasic();
+		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+		reqDTO.setApplId(applId);
+		List<SmCompanyBasic> compBasicList = SmServiceLookup
+				.getMofRegistrationSO().retrieveSmCompanyBasicByApplId(reqDTO)
+				.getCompanyBasicList();
+		activeCompanyBasic = SmCommonUtil.getCompanyBasicByRevNo(compBasicList,
+				2);
+
+		if (activeCompanyBasic.getTotalMember() != null
+				&& activeCompanyBasic.getTotalMember().compareTo(
+						BigDecimal.ZERO) != 0) {
+			activeCompanyBasic.setTotalMember(activeCompanyBasic
+					.getTotalMember().setScale(0, BigDecimal.ROUND_DOWN));
+		}
+
+		return activeCompanyBasic;
+	}
 }
