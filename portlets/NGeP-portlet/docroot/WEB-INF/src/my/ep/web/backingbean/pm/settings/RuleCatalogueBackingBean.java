@@ -2139,6 +2139,7 @@ public class RuleCatalogueBackingBean extends
 						  log.info("Tracking diary for Threshold : ministery Unplanned changed");
 						  String messageId = MessageConst.TD_80017;
 							String[] msgParam = new String[] {
+									threshold.getOrgProfileId().getPmOrgValidity().getOrgName(),
 									originalUnplanndthreshold.toString(),
 									threshold.getS2Unplanned().toString()};
 							reqDTO.setTrackingStatus(true);
@@ -2172,6 +2173,7 @@ public class RuleCatalogueBackingBean extends
 						  log.info("Tracking diary for Threshold : ministery BudgetVsSpent changed");
 						  String messageId = MessageConst.TD_80019;
 							String[] msgParam = new String[] {
+									threshold.getOrgProfileId().getPmOrgValidity().getOrgName(),
 									originalUnplanndthreshold.toString(),
 									threshold.getBudgetSpent().toString()};
 							reqDTO.setTrackingStatus(true);
