@@ -16,10 +16,13 @@ import javax.faces.context.FacesContext;
 import org.apache.log4j.Logger;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
@@ -164,6 +167,29 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 			}
 		};
 		Collections.sort(ctItemCeilingQty, comparator);
+	}
+	
+	/**
+	 * The method used to verify contract is with GST.
+	 * 
+	 * @param supplierId  the supplier id
+	 * @param branchCode  the branch code
+	 * 
+	 * @return true, if contract is with GST
+	 *         false, if contract is without GST
+	 */
+	public boolean isContractWithGst(Long supplierId, Long branchCode) {
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+		gstReqDTO.setSupplierId(supplierId);
+		gstReqDTO.setBranchCode(branchCode);
+		SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+		
+		if (gstResDTO.isSuccessful() && gstResDTO.getSmGstSupplier() != null) {
+			return true;
+		} else {		
+			return false;
+		}
 	}
 }
 
