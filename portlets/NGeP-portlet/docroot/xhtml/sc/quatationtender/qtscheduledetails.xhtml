@@ -400,7 +400,7 @@
 						value="#{qTScheduleDetailBackingBean.managedBean.deskOfficerAdmin}"
 						var="appName" itemLabel="#{appName.userName}"
 						itemValue="#{appName.userId}" />
-					<p:ajax event="change" partialSubmit="true" process="doaaUserId"
+					<p:ajax event="change"  process="doaaUserId"
 						update="doaaUserId"
 						listener="#{qTScheduleDetailBackingBean.retrievePmuserName(deskofficeradmin,rowIndex)}" />
 				</p:selectOneMenu>
