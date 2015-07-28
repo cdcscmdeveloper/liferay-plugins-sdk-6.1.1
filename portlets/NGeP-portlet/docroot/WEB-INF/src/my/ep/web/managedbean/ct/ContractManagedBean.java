@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -29,6 +30,9 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean viewContract = false;
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
+	private CtContractVer ctContractVer;
+	private CtContractVer agreementContractVer;
+	private double performanceBondRuleAmt;
 	
 	/**
 	 * @return the fileDirectory
@@ -104,5 +108,29 @@ public class ContractManagedBean extends BaseManagedBean {
 	 */
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+
+	public CtContractVer getCtContractVer() {
+		return ctContractVer;
+	}
+
+	public void setCtContractVer(CtContractVer ctContractVer) {
+		this.ctContractVer = ctContractVer;
+	}
+
+	public CtContractVer getAgreementContractVer() {
+		return agreementContractVer;
+	}
+
+	public void setAgreementContractVer(CtContractVer agreementContractVer) {
+		this.agreementContractVer = agreementContractVer;
+	}
+
+	public double getPerformanceBondRuleAmt() {
+		return performanceBondRuleAmt;
+	}
+
+	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
+		this.performanceBondRuleAmt = performanceBondRuleAmt;
 	}
 }

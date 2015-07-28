@@ -214,6 +214,10 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			
+			 getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+					    ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
+				    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
+			
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
 		
@@ -264,24 +268,24 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				}
 			}/*End*/
 		    
+		    /*Setting to list of remark and attachement of document*/
+		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
+		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
+		    ctBB.getManagedBean().setCtContractVer(getManagedBean().getContractVer());
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+			 /*End remark setting*/
+			
 		    /*Get performance bond rule amount*/
 		    IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IRuleSO.class);
 		    RuleReqDTO ruleReqDTO = new RuleReqDTO();
 		    ruleReqDTO.setRuleType(RuleTypeConst.BOND);
 		    RuleResDTO roleResDTO = ruleSO.getRuleValuesByRuleType(ruleReqDTO);
 		    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
-		    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
+		    	ctBB.getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 		    }
 			
-		    /*Setting to list of remark and attachement of document*/
-		    getManagedBean().setRemarkList(resDTO.getCtRemarks());
-		    getManagedBean().setAttachmentList(resDTO.getCtAttachments());
-		    getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-			    ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE, getManagedBean().getCtContract().getContractNo()));
-		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	  
-		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewOnly());
-			ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-			 /*End remark setting*/
+		   
 	 }
 	
 	 /**
@@ -317,16 +321,16 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 				 amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
 				
 				 if (amendmentResDTO.getCtAmendment() != null) {
-					 getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+					 ctBB.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
 				 } else {
 					 reqDTO.setContractId(getManagedBean().getCtContract().getContractId());
 					 reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
 					
 					 resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
-					 getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+					 ctBB.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
 				 }				
 			 } else {
-				 getManagedBean().setAgreementContractVer(getManagedBean().getContractVer());
+				 ctBB.getManagedBean().setAgreementContractVer(getManagedBean().getContractVer());
 			 }
 		 } catch(Exception e) {
 			 e.printStackTrace();
