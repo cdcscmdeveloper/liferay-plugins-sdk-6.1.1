@@ -30,6 +30,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -186,7 +187,11 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 		SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
 		
 		if (gstResDTO.isSuccessful() && gstResDTO.getSmGstSupplier() != null) {
-			return true;
+			if (gstResDTO.getSmGstSupplier().getGstEffDate() != null 
+					&& gstResDTO.getSmGstSupplier().getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime())
+				return true;
+			else 
+				return false;
 		} else {		
 			return false;
 		}
