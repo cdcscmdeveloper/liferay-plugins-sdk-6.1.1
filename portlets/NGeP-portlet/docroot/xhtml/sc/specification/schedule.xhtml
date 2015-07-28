@@ -279,7 +279,7 @@
 								value="#{specificationBackingBean.monthDropDownValues}">
 							</f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
+								listener="#{specificationBackingBean.calculateProgressivepayment(payment)}"></p:ajax>
 						</p:selectOneMenu>
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" style="width:15%">
@@ -289,7 +289,7 @@
 							<f:selectItems
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
-								listener="#{specificationBackingBean.calculateProgressivepayment}"></p:ajax>
+								listener="#{specificationBackingBean.calculateProgressivepayment(payment)}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
