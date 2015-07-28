@@ -721,7 +721,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)62114;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4185,39 +4185,38 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 	
 	public void retrieveDates() {
-		SimpleDateFormat outputDateFormat = new SimpleDateFormat(
-				CommonConstants.DEFAULT_DATE_FORMAT);
-		if (this.getModuleValue().equalsIgnoreCase(
-				ModuleCodeConst.SUPPLIER_SELECTION)) {
-			Date currentDate = new Date();
-			this.setScCreatedFromYear(outputDateFormat.format(currentDate)
-					.substring(6, 10));
-			this.setScCreatedToYear(outputDateFormat.format(currentDate)
-					.substring(6, 10));
-		}
-		if (this.getModuleValue().equalsIgnoreCase(
-				ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
-			Date currentDate = new Date();
-			this.setSmCreatedFromYear(outputDateFormat.format(currentDate)
-					.substring(6, 10));
-			this.setSmCreatedToYear(outputDateFormat.format(currentDate)
-					.substring(6, 10));
-			this.setSmThresholdFromYear(outputDateFormat.format(currentDate)
-					.substring(6, 10));
-			this.setSmThresholdToYear(outputDateFormat.format(currentDate)
-					.substring(6, 10));
-		}		
-		if ((this.getModuleValue() != null) && (this.getSubModule() != null)) {
-			if ((this.getModuleValue()
-					.equalsIgnoreCase(ReportConst.DP_MOD_VAL))
-					&& (this.getSubModule()
-							.equalsIgnoreCase(ReportConst.SUB_MOD_S1))) {
+		if ((this.getReportValue() != null) && (this.getReportValue() != ReportConst.EMPTY_VAL)) {
+			SimpleDateFormat outputDateFormat = new SimpleDateFormat(
+					CommonConstants.DEFAULT_DATE_FORMAT);
+			if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.SUPPLIER_SELECTION)) {
 				Date currentDate = new Date();
-				this.setScSoneCrtdToDate(currentDate);
-				Date newDate = new Date();
-				newDate.setMonth(0);
-				newDate.setDate(1);
-				this.setScSoneCrtdFromDate(newDate);
+				this.setScCreatedFromYear(outputDateFormat.format(currentDate)
+						.substring(6, 10));
+				this.setScCreatedToYear(outputDateFormat.format(currentDate)
+						.substring(6, 10));
+			}
+			if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
+				Date currentDate = new Date();
+				this.setSmCreatedFromYear(outputDateFormat.format(currentDate)
+						.substring(6, 10));
+				this.setSmCreatedToYear(outputDateFormat.format(currentDate)
+						.substring(6, 10));
+				this.setSmThresholdFromYear(outputDateFormat.format(currentDate)
+						.substring(6, 10));
+				this.setSmThresholdToYear(outputDateFormat.format(currentDate)
+						.substring(6, 10));
+			}		
+			
+			if ((this.getModuleValue()
+						.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
+					Date currentDate = new Date();
+					this.setScSoneCrtdToDate(currentDate);
+					Date newDate = new Date();
+					newDate.setMonth(0);
+					newDate.setDate(1);
+					this.setScSoneCrtdFromDate(newDate);
 			}
 		}
 	}
@@ -4504,6 +4503,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				if (this.getScSoneCrtdFromDate().after(
 						this.getScSoneCrtdToDate())) {
 					throw new EpException(MessageConst.ERROR_REPORT_780008);
+				}
+			}
+			if ((this.getScSoneCrtdFromDate() != null) && (this.getScSoneCrtdToDate() != null)) {
+				if (this.getScSoneCrtdToDate().after(this.getScSoneCrtdFromDate())) {
+					checkOneYearDefference(this.getScSoneCrtdFromDate(),this.getScSoneCrtdToDate());
 				}
 			}
 			 if ((getManagedBean().getReportValue() != null)
