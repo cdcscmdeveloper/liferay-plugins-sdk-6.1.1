@@ -109,6 +109,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private Long jabatanProfileId;
     private BigDecimal paidAdvancePaymentAmt;
     private BigDecimal paidInvoiceAmt;
+    private BigDecimal gstTotalAmount;
     private Date ctDateStart;
 	private Date ctDateEnd;
 	private int selectedTabIndex = 0;
@@ -132,6 +133,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private boolean progSchedButtonDeactive;
 	private boolean autoUpdate = true;
 	private boolean buttonHideActive = true;
+	private boolean disableGstAmount;
 	private List<CtContractItem> ctItemList;
 	private List<CtContractItem> ctItemServiceList;
 	private List<CtContractZoneDtl> ctContractZoneDtls;
@@ -1448,6 +1450,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setIndex(int index) {
 		this.index = index;
+	}
+
+	public BigDecimal getGstTotalAmount() {
+		return gstTotalAmount;
+	}
+
+	public void setGstTotalAmount(BigDecimal gstTotalAmount) {
+		this.gstTotalAmount = gstTotalAmount;
+	}
+
+	public boolean isDisableGstAmount() {
+		return disableGstAmount;
+	}
+
+	public void setDisableGstAmount(boolean disableGstAmount) {
+		this.disableGstAmount = disableGstAmount;
 	}
 
 	/**
