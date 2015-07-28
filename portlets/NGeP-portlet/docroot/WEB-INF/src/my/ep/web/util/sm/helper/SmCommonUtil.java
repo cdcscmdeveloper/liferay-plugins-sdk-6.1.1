@@ -66,6 +66,7 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -88,6 +89,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
@@ -2381,5 +2383,23 @@ public class SmCommonUtil {
 		}
 
 		return retVal;
+	}
+
+	/**
+	 * Get SmMofAccount by Supplier Id and Supplier Type
+	 * 
+	 * @param Long
+	 *            supplierId
+	 * @param String
+	 *            suppType
+	 * @return SmMofAccount
+	 */
+	public static SmMofAccount getMofAccountBySuppIdAndSuppType(
+			Long supplierId, String suppType) {
+		MofAccountReqDTO reqDTO = new MofAccountReqDTO();
+		reqDTO.setSupplierType(suppType);
+		reqDTO.setSupplierId(supplierId);
+		return SmServiceLookup.getMofAccountSO()
+				.retriveMOFAccountBySupplierIdAndType(reqDTO).getMofAccount();
 	}
 }
