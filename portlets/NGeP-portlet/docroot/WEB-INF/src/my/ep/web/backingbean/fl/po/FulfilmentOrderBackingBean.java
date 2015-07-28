@@ -341,6 +341,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				}
 			}
 		}
+		doMB.getSupplierGst(resDTO.getFlFulfilmentRequest());
 		doMB.getManagedBean().setDisplayStopIntrDetls(false);
 		if(resDTO.getFlStopInstr() !=null){
 			doMB.getManagedBean().setDisplayStopIntrDetls(true);
