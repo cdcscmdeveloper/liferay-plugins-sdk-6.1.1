@@ -10,7 +10,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.sm.SmPersonnel;
-import my.ep.persistence.entity.sm.SmSoftcertDoc;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
