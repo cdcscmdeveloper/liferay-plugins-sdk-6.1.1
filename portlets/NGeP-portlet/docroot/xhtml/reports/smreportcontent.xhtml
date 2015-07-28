@@ -1542,8 +1542,7 @@
 				   <TD>
 					<p:selectOneMenu value="#{reportBackingBean.smThresholdFromYear}" 
 							style="margin-top:5px;width:150px;">
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-													itemValue="#{null}"></f:selectItem>
+							
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
@@ -1555,8 +1554,7 @@
 							 /></TD>
 					<TD><p:selectOneMenu value="#{reportBackingBean.smThresholdToYear}"
 							style="margin-top:5px;width:150px;">
-							<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
-													itemValue="#{null}"></f:selectItem>
+							
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
