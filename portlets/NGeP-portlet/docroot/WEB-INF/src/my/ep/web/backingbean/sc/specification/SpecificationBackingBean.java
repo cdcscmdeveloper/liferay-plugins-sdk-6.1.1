@@ -5053,7 +5053,7 @@ public class SpecificationBackingBean extends
 						zoneLocal);
 
 			}
-			
+
 			// scQt.setZoneLocationLevel(null);
 			scQt.getScQtSupplierCriteria().setLocationLevel(null);
 			scQt.setQtType(QTConstants.OPEN_TYPE);
@@ -8805,14 +8805,17 @@ public class SpecificationBackingBean extends
 		// event.getComponent().getAttributes().get("value");
 		List<ScQtProgressivePayment> payment = this.getManagedBean()
 				.getProgressivePaymentList();
-		if (null == progressivepayment) {
+		if (null == payment) {
 			payment = new ArrayList<ScQtProgressivePayment>();
 
 		}
 		if (null != progressivepayment
 				&& null != progressivepayment.getStartMonth()) {
 			int index = payment.indexOf(progressivepayment);
-			progressivepayment.setEndMonth(progressivepayment.getStartMonth());
+			if (null == progressivepayment.getEndMonth()) {
+				progressivepayment.setEndMonth(progressivepayment
+						.getStartMonth());
+			}
 			payment.set(index, progressivepayment);
 
 			this.getManagedBean().setProgressivePaymentList(payment);
@@ -8827,9 +8830,22 @@ public class SpecificationBackingBean extends
 	 * @param event
 	 *            the event
 	 */
-	public void calculateProgressivepayment(AjaxBehaviorEvent event) {
+	public void calculateProgressivepayment(
+			ScQtProgressivePayment progressivepayment) {
 
-		event.getComponent().getAttributes().get("value");
+		List<ScQtProgressivePayment> payment = this.getManagedBean()
+				.getProgressivePaymentList();
+		if (null == payment) {
+			payment = new ArrayList<ScQtProgressivePayment>();
+
+		}
+		if (null != progressivepayment) {
+			int index = payment.indexOf(progressivepayment);
+
+			payment.set(index, progressivepayment);
+
+			this.getManagedBean().setProgressivePaymentList(payment);
+		}
 
 	}
 
@@ -11584,9 +11600,9 @@ public class SpecificationBackingBean extends
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 					String localDate = format.format(d1);
 					String date = localDate.substring(0, 2);
-					String fromdate = date + "/" + Startmonth + "/"
+					String fromdate = 01 + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
-					String toDate = date + "/" + endmonth + "/"
+					String toDate = 31 + "/" + endmonth + "/"
 							+ schedule.getEndYear();
 
 					schedule.setScheduleNo(schedule.getScheduleNo());
