@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.businessnature.ISupplierBusinessNatureSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.payment.IPaymentSO;
@@ -377,6 +378,15 @@ public class SmServiceLookup {
 	public static ISmSchedulerSO getSmSchedulerSO(){
 		return (ISmSchedulerSO) BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISmSchedulerSO.class);
+	}
+	
+	/**
+	 * Get ISupplierGstSO
+	 * @return ISupplierGstSO
+	 */
+	public static ISupplierGstSO getSupplierGstSO(){
+		return (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
 	}
 	
 }
