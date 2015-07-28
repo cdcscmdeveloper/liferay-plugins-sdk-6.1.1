@@ -638,7 +638,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 			if(isFlFulfilmentPaymentOfficer()){
 				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
 			}
-		} else if(getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+		} else if(ParameterConst.DOCTYPE_PURCHASE_ORDER.equalsIgnoreCase(getSearchOrderType())) {
 			flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
 			if(isFlFulfilmentRequisitioner()) {
 				flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
