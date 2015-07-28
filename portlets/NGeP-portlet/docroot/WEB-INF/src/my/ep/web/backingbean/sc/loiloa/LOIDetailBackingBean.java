@@ -690,7 +690,7 @@ public class LOIDetailBackingBean extends
 	 */
 	public void retrieveLOIList(Long qtId) {
 		debugLogger("retrieveLOIList");
-		//boolean isMultipleLoi = Boolean.FALSE;
+		boolean isLoiRequired = Boolean.TRUE;
 		//boolean isSelectedLoi = Boolean.TRUE;
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -702,26 +702,19 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setLoiLoas(resDTO.getLoiLoas());
 			getManagedBean().setScQtFinalization(resDTO.getScQtFinalization());
 
-			/*
-			 * if (ParameterConst.DOCTYPE_MULTIPLE_LOI.equals(getManagedBean()
-			 * .getDocType())) { isMultipleLoi = Boolean.TRUE; }
-			 */
-
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				// rec supplier in loi list
-				disableIsLoiRequired(resDTO.getLoiLoas());
-				/*
-				 * for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) { if
-				 * (isMultipleLoi) { //Boolean loiReq = Boolean.TRUE;
-				 * //scLoiLoa.setLoiRequired(loiReq);
-				 * 
-				 * } else { if (scLoiLoa.isLoiCreated()) {
-				 * //scLoiLoa.setLoiRequired(Boolean.TRUE); } if
-				 * (scLoiLoa.isLoiRequired()) { isSelectedLoi = Boolean.FALSE; }
-				 * } loiLoas.add(scLoiLoa); }
-				 * 
-				 * //getManagedBean().setLoiRequired(isSelectedLoi);
-				 */
+				for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) { 
+
+					if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
+						isLoiRequired = Boolean.FALSE;
+					}
+				}
+				if (isLoiRequired) {
+					getManagedBean().setLoiRequired(Boolean.TRUE);
+				} else {
+					getManagedBean().setLoiRequired(Boolean.FALSE);
+				}
 			}
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
@@ -904,7 +897,7 @@ public class LOIDetailBackingBean extends
 	 */
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
 		// calc total items in award details
-
+		Map<Long, ScLoiLoaItem> maxPriceItemMap  = new HashMap<Long, ScLoiLoaItem>();
 		// calculate max price items only.
 		boolean isMaxPriceItem = Boolean.FALSE;
 
@@ -931,7 +924,7 @@ public class LOIDetailBackingBean extends
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
 
-					Map<ScRequestItem, ScLoiLoaItem> maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem);
+					maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem ,maxPriceItemMap);
 
 					if (maxPriceItemMap != null
 							&& !maxPriceItemMap.isEmpty()
@@ -991,23 +984,20 @@ public class LOIDetailBackingBean extends
 	 *
 	 * @param scLoiLoaItem the sc loi loa item
 	 */
-	private Map<ScRequestItem, ScLoiLoaItem>  maxItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem) {
+	private Map<Long, ScLoiLoaItem>  maxItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem , Map<Long, ScLoiLoaItem> map) {
 		boolean isFindMaxPriceItem = Boolean.FALSE;
-		
-		Map<ScRequestItem, ScLoiLoaItem> maxPriceItemMap = new HashMap<ScRequestItem, ScLoiLoaItem>();
 		List<ScLoiLoaItem> sameItems = new ArrayList<ScLoiLoaItem>();
-	
-		if (null == maxPriceItemMap || maxPriceItemMap.isEmpty()){
+		if (null == map || map.isEmpty()){
 			isFindMaxPriceItem = Boolean.TRUE;
-			
+
 		} else {
-			if(maxPriceItemMap.containsKey(scLoiLoaItem.getScRequestItem())){
-				isFindMaxPriceItem = Boolean.FALSE;
-			} else{
+			if(!map.containsKey(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
 				isFindMaxPriceItem = Boolean.TRUE;
+			} else{
+				isFindMaxPriceItem = Boolean.FALSE;
 			}
 		}
-		
+
 		if(isFindMaxPriceItem){
 			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
 			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
@@ -1016,9 +1006,9 @@ public class LOIDetailBackingBean extends
 				}
 			}
 			ScLoiLoaItem maxPriceItem  = findMaxPriceItem(sameItems);
-			maxPriceItemMap.put(maxPriceItem.getScRequestItem(), maxPriceItem);
+			map.put(maxPriceItem.getScRequestItem().getRequestNoteItemId(), maxPriceItem);
 		}
-		return maxPriceItemMap;
+		return map;
 	}
 
 	/**
@@ -1344,7 +1334,6 @@ public class LOIDetailBackingBean extends
 	 *            the res dto
 	 */
 	private void populateLOIDetails(AwardSupplierResDTO resDTO) {
-		
 		boolean isMaxPriceItem = Boolean.FALSE;// calculate max price items only.
 		boolean isTermPriceFound = Boolean.FALSE;
 		boolean isBiddingAward = Boolean.FALSE;
@@ -1376,13 +1365,10 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setHideColumnFlag(Boolean.FALSE);
 		}
 		
-		
-		
-		//check tier or non tier 
-		
-
 		// calc total items in award details
 		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
+			
+			Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
@@ -1406,12 +1392,14 @@ public class LOIDetailBackingBean extends
 				} else{
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-					Map<ScRequestItem, ScLoiLoaItem> maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem);
+				    maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem, maxPriceItemMap);
 
 					if (maxPriceItemMap != null
 							&& !maxPriceItemMap.isEmpty()
 							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
 						isMaxPriceItem = Boolean.TRUE;
+					} else{
+						isMaxPriceItem = Boolean.FALSE;
 					}
 				}
 
@@ -1806,6 +1794,7 @@ public class LOIDetailBackingBean extends
 			List<String> recommendDtlIds = getManagedBean()
 					.getRecommendDtlIds();
 			Object payLoadData = getManagedBean().getPayLoadData();
+			boolean isLoiRequired  = getManagedBean().isLoiRequired();
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			List<ScLoiLoa> recSupplierList =getManagedBean().getRecSupplierList();
 			isLoiLoasUpdate = updatePendingLoiLoas(recSupplierList, docType);
@@ -1825,6 +1814,7 @@ public class LOIDetailBackingBean extends
 					getManagedBean().setSourceId(sourceId);
 					getManagedBean().setRecommendDtlIds(recommendDtlIds);
 					getManagedBean().setPayLoadData(payLoadData);
+					getManagedBean().setLoiRequired(isLoiRequired);
 					reloadLOIList(sourceId);
 				}
 				successMessage(MessageConst.INFO_700025, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION, scQtFinalization.getScQt().getQtNo(), Boolean.FALSE);
