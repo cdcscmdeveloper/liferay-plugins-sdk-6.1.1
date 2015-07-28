@@ -8,7 +8,7 @@
 
 
 	<p:dialog id="dlRoleOptions" header="#{lbl['lbl.pm.profiles.authorisation.role.opt']}" 
-		widgetVar="dlRoleOptions" dynamic="true" width="1000" height="500">
+		widgetVar="dlRoleOptions" modal="true"  dynamic="true" width="500" >
 		<!-- Validation Message -->
 		<p:messages id="messagesRole" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
 		<p:outputPanel id="opRoleOptions">
@@ -34,8 +34,7 @@
 		         	#{roleDesc.roleName}
 		        </p:column>
 			</p:dataTable>
-			<br/>
-			<br/>    
+			<br/>		   
 	 		<div class="ppRightBtn">
 			  <p:commandButton value="#{lbl['lbl.btn.ok']}" immediate="true"
 			  	action="#{profileManagementBackingBean.confirmRoles()}"
