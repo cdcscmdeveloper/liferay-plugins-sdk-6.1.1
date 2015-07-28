@@ -71,6 +71,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public void setSelectedDocType2(String selectedDocType2) {
+		log.info(".......setSelectedDocType2........selectedDocType2="+selectedDocType2);
 		this.selectedDocType2 = selectedDocType2;
 	}
 
@@ -79,6 +80,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public void setMultiRuleType(boolean multiRuleType) {
+		log.info(".......setMultiRuleType........multiRuleType="+multiRuleType);
 		this.multiRuleType = multiRuleType;
 	}
 
