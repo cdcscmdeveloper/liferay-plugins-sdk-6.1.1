@@ -325,21 +325,11 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 	 * @return SmMofAccount
 	 */
 	public SmMofAccount getSingleSmMofAccount() {
-		IMofAccountSO mofAccountSO = (IMofAccountSO) BusinessDelegate
-				.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_MANAGEMENT,
-						IMofAccountSO.class);
-
 		SmMofAccount smMofAccount = new SmMofAccount();
 		try {
-			MofAccountReqDTO reqDTO = new MofAccountReqDTO();
-			reqDTO.setSupplierType(getManagedBean().getSmAppl()
-					.getSupplierType());
-			reqDTO.setSupplierId(getManagedBean().getSmSupplier()
-					.getSupplierId());
-			MofAccountResDTO resDTO = mofAccountSO
-					.retriveMOFAccountBySupplierIdAndType(reqDTO);
-			smMofAccount = resDTO.getMofAccount();
+			smMofAccount = SmCommonUtil.getMofAccountBySuppIdAndSuppType(
+					getManagedBean().getSmSupplier().getSupplierId(),
+					getManagedBean().getSmAppl().getSupplierType());
 		} catch (Exception ex) {
 			log.error(ex.getMessage());
 		}
