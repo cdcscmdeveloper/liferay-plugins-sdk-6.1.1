@@ -16,8 +16,6 @@
              value="#{contractDetailsBackingBean.managedBean.contractVer.ctAgencies}" >
             <ac:paginator for="tableAgencyDetails"/>
        			<p:ajax event="rowSelect"   update=":form:agencyDeliveryAddress"  process="@this" />	
-       			
-       			
        			<p:columnGroup type="header"> 
 								<p:row> 
 									<p:column rowspan="2" headerText="#{lbl['lbl.ct.ministry']}" /> 

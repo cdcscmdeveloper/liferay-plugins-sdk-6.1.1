@@ -32,7 +32,17 @@
 					</td>
 					</h:panelGroup>
 				</tr>
+				
 				<tr>
+					<td class="columnWidth150">
+						<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
+					</td>
+					<td>
+						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				value="#{contractDetailsBackingBean.managedBean.ctContractAmount.contractAmount}"  disabled="true">
+				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+					</td>
 					<td class="columnWidth150">
 						<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effective.date']}" />
 					</td>
@@ -42,6 +52,21 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
+			    </tr>
+			    
+			    <tr>
+			    <td class="columnWidth150">
+						<p:outputLabel id="gstAmount" value="#{lbl['lbl.ct.gst.amt']}"  />
+					</td>
+					<td>
+						<p:inputText for="gstAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				 disabled="#{!contractDetailsBackingBean.managedBean.disableGstAmount}" 
+			   				 value="#{contractDetailsBackingBean.managedBean.ctContractAmount.gstAmount}" >
+			   				<p:ajax  event="blur" update="overAllAmts" process="@this"
+				   			   listener="#{contractDetailsBackingBean.calculateOrverAllAmt()}"></p:ajax>
+				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+					</td>
 					<td class="columnWidth150">
 						<p:outputLabel id="edate" value="#{lbl['lbl.ct.expiry.date']}" />
 					</td> 
@@ -54,11 +79,11 @@
 				</tr>
 				<tr>
 					<td class="columnWidth150">
-						<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
+						<p:outputLabel id="overAllAmt" value="#{lbl['lbl.ct.gst.all.amt']}" />
 					</td>
 					<td>
-						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{contractDetailsBackingBean.managedBean.ctContractAmount.contractAmount}"  disabled="true">
+						<p:inputText id="overAllAmts" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				value="#{contractDetailsBackingBean.managedBean.gstTotalAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
@@ -119,7 +144,7 @@
 					</td>
 					<td colspan="3">
 						<p:inputTextarea id="contractName" autoResize="false" maxlength="1000"
-							disabled="true" rows="4" style="width:450px; margin-bottom:5px;" 
+							disabled="true" rows="4" style="width:470px; margin-bottom:5px;" 
 							value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}" />
 					</td>					
 				</tr>

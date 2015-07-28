@@ -597,7 +597,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			setValidateContractField(resDTO);         
-			    
+			if(resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
+				getManagedBean().setDisableGstAmount(true);
+			}
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
 					ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -807,6 +809,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 		ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+		if(getManagedBean().getCtContractAmount().getGstAmount() !=  null){
+  		  getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
+  	    }
 	}
 	
 	/**
@@ -3755,4 +3760,29 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     	}
       	return false;
     }
+    
+    public void calculateOrverAllAmt(){
+    	if(getManagedBean().getCtContractAmount()!= null && getManagedBean().getCtContractAmount().getGstAmount() !=  null){
+    		  getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
+    	}
+    }
+    	public boolean chkProcurementTypeService() {
+    	   
+    		
+				try {
+					if(getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory() != null &&
+							getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
+				        	if(getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(
+						   ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE) && 
+						   DateUtils.isDateGreaterOrEqual(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT,"01/04/2015"), getManagedBean().getCtContract().getAckDate())){
+					   return true;
+  	                  }
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		
+    	   return false;
+      }
 }

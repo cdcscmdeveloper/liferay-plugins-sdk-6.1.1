@@ -263,16 +263,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
 				
 				if (amendmentResDTO.getCtAmendment() != null) {
-					this.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
+					ctBB.getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
 				} else {
 					reqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
 					reqDTO.setParamCode(ParameterConst.DOCTYPE_CONTRACT_CREATION);
 					
 					resDTO = contractSO.retrieveContractVerByIdAndDocType(reqDTO);
-					this.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
+					ctBB.getManagedBean().setAgreementContractVer(resDTO.getCtContractVer());
 				}				
 			} else {
-				this.getManagedBean().setAgreementContractVer(this.getManagedBean().getContractVer());
+				ctBB.getManagedBean().setAgreementContractVer(this.getManagedBean().getContractVer());
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -290,6 +290,10 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 		getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		
+		getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
+			    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
+		    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
+		    ctBB.getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 		//Retrieve agreement contract version for physical no & signed date
 		retrieveContractVerOfAgreement();
 		
@@ -327,10 +331,6 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 	    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 	    }
-		
-		   getManagedBean().setFileDirectory(DocumentRepositoryUtils.getUploadDirectoryPath(ModuleCodeConst.CONTRACT_MANAGEMENT, 
-				    ParameterConst.DOCTYPE_CONTRACT_TERMINATION, getManagedBean().getCtContract().getContractNo()));
-			    ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());	
 		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 		     ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 		
