@@ -2268,14 +2268,26 @@ public class QTDetailBackingBean extends
 								scQt.getScQtSupplierCriteria());
 					}
 
-					if (scQt.isPanel()
-							|| SourcingConstants.QT_TYPE_RESTRICTED_TENDER
-									.equalsIgnoreCase(scQt.getQtType())) {
+					if (scQt.isPanel()) {
 						if (null != scQt.getScQtSuppliers()) {
 							this.getManagedBean().setQtSupplierList(
 									scQt.getScQtSuppliers());
 							this.getManagedBean().setTotalSupplier(
 									scQt.getScQtSuppliers().size());
+						} else {
+							this.getManagedBean().setQtSupplierList(
+									new ArrayList<ScQtSupplier>());
+						}
+					} else if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
+							.equalsIgnoreCase(scQt.getQtType())) {
+						if (tenderResDTO.getSupplierResultBean()
+								.getTotalRecord() > 0) {
+							this.getManagedBean().setQtSupplierList(
+									tenderResDTO.getSupplierResultBean()
+											.getResultList());
+							this.getManagedBean().setTotalSupplier(
+									tenderResDTO.getSupplierResultBean()
+											.getTotalRecord());
 						} else {
 							this.getManagedBean().setQtSupplierList(
 									new ArrayList<ScQtSupplier>());
