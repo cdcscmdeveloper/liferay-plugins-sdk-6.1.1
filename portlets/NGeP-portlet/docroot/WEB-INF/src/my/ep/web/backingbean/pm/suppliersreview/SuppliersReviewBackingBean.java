@@ -38,6 +38,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 
+
 // TODO: Auto-generated Javadoc
 /**
  * The Class SuppliersReviewBackingBean.
@@ -133,6 +134,7 @@ BaseBackingBean<SuppliersReviewManagedBean> {
 
 		this.getManagedBean().setAllStates(false);
 		this.getManagedBean().setDisabled(false);
+		this.getManagedBean().setQtCategoryList(null);
 
 		retrievePmStateList();
 
