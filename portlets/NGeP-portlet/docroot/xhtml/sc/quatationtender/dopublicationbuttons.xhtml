@@ -23,10 +23,10 @@
 				</ui:fragment>
 
 				<p:commandButton value="#{lbl['lbl.btn.save']}"
-					action="#{qTDetailBB.saveQtDetailsAction}" process="@form"
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@form" partialSubmit="true"
 					onstart="blockWidget.show();"
 					oncomplete="blockWidget.hide();"
-					update="@all" />
+					update="@form" />
 				<p:commandButton value="#{lbl['lbl.btn.submit']}"
 					action="#{qTDetailBB.submitQtDetailsForApproval}" process="@form"
 					update="@all"
