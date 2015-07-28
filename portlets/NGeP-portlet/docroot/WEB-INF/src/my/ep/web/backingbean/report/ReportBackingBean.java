@@ -721,7 +721,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3707,8 +3707,21 @@ public class ReportBackingBean extends
 		if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
 				ModuleCodeConst.SUPPLIER_MANAGEMENT))){
 			getParameterCodeTypeString();
-			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
-				retrieveSupplierCompName();	
+			retrieveSupplierCompName();
+			if(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP)))&&(this.getReportValue().equalsIgnoreCase(ReportConst.SM_PERSON_BRANCH_BANK))){
+				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
+					getManagedBean().getRptGenBean().setSmCompanyNameDropdownView(true);
+				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
+					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
+				}
+				getManagedBean().getRptGenBean().setSmCommonZoneView(false);
+				getManagedBean().getRptGenBean().setSmMandatoryEPAdminPTJAdminZoneView(false);	        	
+				getManagedBean().getRptGenBean().setSmMandatorySupplierTypeView(false);				
+				getManagedBean().getRptGenBean().setSmRegistrationNoView(false);
+				getManagedBean().getRptGenBean().setSmMofRegNoView(false);
+				getManagedBean().getRptGenBean().setSmExtraTwoColumnView(true);
+		    }else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
+					
 				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
 					getManagedBean().getRptGenBean().setSmCompanyNameDropdownView(true);
 				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
