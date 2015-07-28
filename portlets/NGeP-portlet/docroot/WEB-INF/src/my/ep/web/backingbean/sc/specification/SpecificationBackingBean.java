@@ -2026,12 +2026,11 @@ public class SpecificationBackingBean extends
 					if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())
 							&& type.equalsIgnoreCase("SC")) {
-						if (null != scQt.getScQtSuppliers()
-								&& !scQt.getScQtSuppliers().isEmpty()) {
+						if (tenderResDTO.getSupplierResultBean().getTotalRecord() > 0) {
 							this.getManagedBean().setRestrictedSupplierList(
-									scQt.getScQtSuppliers());
+									tenderResDTO.getSupplierResultBean().getResultList());
 							this.getManagedBean().setTotalSuppliers(
-									scQt.getScQtSuppliers().size());
+									tenderResDTO.getSupplierResultBean().getTotalRecord());
 						}
 					}
 
