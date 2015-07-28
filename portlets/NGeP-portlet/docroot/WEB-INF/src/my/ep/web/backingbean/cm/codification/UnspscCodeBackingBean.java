@@ -424,7 +424,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		try {
 			this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
-			this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
+			if(this.getManagedBean().getSelectedRecommendCode().getUnspscTitle()!=null && this.getManagedBean().getSelectedRecommendCode().getUnspscCode()!=null){
+				this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
+			}
 			System.out.println("getUnspscTitle:"+this.getManagedBean().getSelectedRecommendCode().getUnspscTitle());
 			
 			System.out
@@ -432,9 +434,10 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					+ this.getManagedBean().getRequestCode()
 					.getCmRecommendCodes().size());
 			if (this.getManagedBean().getRequestCode().getCmRecommendCodes()
-					.size() > 1) {
+					.size() > 1 || this.getManagedBean().getRequestCode().getCmRecommendCodes()
+					.size() < 1) {
 				System.out
-				.println("***************more than 1*****************");
+				.println("***************more than 1 or no select*****************");
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 
 				facesContext.addMessage(
