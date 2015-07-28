@@ -3300,6 +3300,19 @@ table.rptTbl {
 	display: none;
 }
 
+table.taxableGuidelineTable {
+    border-width: 1px;
+    border-style: outset;
+    border-collapse: separate;
+}
+
+table.taxableGuidelineTable td {
+    border-width: 1px;
+    padding: 1px;
+    border-style: inset;
+    -moz-border-radius: ;
+}
+
 .ui-widget-content .ui-datalist-content{
     border: none;
     background: transparent;
