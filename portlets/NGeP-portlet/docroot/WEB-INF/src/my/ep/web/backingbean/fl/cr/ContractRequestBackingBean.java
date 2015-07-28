@@ -2455,12 +2455,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			for(FlFulfilmentItemAddr itemAddress : deliveryAddress.getFlFulfilmentItemAddr()){
 				itemAddress.setChargeOrderedAmt(itemAddress.getOrderedAmt());
 				itemAddress.setChargeOrderedQty(itemAddress.getOrderedQty());
-				itemAddress.setChargeUnitPrice(itemAddress.getUnitPrice());
+				itemAddress.setChargeUnitPrice(itemAddress.getGstUnitPrice());
 				if(chargeLineItemsMap.containsKey(itemAddress.getScRequestItem().getRequestNoteItemId())){
 					//code for calculating duplicate charge line order amount and quantity for same unit price  Condition for checking unit price same.
 					boolean notContained=true;
 					for(FlFulfilmentItemAddr containedItem : chargeLineItemsMap.get(itemAddress.getScRequestItem().getRequestNoteItemId())){
-						if(containedItem.getChargeUnitPrice().equals(itemAddress.getUnitPrice())){
+						if(containedItem.getChargeUnitPrice().equals(itemAddress.getGstUnitPrice())){
 							containedItem.setChargeOrderedAmt( containedItem.getChargeOrderedAmt().add(itemAddress.getOrderedAmt()));
 							containedItem.setChargeOrderedQty(containedItem.getChargeOrderedQty().add(itemAddress.getOrderedQty()));
 							notContained=false;
