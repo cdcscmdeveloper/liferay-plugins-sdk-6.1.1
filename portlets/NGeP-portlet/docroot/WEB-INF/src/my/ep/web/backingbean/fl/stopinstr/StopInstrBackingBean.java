@@ -18,11 +18,10 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.reason.IReasonSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -36,8 +35,8 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.reason.ReasonReqDTO;
 import my.ep.dto.pm.common.reason.ReasonResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
@@ -47,7 +46,6 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -188,6 +186,17 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				errReq.setErrorId(stopFlData.getErrorId());
 				FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 				getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
+			}
+			
+			ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+			gstReqDTO.setBranchCode(resDTO.getFlStopInstr().getFlRequest().getFlSupplierDtl().getBranchCode());
+			gstReqDTO.setSupplierId(resDTO.getFlStopInstr().getFlRequest().getSmSupplier().getSupplierId());
+			SupplierGstResDTO gstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+			if(gstResDTO.getSmGstSupplier() != null){
+				getManagedBean().getStopInstr().setGstEffectiveDate(gstResDTO.getSmGstSupplier().getGstEffDate());
+				getManagedBean().getStopInstr().setGstDeclaredDate(gstResDTO.getSmGstSupplier().getGstDeclaredDate());
+				getManagedBean().getStopInstr().setGstRegNo(gstResDTO.getSmGstSupplier().getGstRegNo());
 			}
 		}
 	}
