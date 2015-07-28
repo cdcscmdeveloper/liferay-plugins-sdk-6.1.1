@@ -8,7 +8,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -905,6 +904,10 @@ public class LOIDetailBackingBean extends
 	 */
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
 		// calc total items in award details
+
+		// calculate max price items only.
+		boolean isMaxPriceItem = Boolean.FALSE;
+
 		if (scLoi.getScLoiLoaItems() != null
 				&& scLoi.getScLoiLoaItems().size() > 0) {
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
@@ -922,46 +925,58 @@ public class LOIDetailBackingBean extends
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
 					quantity = scLoiLoaItem.getQty();
+					isMaxPriceItem = Boolean.TRUE;
+
 				} else{
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-				}
-				
-				if (scLoiLoaItem.getScQtProposalItem() != null) {
-					offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
-							.getScQtProposalItem()
-							.getOfferPrice()));
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.getScQtProposalItem()
-								.setOfferPrice(offerPrice.floatValue());
-					
-					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
 
-					finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
-							.getScQtProposalItem()
-							.getFinalPrice()));
-					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.getScQtProposalItem()
-								.setFinalPrice(finalPrice.floatValue());					
-					
-					// offered price sub total and total
-					offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
-					offeredPriceSubTotal = offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
-					offeredPriceAmount = offeredPriceAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					Map<ScRequestItem, ScLoiLoaItem> maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem);
+
+					if (maxPriceItemMap != null
+							&& !maxPriceItemMap.isEmpty()
+							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+						isMaxPriceItem = Boolean.TRUE;
+					}
 				}
 
-				afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
-				afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				
-				// after nego price sub total and total
-				afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
-				afterNegoTotalAmount = afterNegoTotalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				
-				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				if(isMaxPriceItem){
+					if (scLoiLoaItem.getScQtProposalItem() != null) {
+						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
+								.getScQtProposalItem()
+								.getOfferPrice()));
+						offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.getScQtProposalItem()
+						.setOfferPrice(offerPrice.floatValue());
+
+						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
+								scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
+
+						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
+								.getScQtProposalItem()
+								.getFinalPrice()));
+						finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.getScQtProposalItem()
+						.setFinalPrice(finalPrice.floatValue());					
+
+						// offered price sub total and total
+						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+						offeredPriceSubTotal = offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+						offeredPriceAmount = offeredPriceAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					}
+
+					afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
+					afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+					// after nego price sub total and total
+					afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
+					afterNegoTotalAmount = afterNegoTotalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+					scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				}
 			}
 
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
@@ -969,6 +984,59 @@ public class LOIDetailBackingBean extends
 			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
 			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
 		}		
+	}
+
+	/**
+	 * Max item price By item.
+	 *
+	 * @param scLoiLoaItem the sc loi loa item
+	 */
+	private Map<ScRequestItem, ScLoiLoaItem>  maxItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem) {
+		boolean isFindMaxPriceItem = Boolean.FALSE;
+		
+		Map<ScRequestItem, ScLoiLoaItem> maxPriceItemMap = new HashMap<ScRequestItem, ScLoiLoaItem>();
+		List<ScLoiLoaItem> sameItems = new ArrayList<ScLoiLoaItem>();
+	
+		if (null == maxPriceItemMap || maxPriceItemMap.isEmpty()){
+			isFindMaxPriceItem = Boolean.TRUE;
+			
+		} else {
+			if(maxPriceItemMap.containsKey(scLoiLoaItem.getScRequestItem())){
+				isFindMaxPriceItem = Boolean.FALSE;
+			} else{
+				isFindMaxPriceItem = Boolean.TRUE;
+			}
+		}
+		
+		if(isFindMaxPriceItem){
+			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
+			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
+				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					sameItems.add(loiLoaItem);
+				}
+			}
+			ScLoiLoaItem maxPriceItem  = findMaxPriceItem(sameItems);
+			maxPriceItemMap.put(maxPriceItem.getScRequestItem(), maxPriceItem);
+		}
+		return maxPriceItemMap;
+	}
+
+	/**
+	 * Find max price item.
+	 *
+	 * @param items the items
+	 * @return the sc loi loa item
+	 */
+	private ScLoiLoaItem findMaxPriceItem(List<ScLoiLoaItem> items) {
+		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
+			@Override
+			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
+				return new CompareToBuilder().append(o1.getScQtProposalItem().getOfferPrice(),
+						o2.getScQtProposalItem().getOfferPrice()).toComparison();
+			}
+		};
+		 ScLoiLoaItem  scLoiLoaItem = Collections.max(items, comparator);
+		return scLoiLoaItem;
 	}
 
 	/**
@@ -1276,10 +1344,13 @@ public class LOIDetailBackingBean extends
 	 *            the res dto
 	 */
 	private void populateLOIDetails(AwardSupplierResDTO resDTO) {
-		ScLoi scLoi = resDTO.getScLoi();
-		getManagedBean().setScLoi(scLoi);
+		
+		boolean isMaxPriceItem = Boolean.FALSE;// calculate max price items only.
 		boolean isTermPriceFound = Boolean.FALSE;
 		boolean isBiddingAward = Boolean.FALSE;
+		
+		ScLoi scLoi = resDTO.getScLoi();
+		getManagedBean().setScLoi(scLoi);
 
 		// online bidding
 		if (scLoi.getScLoiLoa().getRecommendBy() != null) {
@@ -1304,6 +1375,11 @@ public class LOIDetailBackingBean extends
 		}else {
 			getManagedBean().setHideColumnFlag(Boolean.FALSE);
 		}
+		
+		
+		
+		//check tier or non tier 
+		
 
 		// calc total items in award details
 		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
@@ -1326,40 +1402,50 @@ public class LOIDetailBackingBean extends
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
 					quantity = scLoiLoaItem.getQty();
+					isMaxPriceItem = Boolean.TRUE;
 				} else{
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+					Map<ScRequestItem, ScLoiLoaItem> maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem);
+
+					if (maxPriceItemMap != null
+							&& !maxPriceItemMap.isEmpty()
+							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+						isMaxPriceItem = Boolean.TRUE;
+					}
 				}
 
-				if (scLoiLoaItem.getScQtProposalItem() != null) {
-					// offered price sub total and total
-					 offerPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtProposalItem().getOfferPrice()));
-					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
-					if(offeredPriceSubTotal != null){
-						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
-						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
-					}
-
-					// final price sub total and total - for bidding.
-					if(isBiddingAward){
-						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtProposalItem().getFinalPrice()));
-						finalPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
-						if(finalPriceSubTotal != null){
-							scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
-							finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal);
+				if(isMaxPriceItem){
+					if (scLoiLoaItem.getScQtProposalItem() != null) {
+						// offered price sub total and total
+						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtProposalItem().getOfferPrice()));
+						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
+						if(offeredPriceSubTotal != null){
+							scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+							offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
 						}
-					} else{
-						// after nego price sub total and total
-						afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), quantity);
-						if (afterNegoSubTotal != null) {
-							afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
-							scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+
+						// final price sub total and total - for bidding.
+						if(isBiddingAward){
+							finalPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtProposalItem().getFinalPrice()));
+							finalPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
+							if(finalPriceSubTotal != null){
+								scLoiLoaItem.setAfterNegoSubTotal(finalPriceSubTotal);
+								finalPriceAmount = finalPriceAmount.add(finalPriceSubTotal);
+							}
+						} else{
+							// after nego price sub total and total
+							afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), scLoiLoaItem.getUnitPrice(), quantity);
+							if (afterNegoSubTotal != null) {
+								afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
+								scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+							}
 						}
 					}
 				}
 			}
 			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
-			
+
 			if(isBiddingAward){
 				scLoi.setLoiAmt(finalPriceAmount); // unit price total
 				scLoi.setAfterNegoTotal(finalPriceAmount); // after nego total
@@ -1367,7 +1453,7 @@ public class LOIDetailBackingBean extends
 				scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
 				scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
 			}
-			
+
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 		}
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -3347,79 +3433,22 @@ public class LOIDetailBackingBean extends
 				.getProgressivePaymentList();
 		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
 		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-			String startMonth = "";
-			String endmonth = "";
 			for (ScQtProgressivePayment payment : progressivePayemnt) {
-				if (payment.getStartMonth().equalsIgnoreCase("0")) {
-					startMonth = "01";
-				} else if (payment.getStartMonth().equalsIgnoreCase("1")) {
-					startMonth = "02";
-				} else if (payment.getStartMonth().equalsIgnoreCase("2")) {
-					startMonth = "03";
-				} else if (payment.getStartMonth().equalsIgnoreCase("3")) {
-					startMonth = "04";
-				} else if (payment.getStartMonth().equalsIgnoreCase("4")) {
-					startMonth = "05";
-				} else if (payment.getStartMonth().equalsIgnoreCase("5")) {
-					startMonth = "06";
-				} else if (payment.getStartMonth().equalsIgnoreCase("6")) {
-					startMonth = "07";
-				} else if (payment.getStartMonth().equalsIgnoreCase("7")) {
-					startMonth = "08";
-				} else if (payment.getStartMonth().equalsIgnoreCase("8")) {
-					startMonth = "09";
-				} else if (payment.getStartMonth().equalsIgnoreCase("9")) {
-					startMonth = "10";
-				} else if (payment.getStartMonth().equalsIgnoreCase("10")) {
-					startMonth = "11";
-				} else if (payment.getStartMonth().equalsIgnoreCase("11")) {
-					startMonth = "12";
-				}
-				if (payment.getEndMonth().equalsIgnoreCase("0")) {
-					endmonth = "01";
-				} else if (payment.getEndMonth().equalsIgnoreCase("1")) {
-					endmonth = "02";
-				} else if (payment.getEndMonth().equalsIgnoreCase("2")) {
-					endmonth = "03";
-				}
-
-				else if (payment.getEndMonth().equalsIgnoreCase("3")) {
-					endmonth = "04";
-				} else if (payment.getEndMonth().equalsIgnoreCase("4")) {
-					endmonth = "05";
-				} else if (payment.getEndMonth().equalsIgnoreCase("5")) {
-					endmonth = "06";
-				}
-
-				else if (payment.getEndMonth().equalsIgnoreCase("6")) {
-					endmonth = "07";
-				} else if (payment.getEndMonth().equalsIgnoreCase("7")) {
-					endmonth = "08";
-				} else if (payment.getEndMonth().equalsIgnoreCase("8")) {
-					endmonth = "09";
-				} else if (payment.getEndMonth().equalsIgnoreCase("9")) {
-					endmonth = "10";
-				} else if (payment.getEndMonth().equalsIgnoreCase("10")) {
-					endmonth = "11";
-				} else if (payment.getEndMonth().equalsIgnoreCase("11")) {
-					endmonth = "12";
-				}
-				Date d1 = new Date();
-
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(d1);
-				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + startMonth + "/"
+				Date currentDate = new Date();
+				SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String localDate = format.format(currentDate);
+				String day = localDate.substring(0, 2);
+				String fromdate = day + "/" + payment.getStartMonth() + "/"
 						+ payment.getStartYear();
-				String toDate = date + "/" + endmonth + "/"
+				String toDate = day + "/" + payment.getEndMonth() + "/"
 						+ payment.getEndYear();
+
 				try {
-					if (df.parse(fromdate).after(df.parse(toDate))) {
+					if (format.parse(fromdate).after(format.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
 					} else {
-						payment.setFromDate(df.parse(fromdate));
-						payment.setToDate(df.parse(toDate));
+						payment.setFromDate(format.parse(fromdate));
+						payment.setToDate(format.parse(toDate));
 					}
 				} catch (ParseException e) {
 					// TODO Auto-generated catch block
@@ -3451,6 +3480,7 @@ public class LOIDetailBackingBean extends
 			}
 		};
 		Collections.sort(scQtScheduleList, comparator);
+		
 	}
 
 	/**
