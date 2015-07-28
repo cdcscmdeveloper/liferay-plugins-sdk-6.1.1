@@ -5400,8 +5400,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((getScStatus() != null) && (getScStatus().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPublishFromDate() != null) && (getScPublishFromDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((getScPublishToDate() != null) && (getScPublishToDate().toString() != ReportConst.EMPTY_VAL))
-				|| ((getScPrcRptGroup() != null) && (getScPrcRptGroup() != ReportConst.EMPTY_VAL))
-				|| ((getScPIDtlsPrcRptGroup() != null) && (getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL))
+				/*|| ((getScPrcRptGroup() != null) && (getScPrcRptGroup() != ReportConst.EMPTY_VAL))
+				|| ((getScPIDtlsPrcRptGroup() != null) && (getScPIDtlsPrcRptGroup() != ReportConst.EMPTY_VAL))*/
 				|| ((getScProcurementType() != null) && (getScProcurementType() != ReportConst.EMPTY_VAL))
 				|| ((getScProcessRptQuotationNo() != null) && (getScProcessRptQuotationNo() != ReportConst.EMPTY_VAL))
 				|| ((getScCommonStatus() != null) && (getScCommonStatus() != ReportConst.EMPTY_VAL))
