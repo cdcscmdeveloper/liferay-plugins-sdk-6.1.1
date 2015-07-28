@@ -445,9 +445,9 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmSubmissionDateView(true);			 	
          break;
 		 case ReportConst.SM_THRESHOLD_VALUE:
-				 rptGenBean.setSmSupplierView(true);
+				 /*rptGenBean.setSmSupplierView(true);
 				 rptGenBean.setSmRegistrationNoView(true);
-				 rptGenBean.setSmMofRegNoView(true);
+				 rptGenBean.setSmMofRegNoView(true);*/
 				 rptGenBean.setSmFromAndToYearView(true);
 				 rptGenBean.setSmThresholdYearFromView(true);			 	
          break;

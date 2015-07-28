@@ -12,6 +12,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -721,7 +727,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)62114;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)25;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -4573,6 +4579,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& !ReportConst.EMPTY_VAL.equals(constructedParamString)) {
 				try {
 					getManagedBean().getRptGenBean().setGenerateButtonView(true);
+					//generateReportIntime();
 					fileGenerateReport(getManagedBean().getReportJsp(),
 							constructedParamString);
 					getManagedBean().getRptGenBean().setGenerateButtonView(false);
@@ -4588,7 +4595,45 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 	}
+ 
+	public void generateReportIntime() {
+		ExecutorService service = Executors.newSingleThreadExecutor();
 
+		try {
+		    Runnable rnbl = new Runnable() {
+		        @Override
+		        public void run() {
+		        	try {
+						fileGenerateReport(getManagedBean().getReportJsp(),
+								constructedParamString);
+					} catch (IOException e) {
+						getManagedBean().getRptGenBean().setGenerateButtonView(false);
+						throw new EpException(MessageConst.ERROR_REPORT_780009);
+					}
+		        }
+		    };
+
+		    Future<?> f = service.submit(rnbl);
+
+		    f.get(4, TimeUnit.MINUTES);     // attempt the task for two minutes
+		}
+		catch (final InterruptedException e) {
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780020);
+		}
+		catch (final TimeoutException e) {
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780020);
+		}
+		catch (final ExecutionException e) {
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780023);
+		} 
+		finally {
+		    service.shutdown();
+		}
+	}
+	
 	public void loadReportWithParams(List<String> paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
