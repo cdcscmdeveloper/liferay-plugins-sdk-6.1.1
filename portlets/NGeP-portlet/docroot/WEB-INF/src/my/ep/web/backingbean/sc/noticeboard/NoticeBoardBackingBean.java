@@ -303,8 +303,11 @@ public class NoticeBoardBackingBean extends
 						resDTO.getScQtAmend() != null ? commonUtils.getFormattedDate(new Date(resDTO
 								.getScQtAmend().getChangedDate().getTime()),CommonConstants.DEFAULT_12HR_DATETIME_FORMAT)
 								: null);
-				this.getManagedBean().setQtAmendMentBean(
-						getAmendMentDtls(resDTO));
+				QtAmendMentBean amendMentBean = getAmendMentDtls(resDTO);
+				this.getManagedBean().setQtAmendMentBean(getAmendMentDtls(resDTO));
+				if (amendMentBean != null) {
+					setQtAmendMentData(scQt, amendMentBean);
+				}
 			}
 		} finally {
 			qtNoticeBoardSO = null;
@@ -2598,6 +2601,26 @@ public class NoticeBoardBackingBean extends
 			}
 		}
 		return isNotRigistered;
+	}
+	
+	private void setQtAmendMentData(ScQt scQt, QtAmendMentBean amendMentBean){
+		
+		if (0 != amendMentBean.getNewValidityPeriodDays()) {
+
+			scQt.setQtValidityPeriod(amendMentBean
+					.getNewValidityPeriodDays());
+		}
+		if (0 != amendMentBean.getNewPublishPeriodDays()) {
+			scQt.setPublishPeriod(amendMentBean
+					.getNewPublishPeriodDays());
+		}
+		if (null != amendMentBean.getNewTitle()) {
+			scQt.setQtTitle(amendMentBean.getNewTitle());
+		}
+		if (null != amendMentBean.getNewEstmtPrice()) {
+			scQt.setEstimatedAmount(amendMentBean
+					.getNewEstmtPrice());
+		}
 	}
 
 }
