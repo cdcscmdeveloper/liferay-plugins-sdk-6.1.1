@@ -1110,6 +1110,7 @@ public class SpecificationBackingBean extends
 				openList.remove(category);
 
 		}
+		this.getManagedBean().getScQt().setScQtCategorys(openList);
 
 	}
 
