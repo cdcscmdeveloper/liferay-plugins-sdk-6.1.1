@@ -3241,6 +3241,7 @@ public class SupplierFinalizationBackingBean extends
 								evaluationResultDtl
 										.setSuppSelectionDisabled(true);
 								evaluationResultDtl.setAwareded(false);
+								evaluationResultDtl.setShortListed(false);
 								break;
 							}
 						}
@@ -5661,10 +5662,11 @@ public class SupplierFinalizationBackingBean extends
 					new ArrayList<ScQtRecommend>());
 		}
 		if (scQtRecommend.isSelected()) {
-			scQtRecommend
-					.setAwardSupplierList(new ArrayList<ScQtEvaluationResultDtl>());
+			scQtRecommend.setAwardSupplierList(
+					new ArrayList<ScQtEvaluationResultDtl>());
 			List<ScQtEvaluationResultDtl> shortlistedItemSupplierList = null;
 			boolean isSuccessful = false;
+			
 			if (CollectionUtils.isEmpty(scQtRecommend
 					.getShortListedSupplierList())) {
 				// Retrieve the suppliers short listed for the selected item
