@@ -199,7 +199,8 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu id="awardSupplier" value="#{suppFinalizationBackingBean.managedBean.awardSupplier}" 
-					disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+					disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
+										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 					<f:selectItems value="#{suppFinalizationBackingBean.getAwardSupplierListDropDown()}" />
 					<p:ajax event="change" listener="#{suppFinalizationBackingBean.selectSupplierDropDownEvent}" 
