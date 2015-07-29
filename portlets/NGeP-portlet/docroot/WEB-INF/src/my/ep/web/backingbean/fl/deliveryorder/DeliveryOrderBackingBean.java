@@ -199,6 +199,9 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 						flDeliveryOrder.setRemarkList(flDeliveryAddress.getRemarkList());
 						flDeliveryOrder.setAttachmentList(flDeliveryAddress.getAttachmentList());
 						flDeliveryOrder.setEstDeliveryDate(flDeliveryAddress.getFlTempDoAddr().getEstDeliveryDate());
+						flDeliveryOrder.setGstDeclaredDate(getManagedBean().getGstDeclareDate());
+						flDeliveryOrder.setGstEffectiveDate(getManagedBean().getGstEffDate());
+						flDeliveryOrder.setGstRegNo(getManagedBean().getGstRegNo());
 						
 						//FlDelOrderItem
 						ArrayList<FlDelOrderItem> delOrderList= new ArrayList<FlDelOrderItem>();
@@ -1181,24 +1184,24 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 		reqDTO.setBranchCode(flRequest.getFlSupplierDtl().getBranchCode());
 		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
-		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		SupplierGstResDTO suppGstResDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		if(suppGstResDTO.getSmGstSupplier() != null){
+			getManagedBean().setGstEffDate(suppGstResDTO.getSmGstSupplier().getGstEffDate());
+			getManagedBean().setGstDeclareDate(suppGstResDTO.getSmGstSupplier().getGstDeclaredDate());
+			getManagedBean().setGstRegNo(suppGstResDTO.getSmGstSupplier().getGstRegNo());
+		}
 		boolean amtChanged = false;
-		if(resDTO.getSmGstSupplier() != null){
+		if(suppGstResDTO.getSmGstSupplier() != null){
 			if(getManagedBean().getFulfilmentRequest().getGstRegNo() == null){
-				amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged,flRequest);
+				amtChanged = reCalculateGstUnitPrice(suppGstResDTO.getSmGstSupplier(),amtChanged,flRequest);
 			}
 		}
-//		if(getManagedBean().getFulfilmentRequest().getGstRegNo() != null){
-//			if(resDTO.getSmGstSupplier() == null){
-//				reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged);
-//			}
-//		}
 		//if from GST to non-GST direct set to default
 		if(amtChanged == false){
 			for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-					itemAddr.setDoGstAmt(BigDecimal.ZERO);
-					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice());
+					itemAddr.setDoGstAmt(itemAddr.getGstAmount());
+					itemAddr.setDoGstUnitPrice(itemAddr.getGstUnitPrice());
 				}
 			}
 		}

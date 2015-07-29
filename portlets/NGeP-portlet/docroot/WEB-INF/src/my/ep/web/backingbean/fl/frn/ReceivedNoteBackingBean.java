@@ -859,6 +859,11 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		reqDTO.setBranchCode(fulfilmentNote.getFlRequest().getFlSupplierDtl().getBranchCode());
 		reqDTO.setSupplierId(fulfilmentNote.getFlRequest().getSmSupplier().getSupplierId());
 		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		if(resDTO.getSmGstSupplier() != null){
+			fulfilmentNote.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
+			fulfilmentNote.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
+			fulfilmentNote.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
+		}
 		boolean amtChanged = false;
 		if(resDTO.getSmGstSupplier() != null){
 			if(getManagedBean().getFulfilmentRequest().getGstRegNo() == null){
@@ -868,8 +873,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 		//if from GST to non-GST direct set to default
 		if(amtChanged == false){
 			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
-				noteItem.setGstAmount(BigDecimal.ZERO);
-				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+				noteItem.setGstAmount(noteItem.getFlDelOrderItem().getGstAmount());
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getGstUnitPrice());
 			}
 		}
 		if(amtChanged == true){
