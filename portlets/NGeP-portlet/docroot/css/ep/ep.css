@@ -3282,7 +3282,8 @@ table.rptTbl {
 }
 
 .float-left>tbody>tr>td>label {
-	float: left;
+	float: left !important;
+	text-align: left !important;
 }
 
 .ui-datagrid-column td {
