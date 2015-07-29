@@ -75,7 +75,8 @@
 															suppFinalizationBackingBean.managedBean.procCategoryMedicine or 
 																suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
 													(isQTStatusReFinalized and 
-														suppFinalizationBackingBean.managedBean.initialSelectionItemized)}">
+														(suppFinalizationBackingBean.managedBean.initialSelectionItemized or 
+															suppFinalizationBackingBean.managedBean.zonal) )}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
 										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 
