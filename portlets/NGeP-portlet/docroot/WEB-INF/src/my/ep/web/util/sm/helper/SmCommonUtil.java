@@ -66,6 +66,7 @@ import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -89,6 +90,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -2426,7 +2428,23 @@ public class SmCommonUtil {
 			activeCompanyBasic.setTotalMember(activeCompanyBasic
 					.getTotalMember().setScale(0, BigDecimal.ROUND_DOWN));
 		}
-
 		return activeCompanyBasic;
+	}
+
+	/**
+	 * @param Long
+	 *            supplierId
+	 * @param Long
+	 *            branchCode
+	 * @return SmGstSupplier
+	 */
+	public static SmGstSupplier getSmGstSupplierBySupplierIdAndBranchCode(
+			Long supplierId, Long branchCode) {
+		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+		gstReqDTO.setSupplierId(supplierId);
+		gstReqDTO.setBranchCode(branchCode);
+		return SmServiceLookup.getSupplierGstSO()
+				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
+				.getSmGstSupplier();
 	}
 }

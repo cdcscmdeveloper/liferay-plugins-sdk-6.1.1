@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:panel header="#{lbl['lbl.sm.branch.panHdr']}" toggleable="true" id="branchGstInfoPanelId">
+		<p:dataTable var="br" id="branchDt"
+			value="#{smUpdateGstInfoBackingBean.managedBean.branches}"
+			rowIndexVar="index">
+
+			<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+				style="width : 5%;">
+				<p:outputLabel value="#{index + 1}"
+					style="float: left;white-space: normal;" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
+				<table style="width: 50%">
+					<tr>
+						<td colspan="2" style="border-style: none !important;"><h:outputText
+								value="#{br.branch.branchName}" /></td>
+					</tr>
+					<tr>
+						<td colspan="2" style="border-style: none !important;white-space: normal;"><h:outputText
+								value="#{smUpdateGstInfoBackingBean.getFullAddress(br.branch.smAddress)}" /></td>
+					</tr>
+				 </table>
+				 <br />
+				 <ac:smGstMainFields smGstSupplier="#{br.gst}" 
+					isGstEmpty="#{smUpdateGstInfoBackingBean.managedBean.gstEmpty}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>
