@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -63,6 +64,8 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -463,6 +466,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						}
 					}	
 				}	
+				getSupplierGst(getManagedBean().getInvoice());
 			}
 			validateAdvancedPayment();
 		} 
@@ -1430,5 +1434,20 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					return true;
 			 else
 			return false;
+		}
+		
+		private void getSupplierGst(FlInvoice invoice) {
+			ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+			
+			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+			reqDTO.setBranchCode(invoice.getFlRequest().getFlSupplierDtl().getBranchCode());
+			reqDTO.setSupplierId(invoice.getFlRequest().getSmSupplier().getSupplierId());
+			SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+			if(resDTO.getSmGstSupplier() != null){
+				invoice.setGstEffectiveDate(resDTO.getSmGstSupplier().getGstEffDate());
+				invoice.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
+				invoice.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
+			}
+			
 		}
 }

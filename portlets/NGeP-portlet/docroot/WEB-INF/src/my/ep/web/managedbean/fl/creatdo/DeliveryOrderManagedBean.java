@@ -206,6 +206,9 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     private boolean gfmasError=false;
     private String gfmasErrorContent;
     private Date estDeliveryDate;
+    private Date gstDeclareDate;
+    private Date gstEffDate;
+    private String gstRegNo;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1165,6 +1168,48 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setEstDeliveryDate(Date estDeliveryDate) {
 		this.estDeliveryDate = estDeliveryDate;
+	}
+
+	/**
+	 * @return the gstDeclareDate
+	 */
+	public Date getGstDeclareDate() {
+		return gstDeclareDate;
+	}
+
+	/**
+	 * @param gstDeclareDate the gstDeclareDate to set
+	 */
+	public void setGstDeclareDate(Date gstDeclareDate) {
+		this.gstDeclareDate = gstDeclareDate;
+	}
+
+	/**
+	 * @return the gstEffDate
+	 */
+	public Date getGstEffDate() {
+		return gstEffDate;
+	}
+
+	/**
+	 * @param gstEffDate the gstEffDate to set
+	 */
+	public void setGstEffDate(Date gstEffDate) {
+		this.gstEffDate = gstEffDate;
+	}
+
+	/**
+	 * @return the gstRegNo
+	 */
+	public String getGstRegNo() {
+		return gstRegNo;
+	}
+
+	/**
+	 * @param gstRegNo the gstRegNo to set
+	 */
+	public void setGstRegNo(String gstRegNo) {
+		this.gstRegNo = gstRegNo;
 	}
 
 	
