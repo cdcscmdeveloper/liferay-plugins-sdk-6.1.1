@@ -15,6 +15,7 @@ import javax.faces.convert.NumberConverter;
 
 import my.ep.web.constant.CommonUIConst;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import com.sun.faces.util.MessageFactory;
@@ -46,7 +47,7 @@ public class DecimalConverter extends NumberConverter {
 
 			if (value.contains(".")) {
 				String[] digits = value.split("\\.");
-				if (null != digits && digits.length > 0) {
+				if (ArrayUtils.isNotEmpty(digits)) {
 					integralValue = digits[0].length();
 					decimalValue = digits[1].length();
 				}
@@ -58,7 +59,7 @@ public class DecimalConverter extends NumberConverter {
 				String pattern = getPattern();
 				if (pattern.contains(".")) {
 					String[] digits = pattern.split("\\.");
-					if (null != digits && digits.length > 0) {
+					if (ArrayUtils.isNotEmpty(digits)) {
 						maxFractionDigits = digits[1].length();
 					}
 				}
