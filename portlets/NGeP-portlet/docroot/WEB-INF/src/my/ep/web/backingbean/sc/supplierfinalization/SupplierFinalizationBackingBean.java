@@ -3467,15 +3467,16 @@ public class SupplierFinalizationBackingBean extends
 	
 	private List<ScQtEvaluationResultDtl> processAndSetRecommendedSupplierList(
 				ScQtRecommend scQtRecommend, List<ScQtEvaluationResultDtl> shortlistedSupplierList) {
+		
 		// Multiple LOI or Online Bidding
 		if (scQtRecommend.getRecommendDtls() == null) {
-			scQtRecommend
-					.setRecommendDtls(new ArrayList<ScQtRecommendDtl>());
+			scQtRecommend.setRecommendDtls(
+					new ArrayList<ScQtRecommendDtl>());
 		}
 
 		List<Long> supplierIdList = new ArrayList<Long>();
-		for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend
-				.getRecommendDtls()) {
+		for (ScQtRecommendDtl scQtRecommendDtl 
+									: scQtRecommend.getRecommendDtls()) {
 			if (scQtRecommendDtl.getRecordStatusFlg()
 					.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
 				supplierIdList.add(scQtRecommendDtl
@@ -4016,8 +4017,11 @@ public class SupplierFinalizationBackingBean extends
 		SelectItem[] items = null;
 		ISearchBean<PmParameterDesc> searchBean = null;
 		List<String> excludedDecisionList = null;
+		
 		boolean isRefinalization = this.isQTRefinalized();
 		
+		// 1. If re-finalized and (is zonal or isItemized) exclude the defined decision type(s)
+		// 2. Zonal package also cannot exclude the defined decision type(s)
 		if (isRefinalization) {
 			boolean hasLOAAwarded = false;
 			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
@@ -4731,10 +4735,10 @@ public class SupplierFinalizationBackingBean extends
 							// Retrieving the items and corresponding recommended suppliers by zone
 							if (CollectionUtils.isNotEmpty(zonalKeySet)) {
 								for (TplSpecZoneDtl zoneDtl : zonalKeySet) {
-									List<ScQtRecommend> recommendedItemListByZone = scQtFinalization
-											.getScQtRecommendsByZone().get(zoneDtl);
-									if (CollectionUtils.isNotEmpty(recommendedItemListByZone)) {
-										ScQtRecommend qtRecommend = recommendedItemListByZone.get(0);
+									List<ScQtRecommend> itemListByZone = scQtFinalization
+															.getScQtRecommendsByZone().get(zoneDtl);
+									if (CollectionUtils.isNotEmpty(itemListByZone)) {
+										ScQtRecommend qtRecommend = itemListByZone.get(0);
 										List<ScQtEvaluationResultDtl> shortListedSupplierList = 
 															this.getShortlistedSuppliersByZone(zoneDtl);
 										
@@ -4744,7 +4748,8 @@ public class SupplierFinalizationBackingBean extends
 											shortListedSuppliers = shortListedSupplierList;
 											continue;
 										}
-										setRecommendedSuppliersByRecommendType(qtRecommend, zoneDtl, shortListedSupplierList);
+										setRecommendedSuppliersByRecommendType(
+												qtRecommend, zoneDtl, shortListedSupplierList);
 									}
 								}
 							}
@@ -4861,9 +4866,9 @@ public class SupplierFinalizationBackingBean extends
 		boolean isZonal = this.getManagedBean().getScQt().isZonal();
 		
 		// set the checkbox or radio button of supplier selected
-		if (CollectionUtils.isNotEmpty(scQtRecommend
-				.getRecommendDtls()) && 
-				CollectionUtils.isNotEmpty(shortListedSuppliers)) {
+		if (CollectionUtils.isNotEmpty(
+				scQtRecommend.getRecommendDtls()) && 
+					CollectionUtils.isNotEmpty(shortListedSuppliers)) {
 			if (scQtRecommend.getRecommendBy().getParameterCode().equals(
 					ParameterConst.RECOMMEND_BY_AWARD)) {
 				
@@ -4928,12 +4933,15 @@ public class SupplierFinalizationBackingBean extends
 		
 		// Multiple LOI or Online Bidding
 		List<Long> supplierIdList = new ArrayList<Long>();
-		for (ScQtRecommendDtl scQtRecommendDtl : scQtRecommend
-				.getRecommendDtls()) {
-			if (scQtRecommendDtl.getRecordStatusFlg()
-					.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
-				supplierIdList.add(scQtRecommendDtl
-						.getSupplier().getSupplierId());
+		if (CollectionUtils.isNotEmpty(
+					scQtRecommend.getRecommendDtls())) {
+			for (ScQtRecommendDtl scQtRecommendDtl 
+						: scQtRecommend.getRecommendDtls()) {
+				if (scQtRecommendDtl.getRecordStatusFlg()
+						.equals(DbValueConst.RECORD_STATUS_ACTIVE)) {
+					supplierIdList.add(scQtRecommendDtl
+							.getSupplier().getSupplierId());
+				}
 			}
 		}
 		getManagedBean().setRecommendedSupplierList(
@@ -4953,9 +4961,8 @@ public class SupplierFinalizationBackingBean extends
 				scQtEvaluationResultDtl.setAwareded(false);
 				scQtEvaluationResultDtl.setShortListed(true);
 				
-				getManagedBean()
-						.getRecommendedSupplierList().add(
-								scQtEvaluationResultDtl);
+				getManagedBean().getRecommendedSupplierList()
+								.add(scQtEvaluationResultDtl);
 				++count;
 			}
 		}		
@@ -6350,9 +6357,6 @@ public class SupplierFinalizationBackingBean extends
 		Set<ScQtRecommend> selectedItemSet = new HashSet<ScQtRecommend>();
 		selectedItemSet.addAll(selectedItemList);
 		selectedItemList.clear();
-//		selectedItemList.addAll(selectedItemSet);
-//		selectedItemSet = null;
-
 
 		if (CollectionUtils.isNotEmpty(selectedItemSet)) {
 			ScQtRecommend removableItem = null; // Remove item added due to row
@@ -6450,19 +6454,29 @@ public class SupplierFinalizationBackingBean extends
 		boolean isAward = ParameterConst.RECOMMEND_BY_AWARD
 								.equals(recommendBy.getParameterCode());
 		
-		if (isAward && CollectionUtils.isEmpty(
-							scQtRecommend.getRecommendDtls())) {
-			supplierSelected = false;
-		} else if (!isAward) {
-			if (CollectionUtils.isEmpty(
-					scQtRecommend.getRecommendDtls())) {
-				supplierSelected = false;
-				minSuppliersExist = false;
-			} else if (scQtRecommend
-						.getRecommendDtls().size() < 2) {
-				supplierSelected = false;
-				minSuppliersExist = false;
+		int activeSupplierCount = 0;
+		if (CollectionUtils.isNotEmpty(
+				scQtRecommend.getRecommendDtls())) {
+			for (ScQtRecommendDtl recommendDtl 
+						: scQtRecommend.getRecommendDtls()) {
+				if (recommendDtl.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_ACTIVE)) {
+					++activeSupplierCount;
+					if (isAward && activeSupplierCount == 1) {
+						break;
+					} else if (!isAward && activeSupplierCount == 2) {
+						break;
+					}
+				}
 			}
+		}
+		
+		if (isAward && activeSupplierCount == 0) {
+			supplierSelected = false;
+		} else if (!isAward && 
+					 	activeSupplierCount < 2) {
+			supplierSelected = false;
+			minSuppliersExist = false;
 		}	
 		
 		if (!supplierSelected) {
