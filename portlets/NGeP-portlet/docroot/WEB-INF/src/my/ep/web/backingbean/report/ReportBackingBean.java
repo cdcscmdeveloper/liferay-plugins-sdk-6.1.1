@@ -728,7 +728,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -6752,6 +6752,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
 		}
+		finally
+	      {
+			urlConnection.disconnect();
+	      }
 		
 	}
 	
