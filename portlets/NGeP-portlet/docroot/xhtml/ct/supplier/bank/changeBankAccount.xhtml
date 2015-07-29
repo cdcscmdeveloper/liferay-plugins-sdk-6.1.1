@@ -239,6 +239,7 @@
 
 		<p:panel id="supplierDetails" header="#{lbl['lbl.ct.panel.supplier']}"
 			toggleable="true" toggleSpeed="500">
+			
 			<h:panelGrid columns="4" style="width:100%;"
 				styleClass="top-aligned-columns"
 				columnClasses="columnWidth200,columnWidth400,columnWidth200,columnWidth300">
@@ -261,38 +262,40 @@
 					</h:panelGrid>
 				</h:panelGrid>
 				
-				<p:outputLabel value="#{lbl['lbl.ct.mobile']}" />
-				<p:inputText disabled="true" style="width:200px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierMobileNo}" />
-
-				<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
-				<p:inputText disabled="true" style="width:310px;"
+				 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.reg']}"/> 
+                    <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
+                                     value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.gstRegNo}" />
+            
+            	<p:outputLabel value="#{lbl['lbl.ct.business.name']}" />
+				<p:inputText disabled="true" style="width:350px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierName}" />
-					
-				<p:outputLabel value="#{lbl['lbl.ct.tel']}" />
-				<p:inputText disabled="true" style="width:200px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
-
+					 <p:outputLabel value="#{lbl['lbl.ct.supplier.gst.eff.date']}" />
+                      <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
+                         value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.gstEffDate}">
+                           <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                         </p:inputText>
+				
 				<p:outputLabel value="#{lbl['lbl.ct.branch.name']}" />
 				<h:panelGrid columns="3">
-					<p:inputText disabled="true" style="width:310px;"
+					<p:inputText disabled="true" style="width:350px;"
 						value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBranch}" />
 					<p:spacer width="1" />
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.supplier.branch']}" />
 				</h:panelGrid>
 				
-				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
-				<p:inputText disabled="true" style="width:200px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
+				  <p:outputLabel  value="#{lbl['lbl.ct.supplier.ep.date']}"/>  
+                   <p:inputText disabled="true" style="width:200px;margin-bottom: 5px;"  
+                       value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.gstDeclaredDate}" > 
+                       <f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+                       </p:inputText> 
 				
 				<p:outputLabel value="#{lbl['lbl.ct.contact.person']}" />
 				<p:inputText disabled="true" style="width:250px;"
 					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
 				
-				<p:outputLabel value="#{lbl['lbl.ct.email']}" />
-				<p:inputText disabled="true" style="width:200px;"
-					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
-
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+				
+				
                    <h:panelGroup>
 					<div style="height: 40px; vertical-align: top">
 						<p:outputLabel for="supplierAddress"
@@ -301,10 +304,26 @@
 				</h:panelGroup>
 				<h:panelGrid>
 					<p:inputTextarea id="supplierAddress" disabled="true" rows="5"
-						style="width:250px;" autoResize="true"
+						style="width:250px;margin-bottom: 5px;" autoResize="true"
 						value="#{supplierBackingBean.getFullAddress(supplierBackingBean.managedBean.contractVer.ctContractValue.supplierAddress)}" />
 				</h:panelGrid>
+				
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
 
+             <p:outputLabel value="#{lbl['lbl.ct.tel']}" />
+             <h:panelGrid columns="4">
+				<p:inputText disabled="true" style="width:134px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierPhoneNo}" />
+                 <p:spacer width="10"></p:spacer>
+				<p:outputLabel value="#{lbl['lbl.ct.fax']}" />
+				<p:inputText disabled="true" style="width:135px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierFaxNo}" />
+				</h:panelGrid>
+				<f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+				<p:outputLabel value="#{lbl['lbl.ct.email']}" />
+				<p:inputText disabled="true" style="width:350px;"
+					value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierEmail}" />
+				
 				
 			</h:panelGrid>
 		</p:panel>
