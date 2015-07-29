@@ -912,6 +912,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 			String processName = this.getManagedBean().getProcessName();
 			ScQt scQt = getManagedBean().getScQt();
 			Long currentStatusId = this.getManagedBean().getCurrentStatusId();
+			SCEvaluationDataType dataType = (SCEvaluationDataType) this.getManagedBean().getPayLoad();
 			
 			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
 
@@ -920,10 +921,11 @@ public class SupplierFinalizationBiddingBackingBean extends
 			qtSuppFinalizationSO.saveFinalizationOfflineEndorsement(reqDTO);
 
 			renewSesionObject();
-			setTaskDetails(activeIndex, taskId, outComes, processName, currentStatusId);
+			setTaskDetails(taskId, dataType, outComes, processName, currentStatusId);
 
 			Long qtId = scQt.getQtId();
 			retrieveOnlineBiddingEndorsement(qtId);
+			this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
 
 			String variable1 = getParameterDesc(
 					ParameterTypeConst.DOCUMENT_TYPES,
@@ -1025,14 +1027,13 @@ public class SupplierFinalizationBiddingBackingBean extends
 		}
 	}
 
-	private void setTaskDetails(Integer activeIndex, String taskId,
-			String[] outComes, String processName, Long currentStatusId) {
-		if (activeIndex != null) {
-			this.getManagedBean().setOnlineBiddingActiveIndex(activeIndex);
-		}
+	private void setTaskDetails(String taskId, SCEvaluationDataType dataType, 
+								String[] outComes, String processName, Long currentStatusId) {
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setOutComes(outComes);
 		this.getManagedBean().setProcessName(processName);
+		this.getManagedBean().setPayLoad(dataType);
+		this.getManagedBean().setCurrentStatusId(currentStatusId);
 	}
 
 	private void commonMessageAcknowledmentPage(String messageId,
