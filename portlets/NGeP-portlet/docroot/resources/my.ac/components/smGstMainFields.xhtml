@@ -17,8 +17,8 @@
 		<p:outputPanel id="gstNotEmptyPanelId" rendered="#{!cc.attrs.isGstEmpty}">
 			<table style="width: 50%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
-					<td><p:inputText id="gstRegNo"  maxlength="12" 
+					<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
+					<td style="border-style: none !important;"><p:inputText id="gstRegNo"  maxlength="12" 
 						value="#{cc.attrs.smGstSupplier.gstRegNo}" 
 						size="40" label="#{lbl['lbl.sm.gst.regno']}" >
 						<p:ajax event="blur" update="gstEffDatePanelId" />
@@ -27,9 +27,9 @@
 				</tr>
 				<p:outputPanel id="gstEffDatePanelId">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
+						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
 							<p:outputLabel value="*" styleClass="mandatory" rendered="#{not empty cc.attrs.smGstSupplier.gstRegNo}"/></td>
-						<td><p:calendar id="gstRegDateCalId"
+						<td style="border-style: none !important;"><p:calendar id="gstRegDateCalId"
 								navigator="true" 
 								required="#{not empty cc.attrs.smGstSupplier.gstRegNo}" 
 								label="#{lbl['lbl.sm.gst.effdate']}"
@@ -41,8 +41,8 @@
 					</tr>
 				</p:outputPanel>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-					<td><p:calendar id="gstEffEndDateCalId"
+					<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+					<td style="border-style: none !important;"><p:calendar id="gstEffEndDateCalId"
 							navigator="true" 
 							label="#{lbl['lbl.sm.gst.eff.end.date']}"
 							value="#{cc.attrs.smGstSupplier.gstEndDate}"
@@ -54,18 +54,18 @@
 			</table>
 	  	</p:outputPanel>
 	  	<p:outputPanel id="gstEmptyPanelId" rendered="#{cc.attrs.isGstEmpty}">
-	  		<table style="width: 50%">
+	  		<table style="width: 50%;table-layout:fixed">
 		  		<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.regno']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
+					<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.regno']}" /></td>
+					<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.effdate']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
+					<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+					<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
-					<td><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
+					<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+					<td style="border-style: none !important;"><p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" /></td>
 				</tr>
 			</table>
 	  	</p:outputPanel>
