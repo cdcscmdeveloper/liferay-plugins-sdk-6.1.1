@@ -60,7 +60,7 @@
 				<p:column style="width:15%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.difference.rm']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
+						<ac:iconTooltip id="priceDiff#{index}FECSS" value="#{lbl['lbl.sc.difference.rm.tooltip']}" />
 					</f:facet>
 					<h:outputLabel
 						value="#{finSpec.scQtProposal.proposalAmount.priceDifference}"
@@ -74,7 +74,7 @@
 				<p:column style="width:15%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.difference.perc']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
+						<ac:iconTooltip id="prefMargin#{index}FEC" value="#{lbl['lbl.sc.difference.perc.tooltip']}" />
 					</f:facet>
 					<h:outputLabel
 						value="#{finSpec.scQtProposal.proposalAmount.percentageDifference}"
@@ -102,7 +102,7 @@
 				<p:column style="width:15%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.sc.action']}" />
-						<ac:iconTooltip value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
+						<ac:iconTooltip id="action#{index}FECSSL" value="#{lbl['lbl.sc.action.evaluation.tooltip']}" />
 					</f:facet>
 
 					<p:commandButton value="#{lbl['lbl.btn.evaluate']}"

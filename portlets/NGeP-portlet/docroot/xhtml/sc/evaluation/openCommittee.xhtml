@@ -13,7 +13,7 @@
 		<p:dataTable id="evaluationpreparecommittee" var="committeeMember"
 			rows="10" rowKey="#{committeeMember.qtCommitteeActivityId}"
 			value="#{evaluationBackingBean.managedBean.committeeMemberList}"
-			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}">
+			selection="#{evaluationBackingBean.managedBean.committeeActivitymultiSelect}" rowIndexVar="index">
 			<ac:paginator for="evaluationpreparecommittee" />
 
 			<p:column style="width:18%;white-space: normal" headerText="#{lbl['lbl.sc.name']}">
@@ -38,7 +38,7 @@
 			<p:column style="width:8%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					<ac:iconTooltip id="pnp#{index}OC" value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
 					value="#{lbl[committeeMember.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
