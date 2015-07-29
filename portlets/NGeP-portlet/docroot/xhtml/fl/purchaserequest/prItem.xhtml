@@ -146,7 +146,8 @@
 				rowKey="#{flItem}">
 				<ac:paginator for="itemDataTable" />
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
-					<p:selectBooleanCheckbox value="#{flItem.gst}">
+					<p:selectBooleanCheckbox value="#{flItem.gst}"
+					disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null or purchaseRequestBackingBean.managedBean.buttonVal=='View'}">
 						<p:ajax process="@this" listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}"
 						update="subTotalTxt,unitPrice,orderedQty,itemDataTable"/>
 					</p:selectBooleanCheckbox>
