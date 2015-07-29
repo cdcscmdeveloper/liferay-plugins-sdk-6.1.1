@@ -3125,6 +3125,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					return "editCatalogItem";
 				}
 			}
+			
+			
+			
+			///promotion end date cannot less than standard start date
+		
+			if(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getStartDate()
+					.after(this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getEndDate())){
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+								MessageUtils.getMessage(MessageConst.ERROR_715011,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())));
+				return "editCatalogItem";
+			}
 
 			//Tier Pricing
 			int groupPrevious = 0;
