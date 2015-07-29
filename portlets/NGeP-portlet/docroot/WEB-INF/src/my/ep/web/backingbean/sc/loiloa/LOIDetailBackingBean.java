@@ -704,6 +704,8 @@ public class LOIDetailBackingBean extends
 
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				// rec supplier in loi list
+				disableIsLoiRequired(resDTO.getLoiLoas());
+
 				for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) { 
 
 					if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
