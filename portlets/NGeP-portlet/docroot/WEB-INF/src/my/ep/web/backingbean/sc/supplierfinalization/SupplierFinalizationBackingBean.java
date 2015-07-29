@@ -4016,21 +4016,35 @@ public class SupplierFinalizationBackingBean extends
 		SelectItem[] items = null;
 		ISearchBean<PmParameterDesc> searchBean = null;
 		List<String> excludedDecisionList = null;
-		
 		boolean isRefinalization = this.isQTRefinalized();
 		
-		// 1. If re-finalized and (is zonal or isItemized) exclude the defined decision type(s)
-		// 2. Zonal package also cannot exclude the defined decision type(s)
-		if (isRefinalization && 
-				(getManagedBean().getScQt().isZonal() || 
-						getManagedBean().isInitialSelectionItemized())) {
-			excludedDecisionList = new ArrayList<String>();
-			excludedDecisionList.add(
-					ParameterConst.DECISION_CANCEL);
-			excludedDecisionList.add(
-					ParameterConst.DECISION_RE_PUBLISH);
-			excludedDecisionList.add(
-					ParameterConst.DECISION_RE_EVALUATION);		
+		if (isRefinalization) {
+			boolean hasLOAAwarded = false;
+			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
+			
+			try {
+				qtSuppFinalizationSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSuppFinalizationSO.class);
+				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+				reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.hasLOAAwarded(reqDTO);
+				if (resDTO.isSuccessful()) {
+					hasLOAAwarded = resDTO.isLoaAwarded();
+				}
+			} finally {
+				qtSuppFinalizationSO = null;
+			}
+			
+			if (hasLOAAwarded) {
+				excludedDecisionList = new ArrayList<String>();
+				excludedDecisionList.add(
+						ParameterConst.DECISION_CANCEL);
+				excludedDecisionList.add(
+						ParameterConst.DECISION_RE_PUBLISH);
+				excludedDecisionList.add(
+						ParameterConst.DECISION_RE_EVALUATION);	
+			}
 		}
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
