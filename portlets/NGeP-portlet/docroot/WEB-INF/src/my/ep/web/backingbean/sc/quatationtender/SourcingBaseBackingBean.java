@@ -1266,6 +1266,10 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				for (int i = 0; i < list.size(); i++) {
 					if (list.get(i).isSelected()) {
 						list.get(i).setDeleted(true);
+						if (null == list.get(i).getTitle()
+								|| StringUtils.isBlank(list.get(i).getTitle())) {
+							list.get(i).setTitle("hellodelete");
+						}
 						markDeletedList.add(list.get(i));
 
 						list.remove(list.get(i));
@@ -1581,8 +1585,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				if (null != mofAccResDTO.getMofAccount()) {
 					mofAccount = mofAccResDTO.getMofAccount();
 					smSupplier.setSmMofAccount(mofAccount);
-				}
-				else {
+				} else {
 					mofAccount = new SmMofAccount();
 				}
 			} else {
