@@ -6,17 +6,22 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:param name="qualifiedSupplierListHeader" value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage']}" />
-	<ui:param name="qualifiedSupplierListTooltip" value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage.tooltip']}" />
-	<ui:param name="disQualifiedSupplierListHeader" value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage']}" />
-	<ui:param name="disQualifiedSupplierListTooltip" value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage.tooltip']}" />
+	<ui:param name="qualifiedSupplierListHeader"
+		value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage']}" />
+	<ui:param name="qualifiedSupplierListTooltip"
+		value="#{lbl['lbl.sc.eva.qualified.supplier.list.fec.evaluation.stage.tooltip']}" />
+	<ui:param name="disQualifiedSupplierListHeader"
+		value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage']}" />
+	<ui:param name="disQualifiedSupplierListTooltip"
+		value="#{lbl['lbl.sc.eva.disqualified.supplier.list.fec.evaluation.stage.tooltip']}" />
 
 	<table>
 		<tr>
 			<td><h:outputLabel value="#{lbl['lbl.sc.view.by']}" /></td>
 			<td><p:selectOneMenu
 					value="#{evaluationBackingBean.managedBean.financialSummaryView}">
-					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}"></f:selectItem>
+					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+						itemValue="#{null}"></f:selectItem>
 					<f:selectItem itemLabel="Package Preference Margin" itemValue="FPM"></f:selectItem>
 					<f:selectItem itemLabel="Item" itemValue="FI"></f:selectItem>
 					<p:ajax event="change" process="@this" partialSubmit="true"
@@ -30,10 +35,10 @@
 
 
 	<h:panelGroup id="financialviewSummary">
-		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FI'}">
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+		<c:if
+			test="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FI'}">
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
 				<p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
@@ -71,7 +76,7 @@
 									value="supplierItemsSelected"></ui:param>
 
 							</c:if>
-							
+
 							<ui:param name="passingScore"
 								value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 							<ui:param name="itemList"
@@ -81,8 +86,8 @@
 						</h:panelGroup>
 					</p:tab>
 				</p:accordionPanel>
-			</ui:fragment>
-			<ui:fragment
+			</c:if>
+			<c:if
 				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
 				<ui:param name="recommendationitemListId" value="itemLstwithoutzone"></ui:param>
 				<ui:param name="recommendationitemSelectQualifiedId"
@@ -96,16 +101,16 @@
 				<ui:param name="itemList"
 					value="#{evaluationBackingBean.managedBean.summaryItemList}"></ui:param>
 				<ui:param name="passingScore"
-					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
+					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 				<ui:include src="summaryItem.xhtml"></ui:include>
-			</ui:fragment>
-		</ui:fragment>
+			</c:if>
+		</c:if>
 
-		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FPM'}">
+		<c:if
+			test="#{evaluationBackingBean.managedBean.financialSummaryView eq 'FPM'}">
 
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
 				<p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
@@ -137,10 +142,10 @@
 						</h:panelGroup>
 					</p:tab>
 				</p:accordionPanel>
-			</ui:fragment>
+			</c:if>
 
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+			<c:if
+				test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
 				<ui:param name="recommendationqualifiedPreferenceListId"
 					value="QualifiedPreferenceMarginListId"></ui:param>
 				<ui:param name="recommendationdisQualifiedPreferenceListId"
@@ -150,10 +155,10 @@
 				<ui:param name="disQualifiedPreferenceList"
 					value="#{evaluationBackingBean.managedBean.disqualifiedSuppliersDM}"></ui:param>
 				<ui:param name="passingScore"
-					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
+					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>
 				<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
-			</ui:fragment>
-		</ui:fragment>
+			</c:if>
+		</c:if>
 	</h:panelGroup>
 
 
