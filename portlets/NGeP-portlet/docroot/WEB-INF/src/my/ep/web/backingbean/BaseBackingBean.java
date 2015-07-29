@@ -923,7 +923,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		IOrgProfileSO profileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(orgProfileId);
-		return profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile().getOrgName();
+		PmOrgProfile orgProfile = profileSO.retrieveMinistryByOrgProfileId(reqDTO).getPmOrgProfile();
+		if(orgProfile!=null) {
+			return orgProfile.getOrgName();
+		} else {
+			log.info("Ministry not found : "+orgProfileId);
+			return "";
+		}
 	}
 	
 	public PmOrgProfile retrieveMinistryOrgProfile(Long orgProfileId){
