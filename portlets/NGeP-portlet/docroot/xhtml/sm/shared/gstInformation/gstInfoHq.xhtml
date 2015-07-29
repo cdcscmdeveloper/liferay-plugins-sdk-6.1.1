@@ -25,6 +25,48 @@
 		
 		<ac:smGstMainFields smGstSupplier="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier}" 
 			isGstEmpty="#{smUpdateGstInfoBackingBean.managedBean.gstEmpty}" />
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.add']}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				partialSubmit="true" process="@this" disabled="#{!smUpdateGstInfoBackingBean.managedBean.gstEmpty}"
+				update="@([id$=hqGstInfoPanelId])" action="#{smUpdateGstInfoBackingBean.addHqGst}">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.save']}" update="@form"
+				partialSubmit="true" process="@this" disabled="#{smUpdateGstInfoBackingBean.managedBean.gstEmpty}"
+				oncomplete="confirmAddHqDialog.show();" action="#{smUpdateGstInfoBackingBean.onSaveHqGst}">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				partialSubmit="true" process="@this" update="@form"
+				disabled="#{empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier or empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstSupplierId}"
+				oncomplete="confirmDeleteHqDialog.show();" >
+			</p:commandButton>
+		</div>
+		<br />
 	</p:panel>
+	
+	<p:confirmDialog id="confirmDeleteHqDialog"
+		message="#{lbl['lbl.sm.gst.delete.confirm.msg']}"
+		header="#{lbl['lbl.sm.userprofile.confirmation']}"
+		widgetVar="confirmDeleteHqDialog">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeleteHqDialog.hide();" 
+				action="#{smUpdateGstInfoBackingBean.deleteHqGst}" update="@form"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeleteHqDialog.hide();" />
+		</div>
+	</p:confirmDialog>
+	
+	<p:confirmDialog id="confirmAddHqDialog"
+		message="#{smUpdateGstInfoBackingBean.managedBean.saveHqGstConfirmMsg}"
+		header="#{lbl['lbl.sm.userprofile.confirmation']}"
+		widgetVar="confirmAddHqDialog">
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmAddHqDialog.hide();" 
+				action="#{smUpdateGstInfoBackingBean.saveHqGst}" update="@form"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+			<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmAddHqDialog.hide();" />
+		</div>
+	</p:confirmDialog>
 	
 </ui:composition>

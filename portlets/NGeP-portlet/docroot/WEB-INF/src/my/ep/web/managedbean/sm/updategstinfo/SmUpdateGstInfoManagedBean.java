@@ -23,9 +23,13 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmCompanyBasic companyBasic;
 	private SmGstSupplier hqGstSupplier;
+	private SmGstBranchVO selectedBranchGst;
 	private SmMofAccount mofAccount;
 	private List<SmGstBranchVO> branches;
 	private boolean gstEmpty;
+	private String saveHqGstConfirmMsg;
+	private String saveBranchGstConfirmMsg;
+	private String deleteBranchGstConfirmMsg;
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -73,6 +77,38 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 
 	public void setBranches(List<SmGstBranchVO> branches) {
 		this.branches = branches;
+	}
+
+	public String getSaveHqGstConfirmMsg() {
+		return saveHqGstConfirmMsg;
+	}
+
+	public void setSaveHqGstConfirmMsg(String saveHqGstConfirmMsg) {
+		this.saveHqGstConfirmMsg = saveHqGstConfirmMsg;
+	}
+
+	public String getSaveBranchGstConfirmMsg() {
+		return saveBranchGstConfirmMsg;
+	}
+
+	public void setSaveBranchGstConfirmMsg(String saveBranchGstConfirmMsg) {
+		this.saveBranchGstConfirmMsg = saveBranchGstConfirmMsg;
+	}
+
+	public String getDeleteBranchGstConfirmMsg() {
+		return deleteBranchGstConfirmMsg;
+	}
+
+	public void setDeleteBranchGstConfirmMsg(String deleteBranchGstConfirmMsg) {
+		this.deleteBranchGstConfirmMsg = deleteBranchGstConfirmMsg;
+	}
+
+	public SmGstBranchVO getSelectedBranchGst() {
+		return selectedBranchGst;
+	}
+
+	public void setSelectedBranchGst(SmGstBranchVO selectedBranchGst) {
+		this.selectedBranchGst = selectedBranchGst;
 	}
 
 }
