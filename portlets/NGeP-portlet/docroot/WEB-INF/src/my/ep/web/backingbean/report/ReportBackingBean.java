@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -4577,16 +4578,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if (null != constructedParamString
 					&& !ReportConst.EMPTY_VAL.equals(constructedParamString)) {
-				try {
+				//try {
 					getManagedBean().getRptGenBean().setGenerateButtonView(true);
+					//generateReportTimer();
 					//generateReportIntime();
-					fileGenerateReport(getManagedBean().getReportJsp(),
-							constructedParamString);
+					fileGenerateReport(getManagedBean().getReportJsp(),	constructedParamString);
 					getManagedBean().getRptGenBean().setGenerateButtonView(false);
-				} catch (IOException e) {
+				/*} catch (IOException e) {
 					getManagedBean().getRptGenBean().setGenerateButtonView(false);
 					throw new EpException(MessageConst.ERROR_REPORT_780009);
-				}
+				}*/
 			} 
 			/*RequestContext context = RequestContext.getCurrentInstance();
 			context.addCallbackParam(ReportConst.RPT_IN_VALID,
@@ -4603,23 +4604,16 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		    Runnable rnbl = new Runnable() {
 		        @Override
 		        public void run() {
-		        	try {
 						fileGenerateReport(getManagedBean().getReportJsp(),
-								constructedParamString);
-					} catch (IOException e) {
-						getManagedBean().getRptGenBean().setGenerateButtonView(false);
-						throw new EpException(MessageConst.ERROR_REPORT_780009);
-					}
+								constructedParamString);					
 		        }
 		    };
-
 		    Future<?> f = service.submit(rnbl);
-
-		    f.get(4, TimeUnit.MINUTES);     // attempt the task for two minutes
+		    f.get(1, TimeUnit.MINUTES);     // attempt the task for one minutes
 		}
 		catch (final InterruptedException e) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
-			throw new EpException(MessageConst.ERROR_REPORT_780020);
+			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		}
 		catch (final TimeoutException e) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
@@ -4633,7 +4627,30 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		    service.shutdown();
 		}
 	}
-	
+	public void generateReportTimer() {
+		Thread thread = new Thread(new Runnable() {
+	        @Override
+	        public void run(){
+					fileGenerateReport(getManagedBean().getReportJsp(),
+							constructedParamString);
+	        }
+		});
+		thread.start();
+		long endTimeMillis = System.currentTimeMillis() + 60000;
+		while (thread.isAlive()) {
+		    if (System.currentTimeMillis() > endTimeMillis) {
+		    	getManagedBean().getRptGenBean().setGenerateButtonView(false);		    	
+		    	break;		        
+		    }
+		    try {
+		        Thread.sleep(50000);
+		    }
+		    catch (InterruptedException t) {
+		    	getManagedBean().getRptGenBean().setGenerateButtonView(false);
+		    	log.info(MessageConst.ERROR_REPORT_780020);
+		    }
+		}
+	}	
 	public void loadReportWithParams(List<String> paramLst) {
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
@@ -6679,7 +6696,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 
 	protected void fileGenerateReport(String reportFile,
-			String paramConstrString) throws IOException {
+			String paramConstrString){
 		StringBuilder gnrtdURL = new StringBuilder();
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_PREV_URL));
@@ -6687,37 +6704,57 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		gnrtdURL.append(EpPropertiesUtils.getInstance().getProperty(
 				EpPropertiesConst.EXC_NEXT_URL));
 		HttpURLConnection urlConnection = null;
-		URL obj = new URL(gnrtdURL.toString());
-		log.info(gnrtdURL.toString());
-		urlConnection = (HttpURLConnection) obj.openConnection();
-		BufferedInputStream buf = new BufferedInputStream(
-				urlConnection.getInputStream());
-		PortletResponse portletResponse = (PortletResponse) FacesContext
-				.getCurrentInstance().getExternalContext().getResponse();
-		HttpServletResponse res = PortalUtil
-				.getHttpServletResponse(portletResponse);
-		int position = reportFile.lastIndexOf(ReportConst.DOTJSP);
-		if (position != -1) {
-			reportFile = reportFile.substring(0, position);
+		URL obj;
+		BufferedInputStream buf;
+		try {
+			obj = new URL(gnrtdURL.toString());
+			log.info(gnrtdURL.toString());
+			urlConnection = (HttpURLConnection) obj.openConnection();
+			
+			urlConnection.setConnectTimeout(290000);
+			urlConnection.setReadTimeout(290000);
+			new Thread(new InterruptThread(urlConnection)).start();
+			
+			buf = new BufferedInputStream(
+					urlConnection.getInputStream());
+			PortletResponse portletResponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse res = PortalUtil
+					.getHttpServletResponse(portletResponse);
+			int position = reportFile.lastIndexOf(ReportConst.DOTJSP);
+			if (position != -1) {
+				reportFile = reportFile.substring(0, position);
+			}
+			res.setHeader(
+					ReportConst.CONTENT_DISPOSITION,
+					ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportFile
+							+ ReportConst.UNDERSCORE
+							+ ReportConst.REPORT_DATE_TIME.format(new Date())
+							+ ReportConst.DOTPDFEIFON);//
+			res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING, ReportConst.BINARY);
+			res.setContentType(ReportConst.APPLICATIONEIFONPDF);
+			res.flushBuffer();
+			OutputStream out = res.getOutputStream();
+			byte[] b = new byte[128];
+			int size;
+			while ((size = buf.read(b, 0, b.length)) != -1) {
+				out.write(b, 0, size);
+			}
+			buf.close();
+			out.close();
+		} catch (MalformedURLException e) {
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780009);
+		}catch ( IllegalArgumentException e) {	
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780009);
+		}catch (IOException e) {
+			getManagedBean().getRptGenBean().setGenerateButtonView(false);
+			throw new EpException(MessageConst.ERROR_REPORT_780020);
 		}
-		res.setHeader(
-				ReportConst.CONTENT_DISPOSITION,
-				ReportConst.ATTACHMENTNFILENAMEEQUIFON + reportFile
-						+ ReportConst.UNDERSCORE
-						+ ReportConst.REPORT_DATE_TIME.format(new Date())
-						+ ReportConst.DOTPDFEIFON);//
-		res.setHeader(ReportConst.CONTENT_TRANSFER_ENCODING, ReportConst.BINARY);
-		res.setContentType(ReportConst.APPLICATIONEIFONPDF);
-		res.flushBuffer();
-		OutputStream out = res.getOutputStream();
-		byte[] b = new byte[128];
-		int size;
-		while ((size = buf.read(b, 0, b.length)) != -1) {
-			out.write(b, 0, size);
-		}
-		buf.close();
-		out.close();
+		
 	}
+	
 
 	public Map<String, List<SelectItem>> getModuleItemMap() {
 		return moduleItemMap;
