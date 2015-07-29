@@ -32,10 +32,8 @@
 
 
 	<h:panelGroup id="recommendationviewSummary">
-		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'RI'}">
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+		<c:if test	="#{evaluationBackingBean.managedBean.summaryViewBy eq 'RI'}">
+			<c:if test ="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
 				<p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
@@ -80,9 +78,8 @@
 						</h:panelGroup>
 					</p:tab>
 				</p:accordionPanel>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+			</c:if>
+			<c:if test 	="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
 				<ui:param name="itemListId" value="itemLstwithoutzone"></ui:param>
 				<ui:param name="itemSelectQualifiedId"
 					value="itemSupplierQualifiedoutzoneId"></ui:param>
@@ -97,14 +94,14 @@
 				<ui:param name="passingScore"
 					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
 				<ui:include src="summaryItem.xhtml"></ui:include>
-			</ui:fragment>
-		</ui:fragment>
+			</c:if>
+		</c:if>
 
-		<ui:fragment
-			rendered="#{evaluationBackingBean.managedBean.summaryViewBy eq 'RPM'}">
+		<c:if
+			test="#{evaluationBackingBean.managedBean.summaryViewBy eq 'RPM'}">
 
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
+			<c:if 
+				test="#{evaluationBackingBean.managedBean.scQt.zonal ne 'false'}">
 				<p:accordionPanel dynamic="true"
 					value="#{evaluationBackingBean.managedBean.evaluationStageZonesSummary}"
 					var="zonePnlList">
@@ -137,10 +134,9 @@
 						</h:panelGroup>
 					</p:tab>
 				</p:accordionPanel>
-			</ui:fragment>
+			</c:if>
 
-			<ui:fragment
-				rendered="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
+			<c:if test="#{evaluationBackingBean.managedBean.scQt.zonal eq 'false'}">
 				<ui:param name="qualifiedPreferenceListId"
 					value="QualifiedPreferenceMarginListId"></ui:param>
 				<ui:param name="disQualifiedPreferenceListId"
@@ -152,8 +148,8 @@
 				<ui:param name="passingScore"
 					value="#{evaluationBackingBean.managedBean.passingScore}"></ui:param>					
 				<ui:include src="summaryPrefernceMargin.xhtml"></ui:include>
-			</ui:fragment>
-		</ui:fragment>
+			</c:if>
+		</c:if>
 	</h:panelGroup>
 
 
