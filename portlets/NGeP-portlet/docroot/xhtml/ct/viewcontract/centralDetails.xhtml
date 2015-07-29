@@ -30,6 +30,15 @@
 					</td>
 				</tr>
 				<tr>
+				<td class="columnWidth150">
+						<p:outputLabel id="centralCtAmountId" value="#{lbl['lbl.ct.contract.amount']}" />
+					</td>
+					<td>
+						<p:inputText for="centralCtAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+					</td>
 					<td class="columnWidth150">
 						<p:outputLabel id="centralEfDate" value="#{lbl['lbl.ct.effective.date']}" />
 					</td>
@@ -39,7 +48,23 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
-					<td class="columnWidth150">
+				</tr>				
+				<tr>
+					  <td class="columnWidth150">
+						<p:outputLabel id="gstAmountCentral" value="#{lbl['lbl.ct.gst.amt']}"  />
+					</td>
+					<td>
+						<p:inputText for="gstAmountCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				 disabled="#{!contractDetailsBackingBean.managedBean.disableGstAmount}" 
+			   				 value="#{contractDetailsBackingBean.managedBean.ctContractAmount.gstAmount}" >
+			   				<p:ajax  event="blur" update="overAllAmtsCentral" process="@this"
+				   			   listener="#{contractDetailsBackingBean.calculateOrverAllAmt()}"></p:ajax>
+				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+					</td>
+                	
+                	
+                	<td class="columnWidth150">
 						<p:outputLabel id="centralExpDate" value="#{lbl['lbl.ct.expiry.date']}" />
 					</td> 
 					<td>
@@ -48,21 +73,19 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
-				</tr>				
-				<tr>
-					<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}">
-					<td class="columnWidth150">
-						<p:outputLabel id="centralCtAmountId" value="#{lbl['lbl.ct.contract.amount']}" />
+			  	</tr>
+			  	<tr>
+			 	<td class="columnWidth150">
+						<p:outputLabel id="overAllAmtsCentrals" value="#{lbl['lbl.ct.gst.all.amt']}" />
 					</td>
 					<td>
-						<p:inputText for="centralCtAmountId" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+						<p:inputText id="overAllAmtsCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				value="#{contractDetailsBackingBean.managedBean.gstTotalAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
-                	</h:panelGroup>
-            
-            		<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
+			
+					<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContract.zonalPricing}">
 					<td class="columnWidth150">
 	     	             	<p:outputLabel id="centralPeriod" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%"  styleClass="required" />
 					</td> 
@@ -75,20 +98,7 @@
                 	</h:panelGroup>   
                 	</tr>
                 	<tr>
-                	<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}">
-                	    <td class="columnWidth150">
-						<p:outputLabel id="gstAmountCentral" value="#{lbl['lbl.ct.gst.amt']}"  />
-					</td>
-					<td>
-						<p:inputText for="gstAmountCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				 disabled="#{!contractDetailsBackingBean.managedBean.disableGstAmount}" 
-			   				 value="#{contractDetailsBackingBean.managedBean.ctContractAmount.gstAmount}" >
-			   				<p:ajax  event="blur" update="overAllAmtsCentral" process="@this"
-				   			   listener="#{contractDetailsBackingBean.calculateOrverAllAmt()}"></p:ajax>
-				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText>
-					</td>
-                  </h:panelGroup>
+                	
                 	<h:panelGroup rendered="#{!contractDetailsBackingBean.managedBean.ctContractAmount.agreement
                 		and contractDetailsBackingBean.managedBean.contractVer.docType != ParameterConst.doctypeContractCreation}">
                 	<td class="columnWidth150">
@@ -104,19 +114,7 @@
 					</td>					
 					</h:panelGroup>
 				</tr>
-				<tr>
-				<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt}">
-				<td class="columnWidth150">
-						<p:outputLabel id="overAllAmtsCentrals" value="#{lbl['lbl.ct.gst.all.amt']}" />
-					</td>
-					<td>
-						<p:inputText id="overAllAmtsCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
-			   				value="#{contractDetailsBackingBean.managedBean.gstTotalAmount}"  disabled="true">
-				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</p:inputText>
-					</td>
-				</h:panelGroup>
-				</tr>
+				
 				<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 				<tr rowspan="2">
 					<h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.ctAgreement.status.statusId != CtStatusConst.acComplete and
