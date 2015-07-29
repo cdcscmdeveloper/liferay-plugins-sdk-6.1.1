@@ -85,10 +85,10 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstRegNo}" /></td>
+						value="#{stopInstrBB.managedBean.stopInstr.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.gstRegNo}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstDeclaredDate}">
+						value="#{stopInstrBB.managedBean.stopInstr.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.gstDeclaredDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
@@ -96,7 +96,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
 				<td><p:inputText size="15" disabled="true"
-						value="#{stopInstrBB.managedBean.stopInstr.flRequest.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.flRequest.gstEffectiveDate}">
+						value="#{stopInstrBB.managedBean.stopInstr.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : stopInstrBB.managedBean.stopInstr.gstEffectiveDate}">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText></td>
