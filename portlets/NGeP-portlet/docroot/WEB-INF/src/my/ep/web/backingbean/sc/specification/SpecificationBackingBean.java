@@ -2026,11 +2026,14 @@ public class SpecificationBackingBean extends
 					if (SourcingConstants.QT_TYPE_RESTRICTED_TENDER
 							.equalsIgnoreCase(scQt.getQtType())
 							&& type.equalsIgnoreCase("SC")) {
-						if (tenderResDTO.getSupplierResultBean().getTotalRecord() > 0) {
+						if (tenderResDTO.getSupplierResultBean()
+								.getTotalRecord() > 0) {
 							this.getManagedBean().setRestrictedSupplierList(
-									tenderResDTO.getSupplierResultBean().getResultList());
+									tenderResDTO.getSupplierResultBean()
+											.getResultList());
 							this.getManagedBean().setTotalSuppliers(
-									tenderResDTO.getSupplierResultBean().getTotalRecord());
+									tenderResDTO.getSupplierResultBean()
+											.getTotalRecord());
 						}
 					}
 
@@ -9700,17 +9703,19 @@ public class SpecificationBackingBean extends
 			throws FileNotFoundException, IOException {
 
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
-		ScQtCheckListAttachment attachment = scQtChecklist
-				.getScQtCheckListAttachment();
-		if (null == attachment) {
-			attachment = new ScQtCheckListAttachment();
-			attachment.setScQtCheckList(scQtChecklist);
+		if (null != scQtChecklist) {
+			ScQtCheckListAttachment attachment = scQtChecklist
+					.getScQtCheckListAttachment();
+			if (null == attachment) {
+				attachment = new ScQtCheckListAttachment();
+				attachment.setScQtCheckList(scQtChecklist);
+			}
+			attachment.setDocNo(scQtChecklist.getScQt().getQtNo());
+
+			uploadAttachment(event.getFile(), attachment);
+
+			scQtChecklist.setScQtCheckListAttachment(attachment);
 		}
-		attachment.setDocNo(scQtChecklist.getScQt().getQtNo());
-
-		uploadAttachment(event.getFile(), attachment);
-
-		scQtChecklist.setScQtCheckListAttachment(attachment);
 	}
 
 	/**
