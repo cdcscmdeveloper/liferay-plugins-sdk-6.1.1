@@ -46,206 +46,206 @@
 					</p:inputText> <p:message id="priceMsg" for="estPrice" display="icon" /></td>
 
 			</tr>
+			<ui:fragment
+				rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0}">
+				<tr>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
+						<td><h:outputLabel value=" #{lbl['lbl.sc.justification']}" /></td>
+						<td colspan="3"><p:inputTextarea rows="2" cols="143"
+								style="margin-bottom:5px;width: 80%;"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								maxlength="200"
+								value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
+								readonly="#{specificationBackingBean.managedBean.readOnly}"></p:inputTextarea>
+							<ac:iconTooltip value="#{lbl['lbl.sc.justification.tooltip']}" /></td>
+					</ui:fragment>
 
-			<tr>
-				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.ppPlan.planNo ne null}">
-					<td><h:outputLabel value=" #{lbl['lbl.sc.justification']}" /></td>
-					<td colspan="3"><p:inputTextarea rows="2" cols="143"
-							style="margin-bottom:5px;width: 80%;"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							maxlength="200"
-							value="#{specificationBackingBean.managedBean.scQt.justificationRemark}"
-							readonly="#{specificationBackingBean.managedBean.readOnly}"></p:inputTextarea>
-						<ac:iconTooltip value="#{lbl['lbl.sc.justification.tooltip']}" /></td>
-				</ui:fragment>
-
-			</tr>
-
-
-
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> <ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-						<p:outputLabel value="*" styleClass="mandatory" />
-					</ui:fragment></td>
-				<td><ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
-						<p:selectOneMenu style="width:230px;"
-							value="#{specificationBackingBean.managedBean.scQt.qtType}"
-							disabled="true">
-							<f:selectItems
-								value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
-								var="parameter" itemLabel="#{parameter.codeName}"
-								itemValue="#{parameter.pmParameter.parameterCode}" />
-
-						</p:selectOneMenu>
-					</ui:fragment> <ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-
-						<p:selectOneRadio required="true" id="tenderType"
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							label="#{lbl['lbl.sc.qttentype']}"
-							value="#{specificationBackingBean.managedBean.scQt.qtType}">
-
-							<f:selectItems
-								value="#{specificationBackingBean.getQuotationTendervalues(ParameterTypeConst.quotationTenderType)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form"
-								listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
-						</p:selectOneRadio>
-						<p:message id="tenderMsg" for="tenderType" display="icon" />
-					</ui:fragment></td>
-			</tr>
-			<tr>
-				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No'}">
-					<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneRadio required="true" id="openFor"
-							disabled="#{specificationBackingBean.managedBean.readOnly }"
-							label="#{lbl['lbl.sc.open.for']}"
-							value="#{specificationBackingBean.managedBean.scQt.openFor}">
-							<f:selectItems
-								value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form"
-								listener="#{specificationBackingBean.openForChange}"></p:ajax>
-						</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
-				</ui:fragment>
-			</tr>
+				</tr>
 
 
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><ui:fragment
-						rendered="#{isOneTierThresHold}">
-						<p:selectOneRadio
-							disabled="#{specificationBackingBean.managedBean.readOnly}"
-							value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
-							<f:selectItems
-								value="#{specificationBackingBean.managedBean.evaluationTypeItem}" />
-							<p:ajax event="change" process="@this" partialSubmit="true"
-								update="@form"></p:ajax>
-						</p:selectOneRadio>
-					</ui:fragment> <ui:fragment
-						rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or !isOneTierThresHold}">
-						<table>
-							<tr>
-								<td><p:selectOneRadio required="true" id="evalType"
-										disabled="#{specificationBackingBean.managedBean.readOnly}"
-										label=" #{lbl['lbl.sc.evaluation.type']}"
-										value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
-										<f:selectItems
-											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
-										<p:ajax event="change" process="@this" partialSubmit="true"
-											update="@form"
-											listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
 
-									</p:selectOneRadio> <p:message id="evalMsg" for="evalType" display="icon" /></td>
-								<td style="margin-top: -3px"><ac:iconTooltip
-										value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
-							</tr>
-						</table>
-					</ui:fragment></td>
-			</tr>
-			<tr>
-				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
-					<td style="width: 250px;"><p:outputLabel
-							value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /> <p:outputLabel
-							value="*" styleClass="mandatory" /></td>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.qttentype']}" /> <ui:fragment
+							rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+							<p:outputLabel value="*" styleClass="mandatory" />
+						</ui:fragment></td>
+					<td><ui:fragment
+							rendered="#{specificationBackingBean.managedBean.scQt.panel ne 'No'}">
+							<p:selectOneMenu style="width:230px;"
+								value="#{specificationBackingBean.managedBean.scQt.qtType}"
+								disabled="true">
+								<f:selectItems
+									value="#{specificationBackingBean.retrieveParameterDescByType(ParameterTypeConst.quotationTenderType)}"
+									var="parameter" itemLabel="#{parameter.codeName}"
+									itemValue="#{parameter.pmParameter.parameterCode}" />
 
-					<td>
-						<table>
-							<tr>
-								<td><p:selectOneRadio id="techEvaluation" required="true"
-										disabled="#{specificationBackingBean.managedBean.readOnly}"
-										label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
-										value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
-										<f:selectItems
-											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-										<p:ajax event="change" process="@this" partialSubmit="true"
-											listener="#{specificationBackingBean.techEvaluationReqChanged}"></p:ajax>
-									</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation"
-										display="icon"></p:message></td>
-								<td style="margin-top: -3px"><ac:iconTooltip
-										value="#{lbl['lbl.sc.spec.requir.tech.eval.tooltip']}" /></td>
-							</tr>
-						</table>
-					</td>
-				</ui:fragment>
-			</tr>
-			<tr>
-				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}">
-					<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-					<td>
-						<table>
-							<tr>
-								<td><p:selectOneRadio
-										disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
-										value="#{specificationBackingBean.managedBean.scQt.zonal}">
-										<f:selectItems
-											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+							</p:selectOneMenu>
+						</ui:fragment> <ui:fragment
+							rendered="#{specificationBackingBean.managedBean.scQt.panel eq 'No'}">
 
-										<p:ajax event="change" partialSubmit="true"
-											update="generalLocationList" process="@this"
-											listener="#{specificationBackingBean.zoneRadioChange}"></p:ajax>
-									</p:selectOneRadio></td>
-								<td style="margin-top: -3px"><ac:iconTooltip
-										value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-							</tr>
-						</table>
-					</td>
-				</ui:fragment>
-			</tr>
-			<tr>
+							<p:selectOneRadio required="true" id="tenderType"
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								label="#{lbl['lbl.sc.qttentype']}"
+								value="#{specificationBackingBean.managedBean.scQt.qtType}">
 
-				<td><p:outputLabel
-						value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td>
-					<table>
-						<tr>
-							<td><p:selectOneMenu id="procCategory" required="true"
-									style="margin-bottom:5px;width:209px;"
-									disabled="#{specificationBackingBean.managedBean.readOnly}"
-									label="#{lbl['lbl.sc.procurement.category']}"
-									value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
-									<f:selectItems
-										value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
-									<p:ajax event="change"
-										listener="#{specificationBackingBean.procurementChange}"></p:ajax>
-								</p:selectOneMenu> <p:message id="titleMsg" for="procCategory" display="icon" />
-							</td>
-							<td style="margin-top: -3px"><ac:iconTooltip
-									value="#{lbl['lbl.sc.procurement.category.tooltip']}" /></td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+								<f:selectItems
+									value="#{specificationBackingBean.getQuotationTendervalues(ParameterTypeConst.quotationTenderType)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@form"
+									listener="#{specificationBackingBean.onChangeQtType}"></p:ajax>
+							</p:selectOneRadio>
+							<p:message id="tenderMsg" for="tenderType" display="icon" />
+						</ui:fragment></td>
+				</tr>
+				<tr>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No'}">
+						<td><p:outputLabel value="#{lbl['lbl.sc.open.for']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+						<td><p:selectOneRadio required="true" id="openFor"
+								disabled="#{specificationBackingBean.managedBean.readOnly }"
+								label="#{lbl['lbl.sc.open.for']}"
+								value="#{specificationBackingBean.managedBean.scQt.openFor}">
+								<f:selectItems
+									value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scOpenFor)}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@form"
+									listener="#{specificationBackingBean.openForChange}"></p:ajax>
+							</p:selectOneRadio> <p:message id="openMsg" for="openFor" display="icon" /></td>
+					</ui:fragment>
+				</tr>
 
-			<tr>
-				<ui:fragment
-					rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq}">
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" />
+						<p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><ui:fragment rendered="#{isOneTierThresHold}">
+							<p:selectOneRadio
+								disabled="#{specificationBackingBean.managedBean.readOnly}"
+								value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
+								<f:selectItems
+									value="#{specificationBackingBean.managedBean.evaluationTypeItem}" />
+								<p:ajax event="change" process="@this" partialSubmit="true"
+									update="@form"></p:ajax>
+							</p:selectOneRadio>
+						</ui:fragment> <ui:fragment
+							rendered="#{specificationBackingBean.managedBean.scQt.estimatedAmount eq null or !isOneTierThresHold}">
+							<table>
+								<tr>
+									<td><p:selectOneRadio required="true" id="evalType"
+											disabled="#{specificationBackingBean.managedBean.readOnly}"
+											label=" #{lbl['lbl.sc.evaluation.type']}"
+											value="#{specificationBackingBean.managedBean.scQt.evaluationType}">
+											<f:selectItems
+												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.scEvaluationType)}" />
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												update="@form"
+												listener="#{specificationBackingBean.evaluationTypeChange}"></p:ajax>
+
+										</p:selectOneRadio> <p:message id="evalMsg" for="evalType" display="icon" /></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.evaluation.type.tooltip']}" /></td>
+								</tr>
+							</table>
+						</ui:fragment></td>
+				</tr>
+				<tr>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.evaluationType eq '1'}">
+						<td style="width: 250px;"><p:outputLabel
+								value="#{lbl['lbl.sc.spec.requir.tech.eval']}" /> <p:outputLabel
+								value="*" styleClass="mandatory" /></td>
+
+						<td>
+							<table>
+								<tr>
+									<td><p:selectOneRadio id="techEvaluation" required="true"
+											disabled="#{specificationBackingBean.managedBean.readOnly}"
+											label="#{lbl['lbl.sc.spec.requir.tech.eval']}"
+											value="#{specificationBackingBean.managedBean.scQt.techEvaluationReq}">
+											<f:selectItems
+												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+											<p:ajax event="change" process="@this" partialSubmit="true"
+												listener="#{specificationBackingBean.techEvaluationReqChanged}"></p:ajax>
+										</p:selectOneRadio> <p:message id="reqTechEval" for="techEvaluation"
+											display="icon"></p:message></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.spec.requir.tech.eval.tooltip']}" /></td>
+								</tr>
+							</table>
+						</td>
+					</ui:fragment>
+				</tr>
+				<tr>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O'}">
+						<td><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+						<td>
+							<table>
+								<tr>
+									<td><p:selectOneRadio
+											disabled="#{specificationBackingBean.managedBean.readOnly or specificationBackingBean.managedBean.scQt.panel ne 'No'}"
+											value="#{specificationBackingBean.managedBean.scQt.zonal}">
+											<f:selectItems
+												value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+
+											<p:ajax event="change" partialSubmit="true"
+												update="generalLocationList" process="@this"
+												listener="#{specificationBackingBean.zoneRadioChange}"></p:ajax>
+										</p:selectOneRadio></td>
+									<td style="margin-top: -3px"><ac:iconTooltip
+											value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+								</tr>
+							</table>
+						</td>
+					</ui:fragment>
+				</tr>
+				<tr>
+
 					<td><p:outputLabel
-							value="#{lbl['lbl.sc.ministry.spec.secretary']}" /></td>
-					<td><p:inputText size="32" style="margin-bottom:5px;"
-							value="#{lbl[specificationBackingBean.managedBean.scQt.specApprovalReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-							readonly="true"></p:inputText></td>
-				</ui:fragment>
-			</tr>
+							value="#{lbl['lbl.sc.procurement.category']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td>
+						<table>
+							<tr>
+								<td><p:selectOneMenu id="procCategory" required="true"
+										style="margin-bottom:5px;width:209px;"
+										disabled="#{specificationBackingBean.managedBean.readOnly}"
+										label="#{lbl['lbl.sc.procurement.category']}"
+										value="#{specificationBackingBean.managedBean.scQt.pmProcurementCategory.parameterId}">
+										<f:selectItems
+											value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
+										<p:ajax event="change"
+											listener="#{specificationBackingBean.procurementChange}"></p:ajax>
+									</p:selectOneMenu> <p:message id="titleMsg" for="procCategory" display="icon" />
+								</td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.procurement.category.tooltip']}" /></td>
+							</tr>
+						</table>
+					</td>
+				</tr>
 
+				<tr>
+					<ui:fragment
+						rendered="#{specificationBackingBean.managedBean.scQt.specApprovalReq}">
+						<td><p:outputLabel
+								value="#{lbl['lbl.sc.ministry.spec.secretary']}" /></td>
+						<td><p:inputText size="32" style="margin-bottom:5px;"
+								value="#{lbl[specificationBackingBean.managedBean.scQt.specApprovalReq ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
+								readonly="true"></p:inputText></td>
+					</ui:fragment>
+				</tr>
 
+			</ui:fragment>
 		</table>
 
 	</p:panel>
 
 	<h:panelGroup id="generalLocationList">
 		<p:panel header="#{lbl['lbl.sc.qt.zone.location.info']}"
-			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false')}">
+			rendered="#{(specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0)}">
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 250px"><p:outputLabel
@@ -269,7 +269,7 @@
 		</p:panel>
 
 		<h:panelGroup
-			rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
+			rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No' and specificationBackingBean.managedBean.scQt.zonal !='false' and specificationBackingBean.managedBean.scQt.estimatedAmount ne null and specificationBackingBean.managedBean.scQt.estimatedAmount gt 0}">
 			<h:panelGrid width="100%">
 				<p:dataTable id="zoneGeneralDataTable" rows="10"
 					value="#{specificationBackingBean.managedBean.zoneGeneralTrees}"
@@ -347,7 +347,8 @@
 		widgetVar="ZoneGeneral" modal="true" width="490" position="top"
 		height="410">
 		<p:messages id="specBusinessOwnerZonemessages" showDetail="true"
-			showSummary="false" autoUpdate="true" closable="true" severity="error, info"/>
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
 		<h:panelGroup id="zonePopupGeneral">
 			<table styleClass="noBorders tr,noBorders td" border="0">
 				<TR>
