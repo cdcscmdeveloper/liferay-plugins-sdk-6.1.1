@@ -33,10 +33,9 @@
 
 			<p:column style="width:2px;">
 				<f:facet name="header">
-					<p:selectBooleanCheckbox
-						disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
+					<p:selectBooleanCheckbox disabled="true"
 						value="#{specificationBackingBean.managedBean.templateSpecBean.selectAll}">
-						<p:ajax partialSubmit="true" process="@this"
+						<p:ajax partialSubmit="true" process="@this" disabled="true"
 							update="stageTwotechProposal"
 							listener="#{specificationBackingBean.selectAll(specificationBackingBean.managedBean.templateSpecBean.selectAll, specificationBackingBean.managedBean.scQtCheckSt2techProposal)}" />
 					</p:selectBooleanCheckbox>
