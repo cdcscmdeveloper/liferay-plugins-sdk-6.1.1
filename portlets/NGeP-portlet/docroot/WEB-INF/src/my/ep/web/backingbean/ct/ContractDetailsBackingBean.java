@@ -51,7 +51,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -79,8 +78,6 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sm.search.SupplierSearchReqDTO;
-import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
@@ -144,7 +141,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 
 import org.apache.log4j.Logger;
-import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -197,6 +193,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
+		}
+		
+		if(ctBB == null){
+			ctBB = new ContractBackingBean();
 		}
 	 }
 	
@@ -619,6 +619,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public void setValidateContractField(ContractResDTO resDTO) {
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+	    ctBB.getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 	         
 	    // Retrieve Agencies
 	    if (getManagedBean().getContractVer().getCtAgencies() != null 
@@ -722,9 +723,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    if (getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 	    		ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE)) {
 			getManagedBean().setDirectPurchase(true);
+			 ctBB.getManagedBean().setDirectPurchase(true);
 			getManagedBean().setFlgPaymentTracking(false);
 		} else {
 			this.getManagedBean().setDirectPurchase(false);
+			ctBB.getManagedBean().setDirectPurchase(false);
 		}
 	    // Retrieve Zones
 	    if (getManagedBean().getContractVer().getCtContractZones() != null 
@@ -733,11 +736,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    	retriveZonesByContractVer();
 	    }
 	    // Retrieve Supplier Information
-	    getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
-	    getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
+	    ctBB.getManagedBean().setSmAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
+	    ctBB.getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(ctBB.getManagedBean().getSmAddress()));
 		renderUpdateCheckbox(getManagedBean().getContractVer());
-		getManagedBean().setSupplierCompanyName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
-		getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+		ctBB.getManagedBean().setSupplierCompanyName(getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+		ctBB.getManagedBean().setSupplierBranchName(this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		
 		getManagedBean().getApproverModel().setSource(
 				getAvailableApproverList(getManagedBean().getCtContract().getContractType().getParameterCode(),
@@ -849,11 +852,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
          	CtContractVer ctContractVer = getManagedBean().getContractVer();
          	
          	if (ctContractVer.getCtContractValue().isCompanyNameChange()) {
-         		ctContractVer.getCtContractValue().setSupplierName(getManagedBean().getSupplierCompanyName());
-         		ctContractVer.getCtContractValue().setSupplierBranch(getManagedBean().getSupplierBranchName());
+         		ctContractVer.getCtContractValue().setSupplierName(ctBB.getManagedBean().getSupplierCompanyName());
+         		ctContractVer.getCtContractValue().setSupplierBranch(ctBB.getManagedBean().getSupplierBranchName());
          	}
          	if (ctContractVer.getCtContractValue().isAddressChange()) {
-         		ctContractVer.getCtContractValue().setSupplierAddress(getManagedBean().getSmAddress());
+         		ctContractVer.getCtContractValue().setSupplierAddress(ctBB.getManagedBean().getSmAddress());
          	}         	
             reqDTO.setCtContractVer(ctContractVer);
             reqDTO.setAgreementContractVer(getManagedBean().getAgreementContractVer());
@@ -1984,15 +1987,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& this.getManagedBean().isUpdateContract()) {
 			if (!ctContractVer.getCtContractValue().getSupplierName().equals(
 					this.getManagedBean().getCtContract().getSmSupplier().getCompanyName())) {
-				this.getManagedBean().setUpdateCompanyName(true);
+				ctBB.getManagedBean().setUpdateCompanyName(true);
 			}
 			SmAddress latestAddress = retrieveLatestSupplierAddress();
 			if (!ctContractVer.getCtContractValue().getSupplierAddress().equals(latestAddress)) {
-				this.getManagedBean().setUpdateSupplierAddress(true);
+				ctBB.getManagedBean().setUpdateSupplierAddress(true);
 			}
 		} else {
-			this.getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
-			this.getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
+			ctBB.getManagedBean().setUpdateCompanyName(ctContractVer.getCtContractValue().isCompanyNameChange());
+			ctBB.getManagedBean().setUpdateSupplierAddress(ctContractVer.getCtContractValue().isAddressChange());
 		}
 	}
 	
@@ -2382,11 +2385,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	
     /**
 	 * The method used to retrieve the company name of supplier.
-     */
+     *//*
 	public void retrieveCompanyName(AjaxBehaviorEvent event) {
 		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
-			this.getManagedBean().setSupplierCompanyName(
-					this.getManagedBean().getCtContract().getSmSupplier().getCompanyName());
+			ctBB.getManagedBean().setSupplierCompanyName(
+					getManagedBean().getCtContract().getSmSupplier().getCompanyName());
 			
 			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
@@ -2395,16 +2398,16 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
             SupplierSearchResDTO resDTO = supplierSearchSO.retrieveUpdateSmSupplierBranchFromLatestApplication(reqDTO);			
 			this.getManagedBean().setSupplierBranchName(resDTO.getLatestBranch().getBranchName());
 		} else {
-			this.getManagedBean().setSupplierCompanyName(
-				this.getManagedBean().getContractVer().getCtContractValue().getSupplierName());
+			ctBB.getManagedBean().setSupplierCompanyName(
+				getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			this.getManagedBean().setSupplierBranchName(
-					this.getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
+					getManagedBean().getContractVer().getCtContractValue().getSupplierBranch());
 		}
-	}
+	}*/
 	
 	/**
 	 * The method used to retrieve the address of supplier.
-     */
+     *//*
 	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
 		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
 			this.getManagedBean().setSmAddress(retrieveLatestSupplierAddress());
@@ -2412,8 +2415,8 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		else {
 			this.getManagedBean().setSmAddress(this.getManagedBean().getContractVer().getCtContractValue().getSupplierAddress());
 		}
-		getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
-	}
+		ctBB.getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
+	}*/
 	
 	/**
 	 * The method used to add a new performance bond record.
@@ -3766,23 +3769,4 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
     		  getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
     	}
     }
-    	public boolean chkProcurementTypeService() {
-    	   
-    		
-				try {
-					if(getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory() != null &&
-							getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
-				        	if(getManagedBean().getContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(
-						   ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE) && 
-						   DateUtils.isDateGreaterOrEqual(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT,"01/04/2015"), getManagedBean().getCtContract().getAckDate())){
-					   return true;
-  	                  }
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-    		
-    	   return false;
-      }
 }

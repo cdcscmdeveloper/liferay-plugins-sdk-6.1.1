@@ -200,6 +200,10 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
 		}
+		
+		if(ctBackingBean == null){
+			ctBackingBean = new ContractBackingBean();
+		}
 	}
 	
 	/**
@@ -580,7 +584,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		try {
 			getManagedBean().setContractVer(resDTO.getCtContractVer());
 			getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		  	
+			ctBackingBean.getManagedBean().setCtContractVer(getManagedBean().getContractVer());
+				 
 			//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
 			
@@ -739,7 +744,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			    ctBackingBean.getManagedBean().setViewContract(false);
 			    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-			  	// Amendment process	  
+			     // Amendment process	  
 			    getManagedBean().setCommitteeType(retrieveCommitteeType());
 			    getManagedBean().setDisableAmendDetails(false);
 			    if (getManagedBean().getTaskName() != null
@@ -951,7 +956,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void validateContractAmendment(String action) throws EpException {
 		getManagedBean().setAutoUpdate(true);	
-		// Validation for remark
+	    // Validation for remark
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)||
 				(isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME))) {
 			String remark = getManagedBean().getRemarkList().get(0).getRemark();
@@ -967,6 +972,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 								ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
 			}
 		}
+	
+		// Mandatory attachements for other
+	    if(getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
+	    	if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
+		       throw new EpException(MessageConst.ERROR_100022,new String[] { "Document attachement for checkbox selection other " });
+	        }
+	    }
+	    
 		// Mandatory for supporting document of AP201 special approver
 		if(isBpkApprover() && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_BREACHED_FA_HT_NAME) &&
 				action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) && getManagedBean().getContractVer().getAp201Attachements().isEmpty()){
@@ -1513,18 +1526,14 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * base on loa amount and procurement type
      */
 	private String retrieveCommitteeType() {	    
-		IContractSO contractSO = null;
 		
-		try {
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-			return contractSO.getCommitteeType(getManagedBean().getContractVer());
-		} catch (Exception ex) {
-			   
-		}finally {
-			contractSO = null;
-		}
-		return null;
+		IContractSO contractSO = null;
+		contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+		 if(contractSO.getCommitteeType(getManagedBean().getContractVer())== null) {
+			 throw new EpException(MessageConst.WARN_755018);
+		 }
+	    return contractSO.getCommitteeType(getManagedBean().getContractVer());
+		return new String();
 	}
 	
 	/**

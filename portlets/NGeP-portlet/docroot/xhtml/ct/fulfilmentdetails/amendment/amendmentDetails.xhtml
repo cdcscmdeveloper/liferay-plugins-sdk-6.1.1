@@ -82,7 +82,19 @@
 					<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.change.clause']}" />
 				</h:panelGrid>
 			</h:panelGrid>
-	     </h:panelGrid>
+			<f:verbatim/>
+			
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}"
+					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.otherChange}" >
+				</p:selectBooleanCheckbox>
+				<p:spacer width="2" />
+				<h:panelGrid columns="2">
+				        <p:outputLabel value="Other" style="width:150px; text-align:left" />
+				         <ac:iconTooltip value="Document attachement for checkbox selection other is compulsory" />
+				    </h:panelGrid>
+		  	</h:panelGrid>
+		 </h:panelGrid>
 	    <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 				<p:outputLabel value="#{lbl['lbl.ct.file.ref.no']}" styleClass="required" />
 			<h:panelGrid columns="5">

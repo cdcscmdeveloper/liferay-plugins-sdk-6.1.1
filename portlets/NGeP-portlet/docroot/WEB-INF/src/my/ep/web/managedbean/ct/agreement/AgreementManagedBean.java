@@ -81,7 +81,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private PmDigiSign pmDigiSign;	
 	private TreeNode docSectionTN;
 	private Map<TplDocSection, TreeNode> docSectionMap;
-	
 	/**
 	 * @return the action
 	 */

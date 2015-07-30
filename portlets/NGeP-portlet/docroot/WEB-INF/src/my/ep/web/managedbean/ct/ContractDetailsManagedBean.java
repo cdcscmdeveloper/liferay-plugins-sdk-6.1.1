@@ -49,7 +49,6 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -90,9 +89,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private String ctPhysicalNo;
 	private String ctCircularName;
 	private String ctSupplierName;
-	private String supplierAddress;
-	private String supplierCompanyName;
-	private String supplierBranchName;
+	//private String supplierAddress;
+	//private String supplierCompanyName;
+	//private String supplierBranchName;
 	private String externalPageUrl;
 	private String ptjCodeName;
 	private String ptjCodeNameSearchValues;
@@ -123,8 +122,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private boolean chkProgressive;
 	private boolean chkSchedule;
 	private boolean disableScheduleRadio;
-	private boolean updateSupplierAddress;
-	private boolean updateCompanyName;
+	//private boolean updateSupplierAddress;
+	//private boolean updateCompanyName;
 	private boolean updateContract = false;
 	private boolean viewContract = false;
 	private boolean chkJustification;
@@ -161,7 +160,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	private CtContractAmount ctContractAmount;	
 	private TreeNode ctZoneTrees;
 	private MenuModel fulfilmentMenuModel;	
-	private SmAddress smAddress;
+	//private SmAddress smAddress;
 	private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
 		
@@ -358,46 +357,47 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the supplierAddress
-	 */
+	 *//*
 	public String getSupplierAddress() {
 		return supplierAddress;
 	}
 
-	/**
+	*//**
 	 * @param supplierAddress the supplierAddress to set
-	 */
+	 *//*
 	public void setSupplierAddress(String supplierAddress) {
 		this.supplierAddress = supplierAddress;
-	}
+	}*/
 	
+
+	/**
+	 * @return the supplierBranchName
+	 *//*
+	public String getSupplierBranchName() {
+		return supplierBranchName;
+	}
+*/
+	/**
+	 * @param supplierBranchName the supplierBranchName to set
+	 *//*
+	public void setSupplierBranchName(String supplierBranchName) {
+		this.supplierBranchName = supplierBranchName;
+	}
+	*/
 	/**
 	 * @return the supplierCompanyName
-	 */
+	 *//*
 	public String getSupplierCompanyName() {
 		return supplierCompanyName;
 	}	
 
-	/**
-	 * @return the supplierBranchName
-	 */
-	public String getSupplierBranchName() {
-		return supplierBranchName;
-	}
-
-	/**
-	 * @param supplierBranchName the supplierBranchName to set
-	 */
-	public void setSupplierBranchName(String supplierBranchName) {
-		this.supplierBranchName = supplierBranchName;
-	}
-
-	/**
+	*//**
 	 * @param supplierCompanyName the supplierCompanyName to set
-	 */
+	 *//*
 	public void setSupplierCompanyName(String supplierCompanyName) {
 		this.supplierCompanyName = supplierCompanyName;
 	}
-
+*/
 	/**
 	 * @return the externalPageUrl
 	 */
@@ -806,32 +806,32 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the updateSupplierAddress
-	 */
+	 *//*
 	public boolean isUpdateSupplierAddress() {
 		return updateSupplierAddress;
 	}
 
-	/**
+	*//**
 	 * @param updateSupplierAddress the updateSupplierAddress to set
-	 */
+	 *//*
 	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
 		this.updateSupplierAddress = updateSupplierAddress;
 	}
-
+*/
 	/**
 	 * @return the updateCompanyName
-	 */
+	 *//*
 	public boolean isUpdateCompanyName() {
 		return updateCompanyName;
 	}
 
-	/**
+	*//**
 	 * @param updateCompanyName the updateCompanyName to set
-	 */
+	 *//*
 	public void setUpdateCompanyName(boolean updateCompanyName) {
 		this.updateCompanyName = updateCompanyName;
 	}
-
+*/
 	/**
 	 * @return the updateContract
 	 */
@@ -1412,18 +1412,18 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the smAddress
-	 */
+	 *//*
 	public SmAddress getSmAddress() {
 		return smAddress;
 	}
 
-	/**
+	*//**
 	 * @param smAddress the smAddress to set
-	 */
+	 *//*
 	public void setSmAddress(SmAddress smAddress) {
 		this.smAddress = smAddress;
 	}
-	
+	*/
 	/**
 	 * @return the ctCircularVer
 	 */
