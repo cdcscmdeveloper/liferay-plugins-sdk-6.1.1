@@ -4221,7 +4221,7 @@ public class SpecificationBackingBean extends
 							states, districts, divisions, cities,
 							locationLevelCode, TplSpecZoneLoc.class));
 			int i = index;
-
+			this.getManagedBean().setAutoUpdate(false);
 			this.getManagedBean().setIndex(i);
 			getManagedBean().setZoneName(
 					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
@@ -4239,6 +4239,7 @@ public class SpecificationBackingBean extends
 	public void closeListener() {
 		getManagedBean().setRequired(Boolean.FALSE);
 		this.getManagedBean().setZoneLocation(Boolean.FALSE);
+		this.getManagedBean().setAutoUpdate(true);
 	}
 
 	/**
@@ -4246,6 +4247,7 @@ public class SpecificationBackingBean extends
 	 */
 	public void technicalSpecBoValidate() {
 		getManagedBean().setRequired(Boolean.TRUE);
+		this.getManagedBean().setAutoUpdate(false);
 	}
 
 	/**
@@ -4423,6 +4425,7 @@ public class SpecificationBackingBean extends
 				}
 
 			}
+			this.getManagedBean().setAutoUpdate(false);
 			RequestContext.getCurrentInstance().execute("ZoneGeneral.show()");
 		} finally {
 
@@ -4614,6 +4617,7 @@ public class SpecificationBackingBean extends
 		getManagedBean().setZoneName(null);
 		getManagedBean().setTempZoneName(null);
 		this.getManagedBean().setIndex(-1);
+		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
 
 	}
@@ -14459,6 +14463,7 @@ public class SpecificationBackingBean extends
 
 			this.getManagedBean().setScQtChecklist(qtCheckList);
 			this.getManagedBean().setIndex(-1);
+			this.getManagedBean().setAutoUpdate(true);
 			RequestContext.getCurrentInstance().execute(
 					"createOwnerSpec.hide()");
 			// RequestContext.getCurrentInstance().update("btnId");
