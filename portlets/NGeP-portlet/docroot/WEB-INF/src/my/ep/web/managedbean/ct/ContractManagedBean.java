@@ -12,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -33,7 +34,13 @@ public class ContractManagedBean extends BaseManagedBean {
 	private CtContractVer ctContractVer;
 	private CtContractVer agreementContractVer;
 	private double performanceBondRuleAmt;
-	
+	private String supplierCompanyName;
+	private boolean updateCompanyName;
+	private String supplierBranchName;
+	private String supplierAddress;
+	private boolean updateSupplierAddress;
+	private SmAddress smAddress;
+	private boolean directPurchase;
 	/**
 	 * @return the fileDirectory
 	 */
@@ -132,5 +139,61 @@ public class ContractManagedBean extends BaseManagedBean {
 
 	public void setPerformanceBondRuleAmt(double performanceBondRuleAmt) {
 		this.performanceBondRuleAmt = performanceBondRuleAmt;
+	}
+
+	public String getSupplierCompanyName() {
+		return supplierCompanyName;
+	}
+
+	public void setSupplierCompanyName(String supplierCompanyName) {
+		this.supplierCompanyName = supplierCompanyName;
+	}
+
+	public boolean isUpdateCompanyName() {
+		return updateCompanyName;
+	}
+
+	public void setUpdateCompanyName(boolean updateCompanyName) {
+		this.updateCompanyName = updateCompanyName;
+	}
+
+	public String getSupplierBranchName() {
+		return supplierBranchName;
+	}
+
+	public void setSupplierBranchName(String supplierBranchName) {
+		this.supplierBranchName = supplierBranchName;
+	}
+
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	public boolean isUpdateSupplierAddress() {
+		return updateSupplierAddress;
+	}
+
+	public void setUpdateSupplierAddress(boolean updateSupplierAddress) {
+		this.updateSupplierAddress = updateSupplierAddress;
+	}
+
+	public SmAddress getSmAddress() {
+		return smAddress;
+	}
+
+	public void setSmAddress(SmAddress smAddress) {
+		this.smAddress = smAddress;
+	}
+
+	public boolean isDirectPurchase() {
+		return directPurchase;
+	}
+
+	public void setDirectPurchase(boolean directPurchase) {
+		this.directPurchase = directPurchase;
 	}
 }

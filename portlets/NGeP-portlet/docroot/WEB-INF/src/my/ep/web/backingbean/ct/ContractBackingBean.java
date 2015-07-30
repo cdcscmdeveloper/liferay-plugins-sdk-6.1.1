@@ -13,27 +13,42 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
+import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constants.CommonConstants;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.CtWorkflowStatus;
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmCompanyAddress;
+import my.ep.type.pm.AddressType;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.ct.ContractManagedBean;
+import my.ep.web.util.AddressUtils;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.DocumentRepositoryUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.component.selectbooleancheckbox.SelectBooleanCheckbox;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -264,4 +279,74 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void deleteAttachmentAction(int index) {
 		this.getManagedBean().getAttachmentList().remove(index);
 	}
+	
+	/**
+	 * The method used to retrieve the address of supplier.
+     */
+	public void retrieveSupplierAddress(AjaxBehaviorEvent event) {
+		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
+			 getManagedBean().setSmAddress(retrieveLatestSupplierAddress());
+		}
+		else {
+			  getManagedBean().setSmAddress(getManagedBean().getCtContractVer().getCtContractValue().getSupplierAddress());
+		}
+		 getManagedBean().setSupplierAddress(AddressUtils.getFullAddress(getManagedBean().getSmAddress()));
+	}
+	
+	/**
+	 * The method used to retrieve the latest supplier address.
+     */
+	private SmAddress retrieveLatestSupplierAddress() {
+		SmAddress smAddress = new SmAddress();
+		List<SmCompanyAddress> smCompanyAddresses = new ArrayList<SmCompanyAddress>();
+		smCompanyAddresses = this.getManagedBean().getCtContractVer().getCtContract().getSmSupplier().getSmAppl().getSmCompanyBasic().getSmCompanyAddresses();
+		for (SmCompanyAddress address : smCompanyAddresses) {
+			if (address.getAddressType().equalsIgnoreCase(AddressType.CONTACT_ADDRESS.value())) { // C-Company Address, M-Mailing Address
+				smAddress = address.getSmAddress();
+			}
+		}
+		return smAddress;
+	}
+	
+	
+	/**
+	 * The method used to retrieve the company name of supplier.
+     */
+	public void retrieveCompanyName(AjaxBehaviorEvent event) {
+		if (((SelectBooleanCheckbox)event.getSource()).isSelected()) {
+			    getManagedBean().setSupplierCompanyName(
+					getManagedBean().getCtContractVer().getCtContract().getSmSupplier().getCompanyName());
+			
+			ISupplierSearchSO supplierSearchSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);
+			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
+            reqDTO.setSmAppl(this.getManagedBean().getCtContractVer().getCtContract().getSmSupplier().getSmAppl());
+            SupplierSearchResDTO resDTO = supplierSearchSO.retrieveUpdateSmSupplierBranchFromLatestApplication(reqDTO);			
+			this.getManagedBean().setSupplierBranchName(resDTO.getLatestBranch().getBranchName());
+		} else {
+			  getManagedBean().setSupplierCompanyName(
+				getManagedBean().getCtContractVer().getCtContractValue().getSupplierName());
+			this.getManagedBean().setSupplierBranchName(
+					getManagedBean().getCtContractVer().getCtContractValue().getSupplierBranch());
+		}
+	}
+	
+	public boolean chkProcurementTypeService() {
+ 	   
+		
+		try {
+			if(getManagedBean().getCtContractVer().getCtContractValue().getProcurementTypeCategory() != null &&
+					getManagedBean().getCtContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode() != null) {
+		        	if(getManagedBean().getCtContractVer().getCtContractValue().getProcurementTypeCategory().getParameterCode().equalsIgnoreCase(
+				   ParameterConst.PROCUREMENT_TYPE_CODE_SERVICE) && 
+				   DateUtils.isDateGreaterOrEqual(DateUtils.convertStringToDate(CommonConstants.DEFAULT_DATE_FORMAT,"01/04/2015"), getManagedBean().getCtContractVer().getCtContract().getAckDate())){
+			   return true;
+                }
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+   return false;
+}
 }
