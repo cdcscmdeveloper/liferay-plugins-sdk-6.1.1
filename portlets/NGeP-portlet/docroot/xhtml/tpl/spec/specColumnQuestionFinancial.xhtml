@@ -51,7 +51,11 @@
 		</div>
 		</c:if>
 	</p:column>
-	<p:column style="width:125px;" headerText="#{lbl['lbl.tpl.spec.content.total.amount']}">
+	<p:column style="width:125px;">
+		<f:facet name="header">
+			<h:outputText value="* " styleClass="mandatory" rendered="#{isScoringReq}"/>
+			<h:outputText value="#{lbl['lbl.tpl.spec.content.total.amount']}" />
+		</f:facet>
 		<f:facet name="footer">
 			<p:inputText style="width:113px; text-align:right;" value="#{templateSpecBean.specMaster.specTotal}" disabled="true" rendered="#{isSpecTypeFinancial}" />
 		</f:facet>
