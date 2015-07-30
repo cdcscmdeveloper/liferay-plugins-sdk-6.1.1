@@ -1533,7 +1533,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			 throw new EpException(MessageConst.WARN_755018);
 		 }
 	    return contractSO.getCommitteeType(getManagedBean().getContractVer());
-		return new String();
 	}
 	
 	/**
