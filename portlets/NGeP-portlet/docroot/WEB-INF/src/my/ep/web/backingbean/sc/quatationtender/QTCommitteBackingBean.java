@@ -639,7 +639,7 @@ public class QTCommitteBackingBean extends
 			List<ScCommittee> committes = resDTO.getCommittes();
 			if (null != committes) {
 				DefaultTreeNode searchcommitteeNode = new DefaultTreeNode(
-						"Root", new  DefaultTreeNode());
+						"Root", null);
 				populateCommitteeTreeNode(committes, searchcommitteeNode);
 
 				this.getManagedBean().setSearchcommitteeNode(
