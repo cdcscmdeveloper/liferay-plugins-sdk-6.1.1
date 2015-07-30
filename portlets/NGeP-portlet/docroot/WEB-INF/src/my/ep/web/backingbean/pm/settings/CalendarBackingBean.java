@@ -189,7 +189,9 @@ public class CalendarBackingBean extends
 		holiday.setHolidayName(getManagedBean().getEvent().getTitle());
 		holiday.setStartDate(getManagedBean().getEvent().getStartDate());
 		//increase end date for one day before persist because Scheduler component don't include endDate for holiday event
-		holiday.setEndDate(DateUtils.addDays(getManagedBean().getEvent().getEndDate(), 1));
+//		holiday.setEndDate(DateUtils.addDays(getManagedBean().getEvent().getEndDate(), 1));
+		System.out.println(".....getManagedBean().getEvent().getEndDate()"+getManagedBean().getEvent().getEndDate());
+		holiday.setEndDate(getManagedBean().getEvent().getEndDate());
 	}
 	
 	public Calendar today() {
@@ -200,8 +202,8 @@ public class CalendarBackingBean extends
         return calendar;
     }
 	public void onEventSelect(SelectEvent selectEvent) {
-		System.out.println("......getObject()).getStartDate().toGMTString()="+((ScheduleEvent) selectEvent.getObject()).getStartDate().toGMTString());
-		System.out.println("......getObject()).getEndDate().toGMTString()="+((ScheduleEvent) selectEvent.getObject()).getEndDate().toGMTString());
+		System.out.println("......getObject()).getStartDate()="+((ScheduleEvent) selectEvent.getObject()).getStartDate());
+		System.out.println("......getObject()).getEndDate()="+((ScheduleEvent) selectEvent.getObject()).getEndDate());
 		
 		getManagedBean().setEvent((ScheduleEvent) selectEvent.getObject());
     }
