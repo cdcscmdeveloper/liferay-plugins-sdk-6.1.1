@@ -7282,7 +7282,7 @@ public class SmApplicationBackingBean extends
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 				String filePath = Calendar.getInstance().get(Calendar.YEAR)
-						+ "/SM/" + getManagedBean().getSmAppl().getApplNo()
+						+ "/SM/APPLICATION/"+getManagedBean().getSmAppl().getApplNo()
 						+ "/SD/";
 				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
 						.getSmApplSupportDocs()) {
