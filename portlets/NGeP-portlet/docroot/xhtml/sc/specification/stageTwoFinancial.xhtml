@@ -8,11 +8,11 @@
 
 
 	<p:dialog widgetVar="stageTwoFinance" modal="true" width="800"
-		position="top"
-		header="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
+		position="top" header="#{lbl['lbl.sc.spec.btn.standard.check.list']}"
 		height="500">
 		<p:messages id="technicalChecklistPopup" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" severity="error, info"/>
+			autoUpdate="true" closable="true" showSummary="false"
+			severity="error, info" />
 		<h:panelGroup id="financialChecklistPopup">
 
 			<p:dataTable id="stageTwoFinPopup" var="compilance" rows="10"
@@ -30,12 +30,14 @@
 
 		</h:panelGroup>
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+			actionListener="#{specificationBackingBean.cancelPopup}"
 			style="float:right;" onclick="stageTwoFinance.hide();"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.btn.ok']}"
-			style="float:right;" process="@all" partialSubmit="true"
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+			process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.addFinancialComplianceList}"
 			update="financeProposaltwo"></p:commandButton>
 
-
+		<p:ajax event="close"
+			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
 </ui:composition>
