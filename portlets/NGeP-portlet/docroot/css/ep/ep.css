@@ -3302,15 +3302,19 @@ table.rptTbl {
 }
 
 table.taxableGuidelineTable {
-    border-width: 1px;
-    border-style: outset;
-    border-collapse: separate;
+    border-width: 1px !important;
+    border-style: outset !important;
+    border-color: grey !important;
+    border-collapse: separate !important;
+    background-color: white !important;
 }
 
 table.taxableGuidelineTable td {
-    border-width: 1px;
-    padding: 1px;
-    border-style: inset;
+    border-width: 1px !important;
+    padding: 1px !important;
+    border-style: inset !important;
+    border-color: blue !important;
+    background-color: white grey !important;
     -moz-border-radius: ;
 }
 
