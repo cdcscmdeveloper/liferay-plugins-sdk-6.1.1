@@ -639,7 +639,7 @@ public class QTCommitteBackingBean extends
 			List<ScCommittee> committes = resDTO.getCommittes();
 			if (null != committes) {
 				DefaultTreeNode searchcommitteeNode = new DefaultTreeNode(
-						"Root", null);
+						"Root", new  DefaultTreeNode());
 				populateCommitteeTreeNode(committes, searchcommitteeNode);
 
 				this.getManagedBean().setSearchcommitteeNode(
@@ -804,8 +804,7 @@ public class QTCommitteBackingBean extends
 						.getMessage(MessageConst.ERROR_760155,
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
-		this.getManagedBean().setSelectSearchcommitteeNode(null);
-		this.getManagedBean().setSearchcommitteeNode(null);
+		
 		RequestContext.getCurrentInstance().execute("screen2.hide()");
 		this.getManagedBean().setAutoUpdate(true);
 	}
@@ -1286,10 +1285,10 @@ public class QTCommitteBackingBean extends
 			userReqDTO.setPmUser(user);
 			UserResDTO resDTO = new UserResDTO();
 			try {
+				//No Need to save.. Need to check with kenny..
 				resDTO = getUserSO().saveUser(userReqDTO);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			}
 
 			member.setPmUser(resDTO.getPmUser());
