@@ -15,7 +15,7 @@
 			rowKey="#{scQtBriefReg}" selectionMode="single" rowIndexVar="index">
 			<p:ajax event="rowSelect"
 				listener="#{bsvAttendanceBackingBean.onRowSelect}"
-				update="@([id$=attandanceDeleteBtn],[id$=attendanceDetailstbl],[id$=attandanceaddBtn],[id$=regDelteBtn],[id$=attendanceNavInfo])"
+				update="@([id$=attendanceDetailstbl],[id$=regDelteBtn],[id$=attendanceNavInfo])"
 				process="@this" />
 
 
@@ -172,32 +172,6 @@
 
 			</p:column>
 		</p:dataTable>
-
-		<div align="right">
-			<p:commandButton id="attandanceaddBtn"
-				value="#{lbl['lbl.btn.add']}"
-				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow}"
-				partialSubmit="true"
-				update="attendanceDetailstbl"
-				action="#{bsvAttendanceBackingBean.addAttendanceForBSV}" />
-
-			<p:commandButton id="attandanceDeleteBtn"
-				value="#{lbl['lbl.btn.delete']}"
-				disabled="#{!bsvAttendanceBackingBean.managedBean.selectedbriefRegistration.brandNew and bsvAttendanceBackingBean.managedBean.maintanceFlow}"
-				process="@this,attendanceDetailstbl" partialSubmit="true"
-				oncomplete="supplierDeleteIdPopUp.show();"
-				update="@([id$=#{supplierDeleteId}])" />
-		</div>
-		
-		<ui:param name="supplierDeleteId"
-			value="supplierDeleteId"></ui:param>
-			
-		<ac:confirmationPopup id="#{supplierDeleteId}"
-			widget="supplierDeleteIdPopUp" width="450"
-			height="100" okAction="bsvAttendanceBackingBean.deleteBsvAttandances"
-			title="#{lbl['lbl.sc.supplier.attendene.list']}"
-			content="#{lbl['lbl.sc.dialog.confirm.supplier.attendence.record']}"
-			update="@([id$=attendanceDetailstbl])" />
 			
 	</p:panel>
 
