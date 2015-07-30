@@ -2414,10 +2414,12 @@ public class SmApplicationUtil {
 			@Override
 			public int compare(final SmSupplierCategory s1,
 					final SmSupplierCategory s2) {
-				return (s1.getPmCategoryL1().getCategoryL1Code() + s1
-						.getPmCategoryL2().getCategoryL2Code()).compareTo(s2
+				return (s1.getPmCategoryL1().getCategoryL1Code()
+						+ s1.getPmCategoryL2().getCategoryL2Code() + s1
+						.getPmCategoryL3().getCategoryL3Code()).compareTo(s2
 						.getPmCategoryL1().getCategoryL1Code()
-						+ s2.getPmCategoryL2().getCategoryL2Code());
+						+ s2.getPmCategoryL2().getCategoryL2Code()
+						+ s2.getPmCategoryL3().getCategoryL3Code());
 			}
 		});
 
