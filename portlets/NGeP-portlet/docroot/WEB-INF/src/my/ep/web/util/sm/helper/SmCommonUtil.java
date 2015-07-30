@@ -2447,4 +2447,8 @@ public class SmCommonUtil {
 				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
 				.getSmGstSupplier();
 	}
+	
+	public static String getUploadFilePath(String path){
+		return Calendar.getInstance().get(Calendar.YEAR) + path;
+	}
 }
