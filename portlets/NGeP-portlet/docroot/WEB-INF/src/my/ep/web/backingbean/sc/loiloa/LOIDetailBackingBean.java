@@ -325,7 +325,6 @@ public class LOIDetailBackingBean extends
 
 			Long sourceId = Long.valueOf(dpDataType.getSourceId());
 			Long loiId = Long.valueOf(dpDataType.getAwardId());
-
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoadData(dpDataType);
 
@@ -335,20 +334,19 @@ public class LOIDetailBackingBean extends
 					.retrieveSupplierLOIDtl(awardSupplierReqDTO);
 			if (awardSupplierResDTO.getScLoi() != null) {
 				ScLoi scLoi = awardSupplierResDTO.getScLoi();
+				getManagedBean().setScLoi(scLoi);
+				// calc sub total items in acceptance letter.
+				calculateOfferedAndFinalPriceByItem(scLoi);
 
-			// calc sub total items in acceptance letter.
-			  calculateOfferedAndFinalPriceByItem(scLoi);
-			
-			// contract signer
-			if (scLoi.getContractSigner() != null) {
-				getManagedBean().setContractSignerUser(
-						scLoi.getContractSigner());
+				// contract signer
+				if (scLoi.getContractSigner() != null) {
+					getManagedBean().setContractSignerUser(
+							scLoi.getContractSigner());
+				}
+
+				generateDeclarationFromVelocity(scLoi,
+						awardSupplierResDTO.getScQt());
 			}
-
-			generateDeclarationFromVelocity(scLoi,
-					awardSupplierResDTO.getScQt());
-			getManagedBean().setScLoi(scLoi);
-		   }
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -932,6 +930,8 @@ public class LOIDetailBackingBean extends
 							&& !maxPriceItemMap.isEmpty()
 							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
 						isMaxPriceItem = Boolean.TRUE;
+					} else{
+						isMaxPriceItem = Boolean.FALSE;
 					}
 				}
 

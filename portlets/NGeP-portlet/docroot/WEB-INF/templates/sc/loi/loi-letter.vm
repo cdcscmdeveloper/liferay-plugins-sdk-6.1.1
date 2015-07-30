@@ -76,7 +76,7 @@
 							 #if ($!scLoiLoaItem.tplSpecTierQty )
 								   $scLoiLoaItem.tplSpecTierQty.fromQty - $scLoiLoaItem.tplSpecTierQty.toQty
 							 #else
-								   $numberDF.format($scLoiLoaItem.qty)
+								   $scLoiLoaItem.qty
 						      #end
 						     </span></td>	
 							<td><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$scLoiLoaItem.scRequestItem.uom.uomName</span></td>
@@ -85,7 +85,7 @@
 	                            $String.format("%.2f", $!scLoiLoaItem.scQtProposalItem.offerPrice) 
                              #end </span></td>
 							
-							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$amountDF.format($scLoiLoaItem.offeredPriceSubTotal)</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$!scLoiLoaItem.offeredPriceSubTotal</span></td>
 						</tr>
 					#end
 				</table>
