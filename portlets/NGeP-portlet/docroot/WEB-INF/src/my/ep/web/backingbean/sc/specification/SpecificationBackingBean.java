@@ -15267,9 +15267,12 @@ public class SpecificationBackingBean extends
 				}
 			}
 			List<ScQtLocCriteria> scQtLocCriteriaList = new ArrayList<ScQtLocCriteria>();
-			for (TreeNode treeNode : getManagedBean().getZoneGeneralTrees()) {
-				List<ScQtLocCriteria> qtLocCriteriaList = getLocationsList(treeNode);
-				scQtLocCriteriaList.addAll(qtLocCriteriaList);
+			if (null != getManagedBean().getZoneGeneralTrees()
+					&& !getManagedBean().getZoneGeneralTrees().isEmpty()) {
+				for (TreeNode treeNode : getManagedBean().getZoneGeneralTrees()) {
+					List<ScQtLocCriteria> qtLocCriteriaList = getLocationsList(treeNode);
+					scQtLocCriteriaList.addAll(qtLocCriteriaList);
+				}
 			}
 			retrievLocationDtls(scQtLocCriteriaList);
 		}
