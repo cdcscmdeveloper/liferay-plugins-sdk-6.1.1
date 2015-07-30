@@ -983,6 +983,22 @@
 			</list>
 		</property>
 	</bean>
+	<bean id="SC_REQUEST_ITEM" class="my.ep.web.bean.LovBean">
+		<property name="pk" value="requestNoteItemId" />
+		<property name="daoClass"
+			value="my.ep.persistence.dao.sc.common.RequestItemDAO" />
+		<property name="columns">
+			<list>
+				<bean class="my.ep.web.bean.LovColumnBean">
+					<property name="columnName" value="itemName" />
+					<property name="bundleFile"
+						value="messageprovider-config.bundles.labels.labels" />
+					<property name="bundleKey" value="lbl.ct.item.name" />
+					<!-- <property name="columnWidth" value="150" /> -->
+				</bean>
+			</list>
+		</property>
+	</bean>
 	<bean id="SC_REQUEST_SUPPLIER_ITEM" class="my.ep.web.bean.LovBean">
 		<property name="pk" value="requestSupplierItemId" />
 		<property name="daoClass"
