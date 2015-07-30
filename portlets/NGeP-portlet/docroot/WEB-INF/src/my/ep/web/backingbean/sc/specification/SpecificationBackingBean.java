@@ -7849,6 +7849,7 @@ public class SpecificationBackingBean extends
 		} finally {
 
 		}
+		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("stageTwoTech.hide()");
 	}
 
@@ -8007,6 +8008,7 @@ public class SpecificationBackingBean extends
 		} finally {
 			statussO = null;
 		}
+		this.getManagedBean().setAutoUpdate(true);
 		RequestContext.getCurrentInstance().execute("stageTwoFinance.hide();");
 	}
 
@@ -8054,7 +8056,7 @@ public class SpecificationBackingBean extends
 						resDTO.getDocumentList());
 				// localcheckList.addAll(resDTO.getTechnicalCheckList());
 			}
-
+			this.getManagedBean().setAutoUpdate(false);
 			this.getManagedBean().setStageTwoTechComplianceList(localcheckList);
 		} finally {
 			documentSo = null;
@@ -8523,7 +8525,7 @@ public class SpecificationBackingBean extends
 			resDTO = documentSo.retrieveDocumentCheckList(reqDTO);
 			this.getManagedBean().setStageTwoFinComplianceSelect(
 					new ArrayList<PmDocument>());
-
+			this.getManagedBean().setAutoUpdate(false);
 			this.getManagedBean().setStageTwoFinComplianceList(
 					resDTO.getDocumentList());
 		} finally {
@@ -16108,6 +16110,11 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setProgressivePaymentList(
 					new ArrayList<ScQtProgressivePayment>());
 		}
+
+	}
+
+	public void cancelPopup() {
+		this.getManagedBean().setAutoUpdate(true);
 
 	}
 
