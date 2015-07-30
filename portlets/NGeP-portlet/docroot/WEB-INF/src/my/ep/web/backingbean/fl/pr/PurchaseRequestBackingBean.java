@@ -3228,6 +3228,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 			}
 		}
+		if(resDTO.getPmOrgProfile() != null){
+			getManagedBean().setCurrentChargePtjGroup(resDTO.getPmOrgProfile());
+		}
 	}
 	/**
 	 * Get preparef PTJ condition for construct the LOV listing
