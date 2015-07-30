@@ -1582,12 +1582,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			IContractZoneSO contractZoneSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractZoneSO.class);
 			ContractZoneReqDTO czReqDTO = new ContractZoneReqDTO();
 			Map<ScRequestItem, Map<Long, BigDecimal>> requestItemZonalQtyMap = new HashMap<ScRequestItem, Map<Long, BigDecimal>>();
+			CtContractZone ctContractZone = null;
 			Long ctContractZoneId = null;
 			Map<Long, BigDecimal> zonalQtyMap = null;
 			for(FlDeliveryAddress deliveryAddress : getManagedBean().getFlRequest().getFlDeliveryAddresses()){
 				czReqDTO.setContractId(flRequest.getCtContract().getContractId());
 				czReqDTO.setPmAddress(deliveryAddress.getPmAddress());
-				ctContractZoneId = contractZoneSO.retrieveContractZoneByAddress(czReqDTO).getCtContractZone().getContractZoneId();
+				ctContractZone = contractZoneSO.retrieveContractZoneByAddress(czReqDTO).getCtContractZone();
+				if(ctContractZone!=null) {
+					ctContractZoneId = ctContractZone.getContractZoneId();
+				} else {
+					continue;
+				}
 				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
 					zonalQtyMap = null;
 					if(requestItemZonalQtyMap.containsKey(itemAddr.getScRequestItem())) {
