@@ -72,18 +72,18 @@
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
 	<tbody>
 		<tr>
-            <td bgcolor="#6d839b" class="title border left">Item</td>
+            <td width="15%" bgcolor="#6d839b" class="title border left">Item</td>
             <td bgcolor="#6d839b" class="title border right">
 				<table width="100%" border="0" cellpadding="0" cellspacing="0">
 					<tbody>
 						<tr>
-							<td bgcolor="#6d839b" class="title left">Recommended Supplier</td>
-							<td bgcolor="#6d839b" class="title left">Proposal ID</td>
-							<td bgcolor="#6d839b" class="title left">Bumiputra Status</td>
-							<td bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
-							<td bgcolor="#6d839b" class="title left">Total Score</td>
-							<td bgcolor="#6d839b" class="title left">Ranking</td>
-							<td bgcolor="#6d839b" class="title left">Quantity</td>
+							<td width="15%" bgcolor="#6d839b" class="title left">Recommended Supplier</td>
+							<td width="10%" bgcolor="#6d839b" class="title left">Proposal ID</td>
+							<td width="10%" bgcolor="#6d839b" class="title left">Bumiputra Status</td>
+							<td width="15%" bgcolor="#6d839b" class="title left">Offered Price (RM)</td>
+							<td width="12%" bgcolor="#6d839b" class="title left">Total Score</td>
+							<td width="10%" bgcolor="#6d839b" class="title left">Ranking</td>
+							<td width="10%" bgcolor="#6d839b" class="title left">Quantity</td>
 						</tr>
 					</tbody>
 				</table>
@@ -91,26 +91,26 @@
 		</tr>
 		#foreach( $item in $recommendList )
 		<tr>
-			<td class="standard border-bottom left" >$item.requestItem.itemName</td>
+			<td width="15%" class="standard border-bottom left" >$item.requestItem.itemName</td>
 			<td class="standard border-bottom right">
 				#foreach( $evalResultDtl in $item.awardSupplierList )
-					<table width="100%" border="0" cellpadding="0" cellspacing="0">
+					<table width="100%" border="1" cellpadding="0" cellspacing="0">
 						<tbody>
 							<tr>
 								#if ($evalResultDtl.awareded)
-									<td class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
-									<td class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
-									<td class="standard left">
+									<td width="18%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName</td>
+									<td width="11%" class="standard left">$evalResultDtl.qtEvaluationResult.scQtProposal.supplierNo</td>
+									<td width="12%" class="standard left">
 										#if ($evalResultDtl.qtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.bumi == "true")
 											Yes
 										#else
 											No
 										#end
 									</td>
-									<td class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
-									<td class="standard left alignRight">$evalResultDtl.totalScore</td>
-									<td class="standard left">$evalResultDtl.evalRank</td>
-									<td class="standard left">$evalResultDtl.scQtRecommendDtl.awardQty</td>
+									<td width="17%" class="standard left alignRight">$numberFormatter.format($evalResultDtl.qtEvaluationResult.offeredPrice)</td>
+									<td width="13%" class="standard left alignRight">$evalResultDtl.totalScore</td>
+									<td width="11%" class="standard left">$evalResultDtl.evalRank</td>
+									<td width="11%" class="standard left">$evalResultDtl.scQtRecommendDtl.awardQty</td>
 								#end
 							</tr>
 						</tbody>
