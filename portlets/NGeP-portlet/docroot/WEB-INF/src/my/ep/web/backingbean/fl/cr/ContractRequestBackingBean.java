@@ -1189,6 +1189,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getPmOrgProfile());
 			getManagedBean().getFlRequest().setChargeOrgProfile(resDTO.getPmOrgProfile());
 			getManagedBean().getFlRequest().setIssuedOrgProfile(resDTO.getPmOrgProfile());
+			
+			IOrgProfileSO profileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+			OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+			orgReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getChargeOrgProfile().getOrgProfileId());
+			getManagedBean().setCurrentChargePtjGroup(profileSO.retrieveJabatanByOrgProfileId(orgReqDTO).getPmOrgProfile());
+			
 			getLoginUserOrg();
 			String[] outcome = new String[2];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
@@ -2028,14 +2034,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				oriItemAddr.setOrderedAmt(flItemAddr.getOrderedAmt());
 			}
 		} else{//STANDARD PRICE and ZONAL
-			if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
-				if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
-					throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
-				}
-			}
 			if(null == flItemAddr.getOrderedQty()){
 				flItemAddr.setOrderedAmt(BigDecimal.ZERO);
 			} else {
+				if(ParameterConst.ITEM_TYPE_SERVICE.equals(flItemAddr.getItemType().getParameterCode())){
+					if(flItemAddr.getOrderedQty().doubleValue() != flItemAddr.getScRequestItem().getQuantity().doubleValue()){
+						throw new EpException(MessageConst.ERROR_745067,new String[]{flItemAddr.getScRequestItem().getItemName(), getManagedBean().getFlRequest().getCtContract().getContractNo()});
+					}
+				}
+				
 				FlFulfilmentItemAddr oriItemAddr = flItemAddr;
 				if(getManagedBean().getItemAddrList()!=null && getManagedBean().getItemAddrList().contains(flItemAddr)){
 					FlFulfilmentItemAddr clonedlItemAddr = (FlFulfilmentItemAddr) flItemAddr.cloneEntity();
@@ -4107,6 +4114,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 				}
 			}
+		}
+		if(resDTO.getPmOrgProfile() != null){
+			getManagedBean().setCurrentChargePtjGroup(resDTO.getPmOrgProfile());
 		}
 	}
 	private BigDecimal calculatesTotalOrderedAmt(){
