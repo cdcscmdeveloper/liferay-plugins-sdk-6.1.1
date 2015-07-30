@@ -170,9 +170,10 @@ public class BSVAttendanceBackingBean extends
 
 	/**
 	 * Add the attendance on click of 'Add' button.
+	 *  method commented - defect fix-5975
 	 * 
 	 */
-	public void addAttendanceForBSV() {
+	/*public void addAttendanceForBSV() {
 
 		if (null != this.getManagedBean().getSelectedbriefRegistration()) {
 			List<ScQtBsvAttendance> attandances = this.getManagedBean()
@@ -198,7 +199,7 @@ public class BSVAttendanceBackingBean extends
 			throw new EpException(MessageConst.ERROR_760185);
 		}
 
-	}
+	}*/
 
 	/**
 	 * Show registration details when user clicks register button
@@ -696,9 +697,10 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * Method to delete the registrations
+	 * Method to delete the registrations- 
+	 * Commented method - defect fix-5975
 	 */
-	public void deleteBsvAttandances() {
+	/*public void deleteBsvAttandances() {
 
 		List<ScQtBsvAttendance> attandances = null;
 		if (null != this.getManagedBean().getSelectedbriefRegistration()) {
@@ -724,7 +726,7 @@ public class BSVAttendanceBackingBean extends
 		} else {
 			throw new EpException(MessageConst.ERROR_760126);
 		}
-	}
+	}*/
 
 	/**
 	 * Method will notify whether BSvs completed or not.
