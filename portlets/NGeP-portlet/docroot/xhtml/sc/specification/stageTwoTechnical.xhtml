@@ -8,11 +8,11 @@
 
 
 	<p:dialog widgetVar="stageTwoTech" modal="true" width="800"
-		position="top"
-		header="#{lbl['lbl.sc.spec.btn.standard.check.list']} "
+		position="top" header="#{lbl['lbl.sc.spec.btn.standard.check.list']} "
 		height="500">
 		<p:messages id="technicalChecklistPopup" showDetail="true"
-			autoUpdate="true" closable="true" showSummary="false" severity="error, info"/>
+			autoUpdate="true" closable="true" showSummary="false"
+			severity="error, info" />
 		<h:panelGroup id="specCommitteeTechnicalChecklist">
 
 			<p:dataTable id="compilencestageTwo" var="compilance" rows="10"
@@ -30,12 +30,14 @@
 
 		</h:panelGroup>
 		<p:commandButton value="#{lbl['lbl.btn.cancel']}"
-			style="float:right;" onclick="stageTwoTech.hide();"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.btn.ok']}"
-			style="float:right;" process="@all" partialSubmit="true"
+			actionListener="#{specificationBackingBean.cancelPopup}" style="float:right;"
+			onclick="stageTwoTech.hide();"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.btn.ok']}" style="float:right;"
+			process="@all" partialSubmit="true"
 			action="#{specificationBackingBean.addTechnicalComplianceList}"
 			update="stageTwotechProposal"></p:commandButton>
 
-
+		<p:ajax event="close"
+			listener="#{specificationBackingBean.closeListener}" />
 	</p:dialog>
 </ui:composition>
