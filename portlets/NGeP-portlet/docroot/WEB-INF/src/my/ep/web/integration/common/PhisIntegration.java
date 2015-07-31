@@ -1,6 +1,9 @@
 package my.ep.web.integration.common;
 
+import java.io.IOException;
 import java.rmi.RemoteException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -326,14 +329,14 @@ public class PhisIntegration {
 	public void votFund() {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();		
-		/*Date currentDate = new Date();
+		Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "20-05-2015";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}*/
+		}
 		reqDTO.setCreatedDate(currentDate);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundByCreatedDate(reqDTO);
@@ -351,7 +354,7 @@ public class PhisIntegration {
 				votFnd = new PhisVotFund();
 				votFnd.setCode(votFund.getVotFundCode());
 				votFnd.setDescription(votFund.getDescription());
-				if(votFund.getPmOrgProfile()!=null && null!=votFund.getPmOrgProfile().getPmOrgValidity()){
+				if(votFund.getPmOrgProfile()!=null){
 					votFnd.setPtjCode(votFund.getPmOrgProfile().getOrgCode());          
 				}else{
 					votFnd.setPtjCode(IntegrationConstants.EMPTY_TRING);
@@ -376,14 +379,14 @@ public class PhisIntegration {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
 		
-		/*Date currentDate = new Date();
+		Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "20-05-2015";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}*/
+		}
 		reqDTO.setCreatedDate(currentDate);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundDanaByCreatedDate(reqDTO);
@@ -419,14 +422,14 @@ public class PhisIntegration {
 	public void programActivity() {
 
 		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-		/*Date currentDate = new Date();
+		Date currentDate = null;// new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "20-05-2015";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}*/
+		}
 		reqDTO.setCreatedDate(currentDate);
 
 		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityByCreateDate(reqDTO);
@@ -469,14 +472,14 @@ public class PhisIntegration {
 
 	public void project() {		
 	
-		/*Date currentDate = new Date();
+		Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "20-05-2015";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}	*/
+		}	
 
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		
@@ -527,14 +530,14 @@ public class PhisIntegration {
 	public void glAccount() {
 
 		
-		/*Date currentDate = new Date();
+		Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		String dateInString = "20-05-2015";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}*/
+		}
 		
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
 		reqDTO.setCreatedDate(currentDate);
