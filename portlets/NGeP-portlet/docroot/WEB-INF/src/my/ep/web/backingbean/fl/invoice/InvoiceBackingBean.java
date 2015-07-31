@@ -1208,6 +1208,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
 		}else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
+				if(!getManagedBean().isReliefDeclarationCheck()){
+						throw new EpException(MessageConst.ERROR_745072);
+				}
 			if(hasGovtSellerRole()){
 				reqDTO.setOutcome(outcome);
 				reqDTO.setInvoice(getManagedBean().getInvoice());
