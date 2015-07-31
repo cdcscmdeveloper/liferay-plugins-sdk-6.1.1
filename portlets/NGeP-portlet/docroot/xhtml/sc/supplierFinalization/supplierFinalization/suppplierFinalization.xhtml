@@ -75,8 +75,8 @@
 															suppFinalizationBackingBean.managedBean.procCategoryMedicine or 
 																suppFinalizationBackingBean.managedBean.itemFwdToHighAuthority or 
 													(isQTStatusReFinalized and 
-														(suppFinalizationBackingBean.managedBean.initialSelectionItemized or 
-															suppFinalizationBackingBean.managedBean.scQt.zonal) )}">
+														(suppFinalizationBackingBean.managedBean.scQt.zonal or 
+															suppFinalizationBackingBean.managedBean.initialSelectionItemized) )}">
 									<f:selectItems value="#{suppFinalizationBackingBean.getRecommendTypeRadioBtn()}" />
 									<p:ajax event="change" update="@([id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
 										listener="#{suppFinalizationBackingBean.recommendTypeEvent}" process="@this" 
@@ -257,8 +257,8 @@
 				 			  	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
 				 			  	
 					<td width="14%" class="sidemenutd" valign="top">
-						<p:remoteCommand name="onZoneTabChangeAction" update="@([id$=zonalMenu],[id$=itemPanel],[id$=supplierPanel])" 
-										 partialSubmit="true" process="@this" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
+						<p:remoteCommand name="onZoneTabChangeAction" update="@form" 
+										 partialSubmit="true" process="@form" action="#{suppFinalizationBackingBean.onZoneTabChangeAction}" />
 						
 						<p:tabMenu styleClass="sidemenu" id="zonalMenu" 
 							activeIndex="#{suppFinalizationBackingBean.managedBean.zoneActiveIndex}"
