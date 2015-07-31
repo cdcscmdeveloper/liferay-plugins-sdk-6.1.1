@@ -37,7 +37,6 @@ public class IntegrationConstants {
 //	public static final String DECRYPTED_FILE_PATH = "C:/Integration/Encryption/decrypt/";
 
 	public static final String SFTP_HOST = EpPropertiesUtils.getInstance().getProperty("sftp.host");    //Stg
-//	public static final String SFTP_HOST = "192.168.120.14";   //Dev
 	public static final int SFTP_PORT = 22;// Integer.parseInt("22");
 	public static final String SFTP_USER = EpPropertiesUtils.getInstance().getProperty("sftp.user");//"oracle";  // "support";
 	public static final String SFTP_PASS = EpPropertiesUtils.getInstance().getProperty("sftp.pass");//"welcome1"; // "suPPort!@#";
@@ -51,6 +50,8 @@ public class IntegrationConstants {
 	public static final String GMAS_PASS_PHASE = "eperolehanpsstg";
 
 	public static final String PHIS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/PLSB publickey.asc";
+	
+//	public static final String PHIS_PUBLIC_KEY_PATH = "NGeP-portlet/docroot/encryptionKeys/PLSB publickey.asc";
 
 	public static final String CRE = "CRE";
 	public static final String ADJ = "ADJ";
@@ -80,7 +81,7 @@ public class IntegrationConstants {
 
 	public final static Charset ENCODING = StandardCharsets.UTF_8;
 
-	public static final Long CHANGED_BY = 12345L;
+	public static final Long BATCH_USER = 12345L;
 
 	public static final String SERVICE_SUCCESS_CODE = "00";
 	
@@ -88,7 +89,7 @@ public class IntegrationConstants {
 	
 	public static final String GL_RECON_NO = "L0190000";
 	
-	public static final String CURRENCY_CODE_MY = "RM";
+	public static final String CURRENCY_CODE_RM = "RM";
 	
 	public static final String COUNTRY_CODE_MY = "MY";
 	
@@ -112,6 +113,8 @@ public class IntegrationConstants {
 	
 	public static final int RECORD_TYPE_TWO = 2;
 	
+	public static final int RECORD_TYPE_THREE = 3;
+	
 	public static final String HQ_INDICATOR_CODE = "000";
 	
 	public static final String BRANCH_INDICATOR_CODE = "111";
@@ -127,6 +130,34 @@ public class IntegrationConstants {
 	public static final String RECORD_VALID = "V";
 	
 	public static final String RECORD_IN_VALID = "X";
+	
+	public static final int FTP_STATUS_SUCCESS = 1;
+	
+	public static final int FTP_STATUS_FAIL = 0;
+	
+	public static final int FILE_CREATION_SUCCESS = 1;
+	
+	public static final int FILE_CREATION_FAIL = 0;
+	
+	public static final int ROW_STATUS_CURRENT = 1;
+	
+	public static final String BATCH_DIRECTION_INBOUND = "I";
+	
+	public static final String BATCH_DIRECTION_OUTBOUND = "O";
+	
+	public static final String TARGET_SYSTEM_1GFMAS = "1GFMAS";
+	
+	public static final String TARGET_SYSTEM_PHIS = "PHIS";
+	
+	public static final String TARGET_SYSTEM_EPERUNDING = "EPERUNDING";
+	
+	// For Payment Information
+	
+	public static final String PEGAWAI_PENGAWAL = "ND";
+	
+	public static final String KUMP_PTJ = "ND      ";
+	
+	public static final String ACCONT_OFFICE = "NA  ";
 	
 	
 	
