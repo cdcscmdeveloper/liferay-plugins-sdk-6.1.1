@@ -222,8 +222,10 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				SmSoftcertDocFile docFile = new SmSoftcertDocFile();
 				docFile.setSmSoftcertDoc(selectedSuppDocVO.getSuppDocList()
 						.get(0));
-				docFile.setFileName(StringUtils.replace(event.getFile()
-						.getFileName(), " ", "-"));
+				docFile.setFileName(System.currentTimeMillis() + "_");
+				docFile.setFileName(docFile.getFileName()
+						+ StringUtils.replace(event.getFile().getFileName(),
+								" ", "_"));
 				docFile.setFilePath(filePath);
 				selectedSuppDocVO
 						.getSuppDocList()
