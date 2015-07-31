@@ -262,7 +262,7 @@
 											value="#{lbl['lbl.sc.sf.awarded.quantity.tooltip']}" />
 									</f:facet>
 									<h:panelGroup id="qtyPG">
-										<p:outputPanel rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward 
+										<p:outputPanel rendered="#{(item.activeSupplierCount gt 1)
 																		and isPendingNegotiationStatus}">
 											<h:outputText value="#{lbl['lbl.sc.max.quantity']}" style="text-align: right;">
 											</h:outputText>[
@@ -296,10 +296,9 @@
 											</p:dataList>
 										</p:outputPanel>
 										
-										<p:outputPanel rendered="#{item.recommendByStr == ParameterConst.recommendByMultipleAward
+										<p:outputPanel rendered="#{(item.activeSupplierCount gt 1)
 																		and	!isPendingNegotiationStatus}">
-												<ui:repeat var="awardedSuppl" value="#{item.awardSupplierList}" 
-													rendered="#{item.recommendByStr eq ParameterConst.recommendByMultipleAward}">
+												<ui:repeat var="awardedSuppl" value="#{item.awardSupplierList}">
 													<p:column rendered="#{awardedSuppl.scQtRecommendDtl.recordStatusFlg eq DbValueConst.recordStatusActive}">
 														<h:outputText value="#{awardedSuppl.scQtRecommendDtl.awardQty}" />
 														<br />
@@ -310,7 +309,7 @@
 										<h:outputText value="#{item.requestItem.quantity}"
 											rendered="#{(item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeStandard ||
 															item.requestItem.tplSpecQuestion.clPriceTypeCode.parameterCode == ParameterConst.priceTypeZonalStandard) 
-													and item.recommendByStr != ParameterConst.recommendByMultipleAward}" />
+													and (item.activeSupplierCount lt 2) }" />
 									</h:panelGroup>
 								</p:column>
 								
