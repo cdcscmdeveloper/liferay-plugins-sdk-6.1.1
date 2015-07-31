@@ -1363,7 +1363,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			if (getManagedBean().isPrepareLOA()) {
 				getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareLoa);					 
-				if ((getManagedBean().getCtContract().isBondReq()
+				if ((getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 						&& !getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 								ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 					getManagedBean().getFinalListOfSideMenu().addAll(sideMenu.menuWithPrepareBond);
@@ -1434,13 +1434,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		    	if (outputValue.equalsIgnoreCase("CNT")) {
 		    		getManagedBean().setSelectedTabIndex(index + 2);
 		    	}
-		    	if ((getManagedBean().getCtContract().isBondReq() && outputValue.equalsIgnoreCase("PB")
+		    	if ((getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq() && outputValue.equalsIgnoreCase("PB")
 		    			&& !getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 		    					ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 		    		getManagedBean().setSelectedTabIndex(index + 3);
 		    	}
 		    	if (getManagedBean().isDecisionPbQcLOA() && outputValue.equalsIgnoreCase("DCN")) {
-		    		if ((getManagedBean().getCtContract().isBondReq()
+		    		if ((getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()
 		    				&& !getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(
 		    						ParameterConst.SC_PROCUREMENT_MODE_DIRECT_PURCHASE))) {
 		    			getManagedBean().setSelectedTabIndex(index + 4);
@@ -3839,7 +3839,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			context.put("amendEffExpDate", df.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate()));
 													
-			if (getManagedBean().getContractVer().getCtContract().isBondReq()) {
+			if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().isBondReq()) {
 				context.put("bondValue",getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt() != null  
 						? amountDF.format(getManagedBean().getContractVer().getCtContract().getLoa().getBondAmt()) : amountDF.format(BigDecimal.ZERO));					
 				context.put("amendBondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() != null 
