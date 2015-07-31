@@ -2313,7 +2313,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (contractAmount <= ContractConst.CONTRACT_THRESHOLD_200k) {
 				return false;
 			} else if (contractAmount <= ContractConst.CONTRACT_THRESHOLD_500k) {
-				if (vCtContract.getCtContract().isAgreement()) {
+				if (resDTO.getCtContractAmount().isAgreement()) {
 					return true;
 				} else {
 					return false;
