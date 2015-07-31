@@ -127,6 +127,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isInitialSelectionItemized;
 	private boolean isInitialDecisionFwdHighAuth;
 	private boolean isInitialDecisionFwdToBPK;
+	private boolean isSelectedItemAlreadyAwarded;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -683,6 +684,22 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	public void setInitialDecisionFwdToBPK(
 					boolean isInitialDecisionFwdToBPK) {
 		this.isInitialDecisionFwdToBPK = isInitialDecisionFwdToBPK;
+	}
+
+	/**
+	 * @return the isSelectedItemAlreadyAwarded
+	 */
+	public boolean isSelectedItemAlreadyAwarded() {
+		return isSelectedItemAlreadyAwarded;
+	}
+
+	/**
+	 * @param isSelectedItemAlreadyAwarded 
+	 * 				the isSelectedItemAlreadyAwarded to set
+	 */
+	public void setSelectedItemAlreadyAwarded(
+						boolean isSelectedItemAlreadyAwarded) {
+		this.isSelectedItemAlreadyAwarded = isSelectedItemAlreadyAwarded;
 	}
 
 	/**
