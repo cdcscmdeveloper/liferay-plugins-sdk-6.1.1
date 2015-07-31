@@ -1249,7 +1249,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 		try {
 	    	String fileName = getTemplateFileName(agreementContent.getTitle());
-	    	log.info("Agreement Content Title : "+agreementContent.getTitle()+" >> "+fileName);
 			if (fileName != null) {
 				String content = null;
 				String filePath = getManagedBean().getFileDirectory();
@@ -1265,7 +1264,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				} else {
 					content = getContent(agreementContent.getTitle());
 				}
-				log.info("agreement content :"+content);
 				if (content != null) {
 					convertHtmlToDocFile(content, filePath);
 					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
@@ -1425,7 +1423,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		VelocityContext context = null;
 		String vmFile = null;
 		String content = null;
-		if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode)) {
+		if (ContractConst.TEMPLATE_AGREEMENT_COVER_PAGE.equalsIgnoreCase(parameterCode.trim())) {
 			String imgUrl = getServerUrl()+ "NGeP-portlet/css/images/gov.png";
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-cover-page.vm";
@@ -1454,7 +1452,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 					}
 				}
 			}
-		} else if (ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode)) {
+		} else if (ContractConst.TEMPLATE_AGREEMENT_PARTY.equalsIgnoreCase(parameterCode.trim())) {
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-party.vm";
 			IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject(
@@ -1484,7 +1482,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("supplierAddress", AddressUtils.getFullAddress(getManagedBean().getContractVer().getCtContractValue().getSupplierAddress()));
 			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 
-		} else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode)) {
+		} else if (ContractConst.TEMPLATE_AGREEMENT_SIGNING_PAGE.equalsIgnoreCase(parameterCode.trim())) {
 			context = new VelocityContext();
 			vmFile = "/ct/agreement/agreement-signing-page.vm";
 			context.put("ctAgencySignerList", getManagedBean().getCtAgencySigner());
