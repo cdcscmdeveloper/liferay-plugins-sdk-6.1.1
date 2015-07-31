@@ -10,7 +10,6 @@
 	<cc:interface>
 		<cc:attribute name="smGstSupplier" required="true" />
 		<cc:attribute name="isGstEmpty" required="true" />
-		<cc:attribute name="isGstEmpty" required="true" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -21,25 +20,22 @@
 					<td style="border-style: none !important;"><p:inputText id="gstRegNo"  maxlength="12" 
 						value="#{cc.attrs.smGstSupplier.gstRegNo}" 
 						size="40" label="#{lbl['lbl.sm.gst.regno']}" >
-						<p:ajax event="blur" update="gstEffDatePanelId" />
+						<p:ajax event="blur" update="gstRegDateCalId" />
 						</p:inputText>
 					</td>
 				</tr>
-				<p:outputPanel id="gstEffDatePanelId">
-					<tr>
-						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
-							<p:outputLabel value="*" styleClass="mandatory" rendered="#{not empty cc.attrs.smGstSupplier.gstRegNo}"/></td>
-						<td style="border-style: none !important;"><p:calendar id="gstRegDateCalId"
-								navigator="true" 
-								required="#{not empty cc.attrs.smGstSupplier.gstRegNo}" 
-								label="#{lbl['lbl.sm.gst.effdate']}"
-								value="#{cc.attrs.smGstSupplier.gstEffDate}"
-								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-								readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
-								maxdate="#{CommonConstants.CURRENT_DATE}">
-							</p:calendar></td>
-					</tr>
-				</p:outputPanel>
+				<tr>
+					<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+					<td style="border-style: none !important;"><p:calendar id="gstRegDateCalId"
+							navigator="true" 
+							required="#{not empty cc.attrs.smGstSupplier.gstRegNo}" 
+							label="#{lbl['lbl.sm.gst.effdate']}"
+							value="#{cc.attrs.smGstSupplier.gstEffDate}"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
+							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
+							maxdate="#{CommonConstants.CURRENT_DATE}">
+						</p:calendar></td>
+				</tr>
 				<tr>
 					<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 					<td style="border-style: none !important;"><p:calendar id="gstEffEndDateCalId"
