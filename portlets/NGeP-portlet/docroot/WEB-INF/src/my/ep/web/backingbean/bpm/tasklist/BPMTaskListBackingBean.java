@@ -438,6 +438,12 @@ public class BPMTaskListBackingBean extends
 		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
 				+ SCProcessNameConst.SIGNOFF_FC_SELECTION,
 				SourcingConstants.ONLINE_BIDDING_ENDORCEMENT_PAGE);
+		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
+				+ SCProcessNameConst.COORDINATE_FC_MEETING,
+				SourcingConstants.FC_COORDINATE_MEETING_PAGE);	
+		temp.put(SCProcessNameConst.BIDDING_AWARD_PROCESS_NAME
+				+ SCProcessNameConst.FINALISE_FC_SELECTION,
+				SourcingConstants.FC_SUPPLIER_FINALIZATION_PAGE);			
 
 		temp.put(SCProcessNameConst.EVALUATION_PROCESS_NAME
 				+ SCProcessNameConst.ASSIGN_FC_SECRETARY, "qtdetails");
