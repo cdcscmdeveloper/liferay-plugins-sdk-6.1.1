@@ -9,6 +9,7 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,11 +19,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import org.apache.log4j.Logger;
-
+import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
+import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.pm.common.PmInterfaceLog;
 import my.ep.web.integration.eperunding.AssociatedCompany;
 import my.ep.web.integration.eperunding.BoardOfDirector;
 import my.ep.web.integration.eperunding.BranchCompany;
@@ -34,15 +36,17 @@ import my.ep.web.integration.eperunding.GovernmentProject;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
 import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.Signatory;
-import my.ep.web.integration.eterimaan.BillHeader;
-import my.ep.web.integration.eterimaan.BillingInformation;
-import my.ep.web.integration.eterimaan.ChargeLine;
-import my.ep.web.integration.eterimaan.CustomerInformation;
+import my.ep.web.integration.eterimaan.BillingInformationLine;
+import my.ep.web.integration.eterimaan.ReceiptDetails;
+import my.ep.web.integration.eterimaan.ReceiptHeader;
+import my.ep.web.integration.eterimaan.ReceiptInformation;
 import my.ep.web.integration.gfmas.AgCtrlOfficer;
 import my.ep.web.integration.gfmas.AgOffice;
 import my.ep.web.integration.gfmas.BankAccountInformation;
 import my.ep.web.integration.gfmas.CompanyBranch;
 import my.ep.web.integration.gfmas.EPErrorResponse;
+import my.ep.web.integration.gfmas.ErrorDesc;
+import my.ep.web.integration.gfmas.GFMASError;
 import my.ep.web.integration.gfmas.GlAccount;
 import my.ep.web.integration.gfmas.MasterDataMaterialInfo;
 import my.ep.web.integration.gfmas.MasterDataVendor;
@@ -62,6 +66,9 @@ import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 /*
 * @ author Ganga prasad
@@ -308,9 +315,7 @@ public class FileUtility {
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath
-							+ fileName), "utf-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath + fileName), "utf-8"));
 
 			if (content.size() != 0) {
 				StringBuffer line;
@@ -318,47 +323,47 @@ public class FileUtility {
 				StringBuffer subLine;
 				for (MasterDataVendor mDataVendor : content) {
 					
-//					if(mDataVendor.getBankAccountInfoList().size()>0 && !mDataVendor.getVendorIdCode().isEmpty()){
+					line = new StringBuffer();
+					line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
+					line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
+//					if(null!=mDataVendor.getVendorIdCode())
+						line.append(formatStringField(mDataVendor.getVendorIdCode(), 20, "L"));
+//					else
+//						line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
+					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
+					line.append(System.getProperty("line.separator"));
+					writer.write(line.toString());
 						
-						line = new StringBuffer();
-						line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
-						line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
-						if(null!=mDataVendor.getVendorIdCode())
-							line.append(formatStringField(mDataVendor.getVendorIdCode()	.replaceAll("-", ""), 20, "L"));
-						else
-							line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
-						line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
-						line.append(System.getProperty("line.separator"));
-						writer.write(line.toString());
-						
-						if (mDataVendor.getCompanyBranchs().size() != 0) {
-							for (CompanyBranch companyBranch : mDataVendor.getCompanyBranchs()) {
-								branchLine = new StringBuffer();
-								branchLine.append(formatIntegerField(companyBranch.getRecordType(),	1, "R"));
-								branchLine.append(formatStringField(companyBranch.getName(), 35,"L"));
-								branchLine.append(formatStringField(companyBranch.getName2(), 35,"L"));
-								branchLine.append(formatStringField(companyBranch.getAddress(), 35,"L"));
-								branchLine.append(formatStringField(companyBranch.getAddress2(),35, "L"));
-								branchLine.append(formatStringField(companyBranch.getAddress3(),35, "L"));
-								branchLine.append(formatStringField(companyBranch.getPostCode(), 5,"L"));
-								branchLine.append(formatStringField(companyBranch.getCity(), 35,"L"));
-								branchLine.append(formatStringField(companyBranch.getRegion(), 3,"L"));
-								branchLine.append(formatStringField(companyBranch.getCountry(), 2,"L"));
-								branchLine.append(formatStringField(companyBranch.getTelephoneNo(),	15, "L"));
-								branchLine.append(formatStringField(companyBranch.getFaxNo(), 15,"L"));
-								branchLine.append(formatStringField(companyBranch.getEmailAddress(), 100, "L"));
-								branchLine.append(formatStringField(companyBranch.getGlReconAccount(), 10, "L"));
-								branchLine.append(formatStringField(companyBranch.getCurrency(), 5,"L"));
-								branchLine.append(formatStringField(companyBranch.getIncoTerm(), 3,"L"));
-								branchLine.append(formatStringField(companyBranch.getPaymentTerm(),4, "L"));
-								branchLine.append(formatIntegerField(companyBranch.getBankAccountInfoCount(), 3, "R"));
-								branchLine.append(formatIntegerField(companyBranch.getStatus(), 1,"R"));
-								branchLine.append(formatStringField(companyBranch.getMobileNo(), 15,"L"));
-								branchLine.append(formatStringField(companyBranch.getIndicatorCode(), 3, "R"));
-								branchLine.append(formatStringField(companyBranch.getAccountActionIndicator(), 1,"R"));
-								branchLine.append(formatStringField(companyBranch.getReferenceNoGST(), 20,"L"));
-								branchLine.append(System.getProperty("line.separator"));
-								writer.write(branchLine.toString());
+					if (mDataVendor.getCompanyBranchs().size() != 0) {
+						for (CompanyBranch companyBranch : mDataVendor.getCompanyBranchs()) {
+							
+							branchLine = new StringBuffer();
+							branchLine.append(formatIntegerField(companyBranch.getRecordType(),	1, "R"));
+							branchLine.append(formatStringField(companyBranch.getName(), 100,"L"));
+//							branchLine.append(formatStringField(companyBranch.getName2(), 35,"L"));
+							branchLine.append(formatStringField(companyBranch.getAddress(), 35,"L"));
+							branchLine.append(formatStringField(companyBranch.getAddress2(),35, "L"));
+							branchLine.append(formatStringField(companyBranch.getAddress3(),35, "L"));
+							branchLine.append(formatStringField(companyBranch.getPostCode(), 5,"L"));
+							branchLine.append(formatStringField(companyBranch.getCity(), 35,"L"));
+							branchLine.append(formatStringField(companyBranch.getRegion(), 3,"L"));
+							branchLine.append(formatStringField(companyBranch.getCountry(), 2,"L"));
+							branchLine.append(formatStringField(companyBranch.getTelephoneNo(),	15, "L"));
+							branchLine.append(formatStringField(companyBranch.getFaxNo(), 15,"L"));
+							branchLine.append(formatStringField(companyBranch.getEmailAddress(), 100, "L"));
+							branchLine.append(formatStringField(companyBranch.getGlReconAccount(), 10, "L"));
+							branchLine.append(formatStringField(companyBranch.getCurrency(), 5,"L"));
+							branchLine.append(formatStringField(companyBranch.getIncoTerm(), 3,"L"));
+							branchLine.append(formatStringField(companyBranch.getPaymentTerm(),4, "L"));
+							branchLine.append(formatIntegerField(companyBranch.getBankAccountInfoCount(), 3, "R"));
+							branchLine.append(formatIntegerField(companyBranch.getStatus(), 1,"R"));
+							branchLine.append(formatStringField(companyBranch.getMobileNo(), 15,"L"));
+							branchLine.append(formatStringField(companyBranch.getIndicatorCode(), 3, "R"));
+							branchLine.append(formatStringField(companyBranch.getAccountActionIndicator(), 1,"R"));
+							branchLine.append(formatStringField(companyBranch.getReferenceNoGST(), 20,"L"));
+							branchLine.append(System.getProperty("line.separator"));
+							writer.write(branchLine.toString());
+								
 							}
 						}
 						if (mDataVendor.getBankAccountInfoList().size() != 0) {
@@ -377,16 +382,13 @@ public class FileUtility {
 								writer.flush();
 					}
 						}
-						
 //					}
 				}
 			}else{
 				log.info("content is null");
 			}
 //			Encryptio method
-			
-//			Encryption encryption = new Encryption();
-			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010");
+			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-010", PROCESS_ID);
 		} catch (IOException e) {
 
 		} finally {
@@ -401,22 +403,17 @@ public class FileUtility {
 		}
 	}
 
-	public void sstInformationFileOutPutStream(List<SSTInformation> content,
-			String filePath) {
+	public void sstInformationFileOutPutStream(BatchReqDTO<SSTInformation> reqDTO) {
 		String PROCESS_ID = "AP516";
-		
 		String fileName = createFileNameGfmas(PROCESS_ID);
-
 		Writer writer = null;
 
 		try {
-			writer = new BufferedWriter(new OutputStreamWriter(
-					new FileOutputStream(filePath
-							+ fileName), "utf-8"));
+			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(reqDTO.getFilePath() + fileName), "utf-8"));
 
-			if (content.size() != 0) {
+			if (reqDTO.getBatchContent().size() != 0) {
 				StringBuffer line;
-				for (SSTInformation sstInfo : content) {
+				for (SSTInformation sstInfo : reqDTO.getBatchContent()) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(sstInfo.getRecordType(), 1,"R"));
 					line.append(formatStringField(sstInfo.getSSTNumber(), 17,"L"));
@@ -429,10 +426,18 @@ public class FileUtility {
 				}
 				log.info("local fie create....");
 				
-				encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-350");
+				reqDTO.setProcessId(PROCESS_ID);
+				reqDTO.setFileName(fileName);
+				reqDTO.setServiceCode("GFM-350");
+				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
+				
+				encryption.encryptGmas(reqDTO);
 
 			}
 		} catch (IOException e) {
+			
+			System.out.println("Failed in creating file creation");
+			
 
 		} finally {
 
@@ -460,30 +465,30 @@ public class FileUtility {
 			    	  line = scanner.nextLine();
 			    	  if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
 			    		  masterDataVendor = new MasterDataVendor();
-			    		  masterDataVendor.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
-			    		  masterDataVendor.setRecordType(0);
+			    		//  masterDataVendor.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
+			    		  masterDataVendor.setRecordType(IntegrationConstants.RECORD_TYPE_ZERO);
 			    		  masterDataVendor.setAgencyId(getValue(line,1 ,6 ));
 			    		  masterDataVendor.setVendorIdCode(getValue(line,7 ,20 ));
 			    		  masterDataVendor.setEntityCode(getValue(line,27 ,4 ));
 			    		  masterDataVendor.setSapVendorCode(getValue(line,31 ,10 ));
-			    		  masterDataVendor.getCompanyBranch().setName(getValue(line,41 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setName2(getValue(line,76 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setAddress(getValue(line,111 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setAddress2(getValue(line,146 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setAddress3(getValue(line,181 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setPostCode(getValue(line,216 ,5 ));
-			    		  masterDataVendor.getCompanyBranch().setCity(getValue(line,221 ,35 ));
-			    		  masterDataVendor.getCompanyBranch().setRegion(getValue(line,256 ,3 ));
-			    		  masterDataVendor.getCompanyBranch().setCountry(getValue(line,259 ,2 ));
-			    		  masterDataVendor.getCompanyBranch().setTelephoneNo(getValue(line,261 ,15 ));
-			    		  masterDataVendor.getCompanyBranch().setFaxNo(getValue(line,276 ,15 ));
-			    		  masterDataVendor.getCompanyBranch().setEmailAddress(getValue(line,291 ,100 ));
-			    		  masterDataVendor.getCompanyBranch().setCurrency(getValue(line,391 ,5 ));
-			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(getValue(line,396 ,4 ));
-			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,400 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setName(getValue(line,41 ,100 ));
+//			    		  masterDataVendor.getCompanyBranch().setName2(getValue(line,76 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress(getValue(line,141 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress2(getValue(line,176 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setAddress3(getValue(line,211 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setPostCode(getValue(line,246 ,5 ));
+			    		  masterDataVendor.getCompanyBranch().setCity(getValue(line,251 ,35 ));
+			    		  masterDataVendor.getCompanyBranch().setRegion(getValue(line,286 ,3 ));
+			    		  masterDataVendor.getCompanyBranch().setCountry(getValue(line,289 ,2 ));
+			    		  masterDataVendor.getCompanyBranch().setTelephoneNo(getValue(line,291 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setFaxNo(getValue(line,306 ,15 ));
+			    		  masterDataVendor.getCompanyBranch().setEmailAddress(getValue(line,321 ,100 ));
+			    		  masterDataVendor.getCompanyBranch().setCurrency(getValue(line,421 ,5 ));
+			    		  masterDataVendor.getCompanyBranch().setPaymentTerm(getValue(line,426 ,4 ));
+			    		  masterDataVendor.getCompanyBranch().setMobileNo(getValue(line,430 ,15 ));
 			    	  }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
 			    		  bankAccountInformation = new BankAccountInformation();
-			    		  bankAccountInformation.setRecordType(1);
+			    		  bankAccountInformation.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
 			    		  bankAccountInformation.setRecordNumber(Integer.parseInt(getValue(line,1 ,3 )));
 			    		  bankAccountInformation.setBankCountry(getValue(line,4 ,2 ));
 			    		  bankAccountInformation.setBankKey(getValue(line,6 ,15 ));
@@ -510,14 +515,14 @@ public class FileUtility {
 
 			try (Scanner scanner = new Scanner(path,IntegrationConstants.ENCODING.name())) {
 
-				FileUtility fileUtility = new FileUtility();
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
 					afOffice = new AgOffice();
-					afOffice.setYear(fileUtility.getValue(line, 0, 4));
-					afOffice.setCode(fileUtility.getValue(line, 4, 4));
-					afOffice.setDescription(fileUtility.getValue(line, 8, 255));
-					afOffice.setStatus(fileUtility.getValue(line, 263, 1));
+					afOffice.setYear(getValue(line, 0, 4));
+					afOffice.setCode(getValue(line, 4, 4));
+					afOffice.setDescription(getValue(line, 8, 255));
+					afOffice.setStatus(getValue(line, 263, 1));
+					afOffice.setEffDate(IntegrationConstants.DEFAULT_DATE);
 					agOfficeList.add(afOffice);
 
 				}
@@ -536,16 +541,15 @@ public class FileUtility {
 			try (Scanner scanner = new Scanner(path,
 					IntegrationConstants.ENCODING.name())) {
 
-				FileUtility fileUtility = new FileUtility();
 				while (scanner.hasNextLine()) {
 					line = scanner.nextLine();
 
 					afCtrOffice = new AgCtrlOfficer();
 
-					afCtrOffice.setYear(fileUtility.getValue(line,0 ,4 ));
-					afCtrOffice.setCode(fileUtility.getValue(line, 4, 2));
-					afCtrOffice.setDescription(fileUtility.getValue(line, 6, 255));
-					afCtrOffice.setStatus(fileUtility.getValue(line,261, 1));
+					afCtrOffice.setYear(getValue(line,0 ,4 ));
+					afCtrOffice.setCode(getValue(line, 4, 2));
+					afCtrOffice.setDescription(getValue(line, 6, 255));
+					afCtrOffice.setStatus(getValue(line,261, 1));
 					agCtrOfficeList.add(afCtrOffice);
 
 				}
@@ -700,7 +704,7 @@ public class FileUtility {
 					glAccount.setDescription(fileUtility.getValue(line,14, 255));
 //					glAccount.setEffectiveDate(formatStringToDate(fileUtility.getValue(line, 269, 8)));
 //					glAccount.setExpiryDate(formatStringToDate(fileUtility.getValue(line, 277, 8)));
-					glAccount.setStatus(fileUtility.getValue(line,285, 1));
+					glAccount.setStatus(fileUtility.getValue(line,269, 1));
 					glAccountList.add(glAccount);
 
 				}
@@ -1165,7 +1169,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1266,7 +1270,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1315,7 +1319,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1386,7 +1390,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1456,7 +1460,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1512,7 +1516,7 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1562,7 +1566,7 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1620,7 +1624,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1667,7 +1671,7 @@ public class FileUtility {
 			}
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1733,7 +1737,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1798,7 +1802,7 @@ public class FileUtility {
 			
 			//upload the txt file to sftp server
 			
-			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName);
+			sftpUtility.upload(filePath+fileName, IntegrationConstants.EPERUNDING_UPLOAD_DIR+fileName, null, null, null);
 			
 			//once upload is done cal web service osb integration to transfer file.
 //			 osbUtility.osbServiceCallOutBound(SERVICE_CODE,"");
@@ -1838,7 +1842,7 @@ public class FileUtility {
 				for (PhisVotFund votFund : content) {
 					line = new StringBuffer();
 					line.append(formatIntegerField(votFund.getYear(), 4, "R"));
-					line.append(formatStringField(votFund.getCode() + votFund.getPtjCode(), 5, "L"));
+					line.append(formatStringField(votFund.getCode()+votFund.getPtjCode() , 5, "L"));
 					line.append(formatStringField(votFund.getDescription(),255, "L"));
 					line.append(formatDate(votFund.getEffDate()));
 					line.append(formatDate(votFund.getExpDate()));
@@ -2036,7 +2040,6 @@ public class FileUtility {
 					writer.flush();
 				}
 //				Encryption method
-//				Encryption encryption = new Encryption();
 				encryption.encryptPhis(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,SERVICE_CODE);
 
 			}
@@ -2099,8 +2102,6 @@ public class FileUtility {
 			return value.toString()+"|";
 		else
 			return "|";
-//		return String.format("%", value);
-
 	}
 
 	public String createDirectory(Date date,String path) {
@@ -2124,6 +2125,16 @@ public class FileUtility {
 		  String result = line.substring(begin, begin+size);
 		  return result.trim();
 	  }
+	
+	
+	public String formatBigDecimalField(BigDecimal value,int size) {
+
+		if(null!=value)
+			return String.format("%" + size + "s", value.toString());
+		else
+			return String.format("%" + size + "s", IntegrationConstants.EMPTY_TRING);
+
+	}
 	
 	public String findUomCode(Long itemId,List<CmSupplierItem> supplierItems){
 		String uomCode = null;
@@ -2252,6 +2263,138 @@ public class FileUtility {
 		}
 	}*/
 	
+	
+	public void receiptInformationFileOutPutStream(List<ReceiptInformation> content, String filePath) {
+		
+	String PROCESS_ID = "AR502";
+	
+	String fileName = createFileNameGfmas(PROCESS_ID);
+
+	Writer writer = null;
+
+	try {
+		writer = new BufferedWriter(new OutputStreamWriter(	new FileOutputStream(filePath + fileName), "utf-8"));
+
+		if (content.size() != 0) {
+			StringBuffer line = null;
+			StringBuffer receiptHeaderLine = null;
+			StringBuffer receiptDetailsLine = null;
+			StringBuffer billInfoLine = null;
+			for (ReceiptInformation receiptInformation : content) {
+				line = new StringBuffer();
+			
+				line.append(formatIntegerField(receiptInformation.getRecordType(),	1, "L"));
+				line.append(formatStringField(receiptInformation.getAgencyId(), 6,	"L"));
+				line.append(formatIntegerField(receiptInformation.getTotalBillCount(), 4,	"R"));
+				line.append(System.getProperty("line.separator"));
+//				writer.write(line.toString());
+				
+				if(null!=receiptInformation.getReceiptHeaderList() && receiptInformation.getReceiptHeaderList().size()>0){
+					
+					for(ReceiptHeader receiptHeader : receiptInformation.getReceiptHeaderList()){
+						receiptHeaderLine = new StringBuffer();
+						receiptHeaderLine.append(formatIntegerField(receiptHeader.getRecordType(),1,"R"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getReceiptType(), 1, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getReceiptNumberNew(),20, "L"));
+						receiptHeaderLine.append(formatDate(receiptHeader.getReceiptDateNew()));
+						receiptHeaderLine.append(formatDate(receiptHeader.getReceiptPostingDateNew()));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getReceiptNumberOld(),20,"L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getChequeNumberOld(),50,"L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getSpickCodeOld(),10, "L"));
+						receiptHeaderLine.append(formatIntegerField(receiptHeader.getYear(), 4,"R"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getAccountingOffice(), 4,"L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getPegawaiPengawalPembeyar(), 2,"L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getKumpulanPtjNPembeyar(), 8,"L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getCurrency(),5, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getDescription1(),50, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getDescription2(),50, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getCustomerIdCode(),20, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getEntityCode(),4, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getName1(),35, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getName2(),35, "L"));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getAlternateGlReconAcc(),10, "L"));
+						receiptHeaderLine.append(formatBigDecimalField(receiptHeader.getReceiptAmount(),13));
+						receiptHeaderLine.append(formatStringField(receiptHeader.getBankInStatus(),1,"L"));
+						receiptHeaderLine.append(formatIntegerField(receiptHeader.getReceiptDetailsCount(),3,"R"));
+						receiptHeaderLine.append(formatIntegerField(receiptHeader.getBillingCount(),3,"R"));
+						receiptHeaderLine.append(System.getProperty("line.separator"));
+					//	writer.write(receiptHeaderLine.toString());
+						line.append(receiptHeaderLine.toString());
+					}
+				}
+			if (null!=receiptInformation.getReceiptDetailsList() && receiptInformation.getReceiptDetailsList().size() > 0) {
+				
+				System.out.println("receiptInformation.getReceiptDetailsList().size() :"+receiptInformation.getReceiptDetailsList().size());
+				for (ReceiptDetails receiptDetails  : receiptInformation.getReceiptDetailsList()) {
+					receiptDetailsLine = new StringBuffer();
+					receiptDetailsLine.append(formatIntegerField(receiptDetails.getRecordType(),1,"R"));
+					receiptDetailsLine.append(formatIntegerField(receiptDetails.getRecordNumber(),3,"R"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getReceiptNumber(),20,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getKodPenjenisanTerimaan(),15,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getVotDana(),5,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getPegawaiPegawalDipertanggung(),2,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getKumpulanPtjDipertanggung(),8,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getProgramAktiviti(),9,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getProjek(),16,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getKodAkaun(),8,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getPaymentMethod(),1,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getReferenceNo(),50,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getSpickCode(),10,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getSwiftCode(),11,"L"));
+					receiptDetailsLine.append(formatStringField(receiptDetails.getBranchName(),50,"L"));
+					receiptDetailsLine.append(formatDate(receiptDetails.getPaymentDate()));
+					receiptDetailsLine.append(formatBigDecimalField(receiptDetails.getAmount(),13));
+					receiptDetailsLine.append(System.getProperty("line.separator"));
+					line.append(receiptDetailsLine.toString());
+//					writer.write(receiptDetailsLine.toString());
+//					System.out.println("receiptDetailsLine.toString() :"+receiptDetailsLine.toString());
+//					writer.flush();
+					}
+				}
+			if (null!=receiptInformation.getBillingInformationLineList() && receiptInformation.getBillingInformationLineList().size() > 0) {
+				
+				System.out.println("receiptInformation.getBillingInformationLineList().size() :"+receiptInformation.getBillingInformationLineList().size());
+				for (BillingInformationLine billingInformationLine  : receiptInformation.getBillingInformationLineList()) {
+					billInfoLine = new StringBuffer();
+					billInfoLine.append(formatIntegerField(billingInformationLine.getRecordType(),1,"R"));
+					billInfoLine.append(formatIntegerField(billingInformationLine.getRecordNumber(),3,"R"));
+					billInfoLine.append(formatStringField(billingInformationLine.getReceiptNumber(),20,"L"));
+					billInfoLine.append(formatStringField(billingInformationLine.getBillDebitCreditNoteNum(),15,"L"));
+					billInfoLine.append(formatDate(billingInformationLine.getBillDebitCreditNoteDate()));
+					billInfoLine.append(formatStringField(billingInformationLine.getDescription1(),50,"L"));
+					billInfoLine.append(formatStringField(billingInformationLine.getDescription2(),50,"L"));
+					billInfoLine.append(formatStringField(billingInformationLine.getCustomerIdCode(),20,"L"));
+					billInfoLine.append(formatStringField(billingInformationLine.getEntityCode(),4,"L"));
+					billInfoLine.append(formatBigDecimalField(billingInformationLine.getAmountOfbillDebitCreditNote(),13));
+					billInfoLine.append(formatBigDecimalField(billingInformationLine.getAmountReceivedbillDebitCreditNote(),13));
+					billInfoLine.append(System.getProperty("line.separator"));
+					line.append(billInfoLine.toString());
+//					writer.write(billInfoLine.toString());
+//					System.out.println("billInfoLine.toString() :"+billInfoLine.toString());
+//					writer.flush();
+				}
+			}
+			writer.write(line.toString());
+			}
+			// Encryption 
+			encryption.encryptGmas(filePath,IntegrationConstants.ENCRYPTED_FILE_PATH, fileName,"GFM-380",PROCESS_ID);
+			}else{
+			log.info("content is null");
+		}
+	} catch (IOException e) {
+
+	} finally {
+
+		if (writer != null) {
+			try {
+				writer.close();
+			} catch (Exception e) {
+
+			}
+		}
+	}
+}
+	
 	// Error file
 	
 	public void errorFileOutPutStream(List<EPErrorResponse> content,
@@ -2296,6 +2439,105 @@ public class FileUtility {
 				}
 			}
 		}
+	}
+	public List<GFMASError> gfmasErrorInPutStream(String filePath) {
+		Path path = Paths.get(filePath);
+		String line;
+		List<GFMASError> gfmasErrorList = new ArrayList<GFMASError>();
+		List<ErrorDesc> errorDescList = null;
+		GFMASError gfmasError = null;
+		ErrorDesc errorDesc = null;
+
+		try (Scanner scanner = new Scanner(path,
+				IntegrationConstants.ENCODING.name())) {
+
+			while (scanner.hasNextLine()) {
+				line = scanner.nextLine();
+				 if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
+					 gfmasError = new GFMASError();
+					 errorDescList = new ArrayList<ErrorDesc>();
+					 gfmasError.setRecordType(IntegrationConstants.RECORD_TYPE_ZERO);
+					 gfmasError.setAgencyId(getValue(line, 1, 6));
+					 gfmasError.setTotalRecordCount(Integer.valueOf(getValue(line, 7, 3)));
+					 
+				 }else if(line.startsWith(IntegrationConstants.VALUE_ONE)){
+					 errorDesc = new ErrorDesc();
+					 errorDesc.setRecordType(IntegrationConstants.RECORD_TYPE_ONE);
+					 errorDesc.setReferenceNo(getValue(line, 1, 15));
+					 errorDesc.setErrorCode(getValue(line, 16, 6));
+					 errorDesc.setErrorDescription(getValue(line, 22, 255));
+					 errorDescList.add(errorDesc);
+					 
+					 if(gfmasError.getTotalRecordCount()==errorDescList.size()){
+						 gfmasError.setErrorDescs(errorDescList);
+						 gfmasErrorList.add(gfmasError);
+					 }
+				 }
+
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return gfmasErrorList;
+	}
+	
+	/*public void createPmInterfaceRecord(PmInterfaceLog interfaceLog){
+		
+		IPmInterfaceSO interfaceSO = EpEjbRemoteBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
+		
+		PmInterfaceLog pmInterfaceLog = new PmInterfaceLog();
+		
+		pmInterfaceLog.setDirection(interfaceLog.getDirection());
+		pmInterfaceLog.setDataStartTime(interfaceLog.getDataStartTime());
+		pmInterfaceLog.setDataEndTime(interfaceLog.getDataEndTime());
+		pmInterfaceLog.setFileCreationStatus(interfaceLog.getFileCreationStatus());
+		pmInterfaceLog.setFtpStatus(interfaceLog.getFtpStatus());
+		pmInterfaceLog.setFrequency(interfaceLog.getFrequency());
+		pmInterfaceLog.setTargetSystem(interfaceLog.getTargetSystem());
+		pmInterfaceLog.setIsCurrent(IntegrationConstants.ROW_STATUS_CURRENT);
+		pmInterfaceLog.setServiceCode(interfaceLog.getServiceCode());
+		pmInterfaceLog.setProcessId(interfaceLog.getProcessId());
+		pmInterfaceLog.setFileName(interfaceLog.getFileName());
+		
+		pmInterfaceLog.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
+		pmInterfaceLog.setCreatedBy(IntegrationConstants.BATCH_USER);
+		pmInterfaceLog.setChangedBy(IntegrationConstants.BATCH_USER);
+		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+		
+		interfaceSO.saveOrUpdateInterfaceLOg(pmInterfaceLog);
+	}*/
+	
+	public void setValuesToPmInterface(String batchDirection,Date dataStartTime,Date dataEndTime,int fileCreateStatus,int ftpStatus,
+			String targetSys,String serviceCode,String processId,String fileName){
+	
+		IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
+		
+		PmInterfaceLog pmInterfaceLog = new PmInterfaceLog();
+		
+		System.out.println("dataStartTime :"+dataStartTime+" dataEndTime :"+dataEndTime);
+
+		pmInterfaceLog.setDirection(batchDirection);
+		pmInterfaceLog.setDataStartTime(dataStartTime);
+		pmInterfaceLog.setDataEndTime(dataEndTime);
+		pmInterfaceLog.setFileCreationStatus(fileCreateStatus);
+		pmInterfaceLog.setFtpStatus(ftpStatus);
+		pmInterfaceLog.setFrequency(1);
+		pmInterfaceLog.setIsCurrent(IntegrationConstants.ROW_STATUS_CURRENT);
+		pmInterfaceLog.setTargetSystem(targetSys);
+		pmInterfaceLog.setServiceCode(serviceCode);
+		pmInterfaceLog.setProcessId(processId);
+		pmInterfaceLog.setFileName(fileName);
+		
+		pmInterfaceLog.setRecordStatusFlg(IntegrationConstants.RECORD_STATUS_ACTIVE);
+		pmInterfaceLog.setCreatedBy(IntegrationConstants.BATCH_USER);
+		pmInterfaceLog.setChangedBy(IntegrationConstants.BATCH_USER);
+		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
+		
+		interfaceSO.saveInterfaceLOg(pmInterfaceLog);
 	}
 
 }
