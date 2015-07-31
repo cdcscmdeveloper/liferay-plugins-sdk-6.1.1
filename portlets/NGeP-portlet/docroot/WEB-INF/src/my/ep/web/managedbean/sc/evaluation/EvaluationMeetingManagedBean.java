@@ -134,6 +134,9 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
 
 	private ScQt cloneSelectQt;
+	
+	 /** The auto update. */
+    private boolean autoUpdate = Boolean.TRUE;
 
 	/** The today. */
 	private Date today = new Date();
@@ -804,6 +807,20 @@ public class EvaluationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckOtherCommitteeTypes(String checkOtherCommitteeTypes) {
 		this.checkOtherCommitteeTypes = checkOtherCommitteeTypes;
+	}
+
+	/**
+	 * @return the autoUpdate
+	 */
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	/**
+	 * @param autoUpdate the autoUpdate to set
+	 */
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
 	}
 
 }
