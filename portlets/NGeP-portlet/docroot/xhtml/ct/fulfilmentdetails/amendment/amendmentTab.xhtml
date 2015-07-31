@@ -119,7 +119,9 @@
 			
 			<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.performance.bond']}"
 			onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-			rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.prepareLOA and amendmentBackingBean.managedBean.ctContract.bondReq 
+			rendered="#{amendmentBackingBean.managedBean.ackFA eq null and amendmentBackingBean.managedBean.prepareLOA 
+			 and amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa != null
+			 and amendmentBackingBean.managedBean.contractVer.ctAmendment.amendmentLoa.bondReq 
 			 and amendmentBackingBean.managedBean.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase}"
 			actionListener="#{amendmentBackingBean.setTabValue(amendmentBackingBean.managedBean.selectedTabIndex,'PB')}" update=":form" />
 		 

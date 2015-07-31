@@ -1437,8 +1437,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			context.put("contractPeriod", getManagedBean().getAgreementContractVer().getCtContractValue().getContractPeriod() + "");
 			context.put("contractValue", nf.format(getManagedBean().getContractVer().getCtContractAmount().getContractAmount()) + "");
 			context.put("contractValueText", NumberWordUtil.convert(getManagedBean().getContractVer().getCtContractAmount().getContractAmount().toString()));
-			context.put("isBondReq", getManagedBean().getCtContract().isBondReq());
-			if (getManagedBean().getCtContract().isBondReq()) {
+			context.put("isBondReq", getManagedBean().getContractVer().getCtContractAmount().isBondReq());
+			if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
 				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
 					if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 						context.put("performanceBondValue", nf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt()) + "");
@@ -1942,24 +1942,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    String supplierEmel = "N/A";
 		    
 		    
-		    if (getManagedBean().getCtContract().isBondReq()) {    	
-		    	if (getManagedBean().getCtContract().isBondReq()) {
-					if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
-						if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
-							bondAmount = af.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt());
-							bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString());
-							bondPercentage = pf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage());
-							//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage().toString());
-							bondPercentageTxt = bondPercentage;
-						}						
-					} else {
-						if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
-							bondAmount = af.format(getManagedBean().getCtContract().getLoa().getBondAmt());
-							bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondAmt().toString());
-							bondPercentage = pf.format(getManagedBean().getCtContract().getLoa().getBondPercentage());
-							//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondPercentage().toString());
-							bondPercentageTxt = bondPercentage;
-						}
+		    if (getManagedBean().getContractVer().getCtContractAmount().isBondReq()) {
+				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
+					if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
+						bondAmount = af.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt());
+						bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString());
+						bondPercentage = pf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage());
+						//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage().toString());
+						bondPercentageTxt = bondPercentage;
+					}						
+				} else {
+					if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
+						bondAmount = af.format(getManagedBean().getCtContract().getLoa().getBondAmt());
+						bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondAmt().toString());
+						bondPercentage = pf.format(getManagedBean().getCtContract().getLoa().getBondPercentage());
+						//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondPercentage().toString());
+						bondPercentageTxt = bondPercentage;
 					}
 				}
 		    }
