@@ -4,17 +4,11 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import my.ep.factory.EpLogger;
 import my.ep.util.EpPropertiesUtils;
+import my.ep.web.integration.common.BatchLogger;
 import my.ep.web.scheduler.constants.cm.CmSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
 import my.ep.web.scheduler.job.eperunding.EperundingBatchIntegrationJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchFlInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchPmInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchScInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchSmInboundJob;
-import my.ep.web.scheduler.job.gfmas.GfmasBatchSmOutboundJob;
-import my.ep.web.scheduler.job.notification.SmNotificationJob;
 import my.ep.web.scheduler.job.phis.PhisBatchCmOutboundJob;
 import my.ep.web.scheduler.job.phis.PhisBatchPmOutboundJob;
 import my.ep.web.scheduler.job.phis.PhisBatchSmOutboundJob;
@@ -24,7 +18,7 @@ import org.quartz.JobKey;
 
 public class CmSchedulerServlet extends HttpServlet {
 	private static final long serialVersionUID = 8691110272078406918L;
-	public static Logger log = EpLogger
+	public static Logger log = BatchLogger
 			.getLogger(CmSchedulerServlet.class);
 	
 	public void init(ServletConfig config) throws ServletException {
@@ -36,7 +30,7 @@ public class CmSchedulerServlet extends HttpServlet {
 						PhisBatchPmOutboundJob.class, CmSchedulerConstants.PHIS_PM_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("phis.pm.outbound"));
 				//PHIS SM Out bound Continuous job
-				EpSchedulerHelper.scheduleJob(new JobKey(
+				/*EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.PHIS_SM_OUTBOUND_CONTINUOUS_JOB,
 						CmSchedulerConstants.PHIS_SM_OUTBOUND_JOB_GROUP),
 						PhisBatchSmOutboundJob.class, CmSchedulerConstants.PHIS_SM_CONTINUOUS_JOB_DESC,
@@ -48,7 +42,7 @@ public class CmSchedulerServlet extends HttpServlet {
 						PhisBatchCmOutboundJob.class, CmSchedulerConstants.PHIS_CM_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
 				//GFMAS PM IN bound Continuous job				
-				/*EpSchedulerHelper.scheduleJob(new JobKey(
+				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_FL_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_FL_IN_JOB_GROUP),
 						GfmasBatchFlInboundJob.class, CmSchedulerConstants.GFMAS_FL_CONTINUOUS_JOB_DESC,
@@ -78,13 +72,13 @@ public class CmSchedulerServlet extends HttpServlet {
 						GfmasBatchSmOutboundJob.class, CmSchedulerConstants.GFMAS_SM_OUT_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("1gfmas.sm.outbound"));
 			*/	//Eperunding SM Integration Continuous job
-				EpSchedulerHelper.scheduleJob(new JobKey(
+				/*	EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.EPERUNDING_INTEGRATION_JOB_GROUP),
 						EperundingBatchIntegrationJob.class, CmSchedulerConstants.EPERUNDING_INTEGRATION_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("eperunding.sm.outbound"));
 				//Notification Integration Continuous job
-			/*	EpSchedulerHelper.scheduleJob(new JobKey(
+				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB,
 						CmSchedulerConstants.NOTIFICATION_INTEGRATION_JOB_GROUP),
 						SmNotificationJob.class, CmSchedulerConstants.NOTIFICATION_INTEGRATION_CONTINUOUS_JOB_DESC,
