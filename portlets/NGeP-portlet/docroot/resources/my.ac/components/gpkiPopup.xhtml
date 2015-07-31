@@ -92,7 +92,7 @@
 									var subjectDN = obj.subject_dn;
 									var serialNo = obj.serial_no;
 									var ic = obj.ic_no;
-									var signedData = encodeURIComponent(obj.signed_data);
+									var signedText = encodeURIComponent(obj.signed_data);
 									if (statusCode == "0") {
 
 										var textBeforeSign = $(
@@ -100,8 +100,8 @@
 												.val();
 										var originalText = encodeURIComponent(Aegis
 												.hash(textBeforeSign));
-										var signedText = encodeURIComponent(signedData);
-										verify(originalText, signedText);
+										//var signedText = encodeURIComponent(signedData);
+										//verify(originalText, signedText);
 										// 										Aegis.alert(signedText);
 
 										// 										Aegis.alert(signedData);
