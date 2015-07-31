@@ -225,7 +225,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		log.info("****proceedToFirstUserRegistration******");
 		
 		//Validate GST No
-		validateGstRegNo();
+		//validateGstRegNo();
 		
 		if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
 				StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
@@ -581,7 +581,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				: false;
 		String retPage = deactivateAccount ? null : "/xhtml/sm/onlinereg/outputMsg";
 		
-		validateGstRegNo();
+		//validateGstRegNo();
 
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
@@ -2077,7 +2077,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Validate gst no and format
 	 */
-	public void validateGstRegNo(){
+/*	public void validateGstRegNo(){
 		String gstNo = this.getManagedBean().getSmGstSupplier().getGstRegNo();
 		if(gstNo != null && gstNo.length() > 0){
 			if(!SmCommonUtil.validateGstRegNo(gstNo)){
@@ -2089,7 +2089,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}else{
 			this.getManagedBean().setGstFlag(false);
 		}
-	}
+	}*/
 	
 	
 	/**
@@ -2103,7 +2103,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			String tempPath = String.valueOf((new Date()).getTime());
 			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH) + tempPath + "/";
 			
-			getManagedBean().getSelectedGstSupplierDoc().setFileName(event.getFile().getFileName());
+			String fileName = String.valueOf((new Date()).getTime()) + "_" + event.getFile().getFileName();
+			getManagedBean().getSelectedGstSupplierDoc().setFileName(fileName);
 			getManagedBean().getSelectedGstSupplierDoc().setFilePath(filePath);
 			
 			commonUploadFile(event, filePath);
@@ -2117,45 +2118,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		return si;
 	}
-	
-	/*public void customGenFile(FileUploadEvent event, String path) {
-		
-		String tempDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
-		tempDir += "/" + path;
-
-		//String uploadDir = "";
-
-		File dir = new File(tempDir);
-		log.info(" dir.exists()" + dir.exists());
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-
-		try {
-			UploadedFile file = event.getFile();
-			Date date = new Date();
-			Timestamp timeStamp = new Timestamp(date.getTime());
-					
-			String tempFileName = StringUtils.replace(file.getFileName(), " ", "-");
-			String finalFileName = timeStamp + tempFileName;
-			
-			log.info("finalFileName: " + finalFileName);
-			
-			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
-					new FileOutputStream(tempDir + "/" + finalFileName));
-
-			bufferedOutputStream.write(file.getContents());
-
-			if (bufferedOutputStream != null) {
-				bufferedOutputStream.flush();
-				bufferedOutputStream.close();
-			}
-
-		} catch (Exception e) {
-			log.error(e);
-		}
-
-	}*/
 	
 	/**
 	 * Redirect to liferay logout url
