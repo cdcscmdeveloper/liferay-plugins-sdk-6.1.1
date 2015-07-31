@@ -276,26 +276,26 @@
 				</p:column>
 				
 				<p:column style="text-align: center;">
-					<p:selectBooleanCheckbox id="selectAwardSupplier" 
-						value="#{shortlistedSupp.awareded}" 
+					<p:selectBooleanCheckbox id="selectAwardSupplier" value="#{shortlistedSupp.awareded}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 											shortlistedSupp.suppSelectionDisabled or 
 												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
-						rendered="#{suppFinalizationBackingBean.managedBean.recommendBy != ParameterConst.recommendByOnlineBidding and 
-													suppFinalizationBackingBean.managedBean.recommendBy != ParameterConst.recommendByMultipleLoi}">
+						rendered="#{suppFinalizationBackingBean.managedBean.recommendBy eq 
+											ParameterConst.recommendByMultipleAward or 
+												suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, true)}"/>
 					</p:selectBooleanCheckbox>
 					
-					<p:selectBooleanCheckbox id="selectShortlistSupplier" 
-						value="#{shortlistedSupp.shortListed}" 
+					<p:selectBooleanCheckbox id="selectShortlistSupplier" value="#{shortlistedSupp.shortListed}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 											shortlistedSupp.suppSelectionDisabled or 
 												suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
-						rendered="#{suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByOnlineBidding or 
-													suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByMultipleLoi}">
+						rendered="#{(suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByOnlineBidding or 
+											suppFinalizationBackingBean.managedBean.recommendBy == ParameterConst.recommendByMultipleLoi) and 
+												!suppFinalizationBackingBean.managedBean.selectedItemAlreadyAwarded}">
 						<p:ajax partialSubmit="true" process="@this" update="@([id$=itemListTbl],[id$=supplierListTblMultiple])" 
 								listener="#{suppFinalizationBackingBean.selectSupplierEvent(shortlistedSupp, false)}"/>
 					</p:selectBooleanCheckbox>
