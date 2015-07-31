@@ -8,10 +8,10 @@ import java.util.Date;
 public class OrgProfile {
 
 	private String year;
-	private String code;
-	private String ptjCode;
+	private String kumpPtjOrgCode;
+	private String ptjOrgCode;
 	private String description;
-	private String ctrOfficerCode;
+	private String ctrOfficerCode;  
 	private String agOfficeCode;
 	private String status;
 
@@ -28,19 +28,19 @@ public class OrgProfile {
 	}
 
 	public String getCode() {
-		return code;
+		return kumpPtjOrgCode;
 	}
 
 	public void setCode(String code) {
-		this.code = code;
+		this.kumpPtjOrgCode = code;
 	}
 
 	public String getPtjCode() {
-		return ptjCode;
+		return ptjOrgCode;
 	}
 
 	public void setPtjCode(String ptjCode) {
-		this.ptjCode = ptjCode;
+		this.ptjOrgCode = ptjCode;
 	}
 
 	public String getDescription() {
