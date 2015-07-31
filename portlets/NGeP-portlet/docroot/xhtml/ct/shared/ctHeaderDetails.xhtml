@@ -224,7 +224,7 @@
 		     rendered="#{ctBackingBean.managedBean.ctContractVer.ctContract.loa.loaAmt > ctBackingBean.managedBean.performanceBondRuleAmt
 		     	and ctBackingBean.managedBean.ctContractVer.ctContract.procurementMode.parameterCode != ParameterConst.procurementModeDirectPurchase
 		     	and ctBackingBean.managedBean.ctContractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
-			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContract.bondReq ? false : true}"
+			 <p:selectBooleanCheckbox value="#{ctBackingBean.managedBean.ctContractVer.ctContractAmount.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">

@@ -30,9 +30,9 @@
 				<p:spacer width="1" />
 				<p:outputLabel value="#{amendmentBackingBean.calculateNewContractPeriod()}"> #{lbl['lbl.ct.months']}</p:outputLabel>
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.new.contract.amt']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" />
 			<p:inputText disabled="true" style="width:200px;" styleClass="ppRightBtn"
-			    value="#{amendmentBackingBean.newContractAmt()}"  >
+			    value="#{amendmentBackingBean.newOverallContractAmt()}"  >
 				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />			
 			</p:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.pb.percentage']}" />

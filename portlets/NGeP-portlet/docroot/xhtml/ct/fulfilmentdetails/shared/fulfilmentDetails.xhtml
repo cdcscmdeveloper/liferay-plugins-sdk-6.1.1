@@ -204,7 +204,7 @@
 		   <h:panelGrid columns="3" 
 		     rendered="#{contractDetailsBackingBean.managedBean.ctContract.loa.loaAmt > contractDetailsBackingBean.managedBean.performanceBondRuleAmt
 		     and !contractDetailsBackingBean.managedBean.directPurchase}">
-			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.bondReq ? false : true}"
+			 <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContractAmount.bondReq ? false : true}"
 				 disabled="true" style="text-align:top;" />
 			  <p:spacer width="2" />	
 			  <h:panelGrid columns="2">

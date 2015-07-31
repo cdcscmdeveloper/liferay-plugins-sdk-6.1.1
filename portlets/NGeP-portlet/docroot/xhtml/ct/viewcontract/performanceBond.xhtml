@@ -11,7 +11,7 @@
 }
 </style>
 	<p:panel id="bondId" header="#{lbl['lbl.ct.panel.performance.bond']}" toggleable="true" toggleSpeed="500"
-		rendered="#{contractDetailsBackingBean.managedBean.ctContract.bondReq and 
+		rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractAmount.bondReq and 
 		!contractDetailsBackingBean.managedBean.directPurchase}">
 	
 	 <p:dataTable id="tableBond" var="varBond" rowIndexVar="index"
