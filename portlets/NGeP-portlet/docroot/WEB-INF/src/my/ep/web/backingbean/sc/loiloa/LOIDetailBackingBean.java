@@ -923,7 +923,6 @@ public class LOIDetailBackingBean extends
 				} else{
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-
 					maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem ,maxPriceItemMap);
 
 					if (maxPriceItemMap != null
@@ -959,18 +958,17 @@ public class LOIDetailBackingBean extends
 						offeredPriceSubTotal = offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
 						offeredPriceAmount = offeredPriceAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						
+						afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
+								scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
+						afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+						// after nego price sub total and total
+						afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
+						afterNegoTotalAmount = afterNegoTotalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+						//scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 					}
-
-					afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
-					afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
-					// after nego price sub total and total
-					afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
-					afterNegoTotalAmount = afterNegoTotalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-
-					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-					scLoiLoaItem.setSubTotal(afterNegoSubTotal);
 				}
 			}
 
@@ -1012,6 +1010,58 @@ public class LOIDetailBackingBean extends
 		}
 		return map;
 	}
+	
+	
+	/**
+	 * Validate item tier price by item.
+	 *
+	 * @param scLoiLoaItem the sc loi loa item
+	 * @param map the map
+	 */
+	private void validateItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem, Map<Long, ScLoiLoaItem> map) {
+		boolean isItemFound = Boolean.FALSE;
+		ScLoiLoaItem currentItem = null;
+		ScLoiLoaItem prevItem = null;
+		List<ScLoiLoaItem> groupByItems = new ArrayList<ScLoiLoaItem>();
+		if (null == map || map.isEmpty()){
+			isItemFound = Boolean.TRUE;
+
+		} else {
+			if(!map.containsKey(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+				isItemFound = Boolean.TRUE;
+			} else{
+				isItemFound = Boolean.FALSE;
+			}
+		}
+
+		if(isItemFound){
+			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
+			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
+				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					groupByItems.add(loiLoaItem);
+				}
+			}
+			findLowestIterPriceItem(groupByItems); 
+			map.put(scLoiLoaItem.getScRequestItem().getRequestNoteItemId(), scLoiLoaItem);
+
+			//validate tier price items
+			for (ScLoiLoaItem item : groupByItems) {
+				currentItem = item;
+				
+				if(prevItem != null && currentItem != null){
+					if(prevItem.getUnitPrice().doubleValue() < currentItem.getUnitPrice().doubleValue()){
+						throw new EpException(MessageConst.ERROR_700102, 
+								new String[]{
+								currentItem.getTplSpecTierQty().getFromQty().toString(), 
+								currentItem.getTplSpecTierQty().getToQty().toString(),
+								prevItem.getUnitPrice().toString()}); 
+					}
+				}
+
+				prevItem = currentItem;
+			}
+		}
+	}
 
 	/**
 	 * Find max price item.
@@ -1029,6 +1079,24 @@ public class LOIDetailBackingBean extends
 		};
 		 ScLoiLoaItem  scLoiLoaItem = Collections.max(items, comparator);
 		return scLoiLoaItem;
+	}
+	
+	
+	/**
+	 * Find max price item.
+	 *
+	 * @param items the items
+	 * @return the sc loi loa item
+	 */
+	private void findLowestIterPriceItem(List<ScLoiLoaItem> items) {
+		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
+			@Override
+			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
+				return new CompareToBuilder().append(o1.getTplSpecTierQty().getFromQty(),
+						o2.getTplSpecTierQty().getFromQty()).toComparison();
+			}
+		};
+		 Collections.sort(items, comparator);
 	}
 
 	/**
@@ -2840,6 +2908,12 @@ public class LOIDetailBackingBean extends
 		}
 
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+			// validate tier pricing
+			Map<Long, ScLoiLoaItem> groupByItemMap = new HashMap<Long, ScLoiLoaItem>();
+			for (ScLoiLoaItem  scLoiLoaItem : scLoi.getScLoiLoaItems()) {
+				validateItemTierPriceByItem(scLoiLoaItem, groupByItemMap);
+			}
+			
 			if (getManagedBean().getScQt() != null) {
 				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
 					this.saveProgressivePaymntList();
@@ -4192,6 +4266,11 @@ public class LOIDetailBackingBean extends
 	 * Price key in event. when keyin unit price, calculate subtotal after nego.
 	 */
 	public void priceKeyInEvent() {
+		debugLogger("priceKeyInEvent");
+		Map<Long, ScLoiLoaItem> maxPriceItemMap  = new HashMap<Long, ScLoiLoaItem>();
+		// calculate max price items only.
+		boolean isMaxPriceItem = Boolean.FALSE;
+
 		ScLoi scLoi = getManagedBean().getScLoi();
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		// calc after nego total
@@ -4208,14 +4287,24 @@ public class LOIDetailBackingBean extends
 				} else{
 					// Tier quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+					maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem, maxPriceItemMap);
+					if (maxPriceItemMap != null
+							&& !maxPriceItemMap.isEmpty()
+							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+						isMaxPriceItem = Boolean.TRUE;
+					} else{
+						isMaxPriceItem = Boolean.FALSE;
+					}
 				}
-				
-				subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion(),
-						scLoiLoaItem.getUnitPrice(), quantity);
-				scLoiLoaItem.setAfterNegoSubTotal(subTotal);
-				scLoiLoaItem.setSubTotal(subTotal);
-				totalAmount = totalAmount.add(subTotal);
+				if(isMaxPriceItem){
+					subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(),
+							scLoiLoaItem.getUnitPrice(), quantity);
+					
+					scLoiLoaItem.setAfterNegoSubTotal(subTotal);
+					scLoiLoaItem.setSubTotal(subTotal);
+					totalAmount = totalAmount.add(subTotal);	
+				}
 			}
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 			scLoi.setAfterNegoTotal(totalAmount);
