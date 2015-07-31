@@ -11,7 +11,8 @@
 	<p:blockUI block=":form" widgetVar="blockWidget">
 		<h:graphicImage value="/css/images/ajax-loader.gif"></h:graphicImage>
 	</p:blockUI>
-	<p:messages id="evaluationMeeting" showDetail="true" autoUpdate="true"
+	<p:messages id="evaluationMeeting" showDetail="true"
+		autoUpdate="#{evaluationMeetingBackingBean.managedBean.autoUpdate}"
 		closable="true" severity="error,info" showSummary="false" />
 	<!-- <ac:title value="#{lbl['lbl.sc.eva.evaluation.Meeting']}"></ac:title> -->
 	<div align="right">
