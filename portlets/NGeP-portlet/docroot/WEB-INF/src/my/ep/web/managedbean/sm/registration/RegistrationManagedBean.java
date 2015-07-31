@@ -8,12 +8,14 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmBusinessNature;
 import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
-import my.ep.persistence.entity.sm.SmAttachment;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -98,9 +100,9 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private boolean gstFlag;
 
-	private String filePath;
-	private String fileName;
-	private SmAttachment smAttachment;
+	private SmGstSupplier smGstSupplier;
+	private List<PmDocument> gstDocLs;
+	private SmGstSupplierDoc selectedGstSupplierDoc;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -559,28 +561,28 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.gstFlag = gstFlag;
 	}
 
-	public String getFilePath() {
-		return filePath;
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
 	}
 
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
 	}
 
-	public String getFileName() {
-		return fileName;
+	public List<PmDocument> getGstDocLs() {
+		return gstDocLs;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setGstDocLs(List<PmDocument> gstDocLs) {
+		this.gstDocLs = gstDocLs;
 	}
 
-	public SmAttachment getSmAttachment() {
-		return smAttachment;
+	public SmGstSupplierDoc getSelectedGstSupplierDoc() {
+		return selectedGstSupplierDoc;
 	}
 
-	public void setSmAttachment(SmAttachment smAttachment) {
-		this.smAttachment = smAttachment;
+	public void setSelectedGstSupplierDoc(SmGstSupplierDoc selectedGstSupplierDoc) {
+		this.selectedGstSupplierDoc = selectedGstSupplierDoc;
 	}
 
 }
