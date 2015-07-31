@@ -6141,16 +6141,17 @@ public class SupplierFinalizationBackingBean extends
 
 					String recommendBy = "";
 					String parameterType = ParameterTypeConst.FINALIZATION_RECOMMEND_BY;
-					boolean isPriceTypeTariff = ParameterConst.PRICE_TYPE_TIER.equals(priceType);
+					boolean isPriceTypeTariffOrTier = ParameterConst.PRICE_TYPE_TARIFF.equals(priceType) || 
+															isItemPriceTypeTier(scQtRecommend);
 
-					if (isPriceTypeTariff) {
+					if (isPriceTypeTariffOrTier) {
 						if (scQtRecommend.getAwardSupplierList().size() == 0) {
 							pmParameter = null;
 						} else if (scQtRecommend.getAwardSupplierList().size() == 1) {
 							if ( (pmParameter == null) || 
 									(ParameterConst.RECOMMEND_BY_AWARD.equals(pmParameter.getParameterCode()) || 
 											ParameterConst.RECOMMEND_BY_SINGLE_AWARD.equals(pmParameter.getParameterCode())) ) {
-								recommendBy = isPriceTypeTariff ? ParameterConst.RECOMMEND_BY_AWARD 
+								recommendBy = isPriceTypeTariffOrTier ? ParameterConst.RECOMMEND_BY_AWARD 
 													: ParameterConst.RECOMMEND_BY_SINGLE_AWARD;
 								pmParameter = getPmParameterByTypeAndCode(
 										parameterType, recommendBy);
