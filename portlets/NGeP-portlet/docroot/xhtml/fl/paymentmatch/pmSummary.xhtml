@@ -18,6 +18,10 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
+				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.excl.gst']}" /></td>
+				<td><p:inputText size="35" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceAmtNew}"  disabled="true" style="text-align:right">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -36,6 +40,10 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE)}" />
 					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.service.fee']}"/>
 				</td>
+				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.incl.gst']}" /></td>
+				<td><p:inputText size="35" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.invoiceAmtNew}"  disabled="true" style="text-align:right">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>	
 			</tr>
 			
 			<tr>
@@ -46,6 +54,10 @@
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</p:inputText></td>
+				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.gst.amt']}" /></td>
+				<td><p:inputText size="35" value=""  disabled="true" style="text-align:right">
+				<f:convertNumber
+							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>	
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.payment.amount']}" /></td>
