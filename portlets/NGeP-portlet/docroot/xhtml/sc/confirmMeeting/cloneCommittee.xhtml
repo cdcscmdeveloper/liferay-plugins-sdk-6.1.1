@@ -14,7 +14,8 @@
 			widgetVar="screen2" modal="true" width="950" height="600"
 			position="top">
 			<p:messages id="cloneallCommitteeid" autoUpdate="true"
-				showDetail="true" showSummary="false" closable="true" severity="error, info"></p:messages>
+				showDetail="true" showSummary="false" closable="true"
+				severity="error, info"></p:messages>
 			<h:panelGroup id="clonesearchpnlid">
 				<p:panel header="#{lbl['lbl.sc.search']}" toggleable="true">
 					<table width="900px">
@@ -250,6 +251,7 @@
 					<p:spacer height="30"></p:spacer>
 					<div align="right">
 						<p:commandButton value="#{lbl['lbl.btn.cancel']}"
+							actionListener="#{evaluationMeetingBackingBean.closeListener}"
 							style="float:right;" onclick="screen2.hide();" />
 						<p:commandButton value="#{lbl['lbl.btn.ok']}" process="@this"
 							partialSubmit="true"
@@ -260,6 +262,8 @@
 					</div>
 				</p:panel>
 			</h:panelGroup>
+			<p:ajax event="close"
+				listener="#{evaluationMeetingBackingBean.closeListener}" />
 		</p:dialog>
 	</h:panelGroup>
 </ui:composition>
