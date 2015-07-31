@@ -3,7 +3,6 @@ package my.ep.web.backingbean.sm.registration;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -19,9 +18,9 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.businessnature.IBusinessNatureSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.biz.service.sm.attachment.ISmAttachmentSO;
 import my.ep.biz.service.sm.common.myidentity.IMyIdentitySO;
 import my.ep.biz.service.sm.personnel.IPersonnelSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
@@ -33,12 +32,12 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureReqDTO;
 import my.ep.dto.pm.common.businessnature.BusinessNatureResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
 import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
-import my.ep.dto.sm.attachment.SmAttachmentReqDTO;
-import my.ep.dto.sm.attachment.SmAttachmentResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -56,6 +55,7 @@ import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -64,9 +64,10 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmAssociationBody;
-import my.ep.persistence.entity.sm.SmAttachment;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -116,16 +117,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	private static List<String> sabahSarawakRemoveWhiteSpaceList = Arrays.asList("D", "E", "G", "H");
 	private static List<String> rosRemoveWhiteSpaceList = Arrays.asList("O","M","P");
 
-	public RegistrationBackingBean() {
-//		if (MDC.get(LogKey.USER_ID) == null) {
-//			log.info("-------MDC is NULL-----------");
-//			MDC.put(LogKey.USER_ID, 1L);
-//		}
-//
-/*		if (this.getManagedBean().getApplType() == null) {
-			this.getManagedBean().setApplType(SupplierManagementConst.ACC_MOF);
-		}*/
-		
+	public RegistrationBackingBean() {	
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
 		getManagedBean().setMyCountryId(SmCommonUtil.getMyCountryId());
 		if (pmUser != null && pmUser.getUserId() != null) {
@@ -203,15 +195,20 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.retrieveFinancialOrgList();
 			
 			//this.getManagedBean().setSuppBusinessNature(new SmSupplierBusiness());
-			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
+			//this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			//TODO: temporary comment this.retrieveBusinessNatureL5Map();
 			this.retrieveIdentityTypeMap();
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 			
 			log.info("**********permenant"+ this.getManagedBean().getPermenantStateLs().size());
 			log.info("**********residential" + this.getManagedBean().getResidentialStateLs().size());
+			
 		}
-
+		
+		//GST 
+		getManagedBean().setSmGstSupplier(new SmGstSupplier());
+		prepareGstDoc();
+			
 		this.getManagedBean().getSmAppl().setApplType(this.getManagedBean().getApplType());
 		getIndividualServiceType();
 		log.info("-------onlineAccountAgreement end-------------");
@@ -229,9 +226,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		
 		//Validate GST No
 		validateGstRegNo();
-		
-		//check gst upload
-		checkIsFileUpload();
 		
 		if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
 				StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
@@ -413,7 +407,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setSmBusinessAdd(this.getManagedBean().getSmPermenantAdd());
 			
 			getManagedBean().setGstFlag(false);
-			getManagedBean().setFileName(null);
 		}
 		
 		//Validate IC Length
@@ -513,15 +506,12 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSuppBiz.setSmSupplier(smSupp);
 		}
 		
-		/***
+		
+		/*
 		 * Professional Cert 
 		 */
 		if(this.getManagedBean().getSmAppl().getSupplierType() != null && this.getManagedBean().getSmAppl().getApplType().equalsIgnoreCase(SupplierManagementConst.ACC_MOF)){
 			if((smAppl.getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT) && smAppl.getSupplierType() != null)){  
-				//				|| 
-				//				(smAppl.getSupplierType().equals(SupplierManagementConst.INDIVIDUAL_FLAG) && 
-				//				smSupp.getServiceCategory().equals(SupplierManagementConst.PROF_SERVICE) && 
-				//				smSupp.getServiceCategory() != null)){
 				log.info("*****IS PROF********");
 				for(SmAssociationBody suppAssocBody : smAppl.getSmAssociationBodies()){
 					suppAssocBody.setSmAppl(smAppl);
@@ -532,19 +522,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 				smAppl.setSmAssociationBodies(null);
 			}
 		}
+		
+		//GST
+		if(getManagedBean().isGstFlag()){
+			getManagedBean().getSmSupp().setSmGstSuppliers(new ArrayList<SmGstSupplier>());
+			setSupplierGst();
+		}
 
-		/* set the temporary default value to supplier and appl type,
-		 * will change force the user to select upon activation
-		 *  */
-/*		smAppl.setApplType(SupplierManagementConst.TEMP_TYPE);
-		smAppl.setSupplierType(SupplierManagementConst.TEMP_TYPE);*/
-		
-		/*if(getManagedBean().isGstFlag() && getManagedBean().getFileUpload().getFile() != null){
-			smAttachment = gstFileUpload();
-		}*/
-		
-		
-		
 		/*
 		 * Add all related objects to Parent SmSupplier
 		 */
@@ -562,15 +546,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		reqDTO.setServerName(fs.getRequest().getServerName());
 		reqDTO.setServerPort(fs.getRequest().getServerPort());
 		reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
-
-		/*
-		 * Gst FIle Upload
-		 */
-		if(getManagedBean().isGstFlag() && getManagedBean().getFileName() != null){
-			SmAttachment smAttachment = new SmAttachment();
-			smAttachment = gstFileUpload();
-			reqDTO.setSmAttachment(smAttachment);
-		}
 		
 		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
@@ -604,8 +579,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		boolean deactivateAccount = this.getManagedBean().getSmSupp().getRecordStatusFlg()
 				.intValue() == DbValueConst.RECORD_STATUS_SUSPENDED ? true
 				: false;
-		String retPage = deactivateAccount ? null
-				: "/xhtml/sm/onlinereg/outputMsg";
+		String retPage = deactivateAccount ? null : "/xhtml/sm/onlinereg/outputMsg";
 		
 		validateGstRegNo();
 
@@ -626,29 +600,9 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
 		}
 
-		reqDTO.setSmSupp(this.getManagedBean().getSmSupp());
-		
-		//update GST Attachment
-		if(getManagedBean().isGstFlag()){
-			SmAttachment attachedFile = retrievAndSetSmAttachment();
-			if(attachedFile != null){
-				getManagedBean().getSmAttachment().setFilePath(getManagedBean().getFilePath());
-				getManagedBean().getSmAttachment().setFileName(getManagedBean().getFileName());
-			}else{
-				SmAttachment attachment = new SmAttachment();
-				attachment.setFilePath(getManagedBean().getFilePath());
-				attachment.setFileName(getManagedBean().getFileName());
-				attachment.setDocId(getManagedBean().getSmSupp().getSupplierId());
-				getManagedBean().setSmAttachment(attachment);
-			}
-			
-			getManagedBean().getSmAttachment().setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
-			reqDTO.setSmAttachment(getManagedBean().getSmAttachment());
-			
-			log.info("reqDTO filename>>>>>" + reqDTO.getSmAttachment().getFileName());
-			log.info("reqDTO filePath>>>>>" + reqDTO.getSmAttachment().getFilePath());
-			log.info("reqDTO Suppllier>>>>>" + reqDTO.getSmAttachment().getDocId());
-		}
+		reqDTO.setSmGstSupplier(getManagedBean().getSmGstSupplier());
+		reqDTO.setGstFlag(getManagedBean().isGstFlag());
+		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		
 		try{
 			IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
@@ -1294,28 +1248,11 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			if(this.getManagedBean().getSmAppl().getSupplierType().equals(SupplierManagementConst.STYPE_CONSULTANT)){
 				this.retrieveProfBody();
 			}
-			
-			//set gstFlag to true, if value is not null
-			if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() != null){
-				this.getManagedBean().setGstFlag(true);
-			}else{
-				this.getManagedBean().setGstFlag(false);
-			}
-			
+
 			retrieveIdentityTypeMap();
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 			setDisableCompanyNameBusinessTypeInMaintenance();
-			
-			//set GST Flag
-			if(getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() != null && 
-					StringUtils.isNotBlank(getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
-				SmAttachment attachment = retrievAndSetSmAttachment();
-				if(attachment != null){
-					this.getManagedBean().setFileName(attachment.getFileName());
-					this.getManagedBean().setFilePath(attachment.getFilePath());
-				}
-			}
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
@@ -2143,7 +2080,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 * Validate gst no and format
 	 */
 	public void validateGstRegNo(){
-		String gstNo = this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo();
+		String gstNo = this.getManagedBean().getSmGstSupplier().getGstRegNo();
 		if(gstNo != null && gstNo.length() > 0){
 			if(!SmCommonUtil.validateGstRegNo(gstNo)){
 				this.getManagedBean().setGstFlag(false);
@@ -2166,82 +2103,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		if(event != null){
 			log.info("******handleFileUpload******");
 			String tempPath = String.valueOf((new Date()).getTime());
-			String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "BASIC_GST/" + tempPath + "/";
-			getManagedBean().setFileName(event.getFile().getFileName());
-			getManagedBean().setFilePath(filePath);
+			String filePath = SmCommonUtil.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH) + tempPath + "/";
+			
+			getManagedBean().getSelectedGstSupplierDoc().setFileName(event.getFile().getFileName());
+			getManagedBean().getSelectedGstSupplierDoc().setFilePath(filePath);
+			
 			commonUploadFile(event, filePath);
 		}
-	}
-	
-	/**
-	 * Get File Upload Instance
-	 * @return SmAttachment
-	 */
-	private SmAttachment gstFileUpload(){
-		//getManagedBean().getSmAppl().setSmApplSupportDocs(new ArrayList<SmApplSupportDoc>());
-	
-		SmAttachment attachment = new SmAttachment();
-		//String filePath = Calendar.getInstance().get(Calendar.YEAR)+ "/SM/" + "test" + "/SD/";
-		
-		//attachment.setFileName(getManagedBean().getFileUpload().getFile().getFileName());
-		attachment.setFileName(getManagedBean().getFileName());
-		attachment.setFilePath(getManagedBean().getFilePath());
-		attachment.setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
-		
-		//commonUploadFile(getManagedBean().getFileUpload(), filePath);
-		
-		return attachment;
-	}
-	
-	/**
-	 * Check whether file is uploaded
-	 */
-	private void checkIsFileUpload(){
-		if(getManagedBean().isGstFlag()){
-			if(getManagedBean().getFileName() == null){
-				throw new EpException(MessageConst.ERROR_721028);
-			}
-		}
-	}
-	
-	/**
-	 * Action - download Uploaded File
-	 * @throws IOException
-	 */
-	public void downloadUploadedFileDownload() throws IOException{
-
-		log.info("-----------PATH------------" + this.getManagedBean().getFilePath() + this.getManagedBean().getFileName());
-		
-		try {
-			commonDownload(this.getManagedBean().getFilePath() + this.getManagedBean().getFileName(), this.getManagedBean().getFileName());
-        	
-        } catch (IOException e) {
-        	// TODO Auto-generated catch block
-        	log.info("****downloadUploadedFileDownload***" + e.getMessage());
-        	e.printStackTrace();
-        }
-	}
-	
-	/**
-	 * Retrieve SmAttachment and set to managedBean
-	 * @return SmAttachment
-	 */
-	private SmAttachment retrievAndSetSmAttachment(){
-		ISmAttachmentSO smAttachmentSO = SmServiceLookup.getSmAttachmentSO();
-		SmAttachmentReqDTO smAttachmentReqDTO = new SmAttachmentReqDTO();
-		smAttachmentReqDTO.setDocId(getManagedBean().getSmSupp().getSupplierId());
-		smAttachmentReqDTO.setDocType(SupplierManagementConst.GST_ATTACHMENT_DOC_TYPE);
-		SmAttachmentResDTO smAttachmentResDTO  = smAttachmentSO.retrieveSmAttachmentByDocIdAndType(smAttachmentReqDTO);
-		if(smAttachmentResDTO.getAttachment() != null){
-			getManagedBean().setGstFlag(true);
-			this.getManagedBean().setSmAttachment(smAttachmentResDTO.getAttachment());
-/*			this.getManagedBean().setFilePath(smAttachmentResDTO.getAttachment().getFilePath());
-			this.getManagedBean().setFileName(smAttachmentResDTO.getAttachment().getFileName());*/
-			
-			return smAttachmentResDTO.getAttachment();
-		}
-		
-		return null;
 	}
 	
 	private SelectItem convertToStateSelectItem(PmState state){
@@ -2299,12 +2167,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		SmCommonUtil.redirectToLogoutUrl();
 	}
 	
-	public void testRedirect() {
-		SmCommonUtil.redirectToPage(
-				SmApplicationUtil.getApplicationErrorPage(), "");
-	}
-	
-	
+	/**
+	 * proceed to Term & Condition Page
+	 * @return String
+	 */
 	public String proceedToTermAndCondition(){
 		if(getManagedBean().getApplType() != null){
 			return termAndCondition;
@@ -2313,9 +2179,74 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}
 	}
 	
+	/**
+	 * return to Term & Condition Page
+	 * @return String
+	 */
 	public String returnToTermAndCondition(){
 		return termAndCondition;
 
+	}
+
+	/**
+	 * Retrieve Gst Supporting Doc From PmDocument
+	 */
+	private List<PmDocument> retrieveGstDocFromPmDocument(){
+		IDocumentSO reqSO = SmServiceLookup.getDocumentSO();
+		DocumentReqDTO reqDTO = new DocumentReqDTO();
+		DocumentResDTO resDTO = reqSO.retrieveGstSuppDocuments(reqDTO);
+		
+		return resDTO.getDocumentList();
+	}
+	
+	/**
+	 * Set GstSupplier Object to supplier
+	 */
+	private void setSupplierGst(){
+		SmGstSupplier gstSupplier = getManagedBean().getSmGstSupplier();
+		gstSupplier.setIsCurrent(true);
+		
+		if(gstSupplier.getSmGstSupplierDocs().size() > 0){
+			List<SmGstSupplierDoc> tempLs = new ArrayList<SmGstSupplierDoc>();
+			tempLs.addAll(gstSupplier.getSmGstSupplierDocs());
+			
+			for(SmGstSupplierDoc supplierDoc : gstSupplier.getSmGstSupplierDocs()){
+				if(supplierDoc.getFileName() == null || supplierDoc.getFilePath() == null){
+					tempLs.remove(supplierDoc);
+				}
+			}
+			gstSupplier.setSmGstSupplierDocs(tempLs);
+		}
+		
+		SmSupplier supplier = getManagedBean().getSmSupp();
+		gstSupplier.setSmSupplier(getManagedBean().getSmSupp());
+		supplier.getSmGstSuppliers().add(gstSupplier);
+	}
+	
+	/**
+	 * Create Gst Document List
+	 */
+	private void prepareGstDoc(){
+		SmGstSupplier gstSupplier = getManagedBean().getSmGstSupplier();
+		List<PmDocument> docLs = retrieveGstDocFromPmDocument();
+		gstSupplier.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+
+		if(docLs.size() > 0){
+			for(PmDocument document : docLs){
+				SmGstSupplierDoc gstSupplierDoc = new SmGstSupplierDoc();
+				gstSupplierDoc.setSmGstSupplier(gstSupplier);
+				gstSupplierDoc.setPmDocument(document);
+				gstSupplier.getSmGstSupplierDocs().add(gstSupplierDoc);
+			}
+		}
+	}
+	
+	/**
+	 * set Selected Gst Doc
+	 * @param gstSupplierDoc
+	 */
+	public void setSelectedGstDoc(SmGstSupplierDoc gstSupplierDoc){
+		this.getManagedBean().setSelectedGstSupplierDoc(gstSupplierDoc);
 	}
 
 }
