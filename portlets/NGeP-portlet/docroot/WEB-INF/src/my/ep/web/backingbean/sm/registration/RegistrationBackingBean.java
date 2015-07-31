@@ -600,8 +600,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmBusinessAdd());
 		}
 
-		reqDTO.setSmGstSupplier(getManagedBean().getSmGstSupplier());
-		reqDTO.setGstFlag(getManagedBean().isGstFlag());
 		reqDTO.setSmSupp(getManagedBean().getSmSupp());
 		
 		try{
