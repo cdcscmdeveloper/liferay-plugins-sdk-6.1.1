@@ -363,6 +363,7 @@ public class EvaluationMeetingBackingBean extends
 		committeeMember.setPmUser(new PmUser());
 		committeeMember.setUserSelection("E");
 		this.getManagedBean().setCommitteMember(committeeMember);
+		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		getSelectionTypes();
 		searchExistingUser.reloadData();
 
@@ -642,6 +643,7 @@ public class EvaluationMeetingBackingBean extends
 		committeeActivity.addAll(localList);
 		Collections.sort(committeeActivity);
 		this.getManagedBean().setCommitteeMemberActivity(committeeActivity);
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().execute(
 				"newspecificationcommittee.hide()");
 	}
@@ -825,6 +827,7 @@ public class EvaluationMeetingBackingBean extends
 	 */
 	public void addCloneCommittee() {
 		this.getManagedBean().setCloneSelectQt(null);
+		this.getManagedBean().setAutoUpdate(Boolean.FALSE);
 		this.getManagedBean().setCloneQtnTenderSearchBean(
 				new QtnTenderSearchBean());
 		this.getManagedBean().setCloneCommitteMemebers(
@@ -860,7 +863,8 @@ public class EvaluationMeetingBackingBean extends
 		// debugLogger("onRowCloneAction");
 		ScQt scQt = (ScQt) event.getObject();
 		this.getManagedBean().setCloneSelectQt(scQt);
-
+		this.getManagedBean().setCloneCommitteMemebersSelect(
+				new ArrayList<ScCommitteeMember>());
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 
 		reqDTO.setQtId(scQt.getQtId());
@@ -1001,6 +1005,7 @@ public class EvaluationMeetingBackingBean extends
 		committeeMemberList.addAll(localList);
 		Collections.sort(committeeMemberList);
 		this.getManagedBean().setCommitteeMemberActivity(committeeMemberList);
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 		RequestContext.getCurrentInstance().execute("screen2.hide();");
 
 	}
@@ -1144,59 +1149,60 @@ public class EvaluationMeetingBackingBean extends
 					// searchFilterBean.add(bean);
 				}
 
-				
-				
 				Date fromPublishDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getFromPublishDate();
 				Date toPublishDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getToPublishDate();
-				   if (null != fromPublishDate || null != toPublishDate) {
-				    Calendar c1 = Calendar.getInstance();
-				    c1.setTime(fromPublishDate);
-				    Calendar fromDate = Calendar.getInstance();
-				    fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
-				      c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-				    fromDate.set(Calendar.MILLISECOND, 0);
-				    fromPublishDate = fromDate.getTime();
-				    if (toPublishDate != null) {
-				     Calendar c2 = Calendar.getInstance();
-				     c2.setTime(toPublishDate);
-				     Calendar toDate = Calendar.getInstance();
-				     toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
-				       c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-				     toDate.set(Calendar.MILLISECOND, 0);
-				     toPublishDate = toDate.getTime();
-				    }
-				    SearchFilterBean bean = new SearchFilterBean();
-				    bean.setSearchField(QTConstants.PUBLISH_DATE);
-				    bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-				    SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-				      fromPublishDate, toPublishDate);
-				    bean.setSearchValue(betweenVal);
-				    searchBean.getDataFilterBeans().add(bean);
-				   }
+				if (null != fromPublishDate || null != toPublishDate) {
+					Calendar c1 = Calendar.getInstance();
+					c1.setTime(fromPublishDate);
+					Calendar fromDate = Calendar.getInstance();
+					fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+							c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+					fromDate.set(Calendar.MILLISECOND, 0);
+					fromPublishDate = fromDate.getTime();
+					if (toPublishDate != null) {
+						Calendar c2 = Calendar.getInstance();
+						c2.setTime(toPublishDate);
+						Calendar toDate = Calendar.getInstance();
+						toDate.set(c2.get(Calendar.YEAR),
+								c2.get(Calendar.MONTH),
+								c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+						toDate.set(Calendar.MILLISECOND, 0);
+						toPublishDate = toDate.getTime();
+					}
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField(QTConstants.PUBLISH_DATE);
+					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
+							.value());
+					SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+							fromPublishDate, toPublishDate);
+					bean.setSearchValue(betweenVal);
+					searchBean.getDataFilterBeans().add(bean);
+				}
 
 				Date fromClosingDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getFromClosingDate();
 				Date toClosingDate = getManagedBean()
 						.getCloneQtnTenderSearchBean().getToClosingDate();
 				if (null != fromClosingDate || null != toClosingDate) {
-					 Calendar c1 = Calendar.getInstance();
-					    c1.setTime(fromClosingDate);
-					    Calendar fromDate = Calendar.getInstance();
-					    fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
-					      c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-					    fromDate.set(Calendar.MILLISECOND, 0);
-					    fromClosingDate = fromDate.getTime();
-					    if (toClosingDate != null) {
-					     Calendar c2 = Calendar.getInstance();
-					     c2.setTime(toClosingDate);
-					     Calendar toDate = Calendar.getInstance();
-					     toDate.set(c2.get(Calendar.YEAR), c2.get(Calendar.MONTH),
-					       c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-					     toDate.set(Calendar.MILLISECOND, 0);
-					     toClosingDate = toDate.getTime();
-					    }
+					Calendar c1 = Calendar.getInstance();
+					c1.setTime(fromClosingDate);
+					Calendar fromDate = Calendar.getInstance();
+					fromDate.set(c1.get(Calendar.YEAR), c1.get(Calendar.MONTH),
+							c1.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+					fromDate.set(Calendar.MILLISECOND, 0);
+					fromClosingDate = fromDate.getTime();
+					if (toClosingDate != null) {
+						Calendar c2 = Calendar.getInstance();
+						c2.setTime(toClosingDate);
+						Calendar toDate = Calendar.getInstance();
+						toDate.set(c2.get(Calendar.YEAR),
+								c2.get(Calendar.MONTH),
+								c2.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+						toDate.set(Calendar.MILLISECOND, 0);
+						toClosingDate = toDate.getTime();
+					}
 					SearchFilterBean bean = new SearchFilterBean();
 					bean.setSearchField(QTConstants.CLOSED_DATE);
 					bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN
@@ -1526,8 +1532,7 @@ public class EvaluationMeetingBackingBean extends
 						IQTMeetingSO.class);
 		MeetingReqDTO activityReqDTo = new MeetingReqDTO();
 		activityReqDTo.setQtId(evaluationDataType.getQtId().longValue());
-		activityReqDTo
-				.setCommitteType(evaluationDataType.getCommitteeType());
+		activityReqDTo.setCommitteType(evaluationDataType.getCommitteeType());
 		MeetingResDTO activityResDTo = meetingso
 				.retriveCommitteActivityDtls(activityReqDTo);
 		if (null != activityResDTo
@@ -1537,7 +1542,7 @@ public class EvaluationMeetingBackingBean extends
 			for (ScQtCommitteeActivity activity : activityResDTo
 					.getCommitteMembers()) {
 				if (!activity.isBrandNew()) {
-					//activity.setScCommitteeMember(null);
+					// activity.setScCommitteeMember(null);
 					activity.setDeleted(true);
 					deleteActivityList.add(activity);
 				}
@@ -1763,6 +1768,13 @@ public class EvaluationMeetingBackingBean extends
 			}
 		}
 
+	}
+
+	/**
+	 * Close listener.close popup
+	 */
+	public void closeListener() {
+		this.getManagedBean().setAutoUpdate(Boolean.TRUE);
 	}
 
 	/*
