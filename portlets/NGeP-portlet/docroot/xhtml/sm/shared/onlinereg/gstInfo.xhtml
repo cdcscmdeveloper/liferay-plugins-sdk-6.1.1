@@ -22,11 +22,11 @@
 				
 				<tr>
 					<td class="tdTitle">
-						<p:outputLabel value="#{lbl['lbl.sm.gst.regdate']}" />
+						<p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
 					</td>
 					
 					<td class="tdContent">
-						<p:calendar id="gstRegDateCalId"
+						<p:calendar id="gstEffDateCalId"
 							navigator="true" required="#{registrationBackingBean.managedBean.gstFlag and !empty param['disableValidation']}" label="#{lbl['lbl.sm.gst.regdate']}"
 							value="#{registrationBackingBean.managedBean.smGstSupplier.gstEffDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"  
@@ -40,7 +40,7 @@
 				
 				<tr>
 					<td class="tdTitle">
-						<p:outputLabel value="Effective End Date" />
+						<p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" />
 					</td>
 					
 					<td class="tdContent">
@@ -61,7 +61,7 @@
 			<p:column headerText="No.">
 				#{index +1}
 			</p:column>
-			<p:column headerText="Document Description">
+			<p:column headerText="#{lbl['lbl.sm.gst.document.desc']}">
 				#{gstDoc.pmDocument.docName}
 			</p:column>
 			<p:column headerText="Upload Document">
@@ -70,7 +70,7 @@
 						<p:graphicImage value="/css/images/design/upload.png" style="margin-right:2px;" />
 					</p:commandLink>
 			</p:column>
-			<p:column headerText="Document Name">
+			<p:column headerText="#{lbl['lbl.sm.gst.document.name']}">
 				#{gstDoc.fileName}
 			</p:column>
 		</p:dataTable>
