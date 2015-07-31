@@ -24,9 +24,9 @@ public class SFTPUtility {
 	
 	private static Logger log = BatchLogger.getLogger(SFTPUtility.class);
 
-	String hostName = IntegrationConstants.SFTP_HOST;
-	String username = IntegrationConstants.SFTP_USER;
-	String password = IntegrationConstants.SFTP_PASS;
+	String hostName = IntegrationConstants.SFTP_HOST.trim();
+	String username = IntegrationConstants.SFTP_USER.trim();
+	String password = IntegrationConstants.SFTP_PASS.trim();
 
 	
 	 /* public static void main(String[] args) {
@@ -50,10 +50,13 @@ public class SFTPUtility {
 	  
 	/**
 	 * Method to upload a file in Remote server
+	 * @param serviceCode TODO
+	 * @param processId TODO
+	 * @param fileName TODO
 	 * 
 	 */
 	
-	public void upload(String localFilePath, String remoteFilePath) {
+	public void upload(String localFilePath,String remoteFilePath,String fileName,String serviceCode,String processId) {
 		log.info("inside file upload...");
 
 		File file = new File(localFilePath);
@@ -72,6 +75,8 @@ public class SFTPUtility {
 			FileObject remoteFile = manager.resolveFile(
 					createConnectionString(hostName, username, password,
 							remoteFilePath), createDefaultOptions());
+			System.out.println("getURL :"+remoteFile.getURL());
+			
 			/*
 			 * use createDefaultOptions() in place of fsOptions for all default
 			 * options - Ashok.
@@ -82,12 +87,66 @@ public class SFTPUtility {
 
 			log.info("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
 		} catch (Exception e) {
+			System.out.println("Error Uploading file to SOA");
+			// Create Record in PmInterfaceLog
+
+				/*FileUtility fileUtility = new FileUtility();
+				fileUtility.setValuesToPmInterface(
+						IntegrationConstants.BATCH_DIRECTION_OUTBOUND, null, null,
+						IntegrationConstants.FILE_CREATION_SUCCESS,
+						IntegrationConstants.FTP_STATUS_FAIL,
+						IntegrationConstants.TARGET_SYSTEM_1GFMAS,
+						serviceCode, processId, fileName);*/
 			throw new RuntimeException(e);
 		} finally {
 			manager.close();
 		}
 	}
 
+	public void upload(BatchReqDTO reqDTO) {
+		log.info("inside file upload...");
+
+		File file = new File(reqDTO.getLocatFilePath());
+		if (!file.exists())
+			throw new RuntimeException("Error. Local file not found");
+
+		StandardFileSystemManager manager = new StandardFileSystemManager();
+
+		try {
+			manager.init();
+
+			// Create local file object
+			FileObject localFile = manager.resolveFile(file.getAbsolutePath());
+
+			// Create remote file object
+			FileObject remoteFile = manager.resolveFile(
+					createConnectionString(hostName, username, password,
+							reqDTO.getRemoteFilePath()), createDefaultOptions());
+			/*
+			 * use createDefaultOptions() in place of fsOptions for all default
+			 * options - Ashok.
+			 */
+
+			// Copy local file to sftp server
+			remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);
+
+			log.info("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
+		} catch (Exception e) {
+			System.out.println("Error Uploading file to SOA");
+			// Create Record in PmInterfaceLog
+			
+				/*FileUtility fileUtility = new FileUtility();
+				fileUtility.setValuesToPmInterface(
+						IntegrationConstants.BATCH_DIRECTION_OUTBOUND, reqDTO.getDataStartTime(), reqDTO.getDataEndTime(),
+						IntegrationConstants.FILE_CREATION_SUCCESS,
+						IntegrationConstants.FTP_STATUS_FAIL,
+						IntegrationConstants.TARGET_SYSTEM_1GFMAS,
+						reqDTO.getServiceCode(), reqDTO.getProcessId(), reqDTO.getFileName());*/
+			throw new RuntimeException(e);
+		} finally {
+			manager.close();
+		}
+	}
 	public boolean move(String remoteSrcFilePath, String remoteDestFilePath) {
 		StandardFileSystemManager manager = new StandardFileSystemManager();
 
