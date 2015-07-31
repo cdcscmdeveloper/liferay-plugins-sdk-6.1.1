@@ -1249,6 +1249,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 		try {
 	    	String fileName = getTemplateFileName(agreementContent.getTitle());
+	    	log.info("Agreement Content Title : "+agreementContent.getTitle()+" >> "+fileName);
 			if (fileName != null) {
 				String content = null;
 				String filePath = getManagedBean().getFileDirectory();
@@ -1264,7 +1265,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				} else {
 					content = getContent(agreementContent.getTitle());
 				}
-	
+				log.info("agreement content :"+content);
 				if (content != null) {
 					convertHtmlToDocFile(content, filePath);
 					downloadFile(DocumentRepositoryUtils.getDBFilePath(filePath), fileName);
