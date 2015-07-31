@@ -19,8 +19,28 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.declare']}" update="@form"
+				partialSubmit="true" process="@this" 
+				disabled="#{smUpdateGstInfoBackingBean.managedBean.gstEmpty or empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier}"
+				oncomplete="confirmDeclareDialog.show();">
+			</p:commandButton>
+		</div>
+		
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoHq.xhtml" />
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoBranches.xhtml" />
+		
+		<p:confirmDialog id="confirmDeclareDialog"
+			message="#{lbl['lbl.sm.gst.declare.confirm.msg']}"
+			header="#{lbl['lbl.sm.userprofile.confirmation']}"
+			widgetVar="confirmDeclareDialog">
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeclareDialog.hide();" 
+					action="#{smUpdateGstInfoBackingBean.declareGst}"
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
+				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeclareDialog.hide();" />
+			</div>
+		</p:confirmDialog>
 	</ui:define>
 		
 </ui:composition>

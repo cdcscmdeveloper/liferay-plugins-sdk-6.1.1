@@ -7,8 +7,10 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.SmGstBranchVO;
 
@@ -23,13 +25,14 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 	private SmSupplier smSupplier;
 	private SmCompanyBasic companyBasic;
 	private SmGstSupplier hqGstSupplier;
-	private SmGstBranchVO selectedBranchGst;
 	private SmMofAccount mofAccount;
 	private List<SmGstBranchVO> branches;
 	private boolean gstEmpty;
 	private String saveHqGstConfirmMsg;
 	private String saveBranchGstConfirmMsg;
-	private String deleteBranchGstConfirmMsg;
+	private SmGstSupplierDoc selectedHqSuppDoc;
+	private SmGstBranchVO selectedBranchDoc;
+	private List<SmSupplierBranch> suppBranchList;
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -95,20 +98,28 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 		this.saveBranchGstConfirmMsg = saveBranchGstConfirmMsg;
 	}
 
-	public String getDeleteBranchGstConfirmMsg() {
-		return deleteBranchGstConfirmMsg;
+	public SmGstSupplierDoc getSelectedHqSuppDoc() {
+		return selectedHqSuppDoc;
 	}
 
-	public void setDeleteBranchGstConfirmMsg(String deleteBranchGstConfirmMsg) {
-		this.deleteBranchGstConfirmMsg = deleteBranchGstConfirmMsg;
+	public void setSelectedHqSuppDoc(SmGstSupplierDoc selectedHqSuppDoc) {
+		this.selectedHqSuppDoc = selectedHqSuppDoc;
 	}
 
-	public SmGstBranchVO getSelectedBranchGst() {
-		return selectedBranchGst;
+	public SmGstBranchVO getSelectedBranchDoc() {
+		return selectedBranchDoc;
 	}
 
-	public void setSelectedBranchGst(SmGstBranchVO selectedBranchGst) {
-		this.selectedBranchGst = selectedBranchGst;
+	public void setSelectedBranchDoc(SmGstBranchVO selectedBranchDoc) {
+		this.selectedBranchDoc = selectedBranchDoc;
+	}
+
+	public List<SmSupplierBranch> getSuppBranchList() {
+		return suppBranchList;
+	}
+
+	public void setSuppBranchList(List<SmSupplierBranch> suppBranchList) {
+		this.suppBranchList = suppBranchList;
 	}
 
 }
