@@ -561,23 +561,23 @@ public class LOADetailBackingBean extends
 	    
 	    if(startDate != null && endDate != null){
 	    	if (startDate.after(endDate)) {
-	    		throw new EpException("Start date must be before end date");
+	    		throw new EpException("Start date must be before end date in Fulfilment Schedule.");
 	    	}
 
 	    	if (endDate.before(startDate)) {
-	    		throw new EpException("End date must be after start date");
+	    		throw new EpException("End date must be after start date in Fulfilment Schedule.");
 	    	}
 
 	    	if (!(startDate.getTime().after(contractEffDate)
 					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
 				throw new EpException(
-						"Start date should be in contract validity period.");
+						"Start date should be in contract validity period in Fulfilment Schedule.");
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
 					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
 				throw new EpException(
-						"End date should be in contract validity period.");
+						"End date should be in contract validity period in Fulfilment Schedule.");
 			}
 	    }
 
