@@ -58,7 +58,9 @@
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox disabled="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.itemPriceChange 
 				    or amendmentBackingBean.managedBean.contractVer.ctAmendment.quantityChange
-				    or amendmentBackingBean.managedBean.disableAmendDetails}"
+				    or amendmentBackingBean.managedBean.disableAmendDetails
+				    or (amendmentBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral
+				    	and !amendmentBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
 					<p:ajax event="change"  update=":form:amend" process="@form" 
 					  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
@@ -188,7 +190,7 @@
 				   styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
 				   disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-					 <p:ajax event="blur" update="addValueTxt, addValue" process="@this" 
+					 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
 				</p:inputText>
 				<p:spacer width="1"/>
@@ -205,7 +207,7 @@
 				</p:inputText>
 				<p:spacer width="1"/>
 				<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.new.contract.amount']}" />
-			</h:panelGrid>
+			</h:panelGrid>			
 		
 			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(2)}"  style="float:right;">
 				<p:outputLabel value="*" styleClass="mandatory" />
@@ -226,6 +228,34 @@
 			    <p:spacer width="1"/>
 			   <p:message for="edateCal1" display="icon" />	
 			</h:panelGrid>
+			
+			<f:verbatim rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
+				!amendmentBackingBean.getAmendValue(2)}"/>
+			<f:verbatim rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.contractExtend and
+				!amendmentBackingBean.getAmendValue(2)}"/>
+			<h:panelGrid columns="2" rendered="#{amendmentBackingBean.getAmendValue(1)}" style="float:right;" >
+				<p:outputLabel value="*" styleClass="mandatory" />
+				<p:outputLabel value="#{lbl['lbl.ct.new.gst.amt']}" />
+			</h:panelGrid>
+			
+			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
+				<p:inputText id="newGstAmtTxt" style="width:70px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
+				   styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
+				   disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
+					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
+				</p:inputText>
+				<p:message for="newGstAmtTxt" display="icon" />
+			</h:panelGrid>
+			
+			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
+			<h:panelGrid columns="3" rendered="#{amendmentBackingBean.getAmendValue(1)}">
+				<p:inputText id="overallAmt" styleClass="ppRightBtn" style="width:100px;" disabled="true"
+					value="#{amendmentBackingBean.newOverallContractAmt()}" >
+					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</p:inputText>
+			</h:panelGrid>			
 		</h:panelGrid>
 		
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225"

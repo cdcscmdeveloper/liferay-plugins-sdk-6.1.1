@@ -93,13 +93,16 @@
 				</li>
 				#end
 				<li style="padding-bottom:20px;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate. Perubahan/Tambahan kepada syarat-syarat kontrak adalah seperti di lampiran.<br /></li>
-				<li style="padding-bottom:20px;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.<br /><br /></li>
+				<li style="padding-bottom:20px;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.<br /></li>
+				#if ( $contractWithGst == 'true' )
+				<li style="padding-bottom:20px;">Merujuk kepada Sebutharga tuan untuk *Pembekalan/Perkhidmatan yang tersebut di atas, Kerajaan Malaysia dengan ini memberitahu tuan dengan sukacitanya bahawa kerajaan telah bersetuju menerima Sebutharga tuan dengan nilai RM $overallContractValue yang mengandungi harga cadangan tawaran syarikat sebanyak RM $contractAmount dan kenaan CBP sebanyak RM $gstAmount.<br /></li>
+				#end
 			</ol>
 		</td>
 	</tr>	
 	<tr>
 		<td>
-			Sekian, terima kasih. <br /><br />
+			<br />Sekian, terima kasih. <br /><br />
 		</td>
 	</tr>
 	<tr>

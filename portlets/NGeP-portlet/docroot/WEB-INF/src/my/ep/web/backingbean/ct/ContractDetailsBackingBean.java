@@ -812,9 +812,6 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ctBB = new ContractBackingBean(getManagedBean().getFileDirectory());
 		ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 		ctBB.initializeRemarkAndAttachement(resDTO.getCtContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		if(getManagedBean().getCtContractAmount().getGstAmount() !=  null){
-  		  getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
-  	    }
 	}
 	
 	/**
@@ -967,7 +964,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
 			// Validation for performance bond
-			if (getManagedBean().getCtContract().isBondReq() && !getManagedBean().isDirectPurchase()) {
+			if (getManagedBean().getCtContractAmount().isBondReq() && !getManagedBean().isDirectPurchase()) {
 				//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
 				//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
 				if (contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
@@ -3593,6 +3590,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	    	//Retrieve agreement contract version for physical no & signed date
 			retrieveContractVerOfAgreement();
     	}
+    	// Retrieve overall contract amount
+    	if(getManagedBean().getCtContractAmount().getGstAmount() !=  null){
+    		getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
+	    } else {
+	    	getManagedBean().setGstTotalAmount(null);
+	    }
 	}
 	
 	/**

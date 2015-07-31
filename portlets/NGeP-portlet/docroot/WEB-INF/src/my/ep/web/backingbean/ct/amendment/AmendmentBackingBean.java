@@ -615,6 +615,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				}
 				getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
 				getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
+				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+					getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(getManagedBean().getContractVer().getCtContractAmount().getGstAmount());	
+				} else {
+					getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(new BigDecimal(0));	
+				}
 				getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 				getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
 				getManagedBean().getContractVer().getCtAmendment().setExtendEndDate(null);
@@ -1639,9 +1644,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * different amendment type.
 	 */
 	public boolean getAmendValue(int value) {		
-		if (value == 1 && (getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()
-				|| getManagedBean().getContractVer().getCtAmendment().isQuantityChange()
-				|| getManagedBean().getContractVer().getCtAmendment().isValueChange())) {
+		if (value == 1 && getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
 			return true;
 		}		
 		if (value == 2  && !getManagedBean().getContractVer().getCtAmendment().isContractExtend()
@@ -1797,6 +1800,16 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	public BigDecimal newContractAmt() {
 		return getManagedBean().getContractVer().getCtContractAmount().getContractAmount().add(
 				getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
+	}
+	
+	/**
+	 * The method used to retrieve the new overall contract amount
+	 * with addition of new contract amount and new gst amount amount.
+	 * 
+	 * @return new overall contract amount
+	 */
+	public BigDecimal newOverallContractAmt() {
+		return newContractAmt().add(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
 	}
 	
 	/**
@@ -2554,7 +2567,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onItemPriceChecked() {
 		if (getManagedBean().getContractVer().getCtAmendment().isItemPriceChange()) {
-			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+			// contract type: central and followLoaAmount: false, disallow to change contract value
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
+					&& !getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+				getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			} else {
+				getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+			}
 		} else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
@@ -2568,7 +2587,13 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 */
 	public void onQuantityChecked() {
 		if (getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
-			getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+			// contract type: central and followLoaAmount: false, disallow to change contract value
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL) 
+					&& !getManagedBean().getContractVer().getCtContractValue().isFollowLoaAmt()) {
+				getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			} else {
+				getManagedBean().getContractVer().getCtAmendment().setValueChange(true);				
+			}
 		} else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
@@ -3095,6 +3120,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				List<SmSupplierBank> supplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
 				if (supplierBank.size() == 1) {
 					getManagedBean().getContractVer().getCtContractValue().setBankAccountNo(supplierBank.get(0).getAccountNo());
+					changeAccountActionListener();
 				}
 				for (SmSupplierBank obj : supplierBank) {
 					String account = obj.getAccountNo();
@@ -3753,6 +3779,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
+		boolean contractWithGst = isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode());
 		
 		// Ringkasan Kontrak
 		if (ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
@@ -3770,11 +3797,25 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			if (getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() !=null) {
 				contractValue = contractValue.add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 			}				
-			context.put("newContractValue", amountDF.format(contractValue));
+			context.put("newContractValue", amountDF.format(contractValue));			
+			
+			if (contractWithGst) {
+				context.put("contractWithGst", true);
+				context.put("gstRate", percentageDF.format(getManagedBean().getContractVer().getCtContractValue().getGstRate()));
+				context.put("newGSTAmout", amountDF.format(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()));
+				
+				BigDecimal overallContractValue = contractValue;
+				if (getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null) {
+					overallContractValue = contractValue.add(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+				}				
+				context.put("newOverallAmt", amountDF.format(overallContractValue));
+			} else {
+				context.put("contractWithGst", false);
+			}
+			
 			String fulfilmentType = getParameterDesc(getManagedBean().getCtContract().getFulfillmentType());
 			fulfilmentType = fulfilmentType.replaceAll("&", "&#38;");
-			context.put("fulfillmentType", fulfilmentType);
-			context.put("referAttachment", "Refer Attachment");
+			context.put("fulfilmentType", fulfilmentType);
 				
 			double deductionAmount = 0;				
 			for (CtDeduction deduction : getManagedBean().getContractVer().getCtDeductions()) {
@@ -3784,15 +3825,15 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}				
 			context.put("deductionAmount", amountDF.format(deductionAmount));				
 			context.put("months", getManagedBean().getContractVer().getCtContractValue().getContractPeriod() + " bulan");
-			context.put("effStartDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
-			context.put("effEndDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
+			context.put("contractEffDate", df.format(getManagedBean().getContractVer().getCtContractValue().getEffDate()));
+			context.put("contractExpDate", df.format(getManagedBean().getContractVer().getCtContractValue().getExpDate()));
 			
 			if (getManagedBean().getContractVer().getCtAmendment().isContractExtend()) {
 				context.put("extendMonths",getManagedBean().getContractVer().getCtAmendment().getExtendPeriod() + " bulan");
 				context.put("extStartDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendStartDate()));
 				context.put("extEndDate", df.format(getManagedBean().getContractVer().getCtAmendment().getExtendEndDate()));
 			} else {
-				context.put("extendMonths","-");
+				context.put("extendMonths","");
 				context.put("extStartDate", "");
 				context.put("extEndDate", "");
 			}
@@ -3983,37 +4024,56 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
 			}
 			
-			String bondAmt = "";
-			if (scLoa.getBondAmt() != null) {
-				bondAmt = amountDF.format(scLoa.getBondAmt());
-			}
-			context.put("bondAmt", bondAmt);
-			context.put("bondAmtText", scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue()!=0 ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt()) ) : ""); 
-			
-			if (scLoa.getBondAmt() != null && getManagedBean().getContractVer().getCtContract().isBondReq()) {
+			if (scLoa.getBondAmt() != null && scLoa.isBondReq()) {
 				context.put("bondAmt200k", true);
+			
+				String bondAmt = "";
+				if (scLoa.getBondAmt() != null) {
+					bondAmt = amountDF.format(scLoa.getBondAmt());
+				}
+				context.put("bondAmt", bondAmt);
+				context.put("bondAmtText", scLoa.getBondAmt() != null && scLoa.getBondAmt().doubleValue()!=0 ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getBondAmt()) ) : ""); 
+				
+				String bondPercentage = "";
+				if (scLoa.getBondPercentage() != null) {
+					bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+				}
+				context.put("bondPercentage", bondPercentage);
+				Date bondExpDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
+				if (getManagedBean().getContractVer().getCtAmendment().getExtendEndDate() != null) {
+					bondExpDate = getManagedBean().getContractVer().getCtAmendment().getExtendEndDate();
+				}
+				Calendar bondDate = Calendar.getInstance();
+				bondDate.setTime(bondExpDate);
+				bondDate.add(Calendar.YEAR, 1);
+				context.put("bondExpDate", dateSDF.format(bondDate.getTime())); 
+	
+				//TODO #3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
+				String bondResDueDays = "30";
+				context.put("bondResDueDays", bondResDueDays);
 			} else {
 				context.put("bondAmt200k", false);
 			}
 			
-			String bondPercentage = "";
-			if (scLoa.getBondPercentage() != null) {
-				bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+			if (contractWithGst) {
+				context.put("contractWithGst", true);
+				String gstAmt = "";
+				String overallAmt = "";
+				String contractAmt = amountDF.format(scLoa.getLoaAmt());
+				
+				if (scLoa.getGstAmt() != null) {
+					gstAmt = amountDF.format(scLoa.getGstAmt());
+					overallAmt = amountDF.format(scLoa.getLoaAmt().add(scLoa.getGstAmt()));
+				} else {
+					overallAmt = amountDF.format(scLoa.getLoaAmt());
+				}
+				context.put("gstAmount", gstAmt);
+				context.put("contractAmount", contractAmt);
+				context.put("overallContractValue", overallAmt);
+			} else {
+				context.put("contractWithGst", false);
 			}
-			context.put("bondPercentage", bondPercentage);
-			Date bondExpDate = getManagedBean().getContractVer().getCtContractValue().getExpDate();
-			if (getManagedBean().getContractVer().getCtAmendment().getExtendEndDate() != null) {
-				bondExpDate = getManagedBean().getContractVer().getCtAmendment().getExtendEndDate();
-			}
-			Calendar bondDate = Calendar.getInstance();
-			bondDate.setTime(bondExpDate);
-			bondDate.add(Calendar.YEAR, 1);
-			context.put("bondExpDate", dateSDF.format(bondDate.getTime())); 
-
-			//TODO #3271: the government want this to be configured; hence this need to be set in PM but at the moment default this to 30
-			String bondResDueDays = "30";
-			context.put("bondResDueDays", bondResDueDays);
-			
+						
 			String contractEffDate = "";
 			if (getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null) {
 				contractEffDate = dateSDF.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate());

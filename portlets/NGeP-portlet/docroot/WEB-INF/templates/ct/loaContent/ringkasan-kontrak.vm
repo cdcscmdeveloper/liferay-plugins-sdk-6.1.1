@@ -11,135 +11,34 @@
    <body>
       <strong>APPENDIKS: RINGKASAN KONTRAK</strong><br/><br/>
       Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak<br/><br/>
-      <table>
-      <tr>
-         <td>i.
-         </td>
-         <td>No Rujukan
-         </td>
-         <td>$fileNo $sourcingNo
-         </td>
-      </tr>
-      <tr>
-         <td>ii.
-         </td>
-         <td>Skop / Tajuk
-         </td>
-         <td>$sourcingTitle
-         </td>
-      </tr>
-      <tr>
-         <td>iii.
-         </td>
-         <td>Pembekal
-         </td>
-         <td>$successfulSupplierName
-         </td>
-      </tr>
-      <tr>
-         <td>iv.
-         </td>
-         <td>Nilai Kontrak Asal
-         </td>
-         <td>$contractValue
-         </td>
-      </tr>
-      <tr>
-         <td>v.
-         </td>
-         <td>Nilai Baru Kontrak Tambahan
-         </td>
-         <td>$newContractValue
-         </td>
-      </tr>      
-      <tr>
-         <td>vi.
-         </td>
-         <td>Jenis Pemenuhan
-         </td>
-         <td>$fulfillmentType
-         </td>
-      </tr>
-      <tr>
-         <td>vii.
-         </td>
-         <td>Jadual Penghantaran
-         </td>
-         <td>Seperti di lampiran
-         </td>
-      </tr>
-      <tr>
-         <td>viii.
-         </td>
-         <td>Potongan Pembayaran
-         </td>
-         <td>$deductionAmount **tertakluk kepada potongan tetap sahaja
-         </td>
-      </tr>
-      <tr>
-         <td>ix.
-         </td>
-         <td>Tempoh Kontrak Asal
-         </td>
-         <td>$months
-         </td>
-      </tr>
-      <tr>
-         <td>x.
-         </td>
-         <td>Tempoh Kontrak Tambahan
-         </td>
-         <td><table><tr><td>$effStartDate</td><td width="10px"></td><td>$effEndDate</td></tr></table>
-         </td>
-      </tr>
-      <tr>
-         <td>xi.
-         </td>
-         <td>Tempoh Kuatkuasa Pindaan
-         </td>
-         <td>$amendEffExpDate
-         </td>
-      </tr>
-      <tr>
-         <td>xii.
-         </td>
-         <td>Nilai Bon Pelaksanaan Asal
-         </td>
-         <td>$bondValue
-         </td>
-      </tr>
-      <tr>
-         <td>xiii.
-         </td>
-         <td>Nilai Baru Bon Pelaksanaan
-         </td>
-         <td>$amendBondValue
-         </td>
-      </tr>
-      <tr>
-         <td>xiv.
-         </td>
-         <td>Spesifikasi Tugas / Skop Kerja
-         </td>
-         <td>Seperti di lampiran
-         </td>
-      </tr>
-      <tr>
-         <td>xv.
-         </td>
-         <td>Cara Pembayaran :
-         </td>
-         <td>Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)
-         </td>
-      </tr>
-      <tr>
-         <td>xvi.
-         </td>
-         <td>Lain-lain Terma
-         </td>
-         <td>Seperti di lampiran
-         </td>
-      </tr>
-      </table>
+	  <ol type="i">
+		<li>No Rujukan: $fileNo $sourcingNo</li>
+		<li>Skop / Tajuk: $sourcingTitle</li>
+		<li>Pembekal: $successfulSupplierName</li>
+		<li>Harga Tawaran Asal: $contractValue</li>
+		<li>Harga Baru Tawaran Tambahan: $newContractValue</li>
+		#if ( $contractWithGst == 'true' )
+		<li>Jumlah Nilai CBP $gstRate%: $newGSTAmout</li>
+		<li>Jumlah Harga Tawaran Keseluruhan : $newOverallAmt
+			<br />
+			(Harga Baru Tawaran Tambahan + Jumlah Nilai CBP $gstRate%)
+		</li>
+		#end
+		<li>Jenis Pemenuhan: $fulfilmentType</li>
+		<li>Jadual Penghantaran: Seperti di lampiran</li>
+		<li>Potongan Pembayaran: $deductionAmount **tertakluk kepada potongan tetap sahaja</li>
+		<li>Tempoh Kontrak Asal: $months   ( $contractEffDate - $contractExpDate )
+		</li>
+		#if ( $extendMonths != "")
+		<li>Tempoh Kontrak Tambahan: $extendMonths   ( $extStartDate - $extEndDate )
+		</li>
+		#end
+		<li>Tempoh Kuatkuasa Pindaan: $amendEffExpDate</li>
+		<li>Nilai Bon Pelaksanaan Asal: $bondValue</li>
+		<li>Nilai Baru Bon Pelaksanaan: $amendBondValue</li>
+		<li>Spesifikasi Tugas / Skop Kerja: Seperti di lampiran</li>
+		<li>Cara Pembayaran: Secara Elektronik iaitu menggunakan Sistem eperolehan (eP)</li>
+		<li>Lain-lain Terma: Seperti di lampiran</li>
+	  </ol>
    </body>
 </html>
