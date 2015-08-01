@@ -259,7 +259,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 
 					MenuItem zoneItem = new MenuItem();
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
-					zoneItem.setAjax(true);
+//					zoneItem.setAjax(true);
 					zoneItem.setPartialSubmit(true);
 					zoneItem.setProcess("@this");
 					zoneItem.setUpdate("@this");
