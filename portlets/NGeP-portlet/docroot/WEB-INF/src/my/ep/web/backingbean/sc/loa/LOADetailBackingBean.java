@@ -724,6 +724,7 @@ public class LOADetailBackingBean extends
 					NumberWordUtil.convert(scLoa.getBondAmt().toString()));
 		}
 		checkPerformanceBondMandatory();
+		checkAgreementMandatory();
 		
 		// clauses title
 		getClausesTitle(null);
@@ -2616,7 +2617,6 @@ public class LOADetailBackingBean extends
 		}
 
 		contractAgencyChanged();
-		checkAgreementMandatory();
 	}
 
 	/**

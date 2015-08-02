@@ -32,7 +32,9 @@ import my.ep.web.managedbean.sc.loa.QtLOAManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -184,6 +186,65 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		} finally {
 			qtAwardSO = null;
 		}
+	}
+	
+	public void onRowRecSupplierAction(SelectEvent event) {
+		IQTAwardSO qtAwardSO = null;
+		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+			
+			SmSupplier supplier = scLoiLoa.getSmSupplier();
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			getLoiLoaListTitle(supplier);
+			
+			List<Long> loiLoaList = new ArrayList<Long>();
+			
+			Long supplierId = supplier.getSupplierId();
+			for(ScLoiLoa loiLoa : getManagedBean().getSuppLoiLoaMap().get(supplierId)) {
+				loiLoaList.add(loiLoa.getLoiLoaId());
+			}
+			
+			reqDTO.setLoiLoaIds(loiLoaList);
+			AwardSupplierResDTO resDTO = qtAwardSO.getLoiAndLoaByLoiLoaList(reqDTO);
+			if(!CollectionUtils.isEmpty(resDTO.getScLoas()) ||
+					!CollectionUtils.isEmpty(resDTO.getScLois())) {
+				getManagedBean().setSuppLoiLoaList(
+						prepareLoiLoaList(resDTO.getScLois(), resDTO.getScLoas()));
+			}
+			else {
+				getManagedBean().setSuppLoiLoaList(new ArrayList<SuppLoiLoaBean>());
+			}
+			getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			qtAwardSO = null;
+		}
+	}
+	
+	private List<SuppLoiLoaBean> prepareLoiLoaList(List<ScLoi> loiList, List<ScLoa> loaList) {
+		List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
+		SuppLoiLoaBean suppLoaLoi = null;
+		for (ScLoa scLoa : loaList) {
+			suppLoaLoi = new SuppLoiLoaBean();
+			suppLoaLoi.setLoiLoaNo(scLoa.getLoaNo());
+			suppLoaLoi.setType(SourcingConstants.SUPP_LOA_TYPE);
+			suppLoaLoi.setStatus(scLoa.getPmStatus());
+			suppLoaLoi.setScLoa(scLoa);
+			suppLoiLoaList.add(suppLoaLoi);
+		}
+
+		for (ScLoi scLoi : loiList) {
+			suppLoaLoi = new SuppLoiLoaBean();
+			suppLoaLoi.setLoiLoaNo(scLoi.getLoiNo());
+			suppLoaLoi.setType(SourcingConstants.SUPP_LOI_TYPE);
+			suppLoaLoi.setStatus(scLoi.getScWorkFlowStatus().getPmStatus());
+			suppLoaLoi.setScLoi(scLoi);
+			suppLoiLoaList.add(suppLoaLoi);
+		}
+		return suppLoiLoaList;
 	}
 	
 	/**
