@@ -733,41 +733,31 @@ public class LOIDetailBackingBean extends
 	 *            the loiloas
 	 * @return the list
 	 */
-	private List<LoiLoaBean> prepareLoiLoaList(List<ScLoiLoa> loiloas) {
+	private List<LoiLoaBean> prepareLoiLoaList(List<ScLoi> loiList, List<ScLoa> loaList) {
 		List<LoiLoaBean> loiloaBeans = new ArrayList<LoiLoaBean>();
-		if (loiloas != null && loiloas.size() > 0) {
-			for (ScLoiLoa scLoiLoa : loiloas) {
 
-				if (scLoiLoa.getScloas() != null
-						&& scLoiLoa.getScloas().size() > 0) {
-					for (ScLoa scLoa : scLoiLoa.getScloas()) {
-						LoiLoaBean loiLoaBean = new LoiLoaBean();
-						loiLoaBean.setScLoa(scLoa);
-						loiLoaBean
-								.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
-						loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa
-								.getPmStatus().getStatusId()));
-						loiLoaBean.setPmStatus(scLoa.getPmStatus());
-						loiloaBeans.add(loiLoaBean);
-					}
-				}
+		for (ScLoa scLoa : loaList) {
+			LoiLoaBean loiLoaBean = new LoiLoaBean();
+			loiLoaBean.setScLoa(scLoa);
+			loiLoaBean
+			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoa
+					.getPmStatus().getStatusId()));
+			loiLoaBean.setPmStatus(scLoa.getPmStatus());
+			loiloaBeans.add(loiLoaBean);
+		}
 
-				if (scLoiLoa.getScLois() != null
-						&& scLoiLoa.getScLois().size() > 0) {
-					for (ScLoi scLoi : scLoiLoa.getScLois()) {
-						LoiLoaBean loiLoaBean = new LoiLoaBean();
-						loiLoaBean.setScLoi(scLoi);
-						loiLoaBean
-								.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
-						loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
-								.getScWorkFlowStatus().getPmStatus()
-								.getStatusId()));
-						loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
-								.getPmStatus());
-						loiloaBeans.add(loiLoaBean);
-					}
-				}
-			}
+		for (ScLoi scLoi : loiList) {
+			LoiLoaBean loiLoaBean = new LoiLoaBean();
+			loiLoaBean.setScLoi(scLoi);
+			loiLoaBean
+			.setLoiLoaType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			loiLoaBean.setLoiLoaStatus(getStatusDescById(scLoi
+					.getScWorkFlowStatus().getPmStatus()
+					.getStatusId()));
+			loiLoaBean.setPmStatus(scLoi.getScWorkFlowStatus()
+					.getPmStatus());
+			loiloaBeans.add(loiLoaBean);
 		}
 		return loiloaBeans;
 	}
@@ -782,22 +772,27 @@ public class LOIDetailBackingBean extends
 	public void onRowRecSupplierAction(SelectEvent event) {
 		ScLoiLoa scLoiLoa = (ScLoiLoa) event.getObject();
 		try {
-
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+			/*reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setSupplierId(scLoiLoa.getSmSupplier().getSupplierId());
-			reqDTO.setDocId(scLoiLoa.getDocId());
+			reqDTO.setDocId(scLoiLoa.getDocId());*/
 			getLoiLoaListTitle(scLoiLoa.getSmSupplier());
-			reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
+			/*reqDTO.setRecommendDtlIdList(getManagedBean().getRecommendDtlIds());
 			reqDTO.setViewSupplierLoiLoa(true);
 			reqDTO.setAwardType(getManagedBean().getDocType());
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOILOAList(
-					reqDTO);
-
-			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
+					reqDTO);*/
+			
+			List<Long> loiLoaList = new ArrayList<Long>();
+			loiLoaList.add(scLoiLoa.getLoiLoaId());
+			reqDTO.setLoiLoaIds(loiLoaList);
+			AwardSupplierResDTO resDTO = getQtAwardSO().getLoiAndLoaByLoiLoaList(reqDTO);
+			if(!CollectionUtils.isEmpty(resDTO.getScLoas()) ||
+					!CollectionUtils.isEmpty(resDTO.getScLois())) {
 				getManagedBean().setLoiLoaBeans(
-						prepareLoiLoaList(resDTO.getLoiLoas()));
-			} else {
+						prepareLoiLoaList(resDTO.getScLois(), resDTO.getScLoas()));
+			}
+			else {
 				getManagedBean().setLoiLoaBeans(new ArrayList<LoiLoaBean>());
 			}
 		} finally {
