@@ -180,7 +180,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			}
 			
 			FacesScopes face = new FacesScopes();
-			String token =face.getBPMAuthenticationCtxToken();
+			Object token =face.getBPMAuthenticationCtxToken();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			reqDTO = new BpmRequestDTO();
@@ -369,7 +369,7 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			validateContractTermination(action);
 			 
 			reqDTO = new ContractReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 					
 			contractTerminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractTerminationSO.class);
 		   
