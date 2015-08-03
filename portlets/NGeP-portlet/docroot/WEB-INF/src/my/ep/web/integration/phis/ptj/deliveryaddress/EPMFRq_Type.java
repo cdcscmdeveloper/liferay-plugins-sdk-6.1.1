@@ -8,16 +8,16 @@
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
 public class EPMFRq_Type  implements java.io.Serializable {
-    private RqHeader_Type rqHeader;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type rqHeader;
 
-    private  DeliveryAddressRq_Type deliveryAddressRq;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type deliveryAddressRq;
 
     public EPMFRq_Type() {
     }
 
     public EPMFRq_Type(
-           RqHeader_Type rqHeader,
-            DeliveryAddressRq_Type deliveryAddressRq) {
+           my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type rqHeader,
+           my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type deliveryAddressRq) {
            this.rqHeader = rqHeader;
            this.deliveryAddressRq = deliveryAddressRq;
     }
@@ -28,7 +28,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @return rqHeader
      */
-    public RqHeader_Type getRqHeader() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type getRqHeader() {
         return rqHeader;
     }
 
@@ -38,7 +38,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @param rqHeader
      */
-    public void setRqHeader(RqHeader_Type rqHeader) {
+    public void setRqHeader(my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type rqHeader) {
         this.rqHeader = rqHeader;
     }
 
@@ -48,7 +48,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @return deliveryAddressRq
      */
-    public  DeliveryAddressRq_Type getDeliveryAddressRq() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type getDeliveryAddressRq() {
         return deliveryAddressRq;
     }
 
@@ -58,7 +58,7 @@ public class EPMFRq_Type  implements java.io.Serializable {
      * 
      * @param deliveryAddressRq
      */
-    public void setDeliveryAddressRq( DeliveryAddressRq_Type deliveryAddressRq) {
+    public void setDeliveryAddressRq(my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type deliveryAddressRq) {
         this.deliveryAddressRq = deliveryAddressRq;
     }
 

@@ -27,10 +27,12 @@ public class GfmasBatchScInboundJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("GfmasSCBatchIntegrationJob ");
+		log.info("AP516 : GfmasSCBatchIntegrationJob start");
 
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		 gfmasIntegration.sstInformationGfmas();
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.sstInformationGfmas();
+		 
+		log.info("AP516 : GfmasSCBatchIntegrationJob end");
 		
 
 	}

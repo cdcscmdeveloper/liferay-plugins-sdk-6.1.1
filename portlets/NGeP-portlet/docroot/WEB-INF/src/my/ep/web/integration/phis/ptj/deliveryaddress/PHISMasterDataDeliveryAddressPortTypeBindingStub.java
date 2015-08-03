@@ -7,7 +7,7 @@
 
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
-public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache.axis.client.Stub implements PHISMasterDataDeliveryAddressPortType_PortType {
+public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache.axis.client.Stub implements my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType {
     private java.util.Vector cachedSerClasses = new java.util.Vector();
     private java.util.Vector cachedSerQNames = new java.util.Vector();
     private java.util.Vector cachedSerFactories = new java.util.Vector();
@@ -25,10 +25,10 @@ public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache
         org.apache.axis.description.ParameterDesc param;
         oper = new org.apache.axis.description.OperationDesc();
         oper.setName("inquire");
-        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRq"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRq_Type"),  EPMFRq_Type.class, false, false);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRq"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRq_Type"), my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type.class, false, false);
         oper.addParameter(param);
         oper.setReturnType(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRs_Type"));
-        oper.setReturnClass( EPMFRs_Type.class);
+        oper.setReturnClass(my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type.class);
         oper.setReturnQName(new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRs"));
         oper.setStyle(org.apache.axis.constants.Style.DOCUMENT);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -137,35 +137,35 @@ public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RqHeader_Type");
             cachedSerQNames.add(qName);
-            cls =  RqHeader_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.RqHeader_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RqUID_Type");
             cachedSerQNames.add(qName);
-            cls =  RqUID_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RsHeader_Type");
             cachedSerQNames.add(qName);
-            cls =  RsHeader_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.RsHeader_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "RsUID_Type");
             cachedSerQNames.add(qName);
-            cls =  RsUID_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.RsUID_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/epmf", "Status_Type");
             cachedSerQNames.add(qName);
-            cls =  Status_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.Status_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -256,14 +256,14 @@ public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "DeliveryAddress_Type");
             cachedSerQNames.add(qName);
-            cls =  DeliveryAddress_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "DeliveryAddressArray_Type");
             cachedSerQNames.add(qName);
-            cls =  DeliveryAddress_Type[].class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type[].class;
             cachedSerClasses.add(cls);
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "DeliveryAddress");
             qName2 = null;
@@ -272,21 +272,21 @@ public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "DeliveryAddressRq_Type");
             cachedSerQNames.add(qName);
-            cls =  DeliveryAddressRq_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddressRq_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRq_Type");
             cachedSerQNames.add(qName);
-            cls =  EPMFRq_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
 
             qName = new javax.xml.namespace.QName("http://www.ep.gov.my/Schema/1-0/PHISMasterDataDeliveryAddress", "EPMFRs_Type");
             cachedSerQNames.add(qName);
-            cls =  EPMFRs_Type.class;
+            cls = my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type.class;
             cachedSerClasses.add(cls);
             cachedSerFactories.add(beansf);
             cachedDeserFactories.add(beandf);
@@ -357,7 +357,7 @@ public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache
         }
     }
 
-    public  EPMFRs_Type inquire( EPMFRq_Type part) throws java.rmi.RemoteException {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type inquire(my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type part) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -381,9 +381,9 @@ public class PHISMasterDataDeliveryAddressPortTypeBindingStub extends org.apache
         else {
             extractAttachments(_call);
             try {
-                return ( EPMFRs_Type) _resp;
+                return (my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type) _resp;
             } catch (java.lang.Exception _exception) {
-                return ( EPMFRs_Type) org.apache.axis.utils.JavaUtils.convert(_resp,  EPMFRs_Type.class);
+                return (my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type) org.apache.axis.utils.JavaUtils.convert(_resp, my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type.class);
             }
         }
   } catch (org.apache.axis.AxisFault axisFaultException) {

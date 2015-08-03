@@ -14,7 +14,7 @@ public class DeliveryAddressRq_Type  implements java.io.Serializable {
 
     private int noOfDeliveryAddress;
 
-    private DeliveryAddress_Type[] deliveryAddressArray;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type[] deliveryAddressArray;
 
     public DeliveryAddressRq_Type() {
     }
@@ -23,7 +23,7 @@ public class DeliveryAddressRq_Type  implements java.io.Serializable {
            java.lang.String action,
            java.lang.String PTJCode,
            int noOfDeliveryAddress,
-           DeliveryAddress_Type[] deliveryAddressArray) {
+           my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type[] deliveryAddressArray) {
            this.action = action;
            this.PTJCode = PTJCode;
            this.noOfDeliveryAddress = noOfDeliveryAddress;
@@ -96,7 +96,7 @@ public class DeliveryAddressRq_Type  implements java.io.Serializable {
      * 
      * @return deliveryAddressArray
      */
-    public DeliveryAddress_Type[] getDeliveryAddressArray() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type[] getDeliveryAddressArray() {
         return deliveryAddressArray;
     }
 
@@ -106,7 +106,7 @@ public class DeliveryAddressRq_Type  implements java.io.Serializable {
      * 
      * @param deliveryAddressArray
      */
-    public void setDeliveryAddressArray(DeliveryAddress_Type[] deliveryAddressArray) {
+    public void setDeliveryAddressArray(my.ep.web.integration.phis.ptj.deliveryaddress.DeliveryAddress_Type[] deliveryAddressArray) {
         this.deliveryAddressArray = deliveryAddressArray;
     }
 

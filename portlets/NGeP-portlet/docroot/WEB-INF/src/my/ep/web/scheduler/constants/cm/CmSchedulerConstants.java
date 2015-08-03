@@ -36,17 +36,17 @@ public class CmSchedulerConstants {
 	public static final String GFMAS_SM_CONTINUOUS_JOB_DESC ="Job run every 1 minute";
 	//SC
 	public static final String GFMAS_SC_OUT_JOB_GROUP ="GFMAS JOB GROUP";
-	public static final String GFMAS_SC_OUT_CONTINUOUS_JOB ="GFMAS OUT SC JOB";
+	public static final String GFMAS_SC_OUT_CONTINUOUS_JOB ="Surat Setuju Terima";
 	public static final String GFMAS_SC_CONTINUOUS_JOB_DESC ="Job run 9 AM and 9 PM";
 	//FL
 	public static final String GFMAS_FL_IN_JOB_GROUP ="GFMAS JOB GROUP";
-	public static final String GFMAS_FL_IN_CONTINUOUS_JOB ="GFMAS IN FL JOB";
+	public static final String GFMAS_FL_IN_CONTINUOUS_JOB ="Payment information update";
 	public static final String GFMAS_FL_CONTINUOUS_JOB_DESC ="Job run every 1 hour";
 	
 	//GFMS OUT BOUND
 	//SM
 	public static final String GFMAS_SM_OUT_JOB_GROUP="GFMAS JOB GROUP";
-	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB ="GFMAS OUTBOUND SM JOB";
+	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB ="Masterdata vendor Information";
 	public static final String GFMAS_SM_OUT_CONTINUOUS_JOB_DESC ="Job run 8 AM and 8 PM";
 	
 	// NOTIFICATIONS

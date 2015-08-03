@@ -8,16 +8,16 @@
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
 public class RsHeader_Type  implements java.io.Serializable {
-    private  Status_Type status;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.Status_Type status;
 
-    private  RsUID_Type UID;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.RsUID_Type UID;
 
     public RsHeader_Type() {
     }
 
     public RsHeader_Type(
-            Status_Type status,
-            RsUID_Type UID) {
+           my.ep.web.integration.phis.ptj.deliveryaddress.Status_Type status,
+           my.ep.web.integration.phis.ptj.deliveryaddress.RsUID_Type UID) {
            this.status = status;
            this.UID = UID;
     }
@@ -28,7 +28,7 @@ public class RsHeader_Type  implements java.io.Serializable {
      * 
      * @return status
      */
-    public  Status_Type getStatus() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.Status_Type getStatus() {
         return status;
     }
 
@@ -38,7 +38,7 @@ public class RsHeader_Type  implements java.io.Serializable {
      * 
      * @param status
      */
-    public void setStatus( Status_Type status) {
+    public void setStatus(my.ep.web.integration.phis.ptj.deliveryaddress.Status_Type status) {
         this.status = status;
     }
 
@@ -48,7 +48,7 @@ public class RsHeader_Type  implements java.io.Serializable {
      * 
      * @return UID
      */
-    public  RsUID_Type getUID() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.RsUID_Type getUID() {
         return UID;
     }
 
@@ -58,7 +58,7 @@ public class RsHeader_Type  implements java.io.Serializable {
      * 
      * @param UID
      */
-    public void setUID( RsUID_Type UID) {
+    public void setUID(my.ep.web.integration.phis.ptj.deliveryaddress.RsUID_Type UID) {
         this.UID = UID;
     }
 
