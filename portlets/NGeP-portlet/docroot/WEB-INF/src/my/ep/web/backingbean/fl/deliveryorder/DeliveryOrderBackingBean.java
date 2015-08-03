@@ -1191,20 +1191,18 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().setGstRegNo(suppGstResDTO.getSmGstSupplier().getGstRegNo());
 		}
 		boolean amtChanged = false;
-		if(suppGstResDTO.getSmGstSupplier() != null){
-			if(getManagedBean().getFulfilmentRequest().getGstRegNo() == null){
-				amtChanged = reCalculateGstUnitPrice(suppGstResDTO.getSmGstSupplier(),amtChanged,flRequest);
-			}
-		}
-		//if from GST to non-GST direct set to default
-		if(amtChanged == false){
+		if(suppGstResDTO.getSmGstSupplier() == null && flRequest.getGstRegNo() == null){//no GST previous n current
 			for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 				for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-					itemAddr.setDoGstAmt(itemAddr.getGstAmount());
-					itemAddr.setDoGstUnitPrice(itemAddr.getGstUnitPrice());
+					itemAddr.setDoGstAmt(BigDecimal.ZERO);
+					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice());
 				}
 			}
+			return;
+		}else{
+			amtChanged = reCalculateGstUnitPrice(suppGstResDTO.getSmGstSupplier(),amtChanged,flRequest);
 		}
+		
 		if(amtChanged == true){//TODO not working yet later do..
 //			getManagedBean().setAutoUpdate(Boolean.FALSE);
 //			RequestContext.getCurrentInstance().update("@form");
@@ -1219,18 +1217,25 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		for(FlDeliveryAddress deliveryAddress : flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : deliveryAddress.getFlFulfilmentItemAddr()){
-				if(smGstSupplier != null){
+				if(smGstSupplier != null){//PRCR nonGST and current isGST OR PRCR isGST and current isGST
 					Double gstAmt = new Double(0);
 					gstAmt = itemAddr.getUnitPrice().doubleValue() / 100;
 					if(smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
-							&& itemAddr.isGst()){
+							&& itemAddr.isGst()){//check effDate and isGST checked
 						itemAddr.setDoGstAmt(new BigDecimal(gstAmt).multiply(flRequest.getGstRate()));
-						
+
 						if(itemAddr.getDoGstAmt().doubleValue() > 0){
 							itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice().add(itemAddr.getDoGstAmt()));
 							amtChanged = true;
 						}
+					}else{//not effective date
+						itemAddr.setDoGstAmt(BigDecimal.ZERO);
+						itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice());
 					}
+				}else if(smGstSupplier == null){//PRCR isGST and current non GST
+					itemAddr.setDoGstAmt(BigDecimal.ZERO);
+					itemAddr.setDoGstUnitPrice(itemAddr.getUnitPrice());
+					amtChanged = true;
 				}
 			}
 		}
