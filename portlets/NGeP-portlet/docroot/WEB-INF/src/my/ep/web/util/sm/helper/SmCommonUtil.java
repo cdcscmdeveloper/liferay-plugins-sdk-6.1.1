@@ -1582,7 +1582,7 @@ public class SmCommonUtil {
 	 *            - String
 	 * @return List<WorklistItemVO>
 	 */
-	public static List<WorklistItemVO> getBpmTaskListByAuthToken(String token) {
+	public static List<WorklistItemVO> getBpmTaskListByAuthToken(Object token) {
 		IBpmSO bpmSO = null;
 		BpmRequestDTO reqDTO = null;
 		BpmResponseDTO responseDTO = null;
