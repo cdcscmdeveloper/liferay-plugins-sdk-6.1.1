@@ -895,7 +895,7 @@ public class LOIDetailBackingBean extends
 		Map<Long, ScLoiLoaItem> maxPriceItemMap  = new HashMap<Long, ScLoiLoaItem>();
 		// calculate max price items only.
 		boolean isMaxPriceItem = Boolean.FALSE;
-
+		boolean isZonal = Boolean.FALSE;
 		if (scLoi.getScLoiLoaItems() != null
 				&& scLoi.getScLoiLoaItems().size() > 0) {
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
@@ -909,6 +909,10 @@ public class LOIDetailBackingBean extends
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+				
+				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
+					isZonal = Boolean.TRUE;
+				}
 
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
@@ -971,6 +975,7 @@ public class LOIDetailBackingBean extends
 			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
 			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
 			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
+			getManagedBean().setZonal(isZonal);
 		}		
 	}
 
@@ -3965,6 +3970,7 @@ public class LOIDetailBackingBean extends
 			}
 		}
 		
+		context.put("isZonal", getManagedBean().isZonal());
 		context.put("decimalFormatter", new DecimalFormat("#,###,##0.00"));
 		context.put("scLois", getManagedBean().getLois());
 		context.put("bean", this);
