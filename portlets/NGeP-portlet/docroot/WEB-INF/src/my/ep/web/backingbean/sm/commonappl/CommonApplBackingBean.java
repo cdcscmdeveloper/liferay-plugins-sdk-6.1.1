@@ -61,7 +61,7 @@ public class CommonApplBackingBean extends
 		String taskId = originalServletRequest.getParameter("taskId");
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 
-		String token = new FacesScopes().getBPMAuthenticationCtxToken();
+		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
