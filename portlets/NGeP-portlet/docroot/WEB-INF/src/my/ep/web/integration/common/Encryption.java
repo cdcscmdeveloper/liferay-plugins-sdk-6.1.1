@@ -17,7 +17,7 @@ public class Encryption {
 		
 		System.out.println("inside encryptGmas....");
 	
-		FileUtility fileUtility = new FileUtility();
+	//	FileUtility fileUtility = new FileUtility();
 		File inFile = new File(inFilePath + fileName);
 		File outFile = new File(outFilePath + fileName);
 	
@@ -48,12 +48,12 @@ public class Encryption {
 			System.out.println("Error Creating Encryption File");
 			// Create Record in PmInterfaceLog
 	
-			fileUtility.setValuesToPmInterface(
+			/*fileUtility.setValuesToPmInterface(
 					IntegrationConstants.BATCH_DIRECTION_OUTBOUND, null, null,
 					IntegrationConstants.FILE_CREATION_SUCCESS,
 					IntegrationConstants.FTP_STATUS_FAIL,
 					IntegrationConstants.TARGET_SYSTEM_1GFMAS,
-					serviceCode,processId, fileName);
+					serviceCode,processId, fileName);*/
 	
 			e.printStackTrace();
 		}
