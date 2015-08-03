@@ -570,7 +570,7 @@ public class BPMTaskListBackingBean extends
 		String docType = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("docType");
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		try {

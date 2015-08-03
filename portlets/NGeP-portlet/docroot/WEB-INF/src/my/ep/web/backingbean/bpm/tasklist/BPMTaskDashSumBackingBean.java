@@ -62,7 +62,7 @@ public class BPMTaskDashSumBackingBean extends
 			dashSummarySO = (IDashSummarySO) BusinessDelegate.getInstance()
 					.getServiceObject("cc", IDashSummarySO.class);
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 			long userId = new FacesScopes().getUserSessionBean().getUserId();
 
 			DashSummaryReqDTO reqDTO = new DashSummaryReqDTO();
