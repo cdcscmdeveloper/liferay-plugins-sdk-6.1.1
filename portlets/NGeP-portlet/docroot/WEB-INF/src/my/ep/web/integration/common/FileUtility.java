@@ -9,7 +9,6 @@ import java.io.Writer;
 import java.math.BigDecimal;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,12 +18,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
-import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
-import my.ep.persistence.entity.pm.common.PmInterfaceLog;
 import my.ep.web.integration.eperunding.AssociatedCompany;
 import my.ep.web.integration.eperunding.BoardOfDirector;
 import my.ep.web.integration.eperunding.BranchCompany;
@@ -66,7 +62,6 @@ import my.ep.web.integration.phis.PhisGlAccount;
 import my.ep.web.integration.phis.PhisProgramActivity;
 import my.ep.web.integration.phis.PhisProject;
 import my.ep.web.integration.phis.PhisVotFund;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -2509,7 +2504,7 @@ public class FileUtility {
 		interfaceSO.saveOrUpdateInterfaceLOg(pmInterfaceLog);
 	}*/
 	
-	public void setValuesToPmInterface(String batchDirection,Date dataStartTime,Date dataEndTime,int fileCreateStatus,int ftpStatus,
+	/*public void setValuesToPmInterface(String batchDirection,Date dataStartTime,Date dataEndTime,int fileCreateStatus,int ftpStatus,
 			String targetSys,String serviceCode,String processId,String fileName){
 	
 		IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
@@ -2538,6 +2533,6 @@ public class FileUtility {
 		pmInterfaceLog.setCreatedDate(new Timestamp(IntegrationConstants.DEFAULT_DATE.getTime()));
 		
 		interfaceSO.saveInterfaceLOg(pmInterfaceLog);
-	}
+	}*/
 
 }
