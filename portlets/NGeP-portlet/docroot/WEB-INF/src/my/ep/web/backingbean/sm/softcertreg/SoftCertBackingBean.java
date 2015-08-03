@@ -465,9 +465,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	private void setSoftCertPaymentBpmTask() {
 		getManagedBean().setSoftCertBpmTask(null);
-		if (getManagedBean().getToken() == null
-				|| getManagedBean().getBpmToken()==null) {
-			getManagedBean().setBpmToken(
+		if (getManagedBean().getToken() == null) {
+			getManagedBean().setToken(
 					new FacesScopes().getBPMAuthenticationCtxToken());
 		}
 		List<WorklistItemVO> taskList = SmCommonUtil
