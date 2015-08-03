@@ -241,13 +241,18 @@ public class SupplierFinalizationBiddingBackingBean extends
 			
 			getManagedBean().setScQtFinalization(scQtFinalization);
 
+			if (ParameterConst.ONLINE_BIDDING_MEETING
+					.equals(scQtFinalization.getOnlineBiddingEndorse())) {
+				retrieveOnlineEndorsement();
+			}
 		} finally {
 			qtSuppFinalizationSO = null;
 		}
 	}
 	
 	private void generateZoneMenuModel() {
-		if (CollectionUtils.isNotEmpty(this.getManagedBean().getBiddingZoneDetails())) {
+		if (CollectionUtils.isNotEmpty(
+				this.getManagedBean().getBiddingZoneDetails())) {
 			List<TplSpecZoneDtl> zoneDtls = this.getManagedBean().getBiddingZoneDetails();
 
 			// Dynamically generating the tabs
@@ -546,25 +551,29 @@ public class SupplierFinalizationBiddingBackingBean extends
 		this.getManagedBean().setOnlineBiddingActiveIndex(
 				ONLINE_BIDDING_ACTIVE_INDEX_ONLINE_ENDORSEMENT);
 
-		IQTMeetingSO meetingSO;
-		try {
-			meetingSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
-			String committeeType = getManagedBean().getCommitteeType();
-
-			MeetingReqDTO reqDTO = new MeetingReqDTO();
-			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-			reqDTO.setCommitteType(committeeType);
-			reqDTO.setIsAttended(null);
-
-			MeetingResDTO resDTO = meetingSO
-					.retrieveSignOffCommitteeListByCommType(reqDTO);
-			if (resDTO.getCommitteMembers() != null) {
-				this.getManagedBean().setCommitteeEndorsementList(
-						resDTO.getCommitteMembers());
+		if (CollectionUtils.isEmpty(
+				getManagedBean().getCommitteeEndorsementList())) {
+			
+			IQTMeetingSO meetingSO;
+			try {
+				meetingSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
+				String committeeType = getManagedBean().getCommitteeType();
+	
+				MeetingReqDTO reqDTO = new MeetingReqDTO();
+				reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+				reqDTO.setCommitteType(committeeType);
+				reqDTO.setIsAttended(null);
+	
+				MeetingResDTO resDTO = meetingSO
+						.retrieveSignOffCommitteeListByCommType(reqDTO);
+				if (resDTO.getCommitteMembers() != null) {
+					this.getManagedBean().setCommitteeEndorsementList(
+							resDTO.getCommitteMembers());
+				}
+			} finally {
+				meetingSO = null;
 			}
-		} finally {
-			meetingSO = null;
 		}
 	}
 	
@@ -746,8 +755,15 @@ public class SupplierFinalizationBiddingBackingBean extends
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION);
 				String variable2 = getManagedBean().getScQt().getQtNo();
-				commonMessageAcknowledmentPage(MessageConst.INFO_700047,
-						variable1, variable2);
+//				commonMessageAcknowledmentPage(MessageConst.INFO_700047,
+//						variable1, variable2);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(MessageConst.INFO_700047, new String[] { variable1,
+										variable2 },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										getFacesScopes().getUserLocale())));				
 			} else {
 				throw new EpException("Failed.");
 			}
@@ -964,7 +980,9 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void submitBiddingEndorsement(String outcome) {
 		debugLogger("submitBiddingEndorsement");
 		this.getManagedBean().setAction(outcome);
-		if(isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
+		if(ParameterConst.ONLINE_BIDDING_MEETING.equals(
+				getManagedBean().getScQtFinalization().getOnlineBiddingEndorse()) &&
+					isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			updateBPMTask(outcome, null);
@@ -981,8 +999,8 @@ public class SupplierFinalizationBiddingBackingBean extends
 		FacesScopes facesScope = new FacesScopes();
 		suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		suppFinalizationReqDTO.setToken(facesScope
-				.getBPMAuthenticationCtxToken());
+		suppFinalizationReqDTO.setToken(
+				(String) facesScope.getBPMAuthenticationCtxToken());
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1006,10 +1024,14 @@ public class SupplierFinalizationBiddingBackingBean extends
 			ScQtFinalization scQtFinalization = prepareFinalizationInfo();
 
 			suppFinalizationReqDTO.setScQtFinalization(scQtFinalization);
-			suppFinalizationReqDTO.setPayLoad(this.getManagedBean()
-					.getPayLoad());
+			suppFinalizationReqDTO.setPayLoad(
+					this.getManagedBean().getPayLoad());
 			suppFinalizationReqDTO.setDigiSignData(digiSign);
-			qtSuppFinalizationSO.validateOfflineEndorsement(suppFinalizationReqDTO);
+			
+			if (ParameterConst.ONLINE_BIDDING_ESCALATION
+					.equals(scQtFinalization.getOnlineBiddingEndorse())) {
+				qtSuppFinalizationSO.validateOfflineEndorsement(suppFinalizationReqDTO);
+			}
 			suppFinalizationResDTO = qtSuppFinalizationSO.updateBPMAction(suppFinalizationReqDTO);
 				
 			//}
