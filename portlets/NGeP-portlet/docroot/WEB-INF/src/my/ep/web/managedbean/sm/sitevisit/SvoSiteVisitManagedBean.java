@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -99,7 +100,9 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private SmSvAdtMachine selectedAdtMachine;
 	//private Map<Long, String> facilityTypeAddressMap; //for #2570, also use for 2870
-	private Map<String, SmFacility> allFacilityMap;
+	//private Map<String, SmFacility> allFacilityMap;
+	
+	private SmGstSupplier smGstSupplier;
 
 	
 	public SMSiteVisitDataType getBpmPojo() {
@@ -556,6 +559,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.selectedAdtMachine = selectedAdtMachine;
 	}
 
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
+	}
+
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
+	}
+
 	/*public Map<Long, String> getFacilityTypeAddressMap() {
 		return facilityTypeAddressMap;
 	}
@@ -564,13 +575,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.facilityTypeAddressMap = facilityTypeAddressMap;
 	}*/
 
-	public Map<String, SmFacility> getAllFacilityMap() {
+/*	public Map<String, SmFacility> getAllFacilityMap() {
 		return allFacilityMap;
 	}
 
 	public void setAllFacilityMap(Map<String, SmFacility> allFacilityMap) {
 		this.allFacilityMap = allFacilityMap;
 	}
-	
+	*/
 
 }
