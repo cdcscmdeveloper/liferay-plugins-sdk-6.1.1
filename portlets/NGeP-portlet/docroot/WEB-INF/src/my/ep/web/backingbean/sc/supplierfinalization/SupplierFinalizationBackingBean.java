@@ -1479,7 +1479,9 @@ public class SupplierFinalizationBackingBean extends
 						ParameterConst.DECISION_RECOMMEND_SUPPLIER
 							.equals(decisionTypeCode)) && 
 							 	!scQtRecommend.isAwardedItem()) {
-				validateAwardOfItem(scQtRecommend);
+				if (!scQtRecommend.isAwardedItem()) {
+					validateAwardOfItem(scQtRecommend);
+				}
 			} else if (isFwdToHighAuth &&
 							scQtRecommend.isHigherAuthReq() &&
 							scQtRecommend.getRecommendBy() == null) {
@@ -1521,7 +1523,11 @@ public class SupplierFinalizationBackingBean extends
 	public void submitSuppFinalization(String outcome) {
 		debugLogger("submitSuppFinalization");
 		this.getManagedBean().setAction(outcome);
-		this.getManagedBean().setSubmit(true);
+		
+		if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+				.equals(getManagedBean().getCurrentStatusId())) {
+			this.getManagedBean().setSubmit(true);
+		}
 
 		SuppFinalizationReqDTO reqDTO = preSubmitValidation();
 		
@@ -1739,14 +1745,6 @@ public class SupplierFinalizationBackingBean extends
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
 
-		if (null != digiSign) {
-			updatePmDigiSignData(digiSign,
-					ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION,
-					getManagedBean().getScQt().getQtId(), getManagedBean()
-							.getScQt().getQtNo());
-			signOff();
-		}
-
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1775,6 +1773,14 @@ public class SupplierFinalizationBackingBean extends
 				scQtCommittee = preparationDtlsInfo();
 				reqDTO.setScQtCommittee(scQtCommittee);
 			}
+			
+			if (null != digiSign) {
+				updatePmDigiSignData(digiSign,
+						ParameterConst.DOCTYPE_SUPPLIER_FINALIZATION,
+						getManagedBean().getScQt().getQtId(), getManagedBean()
+								.getScQt().getQtNo());
+				signOff();
+			}			
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.submitSupplierFinalization(reqDTO);
 
@@ -3865,6 +3871,7 @@ public class SupplierFinalizationBackingBean extends
 				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())
 			});
 		}
+		resetNotificationFields();
 		
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		try {
@@ -3883,12 +3890,23 @@ public class SupplierFinalizationBackingBean extends
 			SuppFinalizationResDTO resDTO = qtSuppFinalizationSO
 					.sendNotifications(reqDTO);
 			if (resDTO.isSuccessful()) {
+				resetNotificationFields();
+				
 				String variable1 = getParameterDesc(
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_QUOTATION);
 				String variable2 = getManagedBean().getScQt().getQtNo();
-				commonMessageAcknowledmentPage(MessageConst.INFO_700047,
-						variable1, variable2);
+//				commonMessageAcknowledmentPage(MessageConst.INFO_700047,
+//						variable1, variable2);
+				
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, null, MessageUtils
+								.getMessage(MessageConst.INFO_700047, new String[] { variable1,
+										variable2 },
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										getFacesScopes().getUserLocale())));
+				
 			} else {
 				throw new EpException("Failed.");
 			}
@@ -5040,6 +5058,11 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setMultipleLoi(false);
 		this.getManagedBean().setMultipleAward(false);
 	}	
+	
+	private void resetNotificationFields() {
+		this.getManagedBean().setSubject(null);
+		this.getManagedBean().setMessage(null);
+	}
 
 	private void populateShortListedSuppliersByZone() {
 
