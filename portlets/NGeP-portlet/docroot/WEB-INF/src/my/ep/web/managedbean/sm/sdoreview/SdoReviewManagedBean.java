@@ -11,6 +11,7 @@ import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -35,6 +36,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private List<SmApplSupportDoc> unselectedSmApplSuppDocs;
 	private String zoneCode;
 	private Map<Long,SmApplSupportDoc> supportingDocMap;
+	private SmGstSupplier smGstSupplier;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -155,6 +157,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setSupportingDocMap(Map<Long, SmApplSupportDoc> supportingDocMap) {
 		this.supportingDocMap = supportingDocMap;
+	}
+
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
+	}
+
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
 	}
 
 	
