@@ -27,7 +27,7 @@ public class BPMTaskSearchBackingBean {
 	public void searchAction() {
 		
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String token = bpmSO.authenticate("weblogic");
+		Object token = bpmSO.authenticate("weblogic");
 		
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 //		reqDTO.setDocNumber("KN-20141104-0007");
