@@ -194,7 +194,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 				// String token = bpmSO.authenticate("roslan", "welcome1");
 				FacesScopes face = new FacesScopes();
-				String token = face.getBPMAuthenticationCtxToken();
+				Object token = face.getBPMAuthenticationCtxToken();
 
 			   System.out.println("testing BPM auth******" + token);
 				BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -209,6 +209,10 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setAssignment(getAssignment());
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+				
+				BpmResponseDTO responseDTO2 = bpmSO.getDashSummary(reqDTO);
+				System.out.println("responseDTO2: " + responseDTO2);
+				
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
