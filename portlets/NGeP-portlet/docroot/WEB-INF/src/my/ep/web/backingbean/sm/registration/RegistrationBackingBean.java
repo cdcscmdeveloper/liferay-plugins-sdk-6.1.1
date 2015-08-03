@@ -1273,6 +1273,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	public SelectItem[] pmBusinessTypeDropDown(){
 		log.info("*********getPmBusinessTypeDropDown**********");
 		List<SelectItem> itemList = new ArrayList<SelectItem>();
+		SelectItem selectedItem=new SelectItem() ;	
 		try {
 			SelectItem[] items = getDropdownCodeValues("SBT");
 
@@ -1338,7 +1339,21 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 					}
 				});
 			}
-			log.info("------------->" + itemList.size());
+			
+			if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_BASIC)){
+				for(SelectItem item:itemList){
+					if(item.getLabel().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_INDIVIDU)){
+						selectedItem=item;
+						itemList.remove(item);
+						break;
+					}
+				}			
+				selectedItem.setLabel(SupplierManagementConst.BUSINESS_TYPE_INDIVIDUAL);
+				itemList.add(selectedItem);
+			}
+			log.info("------------->" + itemList.size());	
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new EpException(MessageConst.ERROR_721010, new String[]{e.toString(), e.getMessage()});
