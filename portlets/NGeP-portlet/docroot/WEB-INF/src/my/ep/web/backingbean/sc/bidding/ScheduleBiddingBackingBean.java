@@ -20,7 +20,6 @@ import my.ep.biz.service.sc.schedulebidding.IScheduleBiddingSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
-import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationResDTO;
 import my.ep.dto.sc.schedulebidding.ScheduleBiddingReqDTO;
@@ -32,7 +31,6 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sc.bidding.ScBidContactPerson;
 import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
-import my.ep.persistence.entity.sc.supplierproposal.ScQtPRPExperience;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.CommonUIConst;
@@ -458,7 +456,6 @@ public class ScheduleBiddingBackingBean extends
 		PmUser creatorUser = (PmUser) (new FacesScopes().getUserSessionBean());
 
 		String taskId = this.getManagedBean().getTaskId();
-		String token = new FacesScopes().getBPMAuthenticationCtxToken();
 		IScheduleBiddingSO scheduleBiddingSO = null;
 		ScheduleBiddingReqDTO biddingReqDTO = new ScheduleBiddingReqDTO();
 		try {
@@ -467,7 +464,7 @@ public class ScheduleBiddingBackingBean extends
 							IScheduleBiddingSO.class);
 			biddingReqDTO.setCreatorUser(creatorUser);
 			biddingReqDTO.setOutcome(outCome);
-			biddingReqDTO.setToken(token);
+			biddingReqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			biddingReqDTO.setTaskId(taskId);
 			biddingReqDTO.setRoleCode(getUserRoleCode());
 			biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());

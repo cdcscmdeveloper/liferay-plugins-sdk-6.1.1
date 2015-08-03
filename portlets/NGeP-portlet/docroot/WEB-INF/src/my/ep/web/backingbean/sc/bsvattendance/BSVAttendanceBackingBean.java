@@ -44,7 +44,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
@@ -295,8 +294,7 @@ public class BSVAttendanceBackingBean extends
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTBriefingSO.class);
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
-			String ctx = facesScopes.getBPMAuthenticationCtxToken();
-			reqDTO.setToken(ctx);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPayLoad(this.getManagedBean().getSiteVisitPayLoad());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setBsvDetails(bsvs);
@@ -509,8 +507,7 @@ public class BSVAttendanceBackingBean extends
 		briefingReqDTO.setOutcome(action);
 		briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		briefingReqDTO.setToken(ctx);
+		briefingReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		briefingReqDTO.setPayLoad(this.getManagedBean().getSiteVisitPayLoad());
 		IQTBriefingSO briefingSO = getBriefingSO();
 		try {

@@ -349,7 +349,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
     private SpkiBackingBean spkiBackingBean;
     
     /** The end loa token. */
-    private String endLoaToken;
+    private Object endLoaToken;
     
 	/** The end loa task id. */
 	private String endLoaTaskId;
@@ -2133,7 +2133,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 *
 	 * @return the end loa token
 	 */
-	public String getEndLoaToken() {
+	public Object getEndLoaToken() {
 		return endLoaToken;
 	}
 
@@ -2142,7 +2142,7 @@ public class SimpleQuoteManagedBean extends BaseManagedBean{
 	 *
 	 * @param endLoaToken the new end loa token
 	 */
-	public void setEndLoaToken(String endLoaToken) {
+	public void setEndLoaToken(Object endLoaToken) {
 		this.endLoaToken = endLoaToken;
 	}
 

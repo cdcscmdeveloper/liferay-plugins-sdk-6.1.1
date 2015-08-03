@@ -1310,8 +1310,7 @@ public class SPDetailBackingBean extends
 		prReqDTO.setOutcome(action);
 		prReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		prReqDTO.setToken(ctx);
+		prReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		prReqDTO.setPayLoad(this.getManagedBean().getProposalData());
 		IQTProposalSO proSo = getProposalSO();
 		try {

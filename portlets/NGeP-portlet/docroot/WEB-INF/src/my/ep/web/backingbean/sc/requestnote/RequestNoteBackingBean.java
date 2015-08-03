@@ -313,7 +313,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    if(getManagedBean().getPrInquiryId() != null){
 			requestNoteReqDTO.setPurchaseInquiryId(prInqId);
 		}
-		String token = face.getBPMAuthenticationCtxToken();
+	    Object token = face.getBPMAuthenticationCtxToken();
 	    if(outcome.isEmpty()){
 	    	requestNoteReqDTO.setSubmit(Boolean.FALSE);
 			requestNoteReqDTO.setToken(token);
@@ -502,7 +502,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			requestNoteReqDTO.setEndLoaToken(getManagedBean().getEndLoaToken());
 			requestNoteReqDTO.setEndLoaRN(getManagedBean().getEndLoaRN());
 
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			if(outcome.isEmpty()) {	
@@ -553,9 +553,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			log.info("taskId : " + taskId);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			this.getManagedBean().setOutComes(res.getAction());
@@ -803,13 +802,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 			
 			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			requestNoteReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			requestNoteReqDTO.setRoleCode(getUserRoleCode());
 			setUserDetails(requestNote);
 			requestNoteReqDTO.setRequestNote(requestNote);
 			requestNoteReqDTO.setTaskId(getManagedBean().getTaskId());
-			requestNoteReqDTO.setToken(ctxToken);
+			requestNoteReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			requestNoteReqDTO.setOutcome(outcome);
 			requestNoteReqDTO.setDigiSignData(digiSign);
 			

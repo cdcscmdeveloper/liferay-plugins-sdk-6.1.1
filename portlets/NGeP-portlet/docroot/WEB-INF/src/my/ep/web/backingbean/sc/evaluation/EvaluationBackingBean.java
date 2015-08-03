@@ -7646,8 +7646,7 @@ public class EvaluationBackingBean extends
 		reqDtO.setTaskId(this.getManagedBean().getTaskId());
 		reqDtO.setPayLoad(this.getManagedBean().getEvaluationPayLoad());
 		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		reqDtO.setToken(ctx);
+		reqDtO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDtO.setPmUser(facesScopes.getUserSessionBean());
 		reqDtO.setRoleCode(this.getManagedBean().getRoleCode());
 		EvaluationResDTO resDTO = null;

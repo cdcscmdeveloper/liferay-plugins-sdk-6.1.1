@@ -9788,10 +9788,9 @@ public class SpecificationBackingBean extends
 			spReqDTO.setPayLoad(this.getManagedBean()
 					.getSpecificationDataType());
 			FacesScopes facesScopes = new FacesScopes();
-			String ctx = facesScopes.getBPMAuthenticationCtxToken();
 			spReqDTO.setPmUser(facesScopes.getUserSessionBean());
 			spReqDTO.setRoleCode(getUserRoleCode());
-			spReqDTO.setToken(ctx);
+			spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			IQTSpecSO specSO = getSpecSO();
 			SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 			if (resDTO.isSuccessful()) {
@@ -12934,8 +12933,7 @@ public class SpecificationBackingBean extends
 		specReqDTO.setRoleCode(getUserRoleCode());
 		specReqDTO.setPrepareSpecStatus(this.getManagedBean()
 				.getCurrentStatusId());
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		specReqDTO.setToken(ctx);
+		specReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		IQTSpecSO specSO = getSpecSO();
 
 		try {
@@ -13229,8 +13227,7 @@ public class SpecificationBackingBean extends
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
 		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		spReqDTO.setToken(ctx);
+		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		spReqDTO.setPmUser(facesScopes.getUserSessionBean());
 		spReqDTO.setRoleCode(getUserRoleCode());
 		spReqDTO.setPrepareSpecStatus(this.getManagedBean()
@@ -13277,8 +13274,7 @@ public class SpecificationBackingBean extends
 				.getSpecificationDataType()).setCircular(true);
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
 		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		spReqDTO.setToken(ctx);
+		spReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		IQTSpecSO specSO = getSpecSO();
 
 		try {
