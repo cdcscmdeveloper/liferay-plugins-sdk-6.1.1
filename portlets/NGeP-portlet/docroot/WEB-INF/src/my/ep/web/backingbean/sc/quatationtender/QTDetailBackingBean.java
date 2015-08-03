@@ -405,8 +405,7 @@ public class QTDetailBackingBean extends
 			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 			quationTenderReqDTO.setSaveFlow(false);
 			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			quationTenderReqDTO.setToken(ctxToken);
+			quationTenderReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 
 			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			quationTenderReqDTO.setPayLoad(this.getManagedBean()
@@ -1812,7 +1811,7 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO qtReqDTO = prepareQTInfo();
 
 		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);

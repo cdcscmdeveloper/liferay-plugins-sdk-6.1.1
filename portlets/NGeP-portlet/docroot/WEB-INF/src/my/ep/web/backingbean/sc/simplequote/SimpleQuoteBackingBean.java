@@ -880,8 +880,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setSubmit(Boolean.FALSE);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
@@ -1505,8 +1504,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			}
 
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setOrgProfileId(getManagedBean().getRequestNote().getPmOrgProfile().getOrgProfileId());
 			reqDTO.setQuoteBidDtl(quote);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -1559,8 +1557,7 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			QuoteReqDTO reqDTO = new QuoteReqDTO();
 			reqDTO.setQuoteBidDtl(getManagedBean().getScQuote());
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(outcome);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			QuoteResDTO resDTO = getQuoteSO().updateSimpleQuote(reqDTO);
@@ -3388,9 +3385,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 			log.info("taskId : " + taskId);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			this.getManagedBean().setOutComes(res.getAction());

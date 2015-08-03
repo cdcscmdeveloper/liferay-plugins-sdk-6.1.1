@@ -663,7 +663,7 @@ public class QTScheduleDetailBackingBean extends
 		BriefingReqDTO briefingReqDTO = new BriefingReqDTO();
 
 		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		Object ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);

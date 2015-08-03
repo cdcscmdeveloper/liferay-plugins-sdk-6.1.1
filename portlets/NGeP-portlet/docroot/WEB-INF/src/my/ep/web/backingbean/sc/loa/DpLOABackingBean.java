@@ -174,7 +174,7 @@ public class DpLOABackingBean extends SourcingBaseBackingBean<DpLOAManagedBean> 
 		purchaseRequestSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 				IPurchaseRequestSO.class);
 		Long userId = new FacesScopes().getUserSessionBean().getUserId();
-		String token = new FacesScopes().getBPMAuthenticationCtxToken();
+		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 		PurchaseRequestReqDTO   requestReqDTO = new PurchaseRequestReqDTO();
 		ScRequestNote requestNote  = getManagedBean().getScRequestNote();
 		requestReqDTO.setAssignedTo(userId);

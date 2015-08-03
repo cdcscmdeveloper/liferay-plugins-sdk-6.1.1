@@ -678,11 +678,10 @@ public class ApprovalBackingBean extends
 	private QuationTenderResDTO updateBpmTask(String outcome,
 			PmDigiSign digiSign) {
 		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctxToken);
+		reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		String taskName = res.getTaskName();
@@ -745,7 +744,7 @@ public class ApprovalBackingBean extends
 						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 								ICommitteSO.class);
 				CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-				committeReqDTO.setToken(ctxToken);
+				committeReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				committeReqDTO.setPayLoad(this.getManagedBean()
 						.getQuotationTenderDataType());
@@ -777,7 +776,7 @@ public class ApprovalBackingBean extends
 			} else {
 				QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 				qtReqDTO.setApprovalFlow(true);
-				qtReqDTO.setToken(ctxToken);
+				qtReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 				qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 				qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 				IQTDetailSO detailSO = BusinessDelegate.getInstance()
@@ -1211,7 +1210,6 @@ public class ApprovalBackingBean extends
 	public String supplierAcceptance(String outCome) {
 
 		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
 		try {
 			ScQt qt = this.getManagedBean().getQt();
@@ -1221,7 +1219,7 @@ public class ApprovalBackingBean extends
 
 			QuationTenderReqDTO qtReqDTO = new QuationTenderReqDTO();
 
-			qtReqDTO.setToken(ctxToken);
+			qtReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 			qtReqDTO.setDocType(QTConstants.DOCTYPE_QT);
 			IQTDetailSO detailSO = BusinessDelegate.getInstance()

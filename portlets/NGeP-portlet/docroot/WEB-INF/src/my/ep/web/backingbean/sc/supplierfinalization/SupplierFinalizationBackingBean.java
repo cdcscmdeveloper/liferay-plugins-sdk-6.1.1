@@ -1738,7 +1738,6 @@ public class SupplierFinalizationBackingBean extends
 		IQTSuppFinalizationSO qtSuppFinalizationSO = null;
 		int activeIndex = this.getManagedBean().getActiveIndex();
 		String taskId = this.getManagedBean().getTaskId();
-		String token = new FacesScopes().getBPMAuthenticationCtxToken();
 
 		if (null != digiSign) {
 			updatePmDigiSignData(digiSign,
@@ -1756,7 +1755,7 @@ public class SupplierFinalizationBackingBean extends
 				reqDTO = validateInfo(activeIndex);
 			}			
 			reqDTO.setOutcome(outcome);
-			reqDTO.setToken(token);
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
 			reqDTO.setRoleCode(getManagedBean().isInitialDecisionFwdToBPK() ? 

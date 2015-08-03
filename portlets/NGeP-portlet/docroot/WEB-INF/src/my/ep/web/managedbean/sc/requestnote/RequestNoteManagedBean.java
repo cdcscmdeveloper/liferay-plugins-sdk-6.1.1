@@ -253,7 +253,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     private String backToPreviousPage;
     
     /** The end loa token. */
-    private String endLoaToken;
+    private Object endLoaToken;
     
 	/** The end loa task id. */
 	private String endLoaTaskId;
@@ -1518,7 +1518,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 *
 	 * @return the end loa token
 	 */
-	public String getEndLoaToken() {
+	public Object getEndLoaToken() {
 		return endLoaToken;
 	}
 
@@ -1527,7 +1527,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 *
 	 * @param endLoaToken the new end loa token
 	 */
-	public void setEndLoaToken(String endLoaToken) {
+	public void setEndLoaToken(Object endLoaToken) {
 		this.endLoaToken = endLoaToken;
 	}
 
