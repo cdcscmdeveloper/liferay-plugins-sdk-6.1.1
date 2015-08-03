@@ -167,7 +167,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					.getServiceObject("cm", ICodificationSO.class);
 
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			log.info("new:"
@@ -294,7 +294,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			log.info("new:"
@@ -456,7 +456,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			log.info("new:"
@@ -513,7 +513,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 					.getServiceObject("cm", ICodificationSO.class);
 
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
@@ -875,7 +875,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		CodificationBackingBean bb = new CodificationBackingBean();
@@ -1383,7 +1383,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	 * ).getServiceObject("cm",ICodificationSO.class);
 	 * 
 	 * CodificationReqDTO reqDTO = new CodificationReqDTO(); CodificationResDTO
-	 * resDTO = null; FacesScopes face = new FacesScopes(); String token
+	 * resDTO = null; FacesScopes face = new FacesScopes(); byte[] token
 	 * =face.getBPMAuthenticationCtxToken(); CmItem item = new CmItem();
 	 * 
 	 * System.out.println("this.getManagedBean().getRequestCode().getTempCode():"
@@ -1539,7 +1539,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
@@ -1787,7 +1787,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 
@@ -2115,7 +2115,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getServiceObject(IBpmSO.class);
 
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		reqDTO.setCtxToken(token);
@@ -2156,7 +2156,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		System.out.println("taskId:" + taskId);
 
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
@@ -2362,7 +2362,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		log.info("taskId:" + taskId);
 
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
@@ -2467,7 +2467,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				.getInstance().getServiceObject("cm", ICodificationSO.class);
 
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CmRequestCode code = new CmRequestCode();
 		CodificationBackingBean cdBB = new CodificationBackingBean();

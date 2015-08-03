@@ -328,7 +328,7 @@ public class FacesScopes {
 		return (end >= 0 && start < end);
 	}
 
-	public String getBPMAuthenticationCtxToken() {
+	public Object getBPMAuthenticationCtxToken() {
 		Object ctxToken = getSessionScope(BPM_AUTH_CONTEXT_TOKEN);
 		if (null == ctxToken) {
 			String loginId = getUserScreenName();
@@ -341,7 +341,7 @@ public class FacesScopes {
 				setSessionScope(BPM_AUTH_CONTEXT_TOKEN, ctxToken);
 			}
 		}
-		return (String) ctxToken;
+		return ctxToken;
 	}
 
 	public static MethodExpression createMethodExpression(FacesContext context, String methodExpression,
