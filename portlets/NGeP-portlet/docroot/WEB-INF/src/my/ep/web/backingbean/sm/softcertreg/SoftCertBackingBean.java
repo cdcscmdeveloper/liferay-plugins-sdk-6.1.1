@@ -236,10 +236,11 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						.getSmSofcertDocFiles().add(docFile);
 
 				// set selected doc to main list
-				setSelectedSuppDocToMainList(filePath);
+				setSelectedSuppDocToMainList();
 
 				// upload file
-				commonUploadFile(event, filePath);
+				SmCommonUtil.processUpload(filePath, event,
+						docFile.getFileName());
 			}
 		}
 
@@ -749,7 +750,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * @param String
 	 *            filePath
 	 */
-	private void setSelectedSuppDocToMainList(String filePath) {
+	private void setSelectedSuppDocToMainList() {
 		Iterator<SoftcertUploadSuppDocVO> docVOIter = getManagedBean()
 				.getSoftcertUploadSuppDocList().iterator();
 		while (docVOIter.hasNext()) {
