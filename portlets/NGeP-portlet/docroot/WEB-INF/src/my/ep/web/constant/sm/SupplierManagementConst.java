@@ -153,6 +153,7 @@ public class SupplierManagementConst {
 	public static final String LOGIN_URL = "";
 	public static final String ORG_TYPE_SUPPLIER = "SUP";
 	public static final String SUPPLIER_BUSINESS_TYPE = "SBT";
+	
 
 	// SDO BPM Action
 	public static final String BPM_INQUIRY = "INQUIRY";
@@ -162,6 +163,10 @@ public class SupplierManagementConst {
 	// Supporting Doc Type
 	public static final String SUPPORTING_DOC_ONLINE = "S";
 	public static final String SUPPORTING_DOC_OFFLINE = "H";
+	
+	// Business Type
+	public static final String BUSINESS_TYPE_INDIVIDU = "Individu";
+	public static final String BUSINESS_TYPE_INDIVIDUAL = "Individual"; 
 
 	// Site Visit Assignment
 	public static final String SVO_HQ = "UPS_SVO_HQ";
