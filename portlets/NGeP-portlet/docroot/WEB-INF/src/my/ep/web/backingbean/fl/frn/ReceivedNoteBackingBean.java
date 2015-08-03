@@ -362,6 +362,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 							noteItem.setFlDelOrderItem(delOrderItem);
 							noteItem.setFlFulfilmentNote(getManagedBean().getFulfilmentNote());
 							noteItem.setFlItem(delOrderItem.getFlItem());
+							noteItem.setGstAmount(delOrderItem.getGstAmount());
+							noteItem.setGstUnitPrice(delOrderItem.getGstUnitPrice());
 							if(delOrderItem.getFlFulfilmentItemAddr().getItemType().getParameterCode().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 								noteItem.setReceivedQty(delOrderItem.getDeliveredQty());
 								noteItem.setReceivedAmt(delOrderItem.getDeliveredAmt());
