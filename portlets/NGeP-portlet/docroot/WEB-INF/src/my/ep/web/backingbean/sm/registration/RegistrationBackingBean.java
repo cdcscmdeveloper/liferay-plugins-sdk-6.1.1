@@ -2077,7 +2077,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Validate gst no and format
 	 */
-/*	public void validateGstRegNo(){
+	public void validateGstRegNo(){
 		String gstNo = this.getManagedBean().getSmGstSupplier().getGstRegNo();
 		if(gstNo != null && gstNo.length() > 0){
 			if(!SmCommonUtil.validateGstRegNo(gstNo)){
@@ -2089,7 +2089,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		}else{
 			this.getManagedBean().setGstFlag(false);
 		}
-	}*/
+	}
 	
 	
 	/**
