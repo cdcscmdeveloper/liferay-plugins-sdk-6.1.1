@@ -183,7 +183,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			return;
 		}
 		FacesScopes face = new FacesScopes();
-		String token = face.getBPMAuthenticationCtxToken();
+		Object token = face.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 
