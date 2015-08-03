@@ -14,7 +14,7 @@
 	</ui:define>
 	
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
+		<p:messages id="messages" showDetail="true" closable="true" showSummary="false" escape="false"/>
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
@@ -30,17 +30,24 @@
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoHq.xhtml" />
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoBranches.xhtml" />
 		
-		<p:confirmDialog id="confirmDeclareDialog"
-			message="#{lbl['lbl.sm.gst.declare.confirm.msg']}"
-			header="#{lbl['lbl.sm.userprofile.confirmation']}"
-			widgetVar="confirmDeclareDialog">
+		<p:dialog id="confirmDeclareDialog" header="#{lbl['lbl.sm.gst.tnc.header']}"
+			widgetVar="confirmDeclareDialog" modal="true" width="500px" height="300px">
+			<table style="width: 100%">
+				<tr>
+					<td>
+						<h:outputText value="#{lbl['lbl.sm.gst.tnc.msg']}" 
+							style="float: left;white-space: normal;" escape="false"/>
+					</td>
+				</tr>
+			</table>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeclareDialog.hide();" 
-					action="#{smUpdateGstInfoBackingBean.declareGst}"
+				<p:commandButton value="#{lbl['lbl.btn.accept']}" onclick="confirmDeclareDialog.hide();" 
+					action="#{smUpdateGstInfoBackingBean.declareGst}" update="@form"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeclareDialog.hide();" />
+				<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="confirmDeclareDialog.hide();" />
 			</div>
-		</p:confirmDialog>
+		</p:dialog>
+		
 	</ui:define>
 		
 </ui:composition>
