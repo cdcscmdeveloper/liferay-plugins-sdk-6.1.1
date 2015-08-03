@@ -19,7 +19,7 @@
 					<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
 					<td style="border-style: none !important;"><p:inputText id="gstRegNo"  maxlength="12" 
 						value="#{cc.attrs.smGstSupplier.gstRegNo}" 
-						size="40" label="#{lbl['lbl.sm.gst.regno']}" >
+						size="35" label="#{lbl['lbl.sm.gst.regno']}" >
 						<p:ajax event="blur" update="gstRegDateCalId" />
 						</p:inputText>
 					</td>
@@ -34,6 +34,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
 							maxdate="#{CommonConstants.CURRENT_DATE}">
+							<p:ajax event="dateSelect"  update="gstNotEmptyPanelId" process="@this"/>
 						</p:calendar></td>
 				</tr>
 				<tr>
@@ -45,6 +46,7 @@
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
 							mindate="#{CommonConstants.CURRENT_DATE}">
+							<p:ajax event="dateSelect"  update="gstNotEmptyPanelId" process="@this"/>
 						</p:calendar></td>
 				</tr>
 			</table>
