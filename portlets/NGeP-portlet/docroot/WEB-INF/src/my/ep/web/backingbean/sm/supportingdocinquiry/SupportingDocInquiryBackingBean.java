@@ -162,7 +162,7 @@ public class SupportingDocInquiryBackingBean extends BaseBackingBean<SupportingD
 			log.info("**********submitInquiryResponse*********");
 			ISupportingDocInquirySO reqSO = (ISupportingDocInquirySO) BusinessDelegate.getInstance().getServiceObject("sm", ISupportingDocInquirySO.class);
 			SupportingDocInquiryReqDTO reqDTO = new SupportingDocInquiryReqDTO();
-			String token = new FacesScopes().getBPMAuthenticationCtxToken();
+			Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 			
 			Date currDate = new Date();
 			
