@@ -111,7 +111,7 @@ public class TemplateSpecBackingBean extends
 	 * Get the template specification details by template specification bean
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 * @return the template specification redirect url
 	 */
 	public String retrieveTemplateSpecMaster(TemplateSpecBean templateSpecBean) {
@@ -180,9 +180,10 @@ public class TemplateSpecBackingBean extends
 				templateSpecBean.setSpecMaster(specMaster);
 				templateSpecBean.setSpecAnswerList(resDTO.getSpecAnswerList());
 				templateSpecBean.setSelectedSpecQuestion(null);
-				
-				if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL.equals(specMaster) &&
-						resDTO.getSpecAnswerList() != null) {
+
+				if (ParameterConst.SPECIFICATION_TYPE_FINANCIAL
+						.equals(specMaster)
+						&& resDTO.getSpecAnswerList() != null) {
 					calcGrandTotalAmount(templateSpecBean);
 				}
 			}
@@ -197,7 +198,7 @@ public class TemplateSpecBackingBean extends
 	 * Save the template specification master and details action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void saveAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("saveAction");
@@ -240,7 +241,7 @@ public class TemplateSpecBackingBean extends
 	 * Save the template specification answer action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void saveAnswerAction(TemplateSpecBean templateSpecBean) {
 		ITemplateSpecSO templateSpecSO = null;
@@ -282,7 +283,7 @@ public class TemplateSpecBackingBean extends
 	 * Delete template specification question by template specification bean.
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void deleteQuestion(TemplateSpecBean templateSpecBean) {
 		List<TplSpecQuestion> specQuestionList = templateSpecBean
@@ -328,22 +329,22 @@ public class TemplateSpecBackingBean extends
 		specMaster.setTemplateTypeCode(new PmParameter());
 		specMaster.setSpecTypeCode(new PmParameter());
 		specMaster.setOrgProfile(new PmOrgProfile());
-		
+
 		IUserSO userSO = null;
 		try {
-			userSO = BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IUserSO.class);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
-			UserResDTO resDTO = userSO
-					.retrieveUserOrgListByUserId(reqDTO);
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 
-			if (resDTO.getUserOrgList() != null && resDTO.getUserOrgList().size() > 0) {
-				specMaster.setOwnerOrgProfile(resDTO.getUserOrgList().get(0).getPmOrgProfile());
+			if (resDTO.getUserOrgList() != null
+					&& resDTO.getUserOrgList().size() > 0) {
+				specMaster.setOwnerOrgProfile(resDTO.getUserOrgList().get(0)
+						.getPmOrgProfile());
 			}
-			
+
 		} finally {
 			userSO = null;
 		}
@@ -369,13 +370,13 @@ public class TemplateSpecBackingBean extends
 	 * Add new template specification question
 	 * 
 	 * @param tplSpecMaster
-	 * 		the TplSpecMaster instance
+	 *            the TplSpecMaster instance
 	 * @param questionList
-	 * 		the list of TplSpecQuestion instance
+	 *            the list of TplSpecQuestion instance
 	 * @param row
-	 * 		the insert row
+	 *            the insert row
 	 * @param questionType
-	 * 		the question type
+	 *            the question type
 	 */
 	public TplSpecQuestion addQuestion(TplSpecMaster tplSpecMaster,
 			List<TplSpecQuestion> questionList, Integer row, String questionType) {
@@ -460,14 +461,14 @@ public class TemplateSpecBackingBean extends
 			TplSpecQuestion question = questionList.get(i);
 			question.setQuestionOrder(i + 1);
 		}
-		
+
 		return newQuestion;
 	}
 
 	/**
 	 * Get ministry dropdown list
 	 * 
-	 * @return	the list of SelectItem instance
+	 * @return the list of SelectItem instance
 	 */
 	public SelectItem[] getMinistryList() {
 		SelectItem[] items = null;
@@ -501,7 +502,7 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Get specification type dropdown list
 	 * 
-	 * @return	the list of SelectItem instance
+	 * @return the list of SelectItem instance
 	 */
 	public SelectItem[] getSpecTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -518,7 +519,7 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Get item type dropdown list
 	 * 
-	 * @return	the list of SelectItem instance
+	 * @return the list of SelectItem instance
 	 */
 	public SelectItem[] getItemTypeDropdownList() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -535,7 +536,7 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Get fulfilement type dropdown list
 	 * 
-	 * @return	the list of SelectItem instance
+	 * @return the list of SelectItem instance
 	 */
 	public SelectItem[] getFulfilmentTypeDropdownList(TplSpecMaster specMaster) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -550,11 +551,11 @@ public class TemplateSpecBackingBean extends
 		return super.getDropdownValuesBySearchBean(
 				ParameterTypeConst.FULFILMENT_TYPE, searchBean);
 	}
-	
+
 	/**
 	 * Get price type dropdown list
 	 * 
-	 * @return	the list of SelectItem instance
+	 * @return the list of SelectItem instance
 	 */
 	public SelectItem[] getPriceTypeDropdownList(TplSpecMaster specMaster) {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -567,7 +568,7 @@ public class TemplateSpecBackingBean extends
 
 			if (specificationReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
-				//filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
+				// filteredList.add(ParameterConst.PRICE_TYPE_TARIFF);
 			} else if (!estCostReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_TIER);
 			}
@@ -576,7 +577,7 @@ public class TemplateSpecBackingBean extends
 
 			if (specificationReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
-				//filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
+				// filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TARIFF);
 			} else if (!estCostReq) {
 				filteredList.add(ParameterConst.PRICE_TYPE_ZONAL_TIER);
 			}
@@ -594,8 +595,8 @@ public class TemplateSpecBackingBean extends
 	 * Get estimation cost by zone/normal
 	 * 
 	 * @param specAnswer
-	 * 		the TplSpecAnswer instance
-	 * @return	the estimation cost
+	 *            the TplSpecAnswer instance
+	 * @return the estimation cost
 	 */
 	public BigDecimal getEstimationCostByAnswer(TplSpecAnswer specAnswer) {
 		long specZoneId = specAnswer.getTplSpecSuppAnswer().getTplSpecZoneDtl() != null ? specAnswer
@@ -709,7 +710,8 @@ public class TemplateSpecBackingBean extends
 	/**
 	 * Price Type dropdown change action
 	 */
-	public void priceTypeChange(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion) {
+	public void priceTypeChange(TemplateSpecBean templateSpecBean,
+			TplSpecQuestion specQuestion) {
 		Long parameterId = specQuestion.getClPriceTypeCode().getParameterId();
 
 		// if (parameterId != null) {
@@ -725,15 +727,17 @@ public class TemplateSpecBackingBean extends
 
 			TemplateSpecHelper specHelper = TemplateSpecHelper.getInstance();
 			specHelper.resetPriceTypeDtl(specQuestion);
-			
-			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER.equals(templateSpecBean.getContentType()) &&
-					specHelper.isPriceTypeStandard(specQuestion.getClPriceTypeCode().getParameterCode())){
-				
+
+			if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
+					.equals(templateSpecBean.getContentType())
+					&& specHelper.isPriceTypeStandard(specQuestion
+							.getClPriceTypeCode().getParameterCode())) {
+
 				TplSpecAnswer specAnswer = specHelper.createNewSpecAnswer(
 						templateSpecBean, specQuestion, null);
 				List<TplSpecAnswer> specAnswers = new ArrayList<TplSpecAnswer>();
 				specAnswers.add(specAnswer);
-				
+
 				specQuestion.setTplSpecAnswers(specAnswers);
 			}
 		} finally {
@@ -745,7 +749,7 @@ public class TemplateSpecBackingBean extends
 	 * Answer Type dropdown change action
 	 * 
 	 * @param specQuestion
-	 * 		the TplSpecQuestion instance 
+	 *            the TplSpecQuestion instance
 	 */
 	public void answerTypeChange(TplSpecQuestion specQuestion) {
 		IParameterSO parameterSO = null;
@@ -769,7 +773,8 @@ public class TemplateSpecBackingBean extends
 
 	private void resetAnswerTypeDtl(TplSpecQuestion specQuestion) {
 		if (ParameterConst.ANSWER_TYPE_TEXT.equals(specQuestion
-				.getAnswerTypeCode().getParameterCode()) && specQuestion.getTplSpecMaster().isScoringReq()) {
+				.getAnswerTypeCode().getParameterCode())
+				&& specQuestion.getTplSpecMaster().isScoringReq()) {
 			PmParameter pmParameter = getParameterByTypeAndCode(
 					ParameterTypeConst.SCORE_TYPE,
 					ParameterConst.SCORE_TYPE_USER);
@@ -783,7 +788,7 @@ public class TemplateSpecBackingBean extends
 	 * Score Type dropdown change action
 	 * 
 	 * @param specQuestion
-	 * 		the TplSpecQuestion instance 
+	 *            the TplSpecQuestion instance
 	 */
 	public void scoreTypeChange(TplSpecQuestion specQuestion,
 			Long selectedScoreTypeId) {
@@ -815,7 +820,7 @@ public class TemplateSpecBackingBean extends
 	 * Delivery Term dropdown change action
 	 * 
 	 * @param specQuestion
-	 * 		the TplSpecQuestion instance 
+	 *            the TplSpecQuestion instance
 	 */
 	public void deliveryTermChange(TplSpecQuestion specQuestion) {
 		IParameterSO parameterSO = null;
@@ -840,11 +845,11 @@ public class TemplateSpecBackingBean extends
 	 * Calculate the total amount and amount per year for each item.
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 * @param specAnswer
-	 * 		the TplSpecAnswer instance
+	 *            the TplSpecAnswer instance
 	 * @param isItemTypeService
-	 * 		the item type service flag
+	 *            the item type service flag
 	 */
 	public void calcTotalAmount(TemplateSpecBean templateSpecBean,
 			TplSpecAnswer specAnswer, boolean isItemTypeService) {
@@ -877,10 +882,10 @@ public class TemplateSpecBackingBean extends
 	}
 
 	/**
-	 * Tier Quantity Popup Action 
+	 * Tier Quantity Popup Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void tierQtyPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyPopupAction");
@@ -908,7 +913,7 @@ public class TemplateSpecBackingBean extends
 	 * Scoring Popup Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void scoringPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringPopupAction");
@@ -1003,7 +1008,7 @@ public class TemplateSpecBackingBean extends
 	 * Estimation Popup Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void estimationPopupAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("estimationPopupAction");
@@ -1057,7 +1062,8 @@ public class TemplateSpecBackingBean extends
 		if (specEstimations == null
 				|| specEstimations.size() == 0
 				|| (specZoneDtls != null && specEstimations.size() != specZoneDtls
-						.size())) {
+						.size())
+				|| !compareZoneDtlsEstimations(specZoneDtls, specEstimations)) {
 
 			specEstimations = new ArrayList<TplSpecEstimation>();
 
@@ -1079,7 +1085,7 @@ public class TemplateSpecBackingBean extends
 	 * Add new Tier Quantity action
 	 * 
 	 * @param tplSpecQuestion
-	 * 		the TplSpecQuestion instance
+	 *            the TplSpecQuestion instance
 	 */
 	public void addTierQtyAction(TplSpecQuestion tplSpecQuestion) {
 		debugLogger("addTierQtyAction");
@@ -1115,7 +1121,7 @@ public class TemplateSpecBackingBean extends
 	 * Add new scoring action
 	 * 
 	 * @param tplSpecQuestion
-	 * 		the TplSpecQuestion instance
+	 *            the TplSpecQuestion instance
 	 */
 	public void addScoringAction(TplSpecQuestion tplSpecQuestion) {
 		debugLogger("addScoringAction");
@@ -1150,7 +1156,7 @@ public class TemplateSpecBackingBean extends
 	 * Tier Quantity Popup Ok Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void tierQtyOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyOkAction");
@@ -1159,13 +1165,13 @@ public class TemplateSpecBackingBean extends
 		List<TplSpecTierQty> specTierQties = templateSpecBean
 				.getSelectedSpecQuestion().getTplSpecTierQties();
 		try {
-			
+
 			templateSpecSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
 
 			templateSpecSO.validateTierQty(
 					templateSpecBean.getSelectedSpecQuestion(), specTierQties);
-			
+
 		} catch (EpException e) {
 			String msgCode = e.getMessage();
 			if (MessageConst.ERROR_700107.equalsIgnoreCase(msgCode)
@@ -1173,7 +1179,7 @@ public class TemplateSpecBackingBean extends
 				throw new EpException(MessageConst.ERROR_760296,
 						new String[] { "Tier Quantity" });
 			}
-			throw new EpException(msgCode,e.getParameters());
+			throw new EpException(msgCode, e.getParameters());
 		} finally {
 			templateSpecSO = null;
 		}
@@ -1188,7 +1194,7 @@ public class TemplateSpecBackingBean extends
 	 * Tier Quantity Popup Ok Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void tierQtyCancelAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("tierQtyCancelAction");
@@ -1207,7 +1213,7 @@ public class TemplateSpecBackingBean extends
 	 * Scoring Popup Ok Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void scoringOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringOkAction");
@@ -1244,7 +1250,7 @@ public class TemplateSpecBackingBean extends
 	 * Scoring Popup Cancel Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void scoringCancelAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("scoringCancelAction");
@@ -1253,12 +1259,14 @@ public class TemplateSpecBackingBean extends
 		TplSpecQuestion selectedSpecQuestion = templateSpecBean
 				.getSelectedSpecQuestion();
 
-		if (oriSpecQuestion.getScoreTypeCode() != null && oriSpecQuestion.getScoreTypeCode().getParameterId() != null) {
-			selectedSpecQuestion.setScoreTypeCode(oriSpecQuestion.getScoreTypeCode());	
+		if (oriSpecQuestion.getScoreTypeCode() != null
+				&& oriSpecQuestion.getScoreTypeCode().getParameterId() != null) {
+			selectedSpecQuestion.setScoreTypeCode(oriSpecQuestion
+					.getScoreTypeCode());
 		} else {
 			selectedSpecQuestion.setScoreTypeCode(null);
 		}
-		
+
 		selectedSpecQuestion.setMaxScore(oriSpecQuestion.getMaxScore());
 		selectedSpecQuestion.setWeightageReq(oriSpecQuestion.isWeightageReq());
 		selectedSpecQuestion.setWeightage(oriSpecQuestion.getWeightage());
@@ -1272,7 +1280,7 @@ public class TemplateSpecBackingBean extends
 	 * Estimation Cost Popup Ok Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void estCostOkAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("estCostOkAction");
@@ -1288,7 +1296,7 @@ public class TemplateSpecBackingBean extends
 	 * Estimation Popup Cancel Action
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void estCostCancelAction(TemplateSpecBean templateSpecBean) {
 		debugLogger("estCostCancelAction");
@@ -1306,10 +1314,10 @@ public class TemplateSpecBackingBean extends
 	}
 
 	/**
-	 * Calculate Grand Total Estimation Amount 
+	 * Calculate Grand Total Estimation Amount
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 * @return the grand total estimation amount
 	 */
 	public BigDecimal calcGrandTotalEstAmount(TemplateSpecBean templateSpecBean) {
@@ -1330,15 +1338,19 @@ public class TemplateSpecBackingBean extends
 						&& specQuestion.getTplSpecEstimations() != null) {
 
 					if (specZoneDtl != null) {
-						for (TplSpecEstimation specEstimation : specQuestion.getTplSpecEstimations()) {
-							if (specZoneDtl.getSpecZoneId().equals(specEstimation.getTplSpecZoneDtl().getSpecZoneId())) {
+						for (TplSpecEstimation specEstimation : specQuestion
+								.getTplSpecEstimations()) {
+							if (specZoneDtl.getSpecZoneId().equals(
+									specEstimation.getTplSpecZoneDtl()
+											.getSpecZoneId())) {
 								specEstimations.add(specEstimation);
 								break;
 							}
 						}
-						
+
 					} else {
-						specEstimations.addAll(specQuestion.getTplSpecEstimations());	
+						specEstimations.addAll(specQuestion
+								.getTplSpecEstimations());
 					}
 
 					specQuestionIds.add(specQuestion.getSpecQuestionId());
@@ -1370,7 +1382,7 @@ public class TemplateSpecBackingBean extends
 	 * Calculate the Grand Total Amount
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 * @return the grand total amount
 	 */
 	public BigDecimal calcGrandTotalAmount(TemplateSpecBean templateSpecBean) {
@@ -1382,24 +1394,27 @@ public class TemplateSpecBackingBean extends
 				.getInstance();
 		List<TplSpecAnswer> specAnswerList = null;
 
-		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER.equals(templateSpecBean.getContentType())) {
+		if (TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER
+				.equals(templateSpecBean.getContentType())) {
 			specAnswerList = new ArrayList<TplSpecAnswer>();
-			
+
 			if (specMaster.getTplSpecQuestions() != null) {
-				for (TplSpecQuestion specQuestion : specMaster.getTplSpecQuestions()) {
+				for (TplSpecQuestion specQuestion : specMaster
+						.getTplSpecQuestions()) {
 					if (specQuestion.getTplSpecAnswers() != null) {
 						specAnswerList.addAll(specQuestion.getTplSpecAnswers());
 					}
 				}
 			}
-			
+
 		} else {
-			specAnswerList = templateSpecBean.getSpecAnswerList();			
+			specAnswerList = templateSpecBean.getSpecAnswerList();
 		}
-		
+
 		if (specAnswerList != null) {
 			for (TplSpecAnswer tplSpecAnswer : specAnswerList) {
-				TplSpecQuestion specQuestion = tplSpecAnswer.getTplSpecQuestion();
+				TplSpecQuestion specQuestion = tplSpecAnswer
+						.getTplSpecQuestion();
 				String priceType = specQuestion.getClPriceTypeCode()
 						.getParameterCode();
 				BigDecimal quantity = specQuestion.getClQuantity();
@@ -1420,7 +1435,8 @@ public class TemplateSpecBackingBean extends
 					tierSpecQuestionId = specQuestion.getSpecQuestionId();
 
 				} else if (templateSpecHelper.isPriceTypeStandard(priceType)
-						|| templateSpecHelper.isPriceTypeZonalStandard(priceType)) {
+						|| templateSpecHelper
+								.isPriceTypeZonalStandard(priceType)) {
 
 					if (tplSpecAnswer.getAnswerNumeric() != null) {
 						totalAmount = totalAmount.add(tplSpecAnswer
@@ -1432,7 +1448,7 @@ public class TemplateSpecBackingBean extends
 					totalAmountPerYear = totalAmountPerYear.add(tplSpecAnswer
 							.getAmountPerYear());
 				}
-			}	
+			}
 		}
 
 		specMaster.setTotalAmountPerYear(totalAmountPerYear);
@@ -1440,42 +1456,46 @@ public class TemplateSpecBackingBean extends
 
 		return totalAmount;
 	}
-	
+
 	/**
 	 * Calculate the total amount and amount per year for each item.
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 * @return the total score
 	 */
 	public String calcTotalScore(TemplateSpecBean templateSpecBean) {
 		String totalScoreStr = null;
-		List<TplSpecAnswer> specAnswerList = templateSpecBean.getSpecAnswerList();
+		List<TplSpecAnswer> specAnswerList = templateSpecBean
+				.getSpecAnswerList();
 
 		if (specAnswerList != null && specAnswerList.size() > 0) {
 			BigDecimal totalScore = BigDecimal.valueOf(0);
 			BigDecimal totalMaxScore = BigDecimal.valueOf(0);
-			
+
 			for (TplSpecAnswer specAnswer : specAnswerList) {
 				BigDecimal autoScore = specAnswer.getAutoScore();
 				BigDecimal userScore = specAnswer.getUserScore();
-				
+
 				if (autoScore != null) {
 					totalScore = totalScore.add(autoScore);
 				}
-				
+
 				if (userScore != null) {
 					totalScore = totalScore.add(userScore);
 				}
-				
-				if (specAnswer.getTplSpecQuestion().getMaxScore() != null && (autoScore != null || userScore != null)) {
-					totalMaxScore = totalMaxScore.add(specAnswer.getTplSpecQuestion().getMaxScore());
+
+				if (specAnswer.getTplSpecQuestion().getMaxScore() != null
+						&& (autoScore != null || userScore != null)) {
+					totalMaxScore = totalMaxScore.add(specAnswer
+							.getTplSpecQuestion().getMaxScore());
 				}
 			}
-			
-			totalScoreStr = totalScore.toString() + " / " + totalMaxScore.toString();
+
+			totalScoreStr = totalScore.toString() + " / "
+					+ totalMaxScore.toString();
 		}
-		
+
 		return totalScoreStr;
 	}
 
@@ -1483,14 +1503,15 @@ public class TemplateSpecBackingBean extends
 	 * Check all items price type is standard
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
-	 * @return	the indicator all items price type is standard
+	 *            the TemplateSpecBean instance
+	 * @return the indicator all items price type is standard
 	 */
 	public boolean isAllPriceTypesStandard(TemplateSpecBean templateSpecBean) {
 		boolean isAllPriceTypesStandard = true;
 		String contentType = templateSpecBean.getContentType();
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
-		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE.equals(specMaster.getItemTypeCode().getParameterCode());
+		boolean isItemTypeService = ParameterConst.ITEM_TYPE_SERVICE
+				.equals(specMaster.getItemTypeCode().getParameterCode());
 		List<TplSpecQuestion> specQuestions = null;
 
 		if (TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(contentType)
@@ -1524,8 +1545,9 @@ public class TemplateSpecBackingBean extends
 					String priceType = specQuestion.getClPriceTypeCode()
 							.getParameterCode();
 
-					if (!templateSpecHelper.isPriceTypeStandard(priceType) && 
-							((!specificationReq && !isItemTypeService) || (specificationReq && !templateSpecHelper.isPriceTypeZonalStandard(priceType)))) {
+					if (!templateSpecHelper.isPriceTypeStandard(priceType)
+							&& ((!specificationReq && !isItemTypeService) || (specificationReq && !templateSpecHelper
+									.isPriceTypeZonalStandard(priceType)))) {
 						isAllPriceTypesStandard = false;
 
 						break;
@@ -1541,7 +1563,7 @@ public class TemplateSpecBackingBean extends
 	 * Check any weightage required
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 * @return the weightage required indicator
 	 */
 	public boolean hasWeightage(TemplateSpecBean templateSpecBean) {
@@ -1564,7 +1586,7 @@ public class TemplateSpecBackingBean extends
 	 * Update Item Weightage Required
 	 * 
 	 * @param templateSpecBean
-	 * 		the TemplateSpecBean instance
+	 *            the TemplateSpecBean instance
 	 */
 	public void updateItemWeightageReq(TemplateSpecBean templateSpecBean) {
 		TplSpecMaster specMaster = templateSpecBean.getSpecMaster();
@@ -1572,7 +1594,7 @@ public class TemplateSpecBackingBean extends
 		TemplateSpecHelper.getInstance().updateItemWeightageReq(specMaster,
 				specMaster.getTplSpecQuestions());
 	}
-	
+
 	/**
 	 * Get record status dropdown list
 	 * 
@@ -1580,7 +1602,7 @@ public class TemplateSpecBackingBean extends
 	 */
 	public SelectItem[] getStatusOptions() {
 
-	    return PmCommonUtil.getStatusOptionsDefault();
+		return PmCommonUtil.getStatusOptionsDefault();
 	}
 
 	/**
@@ -1706,9 +1728,9 @@ public class TemplateSpecBackingBean extends
 			IPagingDataModel<TplSpecMaster> specMasterDataModel) {
 		this.specMasterDataModel = specMasterDataModel;
 	}
-	
+
 	public int getNumOfRows(String text) {
-		
+
 		int rowCount = 0;
 		if (!StringUtils.isEmpty(text)) {
 			double lenght = text.length();
@@ -1718,19 +1740,48 @@ public class TemplateSpecBackingBean extends
 			rowCount = 1;
 		} else if (rowCount > 5) {
 			rowCount = 5;// max rows limit shuld be 5. if morthan 5 then display
-						// scroll bar
+							// scroll bar
 		}
 		return rowCount;
 	}
-	
-	public void reset(){
-		
+
+	public void reset() {
+
 		this.getManagedBean().setSearchSpecName(null);
 		this.getManagedBean().setSearchOrgProfileId(null);
 		this.getManagedBean().setSearchTemplateTypeId(null);
 		this.getManagedBean().setSearchSpecTypeId(null);
 		this.getManagedBean().setSearchItemTypeId(null);
 		this.getManagedBean().setSearchProcurementCategoryId(null);
-		
+
+	}
+
+	private boolean compareZoneDtlsEstimations(List<TplSpecZoneDtl> zoneDtld,
+			List<TplSpecEstimation> estimationsList) {
+		boolean chnagedtls = false;
+		if (null != zoneDtld && null != estimationsList) {
+			List<String> zoneNames = new ArrayList<String>();
+			for (TplSpecZoneDtl zoneDtls : zoneDtld) {
+				zoneNames.add(zoneDtls.getZoneName());
+			}
+			for (String names : zoneNames) {
+				chnagedtls = false;
+				for (TplSpecEstimation estimations : estimationsList) {
+					if (names.equalsIgnoreCase(estimations.getTplSpecZoneDtl()
+							.getZoneName())) {
+						chnagedtls = true;
+						break;
+					}
+				}
+				if (chnagedtls == false) {
+					return chnagedtls;
+				}
+			}
+
+		} else {
+			chnagedtls = true;
+		}
+		return chnagedtls;
+
 	}
 }
