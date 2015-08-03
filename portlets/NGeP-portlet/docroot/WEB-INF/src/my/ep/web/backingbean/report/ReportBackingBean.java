@@ -728,7 +728,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2626,6 +2626,20 @@ public class ReportBackingBean extends
 					}
 			}
 		return registrationStatusList;
+	}
+	public void supplierTypeConsultant(){
+		getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(false);
+		if((null!=this.getReportValue())&&(this.getReportValue()
+				.equalsIgnoreCase(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))){
+			if((null!=this.getSmSupplierType())&&(this.getSmSupplierType()
+					.equalsIgnoreCase(ReportConst.SUPPL_CONSLT_TYPE))){
+				getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(true);
+				getManagedBean().getRptGenBean().setSmRegistrationStatusView(false);
+			}else{
+				getManagedBean().getRptGenBean().setSmConsultantRegistrationStatusView(false);
+				getManagedBean().getRptGenBean().setSmRegistrationStatusView(true);
+			}
+		}
 	}
 	public List<SelectItem> getAllModuleList(){
 		 moduleList = new ArrayList<SelectItem>();		
@@ -4583,6 +4597,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					//generateReportTimer();
 					//generateReportIntime();
 					fileGenerateReport(getManagedBean().getReportJsp(),	constructedParamString);
+					/*FacesContext.getCurrentInstance().getPartialViewContext().getRenderIds().add("reportGenDialog.hide()");//execute("reportGenDialog.hide()");
+					RequestContext.getCurrentInstance().execute("reportGenDialog.hide()");*/
 					getManagedBean().getRptGenBean().setGenerateButtonView(false);
 				/*} catch (IOException e) {
 					getManagedBean().getRptGenBean().setGenerateButtonView(false);

@@ -267,22 +267,26 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;	            
 		 case ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL:
 			    rptGenBean.retrieveState();
+			    rptGenBean.setSmSupplierTypeView(true);
 	        	rptGenBean.setSmApplicationNoView(true);
 	        	rptGenBean.setSmApplicationStatusView(true);
 	        	rptGenBean.setSmEpNoView(true);
 	        	rptGenBean.setSmRegistrationNoView(true);
 	        	rptGenBean.setSmSupportingDocumentModeView(true);
 	        	rptGenBean.setSmSupportingDocumentStatusView(true);
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
+	        	rptGenBean.setSmCommonZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmNonMandatoryDateView(true);
+				rptGenBean.setSmApplicationDateView(true);
 	            break;    
-		 case ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL:
-			   
+		 case ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL:			   
 	        	rptGenBean.setSmApplicationNoView(true);
 	        	rptGenBean.setSmEpNoView(true);
-	        	rptGenBean.setSmRegistrationNoView(true);	        	
-	        	rptGenBean.setFromDateView(true);
-				rptGenBean.setToDateView(true);
+	        	rptGenBean.setSmRegistrationNoView(true);
+	        	rptGenBean.setSmCommonZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			    rptGenBean.setSmActiveSubmissiveFromDateView(true);
+				rptGenBean.setSmSubmissionDateView(true);	        	
 	            break;
 		 case ReportConst.SM_VIRTUAL_DAY_REPORT_RPT_VAL: 
 	        	rptGenBean.setFromDateView(true);
@@ -307,13 +311,15 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	            break;
 		 case ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
-	        	rptGenBean.setSmMandatorySupplierTypeView(true);
+	        	rptGenBean.setSmSupplierTypeView(true);
 	        	rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
 	        	rptGenBean.setSmMofRegNoFromView(true);
 	        	rptGenBean.setSmMofRegNoToView(true);
 	        	rptGenBean.setSmPersonnelRoleView(true);
+	        	rptGenBean.setSmNonMandatoryDateView(true);
+	        	rptGenBean.setSmMOFRegisteredDateView(true);
 	            break;
 		 case ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL: 			    
 				rptGenBean.setSmCompanyNameView(true);
