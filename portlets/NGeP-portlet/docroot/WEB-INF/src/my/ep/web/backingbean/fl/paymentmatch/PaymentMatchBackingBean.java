@@ -208,7 +208,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			if(!getManagedBean().isValidated()){
 				validatePaymentMatch(action);
 			}
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlPaymentAdvice paymentAdvice = getManagedBean().getPaymentAdvice();
 			  
@@ -289,7 +289,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
-			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(ctx);
 			reqDTO.setTaskId(taskId);

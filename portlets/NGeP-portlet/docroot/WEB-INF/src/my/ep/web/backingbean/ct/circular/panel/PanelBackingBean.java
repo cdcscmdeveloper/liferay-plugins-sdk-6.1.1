@@ -228,7 +228,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,ICircularSO.class);
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -351,7 +351,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			        circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			        FacesScopes face = new FacesScopes();
-			        String token = face.getBPMAuthenticationCtxToken();
+			        Object token = face.getBPMAuthenticationCtxToken();
 			        IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			        BpmRequestDTO reqDTO = new BpmRequestDTO();

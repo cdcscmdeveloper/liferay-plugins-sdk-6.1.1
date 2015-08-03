@@ -379,7 +379,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				return;
 			}
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setSelectedTabIndex(0);
 			     
@@ -829,7 +829,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			setSecretary();
 			validateContractAmendment(action);
 			reqDTO = new ContractReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();	
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();	
 			reqDTO.setToken(token);
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
