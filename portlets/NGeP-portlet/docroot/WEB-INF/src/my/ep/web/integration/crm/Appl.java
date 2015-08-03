@@ -5,7 +5,7 @@ import java.util.Date;
 public class Appl {
 
 	private String applNo;
-	private String applStatus;
+	private Long applStatus;
 	private String appType;
 	private String mofNo;
 	private Date expiryDate;
@@ -21,11 +21,11 @@ public class Appl {
 		this.applNo = applNo;
 	}
 
-	public String getApplStatus() {
+	public Long getApplStatus() {
 		return applStatus;
 	}
 
-	public void setApplStatus(String applStatus) {
+	public void setApplStatus(Long applStatus) {
 		this.applStatus = applStatus;
 	}
 
