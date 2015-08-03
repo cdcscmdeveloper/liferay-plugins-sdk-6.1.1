@@ -623,7 +623,7 @@ public class QTCommitteBackingBean extends
 	 */
 	public void onRowCloneAction(SelectEvent event) {
 		debugLogger("onRowCloneAction");
-		this.getManagedBean().setSearchcommitteeNode(null);
+		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		ScQt scQt = (ScQt) event.getObject();
 		this.getManagedBean().setCloneCommitteeSelectQt(scQt);
 
@@ -855,7 +855,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
-		getManagedBean().setSearchcommitteeNode(null);
+		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		RequestContext.getCurrentInstance().execute("screen2.show()");
 		getManagedBean().setAutoUpdate(false);
 	}
@@ -887,7 +887,7 @@ public class QTCommitteBackingBean extends
 		getManagedBean().getCloneQtnTenderSearchBean().setToCreatedDate(null);
 		getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
 		getManagedBean().setCloneTenderList(null);
-		getManagedBean().setSearchcommitteeNode(null);
+		getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		getManagedBean().setCloneCommitteMemebers(null);
 		getManagedBean().setSelectedCommitteMemebers(null);
 		String commType = committee.getScCommittee().getCommitteeType()
@@ -1583,7 +1583,7 @@ public class QTCommitteBackingBean extends
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setToCreatedDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean().setQtStatus(null);
-		this.getManagedBean().setSearchcommitteeNode(null);
+		this.getManagedBean().setSearchcommitteeNode(new DefaultTreeNode());
 		this.getManagedBean().getCloneQtnTenderSearchBean()
 				.setFromPublishDate(null);
 		this.getManagedBean().getCloneQtnTenderSearchBean()
