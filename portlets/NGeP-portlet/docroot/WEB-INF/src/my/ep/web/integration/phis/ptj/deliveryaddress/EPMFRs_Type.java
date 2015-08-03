@@ -8,13 +8,13 @@
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
 public class EPMFRs_Type  implements java.io.Serializable {
-    private  RsHeader_Type rsHeader;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.RsHeader_Type rsHeader;
 
     public EPMFRs_Type() {
     }
 
     public EPMFRs_Type(
-            RsHeader_Type rsHeader) {
+           my.ep.web.integration.phis.ptj.deliveryaddress.RsHeader_Type rsHeader) {
            this.rsHeader = rsHeader;
     }
 
@@ -24,7 +24,7 @@ public class EPMFRs_Type  implements java.io.Serializable {
      * 
      * @return rsHeader
      */
-    public  RsHeader_Type getRsHeader() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.RsHeader_Type getRsHeader() {
         return rsHeader;
     }
 
@@ -34,7 +34,7 @@ public class EPMFRs_Type  implements java.io.Serializable {
      * 
      * @param rsHeader
      */
-    public void setRsHeader( RsHeader_Type rsHeader) {
+    public void setRsHeader(my.ep.web.integration.phis.ptj.deliveryaddress.RsHeader_Type rsHeader) {
         this.rsHeader = rsHeader;
     }
 

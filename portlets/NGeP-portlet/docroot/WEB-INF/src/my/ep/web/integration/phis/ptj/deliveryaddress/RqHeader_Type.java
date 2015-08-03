@@ -16,7 +16,7 @@ public class RqHeader_Type  implements java.io.Serializable {
 
     private java.lang.String ipAddress;
 
-    private  RqUID_Type UID;
+    private my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type UID;
 
     public RqHeader_Type() {
     }
@@ -26,7 +26,7 @@ public class RqHeader_Type  implements java.io.Serializable {
            java.lang.String orgUnit,
            java.lang.String segment,
            java.lang.String ipAddress,
-            RqUID_Type UID) {
+           my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type UID) {
            this.consumerID = consumerID;
            this.orgUnit = orgUnit;
            this.segment = segment;
@@ -120,7 +120,7 @@ public class RqHeader_Type  implements java.io.Serializable {
      * 
      * @return UID
      */
-    public  RqUID_Type getUID() {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type getUID() {
         return UID;
     }
 
@@ -130,7 +130,7 @@ public class RqHeader_Type  implements java.io.Serializable {
      * 
      * @param UID
      */
-    public void setUID( RqUID_Type UID) {
+    public void setUID(my.ep.web.integration.phis.ptj.deliveryaddress.RqUID_Type UID) {
         this.UID = UID;
     }
 

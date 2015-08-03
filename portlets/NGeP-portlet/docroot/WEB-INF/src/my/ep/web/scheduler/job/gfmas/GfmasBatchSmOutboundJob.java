@@ -25,9 +25,9 @@ public class GfmasBatchSmOutboundJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("GfmasSMOutboundJob ");
+		log.info("GfmasBatchSmOutboundJob : APIVE");
 
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 //		gfmasIntegration.masterDataVendorGfmasOutbound();
 
 	}

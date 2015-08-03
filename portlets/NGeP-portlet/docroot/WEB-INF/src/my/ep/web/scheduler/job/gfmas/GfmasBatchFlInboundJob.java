@@ -27,11 +27,10 @@ public class GfmasBatchFlInboundJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("GfmasFlIntegrationJob ");
-
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		// Update Payment Info
-//		gfmasIntegration.paymentGfmasInbound();
+		log.info("AP511 : GfmasBatchFlInboundJob start ");
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.paymentGfmasInbound();
+		log.info("AP511 : GfmasBatchFlInboundJob end");
 
 	}
 

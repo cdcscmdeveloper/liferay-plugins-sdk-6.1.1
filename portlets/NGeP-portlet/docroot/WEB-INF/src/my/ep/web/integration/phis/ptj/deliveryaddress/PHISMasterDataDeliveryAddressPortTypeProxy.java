@@ -1,8 +1,8 @@
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
-public class PHISMasterDataDeliveryAddressPortTypeProxy implements PHISMasterDataDeliveryAddressPortType_PortType {
+public class PHISMasterDataDeliveryAddressPortTypeProxy implements my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType {
   private String _endpoint = null;
-  private PHISMasterDataDeliveryAddressPortType_PortType pHISMasterDataDeliveryAddressPortType_PortType = null;
+  private my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType pHISMasterDataDeliveryAddressPortType_PortType = null;
   
   public PHISMasterDataDeliveryAddressPortTypeProxy() {
     _initPHISMasterDataDeliveryAddressPortTypeProxy();
@@ -15,7 +15,7 @@ public class PHISMasterDataDeliveryAddressPortTypeProxy implements PHISMasterDat
   
   private void _initPHISMasterDataDeliveryAddressPortTypeProxy() {
     try {
-      pHISMasterDataDeliveryAddressPortType_PortType = (new PHISMasterDataDeliveryAddressPortType_ServiceLocator()).getPHISMasterDataDeliveryAddressPortTypePort();
+      pHISMasterDataDeliveryAddressPortType_PortType = (new my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_ServiceLocator()).getPHISMasterDataDeliveryAddressPortTypePort();
       if (pHISMasterDataDeliveryAddressPortType_PortType != null) {
         if (_endpoint != null)
           ((javax.xml.rpc.Stub)pHISMasterDataDeliveryAddressPortType_PortType)._setProperty("javax.xml.rpc.service.endpoint.address", _endpoint);
@@ -38,13 +38,13 @@ public class PHISMasterDataDeliveryAddressPortTypeProxy implements PHISMasterDat
     
   }
   
-  public PHISMasterDataDeliveryAddressPortType_PortType getPHISMasterDataDeliveryAddressPortType_PortType() {
+  public my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType getPHISMasterDataDeliveryAddressPortType_PortType() {
     if (pHISMasterDataDeliveryAddressPortType_PortType == null)
       _initPHISMasterDataDeliveryAddressPortTypeProxy();
     return pHISMasterDataDeliveryAddressPortType_PortType;
   }
   
-  public  EPMFRs_Type inquire( EPMFRq_Type part) throws java.rmi.RemoteException{
+  public my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type inquire(my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type part) throws java.rmi.RemoteException{
     if (pHISMasterDataDeliveryAddressPortType_PortType == null)
       _initPHISMasterDataDeliveryAddressPortTypeProxy();
     return pHISMasterDataDeliveryAddressPortType_PortType.inquire(part);

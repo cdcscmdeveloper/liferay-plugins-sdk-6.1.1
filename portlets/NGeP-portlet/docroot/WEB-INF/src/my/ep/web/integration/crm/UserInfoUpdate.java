@@ -30,42 +30,29 @@ public class UserInfoUpdate {
 			if (supplierUserInfoList.size() > 0) {
 				for (SupplierUserInfo supplierUserInfo : supplierUserInfoList) {
 
-					updateSupplierUserInfoRq.setUserName(supplierUserInfo
-							.getUserName());
-					updateSupplierUserInfoRq.setIdentityNo(supplierUserInfo
-							.getIdentityNo());
-					updateSupplierUserInfoRq.setIdentityType(new BigDecimal(
-							supplierUserInfo.getIdentityType()));
-					updateSupplierUserInfoRq.setNationality(supplierUserInfo
-							.getNationality());
-					updateSupplierUserInfoRq.setRecordStatus(supplierUserInfo
-							.getRecordStatus());
-					updateSupplierUserInfoRq.setEmail(supplierUserInfo
-							.getEmail());
-					updateSupplierUserInfoRq.setMobileNo(new BigDecimal(
-							supplierUserInfo.getMobileNo()));
-					updateSupplierUserInfoRq.setPosition(supplierUserInfo
-							.getPosition());
-					updateSupplierUserInfoRq.setAccessStatus(new BigDecimal(
-							supplierUserInfo.getAccessStatus()));
+					updateSupplierUserInfoRq.setUserName(supplierUserInfo.getUserName());
+					updateSupplierUserInfoRq.setIdentityNo(supplierUserInfo.getIdentityNo());
+					updateSupplierUserInfoRq.setIdentityType(new BigDecimal(supplierUserInfo.getIdentityType()));
+					updateSupplierUserInfoRq.setNationality(supplierUserInfo.getNationality());
+					updateSupplierUserInfoRq.setRecordStatus(supplierUserInfo.getRecordStatus());
+					updateSupplierUserInfoRq.setEmail(supplierUserInfo.getEmail());
+					updateSupplierUserInfoRq.setMobileNo(new BigDecimal(supplierUserInfo.getMobileNo()));
+					updateSupplierUserInfoRq.setPosition(supplierUserInfo.getPosition());
+					updateSupplierUserInfoRq.setAccessStatus(new BigDecimal(supplierUserInfo.getAccessStatus()));
 
 					if (supplierUserInfo.getBelongsToList().size() > 0) {
 						UpdateSupplierUserInfoRqBelongsToArrayBelongsTo[] updateBelongsToArray = new UpdateSupplierUserInfoRqBelongsToArrayBelongsTo[supplierUserInfo
 								.getBelongsToList().size()];
 						UpdateSupplierUserInfoRqBelongsToArrayBelongsTo updateBelongsTo = null;
 						int i = 0;
-						for (BelongsTo belongsTo : supplierUserInfo
-								.getBelongsToList()) {
+						for (BelongsTo belongsTo : supplierUserInfo.getBelongsToList()) {
 							updateBelongsTo = new UpdateSupplierUserInfoRqBelongsToArrayBelongsTo();
-							updateBelongsTo.setBranchID(new BigDecimal(
-									belongsTo.getBranchID()));
-							updateBelongsTo.setSupplierID(new BigDecimal(
-									belongsTo.getSupplierID()));
+							updateBelongsTo.setBranchID(new BigDecimal(belongsTo.getBranchID()));
+							updateBelongsTo.setSupplierID(new BigDecimal(belongsTo.getSupplierID()));
 							updateBelongsToArray[i] = updateBelongsTo;
 							i++;
 						}
-						updateSupplierUserInfoRq
-								.setBelongsToArray(updateBelongsToArray);
+						updateSupplierUserInfoRq.setBelongsToArray(updateBelongsToArray);
 					}
 
 					if (supplierUserInfo.getSoftCertList().size() > 0) {
@@ -77,16 +64,14 @@ public class UserInfoUpdate {
 						for (SoftCert softCert : supplierUserInfo
 								.getSoftCertList()) {
 							updateSoftCert = new UpdateSupplierUserInfoRqSoftCertArraySoftCert();
-							updateSoftCert.setSerialNo(new BigDecimal(softCert
-									.getSerialNo()));
+							updateSoftCert.setSerialNo(new BigDecimal(softCert.getSerialNo()));
 							updateSoftCert.setDateFrom(softCert.getDateFrom());
 							updateSoftCert.setDateTo(softCert.getDateTo());
 							updateSoftCertArray[i] = updateSoftCert;
 							i++;
 
 						}
-						updateSupplierUserInfoRq
-								.setSoftCertArray(updateSoftCertArray);
+						updateSupplierUserInfoRq.setSoftCertArray(updateSoftCertArray);
 
 					}
 
@@ -97,10 +82,8 @@ public class UserInfoUpdate {
 			UpdateSupplierUserInfoPortTypeProxy proxy = new UpdateSupplierUserInfoPortTypeProxy();
 			EPMFRq part = new EPMFRq(header_Type, updateSupplierUserInfoRq);
 			EPMFRs ePMFRs = proxy.update(part);
-			System.out.println("getStatusCode  :"
-					+ ePMFRs.getRsHeader().getStatus().getStatusCode());
-			System.out.println("getStatusDesc :"
-					+ ePMFRs.getRsHeader().getStatus().getStatusDesc());
+			System.out.println("getStatusCode  :"+ ePMFRs.getRsHeader().getStatus().getStatusCode());
+			System.out.println("getStatusDesc  :"+ ePMFRs.getRsHeader().getStatus().getStatusDesc());
 
 		} catch (RemoteException e) {
 			e.printStackTrace();

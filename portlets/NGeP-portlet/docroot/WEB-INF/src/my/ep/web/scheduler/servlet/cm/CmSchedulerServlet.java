@@ -8,10 +8,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.integration.common.BatchLogger;
 import my.ep.web.scheduler.constants.cm.CmSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
-import my.ep.web.scheduler.job.eperunding.EperundingBatchIntegrationJob;
-import my.ep.web.scheduler.job.phis.PhisBatchCmOutboundJob;
 import my.ep.web.scheduler.job.phis.PhisBatchPmOutboundJob;
-import my.ep.web.scheduler.job.phis.PhisBatchSmOutboundJob;
 
 import org.apache.log4j.Logger;
 import org.quartz.JobKey;

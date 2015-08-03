@@ -8,5 +8,5 @@
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
 public interface PHISMasterDataDeliveryAddressPortType_PortType extends java.rmi.Remote {
-    public EPMFRs_Type inquire(EPMFRq_Type part) throws java.rmi.RemoteException;
+    public my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRs_Type inquire(my.ep.web.integration.phis.ptj.deliveryaddress.EPMFRq_Type part) throws java.rmi.RemoteException;
 }

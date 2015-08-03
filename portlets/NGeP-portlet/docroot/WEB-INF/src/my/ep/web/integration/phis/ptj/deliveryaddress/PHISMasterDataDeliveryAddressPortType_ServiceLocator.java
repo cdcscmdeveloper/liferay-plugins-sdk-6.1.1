@@ -7,7 +7,7 @@
 
 package my.ep.web.integration.phis.ptj.deliveryaddress;
 
-public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.apache.axis.client.Service implements PHISMasterDataDeliveryAddressPortType_Service {
+public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.apache.axis.client.Service implements my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_Service {
 
     public PHISMasterDataDeliveryAddressPortType_ServiceLocator() {
     }
@@ -22,7 +22,7 @@ public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.ap
     }
 
     // Use to get a proxy class for PHISMasterDataDeliveryAddressPortTypePort
-    private java.lang.String PHISMasterDataDeliveryAddressPortTypePort_address = "http://eposb:8011/PHISMasterDataDeliveryAddress/v1.1";
+    private java.lang.String PHISMasterDataDeliveryAddressPortTypePort_address = "http://localhost:2016/PHISMasterDataDeliveryAddress/v1.1";
 
     public java.lang.String getPHISMasterDataDeliveryAddressPortTypePortAddress() {
         return PHISMasterDataDeliveryAddressPortTypePort_address;
@@ -39,7 +39,7 @@ public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.ap
         PHISMasterDataDeliveryAddressPortTypePortWSDDServiceName = name;
     }
 
-    public PHISMasterDataDeliveryAddressPortType_PortType getPHISMasterDataDeliveryAddressPortTypePort() throws javax.xml.rpc.ServiceException {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType getPHISMasterDataDeliveryAddressPortTypePort() throws javax.xml.rpc.ServiceException {
        java.net.URL endpoint;
         try {
             endpoint = new java.net.URL(PHISMasterDataDeliveryAddressPortTypePort_address);
@@ -50,9 +50,9 @@ public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.ap
         return getPHISMasterDataDeliveryAddressPortTypePort(endpoint);
     }
 
-    public PHISMasterDataDeliveryAddressPortType_PortType getPHISMasterDataDeliveryAddressPortTypePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
+    public my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType getPHISMasterDataDeliveryAddressPortTypePort(java.net.URL portAddress) throws javax.xml.rpc.ServiceException {
         try {
-            PHISMasterDataDeliveryAddressPortTypeBindingStub _stub = new PHISMasterDataDeliveryAddressPortTypeBindingStub(portAddress, this);
+            my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeBindingStub _stub = new my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeBindingStub(portAddress, this);
             _stub.setPortName(getPHISMasterDataDeliveryAddressPortTypePortWSDDServiceName());
             return _stub;
         }
@@ -72,8 +72,8 @@ public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.ap
      */
     public java.rmi.Remote getPort(Class serviceEndpointInterface) throws javax.xml.rpc.ServiceException {
         try {
-            if ( PHISMasterDataDeliveryAddressPortType_PortType.class.isAssignableFrom(serviceEndpointInterface)) {
-                PHISMasterDataDeliveryAddressPortTypeBindingStub _stub = new PHISMasterDataDeliveryAddressPortTypeBindingStub(new java.net.URL(PHISMasterDataDeliveryAddressPortTypePort_address), this);
+            if (my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortType_PortType.class.isAssignableFrom(serviceEndpointInterface)) {
+                my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeBindingStub _stub = new my.ep.web.integration.phis.ptj.deliveryaddress.PHISMasterDataDeliveryAddressPortTypeBindingStub(new java.net.URL(PHISMasterDataDeliveryAddressPortTypePort_address), this);
                 _stub.setPortName(getPHISMasterDataDeliveryAddressPortTypePortWSDDServiceName());
                 return _stub;
             }
