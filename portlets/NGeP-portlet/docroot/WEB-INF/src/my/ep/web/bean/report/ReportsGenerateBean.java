@@ -140,10 +140,12 @@ public class ReportsGenerateBean {
 		private boolean smRegistrationTypeView = false;
 		private boolean smMofRegView = false;
 		private boolean smMandatorySupplierTypeView = false;
+		private boolean smMandatoryAllSupplierTypeView = false;
 		private boolean smMandatoryApplicationDateView = false;
 		private boolean smMandatoryApplicationStatusView = false;
 		private boolean smMandatoryApplicationStatusTwoView = false;
 		private boolean smMandatoryApplicationStatusThreeView = false;
+		private boolean smApplicationStatusThreeView = false;
 		private boolean smMandatoryMofRegNoView = false;
 		private boolean smMandatoryExpiryDateView = false;
 		private boolean smMandatoryPrintedDateView = false;	
@@ -226,6 +228,8 @@ public class ReportsGenerateBean {
 		private boolean smThresholdYearFromView = false;
 		private boolean smApprovalDateView = false;
 		private boolean smMOFRegisteredDateView = false;
+		private boolean smAllSupplierTypeView = false;
+		private boolean smProfileStatusView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -425,6 +429,7 @@ public class ReportsGenerateBean {
 		private String SmThresholdToYearVar=ReportConst.EMPTY_VAL;
 		private String smUserNameVar=ReportConst.EMPTY_VAL;
 		private String smRequestExpiryDateVar=ReportConst.EMPTY_VAL;
+		private String smProfileStatusVar=ReportConst.EMPTY_VAL;
 		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
@@ -510,6 +515,37 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmProfileStatusView() {
+			return smProfileStatusView;
+		}
+		public void setSmProfileStatusView(boolean smProfileStatusView) {
+			this.smProfileStatusView = smProfileStatusView;
+		}
+		public String getSmProfileStatusVar() {
+			return smProfileStatusVar;
+		}
+		public void setSmProfileStatusVar(String smProfileStatusVar) {
+			this.smProfileStatusVar = smProfileStatusVar;
+		}
+		public boolean isSmApplicationStatusThreeView() {
+			return smApplicationStatusThreeView;
+		}
+		public void setSmApplicationStatusThreeView(boolean smApplicationStatusThreeView) {
+			this.smApplicationStatusThreeView = smApplicationStatusThreeView;
+		}
+		public boolean isSmMandatoryAllSupplierTypeView() {
+			return smMandatoryAllSupplierTypeView;
+		}
+		public void setSmMandatoryAllSupplierTypeView(
+				boolean smMandatoryAllSupplierTypeView) {
+			this.smMandatoryAllSupplierTypeView = smMandatoryAllSupplierTypeView;
+		}
+		public boolean isSmAllSupplierTypeView() {
+			return smAllSupplierTypeView;
+		}
+		public void setSmAllSupplierTypeView(boolean smAllSupplierTypeView) {
+			this.smAllSupplierTypeView = smAllSupplierTypeView;
+		}
 		public boolean isSmMOFRegisteredDateView() {
 			return smMOFRegisteredDateView;
 		}
