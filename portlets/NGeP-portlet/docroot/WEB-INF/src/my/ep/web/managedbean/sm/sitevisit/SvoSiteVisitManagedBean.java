@@ -100,7 +100,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	
 	private SmSvAdtMachine selectedAdtMachine;
 	//private Map<Long, String> facilityTypeAddressMap; //for #2570, also use for 2870
-	//private Map<String, SmFacility> allFacilityMap;
+	private Map<String, SmFacility> allFacilityMap;
 	
 	private SmGstSupplier smGstSupplier;
 
@@ -575,13 +575,13 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.facilityTypeAddressMap = facilityTypeAddressMap;
 	}*/
 
-/*	public Map<String, SmFacility> getAllFacilityMap() {
+	public Map<String, SmFacility> getAllFacilityMap() {
 		return allFacilityMap;
 	}
 
 	public void setAllFacilityMap(Map<String, SmFacility> allFacilityMap) {
 		this.allFacilityMap = allFacilityMap;
 	}
-	*/
+	
 
 }
