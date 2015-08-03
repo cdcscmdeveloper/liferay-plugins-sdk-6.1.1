@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
@@ -15,6 +14,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -366,9 +366,6 @@ public class LOADetailBackingBean extends
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
-			
-			// Fulfilment Schedule
-			formFulfilmentSchedule(scLoa);
 
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
@@ -417,6 +414,17 @@ public class LOADetailBackingBean extends
 			// loa signer
 			if(scLoa.getContractSigner() != null){
 				getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+			}
+			
+			if (getManagedBean().getScQt() != null) {
+				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+	                // progressive payment.
+					formProgressivePayment(scLoa);
+				} else if (("F").equals(getManagedBean().getScQt()
+						.getScheduleType())) {
+					// Fulfilment Schedule
+					formFulfilmentSchedule(scLoa);
+				}
 			}
 			
 			// loa contract type - central
@@ -3581,79 +3589,22 @@ public class LOADetailBackingBean extends
 				.getProgressivePaymentList();
 		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
 		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-			String startMonth = "";
-			String endmonth = "";
 			for (ScQtProgressivePayment payment : progressivePayemnt) {
-				if (payment.getStartMonth().equalsIgnoreCase("0")) {
-					startMonth = "01";
-				} else if (payment.getStartMonth().equalsIgnoreCase("1")) {
-					startMonth = "02";
-				} else if (payment.getStartMonth().equalsIgnoreCase("2")) {
-					startMonth = "03";
-				} else if (payment.getStartMonth().equalsIgnoreCase("3")) {
-					startMonth = "04";
-				} else if (payment.getStartMonth().equalsIgnoreCase("4")) {
-					startMonth = "05";
-				} else if (payment.getStartMonth().equalsIgnoreCase("5")) {
-					startMonth = "06";
-				} else if (payment.getStartMonth().equalsIgnoreCase("6")) {
-					startMonth = "07";
-				} else if (payment.getStartMonth().equalsIgnoreCase("7")) {
-					startMonth = "08";
-				} else if (payment.getStartMonth().equalsIgnoreCase("8")) {
-					startMonth = "09";
-				} else if (payment.getStartMonth().equalsIgnoreCase("9")) {
-					startMonth = "10";
-				} else if (payment.getStartMonth().equalsIgnoreCase("10")) {
-					startMonth = "11";
-				} else if (payment.getStartMonth().equalsIgnoreCase("11")) {
-					startMonth = "12";
-				}
-				if (payment.getEndMonth().equalsIgnoreCase("0")) {
-					endmonth = "01";
-				} else if (payment.getEndMonth().equalsIgnoreCase("1")) {
-					endmonth = "02";
-				} else if (payment.getEndMonth().equalsIgnoreCase("2")) {
-					endmonth = "03";
-				}
-
-				else if (payment.getEndMonth().equalsIgnoreCase("3")) {
-					endmonth = "04";
-				} else if (payment.getEndMonth().equalsIgnoreCase("4")) {
-					endmonth = "05";
-				} else if (payment.getEndMonth().equalsIgnoreCase("5")) {
-					endmonth = "06";
-				}
-
-				else if (payment.getEndMonth().equalsIgnoreCase("6")) {
-					endmonth = "07";
-				} else if (payment.getEndMonth().equalsIgnoreCase("7")) {
-					endmonth = "08";
-				} else if (payment.getEndMonth().equalsIgnoreCase("8")) {
-					endmonth = "09";
-				} else if (payment.getEndMonth().equalsIgnoreCase("9")) {
-					endmonth = "10";
-				} else if (payment.getEndMonth().equalsIgnoreCase("10")) {
-					endmonth = "11";
-				} else if (payment.getEndMonth().equalsIgnoreCase("11")) {
-					endmonth = "12";
-				}
-				Date d1 = new Date();
-
-				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				String localDate = format.format(d1);
-				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + startMonth + "/"
+				Date currentDate = new Date();
+				SimpleDateFormat format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String localDate = format.format(currentDate);
+				String day = localDate.substring(0, 2);
+				String fromdate = day + "/" + payment.getStartMonth() + "/"
 						+ payment.getStartYear();
-				String toDate = date + "/" + endmonth + "/"
+				String toDate = day + "/" + payment.getEndMonth() + "/"
 						+ payment.getEndYear();
+				
 				try {
-					if (df.parse(fromdate).after(df.parse(toDate))) {
+					if (format.parse(fromdate).after(format.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
 					} else {
-						payment.setFromDate(df.parse(fromdate));
-						payment.setToDate(df.parse(toDate));
+						payment.setFromDate(format.parse(fromdate));
+						payment.setToDate(format.parse(toDate));
 					}
 				} catch (ParseException e) {
 					e.printStackTrace();
@@ -3806,24 +3757,87 @@ public class LOADetailBackingBean extends
 	 * @return the big decimal
 	 */
 	private BigDecimal calcTotalAmount(List<ScLoiLoaItem> scLoiLoaItems) {
+		boolean isMaxPriceItem = Boolean.FALSE;// calculate max price items only.
+		Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
 		BigDecimal  totalAmount = BigDecimal.valueOf(0d);
 		BigDecimal  subTotal = BigDecimal.valueOf(0d);
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-			
 			if(null == scLoiLoaItem.getTplSpecTierQty() ){
 				// without Tier quantity
 				quantity = scLoiLoaItem.getQty();
+				isMaxPriceItem = Boolean.TRUE;
 			} else{
 				// Tier quantity.
 				quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
+				maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem, maxPriceItemMap);
+
+				if (maxPriceItemMap != null
+						&& !maxPriceItemMap.isEmpty()
+						&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+					isMaxPriceItem = Boolean.TRUE;
+				} else{
+					isMaxPriceItem = Boolean.FALSE;
+				}
 			}
-			subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
-					scLoiLoaItem.getUnitPrice(), quantity);
-			totalAmount = totalAmount.add(subTotal);
+			if(isMaxPriceItem){
+				subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), 
+						scLoiLoaItem.getUnitPrice(), quantity);
+				totalAmount = totalAmount.add(subTotal);
+			}
 		}
 		totalAmount =  totalAmount.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 		return totalAmount;
+	}
+	
+	/**
+	 * Max item price By item.
+	 *
+	 * @param scLoiLoaItem the sc loi loa item
+	 */
+	private Map<Long, ScLoiLoaItem>  maxItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem , Map<Long, ScLoiLoaItem> map) {
+		boolean isFindMaxPriceItem = Boolean.FALSE;
+		List<ScLoiLoaItem> sameItems = new ArrayList<ScLoiLoaItem>();
+		if (null == map || map.isEmpty()){
+			isFindMaxPriceItem = Boolean.TRUE;
+
+		} else {
+			if(!map.containsKey(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+				isFindMaxPriceItem = Boolean.TRUE;
+			} else{
+				isFindMaxPriceItem = Boolean.FALSE;
+			}
+		}
+
+		if(isFindMaxPriceItem){
+			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoa().getScLoiLoaItems();
+			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
+				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+					sameItems.add(loiLoaItem);
+				}
+			}
+			ScLoiLoaItem maxPriceItem  = findMaxPriceItem(sameItems);
+			map.put(maxPriceItem.getScRequestItem().getRequestNoteItemId(), maxPriceItem);
+		}
+		return map;
+	}
+	
+	/**
+	 * Find max price item.
+	 *
+	 * @param items the items
+	 * @return the sc loi loa item
+	 */
+	private ScLoiLoaItem findMaxPriceItem(List<ScLoiLoaItem> items) {
+		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
+			@Override
+			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
+				return new CompareToBuilder().append(o1.getScQtProposalItem().getOfferPrice(),
+						o2.getScQtProposalItem().getOfferPrice()).toComparison();
+			}
+		};
+		 ScLoiLoaItem  scLoiLoaItem = Collections.max(items, comparator);
+		return scLoiLoaItem;
 	}
 	
 	/**
