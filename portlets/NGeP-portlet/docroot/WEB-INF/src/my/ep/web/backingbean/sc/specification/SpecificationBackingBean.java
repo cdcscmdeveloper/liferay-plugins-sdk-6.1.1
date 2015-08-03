@@ -2058,7 +2058,7 @@ public class SpecificationBackingBean extends
 						scQt.getScQtSupplierCriteria().setAllState(false);
 					}
 					this.getManagedBean().setPanelItemCategory("");
-					// TODO Added for viswanath Bug#540
+					//  Added for viswanath Bug#540
 					if (((scQt.isZonal()
 							&& !scQt.getScQtSupplierCriteria().isAllState() && SourcingConstants.QT_TYPE_OPEN
 								.equalsIgnoreCase(scQt.getQtType())) || (!scQt
@@ -11606,11 +11606,11 @@ public class SpecificationBackingBean extends
 						endmonth = retriveMonthDtls(new Integer(
 								schedule.getEndMonth()));
 					}
-					Date d1 = new Date();
-					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+					//Date d1 = new Date();
+					//SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					String localDate = format.format(d1);
-					String date = localDate.substring(0, 2);
+					//String localDate = format.format(d1);
+				//	String date = localDate.substring(0, 2);
 					String fromdate = 01 + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
 					String toDate = 31 + "/" + endmonth + "/"
