@@ -467,6 +467,7 @@ public class ReportConst {
 	public static final String AMP_SM_TO_YEAR_EQ = "&PTOYEAR=";
 	public static final String AMP_SM_USER_NAME_EQ = "&PUSERNAME=";
 	public static final String AMP_SM_REQ_ENQ_DATE_EQ = "&PDATE=";
+	public static final String AMP_SM_PRFL_STS_EQ = "&PPRSTAT=";
 	public static final String KAMA = ",";
 	public static final String SUPPL_CONSLT_TYPE = "J";
 	

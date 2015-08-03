@@ -728,7 +728,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -895,6 +895,7 @@ public class ReportBackingBean extends
 	private String smToMonth;
 	private String smUserName;
 	private String smRequestExpiryDate;
+	private String smProfileStatus;
 	// CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -919,6 +920,15 @@ public class ReportBackingBean extends
 	private long[] lngStateId;
 	private long[] lngDistrictId;
 	
+	
+
+	public String getSmProfileStatus() {
+		return smProfileStatus;
+	}
+
+	public void setSmProfileStatus(String smProfileStatus) {
+		this.smProfileStatus = smProfileStatus;
+	}
 
 	public String getFlSupplierInvoiceNo() {
 		return flSupplierInvoiceNo;
@@ -2985,24 +2995,35 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setSmZoneLabelView(false);
 			getManagedBean().getRptGenBean().setSmZoneView(false);
 			getManagedBean().getRptGenBean().setSmMandatoryZoneView(false);
-			if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_PO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVC)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
-				//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
-					this.setSmZone(this.getStringZone());
-					getManagedBean().getRptGenBean().setSmZoneLabelView(true);
-				//}
-				
-			}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
-				//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
-					getManagedBean().getRptGenBean().setSmZoneView(true);
-					getManagedBean().getRptGenBean().setSmMandatoryZoneView(true);
-				//}
-				
-			}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
-				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
-					rptGenBean.setSmMandatorySupplierTypeView(false);
-					rptGenBean.setSmSupplierTypeView(false);
+			if((null!=this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SUPPL_STAT_BY_CATEGORY_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_SUPPL_STAT_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_QUESTIONAIRE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_DET_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_CONT_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_DET_CONT_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_REG_COMPANY_IN_MOF_PROJ_CONT_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_QUESTIONNAIRE_RESPONSE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_REQUIRE_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_OFFICER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_APPLICATION_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL)
+					||this.getReportValue().equals(ReportConst.SM_BPK_USER_PROFILE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_DELETE_PENDING_APPL)
+                    ||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK)||this.getReportValue().equals(ReportConst.SM_THRESHOLD)|this.getReportValue().equals(ReportConst.SM_LST_MONTH_WISE_RPT_VAL))){				
+			
+				if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_PO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVC)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
+					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+						this.setSmZone(this.getStringZone());
+						getManagedBean().getRptGenBean().setSmZoneLabelView(true);
+					//}
+					
+				}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
+					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+						getManagedBean().getRptGenBean().setSmZoneView(true);
+						getManagedBean().getRptGenBean().setSmMandatoryZoneView(true);
+					//}
+					
+				}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
+					if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
+						rptGenBean.setSmMandatorySupplierTypeView(false);
+						rptGenBean.setSmSupplierTypeView(false);
+					}
 				}
-			}
+			}	
 		}
 	}
 	public List<String> retrieveParamCodeByUser(){
@@ -4219,17 +4240,20 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.SUPPLIER_MANAGEMENT)) {
-				Date currentDate = new Date();
-				this.setSmCreatedFromYear(outputDateFormat.format(currentDate)
-						.substring(6, 10));
-				this.setSmCreatedToYear(outputDateFormat.format(currentDate)
-						.substring(6, 10));
-				this.setSmThresholdFromYear(outputDateFormat.format(currentDate)
-						.substring(6, 10));
-				this.setSmThresholdToYear(outputDateFormat.format(currentDate)
-						.substring(6, 10));
-			}		
-			
+				if((null!=this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_SUPPLIER_PERFORMANCE)||this.getReportValue().equals(ReportConst.SM_THRESHOLD)||this.getReportValue().equals(ReportConst.SM_THRESHOLD_VALUE)||this.getReportValue().equals(ReportConst.SM_LST_MONTH_WISE_RPT_VAL))){
+					Date currentDate = new Date();
+					this.setSmCreatedFromYear(outputDateFormat.format(currentDate)
+							.substring(6, 10));
+					this.setSmCreatedToYear(outputDateFormat.format(currentDate)
+							.substring(6, 10));
+					this.setSmThresholdFromYear(outputDateFormat.format(currentDate)
+							.substring(6, 10));
+					this.setSmThresholdToYear(outputDateFormat.format(currentDate)
+							.substring(6, 10));
+					this.setSmMonthlyRptByYear(outputDateFormat.format(currentDate)
+							.substring(6, 10));
+				}		
+			}
 			if ((this.getModuleValue()
 						.equalsIgnoreCase(ReportConst.DP_MOD_VAL))) {
 					Date currentDate = new Date();
@@ -5055,6 +5079,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getToDate() != null) && (this.getToDate().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmUserName() != null) && (this.getSmUserName().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmRequestExpiryDate() != null) && (this.getSmRequestExpiryDate().toString() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmProfileStatus() != null) && (this.getSmProfileStatus().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmThresholdFromYear() != null) && (this.getSmThresholdFromYear().toString() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmThresholdToYear() != null) && (this.getSmThresholdToYear().toString() != ReportConst.EMPTY_VAL))) {
 
@@ -5090,7 +5115,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 									+ this.getSmThresholdToYear());
 				}				
 			}	
-			
+			if ((this.getSmProfileStatus() != null)
+					&& (this.getSmProfileStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmProfileStatusVar(ReportConst.AMP_SM_PRFL_STS_EQ
+								+ this.getSmProfileStatus());
+			}
 			if ((this.getSmUserName() != null)
 					&& (this.getSmUserName() != ReportConst.EMPTY_VAL)) {
 				rptGenBean
@@ -5399,6 +5429,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getSmPaidUpCapitalFrmVar()
 						+ rptGenBean.getSmPaidUpCapitalToVar()
 						+ rptGenBean.getSmPaidUpCapitalNaccumVar()
+						+ rptGenBean.getSmProfileStatusVar()
 						//+ rptGenBean.getSmRoleVar()
 						+ rptGenBean.getSmEpNoVar()
 						+ rptGenBean.getSmRegistrationNoVar()
@@ -6632,6 +6663,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setSmThresholdToYear(null);
 		this.setSmRequestExpiryDate(null);
 		this.setSmUserName(null);
+		this.setSmProfileStatus(null);
 		this.setFlContractOrder(null);
 		this.setFlContractRequest(null);
 		this.setFlPurchaseOrderNo(null);
