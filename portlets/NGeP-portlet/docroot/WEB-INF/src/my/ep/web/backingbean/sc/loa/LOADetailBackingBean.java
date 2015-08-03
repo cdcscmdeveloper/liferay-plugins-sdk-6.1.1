@@ -1827,6 +1827,8 @@ public class LOADetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
+		boolean isMaxPriceItem = Boolean.FALSE;// calculate max price items only.
+		Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
 		boolean isZonal = Boolean.FALSE;
 		// calc total items in award details
 		if (scLoi.getScLoiLoaItems() != null
@@ -1842,7 +1844,7 @@ public class LOADetailBackingBean extends
 
 			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
 			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
-				
+
 				if(scLoiLoaItem.getTplSpecZoneDtl() != null){
 					isZonal = Boolean.TRUE;
 				}
@@ -1850,47 +1852,58 @@ public class LOADetailBackingBean extends
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
 					quantity = scLoiLoaItem.getQty();
+					isMaxPriceItem = Boolean.TRUE;
 				} else{
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-				}
-				
-				if (scLoiLoaItem.getScQtProposalItem() != null) {
-					offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
-							.getScQtProposalItem()
-							.getOfferPrice()));
-					offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.getScQtProposalItem()
-								.setOfferPrice(offerPrice.floatValue());
-					
-					offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
+					maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem, maxPriceItemMap);
 
-					finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
-							.getScQtProposalItem()
-							.getFinalPrice()));
-					finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.getScQtProposalItem()
-								.setFinalPrice(finalPrice.floatValue());					
-					
-					// offered price sub total and total
-					offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
-					offeredPriceSubTotal = offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-					scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
-					offeredPriceAmount = offeredPriceAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					if (maxPriceItemMap != null
+							&& !maxPriceItemMap.isEmpty()
+							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+						isMaxPriceItem = Boolean.TRUE;
+					} else{
+						isMaxPriceItem = Boolean.FALSE;
+					}
 				}
 
-				afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
-						scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
-				afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				
-				// after nego price sub total and total
-				afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
-				afterNegoTotalAmount = afterNegoTotalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-				
-				scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
-				scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				if(isMaxPriceItem){
+					if (scLoiLoaItem.getScQtProposalItem() != null) {
+						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
+								.getScQtProposalItem()
+								.getOfferPrice()));
+						offerPrice = offerPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.getScQtProposalItem().setOfferPrice(offerPrice.floatValue());
+
+						offeredPriceSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
+								scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), offerPrice, quantity);
+
+						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
+								.getScQtProposalItem()
+								.getFinalPrice()));
+						finalPrice = finalPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.getScQtProposalItem().setFinalPrice(finalPrice.floatValue());					
+
+						// offered price sub total and total
+						offeredPriceAmount = offeredPriceAmount.add(offeredPriceSubTotal);
+						offeredPriceSubTotal = offeredPriceSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.setOfferedPriceSubTotal(offeredPriceSubTotal);
+						offeredPriceAmount = offeredPriceAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+					}
+
+					afterNegoSubTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
+							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(), finalPrice, quantity);
+					afterNegoSubTotal = afterNegoSubTotal.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+					// after nego price sub total and total
+					afterNegoTotalAmount = afterNegoTotalAmount.add(afterNegoSubTotal);
+					afterNegoTotalAmount = afterNegoTotalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
+					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+					//scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				}
 			}
+
 			scLoi.setScLoiLoaItems(scLoiLoaItems);
 			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price total
 			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
