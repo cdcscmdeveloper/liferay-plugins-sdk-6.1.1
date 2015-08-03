@@ -122,23 +122,11 @@ public class SmUpdateGstInfoBackingBean extends
 			throw new EpException(MessageConst.ERROR_722613);
 		} else {
 			List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
-
-			// if new GST info add declare date
-			if (getManagedBean().getHqGstSupplier().getIsCurrent()
-					&& getManagedBean().getHqGstSupplier().getGstSupplierId() == null) {
-				getManagedBean().getHqGstSupplier().setGstDeclaredDate(
-						new Date());
-			}
 			supplierGstList.add(getManagedBean().getHqGstSupplier());
 			validateDeclare();
 			if (getManagedBean().getBranches() != null) {
 				for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 					if (brVO.getGst() != null) {
-						if (brVO.getGst().getIsCurrent()) {
-							if (brVO.getGst().getGstSupplierId() == null) {
-								brVO.getGst().setGstDeclaredDate(new Date());
-							}
-						}
 						supplierGstList.add(brVO.getGst());
 					}
 				}
@@ -165,16 +153,13 @@ public class SmUpdateGstInfoBackingBean extends
 
 	public void assignSelectedBranchSupportDoc(SmGstBranchVO brVO,
 			SmGstSupplierDoc doc) {
-		SmGstBranchVO docVO = new SmGstBranchVO();
-		docVO.setBranch(brVO.getBranch());
-		docVO.setDoc(doc);
-		docVO.setGst(brVO.getGst());
-		getManagedBean().setSelectedBranchDoc(docVO);
+		brVO.setDoc(doc);
+		getManagedBean().setSelectedBranchDoc(brVO);
 	}
 
 	public void handleBranchSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
-			if (getManagedBean().getSelectedHqSuppDoc() != null) {
+			if (getManagedBean().getSelectedBranchDoc() != null) {
 
 				// construct file path
 				String filePath = getGstSuppDocBasePath();
@@ -182,10 +167,8 @@ public class SmUpdateGstInfoBackingBean extends
 				// init suppDocFile (currently only default one file)
 				SmGstSupplierDoc doc = getManagedBean().getSelectedBranchDoc()
 						.getDoc();
-				doc.setFileName(System.currentTimeMillis() + "_");
-				doc.setFileName(doc.getFileName()
-						+ StringUtils.replace(event.getFile().getFileName(),
-								" ", "-"));
+				doc.setFileName(StringUtils.replace(event.getFile()
+						.getFileName(), " ", "-"));
 				doc.setFilePath(filePath);
 
 				// set selected doc to main doc list
@@ -274,7 +257,12 @@ public class SmUpdateGstInfoBackingBean extends
 		if (getManagedBean().getBranches() != null) {
 			for (SmGstBranchVO br : getManagedBean().getBranches()) {
 				if (br.getGst() != null) {
-					setDeleteGst(br.getGst());
+					br.setSameWithHq(false);
+					if (br.getGst().getGstSupplierId() != null) {
+						setDeleteGst(br.getGst());
+					} else {
+						br.setGst(null);
+					}
 				}
 			}
 		}
@@ -286,17 +274,22 @@ public class SmUpdateGstInfoBackingBean extends
 					&& brVO.getBranch()
 							.getSupplierBranchId()
 							.compareTo(branch.getBranch().getSupplierBranchId()) == 0) {
-				setDeleteGst(brVO.getGst());
+				if(brVO.getGst().getGstSupplierId()!=null){
+					setDeleteGst(brVO.getGst());
+				}else{
+					brVO.setGst(null);
+				}
+				brVO.setSameWithHq(false);
 			}
 		}
 	}
 
 	private void setDeleteGst(SmGstSupplier deleteGst) {
-		if(deleteGst.getGstSupplierId()!=null){
+		if (deleteGst.getGstSupplierId() != null) {
 			deleteGst.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 			deleteGst.setGstDeletedDate(new Date());
 			deleteGst.setIsCurrent(false);
-		}else{
+		} else {
 			deleteGst = null;
 		}
 	}
