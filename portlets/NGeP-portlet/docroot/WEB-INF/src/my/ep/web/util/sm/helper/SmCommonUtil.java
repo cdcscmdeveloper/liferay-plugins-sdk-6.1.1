@@ -1,5 +1,6 @@
 package my.ep.web.util.sm.helper;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -124,6 +125,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
@@ -2447,8 +2450,39 @@ public class SmCommonUtil {
 				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
 				.getSmGstSupplier();
 	}
-	
-	public static String getUploadFilePath(String path){
+
+	public static void processUpload(String uploadDir, FileUploadEvent event,
+			String fileName) {
+
+		String finalDir = EpPropertiesUtils.getInstance().getProperty(
+				EpPropertiesConst.DOCUMENT_REPOSITORY_BASE_DIR);
+		finalDir += "/" + uploadDir;
+
+		File dir = new File(finalDir);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		try {
+			fileName = StringUtils.replace(fileName, " ", "-");
+
+			BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(
+					new FileOutputStream(finalDir + "/" + fileName));
+
+			bufferedOutputStream.write(event.getFile().getContents());
+
+			if (bufferedOutputStream != null) {
+				bufferedOutputStream.flush();
+				bufferedOutputStream.close();
+			}
+
+		} catch (Exception e) {
+			throw new EpException("ERROR PROCESSING UPLOADED FILE:"+e.getMessage());
+		}
+
+	}
+
+	public static String getUploadFilePath(String path) {
 		return Calendar.getInstance().get(Calendar.YEAR) + path;
 	}
 }
