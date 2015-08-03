@@ -41,7 +41,7 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private SoftcertUploadSuppDocVO selectedSuppDoc;
 	private String loginRoleName;
 	private String taskName;
-	private String token;
+	private Object bpmToken;
 	private String paymentBtnLbl;
 	private String targetPage;
 	private String suppDocMode;
@@ -131,14 +131,6 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
 	}
 
 	public WorklistItemVO getSoftCertBpmTask() {
@@ -261,6 +253,14 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setDeclare(boolean declare) {
 		this.declare = declare;
+	}
+
+	public Object getBpmToken() {
+		return bpmToken;
+	}
+
+	public void setBpmToken(Object bpmToken) {
+		this.bpmToken = bpmToken;
 	}
 
 }
