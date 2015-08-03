@@ -340,7 +340,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			if(isRequisitioner()) {
@@ -1008,7 +1008,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			renewSesionObject();
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(ctx);
 			reqDTO.setTaskId(taskId);

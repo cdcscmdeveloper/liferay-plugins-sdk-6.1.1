@@ -63,7 +63,7 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		IShippingInstructionSO shippingInstrSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
 			shippingInstrSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl",IShippingInstructionSO.class);
@@ -111,7 +111,7 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+		Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		reqDTO.setCtxToken(ctx);

@@ -165,7 +165,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 *  navigate to acknowledge page.
 	 */
 	public String submitAction(String action) {
-		String token = getFacesScopes().getBPMAuthenticationCtxToken();
+		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -338,7 +338,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		if(taskId != null){
 			renewSesionObject();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO bpmReqDTO = new BpmRequestDTO();
 			bpmReqDTO.setCtxToken(ctx);
 			bpmReqDTO.setTaskId(taskId);

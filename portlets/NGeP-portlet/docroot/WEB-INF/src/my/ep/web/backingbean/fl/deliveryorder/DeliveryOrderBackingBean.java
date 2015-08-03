@@ -163,7 +163,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	 */
 	public String createDeliveryOrder(String action) {
 		FacesScopes facesScopes = new FacesScopes();
-		String token = getFacesScopes().getBPMAuthenticationCtxToken();
+		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
@@ -569,7 +569,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		if(null!=taskId && !"".equals(taskId)){
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO bpmreqDTO = new BpmRequestDTO();
 			bpmreqDTO.setCtxToken(ctx);
 			bpmreqDTO.setTaskId(taskId);

@@ -318,7 +318,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				return;
 			}
 			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			Object token = face.getBPMAuthenticationCtxToken();
 			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			reqDTO = new BpmRequestDTO();
@@ -543,7 +543,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				validateAgreement(action);
 			}
 			ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 	         
 			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {

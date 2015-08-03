@@ -168,7 +168,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			          getManagedBean().setTaskId(taskId);
 		
 			          FacesScopes face = new FacesScopes();
-			          String token =face.getBPMAuthenticationCtxToken();
+			          Object token =face.getBPMAuthenticationCtxToken();
 			          IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			          BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -411,7 +411,7 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 			     validateSuspensionDetails(action);		
 			     contractSuspensionSO = (IContractSuspensionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSuspensionSO.class);
 		       
-				 String token = getFacesScopes().getBPMAuthenticationCtxToken();
+				 Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				 reqDTO = new ContractReqDTO();
 		         reqDTO.setToken(token);
 		         reqDTO.setOutcome(action);

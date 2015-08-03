@@ -111,7 +111,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		log.debug("DebitAdjustmentNoteBackingBean.submitAction()");
 		IAdjustmentSO adjustmentSO = null;
 		try {
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlAdjustment adjustment = getManagedBean().getAdjustment();
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IAdjustmentSO.class);
@@ -176,7 +176,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		if(taskId != null){
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(ctx);
 			reqDTO.setTaskId(taskId);

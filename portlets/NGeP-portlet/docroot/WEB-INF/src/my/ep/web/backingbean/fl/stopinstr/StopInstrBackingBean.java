@@ -98,7 +98,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 	public String saveStopInstruction(String action) {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		
-		String token = getFacesScopes().getBPMAuthenticationCtxToken();
+		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		FlStopInstr flStopInstr = getManagedBean().getStopInstr();
 
@@ -152,7 +152,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		if(taskId != null) {
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentRequestSO.class);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 			reqDTO.setCtxToken(ctx);
