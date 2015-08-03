@@ -867,17 +867,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fulfilmentNote.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
 		}
 		boolean amtChanged = false;
-		if(resDTO.getSmGstSupplier() != null){
-			if(getManagedBean().getFulfilmentRequest().getGstRegNo() == null){
-				amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged,fulfilmentNote);
-			}
-		}
-		//if from GST to non-GST direct set to default
-		if(amtChanged == false){
+		if(resDTO.getSmGstSupplier() == null && fulfilmentNote.getFlDeliveryOrder().getGstRegNo() == null){//no GST previous n current
 			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
-				noteItem.setGstAmount(noteItem.getFlDelOrderItem().getGstAmount());
-				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getGstUnitPrice());
+				noteItem.setGstAmount(BigDecimal.ZERO);
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 			}
+			return;
+		}else{
+			amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged,fulfilmentNote);
 		}
 		if(amtChanged == true){
 //			getManagedBean().setAutoUpdate(Boolean.FALSE);
@@ -896,14 +893,21 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					Double gstAmt = new Double(0);
 					gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().doubleValue() / 100;
 					if(smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
-							&& noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){
+							&& noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){//check effDate and isGST checked
 						noteItem.setGstAmount(new BigDecimal(gstAmt).multiply(fulfilmentNote.getFlRequest().getGstRate()));
-						
+
 						if(noteItem.getGstAmount().doubleValue() > 0){
 							noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().add(noteItem.getGstAmount()));
 							amtChanged = true;
 						}
+					}else{//not effective date
+						noteItem.setGstAmount(BigDecimal.ZERO);
+						noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 					}
+				}else if(smGstSupplier == null){//DO isGST and current non GST
+					noteItem.setGstAmount(BigDecimal.ZERO);
+					noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+					amtChanged = true;
 				}
 		}
 		return amtChanged;
