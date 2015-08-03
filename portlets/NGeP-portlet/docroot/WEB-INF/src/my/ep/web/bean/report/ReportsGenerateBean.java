@@ -128,6 +128,7 @@ public class ReportsGenerateBean {
 		private boolean smSubCategoryView = false;
 		private boolean smSubCategoryDivisionView = false;
 		private boolean smRegistrationStatusView = false;
+		private boolean smConsultantRegistrationStatusView = false;
 		private boolean smPaymentTypeView = false;
 		private boolean smApplicationTypeView = false;
 		private boolean smStateView = false;
@@ -224,6 +225,7 @@ public class ReportsGenerateBean {
 		private boolean smYearFromView = false;
 		private boolean smThresholdYearFromView = false;
 		private boolean smApprovalDateView = false;
+		private boolean smMOFRegisteredDateView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -508,6 +510,19 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmMOFRegisteredDateView() {
+			return smMOFRegisteredDateView;
+		}
+		public void setSmMOFRegisteredDateView(boolean smMOFRegisteredDateView) {
+			this.smMOFRegisteredDateView = smMOFRegisteredDateView;
+		}
+		public boolean isSmConsultantRegistrationStatusView() {
+			return smConsultantRegistrationStatusView;
+		}
+		public void setSmConsultantRegistrationStatusView(
+				boolean smConsultantRegistrationStatusView) {
+			this.smConsultantRegistrationStatusView = smConsultantRegistrationStatusView;
+		}
 		public boolean isScMandatoryProcessRptQuotationNoView() {
 			return scMandatoryProcessRptQuotationNoView;
 		}
