@@ -13,7 +13,7 @@ public abstract class BaseManagedBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String token;
+	private Object token;
 	private String taskId;
 	private String[] outComes;
 	private String title;
@@ -44,11 +44,11 @@ public abstract class BaseManagedBean implements Serializable {
 		this.taskId = taskId;
 	}
 
-	public String getToken() {
+	public Object getToken() {
 		return token;
 	}
 
-	public void setToken(String token) {
+	public void setToken(Object token) {
 		this.token = token;
 	}
 
