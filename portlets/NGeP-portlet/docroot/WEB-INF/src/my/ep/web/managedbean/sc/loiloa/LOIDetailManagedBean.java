@@ -368,6 +368,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** Is FC Secretary User */
 	private boolean isSecretaryUser;
 	
+	/** The zonal. */
+	private boolean zonal;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2148,6 +2151,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSecretaryUser(boolean isSecretaryUser) {
 		this.isSecretaryUser = isSecretaryUser;
+	}
+
+	/**
+	 * @return the zonal
+	 */
+	public boolean isZonal() {
+		return zonal;
+	}
+
+	/**
+	 * @param zonal the zonal to set
+	 */
+	public void setZonal(boolean zonal) {
+		this.zonal = zonal;
 	}
 	
 }
