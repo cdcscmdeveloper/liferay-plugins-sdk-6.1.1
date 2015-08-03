@@ -187,7 +187,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				actionDesc = SupplierManagementConst.SDO_SUBMIT_APPL;
 			}
 
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 			ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISdoReviewSO.class);
 			reqDTO.setApplId(this.getManagedBean().getAppId());
