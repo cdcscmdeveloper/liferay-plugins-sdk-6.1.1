@@ -179,6 +179,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
     private SpkiBackingBean spkiBackingBean;
+    
+    private boolean reliefDeclarationCheck = false;
 	
 	/**
 	 * Gets the doc type.
@@ -992,6 +994,17 @@ public class InvoiceManagedBean extends BaseManagedBean {
 		this.spkiBackingBean = spkiBackingBean;
 	}
 
+	/**
+	 * @return the reliefDeclarationCheck
+	 */
+	public boolean isReliefDeclarationCheck() {
+		return reliefDeclarationCheck;
+	}
 
-
+	/**
+	 * @param reliefDeclarationCheck the reliefDeclarationCheck to set
+	 */
+	public void setReliefDeclarationCheck(boolean reliefDeclarationCheck) {
+		this.reliefDeclarationCheck = reliefDeclarationCheck;
+	}
 }
