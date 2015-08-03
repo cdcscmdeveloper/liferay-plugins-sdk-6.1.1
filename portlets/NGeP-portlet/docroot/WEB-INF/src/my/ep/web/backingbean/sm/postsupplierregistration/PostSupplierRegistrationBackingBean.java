@@ -284,12 +284,11 @@ public class PostSupplierRegistrationBackingBean extends BaseBackingBean<PostSup
 	 */
 	private boolean isHavePendingTaskList() {
 		boolean retVal = false;
-		if (getManagedBean().getToken() == null
-				|| StringUtils.isBlank(getManagedBean().getToken())) {
+		if (getManagedBean().getToken() == null) {
 			FacesScopes face = new FacesScopes();
 			getManagedBean().setToken(face.getBPMAuthenticationCtxToken());
 		}
-		List<WorklistItemVO> taskList = SmCommonUtil.getBpmTaskListByAuthToken(face.getBPMAuthenticationCtxToken());
+		List<WorklistItemVO> taskList = SmCommonUtil.getBpmTaskListByAuthToken(getManagedBean().getToken());
 
 		if (taskList == null || taskList.isEmpty()) {
 			retVal = false;

@@ -613,7 +613,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 				smPayment.setPmStatus(pmStatDesc.getPmStatus());
 
 				// updatePayment(smPayment,validPayment);
-				String token = getFacesScopes().getBPMAuthenticationCtxToken();
+				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 
 				//pymtReqDTO.setPaidPersonnels(getPaidPersonnelBeforeProceed());
@@ -857,7 +857,7 @@ public class PaymentBackingBean extends BaseBackingBean<PaymentManagedBean> {
 			statusCode = SupplierManagementConst.PM_STAT_SUCCESS_PAYMENT;
 			validPayment = true;
 
-			String token = getFacesScopes().getBPMAuthenticationCtxToken();
+			Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 			PaymentReqDTO pymtReqDTO = new PaymentReqDTO();
 
 			// SmPaymentResponse smPaymentRes = new SmPaymentResponse();

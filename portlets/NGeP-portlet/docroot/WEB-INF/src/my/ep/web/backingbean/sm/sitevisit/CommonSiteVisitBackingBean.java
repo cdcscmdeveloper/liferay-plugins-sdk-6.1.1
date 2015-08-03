@@ -33,7 +33,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		//String bpmUsrName = new FacesScopes().getUserScreenName();
 		
-		String token = new FacesScopes().getBPMAuthenticationCtxToken();
+		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
 		
