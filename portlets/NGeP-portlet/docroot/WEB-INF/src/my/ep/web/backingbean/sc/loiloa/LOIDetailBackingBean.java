@@ -891,10 +891,8 @@ public class LOIDetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
-		// calc total items in award details
-		Map<Long, ScLoiLoaItem> maxPriceItemMap  = new HashMap<Long, ScLoiLoaItem>();
 		// calculate max price items only.
-		boolean isMaxPriceItem = Boolean.FALSE;
+		boolean isCalculateMaxPriceItem = Boolean.FALSE;
 		boolean isZonal = Boolean.FALSE;
 		if (scLoi.getScLoiLoaItems() != null
 				&& scLoi.getScLoiLoaItems().size() > 0) {
@@ -917,23 +915,41 @@ public class LOIDetailBackingBean extends
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
 					quantity = scLoiLoaItem.getQty();
-					isMaxPriceItem = Boolean.TRUE;
+					isCalculateMaxPriceItem = Boolean.TRUE;
 
 				} else{
+
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-					maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem ,maxPriceItemMap);
-
-					if (maxPriceItemMap != null
-							&& !maxPriceItemMap.isEmpty()
-							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
-						isMaxPriceItem = Boolean.TRUE;
+					
+					// filter zone tier price items to calculate
+					if(null != scLoiLoaItem.getTplSpecZoneDtl()){
+						Map<TplSpecZoneDtl, ScLoiLoaItem> maxZoneTierPriceItemMap = new HashMap<TplSpecZoneDtl, ScLoiLoaItem>();
+						maxZoneTierPriceItemMap  =  filterZoneTierPriceItemsByItem(scLoiLoaItem, maxZoneTierPriceItemMap);
+						if (maxZoneTierPriceItemMap != null
+								&& !maxZoneTierPriceItemMap.isEmpty()
+								&& maxZoneTierPriceItemMap.containsValue(scLoiLoaItem)){
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else{
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
+						
 					} else{
-						isMaxPriceItem = Boolean.FALSE;
+						// filter tier price items 
+						Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
+					    maxPriceItemMap  =  filterTierPriceItemsByItem(scLoiLoaItem, maxPriceItemMap);
+						if (maxPriceItemMap != null
+								&& !maxPriceItemMap.isEmpty()
+								&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else{
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
 					}
+				
 				}
 
-				if(isMaxPriceItem){
+				if(isCalculateMaxPriceItem ){
 					if (scLoiLoaItem.getScQtProposalItem() != null) {
 						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
 								.getScQtProposalItem()
@@ -978,13 +994,50 @@ public class LOIDetailBackingBean extends
 			getManagedBean().setZonal(isZonal);
 		}		
 	}
-
+	
 	/**
-	 * Max item price By item.
+	 * Filter zone tier price items by item.
 	 *
 	 * @param scLoiLoaItem the sc loi loa item
+	 * @param map the map
+	 * @return the map
 	 */
-	private Map<Long, ScLoiLoaItem>  maxItemTierPriceByItem(ScLoiLoaItem scLoiLoaItem , Map<Long, ScLoiLoaItem> map) {
+	private Map<TplSpecZoneDtl, ScLoiLoaItem>  filterZoneTierPriceItemsByItem(ScLoiLoaItem scLoiLoaItem, Map<TplSpecZoneDtl, ScLoiLoaItem> map) {
+		boolean isMaxZoneTierPriceItem = Boolean.FALSE;
+		List<ScLoiLoaItem> sortGroupItems = new ArrayList<ScLoiLoaItem>();
+		if (null == map || map.isEmpty()){
+			isMaxZoneTierPriceItem = Boolean.TRUE;
+
+		} else {
+			if(!map.containsKey(scLoiLoaItem.getTplSpecZoneDtl())){
+				isMaxZoneTierPriceItem = Boolean.TRUE;
+			} else{
+				isMaxZoneTierPriceItem = Boolean.FALSE;
+			}
+		}
+
+		if(isMaxZoneTierPriceItem){
+			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
+ 			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
+				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) && 
+						loiLoaItem.getTplSpecZoneDtl().getZoneName().equals(scLoiLoaItem.getTplSpecZoneDtl().getZoneName())){
+					sortGroupItems.add(loiLoaItem);
+				}
+			}
+			ScLoiLoaItem maxPriceItem  = findMaxPriceItem(sortGroupItems);
+			map.put(maxPriceItem.getTplSpecZoneDtl(), maxPriceItem);
+		}
+		return map;
+	}
+
+	/**
+	 * Filter tier price items by item.
+	 *
+	 * @param scLoiLoaItem the sc loi loa item
+	 * @param map the map
+	 * @return the map
+	 */
+	private Map<Long, ScLoiLoaItem>  filterTierPriceItemsByItem(ScLoiLoaItem scLoiLoaItem , Map<Long, ScLoiLoaItem> map) {
 		boolean isFindMaxPriceItem = Boolean.FALSE;
 		List<ScLoiLoaItem> sameItems = new ArrayList<ScLoiLoaItem>();
 		if (null == map || map.isEmpty()){
@@ -1037,9 +1090,20 @@ public class LOIDetailBackingBean extends
 		if(isItemFound){
 			List<ScLoiLoaItem> scLoiLoaItems = getManagedBean().getScLoi().getScLoiLoaItems();
 			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
-				if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
-					groupByItems.add(loiLoaItem);
+				
+				// zone tier group items
+				if(null !=  loiLoaItem.getTplSpecZoneDtl()){
+					if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId()) && 
+							loiLoaItem.getTplSpecZoneDtl().getZoneName().equals(scLoiLoaItem.getTplSpecZoneDtl().getZoneName())){
+						groupByItems.add(loiLoaItem);
+					}
+				} else{
+					// tier group items
+					if(loiLoaItem.getScRequestItem().getRequestNoteItemId().equals(scLoiLoaItem.getScRequestItem().getRequestNoteItemId())){
+						groupByItems.add(loiLoaItem);
+					}
 				}
+				
 			}
 			findLowestIterPriceItem(groupByItems); 
 			map.put(scLoiLoaItem.getScRequestItem().getRequestNoteItemId(), scLoiLoaItem);
@@ -1404,7 +1468,7 @@ public class LOIDetailBackingBean extends
 	 *            the res dto
 	 */
 	private void populateLOIDetails(AwardSupplierResDTO resDTO) {
-		boolean isMaxPriceItem = Boolean.FALSE;// calculate max price items only.
+		boolean isCalculateMaxPriceItem = Boolean.FALSE;// calculate max price items only.
 		boolean isTermPriceFound = Boolean.FALSE;
 		boolean isBiddingAward = Boolean.FALSE;
 		
@@ -1438,7 +1502,6 @@ public class LOIDetailBackingBean extends
 		// calc total items in award details
 		if (scLoi.getScLoiLoaItems() != null && scLoi.getScLoiLoaItems().size() > 0) {
 			
-			Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
 			BigDecimal offerPrice = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
 			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
@@ -1458,22 +1521,39 @@ public class LOIDetailBackingBean extends
 				if(null == scLoiLoaItem.getTplSpecTierQty() ){
 					// without Tier quantity
 					quantity = scLoiLoaItem.getQty();
-					isMaxPriceItem = Boolean.TRUE;
+					isCalculateMaxPriceItem = Boolean.TRUE;
 				} else{
+					
 					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-				    maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem, maxPriceItemMap);
-
-					if (maxPriceItemMap != null
-							&& !maxPriceItemMap.isEmpty()
-							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
-						isMaxPriceItem = Boolean.TRUE;
+					
+					// filter zone tier price items
+					if(null != scLoiLoaItem.getTplSpecZoneDtl()){
+						Map<TplSpecZoneDtl, ScLoiLoaItem> maxZoneTierPriceItemMap = new HashMap<TplSpecZoneDtl, ScLoiLoaItem>();
+						maxZoneTierPriceItemMap  =  filterZoneTierPriceItemsByItem(scLoiLoaItem, maxZoneTierPriceItemMap);
+						if (maxZoneTierPriceItemMap != null
+								&& !maxZoneTierPriceItemMap.isEmpty()
+								&& maxZoneTierPriceItemMap.containsValue(scLoiLoaItem)){
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else{
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
+						
 					} else{
-						isMaxPriceItem = Boolean.FALSE;
+						// filter tier price items 
+						Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
+					    maxPriceItemMap  =  filterTierPriceItemsByItem(scLoiLoaItem, maxPriceItemMap);
+						if (maxPriceItemMap != null
+								&& !maxPriceItemMap.isEmpty()
+								&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else{
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
 					}
 				}
 
-				if(isMaxPriceItem){
+				if(isCalculateMaxPriceItem){
 					if (scLoiLoaItem.getScQtProposalItem() != null) {
 						// offered price sub total and total
 						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem.getScQtProposalItem().getOfferPrice()));
@@ -2911,7 +2991,9 @@ public class LOIDetailBackingBean extends
 			// validate tier pricing
 			Map<Long, ScLoiLoaItem> groupByItemMap = new HashMap<Long, ScLoiLoaItem>();
 			for (ScLoiLoaItem  scLoiLoaItem : scLoi.getScLoiLoaItems()) {
-				validateItemTierPriceByItem(scLoiLoaItem, groupByItemMap);
+				if(null != scLoiLoaItem.getTplSpecTierQty()){
+					validateItemTierPriceByItem(scLoiLoaItem, groupByItemMap);
+				}
 			}
 			
 			if (getManagedBean().getScQt() != null) {
@@ -4268,10 +4350,8 @@ public class LOIDetailBackingBean extends
 	 */
 	public void priceKeyInEvent() {
 		debugLogger("priceKeyInEvent");
-		Map<Long, ScLoiLoaItem> maxPriceItemMap  = new HashMap<Long, ScLoiLoaItem>();
 		// calculate max price items only.
-		boolean isMaxPriceItem = Boolean.FALSE;
-
+		boolean isCalculateMaxPriceItem = Boolean.FALSE;
 		ScLoi scLoi = getManagedBean().getScLoi();
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		// calc after nego total
@@ -4286,18 +4366,36 @@ public class LOIDetailBackingBean extends
 					// with out Tier quantity
 					quantity = scLoiLoaItem.getQty();
 				} else{
-					// Tier quantity.
+					// Tier - max quantity.
 					quantity  =  scLoiLoaItem.getScRequestItem().getTplSpecQuestion().getClQuantity();
-					maxPriceItemMap  =  maxItemTierPriceByItem(scLoiLoaItem, maxPriceItemMap);
-					if (maxPriceItemMap != null
-							&& !maxPriceItemMap.isEmpty()
-							&& maxPriceItemMap.containsValue(scLoiLoaItem)){
-						isMaxPriceItem = Boolean.TRUE;
+					
+					// filter zone tier price items
+					if(null != scLoiLoaItem.getTplSpecZoneDtl()){
+						Map<TplSpecZoneDtl, ScLoiLoaItem> maxZoneTierPriceItemMap = new HashMap<TplSpecZoneDtl, ScLoiLoaItem>();
+						maxZoneTierPriceItemMap  =  filterZoneTierPriceItemsByItem(scLoiLoaItem, maxZoneTierPriceItemMap);
+						if (maxZoneTierPriceItemMap != null
+								&& !maxZoneTierPriceItemMap.isEmpty()
+								&& maxZoneTierPriceItemMap.containsValue(scLoiLoaItem)){
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else{
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
+						
 					} else{
-						isMaxPriceItem = Boolean.FALSE;
+						// filter tier price items 
+						Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
+					    maxPriceItemMap  =  filterTierPriceItemsByItem(scLoiLoaItem, maxPriceItemMap);
+						if (maxPriceItemMap != null
+								&& !maxPriceItemMap.isEmpty()
+								&& maxPriceItemMap.containsValue(scLoiLoaItem)){
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else{
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
 					}
 				}
-				if(isMaxPriceItem){
+				
+				if(isCalculateMaxPriceItem){
 					subTotal = TemplateSpecHelper.getInstance().calculateTotalAmount(
 							scLoiLoaItem.getScRequestItem().getTplSpecQuestion(),
 							scLoiLoaItem.getUnitPrice(), quantity);
