@@ -10,7 +10,8 @@
 		toggleable="true">
 
 		<p:dataTable id="scEndorsement" var="committeActivity" rows="10"
-			widgetVar="prepareCommittee" value="#{committeeActivityList}">
+			rowIndexVar="index" widgetVar="prepareCommittee"
+			value="#{committeeActivityList}">
 			<ac:paginator for="scEndorsement" />
 
 			<p:column style="width:30%;white-space: normal;"
@@ -43,7 +44,8 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					<ac:iconTooltip id="pnp#{index}sc"
+						value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
@@ -58,7 +60,8 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+				style="width:10%;white-space: normal;">
 
 
 				<h:outputText
@@ -78,8 +81,7 @@
 		<ui:include src="reminderpopup.xhtml" /> -->
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
