@@ -69,9 +69,10 @@
 				update="@form" action="#{smUpdateGstInfoBackingBean.addHqGst}">
 			</p:commandButton>
 			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
-				partialSubmit="true" process="@this" update="@([id$=confirmDeleteHqDialog])"
+				partialSubmit="true" process="@this" update="@form"
 				disabled="#{empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier 
 					or smUpdateGstInfoBackingBean.managedBean.gstEmpty}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{smUpdateGstInfoBackingBean.deleteHqGst}">
 			</p:commandButton>
 		</div>

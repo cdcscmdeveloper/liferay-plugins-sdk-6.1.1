@@ -110,6 +110,8 @@ public class SmUpdateGstInfoBackingBean extends
 						.compareTo(branch.getBranch().getSupplierBranchId()) == 0) {
 					brTmp.setGst(new SmGstSupplier());
 					brTmp.getGst().setIsCurrent(true);
+					brTmp.getGst().setBranchCode(
+							brTmp.getBranch().getBranchCode());
 					initSuppDocs(brTmp.getGst());
 				}
 			}
@@ -198,6 +200,7 @@ public class SmUpdateGstInfoBackingBean extends
 			brVO.getGst().setGstEndDate(null);
 		}
 		brVO.getGst().setIsCurrent(true);
+		brVO.getGst().setBranchCode(brVO.getBranch().getBranchCode());
 	}
 
 	private String getGstSuppDocBasePath() {
@@ -274,9 +277,9 @@ public class SmUpdateGstInfoBackingBean extends
 					&& brVO.getBranch()
 							.getSupplierBranchId()
 							.compareTo(branch.getBranch().getSupplierBranchId()) == 0) {
-				if(brVO.getGst().getGstSupplierId()!=null){
+				if (brVO.getGst().getGstSupplierId() != null) {
 					setDeleteGst(brVO.getGst());
-				}else{
+				} else {
 					brVO.setGst(null);
 				}
 				brVO.setSameWithHq(false);
