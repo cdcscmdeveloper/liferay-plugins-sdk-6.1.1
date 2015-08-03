@@ -103,7 +103,6 @@ import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sc.supplierproposal.SPDetailManagedBean;
 import my.ep.web.util.BouncyCastleProvider_AES_CBC;
-import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -1108,20 +1107,20 @@ public class SPDetailBackingBean extends
 		try {
 			bc.InitCiphers();
 		} catch (InvalidKeyException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			debugLogger(e.getMessage());
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			debugLogger(e.getMessage());
 		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			debugLogger(e.getMessage());
 		} catch (NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			debugLogger(e.getMessage());
 		} catch (InvalidAlgorithmParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+
+			debugLogger(e.getMessage());
 		}
 		// encryption
 		try {
@@ -1129,11 +1128,9 @@ public class SPDetailBackingBean extends
 		} catch (ShortBufferException e) {
 			log.debug(e.getMessage());
 		} catch (IllegalBlockSizeException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			debugLogger(e.getMessage());
 		} catch (BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			debugLogger(e.getMessage());
 		}
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
@@ -1225,34 +1222,26 @@ public class SPDetailBackingBean extends
 			try {
 				bc.InitCiphers();
 			} catch (InvalidKeyException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			} catch (NoSuchAlgorithmException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			} catch (NoSuchProviderException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			} catch (NoSuchPaddingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			} catch (InvalidAlgorithmParameterException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			}
 
 			// decryption
 			try {
 				bc.CBCDecrypt(input, out);
 			} catch (ShortBufferException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			} catch (IllegalBlockSizeException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			} catch (BadPaddingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				debugLogger(e.getMessage());
 			}
 
 			input.close();
@@ -2286,7 +2275,7 @@ public class SPDetailBackingBean extends
 	 * getManagedBean().setScQtCheckList(
 	 * scQtProposalChecklist.getScQtCheckList());
 	 * 
-	 * // what's happening here // TODO - check still valid or not if
+	 * // what's happening here //  check still valid or not if
 	 * ("SP".equalsIgnoreCase(definationType)) {
 	 * 
 	 * ScQtCheckList scQtCheckList = scQtProposalChecklist .getScQtCheckList();
@@ -3145,7 +3134,7 @@ public class SPDetailBackingBean extends
 		if (scQt != null) {
 			context.put("title", scQt.getQtTitle());
 		}
-		
+
 		if (pmUser != null) {
 			context.put("userName", pmUser.getUserName());
 			context.put("icNo", pmUser.getIdentificationNo());
@@ -3154,7 +3143,8 @@ public class SPDetailBackingBean extends
 		if (smSupplier != null) {
 			context.put("supplierName", smSupplier.getCompanyName());
 			if (smSupplier.getSmMofAccounts().get(0).getMofNo() != null
-					&& !smSupplier.getSmMofAccounts().get(0).getMofNo().isEmpty()) {
+					&& !smSupplier.getSmMofAccounts().get(0).getMofNo()
+							.isEmpty()) {
 				context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
 						.getMofNo());
 			} else if (smSupplier.getRegNo() != null) {
@@ -3166,7 +3156,7 @@ public class SPDetailBackingBean extends
 		if (pmOrgProfile != null) {
 			context.put("agency", pmOrgProfile.getOrgName());
 		}
-		// TODO
+		
 		String integrityPact = DocumentGenerator.getInstance()
 				.getHtmlFromVelocity(
 						SourcingConstants.SUPPLIER_PROPOSAL_INTEGRITY, context);
@@ -3631,11 +3621,8 @@ public class SPDetailBackingBean extends
 			throws Exception {
 		attachment.setFileName("sample Labels.pdf");
 		populateAttachmentDetails(attachment);
-		CommonUtils commonUtils = new CommonUtils();
+		// CommonUtils commonUtils = new CommonUtils();
 
-		DecimalFormat numberDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_INTEGER));
 		VelocityContext context = new VelocityContext();
 
 		context.put("sampleItems", getManagedBean().getScQtSampleLable()
