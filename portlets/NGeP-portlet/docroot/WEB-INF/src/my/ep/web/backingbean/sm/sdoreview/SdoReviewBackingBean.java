@@ -23,6 +23,7 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sm.SmApplInquiry;
 import my.ep.persistence.entity.sm.SmApplSupportDoc;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmRemark;
 import my.ep.type.pm.RoleCode;
@@ -121,6 +122,10 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 				this.getManagedBean().getSupportingDocMap().put(applSuppDoc.getApplSupportDocId(), applSuppDoc);
 			}
 		}
+		
+		//retrieve Supplier GST Info
+		SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(getManagedBean().getSmAppl().getSmSupplier().getSupplierId(), null);
+		getManagedBean().setSmGstSupplier(gstSupp);
 		
 		//retrieveBusinessTypeList();
 		log.info("----------Supporting document-------------" +  this.getManagedBean().getSmAppl().getSmApplSupportDocs().size());
@@ -286,7 +291,7 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	
 
 	//for local testing purpose
-/*	public void preRenderView(){
+	/*public void preRenderView(){
 		if(this.getManagedBean().getSmAppl() == null){
 			viewSupportingDocument();
 		}
