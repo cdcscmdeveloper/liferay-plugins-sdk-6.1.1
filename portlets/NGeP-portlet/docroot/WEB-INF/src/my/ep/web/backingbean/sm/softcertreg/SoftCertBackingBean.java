@@ -101,7 +101,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		String taskId = originalServletRequest.getParameter("taskId");
 		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
 
-		String token = new FacesScopes().getBPMAuthenticationCtxToken();
+		Object token = new FacesScopes().getBPMAuthenticationCtxToken();
 
 		reqDTO.setTaskId(taskId);
 		reqDTO.setToken(token);
@@ -466,8 +466,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	private void setSoftCertPaymentBpmTask() {
 		getManagedBean().setSoftCertBpmTask(null);
 		if (getManagedBean().getToken() == null
-				|| StringUtils.isBlank(getManagedBean().getToken())) {
-			getManagedBean().setToken(
+				|| getManagedBean().getBpmToken()==null) {
+			getManagedBean().setBpmToken(
 					new FacesScopes().getBPMAuthenticationCtxToken());
 		}
 		List<WorklistItemVO> taskList = SmCommonUtil
