@@ -773,8 +773,7 @@ public class CommitteBackingBean extends
 					.getCommitteeType());
 		}
 		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		committeReqDTO.setToken(ctxToken);
+		committeReqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		return committeReqDTO;
 	}
 

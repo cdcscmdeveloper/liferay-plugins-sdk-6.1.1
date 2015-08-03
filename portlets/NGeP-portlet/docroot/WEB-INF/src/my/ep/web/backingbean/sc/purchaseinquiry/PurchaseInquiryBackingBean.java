@@ -587,8 +587,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			prInquiry.getRequestItem().setRequestNote(requestNote);
 
 			requestNote.setRequestNoteDtls(requestNoteDtls);
-			String token = facesScopes.getBPMAuthenticationCtxToken();
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPrInquiryDetail(prInquiry);
@@ -647,10 +646,9 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		prInquiry.setIsStockAvailable(getManagedBean().getStockAvailable());
 		reqDTO.setPrInquiryDetail(prInquiry);
 		FacesScopes facesScopes = new FacesScopes();
-		String token = facesScopes.getBPMAuthenticationCtxToken();
 		reqDTO.setPmUser(facesScopes.getUserSessionBean());
 		reqDTO.setRoleCode(getUserRoleCode());
-		reqDTO.setToken(token);
+		reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDTO.setOutcome(getManagedBean().getAction());
 		reqDTO.setTaskId(getManagedBean().getTaskId());
 
@@ -811,9 +809,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				
 				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 				FacesScopes facesScopes = new FacesScopes();
-				String token = facesScopes.getBPMAuthenticationCtxToken();
 				BpmRequestDTO reqBPMDTO = new BpmRequestDTO();
-				reqBPMDTO.setCtxToken(token);
+				reqBPMDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 				reqBPMDTO.setTaskId(getManagedBean().getTaskId());
 				BpmResponseDTO res = bpmSO.getTaskDetails(reqBPMDTO);
 				requestNoteBackingBean.getManagedBean().setOutComes(res.getAction());
@@ -866,10 +863,9 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 
 			reqDTO.setPrInquiryDetail(prInquiry);
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
@@ -897,9 +893,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 			log.info("taskId : " + taskId);
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			this.getManagedBean().setOutComes(res.getAction());

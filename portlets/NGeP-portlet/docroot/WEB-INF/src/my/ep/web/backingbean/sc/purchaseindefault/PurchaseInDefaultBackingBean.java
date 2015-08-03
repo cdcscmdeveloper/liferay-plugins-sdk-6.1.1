@@ -414,10 +414,9 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			}
 			reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 			// Hoa: add token authenticate to support BPM
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			// reqDTO.setConditionField(getManagedBean().getConditionField());
 			PurchaseInDefaultResDTO resDTO = purchaseInDefaultSO
 					.submitPurchaseInDefault(reqDTO);
@@ -505,8 +504,7 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 				}
 			   reqDTO.setPurchaseInDefaultDtl(scPurchaseInDefault);
 			   FacesScopes facesScopes = new FacesScopes();
-			   String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-			   reqDTO.setToken(ctxToken);
+			   reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			   reqDTO.setPmUser(facesScopes.getUserSessionBean());
 			   reqDTO.setRoleCode(getUserRoleCode());
 			   reqDTO.setTaskId(getManagedBean().getTaskId());
@@ -841,9 +839,8 @@ public class PurchaseInDefaultBackingBean extends SourcingBaseBackingBean<Purcha
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 					.getServiceObject(IBpmSO.class);
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
+			reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			this.getManagedBean().setOutComes(res.getAction());

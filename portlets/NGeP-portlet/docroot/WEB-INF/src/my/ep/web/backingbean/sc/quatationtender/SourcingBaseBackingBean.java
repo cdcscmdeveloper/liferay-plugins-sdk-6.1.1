@@ -535,10 +535,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				.getServiceObject(IBpmSO.class);
 		// TODO
 		FacesScopes facesScopes = new FacesScopes();
-		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		// String ctx = bpmSO.authenticate("roslan", "welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
+		reqDTO.setCtxToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();

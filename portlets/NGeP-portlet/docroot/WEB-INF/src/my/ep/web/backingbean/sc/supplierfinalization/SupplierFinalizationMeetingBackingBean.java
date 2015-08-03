@@ -1323,7 +1323,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		IQTMeetingSO qtMeetingSO = null;
 		try {
 			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			qtMeetingSO = BusinessDelegate.getInstance().getServiceObject(
 									ModuleCodeConst.SUPPLIER_SELECTION,IQTMeetingSO.class);
 			
@@ -1336,7 +1335,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			}
 			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
-			reqDTO.setToken(ctxToken);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			
 			qtMeetingSO.saveQTDtl(reqDTO);
 			renewSessionAndRetrieve();
@@ -1382,7 +1381,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		IQTMeetingSO meetingSO = null;
 		try {
 			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 			meetingSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTMeetingSO.class);
 			 
 			MeetingReqDTO reqDTO = meetingDtlsInfo();
@@ -1393,7 +1391,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setToken(ctxToken);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outCome);
 			

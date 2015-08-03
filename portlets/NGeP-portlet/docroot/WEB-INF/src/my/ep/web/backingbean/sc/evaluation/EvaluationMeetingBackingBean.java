@@ -1483,7 +1483,6 @@ public class EvaluationMeetingBackingBean extends
 		try {
 
 			FacesScopes facesScopes = new FacesScopes();
-			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 
 			IQTMeetingSO meetingso = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
@@ -1492,7 +1491,7 @@ public class EvaluationMeetingBackingBean extends
 			String qtNum = this.getManagedBean().getQt().getQtNo();
 			checkCommitteeFormation(reqDTO);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setToken(ctxToken);
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outCome);
 			MeetingResDTO resDTO = meetingso.updateBPMAction(reqDTO);
