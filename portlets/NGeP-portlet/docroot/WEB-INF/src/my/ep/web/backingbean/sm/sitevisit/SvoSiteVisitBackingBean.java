@@ -2135,7 +2135,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		try{
 			//if Action equals to SUBMIT, set the BPM Info
 			if(action.equals(SupplierManagementConst.BPM_SUBMIT)){
-				String token = getFacesScopes().getBPMAuthenticationCtxToken();
+				Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 				reqDTO.setAppId(this.getManagedBean().getAppId());
 				reqDTO.setToken(token);
 				reqDTO.setOutcome(SupplierManagementConst.BPM_SUBMIT);
