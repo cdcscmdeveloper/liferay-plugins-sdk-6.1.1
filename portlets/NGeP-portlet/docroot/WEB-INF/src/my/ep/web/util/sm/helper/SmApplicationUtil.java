@@ -57,6 +57,7 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.educationlevel.EducationLevelReqDTO;
@@ -126,6 +127,7 @@ import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -5464,6 +5466,65 @@ public class SmApplicationUtil {
 				.getSmAppl();
 	}
 
+	public static SmGstSupplier initGstInformation(Long supplierId,
+			Long branchCode, SmGstSupplier gst) {
+		gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
+				supplierId, branchCode, null);
+		if (gst == null) {
+			gst = new SmGstSupplier();
+		}
+		initGstSuppDocs(gst);
+		return gst;
+	}
+
+	public static void validateGSt(SmGstSupplier gst) {
+		if (!isGstEmpty(gst)) {
+			if (StringUtils.isNotBlank(gst.getGstRegNo())
+					&& gst.getGstEffDate() == null) {
+				// GST Effective date is required
+				throw new EpException(MessageConst.ERROR_721030);
+			} else if (StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getGstEffDate() != null) {
+				// GST Registration no is required
+				throw new EpException(MessageConst.ERROR_721029);
+			} else if (StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getGstEndDate() != null) {
+				// GST Registration no and GST Effective Date is required
+				throw new EpException(MessageConst.ERROR_721043);
+			}
+		}
+	}
+
+	public static boolean isGstEmpty(SmGstSupplier gst) {
+		boolean retVal = false;
+		if (gst == null) {
+			retVal = true;
+		} else if (StringUtils.isBlank(gst.getGstRegNo())
+				&& gst.getGstEffDate() == null && gst.getGstEndDate() == null) {
+			retVal = true;
+		}
+		return retVal;
+	}
+
+	private static void initGstSuppDocs(SmGstSupplier gst) {
+		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO()
+				.retrieveGstSuppDocuments(new DocumentReqDTO())
+				.getDocumentList();
+
+		if (gst != null
+				&& (gst.getSmGstSupplierDocs() == null || gst
+						.getSmGstSupplierDocs().isEmpty())) {
+			gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+			SmGstSupplierDoc suppDoc = null;
+			for (PmDocument doc : suppDocList) {
+				suppDoc = new SmGstSupplierDoc();
+				suppDoc.setPmDocument(doc);
+				suppDoc.setSmGstSupplier(gst);
+				gst.getSmGstSupplierDocs().add(suppDoc);
+			}
+		}
+	}
+
 	private static void validateRenewalApplTypeForSpecialCategory(SmAppl smAppl) {
 		if (!smAppl.getApplCategoryType().equals(
 				ParameterConst.CATEGORY_TYPE_NORMAL)
@@ -5488,35 +5549,6 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722606);
 			}
 		}
-	}
-	
-	public static void validateGSt(SmGstSupplier gst){
-		if(!isGstEmpty(gst)){
-			if (StringUtils.isNotBlank(gst.getGstRegNo())
-					&& gst.getGstEffDate() == null) {
-				// GST Effective date is required
-				throw new EpException(MessageConst.ERROR_721030);
-			} else if (StringUtils.isBlank(gst.getGstRegNo())
-					&& gst.getGstEffDate() != null) {
-				// GST Registration no is required
-				throw new EpException(MessageConst.ERROR_721029);
-			}else if(StringUtils.isBlank(gst.getGstRegNo())
-					&& gst.getGstEndDate() != null){
-				// GST Registration no and GST Effective Date is required
-				throw new EpException(MessageConst.ERROR_721043);
-			}
-		}
-	}
-
-	public static boolean isGstEmpty(SmGstSupplier gst) {
-		boolean retVal = false;
-		if (gst == null) {
-			retVal = true;
-		} else if (StringUtils.isBlank(gst.getGstRegNo())
-				&& gst.getGstEffDate() == null && gst.getGstEndDate() == null) {
-			retVal = true;
-		}
-		return retVal;
 	}
 
 	public static SmApplicationUtil getInstance() {
