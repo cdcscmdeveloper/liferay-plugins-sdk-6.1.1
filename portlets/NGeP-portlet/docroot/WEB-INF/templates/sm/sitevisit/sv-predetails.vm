@@ -34,8 +34,13 @@
     	</tr>
     	
     	<tr>
-    		 <td width="35%"><b>GST Registration Date.</b></td>
-	        <td>$!smVmUtil.formatDate($gstRegDate)</td>
+    		 <td width="35%"><b>GST Effective Date.</b></td>
+	        <td>$!smVmUtil.formatDate($gstEffDate)</td>
+    	</tr>
+    	
+    	<tr>
+    		 <td width="35%"><b>GST Effective End Date.</b></td>
+	        <td>$!smVmUtil.formatDate($gstEndDate)</td>
     	</tr>
     	
     	#if($svAddresses.size() > 0)
