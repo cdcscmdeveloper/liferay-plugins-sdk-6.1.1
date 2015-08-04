@@ -671,7 +671,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			pmDigiSign.setCreatedBy(userId);
 		    pmDigiSign.setCreatedDate(date);
 		    pmDigiSign.setOriginalData(originalText);
-		    pmDigiSign.setSkpiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
+		    pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
 			getManagedBean().setPmDigiSign(pmDigiSign);			
 		} else if(pmDigiSign != null) {
 			getManagedBean().setPmDigiSign(pmDigiSign);		
@@ -733,7 +733,7 @@ public class SupplierBackingBean extends ContractBaseBackingBean<SupplierManaged
 			pmDigiSign.setCreatedBy(userId);
 		    pmDigiSign.setCreatedDate(date);
 		    pmDigiSign.setOriginalData(originalText);
-		    pmDigiSign.setSkpiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
+		    pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
 			getManagedBean().setPmDigiSign(pmDigiSign);			
 		} else if (pmDigiSign != null) {
 			getManagedBean().setPmDigiSign(pmDigiSign);		

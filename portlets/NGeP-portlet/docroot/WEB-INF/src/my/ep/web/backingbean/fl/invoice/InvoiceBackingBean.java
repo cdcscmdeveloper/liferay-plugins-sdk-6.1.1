@@ -1374,7 +1374,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			pmDigiSign.setCreatedDate(date);
 			pmDigiSign.setOriginalData(textBeforeSign);
 			// spki 
-			pmDigiSign.setSkpiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign));
+			pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign));
 		}
 		
 		/**

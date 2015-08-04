@@ -1295,7 +1295,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			pmDigiSign.setCreatedBy(userId);
 		    pmDigiSign.setCreatedDate(date);
 		    pmDigiSign.setOriginalData(originalText);
-		    pmDigiSign.setSkpiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
+		    pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText));
 			getManagedBean().setPmDigiSign(pmDigiSign);			
 		} else if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
