@@ -359,10 +359,10 @@ public class SPDetailBackingBean extends
 			 * );
 			 * RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 			 * String originalText =
-			 * prepareOriginalText(getManagedBean().getSmSupplier()); String
-			 * signedData =
+			 * prepareOriginalText(getManagedBean().getSmSupplier()); 
+			 *  byte[] signedData =
 			 * getManagedBean().getSpkiBackingBean().spkiSignTransaction
-			 * (originalText); digiSign.setSignedData(signedData);
+			 * (originalText); digiSign.setSpkiSignedData(signedData);
 			 * 
 			 * if (null != digiSign) { updateSpkiDigiSignData(digiSign,
 			 * ParameterConst.DOCTYPE_SUPPLIER_PROPOSAL,
