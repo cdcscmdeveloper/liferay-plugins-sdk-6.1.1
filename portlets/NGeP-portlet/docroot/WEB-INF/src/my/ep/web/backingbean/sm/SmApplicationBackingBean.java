@@ -1246,11 +1246,11 @@ public class SmApplicationBackingBean extends
 					.getSmAppl().getApplId(), this.getManagedBean().getSmAppl()
 					.getApplNo(), prepareOriginalText());
 			SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
-			String signedData = spkiBackingBean
+			byte[] signedData = spkiBackingBean
 					.spkiSignTransaction(prepareOriginalText());
 			log.info("signedData: " + signedData);
 
-			pmDigiSign.setSignedData(signedData);
+			pmDigiSign.setSpkiSignedData(signedData);
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		updateSmAppl(applType, currentPageType, outputPageType);
@@ -1266,7 +1266,7 @@ public class SmApplicationBackingBean extends
 		pmDigiSign.setDocType(docType);
 		pmDigiSign.setCreatedBy(userId);
 		pmDigiSign.setCreatedDate(date);
-		pmDigiSign.setOrginalData(textBeforeSign);
+		pmDigiSign.setOriginalData(textBeforeSign);
 	}
 
 	/**
@@ -5955,12 +5955,12 @@ public class SmApplicationBackingBean extends
 					.getApplNo(), prepareOriginalText());
 			// SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
 			// log.info("spkiBackingBean: " + spkiBackingBean);
-			String signedData = getManagedBean().getSpkiBackingBean()
+			byte[] signedData = getManagedBean().getSpkiBackingBean()
 					.spkiSignTransaction(prepareOriginalText());
 
 			log.info("signedData: " + signedData);
 
-			pmDigiSign.setSignedData(signedData);
+			pmDigiSign.setSpkiSignedData(signedData);
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
 		if (applType.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_CANCEL)) {
