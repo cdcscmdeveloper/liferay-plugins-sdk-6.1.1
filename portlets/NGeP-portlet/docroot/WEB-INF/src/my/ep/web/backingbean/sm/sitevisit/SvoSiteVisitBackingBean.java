@@ -275,7 +275,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	 * @param viewMode
 	 */
 	public void retrieveSiteVisitInfo(String viewMode){
-		this.getManagedBean().setAppId(1257118);//Dev
+		//this.getManagedBean().setAppId(1257118);//Dev
 		//this.getManagedBean().setAppId(1259054);
 		//this.getManagedBean().setAppId(1258520);//#4126 #4377
 		//this.getManagedBean().setAppId(1437083);
@@ -749,11 +749,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 	}
 	
 	//Local testing
-	public void preRenderView(){
+/*	public void preRenderView(){
 		if(this.getManagedBean().getSmSvTask() == null){
 			retrieveSiteVisitInfo("");
 		}
-	}
+	}*/
 	
 	/**
 	 * get Total BOD, Mgmt Worker and Equity Owner
