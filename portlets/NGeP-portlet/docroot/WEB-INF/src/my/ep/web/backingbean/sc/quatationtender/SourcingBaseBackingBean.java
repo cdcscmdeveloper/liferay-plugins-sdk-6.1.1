@@ -993,7 +993,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		pmDigiSign.setDocType(docType);
 		pmDigiSign.setCreatedBy(userId);
 		pmDigiSign.setCreatedDate(date);
-		pmDigiSign.setOrginalData(textBeforeSign);
+		pmDigiSign.setOriginalData(textBeforeSign);
 	}
 
 	FacesScopes facesScope = new FacesScopes();
