@@ -163,7 +163,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml?faces-redirect=true";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml?faces-redirect=true";
 	private static final String CONTRACT_PAGE = "/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml?faces-redirect=true";
-	private static final String TERMINATE_HISTORY_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
+	private static final String TERMINATE_HISTORY_PAGE = "/xhttml/ct/fulfilmentdetails/termination/terminationHistory.xhtml?faces-redirect=true";
 	private static final String CONTRACT_MAINT_PAGE = "/xhtml/ct/fulfilmentdetails/search/search.xhtml?faces-redirect=true";
 	private static final String CONTRACT_COMMON_PAGE = "/xhtml/ct/viewcontract/fulfilmentTab.xhtml";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml?faces-redirect=true";
@@ -187,9 +187,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 */
 	public ContractDetailsBackingBean() {
 		/* Initialization of button */
-		if (this.getManagedBean().getAction() == null) {
-			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-			this.getManagedBean().setContractVer(new CtContractVer());
+		if (getManagedBean().getAction() == null) {
+			getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+			getManagedBean().setContractVer(new CtContractVer());
 		}
 		if (getManagedBean().getUserMap().size() == 0) {
 			initializeApproverList();
@@ -597,8 +597,9 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
 			setValidateContractField(resDTO);         
-			if(resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION)){
-				getManagedBean().setDisableGstAmount(true);
+			if(resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && 
+					isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())){
+				    getManagedBean().setDisableGstAmount(true);
 			}
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
@@ -617,8 +618,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @param resDTO  the response data transfer object for contract
 	 */
 	public void setValidateContractField(ContractResDTO resDTO) {
+		
 		getManagedBean().setContractVer(resDTO.getCtContractVer());
 	    getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+	   
 	    ctBB.getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 	         
 	    // Retrieve Agencies
@@ -955,11 +958,11 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				}
 			}
 		}
-		
-		if (contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
-				|| contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
+		log.info(">>>>>>>>> null exception checking>>>>>>>>" +contractVer.getDocType());
+		if (contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
+				|| contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
 			// Validation for agency
-			if (getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY) 
+			if (getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY) 
 					&& contractVer.getCtAgencies().size() == 0 && action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
 				throw new EpException(MessageConst.ERROR_750006); // At least one row should be in Agency section.
 			}
@@ -967,7 +970,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			if (getManagedBean().getCtContractAmount().isBondReq() && !getManagedBean().isDirectPurchase()) {
 				//In CT Update(bond required): if previously the bond already defined, number of performance bond must be > 0 while submission; 
 				//In CT Update(bond required): if previously no bond defined, system allow submission of FD Update even the number of performance bond entered = 0.
-				if (contractVer.getDocType().equals(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
+				if (contractVer.getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_UPDATE)) {
 					if (getManagedBean().getCtContract().getLatestContractVer() != null) {
 						for (CtContractAmount contractAmt : getManagedBean().getCtContract().getLatestContractVer().getCtContractAmounts()) {
 				    		if (getManagedBean().getContractVer().getAsAtDate().getTime() >= contractAmt.getEffDate().getTime() 
@@ -1223,7 +1226,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) 
 				&& (getManagedBean().getContractVer().getCtContractValue().getAp201FileName() == null 
 				||getManagedBean().getContractVer().getCtContractValue().getAp201FileName().equalsIgnoreCase("")) 
-				&& getManagedBean().getCtContract().getContractType().getParameterCode().equals(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
+				&& getManagedBean().getCtContract().getContractType().getParameterCode().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)) {
 			throw new EpException(MessageConst.ERROR_100022, 
    					new String[] {ResourceBundleUtils.getMessage("lbl.ct.attachment.ap201", 
    							ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
@@ -1241,7 +1244,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @see    Exception
      */
     public String gpkiSignAction(String outcome) throws Exception {
-		if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+		if (BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome)) {
 			validateCtContractVer(outcome);
 			CtContractVer contractVer = getManagedBean().getContractVer();
 			//Temp setTextBeforeSign : ContractNo+DocType+StartDate+EndDate+ContractAmount+Type
@@ -1257,7 +1260,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 			return null;
-		} else if (BpmOutcomeConst.BPM_CANCEL.equals(outcome)) {
+		} else if (BpmOutcomeConst.BPM_CANCEL.equalsIgnoreCase(outcome)) {
 			RequestContext.getCurrentInstance().execute("cancelConfirmDlg.show()");
 			return null;
 		} else {
@@ -1982,7 +1985,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	private void renderUpdateCheckbox(CtContractVer ctContractVer) {
 		if (ctContractVer.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)
 				&& this.getManagedBean().isUpdateContract()) {
-			if (!ctContractVer.getCtContractValue().getSupplierName().equals(
+			if (!ctContractVer.getCtContractValue().getSupplierName().equalsIgnoreCase(
 					this.getManagedBean().getCtContract().getSmSupplier().getCompanyName())) {
 				ctBB.getManagedBean().setUpdateCompanyName(true);
 			}
