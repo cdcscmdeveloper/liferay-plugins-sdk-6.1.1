@@ -85,9 +85,28 @@
 	                            $String.format("%.2f", $!scLoiLoaItem.scQtProposalItem.offerPrice) 
                              #end </span></td>
 							
-							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">$!scLoiLoaItem.offeredPriceSubTotal</span></td>
+							<td align="right"><span style="font-family:Arial;font-size:8px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">
+								#if ($!scLoiLoaItem.tplSpecTierQty )
+								#else
+									$!scLoiLoaItem.offeredPriceSubTotal
+								#end
+							</span></td>
 						</tr>
 					#end
+						<tr>
+							#if ($isZonal)
+							   <td> </td>
+							#end
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td>Total</td>
+							<td align="right">$scLoi.offeredPriceTotal</td>
+						</tr>
 				</table>
 			</span>
 			<p style="text-align:justify;"><span style="font-family:Arial;font-size:13px;font-weight:normal;font-style:normal;text-decoration:none;color:#333333;">Berikut adalah terma terma yang akan di runding:-</span></p>
