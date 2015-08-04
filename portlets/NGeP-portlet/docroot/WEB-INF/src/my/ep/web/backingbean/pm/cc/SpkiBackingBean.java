@@ -76,7 +76,7 @@ public class SpkiBackingBean  extends BaseBackingBean{
 	private String password;
 	private PmDigiSign pmDigiSign = new PmDigiSign();
 	private FacesScopes facesScope = new FacesScopes();
-	private String signedData;
+	private byte[] signedData;
 
 	public SpkiBackingBean() {}
 	
@@ -180,7 +180,7 @@ public class SpkiBackingBean  extends BaseBackingBean{
 		return tok;
 	}
 
-	public String spkiEnabledSignTransaction(String originalText) {
+	public byte[] spkiEnabledSignTransaction(String originalText) {
 		try{
 			KMCClient client = getClient();
 			Map<Object, Object> challenges = new HashMap<Object, Object>();
@@ -201,7 +201,7 @@ public class SpkiBackingBean  extends BaseBackingBean{
 			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
 				System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-				signedData = new String(Base64.encode(((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE))));
+				signedData = (byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
 				break;
 
 			default:
@@ -223,12 +223,14 @@ public class SpkiBackingBean  extends BaseBackingBean{
 		return signedData;
 	}
 
-	public String spkiSignTransaction(String originalText) {
+	public byte[] spkiSignTransaction(String originalText) {
+		
+		 
 		if(getSpkiEnabledProperty().equalsIgnoreCase("true")){
 			return 	spkiEnabledSignTransaction(originalText);
 		}else{		
 		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
-		return "DEFAULT SIGNED TEXT";
+		return  null;
 		}
 	}
 
@@ -260,47 +262,47 @@ public class SpkiBackingBean  extends BaseBackingBean{
 		return res.getResultBean().getResultList().get(0).getEpNo();	
 	}
 	
-//	public static void main(String[] args) {
-//		try{
-//			// Create property file
-//			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
-//			// Create KMCClient with the property file
-//			KMCClient client = KMCClientFactory.getInstance(f);
-//
-//			// Request service for user selected question for authentication
-//			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
-////			List<String> challs = null;
-//			switch(res.getStatusCode())
-//			{
-//			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
-//				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
-//				// show to the user to allow user answer the challenge
-////				setChallengeQues1(challs.get(0));
-//				for(int i = 0 ; i < challs.size() ; i ++)
-//				{
-//					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
-//				}
-//				
-//				break;
-//
-//				default:
-//				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
-//				return;
-//			}
-//
-//			if(challs.size() == 0)
-//			{
-//				System.err.println("No challanges found for the user! Data signing failed!");
-//				return;
-//			}
-//				
-//		} catch (Exception ex)
-//		{
-//			ex.printStackTrace();
-//		}
-//	}
+	public static void main2(String[] args) {
+		try{
+			// Create property file
+			File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
+			// Create KMCClient with the property file
+			KMCClient client = KMCClientFactory.getInstance(f);
+
+			// Request service for user selected question for authentication
+			IKMCAPIResponse res = client.requestService(KMCRequestBuilder.getChallengeQuestions("800808081011", 1));
+//			List<String> challs = null;
+			switch(res.getStatusCode())
+			{
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+				challs =  (List<String>) res.get(IKMCAPIResponse.GetChallengeQuestionResonse.CHALLENGE_RESPONSES);
+				// show to the user to allow user answer the challenge
+//				setChallengeQues1(challs.get(0));
+				for(int i = 0 ; i < challs.size() ; i ++)
+				{
+					System.out.println("Challange of "+(i+1)+" is : "+challs.get(i));
+				}
+				
+				break;
+
+				default:
+				System.err.println("API return error. Code was "+res.getStatusCode()+". Message was : "+res.getStatusMessage());
+				return;
+			}
+
+			if(challs.size() == 0)
+			{
+				System.err.println("No challanges found for the user! Data signing failed!");
+				return;
+			}
+				
+		} catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
 	
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 	try{
 		String signedData ;
 		// Create property file
@@ -347,6 +349,86 @@ public class SpkiBackingBean  extends BaseBackingBean{
 		ex.printStackTrace();
 	}
 }
+	
+	
+	
+	
+	/////hktan
+	public static void main(String[] args) {
+	try{
+		byte[] signedData ;
+		// Create property file
+		String challengeQues1 = new String("In what city you were born?");
+		String challengeAns1 = new String("welcome1");
+		File f = new File("C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/standalone/deployments/NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties");
+		// Create KMCClient with the property file
+
+
+		KMCClient client = KMCClientFactory.getInstance(f);
+		// Simulate user selected the question and answer accordingly
+		Map<Object, Object> challenges = new HashMap<Object, Object>();
+		challenges.put(challengeQues1, challengeAns1);
+
+		// Simulate the data ready to sign
+		String dataForSigning = "originalText";
+
+		String pin = "efgh1234";
+
+		//System.out.println("SIGN " + getDigiCertUserId() + getSupplierEpNo() + getChallengeQues1() + getChallengeAns1() + getPassword());
+		// Request service to signData based on the answered challenges and data 
+		IKMCAPIResponse res = client.requestService(KMCRequestBuilder.signData("890823102233","STRONG HABIS", pin.toCharArray(), challenges, new ByteArrayInputStream(dataForSigning.getBytes())));
+
+
+		System.out.println("res.getStatusCode()"+res.getStatusCode());
+		switch(res.getStatusCode())
+		{
+		case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+//			RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
+			FileOutputStream fos = new FileOutputStream("sign3333.bin");
+			fos.flush();
+			fos.write((byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE));
+			fos.close();
+			
+			
+		/*	File ff = new File("sign3333.bin");
+			FileInputStream fis = new FileInputStream(ff);
+			byte[] buf = new byte[(int) ff.length()];
+			DataInputStream dis = new DataInputStream(fis);
+			dis.readFully(buf);
+			dis.close();
+			fis.close();*/
+			
+			signedData = (byte[])res.get(IKMCAPIResponse.SignDataResponse.SIGNATURE);
+			//System.out.println("Data signing successful. SIGNEDTEXT " +  signedData);
+			
+			
+			
+			IKMCAPIResponse res1 = client.requestService(KMCRequestBuilder.verifyData(new ByteArrayInputStream(dataForSigning.getBytes()),signedData));
+			switch(res.getStatusCode())
+			{
+			case IKMCAPIResponse.OPERATION_SUCCESSFUL:
+			System.out.println("Data signature is a valid signature");
+			break;
+			default:
+			System.err.println("API return error. Code was "+res1.getStatusCode()+" Message was : "+res1.getStatusMessage());
+			return;
+			}
+			
+			break;
+
+		default:
+
+			System.err.println("API return error. Code was "+res.getStatusCode()+" Message was : "+res.getStatusMessage());
+			//throw new EpException(MessageConst.ERROR_776052);
+//			signedData = "DEFAULT SIGNED TEXT";
+	}
+
+	} catch (Exception ex)
+	{
+		ex.printStackTrace();
+	}
+}
+
 
 	public String getChallengeQues1() {
 		return challengeQues1;
