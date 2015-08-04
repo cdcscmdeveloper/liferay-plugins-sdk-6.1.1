@@ -269,8 +269,6 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			siItemsMap.put(flStopInstrItem.getFlFulfilmentItem().getItemCode(), flStopInstrItemList);
 		}
 		
-		BigDecimal totalOrderAmt = new BigDecimal(0);
-		BigDecimal totalReceiveAmt = new BigDecimal(0);
 		BigDecimal totalRecalledAmt = new BigDecimal(0);
 		List<Long> flFulfilmentItemIds = null;
 		
@@ -281,36 +279,22 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			flsiItem.setParent(true);
 			TreeNode childItemNode = new DefaultTreeNode(flsiItem.getFlFulfilmentItem().getItemCode(), flsiItem, getManagedBean().getChargeLineItemRoot());
 			
-			totalOrderAmt = new BigDecimal(0);
-			totalReceiveAmt = new BigDecimal(0);
 			totalRecalledAmt = new BigDecimal(0);
 			flFulfilmentItemIds = new ArrayList<Long>();
 			
 			for(FlStopInstrItem chargeLineItem : stopInstrItems) {
 				if(flFulfilmentItemIds.contains(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId())) {
-					chargeLineItem.getFlFulfilmentItem().setSumOrderedQty(chargeLineItem.getFlFulfilmentItem().getSumOrderedQty().add(chargeLineItem.getFlFulfilmentItemAddr().getOrderedQty()));
-					chargeLineItem.getFlFulfilmentItem().setSumReceivedQty(chargeLineItem.getFlFulfilmentItem().getSumReceivedQty().add(chargeLineItem.getFlFulfilmentItemAddr().getChargeReceivedQty()));
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getFlFulfilmentItem().getSumRecalledQty().add(chargeLineItem.getRecalledQty()));
-					chargeLineItem.getFlFulfilmentItem().setSumOrderedAmt(chargeLineItem.getFlFulfilmentItem().getSumOrderedAmt().add(chargeLineItem.getFlFulfilmentItemAddr().getOrderedAmt()));
-					chargeLineItem.getFlFulfilmentItem().setSumReceivedAmt(chargeLineItem.getFlFulfilmentItem().getSumReceivedAmt().add(chargeLineItem.getFlFulfilmentItemAddr().getChargeReceivedAmt()));
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getFlFulfilmentItem().getSumRecalledAmt().add(chargeLineItem.getRecalledAmt()));						
 				} else {
 					flFulfilmentItemIds.add(chargeLineItem.getFlFulfilmentItem().getFulfilmentItemId());
 					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-					chargeLineItem.getFlFulfilmentItem().setSumOrderedQty(chargeLineItem.getFlFulfilmentItemAddr().getOrderedQty());
-					chargeLineItem.getFlFulfilmentItem().setSumReceivedQty(chargeLineItem.getFlFulfilmentItemAddr().getChargeReceivedQty());
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledQty(chargeLineItem.getRecalledQty());
-					chargeLineItem.getFlFulfilmentItem().setSumOrderedAmt(chargeLineItem.getFlFulfilmentItemAddr().getOrderedAmt());
-					chargeLineItem.getFlFulfilmentItem().setSumReceivedAmt(chargeLineItem.getFlFulfilmentItemAddr().getChargeReceivedAmt());
 					chargeLineItem.getFlFulfilmentItem().setSumRecalledAmt(chargeLineItem.getRecalledAmt());					
 				}
 				
-				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getFlFulfilmentItemAddr().getOrderedAmt());
-				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlFulfilmentItemAddr().getChargeReceivedAmt());
 				totalRecalledAmt=totalRecalledAmt.add(chargeLineItem.getRecalledAmt());
 			}			
-			flsiItem.getFlFulfilmentItem().setSumOrderedAmt(totalOrderAmt);
-			flsiItem.getFlFulfilmentItem().setSumReceivedAmt(totalReceiveAmt);
 			flsiItem.getFlFulfilmentItem().setSumRecalledAmt(totalRecalledAmt);
 		}
 	}
