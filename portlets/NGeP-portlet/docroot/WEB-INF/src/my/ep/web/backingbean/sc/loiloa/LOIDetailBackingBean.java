@@ -2156,9 +2156,9 @@ public class LOIDetailBackingBean extends
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");
 				String originalText = prepareOriginalText(scLoi.getScLoiLoa()
 						.getSmSupplier());
-				String signedData = getManagedBean().getSpkiBackingBean()
+				byte[] signedData = getManagedBean().getSpkiBackingBean()
 						.spkiSignTransaction(originalText);
-				digiSign.setSignedData(signedData);
+				digiSign.setSpkiSignedData(signedData);
 				if (null != digiSign) {
 					updateSpkiDigiSignData(digiSign,
 							ParameterConst.DOCTYPE_LETTER_OF_INTENT,
@@ -2834,7 +2834,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		context.put("isZonal", isZonal);
-
+		context.put("scLoi", scLoi);
 		if (scLoi.getScNegoLocations() != null
 				&& scLoi.getScNegoLocations().size() > 0) {
 			context.put("scNegoLocations", scLoi.getScNegoLocations());
@@ -3004,6 +3004,9 @@ public class LOIDetailBackingBean extends
 					this.saveScheduleList();
 				}
 			}
+			
+			// validate deduction payamment for Others
+			validateDeductionPaymentDtls(scLoi);
 		}
 	}
 	
@@ -5187,6 +5190,24 @@ public class LOIDetailBackingBean extends
 				if(scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
 					scLoi.setScLoiLoa(scLoiLoa);
 					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Validate deduction payment dtls.
+	 *
+	 * @param scLoi the sc loi
+	 */
+	public void validateDeductionPaymentDtls(ScLoi scLoi) {
+		List<ScQtDeduction> deductions = scLoi.getScQtDeductions();
+		if (CollectionUtils.isNotEmpty(deductions)) {
+			for (ScQtDeduction deduction : deductions) {
+				if (ParameterConst.DEDUCTION_TYPE_OTHERS.equals(deduction.getDeductionType().getParameterCode())) {
+					if (CollectionUtils.isEmpty(deduction.getScQtDeductionClauses())) {
+						throw new EpException(MessageConst.ERROR_760324);
+					}
 				}
 			}
 		}
