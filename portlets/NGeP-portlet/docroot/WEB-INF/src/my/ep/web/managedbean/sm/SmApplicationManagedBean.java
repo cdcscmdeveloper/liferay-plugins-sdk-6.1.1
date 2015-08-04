@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -362,6 +363,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean roleStaffAndMailAddrReqd;
 	private String mofNumber;
 	private List<SelectItem> countryItems;
+	private SmGstSupplier companyBasicGst;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -2795,6 +2797,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCountryItems(List<SelectItem> countryItems) {
 		this.countryItems = countryItems;
+	}
+
+	public SmGstSupplier getCompanyBasicGst() {
+		return companyBasicGst;
+	}
+
+	public void setCompanyBasicGst(SmGstSupplier companyBasicGst) {
+		this.companyBasicGst = companyBasicGst;
 	}
 
 }

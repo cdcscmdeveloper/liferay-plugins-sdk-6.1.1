@@ -104,6 +104,7 @@ import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -321,7 +322,7 @@ public class SmApplicationBackingBean extends
 							latestResubmitAppl = SmApplicationUtil
 									.getLatesResubmitApplicationByRejectedAppl(rejectedAppl);
 						}
-						if(latestResubmitAppl==null){
+						if (latestResubmitAppl == null) {
 							FacesContext fc = FacesContext.getCurrentInstance();
 							MofRegistrationReqDTO mofReqDto = new MofRegistrationReqDTO();
 							mofReqDto.setApplId(Long.parseLong(applId));
@@ -330,16 +331,18 @@ public class SmApplicationBackingBean extends
 									.cloneSmApplicationForResubmissionDraft(mofReqDto);
 							SmAppl clnAppl = mofRespDto.getSmAppl();
 							SmSupplier supp = mofRespDto.getSmSupplier();
-							
+
 							if (!clnAppl.getApplType().equalsIgnoreCase(
 									ParameterConst.NEW_SM_APPLN_FOR_BUMI)) {
 								QuestionnaireBackingBean quesBackingBean = new QuestionnaireBackingBean();
-								quesBackingBean.getManagedBean()
-										.setTargetUrl(xhtml);
+								quesBackingBean.getManagedBean().setTargetUrl(
+										xhtml);
 								quesBackingBean.getManagedBean().setSmSupp(
 										supplierProfile);
-								quesBackingBean.getManagedBean().setSmAppl(clnAppl);
-								quesBackingBean.getManagedBean().setRejectedAppl(rejectedAppl);
+								quesBackingBean.getManagedBean().setSmAppl(
+										clnAppl);
+								quesBackingBean.getManagedBean()
+										.setRejectedAppl(rejectedAppl);
 								quesBackingBean.retrieveQuestionnaire();
 								fc.getApplication()
 										.getNavigationHandler()
@@ -347,12 +350,12 @@ public class SmApplicationBackingBean extends
 												"/xhtml/sm/questionnaire/questionnaireView.xhtml");
 								getManagedBean().setSmAppl(clnAppl);
 								getManagedBean().setSmSupplier(supp);
-							}else{
+							} else {
 								getManagedBean().setSmAppl(clnAppl);
 								getManagedBean().setSmSupplier(supp);
 								prerenderApplicationForResubmission();
 							}
-						}else{
+						} else {
 							getManagedBean().setSmAppl(latestResubmitAppl);
 							getManagedBean().setSmSupplier(supplierProfile);
 							prerenderApplicationForResubmission();
@@ -942,6 +945,17 @@ public class SmApplicationBackingBean extends
 					}
 				}
 			}
+
+			// init companyBasic GST information
+			getManagedBean().setCompanyBasicGst(
+					SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
+							getManagedBean().getSmSupplier().getSupplierId(),
+							null, null));
+
+			if (getManagedBean().getCompanyBasicGst() == null) {
+				getManagedBean().setCompanyBasicGst(new SmGstSupplier());
+			}
+
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
 			// mofRegistrationSO = null;
@@ -1346,6 +1360,11 @@ public class SmApplicationBackingBean extends
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& !valid) {
+				// validate company basic GST
+				if (getManagedBean().isSupplierUser()) {
+					SmApplicationUtil.validateGSt(getManagedBean()
+							.getCompanyBasicGst());
+				}
 				saveOrUpdateAppl();
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
@@ -4289,7 +4308,7 @@ public class SmApplicationBackingBean extends
 	 */
 	private void saveOrUpdateAppl() {
 		IMofRegistrationSO mofRegistrationSO = null;
-
+		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -4297,10 +4316,14 @@ public class SmApplicationBackingBean extends
 
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-			mofRegistrationSO.updateApplication(reqDto);
+			resDTO = mofRegistrationSO.updateApplication(reqDto);
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
+			if (resDTO.getCompanyBasicGst() != null) {
+				getManagedBean()
+						.setCompanyBasicGst(resDTO.getCompanyBasicGst());
+			}
 		}
 	}
 
@@ -7282,8 +7305,8 @@ public class SmApplicationBackingBean extends
 								.indexOf(getManagedBean().getSupportDoc()),
 								getManagedBean().getSupportDoc());
 				String filePath = Calendar.getInstance().get(Calendar.YEAR)
-						+ "/SM/APPLICATION/"+getManagedBean().getSmAppl().getApplNo()
-						+ "/SD/";
+						+ "/SM/APPLICATION/"
+						+ getManagedBean().getSmAppl().getApplNo() + "/SD/";
 				for (SmApplSupportDoc docs : getManagedBean().getSmAppl()
 						.getSmApplSupportDocs()) {
 					log.info(" *** The name is ****"

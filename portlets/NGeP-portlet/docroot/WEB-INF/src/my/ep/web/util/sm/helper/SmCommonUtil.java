@@ -2442,10 +2442,11 @@ public class SmCommonUtil {
 	 * @return SmGstSupplier
 	 */
 	public static SmGstSupplier getSmGstSupplierBySupplierIdAndBranchCode(
-			Long supplierId, Long branchCode) {
+			Long supplierId, Long branchCode,String applNo) {
 		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 		gstReqDTO.setSupplierId(supplierId);
 		gstReqDTO.setBranchCode(branchCode);
+		gstReqDTO.setApplNo(applNo);
 		return SmServiceLookup.getSupplierGstSO()
 				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
 				.getSmGstSupplier();
