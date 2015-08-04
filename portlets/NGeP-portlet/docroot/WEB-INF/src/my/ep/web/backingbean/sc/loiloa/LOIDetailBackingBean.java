@@ -5173,7 +5173,7 @@ public class LOIDetailBackingBean extends
 			}
 			
 			// update current ScLoiLoa Obj in loi after save pending loiloas
-			if(scLoi != null && scLoi.getScLoiLoa() != null){
+			if(scLoi != null && null != scLoi.getScLoiLoa()){
 				if(scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
 					scLoi.setScLoiLoa(scLoiLoa);
 				}
