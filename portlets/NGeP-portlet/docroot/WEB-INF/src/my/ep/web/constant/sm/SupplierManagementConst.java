@@ -164,8 +164,7 @@ public class SupplierManagementConst {
 	public static final String SUPPORTING_DOC_ONLINE = "S";
 	public static final String SUPPORTING_DOC_OFFLINE = "H";
 	
-	// Business Type
-	public static final String BUSINESS_TYPE_INDIVIDU = "Individu";
+	// Business Type	
 	public static final String BUSINESS_TYPE_INDIVIDUAL = "Individual"; 
 
 	// Site Visit Assignment
