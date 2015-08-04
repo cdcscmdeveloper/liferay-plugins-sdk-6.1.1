@@ -498,7 +498,7 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 		pmDigiSign.setCreatedDate(date);
 		pmDigiSign.setOriginalData(textBeforeSign);
 		// spki 
-		pmDigiSign.setSkpiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign));
+		pmDigiSign.setSpkiSignedData(getManagedBean().getSpkiBackingBean().spkiSignTransaction(textBeforeSign));
 	}
 	
 	/**
