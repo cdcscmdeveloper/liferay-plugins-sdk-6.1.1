@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -92,6 +93,7 @@ import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmGstSupplier;
+import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
@@ -2442,7 +2444,7 @@ public class SmCommonUtil {
 	 * @return SmGstSupplier
 	 */
 	public static SmGstSupplier getSmGstSupplierBySupplierIdAndBranchCode(
-			Long supplierId, Long branchCode,String applNo) {
+			Long supplierId, Long branchCode, String applNo) {
 		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 		gstReqDTO.setSupplierId(supplierId);
 		gstReqDTO.setBranchCode(branchCode);
@@ -2450,6 +2452,26 @@ public class SmCommonUtil {
 		return SmServiceLookup.getSupplierGstSO()
 				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
 				.getSmGstSupplier();
+	}
+
+	/**
+	 * Remove not uploaded file from list
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 */
+	public static void removeNotUploadedGstSuppDoc(SmGstSupplier gst) {
+		if (gst != null && gst.getSmGstSupplierDocs() != null) {
+			Iterator<SmGstSupplierDoc> iter = gst.getSmGstSupplierDocs()
+					.iterator();
+			while (iter.hasNext()) {
+				SmGstSupplierDoc doc = iter.next();
+				if (StringUtils.isBlank(doc.getFileName())
+						|| StringUtils.isBlank(doc.getFilePath())) {
+					iter.remove();
+				}
+			}
+		}
 	}
 
 	public static void processUpload(String uploadDir, FileUploadEvent event,
@@ -2478,7 +2500,8 @@ public class SmCommonUtil {
 			}
 
 		} catch (Exception e) {
-			throw new EpException("ERROR PROCESSING UPLOADED FILE:"+e.getMessage());
+			throw new EpException("ERROR PROCESSING UPLOADED FILE:"
+					+ e.getMessage());
 		}
 
 	}
