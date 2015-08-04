@@ -110,14 +110,16 @@ public class gpkiBackingBean {
 		debugLogger("reflectAction=====================================: "
 				+ obj);
 		Object returnObj = null;
+		System.out.println("textBeforeSign:"+textBeforeSign);
+		System.out.println("signedText:"+signedText);
 		if (getGpkiEnabledProperty().equalsIgnoreCase("true")) {
 			if (subjectDN.substring(subjectDN.indexOf("=") + 1,
 					subjectDN.indexOf(",")).equals(
 					resDTO.getPmUser().getIdentificationNo())) {
 				pmDigiSign.setCreatedBy(userId);
 				pmDigiSign.setCreatedDate(date);
-				pmDigiSign.setOrginalData(textBeforeSign);
-				pmDigiSign.setSignedData(signedText);
+				pmDigiSign.setOriginalData(textBeforeSign);
+				pmDigiSign.setGpkiSignedData(signedText);
 				RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 				debugLogger("=================================Same IC No");
 				returnObj = obj.invoke(
@@ -135,8 +137,8 @@ public class gpkiBackingBean {
 		} else {
 			pmDigiSign.setCreatedBy(userId);
 			pmDigiSign.setCreatedDate(date);
-			pmDigiSign.setOrginalData(textBeforeSign);
-			pmDigiSign.setSignedData(signedText);
+			pmDigiSign.setOriginalData(textBeforeSign);
+			pmDigiSign.setGpkiSignedData(signedText);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.hide()");
 
 			returnObj = obj.invoke(
@@ -160,6 +162,7 @@ public class gpkiBackingBean {
 				.get("statusCode");
 		String statusMsg = FacesContext.getCurrentInstance()
 				.getExternalContext().getRequestParameterMap().get("statusMsg");
+		System.out.println("statusMsg:"+statusMsg);
 		FacesContext.getCurrentInstance().addMessage("gpki",
 				new FacesMessage(FacesMessage.SEVERITY_ERROR, "", statusMsg));
 	}
