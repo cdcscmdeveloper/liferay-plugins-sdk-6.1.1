@@ -130,6 +130,8 @@ public class ReportsGenerateBean {
 		private boolean smRegistrationStatusView = false;
 		private boolean smConsultantRegistrationStatusView = false;
 		private boolean smPaymentTypeView = false;
+		private boolean smPaymentTypeTwoView = false;
+		private boolean smMandatoryPaymentTypeView = false;
 		private boolean smApplicationTypeView = false;
 		private boolean smStateView = false;
 		private boolean smDistrictView = false;		
@@ -188,6 +190,7 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryDateView = false;
 		private boolean smNonMandatoryDateView = false;
 		private boolean smApplicationReceivedDateView = false;
+		private boolean smPaymentDateView = false;
 		
 		private boolean smRoleView = false;
 		private boolean smEpNoView = false;
@@ -230,6 +233,9 @@ public class ReportsGenerateBean {
 		private boolean smMOFRegisteredDateView = false;
 		private boolean smAllSupplierTypeView = false;
 		private boolean smProfileStatusView = false;
+		private boolean smMandatoryExpectedSiteVisitDateView = false;
+		private boolean smMandatoryActualSiteVisitDateView = false;
+		private boolean smGSTEffectiveDateView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -318,6 +324,7 @@ public class ReportsGenerateBean {
 		private boolean ctUserTypeView = false;
 		private boolean ctSubTypeView = false;
 		private boolean ctGroupFourView = false;
+		private boolean ctGroupFiveView = false;
 		private boolean ctStatusThreeView = false;
 		//PP
 		private boolean ppYearView = false;
@@ -515,6 +522,50 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmGSTEffectiveDateView() {
+			return smGSTEffectiveDateView;
+		}
+		public void setSmGSTEffectiveDateView(boolean smGSTEffectiveDateView) {
+			this.smGSTEffectiveDateView = smGSTEffectiveDateView;
+		}
+		public boolean isCtGroupFiveView() {
+			return ctGroupFiveView;
+		}
+		public void setCtGroupFiveView(boolean ctGroupFiveView) {
+			this.ctGroupFiveView = ctGroupFiveView;
+		}
+		public boolean isSmMandatoryExpectedSiteVisitDateView() {
+			return smMandatoryExpectedSiteVisitDateView;
+		}
+		public void setSmMandatoryExpectedSiteVisitDateView(
+				boolean smMandatoryExpectedSiteVisitDateView) {
+			this.smMandatoryExpectedSiteVisitDateView = smMandatoryExpectedSiteVisitDateView;
+		}
+		public boolean isSmMandatoryActualSiteVisitDateView() {
+			return smMandatoryActualSiteVisitDateView;
+		}
+		public void setSmMandatoryActualSiteVisitDateView(
+				boolean smMandatoryActualSiteVisitDateView) {
+			this.smMandatoryActualSiteVisitDateView = smMandatoryActualSiteVisitDateView;
+		}
+		public boolean isSmMandatoryPaymentTypeView() {
+			return smMandatoryPaymentTypeView;
+		}
+		public void setSmMandatoryPaymentTypeView(boolean smMandatoryPaymentTypeView) {
+			this.smMandatoryPaymentTypeView = smMandatoryPaymentTypeView;
+		}
+		public boolean isSmPaymentDateView() {
+			return smPaymentDateView;
+		}
+		public void setSmPaymentDateView(boolean smPaymentDateView) {
+			this.smPaymentDateView = smPaymentDateView;
+		}
+		public boolean isSmPaymentTypeTwoView() {
+			return smPaymentTypeTwoView;
+		}
+		public void setSmPaymentTypeTwoView(boolean smPaymentTypeTwoView) {
+			this.smPaymentTypeTwoView = smPaymentTypeTwoView;
+		}
 		public boolean isSmProfileStatusView() {
 			return smProfileStatusView;
 		}

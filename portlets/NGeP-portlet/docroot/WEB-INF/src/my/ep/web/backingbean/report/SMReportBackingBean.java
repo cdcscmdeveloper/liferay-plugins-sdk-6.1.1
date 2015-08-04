@@ -172,7 +172,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	rptGenBean.setSmMandatoryFromDateView(true);
 	        	rptGenBean.setSmMandatoryDateView(true);
 	            break;
-		 case ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL:								
+		 case ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL:
+			 rptGenBean.setSmMandatoryPaymentTypeView(true);
+			 rptGenBean.setSmMandatoryFromDateView(true);
+			 rptGenBean.setSmPaymentDateView(true);
+			 rptGenBean.setSmExtraTwoColumnView(true);
 	            break;
 		 case ReportConst.SM_LIST_OF_PRE_EXPIRY_COMPANY_RPT_VAL:
 			 	rptGenBean.setSmCompanyNameView(true);
@@ -219,9 +223,10 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmMandatoryZoneView(true);	        	
-	        	rptGenBean.setSmMandatoryBothSupplierTypeView(true);
+	        	rptGenBean.setSmAllSupplierTypeView(true);
 	        	rptGenBean.setSmReportTypeView(true);
-	        	rptGenBean.setSmMandatoryCreatedFromDateView(true);					
+	        	rptGenBean.setSmNonMandatoryDateView(true);	
+	        	rptGenBean.setSmCreatedDateView(true);					
 	            break;
 		 case ReportConst.SM_PAY_REGIS_FEE_RPT_VAL:
 			    rptGenBean.setSmCompanyNameView(true);	        	
@@ -263,11 +268,11 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			    rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmMandatoryZoneView(true);
-	        	rptGenBean.setSmMandatoryFromDateView(true);
-	        	rptGenBean.setSmMandatoryDateView(true);
+	        	//rptGenBean.setSmMandatoryFromDateView(true);
+	        	//rptGenBean.setSmMandatoryDateView(true);
 	        	rptGenBean.setSmMandatoryStateView(true);
 	        	rptGenBean.setSmMandatoryDistrictView(true);
-	        	rptGenBean.setSmSVOUserView(true);
+	        	//rptGenBean.setSmSVOUserView(true);
 	        	rptGenBean.setSmMandatoryApplicationNoView(true);
 	        	rptGenBean.setSmMandatoryApplicationStatusView(true);
 	            break;	            
@@ -407,7 +412,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		 case ReportConst.SM_DELETE_PENDING_APPL: 				
 			    rptGenBean.setFromDateView(true);
 			    rptGenBean.setSmCompanyNameView(true);
-			    rptGenBean.setSmBothMandatorySupplierTypeView(true);
+			    //rptGenBean.setSmBothMandatorySupplierTypeView(true);
+			    rptGenBean.setSmMandatoryAllSupplierTypeView(true);
 			    rptGenBean.setSmCommonZoneView(true);
 			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 	        	//rptGenBean.setSmZoneView(true);
@@ -429,13 +435,16 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 				rptGenBean.setSmActSubmisAllDateView(true);*/
 			 break;
 		 case ReportConst.SM_PERSON_BRANCH_BANK:
-			    rptGenBean.setSmCommonZoneView(true);
-			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			    /*rptGenBean.setSmCommonZoneView(true);
+			    rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);*/
 	        	//rptGenBean.setSmZoneView(true);
-			    rptGenBean.setSmMandatorySupplierTypeView(true);
+			    //rptGenBean.setSmMandatorySupplierTypeView(true);
 			    rptGenBean.setSmSupplierView(true);
-			    rptGenBean.setSmRegistrationNoView(true);
-			    rptGenBean.setSmMofRegNoView(true);				
+			    /*rptGenBean.setSmRegistrationNoView(true);
+			    rptGenBean.setSmMofRegNoView(true);	*/	
+			    rptGenBean.setSmRegistrationTypeView(true);
+			    rptGenBean.setSmNonMandatoryDateView(true);
+			    rptGenBean.setSmMOFRegisteredDateView(true);
 	            break;
 		 case ReportConst.SM_THRESHOLD:			 
 			    rptGenBean.setSmCommonZoneView(true);
@@ -486,6 +495,16 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			 rptGenBean.setSmNonMandatoryDateView(true);
 	         rptGenBean.setSmApprovalDateView(true);			 	
          break;
+		 /*case ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER:		     
+			 rptGenBean.setSmCommonZoneView(true);
+			 rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
+			 rptGenBean.setSmSupplierTypeView(true);
+			 rptGenBean.setSmRegistrationTypeView(true);
+			 rptGenBean.setSmCompanyNameView(true);
+			 rptGenBean.setSmRegistrationNoView(true);
+			 rptGenBean.setSmNonMandatoryDateView(true);
+	         rptGenBean.setSmGSTEffectiveDateView(true);
+         break;*/
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;

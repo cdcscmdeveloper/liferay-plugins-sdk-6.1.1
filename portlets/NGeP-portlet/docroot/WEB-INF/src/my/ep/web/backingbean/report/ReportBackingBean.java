@@ -728,7 +728,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2583,6 +2583,27 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
+	
+	public void applicationStatusDateChange(){
+		
+		getManagedBean().getRptGenBean().setSmMandatoryExpectedSiteVisitDateView(false);
+		getManagedBean().getRptGenBean().setSmMandatoryActualSiteVisitDateView(false);
+		//getManagedBean().getRptGenBean().setSmMandatoryFromDateView(false);
+		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_SITE_VISIT_APPL_PERFORMED_RPT_VAL))) {			
+			if ((null != this.getSmApplicationStatus())&&(this.getSmApplicationStatus().equals(ReportConst.PEND_PRPR_SITE_VISIT))) {
+				getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryExpectedSiteVisitDateView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryDateView(false);
+			}else if ((null != this.getSmApplicationStatus())&&(this.getSmApplicationStatus().equals(ReportConst.SITE_VISIT_COMPLTD))) {
+				getManagedBean().getRptGenBean().setSmMandatoryFromDateView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryActualSiteVisitDateView(true);
+				getManagedBean().getRptGenBean().setSmMandatoryDateView(false);
+			}/*else{
+				getManagedBean().getRptGenBean().setSmMandatoryDateView(true);
+			}*/
+		}
+	}
+	
 	public void changeReportType(){
 		
 		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_TOT_NUM_YEARLY_APPL_RPT_VAL))) {
@@ -3003,7 +3024,7 @@ public class ReportBackingBean extends
 					||this.getReportValue().equals(ReportConst.SM_LIST_OFFLINE_SUPP_DOC_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)
 					||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_STATISTICS_COMPANYTYPE_CAP_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_MOF_CANCELLATION_RPT_VAL)
 					||this.getReportValue().equals(ReportConst.SM_BPK_USER_PROFILE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_BPK_ADMIN_PROFILE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_DELETE_PENDING_APPL)
-                    ||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK)||this.getReportValue().equals(ReportConst.SM_THRESHOLD)|this.getReportValue().equals(ReportConst.SM_LST_MONTH_WISE_RPT_VAL))){				
+                    ||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK)||this.getReportValue().equals(ReportConst.SM_THRESHOLD)||this.getReportValue().equals(ReportConst.SM_LST_MONTH_WISE_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER))){				
 			
 				if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_PO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_APPROVER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVO)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SVC)||allRoleCodesList.contains(ReportConst.ROLE_CODE_UPS_SDO))){
 					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
@@ -5013,7 +5034,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else if ((getManagedBean().getReportValue() != null)
+		} /*else if ((getManagedBean().getReportValue() != null)
 				&& (getManagedBean().getReportValue().trim()
 						.equalsIgnoreCase(ReportConst.SM_LAPORAN_TERIMAAN_HARIAN_RPT_VAL))) {
 
@@ -5027,7 +5048,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			} else {
 				throw new EpException(MessageConst.ERROR_REPORT_780007);
 			}
-		} else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
+		}*/ else if (((this.getSmYearText() != null) && (this.getSmYearText() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmApplicationType() != null) && (this.getSmApplicationType() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmMonthlyRptByYear() != null) && (this.getSmMonthlyRptByYear() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPaymentType() != null) && (this.getSmPaymentType() != ReportConst.EMPTY_VAL))
@@ -6740,7 +6761,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setPpYear(null);
 		this.setMinistryName(null);
 		changeReportType();
-		retrieveDates();		
+		retrieveDates();
+		applicationStatusDateChange();
 	}
 
 	protected void fileGenerateReport(String reportFile,
