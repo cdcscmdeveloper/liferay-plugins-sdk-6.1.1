@@ -1003,6 +1003,7 @@ public class QTBusinessOwnerBackingBean extends
 
 		// BO validation
 		RequestContext.getCurrentInstance().execute("newbusinessowner.hide()");
+		this.getManagedBean().setAutoUpdate(true);
 	}
 
 	/**
