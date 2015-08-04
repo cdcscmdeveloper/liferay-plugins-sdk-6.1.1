@@ -989,6 +989,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	private boolean maintanceFlow;
 	
+	/** The is submit. */
+	private boolean isSubmit = false;
+	
 	/**
 	 * TO update details for modifed qtfileds
 	 */
@@ -6401,6 +6404,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setClausesTitle(String clausesTitle) {
 		this.clausesTitle = clausesTitle;
+	}
+
+	/**
+	 * @return the isSubmit
+	 */
+	public boolean isSubmit() {
+		return isSubmit;
+	}
+
+	/**
+	 * @param isSubmit the isSubmit to set
+	 */
+	public void setSubmit(boolean isSubmit) {
+		this.isSubmit = isSubmit;
 	}
 
 }
