@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.updategstinfo.SmUpdateGstInfoManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
@@ -223,7 +224,7 @@ public class SmUpdateGstInfoBackingBean extends
 	}
 
 	private String getGstSuppDocBasePath() {
-		return Calendar.getInstance().get(Calendar.YEAR) + "/SM/" + "GST/"
+		return SmCommonUtil.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
 				+ getManagedBean().getSmSupplier().getRegNo() + "/"
 				+ System.currentTimeMillis() + "/";
 	}
