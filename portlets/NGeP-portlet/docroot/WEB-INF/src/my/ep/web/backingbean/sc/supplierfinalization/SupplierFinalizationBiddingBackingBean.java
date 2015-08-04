@@ -999,8 +999,7 @@ public class SupplierFinalizationBiddingBackingBean extends
 		FacesScopes facesScope = new FacesScopes();
 		suppFinalizationReqDTO.setPmUser(facesScope.getUserSessionBean());
 		suppFinalizationReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		suppFinalizationReqDTO.setToken(
-				(String) facesScope.getBPMAuthenticationCtxToken());
+		suppFinalizationReqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 		try {
 			qtSuppFinalizationSO = BusinessDelegate.getInstance()
 					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
