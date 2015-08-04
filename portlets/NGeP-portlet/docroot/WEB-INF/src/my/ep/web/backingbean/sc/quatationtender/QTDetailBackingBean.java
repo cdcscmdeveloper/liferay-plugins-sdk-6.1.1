@@ -1789,18 +1789,10 @@ public class QTDetailBackingBean extends
 	public String updateBpmTask(String outcome) {
 		debugLogger("updateBpmTask");
 
-		// Code will be called if user didnt visit the approval tabs..
-		// List<TabBean> tabList = this.getManagedBean().getTabList();
-		// List<ScQtApproval> approvals =
-		// this.getManagedBean().getQt().getScQtApprovals();
-		// if (CollectionUtils.isEmpty(tabList)) {
-
 		updateApprovalDetails(this.getManagedBean().getQt());
 		retrieveApprovalTabDtl();
-		// }
 
-		// Code will be called if user didn't visit the supplier qualification
-		// tab.
+		// Code will be called if user didn't visit the supplier qualification tab.
 		ScQtSupplierCriteria supplierCriteria = this.getManagedBean().getQt()
 				.getScQtSupplierCriteria();
 		if (null == supplierCriteria.getScQtLocCriteria()
@@ -1826,8 +1818,7 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO;
 		try {
 			ScQt qt = qtReqDTO.getQtdetail();
-			// Added by visu on 09012015 - Fix for Other Approval Validations on
-			// sumbit only
+			// Fix for Other Approval Validations on submit only
 			qt.setOtherApproval(true);
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
@@ -1841,14 +1832,14 @@ public class QTDetailBackingBean extends
 					qt.setScQtDocReports(this.getManagedBean()
 							.getScQtDocReportList());
 				}
-				// if (null ==
-				// this.getManagedBean().getScQtSampleSubmissionList()) {
-				if (this.getManagedBean().getQt().isSampleReq()
-						&& (null == this.getManagedBean()
-								.getScQtSampleSubmission() && isEmptyOrNull(this
-								.getManagedBean().getScQtSampleSubmissionList()))) {
+				if (this.getManagedBean().getQt().isSampleReq()) {
+					this.getManagedBean().setSubmit(true);
 					retrieveScheduleTabDtl();
+					qt.setScQtSampleSubmission(this.getManagedBean().getScQtSampleSubmissionList());
 				}
+				QTScheduleDetailBackingBean scheduleBackingBean = new QTScheduleDetailBackingBean();
+				scheduleBackingBean.handlePublishClosingDate();
+				qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 			}
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
@@ -2606,7 +2597,16 @@ public class QTDetailBackingBean extends
 					} else {
 						this.getManagedBean().setScQtSampleSubmission(
 								resDTO.getSampleSubmissionResultBean().get(0));
-						backingBean.retrievePmStateList();
+						if (null != this.getManagedBean().getScQtSampleSubmission()) {
+							if (null == this.getManagedBean().getScQtSampleSubmissionList()) {
+								this.getManagedBean().setScQtSampleSubmissionList(new ArrayList<ScQtSampleSubmission>());
+							}
+							this.getManagedBean().getScQtSampleSubmissionList().add(
+									this.getManagedBean().getScQtSampleSubmission());
+						}
+						if(!getManagedBean().isSubmit()) {
+							backingBean.retrievePmStateList();
+						}
 					}
 				}
 
@@ -2617,7 +2617,9 @@ public class QTDetailBackingBean extends
 		}
 		if (this.getManagedBean().getQt().isSampleReq()) {
 			QTScheduleDetailBackingBean backingBean = new QTScheduleDetailBackingBean();
-			backingBean.retrievePmStateList();
+			if(!getManagedBean().isSubmit()) {
+				backingBean.retrievePmStateList();
+			}
 		}
 		Date publishDate = this.getManagedBean().getQt().getPublishDate();
 		Date bsvDate = null;
