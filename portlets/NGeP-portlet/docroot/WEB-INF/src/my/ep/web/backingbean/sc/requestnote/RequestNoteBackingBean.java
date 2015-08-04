@@ -3389,6 +3389,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		paramMap.put(ReportConst.PARAM_KEY_UOM_ID, uomId + "");
 		paramMap.put(ReportConst.PARAM_KEY_NO_OF_DAYS, noDays + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, ReportConst.SC_S1_RCNT_PRICE_RPT_VAL);
 
 		generateReport(reportName, paramMap);
 	}
@@ -3409,6 +3410,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			String reportName = ReportConst.SC_MARKET_RESEARCH_RPT_JSP;
 			
 			paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes.getUserSessionBean().getUserId() + "");
+			paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, ReportConst.SC_ITEM_PRICING_SUM_RPT_VAL);
 			
 			if(requestNoteDtl.isBrandNew()) {
 				ScRequestSupplierItem requestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
@@ -3419,7 +3421,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				String conditionField = requestNoteDtl.getConditionField();
 				
 				for (String filter: conditionField.split("\\|")){
-			         System.out.println(filter);
 			         String searchField = null;
 			         String searchValue = null;
 			         int searchCondition = SearchOperator.OPERATOR_EQUALS.value();
