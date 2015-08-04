@@ -3937,8 +3937,8 @@ public class SimpleQuoteBackingBean extends SourcingBaseBackingBean<SimpleQuoteM
 						quote.getQuoteId(), quote.getQuoteNo(), prepareOriginalText(Boolean.FALSE));
 			}
 			RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-			String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
-			pmDigiSign.setSignedData(signedData);
+			byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(prepareOriginalText(Boolean.FALSE));
+			pmDigiSign.setSpkiSignedData(signedData);
 			//}
 
 			// hide blcok ui

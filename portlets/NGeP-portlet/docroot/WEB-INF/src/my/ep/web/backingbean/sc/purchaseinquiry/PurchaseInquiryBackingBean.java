@@ -636,7 +636,8 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		// spki 
 		RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 		RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
-		String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+		byte[]  signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+		pmDigiSign.setSpkiSignedData(signedData);
 
 		// updating price 
 		List<ScRequestSupplierItem>	scRequestSupplierItems = new ArrayList<ScRequestSupplierItem>();
@@ -651,8 +652,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 		reqDTO.setOutcome(getManagedBean().getAction());
 		reqDTO.setTaskId(getManagedBean().getTaskId());
-
-		pmDigiSign.setSignedData(signedData);
 		reqDTO.setPmDigiSign(pmDigiSign);
 
 		PrInquiryResDTO resDTO = prInquirySO.submitPrInquiryPrice(reqDTO);
