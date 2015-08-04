@@ -212,8 +212,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 							flDelOrderItem.setFlItem(itemAddress.getFlFulfilmentItem());
 							flDelOrderItem.setDeliveredQty(itemAddress.getDeliveredQty());
 							flDelOrderItem.setDeliveredAmt(itemAddress.getDeliveredAmt());
-							flDelOrderItem.setGstAmount(itemAddress.getGstAmount());
-							flDelOrderItem.setGstUnitPrice(itemAddress.getGstUnitPrice());
+							flDelOrderItem.setGstAmount(itemAddress.getDoGstAmt());
+							flDelOrderItem.setGstUnitPrice(itemAddress.getDoGstUnitPrice());
 							delOrderList.add(flDelOrderItem);
 						}
 						flDeliveryOrder.setFlDelOrderItem(delOrderList);
@@ -510,7 +510,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		BigDecimal delAmtCal= BigDecimal.ZERO;
 		BigDecimal remainingQty = BigDecimal.ZERO;
 		
-		unitPriceCal=itemAddress.getGstUnitPrice();		
+		unitPriceCal=itemAddress.getDoGstUnitPrice();		
 		if(null != itemAddress.getDeliveredQty()){
 			BigDecimal formattedDeliveredQty = itemAddress.getDeliveredQty().setScale(
 					itemAddress.getScRequestItem().getUom().getDecimalScale(),BigDecimal.ROUND_HALF_UP);
