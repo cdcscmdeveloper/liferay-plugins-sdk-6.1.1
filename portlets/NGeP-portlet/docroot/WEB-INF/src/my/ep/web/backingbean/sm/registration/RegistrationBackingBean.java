@@ -1342,13 +1342,13 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			
 			if(this.getManagedBean().getApplType().equals(SupplierManagementConst.ACC_BASIC)){
 				for(SelectItem item:itemList){
-					if(item.getLabel().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_INDIVIDU)){
+					if(item.getLabel().equalsIgnoreCase(SupplierManagementConst.BUSINESS_TYPE_INDIVIDUAL)){
 						selectedItem=item;
 						itemList.remove(item);
 						break;
 					}
 				}			
-				selectedItem.setLabel(SupplierManagementConst.BUSINESS_TYPE_INDIVIDUAL);
+				
 				itemList.add(selectedItem);
 			}
 			log.info("------------->" + itemList.size());	
