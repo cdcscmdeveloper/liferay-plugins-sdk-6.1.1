@@ -2322,8 +2322,8 @@ public class LOADetailBackingBean extends
 				RequestContext.getCurrentInstance().execute("blockWidget.hide();");
 				RequestContext.getCurrentInstance().execute("spki_dlg.hide();");	
 				String originalText = prepareOriginalText(scLoa.getScLoiLoa().getSmSupplier());
-				String signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
-				digiSign.setSignedData(signedData);
+				byte[] signedData = getManagedBean().getSpkiBackingBean().spkiSignTransaction(originalText);
+				digiSign.setSpkiSignedData(signedData);
 
 				if (null != digiSign) {
 					updateSpkiDigiSignData(digiSign, ParameterConst.DOCTYPE_LETTER_OF_AWARD, 
@@ -2567,15 +2567,8 @@ public class LOADetailBackingBean extends
 			scLoa.setContractAgency(pmOrgProfile);
 		}
 
-		// supplier witness details
-		/*if(scLoa.getScLoaWitnesses() != null && scLoa.getScLoaWitnesses().size()>0){
-			List<ScLoaWitness> witnesses = scLoa.getScLoaWitnesses();
-			ScLoaWitness  loaWitness = getManagedBean().getLoaSupplierWitness();
-			if(loaWitness != null){
-				int index  = witnesses.indexOf(loaWitness);
-				scLoa.getScLoaWitnesses().set(index, loaWitness);	
-			}
-		}*/
+		// validate deduction payamment for Others
+		validateDeductionPaymentDtls(scLoa);
 	}
 
 	/**
@@ -4350,6 +4343,24 @@ public class LOADetailBackingBean extends
 			userSO = null;
 		}
 		return isMinistry;		
+	}
+	
+	/**
+	 * Validate deduction payment dtls.
+	 *
+	 * @param scLoa the sc loa
+	 */
+	public void validateDeductionPaymentDtls(ScLoa scLoa) {
+		List<ScQtDeduction> deductions = scLoa.getScQtDeductions();
+		if (CollectionUtils.isNotEmpty(deductions)) {
+			for (ScQtDeduction deduction : deductions) {
+				if (ParameterConst.DEDUCTION_TYPE_OTHERS.equals(deduction.getDeductionType().getParameterCode())) {
+					if (CollectionUtils.isEmpty(deduction.getScQtDeductionClauses())) {
+						throw new EpException(MessageConst.ERROR_760324);
+					}
+				}
+			}
+		}
 	}
 	
 	/**
