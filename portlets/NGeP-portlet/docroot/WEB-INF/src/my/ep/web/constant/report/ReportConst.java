@@ -386,6 +386,7 @@ public class ReportConst {
 		public static final String SM_THRESHOLD_VALUE = "SM_062";
 		public static final String SM_LIST_OF_APPL_STATUS = "SM_063";
 		public static final String SM_AGENCY_STATISTICAL = "SM_064";
+		public static final String SM_LIST_OF_GST_RGSTRD_SUPPLIER = "SM_065";
 		
 	// SM - virtual certificate
 	public static final String SM_VIRTUAL_VERIFICATION_jsp = "SM_VIRTUAL_VERIFICATION.jsp";
@@ -468,6 +469,8 @@ public class ReportConst {
 	public static final String AMP_SM_USER_NAME_EQ = "&PUSERNAME=";
 	public static final String AMP_SM_REQ_ENQ_DATE_EQ = "&PDATE=";
 	public static final String AMP_SM_PRFL_STS_EQ = "&PPRSTAT=";
+	public static final String PEND_PRPR_SITE_VISIT = "Pending Prepare Site Visit Report";
+	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
 	public static final String KAMA = ",";
 	public static final String SUPPL_CONSLT_TYPE = "J";
 	
