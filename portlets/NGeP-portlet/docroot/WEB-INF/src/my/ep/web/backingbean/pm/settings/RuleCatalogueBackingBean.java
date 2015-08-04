@@ -1131,12 +1131,12 @@ public class RuleCatalogueBackingBean extends
 								.equals("C")) {
 							msgParam = new String[] {
 									ruleTypeValue.getCategoryDisplayValue(),
-									ruleType.getRuleTypeDesc() };
+									ruleType.getRuleTypeDescInMS()};
 
 						} else {
 							msgParam = new String[] {
 									ruleTypeValue.getRuleValue(),
-									ruleType.getRuleTypeDesc() };
+									ruleType.getRuleTypeDescInMS()};
 
 						}
 					} else {
@@ -1148,12 +1148,12 @@ public class RuleCatalogueBackingBean extends
 									.equals("C")) {
 								msgParam = new String[] {
 										ruleTypeValue.getCategoryDisplayValue(),
-										ruleType.getRuleTypeDesc() };
+										ruleType.getRuleTypeDescInMS()};
 
 							} else {
 								msgParam = new String[] {
 										ruleTypeValue.getRuleValue(),
-										ruleType.getRuleTypeDesc() };
+										ruleType.getRuleTypeDescInMS()};
 
 							}
 						}
