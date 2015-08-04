@@ -688,8 +688,6 @@ public class LOIDetailBackingBean extends
 	 */
 	public void retrieveLOIList(Long qtId) {
 		debugLogger("retrieveLOIList");
-		boolean isLoiRequired = Boolean.TRUE;
-		//boolean isSelectedLoi = Boolean.TRUE;
 		try {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(qtId);
@@ -703,18 +701,6 @@ public class LOIDetailBackingBean extends
 			if (resDTO.getLoiLoas() != null && resDTO.getLoiLoas().size() > 0) {
 				// rec supplier in loi list
 				disableIsLoiRequired(resDTO.getLoiLoas());
-
-				for (ScLoiLoa scLoiLoa : resDTO.getLoiLoas()) { 
-
-					if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
-						isLoiRequired = Boolean.FALSE;
-					}
-				}
-				if (isLoiRequired) {
-					getManagedBean().setLoiRequired(Boolean.TRUE);
-				} else {
-					getManagedBean().setLoiRequired(Boolean.FALSE);
-				}
 			}
 			// status
 			getCurrentStatus(getManagedBean().getCurrentStatusId());
@@ -1868,10 +1854,10 @@ public class LOIDetailBackingBean extends
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			String outcome = BpmOutcomeConst.BPM_SAVE;
 			
+			parseLOIDetails(scLoi, outcome);
+			
 			//save or update pending loiloas
 			savePendingLois();
-			
-			parseLOIDetails(scLoi, outcome);
 
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setScLoi(scLoi);
@@ -2042,13 +2028,10 @@ public class LOIDetailBackingBean extends
 			ScLoi scLoi = this.getManagedBean().getScLoi();
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			
-			//validating before submit loi details
-			validateLOIDetails(scLoi, outcome);
-
+			parseLOIDetails(scLoi, outcome);
+			
 			//save or update pending loiloas
 			savePendingLois();
-			
-			parseLOIDetails(scLoi, outcome);
 
 			scLoi.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoi.setAckDueDate(DateUtils.addDays(scLoi.getIssueDate(), 14));
@@ -2904,20 +2887,7 @@ public class LOIDetailBackingBean extends
 		}
 		
 		// validate
-		if(null == scLoi.getSupplierAddress()){
-			throw new EpException("No supplier contact address");
-		}
-
-		if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
-			for (ScLoiSupportingDoc scLoiSupportingDoc : scLoi.getScLoiSupportingDocs() ) {
-				if( null == scLoiSupportingDoc.getTitle() || StringUtils.isBlank(scLoiSupportingDoc.getTitle())){
-					throw new EpException("Please enter supporting document title");
-				}
-				if( null == scLoiSupportingDoc.getScLoiSupportingDocAttachment()){
-					throw new EpException("Please attach supporting document");
-				}
-			}
-		}	
+		validateLOIDetails(scLoi, outcome);
 		
 		Long statusId = scLoi.getScWorkFlowStatus().getPmStatus().getStatusId()
 				.longValue();
@@ -2988,14 +2958,6 @@ public class LOIDetailBackingBean extends
 		}
 
 		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
-			// validate tier pricing
-			Map<Long, ScLoiLoaItem> groupByItemMap = new HashMap<Long, ScLoiLoaItem>();
-			for (ScLoiLoaItem  scLoiLoaItem : scLoi.getScLoiLoaItems()) {
-				if(null != scLoiLoaItem.getTplSpecTierQty()){
-					validateItemTierPriceByItem(scLoiLoaItem, groupByItemMap);
-				}
-			}
-			
 			if (getManagedBean().getScQt() != null) {
 				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
 					this.saveProgressivePaymntList();
@@ -3004,9 +2966,6 @@ public class LOIDetailBackingBean extends
 					this.saveScheduleList();
 				}
 			}
-			
-			// validate deduction payamment for Others
-			validateDeductionPaymentDtls(scLoi);
 		}
 	}
 	
@@ -3027,27 +2986,55 @@ public class LOIDetailBackingBean extends
 					|| scLoi.getScNegoLocations().isEmpty()) {
 				throw new EpException(MessageConst.ERROR_760274);
 			}
-		}
-
-		// validate negotiation Term
-		boolean isSelected = Boolean.TRUE;
-		if (scLoi.getScNegoTerms() != null
-				&& scLoi.getScNegoTerms().size() > 0) {
-			for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
-				if (scLoiTerm.isSelected()) {
-					isSelected = Boolean.FALSE;
+			// validate negotiation Term
+			boolean isSelected = Boolean.TRUE;
+			if (scLoi.getScNegoTerms() != null
+					&& scLoi.getScNegoTerms().size() > 0) {
+				for (ScLoiTerm scLoiTerm : scLoi.getScNegoTerms()) {
+					if (scLoiTerm.isSelected()) {
+						isSelected = Boolean.FALSE;
+					}
+				}
+				if (isSelected) {
+					throw new EpException(MessageConst.ERROR_760289);
 				}
 			}
-			if (isSelected) {
-				throw new EpException(MessageConst.ERROR_760289);
+
+			if(scLoi.isApprovalReq()){
+				if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
+					throw new EpException("Approver is required.");
+				}
 			}
 		}
 
-		if(scLoi.isApprovalReq()){
-			if(null == getManagedBean().getApproverUser() || null == getManagedBean().getApproverUser().getUserId()){
-				throw new EpException("Approver is required.");
+		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
+			// validate tier pricing
+			Map<Long, ScLoiLoaItem> groupByItemMap = new HashMap<Long, ScLoiLoaItem>();
+			for (ScLoiLoaItem  scLoiLoaItem : scLoi.getScLoiLoaItems()) {
+				if(null != scLoiLoaItem.getTplSpecTierQty()){
+					validateItemTierPriceByItem(scLoiLoaItem, groupByItemMap);
+				}
 			}
+
+			// validate deduction payamment for Others
+			validateDeductionPaymentDtls(scLoi);
 		}
+
+		// validate supplier contract address
+		if(null == scLoi.getSupplierAddress()){
+			throw new EpException("No supplier contact address");
+		}
+		// validate  supporting document
+		if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
+			for (ScLoiSupportingDoc scLoiSupportingDoc : scLoi.getScLoiSupportingDocs() ) {
+				if( null == scLoiSupportingDoc.getTitle() || StringUtils.isBlank(scLoiSupportingDoc.getTitle())){
+					throw new EpException("Please enter supporting document title");
+				}
+				if( null == scLoiSupportingDoc.getScLoiSupportingDocAttachment()){
+					throw new EpException("Please attach supporting document");
+				}
+			}
+		}	
 	}
 
 	/**
@@ -5170,28 +5157,33 @@ public class LOIDetailBackingBean extends
 	 * @param recSupplierList the rec supplier list
 	 */
 	private void disableIsLoiRequired(List<ScLoiLoa> recSupplierList){
+		ScLoi scLoi = 	getManagedBean().getScLoi();
+		boolean isRequiredSubmitBtn = Boolean.TRUE;
 		getManagedBean().setRecSupplierList(recSupplierList);
-		boolean isLoiRequired = Boolean.FALSE;
+		
 		for (ScLoiLoa scLoiLoa : recSupplierList) {
-			if(null != scLoiLoa.getLoiRequired()){
-				isLoiRequired = Boolean.TRUE;
-				break;
-			}
-		}
-		if(isLoiRequired){
-			for (ScLoiLoa scLoiLoa : recSupplierList) {
+			if(null == scLoiLoa.getLoiRequired()){
+				scLoiLoa.setLoiRequiredDisabled(Boolean.FALSE);
+			} else{
 				scLoiLoa.setLoiRequiredDisabled(Boolean.TRUE);
+			}
+
+			if (null != scLoiLoa.getLoiRequired() && scLoiLoa.getLoiRequired()) {
+				isRequiredSubmitBtn = Boolean.FALSE;
+			}
+			
+			// update current ScLoiLoa Obj in loi after save pending loiloas
+			if(scLoi != null && scLoi.getScLoiLoa() != null){
+				if(scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
+					scLoi.setScLoiLoa(scLoiLoa);
+				}
 			}
 		}
 
-		ScLoi scLoi = 	getManagedBean().getScLoi();
-		if(scLoi != null && scLoi.getScLoiLoa() != null){
-			for (ScLoiLoa scLoiLoa : recSupplierList) {
-				if(scLoiLoa.getLoiLoaId().equals(scLoi.getScLoiLoa().getLoiLoaId())){
-					scLoi.setScLoiLoa(scLoiLoa);
-					break;
-				}
-			}
+		if (isRequiredSubmitBtn) {
+			getManagedBean().setLoiRequired(Boolean.TRUE);
+		} else {
+			getManagedBean().setLoiRequired(Boolean.FALSE);
 		}
 	}
 	
