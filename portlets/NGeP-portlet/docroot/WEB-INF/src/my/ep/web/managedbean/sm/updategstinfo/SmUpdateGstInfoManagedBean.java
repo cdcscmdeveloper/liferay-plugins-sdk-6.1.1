@@ -33,7 +33,9 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 	private SmGstSupplierDoc selectedHqSuppDoc;
 	private SmGstBranchVO selectedBranchDoc;
 	private List<SmSupplierBranch> suppBranchList;
-
+	private List<SmGstSupplier> initialBranchGstList;
+	private SmGstSupplier initialHqGst;
+	
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
@@ -120,6 +122,22 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 
 	public void setSuppBranchList(List<SmSupplierBranch> suppBranchList) {
 		this.suppBranchList = suppBranchList;
+	}
+
+	public List<SmGstSupplier> getInitialBranchGstList() {
+		return initialBranchGstList;
+	}
+
+	public void setInitialBranchGstList(List<SmGstSupplier> initialBranchGstList) {
+		this.initialBranchGstList = initialBranchGstList;
+	}
+
+	public SmGstSupplier getInitialHqGst() {
+		return initialHqGst;
+	}
+
+	public void setInitialHqGst(SmGstSupplier initialHqGst) {
+		this.initialHqGst = initialHqGst;
 	}
 
 }

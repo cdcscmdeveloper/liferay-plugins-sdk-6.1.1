@@ -5490,16 +5490,20 @@ public class SmApplicationUtil {
 		}
 	}
 	
-	public static void validatGSt(SmGstSupplier gst){
+	public static void validateGSt(SmGstSupplier gst){
 		if(!isGstEmpty(gst)){
 			if (StringUtils.isNotBlank(gst.getGstRegNo())
-					&& gst.getGstEndDate() == null) {
+					&& gst.getGstEffDate() == null) {
 				// GST Effective date is required
 				throw new EpException(MessageConst.ERROR_721030);
 			} else if (StringUtils.isBlank(gst.getGstRegNo())
-					&& gst.getGstEndDate() != null) {
+					&& gst.getGstEffDate() != null) {
 				// GST Registration no is required
 				throw new EpException(MessageConst.ERROR_721029);
+			}else if(StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getGstEndDate() != null){
+				// GST Registration no and GST Effective Date is required
+				throw new EpException(MessageConst.ERROR_721043);
 			}
 		}
 	}

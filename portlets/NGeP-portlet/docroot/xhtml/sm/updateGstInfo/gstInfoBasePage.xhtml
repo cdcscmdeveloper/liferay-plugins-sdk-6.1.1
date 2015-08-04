@@ -20,10 +20,11 @@
 		</p:blockUI>
 		
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.declare']}" update="@form"
-				partialSubmit="true" process="@this" 
-				disabled="#{smUpdateGstInfoBackingBean.managedBean.gstEmpty or empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier}"
-				oncomplete="confirmDeclareDialog.show();">
+			<p:commandButton value="#{lbl['lbl.sm.declare']}" 
+				partialSubmit="true" update="@form" 
+				action="#{smUpdateGstInfoBackingBean.onDeclareGst}"
+				disabled="#{smUpdateGstInfoBackingBean.isDisableDeclareButton()}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 			</p:commandButton>
 		</div>
 		
