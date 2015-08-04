@@ -28,6 +28,7 @@ import my.ep.web.vo.SmGstBranchVO;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
 @ManagedBean(name = "smUpdateGstInfoBackingBean")
@@ -118,17 +119,25 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	public void onDeclareGst() {
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeclareDialog.show();");
+	}
+
 	public void declareGst() {
 		if (noGstInfoEntered(getManagedBean().getHqGstSupplier())) {
 			// No GST information to be declared
 			throw new EpException(MessageConst.ERROR_722613);
 		} else {
 			List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
+			removeNotUploadedDoc(getManagedBean().getHqGstSupplier());
 			supplierGstList.add(getManagedBean().getHqGstSupplier());
-			validateDeclare();
 			if (getManagedBean().getBranches() != null) {
 				for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 					if (brVO.getGst() != null) {
+						if (brVO.getGst().getSmGstSupplierDocs() != null) {
+							removeNotUploadedDoc(brVO.getGst());
+						}
 						supplierGstList.add(brVO.getGst());
 					}
 				}
@@ -203,6 +212,16 @@ public class SmUpdateGstInfoBackingBean extends
 		brVO.getGst().setBranchCode(brVO.getBranch().getBranchCode());
 	}
 
+	public boolean isDisableDeclareButton() {
+		boolean retVal = false;
+
+		if (getManagedBean().getInitialHqGst() == null
+				&& getManagedBean().isGstEmpty()) {
+			retVal = true;
+		}
+		return retVal;
+	}
+
 	private String getGstSuppDocBasePath() {
 		return Calendar.getInstance().get(Calendar.YEAR) + "/SM/" + "GST/"
 				+ getManagedBean().getSmSupplier().getRegNo() + "/"
@@ -210,11 +229,10 @@ public class SmUpdateGstInfoBackingBean extends
 	}
 
 	private void initHqGstInfo() {
-		getManagedBean()
-				.setHqGstSupplier(
-						SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-								getManagedBean().getSmSupplier()
-										.getSupplierId(), null));
+		getManagedBean().setHqGstSupplier(
+				SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
+						getManagedBean().getSmSupplier().getSupplierId(), null,
+						null));
 		if (getManagedBean().getHqGstSupplier() != null
 				&& getManagedBean().getHqGstSupplier().getGstSupplierId() != null) {
 			getManagedBean().setGstEmpty(false);
@@ -222,9 +240,12 @@ public class SmUpdateGstInfoBackingBean extends
 			getManagedBean().setGstEmpty(true);
 		}
 		initSuppDocs(getManagedBean().getHqGstSupplier());
+		getManagedBean().setInitialHqGst(getManagedBean().getHqGstSupplier());
 	}
 
 	private void initBranchGstInfo() {
+		getManagedBean()
+				.setInitialBranchGstList(new ArrayList<SmGstSupplier>());
 		List<SmSupplierBranch> supplierBranchList = getManagedBean()
 				.getSuppBranchList();
 		if (supplierBranchList != null && !supplierBranchList.isEmpty()) {
@@ -236,7 +257,8 @@ public class SmUpdateGstInfoBackingBean extends
 				brVO.setGst(SmCommonUtil
 						.getSmGstSupplierBySupplierIdAndBranchCode(
 								getManagedBean().getSmSupplier()
-										.getSupplierId(), br.getBranchCode()));
+										.getSupplierId(), br.getBranchCode(),
+								null));
 				if (brVO.getGst() != null) {
 					if (brVO.getGst()
 							.getGstRegNo()
@@ -248,6 +270,8 @@ public class SmUpdateGstInfoBackingBean extends
 						brVO.setSameWithHq(true);
 					}
 					initSuppDocs(brVO.getGst());
+					getManagedBean().getInitialBranchGstList().add(
+							brVO.getGst());
 				}
 				getManagedBean().getBranches().add(brVO);
 			}
@@ -344,7 +368,9 @@ public class SmUpdateGstInfoBackingBean extends
 				.retrieveGstSuppDocuments(new DocumentReqDTO())
 				.getDocumentList();
 
-		if (gst != null && gst.getSmGstSupplierDocs() == null) {
+		if (gst != null
+				&& (gst.getSmGstSupplierDocs() == null || gst
+						.getSmGstSupplierDocs().isEmpty())) {
 			gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 			SmGstSupplierDoc suppDoc = null;
 			for (PmDocument doc : suppDocList) {
@@ -360,13 +386,13 @@ public class SmUpdateGstInfoBackingBean extends
 		StringBuffer sb = new StringBuffer();
 		SmGstSupplier gst = getManagedBean().getHqGstSupplier();
 		if (StringUtils.isNotBlank(gst.getGstRegNo())
-				&& gst.getGstEndDate() == null) {
+				&& gst.getGstEffDate() == null) {
 			// GST Effective date is required
 			sb.append(
 					getEffDateRequiredMsg(getManagedBean().getCompanyBasic()
 							.getCompanyName())).append("<br />");
 		} else if (StringUtils.isBlank(gst.getGstRegNo())
-				&& gst.getGstEndDate() != null) {
+				&& gst.getGstEffDate() != null) {
 			// GST Registration no is required
 			sb.append(
 					getRegNoRequiredMsg(getManagedBean().getCompanyBasic()
@@ -407,6 +433,20 @@ public class SmUpdateGstInfoBackingBean extends
 			retVal = true;
 		}
 		return retVal;
+	}
+
+	private void removeNotUploadedDoc(SmGstSupplier gst) {
+		if (gst != null && gst.getSmGstSupplierDocs() != null) {
+			Iterator<SmGstSupplierDoc> iter = gst.getSmGstSupplierDocs()
+					.iterator();
+			while (iter.hasNext()) {
+				SmGstSupplierDoc doc = iter.next();
+				if (StringUtils.isBlank(doc.getFileName())
+						|| StringUtils.isBlank(doc.getFilePath())) {
+					iter.remove();
+				}
+			}
+		}
 	}
 
 	private String getRegNoRequiredMsg(String companyName) {
