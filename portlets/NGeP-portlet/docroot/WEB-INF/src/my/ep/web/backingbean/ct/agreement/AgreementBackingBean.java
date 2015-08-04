@@ -343,6 +343,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			CTAgreementDataType dataType = (CTAgreementDataType) obj;
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setDocId(new Long(dataType.getDocId()));
+			ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
 
@@ -355,34 +356,37 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		    		&& getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUP_AGREEMENT)) {
 		    	
 		    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);	
-		    	
-				ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();
-				ContractAgreementResDTO contractAgreementResDTO = new ContractAgreementResDTO();
-				contractAgreementReqDTO.setContractVerId(new Long(dataType.getDocId()));
-				contractAgreementResDTO = agreementSO.retrieveSupAgreementByContractVersion(contractAgreementReqDTO); 
-		    	
-		    	if (contractAgreementResDTO.getAgreement() == null) { 
-		    		conReqDTO = new ContractReqDTO();
-		    		conReqDTO.setContractVerId(new Long(dataType.getDocId()));
-					conReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
-					contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
-					
-					ContractResDTO conResDTO = contractSO.retrieveContractVerDtls(conReqDTO);
-					ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
-					resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
-					getManagedBean().setContractVer(conResDTO.getCtContractVer());
-					getManagedBean().setAgreementContractVer(conResDTO.getCtContractVer());
-					
-					setCtAgreementDetails(resDTO);
-					saveAgreement(BpmOutcomeConst.BPM_SAVE);
-				} else {
-					ctReqDTO.setAgreementId(contractAgreementResDTO.getAgreement().getAgreementId());
-					resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
-					setCtAgreementDetails(resDTO);
-		     	}
+		    	if (dataType.getAgreementId().intValue() == 0) {
+					ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();
+					ContractAgreementResDTO contractAgreementResDTO = new ContractAgreementResDTO();
+					contractAgreementReqDTO.setContractVerId(new Long(dataType.getDocId()));
+					contractAgreementResDTO = agreementSO.retrieveSupAgreementByContractVersion(contractAgreementReqDTO); 
+			    	
+			    	if (contractAgreementResDTO.getAgreement() == null) { 
+			    		conReqDTO = new ContractReqDTO();
+			    		conReqDTO.setContractVerId(new Long(dataType.getDocId()));
+						conReqDTO.setDocType(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+						contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.CONTRACT_MANAGEMENT, IContractSO.class);
+						
+						ContractResDTO conResDTO = contractSO.retrieveContractVerDtls(conReqDTO);
+						ctReqDTO.setCtContractVer(conResDTO.getCtContractVer());
+						resDTO = agreementSO.setSupplementalAgreement(ctReqDTO);
+						getManagedBean().setContractVer(conResDTO.getCtContractVer());
+						getManagedBean().setAgreementContractVer(conResDTO.getCtContractVer());
+						
+						setCtAgreementDetails(resDTO);
+						saveAgreement(BpmOutcomeConst.BPM_SAVE);
+					} else {
+						ctReqDTO.setAgreementId(contractAgreementResDTO.getAgreement().getAgreementId());
+						resDTO = agreementSO.retrieveAgreement(ctReqDTO); 
+						setCtAgreementDetails(resDTO);
+			     	}
+		    	} else {
+		    		resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+		    		setCtAgreementDetails(resDTO);
+		    	}
 		    } else {
-				ctReqDTO.setAgreementId(new Long(dataType.getAgreementId()));
 		    	ctReqDTO.setDocType(ParameterConst.DOCTYPE_AGREEMENT);
 			 	resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 			 	setCtAgreementDetails(resDTO);
