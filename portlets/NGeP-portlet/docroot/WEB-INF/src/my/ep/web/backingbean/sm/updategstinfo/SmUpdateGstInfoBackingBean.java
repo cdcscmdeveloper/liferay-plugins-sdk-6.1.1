@@ -131,13 +131,15 @@ public class SmUpdateGstInfoBackingBean extends
 			throw new EpException(MessageConst.ERROR_722613);
 		} else {
 			List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
-			removeNotUploadedDoc(getManagedBean().getHqGstSupplier());
+			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+					.getHqGstSupplier());
 			supplierGstList.add(getManagedBean().getHqGstSupplier());
 			if (getManagedBean().getBranches() != null) {
 				for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 					if (brVO.getGst() != null) {
 						if (brVO.getGst().getSmGstSupplierDocs() != null) {
-							removeNotUploadedDoc(brVO.getGst());
+							SmCommonUtil.removeNotUploadedGstSuppDoc(brVO
+									.getGst());
 						}
 						supplierGstList.add(brVO.getGst());
 					}
@@ -224,8 +226,10 @@ public class SmUpdateGstInfoBackingBean extends
 	}
 
 	private String getGstSuppDocBasePath() {
-		return SmCommonUtil.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
-				+ getManagedBean().getSmSupplier().getRegNo() + "/"
+		return SmCommonUtil
+				.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
+				+ getManagedBean().getSmSupplier().getRegNo()
+				+ "/"
 				+ System.currentTimeMillis() + "/";
 	}
 
@@ -434,20 +438,6 @@ public class SmUpdateGstInfoBackingBean extends
 			retVal = true;
 		}
 		return retVal;
-	}
-
-	private void removeNotUploadedDoc(SmGstSupplier gst) {
-		if (gst != null && gst.getSmGstSupplierDocs() != null) {
-			Iterator<SmGstSupplierDoc> iter = gst.getSmGstSupplierDocs()
-					.iterator();
-			while (iter.hasNext()) {
-				SmGstSupplierDoc doc = iter.next();
-				if (StringUtils.isBlank(doc.getFileName())
-						|| StringUtils.isBlank(doc.getFilePath())) {
-					iter.remove();
-				}
-			}
-		}
 	}
 
 	private String getRegNoRequiredMsg(String companyName) {
