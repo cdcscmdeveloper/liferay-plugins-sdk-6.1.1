@@ -1356,8 +1356,9 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("svAddresses", this.getManagedBean().getSmSvAddressMap().get(templateType));
 		context.put("addressFormatter", new AddressUtils());
 		
-		context.put("gstRegNo", svTask.getSmAppl().getSmCompanyBasic().getGstRegistrationNo());
-		context.put("gstRegDate", svTask.getSmAppl().getSmCompanyBasic().getGstRegistrationDate());
+		context.put("gstRegNo", getManagedBean().getSmGstSupplier().getGstRegNo());
+		context.put("gstEffDate", getManagedBean().getSmGstSupplier().getGstEffDate());
+		context.put("gstEndDate", getManagedBean().getSmGstSupplier().getGstEndDate());
 
 		String fileName = fileInitName + "predetails.pdf";
 		
