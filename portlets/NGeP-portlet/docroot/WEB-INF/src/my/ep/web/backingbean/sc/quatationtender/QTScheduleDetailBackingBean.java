@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -26,7 +28,6 @@ import my.ep.biz.service.pm.common.city.ICitySO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.sc.quationtender.IQTBriefingSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -47,7 +48,6 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.sc.quationtender.BriefingReqDTO;
 import my.ep.dto.sc.quationtender.BriefingResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
@@ -748,5 +748,21 @@ public class QTScheduleDetailBackingBean extends
 			return MessageConst.INFO_700007;
 		}
 		return MessageConst.INFO_700008;
+	}
+	
+	/**
+	 * Validate postcode.
+	 */
+	public void validatePostcode() {
+		debugLogger("validatePostcode");
+		String postcode = getManagedBean().getScQtSampleSubmission().getAddress().getPostcode();
+		Pattern pattern = Pattern.compile("\\d{5}");
+		Matcher matcher = pattern.matcher(postcode);
+		if (matcher.matches()) {
+			// throw new EpException("Postcode is Valid");
+		} else {
+			throw new EpException("Postcode is not valid, Postcode Should be limited to 5 digits.");
+		}
+
 	}
 }

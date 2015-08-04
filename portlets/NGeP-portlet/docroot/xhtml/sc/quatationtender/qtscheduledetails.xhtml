@@ -311,7 +311,10 @@
 										disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SCHDETAILS)}"
 										label="#{lbl['lbl.sc.post.code']}"
 										value="#{qTScheduleDetailBackingBean.managedBean.scQtSampleSubmission.address.postcode}"
-										size="30" maxlength="10" /></td>
+										size="30" maxlength="10" >
+											<p:ajax event="blur" partialSubmit="true" process="@this"
+												listener="#{qTScheduleDetailBackingBean.validatePostcode}" />
+										</p:inputText></td>
 								<td><p:message id="samplepostpost1Msg" for="samplepost1"
 										display="icon" /></td>
 							</tr>
