@@ -125,6 +125,7 @@ import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -5487,6 +5488,31 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722606);
 			}
 		}
+	}
+	
+	public static void validatGSt(SmGstSupplier gst){
+		if(!isGstEmpty(gst)){
+			if (StringUtils.isNotBlank(gst.getGstRegNo())
+					&& gst.getGstEndDate() == null) {
+				// GST Effective date is required
+				throw new EpException(MessageConst.ERROR_721030);
+			} else if (StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getGstEndDate() != null) {
+				// GST Registration no is required
+				throw new EpException(MessageConst.ERROR_721029);
+			}
+		}
+	}
+
+	public static boolean isGstEmpty(SmGstSupplier gst) {
+		boolean retVal = false;
+		if (gst == null) {
+			retVal = true;
+		} else if (StringUtils.isBlank(gst.getGstRegNo())
+				&& gst.getGstEffDate() == null && gst.getGstEndDate() == null) {
+			retVal = true;
+		}
+		return retVal;
 	}
 
 	public static SmApplicationUtil getInstance() {
