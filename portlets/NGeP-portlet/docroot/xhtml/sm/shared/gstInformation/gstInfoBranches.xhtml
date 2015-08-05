@@ -58,7 +58,7 @@
 				
 				 <br />
 				 <p:dataTable var="table" id="hqSuppDocDtId"
-					value="#{br.gst.smGstSupplierDocs}" rendered="#{not empty br.gst and br.gst.isCurrent}"
+					value="#{br.gst.smGstSupplierDocs}" rendered="#{not empty br.gst and br.gst.isCurrent and !br.sameWithHq}"
 					rowIndexVar="index">
 		
 					<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
