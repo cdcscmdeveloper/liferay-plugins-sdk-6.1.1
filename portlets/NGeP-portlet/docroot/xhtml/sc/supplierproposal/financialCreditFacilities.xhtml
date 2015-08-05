@@ -9,10 +9,11 @@
 
 	<p:panel id="creditFacilitiesPanel"
 		header="#{lbl['lbl.sc.spec.credit.facility']}" toggleable="true">
-		
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
+
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.sp.btn.complete.instruction']}" escape="false"
 			rendered="#{!supplierProposalDetailBackingBean.managedBean.closed}" />
-			
+
 		<p:dataTable id="creditfaciitiesid" var="creditfacilities"
 			value="#{supplierProposalDetailBackingBean.managedBean.scQtPRPCreditFacilities}"
 			rowKey="#{creditfacilities}" rowIndexVar="rowIndex" rows="10">
@@ -148,6 +149,7 @@
 					style="text-align:right;width:78%;"
 					rendered="#{creditfacilities.brandNew eq true}" required="true"
 					maxlength="19" label="#{lbl['lbl.sc.spec.amt.paid']}">
+					<!-- <f:validateDoubleRange for="amtPaid"  minimum="1" /> -->
 					<p:ajax event="blur" process="@this" partialSubmit="true"
 						listener="#{supplierProposalDetailBackingBean.creditFacilityValidator(rowIndex)}"
 						update="@this,amtPaidMsg,@([id$=totalSummaryPG])" />
@@ -168,8 +170,19 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 				partialSubmit="true"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				update="@([id$=creditFacilitiesPanel])"
-				action="#{supplierProposalDetailBackingBean.deleteCreditFacilities}" />
+				oncomplete="finCreditFacilityDelete.show();"
+				update="@([id$=finCreditFacilityDeleteId])" />
+				
+				<ui:param name="finCreditFacilityDeleteId"
+			value="finCreditFacilityDeleteId"></ui:param>
+				
+
+			<ac:confirmationPopup id="#{finCreditFacilityDeleteId}"
+				widget="finCreditFacilityDelete" width="400" height="200"
+				okAction="supplierProposalDetailBackingBean.deleteCreditFacilities"
+				title="#{lbl['lbl.sc.spec.credit.facility']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=creditFacilitiesPanel])" />
 
 		</div>
 

@@ -13,7 +13,8 @@
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:messages id="ScheduleBiddingMainnMessage" showDetail="true"
-			showSummary="false" autoUpdate="true" closable="true" severity="error, info" />
+			showSummary="false" autoUpdate="true" closable="true"
+			severity="error, info" />
 
 		<ui:param name="isRecommendByPackage"
 			value="#{!scheduleBiddingBB.managedBean.scQt.zonal and scheduleBiddingBB.managedBean.scQtFinalization.recommendedTypeId.parameterCode eq 'P'  }" />
@@ -157,8 +158,17 @@
 
 				<p:commandButton id="deleteContact" value="#{lbl['lbl.btn.delete']}"
 					immediate="true" process="@this,contactPersonDetails"
-					partialSubmit="true"
-					action="#{scheduleBiddingBB.deleteContactDetails}"
+					partialSubmit="true" oncomplete="contactPersonDelete.show();"
+					update="@([id$=contactPersonDeleteId])" />
+
+				<ui:param name="contactPersonDeleteId"
+					value="contactPersonDeleteId"></ui:param>
+
+				<ac:confirmationPopup id="#{contactPersonDeleteId}"
+					widget="contactPersonDelete" width="400" height="200"
+					okAction="scheduleBiddingBB.deleteContactDetails"
+					title="#{lbl['lbl.sc.contact.person.details']}"
+					content="#{lbl['lbl.sc.dialog.confirm.message']}"
 					update="@([id$=contactPersonDetails])" />
 			</div>
 		</p:panel>
