@@ -949,7 +949,6 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_721043);
 			}
 		}
-		SmCommonUtil.removeNotUploadedGstSuppDoc(gst);
 	}
 
 	/**
