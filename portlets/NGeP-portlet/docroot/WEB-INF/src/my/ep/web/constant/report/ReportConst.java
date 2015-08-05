@@ -469,6 +469,8 @@ public class ReportConst {
 	public static final String AMP_SM_USER_NAME_EQ = "&PUSERNAME=";
 	public static final String AMP_SM_REQ_ENQ_DATE_EQ = "&PDATE=";
 	public static final String AMP_SM_PRFL_STS_EQ = "&PPRSTAT=";
+	public static final String AMP_SM_GST_REGNO_EQ = "&PGSTREGNO=";
+	public static final String AMP_SM_GST_STS_EQ = "&PGSTSTAT=";
 	public static final String PEND_PRPR_SITE_VISIT = "Pending Prepare Site Visit Report";
 	public static final String SITE_VISIT_COMPLTD = "Site Visit Report Completed";
 	public static final String KAMA = ",";
