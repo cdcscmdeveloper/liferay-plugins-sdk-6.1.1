@@ -170,22 +170,27 @@
 				value="#{contractRequestBackingBean.managedBean.showItemAddrList}"
 				selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}" >
 				<p:ajax event="toggleSelect"
+					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemToggleSelect}" />
 				<p:ajax event="rowSelectCheckbox"
+					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowSelectCheckbox}" />
 				<p:ajax event="rowUnselectCheckbox"
+					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />
 				<p:ajax event="rowSelect" 
+					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowSelectCheckbox}" />
 				<p:ajax event="rowUnselect"
+					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />				
