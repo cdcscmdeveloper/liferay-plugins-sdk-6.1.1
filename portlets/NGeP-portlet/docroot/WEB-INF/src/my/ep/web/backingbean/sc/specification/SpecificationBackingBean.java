@@ -1130,6 +1130,10 @@ public class SpecificationBackingBean extends
 		case 0:
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
 			// specSo.validateBoGeneralInfo(specReqDTO);
+			if (this.getManagedBean().isZoneSpecUpdate()) {
+				ZonesUpdateWarningMessage();
+				validateBusinessOwner(false);
+			}
 
 			break;
 		case 1:
@@ -16139,11 +16143,15 @@ public class SpecificationBackingBean extends
 			}
 			if (null != financialSpecCheckList
 					&& !financialSpecCheckList.isEmpty()) {
+				boolean financialSpecZonesEstimatedpriceUpdate = false;
+				this.getManagedBean().setZoneSpecUpdate(true);
 				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
 					if (null != financialchecklist.getPmStatus()
 							&& QTStatusConst.TS_COMPLETED
 									.equals(financialchecklist.getPmStatus()
 											.getStatusId())) {
+						financialSpecZonesEstimatedpriceUpdate = true;
+						this.getManagedBean().setZoneSpecUpdate(true);
 						PmStatus status = new PmStatus();
 						status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 						financialchecklist.setPmStatus(status);
@@ -16151,11 +16159,25 @@ public class SpecificationBackingBean extends
 					}
 
 				}
+				if (financialSpecZonesEstimatedpriceUpdate == true) {
+					ZonesUpdateWarningMessage();
+
+				}
 			}
 		} finally {
 
 		}
 
+	}
+
+	private boolean ZonesUpdateWarningMessage() {
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils
+						.getMessage(MessageConst.WARN_760328,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+		return true;
 	}
 
 }
