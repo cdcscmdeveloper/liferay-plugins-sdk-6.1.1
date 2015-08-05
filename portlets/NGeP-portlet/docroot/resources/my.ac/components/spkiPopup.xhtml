@@ -1,24 +1,26 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:cc="http://java.sun.com/jsf/composite"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-   	xmlns:p="http://primefaces.org/ui"
-   	xmlns:c="http://java.sun.com/jsp/jstl/core"
-   	xmlns:ac="http://ac.my/jsf/composite/cc">
-    
-<cc:interface>
-	<cc:attribute name="beforeSignText" />
-	<cc:attribute name="postSignAction" method-signature="java.lang.String action()" />
-	<cc:attribute name="enableAutoUpdate" required="false" method-signature="void action()" />
-	<cc:attribute name="challengeQues1" />
-	<cc:attribute name="challengeAns1" />
-	<cc:attribute name="password" />
-</cc:interface>
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-<cc:implementation>
-    <c:choose>
+	<cc:interface>
+		<cc:attribute name="beforeSignText" />
+		<cc:attribute name="postSignAction"
+			method-signature="java.lang.String action()" />
+		<cc:attribute name="enableAutoUpdate" required="false"
+			method-signature="void action()" />
+		<cc:attribute name="challengeQues1" />
+		<cc:attribute name="challengeAns1" />
+		<cc:attribute name="password" />
+	</cc:interface>
+
+	<cc:implementation>
+		<c:choose>
 			<c:when test="#{not empty cc.getValueExpression('enableAutoUpdate')}">
 				<p:remoteCommand name="spkiAutoUpdateAction"
 					action="#{cc.attrs.enableAutoUpdate}" />
@@ -26,29 +28,40 @@
 			<c:otherwise>
 				<p:remoteCommand name="spkiAutoUpdateAction" />
 			</c:otherwise>
-	</c:choose>   
-	<p:remoteCommand name="spkiPostSignAction"
-				action="#{cc.attrs.postSignAction}" />
-	<script>
+		</c:choose>
+		<p:remoteCommand name="spkiPostSignAction"
+			action="#{cc.attrs.postSignAction}" />
+		<script>
 			function spkiSign() {
 				spkiAutoUpdateAction();
 				spkiPostSignAction();
-				//blockWidget.show();
+				spkiBlockWidget.show();
 			}
+			
+		
 	</script>
-    <p:dialog header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg" resizable="false" modal="true">
-        <span id="#{cc.clientId}">
-			<p:messages id="dlgMessages" for="spki" showDetail="true"
-				autoUpdate="true" closable="true" />
-			<h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
-	        	<h:outputLabel  style="white-space: normal;"  value="#{cc.attrs.challengeQues1}" />
-	           	<p:inputText value="#{cc.attrs.challengeAns1}" />
-	        	
-	            <h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
-	            <p:password binding="#{pin1}" id="password" value="#{cc.attrs.password}"  />
-	 			<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" />        
-			</h:panelGrid>
-		</span>
-    </p:dialog>
-</cc:implementation>
+		<p:dialog header="#{lbl['lbl.cc.spki.title']}" widgetVar="spki_dlg"
+			resizable="false" modal="true">
+
+			<p:blockUI block="spkiPopup" widgetVar="spkiBlockWidget">
+				<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
+			</p:blockUI>
+			<p:panel id="spkiPopup">
+				<span id="#{cc.clientId}"> <p:messages id="dlgMessages"
+						for="spki" showDetail="true" autoUpdate="true" closable="true" />
+					<h:panelGrid id="spkiPanel" columns="2" cellpadding="3">
+						<h:outputLabel style="white-space: normal;"
+							value="#{cc.attrs.challengeQues1}" />
+						<p:inputText value="#{cc.attrs.challengeAns1}" />
+
+						<h:outputLabel for="password" value="#{lbl['lbl.cc.spki.pin']}" />
+						<p:password binding="#{pin1}" id="password"
+							value="#{cc.attrs.password}" />
+						<p:commandButton id="spkiSign" value="Sign" onstart="spkiSign();" 
+							oncomplete="spkiBlockWidget.hide();" />
+					</h:panelGrid>
+				</span>
+			</p:panel>
+		</p:dialog>
+	</cc:implementation>
 </ui:composition>
