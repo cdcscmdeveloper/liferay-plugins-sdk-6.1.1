@@ -4206,7 +4206,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		
 	}
 	
-	public void ItemRowSelectCheckbox(AjaxBehaviorEvent e){
+	public void itemRowSelectCheckbox(AjaxBehaviorEvent e){
 		getManagedBean().setItemDeleteButtonShow(false);
 	}
 	
