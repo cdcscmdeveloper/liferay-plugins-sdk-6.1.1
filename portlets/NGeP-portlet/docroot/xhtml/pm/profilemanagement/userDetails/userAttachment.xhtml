@@ -37,7 +37,7 @@
 	        </p:column>
 	    </p:dataTable>
 		<div align="right">
-			<p:commandButton onclick="dlAttachment.show();return false;" update="dtAttachment"
+			<p:commandButton disabled="#{isSupplierOrgType}" onclick="dlAttachment.show();return false;" update="dtAttachment"
 				value="#{lbl['lbl.pm.profiles.authorisation.attachment']}">
 			</p:commandButton>
 		</div>

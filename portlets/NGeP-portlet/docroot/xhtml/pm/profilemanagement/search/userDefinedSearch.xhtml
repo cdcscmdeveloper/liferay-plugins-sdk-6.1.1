@@ -17,7 +17,7 @@
 				<td><p:selectOneRadio value="#{profileManagementBackingBean.managedBean.searchOrgCategory}">
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.federal.government']}" itemValue="#{profileManagementBackingBean.federalGovt}"/>
 						<f:selectItem itemLabel="#{lbl['lbl.pm.org.others']}" itemValue="#{profileManagementBackingBean.others}"/>
-						<p:ajax process="@this" event="change" partialSubmit="true" update=":form:opDefinedSearch" listener ="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
+						<p:ajax process="@this" event="change" partialSubmit="true" update=":form:opDefinedSearch, :form:dtUserResult" listener ="#{profileManagementBackingBean.resetUserProfileSearchBean}"/>
 					</p:selectOneRadio></td>
 			
 			</tr>
@@ -64,7 +64,19 @@
 						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
 						<p:message id="lovFfcOrgMsg" for="lovFfcOrg" display="icon" />
 				</p:outputPanel>
-				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+				<p:outputPanel id="opSupOrgCode" rendered="#{ParameterConst.orgTypeSupplier eq profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
+				    <ac:lov id="lovSupOrg" lovId="PM_ORG_PROFILE_WITH_SUPPLIER" size="29" 
+				    	required="true" 
+		            	update=":form:opDefinedSearch" 
+		            	readonly="true" disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
+						headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
+						value="#{profileManagementBackingBean.managedBean.selectedOrgProfile.smSupplier.companyName}" 
+						postUpdateListener="profileManagementBackingBean.updateSearchCriteriaForOrgName"
+						saveObject="profileManagementBackingBean.managedBean.selectedOrgProfile"
+						conditionField="#{profileManagementBackingBean.constructConditionFields()}" />
+						<p:message id="lovSupOrgMsg" for="lovSupOrg" display="icon" />
+				</p:outputPanel>
+				<p:outputPanel id="opOrgCode" rendered="#{ParameterConst.orgTypeFactoring ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode and ParameterConst.orgTypeSupplier ne profileManagementBackingBean.managedBean.selectedOrgType.parameterCode}">
 				   <ac:lov id="lovMinistry1" lovId="PM_ORG_PROFILE" size="29" required="true"
 			        	disabled="#{profileManagementBackingBean.managedBean.selectedOrgType.parameterId==null}"
 		            	update=":form:opDefinedSearch" readonly="true"
