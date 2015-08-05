@@ -37,7 +37,7 @@
 							<td style="border-style: none !important;float: right !important;">
 								<p:selectBooleanCheckbox value="#{br.sameWithHq}">
 									<p:ajax update="@([id$=branchGstInfoPanelId])" event="change"
-										process="@this"
+										process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 										listener="#{smUpdateGstInfoBackingBean.copyHqGstToBranch(br)}" />
 								</p:selectBooleanCheckbox>
 							</td>
