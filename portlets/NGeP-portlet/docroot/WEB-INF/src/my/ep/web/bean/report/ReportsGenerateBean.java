@@ -236,6 +236,9 @@ public class ReportsGenerateBean {
 		private boolean smMandatoryExpectedSiteVisitDateView = false;
 		private boolean smMandatoryActualSiteVisitDateView = false;
 		private boolean smGSTEffectiveDateView = false;
+		private boolean smGSTRegistrationNoView = false;
+		private boolean smGSTRegisteredStatusView = false;
+		private boolean smMandatoryGSTRegisteredStatusView = false;
 		// FL module
 		private boolean flPtjView = false;
 		private boolean flContractNoView = false;
@@ -437,6 +440,8 @@ public class ReportsGenerateBean {
 		private String smUserNameVar=ReportConst.EMPTY_VAL;
 		private String smRequestExpiryDateVar=ReportConst.EMPTY_VAL;
 		private String smProfileStatusVar=ReportConst.EMPTY_VAL;
+		private String smGSTRegistrationNoVar=ReportConst.EMPTY_VAL;
+		private String smGSTRegisteredStatusVar=ReportConst.EMPTY_VAL;
 		
 		private String reportValueIdVar=ReportConst.EMPTY_VAL;
 		private String userIdVar=ReportConst.EMPTY_VAL;
@@ -522,6 +527,37 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmMandatoryGSTRegisteredStatusView() {
+			return smMandatoryGSTRegisteredStatusView;
+		}
+		public void setSmMandatoryGSTRegisteredStatusView(
+				boolean smMandatoryGSTRegisteredStatusView) {
+			this.smMandatoryGSTRegisteredStatusView = smMandatoryGSTRegisteredStatusView;
+		}
+		public boolean isSmGSTRegistrationNoView() {
+			return smGSTRegistrationNoView;
+		}
+		public void setSmGSTRegistrationNoView(boolean smGSTRegistrationNoView) {
+			this.smGSTRegistrationNoView = smGSTRegistrationNoView;
+		}
+		public boolean isSmGSTRegisteredStatusView() {
+			return smGSTRegisteredStatusView;
+		}
+		public void setSmGSTRegisteredStatusView(boolean smGSTRegisteredStatusView) {
+			this.smGSTRegisteredStatusView = smGSTRegisteredStatusView;
+		}
+		public String getSmGSTRegistrationNoVar() {
+			return smGSTRegistrationNoVar;
+		}
+		public void setSmGSTRegistrationNoVar(String smGSTRegistrationNoVar) {
+			this.smGSTRegistrationNoVar = smGSTRegistrationNoVar;
+		}
+		public String getSmGSTRegisteredStatusVar() {
+			return smGSTRegisteredStatusVar;
+		}
+		public void setSmGSTRegisteredStatusVar(String smGSTRegisteredStatusVar) {
+			this.smGSTRegisteredStatusVar = smGSTRegisteredStatusVar;
+		}
 		public boolean isSmGSTEffectiveDateView() {
 			return smGSTEffectiveDateView;
 		}

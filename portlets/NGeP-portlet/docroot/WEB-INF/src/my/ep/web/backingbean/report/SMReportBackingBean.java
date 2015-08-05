@@ -495,16 +495,19 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			 rptGenBean.setSmNonMandatoryDateView(true);
 	         rptGenBean.setSmApprovalDateView(true);			 	
          break;
-		 /*case ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER:		     
+		 case ReportConst.SM_LIST_OF_GST_RGSTRD_SUPPLIER:		     
 			 rptGenBean.setSmCommonZoneView(true);
 			 rptGenBean.setSmMandatoryEPAdminPTJAdminZoneView(true);
 			 rptGenBean.setSmSupplierTypeView(true);
 			 rptGenBean.setSmRegistrationTypeView(true);
 			 rptGenBean.setSmCompanyNameView(true);
 			 rptGenBean.setSmRegistrationNoView(true);
-			 rptGenBean.setSmNonMandatoryDateView(true);
+			 rptGenBean.setSmGSTRegistrationNoView(true);
+			 rptGenBean.setSmMandatoryGSTRegisteredStatusView(true);
+			 rptGenBean.setSmMandatoryFromDateView(true);
 	         rptGenBean.setSmGSTEffectiveDateView(true);
-         break;*/
+	         rptGenBean.setSmExtraTwoColumnView(true);
+         break;
 	        default: 
 	        	throw new EpException(CommonMethod.getMessageCommon(ReportConst.NO_REPORT_ID));
 	            //break;
