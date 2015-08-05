@@ -263,7 +263,32 @@
 					<h:outputText value="#{scLoiTerm.negoResult}" />
 				</p:column>
 			</p:dataTable>
+		</p:panel>
 
+		<p:panel header="#{lbl['lbl.sc.supporting.document']}"
+			toggleable="false">
+			<p:dataTable id="suppDocTbl" var="scLoiSuppDoc"
+				widgetVar="suppDocTblWidget"
+				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiSupportingDocs}"
+				rows="10" rowKey="#{scLoiSuppDoc}"
+				selection="#{lOIDetailBackingBean.managedBean.selectedScLoiSuppDocs}">
+				<ac:paginator for="suppDocTbl" />
+
+				<p:column headerText="#{lbl['lbl.sc.document.title']}">
+					<p:inputText style="width:85%" value="#{scLoiSuppDoc.title}" disabled="true"/>
+				</p:column>
+
+				<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+					<ui:fragment>
+						<h:commandLink
+							value="#{scLoiSuppDoc.scLoiSupportingDocAttachment.fileName}"
+							styleClass="blue_font" immediate="true"
+							action="#{lOIDetailBackingBean.downloadFile(scLoiSuppDoc.scLoiSupportingDocAttachment)}" />
+
+					</ui:fragment>
+				</p:column>
+
+			</p:dataTable>
 		</p:panel>
 	</h:panelGroup>
 	<c:if test="#{isZonal}">
