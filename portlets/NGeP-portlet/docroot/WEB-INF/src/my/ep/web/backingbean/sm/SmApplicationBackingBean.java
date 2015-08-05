@@ -1225,8 +1225,9 @@ public class SmApplicationBackingBean extends
 		} else if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 				&& getManagedBean().isSupplierUser()) {
-			SmApplicationUtil.validateBasicInfoGstData(true, getManagedBean(),
-					currentTab, ruleHelper);
+//			SmApplicationUtil.validateBasicInfoGstData(true, getManagedBean(),
+//					currentTab, ruleHelper);
+			SmApplicationUtil.validateGSt(getManagedBean(), currentTab, ruleHelper);
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		saveSupplierBusinesType(currentPageType);
@@ -1341,8 +1342,13 @@ public class SmApplicationBackingBean extends
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 				reqDto.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+				reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 				mofRegistrationSO.updateApplication(reqDto);
 				getManagedBean().setCurrentPageType(outputPageType);
+				getManagedBean().setCompanyBasicGst(
+						SmApplicationUtil.initGstInformation(getManagedBean()
+								.getSmAppl().getSmSupplier().getSupplierId(),
+								null, getManagedBean().getCompanyBasicGst()));
 
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
@@ -1356,21 +1362,8 @@ public class SmApplicationBackingBean extends
 			if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 					&& !valid) {
-				// validate company basic GST
-				if (getManagedBean().isSupplierUser()) {
-					SmApplicationUtil.validateGSt(getManagedBean()
-							.getCompanyBasicGst());
-				}
-				// remove not uploaded gst supp doc from list to save
-				SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
-						.getCompanyBasicGst());
-
 				saveOrUpdateAppl();
 
-				// init companyBasic GST information after save
-				getManagedBean().setCompanyBasicGst(
-						SmApplicationUtil.initGstInformation(getManagedBean()
-								.getSmSupplier().getSupplierId(), null, null));
 			} else if (currentPageType
 					.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_EQUITY)
 					&& !valid) {
@@ -5850,6 +5843,7 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
+			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			resDTO = regSo.initiateSmApplicationTask(reqDTO);
 			// if(resDTO!=null && !resDTO.isBpmSuccess()){
 			// throw new EpException(MessageConst.ERROR_700020);
@@ -8309,6 +8303,10 @@ public class SmApplicationBackingBean extends
 			}
 		}
 
+	}
+
+	public void assignSelectedGstDoc(SmGstSupplierDoc doc) {
+		getManagedBean().setSelectedGstSuppDoc(doc);
 	}
 
 	private void setSuppDocFileAttachment(SmGstSupplierDoc doc) {
