@@ -949,8 +949,9 @@ public class SmApplicationBackingBean extends
 
 			// init companyBasic GST information
 			getManagedBean().setCompanyBasicGst(
-					SmApplicationUtil.initGstInformation(getManagedBean()
-							.getSmSupplier().getSupplierId(), null, null));
+					SmApplicationUtil.initHqGstInformation(getManagedBean()
+							.getSmSupplier().getSupplierId(), getManagedBean()
+							.getCompanyBasicGst()));
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -1225,9 +1226,9 @@ public class SmApplicationBackingBean extends
 		} else if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 				&& getManagedBean().isSupplierUser()) {
-//			SmApplicationUtil.validateBasicInfoGstData(true, getManagedBean(),
-//					currentTab, ruleHelper);
-			SmApplicationUtil.validateGSt(getManagedBean(), currentTab, ruleHelper);
+			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean().getCompanyBasicGst());
+			SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
+					ruleHelper);
 		}
 		validateUpdateSmAppl(applType, currentPageType, outputPageType, false);
 		saveSupplierBusinesType(currentPageType);
@@ -1346,9 +1347,9 @@ public class SmApplicationBackingBean extends
 				mofRegistrationSO.updateApplication(reqDto);
 				getManagedBean().setCurrentPageType(outputPageType);
 				getManagedBean().setCompanyBasicGst(
-						SmApplicationUtil.initGstInformation(getManagedBean()
+						SmApplicationUtil.initHqGstInformation(getManagedBean()
 								.getSmAppl().getSmSupplier().getSupplierId(),
-								null, getManagedBean().getCompanyBasicGst()));
+								getManagedBean().getCompanyBasicGst()));
 
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
@@ -2350,27 +2351,6 @@ public class SmApplicationBackingBean extends
 	 * application.
 	 */
 	public void addOrUpdateBranchToSmAppl() {
-		if (!StringUtils.isEmpty(getManagedBean().getSelectedBranch()
-				.getGstRegistrationNo())
-				&& getManagedBean().getSelectedBranch().getGstRegistrationNo()
-						.length() != ruleHelper.getGstRegNumLength()) {
-			throw new EpException(MessageConst.ERROR_722603, new String[] {
-					ResourceBundleUtils.getMessage("lbl.sm.gstNo",
-							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-							new FacesScopes().getUserLocale()),
-					String.valueOf(ruleHelper.getGstRegNumLength()) });
-		}
-		if (!StringUtils.isEmpty(getManagedBean().getSelectedBranch()
-				.getGstRegistrationNo())
-				&& getManagedBean().getSelectedBranch()
-						.getGstRegistrationDate() == null) {
-			throw new EpException(MessageConst.ERROR_722604);
-		} else if (StringUtils.isEmpty(getManagedBean().getSelectedBranch()
-				.getGstRegistrationNo())
-				&& getManagedBean().getSelectedBranch()
-						.getGstRegistrationDate() != null) {
-			throw new EpException(MessageConst.ERROR_722605);
-		}
 		if (getManagedBean().getSmAppl().getSmSupplierBranches()
 				.contains(getManagedBean().getSelectedBranch())) {
 			retriveLatestApplAfterUpdate("", "");

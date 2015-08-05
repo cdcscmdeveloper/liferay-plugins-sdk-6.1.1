@@ -367,6 +367,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmGstSupplier companyBasicGst;
 	private SmGstSupplier selectedGst;
 	private SmGstSupplierDoc selectedGstSuppDoc;
+	private boolean branchSameAsHq;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -574,6 +575,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		currYear = Calendar.getInstance().get(Calendar.YEAR);
 		System.out.println("*** Date String *** " + df.format(new Date()));
 		myCountryId = SmCommonUtil.getMyCountryId();
+		selectedGst = new SmGstSupplier();
+		companyBasicGst = new SmGstSupplier(); 
 	}
 
 	private SmCompanyExperienceCat setDefaulatExpCatVal() {
@@ -2824,6 +2827,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedGst(SmGstSupplier selectedGst) {
 		this.selectedGst = selectedGst;
+	}
+
+	public boolean isBranchSameAsHq() {
+		return branchSameAsHq;
+	}
+
+	public void setBranchSameAsHq(boolean branchSameAsHq) {
+		this.branchSameAsHq = branchSameAsHq;
 	}
 
 }

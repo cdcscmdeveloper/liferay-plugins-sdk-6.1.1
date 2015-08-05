@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.updategstinfo;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -10,12 +9,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.constant.MessageConst;
-import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -66,7 +63,18 @@ public class SmUpdateGstInfoBackingBean extends
 		getManagedBean().setGstEmpty(false);
 		getManagedBean().setHqGstSupplier(new SmGstSupplier());
 		getManagedBean().getHqGstSupplier().setIsCurrent(true);
-		initSuppDocs(getManagedBean().getHqGstSupplier());
+		SmApplicationUtil.initGstSuppDocs(getManagedBean().getHqGstSupplier());
+		if (getManagedBean().getBranches() != null
+				&& !getManagedBean().getBranches().isEmpty()) {
+			for (SmGstBranchVO brTmp : getManagedBean().getBranches()) {
+				brTmp.setGst(new SmGstSupplier());
+				brTmp.getGst().setIsCurrent(true);
+				brTmp.getGst().setBranchCode(brTmp.getBranch().getBranchCode());
+				brTmp.setSameWithHq(true);
+				brTmp.getGst().setIsCurrent(true);
+				SmApplicationUtil.initGstSuppDocs(brTmp.getGst());
+			}
+		}
 	}
 
 	public void deleteHqGst() {
@@ -114,7 +122,7 @@ public class SmUpdateGstInfoBackingBean extends
 					brTmp.getGst().setIsCurrent(true);
 					brTmp.getGst().setBranchCode(
 							brTmp.getBranch().getBranchCode());
-					initSuppDocs(brTmp.getGst());
+					SmApplicationUtil.initGstSuppDocs(brTmp.getGst());
 				}
 			}
 		}
@@ -198,21 +206,11 @@ public class SmUpdateGstInfoBackingBean extends
 	public void copyHqGstToBranch(SmGstBranchVO brVO) {
 		if (brVO.getGst() == null) {
 			brVO.setGst(new SmGstSupplier());
+			SmApplicationUtil.initGstSuppDocs(brVO.getGst());
 		}
-		if (brVO.isSameWithHq()) {
-			brVO.getGst().setGstRegNo(
-					getManagedBean().getHqGstSupplier().getGstRegNo());
-			brVO.getGst().setGstEffDate(
-					getManagedBean().getHqGstSupplier().getGstEffDate());
-			brVO.getGst().setGstEndDate(
-					getManagedBean().getHqGstSupplier().getGstEndDate());
-		} else {
-			brVO.getGst().setGstRegNo(null);
-			brVO.getGst().setGstEffDate(null);
-			brVO.getGst().setGstEndDate(null);
-		}
-		brVO.getGst().setIsCurrent(true);
-		brVO.getGst().setBranchCode(brVO.getBranch().getBranchCode());
+		SmCommonUtil.copyHqGstToBranch(getManagedBean().getHqGstSupplier(),
+				brVO.getGst(), brVO.isSameWithHq(), brVO.getBranch()
+						.getBranchCode());
 	}
 
 	public boolean isDisableDeclareButton() {
@@ -244,7 +242,7 @@ public class SmUpdateGstInfoBackingBean extends
 		} else {
 			getManagedBean().setGstEmpty(true);
 		}
-		initSuppDocs(getManagedBean().getHqGstSupplier());
+		SmApplicationUtil.initGstSuppDocs(getManagedBean().getHqGstSupplier());
 		getManagedBean().setInitialHqGst(getManagedBean().getHqGstSupplier());
 	}
 
@@ -259,28 +257,41 @@ public class SmUpdateGstInfoBackingBean extends
 			for (SmSupplierBranch br : supplierBranchList) {
 				brVO = new SmGstBranchVO();
 				brVO.setBranch(br);
-				brVO.setGst(SmCommonUtil
-						.getSmGstSupplierBySupplierIdAndBranchCode(
-								getManagedBean().getSmSupplier()
-										.getSupplierId(), br.getBranchCode(),
-								null));
-				if (brVO.getGst() != null) {
-					if (brVO.getGst()
-							.getGstRegNo()
-							.equals(getManagedBean().getHqGstSupplier()
-									.getGstRegNo())
-							&& DateUtils.isSameDay(getManagedBean()
-									.getHqGstSupplier().getGstEffDate(), brVO
-									.getGst().getGstEffDate())) {
-						brVO.setSameWithHq(true);
+				if (getManagedBean().getHqGstSupplier() != null
+						&& getManagedBean().getHqGstSupplier().getIsCurrent()) {
+					brVO.setGst(SmCommonUtil
+							.getSmGstSupplierBySupplierIdAndBranchCode(
+									getManagedBean().getSmSupplier()
+											.getSupplierId(), br
+											.getBranchCode(), null));
+					if (brVO.getGst() != null) {
+						brVO.setSameWithHq(isSameWithHq(brVO.getGst()));
+						SmApplicationUtil.initGstSuppDocs(brVO.getGst());
+					} else {
+						if (!getManagedBean().isGstEmpty()) {
+							brVO.setGst(new SmGstSupplier());
+							brVO.setSameWithHq(true);
+							brVO.getGst().setIsCurrent(true);
+							SmApplicationUtil.initGstSuppDocs(brVO.getGst());
+						}
 					}
-					initSuppDocs(brVO.getGst());
 					getManagedBean().getInitialBranchGstList().add(
 							brVO.getGst());
 				}
 				getManagedBean().getBranches().add(brVO);
 			}
 		}
+	}
+
+	private boolean isSameWithHq(SmGstSupplier brGst) {
+		boolean retVal = false;
+		if (brGst.getGstRegNo().equals(
+				getManagedBean().getHqGstSupplier().getGstRegNo())
+				&& DateUtils.isSameDay(getManagedBean().getHqGstSupplier()
+						.getGstEffDate(), brGst.getGstEffDate())) {
+			retVal = true;
+		}
+		return retVal;
 	}
 
 	private void setDeleteHq() {
@@ -364,25 +375,6 @@ public class SmUpdateGstInfoBackingBean extends
 												.getDoc()),
 								getManagedBean().getSelectedBranchDoc()
 										.getDoc());
-			}
-		}
-	}
-
-	private void initSuppDocs(SmGstSupplier gst) {
-		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO()
-				.retrieveGstSuppDocuments(new DocumentReqDTO())
-				.getDocumentList();
-
-		if (gst != null
-				&& (gst.getSmGstSupplierDocs() == null || gst
-						.getSmGstSupplierDocs().isEmpty())) {
-			gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
-			SmGstSupplierDoc suppDoc = null;
-			for (PmDocument doc : suppDocList) {
-				suppDoc = new SmGstSupplierDoc();
-				suppDoc.setPmDocument(doc);
-				suppDoc.setSmGstSupplier(gst);
-				gst.getSmGstSupplierDocs().add(suppDoc);
 			}
 		}
 	}
