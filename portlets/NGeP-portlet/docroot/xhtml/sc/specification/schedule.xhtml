@@ -48,9 +48,8 @@
 									<p:ajax event="blur" update="frequencySchedule"
 										partialSubmit="true" process="@this"
 										listener="#{specificationBackingBean.addScheduleDetails}" />
-								</p:inputText>
-								<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" />
-							</td>
+								</p:inputText> <ac:iconTooltip
+									value="#{lbl['lbl.sc.spec.total.frequency.tooltip']}" /></td>
 						</h:panelGroup>
 					</tr>
 				</table>
@@ -91,7 +90,7 @@
 								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scheduleDetails,scheduleendMonth"
-								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
+								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 						<!-- <p:calendar value="#{frequency.fromDate}" showOn="button"
 						pattern="MM/yyyy"></p:calendar> -->
@@ -105,7 +104,7 @@
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="scheduleDetails"
-								listener="#{specificationBackingBean.calculateStartMonth(frequency)}"></p:ajax>
+								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency,'true')}"></p:ajax>
 						</p:selectOneMenu>
 
 
@@ -120,7 +119,7 @@
 								value="#{specificationBackingBean.monthDropDownValues}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
-								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 					</p:column>
@@ -132,7 +131,7 @@
 								value="#{specificationBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails" process="@this"
 								partialSubmit="true"
-								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency)}"></p:ajax>
+								listener="#{specificationBackingBean.calculateSchedulePercentage(frequency,'false')}"></p:ajax>
 						</p:selectOneMenu>
 
 
@@ -167,7 +166,7 @@
 					</p:column>
 
 				</p:dataTable>
-				
+
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.freq.schedule.loa.instruction']}"
 					escape="false" />
@@ -194,9 +193,8 @@
 								<p:ajax event="blur" update="progressivePayment"
 									partialSubmit="true" process="@this"
 									listener="#{specificationBackingBean.addProgressiveDetails}" />
-							</p:inputText>
-							<ac:iconTooltip value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" />
-						</td>
+							</p:inputText> <ac:iconTooltip
+								value="#{lbl['lbl.sc.spec.total.phase.tooltip']}" /></td>
 					</tr>
 
 				</table>
@@ -316,7 +314,7 @@
 
 
 				</p:dataTable>
-				
+
 				<h:outputText styleClass="instruction"
 					value="#{lbl['lbl.sc.spec.progressive.payment.loa.instruction']}"
 					escape="false" />
