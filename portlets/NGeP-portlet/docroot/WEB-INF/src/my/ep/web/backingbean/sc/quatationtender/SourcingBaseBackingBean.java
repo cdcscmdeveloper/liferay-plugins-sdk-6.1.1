@@ -88,12 +88,14 @@ import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtApproval;
 import my.ep.persistence.entity.sc.quationtender.ScQtApprovalRequest;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListAttachment;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -1030,6 +1032,39 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		}
 		return false;
 	}
+	
+	/**
+	 * To check Digisining Required
+	 * 
+	 * @param roleCode
+	 * @param List<ScQtCommitteeActivity> committeeActivities
+	 * 
+	 * @return boolean flag
+	 */
+	protected boolean isDigiSigningRequired(String roleCode, 
+								List<ScQtCommitteeActivity> committeeActivities) {
+		boolean hasRequiredRole = isDigiSigningRequired(roleCode);
+		
+		if (hasRequiredRole && 
+				CollectionUtils.isNotEmpty(
+							committeeActivities)) {
+			Long currentUsersId = new FacesScopes().getUserSessionBean()
+										.getUserId();
+			for (ScQtCommitteeActivity commActivity 
+									: committeeActivities) {
+				ScCommitteeMember commMember = commActivity.getScCommitteeMember();
+				if (ParameterConst.COMMITTEE_ROLE_CHAIRPERSON
+						.equals(commMember.getMemberRole()
+									.getParameterCode()) && 
+								commMember.getPmUser().getUserId()
+									.equals(currentUsersId)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}	
 
 	/**
 	 * To update categoryCodel1..to scqtCategory..
