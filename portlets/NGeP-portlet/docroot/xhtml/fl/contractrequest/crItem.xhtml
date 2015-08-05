@@ -169,10 +169,31 @@
 				rowIndexVar="index" rowKey="#{item}"
 				value="#{contractRequestBackingBean.managedBean.showItemAddrList}"
 				selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}" >
+				<p:ajax event="toggleSelect"
+					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					listener="#{contractRequestBackingBean.itemToggleSelect}" />
+				<p:ajax event="rowSelectCheckbox"
+					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					listener="#{contractRequestBackingBean.ItemRowSelectCheckbox}" />
+				<p:ajax event="rowUnselectCheckbox"
+					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />
+				<p:ajax event="rowSelect" 
+					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					listener="#{contractRequestBackingBean.ItemRowSelectCheckbox}" />
+				<p:ajax event="rowUnselect" 
+					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />				
 				<ac:paginator for="itemDataTable" />
-				<p:column selectionMode="multiple" width="5%"
+				<p:column selectionMode="multiple" width="5%" 
 					disabledSelection="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
-					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}" />
+					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}">
+				</p:column>	
 				<p:column headerText="#{lbl['lbl.fl.gst']}">
 					<p:selectBooleanCheckbox value="#{item.gst}"
 					disabled="#{(empty contractRequestBackingBean.managedBean.selectedDelAddr or contractRequestBackingBean.managedBean.buttonVal=='View')}">
@@ -239,6 +260,7 @@
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px"></p:spacer>
+			#{contractRequestBackingBean.managedBean.itemDeleteButtonShow}
 			<div style="width: 100%; text-align: right">
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
 					action="#{contractRequestBackingBean.addContractedItems}"
@@ -246,10 +268,10 @@
 					process="@this" update="resultPanel,searchPanel"
 					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					oncomplete="addItems.show();" />
-				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" 
+				<p:commandButton value="#{lbl['lbl.fl.btn.delete']}" id="deleteItemBtn"
 					rendered="#{(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.parameterCode != ParameterConst.fulfilmentTypeOneOff)}"
 					onsuccess="delItemDlg.show()" title="#{lbl['lbl.fl.tooltip.delete']}"
-					disabled="#{contractRequestBackingBean.managedBean.buttonVal=='View'}"
+					disabled="#{contractRequestBackingBean.managedBean.itemDeleteButtonShow or contractRequestBackingBean.managedBean.buttonVal=='View'}"
 					update="itemDataTable" partialSubmit="true" />
 			</div>
 		</h:panelGroup>
@@ -260,7 +282,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" 
 					partialSubmit="true"
 					action="#{contractRequestBackingBean.removeItemRow}"
-					update="itemDataTable"
+					update="deleteItemBtn,itemDataTable"
 					oncomplete="delItemDlg.hide();" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" 
 					onclick="delItemDlg.hide()" type="button" />

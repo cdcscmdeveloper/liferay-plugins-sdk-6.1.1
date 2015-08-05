@@ -282,6 +282,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	private boolean selectChargeLineRow=false;
 	
+	private boolean itemDeleteButtonShow=false;
+	
 	/** The active contract list document data model. */
 	private IPagingDataModel<VCtActiveContract> activeContractDataModel = new ActiveContractPagingDataModel();
 	
@@ -2638,6 +2640,20 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDeclarationCheck(boolean declarationCheck) {
 		this.declarationCheck = declarationCheck;
+	}
+
+	/**
+	 * @return the itemDeleteButtonShow
+	 */
+	public boolean isItemDeleteButtonShow() {
+		return itemDeleteButtonShow;
+	}
+
+	/**
+	 * @param itemDeleteButtonShow the itemDeleteButtonShow to set
+	 */
+	public void setItemDeleteButtonShow(boolean itemDeleteButtonShow) {
+		this.itemDeleteButtonShow = itemDeleteButtonShow;
 	}
 
 }

@@ -314,6 +314,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 		}
 		getManagedBean().setDeleteButtonHide(true);
+		getManagedBean().setItemDeleteButtonShow(true);
 		
 		if(isFlFulfilmentRequisitioner()) {
 			FacesScopes facesScopes = new FacesScopes();
@@ -587,6 +588,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			deletedItemId.add(flItemAddr.getScRequestItem().getRequestNoteItemId());
 		}
 		if(deletedItemId.size()>0) {
+			getManagedBean().setItemDeleteButtonShow(true);
 			List<FlFulfilmentItemAddr> deleteFlItemAddrs = new ArrayList<FlFulfilmentItemAddr>();
 			for (FlFulfilmentItemAddr flItemAddr : getManagedBean().getItemAddrList()) {
 				if(deletedItemId.contains(flItemAddr.getScRequestItem().getRequestNoteItemId())) {
@@ -612,6 +614,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				}
 				flDeliveryAddress.getFlFulfilmentItemAddr().removeAll(deleteFlItemAddrs);
 			}
+			getManagedBean().setItemDeleteButtonShow(true);
 		}
 		if(getManagedBean().getSelectedDelAddr()!=null) {
 			populateItemsForSelectedAddress();
@@ -987,6 +990,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		getManagedBean().getItemAddrList().addAll(itemAddrList);
 		getManagedBean().getShowItemAddrList().addAll(itemAddrList);
+		if(getManagedBean().getShowItemAddrList().size()>0){
+			getManagedBean().setItemDeleteButtonShow(true);
+		}
 		sortItems(getManagedBean().getShowItemAddrList());
 		if(getManagedBean().getSelectedDelAddr()!=null) {
 			populateItemsForSelectedAddress();
@@ -4199,5 +4205,27 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		
 	}
+	
+	public void ItemRowSelectCheckbox(AjaxBehaviorEvent e){
+		getManagedBean().setItemDeleteButtonShow(false);
+	}
+	
+	public void itemRowUnselectCheckbox(AjaxBehaviorEvent e){
+		getManagedBean().setItemDeleteButtonShow(true);
+	}
+	
+	public void itemToggleSelect(AjaxBehaviorEvent e){
+		if(null !=getManagedBean().getShowItemAddrList() && getManagedBean().getShowItemAddrList().size()>0){
+			if(null !=getManagedBean().getSelectedItemsRows() && getManagedBean().getSelectedItemsRows().size()>0){
+				getManagedBean().setItemDeleteButtonShow(false);
+			}else{
+				getManagedBean().setItemDeleteButtonShow(true);
+			}
+		}else{
+			getManagedBean().setItemDeleteButtonShow(true);
+			getManagedBean().getSelectedItemsRows();
+		}
+	}
+	
 	
 }
