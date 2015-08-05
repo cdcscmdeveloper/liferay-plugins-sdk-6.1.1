@@ -75,7 +75,7 @@
 						width="8%">
 
 						<p:selectOneMenu value="#{role.recordStatusFlg}"
-							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}">
+							disabled="#{ProfileManagementConst.roleGovtSeller eq role.pmRole.roleCode or role.brandNew or profileManagementBackingBean.managedBean.selectedUserOrg.recordStatusFlg == 0 or profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or isSupplierOrgType}">
 							<f:selectItem itemLabel="#{lbl['lbl.pm.inactive']}" itemValue="0" />
 							<f:selectItem itemLabel="#{lbl['lbl.pm.active']}" itemValue="1" />
 							<p:ajax event="change" immediate="true"
@@ -91,12 +91,12 @@
 					<p:commandButton
 						action="#{profileManagementBackingBean.getAvailbleUserRole}"
 						immediate="true" value="#{lbl['lbl.btn.add']}"
-						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or isSupplierOrgType}"
 						oncomplete="dlRoleOptions.show();" update=":form:opRoleOptions" />
 					&#160;
 					<p:commandButton id="roleDeleteBtn"
 						value="#{lbl['lbl.btn.delete']}"
-						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or profileManagementBackingBean.disableDeleteRole}"
+						disabled="#{profileManagementBackingBean.managedBean.selectedUser.recordStatusFlg == 0 or profileManagementBackingBean.disableDeleteRole or isSupplierOrgType}"
 						action="#{profileManagementBackingBean.deleteRole}"
 						update=":form:tvRoleReceivingAddr" />
 
