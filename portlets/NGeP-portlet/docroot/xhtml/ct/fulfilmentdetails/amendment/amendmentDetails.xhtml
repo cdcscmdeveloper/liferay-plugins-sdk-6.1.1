@@ -130,20 +130,24 @@
 				<p:message for="txtdesc" display="icon" />	
 			</h:panelGrid>			
 		</h:panelGrid>
-		<h:panelGroup rendered="#{(amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeB or 
-				  		        amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeA) and
-				  		        amendmentBackingBean.managedBean.contractVer.ctContract.procurementMode.parameterCode eq ParameterConst.procurementModeDirectNego and
-				  		        !amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt and
+		<h:panelGroup rendered="#{!amendmentBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt and
 				  		        !amendmentBackingBean.managedBean.disableAmendDetails}">
 		  <h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225">
 			<h:panelGrid columns="1" style="float:right;">
 				<p:outputLabel value="#{lbl['lbl.ct.secretary']}" />
 			</h:panelGrid>
-			<h:panelGrid columns="1">
+			<h:panelGrid columns="1" rendered="#{amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeB or 
+				  		        amendmentBackingBean.managedBean.committeeType eq ParameterConst.committeeTypeQuotationCommitteeA}">
 				<p:selectOneMenu id="secretaryId" value="#{amendmentBackingBean.managedBean.secretaryId}" 
 					label="#{lbl['lbl.ct.secretary']}" style="width:300px;">
 		           	<f:selectItems value="#{amendmentBackingBean.getSecretaryDropdownList()}" />
 		       	</p:selectOneMenu>
+			</h:panelGrid>
+			<h:panelGrid columns="1" rendered="#{amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeB and 
+				  		        amendmentBackingBean.managedBean.committeeType != ParameterConst.committeeTypeQuotationCommitteeA}">
+				<p:inputText id="secretaryMinistry" style="width:300px;" disabled="true"
+					value="#{amendmentBackingBean.managedBean.secretaryName}">
+				</p:inputText>
 			</h:panelGrid>
 		  </h:panelGrid>
 		</h:panelGroup>
