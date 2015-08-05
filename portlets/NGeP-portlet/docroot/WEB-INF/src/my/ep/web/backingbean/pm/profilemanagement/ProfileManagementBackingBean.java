@@ -1056,9 +1056,7 @@ public class ProfileManagementBackingBean extends
 		logger.info("....retrieveOrgTypeMap....");
 		List<PmParameterDesc> parameterDescs = PmCommonUtil
 				.retrieveFilteredParamDesc(
-						ParameterTypeConst.ORGANISATION_TYPES,
-						new ArrayList(
-								Arrays.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)),
+						ParameterTypeConst.ORGANISATION_TYPES,null,
 						null);
 
 		orgTypeMapper = new HashMap<Long, Object>();
@@ -2691,10 +2689,10 @@ public class ProfileManagementBackingBean extends
 		// }
 		// }
 
-		searchBean.getDataFilterBeans().add(
-				new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterCode",
-						SearchOperator.OPERATOR_NOT_EQUALS.value(),
-						ParameterConst.ORG_TYPE_SUPPLIER));
+//		searchBean.getDataFilterBeans().add(
+//				new SearchFilterBean("pmOrgProfile.orgTypeCode.parameterCode",
+//						SearchOperator.OPERATOR_NOT_EQUALS.value(),
+//						ParameterConst.ORG_TYPE_SUPPLIER));
 		if (this.getManagedBean().getSelectedOrgType().getParameterId() != null
 				&& upSearchBean.getSelectedOrgProfileId() != null) {
 			searchBean.getDataFilterBeans().add(
@@ -4743,7 +4741,7 @@ public class ProfileManagementBackingBean extends
 		if (getManagedBean().getSearchOrgCategory() == FEDERAL_GOVT) {
 			searchBean = getUserOrgTypeSearchBean("somFederalOrgType");
 		} else if (getManagedBean().getSearchOrgCategory() == OTHERS) {
-			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");
+			searchBean = getUserOrgTypeSearchBean("somOtherOrgType");			
 		}
 
 		SelectItem[] items = null;
@@ -4768,6 +4766,15 @@ public class ProfileManagementBackingBean extends
 			searchBean = getUserOrgTypeSearchBean("orgTypeFederalList");
 		} else if (getManagedBean().getOrgCategory() == OTHERS) {
 			searchBean = getUserOrgTypeSearchBean("orgTypeOthersList");
+			if(getManagedBean().getSelectedUserOrg() != null 
+					&& getManagedBean().getSelectedUserOrg().isBrandNew()){
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchOperator(SearchOperator.OPERATOR_NOT_IN.value());
+				bean.setSearchField("pmParameter.parameterCode");
+				bean.setSearchValue(new ArrayList<String>(Arrays
+						.asList(ProfileManagementConst.ORG_TYPE_EXCLUDE)));
+				searchBean.getDataFilterBeans().add(bean);
+			}
 		}
 
 		SelectItem[] items = null;
