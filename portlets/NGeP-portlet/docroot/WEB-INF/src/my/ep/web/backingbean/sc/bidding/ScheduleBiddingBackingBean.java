@@ -160,6 +160,26 @@ public class ScheduleBiddingBackingBean extends
 		}
 
 	}
+	
+	private void validateContactPersonnel() {
+
+		List<String> contactPersonnelNames = new ArrayList<String>();
+
+		List<ScBidContactPerson> contactPersonnel = getManagedBean().getScBidContactPersonList();
+				
+		if (null != contactPersonnel) {
+
+			for (ScBidContactPerson contact : contactPersonnel) {
+				String name = contact.getContactName();
+				if (contactPersonnelNames.contains(name)) {
+					throw new EpException(MessageConst.ERROR_760335);
+				} else {
+					contactPersonnelNames.add(name);
+				}
+			}
+		}
+		contactPersonnelNames = null;
+	}
 
 	/**
 	 * method to delete contact person from the list
@@ -323,7 +343,7 @@ public class ScheduleBiddingBackingBean extends
 			int index = getManagedBean().getBidScheduleList().indexOf(
 					scBidSchedule);
 			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
-			throw new EpException("Please Select Start Date");
+			throw new EpException(MessageConst.ERROR_760336);
 		}
 		long durationInMills = scBidSchedule.getEndDate().getTime()
 				- scBidSchedule.getStartDate().getTime();
@@ -333,7 +353,7 @@ public class ScheduleBiddingBackingBean extends
 			maxEndDate.setTime(scBidSchedule.getStartDate());
 			maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
 			getManagedBean().setMaxEndDate(maxEndDate.getTime());
-			throw new EpException("Please Select Proper End Date");
+			throw new EpException(MessageConst.ERROR_760337);
 		}
 		scBidSchedule.setDuration(durationFormatter(durationInMills));
 		int index = getManagedBean().getBidScheduleList()
@@ -372,7 +392,7 @@ public class ScheduleBiddingBackingBean extends
 			bidItem.getScBidSchedule().setEndDate(null);
 			int index = getManagedBean().getBidItemList().indexOf(bidItem);
 			getManagedBean().getBidItemList().set(index, bidItem);
-			throw new EpException("Please Select Start Date");
+			throw new EpException(MessageConst.ERROR_760336);
 		}
 		long durationInMills = bidItem.getScBidSchedule().getEndDate()
 				.getTime()
@@ -384,7 +404,7 @@ public class ScheduleBiddingBackingBean extends
 			maxEndDate.setTime(bidItem.getScBidSchedule().getStartDate());
 			maxEndDate.add(Calendar.HOUR_OF_DAY, 2);
 			getManagedBean().setMaxEndDate(maxEndDate.getTime());
-			throw new EpException("Please Select Proper Start and End Dates");
+			throw new EpException(MessageConst.ERROR_760338);
 		}
 		bidItem.getScBidSchedule().setDuration(
 				durationFormatter(durationInMills));
@@ -425,12 +445,12 @@ public class ScheduleBiddingBackingBean extends
 			int index = getManagedBean().getBidScheduleList().indexOf(
 					scBidSchedule);
 			getManagedBean().getBidScheduleList().set(index, scBidSchedule);
-			throw new EpException("Please Select Start Date");
+			throw new EpException(MessageConst.ERROR_760336);
 		}
 		long durationInMills = scBidSchedule.getEndDate().getTime()
 				- scBidSchedule.getStartDate().getTime();
 		if (durationInMills == 0) {
-			throw new EpException("Please Select Proper End Date");
+			throw new EpException(MessageConst.ERROR_760337);
 		}
 		bidSchedule.setDuration(durationFormatter(durationInMills));
 		getManagedBean().setRowSelectedBid(scBidSchedule);
@@ -469,6 +489,7 @@ public class ScheduleBiddingBackingBean extends
 			biddingReqDTO.setRoleCode(getUserRoleCode());
 			biddingReqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			biddingReqDTO.setPayLoad(this.getManagedBean().getPayLoad());
+			validateContactPersonnel();
 			getManagedBean().getScBid().setScBidContactPersons(
 					getManagedBean().getScBidContactPersonList());
 			biddingReqDTO.setScQt(getManagedBean().getScQt());
