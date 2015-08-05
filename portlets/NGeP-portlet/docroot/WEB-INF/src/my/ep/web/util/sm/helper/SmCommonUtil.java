@@ -128,7 +128,6 @@ import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
@@ -2455,7 +2454,7 @@ public class SmCommonUtil {
 	}
 
 	/**
-	 * Remove not uploaded file from list
+	 * Remove not uploaded gst supporting doc file from list
 	 * 
 	 * @param SmGstSupplier
 	 *            gst
@@ -2470,6 +2469,48 @@ public class SmCommonUtil {
 						|| StringUtils.isBlank(doc.getFilePath())) {
 					iter.remove();
 				}
+			}
+		}
+	}
+
+	public static void copyHqGstToBranch(SmGstSupplier hqGst,
+			SmGstSupplier branchGst, boolean isSameWithHq, Long branchCode) {
+		if(hqGst!=null && hqGst.getIsCurrent()){
+			if (isSameWithHq) {
+				branchGst.setGstRegNo(hqGst.getGstRegNo());
+				branchGst.setGstEffDate(hqGst.getGstEffDate());
+				branchGst.setGstEndDate(hqGst.getGstEndDate());
+			} else {
+				branchGst.setGstRegNo(null);
+				branchGst.setGstEffDate(null);
+				branchGst.setGstEndDate(null);
+			}
+			branchGst.setIsCurrent(true);
+			branchGst.setBranchCode(branchCode);
+			copyHqSuppDocToBranch(hqGst, branchGst, isSameWithHq);
+		}
+	}
+
+	private static void copyHqSuppDocToBranch(SmGstSupplier hqGst,
+			SmGstSupplier branchGst, boolean isSameWithHq) {
+		if (isSameWithHq) {
+			for (SmGstSupplierDoc brDoc : branchGst.getSmGstSupplierDocs()) {
+				for (SmGstSupplierDoc hqDoc : hqGst.getSmGstSupplierDocs()) {
+					if (brDoc.getPmDocument() != null
+							&& brDoc.getPmDocument()
+									.getDocumentId()
+									.compareTo(
+											hqDoc.getPmDocument()
+													.getDocumentId()) == 0) {
+						brDoc.setFileName(hqDoc.getFileName());
+						brDoc.setFilePath(hqDoc.getFilePath());
+					}
+				}
+			}
+		} else {
+			for (SmGstSupplierDoc brDoc : branchGst.getSmGstSupplierDocs()) {
+				brDoc.setFileName(null);
+				brDoc.setFilePath(null);
 			}
 		}
 	}
