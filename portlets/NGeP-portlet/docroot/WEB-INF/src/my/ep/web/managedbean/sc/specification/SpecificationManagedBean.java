@@ -769,6 +769,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
     
     private List<ScQtSchedule> toBeRemoveSchedules;
     private List<ScQtProgressivePayment> toBeRemoveProgPayments;
+    private boolean zoneSpecUpdate;
 	
 	
 
@@ -5138,6 +5139,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setToBeRemoveProgPayments(
 			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
 		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
+	}
+
+	/**
+	 * @return the zoneSpecUpdate
+	 */
+	public boolean isZoneSpecUpdate() {
+		return zoneSpecUpdate;
+	}
+
+	/**
+	 * @param zoneSpecUpdate the zoneSpecUpdate to set
+	 */
+	public void setZoneSpecUpdate(boolean zoneSpecUpdate) {
+		this.zoneSpecUpdate = zoneSpecUpdate;
 	}
 
 }
