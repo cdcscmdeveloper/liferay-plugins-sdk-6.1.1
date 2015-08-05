@@ -926,6 +926,35 @@ public class SmApplicationUtil {
 		}
 	}
 
+	public static void validateGSt(SmApplicationManagedBean managedBean,
+			int currentTab, SmRuleHelper ruleHelper) {
+		SmGstSupplier gst = managedBean.getCompanyBasicGst();
+		if (!isGstEmpty(gst)) {
+			if (StringUtils.isNotBlank(gst.getGstRegNo())
+					&& gst.getGstRegNo().length() != ruleHelper
+							.getGstRegNumLength()) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_721027);
+			} else if (StringUtils.isNotBlank(gst.getGstRegNo())
+					&& gst.getGstEffDate() == null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Effective date is required
+				throw new EpException(MessageConst.ERROR_721030);
+			} else if (StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getGstEffDate() != null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Registration no is required
+				throw new EpException(MessageConst.ERROR_721029);
+			} else if (StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getGstEndDate() != null) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				// GST Registration no and GST Effective Date is required
+				throw new EpException(MessageConst.ERROR_721043);
+			}
+		}
+		SmCommonUtil.removeNotUploadedGstSuppDoc(gst);
+	}
+
 	/**
 	 * Validate sm company basic info before saving the application.
 	 * 
@@ -5475,24 +5504,6 @@ public class SmApplicationUtil {
 		}
 		initGstSuppDocs(gst);
 		return gst;
-	}
-
-	public static void validateGSt(SmGstSupplier gst) {
-		if (!isGstEmpty(gst)) {
-			if (StringUtils.isNotBlank(gst.getGstRegNo())
-					&& gst.getGstEffDate() == null) {
-				// GST Effective date is required
-				throw new EpException(MessageConst.ERROR_721030);
-			} else if (StringUtils.isBlank(gst.getGstRegNo())
-					&& gst.getGstEffDate() != null) {
-				// GST Registration no is required
-				throw new EpException(MessageConst.ERROR_721029);
-			} else if (StringUtils.isBlank(gst.getGstRegNo())
-					&& gst.getGstEndDate() != null) {
-				// GST Registration no and GST Effective Date is required
-				throw new EpException(MessageConst.ERROR_721043);
-			}
-		}
 	}
 
 	public static boolean isGstEmpty(SmGstSupplier gst) {
