@@ -162,9 +162,6 @@ import my.ep.web.vo.SmSupplierBasicInfoVO;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
 
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -5495,14 +5492,15 @@ public class SmApplicationUtil {
 				.getSmAppl();
 	}
 
-	public static SmGstSupplier initGstInformation(Long supplierId,
-			Long branchCode, SmGstSupplier gst) {
+	public static SmGstSupplier initHqGstInformation(Long supplierId,
+			SmGstSupplier gst) {
 		gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-				supplierId, branchCode, null);
-		if (gst == null) {
+				supplierId, null, null);
+		if (gst != null && gst.getIsCurrent()) {
+			initGstSuppDocs(gst);
+		} else {
 			gst = new SmGstSupplier();
 		}
-		initGstSuppDocs(gst);
 		return gst;
 	}
 
@@ -5517,11 +5515,14 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
-	private static void initGstSuppDocs(SmGstSupplier gst) {
+	public static void initGstSuppDocs(SmGstSupplier gst) {
 		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO()
 				.retrieveGstSuppDocuments(new DocumentReqDTO())
 				.getDocumentList();
 
+		if (gst == null) {
+			gst = new SmGstSupplier();
+		}
 		if (gst != null
 				&& (gst.getSmGstSupplierDocs() == null || gst
 						.getSmGstSupplierDocs().isEmpty())) {
