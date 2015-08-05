@@ -141,6 +141,7 @@ public class ReportBackingBean extends
 	private List<String> ptjList = new ArrayList<String>();
 	private List<SelectItem> pmMinistryList = new ArrayList<SelectItem>();
 	private List<String> pmPtjList = new ArrayList<String>();
+	private List<SelectItem> processingOfficerList = new ArrayList<SelectItem>();
 	// private List<PmOrgProfile> ptjList;
 	private List<String> loanList = new ArrayList<String>();
 	private List<SelectItem> unspcList = new ArrayList<SelectItem>();
@@ -206,9 +207,15 @@ public class ReportBackingBean extends
 
 	public void setReportCategory(String reportCategory) {
 		this.reportCategory = reportCategory;
+	}	
+
+	public List<SelectItem> getProcessingOfficerList() {
+		return processingOfficerList;
 	}
 
-	
+	public void setProcessingOfficerList(List<SelectItem> processingOfficerList) {
+		this.processingOfficerList = processingOfficerList;
+	}
 
 	public List<SelectItem> getZoneList() {
 		return zoneList;
@@ -728,7 +735,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)25;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -896,6 +903,8 @@ public class ReportBackingBean extends
 	private String smUserName;
 	private String smRequestExpiryDate;
 	private String smProfileStatus;
+	private String smGSTRegistrationNo;
+	private String smGSTRegisteredStatus;
 	// CT
 	private String ctContractNo;
 	private String ctAgreement;
@@ -921,6 +930,22 @@ public class ReportBackingBean extends
 	private long[] lngDistrictId;
 	
 	
+
+	public String getSmGSTRegistrationNo() {
+		return smGSTRegistrationNo;
+	}
+
+	public void setSmGSTRegistrationNo(String smGSTRegistrationNo) {
+		this.smGSTRegistrationNo = smGSTRegistrationNo;
+	}
+
+	public String getSmGSTRegisteredStatus() {
+		return smGSTRegisteredStatus;
+	}
+
+	public void setSmGSTRegisteredStatus(String smGSTRegisteredStatus) {
+		this.smGSTRegisteredStatus = smGSTRegisteredStatus;
+	}
 
 	public String getSmProfileStatus() {
 		return smProfileStatus;
@@ -2584,6 +2609,24 @@ public class ReportBackingBean extends
 		this.enableValue = enableValue;
 	}
 	
+	public List<SelectItem> retrieveProcessingOfficerList(){
+		processingOfficerList = new ArrayList<SelectItem>();		
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+			if ((null != this.getSmZone())&& (ReportConst.EMPTY_VAL != this.getSmZone())) {
+					List<Object[]> regStatusList = reportSO.retrieveProcessingOfficerList(this.getSmZone());			
+					for (Object[] object : regStatusList) {
+						SelectItem selectItem = new SelectItem();						
+						selectItem.setValue(object[1].toString());
+						selectItem.setLabel(object[0].toString());
+						processingOfficerList.add(selectItem);
+					}
+			}
+		}
+		return processingOfficerList;
+	}
 	public void applicationStatusDateChange(){
 		
 		getManagedBean().getRptGenBean().setSmMandatoryExpectedSiteVisitDateView(false);
@@ -4244,6 +4287,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			enableCriteriaMenu();
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			zoneByRolecode();
+			retrieveProcessingOfficerList();
 		}
 	}
 	
@@ -5090,6 +5134,8 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				//|| ((this.getSmRole() != null) && (this.getSmRole() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmEpNo() != null) && (this.getSmEpNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmRegistrationNo() != null) && (this.getSmRegistrationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmGSTRegistrationNo() != null) && (this.getSmGSTRegistrationNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getSmGSTRegisteredStatus() != null) && (this.getSmGSTRegisteredStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSupportingDocumentMode() != null) && (this.getSmSupportingDocumentMode() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmSupportingDocumentStatus() != null) && (this.getSmSupportingDocumentStatus() != ReportConst.EMPTY_VAL))
 				|| ((this.getSmPersonnelRole()!= null) && (this.getSmPersonnelRole() != ReportConst.EMPTY_VAL))
@@ -5141,6 +5187,18 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean
 						.setSmProfileStatusVar(ReportConst.AMP_SM_PRFL_STS_EQ
 								+ this.getSmProfileStatus());
+			}
+			if ((this.getSmGSTRegistrationNo() != null)
+					&& (this.getSmGSTRegistrationNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmGSTRegistrationNoVar(ReportConst.AMP_SM_GST_REGNO_EQ
+								+ this.getSmGSTRegistrationNo());
+			}
+			if ((this.getSmGSTRegisteredStatus() != null)
+					&& (this.getSmGSTRegisteredStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setSmGSTRegisteredStatusVar(ReportConst.AMP_SM_GST_STS_EQ
+								+ this.getSmGSTRegisteredStatus());
 			}
 			if ((this.getSmUserName() != null)
 					&& (this.getSmUserName() != ReportConst.EMPTY_VAL)) {
