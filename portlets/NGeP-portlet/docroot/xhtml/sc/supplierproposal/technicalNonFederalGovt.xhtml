@@ -190,8 +190,17 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				partialSubmit="true" process="@this"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
-				update="@([id$=nonFedExpPanel])"
-				action="#{supplierProposalDetailBackingBean.deleteNonFederalGovtExperience}" />
+				oncomplete="techNonFedDelete.show();" update="@([id$=nonFedExpPanel])"/>
+				
+					<ui:param name="techNonFedDeleteId"
+			value="techNonFedDeleteId"></ui:param>
+				
+				<ac:confirmationPopup id="#{techNonFedDeleteId}"
+			widget="techNonFedDelete" width="400" height="200"
+			okAction="supplierProposalDetailBackingBean.deleteNonFederalGovtExperience"
+			title="#{lbl['lbl.sc.spec.company.exp.fed.private']}"
+			content="#{lbl['lbl.sc.dialog.confirm.message']}"
+			update="@([id$=nonFedExpPanel])" />
 
 		</div>
 

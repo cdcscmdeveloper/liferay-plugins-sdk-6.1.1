@@ -143,8 +143,17 @@
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
 				rendered="#{!statusHide and !supplierProposalDetailBackingBean.managedBean.closed}"
 				partialSubmit="true" process="@this"
-				update="@([id$=cashOnHandPanel])"
+				update="@([id$=finCashOnHandDeleteId])"
 				action="#{supplierProposalDetailBackingBean.deleteCashOnHand}" />
+
+			<ui:param name="finCashOnHandDeleteId" value="finCashOnHandDeleteId"></ui:param>
+
+			<ac:confirmationPopup id="#{finCashOnHandDeleteId}"
+				widget="finCashOnHandDelete" width="400" height="200"
+				okAction="supplierProposalDetailBackingBean.deleteCashOnHand"
+				title="#{lbl['lbl.sc.spec.cash.hand']}"
+				content="#{lbl['lbl.sc.dialog.confirm.message']}"
+				update="@([id$=cashOnHandPanel])" />
 
 		</div>
 
