@@ -980,9 +980,12 @@ public class SupplierFinalizationBiddingBackingBean extends
 	public void submitBiddingEndorsement(String outcome) {
 		debugLogger("submitBiddingEndorsement");
 		this.getManagedBean().setAction(outcome);
-		if(ParameterConst.ONLINE_BIDDING_MEETING.equals(
-				getManagedBean().getScQtFinalization().getOnlineBiddingEndorse()) &&
-					isDigiSigningRequired(RoleCode.PBA_CHAIRPERSON.value())) {
+		String committeeType = getManagedBean().getCommitteeType();
+		if(StringUtils.isNotBlank(committeeType) && 
+				ParameterConst.ONLINE_BIDDING_MEETING.equals(
+						getManagedBean().getScQtFinalization().getOnlineBiddingEndorse()) &&
+							isDigiSigningRequired(committeeType + QTConstants.CHAIRPERSON, 
+											getManagedBean().getCommitteeEndorsementList())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
 			updateBPMTask(outcome, null);
