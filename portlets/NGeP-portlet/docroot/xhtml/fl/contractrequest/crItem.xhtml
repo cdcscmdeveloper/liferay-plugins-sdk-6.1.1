@@ -176,7 +176,7 @@
 				<p:ajax event="rowSelectCheckbox"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					listener="#{contractRequestBackingBean.ItemRowSelectCheckbox}" />
+					listener="#{contractRequestBackingBean.itemRowSelectCheckbox}" />
 				<p:ajax event="rowUnselectCheckbox"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
@@ -184,8 +184,8 @@
 				<p:ajax event="rowSelect" 
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
-					listener="#{contractRequestBackingBean.ItemRowSelectCheckbox}" />
-				<p:ajax event="rowUnselect" 
+					listener="#{contractRequestBackingBean.itemRowSelectCheckbox}" />
+				<p:ajax event="rowUnselect"
 					update=":form:deleteItemBtn,itemDataTable,@(.orderSummaryChange)"
 					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					listener="#{contractRequestBackingBean.itemRowUnselectCheckbox}" />				
@@ -260,7 +260,6 @@
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px"></p:spacer>
-			#{contractRequestBackingBean.managedBean.itemDeleteButtonShow}
 			<div style="width: 100%; text-align: right">
 				<p:commandButton id="addItems" value="#{lbl['lbl.btn.add']}" 
 					action="#{contractRequestBackingBean.addContractedItems}"
