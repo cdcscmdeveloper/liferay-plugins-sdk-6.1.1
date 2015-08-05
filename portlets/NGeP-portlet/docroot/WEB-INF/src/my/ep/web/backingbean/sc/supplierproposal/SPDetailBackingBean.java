@@ -1191,7 +1191,7 @@ public class SPDetailBackingBean extends
 			return downloadEncryptedFile(getActualFilePath(scAttachment),
 					scAttachment.getFileName());
 		} else {
-			throw new EpException("Attachment not found.");
+			throw new EpException(MessageConst.ERROR_760329);
 		}
 	}
 
@@ -2619,7 +2619,7 @@ public class SPDetailBackingBean extends
 		if (prpExperience.getEffectiveDate() == null) {
 			prpExperience.setExpiryDate(null);
 			getManagedBean().getScQtPRPExperiences().set(index, prpExperience);
-			throw new EpException("Please Select Effective Date");
+			throw new EpException(MessageConst.ERROR_760330);
 		}
 
 		if (prpExperience.getEffectiveDate() != null
@@ -2756,7 +2756,7 @@ public class SPDetailBackingBean extends
 				.getDeletedPRPExperiences();
 		if (selectedExperienceList == null
 				|| selectedExperienceList.size() == 0) {
-			throw new EpException("Please select a record to delete");
+			throw new EpException(MessageConst.ERROR_760331);
 		}
 
 		if (experienceList != null && selectedExperienceList != null) {
@@ -2836,7 +2836,7 @@ public class SPDetailBackingBean extends
 
 		if (selectedCreditFacilitiesList == null
 				|| selectedCreditFacilitiesList.size() == 0) {
-			throw new EpException("Please select a record to delete");
+			throw new EpException(MessageConst.ERROR_760331);
 		}
 
 		if (selectedCreditFacilitiesList != null
@@ -2910,7 +2910,7 @@ public class SPDetailBackingBean extends
 
 		if (selectedCashOnHandList == null
 				|| selectedCashOnHandList.size() == 0) {
-			throw new EpException("Please select a record to delete");
+			throw new EpException(MessageConst.ERROR_760331);
 		}
 
 		if (selectedCashOnHandList != null && cashOnHandList != null) {
@@ -3005,7 +3005,7 @@ public class SPDetailBackingBean extends
 		list = new ArrayList<ScQtProposal>();
 		if (getManagedBean().getPrepareProposal() > getManagedBean().getQt()
 				.getMaxProposal()) {
-			throw new EpException("Allowed maximum proposals are "
+			throw new EpException(MessageConst.ERROR_760332 +
 					+ getManagedBean().getQt().getMaxProposal());
 		} else {
 			for (int i = 0; i < this.getManagedBean().getPrepareProposal(); i++) {
@@ -3143,7 +3143,7 @@ public class SPDetailBackingBean extends
 	}
 
 	private String generateDeclarationFromVelocity(ScQt scQt) throws Exception {
-
+		
 		if (getManagedBean().getSmSupplier() == null
 				|| getManagedBean().getSmSupplier().getCompanyName() == null) {
 			retrievePaidUpCapitalNdDeclarationDtls();
@@ -3592,10 +3592,10 @@ public class SPDetailBackingBean extends
 
 		if (validateFacility.getAmtPaid().doubleValue() > validateFacility
 				.getCreditAmt().doubleValue()) {
-
-			throw new EpException(
-					"Paid Amount can not be greater than Credit amount");
-
+			validateFacility.setAmtPaid(new BigDecimal(0));
+			getManagedBean()
+			.getScQtPRPCreditFacilities().set(index, validateFacility);
+			throw new EpException(MessageConst.ERROR_760333);
 		}
 
 		totalCreditFacilitiesSum();
@@ -3613,7 +3613,7 @@ public class SPDetailBackingBean extends
 			for (ScQtPRPExperience experience : experiences) {
 				String loaOrContractNo = experience.getContractNo();
 				if (loaOrContractNoList.contains(loaOrContractNo)) {
-					throw new EpException("Duplicate Loa/Contract No Found");
+					throw new EpException(MessageConst.ERROR_760334);
 				} else {
 					loaOrContractNoList.add(loaOrContractNo);
 				}
