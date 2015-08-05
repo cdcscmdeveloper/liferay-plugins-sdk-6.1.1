@@ -1822,8 +1822,8 @@ public class QTDetailBackingBean extends
 			qt.setOtherApproval(true);
 
 			Long currentStatus = qt.getQtStatus().getStatusId();
-			if (currentStatus
-					.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT)) {
+			if (currentStatus.equals(QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT) ||
+					currentStatus.equals(QTStatusConst.QT_REVISION_PUBLICATION)) {
 
 				// check if its Pending Schedule and Documents , only execute
 				// this part
@@ -1836,10 +1836,14 @@ public class QTDetailBackingBean extends
 					this.getManagedBean().setSubmit(true);
 					retrieveScheduleTabDtl();
 					qt.setScQtSampleSubmission(this.getManagedBean().getScQtSampleSubmissionList());
+					qt.setClosingDate(getManagedBean().getQt().getClosingDate());
+				} else {
+					retrieveScheduleTabDtl();
+					qt.setClosingDate(getManagedBean().getQt().getClosingDate());
 				}
-				QTScheduleDetailBackingBean scheduleBackingBean = new QTScheduleDetailBackingBean();
+				/*QTScheduleDetailBackingBean scheduleBackingBean = new QTScheduleDetailBackingBean();
 				scheduleBackingBean.handlePublishClosingDate();
-				qt.setClosingDate(getManagedBean().getQt().getClosingDate());
+				qt.setClosingDate(getManagedBean().getQt().getClosingDate());*/
 			}
 			CommitteResDTO committeResDto = null;
 			QuationTenderResDTO qtResDTO = null;
