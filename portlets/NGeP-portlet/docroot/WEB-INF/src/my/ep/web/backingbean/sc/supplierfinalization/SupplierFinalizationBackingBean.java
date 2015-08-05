@@ -3855,34 +3855,33 @@ public class SupplierFinalizationBackingBean extends
 	}
 
 	private void checkIfLoggedinUserIsSecretary() {
-		String identificationNo = getFacesScopes().getUserSessionBean()
-									.getIdentificationNo();
-//		List<ScQtCommitteeActivity> committeeMembers = 
-//				this.getManagedBean().getCommitteeList();
-//		
-//		if (StringUtils.isNotBlank(identificationNo) && 
-//				CollectionUtils.isNotEmpty(committeeMembers)) {
-//			for (ScQtCommitteeActivity committeeActivity :
-//					committeeMembers) {
-//				if (StringUtils.equals(identificationNo, 
-//						committeeActivity.getScCommitteeMember().getIcPassport())) {
-//					String userRole = committeeActivity.getScCommitteeMember().
-//							getMemberRole().getParameterCode();
-//					if (StringUtils.equals(userRole, 
-//							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-//						this.getManagedBean().setSecretaryUser(true);
-//					}
-//					break;
-//				}
-//			}
-//		}
+		Long userId = getFacesScopes().getUserSessionBean()
+						.getUserId();
+		List<ScQtCommitteeActivity> committeeMembers = 
+					this.getManagedBean().getCommitteeList();
 		
-		SCEvaluationDataType dataType = (SCEvaluationDataType) 
-								getManagedBean().getPayLoad();
-		if (StringUtils.equals(identificationNo, 
-				dataType.getFcSecretary())) {
-			this.getManagedBean().setSecretaryUser(true);
+		if (CollectionUtils.isNotEmpty(committeeMembers)) {
+			for (ScQtCommitteeActivity committeeActivity 
+							: committeeMembers) {
+				if (userId.equals(committeeActivity.getScCommitteeMember()
+						.getPmUser().getUserId())) {
+					String userRole = committeeActivity.getScCommitteeMember().
+							getMemberRole().getParameterCode();
+					if (StringUtils.equals(userRole, 
+							ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+						this.getManagedBean().setSecretaryUser(true);
+					}
+					break;
+				}
+			}
 		}
+		
+//		SCEvaluationDataType dataType = (SCEvaluationDataType) 
+//								getManagedBean().getPayLoad();
+//		if (StringUtils.equals(identificationNo, 
+//				dataType.getFcSecretary())) {
+//			this.getManagedBean().setSecretaryUser(true);
+//		}
 	}
 
 	/**
