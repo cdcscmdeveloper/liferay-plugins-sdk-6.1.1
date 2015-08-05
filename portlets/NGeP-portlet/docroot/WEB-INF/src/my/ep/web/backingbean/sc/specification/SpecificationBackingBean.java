@@ -3452,16 +3452,24 @@ public class SpecificationBackingBean extends
 						int start = Integer.parseInt(startMonth);
 						int end = Integer.parseInt(endMonth);
 
-						for (int i = start + 1; i <= end + 1; i++) {
-							count++;
-						}
+						int sYear = Integer.parseInt(startYear);
+						int eYear = Integer.parseInt(endYear);
+						int diffYear = 0;
+						int count = 0;
 
-						long days = DateUtils.getDaysDifference(
-								scQtSchedule.getFromDate(),
-								scQtSchedule.getToDate());
-						int day = (int) days;
-						int months = day / 30;
-						scQtSchedule.setTotalMonths(new BigDecimal(months));
+						if (eYear >= sYear) {
+							if (!endYear.equals(startYear)) {
+								diffYear = eYear - sYear;
+							}
+							for (int i = start + 1; i <= end + 1; i++) {
+								count++;
+							}
+							count = count + (diffYear * 12);
+							scQtSchedule.setTotalMonths(new BigDecimal(count));
+						} else {
+							scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+						}
+						// scQtSchedule.setTotalMonths(new BigDecimal(months));
 
 						scQtSchedule.setStartMonth(startMonth);
 						scQtSchedule.setEndMonth(endMonth);
@@ -8741,76 +8749,7 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	/**
-	 * Calculate start month.change start month dropdown in frequency schedule
-	 * menu.
-	 * 
-	 * @param schedule
-	 *            (ScQtSchedule schedule).
-	 */
-	public void calculateStartMonth(ScQtSchedule schedule) {
-		// event.getComponent().getAttributes().get("value");
-		List<ScQtSchedule> freqSchedule = this.getManagedBean()
-				.getScheduleList();
-		if (null == freqSchedule) {
-			freqSchedule = new ArrayList<ScQtSchedule>();
 
-		}
-		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
-			int start = Integer.parseInt(schedule.getStartMonth());
-			String fromMonth = retriveMonthDtls(start);
-			schedule.setEndMonth(schedule.getStartMonth());
-			int end = Integer.parseInt(schedule.getEndMonth());
-			String toMonth = retriveMonthDtls(end);
-
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			String fromdate = null;
-			String toDate = null;
-			if (null != schedule.getStartYear()
-					&& null != schedule.getEndYear()) {
-				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
-				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
-			}
-
-			// schedule.setScheduleNo(schedule.getScheduleNo());
-
-			try {
-
-				Date date1;
-				Date date2;
-				try {
-					if (null != fromdate && null != toDate) {
-						date1 = format.parse(fromdate);
-						date2 = format.parse(toDate);
-						long days = DateUtils.getDaysDifference(date1, date2);
-						int day = (int) days;
-						int months = day / 30;
-						schedule.setTotalMonths(new BigDecimal(months));
-					}
-				} catch (ParseException e) {
-					log.debug(e.getMessage());
-				}
-
-				// schedule.setFromDate(df.parse(fromdate));
-				// schedule.setToDate(df.parse(toDate));
-
-				int index = freqSchedule.indexOf(schedule);
-				freqSchedule.set(index, schedule);
-
-				this.getManagedBean().setScheduleList(freqSchedule);
-
-			} finally {
-
-			}
-		} else {
-			int index = freqSchedule.indexOf(schedule);
-			if (null != schedule.getStartMonth()) {
-				schedule.setEndMonth(schedule.getStartMonth());
-			}
-			freqSchedule.set(index, schedule);
-		}
-
-	}
 
 	/**
 	 * Calculate progressive start month.change start month in progessive
@@ -8875,7 +8814,8 @@ public class SpecificationBackingBean extends
 	 * @param schedule
 	 *            (ScQtSchedule schedule).
 	 */
-	public void calculateSchedulePercentage(ScQtSchedule schedule) {
+	public void calculateSchedulePercentage(ScQtSchedule schedule,
+			Boolean startMonthAndYearFlag) {
 		/*
 		 * String endMonth = (String) event.getComponent().getAttributes()
 		 * .get("value");
@@ -8887,52 +8827,40 @@ public class SpecificationBackingBean extends
 			freqSchedule = new ArrayList<ScQtSchedule>();
 
 		}
-		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
-			int start = Integer.parseInt(schedule.getStartMonth());
-			String fromMonth = retriveMonthDtls(start);
-			int end = Integer.parseInt(schedule.getEndMonth());
-			String toMonth = retriveMonthDtls(end);
+		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
+		startMonth = schedule.getStartMonth() != null ? Integer
+				.parseInt(schedule.getStartMonth()) : null;
+		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
+				.getEndMonth()) : null;
+		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule
+				.getStartYear()) : null;
+		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
+				.getEndYear()) : null;
 
-			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-			String fromdate = null;
-			String toDate = null;
-			if (null != schedule.getStartYear()
-					&& null != schedule.getEndYear()) {
-				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
-				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
-			}
-
-			// schedule.setScheduleNo(schedule.getScheduleNo());
-
-			try {
-
-				Date date1;
-				Date date2;
-				try {
-					if (null != fromdate && null != toDate) {
-						date1 = format.parse(fromdate);
-						date2 = format.parse(toDate);
-						long days = DateUtils.getDaysDifference(date1, date2);
-						int day = (int) days;
-						int months = day / 30;
-						schedule.setTotalMonths(new BigDecimal(months));
-					}
-				} catch (ParseException e) {
-					log.error(e.getMessage());
-				}
-
-				// schedule.setFromDate(df.parse(fromdate));
-				// schedule.setToDate(df.parse(toDate));
-
-				int index = freqSchedule.indexOf(schedule);
-				freqSchedule.set(index, schedule);
-
-				this.getManagedBean().setScheduleList(freqSchedule);
-
-			} finally {
-
+		if (startMonthAndYearFlag && startMonth != null) {
+			endMonth = startMonth;
+			endYear = startYear;
+			schedule.setEndMonth(endMonth.toString());
+			if (endYear != null) {
+				schedule.setEndYear(endYear.toString());
 			}
 		}
+
+		if (startMonth != null && endMonth != null && startYear != null
+				&& endYear != null && endYear >= startYear) {
+			if (!endYear.equals(startYear)) {
+				diffYear = endYear - startYear;
+			}
+			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
+				count++;
+			}
+			schedule.setTotalMonths(new BigDecimal(count));
+		} else {
+			schedule.setTotalMonths(BigDecimal.ZERO);
+		}
+
+		int index = freqSchedule.indexOf(schedule);
+		freqSchedule.set(index, schedule);
 
 	}
 
@@ -11615,15 +11543,15 @@ public class SpecificationBackingBean extends
 						endmonth = retriveMonthDtls(new Integer(
 								schedule.getEndMonth()));
 					}
-					// Date d1 = new Date();
-					// SimpleDateFormat format = new
-					// SimpleDateFormat("dd/MM/yyyy");
+
+					Date d1 = new Date();
+					SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 					DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-					// String localDate = format.format(d1);
-					// String date = localDate.substring(0, 2);
-					String fromdate = 01 + "/" + Startmonth + "/"
+					String localDate = format.format(d1);
+					String date = localDate.substring(0, 2);
+					String fromdate = date + "/" + Startmonth + "/"
 							+ schedule.getStartYear();
-					String toDate = 31 + "/" + endmonth + "/"
+					String toDate = date + "/" + endmonth + "/"
 							+ schedule.getEndYear();
 
 					schedule.setScheduleNo(schedule.getScheduleNo());
