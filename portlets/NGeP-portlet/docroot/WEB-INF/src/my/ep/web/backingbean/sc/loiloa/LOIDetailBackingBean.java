@@ -115,7 +115,6 @@ import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
@@ -134,7 +133,6 @@ import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
@@ -877,6 +875,7 @@ public class LOIDetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
+		getManagedBean().setScLoi(scLoi);
 		// calculate max price items only.
 		boolean isCalculateMaxPriceItem = Boolean.FALSE;
 		boolean isZonal = Boolean.FALSE;
@@ -3017,24 +3016,39 @@ public class LOIDetailBackingBean extends
 			}
 
 			// validate deduction payamment for Others
-			validateDeductionPaymentDtls(scLoi);
-		}
+			validateOthersDeductionPay(scLoi);
 
-		// validate supplier contract address
-		if(null == scLoi.getSupplierAddress()){
-			throw new EpException("No supplier contact address");
-		}
-		// validate  supporting document
-		if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
-			for (ScLoiSupportingDoc scLoiSupportingDoc : scLoi.getScLoiSupportingDocs() ) {
-				if( null == scLoiSupportingDoc.getTitle() || StringUtils.isBlank(scLoiSupportingDoc.getTitle())){
-					throw new EpException("Please enter supporting document title");
-				}
-				if( null == scLoiSupportingDoc.getScLoiSupportingDocAttachment()){
-					throw new EpException("Please attach supporting document");
+			// validate  supporting document
+			if(scLoi.getScLoiSupportingDocs()  != null && scLoi.getScLoiSupportingDocs().size()>0){
+				for (ScLoiSupportingDoc scLoiSupportingDoc : scLoi.getScLoiSupportingDocs() ) {
+					if( null == scLoiSupportingDoc.getTitle() || StringUtils.isBlank(scLoiSupportingDoc.getTitle())){
+						throw new EpException("Please enter supporting document title");
+					}
+					if( null == scLoiSupportingDoc.getScLoiSupportingDocAttachment()){
+						throw new EpException("Please attach supporting document");
+					}
 				}
 			}
-		}	
+		}
+
+		if (QTStatusConst.LOI_PENDING_SUBMISSION.equals(statusId)
+				|| QTStatusConst.LOI_PENDING_REVISION.equals(statusId)) {
+			// validate nego location duplicate 
+			if(null != scLoi.getScNegoLocations()){
+				List<Date> uniqueNegoDates = new ArrayList<Date>();
+				for (ScLoiNegoLocation scLoiNegoLocation : scLoi.getScNegoLocations()) {
+					uniqueNegoDates.add(scLoiNegoLocation.getNegoDate());
+					if (uniqueNegoDates.contains(scLoiNegoLocation.getNegoDate())) {
+						throw new EpException(MessageConst.ERROR_760335);
+					}
+				}
+			}
+
+			// validate supplier contract address
+			if(null == scLoi.getSupplierAddress()){
+				throw new EpException("No supplier contact address");
+			}
+		}
 	}
 
 	/**
@@ -3132,7 +3146,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setParameterId(parameterId);
 			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 			scQtDeduction.setDeductionType(resDTO.getPmParameter());
-			validateDeductionPayment(scQtDeduction);
+			validateDuplicateDeductionPay(scQtDeduction);
 			getClausesTitle(scQtDeduction);
 			ScQtDeductionClause deductionClause = null;
 			List<ScQtDeductionClause> deductionClauseList = new ArrayList<ScQtDeductionClause>();
@@ -3173,7 +3187,7 @@ public class LOIDetailBackingBean extends
 	 *
 	 * @param scQtDeduction the sc qt deduction
 	 */
-	private void validateDeductionPayment(ScQtDeduction scQtDeduction) {
+	private void validateDuplicateDeductionPay(ScQtDeduction scQtDeduction) {
 		List<ScQtDeduction> scQtDeductions = getManagedBean().getScLoi().getScQtDeductions();
 		if(scQtDeductions != null && scQtDeductions.size()>1){
 			for (ScQtDeduction qtDeduction : scQtDeductions) {
@@ -3574,7 +3588,7 @@ public class LOIDetailBackingBean extends
 				} catch (ParseException e) {
 					throw new EpException(e.toString());
 				}
-				if (schedule.getScLoi() == null) {
+				if (null == schedule.getScLoi()) {
 					schedule.setScLoi(this.getManagedBean().getScLoi());
 				}
 				localScheduleList.add(schedule);
@@ -3653,8 +3667,9 @@ public class LOIDetailBackingBean extends
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				getManagedBean().getScLoi().getScQtProgPayments();
-				payment.setScLoi(getManagedBean().getScLoi());
+				if (null == payment.getScLoi()) {
+					payment.setScLoi(this.getManagedBean().getScLoi());
+				}
 				paymentList.add(payment);
 			}
 			getManagedBean().getScLoi().setScQtProgPayments(paymentList);
@@ -4027,28 +4042,21 @@ public class LOIDetailBackingBean extends
 		attachment.setFileName("Negotiation_Result.pdf");
 		populateAttachmentDetails(attachment);
 
-		// ScLoiLoa scLoiLoa = scLoi.getScLoiLoa();
 		VelocityContext context = new VelocityContext();
-		
-		int flag = 0;
-		if (CollectionUtils.isNotEmpty(getManagedBean().getLois())) {
-			for (ScLoi loi : getManagedBean().getLois()) {
-
-				// Skip first record
-				if (flag != 0) {
-					calculateOfferedAndFinalPriceByItem(loi);
-				}	
-				++flag;
+		List<ScLoi> lois = getManagedBean().getLois();
+		if (CollectionUtils.isNotEmpty(lois)) {
+			for (ScLoi loi : lois) {
+				if(!loi.equals(getManagedBean().getScLoi())){
+					calculateOfferedAndFinalPriceByItem(loi);	
+				}
 			}
 		}
-		
 		context.put("isZonal", getManagedBean().isZonal());
 		context.put("decimalFormatter", new DecimalFormat("#,###,##0.00"));
-		context.put("scLois", getManagedBean().getLois());
+		context.put("scLois", lois);
 		context.put("bean", this);
 
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				"/sc/loi/loi-negotiationResult.vm", context,
+		DocumentGenerator.getInstance().generatePdfFromVelocity(SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
 
@@ -5192,7 +5200,7 @@ public class LOIDetailBackingBean extends
 	 *
 	 * @param scLoi the sc loi
 	 */
-	public void validateDeductionPaymentDtls(ScLoi scLoi) {
+	public void validateOthersDeductionPay(ScLoi scLoi) {
 		List<ScQtDeduction> deductions = scLoi.getScQtDeductions();
 		if (CollectionUtils.isNotEmpty(deductions)) {
 			for (ScQtDeduction deduction : deductions) {
