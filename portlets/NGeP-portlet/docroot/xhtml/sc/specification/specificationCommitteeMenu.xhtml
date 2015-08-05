@@ -61,6 +61,7 @@
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
 							<p:menuitem
@@ -198,6 +199,7 @@
 						<c:if
 							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 
