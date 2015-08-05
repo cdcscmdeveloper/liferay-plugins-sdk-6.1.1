@@ -1089,6 +1089,7 @@ public class SPDetailBackingBean extends
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
+	@SuppressWarnings("resource")
 	protected void uploadAttachmentWithEncryption(UploadedFile file,
 			ScAttachment attachment) throws FileNotFoundException, IOException {
 		String fileName = file.getFileName();
@@ -1109,28 +1110,50 @@ public class SPDetailBackingBean extends
 		} catch (InvalidKeyException e) {
 
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
 		} catch (NoSuchAlgorithmException e) {
 
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
 		} catch (NoSuchProviderException e) {
 
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
 		} catch (NoSuchPaddingException e) {
 
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
 		} catch (InvalidAlgorithmParameterException e) {
 
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
+		} catch (Exception exception){
+			debugLogger(exception.getMessage());
+			throw new EpException(MessageConst.ERROR_760326);
 		}
 		// encryption
 		try {
 			bc.CBCEncrypt(fis, fos);
 		} catch (ShortBufferException e) {
 			log.debug(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
 		} catch (IllegalBlockSizeException e) {
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
 		} catch (BadPaddingException e) {
 			debugLogger(e.getMessage());
+			throw new EpException(MessageConst.ERROR_760327,new String[]{
+					e.getMessage()	});
+		} catch (Exception exception){
+			debugLogger(exception.getMessage());
+			throw new EpException(MessageConst.ERROR_760326);
 		}
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
