@@ -60,8 +60,7 @@ public class SOARetryLogBackingBean extends
 				logger.debug("pageChangeListener");
 			}
 
-			ISOARetryLogSO logSO;
-			try {
+			ISOARetryLogSO logSO;			try {
 				logSO = (ISOARetryLogSO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SOA,
 								ISOARetryLogSO.class);
