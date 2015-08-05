@@ -1767,10 +1767,15 @@ public class TemplateSpecBackingBean extends
 			for (String names : zoneNames) {
 				chnagedtls = false;
 				for (TplSpecEstimation estimations : estimationsList) {
-					if (names.equalsIgnoreCase(estimations.getTplSpecZoneDtl()
-							.getZoneName())) {
-						chnagedtls = true;
-						break;
+					if (null != estimations.getTplSpecZoneDtl()) {
+						if (names.equalsIgnoreCase(estimations
+								.getTplSpecZoneDtl().getZoneName())) {
+							chnagedtls = true;
+							break;
+						}
+					} else {
+						chnagedtls = false;
+						return chnagedtls;
 					}
 				}
 				if (chnagedtls == false) {
