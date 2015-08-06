@@ -9139,6 +9139,17 @@ public class SpecificationBackingBean extends
 					.getCompanyScoreType();
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
 			List<ScQtCheckListScore> noOfYearsScore = new ArrayList<ScQtCheckListScore>();
+			List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+			if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+				for (int i = 0; i < checklistRemoveList.size(); i++) {
+					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+						checklistRemoveList.remove(i);
+					} else {
+						checklistRemoveList.get(i).setDeleted(true);
+					}
+				}
+
+			}
 			if (null != checkList && null != checkList.getScQtCheckListValue()) {
 				int year = Calendar.getInstance().get(Calendar.YEAR);
 				if (null != checkList.getScQtCheckListValue().getYear()) {
@@ -9333,6 +9344,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
 			reqDTO.setCheckListValue(checkList.getScQtCheckListValue());
 			reqDTO.setScoringReq(checkList.isScoringReq());
+			reqDTO.setTobeRemoveList(checklistRemoveList);
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			// resDTO.getScQtCheckList();
 			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
@@ -9356,6 +9368,9 @@ public class SpecificationBackingBean extends
 						updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
 			}
 			reqDTO.setTobeRemoveScores(null);
+			reqDTO.setTobeRemoveList(null);
+			getManagedBean().setMarkDeletedTechChecklist(null);
+			getManagedBean().setMarkDeletedFinChecklist(null);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
@@ -9385,6 +9400,17 @@ public class SpecificationBackingBean extends
 			ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
 			String contractScoreType = this.getManagedBean()
 					.getChecklistScoreType();
+			List<ScQtCheckList> checklistRemoveList = getToBeRemoveList();
+			if (null != checklistRemoveList && !checklistRemoveList.isEmpty()) {
+				for (int i = 0; i < checklistRemoveList.size(); i++) {
+					if (null == checklistRemoveList.get(i).getQtChecklistId()) {
+						checklistRemoveList.remove(i);
+					} else {
+						checklistRemoveList.get(i).setDeleted(true);
+					}
+				}
+
+			}
 
 			List<ScQtCheckListScore> noOfContractScore = new ArrayList<ScQtCheckListScore>();
 			if (checkList.isScoringReq()) {
@@ -9510,6 +9536,7 @@ public class SpecificationBackingBean extends
 			reqDTO.setOtherCheckListScores(noOfYearsScore);
 			reqDTO.setCheckListValue(checkList.getScQtCheckListValue());
 			reqDTO.setScoringReq(checkList.isScoringReq());
+			reqDTO.setTobeRemoveList(checklistRemoveList);
 			SpecificationResDTO resDTO = specSo.saveCheckListScore(reqDTO);
 			ScQtCheckList updatedCheckList = resDTO.getScQtCheckList();
 
@@ -9520,6 +9547,9 @@ public class SpecificationBackingBean extends
 			financialChecklistEditAction(this.getManagedBean().getIndex(),
 					updatedCheckList, QTConstants.FINANCIAL_SPEC_TYPE);
 			reqDTO.setTobeRemoveScores(null);
+			reqDTO.setTobeRemoveList(null);
+			getManagedBean().setMarkDeletedTechChecklist(null);
+			getManagedBean().setMarkDeletedFinChecklist(null);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
