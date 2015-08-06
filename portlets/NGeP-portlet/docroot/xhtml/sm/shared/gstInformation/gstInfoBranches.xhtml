@@ -142,8 +142,9 @@
 		
 					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 						style="width : 55%;">
-						<h:outputText value="#{table.pmDocument.docName}"
+						<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
 							style="float: left;white-space: normal;" />
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
 					</p:column>
 		
 					<p:column headerText="#{lbl['lbl.btn.upload.doc']}"

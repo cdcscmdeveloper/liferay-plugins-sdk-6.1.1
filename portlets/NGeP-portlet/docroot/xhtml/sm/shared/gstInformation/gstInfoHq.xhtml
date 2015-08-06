@@ -129,8 +129,9 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pm.document.name']}"
 				style="width : 20%;">
-				<h:outputText value="#{table.fileName}" 
+				<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
 					style="float: left;white-space: normal;" />
+				<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
 			</p:column>
 		</p:dataTable>
 		
