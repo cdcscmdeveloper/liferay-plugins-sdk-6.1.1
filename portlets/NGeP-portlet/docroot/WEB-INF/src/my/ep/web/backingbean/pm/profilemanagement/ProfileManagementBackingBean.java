@@ -965,20 +965,20 @@ public class ProfileManagementBackingBean extends
 
 	public void addressEntered() {
 		logger.info("addressEntered");
-		if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
-			PmAddress pmAddress = this.getManagedBean().getUserAddress();
-			// address is optional
-			if (pmAddress.getPmCountry().getCountryId() != null
-					|| !StringUtils.isBlank(pmAddress.getAddress1())
-					|| !StringUtils.isBlank(pmAddress.getPostcode())
-					|| pmAddress.getPmState().getStateId() != null
-					|| pmAddress.getPmDistrict().getDistrictId() != null
-					|| pmAddress.getPmDivision().getDivisionId() != null) {
-				this.getManagedBean().setAddressEntered(true);
-			} else {
-				this.getManagedBean().setAddressEntered(false);
-			}
-		}
+//		if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
+//			PmAddress pmAddress = this.getManagedBean().getUserAddress();
+//			// address is optional
+//			if (pmAddress.getPmCountry().getCountryId() != null
+//					|| !StringUtils.isBlank(pmAddress.getAddress1())
+//					|| !StringUtils.isBlank(pmAddress.getPostcode())
+//					|| pmAddress.getPmState().getStateId() != null
+//					|| pmAddress.getPmDistrict().getDistrictId() != null
+//					|| pmAddress.getPmDivision().getDivisionId() != null) {
+//				this.getManagedBean().setAddressEntered(true);
+//			} else {
+//				this.getManagedBean().setAddressEntered(false);
+//			}
+//		}
 		logger.info("addressEntered: "
 				+ this.getManagedBean().isAddressEntered());
 	}
@@ -3380,55 +3380,55 @@ public class ProfileManagementBackingBean extends
 		// }
 	}
 
-	/**
-	 * Validation for PmAddress's fields
-	 * 
-	 * @param pmAddress
-	 * @return boolean
-	 */
-	private boolean validateUserAddress(PmAddress pmAddress) {
-		logger.info("validateUserAddress");
-		boolean addressEntered = false;
-		if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
-			// address is optional
-			if (pmAddress.getPmCountry().getCountryId() != null
-					|| !StringUtils.isBlank(pmAddress.getAddress1())
-					|| !StringUtils.isBlank(pmAddress.getPostcode())
-					|| pmAddress.getPmState().getStateId() != null
-					|| pmAddress.getPmDistrict().getDistrictId() != null
-					|| pmAddress.getPmDivision().getDivisionId() != null) {
-				addressEntered = true;
-			}
-			if (addressEntered) {
-				if (pmAddress.getPmCountry().getCountryId() == null) {
-					throw new EpException(MessageConst.ERROR_770039);
-				}
-
-				if (StringUtils.isBlank(pmAddress.getAddress1())) {
-					throw new EpException(MessageConst.ERROR_770040);
-				}
-
-				if (StringUtils.isBlank(pmAddress.getPostcode())) {
-					throw new EpException(MessageConst.ERROR_770041);
-				}
-
-				if (pmAddress.getPmState().getStateId() == null) {
-					throw new EpException(MessageConst.ERROR_770042);
-				}
-
-				if (pmAddress.getPmDistrict().getDistrictId() == null) {
-					throw new EpException(MessageConst.ERROR_770043);
-				}
-
-				if (this.getManagedBean().isDivisionFlagC()) {
-					if (pmAddress.getPmDivision().getDivisionId() == null) {
-						throw new EpException(MessageConst.ERROR_770044);
-					}
-				}
-			}
-		}
-		return addressEntered;
-	}
+//	/**
+//	 * Validation for PmAddress's fields
+//	 * 
+//	 * @param pmAddress
+//	 * @return boolean
+//	 */
+//	private boolean validateUserAddress(PmAddress pmAddress) {
+//		logger.info("validateUserAddress");
+//		boolean addressEntered = false;
+//		if (!this.getManagedBean().getSelectedUser().isOrgAddress()) {
+//			// address is optional
+//			if (pmAddress.getPmCountry().getCountryId() != null
+//					|| !StringUtils.isBlank(pmAddress.getAddress1())
+//					|| !StringUtils.isBlank(pmAddress.getPostcode())
+//					|| pmAddress.getPmState().getStateId() != null
+//					|| pmAddress.getPmDistrict().getDistrictId() != null
+//					|| pmAddress.getPmDivision().getDivisionId() != null) {
+//				addressEntered = true;
+//			}
+//			if (addressEntered) {
+//				if (pmAddress.getPmCountry().getCountryId() == null) {
+//					throw new EpException(MessageConst.ERROR_770039);
+//				}
+//
+//				if (StringUtils.isBlank(pmAddress.getAddress1())) {
+//					throw new EpException(MessageConst.ERROR_770040);
+//				}
+//
+//				if (StringUtils.isBlank(pmAddress.getPostcode())) {
+//					throw new EpException(MessageConst.ERROR_770041);
+//				}
+//
+//				if (pmAddress.getPmState().getStateId() == null) {
+//					throw new EpException(MessageConst.ERROR_770042);
+//				}
+//
+//				if (pmAddress.getPmDistrict().getDistrictId() == null) {
+//					throw new EpException(MessageConst.ERROR_770043);
+//				}
+//
+//				if (this.getManagedBean().isDivisionFlagC()) {
+//					if (pmAddress.getPmDivision().getDivisionId() == null) {
+//						throw new EpException(MessageConst.ERROR_770044);
+//					}
+//				}
+//			}
+//		}
+//		return addressEntered;
+//	}
 
 	/**
 	 * Validation for PmUser
