@@ -52,7 +52,7 @@
 									</p:column>
 									<p:column
 										headerText="#{lbl['lbl.portal.notify.sender']}/#{lbl['lbl.portal.notify.subject']}">
-							#{notify.pmNotifyLog.pmUser.userName} <br />
+							#{notify.recepient.userName} <br />
 										<p:commandLink id="btnNotifyLink"
 											action="#{notifyBackingBean.selectedNotify}"
 											update=":form:pnldetail,:form:notifyTable">

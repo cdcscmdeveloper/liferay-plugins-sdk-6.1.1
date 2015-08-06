@@ -15,7 +15,6 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
-import my.ep.persistence.entity.pm.common.PmKpiStatus;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDaGst;
 import my.ep.persistence.entity.pm.general.settings.gst.PmDesignatedArea;
@@ -45,8 +44,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	private PmConfigRule selectedRuleType;
 	private List<PmConfigRule> configRuleList;
 	private String selectedDocumentType;
-	private List<PmKpiStatus> kpiStatusList;
-	private PmKpiStatus selectedKpiStatus;
 	private Date  today = new Date();
 	private List<PmFeeExemption> feeExemptionsForOrgAndItem;
 	private List<PmFeeExemption> feeExemptionsForComodity;
@@ -104,19 +101,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		
 	}
 
-//	private PagingDataModel<PmKpiStatus> kpiListDataModel = new kpiPagingDataModel();
-
-//	public PagingDataModel<PmKpiStatus> getKpiListDataModel() {
-//		return kpiListDataModel;
-//	}
-//
-//	public void setKpiListDataModel(PagingDataModel<PmKpiStatus> kpiListDataModel) {
-//		this.kpiListDataModel = kpiListDataModel;
-//	}
-
-	public List<PmKpiStatus> getKpiStatusList() {
-		return kpiStatusList;
-	}
 
 	public Map<String, Integer> getThresholdIdToS2UnplannedMap() {
 		return thresholdIdToS2UnplannedMap;
@@ -180,10 +164,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 		this.feeExemptionsForContract = feeExemptionsForContract;
 	}
 
-	public void setKpiStatusList(List<PmKpiStatus> kpiStatusList) {
-		this.kpiStatusList = kpiStatusList;
-	}
-
 	public Integer getTabActiveIndex() {
 		return tabActiveIndex;
 	}
@@ -242,14 +222,6 @@ public class RuleCatalogueManageBean extends BaseManagedBean {
 	public void setSelectedDocumentType(String selectedDocumentType) {
 		System.out.println("....................setSelectedDocumentType to="+selectedDocumentType);
 		this.selectedDocumentType = selectedDocumentType;
-	}
-
-	public PmKpiStatus getSelectedKpiStatus() {
-		return selectedKpiStatus;
-	}
-
-	public void setSelectedKpiStatus(PmKpiStatus selectedKpiStatus) {
-		this.selectedKpiStatus = selectedKpiStatus;
 	}
 
 	public PmFeeExemption getSelectedFeeExemption() {
