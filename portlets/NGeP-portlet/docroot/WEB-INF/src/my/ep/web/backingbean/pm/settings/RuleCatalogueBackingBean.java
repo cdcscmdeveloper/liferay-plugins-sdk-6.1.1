@@ -321,10 +321,10 @@ public class RuleCatalogueBackingBean extends
 
 			// this.getManagedBean().setFeeExemptionIndex(2);
 			// ////////////getting Thresholds////////////////////////////
-			if (this.getManagedBean().getSelectedConfigGeneral()
-					.getIsGeneralThreshold() == 0) {
-				retrieveOrgProfileList();
-			}
+//			if (this.getManagedBean().getSelectedConfigGeneral()
+//					.getIsGeneralThreshold() == 0) {
+//				retrieveOrgProfileList();
+//			}
 			IOperationalThresholdSO thresholdSO = (IOperationalThresholdSO) BusinessDelegate
 					.getInstance().getServiceObject(
 							ModuleCodeConst.PROFILE_MANAGEMENT,
