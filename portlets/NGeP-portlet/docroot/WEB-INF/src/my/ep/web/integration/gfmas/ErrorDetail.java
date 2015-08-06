@@ -1,17 +1,19 @@
 package my.ep.web.integration.gfmas;
 
+/*
+ *@author P Ganga Prasad
+ */
 public class ErrorDetail {
 
-	private int recordType;
+	private String recordType;
 	private int lineNo;
-	private int columnNo;
 	private String errorDescription;
 
-	public int getRecordType() {
+	public String getRecordType() {
 		return recordType;
 	}
 
-	public void setRecordType(int recordType) {
+	public void setRecordType(String recordType) {
 		this.recordType = recordType;
 	}
 
@@ -21,14 +23,6 @@ public class ErrorDetail {
 
 	public void setLineNo(int lineNo) {
 		this.lineNo = lineNo;
-	}
-
-	public int getColumnNo() {
-		return columnNo;
-	}
-
-	public void setColumnNo(int columnNo) {
-		this.columnNo = columnNo;
 	}
 
 	public String getErrorDescription() {

@@ -2,6 +2,9 @@ package my.ep.web.integration.gfmas;
 
 import java.util.List;
 
+/*
+ * @author P Ganga Prasad
+ */
 public class EPErrorResponse {
 
 	private String recordType;
