@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.updategstinfo;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +22,7 @@ import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.updategstinfo.SmUpdateGstInfoManagedBean;
 import my.ep.web.util.sm.helper.SmApplicationUtil;
 import my.ep.web.util.sm.helper.SmCommonUtil;
+import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmGstBranchVO;
 
@@ -68,11 +70,10 @@ public class SmUpdateGstInfoBackingBean extends
 				&& !getManagedBean().getBranches().isEmpty()) {
 			for (SmGstBranchVO brTmp : getManagedBean().getBranches()) {
 				brTmp.setGst(new SmGstSupplier());
-				brTmp.getGst().setIsCurrent(true);
-				brTmp.getGst().setBranchCode(brTmp.getBranch().getBranchCode());
 				brTmp.setSameWithHq(true);
-				brTmp.getGst().setIsCurrent(true);
-				SmApplicationUtil.initGstSuppDocs(brTmp.getGst());
+				SmCommonUtil.copyHqGstToBranch(getManagedBean()
+						.getHqGstSupplier(), brTmp.getGst(), true, brTmp
+						.getBranch().getBranchCode());
 			}
 		}
 	}
@@ -129,6 +130,7 @@ public class SmUpdateGstInfoBackingBean extends
 	}
 
 	public void onDeclareGst() {
+		validateDeclare();
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeclareDialog.show();");
 	}
@@ -144,10 +146,16 @@ public class SmUpdateGstInfoBackingBean extends
 			supplierGstList.add(getManagedBean().getHqGstSupplier());
 			if (getManagedBean().getBranches() != null) {
 				for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
-					if (brVO.getGst() != null) {
-						if (brVO.getGst().getSmGstSupplierDocs() != null) {
-							SmCommonUtil.removeNotUploadedGstSuppDoc(brVO
-									.getGst());
+					if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
+						if (brVO.isSameWithHq()) {
+							SmCommonUtil.copyHqGstToBranch(getManagedBean()
+									.getHqGstSupplier(), brVO.getGst(), true,
+									brVO.getBranch().getBranchCode());
+						} else {
+							if (brVO.getGst().getSmGstSupplierDocs() != null) {
+								SmCommonUtil.removeNotUploadedGstSuppDoc(brVO
+										.getGst());
+							}
 						}
 						supplierGstList.add(brVO.getGst());
 					}
@@ -213,6 +221,50 @@ public class SmUpdateGstInfoBackingBean extends
 						.getBranchCode());
 	}
 
+	public void onCheckHqEffectiveDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getManagedBean().getHqGstSupplier().getGstEffDate());
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		if (day != 1) {
+			RequestContext.getCurrentInstance().execute("alertHq.show();");
+		}
+	}
+
+	public void onCheckBranchEffectiveDate(SmGstSupplier branchGst) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(branchGst.getGstEffDate());
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		if (day != 1) {
+			getManagedBean().setSelectedGstOnChangeEffDate(branchGst);
+			RequestContext.getCurrentInstance().execute("alertBranch.show();");
+		}
+	}
+
+	public void resetHqEffectiveDate() {
+		SmCommonUtil.resetGstEffectiveDate(getManagedBean().getHqGstSupplier());
+	}
+
+	public void resetBranchEffectiveDate() {
+		SmCommonUtil.resetGstEffectiveDate(getManagedBean()
+				.getSelectedGstOnChangeEffDate());
+		for (SmGstBranchVO brTmp : getManagedBean().getBranches()) {
+			if (brTmp.getGst() != null
+					&& brTmp.getBranch().getBranchCode() != null
+					&& getManagedBean().getSelectedGstOnChangeEffDate()
+							.getBranchCode() != null
+					&& brTmp.getBranch()
+							.getBranchCode()
+							.compareTo(
+									getManagedBean()
+											.getSelectedGstOnChangeEffDate()
+											.getBranchCode()) == 0) {
+				brTmp.getGst().setGstEffDate(
+						getManagedBean().getSelectedGstOnChangeEffDate()
+								.getGstEffDate());
+			}
+		}
+	}
+
 	public boolean isDisableDeclareButton() {
 		boolean retVal = false;
 
@@ -235,7 +287,7 @@ public class SmUpdateGstInfoBackingBean extends
 		getManagedBean().setHqGstSupplier(
 				SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
 						getManagedBean().getSmSupplier().getSupplierId(), null,
-						null));
+						null, true));
 		if (getManagedBean().getHqGstSupplier() != null
 				&& getManagedBean().getHqGstSupplier().getGstSupplierId() != null) {
 			getManagedBean().setGstEmpty(false);
@@ -263,16 +315,21 @@ public class SmUpdateGstInfoBackingBean extends
 							.getSmGstSupplierBySupplierIdAndBranchCode(
 									getManagedBean().getSmSupplier()
 											.getSupplierId(), br
-											.getBranchCode(), null));
+											.getBranchCode(), null, true));
 					if (brVO.getGst() != null) {
 						brVO.setSameWithHq(isSameWithHq(brVO.getGst()));
-						SmApplicationUtil.initGstSuppDocs(brVO.getGst());
+						if (brVO.getGst().getSmGstSupplierDocs() == null
+								|| brVO.getGst().getSmGstSupplierDocs()
+										.isEmpty()) {
+							SmApplicationUtil.initGstSuppDocs(brVO.getGst());
+						}
 					} else {
 						if (!getManagedBean().isGstEmpty()) {
 							brVO.setGst(new SmGstSupplier());
 							brVO.setSameWithHq(true);
-							brVO.getGst().setIsCurrent(true);
-							SmApplicationUtil.initGstSuppDocs(brVO.getGst());
+							SmCommonUtil.copyHqGstToBranch(getManagedBean()
+									.getHqGstSupplier(), brVO.getGst(), true,
+									brVO.getBranch().getBranchCode());
 						}
 					}
 					getManagedBean().getInitialBranchGstList().add(
@@ -383,17 +440,12 @@ public class SmUpdateGstInfoBackingBean extends
 		StringBuffer sb = new StringBuffer();
 		SmGstSupplier gst = getManagedBean().getHqGstSupplier();
 		if (StringUtils.isNotBlank(gst.getGstRegNo())
-				&& gst.getGstEffDate() == null) {
-			// GST Effective date is required
-			sb.append(
-					getEffDateRequiredMsg(getManagedBean().getCompanyBasic()
-							.getCompanyName())).append("<br />");
-		} else if (StringUtils.isBlank(gst.getGstRegNo())
-				&& gst.getGstEffDate() != null) {
-			// GST Registration no is required
-			sb.append(
-					getRegNoRequiredMsg(getManagedBean().getCompanyBasic()
-							.getCompanyName())).append("<br />");
+				&& gst.getGstRegNo().length() != SmRuleHelper.getInstance()
+						.getGstRegNumLength()) {
+			throw new EpException(MessageConst.ERROR_721044);
+		} else if (gst.getGstEffDate() != null
+				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
+
 		}
 		validateBranch(sb);
 	}
@@ -403,42 +455,21 @@ public class SmUpdateGstInfoBackingBean extends
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 				if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
 					if (StringUtils.isNotBlank(brVO.getGst().getGstRegNo())
-							&& brVO.getGst().getGstEndDate() == null) {
-						// GST Effective date is required
-						sb.append(
-								getEffDateRequiredMsg(brVO.getBranch()
-										.getBranchName())).append("<br />");
-					} else if (StringUtils.isBlank(brVO.getGst().getGstRegNo())
-							&& brVO.getGst().getGstEndDate() != null) {
-						// GST Registration no is required
-						sb.append(
-								getRegNoRequiredMsg(brVO.getBranch()
-										.getBranchName())).append("<br />");
+							&& brVO.getGst().getGstRegNo().length() != SmRuleHelper
+									.getInstance().getGstRegNumLength()) {
+						throw new EpException(MessageConst.ERROR_721027);
 					}
 				}
 			}
-		}
-		if (sb.length() > 0) {
-			throw new EpException(sb.toString());
 		}
 	}
 
 	private boolean noGstInfoEntered(SmGstSupplier gst) {
 		boolean retVal = false;
 		if (gst != null && StringUtils.isBlank(gst.getGstRegNo())
-				&& gst.getGstEffDate() == null && gst.getGstEndDate() == null) {
+				&& gst.getGstEffDate() == null) {
 			retVal = true;
 		}
 		return retVal;
-	}
-
-	private String getRegNoRequiredMsg(String companyName) {
-		return SmCommonUtil.getMessage("lbl.sm.gst.regno.required.msg",
-				new String[] { companyName });
-	}
-
-	private String getEffDateRequiredMsg(String companyName) {
-		return SmCommonUtil.getMessage("lbl.sm.gst.effdate.required.msg",
-				new String[] { companyName });
 	}
 }

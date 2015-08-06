@@ -5494,7 +5494,7 @@ public class SmApplicationUtil {
 	public static SmGstSupplier initHqGstInformation(Long supplierId,
 			SmGstSupplier gst) {
 		gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-				supplierId, null, null);
+				supplierId, null, null,false);
 		if (gst != null && gst.getIsCurrent()) {
 			initGstSuppDocs(gst);
 		} else {
