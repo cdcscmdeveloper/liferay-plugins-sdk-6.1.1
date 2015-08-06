@@ -1565,7 +1565,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				//CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				//reqDTO.setPmMachineId(pmMachine.getMachineId());
 				//CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmMachine(reqDTO);
-				pmMachineCategory.setCategoryTypeCode(pmMachine.getCategoryTypeCode());
+				//pmMachineCategory.setCategoryTypeCode(pmMachine.getCategoryTypeCode());
 
 				//log.info("resDTO.getPmMachine().getCategoryTypeCode().getParameterId() "+resDTO.getPmMachine().getCategoryTypeCode().getParameterId());
 
@@ -1802,7 +1802,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 				reqDTO.setPmMachineId(pmMachine.getMachineId());
 				CategoryCodeResDTO resDTO = categoryCodeSO.retrievePmMachine(reqDTO);
-				pmMachineCategory.setCategoryTypeCode(resDTO.getPmMachine().getCategoryTypeCode());
+				//pmMachineCategory.setCategoryTypeCode(resDTO.getPmMachine().getCategoryTypeCode());
 				
 				//log.info("resDTO.getPmMachine().getCategoryTypeCode().getParameterId() "+resDTO.getPmMachine().getCategoryTypeCode().getParameterId());
 				
