@@ -59,9 +59,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -860,18 +858,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 		user.setPmAddressTypes(null);
 		user.setPmCountry(getDefaultCountry());
 		
-		// User Notification
-		List<PmUserNotification> pmUserNotifications = userNotificationDetails(user);
-		user.setPmUserNotifications(pmUserNotifications);
-
 		// User Orgs
 		List<PmUserOrg> pmUserOrgs = userOrgDetails(user);
 		user.setPmUserOrgs(pmUserOrgs);
 		user.setOrgTypeCode(pmUserOrgs.get(0).getPmOrgProfile().getOrgTypeCode());
-
-		// User Preference
-		PmUserPreference pmUserPreference = userPreferenceDetails(user);
-		user.setPmUserPreference(pmUserPreference);
 
 		//Save new Member
 		PmUser newUser = saveNewUser(user);
@@ -890,16 +880,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		} finally {
 			countrySO = null;
 		}
-	}
-	
-	private List<PmUserNotification> userNotificationDetails(PmUser user){
-		List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
-		PmUserNotification pmUserNotification = new PmUserNotification();
-		pmUserNotification.setPmUser(user);
-		pmUserNotification.setNotifyMode("E");
-		pmUserNotification.setPreferred(true);
-		pmUserNotifications.add(pmUserNotification);
-		return pmUserNotifications;
 	}
 	
 	private List<PmUserOrg> userOrgDetails(PmUser user){
@@ -937,17 +917,6 @@ public class SupplierFinalizationMeetingBackingBean extends
 		pmUserRoles.add(pmUserRole);
 		
 		return pmUserRoles;
-	}
-	
-	private PmUserPreference userPreferenceDetails(PmUser user){
-		PmUserPreference pmUserPreference = new PmUserPreference();
-		pmUserPreference.setPmUser(user);
-		pmUserPreference.setFormatDate(CommonConstants.DEFAULT_DATE_FORMAT);
-		pmUserPreference.setFormatTime(CommonConstants.DEFAULT_TIME_FORMAT);
-		pmUserPreference.setFormatNumber(CommonConstants.DEFAULT_NUMBER_FORMAT);
-		pmUserPreference.setPreferredLanguage(CommonConstants.DEFAULT_LANGUAGE_CODE);
-		pmUserPreference.setNotifyRemovalDay(30);
-		return pmUserPreference;
 	}
 	
 	private PmUser saveNewUser(PmUser user) {
