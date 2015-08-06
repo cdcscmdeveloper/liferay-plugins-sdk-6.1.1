@@ -12,7 +12,7 @@
       <strong>APPENDIKS: RINGKASAN KONTRAK</strong><br/><br/>
       Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak<br/><br/>
 	  <ol type="i">
-		<li>No Rujukan: $fileNo $sourcingNo</li>
+		<li>No Rujukan: $fileNo</li>
 		<li>Skop / Tajuk: $sourcingTitle</li>
 		<li>Pembekal: $successfulSupplierName</li>
 		<li>Harga Tawaran Asal: $contractValue</li>

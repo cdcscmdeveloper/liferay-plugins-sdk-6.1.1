@@ -880,8 +880,47 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     			&& getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().size() == 1) {
 	     		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	     	}
+	     	
+	     	String userRole = getUserRole();
+	     	if (userRole.equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || userRole.equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) ||
+	     			userRole.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || userRole.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
+	     		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+	     			// Generate loa document and set into sc_attachment
+	     			AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
+	     			String fileName = null;
+	     			String filePath = null;
+	     			String content = null;
+	     			File file = new File(getManagedBean().getFileDirectory());
+	     			file.mkdirs();
+	     			List <ScLoaReport> scLoaReportList = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports();
+			    	 
+	     			for (ScLoaReport scLoaReport : scLoaReportList) {
+	     				if (scLoaReport.getDefinationType().getParameterId().equals(
+	     						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
+	     								ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
+	     					fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
+	    					filePath = getManagedBean().getFileDirectory() + attachmentFormat.format(fileName, null);
+	    					if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
+	    						formJadualHargaExcel(filePath);
+	    					} else {
+	    						String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+	    						content = getContent(docDefinitionKey);					
+	    						DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
+	    					}
+	    					
+	    					ScLoaReportAttachment attachment = new ScLoaReportAttachment();
+	    				    attachment.setScLoaReport(scLoaReport);			    
+	    				    attachment.setFileName(fileName);
+	    				    attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+	    				    attachment.setFileDesc(fileName);
+	    					
+	    				    scLoaReport.setScLoaReportAttachment(attachment);
+	     				}
+	     			}
+	     		}
+	     	}
 	     		       
-	     	reqDTO.setUserRole(getUserRole());
+	     	reqDTO.setUserRole(userRole);
 	     	reqDTO.setTaskName(getManagedBean().getTaskName());
 	     	reqDTO.setCtContract(getManagedBean().getCtContract());
 	     	reqDTO.setCtContractVer(getManagedBean().getContractVer());
@@ -1051,8 +1090,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		// Validation for contract signer
 		if ((!action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)
-				&& getManagedBean().getAckFA() != null && getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA))
-				||(getManagedBean().getTaskName()!=null && getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME))) {
+				&& getManagedBean().getAckFA() != null 
+				&& getManagedBean().getAckFA().equalsIgnoreCase(ContractConst.SUPPLIER_ACK_LOA))
+			|| (getManagedBean().getTaskName()!=null 
+				&& (getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.PREPARE_LOA_HT_NAME)
+						|| getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.ENDORSE_LOA_HT_NAME)))) {
 			if	(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner() == null 
 					|| getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getContractSigner().getUserId() == null) {
 				RequestContext.getCurrentInstance().addCallbackParam("epException",true);
@@ -1102,6 +1144,27 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					throw new EpException(MessageConst.ERROR_100022, 
 							new String[]{ResourceBundleUtils.getMessage("lbl.ct.email", 
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+				}
+			}			
+			// Validation for Upload LOA content
+			List <ScLoaReport> scLoaReportList = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports();
+			for (ScLoaReport scLoaReport : scLoaReportList) {
+				if (scLoaReport.getDefinationType().getParameterId().equals(
+						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
+								ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD).getParameterId()))) {						
+					if (scLoaReport.getTitle() == null || scLoaReport.getTitle() == "") {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.content.file.name", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}					
+					if (scLoaReport.getScLoaReportAttachment() != null
+							&& (scLoaReport.getScLoaReportAttachment().getFilePath() == null || scLoaReport.getScLoaReportAttachment().getFilePath() == "")) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+						throw new EpException(MessageConst.ERROR_100022, 
+								new String[]{ResourceBundleUtils.getMessage("lbl.ct.loa.content.upload.file", 
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale())});
+					}
 				}
 			}
 		}
@@ -1588,7 +1651,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    	reports.setPmDocument(document);
 			    	reports.setTitle(document.getDocName());
 			    	reports.setDefinationType(document.getDocDefinitionTypeCode());
-			    	reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			    	//reports.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 			    	reports.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 			    	reports.setScLoa( this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
 			    	this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports().add(reports);	
@@ -2477,12 +2540,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		try {
 			loaReport.setDefinationType(new PmParameter());
 		    loaReport.setDefinationType(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD));
-		    loaReport.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+		    //loaReport.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 		    loaReport.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_CONTRACT_AMENDMENT);
 		    loaReport.setScLoa(this.getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa());
 		 
 		    ScLoaReportAttachment attachment = new ScLoaReportAttachment();
-		    attachment.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+		    //attachment.setDocType(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
 		    attachment.setScLoaReport(loaReport);			    
 			
 		    loaReport.setScLoaReportAttachment(attachment);
@@ -3372,10 +3435,12 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		String filePath = null;
 		ScLoaReport agreementLetterReport = null;
 		for (ScLoaReport scLoaReport : getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports()) {
-			String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
-			if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
-				agreementLetterReport = scLoaReport;
-				break;
+			if (scLoaReport.getPmDocument() != null) {
+				String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER.equals(docDefinitionKey)) {
+					agreementLetterReport = scLoaReport;
+					break;
+				}
 			}
 		}
 		if (agreementLetterReport != null) {
@@ -3750,8 +3815,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		if (ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
 			context = new VelocityContext();	
 			vmFile = ContractConst.DOCPATH_CT_LOA_CONTRACT_SUMMARY;
-			context.put("fileNo", getManagedBean().getCtContract().getQuotationTender().getFileNo());
-			context.put("sourcingNo", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
+			context.put("fileNo", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoiLoa().getFileNo() + "-" + getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getFileExtNo());
 			context.put("sourcingTitle",  getManagedBean().getCtContract().getLoa().getScLoiLoa().getTitle());
 			context.put("successfulSupplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
 			
