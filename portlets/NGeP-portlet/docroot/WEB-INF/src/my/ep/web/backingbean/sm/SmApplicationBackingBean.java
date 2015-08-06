@@ -6509,6 +6509,17 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Execute javascript on click a button
+	 * 
+	 * @param String
+	 *            scriptToExecute
+	 */
+	public void onClickButton(String scriptToExecute) {
+		RequestContext.getCurrentInstance().execute(
+				"confirmDeclareDialog.show();");
+	}
+
+	/**
 	 * Cancel button action for site visit action.
 	 * 
 	 * @param dialog

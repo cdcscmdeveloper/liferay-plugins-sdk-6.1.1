@@ -2443,11 +2443,12 @@ public class SmCommonUtil {
 	 * @return SmGstSupplier
 	 */
 	public static SmGstSupplier getSmGstSupplierBySupplierIdAndBranchCode(
-			Long supplierId, Long branchCode, String applNo) {
+			Long supplierId, Long branchCode, String applNo, boolean isCurrent) {
 		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 		gstReqDTO.setSupplierId(supplierId);
 		gstReqDTO.setBranchCode(branchCode);
 		gstReqDTO.setApplNo(applNo);
+		gstReqDTO.setCurrent(isCurrent);
 		return SmServiceLookup.getSupplierGstSO()
 				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
 				.getSmGstSupplier();
@@ -2473,9 +2474,20 @@ public class SmCommonUtil {
 		}
 	}
 
+	/**
+	 * Copy HQ GST information to Branch
+	 * 
+	 * @param SmGstSupplier
+	 *            hqGst
+	 * @param SmGstSupplier
+	 *            branchGst
+	 * @param boolean isSameWithHq
+	 * @param Long
+	 *            branchCode
+	 */
 	public static void copyHqGstToBranch(SmGstSupplier hqGst,
 			SmGstSupplier branchGst, boolean isSameWithHq, Long branchCode) {
-		if(hqGst!=null && hqGst.getIsCurrent()){
+		if (hqGst != null && hqGst.getIsCurrent()) {
 			if (isSameWithHq) {
 				branchGst.setGstRegNo(hqGst.getGstRegNo());
 				branchGst.setGstEffDate(hqGst.getGstEffDate());
@@ -2487,8 +2499,22 @@ public class SmCommonUtil {
 			}
 			branchGst.setIsCurrent(true);
 			branchGst.setBranchCode(branchCode);
+			branchGst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 			copyHqSuppDocToBranch(hqGst, branchGst, isSameWithHq);
 		}
+	}
+
+	/**
+	 * Reset GST effective date to first of month
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 */
+	public static void resetGstEffectiveDate(SmGstSupplier gst) {
+		Calendar c = Calendar.getInstance();
+		c.setTime(gst.getGstEffDate());
+		c.set(Calendar.DATE, 1);
+		gst.setGstEffDate(c.getTime());
 	}
 
 	private static void copyHqSuppDocToBranch(SmGstSupplier hqGst,
