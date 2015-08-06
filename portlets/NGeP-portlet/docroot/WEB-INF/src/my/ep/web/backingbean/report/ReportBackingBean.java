@@ -734,7 +734,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)25;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3852,13 +3852,12 @@ public class ReportBackingBean extends
 		}
 		return ptjList;
 	}
-	public List<String>  retrieveFMIPTJList() {		
+	public List<String>  retrieveFMIPTJList() {
+		ptjList = new ArrayList<String>();
 		//if ((null !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value())))))) {
 		if (null !=this.getCommonMinistry()){
 			 getParameterCodeTypeString();	
-			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))||((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0))))){
-				
-				ptjList = new ArrayList<String>();
+			if(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0))))){				
 				Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
 				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
