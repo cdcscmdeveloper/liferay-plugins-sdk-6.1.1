@@ -176,11 +176,46 @@
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
 				<td><p:inputText id="gstEffDate" 
 						disabled="true" 
-						label="#{lbl['lbl.pm.org.gst.reg.no']}"
+						label="#{lbl['lbl.pm.org.gst.eff.date']}"
 						value=" "
 						size="25" styleClass="ppDisplayTextL"
 						/></td>
 				</ui:fragment>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.end.date']}" /> </td>
+				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
+				<td><p:calendar id="gstEndDateId"  beforeShowDay="firstDayEnabled"					
+					value="#{organisationBackingBean.managedBean.orgProfile.gstEndDate}" 
+					mindate="#{ProfileManagementConst.gstMinDate}"
+					navigator="true"
+					disabled="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}"					
+					label="#{lbl['lbl.pm.org.gst.end.date']}" readonlyInput="true"
+					yearRange="c-50:c+99" showOn="button"
+					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
+					<p:ajax event="dateSelect" process="@this" />
+				</p:calendar></td>
+				</ui:fragment>
+				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
+				<td><p:inputText id="gstEndDate" 
+						disabled="true" 
+						label="#{lbl['lbl.pm.org.gst.end.date']}"
+						value=" "
+						size="25" styleClass="ppDisplayTextL"
+						/></td>
+				</ui:fragment>
+				<td></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.declare.date']}" /> </td>			
+				<td><p:inputText id="gstDeclareDateId" 
+						disabled="true" 
+						label="#{lbl['lbl.pm.org.gst.declare.date']}"
+						value="#{organisationBackingBean.managedBean.orgProfile.gstDeclaredDate}"
+						size="25" styleClass="ppDisplayTextL">
+						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+						</p:inputText></td>				
 				<td></td>
 			</tr>
 			<tr>
