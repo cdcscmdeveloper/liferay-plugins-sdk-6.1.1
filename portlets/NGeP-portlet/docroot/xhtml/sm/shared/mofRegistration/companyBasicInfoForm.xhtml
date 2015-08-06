@@ -337,10 +337,5 @@
 
 	</p:panel>
 	
-	<p:panel header="#{lbl['lbl.sm.gst.info']}" toggleable="true" id="gstHqPanelId">
-		<ac:smGstApplication smGstSupplier="#{backingBean.managedBean.companyBasicGst}" 
-				isViewOnly="#{!backingBean.managedBean.supplierUser 
-				or (backingBean.managedBean.smAppl.applType ne 'N' and backingBean.managedBean.smAppl.applType eq 'R')}" 
-				backingBean="#{backingBean}"/>
-	</p:panel>
+	<ui:include src="gstCompanyBasic.xhtml" />
 </ui:composition>
