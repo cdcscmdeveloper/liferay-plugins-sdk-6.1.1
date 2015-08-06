@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
@@ -24,6 +25,7 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
@@ -31,9 +33,11 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -85,7 +89,17 @@ public class PmTrackingDiaryBackingBean extends
 				orgSearch);
 		this.getManagedBean().resetOrgResultBean();
 	}
-
+	/**
+	 * get zone list for dropdown
+	 * 
+	 */		
+	public List<PmZone> retrieveZones() {
+		IZoneSO iZoneSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);
+		ZoneResDTO resDTO = iZoneSO.retrieveActiveZoneList();
+		return resDTO.getZoneList();
+	}
+	
 	/**
 	 * reset search bean fields
 	 */
@@ -108,6 +122,9 @@ public class PmTrackingDiaryBackingBean extends
 			} else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase(ParameterConst.USER_PROFILE_PARAM_CODE)) {
 				resetUserProfilesSearchBean();
+			} else if(this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
+				this.getManagedBean().getZoneList().addAll(retrieveZones());
 			}
 		}
 
@@ -158,7 +175,21 @@ public class PmTrackingDiaryBackingBean extends
 		
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
-	
+	public String getTrackingForTheZone(PmZone zone){
+		log.info("**********getTrackingForTheZone************");
+		if(zone.getZoneId() != null){
+			
+		getManagedBean().setSelectedDocType(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE);
+		getManagedBean().setSelectedDocType2(null);
+		getManagedBean().setMultiRuleType(false);
+		getManagedBean().setSelectedDocId(zone.getZoneId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		/////
+		
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+		}
+		return "";
+	}
 	public String backToPrev() {
 
 		return NAV_TO_PM_SEARCH + "?faces-redirect=true";
