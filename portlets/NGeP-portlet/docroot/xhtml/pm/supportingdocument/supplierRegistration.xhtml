@@ -83,7 +83,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 					</th>
 					<td>
 						<p:selectOneMenu id="somSuppZone" styleClass="ppDropDownWidthM" label="#{lbl['lbl.pm.supplier.zone']}"
-							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}" required1="#{!empty param['disableValidation']}">
+							value="#{supportDocBackingBean.managedBean.selectedDocument.pmZone.zoneId}" 
+							disabled="#{!(supportDocBackingBean.managedBean.selectedDocument.brandNew)}" required1="#{!empty param['disableValidation']}">
 							<c:if test="#{supportDocBackingBean.managedBean.selectedDocument.brandNew}">
 								<f:selectItem  itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{0}"  />
 							</c:if> 		
