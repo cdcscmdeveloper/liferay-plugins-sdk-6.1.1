@@ -30,12 +30,13 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 	private boolean gstEmpty;
 	private String saveHqGstConfirmMsg;
 	private String saveBranchGstConfirmMsg;
+	private SmGstSupplier selectedGstOnChangeEffDate;
 	private SmGstSupplierDoc selectedHqSuppDoc;
 	private SmGstBranchVO selectedBranchDoc;
 	private List<SmSupplierBranch> suppBranchList;
 	private List<SmGstSupplier> initialBranchGstList;
 	private SmGstSupplier initialHqGst;
-	
+
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
 	}
@@ -138,6 +139,15 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 
 	public void setInitialHqGst(SmGstSupplier initialHqGst) {
 		this.initialHqGst = initialHqGst;
+	}
+
+	public SmGstSupplier getSelectedGstOnChangeEffDate() {
+		return selectedGstOnChangeEffDate;
+	}
+
+	public void setSelectedGstOnChangeEffDate(
+			SmGstSupplier selectedGstOnChangeEffDate) {
+		this.selectedGstOnChangeEffDate = selectedGstOnChangeEffDate;
 	}
 
 }
