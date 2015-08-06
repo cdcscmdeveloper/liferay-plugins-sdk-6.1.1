@@ -1226,7 +1226,6 @@ public class SmApplicationBackingBean extends
 		} else if (currentPageType
 				.equalsIgnoreCase(SupplierManagementConst.SM_APPL_PAGE_TYPE_BASIC)
 				&& getManagedBean().isSupplierUser()) {
-			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean().getCompanyBasicGst());
 			SmApplicationUtil.validateGSt(getManagedBean(), currentTab,
 					ruleHelper);
 		}
@@ -1340,6 +1339,8 @@ public class SmApplicationBackingBean extends
 			}
 			if (valid) {
 				// Save or update to DB
+				SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+						.getCompanyBasicGst());
 				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 				reqDto.setPmDigiSign(this.getManagedBean().getPmDigiSign());
 				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
