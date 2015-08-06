@@ -371,7 +371,17 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 				throw new EpException(MessageConst.ERROR_100022, new String[]{"Remark"});
 			}
 		}
-		if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
+		if (!hasGovtSellerRole() && (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
+				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
+						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
+								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()))) {
+			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+			return null;
+		}else if ((outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE) || 
 				outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_STOP_FULFILMENT)) 
 				||  hasGovtSellerRole()) {
 			// Temp setTextBeforeSign : DocNo+SAP
@@ -384,16 +394,6 @@ public class StopInstrBackingBean extends BaseBackingBean<StopInstrManagedBean>{
 			getManagedBean().setButtonAction(outcome);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
-			return null;
-		}else if (getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) 
-				|| getUserRole().equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value())
-						|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())
-								|| getUserRole().equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value())) {
-			getManagedBean().getSpkiBackingBean().getChallengeQuestions();
-			// set action
-			getManagedBean().setButtonAction(outcome);
-			getManagedBean().setAutoUpdate(Boolean.FALSE);
-			RequestContext.getCurrentInstance().execute("spki_dlg.show()");
 			return null;
 		}
 		else{
