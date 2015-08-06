@@ -144,6 +144,29 @@
 						</p:row>
 					</p:panelGrid>
 
+	<p:dataTable id="dtVirtualCertResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.virtualCertificateParamCode}"
+						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+						value="#{pmTrackingDiaryBackingBean.managedBean.zoneList}"
+						var="zone" width="100%" rows="10">
+
+						<ac:paginator for="dtVirtualCertResult" />
+						<p:column width="80%">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.td.vcer.zone']}" />
+							</f:facet>
+						#{zone.zoneName}
+				</p:column>
+						<p:column>
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.td.action']}" />
+							</f:facet>
+				       	<p:commandLink
+									action="#{pmTrackingDiaryBackingBean.getTrackingForTheZone(zone)}">
+									<p:graphicImage value="/css/images/design/ico-view.png"
+										title="#{lbl['lbl.ct.view']}" />
+						</p:commandLink>
+				</p:column>
+</p:dataTable>
 				<p:dataTable id="dtOrgProfileResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.orgProfileParamCode}"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{pmTrackingDiaryBackingBean.managedBean.userOrgDataModel}"
