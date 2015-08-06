@@ -3037,10 +3037,10 @@ public class LOIDetailBackingBean extends
 			if(null != scLoi.getScNegoLocations()){
 				List<Date> uniqueNegoDates = new ArrayList<Date>();
 				for (ScLoiNegoLocation scLoiNegoLocation : scLoi.getScNegoLocations()) {
-					uniqueNegoDates.add(scLoiNegoLocation.getNegoDate());
 					if (uniqueNegoDates.contains(scLoiNegoLocation.getNegoDate())) {
 						throw new EpException(MessageConst.ERROR_760339);
 					}
+					uniqueNegoDates.add(scLoiNegoLocation.getNegoDate());
 				}
 			}
 
