@@ -73,7 +73,6 @@ import my.ep.persistence.entity.rpt.PMReport;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -735,7 +734,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3763,8 +3762,8 @@ public class ReportBackingBean extends
 	
 	public String  getParameterCodeTypeString() {
 		parameterCodeType = new String();
-		ptjList = new ArrayList<String>();
-		ministryList = new ArrayList<SelectItem>();
+		/*ptjList = new ArrayList<String>();
+		ministryList = new ArrayList<SelectItem>();*/
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3854,16 +3853,21 @@ public class ReportBackingBean extends
 		return ptjList;
 	}
 	public List<String>  retrieveFMIPTJList() {		
-		if ((null !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value())))))) {
-			ptjList = new ArrayList<String>();
-			Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
-			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-							IPMReportSO.class);
-			List<String> ptjLst = reportSO.retrieveFMIPTJList(lngorgprflid);
-			for (int i = 0; i < ptjLst.size(); i++) {				
-				ptjList.add(ptjLst.get(i));
-			}			
+		//if ((null !=this.getCommonMinistry())&&(((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI)))||((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value())))))) {
+		if (null !=this.getCommonMinistry()){
+			 getParameterCodeTypeString();	
+			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))||((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0))))){
+				
+				ptjList = new ArrayList<String>();
+				Long lngorgprflid = Long.parseLong(this.getCommonMinistry());
+				IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+								IPMReportSO.class);
+				List<String> ptjLst = reportSO.retrieveFMIPTJList(lngorgprflid);
+				for (int i = 0; i < ptjLst.size(); i++) {				
+					ptjList.add(ptjLst.get(i));
+				}
+			}
 		}				
 		return ptjList;
 	}
