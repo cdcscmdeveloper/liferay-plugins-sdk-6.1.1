@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.pm.financialorg;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -9,9 +8,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
-import my.ep.persistence.entity.pm.common.PmFinancialSvc;
 import my.ep.web.bean.pm.FinancialOrgSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 /**
@@ -36,17 +33,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	// Financial Org address
 	private PmAddress pmAddress;
 	private PmContact contactPerson;
-
-//	// Financial Branch
-//	private PmFinancialBranch selectedPmFinancialBranch;
-	
-//	// Financial Branch address
-//	private PmAddress branchAddress;
-//	private PmContact branchContactPerson;
-
-
-//	// Financial Branch Acc
-//	private List<PmFinancialAcc> selectedPmFinancialBranchAcc;
 	
 	// General
 	private boolean showParentMsg;
@@ -190,23 +176,7 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 	public void setShowParentMsg(boolean showParentMsg) {
 		this.showParentMsg = showParentMsg;
 	}
-
-//	/**
-//	 * @return the selectedPmFinancialBranch
-//	 */
-//	public PmFinancialBranch getSelectedPmFinancialBranch() {
-//		return selectedPmFinancialBranch;
-//	}
-//
-//	/**
-//	 * @param selectedPmFinancialBranch
-//	 *            the selectedPmFinancialBranch to set
-//	 */
-//	public void setSelectedPmFinancialBranch(
-//			PmFinancialBranch selectedPmFinancialBranch) {
-//		this.selectedPmFinancialBranch = selectedPmFinancialBranch;
-//	}
-
+	
 	/**
 	 * @return the serviceTypes
 	 */
@@ -258,20 +228,6 @@ public class FinancialOrgManagedBean extends BaseManagedBean {
 		this.isLazy = isLazy;
 	}
 
-//	/**
-//	 * @return the selectedPmFinancialBranchAcc
-//	 */
-//	public List<PmFinancialAcc> getSelectedPmFinancialBranchAcc() {
-//		return selectedPmFinancialBranchAcc;
-//	}
-//
-//	/**
-//	 * @param selectedPmFinancialBranchAcc the selectedPmFinancialBranchAcc to set
-//	 */
-//	public void setSelectedPmFinancialBranchAcc(
-//			List<PmFinancialAcc> selectedPmFinancialBranchAcc) {
-//		this.selectedPmFinancialBranchAcc = selectedPmFinancialBranchAcc;
-//	}
 
 	
 }
