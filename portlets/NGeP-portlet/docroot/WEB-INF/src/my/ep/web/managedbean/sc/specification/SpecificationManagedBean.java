@@ -770,6 +770,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
     private List<ScQtSchedule> toBeRemoveSchedules;
     private List<ScQtProgressivePayment> toBeRemoveProgPayments;
     private boolean zoneSpecUpdate;
+    private boolean zonesWarnMessageUpdate;
 	
 	
 
@@ -5153,6 +5154,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setZoneSpecUpdate(boolean zoneSpecUpdate) {
 		this.zoneSpecUpdate = zoneSpecUpdate;
+	}
+
+	/**
+	 * @return the zonesWarnMessageUpdate
+	 */
+	public boolean isZonesWarnMessageUpdate() {
+		return zonesWarnMessageUpdate;
+	}
+
+	/**
+	 * @param zonesWarnMessageUpdate the zonesWarnMessageUpdate to set
+	 */
+	public void setZonesWarnMessageUpdate(boolean zonesWarnMessageUpdate) {
+		this.zonesWarnMessageUpdate = zonesWarnMessageUpdate;
 	}
 
 }
