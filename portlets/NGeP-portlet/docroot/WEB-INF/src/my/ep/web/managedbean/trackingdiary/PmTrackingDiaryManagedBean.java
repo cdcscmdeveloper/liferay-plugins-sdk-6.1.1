@@ -27,6 +27,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -57,6 +58,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String selectedDocType;
 	private String selectedDocType2;
 	private Long selectedDocId;
+	private List<PmZone> zoneList;
 
 	public String getSelectedDocType() {
 		return selectedDocType;
@@ -64,6 +66,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setSelectedDocType(String selectedDocType) {
 		this.selectedDocType = selectedDocType;
+	}
+
+	public List<PmZone> getZoneList() {
+		if(zoneList == null){
+			this.zoneList = new ArrayList<PmZone>();
+		}
+		return zoneList;
+	}
+
+	public void setZoneList(List<PmZone> zoneList) {
+		this.zoneList = zoneList;
 	}
 
 	public String getSelectedDocType2() {
