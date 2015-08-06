@@ -62,9 +62,7 @@ import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.authorization.PmUserNotification;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.authorization.PmUserPreference;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmParameter;
@@ -1581,13 +1579,13 @@ public class CommitteBackingBean extends
 			user.setPmCountry(pmCountry);
 
 			// User Notification
-			List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
-			PmUserNotification pmUserNotification = new PmUserNotification();
-			pmUserNotification.setPmUser(user);
-			pmUserNotification.setNotifyMode("E");
-			pmUserNotification.setPreferred(true);
-			pmUserNotifications.add(pmUserNotification);
-			user.setPmUserNotifications(pmUserNotifications);
+			//List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
+			//PmUserNotification pmUserNotification = new PmUserNotification();
+			//pmUserNotification.setPmUser(user);
+			//pmUserNotification.setNotifyMode("E");
+			//pmUserNotification.setPreferred(true);
+			//pmUserNotifications.add(pmUserNotification);
+			//user.setPmUserNotifications(pmUserNotifications);
 
 			// User Orgs
 			List<PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
@@ -1617,14 +1615,14 @@ public class CommitteBackingBean extends
 			user.setOrgTypeCode(pmOrgProfile.getOrgTypeCode());
 
 			// User Preference
-			PmUserPreference pmUserPreference = new PmUserPreference();
-			pmUserPreference.setPmUser(user);
-			pmUserPreference.setFormatDate("DD-MMM-YYYY");
-			pmUserPreference.setFormatTime("HH:mm:ss");
-			pmUserPreference.setFormatNumber("#,##0");
-			pmUserPreference.setPreferredLanguage("en");
-			pmUserPreference.setNotifyRemovalDay(30);
-			user.setPmUserPreference(pmUserPreference);
+			//PmUserPreference pmUserPreference = new PmUserPreference();
+			//pmUserPreference.setPmUser(user);
+			//pmUserPreference.setFormatDate("DD-MMM-YYYY");
+			//pmUserPreference.setFormatTime("HH:mm:ss");
+			//pmUserPreference.setFormatNumber("#,##0");
+			//pmUserPreference.setPreferredLanguage("en");
+			//pmUserPreference.setNotifyRemovalDay(30);
+			//user.setPmUserPreference(pmUserPreference);
 
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 
@@ -1823,13 +1821,13 @@ public class CommitteBackingBean extends
 			user.setPmCountry(pmCountry);
 
 			// User Notification
-			List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
-			PmUserNotification pmUserNotification = new PmUserNotification();
-			pmUserNotification.setPmUser(user);
-			pmUserNotification.setNotifyMode("E");
-			pmUserNotification.setPreferred(true);
-			pmUserNotifications.add(pmUserNotification);
-			user.setPmUserNotifications(pmUserNotifications);
+			//List<PmUserNotification> pmUserNotifications = new ArrayList<PmUserNotification>();
+			//PmUserNotification pmUserNotification = new PmUserNotification();
+			//pmUserNotification.setPmUser(user);
+			//pmUserNotification.setNotifyMode("E");
+			//pmUserNotification.setPreferred(true);
+			//pmUserNotifications.add(pmUserNotification);
+			//user.setPmUserNotifications(pmUserNotifications);
 
 			// User Orgs
 			List<PmUserOrg> pmUserOrgs = new ArrayList<PmUserOrg>();
@@ -1859,14 +1857,14 @@ public class CommitteBackingBean extends
 			user.setOrgTypeCode(pmOrgProfile.getOrgTypeCode());
 
 			// User Preference
-			PmUserPreference pmUserPreference = new PmUserPreference();
-			pmUserPreference.setPmUser(user);
-			pmUserPreference.setFormatDate("DD-MMM-YYYY");
-			pmUserPreference.setFormatTime("HH:mm:ss");
-			pmUserPreference.setFormatNumber("#,##0");
-			pmUserPreference.setPreferredLanguage("en");
-			pmUserPreference.setNotifyRemovalDay(30);
-			user.setPmUserPreference(pmUserPreference);
+			//PmUserPreference pmUserPreference = new PmUserPreference();
+			//pmUserPreference.setPmUser(user);
+			//pmUserPreference.setFormatDate("DD-MMM-YYYY");
+			//pmUserPreference.setFormatTime("HH:mm:ss");
+			//pmUserPreference.setFormatNumber("#,##0");
+			//pmUserPreference.setPreferredLanguage("en");
+			//pmUserPreference.setNotifyRemovalDay(30);
+			//user.setPmUserPreference(pmUserPreference);
 
 			userReqDTO.setOrgType(OrganizationType.OTHERS.value());
 
