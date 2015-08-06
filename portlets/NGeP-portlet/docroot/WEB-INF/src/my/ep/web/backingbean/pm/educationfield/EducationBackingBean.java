@@ -286,7 +286,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		debugLogger("goToMaintaincePage");
 
 		this.getManagedBean().setPmEduField(pmEduField);
-		this.getManagedBean().setEduRestrList(pmEduField.getPmEduFieldRestrs());
+		//this.getManagedBean().setEduRestrList(pmEduField.getPmEduFieldRestrs());
 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 	}
@@ -324,25 +324,25 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 		PmEduField eduField = this.getManagedBean().getPmEduField();
 		validationMessage(eduField);
-		if (getManagedBean().getEduRestrList() != null&& getManagedBean().getEduRestrList().size() > 0) {
+		/*if (getManagedBean().getEduRestrList() != null&& getManagedBean().getEduRestrList().size() > 0) {
 			for(PmEduFieldRestr eduFieldRestr :getManagedBean().getEduRestrList()){
 				setUserDetails(eduFieldRestr);
 			}
 			eduField.setPmEduFieldRestrs(getManagedBean().getEduRestrList());
 		} else {
 			eduField.setPmEduFieldRestrs(null);
-		}
+		}*/
 		
 		setUserDetails(eduField);
 
-		if (getManagedBean().getEduRestrList() != null
+		/*if (getManagedBean().getEduRestrList() != null
 				&& !getManagedBean().getEduRestrList().isEmpty()) {
 
 			for (PmEduFieldRestr restr : eduField.getPmEduFieldRestrs()) {
 				restr.setPmEduField(eduField);
 
 			}
-		}
+		}*/
 
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		reqDTO.setEduField(eduField);
