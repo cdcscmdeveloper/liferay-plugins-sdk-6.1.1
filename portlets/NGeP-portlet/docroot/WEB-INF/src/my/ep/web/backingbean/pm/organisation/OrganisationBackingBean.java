@@ -723,6 +723,8 @@ public class OrganisationBackingBean extends
 				// reset before save
 				getManagedBean().getOrgProfile().setGstRegNo(null);
 				getManagedBean().getOrgProfile().setGstEffDate(null);
+				getManagedBean().getOrgProfile().setGstEndDate(null);
+				getManagedBean().getOrgProfile().setGstDeclaredDate(null);
 			}
 			
 			// check group org
@@ -2234,6 +2236,11 @@ public class OrganisationBackingBean extends
 					throw new EpException(MessageConst.ERROR_775118);
 				}
 				
+				//validate end date
+				if(orgProfile.getGstEndDate() != null && orgProfile.getGstEndDate().before(orgProfile.getGstEffDate())){
+					throw new EpException(MessageConst.ERROR_775119);
+				}
+				
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				if(!orgProfile.isBrandNew()){
 					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
@@ -2247,7 +2254,25 @@ public class OrganisationBackingBean extends
 				if(resDTO.isSuccessful() && resDTO.getOrgProfileList() !=null 
 						&&!resDTO.getOrgProfileList().isEmpty()){
 							throw new EpException(MessageConst.ERROR_775117);
+			    }
+				
+				//check if GST Details has been changed - set ep declare date
+				if(!orgProfile.isBrandNew()){
+					reqDTO = new OrgProfileReqDTO();
+					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
+					
+					resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
+					if(resDTO.isSuccessful() && resDTO.getPmOrgProfile() !=null ){
+						PmOrgProfile oriOrgProfile = resDTO.getPmOrgProfile();
+						if(!oriOrgProfile.getGstRegNo().equals(orgProfile.getGstRegNo()) 
+								|| !oriOrgProfile.getGstEffDate().equals(orgProfile.getGstEffDate())){
+							orgProfile.setGstDeclaredDate(new Date());
 						}
+				
+				    }
+				}else{
+					orgProfile.setGstDeclaredDate(new Date());
+				}				
 			}
 			
 		}finally{
