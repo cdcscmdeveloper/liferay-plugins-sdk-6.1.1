@@ -443,9 +443,9 @@ public class SmUpdateGstInfoBackingBean extends
 				&& gst.getGstRegNo().length() != SmRuleHelper.getInstance()
 						.getGstRegNumLength()) {
 			throw new EpException(MessageConst.ERROR_721044);
-		} else if (gst.getGstEffDate() != null
+		} else if (gst.getGstEndDate() != null
 				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
-
+			throw new EpException(MessageConst.ERROR_721044);
 		}
 		validateBranch(sb);
 	}
@@ -458,6 +458,10 @@ public class SmUpdateGstInfoBackingBean extends
 							&& brVO.getGst().getGstRegNo().length() != SmRuleHelper
 									.getInstance().getGstRegNumLength()) {
 						throw new EpException(MessageConst.ERROR_721027);
+					} else if (brVO.getGst().getGstEndDate() != null
+							&& brVO.getGst().getGstEffDate()
+									.compareTo(brVO.getGst().getGstEndDate()) > 0) {
+						throw new EpException(MessageConst.ERROR_721044);
 					}
 				}
 			}
