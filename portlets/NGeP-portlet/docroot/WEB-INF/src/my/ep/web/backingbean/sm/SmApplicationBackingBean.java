@@ -104,7 +104,6 @@ import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
-import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
@@ -6515,8 +6514,17 @@ public class SmApplicationBackingBean extends
 	 *            scriptToExecute
 	 */
 	public void onClickButton(String scriptToExecute) {
-		RequestContext.getCurrentInstance().execute(
-				"confirmDeclareDialog.show();");
+		if (scriptToExecute.equalsIgnoreCase("confirmDeclareDialog.show();")
+				&& (!getManagedBean().getSmAppl().getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) && !getManagedBean()
+						.getSmAppl()
+						.getApplType()
+						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
+			submitSmApplToBpm(getManagedBean().getSmAppl().getApplType());
+
+		} else {
+			RequestContext.getCurrentInstance().execute(scriptToExecute);
+		}
 	}
 
 	/**
