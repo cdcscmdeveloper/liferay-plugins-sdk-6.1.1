@@ -1131,7 +1131,8 @@ public class SpecificationBackingBean extends
 			specReqDTO.setScQt(prepareSpecReq().getScQt());
 			// specSo.validateBoGeneralInfo(specReqDTO);
 			if (this.getManagedBean().isZoneSpecUpdate()) {
-				ZonesUpdateWarningMessage();
+				ZonesUpdateWarningMessage(this.getManagedBean()
+						.isZonesWarnMessageUpdate());
 				validateBusinessOwner(false);
 			}
 
@@ -8749,8 +8750,6 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-
-
 	/**
 	 * Calculate progressive start month.change start month in progessive
 	 * payment.
@@ -16071,15 +16070,17 @@ public class SpecificationBackingBean extends
 			}
 			if (null != financialSpecCheckList
 					&& !financialSpecCheckList.isEmpty()) {
-				boolean financialSpecZonesEstimatedpriceUpdate = false;
-				this.getManagedBean().setZoneSpecUpdate(true);
+				boolean financialSpecZonesEstimatedpriceUpdate = Boolean.FALSE;
+				this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 				for (ScQtCheckList financialchecklist : financialSpecCheckList) {
 					if (null != financialchecklist.getPmStatus()
 							&& QTStatusConst.TS_COMPLETED
 									.equals(financialchecklist.getPmStatus()
 											.getStatusId())) {
-						financialSpecZonesEstimatedpriceUpdate = true;
-						this.getManagedBean().setZoneSpecUpdate(true);
+						financialSpecZonesEstimatedpriceUpdate = Boolean.TRUE;
+						this.getManagedBean().setZonesWarnMessageUpdate(
+								Boolean.TRUE);
+						this.getManagedBean().setZoneSpecUpdate(Boolean.TRUE);
 						PmStatus status = new PmStatus();
 						status.setStatusId(QTStatusConst.TS_PENDING_SUBMISSION);
 						financialchecklist.setPmStatus(status);
@@ -16088,7 +16089,8 @@ public class SpecificationBackingBean extends
 
 				}
 				if (financialSpecZonesEstimatedpriceUpdate == true) {
-					ZonesUpdateWarningMessage();
+					ZonesUpdateWarningMessage(this.getManagedBean()
+							.isZonesWarnMessageUpdate());
 
 				}
 			}
@@ -16098,14 +16100,16 @@ public class SpecificationBackingBean extends
 
 	}
 
-	private boolean ZonesUpdateWarningMessage() {
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_WARN, null, MessageUtils
-						.getMessage(MessageConst.WARN_760328,
-								MessageUtils.BUNDLE_COMMON_MESSAGES,
-								new FacesScopes().getUserLocale())));
-		return true;
+	private void ZonesUpdateWarningMessage(boolean warningMessage) {
+		if (warningMessage == true) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, null,
+							MessageUtils.getMessage(MessageConst.WARN_760328,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		}
+
 	}
 
 }
