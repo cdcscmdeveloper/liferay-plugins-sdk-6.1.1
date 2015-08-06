@@ -947,6 +947,10 @@ public class SmApplicationUtil {
 				setNavigationBackToCurrentPage(currentTab, managedBean);
 				// GST Registration no and GST Effective Date is required
 				throw new EpException(MessageConst.ERROR_721043);
+			} else if (gst.getGstEndDate() != null
+					&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
+				setNavigationBackToCurrentPage(currentTab, managedBean);
+				throw new EpException(MessageConst.ERROR_721044);
 			}
 		}
 	}
@@ -5494,7 +5498,7 @@ public class SmApplicationUtil {
 	public static SmGstSupplier initHqGstInformation(Long supplierId,
 			SmGstSupplier gst) {
 		gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-				supplierId, null, null,false);
+				supplierId, null, null, false);
 		if (gst != null && gst.getIsCurrent()) {
 			initGstSuppDocs(gst);
 		} else {
