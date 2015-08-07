@@ -734,7 +734,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)25;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2976,7 +2976,7 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_CCA)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
+			/*if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_MIN_CONTRACT_ADMIN)||highRoleCodeList.contains(ReportConst.ROLE_CODE_FL_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_CCA)||highRoleCodeList.contains(ReportConst.ROLE_CODE_BPK_PCA))){
 				//List<String> ptLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
 				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){
 					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
@@ -3003,7 +3003,7 @@ public class ReportBackingBean extends
 						rolecodeApproverList.add(selectItem);
 					}
 				}
-			}else if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
+			}else*/ if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_REQUISITIONER))){
 				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER);			
 				for (Object[] object : rlcdLst) {
 					SelectItem selectItem = new SelectItem();
@@ -3011,6 +3011,37 @@ public class ReportBackingBean extends
 					selectItem.setValue(object[1]);
 					rolecodeRquisitionerList.add(selectItem);
 				}				
+			}else{
+				/*Long lngPtjId = null;
+				if(this.getCommonPtj()!=null){
+					lngPtjId = Long.parseLong(this.getCommonPtj());
+				}*/				
+				//List<String> ptLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId);
+				if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_REQ_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_REQ_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_REQ_RPT_PO_VAL)||this.getReportValue().equals(ReportConst.EMR_PROCUR_RPT_PO_VAL))){
+					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_REQUISITIONER,this.getCommonPtj());			
+					for (Object[] object : rlcdLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						rolecodeRquisitionerList.add(selectItem);
+					}
+				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.LATE_DEL_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.FL_REC_NOTE_RPT_PO_VAL))){
+					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_RECEIVING_OFFICER,this.getCommonPtj());			
+					for (Object[] object : rlcdLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						rolecodeRecievingOfficerList.add(selectItem);
+					}
+				}else if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.CON_ORD_RPT_MIN_VAL)||this.getReportValue().equals(ReportConst.CON_ORD_RPT_CEN_PEN_VAL)||this.getReportValue().equals(ReportConst.PUR_ORD_RPT_PO_VAL))){
+					List<Object[]> rlcdLst = reportSO.retrieveUserListByAdminOrBKPRoleCode(lngUserId,ReportConst.ROLE_CODE_FL_APPROVER,this.getCommonPtj());			
+					for (Object[] object : rlcdLst) {
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1]);
+						rolecodeApproverList.add(selectItem);
+					}
+				}
 			}
 			if((highRoleCodeList!=null)&&(highRoleCodeList.contains(ReportConst.ROLE_CODE_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_CT_APPROVER)||highRoleCodeList.contains(ReportConst.ROLE_CODE_RN_APPROVER))){
 				List<Object[]> rlcdLst = reportSO.retrieveUserListByREQUISITIONER(lngUserId,highRoleCodeList.get(0));			
@@ -3782,15 +3813,16 @@ public class ReportBackingBean extends
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			 getParameterCodeTypeString();
 			if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FPJ))){
-				retrieveFPJMinistryList();
+				//retrieveFPJMinistryList();
 				//getLtstMinistryListByUserid();
+				retrieveOnlyFPJMinistryList();
 				retrieveFPJPTJList();
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 				}
 			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.PARAM_CODE_TYPE_FMI))){
 				retrieveFPJMinistryList();
-				retrieveFPJPTJList();
+				//retrieveFPJPTJList();
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 				}
@@ -3870,6 +3902,22 @@ public class ReportBackingBean extends
 		}				
 		return ptjList;
 	}
+	public List<SelectItem>  retrieveOnlyFPJMinistryList() {
+    	ministryList = new ArrayList<SelectItem>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+							IPMReportSO.class);
+			List<Object[]> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
+			for (Object[] object : minstryLst) {				
+				SelectItem selectItem = new SelectItem();				
+				selectItem.setLabel(object[0].toString());
+				selectItem.setValue(object[1].toString());
+				ministryList.add(selectItem);
+			}				
+		}
+		return ministryList;	
+	}
 	public List<SelectItem>  retrieveFPJMinistryList() {
     	ministryList = new ArrayList<SelectItem>();
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
@@ -3878,7 +3926,13 @@ public class ReportBackingBean extends
 							IPMReportSO.class);
 			List<Object[]> minstryLst = reportSO.retrieveFPJMinistryList(lngUserId);
 			for (Object[] object : minstryLst) {
+				SelectItem selectItem1 = new SelectItem();
+				selectItem1.setLabel(ResourceBundleUtils.getMessage("lbl.txt.select", 
+			 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+				selectItem1.setValue(null);
+				ministryList.add(selectItem1);
 				SelectItem selectItem = new SelectItem();
+				
 				selectItem.setLabel(object[0].toString());
 				selectItem.setValue(object[1].toString());
 				ministryList.add(selectItem);
@@ -3886,7 +3940,7 @@ public class ReportBackingBean extends
 		}
 		return ministryList;	
 	}
-public List<SelectItem>  retrieveFMIMinistryList() {
+/*public List<SelectItem>  retrieveFMIMinistryList() {
 if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3900,7 +3954,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 		}
 		return ministryList;	
-	}    
+	}*/    
 	public void retrieveCMUnspc() {
 		IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
