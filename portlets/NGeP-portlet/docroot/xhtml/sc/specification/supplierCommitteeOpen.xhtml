@@ -58,9 +58,10 @@
 		rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal !='false'}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
-		
+
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
@@ -116,9 +117,10 @@
 		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal =='false') or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false'  and specificationBackingBean.managedBean.scQt.zonal !='false'))}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
-		
+
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 185px"><p:outputLabel
@@ -180,20 +182,21 @@
 		rendered="#{!isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState !='false'}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
-		
+
 		<table>
 			<tr>
 				<td style="width: 185px;"><p:outputLabel
 						value="#{lbl['lbl.sc.all.states']}" /></td>
-				<td><p:inputText 
+				<td><p:inputText
 						value="#{lbl[specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
 						disabled="true" style="margin-right:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.paidup']}" /></td>
-				<td><p:inputText maxlength="18" disabled="true" 
+				<td><p:inputText maxlength="18" disabled="true"
 						value="#{specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.minPaidUpCapital}"
 						style="margin-right:5px;text-align:right;">
 						<f:convertNumber
@@ -207,9 +210,11 @@
 		<tr>
 			<td style="width: 193px"><p:outputLabel
 					value="#{lbl['lbl.sc.totalsup']}" /></td>
-			<td><p:inputText id="specCommitteeTotalSuppliers" style="margin-right:5px;" disabled="true"
-					value="#{specificationBackingBean.managedBean.totalSuppliers}" size="30"  />
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+			<td><p:inputText id="specCommitteeTotalSuppliers"
+					style="margin-right:5px;" disabled="true"
+					value="#{specificationBackingBean.managedBean.totalSuppliers}"
+					size="30" /> <p:commandButton value="#{lbl['lbl.btn.search']}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					update="specCommitteeTotalSuppliers"
 					action="#{specificationBackingBean.searchForSupplierCount}"
 					partialSubmit="true" process="@this" /></td>

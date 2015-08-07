@@ -8,7 +8,9 @@
 
 
 	<p:panel header="#{lbl['lbl.sc.category.code.list']}" toggleable="true">
-		<h:outputText styleClass="instruction" value="#{lbl['lbl.sc.category.code.list.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.category.code.list.instruction']}"
+			escape="false" />
 
 		<p:dataTable id="openPnlId" var="cateGory" widgetVar="openCodes"
 			value="#{specificationBackingBean.managedBean.suppCriteriaopenList}"
@@ -73,17 +75,18 @@
 	</p:panel>
 
 
-	<p:panel rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false')  or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal) or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false'))}">
+	<p:panel
+		rendered="#{((isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false')  or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal) or (!isQuotationThresHold and specificationBackingBean.managedBean.scQt.zonal =='false'))}">
 		<f:facet name="header">
 			<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 		</f:facet>
-		
+
 		<table style="width: 100%">
 
 
-			<h:panelGroup id="allstate"
-				rendered="#{!isQuotationThresHold}">
+			<h:panelGroup id="allstate" rendered="#{!isQuotationThresHold}">
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.all.states']}"
 							style="width : 150px" /></td>
@@ -241,10 +244,12 @@
 			</h:panelGroup>
 
 
-			<p:panel rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
+			<p:panel
+				rendered="#{isQuotationThresHold and specificationBackingBean.managedBean.scQt.scQtSupplierCriteria.allState=='false' and specificationBackingBean.managedBean.scQt.zonal}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.location.list.paidup.capital']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
+					<ac:iconTooltip
+						value="#{lbl['lbl.sc.location.list.paidup.capital.tooltip']}" />
 				</f:facet>
 				<table style="width: 100%">
 					<tr>
@@ -430,9 +435,11 @@
 		<tr>
 			<td style="width: 193px"><p:outputLabel
 					value="#{lbl['lbl.sc.totalsup']}" /></td>
-			<td><p:inputText id="businessOwnerTotalSuppliers" style="margin-right:5px;" disabled="true"
-					value="#{specificationBackingBean.managedBean.totalSuppliers}" size="30" />
-				<p:commandButton value="#{lbl['lbl.btn.search']}"
+			<td><p:inputText id="businessOwnerTotalSuppliers"
+					style="margin-right:5px;" disabled="true"
+					value="#{specificationBackingBean.managedBean.totalSuppliers}"
+					size="30" /> <p:commandButton value="#{lbl['lbl.btn.search']}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					update="businessOwnerTotalSuppliers"
 					action="#{specificationBackingBean.searchForSupplierCount}"
 					disabled="#{specificationBackingBean.managedBean.readOnly}"
