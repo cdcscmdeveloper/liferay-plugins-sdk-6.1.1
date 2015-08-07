@@ -50,13 +50,12 @@
 					<td style="border-style: none !important;"><p:calendar id="hqGstRegDateCalId"
 							navigator="true" 
 							required="#{not empty smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstRegNo}" 
-							label="#{lbl['lbl.sm.gst.effdate']}"
+							label="#{lbl['lbl.sm.gst.effdate']}" beforeShowDay="beforeShowDate"
 							value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstEffDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
 							maxdate="#{CommonConstants.CURRENT_DATE}">
-							<p:ajax event="dateSelect"  update="hqGstNotEmptyPanelId" 
-								listener="#{smUpdateGstInfoBackingBean.onCheckHqEffectiveDate()}" process="@this"/>
+							<p:ajax event="dateSelect"  update="hqGstNotEmptyPanelId" process="@this"/>
 						</p:calendar>
 						<p:message id="hqGstRegDateCalIdMsg"
 							for="hqGstRegDateCalId" showSummary="true" showDetail="false"
