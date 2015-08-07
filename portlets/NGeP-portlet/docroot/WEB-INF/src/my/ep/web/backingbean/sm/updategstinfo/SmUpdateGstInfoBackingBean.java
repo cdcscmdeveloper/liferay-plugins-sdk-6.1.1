@@ -27,7 +27,6 @@ import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmGstBranchVO;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 
@@ -151,12 +150,9 @@ public class SmUpdateGstInfoBackingBean extends
 							SmCommonUtil.copyHqGstToBranch(getManagedBean()
 									.getHqGstSupplier(), brVO.getGst(), true,
 									brVO.getBranch().getBranchCode());
-						} else {
-							if (brVO.getGst().getSmGstSupplierDocs() != null) {
-								SmCommonUtil.removeNotUploadedGstSuppDoc(brVO
-										.getGst());
-							}
 						}
+						SmCommonUtil.removeNotUploadedGstSuppDoc(brVO
+								.getGst());
 						supplierGstList.add(brVO.getGst());
 					}
 				}
@@ -317,20 +313,20 @@ public class SmUpdateGstInfoBackingBean extends
 											.getSupplierId(), br
 											.getBranchCode(), null, true));
 					if (brVO.getGst() != null) {
-						brVO.setSameWithHq(isSameWithHq(brVO.getGst()));
+						brVO.setSameWithHq(SmApplicationUtil
+								.isBranchGstSameAsHq(getManagedBean()
+										.getHqGstSupplier(), brVO.getGst()));
 						if (brVO.getGst().getSmGstSupplierDocs() == null
 								|| brVO.getGst().getSmGstSupplierDocs()
 										.isEmpty()) {
 							SmApplicationUtil.initGstSuppDocs(brVO.getGst());
 						}
 					} else {
-						if (!getManagedBean().isGstEmpty()) {
-							brVO.setGst(new SmGstSupplier());
-							brVO.setSameWithHq(true);
-							SmCommonUtil.copyHqGstToBranch(getManagedBean()
-									.getHqGstSupplier(), brVO.getGst(), true,
-									brVO.getBranch().getBranchCode());
-						}
+						brVO.setGst(new SmGstSupplier());
+						brVO.setSameWithHq(true);
+						SmCommonUtil.copyHqGstToBranch(getManagedBean()
+								.getHqGstSupplier(), brVO.getGst(), true,
+								brVO.getBranch().getBranchCode());
 					}
 					getManagedBean().getInitialBranchGstList().add(
 							brVO.getGst());
@@ -338,17 +334,6 @@ public class SmUpdateGstInfoBackingBean extends
 				getManagedBean().getBranches().add(brVO);
 			}
 		}
-	}
-
-	private boolean isSameWithHq(SmGstSupplier brGst) {
-		boolean retVal = false;
-		if (brGst.getGstRegNo().equals(
-				getManagedBean().getHqGstSupplier().getGstRegNo())
-				&& DateUtils.isSameDay(getManagedBean().getHqGstSupplier()
-						.getGstEffDate(), brGst.getGstEffDate())) {
-			retVal = true;
-		}
-		return retVal;
 	}
 
 	private void setDeleteHq() {

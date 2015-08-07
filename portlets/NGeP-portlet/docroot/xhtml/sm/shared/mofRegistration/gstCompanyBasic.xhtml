@@ -66,7 +66,8 @@
 								value="#{backingBean.managedBean.companyBasicGst.gstEffDate}" 
 								required="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
 								or not empty backingBean.managedBean.companyBasicGst.gstEndDate}">
-								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this" partialSubmit="true"/>
+								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" 
+								listener="#{backingBean.onCheckHqEffectiveDate()}" process="@this"/>
 							</p:calendar>
 							<p:message id="gstEffDateMsg" for="gstEffDate"
 								showSummary="true" showDetail="false" display="icon" />
@@ -159,6 +160,19 @@
 				fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
 				update="@form" oncomplete="gstUploadDialog.hide();" />
 		</p:dialog>
+		
+		<p:confirmDialog id="alertHq" closable="true"
+			message="#{lbl['lbl.sm.gst.seteffdate.to.first.of.mnth.msg']}"
+			header="#{lbl['lbl.sm.notification']}" severity="alert"
+			widgetVar="alertHq">
+			
+			<div align="right">
+				<p:commandButton id="okHqBtn" update="@form"
+					value="#{lbl['lbl.btn.ok']}" onclick="alertHq.hide()" 
+					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+					action="#{backingBean.resetHqEffectiveDate}" />
+			</div>
+		</p:confirmDialog>
 	</p:panel>
 
 </ui:composition>
