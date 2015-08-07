@@ -2206,9 +2206,8 @@ public class LOADetailBackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
-			validateLOADetails(scLoa, outcome);
-			
 			parseLOADetails(scLoa, outcome);
+			validateLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
@@ -2254,9 +2253,9 @@ public class LOADetailBackingBean extends
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
-			validateLOADetails(scLoa, outcome);
-
 			parseLOADetails(scLoa, outcome);
+			validateLOADetails(scLoa, outcome);
+			
 			scLoa.setScLoaWorkFlowStatuses(null);
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
