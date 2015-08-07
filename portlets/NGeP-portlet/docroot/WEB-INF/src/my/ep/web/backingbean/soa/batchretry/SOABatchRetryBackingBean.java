@@ -37,7 +37,7 @@ public class SOABatchRetryBackingBean extends
 	/**
 	 * template spec list paging class
 	 * 
-	 * @author MD
+	 * @author Jimmy
 	 */
 	private class SOABatchRetryDataModel extends PagingDataModel<OsbBatchRetryDtl> {
 
@@ -68,7 +68,7 @@ public class SOABatchRetryBackingBean extends
 								ISOABatchRetrySO.class);
 
 				 BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SOA,
+						.getServiceObject(ModuleCodeConst.SOABATCH,
 								ISOARetryLogSO.class);
 				
 				SOABatchRetryReqDTO reqDTO = new SOABatchRetryReqDTO();
