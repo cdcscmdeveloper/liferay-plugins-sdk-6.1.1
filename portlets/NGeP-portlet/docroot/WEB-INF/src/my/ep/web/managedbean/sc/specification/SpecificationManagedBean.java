@@ -487,7 +487,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	/** The ptjt list. */
 	private List<PmOrgProfile> ptjtList;
-	
+
 	/** The ptj profile dd list. */
 	private List<Object[]> ptjProfileDDList;
 
@@ -750,29 +750,27 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private ScQtScoreSetting finacialItemScoreSetting;
 
 	private BigDecimal financialItemScore;
-	
+
 	private BigDecimal totalScore = new BigDecimal(0);
 
 	private String locationLevel;
-	
-	
+
 	/** The search supplier data model. */
 	private IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel;
-	
-    /** The auto update. */
-    private boolean autoUpdate = Boolean.TRUE;
-    
-    private Long ptjGroupId;
-    private int checkListYesIndex;
-    private boolean technicalOtherChecklistSubmit;
-    private boolean financialOtherChecklistSubmit;
-    
-    private List<ScQtSchedule> toBeRemoveSchedules;
-    private List<ScQtProgressivePayment> toBeRemoveProgPayments;
-    private boolean zoneSpecUpdate;
-    private boolean zonesWarnMessageUpdate;
-	
-	
+
+	/** The auto update. */
+	private boolean autoUpdate = Boolean.TRUE;
+
+	private Long ptjGroupId;
+	private int checkListYesIndex;
+	private boolean technicalOtherChecklistSubmit;
+	private boolean financialOtherChecklistSubmit;
+
+	private List<ScQtSchedule> toBeRemoveSchedules;
+	private List<ScQtProgressivePayment> toBeRemoveProgPayments;
+	private boolean zoneSpecUpdate;
+	private boolean zonesWarnMessageUpdate;
+	private List<ScQtCategory> tobeRemoveCategoryCodes;
 
 	/**
 	 * Checks if is spec complete.
@@ -4989,7 +4987,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param financialItemScore the financialItemScore to set
+	 * @param financialItemScore
+	 *            the financialItemScore to set
 	 */
 	public void setFinancialItemScore(BigDecimal financialItemScore) {
 		this.financialItemScore = financialItemScore;
@@ -5003,8 +5002,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param totalScore 
-	 * 				the totalScore to set
+	 * @param totalScore
+	 *            the totalScore to set
 	 */
 	public void setTotalScore(BigDecimal totalScore) {
 		this.totalScore = totalScore;
@@ -5018,7 +5017,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param locationLevel the locationLevel to set
+	 * @param locationLevel
+	 *            the locationLevel to set
 	 */
 	public void setLocationLevel(String locationLevel) {
 		this.locationLevel = locationLevel;
@@ -5032,7 +5032,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ptjProfileDDList the ptjProfileDDList to set
+	 * @param ptjProfileDDList
+	 *            the ptjProfileDDList to set
 	 */
 	public void setPtjProfileDDList(List<Object[]> ptjProfileDDList) {
 		this.ptjProfileDDList = ptjProfileDDList;
@@ -5046,7 +5047,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param searchDeliveryAddressDataModel the searchDeliveryAddressDataModel to set
+	 * @param searchDeliveryAddressDataModel
+	 *            the searchDeliveryAddressDataModel to set
 	 */
 	public void setSearchDeliveryAddressDataModel(
 			IPagingDataModel<PmAddressType> searchDeliveryAddressDataModel) {
@@ -5061,7 +5063,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param autoUpdate the autoUpdate to set
+	 * @param autoUpdate
+	 *            the autoUpdate to set
 	 */
 	public void setAutoUpdate(boolean autoUpdate) {
 		this.autoUpdate = autoUpdate;
@@ -5075,7 +5078,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ptjGroupId the ptjGroupId to set
+	 * @param ptjGroupId
+	 *            the ptjGroupId to set
 	 */
 	public void setPtjGroupId(Long ptjGroupId) {
 		this.ptjGroupId = ptjGroupId;
@@ -5089,7 +5093,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param checkListYesIndex the checkListYesIndex to set
+	 * @param checkListYesIndex
+	 *            the checkListYesIndex to set
 	 */
 	public void setCheckListYesIndex(int checkListYesIndex) {
 		this.checkListYesIndex = checkListYesIndex;
@@ -5103,7 +5108,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param technicalOtherChecklistSubmit the technicalOtherChecklistSubmit to set
+	 * @param technicalOtherChecklistSubmit
+	 *            the technicalOtherChecklistSubmit to set
 	 */
 	public void setTechnicalOtherChecklistSubmit(
 			boolean technicalOtherChecklistSubmit) {
@@ -5118,7 +5124,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param financialOtherChecklistSubmit the financialOtherChecklistSubmit to set
+	 * @param financialOtherChecklistSubmit
+	 *            the financialOtherChecklistSubmit to set
 	 */
 	public void setFinancialOtherChecklistSubmit(
 			boolean financialOtherChecklistSubmit) {
@@ -5150,7 +5157,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zoneSpecUpdate the zoneSpecUpdate to set
+	 * @param zoneSpecUpdate
+	 *            the zoneSpecUpdate to set
 	 */
 	public void setZoneSpecUpdate(boolean zoneSpecUpdate) {
 		this.zoneSpecUpdate = zoneSpecUpdate;
@@ -5164,10 +5172,26 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zonesWarnMessageUpdate the zonesWarnMessageUpdate to set
+	 * @param zonesWarnMessageUpdate
+	 *            the zonesWarnMessageUpdate to set
 	 */
 	public void setZonesWarnMessageUpdate(boolean zonesWarnMessageUpdate) {
 		this.zonesWarnMessageUpdate = zonesWarnMessageUpdate;
+	}
+
+	/**
+	 * @return the tobeRemoveCategoryCodes
+	 */
+	public List<ScQtCategory> getTobeRemoveCategoryCodes() {
+		return tobeRemoveCategoryCodes;
+	}
+
+	/**
+	 * @param tobeRemoveCategoryCodes the tobeRemoveCategoryCodes to set
+	 */
+	public void setTobeRemoveCategoryCodes(
+			List<ScQtCategory> tobeRemoveCategoryCodes) {
+		this.tobeRemoveCategoryCodes = tobeRemoveCategoryCodes;
 	}
 
 }
