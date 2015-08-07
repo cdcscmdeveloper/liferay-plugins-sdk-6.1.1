@@ -552,8 +552,20 @@ public class SpecificationBackingBean extends
 					criteria.setDeleted(true);
 				}
 			}
+			List<ScQtCategory> removeCategoryCodes = this.getManagedBean()
+					.getTobeRemoveCategoryCodes();
+
+			if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
+				for (int i = 0; i < removeCategoryCodes.size(); i++) {
+					if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
+						removeCategoryCodes.remove(removeCategoryCodes.get(i));
+					}
+
+				}
+			}
 			SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 			specReqDTO.setTobeRemoveLocCriteriaList(qtLocCriteriaRemoveList);
+			specReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);
 			switch (activeIndex) {
 			case 0:
 				ScQt scQt = prepareSpecReq().getScQt();
@@ -1088,7 +1100,11 @@ public class SpecificationBackingBean extends
 	 * Delete category codes.delete row from the category codes datatable.
 	 */
 	public void deleteCategoryCodes() {
-
+		List<ScQtCategory> removeList = this.getManagedBean()
+				.getTobeRemoveCategoryCodes();
+		if (null == removeList) {
+			removeList = new ArrayList<ScQtCategory>();
+		}
 		List<ScQtCategory> openList = this.getManagedBean()
 				.getSuppCriteriaopenList();
 
@@ -1102,15 +1118,12 @@ public class SpecificationBackingBean extends
 			throw new EpException(MessageConst.ERROR_760146);
 		}
 
-		if (openList.size() == openSelectList.size()) {
-			openList.clear();
-		} else {
-
-			for (ScQtCategory category : openSelectList)
-				openList.remove(category);
-
+		for (ScQtCategory category : openSelectList) {
+			openList.remove(category);
+			removeList.add(category);
 		}
 		this.getManagedBean().getScQt().setScQtCategorys(openList);
+		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
 
 	}
 
@@ -2386,6 +2399,8 @@ public class SpecificationBackingBean extends
 					new ArrayList<ScQtLocCriteria>());
 			this.getManagedBean().setSupplierLocationList(
 					new ArrayList<ScQtLocCriteria>());
+			this.getManagedBean().setSuppCriteriaopenList(
+					new ArrayList<ScQtCategory>());
 		} finally {
 			specSo = null;
 		}
