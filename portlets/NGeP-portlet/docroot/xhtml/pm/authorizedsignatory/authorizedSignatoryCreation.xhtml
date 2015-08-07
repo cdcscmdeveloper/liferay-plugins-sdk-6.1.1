@@ -62,7 +62,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.pm.as.expdate']}" style="width :20%">
-				<p:calendar id="expDateId" value="#{certSignatory.expDate}" 
+				<p:calendar id="expDateId" value="#{certSignatory.expDate}" valueChangeListener="#{authorizedsignatoryBackingBean.expDateChangedListener}" 
 					disabled="#{!authorizedsignatoryBackingBean.checkExpDate(certSignatory)}" navigator="true"
 					maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
@@ -77,6 +77,10 @@
 					disabled="#{certSignatory.brandNew || certSignatory.recordStatusFlg ==9}">
 					<f:selectItems
 						value="#{authorizedsignatoryBackingBean.getSignatoryStatusList()}" />
+						<p:ajax event="change" immediate="true"
+								listener="#{authorizedsignatoryBackingBean.certSignatoryStatusChange(certSignatory)}"
+								partialSubmit="true" process="@this"
+								update="@this" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column width="5%" headerText="#{lbl['lbl.pm.action']}" style="width :5%">  
