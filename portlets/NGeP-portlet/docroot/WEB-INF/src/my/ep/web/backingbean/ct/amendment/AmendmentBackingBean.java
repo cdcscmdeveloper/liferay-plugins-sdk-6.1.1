@@ -881,46 +881,41 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	     		getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaWitnesses().add(getManagedBean().getScLoaWitness());
 	     	}
 	     	
-	     	String userRole = getUserRole();
-	     	if (userRole.equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_ADMIN.value()) || userRole.equalsIgnoreCase(RoleCode.BASIC_SUPPLIER_USER.value()) ||
-	     			userRole.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_USER.value()) || userRole.equalsIgnoreCase(RoleCode.MOF_SUPPLIER_ADMIN.value())) {
-	     		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
-	     			// Generate loa document and set into sc_attachment
-	     			AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
-	     			String fileName = null;
-	     			String filePath = null;
-	     			String content = null;
-	     			File file = new File(getManagedBean().getFileDirectory());
-	     			file.mkdirs();
-	     			List <ScLoaReport> scLoaReportList = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports();
-			    	 
-	     			for (ScLoaReport scLoaReport : scLoaReportList) {
-	     				if (scLoaReport.getDefinationType().getParameterId().equals(
-	     						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
-	     								ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
-	     					fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
-	    					filePath = getManagedBean().getFileDirectory() + attachmentFormat.format(fileName, null);
-	    					if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
-	    						formJadualHargaExcel(filePath);
-	    					} else {
-	    						String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
-	    						content = getContent(docDefinitionKey);					
-	    						DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
-	    					}
-	    					
-	    					ScLoaReportAttachment attachment = new ScLoaReportAttachment();
-	    				    attachment.setScLoaReport(scLoaReport);			    
-	    				    attachment.setFileName(fileName);
-	    				    attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
-	    				    attachment.setFileDesc(fileName);
-	    					
-	    				    scLoaReport.setScLoaReportAttachment(attachment);
-	     				}
-	     			}
-	     		}
-	     	}
-	     		       
-	     	reqDTO.setUserRole(userRole);
+	     	if (isSupplierRole() && action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)) {
+     			// Generate loa document and set into sc_attachment
+     			AttachmentFormat attachmentFormat = new AttachmentDateFormat();		
+     			String fileName = null;
+     			String filePath = null;
+     			String content = null;
+     			File file = new File(getManagedBean().getFileDirectory());
+     			file.mkdirs();
+     			List <ScLoaReport> scLoaReportList = getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getScLoaReports();
+		    	 
+     			for (ScLoaReport scLoaReport : scLoaReportList) {
+     				if (scLoaReport.getDefinationType().getParameterId().equals(
+     						(getParameterByTypeAndCode(ParameterConst.DOCUMENT_DEFINITION_TYPE, 
+     								ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED).getParameterId()))) {
+     					fileName = getTemplateFileName(scLoaReport.getPmDocument().getDocDefinitionKey());
+    					filePath = getManagedBean().getFileDirectory() + attachmentFormat.format(fileName, null);
+    					if (scLoaReport.getTitle().equalsIgnoreCase(ContractConst.TEMPLATE_JADUAL_HARGA)) {
+    						formJadualHargaExcel(filePath);
+    					} else {
+    						String docDefinitionKey = scLoaReport.getPmDocument().getDocDefinitionKey();
+    						content = getContent(docDefinitionKey);					
+    						DocumentGenerator.getInstance().generatePdf(new FileOutputStream(filePath), content);
+    					}
+    					
+    					ScLoaReportAttachment attachment = new ScLoaReportAttachment();
+    				    attachment.setScLoaReport(scLoaReport);			    
+    				    attachment.setFileName(fileName);
+    				    attachment.setFilePath(DocumentRepositoryUtils.getDBFilePath(filePath));
+    				    attachment.setFileDesc(fileName);
+    					
+    				    scLoaReport.setScLoaReportAttachment(attachment);
+     				}
+     			}
+     		}	     		       
+	     	reqDTO.setUserRole(getUserRole());
 	     	reqDTO.setTaskName(getManagedBean().getTaskName());
 	     	reqDTO.setCtContract(getManagedBean().getCtContract());
 	     	reqDTO.setCtContractVer(getManagedBean().getContractVer());
@@ -4552,21 +4547,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			return null;
 		}
 	}
-	
-	/**
-	 * The method used to verify the login user is supplier.
-	 * 
-	 * @return true, if login user is supplier
-	 *         false, if login user is not supplier
-     */
-	public boolean isSupplierRole() {
-		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
-				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
-				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()));
-	}
-	
+		
 	/**
 	 * The method used to check whether approver setting tab menu is required to display.
 	 * 
