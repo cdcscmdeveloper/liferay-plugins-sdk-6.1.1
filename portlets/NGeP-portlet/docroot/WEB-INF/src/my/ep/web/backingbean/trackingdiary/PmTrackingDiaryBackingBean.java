@@ -123,7 +123,7 @@ public class PmTrackingDiaryBackingBean extends
 					.equalsIgnoreCase(ParameterConst.USER_PROFILE_PARAM_CODE)) {
 				resetUserProfilesSearchBean();
 			} else if(this.getManagedBean().getFunctionType()
-					.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
+					.equalsIgnoreCase("VC")) {
 				this.getManagedBean().getZoneList().addAll(retrieveZones());
 			}
 		}
