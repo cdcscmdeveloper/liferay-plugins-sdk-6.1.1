@@ -432,6 +432,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	/** The qt category list. */
 	private List<ScQtCategory> qtCategoryList;
+	
+	private List<ScQtCategory> tobeRemoveCategoryCodes;
 
 	/** The search qt data model. */
 	private IPagingDataModel<ScQt> searchQTDataModel;
@@ -6418,6 +6420,21 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setSubmit(boolean isSubmit) {
 		this.isSubmit = isSubmit;
+	}
+
+	/**
+	 * @return the tobeRemoveCategoryCodes
+	 */
+	public List<ScQtCategory> getTobeRemoveCategoryCodes() {
+		return tobeRemoveCategoryCodes;
+	}
+
+	/**
+	 * @param tobeRemoveCategoryCodes the tobeRemoveCategoryCodes to set
+	 */
+	public void setTobeRemoveCategoryCodes(
+			List<ScQtCategory> tobeRemoveCategoryCodes) {
+		this.tobeRemoveCategoryCodes = tobeRemoveCategoryCodes;
 	}
 
 }
