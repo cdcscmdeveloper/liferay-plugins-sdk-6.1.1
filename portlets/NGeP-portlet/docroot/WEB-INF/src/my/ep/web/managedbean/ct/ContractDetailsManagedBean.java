@@ -21,6 +21,7 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -29,6 +30,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.sm.search.SupplierSearchReqDTO;
+import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -49,6 +52,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -1546,6 +1550,27 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 						searchBean.getDataFilterBeans().add(filterBean);
 					} else {
 						return null;
+					}
+				} else if (fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+						|| fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
+					// supplier
+					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
+					supplierSearchReqDTO.setUserId(fc.getUserSessionBean().getUserId());
+					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);					
+					SupplierSearchResDTO supplierSearchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
+					
+					if (supplierSearchResDTO.getResultBean() != null && supplierSearchResDTO.getResultBean().getResultList() != null 
+			        		&& !supplierSearchResDTO.getResultBean().getResultList().isEmpty()) {
+						List<Long> supplierIdList = new ArrayList<Long>();
+		  		        for (SmSupplier supplier : supplierSearchResDTO.getResultBean().getResultList()) {
+		  		        	supplierIdList.add(supplier.getSupplierId());
+		  		        }
+						
+						SearchFilterBean filterBean = new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_IN.value(), supplierIdList);
+						searchBean.getDataFilterBeans().add(filterBean);
 					}
 				} else {
 					return null;
