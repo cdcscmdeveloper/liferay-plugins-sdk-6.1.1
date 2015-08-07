@@ -30,7 +30,7 @@
 									<p:selectOneMenu id="flPtj" value="#{reportBackingBean.commonPtj}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
 										<f:selectItems value="#{reportBackingBean.ptjList}"></f:selectItems>
-										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																													
+										<p:ajax event="change" listener="#{reportBackingBean.roleCodeUsersSetup()}"  partialSubmit="true"	update="@form" />																													
 									</p:selectOneMenu>
 								  </c:if>
 								  
