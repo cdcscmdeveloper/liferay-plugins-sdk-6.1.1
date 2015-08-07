@@ -1894,6 +1894,7 @@ public class LOIDetailBackingBean extends
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(scQt.getQtId());
 			reqDTO.setDocType(getManagedBean().getDocType());
+			reqDTO.setLoiLoaList(getManagedBean().getRecSupplierList());
 
 			AwardSupplierResDTO resDTO = getQtAwardSO().completeLoiListBPMTask(
 					reqDTO);
