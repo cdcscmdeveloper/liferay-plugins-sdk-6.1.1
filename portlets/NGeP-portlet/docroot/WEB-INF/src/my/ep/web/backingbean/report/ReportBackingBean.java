@@ -734,7 +734,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2607,7 +2607,14 @@ public class ReportBackingBean extends
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
 	}
-	
+	public void showCapitalNaccumShare(){
+		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
+		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {			
+			if ((null != this.getSmPaidUpCapitalNaccum())&&(ReportConst.EMPTY_VAL !=this.getSmApplicationStatus())) {
+				getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(true);				
+			}
+		}
+	}
 	public List<SelectItem> retrieveProcessingOfficerList(){
 		processingOfficerList = new ArrayList<SelectItem>();		
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {

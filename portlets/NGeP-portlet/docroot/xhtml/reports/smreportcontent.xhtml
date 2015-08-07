@@ -1002,7 +1002,7 @@
 								<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
 									itemValue="#{null}"></f:selectItem>
 								<f:selectItems value="#{reportBackingBean.accumulatedPaidUpCptlList}"></f:selectItems>
-								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />								
+								<p:ajax event="change" listener="#{reportBackingBean.showCapitalNaccumShare}" partialSubmit="true"	update="@form" />								
 							</p:selectOneMenu>
 						</c:if>
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPersonnelRoleView}">

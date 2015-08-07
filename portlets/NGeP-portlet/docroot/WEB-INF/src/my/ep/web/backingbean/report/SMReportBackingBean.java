@@ -315,8 +315,8 @@ public class SMReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 	        	//rptGenBean.setSmMandatoryZoneView(true);
 	        	rptGenBean.setSmMandatoryMofRegNoFromView(true);
 	        	rptGenBean.setSmMandatoryMofRegNoToView(true);
-	        	rptGenBean.setSmPaidUpCapitalFrmView(true);
-	        	rptGenBean.setSmPaidUpCapitalToView(true);
+	        	/*rptGenBean.setSmPaidUpCapitalFrmView(true);
+	        	rptGenBean.setSmPaidUpCapitalToView(true);*/
 	        	rptGenBean.setSmPaidUpCapitalNaccumView(true);
 	        	
 	            break;
