@@ -6699,6 +6699,12 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					if (null == checkList.getScQtCheckListValue()) {
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
+					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "companyExperience.xhtml?faces-redirect=true";
 				} else if (QTConstants.TECHNICAL_PRIVATE_CODE
@@ -6795,6 +6801,12 @@ public class SpecificationBackingBean extends
 							checkList.setScQtCheckListValue(resDTO
 									.getScQtCheckListValue());
 						}
+					}
+					if (null == checkList.getScQtCheckListValue()) {
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "companyExperiencePrivate.xhtmlfaces-redirect=true";
@@ -6918,6 +6930,12 @@ public class SpecificationBackingBean extends
 							checkList.setScQtCheckListValue(resDTO
 									.getScQtCheckListValue());
 						}
+					}
+					if (null == checkList.getScQtCheckListValue()) {
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "totalEmployees.xhtml?faces-redirect=true";
@@ -7094,6 +7112,12 @@ public class SpecificationBackingBean extends
 									.getScQtCheckListValue());
 						}
 					}
+					if (null == checkList.getScQtCheckListValue()) {
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
+					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "financialGovernementCompany.xhtml?faces-redirect=true";
 				} else if (QTConstants.FINANCIAL_PRIVATE_CODE
@@ -7152,6 +7176,12 @@ public class SpecificationBackingBean extends
 							checkList.setScQtCheckListValue(resDTO
 									.getScQtCheckListValue());
 						}
+					}
+					if (null == checkList.getScQtCheckListValue()) {
+						ScQtCheckListValue checkListValue = new ScQtCheckListValue();
+						setUserDetails(checkListValue);
+						checkListValue.setScQtCheckList(checkList);
+						checkList.setScQtCheckListValue(checkListValue);
 					}
 					this.getManagedBean().setScQtChecklist(checkList);
 					return "financialPrivateCompany.xhtml?faces-redirect=true";
