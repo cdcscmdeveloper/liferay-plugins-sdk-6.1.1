@@ -1855,7 +1855,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the navigate URL 
 	 */
 	public String gotoBackPage() {
-		return getManagedBean().getGotoPreviewPage();
+		return (getManagedBean().getGotoPreviewPage() != null) ? getManagedBean().getGotoPreviewPage() : CONTRACT_MAINT_PAGE;
 	}
 	
 	/**
@@ -3568,10 +3568,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return portletTitle  the name of the portal
      */
 	public String getPortletTitle() {
-		String portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.ministry.contract.maintenance",
+		String portletTitle = null;
+		if (isContractAdmin()) {
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.ministry.contract.maintenance",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		if (isBPKCCA()) {
+		} else if (isBPKCCA()) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.central.contract.maintenance",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		} else if (isSupplierRole()) {
+			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.contract.list",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		}
 		return portletTitle;
