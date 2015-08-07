@@ -6528,6 +6528,26 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Call alert for HQ GST Effective Date not first day of month
+	 */
+	public void onCheckHqEffectiveDate() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(getManagedBean().getCompanyBasicGst().getGstEffDate());
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		if (day != 1) {
+			RequestContext.getCurrentInstance().execute("alertHq.show();");
+		}
+	}
+
+	/**
+	 * Reset HQ Effective Date to first day of month
+	 */
+	public void resetHqEffectiveDate() {
+		SmCommonUtil.resetGstEffectiveDate(getManagedBean()
+				.getCompanyBasicGst());
+	}
+
+	/**
 	 * Cancel button action for site visit action.
 	 * 
 	 * @param dialog
