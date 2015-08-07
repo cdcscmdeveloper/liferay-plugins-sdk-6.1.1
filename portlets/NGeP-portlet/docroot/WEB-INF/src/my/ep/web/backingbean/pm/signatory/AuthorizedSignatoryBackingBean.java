@@ -6,17 +6,20 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.common.signatory.ISignatorySO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.signatory.SignatoryReqDTO;
 import my.ep.dto.pm.common.signatory.SignatoryResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
@@ -26,6 +29,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -85,7 +89,13 @@ public class AuthorizedSignatoryBackingBean extends
 		}
 		log.info(message);
 	}
-	
+	public void expDateChangedListener(ValueChangeEvent event){
+		log.info("...event.getOldValue()="+event.getOldValue());
+		log.info("...event.getNewValue()="+event.getNewValue());
+		if(event.getOldValue() != event.getNewValue()){
+			
+		}
+	}
 	/**
 	 * get status item dropdown
 	 * 
@@ -342,11 +352,45 @@ public class AuthorizedSignatoryBackingBean extends
 				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 						ISignatorySO.class);
 		SignatoryReqDTO reqDTO = new SignatoryReqDTO();
+		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 		for(PmCertSignatory pmcertSignatory:certSignatories){
 				
 			if(pmcertSignatory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
 				pmcertSignatory.setExpDate(new Date());
-			}	
+			}
+			String messageId = null;
+			String[] msgParam = null;
+			if (pmcertSignatory.isBrandNew()) {
+				log.info("Tracking diary for virtual certificate: add new value :saveCertSignatoryDetials");
+				log.info(".............pmcertSignatory.getSinnatoryName()="
+						+ pmcertSignatory.getSinnatoryName());
+				messageId = MessageConst.TD_80025;
+				msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+
+			} else {
+				//TODO: check previous value 
+				if (pmcertSignatory.isModified()
+						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_SUSPENDED) {
+					log.info("Tracking diary for virtual certificate: de-activating status :saveRuleCatalog");
+					messageId = MessageConst.TD_80027;
+					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+
+					
+				}else if (pmcertSignatory.isModified()
+						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
+					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
+					messageId = MessageConst.TD_80028;
+					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+				}
+			}
+			if (messageId != null & msgParam != null) {
+				reqDTO.setTrackingStatus(true);
+				reqDTO.getTrackDairyVOs().add(
+						PmCommonUtil.assignTrackingDairyForSignatory(pmcertSignatory,
+								getActionDesc(messageId, msgParam),
+								null));
+			}
+
 		
 		}
 		reqDTO.setCertSignatorys(certSignatories);
@@ -361,4 +405,26 @@ public class AuthorizedSignatoryBackingBean extends
 
 		}
 	}
+	/**
+	 * Track Signatory status
+	 * 
+	 * @param signatory
+	 */
+	public void certSignatoryStatusChange(PmCertSignatory signatory) {
+		log.info("certSignatoryStatusChange");
+
+		if (!signatory.isModified()) {
+			signatory.setModified(true);
+		} else {
+			signatory.setModified(false);
+		}
+
+	}
+	
+	private String getActionDesc(String messageId, String[] params) {
+		Locale myLocale = new Locale("ms", "MY");
+		return MessageUtils.getMessage(messageId, params,
+				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
+	}
+
 }
