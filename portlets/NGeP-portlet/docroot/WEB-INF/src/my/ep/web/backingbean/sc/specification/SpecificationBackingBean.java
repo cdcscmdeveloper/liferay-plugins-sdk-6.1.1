@@ -16054,15 +16054,6 @@ public class SpecificationBackingBean extends
 
 	public void checkListNoConfirmationSubmit(String stage) {
 
-		/*
-		 * if (QTConstants.TECHNICAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
-		 * this.getManagedBean().setTechnicalOtherChecklistSubmit(true);
-		 * 
-		 * } else if (QTConstants.FINANCIAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
-		 * this.getManagedBean().setFinancialOtherChecklistSubmit(true);
-		 * 
-		 * }
-		 */
 		if (QTConstants.TECHNICAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
 			this.getManagedBean().setTechnicalOtherChecklistSubmit(false);
 			this.getManagedBean().setActiveIndex(2);
@@ -16074,26 +16065,31 @@ public class SpecificationBackingBean extends
 		}
 	}
 
-	public void checkListYesConfirmationSubmit(String stage) {
-
-		/*
-		 * if (QTConstants.TECHNICAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
-		 * this.getManagedBean().setTechnicalOtherChecklistSubmit(false);
-		 * this.getManagedBean().setActiveIndex(2);
-		 * 
-		 * } else if (QTConstants.FINANCIAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
-		 * this.getManagedBean().setFinancialOtherChecklistSubmit(false);
-		 * this.getManagedBean().setActiveIndex(3);
-		 * 
-		 * }
-		 */
+	public String checkListYesConfirmationSubmit(String stage) {
+		String checklistSubmit = CommonUIConst.ACKNOWLEDGE_PAGE;
 		if (QTConstants.TECHNICAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
 			this.getManagedBean().setTechnicalOtherChecklistSubmit(true);
+			boolean financial = validateFinancialStandardCheckListSubmit();
+			if (!financial
+					&& !this.getManagedBean().isFinancialOtherChecklistSubmit()) {
+				RequestContext.getCurrentInstance().execute(
+						"financialStandardChecklistDlgsSubmit.show()");
+				return null;
+			} else {
+				specCommitteBpmTask(BpmOutcomeConst.BPM_SUBMIT);
+				RequestContext.getCurrentInstance().execute(
+						"technicalStandardChecklistDlgsSubmit.hide();");
+			}
 
 		} else if (QTConstants.FINANCIAL_SPEC_TYPE.equalsIgnoreCase(stage)) {
 			this.getManagedBean().setFinancialOtherChecklistSubmit(true);
+			specCommitteBpmTask(BpmOutcomeConst.BPM_SUBMIT);
+			RequestContext.getCurrentInstance().execute(
+					"financialStandardChecklistDlgsSubmit.hide()");
 
 		}
+
+		return checklistSubmit;
 
 	}
 
