@@ -221,7 +221,7 @@
 								value="#{lbl['lbl.pm.profiles.userdetails.loginid']}" /> <p:outputLabel
 								value="*" styleClass="mandatory" /></th>
 						<td><p:inputText styleClass="ppDisplayTextL" id="itLoginId"
-								maxlength="75"
+								maxlength="75" converter="toLowerCaseConverter"
 								label="#{lbl['lbl.pm.profiles.userdetails.loginid']}"
 								required="#{!empty param['disableValidation']}"
 								disabled="#{!profileManagementBackingBean.managedBean.selectedUser.brandNew}"
