@@ -199,11 +199,13 @@ public class SupplierFinalizationMeetingBackingBean extends
 			
 			ScCommittee scCommittee = resDTO.getQtCommittee().getScCommittee();
 			if(scCommittee != null){
-				if (scCommittee.getScCommitteeMembers() != null && !scCommittee.getScCommitteeMembers().isEmpty()) {
-					getManagedBean().setCommitteeMembersList(scCommittee.getScCommitteeMembers());
+				if (CollectionUtils.isNotEmpty(scCommittee.getScCommitteeMembers())) {
+					getManagedBean().setCommitteeMembersList(
+							scCommittee.getScCommitteeMembers());
 					
 					List<ScCommitteeMember> list = scCommittee.getScCommitteeMembers();
-					getManagedBean().setOriginalCommitteeMembersList(new ArrayList<ScCommitteeMember>());
+					getManagedBean().setOriginalCommitteeMembersList(
+										new ArrayList<ScCommitteeMember>());
 					getManagedBean().getOriginalCommitteeMembersList().addAll(list);
 				}
 				/*}else{
@@ -236,7 +238,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 					for (ScCommitteeMember member : commMembers) {
 						PmParameter memberRole = member.getMemberRole();
 						if (member.getRepresentativeType() == null && 
-								ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRole.getParameterCode())) {
+								ParameterConst.COMMITTEE_ROLE_MEMBER
+									.equals(memberRole.getParameterCode())) {
 							member.setRepresentativeType(new PmParameter());
 						}
 					}
@@ -857,7 +860,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 		user.setIdentificationCode(identificationCode);
 		user.setPmAddressTypes(null);
 		user.setPmCountry(getDefaultCountry());
-		
+
 		// User Orgs
 		List<PmUserOrg> pmUserOrgs = userOrgDetails(user);
 		user.setPmUserOrgs(pmUserOrgs);
@@ -1306,10 +1309,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setCommitteType(getManagedBean().getCommitteeType());
 			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			
-			qtMeetingSO.saveQTDtl(reqDTO);
+			qtMeetingSO.saveFinalizationCommitteeDetails(reqDTO);
+			
 			renewSessionAndRetrieve();
 			
-			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
+			String variable1 = getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, 
+								ParameterConst.DOCTYPE_QUOTATION) + " " + getManagedBean().getScQt().getQtNo();
 			String variable2 = getMessageCommon("lbl.sc.meeting.confirmation");
 			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,null,
 						MessageUtils.getMessage(MessageConst.INFO_700004, new String[]{variable1, variable2}, 
@@ -1364,7 +1369,7 @@ public class SupplierFinalizationMeetingBackingBean extends
 			reqDTO.setPayLoad(this.getManagedBean().getPayLoad());
 			reqDTO.setOutcome(outCome);
 			
-			MeetingResDTO resDTO = meetingSO.updateBPMAction(reqDTO);
+			MeetingResDTO resDTO = meetingSO.submitFinalizationCommitteeMeeting(reqDTO);
 			String qtNo = getManagedBean().getScQt().getQtNo();
 			renewSesionObject();
 			
@@ -1389,8 +1394,34 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtMeeting> deletedMeetingList = this.getManagedBean().getDeletedMeetingList();
 			reqDTO.setDeletedMeetingList(deletedMeetingList);
 			
+			List<ScCommitteeMember> committeeMembers = getManagedBean().getCommitteeMembersList();
 			List<ScCommitteeMember> deletedCommitteeMembers 
 											= this.getManagedBean().getDeletedCommitteeMembers();
+			List<ScCommitteeMember> toBeAddedMembers = new ArrayList<ScCommitteeMember>();
+			
+			if (CollectionUtils.isNotEmpty(
+					getManagedBean().getDeletedCommitteeMembers())) {
+				for (ScCommitteeMember deletedCommitteeMember 
+											: deletedCommitteeMembers) {
+					if (committeeMembers.contains(
+								deletedCommitteeMember)) {
+						ScCommitteeMember committeeMember = committeeMembers.get(
+											committeeMembers.indexOf(deletedCommitteeMember));
+						deletedCommitteeMember.setRepresentativeType(
+									committeeMember.getRepresentativeType());
+						toBeAddedMembers.add(deletedCommitteeMember);
+						committeeMembers.remove(deletedCommitteeMember);
+						deletedCommitteeMembers.remove(deletedCommitteeMember);
+					}
+				}
+			}
+			if (CollectionUtils.isNotEmpty(
+							toBeAddedMembers)) {
+				committeeMembers.addAll(toBeAddedMembers);
+			}
+			
+			scQtCommittee.getScCommittee().setScCommitteeMembers(
+													committeeMembers);
 			reqDTO.setDeletedCommitteeActivityList(deletedCommitteeMembers);
 			
 			finalizeRemarks(scQtCommittee.getQtCommitteRemarks());
