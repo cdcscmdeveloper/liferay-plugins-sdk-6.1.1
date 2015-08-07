@@ -754,7 +754,9 @@ public class FinancialOrgBackingBean extends
 	
 			FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
 			reqDTO.setPmFinancialOrg(financialOrg);
-		
+			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			
 			financialOrgSO = (IFinancialOrgSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IFinancialOrgSO.class);
 			FinancialOrgResDTO resDTO = financialOrgSO.saveOrUpdateFinancialOrgDetails(reqDTO);
