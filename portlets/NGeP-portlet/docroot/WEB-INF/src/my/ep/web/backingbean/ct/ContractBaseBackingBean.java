@@ -196,5 +196,19 @@ public abstract class ContractBaseBackingBean<T extends BaseManagedBean>
 			return false;
 		}
 	}
+	
+	/**
+	 * The method used to verify the login user is supplier.
+	 * 
+	 * @return true, if login user is supplier
+	 *         false, if login user is not supplier
+     */
+	public boolean isSupplierRole() {
+		return (getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
+				||getFacesScopes().hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())
+				||getFacesScopes().hasRoleUser(RoleCode.GOVT_SELLER.value()));
+	}
 }
 
