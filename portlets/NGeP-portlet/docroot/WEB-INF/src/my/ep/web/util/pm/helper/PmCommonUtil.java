@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmConfigGeneral;
 import my.ep.persistence.entity.pm.common.PmCountry;
@@ -1179,6 +1180,22 @@ public class PmCommonUtil {
         trckVO.setDocId(rule.getRuleTypeId());
 		trckVO.setDocType(ParameterConst.RULE_CONFIG_PARAM_CODE);
 		trckVO.setDocNo(rule.getRuleType());		
+		trckVO.setGroupId(null);		
+		trckVO.setStatus(status);				
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForSignatory(PmCertSignatory pmcertSignatory , String actionDesc,
+			PmStatus status) {
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(pmcertSignatory.getPmZone().getZoneId());
+		trckVO.setDocType(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE);
+		trckVO.setDocNo(pmcertSignatory.getSinnatoryName());		
 		trckVO.setGroupId(null);		
 		trckVO.setStatus(status);				
 		trckVO.setGroupDocType(null);
