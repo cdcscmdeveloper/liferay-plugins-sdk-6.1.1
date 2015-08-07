@@ -275,6 +275,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public void deleteRestrictedCategoryAction() {
 		debugLogger("deleteRestrictedCategoryAction");
+		List<ScQtCategory> removeList = this.getManagedBean().getTobeRemoveCategoryCodes();
+		if (removeList == null) {
+			removeList = new ArrayList<ScQtCategory>();
+		}
 		List<ScQtCategory> restrictedList = this.getManagedBean()
 				.getSuppCriteriarestrictedList();
 		if (null == restrictedList) {
@@ -285,12 +289,12 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (null == restrictedSelectList || restrictedSelectList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
-		if (restrictedList.size() == restrictedSelectList.size()) {
-			restrictedList.clear();
-		} else {
-			for (ScQtCategory category : restrictedSelectList)
-				restrictedList.remove(category);
+		for (ScQtCategory category : restrictedSelectList) {
+			restrictedList.remove(category);
+			removeList.add(category);
 		}
+		this.getManagedBean().getQt().setScQtCategorys(restrictedList);
+		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
 	}
 
 	/**
@@ -298,6 +302,10 @@ public class QTSupplierQulCriteriaBackingBean extends
 	 */
 	public void deleteCategoryCodes() {
 		debugLogger("deleteCategoryCodes");
+		List<ScQtCategory> removeList = this.getManagedBean().getTobeRemoveCategoryCodes();
+		if (removeList == null) {
+			removeList = new ArrayList<ScQtCategory>();
+		}
 		List<ScQtCategory> openList = this.getManagedBean().getQtCategoryList();
 		if (null == openList) {
 			openList = new ArrayList<ScQtCategory>();
@@ -307,14 +315,14 @@ public class QTSupplierQulCriteriaBackingBean extends
 		if (null == openSelectList || openSelectList.isEmpty()) {
 			throw new EpException(MessageConst.ERROR_760146);
 		}
-		if (openList.size() == openSelectList.size()) {
-			openList.clear();
-		} else {
-			for (ScQtCategory category : openSelectList)
-				openList.remove(category);
+		for (ScQtCategory category : openSelectList) {
+			openList.remove(category);
+			removeList.add(category);
 		}
+		this.getManagedBean().getQt().setScQtCategorys(openList);
+		this.getManagedBean().setTobeRemoveCategoryCodes(removeList);
 	}
-
+	
 	/**
 	 * Select zone tree node.Event handle check non panel Treenodes.
 	 * 

@@ -764,7 +764,7 @@ public class QTDetailBackingBean extends
 		}
 		scQt.setScQtCommittees(qtCommitteList);
 		// Code for to update the supplier qualification criteria
-		List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();
+		/*List<ScQtCategory> categoryList = new ArrayList<ScQtCategory>();*/
 		if (!this.getManagedBean().getQt().isPanel()) {
 			if (this.getManagedBean().getQt().getQtType()
 					.equals(QTConstants.OPEN_TYPE)) {
@@ -772,7 +772,7 @@ public class QTDetailBackingBean extends
 				List<ScQtCategory> openList = this.getManagedBean()
 						.getQtCategoryList();
 				if (openList != null && !openList.isEmpty()) {
-					for (ScQtCategory scQtCategory : openList) {
+					/*for (ScQtCategory scQtCategory : openList) {
 						if (null != scQtCategory.getPmCategoryL3()) {
 							scQtCategory.setPmCategoryL1(scQtCategory
 									.getPmCategoryL3().getPmCategoryL2()
@@ -783,15 +783,15 @@ public class QTDetailBackingBean extends
 							setUserDetails(scQtCategory);
 							categoryList.add(scQtCategory);
 						}
-					}
-					scQt.setScQtCategorys(categoryList);
+					}*/
+					scQt.setScQtCategorys(openList);
 				}
 			} else if (this.getManagedBean().getQt().getQtType()
 					.equals(QTConstants.RESTRICTED_TYPE)) {
 				List<ScQtCategory> restrictedList = this.getManagedBean()
 						.getSuppCriteriarestrictedList();
 				if (restrictedList != null && !restrictedList.isEmpty()) {
-					for (ScQtCategory scQtCategory : restrictedList) {
+					/*for (ScQtCategory scQtCategory : restrictedList) {
 						scQtCategory.setPmCategoryL1(scQtCategory
 								.getPmCategoryL3().getPmCategoryL2()
 								.getPmCategoryL1());
@@ -800,8 +800,8 @@ public class QTDetailBackingBean extends
 						// scQtCategory.setScQt(this.getManagedBean().getQt());
 						setUserDetails(scQtCategory);
 						categoryList.add(scQtCategory);
-					}
-					scQt.setScQtCategorys(categoryList);
+					}*/
+					scQt.setScQtCategorys(restrictedList);
 				}
 				List<ScQtSupplier> qtSuppliers = this.getManagedBean()
 						.getQtSupplierList();
@@ -1094,6 +1094,17 @@ public class QTDetailBackingBean extends
 
 		quationTenderReqDTO.setToBeRemovedCommitteMembers(this.getManagedBean()
 				.getToBeDelCommitteMemebers());
+		
+		List<ScQtCategory> removeCategoryCodes = this.getManagedBean()
+				.getTobeRemoveCategoryCodes();
+		if (null != removeCategoryCodes && !removeCategoryCodes.isEmpty()) {
+			for (int i = 0; i < removeCategoryCodes.size(); i++) {
+				if (null == removeCategoryCodes.get(i).getQtCategoryId()) {
+					removeCategoryCodes.remove(removeCategoryCodes.get(i));
+				}
+			}
+		}
+		quationTenderReqDTO.setTobeRemoveCategoryCodes(removeCategoryCodes);
 		return quationTenderReqDTO;
 	}
 
