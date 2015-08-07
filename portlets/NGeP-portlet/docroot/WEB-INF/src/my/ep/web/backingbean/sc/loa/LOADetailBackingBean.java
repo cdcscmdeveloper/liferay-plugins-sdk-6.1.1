@@ -417,14 +417,23 @@ public class LOADetailBackingBean extends
 				getManagedBean().setContractSignerUser(scLoa.getContractSigner());
 			}
 			
-			if (getManagedBean().getScQt() != null) {
-				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-	                // progressive payment.
-					formProgressivePayment(scLoa);
-				} else if (("F").equals(getManagedBean().getScQt()
-						.getScheduleType())) {
-					// Fulfilment Schedule
-					formFulfilmentSchedule(scLoa);
+			// check whether loa from s1 or s2.
+			if(scLoa.getScLoiLoa() != null){
+				if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+					// For s2
+					if (getManagedBean().getScQt() != null) {
+						if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+							// progressive payment.
+							formProgressivePayment(scLoa);
+						} else if (("F").equals(getManagedBean().getScQt()
+								.getScheduleType())) {
+							// Fulfilment Schedule
+							formFulfilmentSchedule(scLoa);
+						}
+					} else{
+						// for s1
+						formFulfilmentSchedule(scLoa);
+					}
 				}
 			}
 			
@@ -591,6 +600,7 @@ public class LOADetailBackingBean extends
 	    }
 
 	}
+	
 	/**
 	 * @ param Date date
 	 * @return days of month
@@ -608,7 +618,6 @@ public class LOADetailBackingBean extends
 	 * @param resDTO the res dto
 	 */
 	private void populateLOADetails(AwardSupplierResDTO resDTO) {
-
 		ScLoa scLoa = resDTO.getScLoa();
 		getManagedBean().setScLoa(scLoa);
 		getManagedBean().setScQt(resDTO.getScQt());
@@ -644,7 +653,6 @@ public class LOADetailBackingBean extends
 		if (scLoa.isBrandNew()) {
 			handleBranchDetailsChanged();
 		}
-
 		
 		// Agency & Supplier Witness
 		ScLoaWitness loaAgencyWitness = null;
@@ -666,12 +674,21 @@ public class LOADetailBackingBean extends
 		scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 		scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
-		if (getManagedBean().getScQt() != null) {
-			if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-                // progressive payment.
-				formProgressivePayment(scLoa);
-			} else if (("F").equals(getManagedBean().getScQt()
-					.getScheduleType())) {
+		// check whether loa from s1 or s2.
+		if(scLoa.getScLoiLoa() != null){
+			if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+				if (getManagedBean().getScQt() != null) {
+					if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+						// progressive payment.
+						formProgressivePayment(scLoa);
+					} else if (("F").equals(getManagedBean().getScQt()
+							.getScheduleType())) {
+						// Fulfilment Schedule
+						formFulfilmentSchedule(scLoa);
+					}
+				}
+			} else{
+				// for s1
 				// Fulfilment Schedule
 				formFulfilmentSchedule(scLoa);
 			}
@@ -685,7 +702,6 @@ public class LOADetailBackingBean extends
 		if (scLoa.getContractType().getParameterId() != null) {
 			contractTypeChanged();
 		}
-
 
 		// Contract Signer
 		PmUser contractSignerUser = scLoa.getContractSigner();
@@ -737,7 +753,6 @@ public class LOADetailBackingBean extends
 		
 		// clauses title
 		getClausesTitle(null);
-		
 	}
 	
 	/**
@@ -794,40 +809,35 @@ public class LOADetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void formProgressivePayment(ScLoa scLoa){
-		List<ScQtProgressivePayment> progressivePayment = this
-				.getManagedBean().getProgressivePaymentList();
-		if (progressivePayment == null) {
-			progressivePayment = new ArrayList<ScQtProgressivePayment>();
+		List<ScQtProgressivePayment> progressivePayment  = new ArrayList<ScQtProgressivePayment>();
+		if (null != scLoa.getScQtProgPayments() && scLoa.getScQtProgPayments().size()>0) {
+			this.getManagedBean().setTotalProgressivePayment(
+					scLoa.getScQtProgPayments().size());
+			for (ScQtProgressivePayment scQtProgressivePayment : scLoa
+					.getScQtProgPayments()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
-			if (null != scLoa.getScQtProgPayments() && scLoa.getScQtProgPayments().size()>0) {
-				this.getManagedBean().setTotalProgressivePayment(
-						scLoa.getScQtProgPayments().size());
-				for (ScQtProgressivePayment scQtProgressivePayment : scLoa
-						.getScQtProgPayments()) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
+				String todate = dateFormat.format(scQtProgressivePayment.getToDate());
 
-					String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
-					String todate = dateFormat.format(scQtProgressivePayment.getToDate());
-					
-					String startMonth = fromdate.substring(3, 5);
-					String startYear = fromdate.substring(6, fromdate.length());
-					String endMonth = todate.substring(3, 5);
-					String endYear = todate.substring(6, todate.length());
-					
-					int sMonth = Integer.parseInt(startMonth);
-					int eMonth = Integer.parseInt(endMonth);
-					
-					scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
-					scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
-					scQtProgressivePayment.setStartYear(startYear);
-					scQtProgressivePayment.setEndYear(endYear);
-					progressivePayment.add(scQtProgressivePayment);
+				String startMonth = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String endMonth = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
 
-				}
-				this.sortProgressivePaymentList(progressivePayment);
-				this.getManagedBean().setProgressivePaymentList(
-						progressivePayment);
+				int sMonth = Integer.parseInt(startMonth);
+				int eMonth = Integer.parseInt(endMonth);
+
+				scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
+				scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
+				scQtProgressivePayment.setStartYear(startYear);
+				scQtProgressivePayment.setEndYear(endYear);
+				progressivePayment.add(scQtProgressivePayment);
+
 			}
+			this.sortProgressivePaymentList(progressivePayment);
+			this.getManagedBean().setProgressivePaymentList(
+					progressivePayment);
 		}
 	}
 
@@ -2196,11 +2206,8 @@ public class LOADetailBackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 			
-			if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
-				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-					freqScheduleValidation(scQtSchedule);
-				}
-			}
+			validateLOADetails(scLoa, outcome);
+			
 			parseLOADetails(scLoa, outcome);
 			
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
@@ -2486,6 +2493,41 @@ public class LOADetailBackingBean extends
 				throw new EpException("Contract Expiry Date is required.");
 			}
 		}
+       // validation for fulfillment schedule and progressivepayment
+		if(BpmOutcomeConst.BPM_SUBMIT.equals(outcome) || BpmOutcomeConst.BPM_SAVE.equals(outcome)) {
+			// check whether loa from s1 or s2.
+			if(scLoa.getScLoiLoa() != null){
+				if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+					// For s2
+					if (getManagedBean().getScQt() != null) {
+						if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+							if(scLoa.getScQtProgPayments() != null && scLoa.getScQtProgPayments().size()>0){
+								for (ScQtProgressivePayment progressivePayment : scLoa.getScQtProgPayments()) {
+									progressivePayValidation(progressivePayment);
+								}
+							}
+
+						} else if (("F").equals(getManagedBean().getScQt()
+								.getScheduleType())) {
+							if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+								for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+									freqScheduleValidation(scQtSchedule);
+								}
+							}
+						}
+					}
+				} else{
+					// for s1
+					if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+						for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+							freqScheduleValidation(scQtSchedule);
+						}
+					}
+				}
+			}
+		}
+		// validate deduction payamment for Others
+		validateDeductionPaymentDtls(scLoa);
 	}
 
 	/**
@@ -2547,12 +2589,28 @@ public class LOADetailBackingBean extends
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
-		} else {
-			saveScheduleList();
-			saveProgressivePaymntList();
+		} 		
+		
+		// check whether loa from s1 or s2.
+		if(scLoa.getScLoiLoa() != null){
+			if(ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa().getDocType())){
+				// For s2
+				if (getManagedBean().getScQt() != null) {
+					if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+						saveProgressivePaymntList();
 
-			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
+					} else if (("F").equals(getManagedBean().getScQt()
+							.getScheduleType())) {
+						saveScheduleList();
+					}
+				}
+			} else{
+				// for s1
+				saveScheduleList();
+			}
 		}
+		
+		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 
 		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
 		if (contractSignerUser != null
@@ -2566,9 +2624,7 @@ public class LOADetailBackingBean extends
 			PmOrgProfile pmOrgProfile = retrieveOrgProfileByOrgType(getManagedBean().getSelectedContractAgency());
 			scLoa.setContractAgency(pmOrgProfile);
 		}
-
-		// validate deduction payamment for Others
-		validateDeductionPaymentDtls(scLoa);
+		
 	}
 
 	/**
@@ -4376,7 +4432,7 @@ public class LOADetailBackingBean extends
 	 *
 	 * @param scLoa the sc loa
 	 */
-	public void validateDeductionPaymentDtls(ScLoa scLoa) {
+	private void validateDeductionPaymentDtls(ScLoa scLoa) {
 		List<ScQtDeduction> deductions = scLoa.getScQtDeductions();
 		if (CollectionUtils.isNotEmpty(deductions)) {
 			for (ScQtDeduction deduction : deductions) {
@@ -4387,6 +4443,82 @@ public class LOADetailBackingBean extends
 				}
 			}
 		}
+	}
+
+	/**
+	 * Progressive pay validation.
+	 *
+	 * @param progressivePayment the progressive payment
+	 */
+	private void progressivePayValidation(ScQtProgressivePayment progressivePayment) {
+		debugLogger("frequencyScheduleValidation");
+		FacesScopes facesScopes = new FacesScopes();
+		Calendar startDate = null;
+		Calendar endDate = null;
+		
+		if(progressivePayment.getStartYear() == null || progressivePayment.getStartYear().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.year",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		if(progressivePayment.getStartMonth() == null || progressivePayment.getStartMonth().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		if(progressivePayment.getEndYear() == null || progressivePayment.getEndYear().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.year",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		if(progressivePayment.getEndMonth() == null || progressivePayment.getEndMonth().isEmpty()){
+			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.month",
+					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		}
+		
+		ScLoa loa = 	getManagedBean().getScLoa();
+		Calendar expDate = Calendar.getInstance();
+		expDate.setTime(loa.getContractExpDate());
+		expDate.add(Calendar.MONTH, 1);
+		expDate.set(Calendar.DAY_OF_MONTH, 1);
+		expDate.add(Calendar.DATE, -1);
+		Date contractExpDate = expDate.getTime();
+		
+		Calendar effDate =Calendar.getInstance();
+		effDate.setTime(loa.getContractEffDate());
+		effDate.set(Calendar.DAY_OF_MONTH, 1);
+		Date contractEffDate = effDate.getTime();  
+	   
+	    if(progressivePayment.getStartYear() != null && progressivePayment.getStartMonth() != null){
+	    	startDate = Calendar.getInstance();
+	    	startDate.clear();
+	    	startDate.set(Integer.valueOf(progressivePayment.getStartYear()),Integer.valueOf(progressivePayment.getStartMonth()), 1, 0,0,0);
+	    }
+	   
+	    if(progressivePayment.getEndYear() != null && progressivePayment.getEndMonth() != null){
+	    	endDate = Calendar.getInstance();
+	    	endDate.clear();
+	    	endDate.set(Integer.valueOf(progressivePayment.getEndYear()),Integer.valueOf(progressivePayment.getEndMonth()), Integer.valueOf(getDays(contractExpDate)),0,0,0);
+	    }
+	    
+	    if(startDate != null && endDate != null){
+	    	if (startDate.after(endDate)) {
+	    		throw new EpException("Start date must be before end date in Progressive Payment.");
+	    	}
+
+	    	if (endDate.before(startDate)) {
+	    		throw new EpException("End date must be after start date in Progressive Payment.");
+	    	}
+
+	    	if (!(startDate.getTime().after(contractEffDate)
+					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
+				throw new EpException(
+						"Start date should be in contract validity period in Progressive Payment.");
+			}
+
+			if (!(endDate.getTime().after(contractEffDate)
+					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
+				throw new EpException(
+						"End date should be in contract validity period in Progressive Payment.");
+			}
+	    }
 	}
 	
 	/**
