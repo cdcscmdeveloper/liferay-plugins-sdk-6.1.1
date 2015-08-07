@@ -74,7 +74,7 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="technicalStandardChecklistDlgsSubmit.hide();"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					update="@form"
 					action="#{specificationBackingBean.checkListYesConfirmationSubmit('T')}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
@@ -97,7 +97,7 @@
 			<p:spacer height="1" />
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}"
-					oncomplete="financialStandardChecklistDlgsSubmit.hide();"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					update="@form"
 					action="#{specificationBackingBean.checkListYesConfirmationSubmit('F')}" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" update="@form"
