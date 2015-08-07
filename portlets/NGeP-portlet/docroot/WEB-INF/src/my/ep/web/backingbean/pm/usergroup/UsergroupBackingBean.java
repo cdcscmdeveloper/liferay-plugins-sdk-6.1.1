@@ -528,8 +528,8 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 
 		UserGroupReqDTO reqDto = new UserGroupReqDTO();
 		reqDto.setUserGroup(userGroup);
-
-		
+		reqDto.setRoleCode(PmCommonUtil.getUserRoleValue());
+		reqDto.setPmUser(getFacesScopes().getUserSessionBean());
 
 		UserGroupResDTO resDTO = userGrpSo.saveOrUpdateUserGroup(reqDto);
 
@@ -563,7 +563,7 @@ public class UsergroupBackingBean extends BaseBackingBean<UsergroupManagedBean> 
 			return NAV_TO_MAIN;
 		}
 		else{
-			goToMaintenanceAction(userGroup);
+			goToMaintenanceAction(resDTO.getUserGroup());
 			return "userGroupMaintenance";
 		}
 	}
