@@ -1734,40 +1734,35 @@ public class LOIDetailBackingBean extends
 	 * @param scLoi the sc loi
 	 */
 	private void formProgressivePayment(ScLoi scLoi){
-		List<ScQtProgressivePayment> progressivePayment = this
-				.getManagedBean().getProgressivePaymentList();
-		if (progressivePayment == null) {
-			progressivePayment = new ArrayList<ScQtProgressivePayment>();
+		List<ScQtProgressivePayment>  progressivePayment = new ArrayList<ScQtProgressivePayment>();
+		if (null != scLoi.getScQtProgPayments() && scLoi.getScQtProgPayments().size()>0) {
+			this.getManagedBean().setTotalProgressivePayment(
+					scLoi.getScQtProgPayments().size());
+			for (ScQtProgressivePayment scQtProgressivePayment : scLoi
+					.getScQtProgPayments()) {
+				SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
 
-			if (null != scLoi.getScQtProgPayments() && scLoi.getScQtProgPayments().size()>0) {
-				this.getManagedBean().setTotalProgressivePayment(
-						scLoi.getScQtProgPayments().size());
-				for (ScQtProgressivePayment scQtProgressivePayment : scLoi
-						.getScQtProgPayments()) {
-					SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+				String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
+				String todate = dateFormat.format(scQtProgressivePayment.getToDate());
 
-					String fromdate = dateFormat.format(scQtProgressivePayment.getFromDate());
-					String todate = dateFormat.format(scQtProgressivePayment.getToDate());
-					
-					String startMonth = fromdate.substring(3, 5);
-					String startYear = fromdate.substring(6, fromdate.length());
-					String endMonth = todate.substring(3, 5);
-					String endYear = todate.substring(6, todate.length());
-					
-					int sMonth = Integer.parseInt(startMonth);
-					int eMonth = Integer.parseInt(endMonth);
-					
-					scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
-					scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
-					scQtProgressivePayment.setStartYear(startYear);
-					scQtProgressivePayment.setEndYear(endYear);
-					progressivePayment.add(scQtProgressivePayment);
+				String startMonth = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String endMonth = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
 
-				}
-				this.sortProgressivePaymentList(progressivePayment);
-				this.getManagedBean().setProgressivePaymentList(
-						progressivePayment);
+				int sMonth = Integer.parseInt(startMonth);
+				int eMonth = Integer.parseInt(endMonth);
+
+				scQtProgressivePayment.setStartMonth(String.valueOf(sMonth));
+				scQtProgressivePayment.setEndMonth(String.valueOf(eMonth));
+				scQtProgressivePayment.setStartYear(startYear);
+				scQtProgressivePayment.setEndYear(endYear);
+				progressivePayment.add(scQtProgressivePayment);
+
 			}
+			this.sortProgressivePaymentList(progressivePayment);
+			this.getManagedBean().setProgressivePaymentList(
+					progressivePayment);
 		}
 	}
 
@@ -4350,7 +4345,7 @@ public class LOIDetailBackingBean extends
 	public void priceKeyInEvent() {
 		debugLogger("priceKeyInEvent");
 		// calculate max price items only.
-		boolean isCalculateMaxPriceItem = Boolean.FALSE;
+		boolean isCalculateMaxPriceItem = Boolean.TRUE;
 		ScLoi scLoi = getManagedBean().getScLoi();
 		BigDecimal quantity = BigDecimal.valueOf(0d);
 		// calc after nego total
@@ -4375,7 +4370,7 @@ public class LOIDetailBackingBean extends
 						if (maxZoneTierPriceItemMap != null
 								&& !maxZoneTierPriceItemMap.isEmpty()
 								&& maxZoneTierPriceItemMap.containsValue(scLoiLoaItem)){
-							isCalculateMaxPriceItem = Boolean.TRUE;
+							
 						} else{
 							isCalculateMaxPriceItem = Boolean.FALSE;
 						}
