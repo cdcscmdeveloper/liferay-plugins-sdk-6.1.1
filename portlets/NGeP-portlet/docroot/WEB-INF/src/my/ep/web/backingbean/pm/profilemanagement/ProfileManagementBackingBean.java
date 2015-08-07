@@ -3359,8 +3359,10 @@ public class ProfileManagementBackingBean extends
 		// if (user.getPmCountry().getCountryId() == null) {
 		// throw new EpException(MessageConst.ERROR_770035);
 		// }
-		if (StringUtils.isBlank(pmUserOrg.getDesignation())) {
-			throw new EpException(MessageConst.ERROR_770108);
+		
+		if(!ParameterConst.ORG_TYPE_SUPPLIER.equals(pmUserOrg.getPmOrgProfile()
+				.getOrgTypeCode().getParameterCode()) && StringUtils.isBlank(pmUserOrg.getDesignation())){			
+				throw new EpException(MessageConst.ERROR_770108);			
 		}
 		if (StringUtils.isBlank(pmUserOrg.getEmail())) {
 			throw new EpException(MessageConst.ERROR_770036);
