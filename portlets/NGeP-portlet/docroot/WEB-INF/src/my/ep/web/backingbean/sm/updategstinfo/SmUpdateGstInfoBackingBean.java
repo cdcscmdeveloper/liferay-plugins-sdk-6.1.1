@@ -145,14 +145,13 @@ public class SmUpdateGstInfoBackingBean extends
 			supplierGstList.add(getManagedBean().getHqGstSupplier());
 			if (getManagedBean().getBranches() != null) {
 				for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
-					if (brVO.getGst() != null && brVO.getGst().getIsCurrent()) {
+					if (brVO.getGst() != null) {
 						if (brVO.isSameWithHq()) {
 							SmCommonUtil.copyHqGstToBranch(getManagedBean()
 									.getHqGstSupplier(), brVO.getGst(), true,
 									brVO.getBranch().getBranchCode());
 						}
-						SmCommonUtil.removeNotUploadedGstSuppDoc(brVO
-								.getGst());
+						SmCommonUtil.removeNotUploadedGstSuppDoc(brVO.getGst());
 						supplierGstList.add(brVO.getGst());
 					}
 				}
@@ -325,8 +324,8 @@ public class SmUpdateGstInfoBackingBean extends
 						brVO.setGst(new SmGstSupplier());
 						brVO.setSameWithHq(true);
 						SmCommonUtil.copyHqGstToBranch(getManagedBean()
-								.getHqGstSupplier(), brVO.getGst(), true,
-								brVO.getBranch().getBranchCode());
+								.getHqGstSupplier(), brVO.getGst(), true, brVO
+								.getBranch().getBranchCode());
 					}
 					getManagedBean().getInitialBranchGstList().add(
 							brVO.getGst());

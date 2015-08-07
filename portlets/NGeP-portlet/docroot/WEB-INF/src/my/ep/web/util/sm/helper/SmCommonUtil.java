@@ -2449,8 +2449,9 @@ public class SmCommonUtil {
 		gstReqDTO.setBranchCode(branchCode);
 		gstReqDTO.setApplNo(applNo);
 		gstReqDTO.setCurrent(isCurrent);
-		return SmServiceLookup.getSupplierGstSO()
-				.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
+		return SmServiceLookup
+				.getSupplierGstSO()
+				.retrieveGstInfoBySupplierIdAndBranchCodeAndIsCurrent(gstReqDTO)
 				.getSmGstSupplier();
 	}
 
@@ -2534,9 +2535,9 @@ public class SmCommonUtil {
 				}
 			}
 		} else {
-			for (SmGstSupplierDoc brDoc : branchGst.getSmGstSupplierDocs()) {
-				brDoc.setFileName(null);
-				brDoc.setFilePath(null);
+			if (branchGst.getSmGstSupplierDocs() == null
+					|| branchGst.getSmGstSupplierDocs().isEmpty()) {
+				SmApplicationUtil.initGstSuppDocs(branchGst);
 			}
 		}
 	}
