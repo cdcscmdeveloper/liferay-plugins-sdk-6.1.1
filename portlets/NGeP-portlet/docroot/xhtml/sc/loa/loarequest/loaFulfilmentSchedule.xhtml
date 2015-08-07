@@ -10,11 +10,12 @@
 		value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
 	<ui:param name="isDocTypePurchaseRequest"
 		value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypePurchaseRequest}" />
+		
 	<h:panelGroup id="frequency">
 		<h:panelGroup id="schedule">
 			<p:panel header="#{lbl['lbl.sc.spec.freq.schedule']} "
 				toggleable="true"
-				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeScheduled)}">
+				rendered="#{isDocTypePurchaseRequest or (isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'F')}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:column>
@@ -42,7 +43,8 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.start.month']}"
 						style="width:15%">
-						<p:selectOneMenu id="startMonth" style="width:100px;"  disabled="#{!isEditableStatus}"
+						<p:selectOneMenu id="startMonth" style="width:100px;" 
+						    required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.startMonth}" label="#{lbl['lbl.sc.start.month']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule" 
@@ -53,7 +55,8 @@
 						headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:15%">
 						<p:selectOneMenu value="#{frequency.startYear}" disabled="#{!isEditableStatus}"
-							style="width:100px;"  label="#{lbl['lbl.sc.start.year']}">
+						    required="true"
+							style="width:100px;" label="#{lbl['lbl.sc.start.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true" update="frequencySchedule"
 								listener="#{lOADetailBackingBean.calculateScheduleMonths(frequency,'true')}" />
@@ -62,7 +65,7 @@
 
 					<p:column headerText="#{lbl['lbl.sc.end.month']}"
 						style="width:15%">
-						<p:selectOneMenu style="width:100px;"  disabled="#{!isEditableStatus}"
+						<p:selectOneMenu style="width:100px;" required="true" disabled="#{!isEditableStatus}"
 							value="#{frequency.endMonth}" label="#{lbl['lbl.sc.end.month']}">
 
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
@@ -74,7 +77,8 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.end.year']}" 
 						style="width:15%">
-						<p:selectOneMenu value="#{frequency.endYear}" style="width:100px;" disabled="#{!isEditableStatus}"
+						<p:selectOneMenu value="#{frequency.endYear}" 
+						     required="true" style="width:100px;" disabled="#{!isEditableStatus}"
 							 label="#{lbl['lbl.sc.end.year']}">
 							<f:selectItems value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 							<p:ajax event="change" update="scheduleDetails"
@@ -107,7 +111,7 @@
 	<h:panelGroup id="progressive">
 			<p:panel header="#{lbl['lbl.sc.spec.progressive.payment']}"
 				toggleable="true"
-				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeAsAndWhen}">
+				rendered="#{isDocTypeQuotation and lOADetailBackingBean.managedBean.scQt.scheduleType == 'P'}">
 
 				<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
 					<h:column>
@@ -132,13 +136,14 @@
 					<p:column style="width:6%; text-align: right;" headerText="#{lbl['lbl.sc.spec.phase']}">		
 						#{payment.phaseNo}
 					</p:column>
-					<p:column>
+					<p:column style="width:10%;">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.description']}" />
 						</f:facet>
-						<p:inputText value="#{payment.phaseDesc}" maxlength="50"
-							required="true" id="progressivePhasedesc" size="50">
+						<p:inputText value="#{payment.phaseDesc}" maxlength="50" 
+						    label="#{lbl['lbl.sc.description']}"
+							required="true" id="progressivePhasedesc" style="width:160px;"> 
 							<p:ajax event="blur" partialSubmit="true" process="@this" />
 						</p:inputText>
 						<p:message id="phaseDescId" for="progressivePhasedesc"
@@ -148,6 +153,7 @@
 					<p:column headerText="#{lbl['lbl.sc.from']}"
 						style="width:12%">
 						<p:selectOneMenu style="width:100px;"
+						    required="true" label="#{lbl['lbl.sc.from']}"
 							value="#{payment.startMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}"></f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true"/>
@@ -158,7 +164,9 @@
 						headerText="#{lbl['lbl.sc.start.year']}"
 						style="width:12%">
 
-						<p:selectOneMenu value="#{payment.startYear}" style="width:100px;">
+						<p:selectOneMenu value="#{payment.startYear}" 
+						    required="true" label="#{lbl['lbl.sc.start.year']}"
+						    style="width:100px;">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 								<p:ajax process="@this" event="change" partialSubmit="true"/>
@@ -168,8 +176,8 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.to']}"
 						style="width:12%">
-						<p:selectOneMenu style="width:100px;" value="#{payment.endMonth}">
-
+						<p:selectOneMenu style="width:100px;"  required="true" 
+						  label="#{lbl['lbl.sc.to']}" value="#{payment.endMonth}">
 							<f:selectItems value="#{lOADetailBackingBean.yearDetails}">
 							</f:selectItems>
 							<p:ajax process="@this" event="change" partialSubmit="true"/>
@@ -178,20 +186,21 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.sc.end.year']}"
 						style="width:12%">
-						<p:selectOneMenu value="#{payment.endYear}" style="width:100px;">
+						<p:selectOneMenu value="#{payment.endYear}" required="true" 
+						  label="#{lbl['lbl.sc.end.year']}" style="width:100px;">
 							<f:selectItems
 								value="#{lOADetailBackingBean.yearsDisplayDtls}"></f:selectItems>
 								<p:ajax process="@this" event="change" partialSubmit="true"/>
 						</p:selectOneMenu>
 
 					</p:column>
-					<p:column style="width:10%">
+					<p:column style="width:5%">
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
 							<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 						</f:facet>
-						<p:inputText value="#{payment.percentage}" required="true"
+						<p:inputText value="#{payment.percentage}" required="true" style="width:80px;"
 							id="progressivePercentage" styleClass="ppNumericAlign"
 							label="#{lbl['lbl.sc.percentage']}" maxlength="18">
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="14"></ac:validateNumber>
