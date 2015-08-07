@@ -1753,7 +1753,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		ContractReqDTO reqDTO = new ContractReqDTO();
 		reqDTO.setContractId(contractId);
 		CtContractVer  latestContractVer = contractSO.getLatestContractVer(reqDTO).getCtContractVer();
-		reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		if (latestContractVer != null) {
+			reqDTO.setContractVerId(latestContractVer.getContractVerId());
+		} else {
+			ContractResDTO resDTO = contractSO.retrieveContractById(reqDTO);
+			reqDTO.setContractVerId(resDTO.getContract().getCurrentContractVer().getContractVerId());
+		}
 		reqDTO.setDocType(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
 		reqDTO.setViewOnly(true);
 	    ContractResDTO resDTO = contractSO.retrieveContractVerDtls(reqDTO);
