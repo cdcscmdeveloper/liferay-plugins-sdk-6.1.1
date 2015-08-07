@@ -144,7 +144,7 @@
 						</p:row>
 					</p:panelGrid>
 
-	<p:dataTable id="dtVirtualCertResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == ParameterConst.virtualCertificateParamCode}"
+	<p:dataTable id="dtVirtualCertResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'VC'}"
 						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 						value="#{pmTrackingDiaryBackingBean.managedBean.zoneList}"
 						var="zone" width="100%" rows="10">
