@@ -77,12 +77,11 @@
 										navigator="true" 
 										required="#{not empty br.gst.gstRegNo}" 
 										label="#{lbl['lbl.sm.gst.effdate']}"
-										value="#{br.gst.gstEffDate}"
+										value="#{br.gst.gstEffDate}" beforeShowDay="beforeShowDate"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
 										maxdate="#{CommonConstants.CURRENT_DATE}">
-										<p:ajax event="dateSelect"  update="branchGstNotEmptyPanelId" 
-										   listener="#{smUpdateGstInfoBackingBean.onCheckBranchEffectiveDate(br.gst)}" process="@this"/>
+										<p:ajax event="dateSelect"  update="branchGstNotEmptyPanelId" process="@this"/>
 									</p:calendar>
 									<p:message id="branchGstRegDateCalIdMsg"
 										for="branchGstRegDateCalId" showSummary="true" showDetail="false"
@@ -142,9 +141,8 @@
 		
 					<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
 						style="width : 55%;">
-						<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
+						<h:outputText value="#{table.pmDocument.docName}"
 							style="float: left;white-space: normal;" />
-						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
 					</p:column>
 		
 					<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
@@ -161,8 +159,9 @@
 					</p:column>
 					<p:column headerText="#{lbl['lbl.pm.document.name']}"
 						style="width : 20%;">
-						<h:outputText value="#{table.fileName}" 
+						<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
 							style="float: left;white-space: normal;" />
+						<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
 					</p:column>
 				</p:dataTable>
 				
