@@ -949,6 +949,7 @@ public class SmApplicationBackingBean extends
 			// init companyBasic GST information
 			getManagedBean().setCompanyBasicGst(
 					SmApplicationUtil.initHqGstInformation(getManagedBean()
+							.getSmAppl().getApplNo(), getManagedBean()
 							.getSmSupplier().getSupplierId(), getManagedBean()
 							.getCompanyBasicGst()));
 
@@ -1337,19 +1338,15 @@ public class SmApplicationBackingBean extends
 				log.info(" ****** REMAIN PREV VALUE ********");
 			}
 			if (valid) {
-				// Save or update to DB
-				SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
-						.getCompanyBasicGst());
-				MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-				reqDto.setPmDigiSign(this.getManagedBean().getPmDigiSign());
-				reqDto.setSmAppl(this.getManagedBean().getSmAppl());
-				reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
-				mofRegistrationSO.updateApplication(reqDto);
+				// Save or update to DB (Disabled replace by calling
+				// saveOrUpdateAppl())
+				// MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+				// reqDto.setPmDigiSign(this.getManagedBean().getPmDigiSign());
+				// reqDto.setSmAppl(this.getManagedBean().getSmAppl());
+				// reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
+				// mofRegistrationSO.updateApplication(reqDto);
+				saveOrUpdateAppl();
 				getManagedBean().setCurrentPageType(outputPageType);
-				getManagedBean().setCompanyBasicGst(
-						SmApplicationUtil.initHqGstInformation(getManagedBean()
-								.getSmAppl().getSmSupplier().getSupplierId(),
-								getManagedBean().getCompanyBasicGst()));
 
 			} else {
 				getManagedBean().setTabActiveIndex(currentTab);
@@ -4286,7 +4283,8 @@ public class SmApplicationBackingBean extends
 	 */
 	private void saveOrUpdateAppl() {
 		IMofRegistrationSO mofRegistrationSO = null;
-		MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+				.getCompanyBasicGst());
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -4295,14 +4293,15 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 			reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
-			resDTO = mofRegistrationSO.updateApplication(reqDto);
+			mofRegistrationSO.updateApplication(reqDto);
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
-			if (resDTO.getCompanyBasicGst() != null) {
-				getManagedBean()
-						.setCompanyBasicGst(resDTO.getCompanyBasicGst());
-			}
+			getManagedBean().setCompanyBasicGst(
+					SmApplicationUtil.initHqGstInformation(getManagedBean()
+							.getSmAppl().getApplNo(), getManagedBean()
+							.getSmAppl().getSmSupplier().getSupplierId(),
+							getManagedBean().getCompanyBasicGst()));
 		}
 	}
 
@@ -6233,6 +6232,7 @@ public class SmApplicationBackingBean extends
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
+			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			log.info("******* Save as draft User List to BPM Size *******"
 					+ reqDTO.getUserList());
 			if (reqDTO.getOutcome().equals("")) {

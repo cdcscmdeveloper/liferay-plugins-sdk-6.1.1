@@ -5495,12 +5495,20 @@ public class SmApplicationUtil {
 				.getSmAppl();
 	}
 
-	public static SmGstSupplier initHqGstInformation(Long supplierId,
-			SmGstSupplier gst) {
+	public static SmGstSupplier initHqGstInformation(String applNo,
+			Long supplierId, SmGstSupplier gst) {
 		gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-				supplierId, null, null, false);
+				supplierId, null, applNo, false);
 		if (gst == null) {
 			gst = new SmGstSupplier();
+			SmGstSupplier gstCurrent = SmCommonUtil
+					.getSmGstSupplierBySupplierIdAndBranchCode(supplierId,
+							null, null, true);
+			if (gstCurrent != null) {
+				gst.setGstRegNo(gstCurrent.getGstRegNo());
+				gst.setGstEffDate(gstCurrent.getGstEffDate());
+				gst.setGstEndDate(gstCurrent.getGstEndDate());
+			}
 		}
 		initGstSuppDocs(gst);
 		return gst;
@@ -5511,16 +5519,14 @@ public class SmApplicationUtil {
 		if (!isGstEmpty(hqGst)) {
 			for (SmSupplierBranch br : branchList) {
 				br.setGst(SmCommonUtil
-						.getSmGstSupplierBySupplierIdAndBranchCode(
-								hqGst.getSmSupplier()
-										.getSupplierId(), br
-										.getBranchCode(), null, true));
+						.getSmGstSupplierBySupplierIdAndBranchCode(hqGst
+								.getSmSupplier().getSupplierId(), br
+								.getBranchCode(), null, true));
 				if (br.getGst() != null) {
-					br.setSameAsHq(SmApplicationUtil
-							.isBranchGstSameAsHq(hqGst, br.getGst()));
+					br.setSameAsHq(SmApplicationUtil.isBranchGstSameAsHq(hqGst,
+							br.getGst()));
 					if (br.getGst().getSmGstSupplierDocs() == null
-							|| br.getGst().getSmGstSupplierDocs()
-									.isEmpty()) {
+							|| br.getGst().getSmGstSupplierDocs().isEmpty()) {
 						SmApplicationUtil.initGstSuppDocs(br.getGst());
 					}
 				} else {
