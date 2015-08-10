@@ -18,13 +18,13 @@
 						<tr>
 							<td style="text-align: left; vertical-align: middle;"></td>
 							<td style="text-align: right;"><p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.submit']}"
+									value="#{lbl['lbl.portal.soa.btn.submit']}" id="submit"
 									action="#{soaBatchRetryBackingBean.submitBatchRetryList}"
 									update=":form:batchRetryTable" /> <p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.refresh']}"
+									value="#{lbl['lbl.portal.soa.btn.refresh']}" id="refresh"
 									action="#{soaBatchRetryBackingBean.refreshBatchRetryList}"
 									update=":form:batchRetryTable" /> <p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.delete']}"
+									value="#{lbl['lbl.portal.soa.btn.delete']}" id="delete"
 									action="#{soaBatchRetryBackingBean.removeBatchRetryList}"
 									update=":form:batchRetryTable" /></td>
 						</tr>
