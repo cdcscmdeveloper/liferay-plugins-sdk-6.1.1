@@ -135,7 +135,8 @@
 					<td><p:message id="zoneCodeMsg" for="zoneCode" display="icon" /></td>
 				</tr>
 			</ui:fragment>
-			
+			<ui:fragment
+				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' }">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.reg.no']}" /> </td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
@@ -218,6 +219,7 @@
 						</p:inputText></td>				
 				<td></td>
 			</tr>
+			</ui:fragment>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.organisation.status']}" />
 					<p:outputLabel value="*" styleClass="mandatory" /></td>
