@@ -152,7 +152,7 @@
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
 					<td class="tdContent"><p:inputText
-							value="#{gstSupplier ne null ? gstSupplier.gstRegNo : ''}" disabled="true" size="40" /></td>
+							value="#{gstSupplier.gstRegNo}" disabled="true" size="40" /></td>
 
 
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
@@ -163,24 +163,27 @@
 								pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 						</p:inputText></td>
 				</tr>
-								
+				
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
 					<td class="tdContent">
-						<p:inputText value="#{gstSupplier ne null ? gstSupplier.gstEffDate : ''}" disabled="true" size="40">
+						<p:inputText value="#{gstSupplier.gstEffDate}" disabled="true" size="40">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 					</td>
 				</tr>
 				
+				<ui:remove>
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 					<td class="tdContent">
-						<p:inputText value="#{gstSupplier ne null ? gstSupplier.gstEndDate : ''}" disabled="true" size="40">
+						<p:inputText value="#{gstSupplier.gstEndDate}" disabled="true" size="40">
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText>
 					</td>
 				</tr>
+				</ui:remove>
+				
 				
 				<tr>
 					<td class="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.incometaxno']}" /></td>
