@@ -1252,6 +1252,10 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			this.getManagedBean().setBusinessNatureL1(this.retrieveBusinessNatureByLevelParent("10",0));
 			this.getManagedBean().setSelectedBusinessNature(new SmSupplierBusiness());
 			setDisableCompanyNameBusinessTypeInMaintenance();
+			
+			//retrieve Supplier GST Info
+			SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(resDTO.getSmSupp().getSupplierId(), null, null);
+			getManagedBean().setSmGstSupplier(gstSupp);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,"/xhtml/sm/onlineAccount/accountMaintenanceDet.xhtml");
