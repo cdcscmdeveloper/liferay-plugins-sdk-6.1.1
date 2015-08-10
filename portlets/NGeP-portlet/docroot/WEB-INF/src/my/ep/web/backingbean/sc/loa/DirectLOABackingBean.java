@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sc.loa;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.Format;
@@ -12,6 +13,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -26,10 +29,11 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
+import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -37,43 +41,53 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
+import my.ep.constant.sc.SourcingConstants;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
+import my.ep.dto.pm.common.country.CountryReqDTO;
+import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
+import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
-import my.ep.persistence.entity.sc.loaloi.ScLoaWorkFlowStatus;
-import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
+import my.ep.persistence.entity.sc.quationtender.ScQtSupplierCriteria;
+import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -81,14 +95,20 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.PTJLocalityCode;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.sc.common.ZonesBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
@@ -97,10 +117,19 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.NodeUnselectEvent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -113,7 +142,7 @@ import org.primefaces.model.StreamedContent;
 @ManagedBean(name = "directLOABackingBean")
 @RequestScoped
 public class DirectLOABackingBean extends
-SourcingBaseBackingBean<DirectLOAManagedBean> {
+		SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/** The log. */
 	public static Logger log = EpLogger.getLogger(DirectLOABackingBean.class);
@@ -132,9 +161,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	}
 
 	/**
-	 * save the LOA details.
-	 * save - save data into database and initiate task for LOA details.
-	 * page navigate to loa details page.
+	 * save the LOA details. save - save data into database and initiate task
+	 * for LOA details. page navigate to loa details page.
 	 */
 	public void saveAction() {
 		debugLogger("saveAction");
@@ -142,9 +170,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		try {
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+			if (CollectionUtils.isNotEmpty(scLoa.getScQt().getScQtSchedules())) {
 				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 					freqScheduleValidation(scQtSchedule);
 				}
@@ -152,41 +179,41 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 			parseLOADetails(scLoa, "SAVE");
 
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
-			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
+			reqDTO.setToBeDeleteLocations(this.getManagedBean()
+					.getLocationList());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			DirectAwardResDTO resDTO = getQtDirectAwardSO()
+					.saveDirectAwardDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				scLoa = resDTO.getScLoa();
-				// renewSesionObject();
+				scLoa = resDTO.getLoa();
 
-				if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-						.equals(statusId)) {
-					editSupplierLOAAction(scLoa.getLoaId());
-				} else {
-					//editLOAAction(scLoa);
-				}
-				successMessage(MessageConst.INFO_700004, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.FALSE);
+				successMessage(MessageConst.INFO_700004,
+						ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+						scLoa.getLoaNo(), Boolean.FALSE);
 			}
 
 		} finally {
-			//qtAwardSO = null;
+			// qtAwardSO = null;
 		}
 	}
 
 	/**
-	 * submit LOA details.
-	 * submit - save data into database and BPM process will route to the next respective user.
-	 * @param outcome the outcome
-	 * @return the string
-	 * page navigate to acknowledge page.
+	 * submit LOA details. submit - save data into database and BPM process will
+	 * route to the next respective user.
+	 * 
+	 * @param outcome
+	 *            the outcome
+	 * @return the string page navigate to acknowledge page.
 	 */
 	public String submitAction() {
 		debugLogger("submitAction");
-
 
 		try {
 			String outcome = BpmOutcomeConst.BPM_SUBMIT;
@@ -199,7 +226,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
 
-			if(scLoa.getScQtSchedules() != null && scLoa.getScQtSchedules().size()>0){
+			if (scLoa.getScQtSchedules() != null
+					&& scLoa.getScQtSchedules().size() > 0) {
 				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
 					freqScheduleValidation(scQtSchedule);
 				}
@@ -219,55 +247,52 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getScLoa();
 				renewSesionObject();
-				successMessage(MessageConst.INFO_700026, ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_LETTER_OF_AWARD, scLoa.getLoaNo(), Boolean.TRUE);
+				successMessage(MessageConst.INFO_700026,
+						ParameterTypeConst.DOCUMENT_TYPES,
+						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
+						scLoa.getLoaNo(), Boolean.TRUE);
 			}
 
 		} finally {
-			//qtAwardSO = null;
+			// qtAwardSO = null;
 		}
 		return null;
 	}
 
-
 	/**
 	 * Gets the agreement letter.
-	 *
+	 * 
 	 * @return the loa stream content
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public StreamedContent getLoaStreamContent() throws IOException {
 		StreamedContent loaStreamContent = getManagedBean()
 				.getLoaStreamContent();
 
-		/*	if (loaStreamContent == null) {
-			ScLoaReport agreementLetterReport = null;
-			for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
-					.getScLoaReports()) {
-				String docDefinitionKey = scLoaReport.getPmDocument()
-						.getDocDefinitionKey();
-
-				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-						.equals(docDefinitionKey)) {
-					agreementLetterReport = scLoaReport;
-
-					break;
-				}
-			}
-
-			if (agreementLetterReport != null) {
-				ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport);
-				agreementLetterReport
-						.setScLoaReportAttachment(agreementLetterAttachment);
-
-				loaStreamContent = getAttachmentStreamContent(
-						agreementLetterAttachment,
-						CommonConstants.FILE_CONTENT_TYPE_PDF);
-
-				getManagedBean().setLoaStreamContent(loaStreamContent);
-			}
-		} else {
-			loaStreamContent.getStream().reset();
-		}*/
+		/*
+		 * if (loaStreamContent == null) { ScLoaReport agreementLetterReport =
+		 * null; for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
+		 * .getScLoaReports()) { String docDefinitionKey =
+		 * scLoaReport.getPmDocument() .getDocDefinitionKey();
+		 * 
+		 * if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+		 * .equals(docDefinitionKey)) { agreementLetterReport = scLoaReport;
+		 * 
+		 * break; } }
+		 * 
+		 * if (agreementLetterReport != null) { ScLoaReportAttachment
+		 * agreementLetterAttachment =
+		 * generateDocumentAttachment(agreementLetterReport);
+		 * agreementLetterReport
+		 * .setScLoaReportAttachment(agreementLetterAttachment);
+		 * 
+		 * loaStreamContent = getAttachmentStreamContent(
+		 * agreementLetterAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+		 * 
+		 * getManagedBean().setLoaStreamContent(loaStreamContent); } } else {
+		 * loaStreamContent.getStream().reset(); }
+		 */
 
 		return loaStreamContent;
 	}
@@ -296,58 +321,63 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Calculate bond amount.
-	 *
-	 * @param scLoa the sc loa
+	 * 
+	 * @param scLoa
+	 *            the sc loa
 	 * @return the big decimal
 	 */
-	private ScLoa  calcBondAmount(ScLoa scLoa){
-		BigDecimal loaAmt  = BigDecimal.ZERO;
-		BigDecimal bondAmt  = BigDecimal.ZERO; 
+	private ScLoa calcBondAmount(ScLoa scLoa) {
+		BigDecimal loaAmt = BigDecimal.ZERO;
+		BigDecimal bondAmt = BigDecimal.ZERO;
 		double totalDuration = 0;
 		double loaAmtForBondPercentage = 0;
-		double bondPercentage =0;
-		if(scLoa.getLoaAmt() != null){
-			BigDecimal  lamt  = scLoa.getLoaAmt();
-			lamt =  lamt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-			double loaAmount =  lamt.doubleValue();
+		double bondPercentage = 0;
+		if (scLoa.getLoaAmt() != null) {
+			BigDecimal lamt = scLoa.getLoaAmt();
+			lamt = lamt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+			double loaAmount = lamt.doubleValue();
 
-			if(scLoa.getContractDuration() != null){
-				BigDecimal  duration  = scLoa.getContractDuration();
+			if (scLoa.getContractDuration() != null) {
+				BigDecimal duration = scLoa.getContractDuration();
 				duration = duration.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				double cduration =  duration.doubleValue();
-				if(cduration >0){
-					totalDuration = cduration/12;
+				double cduration = duration.doubleValue();
+				if (cduration > 0) {
+					totalDuration = cduration / 12;
 				}
 
-				if(totalDuration >0){
-					loaAmtForBondPercentage = loaAmount/totalDuration;
+				if (totalDuration > 0) {
+					loaAmtForBondPercentage = loaAmount / totalDuration;
 				}
 
-				if(loaAmtForBondPercentage >0){
-					loaAmt  = new BigDecimal(String.valueOf(loaAmtForBondPercentage));
-					loaAmt =  loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+				if (loaAmtForBondPercentage > 0) {
+					loaAmt = new BigDecimal(
+							String.valueOf(loaAmtForBondPercentage));
+					loaAmt = loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 				}
 			}
 
 			// Get performance bond rule percentage
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
+			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IRuleSO.class);
 			RuleReqDTO ruleReqDTO = new RuleReqDTO();
 			ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
 			ruleReqDTO.setCompareValue(loaAmt.toString());
-			RuleResDTO roleResDTO = ruleSO.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
+			RuleResDTO roleResDTO = ruleSO
+					.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
 
-			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueStrList() != null 
+			if (roleResDTO.isSuccessful()
+					&& roleResDTO.getRuleValueStrList() != null
 					&& roleResDTO.getRuleValueStrList().size() > 0) {
 				String percentage = roleResDTO.getRuleValueStrList().get(0);
 				double res = Double.valueOf(percentage);
-				bondPercentage = res/100;
+				bondPercentage = res / 100;
 				scLoa.setBondPercentage(new BigDecimal(percentage));
 			}
-			if(bondPercentage >0 && loaAmtForBondPercentage >0){
-				double total  = loaAmtForBondPercentage * bondPercentage;
-				bondAmt  = new BigDecimal(String.valueOf(total));
-				bondAmt  = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
+			if (bondPercentage > 0 && loaAmtForBondPercentage > 0) {
+				double total = loaAmtForBondPercentage * bondPercentage;
+				bondAmt = new BigDecimal(String.valueOf(total));
+				bondAmt = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
 				scLoa.setBondAmt(bondAmt);
 			}
 		}
@@ -355,9 +385,10 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	}
 
 	/**
-	 * Edits the supplier loa action.
-	 * page navigate to loa supplier page.
-	 * @param loaId the loa id
+	 * Edits the supplier loa action. page navigate to loa supplier page.
+	 * 
+	 * @param loaId
+	 *            the loa id
 	 */
 	public void editSupplierLOAAction(Long loaId) {
 		debugLogger("editSupplierLOAAction");
@@ -365,8 +396,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setLoaId(loaId);
 
-			AwardSupplierResDTO resDTO = getQtAwardSO()
-					.retrieveSupplierLOADtl(reqDTO);
+			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSupplierLOADtl(
+					reqDTO);
 
 			ScLoa scLoa = resDTO.getScLoa();
 			getManagedBean().setScLoa(scLoa);
@@ -388,14 +419,14 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			if (loaSupplierWitness == null) {
 				loaSupplierWitness = new ScLoaWitness();
 				loaSupplierWitness
-				.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
+						.setPartyType(ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER);
 				loaSupplierWitness.setScLoa(scLoa);
 
 				scLoaWitnesses.add(loaSupplierWitness);
 			}
 			getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
 			ScQt scQt = resDTO.getScQt();
-			if(scQt != null){
+			if (scQt != null) {
 				getManagedBean().setScQt(resDTO.getScQt());
 			}
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
@@ -408,41 +439,46 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			}
 
 			// loa signer
-			if(scLoa.getContractSigner() != null){
-				getManagedBean().setContractSignerUser(scLoa.getContractSigner());
+			if (scLoa.getContractSigner() != null) {
+				getManagedBean().setContractSignerUser(
+						scLoa.getContractSigner());
 			}
 
-			//generateDeclarationFromVelocity(scLoa,scQt);
+			// generateDeclarationFromVelocity(scLoa,scQt);
 
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
 
-
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_SUPPLIER_MAIN_PAGE);
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							QTConstants.SC_DIRECT_LOA_SUPPLIER_MAIN_PAGE);
 
 		} catch (Exception e) {
 			handleException(e);
 		} finally {
-			//qtAwardSO = null;
+			// qtAwardSO = null;
 		}
 	}
 
 	/**
 	 * Pre render page navigation to loa supplier page based on task id
+	 * 
 	 * @return void
 	 */
 	public void preRenderSupplierView() {
 		debugLogger("preRenderSupplierView");
 
 		try {
-			/*SCAwardSupplierDataType dpDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
-			Long sourceId = Long.valueOf(dpDataType.getSourceId());
-			Long loaId = Long.valueOf(dpDataType.getAwardId());
-
-			getManagedBean().setSourceId(sourceId);
-			getManagedBean().setPayLoad(dpDataType);
+			/*
+			 * SCAwardSupplierDataType dpDataType =
+			 * getBpmTaskDetails(SCAwardSupplierDataType.class); Long sourceId =
+			 * Long.valueOf(dpDataType.getSourceId()); Long loaId =
+			 * Long.valueOf(dpDataType.getAwardId());
+			 * 
+			 * getManagedBean().setSourceId(sourceId);
+			 * getManagedBean().setPayLoad(dpDataType);
 			 */
 			/*
 			 * String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT,
@@ -455,7 +491,7 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 			// supplier witness
 
-			if(null == getManagedBean().getLoaSupplierWitness()){
+			if (null == getManagedBean().getLoaSupplierWitness()) {
 				getManagedBean().setLoaSupplierWitness(new ScLoaWitness());
 			}
 
@@ -468,8 +504,9 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Freq schedule validation.
-	 *
-	 * @param scQtSchedule the sc qt schedule
+	 * 
+	 * @param scQtSchedule
+	 *            the sc qt schedule
 	 */
 	private void freqScheduleValidation(ScQtSchedule scQtSchedule) {
 		debugLogger("frequencyScheduleValidation");
@@ -477,24 +514,36 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		Calendar startDate = null;
 		Calendar endDate = null;
 
-		if(scQtSchedule.getStartYear() == null || scQtSchedule.getStartYear().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.year",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		if (scQtSchedule.getStartYear() == null
+				|| scQtSchedule.getStartYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_721110, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.start.year",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
 		}
-		if(scQtSchedule.getStartMonth() == null || scQtSchedule.getStartMonth().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.start.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		if (scQtSchedule.getStartMonth() == null
+				|| scQtSchedule.getStartMonth().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_721110, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.start.month",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
 		}
-		if(scQtSchedule.getEndYear() == null || scQtSchedule.getEndYear().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.year",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		if (scQtSchedule.getEndYear() == null
+				|| scQtSchedule.getEndYear().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_721110, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.end.year",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
 		}
-		if(scQtSchedule.getEndMonth() == null || scQtSchedule.getEndMonth().isEmpty()){
-			throw new EpException(MessageConst.ERROR_721110, new String[] {ResourceBundleUtils.getMessage("lbl.sc.end.month",
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, facesScopes.getUserLocale()), ""});
+		if (scQtSchedule.getEndMonth() == null
+				|| scQtSchedule.getEndMonth().isEmpty()) {
+			throw new EpException(MessageConst.ERROR_721110, new String[] {
+					ResourceBundleUtils.getMessage("lbl.sc.end.month",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							facesScopes.getUserLocale()), "" });
 		}
 
-		ScLoa loa = 	getManagedBean().getScLoa();
+		ScLoa loa = getManagedBean().getScLoa();
 		Calendar expDate = Calendar.getInstance();
 		expDate.setTime(loa.getContractExpDate());
 		expDate.add(Calendar.MONTH, 1);
@@ -502,24 +551,29 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		expDate.add(Calendar.DATE, -1);
 		Date contractExpDate = expDate.getTime();
 
-		Calendar effDate =Calendar.getInstance();
+		Calendar effDate = Calendar.getInstance();
 		effDate.setTime(loa.getContractEffDate());
 		effDate.set(Calendar.DAY_OF_MONTH, 1);
-		Date contractEffDate = effDate.getTime();  
+		Date contractEffDate = effDate.getTime();
 
-		if(scQtSchedule.getStartYear() != null && scQtSchedule.getStartMonth() != null){
+		if (scQtSchedule.getStartYear() != null
+				&& scQtSchedule.getStartMonth() != null) {
 			startDate = Calendar.getInstance();
 			startDate.clear();
-			startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0,0,0);
+			startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),
+					Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0, 0, 0);
 		}
 
-		if(scQtSchedule.getEndYear() != null && scQtSchedule.getEndMonth() != null){
+		if (scQtSchedule.getEndYear() != null
+				&& scQtSchedule.getEndMonth() != null) {
 			endDate = Calendar.getInstance();
 			endDate.clear();
-			endDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(getDays(contractExpDate)),0,0,0);
+			endDate.set(Integer.valueOf(scQtSchedule.getEndYear()),
+					Integer.valueOf(scQtSchedule.getEndMonth()),
+					Integer.valueOf(getDays(contractExpDate)), 0, 0, 0);
 		}
 
-		if(startDate != null && endDate != null){
+		if (startDate != null && endDate != null) {
 			if (startDate.after(endDate)) {
 				throw new EpException("Start date must be before end date");
 			}
@@ -529,34 +583,40 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			}
 
 			if (!(startDate.getTime().after(contractEffDate)
-					&& (startDate.getTime().before(contractExpDate)) || contractEffDate.equals(startDate.getTime()))) {
+					&& (startDate.getTime().before(contractExpDate)) || contractEffDate
+						.equals(startDate.getTime()))) {
 				throw new EpException(
 						"Start date should be in contract validity period.");
 			}
 
 			if (!(endDate.getTime().after(contractEffDate)
-					&& (endDate.getTime().before(contractExpDate)) || contractExpDate.equals(endDate.getTime()))) {
+					&& (endDate.getTime().before(contractExpDate)) || contractExpDate
+						.equals(endDate.getTime()))) {
 				throw new EpException(
 						"End date should be in contract validity period.");
 			}
 		}
 
 	}
+
 	/**
 	 * @ param Date date
+	 * 
 	 * @return days of month
 	 */
-	private	static	String	getDays(Date date){
+	private static String getDays(Date date) {
 		Calendar c1 = Calendar.getInstance();
 		c1.setTime(date);
-		String	days	=	String.valueOf(c1.get(Calendar.DAY_OF_MONTH));
+		String days = String.valueOf(c1.get(Calendar.DAY_OF_MONTH));
 		return days;
 	}
 
 	/**
-	 * Deduction type change.
-	 * Deduction Clause will show when deduction type changes
-	 * @param scQtDeduction the sc qt deduction
+	 * Deduction type change. Deduction Clause will show when deduction type
+	 * changes
+	 * 
+	 * @param scQtDeduction
+	 *            the sc qt deduction
 	 */
 	public void deductionTypeChange(ScQtDeduction scQtDeduction) {
 		debugLogger("deductionTypeChange");
@@ -613,18 +673,19 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Gets the clauses title.
-	 *
-	 * @param deduction the deduction
+	 * 
+	 * @param deduction
+	 *            the deduction
 	 * @return the clauses title
 	 */
-	private void getClausesTitle(ScQtDeduction deduction){
-		StringBuilder title  = new StringBuilder();
+	private void getClausesTitle(ScQtDeduction deduction) {
+		StringBuilder title = new StringBuilder();
 		title.append("Title");
 		title.append(":");
 		title.append(" ");
-		if(deduction != null && deduction.getDeductionType() != null){
+		if (deduction != null && deduction.getDeductionType() != null) {
 			title.append(getParameterDesc(deduction.getDeductionType()));
-			title.append(">"); 
+			title.append(">");
 			title.append(" ");
 		}
 
@@ -686,7 +747,7 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		if (getManagedBean().getScLoa().getScQtDeductions() != null
 				&& getManagedBean().getSelectedScQtDeduction() != null) {
 			getManagedBean().getScLoa().getScQtDeductions()
-			.remove(getManagedBean().getSelectedScQtDeduction());
+					.remove(getManagedBean().getSelectedScQtDeduction());
 		}
 		getManagedBean().setSelectedScQtDeduction(null);
 	}
@@ -695,9 +756,11 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	 * Delete deduction clause.
 	 */
 	public void deleteDeductionClause() {
-		ScQtDeduction scQtDeduction = getManagedBean().getSelectedScQtDeduction();
-		List<ScQtDeductionClause> clauses = getManagedBean().getSelectedDeductionClauses();
-		if(clauses != null && clauses.size()>0){
+		ScQtDeduction scQtDeduction = getManagedBean()
+				.getSelectedScQtDeduction();
+		List<ScQtDeductionClause> clauses = getManagedBean()
+				.getSelectedDeductionClauses();
+		if (clauses != null && clauses.size() > 0) {
 			deleteRowsAction(scQtDeduction.getScQtDeductionClauses(), clauses);
 		} else {
 			throw new EpException("Please select At least one Item");
@@ -706,10 +769,13 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Handle file upload.
-	 *
-	 * @param event the event
-	 * @throws FileNotFoundException the file not found exception
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void handleFileUpload(FileUploadEvent event)
 			throws FileNotFoundException, IOException {
@@ -742,7 +808,7 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 					scLoaReportAttachment.setScLoaReport(selectedScLoaReport);
 
 					selectedScLoaReport
-					.setScLoaReportAttachment(scLoaReportAttachment);
+							.setScLoaReportAttachment(scLoaReportAttachment);
 				}
 
 				scLoaReportAttachment.setDocNo(selectedScLoaReport.getScLoa()
@@ -756,8 +822,7 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	}
 
 	/**
-	 * Handle branch details changed.
-	 *  shows the supplier address details.
+	 * Handle branch details changed. shows the supplier address details.
 	 */
 	public void handleBranchDetailsChanged() {
 		debugLogger("handleBranchDetailsChanged");
@@ -817,8 +882,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	}
 
 	/**
-	 * Handle bank details changed.
-	 * shows the supplier address details for selected branch and bank.
+	 * Handle bank details changed. shows the supplier address details for
+	 * selected branch and bank.
 	 */
 	public void handleBankDetailsChanged() {
 		debugLogger("handleBankDetailsChanged");
@@ -845,12 +910,13 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		}
 	}
 
-
 	/**
 	 * Validate loa details.
-	 *
-	 * @param scLoa the sc loa
-	 * @param outcome the outcome
+	 * 
+	 * @param scLoa
+	 *            the sc loa
+	 * @param outcome
+	 *            the outcome
 	 */
 	private void validateLOADetails(ScLoa scLoa, String outcome) {
 		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
@@ -866,91 +932,102 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Parses the loa details.
-	 *
-	 * @param scLoa the sc loa
-	 * @param outcome the outcome
+	 * 
+	 * @param scLoa
+	 *            the sc loa
+	 * @param outcome
+	 *            the outcome
 	 */
 	private void parseLOADetails(ScLoa scLoa, String outcome) {
 		if (scLoa.isBrandNew()) {
 			scLoa.setIssueDate(new Date());
 
-			List<ScLoaWorkFlowStatus> workFlowStatuses = new ArrayList<ScLoaWorkFlowStatus>();
-			ScLoaWorkFlowStatus workFlowStatus = new ScLoaWorkFlowStatus();
-			workFlowStatus.setScLoa(scLoa);
-			workFlowStatus.setPmStatus(scLoa.getPmStatus());
-			workFlowStatus.setCurrent(true);
-			workFlowStatuses.add(workFlowStatus);
-			scLoa.setScLoaWorkFlowStatuses(workFlowStatuses);
-		}
+			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+			if (scLoa.isApprovalReq()
+					&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+				PmUser approverUser = getManagedBean().getApproverUser();
 
-		if (scLoa.isApprovalReq()
-				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-			PmUser approverUser = getManagedBean().getApproverUser();
+				if (approverUser.getUserId() != null) {
+					ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
 
-			if (approverUser.getUserId() != null) {
-				ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+					if (scLoaApproval == null) {
+						scLoaApproval = new ScLoaApproval();
+						scLoaApproval.setScLoa(scLoa);
+						scLoaApproval.setApprover(approverUser);
 
-				if (scLoaApproval == null) {
-					scLoaApproval = new ScLoaApproval();
-					scLoaApproval.setScLoa(scLoa);
-					scLoaApproval.setApprover(approverUser);
-
-					scLoa.setScLoaApproval(scLoaApproval);
-				} else {
-					scLoaApproval.setApprover(approverUser);
+						scLoa.setScLoaApproval(scLoaApproval);
+					} else {
+						scLoaApproval.setApprover(approverUser);
+					}
 				}
+			} else if (scLoa.isApprovalReq()
+					&& QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+				ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+				String action = null;
+				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+					action = ApprovalAction.APPROVAL_APPROVED.value();
+				} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+					action = ApprovalAction.APPROVAL_REJECTED.value();
+				} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
+					action = ApprovalAction.APPROVAL_REVISED.value();
+				}
+
+				scLoaApproval.setApproverAction(action);
+				scLoaApproval.setApproverActionDate(new Date());
+
+				scLoa.setScLoaApproval(scLoaApproval);
 			}
-		} else if (scLoa.isApprovalReq()
-				&& QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
-			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
-			String action = null;
-			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
-				action = ApprovalAction.APPROVAL_APPROVED.value();
-			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-				action = ApprovalAction.APPROVAL_REJECTED.value();
-			} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
-				action = ApprovalAction.APPROVAL_REVISED.value();
+
+			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+					.equals(statusId)) {
+				scLoa.setAckDate(new Date());
+				scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+				scLoa.setBondResDueDate(new Date());
 			}
 
-			scLoaApproval.setApproverAction(action);
-			scLoaApproval.setApproverActionDate(new Date());
-
-			scLoa.setScLoaApproval(scLoaApproval);
-		}
-
-		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
-			scLoa.setAckDate(new Date());
-			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
-			scLoa.setBondResDueDate(new Date());
-		} else {
-			//saveScheduleList();
 			saveProgressivePaymntList();
-
 			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
-		}
 
-		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
-		if (contractSignerUser != null
-				&& contractSignerUser.getUserId() != null) {
-			scLoa.setContractSigner(contractSignerUser);
-		}
+			ScQt scQt = this.getManagedBean().getScQt();
+			if (scQt.isZonal()) {
+				ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
+						.getScQt().getScQtSupplierCriteria();
+				List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+						this.getManagedBean().getZoneTrees(), null);
 
-		// supplier witness details
-		/*if(scLoa.getScLoaWitnesses() != null && scLoa.getScLoaWitnesses().size()>0){
-			List<ScLoaWitness> witnesses = scLoa.getScLoaWitnesses();
-			ScLoaWitness  loaWitness = getManagedBean().getLoaSupplierWitness();
-			if(loaWitness != null){
-				int index  = witnesses.indexOf(loaWitness);
-				scLoa.getScLoaWitnesses().set(index, loaWitness);	
+				if (CollectionUtils.isNotEmpty(zoneDetails)) {
+
+					for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+
+						tplSpecZoneDtl.setTplSpecZone(supplierCriteria
+								.getQtZoneCriterias());
+
+					}
+				}
+				supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
+
+				supplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
+						zoneDetails);
+			} else {
+				ScQtSupplierCriteria supplierCriteria = scQt
+						.getScQtSupplierCriteria();
+				List<ScQtLocCriteria> locCriterias = convertTreeNodesToLocationCriteria(
+						this.getManagedBean().getLocationTreeNodes(),
+						supplierCriteria);
+
+				supplierCriteria.setScQtLocCriteria(locCriterias);
+
+				supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
+				scQt.setZoneLocationLevel(null);
 			}
-		}*/
+
+		}
+
 	}
 
 	/**
-	 * Contract type changed.
-	 * shows Agency based on contract type changes.
+	 * Contract type changed. shows Agency based on contract type changes.
 	 */
 	public void contractTypeChanged() {
 		debugLogger("contractTypeChanged");
@@ -985,22 +1062,24 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 				getManagedBean().setAgencyProfileDDList(
 						resDTO.getAgencyProfileDDList());
 
-				if(scLoa.getScLoiLoa().getPmOrgProfile() != null){
+				if (scLoa.getScLoiLoa().getPmOrgProfile() != null) {
 					boolean found = false;
-					for(Object[] object : resDTO.getAgencyProfileDDList()){
-						if(object[0].toString().equals(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId().toString())){
+					for (Object[] object : resDTO.getAgencyProfileDDList()) {
+						if (object[0].toString().equals(
+								scLoa.getScLoiLoa().getPmOrgProfile()
+										.getOrgProfileId().toString())) {
 							found = true;
 							break;
 						}
 					}
-					if(found){
-						scLoa.setContractAgency(scLoa.getScLoiLoa().getPmOrgProfile());
+					if (found) {
+						scLoa.setContractAgency(scLoa.getScLoiLoa()
+								.getPmOrgProfile());
 					}
 				}
 
-
 			} finally {
-				//qtAwardSO = null;
+				// qtAwardSO = null;
 			}
 		} else if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
 			ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
@@ -1022,12 +1101,12 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		}
 
 		contractAgencyChanged();
-		//checkAgreementMandatory();
+		// checkAgreementMandatory();
 	}
 
 	/**
-	 * Contract agency changed.
-	 * shows Contract Administrator based on agency changes.
+	 * Contract agency changed. shows Contract Administrator based on agency
+	 * changes.
 	 */
 	public void contractAgencyChanged() {
 		debugLogger("contractAgencyChanged");
@@ -1041,11 +1120,12 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getContractAgency() != null || getManagedBean().getSelectedContractAgency() !=null) {
+			if (scLoa.getContractAgency() != null
+					|| getManagedBean().getSelectedContractAgency() != null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
-					reqDTO.setOrgProfileId(scLoa.getContractAgency()
+					reqDTO.setOrgProfileId(scLoa.getScQt().getPmOrgProfile()
 							.getOrgProfileId());
 
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
@@ -1057,10 +1137,11 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 					// TODO - filter user based on central contract.
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
-					reqDTO.setOrgType(getManagedBean().getSelectedContractAgency());
+					reqDTO.setOrgType(getManagedBean()
+							.getSelectedContractAgency());
 
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-
+					
 					userList = resDTO.getUserList();
 				}
 			}
@@ -1099,8 +1180,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	}
 
 	/**
-	 * Contract eff date changed.
-	 *  calculate Completion Expiry Date based on Completion Period.
+	 * Contract eff date changed. calculate Completion Expiry Date based on
+	 * Completion Period.
 	 */
 	public void contractEffDateChanged() {
 		debugLogger("contractEffDateChanged");
@@ -1148,74 +1229,78 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	public void contractSignerEvent() {
 		debugLogger("contractSignerEvent");
 		PmUser contractSigner = getManagedBean().getContractSignerUser();
-		if(contractSigner != null){
-			if(getManagedBean().getContractSignerList() != null && getManagedBean().getContractSignerList().size()>0 ){
-				List<PmUser> contractSignerList  = getManagedBean().getContractSignerList();
+		if (contractSigner != null) {
+			if (getManagedBean().getContractSignerList() != null
+					&& getManagedBean().getContractSignerList().size() > 0) {
+				List<PmUser> contractSignerList = getManagedBean()
+						.getContractSignerList();
 				for (PmUser user : contractSignerList) {
 
-					if(contractSigner.getUserId().equals(user.getUserId())){
-						getManagedBean().getScLoa().setLoaSignerDesig(user.getDesignation());
+					if (contractSigner.getUserId().equals(user.getUserId())) {
+						getManagedBean().getScLoa().setLoaSignerDesig(
+								user.getDesignation());
+						break;
 					}
 				}
 			}
 		}
 	}
 
-
 	/**
 	 * Adds the schedule details in Fulfillment Schedule.
 	 */
 	public void addScheduleDetails() {
 
+		IParameterSO parameterSo = null;
 		try {
 
-			int year = Calendar.getInstance().get(Calendar.YEAR);
-			List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
+			removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+
+			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
 					.getScQtSchedules();
-			if (null == freqSchedule) {
-				freqSchedule = new ArrayList<ScQtSchedule>();
+
+			parameterSo = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			// int year = Calendar.getInstance().get(Calendar.YEAR);
+			ParameterReqDTO docDefTypeReqDTO = new ParameterReqDTO();
+			docDefTypeReqDTO.setParameterType(ParameterTypeConst.SCHEDULE_TYPE);
+			docDefTypeReqDTO
+					.setParameterCode(ParameterConst.SCHEDULE_TYPE_PERIODIC);
+			ParameterResDTO docDefTypeResDTO = parameterSo
+					.retrieveParameterByTypeAndCode(docDefTypeReqDTO);
+			for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
+
+				ScQtSchedule schedule = new ScQtSchedule();
+				schedule.setScQt(this.getManagedBean().getScQt());
+				schedule.setScLoa(this.getManagedBean().getScLoa());
+
+				schedule.setScheduleType(docDefTypeResDTO.getPmParameter());
+
+				scheduleList.add(schedule);
 			}
 
-			if (freqSchedule.size() > this.getManagedBean().getTotalFrequency()) {
+			this.getManagedBean().getScLoa().setScQtSchedules(scheduleList);
+		}
 
-				List<ScQtSchedule> localSchedule = new ArrayList<ScQtSchedule>();
-				for (int j = 0; j < this.getManagedBean().getTotalFrequency(); j++) {
-					localSchedule.add(freqSchedule.get(j));
-
-				}
-				this.getManagedBean().getScLoa()
-				.setScQtSchedules(localSchedule);
-			} else {
-				for (int i = freqSchedule.size(); i < this.getManagedBean()
-						.getTotalFrequency(); i++) {
-
-					ScQtSchedule schedule = new ScQtSchedule();
-					schedule.setStartYear(String.valueOf(year));
-					schedule.setEndYear(String.valueOf(year));
-					schedule.setScheduleNo(BigDecimal.valueOf(i + 1));
-					PmParameter parameter = this.getParameterByTypeAndCode(ParameterTypeConst.SCHEDULE_TYPE, ParameterConst.SCHEDULE_TYPE_PERIODIC);
-					schedule.setScheduleType(parameter);					
-					setUserDetails(schedule);
-					freqSchedule.add(schedule);
-				}
-				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
-			}
-
-		} finally {
-
+		finally {
+			parameterSo = null;
 		}
 	}
 
 	/**
-	 * Gets the year details.
-	 * Shows start month and end month drop downs based on Total Frequency.
+	 * Gets the year details. Shows start month and end month drop downs based
+	 * on Total Frequency.
+	 * 
 	 * @return the year details
 	 */
 	public List<SelectItem> getYearDetails() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
 		FacesScopes face = new FacesScopes();
 		try {
-			selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS, face.getUserLocale())));
+			selectItems.add(new SelectItem(null, ResourceBundleUtils
+					.getMessage("lbl.txt.select",
+							ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+							face.getUserLocale())));
 			selectItems.add(new SelectItem(1, getMonth(1)));
 			selectItems.add(new SelectItem(2, getMonth(2)));
 			selectItems.add(new SelectItem(3, getMonth(3)));
@@ -1225,9 +1310,9 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 			selectItems.add(new SelectItem(7, getMonth(7)));
 			selectItems.add(new SelectItem(8, getMonth(8)));
 			selectItems.add(new SelectItem(9, getMonth(9)));
-			selectItems.add(new SelectItem(10,getMonth(10)));
-			selectItems.add(new SelectItem(11,getMonth(11)));
-			selectItems.add(new SelectItem(12,getMonth(12)));
+			selectItems.add(new SelectItem(10, getMonth(10)));
+			selectItems.add(new SelectItem(11, getMonth(11)));
+			selectItems.add(new SelectItem(12, getMonth(12)));
 
 			this.getManagedBean().setYearList(selectItems);
 		} finally {
@@ -1239,78 +1324,73 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	/**
 	 * Gets the month.
 	 * 
-	 * @param monthId the month id
+	 * @param monthId
+	 *            the month id
 	 * @return the month
 	 */
-	private String getMonth(int monthId){
+	private String getMonth(int monthId) {
 		Calendar fullMonth = Calendar.getInstance();
 		fullMonth.set(00, monthId, 0000);
 
-		Format formatter = new SimpleDateFormat("MMMM"); 
+		Format formatter = new SimpleDateFormat("MMMM");
 		String month = formatter.format(fullMonth.getTime());
 
 		return month;
 	}
 
 	/**
-	 * Calculate start month.
-	 *
-	 * @param event the event
-	 */
-	public void calculateStartMonth(AjaxBehaviorEvent event) {
-		event.getComponent().getAttributes().get("value");
-
-	}
-
-	/**
-	 * Gets the years display dtls.
-	 * Shows start year and end year drop downs based on Total Frequency.
+	 * Gets the years display dtls. Shows start year and end year drop downs
+	 * based on Total Frequency.
+	 * 
 	 * @return the years display dtls
 	 */
 	public List<SelectItem> getYearsDisplayDtls() {
 		List<SelectItem> selectItems = new ArrayList<SelectItem>();
-		ScLoa loa = 	getManagedBean().getScLoa();
+		ScLoa loa = getManagedBean().getScLoa();
 
 		try {
-			//int year = Calendar.getInstance().get(Calendar.YEAR);
-			Calendar calendar = Calendar.getInstance(); 
+			// int year = Calendar.getInstance().get(Calendar.YEAR);
+			Calendar calendar = Calendar.getInstance();
 			int effYear = 0;
 			int expYear = 0;
-			if(loa != null){
+			if (loa != null) {
 
-				if(loa.getContractEffDate() != null){
-					calendar.setTime(loa.getContractEffDate());  
+				if (loa.getContractEffDate() != null) {
+					calendar.setTime(loa.getContractEffDate());
 					effYear = calendar.get(Calendar.YEAR);
 				}
 
-				if(loa.getContractExpDate() != null){
-					calendar.setTime(loa.getContractExpDate());  
+				if (loa.getContractExpDate() != null) {
+					calendar.setTime(loa.getContractExpDate());
 					expYear = calendar.get(Calendar.YEAR);
 				}
 
 				int noOfYears = expYear - effYear;
-				selectItems.add(new SelectItem(null, ResourceBundleUtils.getMessage(
-						"lbl.txt.select", 
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale())));
+				selectItems.add(new SelectItem(null, ResourceBundleUtils
+						.getMessage("lbl.txt.select",
+								ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+								new FacesScopes().getUserLocale())));
 
-				for (int i = 0; i <= noOfYears +1; i++) {
+				for (int i = 0; i <= noOfYears + 1; i++) {
 
-					if(i == 0){
-						selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+					if (i == 0) {
+						selectItems.add(new SelectItem(effYear, String
+								.valueOf(effYear)));
 					}
 
-					if(noOfYears == 0){
+					if (noOfYears == 0) {
 						break;
 					}
-					effYear = effYear+1;
+					effYear = effYear + 1;
 
-					if(effYear == expYear){
-						selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+					if (effYear == expYear) {
+						selectItems.add(new SelectItem(effYear, String
+								.valueOf(effYear)));
 						break;
 					}
 
-					selectItems.add(new SelectItem(effYear, String.valueOf(effYear)));
+					selectItems.add(new SelectItem(effYear, String
+							.valueOf(effYear)));
 				}
 			}
 
@@ -1328,12 +1408,16 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	}
 
 	/**
-	 * Calculate schedule months.
-	 * Calculating start month , start year , end month and end year to display total months.
-	 * @param schedule the schedule
-	 * @param startMonthAction the start month action
+	 * Calculate schedule months. Calculating start month , start year , end
+	 * month and end year to display total months.
+	 * 
+	 * @param schedule
+	 *            the schedule
+	 * @param startMonthAction
+	 *            the start month action
 	 */
-	public void calculateScheduleMonths(ScQtSchedule schedule, Boolean startMonthAction) {
+	public void calculateScheduleMonths(ScQtSchedule schedule,
+			Boolean startMonthAction) {
 
 		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
 				.getScQtSchedules();
@@ -1344,44 +1428,44 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		Integer startMonth = 0, endMonth = 0, startYear = 0, endYear = 0, diffYear = 0, count = 0;
 		startMonth = schedule.getStartMonth() != null ? Integer
 				.parseInt(schedule.getStartMonth()) : null;
-				endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
-						.getEndMonth()) : null;
-				startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule
-						.getStartYear()) : null;
-				endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
-						.getEndYear()) : null;
+		endMonth = schedule.getEndMonth() != null ? Integer.parseInt(schedule
+				.getEndMonth()) : null;
+		startYear = schedule.getStartYear() != null ? Integer.parseInt(schedule
+				.getStartYear()) : null;
+		endYear = schedule.getEndYear() != null ? Integer.parseInt(schedule
+				.getEndYear()) : null;
 
-				if (startMonthAction !=null && startMonthAction && startMonth != null) {
-					endMonth = startMonth;
-					endYear = startYear;
-					schedule.setEndMonth(endMonth.toString());
-					if(endYear != null){
-						schedule.setEndYear(endYear.toString());
-					}
+		if (startMonthAction != null && startMonthAction && startMonth != null) {
+			endMonth = startMonth;
+			endYear = startYear;
+			schedule.setEndMonth(endMonth.toString());
+			if (endYear != null) {
+				schedule.setEndYear(endYear.toString());
+			}
 
-				}
+		}
 
-				if (startMonth != null && endMonth != null && startYear != null
-						&& endYear != null && endYear >= startYear) {
-					if (!endYear.equals(startYear)) {
-						diffYear = endYear - startYear;
-					}
-					for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
-						count++;
-					}
-					schedule.setTotalMonths(new BigDecimal(count));
-				} else {
-					schedule.setTotalMonths(BigDecimal.ZERO);
-				}
+		if (startMonth != null && endMonth != null && startYear != null
+				&& endYear != null && endYear >= startYear) {
+			if (!endYear.equals(startYear)) {
+				diffYear = endYear - startYear;
+			}
+			for (int i = startMonth + 1; i <= endMonth + 1 + (diffYear * 12); i++) {
+				count++;
+			}
+			schedule.setTotalMonths(new BigDecimal(count));
+		} else {
+			schedule.setTotalMonths(BigDecimal.ZERO);
+		}
 
-				int index = freqSchedule.indexOf(schedule);
-				freqSchedule.set(index, schedule);
-				this.getManagedBean().setScheduleList(freqSchedule);
+		int index = freqSchedule.indexOf(schedule);
+		freqSchedule.set(index, schedule);
+		this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
 	}
 
 	/**
 	 * Gets the deduction item type dropdown list.
-	 *
+	 * 
 	 * @return the deduction item type dropdown list
 	 */
 	public SelectItem[] getDeductionItemTypeDropdownList() {
@@ -1404,42 +1488,26 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	 * Adds the progressive details.
 	 */
 	public void addProgressiveDetails() {
-		int year = Calendar.getInstance().get(Calendar.YEAR);
-		ScLoa scLoa = getManagedBean().getScLoa();
-		List<ScQtProgressivePayment> progressive = this.getManagedBean()
-				.getProgressivePaymentList();
 
-		if (null == progressive) {
-			progressive = new ArrayList<ScQtProgressivePayment>();
+		removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
+		List<ScQtProgressivePayment> payments = this.getManagedBean()
+				.getScLoa().getScQtProgPayments();
+
+		for (int j = 0; j < this.getManagedBean().getTotalProgressivePayment(); j++) {
+
+			ScQtProgressivePayment payment = new ScQtProgressivePayment();
+
+			setUserDetails(payment);
+
+			payment.setScQt(this.getManagedBean().getScQt());
+			payment.setScLoa(this.getManagedBean().getScLoa());
+			payments.add(payment);
 
 		}
+		this.getManagedBean().getScQt()
+				.setScheduleType(SourcingConstants.PROGRESSIVE_PAYMENT);
+		this.getManagedBean().getScLoa().setScQtProgPayments(payments);
 
-		if (progressive.size() > this.getManagedBean()
-				.getTotalProgressivePayment()) {
-
-			List<ScQtProgressivePayment> progressiveList = new ArrayList<ScQtProgressivePayment>();
-			for (int j = 0; j < this.getManagedBean()
-					.getTotalProgressivePayment(); j++) {
-				progressiveList.add(progressive.get(j));
-
-			}
-			this.getManagedBean().setProgressivePaymentList(progressiveList);
-		} else {
-			for (int i = progressive.size(); i < this.getManagedBean()
-					.getTotalProgressivePayment(); i++) {
-
-				ScQtProgressivePayment payment = new ScQtProgressivePayment();
-				payment.setStartYear(String.valueOf(year));
-				payment.setEndYear(String.valueOf(year));
-				payment.setPhaseNo(BigDecimal.valueOf(i + 1));
-				payment.setScLoa(scLoa);
-				// payment.setScheduleType(new BigDecimal(1));
-
-				setUserDetails(payment);
-				progressive.add(payment);
-			}
-			this.getManagedBean().setProgressivePaymentList(progressive);
-		}
 	}
 
 	/**
@@ -1447,7 +1515,8 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	 */
 	private void saveProgressivePaymntList() {
 		List<ScQtProgressivePayment> progressivePayemnt = this.getManagedBean()
-				.getProgressivePaymentList();
+				.getScLoa().getScQtProgPayments();
+
 		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
 		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
 			String startMonth = "";
@@ -1484,15 +1553,13 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 					endmonth = "02";
 				} else if (payment.getEndMonth().equalsIgnoreCase("2")) {
 					endmonth = "03";
-				}
-				else if (payment.getEndMonth().equalsIgnoreCase("3")) {
+				} else if (payment.getEndMonth().equalsIgnoreCase("3")) {
 					endmonth = "04";
 				} else if (payment.getEndMonth().equalsIgnoreCase("4")) {
 					endmonth = "05";
 				} else if (payment.getEndMonth().equalsIgnoreCase("5")) {
 					endmonth = "06";
-				}
-				else if (payment.getEndMonth().equalsIgnoreCase("6")) {
+				} else if (payment.getEndMonth().equalsIgnoreCase("6")) {
 					endmonth = "07";
 				} else if (payment.getEndMonth().equalsIgnoreCase("7")) {
 					endmonth = "08";
@@ -1543,97 +1610,103 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 	public void preRenderDirectNegoView() {
 		debugLogger("preRenderDirectNegoView");
 		renewSesionObject();
-		IStatusSO statusSO = null;
-		ScLoa scLoa = new ScLoa();
-		PmParameter pmParameter = new PmParameter();
-		scLoa.setContractType(pmParameter);
 
-		ScLoiLoa  scLoiLoa = new ScLoiLoa();
-		scLoiLoa.setSmSupplier(new SmSupplier());
-		scLoa.setScLoiLoa(scLoiLoa);
-		scLoa.setContractAdmin(new PmUser());
-		scLoa.setPmOrgProfile(new PmOrgProfile());
+		// TODO Need to make a API Call if alredy Exists
 
-		try {
-			statusSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+		// If from menu we need to create new objects.
 
-			StatusReqDTO statusReqDTO = new StatusReqDTO();
-			statusReqDTO.setStatusId(QTStatusConst.LOA_PENDING_SUBMISSION);
-			StatusResDTO statusResDTO = statusSO
-					.retrieveStatusByStatusId(statusReqDTO);
-			scLoa.setPmStatus(statusResDTO.getPmStatus());
-		} catch (Exception e) {
-			throw new EpException(e.toString());
-		} finally {
-			statusSO = null;
-		}
+		IQTDirectAwardSO directAwardSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDirectAwardSO.class);
 
-
-		//generate loa number
-		scLoa.setLoaNo(getQtAwardSO().generateDirectLoaNo());
-
-		getManagedBean().setScLoa(scLoa);
-
-		// witness
-		ScLoaWitness scLoaWitness = new ScLoaWitness();
-		getManagedBean().setLoaAgencyWitness(scLoaWitness);
+		DirectAwardReqDTO awardReqDTO = new DirectAwardReqDTO();
+		awardReqDTO.setScLoa(new ScLoa());
+		DirectAwardResDTO awardResDTO = directAwardSO
+				.retriveDirectAwardDetails(awardReqDTO);
+		ScLoa scLoa = awardResDTO.getLoa();
+		this.getManagedBean().setScLoa(scLoa);
+		this.getManagedBean().setScQt(scLoa.getScQt());
+		this.getManagedBean().setApproverUser(new PmUser());
+		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
 
 		// award details
-		getManagedBean().getTplSpecMaster().setItemOriginCode(new PmParameter());
+		getManagedBean().getTplSpecMaster()
+				.setItemOriginCode(new PmParameter());
 
-
+		scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa
+				.getScLoaWorkFlowStatuses().get(0), scLoa.getScLoaRemarks(),
+				ScLoaRemark.class));
+		this.getManagedBean().setContractSignerList(
+				awardResDTO.getApproverList());
 		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
 	}
 
 	/**
-	 * Mof no listener.
-	 * Gets supplier, branch and adress details based on mof nor.
-	 * @param mofAccount the mof account
+	 * Mof no listener. Gets supplier, branch and adress details based on mof
+	 * nor.
+	 * 
+	 * @param mofAccount
+	 *            the mof account
 	 */
 	public void mofNoListener(SmMofAccount mofAccount) {
 		debugLogger("mofNoListener");
 
-		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(mofAccount.getSmSupplier());
-		getManagedBean().getScLoa().getScLoiLoa().setMofNo(mofAccount.getMofNo());
-		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(mofAccount.getSmSupplier().getCompanyName());
+		getManagedBean().getScLoa().getScLoiLoa()
+				.setSmSupplier(mofAccount.getSmSupplier());
+		getManagedBean().getScLoa().getScLoiLoa()
+				.setMofNo(mofAccount.getMofNo());
+		getManagedBean().getScLoa().getScLoiLoa()
+				.setSupplierName(mofAccount.getSmSupplier().getCompanyName());
 
-		AwardSupplierReqDTO reqDTO  = new AwardSupplierReqDTO();
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
 
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
+		AwardSupplierResDTO resDTO = getQtAwardSO()
+				.retrieveSmPersonnelBySupplierId(reqDTO);
 
 		// smPersonnel
-		if(resDTO.getSupplierHQPersonnel() != null){
-			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());	
+		if (resDTO.getSupplierHQPersonnel() != null) {
+			getManagedBean().setSupplierHQPersonnel(
+					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setSelectedSupplierBranchName("HQ");
 			handleBranchDetailsChanged();
 		}
 	}
 
 	/**
-	 * Supplier listener.
-	 * Gets mof no, branch and adress details based on mof nor.
-	 * @param suSmSupplier the su sm supplier
+	 * Supplier listener. Gets mof no, branch and adress details based on mof
+	 * nor.
+	 * 
+	 * @param suSmSupplier
+	 *            the su sm supplier
 	 */
 	public void supplierListener(SmSupplier suSmSupplier) {
 		debugLogger("supplierListener");
 
 		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(suSmSupplier);
-		getManagedBean().getScLoa().getScLoiLoa().setSupplierName(suSmSupplier.getCompanyName());
+		getManagedBean().getScLoa().getScLoiLoa()
+				.setSupplierName(suSmSupplier.getCompanyName());
 
-		AwardSupplierReqDTO reqDTO  = new AwardSupplierReqDTO();
+		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSmPersonnelBySupplierId(reqDTO);
+		AwardSupplierResDTO resDTO = getQtAwardSO()
+				.retrieveSmPersonnelBySupplierId(reqDTO);
 
 		// mof nor
-		getManagedBean().getScLoa().getScLoiLoa().setMofNo(resDTO.getSmSupplier().getSmMofAccounts().get(0).getMofNo());
+		getManagedBean()
+				.getScLoa()
+				.getScLoiLoa()
+				.setMofNo(
+						resDTO.getSmSupplier().getSmMofAccounts().get(0)
+								.getMofNo());
 
 		// smPersonnel
-		if(resDTO.getSupplierHQPersonnel() != null){
-			getManagedBean().setSupplierHQPersonnel(resDTO.getSupplierHQPersonnel());	
+		if (resDTO.getSupplierHQPersonnel() != null) {
+			getManagedBean().setSupplierHQPersonnel(
+					resDTO.getSupplierHQPersonnel());
 			getManagedBean().setSelectedSupplierBranchName("HQ");
 			handleBranchDetailsChanged();
 		}
@@ -1641,7 +1714,7 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Ptj dropdown list.
-	 *
+	 * 
 	 * @return the list
 	 */
 	public List<PmOrgProfile> ptjDropdownList() {
@@ -1666,16 +1739,24 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Ptj change listener.
-	 *
-	 * @param orgProfile the org profile
+	 * 
+	 * @param orgProfile
+	 *            the org profile
 	 */
-	public void ptjChangeListener(PmOrgProfile orgProfile) {
+	public void ptjChangeListener() {
 		List<PmOrgProfile> orgProfileList = getManagedBean()
 				.getPtjDropdownList();
 		if (null != orgProfileList) {
 			for (PmOrgProfile pmOrgProfile : orgProfileList) {
-				if (pmOrgProfile.getOrgProfileId().equals(orgProfile.getOrgProfileId())) {
-					getManagedBean().getScLoa().getScLoiLoa().setPmOrgProfile(pmOrgProfile);
+				if (pmOrgProfile.getOrgProfileId().equals(
+						this.getManagedBean().getScQt().getPmOrgProfile()
+								.getOrgProfileId())) {
+					getManagedBean().getScLoa().getScQt()
+							.setPmOrgProfile(pmOrgProfile);
+					getManagedBean().getScLoa().getScLoiLoa()
+							.setPmOrgProfile(pmOrgProfile);
+					getApprovalUsers();
+					break;
 				}
 			}
 		} else {
@@ -1733,9 +1814,10 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Get item type values from pmParameter
+	 * 
 	 * @return list of dropdown item values.
 	 */
-	public SelectItem[] getItemTypeValues(){
+	public SelectItem[] getItemTypeValues() {
 		ISearchBean<PmParameterDesc> searchBean = new SearchBean<PmParameterDesc>();
 		String recommend = ParameterConst.ITEM_TYPE_PRODUCT_AND_SERVICE;
 
@@ -1743,19 +1825,24 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 				new SearchFilterBean("pmParameter.parameterCode",
 						SearchOperator.OPERATOR_NOT_EQUALS.value(), recommend));
 
-		SelectItem[] items = getDropdownCodeValuesBySearchBean(ParameterTypeConst.SC_ITEM_TYPE, searchBean);
+		SelectItem[] items = getDropdownCodeValuesBySearchBean(
+				ParameterTypeConst.SC_ITEM_TYPE, searchBean);
 		return items;
 	}
-	
-	
+
 	/**
 	 * Success message.
-	 *
-	 * @param messageCode the message code
-	 * @param docType the doc type
-	 * @param docTypeCode the doc type code
-	 * @param docNo the doc no
-	 * @param isAcknowledgeReq the is acknowledge req
+	 * 
+	 * @param messageCode
+	 *            the message code
+	 * @param docType
+	 *            the doc type
+	 * @param docTypeCode
+	 *            the doc type code
+	 * @param docNo
+	 *            the doc no
+	 * @param isAcknowledgeReq
+	 *            the is acknowledge req
 	 */
 	private void successMessage(String messageCode, String docType,
 			String docTypeCode, String docNo, boolean isAcknowledgeRequired) {
@@ -1767,21 +1854,22 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 								new String[] {
 										getParameterDesc(docType, docTypeCode),
 										docNo },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-		
-		if(isAcknowledgeRequired){
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		if (isAcknowledgeRequired) {
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
-			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
+					.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
 
 	}
 
 	/**
 	 * Debug logger.
-	 *
-	 * @param message the message
+	 * 
+	 * @param message
+	 *            the message
 	 */
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -1790,11 +1878,9 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 		log.info(message);
 	}
 
-
-
 	/**
 	 * Gets the pm digi sign.
-	 *
+	 * 
 	 * @return the pm digi sign
 	 */
 	public PmDigiSign getPmDigiSign() {
@@ -1803,8 +1889,9 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Sets the pm digi sign.
-	 *
-	 * @param pmDigiSign the new pm digi sign
+	 * 
+	 * @param pmDigiSign
+	 *            the new pm digi sign
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
@@ -1812,7 +1899,7 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Gets the text before sign.
-	 *
+	 * 
 	 * @return the text before sign
 	 */
 	public String getTextBeforeSign() {
@@ -1821,8 +1908,9 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Sets the text before sign.
-	 *
-	 * @param textBeforeSign the new text before sign
+	 * 
+	 * @param textBeforeSign
+	 *            the new text before sign
 	 */
 	public void setTextBeforeSign(String textBeforeSign) {
 		this.textBeforeSign = textBeforeSign;
@@ -1830,11 +1918,1973 @@ SourcingBaseBackingBean<DirectLOAManagedBean> {
 
 	/**
 	 * Gets the qt award so.
-	 *
+	 * 
+	 * @return the qt award so
+	 */
+	private IQTDirectAwardSO getQtDirectAwardSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IQTDirectAwardSO.class);
+	}
+
+	public void closeListener() {
+		getManagedBean().setRequired(Boolean.FALSE);
+		this.getManagedBean().setZoneLocation(Boolean.FALSE);
+		this.getManagedBean().setAutoUpdate(true);
+	}
+
+	/**
+	 * Select zone tree node.Event handle check non panel Treenodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode)
+	 */
+	public void selectZoneTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(true);
+	}
+
+	/**
+	 * Un select zone tree node.Event handle uncheck Nonpanel treeNodes.
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
+	public void unSelectZoneTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(false);
+	}
+
+	/**
+	 * Edits the zones.click pencil icon in general information menu navigate to
+	 * ZoneLocation Popup.
+	 * 
+	 * @param rootZoneLocation
+	 *            (TreeNode rootZoneLocation)
+	 * @param index
+	 *            (int index).
+	 */
+	public void editZones(TreeNode rootZoneLocation, int index) {
+		IParameterSO parameterSo = null;
+		ICountrySO countrySo = null;
+		try {
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			List<TplSpecZoneLoc> locationDTOs = getZoneLocations(rootZoneLocation);
+
+			// TplSpecZoneDtl zone = getZone(rootZoneLocation);
+			Long locationLevel = this.getManagedBean().getScQt()
+					.getZoneLocationLevel().getParameterId();
+			if (locationLevel == null) {
+				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
+				districtReqDTO
+						.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				districtReqDTO
+						.setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
+				ParameterResDTO districtResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(districtReqDTO);
+
+				locationLevel = districtResDTO.getPmParameter()
+						.getParameterId();
+			}
+
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+			String locationLevelCode = null;
+			for (PmParameterDesc paramDesc : localParamDesc) {
+
+				if (paramDesc.getPmParameter().getParameterId()
+						.equals(locationLevel)) {
+					locationLevelCode = paramDesc.getPmParameter()
+							.getParameterCode();
+
+					break;
+				}
+			}
+
+			List<PmState> states = SourcingLocationHelper
+					.getStateFromLocationDTO(locationDTOs);
+
+			List<PmDivision> divisions = SourcingLocationHelper
+					.getDivisionFromLocationDTO(locationDTOs);
+			List<PmDistrict> districts = SourcingLocationHelper
+					.getDistrictFromLocationDTO(locationDTOs);
+			List<PmCity> cities = SourcingLocationHelper
+					.getCityFromLocationDTO(locationDTOs);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+			getManagedBean().setRootZoanlTree(
+					LocationSingleton.getInstance().buildLocationPopupTree(
+							countryResDTO.getPmCountry().getCountryId(),
+							states, districts, divisions, cities,
+							locationLevelCode, TplSpecZoneLoc.class));
+			int i = index;
+			this.getManagedBean().setAutoUpdate(false);
+			this.getManagedBean().setIndex(i);
+			getManagedBean().setZoneName(
+					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
+			getManagedBean().setTempZoneName(
+					locationDTOs.get(0).getTplSpecZoneDtl().getZoneName());
+		} finally {
+
+		}
+
+	}
+
+	/**
+	 * Gets the zone locations. convert Treenode to TplSpecZoneLoc objects in
+	 * general information.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation)
+	 * @return List<TplSpecZoneLoc>
+	 */
+	private List<TplSpecZoneLoc> getZoneLocations(TreeNode zoneLocation) {
+
+		List<TplSpecZoneLoc> results = new ArrayList<TplSpecZoneLoc>();
+		if (zoneLocation.isLeaf()) {
+			TplSpecZoneLoc locationDTO = (TplSpecZoneLoc) zoneLocation
+					.getData();
+			results.add(locationDTO);
+		} else {
+			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
+				results.addAll(getZoneLocations(childrendLocationNode));
+			}
+		}
+
+		return results;
+	}
+
+	/**
+	 * Select location tree node.Event handle check treeNode Locations in
+	 * Supplier qualification criteria .
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
+	public void selectLocationTreeNode(NodeSelectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(true);
+	}
+
+	/**
+	 * Un select location tree node.Event handle Uncheck treeNode Locations in
+	 * Supplier qualification criteria .
+	 * 
+	 * @param event
+	 *            (TreeNode treeNode).
+	 */
+	public void unSelectLocationTreeNode(NodeUnselectEvent event) {
+		TreeNode selectedTreeNode = event.getTreeNode();
+
+		selectedTreeNode.setSelected(false);
+	}
+
+	/**
+	 * Edits the supplier locations.click pencil icon in supplier qualification
+	 * criteria navigate to Locations Popup.
+	 * 
+	 * @param rootZoneLocation
+	 *            (TreeNode rootZoneLocation)
+	 * @param index
+	 *            (int index)
+	 */
+	public void editSupplierLocations(TreeNode rootZoneLocation, int index) {
+		IParameterSO parameterSo = null;
+		ICountrySO countrySo = null;
+
+		try {
+
+			parameterSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+
+			List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
+			List<TreeNode> locationNodes = getManagedBean()
+					.getLocationTreeNodes();
+			if (CollectionUtils.isNotEmpty(locationNodes)) {
+				for (TreeNode treeNode : locationNodes) {
+					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+					locationDTOs.addAll(locationDTO);
+				}
+			}
+
+			// List<ScQtLocCriteria> locationDTOs =
+			// getLocations(rootZoneLocation);
+			Long locationLevel = this.getManagedBean().getScQt()
+					.getScQtSupplierCriteria().getLocationLevel()
+					.getParameterId();
+
+			if (locationLevel == null) {
+				ParameterReqDTO districtReqDTO = new ParameterReqDTO();
+				districtReqDTO
+						.setParameterType(ParameterTypeConst.LOCATION_LEVEL);
+				districtReqDTO
+						.setParameterCode(ParameterConst.LOCATION_LEVEL_DISTRICT);
+				ParameterResDTO districtResDTO = parameterSo
+						.retrieveParameterByTypeAndCode(districtReqDTO);
+
+				locationLevel = districtResDTO.getPmParameter()
+						.getParameterId();
+			}
+
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+			String locationLevelCode = null;
+			for (PmParameterDesc paramDesc : localParamDesc) {
+
+				if (paramDesc.getPmParameter().getParameterId()
+						.equals(locationLevel)) {
+					locationLevelCode = paramDesc.getPmParameter()
+							.getParameterCode();
+					this.getManagedBean().setLocalLevelCode(locationLevelCode);
+
+					break;
+				}
+			}
+
+			// ScQuoteZone zone = getZone(rootZoneLocation);
+			List<PmState> states = SourcingLocationHelper
+					.getStateFromLocationDTO(locationDTOs);
+			List<PmDivision> divisions = SourcingLocationHelper
+					.getDivisionFromLocationDTO(locationDTOs);
+			List<PmDistrict> districts = SourcingLocationHelper
+					.getDistrictFromLocationDTO(locationDTOs);
+			List<PmCity> cities = SourcingLocationHelper
+					.getCityFromLocationDTO(locationDTOs);
+			CountryReqDTO countryReqDTo = new CountryReqDTO();
+			countryReqDTo.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+			CountryResDTO countryResDTO = countrySo
+					.retrieveCountryByCode(countryReqDTo);
+			getManagedBean().setRootLocationTree(
+					LocationSingleton.getInstance().buildLocationPopupTree(
+							countryResDTO.getPmCountry().getCountryId(),
+							states, districts, divisions, cities,
+							locationLevelCode, ScQtLocCriteria.class));
+
+			// this.getManagedBean().setIndex(i);
+		} finally {
+			parameterSo = null;
+		}
+
+		// getManagedBean().setZoneName(zone.getZoneName());
+
+	}
+
+	/**
+	 * Gets the locations.convert Treenode to Location Criteria objects in
+	 * supplier qualification criteria.
+	 * 
+	 * @param zoneLocation
+	 *            (TreeNode zoneLocation)
+	 * @return List<ScQtLocCriteria>
+	 */
+	private List<ScQtLocCriteria> getLocations(TreeNode zoneLocation) {
+		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
+		if (zoneLocation.isLeaf()) {
+			ScQtLocCriteria locationDTO = (ScQtLocCriteria) zoneLocation
+					.getData();
+			results.add(locationDTO);
+		} else {
+			for (TreeNode childrendLocationNode : zoneLocation.getChildren()) {
+				results.addAll(getLocations(childrendLocationNode));
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Show supplier location popup.Event handle navigate to the Supplier
+	 * Locations Popup.
+	 */
+	public void showSupplierLocationPopup() {
+
+		ICountrySO countrySo = null;
+		try {
+
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+
+			Long locationLevel = this.getManagedBean().getScQt()
+					.getZoneLocationLevel().getParameterId();
+
+			if (locationLevel == null) {
+
+				throw new EpException(MessageConst.ERROR_760063);
+			}
+
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+
+			for (PmParameterDesc paramDesc : localParamDesc) {
+
+				if (paramDesc.getPmParameter().getParameterId()
+						.equals(locationLevel)) {
+					this.getManagedBean().setLocalLevelCode(
+							paramDesc.getPmParameter().getParameterCode());
+					CountryReqDTO countryReqDTo = new CountryReqDTO();
+					countryReqDTo
+							.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+					CountryResDTO countryResDTO = countrySo
+							.retrieveCountryByCode(countryReqDTo);
+
+					List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
+					if (getManagedBean().getLocationTreeNodes() != null) {
+						for (TreeNode treeNode : getManagedBean()
+								.getLocationTreeNodes()) {
+							List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+							locationDTOs.addAll(locationDTO);
+						}
+					}
+
+					List<PmState> states = SourcingLocationHelper
+							.getStateFromLocationDTO(locationDTOs);
+					List<PmDivision> divisions = null;
+					List<PmDistrict> districts = null;
+					if (ParameterConst.LOCATION_LEVEL_DIVISION
+							.equalsIgnoreCase(this.getManagedBean()
+									.getLocalLevelCode())) {
+						divisions = SourcingLocationHelper
+								.getDivisionFromLocationDTO(locationDTOs);
+
+					} else if (ParameterConst.LOCATION_LEVEL_DISTRICT
+							.equalsIgnoreCase(this.getManagedBean()
+									.getLocalLevelCode())) {
+						divisions = SourcingLocationHelper
+								.getDivisionFromLocationDTO(locationDTOs);
+						districts = SourcingLocationHelper
+								.getDistrictFromLocationDTO(locationDTOs);
+					}
+
+					getManagedBean().setRootLocationTree(
+							LocationSingleton.getInstance()
+									.buildLocationPopupTree(
+											countryResDTO.getPmCountry()
+													.getCountryId(),
+											states,
+											districts,
+											divisions,
+											null,
+											paramDesc.getPmParameter()
+													.getParameterCode(),
+											ScQtLocCriteria.class));
+					getManagedBean().setIndex(-1);
+				}
+
+			}
+			RequestContext.getCurrentInstance().execute("ZoneLocation.show()");
+		} finally {
+
+		}
+	}
+
+	/*
+	 * Delete supplier qualification tree node.Event handle delete Locations
+	 * from supplier qualification criteria.
+	 * 
+	 * @throws NoSuchMethodException
+	 * 
+	 * @throws InvocationTargetException
+	 * 
+	 * @throws InstantiationException
+	 * 
+	 * @throws IllegalAccessException
+	 */
+	public void deleteSupplierQualificationTreeNode() {
+		try {
+			List<TreeNode> rootTrees = getManagedBean().getLocationTreeNodes();
+			deleteTreeNodes(rootTrees);
+
+			List<ScQtLocCriteria> newLocCriterias = new ArrayList<ScQtLocCriteria>();
+			if (!rootTrees.isEmpty()) {
+
+				List<TplSpecLoc> localLoc = new ArrayList<TplSpecLoc>();
+				List<ScQtLocCriteria> Criteria = new ArrayList<ScQtLocCriteria>();
+
+				Criteria = convertTreeNodesToLocationCriteria(rootTrees, this
+						.getManagedBean().getScQt().getScQtSupplierCriteria());
+
+				for (ScQtLocCriteria locCriteria : Criteria) {
+					// Criteria.add(locCriteria);
+					ScQtLocCriteria criteriaNew = (ScQtLocCriteria) BeanUtils
+							.cloneBean(locCriteria);
+					newLocCriterias.add(criteriaNew);
+					TplSpecLoc specLoc = (TplSpecLoc) locCriteria;
+
+					localLoc.add(specLoc);
+
+				}
+
+				this.getManagedBean().setTotalSuppliersSpecLoc(localLoc);
+			}
+
+			checkExistingLocation(newLocCriterias, this.getManagedBean()
+					.getExistingLocationList());
+
+		} catch (IllegalAccessException e) {
+			debugLogger(e.getMessage());
+		} catch (InstantiationException e) {
+			debugLogger(e.getMessage());
+		} catch (InvocationTargetException e) {
+			debugLogger(e.getMessage());
+		} catch (NoSuchMethodException e) {
+			debugLogger(e.getMessage());
+		}
+	}
+
+	/**
+	 * Delete tree nodes.
+	 * 
+	 * @param rootTrees
+	 *            the root trees
+	 */
+	private void deleteTreeNodes(List<TreeNode> rootTrees) {
+		if (rootTrees != null) {
+			for (int row = 0; row < rootTrees.size(); row++) {
+				TreeNode rootTree = rootTrees.get(row);
+
+				for (TreeNode zoneTree : rootTree.getChildren()) {
+					if (zoneTree.isSelected()) {
+
+						rootTrees.remove(row--);
+						// deleteSupplierLocacriteria(loccriteria);
+					} else {
+						deleteChildTreeNodes(zoneTree.getChildren());
+
+						if (zoneTree.getChildren().size() == 0) {
+							// rootTrees.remove(row--);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Delete child tree nodes.
+	 * 
+	 * @param treeNodes
+	 *            the tree nodes
+	 */
+	private void deleteChildTreeNodes(List<TreeNode> treeNodes) {
+		if (treeNodes != null) {
+			List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+
+			for (TreeNode treeNode : treeNodes) {
+				if (treeNode.isSelected()) {
+
+					nodesToRemoved.add(treeNode);
+
+					// deleteSupplierLocacriteria(loccriteria);
+				} else {
+					if (treeNode.getChildren() != null
+							&& treeNode.getChildren().size() > 0) {
+
+						deleteChildTreeNodes(treeNode.getChildren());
+						// deleteSupplierLocacriteria(loccriteria);
+						if (treeNode.getChildren().size() == 0) {
+							nodesToRemoved.add(treeNode);
+						}
+					}
+				}
+			}
+
+			if (nodesToRemoved.size() > 0) {
+				treeNodes.removeAll(nodesToRemoved);
+			}
+		}
+	}
+
+	private void checkExistingLocation(
+			List<ScQtLocCriteria> currentLocationList,
+			List<ScQtLocCriteria> existingLocations) {
+		List<ScQtLocCriteria> localDeleteList = this.getManagedBean()
+				.getLocationList();
+		if (null == localDeleteList) {
+			localDeleteList = new ArrayList<ScQtLocCriteria>();
+		}
+		if (null != existingLocations && !existingLocations.isEmpty()
+				&& null != currentLocationList
+				&& !currentLocationList.isEmpty()) {
+			for (ScQtLocCriteria locDeleteCriteria : existingLocations) {
+				boolean delectLoc = false;
+				for (ScQtLocCriteria locCurrentList : currentLocationList) {
+					if (null != locCurrentList.getSpecLocId()) {
+						if (locCurrentList.getSpecLocId().equals(
+								locDeleteCriteria.getSpecLocId())) {
+							delectLoc = true;
+							break;
+						}
+					} else {
+						delectLoc = true;
+					}
+				}
+				if (!delectLoc) {
+					if (!localDeleteList.contains(locDeleteCriteria)) {
+						localDeleteList.add(locDeleteCriteria);
+					}
+				}
+			}
+
+			this.getManagedBean().setLocationList(localDeleteList);
+
+		}
+		if (null == currentLocationList || currentLocationList.isEmpty()) {
+			if (null != existingLocations && !existingLocations.isEmpty()) {
+				this.getManagedBean().setLocationList(existingLocations);
+			}
+		}
+	}
+
+	/**
+	 * Update supplier locations.Event handle add Locations to Supplier
+	 * qualification criteria menu.
+	 */
+	public void updateSupplierLocations() {
+		List<ScQtLocCriteria> locationDTOs = new ArrayList<ScQtLocCriteria>();
+		this.getManagedBean().setLocationList(
+				getManagedBean().getExistingLocationList());
+		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+			this.getManagedBean().setTotalSuppliersSpecLoc(
+					new ArrayList<TplSpecLoc>());
+		}
+		List<TplSpecLoc> specLoc = new ArrayList<TplSpecLoc>();
+		if (getManagedBean().getSelectedNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
+				if (!treeNode.getParent().isSelected()) {
+					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+					for (ScQtLocCriteria locCritera : locationDTO) {
+						TplSpecLoc localSpecLoc = (TplSpecLoc) locCritera;
+						specLoc.add(localSpecLoc);
+					}
+					this.getManagedBean().getTotalSuppliersSpecLoc()
+							.addAll(specLoc);
+					locationDTOs.addAll(locationDTO);
+				} else {
+					List<ScQtLocCriteria> locationDTO = getLocations(treeNode);
+					for (ScQtLocCriteria locCritera : locationDTO) {
+						TplSpecLoc localSpecLoc = (TplSpecLoc) locCritera;
+						specLoc.add(localSpecLoc);
+					}
+					this.getManagedBean().getTotalSuppliersSpecLoc()
+							.addAll(specLoc);
+					locationDTOs.addAll(locationDTO);
+				}
+			}
+		}
+		retrievLocationDtls(locationDTOs);
+		log.info("updateZoneLocation - END");
+	}
+
+	/**
+	 * Retriev location dtls.
+	 * 
+	 * @param scQtLocCriteriaList
+	 *            the sc qt loc criteria list
+	 */
+	private void retrievLocationDtls(List<ScQtLocCriteria> scQtLocCriteriaList) {
+		log.info("retrievLocationDtls - START");
+		List<PmState> states = SourcingLocationHelper
+				.getStateFromLocationDTO(scQtLocCriteriaList);
+		List<PmDivision> divisions = SourcingLocationHelper
+				.getDivisionFromLocationDTO(scQtLocCriteriaList);
+		List<PmDistrict> districts = SourcingLocationHelper
+				.getDistrictFromLocationDTO(scQtLocCriteriaList);
+		List<PmCity> cities = SourcingLocationHelper
+				.getCityFromLocationDTO(scQtLocCriteriaList);
+		getManagedBean().setLocationTreeNodes(new ArrayList<TreeNode>());
+		if (ParameterConst.LOCATION_LEVEL_STATE.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != states && !states.isEmpty()) {
+				for (PmState state : states) {
+					List<PmState> localStateList = new ArrayList<PmState>();
+					localStateList.add(state);
+					getManagedBean().getLocationTreeNodes().add(
+							LocationSingleton.getInstance().buildLocationTree(
+									null, localStateList, districts, divisions,
+									cities, ScQtLocCriteria.class));
+				}
+			}
+		} else if (ParameterConst.LOCATION_LEVEL_DISTRICT.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != districts && !districts.isEmpty()) {
+				Map<PmState, Map<PmDivision, Map<PmDistrict, List<PmCity>>>> mapStatesDivisionsDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStatesDivisionsDistrictsCities(
+								districts, null);
+				Set<PmState> statesDivisionsDistrictsCitiesKeySet = mapStatesDivisionsDistrictsCities
+						.keySet();
+				Map<PmState, Map<PmDistrict, List<PmCity>>> mapStatesDistrictsCities = LocationSingleton
+						.getInstance().getUniqueStateDistrictsCities(districts,
+								null);
+				Set<PmState> statesDistrictsCitiesKeySet = mapStatesDistrictsCities
+						.keySet();
+				if (statesDivisionsDistrictsCitiesKeySet != null
+						&& !statesDivisionsDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDivisionsDistrictsCitiesKeySet) {
+						Map<PmDivision, Map<PmDistrict, List<PmCity>>> mapDivisionsDistrictsCities = mapStatesDivisionsDistrictsCities
+								.get(state);
+						Set<PmDivision> divisionsDistrictsCitiesKeySet = mapDivisionsDistrictsCities
+								.keySet();
+						if (divisionsDistrictsCitiesKeySet != null
+								&& !divisionsDistrictsCitiesKeySet.isEmpty()) {
+							divisions.clear();
+							districts.clear();
+							for (PmDivision division : divisionsDistrictsCitiesKeySet) {
+								division.setPmState(state);
+								Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapDivisionsDistrictsCities
+										.get(division);
+								Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+										.keySet();
+								if (districtsCitiesKeySet != null
+										&& !districtsCitiesKeySet.isEmpty()) {
+									for (PmDistrict district : districtsCitiesKeySet) {
+										districts.add(district);
+									}
+								}
+							}
+							getManagedBean().getLocationTreeNodes().add(
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, null,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						}
+					}
+				}
+				if (statesDistrictsCitiesKeySet != null
+						&& !statesDistrictsCitiesKeySet.isEmpty()) {
+					for (PmState state : statesDistrictsCitiesKeySet) {
+						divisions.clear();
+						Map<PmDistrict, List<PmCity>> mapDistrictsCities = mapStatesDistrictsCities
+								.get(state);
+						Set<PmDistrict> districtsCitiesKeySet = mapDistrictsCities
+								.keySet();
+						if (districtsCitiesKeySet != null
+								&& !districtsCitiesKeySet.isEmpty()) {
+							districts.clear();
+							for (PmDistrict district : districtsCitiesKeySet) {
+								district.setPmState(state);
+								districts.add(district);
+							}
+						}
+						getManagedBean().getLocationTreeNodes().add(
+								LocationSingleton.getInstance()
+										.buildLocationTree(null, null,
+												districts, divisions, cities,
+												ScQtLocCriteria.class));
+					}
+				}
+			}
+		} else if (ParameterConst.LOCATION_LEVEL_DIVISION.equalsIgnoreCase(this
+				.getManagedBean().getLocalLevelCode())) {
+			if (null != divisions && !divisions.isEmpty()) {
+				Map<PmState, List<PmDivision>> mapStatesDivision = LocationSingleton
+						.getInstance().getUniqueStatesDivision(divisions);
+				Set<PmState> statesDivisionKeySet = mapStatesDivision.keySet();
+				if (statesDivisionKeySet != null
+						&& !statesDivisionKeySet.isEmpty()) {
+					for (PmState state : statesDivisionKeySet) {
+						divisions.clear();
+						List<PmDivision> divisions1 = mapStatesDivision
+								.get(state);
+						if (divisions1 != null && !divisions1.isEmpty()) {
+							for (PmDivision division : divisions1) {
+								division.setPmState(state);
+								divisions.add(division);
+							}
+							getManagedBean().getLocationTreeNodes().add(
+									LocationSingleton.getInstance()
+											.buildLocationTree(null, null,
+													districts, divisions,
+													cities,
+													ScQtLocCriteria.class));
+						}
+					}
+				}
+			}
+		}
+		log.info("retrievLocationDtls - END");
+	}
+
+	/**
+	 * Show general zones popup.Event handle navigate to the ZoneLocations
+	 * Popup.
+	 */
+	public void showGeneralZonesPopup() {
+
+		ICountrySO countrySo = null;
+
+		try {
+			Long locationLevel = this.getManagedBean().getScQt()
+					.getZoneLocationLevel().getParameterId();
+
+			countrySo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICountrySO.class);
+			if (locationLevel == null) {
+
+				throw new EpException(MessageConst.ERROR_760063);
+			}
+
+			List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.LOCATION_LEVEL);
+
+			for (PmParameterDesc paramDesc : localParamDesc) {
+
+				if (paramDesc.getPmParameter().getParameterId()
+						.equals(locationLevel)) {
+					this.getManagedBean().setZoneLocation(true);
+
+					CountryReqDTO countryReqDTo = new CountryReqDTO();
+					countryReqDTo
+							.setCountryCode(CommonConstants.DEFAULT_COUNTRY_CODE);
+					CountryResDTO countryResDTO = countrySo
+							.retrieveCountryByCode(countryReqDTo);
+					getManagedBean().setRootZoanlTree(
+							LocationSingleton.getInstance()
+									.buildLocationPopupTree(
+											countryResDTO.getPmCountry()
+													.getCountryId(),
+											null,
+											null,
+											null,
+											null,
+											paramDesc.getPmParameter()
+													.getParameterCode(),
+											TplSpecZoneLoc.class));
+					this.getManagedBean().setIndex(-1);
+					this.getManagedBean().setZoneName("");
+				}
+
+			}
+			this.getManagedBean().setAutoUpdate(false);
+			RequestContext.getCurrentInstance().execute("ZoneGeneral.show()");
+		} finally {
+
+		}
+
+	}
+
+	/**
+	 * Delete tree node.Event handle delete NonPanel Zones from General
+	 * information.
+	 */
+	public void deleteTreeNode() {
+
+		List<TreeNode> rootTrees = this.getManagedBean().getZoneTrees();
+
+		// LocationSingleton.getInstance().deleteTreeNodes(rootTrees);
+		deleteZonesTreeNodes(rootTrees);
+		TplSpecZoneDtl zoneDtl = null;
+		// zone details
+		if (!rootTrees.isEmpty()) {
+			getManagedBean()
+					.getScQt()
+					.getScQtSupplierCriteria()
+					.getQtZoneCriterias()
+					.setTplSpecZoneDtls(
+							convertTreeNodesToZoneCriteria(rootTrees, zoneDtl));
+		}
+		this.getManagedBean().setIndex(-1);
+
+	}
+
+	/**
+	 * Delete zones tree nodes.
+	 * 
+	 * @param rootTrees
+	 *            the root trees
+	 * @return the list
+	 */
+	private List<TreeNode> deleteZonesTreeNodes(List<TreeNode> rootTrees) {
+		TplSpecZoneDtl tplSpecZoneDtl = null;
+		List<TreeNode> removedList = new ArrayList<TreeNode>();
+		if (rootTrees != null) {
+			if (null != this.getManagedBean().getScQt()
+					.getScQtSupplierCriteria()
+					&& null != this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getQtZoneCriterias()) {
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.getQtZoneCriterias().setModified(true);
+			}
+			for (int row = 0; row < rootTrees.size(); row++) {
+				TreeNode rootTree = rootTrees.get(row);
+
+				for (TreeNode zoneTree : rootTree.getChildren()) {
+					if (zoneTree.isSelected()) {
+						tplSpecZoneDtl = (TplSpecZoneDtl) zoneTree.getData();
+						if (tplSpecZoneDtl.getPanelZone() != null) {
+							// deletePanelItemSuppliers(tplSpecZoneDtl);
+
+						} else {
+							deleteStateOrDivOrDist(tplSpecZoneDtl, null);
+						}
+
+						rootTrees.remove(row--);
+					} else {
+
+						removedList = deleteZoneChildTreeNodes(zoneTree
+								.getChildren());
+
+						if (removedList != null) {
+							for (TreeNode treeNode : removedList) {
+								List<TplSpecZoneLoc> locationDTOs = getZoneLocations(treeNode);
+
+								deleteStateOrDivOrDist(tplSpecZoneDtl,
+										locationDTOs);
+							}
+						}
+
+						if (zoneTree.getChildren().size() == 0) {
+							rootTrees.remove(row--);
+						}
+					}
+
+				}
+			}
+		}
+		return removedList;
+	}
+
+	/**
+	 * Delete zone child tree nodes.
+	 * 
+	 * @param treeNodes
+	 *            the tree nodes
+	 * @return the list
+	 */
+	private List<TreeNode> deleteZoneChildTreeNodes(List<TreeNode> treeNodes) {
+		List<TreeNode> nodesToRemoved = new ArrayList<TreeNode>();
+		if (treeNodes != null) {
+
+			for (TreeNode treeNode : treeNodes) {
+				if (treeNode.isSelected()) {
+					nodesToRemoved.add(treeNode);
+				} else {
+					if (treeNode.getChildren() != null
+							&& treeNode.getChildren().size() > 0) {
+						deleteChildTreeNodes(treeNode.getChildren());
+
+						if (treeNode.getChildren().size() == 0) {
+							nodesToRemoved.add(treeNode);
+						}
+					}
+				}
+			}
+
+			if (nodesToRemoved.size() > 0) {
+				treeNodes.removeAll(nodesToRemoved);
+			}
+		}
+		return nodesToRemoved;
+	}
+
+	/**
+	 * Delete state or div or dist.
+	 * 
+	 * @param tplSpecZoneDtl
+	 *            (TplSpecZoneDtl tplSpecZoneDtl)
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 */
+	private void deleteStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl,
+			List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> stateIds = null;
+		List<Long> divIds = null;
+		List<Long> distIds = null;
+
+		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
+			stateIds = getPmStateIds(tplSpecZoneLocs);
+
+			divIds = getPmDivisionIds(tplSpecZoneLocs);
+
+			distIds = getPmDistrictsIds(tplSpecZoneLocs);
+		}
+
+		List<ZonesBean> results = new ArrayList<ZonesBean>();
+		List<ZonesBean> list = getManagedBean().getZoneBeans();
+		if (list != null && list.size() > 0) {
+			for (ZonesBean zonesBean : list) {
+				ZonesBean bean = new ZonesBean();
+				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+
+				if (zone != null) {
+
+					if (tplSpecZoneDtl != null) {
+						if (!zone.getZoneName().equalsIgnoreCase(
+								tplSpecZoneDtl.getZoneName())) {
+							bean = zonesBean;
+							results.add(bean);
+						}
+
+					} else {
+						if (zonesBean.getTplSpecZoneLocs() != null
+								&& zonesBean.getTplSpecZoneLocs().size() > 0) {
+							List<TplSpecZoneLoc> specZoneLocs = new ArrayList<TplSpecZoneLoc>();
+							for (TplSpecZoneLoc TplSpecZoneLoc : zonesBean
+									.getTplSpecZoneLocs()) {
+
+								if (TplSpecZoneLoc.getPmState() != null) {
+
+									if (stateIds != null && stateIds.size() > 0) {
+
+										if (!stateIds.contains(TplSpecZoneLoc
+												.getPmState().getStateId())) {
+											specZoneLocs.add(TplSpecZoneLoc);
+										}
+									}
+
+								} else if (TplSpecZoneLoc.getPmDivision() != null) {
+									if (divIds != null && divIds.size() > 0) {
+										if (!divIds.contains(TplSpecZoneLoc
+												.getPmDivision()
+												.getDivisionId())) {
+											specZoneLocs.add(TplSpecZoneLoc);
+										}
+									}
+								} else if (TplSpecZoneLoc.getPmDistrict() != null) {
+									if (distIds != null && distIds.size() > 0) {
+										if (!distIds.contains(TplSpecZoneLoc
+												.getPmDistrict()
+												.getDistrictId())) {
+											specZoneLocs.add(TplSpecZoneLoc);
+										}
+									}
+								}
+							}
+							bean.setTplSpecZoneLocs(specZoneLocs);
+						}
+						results.add(bean);
+					}
+				}
+			}
+			getManagedBean().setZoneBeans(results);
+		}
+	}
+
+	/**
+	 * Gets the pm state ids.
+	 * 
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 * @return (List<Long>).
+	 */
+	private List<Long> getPmStateIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> results = new ArrayList<Long>();
+
+		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
+			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
+
+				if (TplSpecZoneLoc.getPmState() != null) {
+					results.add(TplSpecZoneLoc.getPmState().getStateId());
+				}
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Gets the pm division ids.
+	 * 
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 * @return (List<Long>).
+	 */
+	private List<Long> getPmDivisionIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> results = new ArrayList<Long>();
+
+		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
+			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
+
+				if (TplSpecZoneLoc.getPmDivision() != null) {
+					results.add(TplSpecZoneLoc.getPmDivision().getDivisionId());
+				}
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Gets the pm districts ids.
+	 * 
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 * @return (List<Long>).
+	 */
+	private List<Long> getPmDistrictsIds(List<TplSpecZoneLoc> tplSpecZoneLocs) {
+		List<Long> results = new ArrayList<Long>();
+
+		if (tplSpecZoneLocs != null && tplSpecZoneLocs.size() > 0) {
+			for (TplSpecZoneLoc TplSpecZoneLoc : tplSpecZoneLocs) {
+
+				if (TplSpecZoneLoc.getPmDistrict() != null) {
+					results.add(TplSpecZoneLoc.getPmDistrict().getDistrictId());
+				}
+			}
+		}
+		return results;
+	}
+
+	/**
+	 * Update zone general location.Event handle add zones to general
+	 * information menu.
+	 */
+	public void updateZoneGeneralLocation() {
+		if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+			this.getManagedBean().setTotalSuppliersSpecLoc(
+					new ArrayList<TplSpecLoc>());
+		}
+		List<ZonesBean> beans = getManagedBean().getZoneBeans();
+		if (null == beans) {
+			beans = new ArrayList<ZonesBean>();
+		}
+		ZonesBean zonesBean = new ZonesBean();
+		String locationLevel = this.getManagedBean().getLocalLevelCode();
+		List<TplSpecZoneLoc> allNodes = new ArrayList<TplSpecZoneLoc>();
+		if (getManagedBean().getSelectedGeneralTreeNodes() != null) {
+			for (TreeNode treeNode : getManagedBean()
+					.getSelectedGeneralTreeNodes()) {
+
+				if (ParameterConst.LOCATION_LEVEL_DIVISION
+						.equalsIgnoreCase(locationLevel)) {
+					if (treeNode.getType().equals("state")) {
+						if (treeNode.getChildCount() == 0
+								&& treeNode.getChildren().isEmpty()) {
+							List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+							allNodes.addAll(locationDTO);
+
+						}
+					} else {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+					}
+				} else {
+
+					if (treeNode.getParent().isSelected()) {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+					} else {
+						List<TplSpecZoneLoc> locationDTO = getZoneLocations(treeNode);
+						allNodes.addAll(locationDTO);
+					}
+				}
+			}
+		}
+
+		if (null == getManagedBean().getZoneTrees()) {
+			getManagedBean().setZoneTrees(new ArrayList<TreeNode>());
+		}
+		if (null != allNodes && !allNodes.isEmpty()) {
+
+			if (null != this.getManagedBean().getScQt()
+					.getScQtSupplierCriteria()
+					&& null != this.getManagedBean().getScQt()
+							.getScQtSupplierCriteria().getQtZoneCriterias()) {
+				this.getManagedBean().getScQt().getScQtSupplierCriteria()
+						.getQtZoneCriterias().setModified(true);
+			}
+			TplSpecZoneDtl zone = new TplSpecZoneDtl();
+
+			if (null == getManagedBean().getZoneName()
+					|| StringUtils.isBlank(getManagedBean().getZoneName())) {
+				throw new EpException("Zone Name is Mandatory.");
+			}
+
+			zone.setZoneName(getManagedBean().getZoneName());
+
+			List<PmState> states = SourcingLocationHelper
+					.getStateFromLocationDTO(allNodes);
+
+			List<PmDivision> divisions = SourcingLocationHelper
+					.getDivisionFromLocationDTO(allNodes);
+
+			List<PmDistrict> districts = SourcingLocationHelper
+					.getDistrictFromLocationDTO(allNodes);
+
+			List<PmCity> cities = SourcingLocationHelper
+					.getCityFromLocationDTO(allNodes);
+			String editZoneName = getManagedBean().getTempZoneName();
+			if (getManagedBean().getIndex() >= 0) {
+				updateZoneBean(editZoneName);
+			}
+			zone.setTplSpecZoneLocs(allNodes);
+			zonesBean.setTplSpecZoneDtl(zone);
+			// zonesBean.setTplSpecZoneDtl(zone);
+			// validate zone name
+			checkZoneExistsOrNot(zone);
+
+			if (ParameterConst.LOCATION_LEVEL_STATE
+					.equalsIgnoreCase(locationLevel)) {
+				// check whether state exists or not
+				if (!getManagedBean().getZoneBeans().isEmpty()) {
+					checkDuplicateStateOrDivOrDist(zone);
+				}
+				// zonesBean.setTplSpecZoneLocs(allNodes);
+			}
+
+			if (ParameterConst.LOCATION_LEVEL_DIVISION
+					.equalsIgnoreCase(locationLevel)) {
+				// check whether division exists or not
+				if (!getManagedBean().getZoneBeans().isEmpty()) {
+					checkDuplicateStateOrDivOrDist(zone);
+				}
+				// zonesBean.setTplSpecZoneLocs(allNodes);
+			}
+
+			if (ParameterConst.LOCATION_LEVEL_DISTRICT
+					.equalsIgnoreCase(locationLevel)) {
+				// check whether district exists or not
+				if (!getManagedBean().getZoneBeans().isEmpty()) {
+					checkDuplicateStateOrDivOrDist(zone);
+				}
+				// zonesBean.setTplSpecZoneLocs(allNodes);
+			}
+
+			beans.add(zonesBean);
+
+			if (getManagedBean().getIndex() == -1) {
+
+				getManagedBean().getZoneTrees().add(
+						LocationSingleton.getInstance().buildLocationTree(zone,
+								states, districts, divisions, cities,
+								TplSpecZoneLoc.class));
+
+			}
+
+			else if (getManagedBean().getIndex() >= 0) {
+
+				getManagedBean().getZoneTrees().remove(
+						getManagedBean().getIndex());
+				getManagedBean().getZoneTrees().add(
+						getManagedBean().getIndex(),
+						LocationSingleton.getInstance().buildLocationTree(zone,
+								states, districts, divisions, cities,
+								TplSpecZoneLoc.class));
+			}
+			getManagedBean().getZoneBeans().add(zonesBean);
+		} else {
+			throw new EpException("Please select At least one Zone Location");
+		}
+		this.getManagedBean().setZoneLocation(false);
+		getManagedBean().setZoneName(null);
+		getManagedBean().setTempZoneName(null);
+		this.getManagedBean().setIndex(-1);
+		this.getManagedBean().setAutoUpdate(true);
+		RequestContext.getCurrentInstance().execute("ZoneGeneral.hide();");
+
+	}
+
+	// check zone name existing in the list or not.
+	private void updateZoneBean(String zoneName) {
+		List<ZonesBean> beans = new ArrayList<ZonesBean>();
+		List<ZonesBean> zoneBeans = getManagedBean().getZoneBeans();
+
+		if (zoneBeans != null && zoneBeans.size() > 0) {
+			for (ZonesBean zonesBean : zoneBeans) {
+				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
+				if (null != prevsZone) {
+					if (!prevsZone.getZoneName().equalsIgnoreCase(zoneName)) {
+						beans.add(zonesBean);
+					}
+				}
+			}
+		}
+		getManagedBean().setZoneBeans(beans);
+
+	}
+
+	/**
+	 * Check zone exists or not.
+	 * 
+	 * @param tplSpecZoneDtl
+	 *            (TplSpecZoneDtl tplSpecZoneDtl)
+	 * 
+	 * @return List<Long>
+	 */
+	private List<Long> checkZoneExistsOrNot(TplSpecZoneDtl tplSpecZoneDtl) {
+		List<Long> results = new ArrayList<Long>();
+		// if (index < 0) {
+		List<ZonesBean> list = getManagedBean().getZoneBeans();
+		if (list != null && list.size() > 0) {
+
+			for (ZonesBean zonesBean : list) {
+				TplSpecZoneDtl zone = zonesBean.getTplSpecZoneDtl();
+
+				if (zone != null) {
+
+					if (zone.getZoneName().equalsIgnoreCase(
+							tplSpecZoneDtl.getZoneName())) {
+						throw new EpException(tplSpecZoneDtl.getZoneName()
+								+ " zone already exists.");
+					}
+				}
+			}
+		}
+		// }
+		return results;
+	}
+
+	/**
+	 * Check duplicate state or div or dist.
+	 * 
+	 * @param tplSpecZoneDtl
+	 *            (TplSpecZoneDtl tplSpecZoneDtl)
+	 * @param tplSpecZoneLocs
+	 *            (List<TplSpecZoneLoc> tplSpecZoneLocs)
+	 */
+	private void checkDuplicateStateOrDivOrDist(TplSpecZoneDtl tplSpecZoneDtl) {
+		List<Long> stateIds = null;
+		List<Long> divIds = null;
+		List<Long> distIds = null;
+
+		if (null != tplSpecZoneDtl.getTplSpecZoneLocs()
+				&& tplSpecZoneDtl.getTplSpecZoneLocs().size() > 0) {
+			List<TplSpecZoneLoc> currentTplSpecLocs = tplSpecZoneDtl
+					.getTplSpecZoneLocs();
+			stateIds = getPmStateIds(currentTplSpecLocs);
+			divIds = getPmDivisionIds(currentTplSpecLocs);
+			distIds = getPmDistrictsIds(currentTplSpecLocs);
+		}
+
+		List<ZonesBean> list = getManagedBean().getZoneBeans();
+
+		if (list != null && list.size() > 0) {
+
+			for (ZonesBean zonesBean : list) {
+				TplSpecZoneDtl prevsZone = zonesBean.getTplSpecZoneDtl();
+
+				if (prevsZone != null) {
+
+					if (prevsZone.getTplSpecZoneLocs() != null
+							&& prevsZone.getTplSpecZoneLocs().size() > 0) {
+						List<TplSpecZoneLoc> previousTplSpecLocs = prevsZone
+								.getTplSpecZoneLocs();
+						for (TplSpecZoneLoc TplSpecZoneLoc : previousTplSpecLocs) {
+
+							if (TplSpecZoneLoc.getPmState() != null) {
+
+								if (stateIds != null && stateIds.size() > 0) {
+
+									if (stateIds.contains(TplSpecZoneLoc
+											.getPmState().getStateId())) {
+										throw new EpException(
+												MessageConst.ERROR_760168,
+												new String[] {
+														TplSpecZoneLoc
+																.getPmState()
+																.getStateName(),
+														prevsZone.getZoneName() });
+									}
+								}
+
+							}
+
+							if (TplSpecZoneLoc.getPmDivision() != null) {
+								if (divIds != null && divIds.size() > 0) {
+									if (divIds.contains(TplSpecZoneLoc
+											.getPmDivision().getDivisionId())) {
+										throw new EpException(
+												MessageConst.ERROR_760167,
+												new String[] {
+														TplSpecZoneLoc
+																.getPmDivision()
+																.getDivisionName(),
+														prevsZone.getZoneName() });
+									}
+								}
+							}
+
+							if (TplSpecZoneLoc.getPmDistrict() != null) {
+								if (distIds != null && distIds.size() > 0) {
+									if (distIds.contains(TplSpecZoneLoc
+											.getPmDistrict().getDistrictId())) {
+										throw new EpException(
+												MessageConst.ERROR_760166,
+												new String[] {
+														TplSpecZoneLoc
+																.getPmDistrict()
+																.getDistrictName(),
+														prevsZone.getZoneName() });
+									}
+								}
+							}
+						}
+					}
+					if (prevsZone.getZoneName().equals(
+							tplSpecZoneDtl.getZoneName())) {
+						throw new EpException(
+								MessageConst.ERROR_700027,
+								new String[] { ResourceBundleUtils.getMessage(
+										tplSpecZoneDtl.getZoneName(),
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+										new FacesScopes().getUserLocale()) });
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Fulfilment change.changed Fulfilemnt Dropdown in specification committee.
+	 * 
+	 * @param event
+	 *            (Long fulfilmentId)
+	 */
+	public void fulfilmentChange(AjaxBehaviorEvent event) {
+		Long type = (Long) event.getComponent().getAttributes().get("value");
+		List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(ParameterTypeConst.FULFILMENT_TYPE);
+		for (PmParameterDesc paramDesc : localParamDesc) {
+			if (paramDesc.getPmParameter().getParameterId()
+					.equals(Long.valueOf(type))) {
+
+				this.getManagedBean().getScQt()
+						.setFulfilmentType(paramDesc.getPmParameter());
+				this.getManagedBean().getScLoa().getScLoiLoa()
+						.setFulfilmentTypeCode(paramDesc.getPmParameter());
+				break;
+			}
+		}
+
+		if (ParameterConst.FULFILMENT_TYPE_SCHEDULED.equalsIgnoreCase(this
+				.getManagedBean().getScQt().getFulfilmentType()
+				.getParameterCode())) {
+			this.getManagedBean().getScQt()
+					.setScheduleType(SourcingConstants.FREQUENCY_SCHEDULE);
+			this.getManagedBean().setTotalFrequency(0);
+			this.getManagedBean().setTotalProgressivePayment(0);
+
+		}
+
+		this.getManagedBean().getScQt().setScQtSchedules(null);
+		this.getManagedBean().getScQt().setScQtProgressivePayments(null);
+		removefullfillmentDetails(SourcingConstants.PROGRESSIVE_PAYMENT);
+		removefullfillmentDetails(SourcingConstants.FREQUENCY_SCHEDULE);
+		getLoaReports();
+
+	}
+
+	/**
+	 * Gets the dropdown location values.display the Location level dropdown
+	 * values.
+	 * 
+	 * @param locationLevel
+	 *            the location level
+	 * @return the dropdown location values
+	 */
+	public SelectItem[] getDropdownLocationValues(String locationLevel) {
+
+		List<String> types = new ArrayList<String>();
+		types.add(ParameterConst.LOCATION_LEVEL_STATE);
+		if (PTJLocalityCode.STATE_SARAWAK == this.getManagedBean()
+				.getAllStateCode()) {
+			types.add(ParameterConst.LOCATION_LEVEL_DIVISION);
+		}
+		types.add(ParameterConst.LOCATION_LEVEL_DISTRICT);
+
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[types.size() + 1];
+			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					new FacesScopes().getUserLocale()));
+			int i = 1;
+			for (String location : types) {
+				List<PmParameterDesc> localParamDesc = retrieveParameterDescByType(locationLevel);
+
+				for (PmParameterDesc paramDesc : localParamDesc) {
+					if (paramDesc.getPmParameter().getParameterCode()
+							.equals(location)) {
+
+						items[i++] = new SelectItem(paramDesc.getPmParameter()
+								.getParameterId(), paramDesc.getCodeName());
+					}
+				}
+			}
+		} catch (Exception e) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
+		}
+		return items;
+		// return getDropdownCodeValues(committeeRole);
+	}
+
+	/**
+	 * Select zone location level.change Location Level Dropdown in General
+	 * information menu.
+	 * 
+	 * @param event
+	 *            (Long locationLevelId).
+	 */
+	public void selectZoneLocationLevel(AjaxBehaviorEvent event) {
+
+		if (this.getManagedBean().getScQt().isZonal()) {
+			if (CollectionUtils
+					.isNotEmpty(this.getManagedBean().getZoneTrees())) {
+				this.getManagedBean().setZoneTrees(null);
+				this.getManagedBean().setZoneBeans(new ArrayList<ZonesBean>());
+			}
+
+		}
+
+	}
+
+	/**
+	 * Zone radio change.change zone location level radio in business owner.
+	 * 
+	 * @param event
+	 *            (boolean zoneLocationlevel).
+	 */
+	public void zoneRadioChange(AjaxBehaviorEvent event) {
+		Boolean isZonal = (Boolean) event.getComponent().getAttributes()
+				.get("value");
+		ScQt scQt = this.getManagedBean().getScQt();
+		ScQtSupplierCriteria supplierCriteria = scQt.getScQtSupplierCriteria();
+		scQt.setZoneLocationLevel(new PmParameter());
+		if (null == supplierCriteria) {
+			supplierCriteria = new ScQtSupplierCriteria();
+		}
+		if (isZonal) {
+			ScQtZoneCriteria zoneCriteria = supplierCriteria
+					.getQtZoneCriterias();
+			if (null == zoneCriteria) {
+				zoneCriteria = new ScQtZoneCriteria();
+				zoneCriteria.setScQtSupplierCriteria(supplierCriteria);
+				supplierCriteria.setQtZoneCriterias(zoneCriteria);
+			}
+
+			supplierCriteria.setScQtLocCriteria(null);
+
+			this.getManagedBean().setLocationTreeNodes(null);
+		} else {
+
+			supplierCriteria.setQtZoneCriterias(null);
+			if (null == supplierCriteria.getLocationLevel()) {
+				supplierCriteria.setLocationLevel(new PmParameter());
+			}
+
+			this.getManagedBean().setZoneTrees(null);
+			this.getManagedBean().setZoneBeans(new ArrayList<ZonesBean>());
+
+		}
+		scQt.setScQtSupplierCriteria(supplierCriteria);
+		this.getManagedBean().setScQt(scQt);
+
+	}
+
+	/*
+	 * public void getLoaReports() { ScLoa scLoa =
+	 * this.getManagedBean().getScLoa(); if
+	 * (CollectionUtils.isEmpty(scLoa.getScLoaReports())) { IQTAwardSO awardSO =
+	 * BusinessDelegate.getInstance()
+	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	 * 
+	 * AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+	 * AwardSupplierResDTO awardSupplierResDTO = awardSO
+	 * .getAwardReports(awardSupplierReqDTO); this.getManagedBean().getScLoa()
+	 * .setScLoaReports(awardSupplierResDTO.getLoaReports()); } }
+	 */
+
+	public void getApprovalUsers() {
+		if (CollectionUtils.isEmpty(this.getManagedBean().getApproverList())) {
+			IUserSO userSo = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.PUBLICATION_APPROVER.value());
+			userReqDTO.setOrgProfileId(this.getManagedBean().getScQt()
+					.getPmOrgProfile().getOrgProfileId());
+			userReqDTO.setWithProfileGroup(true);
+			UserResDTO userResDTO = userSo
+					.retrieveUserListWithProfileGroupUserByRole(userReqDTO);
+			this.getManagedBean().setContractSignerList(
+					userResDTO.getUserList());
+		}
+	}
+
+	/**
+	 * Schedule type change.Event handle change Schedule
+	 * type(Schedule/Progressive payment)in Specification committee.
+	 * 
+	 * @param event
+	 *            (String ScheduleType).
+	 */
+	public void scheduleTypeChange(AjaxBehaviorEvent event) {
+
+		String scheduleType = (String) event.getComponent().getAttributes()
+				.get("value");
+		String toBeRemoveType = null;
+		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+			toBeRemoveType = SourcingConstants.PROGRESSIVE_PAYMENT;
+			this.getManagedBean().setTotalProgressivePayment(0);
+		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
+				.equalsIgnoreCase(scheduleType)) {
+			toBeRemoveType = SourcingConstants.FREQUENCY_SCHEDULE;
+			this.getManagedBean().setTotalFrequency(0);
+		}
+		this.getManagedBean().getScQt().setScheduleType(scheduleType);
+		removefullfillmentDetails(toBeRemoveType);
+
+	}
+
+	private void removefullfillmentDetails(String scheduleType) {
+
+		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
+			List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
+					.getScQtSchedules();
+
+			if (CollectionUtils.isNotEmpty(scheduleList)) {
+				List<ScQtSchedule> toBeRemoveList = new ArrayList<ScQtSchedule>();
+
+				for (ScQtSchedule qtSchedule : scheduleList) {
+					if (null != qtSchedule.getQtScheduleId()) {
+						qtSchedule.setDeleted(true);
+						toBeRemoveList.add(qtSchedule);
+					}
+				}
+				this.getManagedBean().setToBeRemoveSchedules(toBeRemoveList);
+				this.getManagedBean().getScQt().setScQtSchedules(null);
+			}
+			this.getManagedBean().getScLoa()
+					.setScQtSchedules(new ArrayList<ScQtSchedule>());
+		} else if (SourcingConstants.PROGRESSIVE_PAYMENT
+				.equalsIgnoreCase(scheduleType)) {
+			List<ScQtProgressivePayment> payments = this.getManagedBean()
+					.getScLoa().getScQtProgPayments();
+
+			if (CollectionUtils.isNotEmpty(payments)) {
+				List<ScQtProgressivePayment> toBeRemoveList = new ArrayList<ScQtProgressivePayment>();
+
+				for (ScQtProgressivePayment payment : payments) {
+					if (null != payment.getQtPaymentId()) {
+						payment.setDeleted(true);
+						toBeRemoveList.add(payment);
+					}
+				}
+				this.getManagedBean().setToBeRemoveProgPayments(toBeRemoveList);
+				this.getManagedBean().getScQt()
+						.setScQtProgressivePayments(null);
+			}
+			this.getManagedBean()
+					.getScLoa()
+					.setScQtProgPayments(
+							new ArrayList<ScQtProgressivePayment>());
+		}
+
+	}
+
+	/**
+	 * Calculate start month.change start month dropdown in frequency schedule
+	 * menu.
+	 * 
+	 * @param schedule
+	 *            (ScQtSchedule schedule).
+	 */
+	public void calculateStartMonth(ScQtSchedule schedule) {
+		// event.getComponent().getAttributes().get("value");
+		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
+		if (null == freqSchedule) {
+			freqSchedule = new ArrayList<ScQtSchedule>();
+
+		}
+		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
+			int start = Integer.parseInt(schedule.getStartMonth());
+			String fromMonth = getMonth(start);
+			schedule.setEndMonth(schedule.getStartMonth());
+			int end = Integer.parseInt(schedule.getEndMonth());
+			String toMonth = getMonth(end);
+
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			String fromdate = null;
+			String toDate = null;
+			if (null != schedule.getStartYear()
+					&& null != schedule.getEndYear()) {
+				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
+				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			}
+
+			// schedule.setScheduleNo(schedule.getScheduleNo());
+
+			try {
+
+				Date date1;
+				Date date2;
+				try {
+					if (null != fromdate && null != toDate) {
+						date1 = format.parse(fromdate);
+						date2 = format.parse(toDate);
+						long days = DateUtils.getDaysDifference(date1, date2);
+						int day = (int) days;
+						int months = day / 30;
+						schedule.setTotalMonths(new BigDecimal(months));
+					}
+				} catch (ParseException e) {
+					log.debug(e.getMessage());
+				}
+
+				// schedule.setFromDate(df.parse(fromdate));
+				// schedule.setToDate(df.parse(toDate));
+
+				int index = freqSchedule.indexOf(schedule);
+				freqSchedule.set(index, schedule);
+
+				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
+
+			} finally {
+
+			}
+		} else {
+			int index = freqSchedule.indexOf(schedule);
+			if (null != schedule.getStartMonth()) {
+				schedule.setEndMonth(schedule.getStartMonth());
+			}
+			freqSchedule.set(index, schedule);
+		}
+
+	}
+
+	/**
+	 * Calculate progressive start month.change start month in progessive
+	 * payment.
+	 * 
+	 * @param progressivepayment
+	 *            (ScQtProgressivePayment progressivepayment).
+	 */
+	public void calculateProgressiveStartMonth(
+			ScQtProgressivePayment progressivepayment) {
+		// event.getComponent().getAttributes().get("value");
+		List<ScQtProgressivePayment> payment = this.getManagedBean().getScLoa()
+				.getScQtProgPayments();
+
+		if (null == payment) {
+			payment = new ArrayList<ScQtProgressivePayment>();
+
+		}
+		if (null != progressivepayment
+				&& null != progressivepayment.getStartMonth()) {
+			int index = payment.indexOf(progressivepayment);
+			if (null == progressivepayment.getEndMonth()) {
+				progressivepayment.setEndMonth(progressivepayment
+						.getStartMonth());
+			}
+			payment.set(index, progressivepayment);
+
+			this.getManagedBean().getScLoa().setScQtProgPayments(payment);
+		}
+
+	}
+
+	/**
+	 * Calculate progressivepayment.change end month dropdown in progressive
+	 * payment.
+	 * 
+	 * @param event
+	 *            the event
+	 */
+	public void calculateProgressivepayment(
+			ScQtProgressivePayment progressivepayment) {
+
+		List<ScQtProgressivePayment> payment = this.getManagedBean().getScLoa()
+				.getScQtProgPayments();
+
+		if (null == payment) {
+			payment = new ArrayList<ScQtProgressivePayment>();
+
+		}
+		if (null != progressivepayment) {
+			int index = payment.indexOf(progressivepayment);
+
+			payment.set(index, progressivepayment);
+
+			this.getManagedBean().getScLoa().setScQtProgPayments(payment);
+		}
+
+	}
+
+	/**
+	 * Calculate schedule percentage.calculate months difference in Frequency
+	 * schedule.
+	 * 
+	 * @param schedule
+	 *            (ScQtSchedule schedule).
+	 */
+	public void calculateSchedulePercentage(ScQtSchedule schedule) {
+		List<ScQtSchedule> freqSchedule = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
+
+		if (null == freqSchedule) {
+			freqSchedule = new ArrayList<ScQtSchedule>();
+
+		}
+		if (null != schedule.getStartMonth() && null != schedule.getEndMonth()) {
+			int start = Integer.parseInt(schedule.getStartMonth());
+			String fromMonth = getMonth(start);
+			int end = Integer.parseInt(schedule.getEndMonth());
+			String toMonth = getMonth(end);
+
+			SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+			String fromdate = null;
+			String toDate = null;
+			if (null != schedule.getStartYear()
+					&& null != schedule.getEndYear()) {
+				fromdate = 01 + "/" + fromMonth + "/" + schedule.getStartYear();
+				toDate = 31 + "/" + toMonth + "/" + schedule.getEndYear();
+			}
+
+			// schedule.setScheduleNo(schedule.getScheduleNo());
+
+			try {
+
+				Date date1;
+				Date date2;
+				try {
+					if (null != fromdate && null != toDate) {
+						date1 = format.parse(fromdate);
+						date2 = format.parse(toDate);
+						long days = DateUtils.getDaysDifference(date1, date2);
+						int day = (int) days;
+						int months = day / 30;
+						schedule.setTotalMonths(new BigDecimal(months));
+					}
+				} catch (ParseException e) {
+					log.error(e.getMessage());
+				}
+
+				// schedule.setFromDate(df.parse(fromdate));
+				// schedule.setToDate(df.parse(toDate));
+
+				int index = freqSchedule.indexOf(schedule);
+				freqSchedule.set(index, schedule);
+
+				this.getManagedBean().getScLoa().setScQtSchedules(freqSchedule);
+
+			} finally {
+
+			}
+		}
+
+	}
+
+	private void getLoaReports() {
+		if (CollectionUtils.isEmpty(this.getManagedBean().getScLoa()
+				.getScLoaReports())) {
+			IQTAwardSO awardSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+							IQTAwardSO.class);
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO.setScLoa(this.getManagedBean().getScLoa());
+			this.getManagedBean()
+					.getScLoa()
+					.setScLoaReports(
+							awardSO.getAwardReports(awardSupplierReqDTO)
+									.getLoaReports());
+		}
+	}
+
+	/**
+	 * Adds the loa content action.
+	 */
+	public void addLoaContentAction() {
+		debugLogger("addLoaContentAction");
+
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+
+		if (scLoaReports == null) {
+			scLoaReports = new ArrayList<ScLoaReport>();
+
+			scLoa.setScLoaReports(scLoaReports);
+		}
+
+		ScLoaReport scLoaReport = new ScLoaReport();
+		scLoaReport.setScLoa(scLoa);
+		scLoaReport.setScLoaReportAttachment(new ScLoaReportAttachment());
+
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			scLoaReport.setDefinationType(resDTO.getPmParameter());
+			scLoaReport
+					.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
+		} finally {
+			parameterSO = null;
+		}
+
+		scLoaReports.add(scLoaReport);
+	}
+
+	/**
+	 * Delete loa content action.
+	 */
+	public void deleteLoaContentAction() {
+		debugLogger("deleteLoaContentAction");
+		ScLoa scLoa = getManagedBean().getScLoa();
+		List<ScLoaReport> selectedScLoaReports = getManagedBean()
+				.getSelectedScLoaReports();
+
+		if (selectedScLoaReports != null && selectedScLoaReports.size() > 0) {
+			deleteRowsAction(scLoa.getScLoaReports(), selectedScLoaReports);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
+
+	/*
+	 * * Download all reports as pdf or xlsx files in Letter of Acceptance.
+	 * 
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void downloadAllReports() throws IOException {
+		debugLogger("downloadAllReports");
+
+		List<ScLoaReport> scLoaReports = getManagedBean().getScLoa()
+				.getScLoaReports();
+		List<ScLoaReportAttachment> scAttachments = new ArrayList<ScLoaReportAttachment>();
+
+		for (ScLoaReport scLoaReport : scLoaReports) {
+			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+					.getScLoaReportAttachment();
+			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
+			scAttachments.add(scLoaReportAttachment);
+		}
+
+		downloadAllFiles("NGeP-LOA-Report", scAttachments);
+	}
+
+	/**
+	 * Generate document attachment.
+	 * 
+	 * @param scLoaReport
+	 *            the sc loa report
+	 * @return the sc loa report attachment
+	 */
+	private ScLoaReportAttachment generateDocumentAttachment(
+			ScLoaReport scLoaReport) {
+		String definitionType = scLoaReport.getDefinationType()
+				.getParameterCode();
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+				.getScLoaReportAttachment();
+
+		/*
+		 * if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+		 * .equals(definitionType)) { try { String docDefinitionKey =
+		 * scLoaReport.getPmDocument() .getDocDefinitionKey(); ScLoa scLoa =
+		 * getManagedBean().getScLoa(); Long statusId =
+		 * scLoa.getPmStatus().getStatusId().longValue(); StringBuilder filename
+		 * = new StringBuilder(); //replace white space due to firefox
+		 * filename.append(scLoaReport.getTitle().replaceAll("\\s","")); if
+		 * (scLoaReportAttachment == null) { scLoaReportAttachment = new
+		 * ScLoaReportAttachment();
+		 * scLoaReportAttachment.setScLoaReport(scLoaReport);
+		 * scLoaReportAttachment.setDocNo(scLoaReport.getScLoa() .getLoaNo());
+		 * 
+		 * if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateContractSummaryPdfFromVelocity( (ScAttachment)
+		 * scLoaReportAttachment, scLoa); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateAgreementLetterPdfFromVelocity( (ScAttachment)
+		 * scLoaReportAttachment, scLoa, getManagedBean().getScQt()); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateDeclarationPdfFromVelocity( (ScAttachment)
+		 * scLoaReportAttachment, scLoa); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * saveScheduleList(); generateFrequencySchedulePdfFromVelocity(
+		 * (ScAttachment) scLoaReportAttachment, scLoa); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+		 * .equals(docDefinitionKey)) { filename.append(".xlsx");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * formJadualHarga((ScAttachment) scLoaReportAttachment, scLoa);
+		 * 
+		 * }else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION
+		 * .equals(docDefinitionKey)) { filename.append(".xlsx");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * formSpecification((ScAttachment) scLoaReportAttachment, scLoa);
+		 * 
+		 * }else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateBondLetterFromVelocityToPdf((ScAttachment)
+		 * scLoaReportAttachment,scLoa); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment); }
+		 * 
+		 * }else if(scLoaReportAttachment != null &&
+		 * QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
+		 * || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)){ // if
+		 * pending supplier acknowledgement , always regenerate
+		 * 
+		 * if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateContractSummaryPdfFromVelocity( (ScAttachment)
+		 * scLoaReportAttachment, scLoa); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateAgreementLetterPdfFromVelocity( (ScAttachment)
+		 * scLoaReportAttachment, scLoa, getManagedBean().getScQt()); } else if
+		 * (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateDeclarationPdfFromVelocity( (ScAttachment)
+		 * scLoaReportAttachment, scLoa);
+		 * 
+		 * } else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+		 * .equals(docDefinitionKey)) { filename.append(".xlsx");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * formJadualHarga((ScAttachment) scLoaReportAttachment, scLoa);
+		 * 
+		 * } else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment); }
+		 * }else if(scLoaReportAttachment != null &&
+		 * QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){ // if pending
+		 * submission , always regenerate if
+		 * (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+		 * .equals(docDefinitionKey)) { filename.append(".pdf");
+		 * scLoaReportAttachment.setFileName(filename.toString());
+		 * saveScheduleList(); generateFrequencySchedulePdfFromVelocity(
+		 * (ScAttachment) scLoaReportAttachment, scLoa); } } } catch (Exception
+		 * e) { //e.printStackTrace(); throw new EpException(e.getMessage()); }
+		 * 
+		 * // TODOs if (scLoaReportAttachment.getFileName() != null &&
+		 * scLoaReportAttachment.getFilePath() != null) {
+		 * scLoaReport.setScLoaReportAttachment(scLoaReportAttachment); } }
+		 */
+
+		return scLoaReportAttachment;
+	}
+
+	/**
+	 * Gets the qt award so.
+	 * 
 	 * @return the qt award so
 	 */
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 	}
+
 }
