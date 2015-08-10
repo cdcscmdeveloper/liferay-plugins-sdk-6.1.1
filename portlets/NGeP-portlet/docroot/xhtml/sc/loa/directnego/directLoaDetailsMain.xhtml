@@ -8,99 +8,137 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="contentSection">
-		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
-		
-		<ui:param name="isDocTypeQuotation" value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
-		<ui:param name="isPendingSubmissionStatus" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
-		<ui:param name="isEditableStatus" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION || ((directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL || directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION) and !empty directLOABackingBean.managedBean.taskId)}" />
-		<ui:param name="isSupplierAckStatus" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
-		<ui:param name="isAfterSupplierResponseStatus" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
-		<ui:param name="isPendingVerification" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
-		
+		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
+
+		<ui:param name="isDocTypeQuotation"
+			value="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.docType == ParameterConst.doctypeQuotation}" />
+		<ui:param name="isPendingSubmissionStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
+		<ui:param name="isEditableStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION || ((directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL || directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION) and !empty directLOABackingBean.managedBean.taskId)}" />
+		<ui:param name="isSupplierAckStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isAfterSupplierResponseStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isPendingVerification"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
+
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaButtons.xhtml" />
 		<ui:include src="/xhtml/sc/loa/directnego/directLoaHeader.xhtml" />
 
 		<ac:gpkiPopup textBeforeSign="#{directLOABackingBean.textBeforeSign}"
 			postSignAction="#{directLOABackingBean.gpkiSignAction(gpkiBackingBean.pmDigiSign)}" />
-		
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		  <tr>
-			<td width="20%" valign="top" class="sidemenutd">
-				<p:tabMenu id="menuTab" styleClass="sidemenu"
-					activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
 
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" disabled="#{isPendingVerification}">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="0" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}" update="@form" disabled="#{isPendingVerification}">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="1" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" disabled="#{isPendingVerification}">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="2" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}" update="@form" disabled="#{!isAfterSupplierResponseStatus or isPendingVerification}">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="3" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" 
-					  disabled="#{directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff or directLOABackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeAsAndWhen or isPendingVerification}">	
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="4" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" disabled="#{!directLOABackingBean.managedBean.scLoa.bondReq or isPendingVerification}">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="5" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 6 : 5}" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{isPendingVerification}">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
-					</p:menuitem>
-				</p:tabMenu>
-			</td>
-			<td width="80%">
-				<h:panelGroup id="menuContent">
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
-						<ui:include src="/xhtml/sc/loa/directnego/directLoaDetailsMenu.xhtml" />
-					</c:if>
-		
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
-						<ui:include src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
-					</c:if>
-					
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
-						<ui:include src="/xhtml/sc/loa/loarequest/loaDeductionPaymentMenu.xhtml" />
-					</c:if>
-					
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
-						<ui:include src="/xhtml/sc/loa/loarequest/loaPaymentDetailsMenu.xhtml" />	
-					</c:if>
-				
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
-						<ui:include src="/xhtml/sc/loa/loarequest/loaFulfilmentSchedule.xhtml" />
-					</c:if>
-					
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 5 : 7)}">
-						<ui:include src="/xhtml/sc/loa/loarequest/loaPerformanceBondMenu.xhtml" />
-					</c:if>
-					
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 6 : 5)}">
-						<ui:include src="/xhtml/sc/loa/loarequest/loaLetterOfAcceptance.xhtml" />
-					</c:if>
-					
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == (isDocTypeQuotation ? 7 : 6)}">
-						<ui:include src="/xhtml/sc/loa/loarequest/loaApprovalMenu.xhtml" />
-					</c:if>
-				</h:panelGroup>
-			</td>
-		</tr>
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						id="menuTab" styleClass="sidemenu"
+						activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}"
+							update="@form" disabled="#{isPendingVerification}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
+							update="@form" disabled="#{isPendingVerification}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							update="@form" disabled="#{isPendingVerification}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.payment.details']}"
+							update="@form"
+							disabled="#{!isAfterSupplierResponseStatus or isPendingVerification}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+							update="@form"
+							disabled="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="4" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
+							update="@form" disabled="#{!directLOABackingBean.managedBean.scLoa.approvalReq}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="5" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="6" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
+							update="@form" disabled="#{isPendingVerification}">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="7" />
+						</p:menuitem>
+					</p:tabMenu></td>
+				<td width="80%"><h:panelGroup id="menuContent">
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
+							<ui:include src="directLoaDetailsMenu.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
+							<ui:include src="directLoaAwardDetailsMenu.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
+							<ui:include src="directawardloaDeductionPaymentMenu.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
+							<ui:include src="directawardloaPaymentDetailsMenu.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
+							<ui:include src="directawardloaFulfilmentSchedule.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 5 }">
+							<ui:include src="directawardloaPerformanceBondMenu.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 6 }">
+							<ui:include src="directawardloaLetterOfAcceptance.xhtml" />
+						</c:if>
+
+						<c:if
+							test="#{directLOABackingBean.managedBean.selectedTabIndex == 7 }">
+							<ui:include src="directawardloaApprovalMenu.xhtml" />
+						</c:if>
+					</h:panelGroup></td>
+			</tr>
 		</table>
-		
-		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg" 
-			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
-			header="#{lbl['lbl.txt.choose.files']}">
-			
+
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+
 			<p:ajax event="close" />
-			
-			<c:if test="#{directLOABackingBean.managedBean.attachmentDocType != ParameterConst.doctypeLetterOfAward}">
+
+			<c:if
+				test="#{directLOABackingBean.managedBean.attachmentDocType != ParameterConst.doctypeLetterOfAward}">
 				<p:fileUpload style="display:inline;"
 					fileUploadListener="#{directLOABackingBean.handleFileUpload}"
 					mode="advanced" id="uploadattachment"
@@ -110,7 +148,8 @@
 					update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 				</p:fileUpload>
 			</c:if>
-			<c:if test="#{directLOABackingBean.managedBean.attachmentDocType == ParameterConst.doctypeLetterOfAward}">
+			<c:if
+				test="#{directLOABackingBean.managedBean.attachmentDocType == ParameterConst.doctypeLetterOfAward}">
 				<p:fileUpload style="display:inline;"
 					fileUploadListener="#{directLOABackingBean.handleFileUpload}"
 					mode="advanced" id="uploadattachment"

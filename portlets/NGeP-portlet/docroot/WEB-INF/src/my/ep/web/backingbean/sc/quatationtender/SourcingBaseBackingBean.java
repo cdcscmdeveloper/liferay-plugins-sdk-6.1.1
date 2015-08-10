@@ -100,6 +100,8 @@ import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
@@ -134,6 +136,7 @@ import org.docx4j.relationships.Relationship;
 import org.docx4j.wml.CTAltChunk;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
@@ -1632,5 +1635,201 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return mofAccount;
 
 	}
+	
+	/**
+	 * Convert tree nodes to zone criteria.convert General treenode list to
+	 * TplSpecZoneLoc objects.
+	 * 
+	 * @param treeNodes
+	 *            (list of treeNodes)
+	 * @param zoneDtl
+	 *            (TplSpecZoneDtl Object)
+	 * @return List<TplSpecZoneDtl>
+	 */
+	public List<TplSpecZoneDtl> convertTreeNodesToZoneCriteria(
+			List<TreeNode> treeNodes, TplSpecZoneDtl zoneDtl) {
+
+		List<TplSpecZoneDtl> zoneList = new ArrayList<TplSpecZoneDtl>();
+		List<TplSpecZoneLoc> results = null;
+
+		if (null != treeNodes && !treeNodes.isEmpty()) {
+			for (TreeNode treeNode : treeNodes) {
+				TplSpecZoneDtl tplSpecZoneDtl = null;
+				results = new ArrayList<TplSpecZoneLoc>();
+				List<TreeNode> zoneNodes = treeNode.getChildren();
+				// zoneDtl=(TplSpecZoneDtl)treeNode.getData();
+				// zoneDtl = (TplSpecZoneDtl) zoneNodes.getData();
+				// TplSpecZoneDtl zoneDtl=new TplSpecZoneDtl();
+				zoneDtl = (TplSpecZoneDtl) zoneNodes.get(0).getData();
+				for (TreeNode treeNode1 : zoneNodes) {
+
+					List<TreeNode> stateNodes = treeNode1.getChildren();
+
+					for (TreeNode treeNode2 : stateNodes) {
+
+						List<TreeNode> district = treeNode2.getChildren();
+						if (null != district && !district.isEmpty()) {
+							for (TreeNode devision : district) {
+
+								if (devision.getChildCount() > 0) {
+									for (TreeNode districtNode : devision
+											.getChildren()) {
+										TplSpecZoneLoc criteria = (TplSpecZoneLoc) districtNode
+												.getData();
+
+										criteria.setPmDistrict(((TplSpecZoneLoc) districtNode
+												.getData()).getPmDistrict());
+										criteria.setPmDivision(((TplSpecZoneLoc) districtNode
+												.getParent().getData())
+												.getPmDivision());
+										criteria.setPmState(((TplSpecZoneLoc) treeNode2
+												.getData()).getPmState());
+										criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+												.getData()));
+										tplSpecZoneDtl = criteria
+												.getTplSpecZoneDtl();
+										// criteria.setScQtSupplierCriteria(supplierCriteria);
+										setUserDetails(criteria);
+										results.add(criteria);
+										// tplSpecZoneDtl
+										// .setTplSpecZoneLocs(results);
+
+									}
+
+								} else {
+
+									TplSpecZoneLoc criteria = (TplSpecZoneLoc) devision
+											.getData();
+									criteria.setPmDistrict(((TplSpecZoneLoc) devision
+											.getData()).getPmDistrict());
+									criteria.setPmState(((TplSpecZoneLoc) treeNode2
+											.getData()).getPmState());
+
+									criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+											.getData()));
+									tplSpecZoneDtl = criteria
+											.getTplSpecZoneDtl();
+									// criteria.setScQtSupplierCriteria(supplierCriteria);
+									setUserDetails(criteria);
+									results.add(criteria);
+									// tplSpecZoneDtl.setTplSpecZoneLocs(results);
+
+								}
+
+								// zoneDtl.setTplSpecZoneLocs(results);
+								// setUserDetails(tplSpecZoneDtl);
+
+								// zoneList.add(tplSpecZoneDtl);
+
+							}
+						} else {
+
+							TplSpecZoneLoc criteria = (TplSpecZoneLoc) treeNode2
+									.getData();
+							criteria.setPmState(((TplSpecZoneLoc) treeNode2
+									.getData()).getPmState());
+
+							criteria.setTplSpecZoneDtl(((TplSpecZoneDtl) treeNode1
+									.getData()));
+							tplSpecZoneDtl = criteria.getTplSpecZoneDtl();
+							// criteria.setScQtSupplierCriteria(supplierCriteria);
+							setUserDetails(criteria);
+							results.add(criteria);
+							// tplSpecZoneDtl.setTplSpecZoneLocs(results);
+						}
+
+					}
+					if (tplSpecZoneDtl != null) {
+						tplSpecZoneDtl.setTplSpecZoneLocs(results);
+						setUserDetails(tplSpecZoneDtl);
+						zoneList.add(tplSpecZoneDtl);
+						// tplSpecDtls.add(tplSpecZoneDtl);
+						// scQuoteZone.setTplSpecZoneDtls(tplSpecDtls);
+					} else {
+						tplSpecZoneDtl = (TplSpecZoneDtl) treeNode1.getData();
+						setUserDetails(tplSpecZoneDtl);
+						zoneList.add(tplSpecZoneDtl);
+					}
+
+				}
+
+			}
+
+			// zoneDtl.setTplSpecZone(new ScQtZoneCriteria());
+			// setUserDetails(zoneDtl);
+
+			// zoneList.add(zoneDtl);
+
+		}
+
+		return zoneList;
+	}
+	
+	/**
+	 * Convert tree nodes to location criteria.convert supplier location tree
+	 * node list to supplier location objects
+	 * 
+	 * @param treeNodes
+	 *            (list of treenodes)
+	 * @param supplierCriteria
+	 *            (supplierCriteria object)
+	 * @return List<ScQtLocCriteria>
+	 */
+	public List<ScQtLocCriteria> convertTreeNodesToLocationCriteria(
+			List<TreeNode> treeNodes, ScQtSupplierCriteria supplierCriteria) {
+		List<ScQtLocCriteria> locCriterias = new ArrayList<ScQtLocCriteria>();
+		if (null != treeNodes && !treeNodes.isEmpty()) {
+			for (TreeNode treeNode : treeNodes) {
+				List<TreeNode> stateNodes = treeNode.getChildren();
+				for (TreeNode treeNode2 : stateNodes) {
+					List<TreeNode> district = treeNode2.getChildren();
+					if (null != district && !district.isEmpty()) {
+						for (TreeNode devision : district) {
+							if (devision.getChildCount() > 0) {
+								for (TreeNode districtNode : devision
+										.getChildren()) {
+									ScQtLocCriteria criteria = ((ScQtLocCriteria) districtNode
+											.getData());
+									criteria.setPmDistrict(((ScQtLocCriteria) districtNode
+											.getData()).getPmDistrict());
+									criteria.setPmDivision(((ScQtLocCriteria) districtNode
+											.getParent().getData())
+											.getPmDivision());
+									criteria.setPmState(((ScQtLocCriteria) treeNode2
+											.getData()).getPmState());
+									criteria.setScQtSupplierCriteria(supplierCriteria);
+									setUserDetails(criteria);
+									locCriterias.add(criteria);
+								}
+							} else {
+								ScQtLocCriteria criteria = ((ScQtLocCriteria) devision
+										.getData());
+								criteria.setPmDistrict(((ScQtLocCriteria) devision
+										.getData()).getPmDistrict());
+								criteria.setPmState(((ScQtLocCriteria) treeNode2
+										.getData()).getPmState());
+								criteria.setScQtSupplierCriteria(supplierCriteria);
+								setUserDetails(criteria);
+								locCriterias.add(criteria);
+							}
+
+						}
+					} else {
+
+						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2
+								.getData();
+						criteria.setScQtSupplierCriteria(supplierCriteria);
+						setUserDetails(criteria);
+
+						locCriterias.add(criteria);
+					}
+				}
+			}
+		}
+
+		return locCriterias;
+	}
+
+
 
 }

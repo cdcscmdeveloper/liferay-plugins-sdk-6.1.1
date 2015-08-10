@@ -1,0 +1,141 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="#{lbl['lbl.sc.zone.details']}" toggleable="true">
+
+
+
+		<h:panelGrid width="100%">
+			<p:dataTable id="zoneGeneralDataTable" rows="10"
+				value="#{directLOABackingBean.managedBean.zoneTrees}" var="zoneTree"
+				style="width:100%" rowIndexVar="index" rowKey="#{zoneTree}">
+
+				<p:column style="width:250%;">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.zone.location']}" />
+					</f:facet>
+					<p:tree value="#{zoneTree}" var="location" selectionMode="checkbox">
+						<p:ajax event="select"
+							listener="#{directLOABackingBean.selectZoneTreeNode}" />
+						<p:ajax event="unselect"
+							listener="#{directLOABackingBean.unSelectZoneTreeNode}" />
+
+						<p:treeNode type="zone">
+							<h:outputText value="#{location.zoneName}" />
+						</p:treeNode>
+
+						<p:treeNode type="state">
+							<h:outputText value="#{location.pmState.stateName}" />
+						</p:treeNode>
+						<p:treeNode type="division">
+							<h:outputText value="#{location.pmDivision.divisionName}" />
+						</p:treeNode>
+						<p:treeNode type="district">
+							<h:outputText value="#{location.pmDistrict.districtName}" />
+						</p:treeNode>
+					</p:tree>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
+					<p:commandLink
+						
+						actionListener="#{directLOABackingBean.editZones(zoneTree,index)}"
+						process="@this" update="@([id$=dlgId])"
+						oncomplete="ZoneGeneral.show();">
+						<h:graphicImage value="/css/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+		<div align="right" style="width: 100%">
+
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+				update="@([id$=zonePopupGeneral])"
+				actionListener="#{directLOABackingBean.showGeneralZonesPopup}" />
+			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
+				partialSubmit="true" oncomplete="zonesNonpanelDeletePopUp.show();"
+				update="@([id$=#{zonesNonpanelDeleteId}])" />
+		</div>
+		<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
+		<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"
+			widget="zonesNonpanelDeletePopUp"
+			okAction="directLOABackingBean.deleteTreeNode" width="400"
+			height="200" title="#{lbl['lbl.sc.qt.zone.location.info']}"
+			content="#{lbl['lbl.sc.dialog.confirm.zones.delete']}"
+			update="@([id$=zoneGeneralDataTable])" />
+
+		<p:dialog id="dlgId" header="#{lbl['lbl.sc.add.location']}"
+			widgetVar="ZoneGeneral" modal="true" width="490" position="top"
+			height="410">
+			<p:messages id="directAwardZonemessages" showDetail="true"
+				showSummary="false" autoUpdate="true" closable="true"
+				severity="error, info" />
+			<h:panelGroup id="zonePopupGeneral">
+				<table styleClass="noBorders tr,noBorders td" border="0">
+					<TR>
+						<TD width="30%" valign="top"><p:outputLabel
+								value="#{lbl['lbl.sc.zone.name']}"></p:outputLabel> <p:outputLabel
+								value="*" styleClass="mandatory" /></TD>
+						<td width="70%">
+							<table>
+								<tr>
+									<td><p:inputText size="50" id="zoneNameId"
+											label="#{lbl['lbl.sc.zone.name']}" maxlength="50"
+											required="#{directLOABackingBean.managedBean.zoneLocation}"
+											value="#{directLOABackingBean.managedBean.zoneName}"></p:inputText></td>
+									<td><p:message id="zoneNameMsg" for="zoneNameId"
+											display="icon" /></td>
+								</tr>
+							</table>
+						</td>
+					</TR>
+					<TR>
+						<TD valign="top"><p:outputLabel
+								value="#{lbl['lbl.sc.location']}" /> <p:outputLabel value="*"
+								styleClass="mandatory" /></TD>
+						<TD>
+							<div style="height: 300px; overflow-y: scroll;">
+								<p:tree id="treeZoneGeneralPopup"
+									value="#{directLOABackingBean.managedBean.rootZoanlTree}"
+									var="location"
+									selection="#{directLOABackingBean.managedBean.selectedGeneralTreeNodes}"
+									selectionMode="checkbox">
+									<p:treeNode type="state">
+										<h:outputText value="#{location.pmState.stateName}" />
+									</p:treeNode>
+									<p:treeNode type="division">
+										<h:outputText value="#{location.pmDivision.divisionName}" />
+									</p:treeNode>
+									<p:treeNode type="district">
+										<h:outputText value="#{location.pmDistrict.districtName}" />
+									</p:treeNode>
+									<p:treeNode type="city">
+										<h:outputText value="#{pmCity.cityName}" />
+									</p:treeNode>
+								</p:tree>
+							</div>
+						</TD>
+					</TR>
+					<TR>
+						<td><p:commandButton value="#{lbl['lbl.btn.cancel']}"
+								style="float:right;" onclick="ZoneGeneral.hide();" /></td>
+						<td><p:commandButton value="#{lbl['lbl.btn.ok']}"
+								style="float:right;" process="@all"
+								update="@this, zoneGeneralDataTable,zonePopupGeneral"
+								action="#{directLOABackingBean.updateZoneGeneralLocation}">
+							</p:commandButton></td>
+					</TR>
+				</table>
+			</h:panelGroup>
+
+			<p:ajax event="close"
+				listener="#{directLOABackingBean.closeListener}" />
+		</p:dialog>
+
+	</p:panel>
+</ui:composition>

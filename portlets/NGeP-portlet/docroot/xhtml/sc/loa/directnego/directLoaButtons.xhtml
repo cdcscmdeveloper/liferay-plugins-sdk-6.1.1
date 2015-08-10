@@ -13,19 +13,19 @@
 	<div class="ppRightBtn">
 		<h:panelGroup id="loaButtonsId">
 			<p:commandButton value="#{lbl['lbl.btn.save']}"
-				action="#{lOADetailBackingBean.saveAction}"
+				action="#{directLOABackingBean.saveAction}"
 				process="@form" update="@form"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				
-				<p:commandButton value="#{lbl['lbl.btn.complete']}"
-				action="#{lOADetailBackingBean.saveAction}"
+				<p:commandButton value="#{lbl['lbl.btn.submit']}"
+				action="#{directLOABackingBean.submitAction}"
 				process="@form" update="@form"
 				onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />
 				
 			<c:choose>
-				<c:when test="#{!empty lOADetailBackingBean.managedBean.taskId}">
+				<c:when test="#{!empty directLOABackingBean.managedBean.taskId}">
 					<ui:repeat var="bpmAction"
-						value="#{lOADetailBackingBean.managedBean.outComes}">
+						value="#{directLOABackingBean.managedBean.outComes}">
 						<ui:param name="buttonLabel"
 							value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
 						<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
@@ -34,7 +34,7 @@
 							styleClass="ui-button" onstart="blockWidget.show();"
 							rendered="#{!isPendingVerification}"
 							oncomplete="blockWidget.hide();"
-							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+							action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
 							partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 							update="#{isReject ? '@this' : '@form'}" />
 
@@ -43,8 +43,8 @@
 							styleClass="ui-button" onstart="blockWidget.show();"
 							rendered="#{isPendingVerification}"
 							oncomplete="blockWidget.hide();"
-							disabled="#{lOADetailBackingBean.managedBean.verifyBtnFlag}"
-							action="#{lOADetailBackingBean.updateBpmTaskAction(bpmAction)}"
+							disabled="#{directLOABackingBean.managedBean.verifyBtnFlag}"
+							action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
 							partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 							update="#{isReject ? '@this' : '@form'}" />
 
