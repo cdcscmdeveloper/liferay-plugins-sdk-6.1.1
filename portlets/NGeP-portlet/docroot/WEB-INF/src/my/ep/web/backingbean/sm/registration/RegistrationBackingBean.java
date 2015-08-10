@@ -526,6 +526,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//GST
 		if(getManagedBean().isGstFlag()){
 			getManagedBean().getSmSupp().setSmGstSuppliers(new ArrayList<SmGstSupplier>());
+			getManagedBean().getSmSupp().setGstRegisteredFlag(DbValueConst.RECORD_STATUS_ACTIVE);
 			setSupplierGst();
 		}
 
