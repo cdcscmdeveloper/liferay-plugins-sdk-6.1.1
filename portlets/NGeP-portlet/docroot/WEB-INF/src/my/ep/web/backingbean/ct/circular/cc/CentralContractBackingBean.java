@@ -623,9 +623,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			getManagedBean().setAutoUpdate(true);
 			
-			/*	if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
+				if(getManagedBean().getCircularVer().getCtContactPersons().size()==0) {
 					throw new EpException(MessageConst.ERROR_100023, new String[]{"Contact Person Details"});
-				}*/
+				}
 			
 			if (outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT) || outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				if(getManagedBean().getCircularVer().getCircularFileName()==null) {
