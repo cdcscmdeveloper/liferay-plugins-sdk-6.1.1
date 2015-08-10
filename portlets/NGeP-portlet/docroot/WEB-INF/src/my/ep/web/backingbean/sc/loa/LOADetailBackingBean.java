@@ -2588,7 +2588,9 @@ public class LOADetailBackingBean extends
 			scLoa.setAckDate(new Date());
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 			scLoa.setBondResDueDate(new Date());
-		} 		
+		}  else{
+			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
+		}
 		
 		// check whether loa from s1 or s2.
 		if(scLoa.getScLoiLoa() != null){
@@ -2608,8 +2610,6 @@ public class LOADetailBackingBean extends
 				saveScheduleList();
 			}
 		}
-		
-		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
 
 		PmUser contractSignerUser = getManagedBean().getContractSignerUser();
 		if (contractSignerUser != null
