@@ -5,6 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
 	<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
 		toggleable="false">
 		<table>
@@ -12,25 +15,24 @@
 				<td valign="top" width="18%"><h:outputLabel
 						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
 				<td colspan="3"><p:inputText size="95"
-						style="margin-bottom:5px;" 
+						style="margin-bottom:5px;"
 						value="#{directLOABackingBean.managedBean.tplSpecMaster.specName}" /></td>
 			</tr>
 			<tr>
-				<td style="width: 10%">
-				<h:outputLabel
-						value="#{lbl['lbl.sc.item.type']}" /> 
-				<p:outputLabel value="*" styleClass="mandatory"  /></td>
+				<td style="width: 10%"><h:outputLabel
+						value="#{lbl['lbl.sc.item.type']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="itemType"
 						value="#{directLOABackingBean.managedBean.itemTypeId}"
 						style="width: 178px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
-						<f:selectItems
-							value="#{directLOABackingBean.itemTypeValues}" />
-						<p:ajax event="change" partialSubmit="true" process="@this"  update="productAndServiceId"/>
-					</p:selectOneMenu>
-				</td>
-					
-				<td width="16%"><h:outputLabel value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
+						<f:selectItems value="#{directLOABackingBean.itemTypeValues}" />
+						<p:ajax event="change" partialSubmit="true" process="@this"
+							update="productAndServiceId" />
+					</p:selectOneMenu></td>
+
+				<td width="16%"><h:outputLabel
+						value="#{lbl['lbl.tpl.spec.specification.type']}" /></td>
 				<td><p:inputText disabled="true" size="30" /></td>
 			</tr>
 			<tr>
@@ -42,22 +44,77 @@
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-                <td><h:outputLabel
-						value="#{lbl['lbl.sc.status']}" /></td>
+				<td><h:outputLabel value="#{lbl['lbl.sc.status']}" /></td>
 				<td><p:inputText disabled="true"></p:inputText></td>
 			</tr>
 
 		</table>
 	</p:panel>
+	<p:panel header="Zone / Location Details" toggleable="false">
 
-	<p:panel header="Specification Content" toggleable="true" id="productAndServiceId">
-		<h:panelGroup id="productListId" style="width: 100%;" rendered="#{directLOABackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeProduct}">
+
+		<table>
+			<tr>
+				<td valign="top" width="18%"><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+				<td><p:selectOneRadio
+						value="#{directLOABackingBean.managedBean.scQt.zonal}">
+						<f:selectItems
+							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+
+						<p:ajax event="change" partialSubmit="true"
+							update="generalLocationList" process="@this"
+							listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
+					</p:selectOneRadio></td>
+				<td style="margin-top: -3px"><ac:iconTooltip
+						value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+			</tr>
+
+
+		</table>
+		<h:panelGroup id="generalLocationList">
+
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+					<td><p:selectOneMenu id="locationLevels"
+							label="#{lbl['lbl.sc.zone.location.level']}"
+							value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
+							style="width: 209px;">
+
+							<f:selectItems
+								value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+							<p:ajax event="change" update="generalLocationList"
+								listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
+						</p:selectOneMenu> <ac:iconTooltip
+							value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
+							id="withzone" for="locationLevels" display="icon"></p:message></td>
+				</tr>
+			</table>
+
+
+			<c:if test="#{directLOABackingBean.managedBean.scQt.zonal}">
+				<ui:include src="zonelocdetails.xhtml"></ui:include>
+			</c:if>
+
+			<c:if test="#{!directLOABackingBean.managedBean.scQt.zonal}">
+				<ui:include src="locationDetails.xhtml"></ui:include>
+			</c:if>
+		</h:panelGroup>
+
+	</p:panel>
+
+	<p:panel header="Specification Content" toggleable="true"
+		id="productAndServiceId">
+		<h:panelGroup id="productListId"
+			rendered="#{directLOABackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeProduct}">
 			<ac:templateSpec
 				templateSpecBean="#{directLOABackingBean.managedBean.productTemplateSpecBean}"
 				title="#{lbl['lbl.txt.product']}" />
 
 		</h:panelGroup>
-		<h:panelGroup id="serviceListId" style="width: 100%;" rendered="#{directLOABackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeService}">
+		<h:panelGroup id="serviceListId"
+			rendered="#{directLOABackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeService}">
 			<ac:templateSpec
 				templateSpecBean="#{directLOABackingBean.managedBean.serviceTemplateSpecBean}"
 				title="#{lbl['lbl.txt.service']}" />
@@ -66,7 +123,5 @@
 
 	</p:panel>
 
-	<c:if test="#{isZonal}">
-		<ui:include src="/xhtml/tpl/spec/zoneLocPopup.xhtml" />
-	</c:if>
+
 </ui:composition>
