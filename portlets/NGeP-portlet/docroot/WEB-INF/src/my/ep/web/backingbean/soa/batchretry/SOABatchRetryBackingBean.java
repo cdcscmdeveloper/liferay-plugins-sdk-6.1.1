@@ -67,10 +67,6 @@ public class SOABatchRetryBackingBean extends
 						.getServiceObject(ModuleCodeConst.SOABATCH,
 								ISOABatchRetrySO.class);
 
-				 BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SOABATCH,
-								ISOARetryLogSO.class);
-				
 				SOABatchRetryReqDTO reqDTO = new SOABatchRetryReqDTO();
 				SOABatchRetryResDTO resDTO = logSO.searchSOABatchRetryList(reqDTO);
 				if (resDTO.isSuccessful()) {
