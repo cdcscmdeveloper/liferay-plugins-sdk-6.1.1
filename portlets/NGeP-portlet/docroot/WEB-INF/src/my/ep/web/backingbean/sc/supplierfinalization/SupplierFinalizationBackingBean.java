@@ -3306,7 +3306,9 @@ public class SupplierFinalizationBackingBean extends
 						if (recommendDtlId != null) {
 							if ((BooleanUtils.isTrue(
 									recommendDtl.getLoiAwarded()) && 
-										recommendDtl.getLoaAwarded() == null) ||
+										recommendDtl.getLoaAwarded() == null && 
+											recommendDtl.getRecordStatusFlg().equals(
+														DbValueConst.RECORD_STATUS_ACTIVE)) ||
 											(BooleanUtils.isTrue(
 												recommendDtl.getLoiAwarded()) && 
 													BooleanUtils.isTrue(
