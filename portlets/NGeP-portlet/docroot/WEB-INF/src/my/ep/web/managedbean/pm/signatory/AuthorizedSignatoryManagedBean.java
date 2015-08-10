@@ -1,6 +1,10 @@
 package my.ep.web.managedbean.pm.signatory;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -32,6 +36,7 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	private List<PmCertSignatory> deletedCertSignatories;
 	private int status;
 	private boolean validationError = false;
+	private Map<Long , Date> idToCertSignMapForChangedRecs = new HashMap<Long , Date>();
 	
 
 	/**
@@ -141,6 +146,16 @@ public class AuthorizedSignatoryManagedBean extends BaseManagedBean {
 	 */
 	public void setValidationError(boolean validationError) {
 		this.validationError = validationError;
-	}	
+	}
+
+	public Map<Long, Date> getIdToCertSignMapForChangedRecs() {
+		return idToCertSignMapForChangedRecs;
+	}
+
+	public void setIdToCertSignMapForChangedRecs(
+			Map<Long, Date> idToCertSignMapForChangedRecs) {
+		this.idToCertSignMapForChangedRecs = idToCertSignMapForChangedRecs;
+	}
+
 		
 }
