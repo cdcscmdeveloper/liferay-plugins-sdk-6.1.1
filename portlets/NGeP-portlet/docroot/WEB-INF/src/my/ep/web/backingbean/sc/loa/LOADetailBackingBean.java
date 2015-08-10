@@ -568,13 +568,13 @@ public class LOADetailBackingBean extends
 	    if(scQtSchedule.getStartYear() != null && scQtSchedule.getStartMonth() != null){
 	    	startDate = Calendar.getInstance();
 	    	startDate.clear();
-	    	startDate.set(Integer.valueOf(scQtSchedule.getStartYear()),Integer.valueOf(scQtSchedule.getStartMonth()), 1, 0,0,0);
+	    	startDate.set(Integer.valueOf(scQtSchedule.getStartYear()), Integer.valueOf(scQtSchedule.getStartMonth())-1, 1, 0, 0, 0);
 	    }
 	   
 	    if(scQtSchedule.getEndYear() != null && scQtSchedule.getEndMonth() != null){
 	    	endDate = Calendar.getInstance();
 	    	endDate.clear();
-	    	endDate.set(Integer.valueOf(scQtSchedule.getEndYear()),Integer.valueOf(scQtSchedule.getEndMonth()), Integer.valueOf(getDays(contractExpDate)),0,0,0);
+	    	endDate.set(Integer.valueOf(scQtSchedule.getEndYear()), Integer.valueOf(scQtSchedule.getEndMonth())-1, Integer.valueOf(getDays(contractExpDate)), 0, 0, 0);
 	    }
 	    
 	    if(startDate != null && endDate != null){
@@ -4488,13 +4488,13 @@ public class LOADetailBackingBean extends
 	    if(progressivePayment.getStartYear() != null && progressivePayment.getStartMonth() != null){
 	    	startDate = Calendar.getInstance();
 	    	startDate.clear();
-	    	startDate.set(Integer.valueOf(progressivePayment.getStartYear()),Integer.valueOf(progressivePayment.getStartMonth()), 1, 0,0,0);
+	    	startDate.set(Integer.valueOf(progressivePayment.getStartYear()), Integer.valueOf(progressivePayment.getStartMonth())-1, 1, 0, 0, 0);
 	    }
 	   
 	    if(progressivePayment.getEndYear() != null && progressivePayment.getEndMonth() != null){
 	    	endDate = Calendar.getInstance();
 	    	endDate.clear();
-	    	endDate.set(Integer.valueOf(progressivePayment.getEndYear()),Integer.valueOf(progressivePayment.getEndMonth()), Integer.valueOf(getDays(contractExpDate)),0,0,0);
+	    	endDate.set(Integer.valueOf(progressivePayment.getEndYear()), Integer.valueOf(progressivePayment.getEndMonth())-1, Integer.valueOf(getDays(contractExpDate)), 0, 0, 0);
 	    }
 	    
 	    if(startDate != null && endDate != null){
