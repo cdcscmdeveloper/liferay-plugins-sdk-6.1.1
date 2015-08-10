@@ -1153,67 +1153,6 @@ public class QTSupplierQulCriteriaBackingBean extends
 	}
 
 	/**
-	 * Convert tree nodes to location criteria.convert supplier location tree
-	 * node list to supplier location objects
-	 * 
-	 * @param treeNodes
-	 *            (list of treenodes)
-	 * @param supplierCriteria
-	 *            (supplierCriteria object)
-	 * @return List<ScQtLocCriteria>
-	 */
-	private List<ScQtLocCriteria> convertTreeNodesToLocationCriteria(
-			List<TreeNode> treeNodes, ScQtSupplierCriteria supplierCriteria) {
-		List<ScQtLocCriteria> results = new ArrayList<ScQtLocCriteria>();
-		if (null != treeNodes && !treeNodes.isEmpty()) {
-			for (TreeNode treeNode : treeNodes) {
-				List<TreeNode> stateNodes = treeNode.getChildren();
-				for (TreeNode treeNode2 : stateNodes) {
-					List<TreeNode> district = treeNode2.getChildren();
-					if (null != district && !district.isEmpty()) {
-						for (TreeNode devision : district) {
-							if (devision.getChildCount() > 0) {
-								for (TreeNode districtNode : devision
-										.getChildren()) {
-									ScQtLocCriteria criteria = ((ScQtLocCriteria) districtNode
-											.getData());
-									criteria.setPmDistrict(((ScQtLocCriteria) districtNode
-											.getData()).getPmDistrict());
-									criteria.setPmDivision(((ScQtLocCriteria) districtNode
-											.getParent().getData())
-											.getPmDivision());
-									criteria.setPmState(((ScQtLocCriteria) treeNode2
-											.getData()).getPmState());
-									criteria.setScQtSupplierCriteria(supplierCriteria);
-									setUserDetails(criteria);
-									results.add(criteria);
-								}
-							} else {
-								ScQtLocCriteria criteria = ((ScQtLocCriteria) devision
-										.getData());
-								criteria.setPmDistrict(((ScQtLocCriteria) devision
-										.getData()).getPmDistrict());
-								criteria.setPmState(((ScQtLocCriteria) treeNode2
-										.getData()).getPmState());
-								criteria.setScQtSupplierCriteria(supplierCriteria);
-								setUserDetails(criteria);
-								results.add(criteria);
-							}
-						}
-					} else {
-						ScQtLocCriteria criteria = (ScQtLocCriteria) treeNode2
-								.getData();
-						criteria.setScQtSupplierCriteria(supplierCriteria);
-						setUserDetails(criteria);
-						results.add(criteria);
-					}
-				}
-			}
-		}
-		return results;
-	}
-
-	/**
 	 * Delete tree nodes.
 	 *
 	 * @param rootTrees the root trees
