@@ -1013,6 +1013,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 /** The auto update. */
     private boolean autoUpdate =true;
     
+   private int selectedCommitteeTabIndex;
+    
     /** The clauses title. */
 	private String clausesTitle;
     
@@ -6435,6 +6437,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setTobeRemoveCategoryCodes(
 			List<ScQtCategory> tobeRemoveCategoryCodes) {
 		this.tobeRemoveCategoryCodes = tobeRemoveCategoryCodes;
+	}
+
+	public int getSelectedCommitteeTabIndex() {
+		return selectedCommitteeTabIndex;
+	}
+
+	public void setSelectedCommitteeTabIndex(int selectedCommitteeTabIndex) {
+		this.selectedCommitteeTabIndex = selectedCommitteeTabIndex;
 	}
 
 }
