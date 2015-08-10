@@ -145,6 +145,7 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.MapUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.velocity.VelocityContext;
@@ -3289,21 +3290,28 @@ public class SupplierFinalizationBackingBean extends
 	private void disableAwardedItems(List<ScQtRecommend> scQtRecommends) {
 		List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
 		
-		if (scQtRecommends != null && 
-				CollectionUtils.isNotEmpty(
-						rejectedRecommendDtlIds)) {
+		if (CollectionUtils.isNotEmpty(
+							scQtRecommends)) {
 			for (ScQtRecommend recommend : scQtRecommends) {
 				if (recommend.getRecommendDtls() != null) {
-					boolean isAwardedItem = true;
+					boolean isAwardedItem = false;
 					int activeSupplierCount = 0;
 					for (ScQtRecommendDtl recommendDtl 
-												: recommend.getRecommendDtls()) {
+											: recommend.getRecommendDtls()) {
 						Long recommendDtlId = recommendDtl.getRecommendDtlId();
 
+						// If LOI awarded and no decision made on LOA (or) 
+						// if LOI awarded and LOA awarded,
+						// then consider the item as awarded
 						if (recommendDtlId != null) {
-							if (rejectedRecommendDtlIds.contains(
-									String.valueOf(recommendDtlId))) {
-								isAwardedItem = false;
+							if ((BooleanUtils.isTrue(
+									recommendDtl.getLoiAwarded()) && 
+										recommendDtl.getLoaAwarded() == null) ||
+											(BooleanUtils.isTrue(
+												recommendDtl.getLoiAwarded()) && 
+													BooleanUtils.isTrue(
+														recommendDtl.getLoaAwarded()))) {
+								isAwardedItem = true;
 							}
 						}
 						if (recommendDtl.getRecordStatusFlg()

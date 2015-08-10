@@ -137,6 +137,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
@@ -482,11 +483,37 @@ public class LOIDetailBackingBean extends
 						.getScQtFinalization();
 				List<ScQtRecommend> scQtRecommendList = resDTO
 						.getScQtRecommendList();
+				
+				List<ScLoi> scLois = resDTO.getScLois();
+				if (CollectionUtils.isNotEmpty(scLois) && 
+						CollectionUtils.isNotEmpty(recommendDtlIds)) {
+					List<ScLoi> previousLois = null;
+					for (ScLoi scLoi : scLois) {
+						if (CollectionUtils.isNotEmpty(
+									scLoi.getScLoiLoaItems())) {
+							for (ScLoiLoaItem loiLoaItem : scLoi.getScLoiLoaItems()) {
+								Long recommendDtlId = loiLoaItem
+										.getScQtRecommendDtl().getRecommendDtlId();
+								if (!recommendDtlIds.contains(
+										String.valueOf(recommendDtlId))) {
+									if (previousLois == null) {
+										previousLois = new ArrayList<ScLoi>();
+									}
+									previousLois.add(scLoi);
+									break;
+								}
+							}
+						}
+					}
+					if (CollectionUtils.isNotEmpty(previousLois)) {
+						scLois.removeAll(previousLois);
+					}
+				}
 
 				getManagedBean().setScQtFinalization(scQtFinalization);
 				getManagedBean().setScQt(scQtFinalization.getScQt());
 				getManagedBean().setCommitteeType(committeeType);
-				getManagedBean().setLois(resDTO.getScLois());
+				getManagedBean().setLois(scLois);
 				getManagedBean().setRecommendDtlIds(recommendDtlIds);
 				
 				String recommendType = scQtFinalization.getRecommendedTypeId()
@@ -507,8 +534,8 @@ public class LOIDetailBackingBean extends
 						if (!zoneDetails.contains(specZoneDtl)) {
 							zoneDetails.add(specZoneDtl);
 						}
-						if (scQtRecommendsByZone
-								.containsKey(specZoneDtl.getSpecZoneId())) {
+						if (scQtRecommendsByZone.containsKey(
+										specZoneDtl.getSpecZoneId())) {
 							List<ScQtRecommend> scQtRecommends 
 									= scQtRecommendsByZone.get(specZoneDtl.getSpecZoneId());
 							scQtRecommends.add(scQtRecommend);
@@ -516,7 +543,8 @@ public class LOIDetailBackingBean extends
 							List<ScQtRecommend> scQtRecommends 
 									= new ArrayList<ScQtRecommend>();
 							scQtRecommends.add(scQtRecommend);
-							scQtRecommendsByZone.put(specZoneDtl.getSpecZoneId(), scQtRecommends);
+							scQtRecommendsByZone.put(
+									specZoneDtl.getSpecZoneId(), scQtRecommends);
 						}						
 					}
 					if (CollectionUtils.isNotEmpty(zoneDetails)) {
@@ -4466,8 +4494,8 @@ public class LOIDetailBackingBean extends
 			for (ScQtRecommend scQtRecommend : selectedRecommendList) {
 				for (ScQtRecommendDtl scQtRecommendDtl 
 							: scQtRecommend.getRecommendDtls()) {
-					if (!scQtRecommendDtl.getRecordStatusFlg()
-							.equals(DbValueConst.RECORD_STATUS_CANCELLED)) {
+					if (BooleanUtils.isTrue(
+							scQtRecommendDtl.getLoiAwarded())) {
 						SmSupplier smSupplier = scQtRecommendDtl.getSupplier();
 						Long supplierId = smSupplier.getSupplierId();
 	
@@ -4518,8 +4546,8 @@ public class LOIDetailBackingBean extends
 			for (ScQtRecommendDtl recommendDtl 
 						: scQtRecommend.getRecommendDtls()) {
 				if (!recommendDtl.equals(scQtRecommendDtl) && 
-						!recommendDtl.getRecordStatusFlg()
-							.equals(DbValueConst.RECORD_STATUS_CANCELLED)) {
+						BooleanUtils.isTrue(
+								recommendDtl.getLoiAwarded())) {
 					recommendDtl.setRecordStatus(false);
 					recommendDtl.setRecordStatusFlg(
 							DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -4571,8 +4599,8 @@ public class LOIDetailBackingBean extends
 						recommendDtl.setRecordStatus(true);
 						recommendDtl.setRecordStatusFlg(
 								DbValueConst.RECORD_STATUS_ACTIVE);
-					} else if (!recommendDtl.getRecordStatusFlg()
-									.equals(DbValueConst.RECORD_STATUS_CANCELLED)) {
+					} else if (BooleanUtils.isTrue(
+									recommendDtl.getLoiAwarded())) {
 						recommendDtl.setRecordStatus(false);
 						recommendDtl.setRecordStatusFlg(
 								DbValueConst.RECORD_STATUS_SUSPENDED);
@@ -4715,8 +4743,8 @@ public class LOIDetailBackingBean extends
 										: scQtRecommend.getRecommendDtls()) {
 				
 				// Skip the rejected suppliers
-				if (!scQtRecommendDtl.getRecordStatusFlg()
-						.equals(DbValueConst.RECORD_STATUS_CANCELLED)) {
+				if (BooleanUtils.isTrue(
+						scQtRecommendDtl.getLoiAwarded())) {
 					Long supplierId = scQtRecommendDtl.getSupplier().getSupplierId();
 					recommendDtlsMap.put(supplierId, scQtRecommendDtl);
 				}
