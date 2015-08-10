@@ -4729,24 +4729,23 @@ public class LOIDetailBackingBean extends
 							.getScQtProposal().getScQtSupplier().getSmSupplier()
 							.getSupplierId();
 					if (recommendDtlsMap.containsKey(supplierId)) {
-						evaluationResultDtl.setScQtRecommendDtl(
-										recommendDtlsMap.get(supplierId));
+						
+						if(evaluationResultDtl.getScQtRecommendDtl()== null){
+							List<ScQtRecommendDtl> recommendDtl = new ArrayList<ScQtRecommendDtl>();
+							recommendDtl.add(recommendDtlsMap.get(supplierId));
+							evaluationResultDtl.setScQtRecommendDtl(recommendDtl);
+						} else {
+							evaluationResultDtl.getScQtRecommendDtl().add(
+									recommendDtlsMap.get(supplierId));
+						}
+						
 						scQtRecommend.getAwardSupplierList()
 									 .add(evaluationResultDtl);
+						
 						if (isItemized) {
 							calculateOfferedPrice(
 									evaluationResultDtl,scQtRecommend.getRequestItem());	
-						} else {
-							// Setting RecommendDtls by package to caluclate offer price for whole items of supplier
-							if(evaluationResultDtl.getScQtRecommendDtlByPkg()== null){
-								List<ScQtRecommendDtl> recommendDtl = new ArrayList<ScQtRecommendDtl>();
-								recommendDtl.add(recommendDtlsMap.get(supplierId));
-								evaluationResultDtl.setScQtRecommendDtlByPkg(recommendDtl);
-							} else {
-								evaluationResultDtl.getScQtRecommendDtlByPkg().add(
-										recommendDtlsMap.get(supplierId));
-							}
-						}
+						} 
 					}
 				}				
 			}			
@@ -4767,21 +4766,15 @@ public class LOIDetailBackingBean extends
 		
 		ScQtProposalItem proposalItem = null;
 		BigDecimal awardQuantity = null;
-		if (!getManagedBean().isItemized()) {
-			
-			List<ScQtRecommendDtl> recommendDtls = evalResultDtl.getScQtRecommendDtlByPkg();
-			for (ScQtRecommendDtl recommendDtl : recommendDtls) {
-				if (recommendDtl.getScQtRecommend().getRequestItem()
-						.getItemName().equalsIgnoreCase(requestItem.getItemName())) {
-						
-					proposalItem = recommendDtl.getScQtProposalItem();
-					awardQuantity = recommendDtl.getAwardQty();
-				}
+		
+		List<ScQtRecommendDtl> recommendDtls = evalResultDtl.getScQtRecommendDtl();
+		for (ScQtRecommendDtl recommendDtl : recommendDtls) {
+			if (recommendDtl.getScQtRecommend().getRequestItem()
+					.getItemName().equalsIgnoreCase(requestItem.getItemName())) {
+					
+				proposalItem = recommendDtl.getScQtProposalItem();
+				awardQuantity = recommendDtl.getAwardQty();
 			}
-		} else {
-			ScQtRecommendDtl recommendDtl = evalResultDtl.getScQtRecommendDtl();
-			proposalItem = recommendDtl.getScQtProposalItem();
-			awardQuantity = recommendDtl.getAwardQty();
 		}
 
 		if (proposalItem != null) {
