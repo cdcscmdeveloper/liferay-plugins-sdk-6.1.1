@@ -29,13 +29,11 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertSignatory;
 import my.ep.persistence.entity.pm.common.PmZone;
-import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.signatory.AuthorizedSignatoryManagedBean;
-import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
@@ -92,8 +90,18 @@ public class AuthorizedSignatoryBackingBean extends
 	public void expDateChangedListener(ValueChangeEvent event){
 		log.info("...event.getOldValue()="+event.getOldValue());
 		log.info("...event.getNewValue()="+event.getNewValue());
-		if(event.getOldValue() != event.getNewValue()){
-			
+		PmCertSignatory certSignatory = (PmCertSignatory) event.getComponent().getAttributes().get("certSignatory");
+		//set modified for Tracking Diary and save the original expireDate if this Signatory for later compare
+		if(certSignatory != null){
+		Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(certSignatory.getCertSignatoryId());
+		log.info("...originalExpDate="+originalExpDate);
+		if(originalExpDate != null){
+			if(originalExpDate == (Date) event.getNewValue()){
+				 this.getManagedBean().getIdToCertSignMapForChangedRecs().remove(certSignatory.getCertSignatoryId());
+			}
+		}else{
+          this.getManagedBean().getIdToCertSignMapForChangedRecs().put(certSignatory.getCertSignatoryId(), (Date) event.getOldValue());
+		}
 		}
 	}
 	/**
@@ -380,6 +388,12 @@ public class AuthorizedSignatoryBackingBean extends
 						&& pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					log.info("Tracking diary for virtual certificate: re-activating status :saveRuleCatalog");
 					messageId = MessageConst.TD_80028;
+					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
+				}
+				Date originalExpDate = this.getManagedBean().getIdToCertSignMapForChangedRecs().get(pmcertSignatory.getCertSignatoryId());
+				if(originalExpDate != null && pmcertSignatory.getExpDate() != originalExpDate){
+					log.info("Tracking diary for virtual certificate: updating Expire Date :saveRuleCatalog");
+					messageId = MessageConst.TD_80026;
 					msgParam = new String[] {pmcertSignatory.getSinnatoryName()};
 				}
 			}
