@@ -4675,7 +4675,9 @@ public class LOIDetailBackingBean extends
 		int activeSupplierCount = 0;
 		for (ScQtRecommendDtl recommendDtl 
 						: scQtRecommend.getRecommendDtls()) {
-			if (recommendDtl.isRecordStatus()) {
+			if (BooleanUtils.isTrue(
+					recommendDtl.getLoiAwarded()) && 
+						recommendDtl.isRecordStatus()) {
 				++activeSupplierCount;
 			}
 		}
