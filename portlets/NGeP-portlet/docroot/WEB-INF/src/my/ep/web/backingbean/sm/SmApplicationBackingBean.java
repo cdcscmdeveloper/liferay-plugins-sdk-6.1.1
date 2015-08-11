@@ -955,8 +955,7 @@ public class SmApplicationBackingBean extends
 							.getSupplierId(), getManagedBean()
 							.getCompanyBasicGst()));
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
-					.getCompanyBasicGst(), getManagedBean().getSmAppl()
-					.getSmSupplierBranches(), getManagedBean().getSmAppl());
+					.getCompanyBasicGst(), getManagedBean().getSmAppl());
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -1491,6 +1490,19 @@ public class SmApplicationBackingBean extends
 
 				// init business premise whether show or hide home office
 				initBusinessPremise();
+
+				// init gst info
+				getManagedBean().setCompanyBasicGst(
+						SmApplicationUtil.initHqGstInformation(getManagedBean()
+								.getSmAppl(), getManagedBean().getSmAppl()
+								.getSmSupplier().getSupplierId(),
+								getManagedBean().getCompanyBasicGst()));
+				SmApplicationUtil.initBranchGstInformation(getManagedBean()
+						.getCompanyBasicGst(), getManagedBean().getSmAppl());
+				if (getManagedBean().getSelectedBranch() != null
+						&& getManagedBean().getSelectedBranch().getGst() != null) {
+					getManagedBean().getSelectedBranch().setGst(null);
+				}
 			}
 			assignValReqdToFalse();
 		}
@@ -4335,13 +4347,7 @@ public class SmApplicationBackingBean extends
 							.getSmSupplier().getSupplierId(), getManagedBean()
 							.getCompanyBasicGst()));
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
-					.getCompanyBasicGst(), getManagedBean().getSmAppl()
-					.getSmSupplierBranches(), getManagedBean().getSmAppl());
-			if (getManagedBean().getSelectedBranch() != null
-					&& getManagedBean().getSelectedBranch().getGst() != null) {
-				getManagedBean().getSelectedBranch()
-						.setGst(null);
-			}
+					.getCompanyBasicGst(), getManagedBean().getSmAppl());
 		}
 	}
 
