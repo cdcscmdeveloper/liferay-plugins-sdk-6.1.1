@@ -736,7 +736,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3816,7 +3816,20 @@ public class ReportBackingBean extends
 		if(highRoleCodeList!=null){
 			if((paramTableRoleCodeList!=null)&&(paramTableRoleCodeList.contains(highRoleCodeList.get(0)))){
 			//if((highRoleCodeList!=null)&&((highRoleCodeList.contains(RoleCode.BPK_PCA.value())||highRoleCodeList.contains(RoleCode.BPK_CCA.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_ADMIN.value())||highRoleCodeList.contains(RoleCode.BASIC_SUPPLIER_USER.value())||highRoleCodeList.contains(RoleCode.MOF_SUPPLIER_USER.value()))))  {	
-					 getLtstMinistryList();					 
+					 getLtstMinistryList();
+					 getParameterCodeTypeString();
+					 if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
+							retrieveSupplierCompName();	
+							if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
+								getManagedBean().getRptGenBean().setFlSupplierDropdownView(true);
+							}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
+								getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+							}
+						}else{
+							if(getManagedBean().getRptGenBean().isFlSupplierView()){
+								getManagedBean().getRptGenBean().setFlSupplierTextView(true);
+							}
+						}
 			}else{
 				retrieveParameterCodeType();
 			}
@@ -3897,12 +3910,11 @@ public class ReportBackingBean extends
 				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
 					getManagedBean().getRptGenBean().setSmCompanyNameView(true);
 				}
-				getManagedBean().getRptGenBean().setSmCommonZoneView(false);
-				getManagedBean().getRptGenBean().setSmMandatoryEPAdminPTJAdminZoneView(false);	        	
-				getManagedBean().getRptGenBean().setSmMandatorySupplierTypeView(false);				
-				getManagedBean().getRptGenBean().setSmRegistrationNoView(false);
-				getManagedBean().getRptGenBean().setSmMofRegNoView(false);
+				
 				getManagedBean().getRptGenBean().setSmExtraTwoColumnView(true);
+				getManagedBean().getRptGenBean().setSmRegistrationTypeView(false);
+				getManagedBean().getRptGenBean().setSmNonMandatoryDateView(false);
+				getManagedBean().getRptGenBean().setSmMOFRegisteredDateView(false);
 		    }else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
 					
 				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isSmSupplierView())){
@@ -4275,7 +4287,17 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						IPMReportSO.class);
 		List<String> supplCompNameLst = reportSO.retrieveSupplierCompName(lngUserId);
 		for (int i = 0; i < supplCompNameLst.size(); i++) {
-			supplCompanyList.add(supplCompNameLst.get(i));
+		supplCompanyList.add(supplCompNameLst.get(i));
+		}
+		if(supplCompNameLst.size()>0){
+			if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT))){
+				this.setSmCompanyName(supplCompNameLst.get(0));
+			}
+		    if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
+						ModuleCodeConst.ORDER_FULFILLMENT))){	
+					this.setFlSupplier(supplCompNameLst.get(0));
+			}
 		}
 		
 		
