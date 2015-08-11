@@ -826,6 +826,7 @@ public class ReportBackingBean extends
 	private String flScoring;
 	private String flPkpNo;
 	private String flDeliveryOrderNo;
+	private String flSupplierDeliveryOrderNo;
 	private String flItemCode;
 	private String flPoAmount;
 	private String flPrNo;
@@ -931,6 +932,14 @@ public class ReportBackingBean extends
 	private long[] lngDistrictId;
 	
 	
+
+	public String getFlSupplierDeliveryOrderNo() {
+		return flSupplierDeliveryOrderNo;
+	}
+
+	public void setFlSupplierDeliveryOrderNo(String flSupplierDeliveryOrderNo) {
+		this.flSupplierDeliveryOrderNo = flSupplierDeliveryOrderNo;
+	}
 
 	public String getSmGSTRegistrationNo() {
 		return smGSTRegistrationNo;
@@ -6270,6 +6279,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getFlPkpNo() != null) && (this.getFlPkpNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlStopInstructionNo() != null) && (this.getFlStopInstructionNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDeliveryOrderNo() != null) && (this.getFlDeliveryOrderNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlSupplierDeliveryOrderNo() != null) && (this.getFlSupplierDeliveryOrderNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlItemCode() != null) && (this.getFlItemCode() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPoAmount() != null) && (this.getFlPoAmount() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlPrNo() != null) && (this.getFlPrNo() != ReportConst.EMPTY_VAL))
@@ -6299,10 +6309,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				/*Long orgprofileid = Long.parseLong(this.getCommonMinistry());
 				
 				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
-						+ retrieveMinistryName(orgprofileid));
+						+ retrieveMinistryName(orgprofileid));*/
+				rptGenBean.setMinistryTotVar(ReportConst.FL_AMP_MINISTRY_EQ
+						+ this.getCommonMinistry());
 			}
 			if ((this.getFlSupplier() != null)
 					&& (this.getFlSupplier() != ReportConst.EMPTY_VAL)) {
@@ -6406,6 +6418,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				rptGenBean
 						.setDeliveryOrderNoTotVar(ReportConst.FL_AMP_DELI_ORD_NO_EQ
 								+ this.getFlDeliveryOrderNo());
+			}
+			if ((this.getFlSupplierDeliveryOrderNo() != null)
+					&& (this.getFlSupplierDeliveryOrderNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean
+						.setFlSupplierDeliveryOrderNoVar(ReportConst.FL_AMP_SUP_DELI_ORD_NO_EQ
+								+ this.getFlSupplierDeliveryOrderNo());
 			}
 			if ((this.getFlItemCode() != null)
 					&& (this.getFlItemCode() != ReportConst.EMPTY_VAL)) {
@@ -6587,6 +6605,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getPkpNoTotVar()
 						+ rptGenBean.getFlStopInstructionNoVar()
 						+ rptGenBean.getDeliveryOrderNoTotVar()
+						+ rptGenBean.getFlSupplierDeliveryOrderNoVar()
 						+ rptGenBean.getItemCodeTotVar()
 						+ rptGenBean.getPoAmountTotVar()
 						+ rptGenBean.getPrNoTotVar()
@@ -6862,6 +6881,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setFlInvoiceNo(null);
 		this.setFlSupplierInvoiceNo(null);
 		this.setFlDeliveryOrderNo(null);
+		this.setFlSupplierDeliveryOrderNo(null);
 		this.setFlItemCode(null);
 		this.setFlPoAmount(null);
 		this.setFlPrNo(null);
