@@ -36,6 +36,7 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 	private List<SmSupplierBranch> suppBranchList;
 	private List<SmGstSupplier> initialBranchGstList;
 	private SmGstSupplier initialHqGst;
+	private boolean agreeTC;
 
 	public SmSupplier getSmSupplier() {
 		return smSupplier;
@@ -148,6 +149,14 @@ public class SmUpdateGstInfoManagedBean extends BaseManagedBean {
 	public void setSelectedGstOnChangeEffDate(
 			SmGstSupplier selectedGstOnChangeEffDate) {
 		this.selectedGstOnChangeEffDate = selectedGstOnChangeEffDate;
+	}
+
+	public boolean isAgreeTC() {
+		return agreeTC;
+	}
+
+	public void setAgreeTC(boolean agreeTC) {
+		this.agreeTC = agreeTC;
 	}
 
 }

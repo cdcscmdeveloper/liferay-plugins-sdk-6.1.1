@@ -5495,19 +5495,23 @@ public class SmApplicationUtil {
 				.getSmAppl();
 	}
 
-	public static SmGstSupplier initHqGstInformation(String applNo,
+	public static SmGstSupplier initHqGstInformation(SmAppl appl,
 			Long supplierId, SmGstSupplier gst) {
-		gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-				supplierId, null, applNo, false);
-		if (gst == null) {
-			gst = new SmGstSupplier();
-			SmGstSupplier gstCurrent = SmCommonUtil
-					.getSmGstSupplierBySupplierIdAndBranchCode(supplierId,
-							null, null, true);
-			if (gstCurrent != null) {
-				gst.setGstRegNo(gstCurrent.getGstRegNo());
-				gst.setGstEffDate(gstCurrent.getGstEffDate());
-				gst.setGstEndDate(gstCurrent.getGstEndDate());
+		SmGstSupplier gstCurrent = SmCommonUtil
+				.getSmGstSupplierBySupplierIdAndBranchCode(supplierId, null,
+						null, true);
+		if (appl.isActiveAppl()) {
+			gst = gstCurrent;
+		} else {
+			gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
+					supplierId, null, appl.getApplNo(), false);
+			if (gst == null) {
+				gst = new SmGstSupplier();
+				if (gstCurrent != null) {
+					gst.setGstRegNo(gstCurrent.getGstRegNo());
+					gst.setGstEffDate(gstCurrent.getGstEffDate());
+					gst.setGstEndDate(gstCurrent.getGstEndDate());
+				}
 			}
 		}
 		initGstSuppDocs(gst);
@@ -5515,13 +5519,15 @@ public class SmApplicationUtil {
 	}
 
 	public static void initBranchGstInformation(SmGstSupplier hqGst,
-			List<SmSupplierBranch> branchList) {
+			List<SmSupplierBranch> branchList,boolean isCurrent) {
 		if (!isGstEmpty(hqGst)) {
 			for (SmSupplierBranch br : branchList) {
 				br.setGst(SmCommonUtil
-						.getSmGstSupplierBySupplierIdAndBranchCode(hqGst
-								.getSmSupplier().getSupplierId(), br
-								.getBranchCode(), null, true));
+						.getSmGstSupplierBySupplierIdAndBranchCode(
+								hqGst.getSmSupplier().getSupplierId(),
+								br.getBranchCode() == null ? br
+										.getSupplierBranchId() : br
+										.getBranchCode(), null, isCurrent));
 				if (br.getGst() != null) {
 					br.setSameAsHq(SmApplicationUtil.isBranchGstSameAsHq(hqGst,
 							br.getGst()));
@@ -5536,6 +5542,18 @@ public class SmApplicationUtil {
 							br.getBranchCode());
 				}
 			}
+		}
+	}
+
+	public static void addNewBranchGst(SmGstSupplier hqGst, SmSupplierBranch br) {
+		if (!isGstEmpty(hqGst)) {
+			br.setGst(new SmGstSupplier());
+			br.setSameAsHq(true);
+			SmCommonUtil.copyHqGstToBranch(hqGst, br.getGst(), true,
+					br.getBranchCode());
+		} else {
+			br.setGst(new SmGstSupplier());
+			br.getGst().setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 		}
 	}
 
@@ -5596,30 +5614,6 @@ public class SmApplicationUtil {
 				throw new EpException(MessageConst.ERROR_722606);
 			}
 		}
-	}
-
-	/**
-	 * Get latest create branch
-	 * 
-	 * @param List
-	 *            <SmSupplierBranch> branchList
-	 * @return SmSupplierBranch
-	 */
-	public static SmSupplierBranch getLatestCreatedBranch(
-			List<SmSupplierBranch> branchList) {
-		SmSupplierBranch br = null;
-		if (branchList != null && !branchList.isEmpty()) {
-			Collections.sort(branchList, new Comparator<SmSupplierBranch>() {
-				public int compare(SmSupplierBranch o1, SmSupplierBranch o2) {
-					if (o1.getCreatedDate() == null
-							|| o2.getCreatedDate() == null)
-						return 0;
-					return o2.getCreatedDate().compareTo(o1.getCreatedDate());
-				}
-			});
-			br = branchList.get(0);
-		}
-		return br;
 	}
 
 	public static void setUpdatedBranchGstToMainList(
