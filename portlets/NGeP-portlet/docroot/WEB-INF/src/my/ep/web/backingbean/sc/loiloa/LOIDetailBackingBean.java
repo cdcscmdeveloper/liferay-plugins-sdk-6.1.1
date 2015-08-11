@@ -2533,6 +2533,8 @@ public class LOIDetailBackingBean extends
 
 		reqDTO.setScQtRecommendList(getManagedBean().getRecommendList());
 		reqDTO.setItemized(this.getManagedBean().isItemized());
+		reqDTO.setDeletedMeetingAttendanceList(
+				getManagedBean().getDeletedMeetingAttendanceList());
 
 		return reqDTO;
 	}
@@ -2705,12 +2707,24 @@ public class LOIDetailBackingBean extends
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		List<ScQtMeetingAttendance> selectedMeetingAttendances = getManagedBean()
 				.getSelectedMeetingAttList();
-		if (selectedMeetingAttendances != null
-				&& selectedMeetingAttendances.size() > 0) {
+		if (CollectionUtils.isNotEmpty(
+				selectedMeetingAttendances)) {
 			deleteRowsAction(scQtCommittee.getMeetingAttendances(),
 					selectedMeetingAttendances);
+			if (getManagedBean().getDeletedMeetingAttendanceList() == null) {
+				getManagedBean().setDeletedMeetingAttendanceList(
+							new ArrayList<ScQtMeetingAttendance>());
+			}
+			for (ScQtMeetingAttendance meetingAttd
+							: getManagedBean().getSelectedMeetingAttList()) {
+				if (!meetingAttd.isBrandNew()) {
+					meetingAttd.setDeleted(true);
+					getManagedBean().getDeletedMeetingAttendanceList()
+									.add(meetingAttd);
+				}
+			}
 		} else {
-			throw new EpException("Please select At least one Item");
+			throw new EpException("Please select atleast one record");
 		}
 	}
 

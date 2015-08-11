@@ -371,6 +371,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The zonal. */
 	private boolean zonal;
 	
+	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2165,6 +2167,22 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setZonal(boolean zonal) {
 		this.zonal = zonal;
+	}
+
+	/**
+	 * @return the deletedMeetingAttendanceList
+	 */
+	public List<ScQtMeetingAttendance> getDeletedMeetingAttendanceList() {
+		return deletedMeetingAttendanceList;
+	}
+
+	/**
+	 * @param deletedMeetingAttendanceList 
+	 * 				the deletedMeetingAttendanceList to set
+	 */
+	public void setDeletedMeetingAttendanceList(
+			List<ScQtMeetingAttendance> deletedMeetingAttendanceList) {
+		this.deletedMeetingAttendanceList = deletedMeetingAttendanceList;
 	}
 	
 }
