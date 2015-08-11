@@ -76,6 +76,7 @@ import my.ep.dto.pm.common.zone.ZoneReqDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityReqDTO;
 import my.ep.dto.sm.common.myidentity.MyIdentityResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.mofRegistration.SmTrackingDairyVO;
@@ -5502,6 +5503,14 @@ public class SmApplicationUtil {
 						null, true);
 		if (appl.isActiveAppl()) {
 			gst = gstCurrent;
+			if (gst == null) {
+				gst = new SmGstSupplier();
+				if (gstCurrent != null) {
+					gst.setGstRegNo(gstCurrent.getGstRegNo());
+					gst.setGstEffDate(gstCurrent.getGstEffDate());
+					gst.setGstEndDate(gstCurrent.getGstEndDate());
+				}
+			}
 		} else {
 			gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
 					supplierId, null, appl.getApplNo(), false);
@@ -5519,15 +5528,21 @@ public class SmApplicationUtil {
 	}
 
 	public static void initBranchGstInformation(SmGstSupplier hqGst,
-			List<SmSupplierBranch> branchList,boolean isCurrent) {
+			List<SmSupplierBranch> branchList, SmAppl appl) {
+		SupplierGstReqDTO reqDTO = null;
+		SmGstSupplier brCurr = null;
 		if (!isGstEmpty(hqGst)) {
 			for (SmSupplierBranch br : branchList) {
-				br.setGst(SmCommonUtil
-						.getSmGstSupplierBySupplierIdAndBranchCode(
-								hqGst.getSmSupplier().getSupplierId(),
-								br.getBranchCode() == null ? br
-										.getSupplierBranchId() : br
-										.getBranchCode(), null, isCurrent));
+				reqDTO = new SupplierGstReqDTO();
+				reqDTO.setApplNo(appl.getApplNo());
+				reqDTO.setBranchCode(br.getBranchCode() == null ? br
+						.getSupplierBranchId() : br.getBranchCode());
+				brCurr = SmServiceLookup.getSupplierGstSO()
+						.retrieveGstInfoByApplNoAndBranchCode(reqDTO)
+						.getSmGstSupplier();
+				if (brCurr != null && brCurr.getGstDeletedDate() == null) {
+					br.setGst(brCurr);
+				}
 				if (br.getGst() != null) {
 					br.setSameAsHq(SmApplicationUtil.isBranchGstSameAsHq(hqGst,
 							br.getGst()));
