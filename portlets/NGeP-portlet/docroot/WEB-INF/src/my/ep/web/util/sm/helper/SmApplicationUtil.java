@@ -5527,11 +5527,11 @@ public class SmApplicationUtil {
 		return gst;
 	}
 
-	public static void initBranchGstInformation(SmGstSupplier hqGst,
-			List<SmSupplierBranch> branchList, SmAppl appl) {
+	public static void initBranchGstInformation(SmGstSupplier hqGst,SmAppl appl) {
 		SupplierGstReqDTO reqDTO = null;
 		SmGstSupplier brCurr = null;
-		if (!isGstEmpty(hqGst)) {
+		List<SmSupplierBranch> branchList = appl.getSmSupplierBranches();
+		if (!isGstEmpty(hqGst) && branchList!=null) {
 			for (SmSupplierBranch br : branchList) {
 				reqDTO = new SupplierGstReqDTO();
 				reqDTO.setApplNo(appl.getApplNo());

@@ -6,7 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 		
-		<p:outputPanel id="branchGstInfoPanelId" rendered="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo}">
+		<p:outputPanel id="branchGstInfoPanelId" rendered="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
+			and not empty backingBean.managedBean.selectedBranch}">
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.supplierUser and (backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}">
 				<table style="width: 100%">
