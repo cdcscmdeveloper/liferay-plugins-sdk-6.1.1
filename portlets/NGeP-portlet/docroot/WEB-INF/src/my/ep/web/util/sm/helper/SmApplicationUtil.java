@@ -5540,9 +5540,7 @@ public class SmApplicationUtil {
 				brCurr = SmServiceLookup.getSupplierGstSO()
 						.retrieveGstInfoByApplNoAndBranchCode(reqDTO)
 						.getSmGstSupplier();
-				if (brCurr != null && brCurr.getGstDeletedDate() == null) {
-					br.setGst(brCurr);
-				}
+				br.setGst(brCurr);
 				if (br.getGst() != null) {
 					br.setSameAsHq(SmApplicationUtil.isBranchGstSameAsHq(hqGst,
 							br.getGst()));
