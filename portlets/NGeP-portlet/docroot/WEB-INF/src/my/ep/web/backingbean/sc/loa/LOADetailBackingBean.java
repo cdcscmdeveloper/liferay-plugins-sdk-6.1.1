@@ -38,6 +38,8 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
+import my.ep.biz.service.sc.quationtender.IQTDetailSO;
+import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -66,6 +68,10 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
+import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
+import my.ep.dto.sc.quationtender.QuationTenderResDTO;
+import my.ep.dto.sc.quationtender.SpecificationReqDTO;
+import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -101,6 +107,7 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
+import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -121,6 +128,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -137,6 +145,7 @@ import my.ep.web.util.template.DocumentGenerator;
 import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -1212,6 +1221,13 @@ public class LOADetailBackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
+						
+					} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						/* scLoaReportAttachment = generateSkopPerkhidmatanPdfFromVelocity((ScAttachment) scLoaReportAttachment, 
+								docDefinitionKey, scLoaReport);*/
 					}
 					
 				}else if(scLoaReportAttachment != null && 
@@ -1250,7 +1266,14 @@ public class LOADetailBackingBean extends
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
 						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
+					} else if (SourcingConstants.DOC_DEF_KEY_SCOPE_SERVICES
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						/* scLoaReportAttachment = generateSkopPerkhidmatanPdfFromVelocity((ScAttachment) scLoaReportAttachment, 
+								docDefinitionKey, scLoaReport);*/
 					}
+					
 				}else if(scLoaReportAttachment != null && 
 						QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
 					// if pending submission , always regenerate 
@@ -1295,6 +1318,11 @@ public class LOADetailBackingBean extends
 			ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 					.getScLoaReportAttachment();
 			scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
+			if (scLoaReportAttachment != null
+					&& StringUtils.isNotBlank(scLoaReportAttachment.getFileName())) {
+				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			}
+		
 			scAttachments.add(scLoaReportAttachment);
 		}
 	        
@@ -1756,14 +1784,16 @@ public class LOADetailBackingBean extends
 			ScLoaReport agreementLetterReport = null;
 			for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
 					.getScLoaReports()) {
-				String docDefinitionKey = scLoaReport.getPmDocument()
-						.getDocDefinitionKey();
+				if(null != scLoaReport.getPmDocument()){
+					String docDefinitionKey = scLoaReport.getPmDocument()
+							.getDocDefinitionKey();
 
-				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-						.equals(docDefinitionKey)) {
-					agreementLetterReport = scLoaReport;
+					if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) { 
+						agreementLetterReport = scLoaReport;
 
-					break;
+						break;
+					}
 				}
 			}
 
@@ -3400,6 +3430,7 @@ public class LOADetailBackingBean extends
 	 */
 	public void formSpecification(ScAttachment attachment, ScLoa scLoa)
 			throws Exception {
+		populateAttachmentDetails(attachment);
 		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT,ITemplateSpecSO.class);
 		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
 
@@ -3770,6 +3801,101 @@ public class LOADetailBackingBean extends
 				SourcingConstants.LOA_BOND_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
+	
+	/**
+	 * Generate skop perkhidmatan pdf from velocity.
+	 *
+	 * @param attachment the attachment
+	 * @param docDefinitionKey the doc definition key
+	 * @param scLoaReport the sc loa report
+	 * @return the sc qt doc report attachment
+	 * @throws Exception the exception
+	 */
+	private ScLoaReportAttachment generateSkopPerkhidmatanPdfFromVelocity(
+			ScAttachment attachment, String docDefinitionKey, ScLoaReport scLoaReport) throws Exception {
+		debugLogger("generateSkopPerkhidmatanPdfFromVelocity");
+		populateAttachmentDetails(attachment);
+		ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+		IQTSpecSO specSo = null;
+		IQTDetailSO qtDetailSO = null;
+		SpecificationResDTO resDTO = null;
+		try {
+			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
+			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			reqDTO.setScQt(getManagedBean().getScQt());
+			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
+			resDTO = specSo.retrieveCheckLists(reqDTO);
+			
+			if (isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
+				if (null != resDTO.getTechnicalCheckList()) {
+					for (ScQtCheckList checklist : resDTO
+							.getTechnicalCheckList()) {
+						if (null != checklist.getPmDocument()) {
+							if (SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE.equalsIgnoreCase(checklist.getPmDocument().getDocDefinitionKey())) {
+								QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+								quationTenderReqDTO.setDocCategory(checklist.getDocCategory());
+								quationTenderReqDTO.setDocDefKey(docDefinitionKey);
+								quationTenderReqDTO.setScQtCheckList(checklist);
+								QuationTenderResDTO qtResDTO = qtDetailSO.retriveScQtReportByDefKey(quationTenderReqDTO);
+
+								ScQtCheckList qtCheckList = qtResDTO.getScQtCheckList();
+								if (qtCheckList != null && qtCheckList.getScQtCheckListAttachment() != null) {
+									attachment = qtCheckList.getScQtCheckListAttachment();
+								}
+								if (attachment != null) {
+									scLoaReportAttachment.setFileName(attachment.getFileName());
+									scLoaReportAttachment.setFilePath(attachment.getFilePath());
+									scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+									scLoaReportAttachment.setScLoaReport(scLoaReport);
+								}
+								break;
+							} 
+						}  
+					}
+				} 
+			}
+		} finally {
+			specSo = null;
+			qtDetailSO = null;
+		}
+		return scLoaReportAttachment;
+
+	}
+
+
+	/**
+	 * @param technicalCheckList
+	 * @return
+	 */
+	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
+		boolean isServiceItemFound = Boolean.FALSE;
+		if (null != checklist && !checklist.isEmpty()) {
+			for (ScQtCheckList specChecklist : checklist) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+								.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
+						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+						specReqDTO.setSpecMaster(specChecklist.getScQtDoc().getTplSpecMaster());
+						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(specReqDTO);
+						if (resDTO.getSpecMaster().getItemTypeCode()
+								.getParameterCode().equalsIgnoreCase(
+										ParameterConst.ITEM_TYPE_SERVICE)) {
+							isServiceItemFound = Boolean.TRUE;
+							break;
+						}
+					}
+				}
+			}
+		}
+		return isServiceItemFound;
+	}
+
+	
 
 	/**
 	 * Sort progressive payment list.
