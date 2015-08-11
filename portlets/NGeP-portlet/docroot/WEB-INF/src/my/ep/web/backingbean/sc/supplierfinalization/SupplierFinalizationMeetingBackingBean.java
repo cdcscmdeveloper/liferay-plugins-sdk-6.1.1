@@ -1410,14 +1410,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 						deletedCommitteeMember.setRepresentativeType(
 									committeeMember.getRepresentativeType());
 						toBeAddedMembers.add(deletedCommitteeMember);
-						committeeMembers.remove(deletedCommitteeMember);
-						deletedCommitteeMembers.remove(deletedCommitteeMember);
 					}
 				}
 			}
 			if (CollectionUtils.isNotEmpty(
 							toBeAddedMembers)) {
-				committeeMembers.addAll(toBeAddedMembers);
+				deletedCommitteeMembers.removeAll(toBeAddedMembers);
 			}
 			
 			scQtCommittee.getScCommittee().setScCommitteeMembers(
