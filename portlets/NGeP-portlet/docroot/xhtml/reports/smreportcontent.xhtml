@@ -371,10 +371,9 @@
 						</c:if>
 						<c:if test="#{flReportBackingBean.managedBean.rptGenBean.smCompanyNameDropdownView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.cmpName']}" style="margin-bottom:5px;width:160px;"/>
-									<p:selectOneMenu value="#{reportBackingBean.smCompanyName}" style="margin-bottom:5px;width:300px;">
-										<f:selectItems value="#{reportBackingBean.supplCompanyList}"></f:selectItems>
-										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
-									</p:selectOneMenu>
+									<p:outputLabel value="#{reportBackingBean.smCompanyName}" style="float:left;text-align:left;margin-bottom:5px;width:160px;"/>
+									
+							
 									</c:if>
 						
 						<c:if
