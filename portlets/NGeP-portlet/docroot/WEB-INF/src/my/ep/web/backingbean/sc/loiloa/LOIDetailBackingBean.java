@@ -509,6 +509,12 @@ public class LOIDetailBackingBean extends
 						scLois.removeAll(previousLois);
 					}
 				}
+				
+				if (CollectionUtils.isNotEmpty(scLois)) {
+					 for (ScLoi scLoi : scLois) {
+						 calculateOfferedAndFinalPriceByItem(scLoi);
+					 }
+				}
 
 				getManagedBean().setScQtFinalization(scQtFinalization);
 				getManagedBean().setScQt(scQtFinalization.getScQt());
