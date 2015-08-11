@@ -450,49 +450,65 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 		case ReportConst.PYMT_MATCH_RPT_PO_VAL:
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlInvoiceNoView(true);
+			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlPaymentAdviceNoView(true);
 			rptGenBean.setFlStatusView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupFourteenView(true);
 			break;
 		case ReportConst.PUR_REQ_CANC_RPT_PO_VAL:
+			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setToDateView(true);
 			rptGenBean.setFlGroupTenView(true);
+			rptGenBean.setFlPrNoView(true);
 			break;
 		case ReportConst.PUR_ORD_CANC_RPT_PO_VAL:
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);	
-			rptGenBean.setFlGroupTenView(true);
+			rptGenBean.setFlGroupTwentyThreeView(true);
 			break;
 		case ReportConst.DEL_ORD_CANC_RPT_PO_VAL:
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlDeliveryOrderNoView(true);
+			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlPtjView(true);
 			rptGenBean.setFlPkpNoView(true);
 			rptGenBean.setFromDateView(true);
-			rptGenBean.setFlGroupFifteenView(true);
+			rptGenBean.setFlGroupThirteenView(true);
 			break;
 		case ReportConst.FL_REC_NOTE_CANC_RPT_PO_VAL:
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
+			rptGenBean.setFlPkpNoView(true);
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlRecievingOfficerView(true);
+			rptGenBean.setFlRecNoteNoView(true);
 			rptGenBean.setFlContractNoView(true);	
 			rptGenBean.setFlSstView(true);
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);	
-			rptGenBean.setFlGroupFifteenView(true);
+			rptGenBean.setFlGroupThirteenView(true);
 			break;
 		case ReportConst.INV_CANC_RPT_PO_VAL:
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPtjView(true);
-			rptGenBean.setFlPkpNoView(true);	
+			rptGenBean.setFlPkpNoView(true);
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlInvoiceNoView(true);
+			rptGenBean.setFlSupplierInvoiceNoView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupFifteenView(true);
 			break;
