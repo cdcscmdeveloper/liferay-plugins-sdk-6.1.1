@@ -1150,13 +1150,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		PmCategoryL3 oldPmCategoryL3=this.getManagedBean().getOldCategoryL3();
 		PmCategoryL3 newPmCategoryL3=this.getManagedBean().getPmCategoryL3();
 		String messageId="";
-		String recordStatusMessageId="";
-		/*String delrecordStatusBasicMessageId="";
-		String addrecordStatusBasicMessageId="";
-		String delrecordStatusMachineMessageId="";
-		String addrecordStatusMachineMessageId="";
-		String delrecordStatusCatRestrMessageId="";
-		String addrecordStatusCatRestrMessageId="";*/
+		String recordStatusMessageId="";		
 		/*Integer oldVal=(oldPmCategoryL3.isByCompType()==true?1:0);
 		Integer newVal=(newPmCategoryL3.isByCompType()==true?1:0);*/
 		
@@ -1256,12 +1250,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			
 			String[] msgParam = new String[] {
 					pmCategoryL3.getCategoryL3Code(),this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
-					this.getManagedBean().getPmCategoryL2().getCategoryL2Code()};
-			
-		/*	String[] commonMsgParam = new String[] {
-					this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
-					this.getManagedBean().getPmCategoryL3().getCategoryL3Code()};
-*/
+					this.getManagedBean().getPmCategoryL2().getCategoryL2Code()};			
+		
 			if(this.getManagedBean().isNewCategory()){				
 
 				messageId = MessageConst.TD_80708;
@@ -1310,98 +1300,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 							getPmActionDesc(recordStatusMessageId,msgParam),null,"SBC"));
 				}				
 			}			
-			/*if(CollectionUtils.isNotEmpty(this.getManagedBean().getBasicCategoryList()) 
-					|| CollectionUtils.isEmpty(this.getManagedBean().getBasicCategoryList())){
-				if( CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPmBasicCategoryList())){
-					for(PmBasicCategory deleBasic:this.getManagedBean().getDeletedPmBasicCategoryList()){
-						if(!this.getManagedBean().getBasicCategoryList().contains(deleBasic)){					 
-
-							delrecordStatusBasicMessageId = MessageConst.TD_80717;	
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-									getPmActionDesc(delrecordStatusBasicMessageId,commonMsgParam),null,"SBC"));
-						}
-					}
-					this.getManagedBean().getDeletedPmBasicCategoryList().clear();
-				}
-				if(!this.getManagedBean().isNewCategory()){
-					for(PmBasicCategory pmBasicCategory:this.getManagedBean().getBasicCategoryList()){
-						if(pmBasicCategory.isBrandNew()){						
-							
-							addrecordStatusBasicMessageId = MessageConst.TD_80716;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-									getPmActionDesc(addrecordStatusBasicMessageId,commonMsgParam),null,"SBC"));
-						}
-						}
-				}
-			}*/
 			
-		/*	if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList()) 
-					|| CollectionUtils.isEmpty(this.getManagedBean().getPmMachineCategoryList())){
-				if( CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPmMachineCategoryList())){
-					for(PmMachineCategory deleMachine:this.getManagedBean().getDeletedPmMachineCategoryList()){
-						if(!this.getManagedBean().getPmMachineCategoryList().contains(deleMachine)){
-							delrecordStatusMachineMessageId = MessageConst.TD_80715;	
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-									getPmActionDesc(delrecordStatusMachineMessageId,commonMsgParam),null,"SBC"));
-						}
-					}
-					this.getManagedBean().getDeletedPmMachineCategoryList().clear();
-				}
-				if(!this.getManagedBean().isNewCategory()){
-					for(PmMachineCategory pmMachineCategory:this.getManagedBean().getPmMachineCategoryList()){
-						if(pmMachineCategory.isBrandNew()){						
-						
-							addrecordStatusMachineMessageId = MessageConst.TD_80714;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-									getPmActionDesc(addrecordStatusMachineMessageId,commonMsgParam),null,"SBC"));
-						}
-					}
-				}
-			}	
-
-			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCategoryRestrList()) 
-					|| CollectionUtils.isEmpty(this.getManagedBean().getCategoryRestrList())){
-				if( CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPmPmCategoryRestrList())){
-					for(PmCategoryRestr catResstr:this.getManagedBean().getDeletedPmPmCategoryRestrList()){
-						if(!this.getManagedBean().getCategoryRestrList().contains(catResstr)){					 
-
-							delrecordStatusCatRestrMessageId = MessageConst.TD_80713;	
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-									getPmActionDesc(delrecordStatusCatRestrMessageId,commonMsgParam),null,"SBC"));
-						}
-					}
-					this.getManagedBean().getDeletedPmPmCategoryRestrList().clear();
-				}
-				if(!this.getManagedBean().isNewCategory()){
-					for(PmCategoryRestr categoryRestr:this.getManagedBean().getCategoryRestrList()){
-						if(categoryRestr.isBrandNew()){						
-						
-							addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-									getPmActionDesc(addrecordStatusCatRestrMessageId,commonMsgParam),null,"SBC"));
-						}
-					}
-				}
-			}	
-*/
 			getAllCategoryDetails(reqDTO);
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
