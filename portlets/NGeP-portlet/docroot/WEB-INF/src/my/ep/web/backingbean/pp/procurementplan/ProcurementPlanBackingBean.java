@@ -59,10 +59,12 @@ import my.ep.persistence.entity.pp.procurementplan.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpWorkflowStatus;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -920,6 +922,10 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	 */
 	public boolean isRoleBPK(){
 		return getFacesScopes().hasRoleUser(RoleCode.BPK_OFFICER.value());
+	}
+	
+	private boolean isAuditor(){
+		return getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value());
 	}
 	
 	/**
@@ -3010,12 +3016,14 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		StringBuilder conditionSB = new StringBuilder();
 
 		
-		if(!isRoleBPK()){
+		if(!isRoleBPK() && !isAuditor()){
 			if(isRoleApprover()){
 				conditionSB.append("|");
 				conditionSB.append("orgProfileId^");
 				conditionSB.append(this.getCurrentActiveOrg().getOrgProfileId());
-				conditionSB.append("*parentOrgProfile.orgProfileId^");
+				conditionSB.append("*");
+				conditionSB.append(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()));
+				conditionSB.append("^");
 				conditionSB.append(this.getCurrentActiveOrg().getOrgProfileId());
 			}else{
 				conditionSB.append("|");
