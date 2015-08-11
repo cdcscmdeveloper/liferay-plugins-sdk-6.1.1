@@ -3332,6 +3332,13 @@ public class SupplierFinalizationBackingBean extends
 										DbValueConst.RECORD_STATUS_ACTIVE);
 							}
 						}
+					} else {
+						ScQtFinalization scQtFinalization = getManagedBean().getScQtFinalization();
+						if (scQtFinalization.getAwardedItemIds() == null) {
+							scQtFinalization.setAwardedItemIds(new ArrayList<Long>());
+						}
+						scQtFinalization.getAwardedItemIds()
+								.add(recommend.getQtRecommendId());
 					}
 					recommend.setAwardedItem(isAwardedItem);
 					recommend.setActiveSupplierCount(activeSupplierCount);
