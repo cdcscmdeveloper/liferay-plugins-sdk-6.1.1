@@ -30,9 +30,11 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -43,6 +45,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
+import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -110,6 +113,24 @@ public class PmTrackingDiaryBackingBean extends
 		this.getManagedBean().resetUserResultBean();
 	}
 	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetUOMSearchBean() {
+		log.info("resetUOMSearchBean");
+		this.getManagedBean().setUomSearchBean(
+				new UnitOfMeasurmentSearchBean());
+		this.getManagedBean().resetUOMResultBean();
+	}
+	/**
+	 * reset search bean fields
+	 */
+	public void resetEduSearchBean() {
+		log.info("resetEduSearchBean");
+		this.getManagedBean().setEduFieldName("");
+		this.getManagedBean().resetEduResultBean();
+	}
+	
 	public void onFunctionSelect() {
 		System.out.println("............onFunctionSelect..............");
 		resetOrganisationSearchBean();
@@ -125,6 +146,12 @@ public class PmTrackingDiaryBackingBean extends
 			} else if(this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("VC")) {
 				this.getManagedBean().getZoneList().addAll(retrieveZones());
+			} else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("UO")) {
+				resetUOMSearchBean();
+			}else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("EF")) {
+				resetEduSearchBean();
 			}
 		}
 
@@ -143,6 +170,21 @@ public class PmTrackingDiaryBackingBean extends
 		log.debug("**********goToOrgTrackingDiarySearch************"+ user.getUserId());
 		getManagedBean().setSelectedDocType(ParameterConst.USER_PROFILE_PARAM_CODE);
 		getManagedBean().setSelectedDocId(user.getUserId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	public String goToUOMTrackingDiarySearch(PmUom uom) {
+		log.debug("**********goToUOMTrackingDiarySearch************"+ uom.getUomId());
+		getManagedBean().setSelectedDocType(ParameterConst.UNIT_OF_MEASUREMENT_PARAM_CODE);
+		getManagedBean().setSelectedDocId(uom.getUomId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	
+	public String goToEduTrackingDiarySearch(PmEduField edu) {
+		log.debug("**********goToEduTrackingDiarySearch************"+ edu.getEduFieldId());
+		getManagedBean().setSelectedDocType(ParameterConst.EDU_PARAM_CODE);
+		getManagedBean().setSelectedDocId(edu.getEduFieldId());
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
@@ -235,6 +277,15 @@ public class PmTrackingDiaryBackingBean extends
 		this.getManagedBean().getUserDataModel().reloadData();
 	}
 
+	public void searchUnitOfMeasurement(){
+		log.info(",,,searchUnitOfMeasurement");
+		this.getManagedBean().getUomDataModel().reloadData();
+	}
+	
+	public void searchEducationOfField(){
+		log.info(",,,searchEducationOfField");
+		this.getManagedBean().getEduDataModel().reloadData();
+	}
 	/**
 	 * change organization type
 	 */
