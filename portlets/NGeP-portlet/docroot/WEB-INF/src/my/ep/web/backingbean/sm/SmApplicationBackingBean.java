@@ -956,7 +956,8 @@ public class SmApplicationBackingBean extends
 							.getCompanyBasicGst()));
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
 					.getCompanyBasicGst(), getManagedBean().getSmAppl()
-					.getSmSupplierBranches(), true);
+					.getSmSupplierBranches(), getManagedBean()
+					.getSmAppl());
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -4338,7 +4339,8 @@ public class SmApplicationBackingBean extends
 							.getCompanyBasicGst()));
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
 					.getCompanyBasicGst(), getManagedBean().getSmAppl()
-					.getSmSupplierBranches(), false);
+					.getSmSupplierBranches(), getManagedBean()
+					.getSmAppl());
 		}
 	}
 

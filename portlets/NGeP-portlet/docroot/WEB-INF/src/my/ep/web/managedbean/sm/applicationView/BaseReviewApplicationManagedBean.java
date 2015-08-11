@@ -26,6 +26,7 @@ import my.ep.persistence.entity.sm.SmAssociationBody;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -171,6 +172,7 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	private Long searchPmRegStatusId;
 	private Long searchPmZoneId;
 	private Date currDate;
+	private SmGstSupplier hqGst;
 
 	public BaseReviewApplicationManagedBean() {
 		selectedCert = new SmSupplierCert();
@@ -1160,6 +1162,14 @@ public abstract class BaseReviewApplicationManagedBean extends BaseManagedBean {
 	public void setSuppProfileOrHistoryCategoryList(
 			List<SmSupplierCategory> suppProfileOrHistoryCategoryList) {
 		this.suppProfileOrHistoryCategoryList = suppProfileOrHistoryCategoryList;
+	}
+
+	public SmGstSupplier getHqGst() {
+		return hqGst;
+	}
+
+	public void setHqGst(SmGstSupplier hqGst) {
+		this.hqGst = hqGst;
 	}
 
 }

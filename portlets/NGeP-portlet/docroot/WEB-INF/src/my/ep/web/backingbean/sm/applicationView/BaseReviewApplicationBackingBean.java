@@ -14,7 +14,6 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.revision.ISmApplRevisionSO;
 import my.ep.constant.EpPropertiesConst;
@@ -23,8 +22,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.personnel.PersonnelReqDTO;
@@ -55,6 +53,7 @@ import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -500,6 +499,20 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmAssociationBodies(
 					activeAssocBodies);
 		}
+
+		// init company basic gst
+		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+		gstReqDTO.setBranchCode(null);
+		gstReqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
+		getManagedBean().setHqGst(
+				SmServiceLookup.getSupplierGstSO()
+						.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
+						.getSmGstSupplier());
+		if (getManagedBean().getHqGst() == null) {
+			getManagedBean().setHqGst(new SmGstSupplier());
+		}
+		SmApplicationUtil.initGstSuppDocs(getManagedBean().getHqGst());
+
 	}
 
 	/**
@@ -511,14 +524,30 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
 		} else {
+			SupplierGstReqDTO gstReqDTO = null;
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					getSmSupplierBranchByRevNo());
 			for (SmSupplierBranch smSupplierBranch : getManagedBean()
 					.getSmAppl().getSmSupplierBranches()) {
 				if (smSupplierBranch.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
+					gstReqDTO = new SupplierGstReqDTO();
+					gstReqDTO
+							.setBranchCode(smSupplierBranch.getBranchCode() != null ? smSupplierBranch
+									.getBranchCode() : smSupplierBranch
+									.getSupplierBranchId());
+					gstReqDTO.setApplNo(getManagedBean().getSmAppl()
+							.getApplNo());
+					smSupplierBranch.setGst(SmServiceLookup.getSupplierGstSO()
+							.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
+							.getSmGstSupplier());
+					if (smSupplierBranch.getGst() == null) {
+						smSupplierBranch.setGst(new SmGstSupplier());
+					}
 					if (smSupplierBranch.getSmPersonnel() == null) {
 						smSupplierBranch.setSmPersonnel(new SmPersonnel());
 					}
+					SmApplicationUtil
+							.initGstSuppDocs(smSupplierBranch.getGst());
 				}
 			}
 		}
