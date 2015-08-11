@@ -348,8 +348,8 @@ public class SupplierFinalizationMeetingBackingBean extends
 		
 		ScCommitteeMember committeeMember = 
 								(ScCommitteeMember) event.getObject();
-		if (committeeMember.getMemberRole().getParameterCode()
-				.equals(ParameterConst.COMMITTEE_ROLE_MEMBER)) {
+		if (!ParameterConst.COMMITTEE_ROLE_SECRETARY.equals(
+				committeeMember.getMemberRole().getParameterCode())) {
 			committeeMember.setSelected(true);
 			selectMemberEvent(committeeMember);
 		} else {
@@ -790,18 +790,23 @@ public class SupplierFinalizationMeetingBackingBean extends
 	 */
 	public void committeeDeleteAction() {
 		try {
-			List<ScCommitteeMember> committeeList = getManagedBean().getCommitteeMembersList();
-			List<ScCommitteeMember> selectedCommitteeList = getManagedBean().getSelectedCommitteeMembersList();
+			List<ScCommitteeMember> committeeList 
+							= getManagedBean().getCommitteeMembersList();
+			List<ScCommitteeMember> selectedCommitteeList 
+							= getManagedBean().getSelectedCommitteeMembersList();
 			
-			if (committeeList != null && selectedCommitteeList != null) {
+			if (CollectionUtils.isNotEmpty(committeeList) && 
+					CollectionUtils.isNotEmpty(selectedCommitteeList)) {
 				if (committeeList.size() == selectedCommitteeList.size()) {
 					committeeList.clear();
 				} else {
-					for (ScCommitteeMember committeeMember : selectedCommitteeList) {
+					for (ScCommitteeMember committeeMember 
+									: selectedCommitteeList) {
 						committeeList.remove(committeeMember);
 					}
 				}
 				prepareToDeleteCommitteeMembers(selectedCommitteeList);
+				getManagedBean().setSelectedCommitteeMembersList(null);
 			}
 		} finally {
 		}
