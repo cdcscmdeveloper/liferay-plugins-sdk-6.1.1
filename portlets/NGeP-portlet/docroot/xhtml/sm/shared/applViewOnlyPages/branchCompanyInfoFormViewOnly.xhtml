@@ -84,7 +84,7 @@
 		</p:outputPanel>
 	</p:panel>
 	
-	<p:dialog style="max-height:350px;width:500px"
+	<p:dialog style="max-height:450px;width:550px"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="branchDialogId" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
@@ -93,6 +93,7 @@
 			<ui:fragment
 				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'K' or viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'J'}">
 				<ui:include src="branchDetailsTablePageViewOnly.xhtml" />
+				<ui:include src="gstBranchInfoFormViewOnly.xhtml" />
 			</ui:fragment>
 			<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
 				rendered="#{viewSmApplBackingBean.managedBean.smAppl.supplierType eq 'MKM'}">
