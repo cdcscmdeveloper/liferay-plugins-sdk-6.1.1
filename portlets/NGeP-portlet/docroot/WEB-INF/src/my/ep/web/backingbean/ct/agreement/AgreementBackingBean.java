@@ -48,7 +48,6 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -60,7 +59,6 @@ import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
-import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
@@ -75,8 +73,6 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -93,8 +89,6 @@ import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
-import my.ep.persistence.entity.sc.quationtender.ScQt;
-import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.pm.AddressType;
@@ -1170,27 +1164,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	}
 	
 	public void downloadSampleFile() throws IOException{
-		IQTDetailSO qTDetailSO;
-		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-
-		qTDetailSO = (IQTDetailSO) BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-		quationTenderReqDTO.setDocDefKey(SourcingConstants.DOC_DEF_KEY_CONTRACT_COPY_SAMPLE);
-		quationTenderReqDTO.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_QUOTATION_TENDER_DOCUMENTS);
-		
-		//DOCUMENT_CATEGORY_AGREEMENT
 		if(getManagedBean().getCtContract().getQuotationTender() == null 
-				|| getManagedBean().getCtContract().getQuotationTender().getQtId() != null) {
+				|| getManagedBean().getCtContract().getQuotationTender().getQtId() == null) {
 			throw new EpException(MessageConst.INFO_758001);
 		}
 		
-		ScQtDocReport scQtDocReport = new ScQtDocReport();
-		scQtDocReport.setScQt(new ScQt());
-		scQtDocReport.getScQt().setQtId(getManagedBean().getCtContract().getQuotationTender().getQtId());
-	    quationTenderReqDTO.setScQtDocReport(scQtDocReport);
-		
-		QuationTenderResDTO resDTO = qTDetailSO.retriveScQtReportByDefKey(quationTenderReqDTO);
-        if(resDTO.getScQtDocReport() != null) {
+		 IAgreementSO agreementSO = null;
+		 ContractAgreementReqDTO reqDTO = new ContractAgreementReqDTO();
+		 reqDTO.setQtid(getManagedBean().getCtContract().getQuotationTender().getQtId());
+		 agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
+		 ContractAgreementResDTO resDTO = agreementSO.downloadSampleFile(reqDTO);
+		 if(resDTO.getScQtDocReport() != null && resDTO.getScQtDocReport().getScQtDocReportAttachment() != null) {
             downloadFile(resDTO.getScQtDocReport().getScQtDocReportAttachment().getFilePath(),resDTO.getScQtDocReport().getScQtDocReportAttachment().getFileName());
         } else {
         	throw new EpException(MessageConst.INFO_758001);
