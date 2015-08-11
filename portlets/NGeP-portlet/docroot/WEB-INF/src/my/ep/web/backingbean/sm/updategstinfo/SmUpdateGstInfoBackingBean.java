@@ -43,8 +43,8 @@ public class SmUpdateGstInfoBackingBean extends
 		renewSesionObject();
 		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "");
 	}
-	
-	public void proceedAfterAcceptTnC(){
+
+	public void proceedAfterAcceptTnC() {
 		getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
 		getManagedBean().setMofAccount(
 				SmCommonUtil.getMofAccountBySuppIdAndSuppType(getManagedBean()
@@ -313,7 +313,9 @@ public class SmUpdateGstInfoBackingBean extends
 					brVO.setGst(SmCommonUtil
 							.getSmGstSupplierBySupplierIdAndBranchCode(
 									getManagedBean().getSmSupplier()
-											.getSupplierId(), br
+											.getSupplierId(),
+									br.getBranchCode() == null ? br
+											.getSupplierBranchId() : br
 											.getBranchCode(), null, true));
 					if (brVO.getGst() != null) {
 						brVO.setSameWithHq(SmApplicationUtil
