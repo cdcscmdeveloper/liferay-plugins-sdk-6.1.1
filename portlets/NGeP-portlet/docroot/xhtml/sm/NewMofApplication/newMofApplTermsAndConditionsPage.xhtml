@@ -17,6 +17,13 @@
 		<p:blockUI block=":form" widgetVar="blockWidget">
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
+		
+		<p:scrollPanel style="border:0;" mode="native">
+			<b>#{lbl['lbl.sm.gst.tnc.header']}</b>
+			<br />
+			<p><h:outputText escape="false" value="#{lbl['lbl.sm.gst.tnc.msg']}" /></p>
+		</p:scrollPanel>
+		<br/>
 	
 		<div>
 			<table style="width: 100%">

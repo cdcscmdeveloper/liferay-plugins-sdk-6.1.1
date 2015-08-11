@@ -80,7 +80,7 @@
 										value="#{br.gst.gstEffDate}" beforeShowDay="beforeShowDate"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
-										maxdate="#{CommonConstants.CURRENT_DATE}">
+										mindate="#{CommonConstants.GST_LAUNCH_DATE}">
 										<p:ajax event="dateSelect"  update="branchGstNotEmptyPanelId" process="@this"/>
 									</p:calendar>
 									<p:message id="branchGstRegDateCalIdMsg"
@@ -93,10 +93,9 @@
 								<td style="border-style: none !important;"><p:calendar id="branchGstEffEndDateCalId"
 										navigator="true" 
 										label="#{lbl['lbl.sm.gst.eff.end.date']}"
-										value="#{br.gst.gstEndDate}"
+										value="#{br.gst.gstEndDate}" mindate="#{CommonConstants.GST_LAUNCH_DATE}"
 										pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
-										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
-										mindate="#{CommonConstants.CURRENT_DATE}">
+										readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" >
 										<p:ajax event="dateSelect"  update="branchGstNotEmptyPanelId" process="@this"/>
 									</p:calendar>
 									<p:message id="branchGstEffEndDateCalIdMsg"
