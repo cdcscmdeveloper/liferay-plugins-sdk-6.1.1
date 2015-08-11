@@ -38,10 +38,12 @@
 	        <td>$!smVmUtil.formatDate($gstEffDate)</td>
     	</tr>
     	
+    	<!--
     	<tr>
     		 <td width="35%"><b>GST Effective End Date.</b></td>
 	        <td>$!smVmUtil.formatDate($gstEndDate)</td>
     	</tr>
+    	-->
     	
     	#if($svAddresses.size() > 0)
     		#foreach($svAdd in $svAddresses)
