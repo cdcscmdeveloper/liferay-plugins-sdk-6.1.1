@@ -300,6 +300,7 @@ public class ReportsGenerateBean {
 		private boolean flGroupTwentyOneView = false;
 		private boolean flGroupTwentyTwoView = false;
 		private boolean flSupplierInvoiceNoView = false;
+		private boolean flSupplierDeliveryOrderNoView = false;
 		
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
@@ -376,6 +377,7 @@ public class ReportsGenerateBean {
 		private String scoringTotVar=ReportConst.EMPTY_VAL;
 		private String pkpNoTotVar=ReportConst.EMPTY_VAL;
 		private String deliveryOrderNoTotVar=ReportConst.EMPTY_VAL;	
+		private String flSupplierDeliveryOrderNoVar=ReportConst.EMPTY_VAL;	
 		private String itemCodeTotVar=ReportConst.EMPTY_VAL;
 		private String poAmountTotVar=ReportConst.EMPTY_VAL;
 		private String prNoTotVar=ReportConst.EMPTY_VAL;
@@ -527,6 +529,20 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlSupplierDeliveryOrderNoView() {
+			return flSupplierDeliveryOrderNoView;
+		}
+		public void setFlSupplierDeliveryOrderNoView(
+				boolean flSupplierDeliveryOrderNoView) {
+			this.flSupplierDeliveryOrderNoView = flSupplierDeliveryOrderNoView;
+		}
+		
+		public String getFlSupplierDeliveryOrderNoVar() {
+			return flSupplierDeliveryOrderNoVar;
+		}
+		public void setFlSupplierDeliveryOrderNoVar(String flSupplierDeliveryOrderNoVar) {
+			this.flSupplierDeliveryOrderNoVar = flSupplierDeliveryOrderNoVar;
+		}
 		public boolean isSmMandatoryGSTRegisteredStatusView() {
 			return smMandatoryGSTRegisteredStatusView;
 		}

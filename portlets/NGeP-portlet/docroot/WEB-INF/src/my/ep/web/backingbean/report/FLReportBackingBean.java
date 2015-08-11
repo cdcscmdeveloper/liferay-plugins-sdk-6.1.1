@@ -394,6 +394,8 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlDeliveryAddressView(true);
 			rptGenBean.setFlSupplierView(true);
 			rptGenBean.setFlPkpNoView(true);
+			rptGenBean.setFlPurchaseOrderNoView(true);
+			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
 			rptGenBean.setFromDateView(true);
 			rptGenBean.setFlGroupTwelveView(true);
 			break;
@@ -407,6 +409,7 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupTwelveView(true);
+			rptGenBean.setFlRecNoteNoView(true);
 			break;
 		case ReportConst.LATE_DEL_RPT_PO_VAL:
 			rptGenBean.setFlPtjView(true);
@@ -414,6 +417,9 @@ public class FLReportBackingBean extends SourcingBaseBackingBean<ReportMangedBea
 			rptGenBean.setFlMinistryView(true);
 			rptGenBean.setFromDateView(true);	
 			rptGenBean.setFlGroupThirteenView(true);
+			rptGenBean.setFlDeliveryOrderNoView(true);
+			rptGenBean.setFlSupplierDeliveryOrderNoView(true);
+			rptGenBean.setFlPurchaseOrderNoView(true);
 			break;
 		case ReportConst.STP_INSTR_DEL_RPT_PO_VAL:
 			rptGenBean.setFlSupplierView(true);
