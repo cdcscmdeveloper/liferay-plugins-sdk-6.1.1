@@ -41,6 +41,10 @@ public class SmUpdateGstInfoBackingBean extends
 
 	public void preRenderGstInfo() {
 		renewSesionObject();
+		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "");
+	}
+	
+	public void proceedAfterAcceptTnC(){
 		getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
 		getManagedBean().setMofAccount(
 				SmCommonUtil.getMofAccountBySuppIdAndSuppType(getManagedBean()

@@ -104,6 +104,7 @@ import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmCompanyExperienceCat;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
@@ -142,6 +143,7 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
+import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -946,12 +948,15 @@ public class SmApplicationBackingBean extends
 				}
 			}
 
-			// init companyBasic GST information
+			// init GST information
 			getManagedBean().setCompanyBasicGst(
 					SmApplicationUtil.initHqGstInformation(getManagedBean()
-							.getSmAppl().getApplNo(), getManagedBean()
-							.getSmSupplier().getSupplierId(), getManagedBean()
+							.getSmAppl(), getManagedBean().getSmSupplier()
+							.getSupplierId(), getManagedBean()
 							.getCompanyBasicGst()));
+			SmApplicationUtil.initBranchGstInformation(getManagedBean()
+					.getCompanyBasicGst(), getManagedBean().getSmAppl()
+					.getSmSupplierBranches(), true);
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -2344,6 +2349,21 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Copy hq gst info to branch
+	 * 
+	 * @param SmSupplierBranch
+	 *            branch
+	 */
+	public void copyHqGstToBranch(SmSupplierBranch branch) {
+		if (branch.getGst() == null) {
+			branch.setGst(new SmGstSupplier());
+			SmApplicationUtil.initGstSuppDocs(branch.getGst());
+		}
+		SmCommonUtil.copyHqGstToBranch(getManagedBean().getCompanyBasicGst(),
+				branch.getGst(), branch.isSameAsHq(), branch.getBranchCode());
+	}
+
+	/**
 	 * Add or update selected branch info to SmSupplierBranch list of the
 	 * application.
 	 */
@@ -2415,7 +2435,11 @@ public class SmApplicationBackingBean extends
 						getManagedBean().getSmAppl().getSmSupplierBranches()
 								.get(index));
 		getManagedBean().setSelectedBranchIndex(index);
-
+		if (branchBean.getGst() == null) {
+			branchBean.setGst(new SmGstSupplier());
+			branchBean.getGst().setSmGstSupplierDocs(
+					new ArrayList<SmGstSupplierDoc>());
+		}
 		getManagedBean().setSelectedBranch(branchBean);
 		assignValReqdToTrue();
 		SmApplicationUtil.setDisableBranchGst(getManagedBean());
@@ -2442,6 +2466,9 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setBranchCompanyCities(new ArrayList<PmCity>());
 		getManagedBean().setSelectedBranch(br);
 		SmApplicationUtil.setDisableBranchGst(getManagedBean());
+		SmApplicationUtil.addNewBranchGst(
+				getManagedBean().getCompanyBasicGst(), getManagedBean()
+						.getSelectedBranch());
 		assignValReqdToTrue();
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 	}
@@ -4285,6 +4312,10 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO mofRegistrationSO = null;
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
+		for (SmSupplierBranch br : getManagedBean().getSmAppl()
+				.getSmSupplierBranches()) {
+			SmCommonUtil.removeNotUploadedGstSuppDoc(br.getGst());
+		}
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -4293,15 +4324,21 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			reqDto.setSmAppl(this.getManagedBean().getSmAppl());
 			reqDto.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
+			reqDto.setBranchGst(getManagedBean().getSelectedBranch().getGst());
+			reqDto.setSameAsHq(getManagedBean().getSelectedBranch()
+					.isSameAsHq());
 			mofRegistrationSO.updateApplication(reqDto);
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
 			getManagedBean().setCompanyBasicGst(
 					SmApplicationUtil.initHqGstInformation(getManagedBean()
-							.getSmAppl().getApplNo(), getManagedBean()
-							.getSmAppl().getSmSupplier().getSupplierId(),
-							getManagedBean().getCompanyBasicGst()));
+							.getSmAppl(), getManagedBean().getSmAppl()
+							.getSmSupplier().getSupplierId(), getManagedBean()
+							.getCompanyBasicGst()));
+			SmApplicationUtil.initBranchGstInformation(getManagedBean()
+					.getCompanyBasicGst(), getManagedBean().getSmAppl()
+					.getSmSupplierBranches(), false);
 		}
 	}
 
@@ -6232,7 +6269,6 @@ public class SmApplicationBackingBean extends
 			PmUser loginUser = new FacesScopes().getUserSessionBean();
 			useList.add(loginUser.getLoginId());
 			reqDTO.setUserList(useList);
-			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			log.info("******* Save as draft User List to BPM Size *******"
 					+ reqDTO.getUserList());
 			if (reqDTO.getOutcome().equals("")) {
@@ -6241,6 +6277,14 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
+			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+					.getCompanyBasicGst());
+			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+					.getSelectedBranch().getGst());
+			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
+			reqDTO.setBranchGst(getManagedBean().getSelectedBranch().getGst());
+			reqDTO.setSameAsHq(getManagedBean().getSelectedBranch()
+					.isSameAsHq());
 			resDTO = regSo.initiateSmApplSaveAsDraftTask(reqDTO);
 			if (resDTO != null) {
 				log.info("******* From SO ******** " + resDTO.isBpmSuccess());
@@ -6504,26 +6548,6 @@ public class SmApplicationBackingBean extends
 			return submitPOorApproverReviewToBPM(decision);
 		} else {
 			return null;
-		}
-	}
-
-	/**
-	 * Execute javascript on click a button
-	 * 
-	 * @param String
-	 *            scriptToExecute
-	 */
-	public void onClickButton(String scriptToExecute) {
-		if (scriptToExecute.equalsIgnoreCase("confirmDeclareDialog.show();")
-				&& (!getManagedBean().getSmAppl().getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_MOF) && !getManagedBean()
-						.getSmAppl()
-						.getApplType()
-						.equalsIgnoreCase(ParameterConst.NEW_SM_APPLN_FOR_RENEW))) {
-			submitSmApplToBpm(getManagedBean().getSmAppl().getApplType());
-
-		} else {
-			RequestContext.getCurrentInstance().execute(scriptToExecute);
 		}
 	}
 

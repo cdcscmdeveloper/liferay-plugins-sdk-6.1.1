@@ -9,7 +9,7 @@
 	<h:outputScript library="js" name="smGstCalendar.js" />
 	
 	<p:panel header="#{lbl['lbl.sm.gst.info']}" toggleable="true" id="gstHqPanelId">
-		<table style="width: 100%">
+		<table style="width: 58%">
 			<tr>
 				<td>
 					<p:outputLabel value="#{lbl['lbl.sm.gstNo']}" />
@@ -43,8 +43,6 @@
 								readonly="true" disabled="true" />
 						</c:otherwise>
 					</c:choose></td>
-				<td>&#160;</td>
-				<td>&#160;</td>
 			</tr>
 			<tr>
 				<td>
@@ -63,7 +61,7 @@
 							<p:calendar id="gstEffDate" showOn="button" navigator="true"
 								display="inline" label="#{lbl['lbl.sm.gst.effdate']}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-								yearRange="-99:+0" readonlyInput="true"
+								yearRange="-99:+0" readonlyInput="true" mindate="#{CommonConstants.GST_LAUNCH_DATE}"
 								maxdate="#{CommonConstants.CURRENT_DATE}" beforeShowDay="beforeShowDate" 
 								value="#{backingBean.managedBean.companyBasicGst.gstEffDate}" 
 								required="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
@@ -83,6 +81,8 @@
 						</c:otherwise>
 
 					</c:choose></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 				<td><c:choose>
 						<c:when test="#{backingBean.managedBean.supplierUser 
@@ -92,7 +92,7 @@
 								display="inline" label="#{lbl['lbl.sm.gst.eff.end.date']}"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 								yearRange="-99:+0" readonlyInput="true"
-								mindate="#{CommonConstants.CURRENT_DATE}"
+								mindate="#{CommonConstants.GST_LAUNCH_DATE}"
 								value="#{backingBean.managedBean.companyBasicGst.gstEndDate}" >
 								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this" partialSubmit="true"/>
 							</p:calendar>
@@ -109,9 +109,11 @@
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
-			<tr><td colspan="4" height="10"></td></tr>
+			<tr><td colspan="2" height="10"></td></tr>
+		</table>
+		<table style="width: 100%">
 			<tr>
-				<td colspan="4">
+				<td>
 					<p:dataTable var="table" id="hqSuppDocDtId" value="#{backingBean.managedBean.companyBasicGst.smGstSupplierDocs}" rowIndexVar="index">
 			
 						<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"

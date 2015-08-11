@@ -1,0 +1,208 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+		
+		<p:outputPanel id="branchGstInfoPanelId" rendered="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo}">
+			
+			<p:outputPanel rendered="#{backingBean.managedBean.supplierUser and (backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}">
+				<table style="width: 100%">
+					<tr>
+						<td style="border-style: none !important;float: right !important;">
+							<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedBranch.sameAsHq}">
+								<p:ajax update="branchGstInfoPanelId" event="change"
+									process="@this" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+									listener="#{backingBean.copyHqGstToBranch(backingBean.managedBean.selectedBranch)}" />
+							</p:selectBooleanCheckbox>
+						</td>
+						<td valign="top" style="border-style: none !important;">
+							<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.brnch.gstSame']}" />
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			
+			<p:outputPanel rendered="#{!backingBean.managedBean.selectedBranch.sameAsHq}">
+				<table style="width: 100%">
+					<tr>
+						<td><u><b><h:outputText
+									value="#{lbl['lbl.sm.gst.info']} " /></b></u></td>
+					</tr>
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.gstNo']}" />
+							<p:outputLabel value="*" styleClass="mandatory" 
+							rendered="#{not empty backingBean.managedBean.selectedBranch.gst.gstEffDate 
+							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate 
+							and (backingBean.managedBean.supplierUser
+							and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R'))}"/>
+						</td>
+						<td><c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+										required="#{not empty backingBean.managedBean.selectedBranch.gst.gstEffDate 
+										or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate}"
+										value="#{backingBean.managedBean.selectedBranch.gst.gstRegNo}"
+										id="gstBrGstRegistrationNo" size="35" maxlength="12"
+										validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
+										<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+										<p:ajax process="@this" partialSubmit="true" update="branchGstInfoPanelId" />
+									</p:inputText>
+									<p:message id="gstBrRegistrationNoMsg" for="gstBrGstRegistrationNo"
+										showSummary="true" showDetail="false" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText label="#{lbl['lbl.sm.gstNo']}"
+										value="#{backingBean.managedBean.selectedBranch.gst.gstRegNo}"
+										id="smGstRegistrationNoRdOnly" size="35" maxlength="12"
+										readonly="true" disabled="true" />
+								</c:otherwise>
+							</c:choose></td>
+					</tr>
+					<tr>
+						<td>
+							<p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" />
+							<p:outputLabel value="*" styleClass="mandatory" 
+							rendered="#{not empty backingBean.managedBean.selectedBranch.gst.gstRegNo 
+							or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate 
+							and (backingBean.managedBean.supplierUser
+							and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R'))}"/>
+						</td>
+						<td><c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:calendar id="gstBrEffDate" showOn="button" navigator="true"
+										display="inline" label="#{lbl['lbl.sm.gst.effdate']}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										yearRange="-99:+0" readonlyInput="true"
+										mindate="#{CommonConstants.GST_LAUNCH_DATE}" beforeShowDay="beforeShowDate" 
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEffDate}" 
+										required="#{not empty backingBean.managedBean.selectedBranch.gst.gstRegNo 
+										or not empty backingBean.managedBean.selectedBranch.gst.gstEndDate}">
+										<p:ajax event="dateSelect"  update="branchGstInfoPanelId" process="@this"/>
+									</p:calendar>
+									<p:message id="gstBrEffDateMsg" for="gstBrEffDate"
+										showSummary="true" showDetail="false" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEffDate}"
+										readonly="true" size="35">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
+								</c:otherwise>
+		
+							</c:choose></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+						<td><c:choose>
+								<c:when test="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									<p:calendar id="gstBrEndDate" showOn="button" navigator="true"
+										display="inline" label="#{lbl['lbl.sm.gst.eff.end.date']}"
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+										yearRange="-99:+0" readonlyInput="true"
+										mindate="#{CommonConstants.GST_LAUNCH_DATE}"
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEndDate}" >
+										<p:ajax event="dateSelect"  update="branchGstInfoPanelId" 
+											process="@this" partialSubmit="true"/>
+									</p:calendar>
+									<p:message id="gstBrEndDateMsg" for="gstBrEndDate"
+										showSummary="true" showDetail="false" display="icon" />
+								</c:when>
+								<c:otherwise>
+									<p:inputText
+										value="#{backingBean.managedBean.selectedBranch.gst.gstEndDate}"
+										readonly="true" size="35">
+										<f:convertDateTime
+											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+									</p:inputText>
+								</c:otherwise>
+							</c:choose></td>
+					</tr>
+					<tr><td colspan="2" height="10"></td></tr>
+					<tr>
+						<td colspan="2">
+							<p:dataTable var="table" id="brSuppDocDtId" value="#{backingBean.managedBean.selectedBranch.gst.smGstSupplierDocs}" 
+							rowIndexVar="index">
+					
+								<p:column headerText="#{lbl['lbl.sm.userprofile.num']}"
+									style="width : 5%;">
+									<p:outputLabel value="#{index + 1}"
+										style="float: left;white-space: normal;" />
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.sm.suppDoc.document.description']}"
+									style="width : 55%;">
+									<h:outputText value="#{table.pmDocument.docName}"
+										style="float: left;white-space: normal;" />
+								</p:column>
+					
+								<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
+									style="width : 20%;" rendered="#{backingBean.managedBean.supplierUser 
+									and (backingBean.managedBean.smAppl.applType eq 'N' 
+									or backingBean.managedBean.smAppl.applType eq 'R')}">
+					
+									<p:commandLink oncomplete="gstUploadDialog.show();return false;"
+										rendered="#{!table.pmDocument.hardCopyReq}"
+										update="@([id$=gstBrUploadDialog])"
+										action="#{backingBean.assignSelectedGstDoc(table)}">
+										<p:graphicImage value="/css/images/design/upload.png"
+											style="margin-right:2px;" />
+									</p:commandLink>
+					
+								</p:column>
+								<p:column headerText="#{lbl['lbl.pm.document.name']}"
+									style="width : 20%;">
+									<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
+										style="float: left;white-space: normal;" />
+									<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+								</p:column>
+							</p:dataTable>
+						</td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			
+			<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.sameAsHq}">
+				<table style="width: 100%">
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.regno']}" /></td>
+						<td style="border-style: none !important;"><p:inputText readonly="true" disabled="true" value="" size="40" /></td>
+					</tr>
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.effdate']}" /></td>
+						<td style="border-style: none !important;"><p:inputText readonly="true" disabled="true" value="" size="30" /></td>
+					</tr>
+					<tr>
+						<td style="border-style: none !important;"><p:outputLabel value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+						<td style="border-style: none !important;"><p:inputText readonly="true" disabled="true" value="" size="30" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			
+		</p:outputPanel>
+		
+		<p:dialog id="gstBrUploadDialog" widgetVar="gstBrUploadDialog" modal="true"
+			dynamic="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+				sizeLimit="1000000"
+				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+				fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
+				update="@form" oncomplete="gstBrUploadDialog.hide();" />
+		</p:dialog>
+
+</ui:composition>

@@ -72,14 +72,24 @@
 									value="#{lbl['lbl.sm.gstNo']}" /></td>
 							<td style="border-style: none !important; width: 5%;">:</td>
 							<td style="border-style: none !important;; width: 55%;"><h:outputText
-									value="#{branchBean.gstRegistrationNo}" /></td>
+									value="#{branchBean.gst.gstRegNo}" /></td>
 						</tr>
 						<tr>
 							<td style="border-style: none !important;"><h:outputText
-									value="#{lbl['lbl.sm.gstDate']}" /></td>
+									value="#{lbl['lbl.sm.gst.effdate']}" /></td>
 							<td style="border-style: none !important;">:</td>
 							<td style="border-style: none !important;"><h:outputText
-									value="#{branchBean.gstRegistrationDate}">
+									value="#{branchBean.gst.gstEffDate}">
+									<f:convertDateTime
+										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+								</h:outputText></td>
+						</tr>
+						<tr>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
+							<td style="border-style: none !important;">:</td>
+							<td style="border-style: none !important;"><h:outputText
+									value="#{branchBean.gst.gstEndDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 								</h:outputText></td>
@@ -159,7 +169,7 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="450px" height="430px"
+	<p:dialog width="550px" height="500px"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
 		id="banchDialog" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true" closable="false">
@@ -168,6 +178,7 @@
 		<ui:fragment
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'K' or backingBean.managedBean.smAppl.supplierType eq 'J'}">
 			<ui:include src="branchDetailsTablePage.xhtml" />
+			<ui:include src="gstBranchInfoForm.xhtml" />
 		</ui:fragment>
 		<p:panel header="#{lbl['lbl.sm.branch.details']}" toggleable="true"
 			rendered="#{backingBean.managedBean.smAppl.supplierType eq 'MKM'}">

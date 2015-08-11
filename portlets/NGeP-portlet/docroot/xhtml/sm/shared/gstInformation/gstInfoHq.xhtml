@@ -54,7 +54,7 @@
 							value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstEffDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
-							maxdate="#{CommonConstants.CURRENT_DATE}">
+							mindate="#{CommonConstants.GST_LAUNCH_DATE}">
 							<p:ajax event="dateSelect"  update="hqGstNotEmptyPanelId" process="@this"/>
 						</p:calendar>
 						<p:message id="hqGstRegDateCalIdMsg"
@@ -70,7 +70,7 @@
 							value="#{smUpdateGstInfoBackingBean.managedBean.hqGstSupplier.gstEndDate}"
 							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" display="inline"
 							readonlyInput="true" size="30" showOn="button" yearRange="-99:+0" 
-							mindate="#{CommonConstants.CURRENT_DATE}">
+							mindate="#{CommonConstants.GST_LAUNCH_DATE}">
 							<p:ajax event="dateSelect"  update="hqGstNotEmptyPanelId" process="@this"/>
 						</p:calendar>
 						<p:message id="hqGstEffEndDateCalIdMsg"
