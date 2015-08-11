@@ -13,6 +13,8 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -21,18 +23,25 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
+import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
+import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
+import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -49,8 +58,12 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	// Paging for listing
 	private IPagingDataModel<PmUser> userDataModel = new UserPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> userOrgDataModel = new UserOrgPagingDataModel();
+	private IPagingDataModel<PmUom> uomDataModel = new UOMPagingDataModel();
+	private IPagingDataModel<PmEduField> eduDataModel = new EduPagingDataModel();
 	private OrganisationSearchBean organisationSearchBean;
 	private UserProfilesSearchBean userProfileSearchBean;
+	private UnitOfMeasurmentSearchBean uomSearchBean;
+	private String eduFieldName;
 	private boolean orgProfileRequired;
 	// private PmOrgProfile selectedOrgProfile;
 	// private PmUser selectedUser;
@@ -59,6 +72,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String selectedDocType2;
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
+
+	public String getEduFieldName() {
+		return eduFieldName;
+	}
+
+	public void setEduFieldName(String eduFieldName) {
+		this.eduFieldName = eduFieldName;
+	}
+
+	public IPagingDataModel<PmEduField> getEduDataModel() {
+		return eduDataModel;
+	}
+
+	public void setEduDataModel(IPagingDataModel<PmEduField> eduDataModel) {
+		this.eduDataModel = eduDataModel;
+	}
 
 	public String getSelectedDocType() {
 		return selectedDocType;
@@ -171,6 +200,25 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.orgProfileRequired = orgProfileRequired;
 	}
 
+	public UnitOfMeasurmentSearchBean getUomSearchBean() {
+		if (uomSearchBean == null) {
+			uomSearchBean = new UnitOfMeasurmentSearchBean();
+		}
+		return uomSearchBean;
+	}
+
+	public void setUomSearchBean(UnitOfMeasurmentSearchBean uomSearchBean) {
+		this.uomSearchBean = uomSearchBean;
+	}
+
+	public IPagingDataModel<PmUom> getUomDataModel() {
+		return uomDataModel;
+	}
+
+	public void setUomDataModel(IPagingDataModel<PmUom> uomDataModel) {
+		this.uomDataModel = uomDataModel;
+	}
+
 	/**
 	 * reset result bean fields
 	 */
@@ -183,6 +231,18 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void resetUserResultBean() {
 		this.setUserDataModel(new UserPagingDataModel());
+	}
+	/**
+	 * reset result bean fields
+	 */
+	public void resetUOMResultBean() {
+		this.setUomDataModel(new UOMPagingDataModel());
+	}
+	/**
+	 * reset result bean fields
+	 */
+	public void resetEduResultBean() {
+		this.setEduDataModel(new EduPagingDataModel());
 	}
 
 	// pagination for user profile search list
@@ -298,7 +358,109 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 
 	}
+	// pagination for UOM search list
+		private class UOMPagingDataModel extends PagingDataModel<PmUom> {
+			private static final long serialVersionUID = 1L;
 
+			public UOMPagingDataModel() {
+				super("dtUOMResult");
+			}
+
+			@Override
+			protected ISearchResultBean<PmUom> pageChangeListener(
+					ISearchBean<PmUom> searchBean) {
+				log.info("pageChangeListener");
+				if (log.isDebugEnabled()) {
+					log.debug("pageChangeListener");
+				}
+				boolean isSearchBeanEmpty = true;
+				IUomSO uomSO;
+				try {
+
+					if (getUomSearchBean().getUOMCode() != null
+							&& !getUomSearchBean().getUOMCode().equals("")) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("uomCode",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getUomSearchBean().getUOMCode(),
+										true));
+						isSearchBeanEmpty = false;
+					}
+					if (getUomSearchBean().getUOMName() != null
+							&& !getUomSearchBean().getUOMName()
+									.equals("")) {
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("uomName",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getUomSearchBean().getUOMName(), true));
+						isSearchBeanEmpty = false;
+					}
+					if (!isSearchBeanEmpty) {
+						uomSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+
+						UomReqDTO uomReqDTO = new UomReqDTO();
+
+						uomReqDTO.setMeasurementSearchBean(searchBean);
+						UomResDTO resDto = uomSO.retrieveMeasurementBySearch(uomReqDTO);
+
+						return resDto.getMeasurementSearchResultBean();
+					} else {
+						return new SearchResultBean();
+					}
+				} finally {
+					uomSO = null;
+				}
+			}
+		}
+		
+		// pagination for Education fields search list
+				private class EduPagingDataModel extends PagingDataModel<PmEduField> {
+					private static final long serialVersionUID = 1L;
+
+					public EduPagingDataModel() {
+						super("dtEduResult");
+					}
+
+					@Override
+					protected ISearchResultBean<PmEduField> pageChangeListener(
+							ISearchBean<PmEduField> searchBean) {
+						log.info("pageChangeListener");
+						if (log.isDebugEnabled()) {
+							log.debug("pageChangeListener");
+						}
+						boolean isSearchBeanEmpty = true;
+						IEducationFieldSO eduSO;
+						try {
+
+							if (getEduFieldName() != null
+									&& !getEduFieldName().equals("")) {
+								searchBean.getDataFilterBeans().add(
+										new SearchFilterBean("fieldName",
+												SearchOperator.OPERATOR_LIKE.value(),
+												getEduFieldName(),
+												true));
+								isSearchBeanEmpty = false;
+							}
+							if (!isSearchBeanEmpty) {
+								eduSO = BusinessDelegate.getInstance().getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT, IEducationFieldSO.class);
+
+								EducationFieldReqDTO eduReqDTO = new EducationFieldReqDTO();
+
+								eduReqDTO.setEducationSearchBean(searchBean);
+								EducationFieldResDTO resDto = eduSO.retrieveEducationBySearch(eduReqDTO);
+
+								return resDto.getEducationSearchResultBean();
+							} else {
+								return new SearchResultBean();
+							}
+						} finally {
+							eduSO = null;
+						}
+					}
+				}
+				
 	private class SearchTrackingDiaryPagingDataModel extends
 			PagingDataModel<PmTrackingDiary> {
 
