@@ -870,33 +870,41 @@ public class LOIDetailBackingBean extends
 		getManagedBean().setTotalFrequency(0);
 		
 		ScLoi scLoi = getManagedBean().getScLoi();
-		boolean isTermPriceFound = Boolean.FALSE;
-		getManagedBean().setItemDetailsFlag(Boolean.TRUE);
-
-		isTermPriceFound = checkNegoTermPrice(scLoi);
-		
-		if (isTermPriceFound) {
-			getManagedBean().setHideColumnFlag(Boolean.TRUE);
-		}  else {
-			getManagedBean().setHideColumnFlag(Boolean.FALSE);
-		}
-		
-		if (CollectionUtils.isNotEmpty(
-					scLoi.getScQtSchedules())) {
-			getManagedBean().setTotalFrequency(
-					scLoi.getScQtSchedules().size());
-		} 
-		calculateOfferedAndFinalPriceByItem(scLoi);
-		
-		if (getManagedBean().getScQt() != null) {
-			if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-				// progressive payment.
-				formProgressivePayment(scLoi);
-			} else if (("F").equals(getManagedBean().getScQt()
-					.getScheduleType())) {
-				// Fulfilment Schedule
-				formFulfilmentSchedule(scLoi);
+		if (!QTStatusConst.LOI_REJECTED.equals(
+				scLoi.getScWorkFlowStatus().getPmStatus().getStatusId())) {
+			boolean isTermPriceFound = Boolean.FALSE;
+			getManagedBean().setItemDetailsFlag(Boolean.TRUE);
+	
+			isTermPriceFound = checkNegoTermPrice(scLoi);
+			
+			if (isTermPriceFound) {
+				getManagedBean().setHideColumnFlag(Boolean.TRUE);
+			}  else {
+				getManagedBean().setHideColumnFlag(Boolean.FALSE);
 			}
+			
+			if (CollectionUtils.isNotEmpty(
+						scLoi.getScQtSchedules())) {
+				getManagedBean().setTotalFrequency(
+						scLoi.getScQtSchedules().size());
+			} 
+			calculateOfferedAndFinalPriceByItem(scLoi);
+			
+			if (getManagedBean().getScQt() != null) {
+				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+					// progressive payment.
+					formProgressivePayment(scLoi);
+				} else if (("F").equals(getManagedBean().getScQt()
+						.getScheduleType())) {
+					// Fulfilment Schedule
+					formFulfilmentSchedule(scLoi);
+				}
+			}
+		} else {
+			scLoi.setScNegoTerms(null);
+			scLoi.setScLoiSupportingDocs(null);
+			getManagedBean().setItemDetailsFlag(Boolean.FALSE);
+			this.getManagedBean().setProgressivePaymentList(null);
 		}
 		
 		getManagedBean().setSelectedScQtDeduction(null);
@@ -2518,13 +2526,13 @@ public class LOIDetailBackingBean extends
 		}
 		reqDTO.setEcActivityList(ecActivityList);
 
-		boolean itemized = this.getManagedBean().isItemized();
-		ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean()
-				.getSelectedSupplier();
-		if (!itemized && awardedSupplier != null) {
-			awardedSupplier.setAwareded(true);
-			reqDTO.setAwardedSupplier(awardedSupplier);
-		}
+//		boolean itemized = this.getManagedBean().isItemized();
+//		ScQtEvaluationResultDtl awardedSupplier = this.getManagedBean()
+//				.getSelectedSupplier();
+//		if (!itemized && awardedSupplier != null) {
+//			awardedSupplier.setAwareded(true);
+//			reqDTO.setAwardedSupplier(awardedSupplier);
+//		}
 
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
 		scQtCommittee.setQtCommitteRemarks(finalizeRemarks(scQtCommittee
