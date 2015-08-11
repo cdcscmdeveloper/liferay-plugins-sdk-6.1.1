@@ -23,12 +23,12 @@
 				<h:inputText label="#{lbl['lbl.sc.content']}" 
 					style="width:96%" value="#{scLoiReport.title}" required="true"
 					rendered="#{empty scLoiReport.pmDocument and 
-									lOIDetailBackingBean.managedBean.secretaryUser}">
+											isPendingNegotiationStatus}">
 					<p:ajax event="keyup" />
 				</h:inputText>
 				<h:outputText value="#{scLoiReport.title}"
 					rendered="#{empty scLoiReport.pmDocument and 
-									!lOIDetailBackingBean.managedBean.secretaryUser}" />		
+										!isPendingNegotiationStatus}" />		
 				<h:outputText value="#{scLoiReport.title}"
 					rendered="#{!empty scLoiReport.pmDocument}" />
 			</p:column>
@@ -40,8 +40,8 @@
 								action="#{lOIDetailBackingBean.downloadFile(
 											scLoiReport.scLoiReportAttachment)}" />
 					<p:commandLink immediate="true"
-						rendered="#{(!empty scLoiReport.scLoiReportAttachment.fileName) and
-											lOIDetailBackingBean.managedBean.secretaryUser}" update="reportContentsTbl">
+						rendered="#{(!empty scLoiReport.scLoiReportAttachment.fileName) and 
+											isPendingNegotiationStatus}" update="reportContentsTbl">
 						<h:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/icon_trash.png"
 							styleClass="tasklist_title1" />
 
