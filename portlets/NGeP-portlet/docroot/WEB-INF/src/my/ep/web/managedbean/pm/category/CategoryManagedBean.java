@@ -43,10 +43,34 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private int activeIndex = 0;
 	
 	/** The organisation active index. */
+	private List<PmMachineCategory> tobeAddedPmMachineCategoryList;
 	private int organisationActiveIndex;
 	
 	/** The main cat code. */
 	private String mainCatCode;
+	
+	private List<PmCategoryL3> categoryL3List;
+	
+	private PmCategoryL1 oldCategoryL1;
+	
+	private PmCategoryL2 oldCategoryL2;
+	
+	private PmCategoryL3 oldCategoryL3;
+	
+	private PmCategoryRestr oldPmCategoryRestr;
+	
+	private PmMachineCategory oldPmMachineCategory;
+	
+	private PmBasicCategory oldPmBasicCategory;
+	
+	private List<PmBasicCategory> deletedPmBasicCategoryList;	
+	
+	private List<PmCategoryRestr> deletedPmPmCategoryRestrList;
+	
+	private List<PmMachineCategory> deletedPmMachineCategoryList;
+	
+	/** The tobe added pm basic category list. */
+	private List<PmBasicCategory> oldPmBasicCategoryList;
 	
 	/** The sub cat code. */
 	private String subCatCode;
@@ -118,7 +142,6 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	private List<PmBasicCategory> tobeAddedPmBasicCategoryList;
 	
 	/** The tobe added pm machine category list. */
-	private List<PmMachineCategory> tobeAddedPmMachineCategoryList;
 	
 	/** The pm machine category list. */
 	private List<PmMachineCategory> pmMachineCategoryList;
@@ -1004,6 +1027,177 @@ public class CategoryManagedBean extends BaseManagedBean implements Serializable
 	 */
 	public void setStatus(Long status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the categoryL3List
+	 */
+	public List<PmCategoryL3> getCategoryL3List() {
+		return categoryL3List;
+	}
+
+	/**
+	 * @param categoryL3List the categoryL3List to set
+	 */
+	public void setCategoryL3List(List<PmCategoryL3> categoryL3List) {
+		this.categoryL3List = categoryL3List;
+	}
+
+	/**
+	 * @return the oldCategoryL3
+	 */
+	public PmCategoryL1 getOldCategoryL1() {
+		return oldCategoryL1;
+	}
+
+	/**
+	 * @param oldCategoryL3 the oldCategoryL3 to set
+	 */
+	public void setOldCategoryL1(PmCategoryL1 oldCategoryL1) {
+		this.oldCategoryL1 = oldCategoryL1;
+	}
+
+	/**
+	 * @return the oldCategoryL2
+	 */
+	public PmCategoryL2 getOldCategoryL2() {
+		return oldCategoryL2;
+	}
+
+	/**
+	 * @param oldCategoryL2 the oldCategoryL2 to set
+	 */
+	public void setOldCategoryL2(PmCategoryL2 oldCategoryL2) {
+		this.oldCategoryL2 = oldCategoryL2;
+	}
+
+	/**
+	 * @return the oldCategoryL3
+	 */
+	public PmCategoryL3 getOldCategoryL3() {
+		return oldCategoryL3;
+	}
+
+	/**
+	 * @param oldCategoryL3 the oldCategoryL3 to set
+	 */
+	public void setOldCategoryL3(PmCategoryL3 oldCategoryL3) {
+		this.oldCategoryL3 = oldCategoryL3;
+	}
+
+	/**
+	 * @return the oldPmCategoryRestr
+	 */
+	public PmCategoryRestr getOldPmCategoryRestr() {
+		return oldPmCategoryRestr;
+	}
+
+	/**
+	 * @param oldPmCategoryRestr the oldPmCategoryRestr to set
+	 */
+	public void setOldPmCategoryRestr(PmCategoryRestr oldPmCategoryRestr) {
+		this.oldPmCategoryRestr = oldPmCategoryRestr;
+	}
+
+	/**
+	 * @return the oldPmMachineCategory
+	 */
+	public PmMachineCategory getOldPmMachineCategory() {
+		return oldPmMachineCategory;
+	}
+
+	/**
+	 * @param oldPmMachineCategory the oldPmMachineCategory to set
+	 */
+	public void setOldPmMachineCategory(PmMachineCategory oldPmMachineCategory) {
+		this.oldPmMachineCategory = oldPmMachineCategory;
+	}
+
+	/**
+	 * @return the oldPmBasicCategory
+	 */
+	public PmBasicCategory getOldPmBasicCategory() {
+		return oldPmBasicCategory;
+	}
+
+	/**
+	 * @param oldPmBasicCategory the oldPmBasicCategory to set
+	 */
+	public void setOldPmBasicCategory(PmBasicCategory oldPmBasicCategory) {
+		this.oldPmBasicCategory = oldPmBasicCategory;
+	}
+
+	/**
+	 * @return the oldPmBasicCategoryList
+	 */
+	public List<PmBasicCategory> getOldPmBasicCategoryList() {
+		if(oldPmBasicCategoryList==null){
+			oldPmBasicCategoryList=new ArrayList<PmBasicCategory>();
+		}
+		return oldPmBasicCategoryList;
+	}
+
+	/**
+	 * @param oldPmBasicCategoryList the oldPmBasicCategoryList to set
+	 */
+	public void setOldPmBasicCategoryList(
+			List<PmBasicCategory> oldPmBasicCategoryList) {
+		this.oldPmBasicCategoryList = oldPmBasicCategoryList;
+	}
+
+	/**
+	 * @return the deletedPmBasicCategoryList
+	 */
+	public List<PmBasicCategory> getDeletedPmBasicCategoryList() {
+		if(deletedPmBasicCategoryList==null){
+			deletedPmBasicCategoryList=new ArrayList<PmBasicCategory>();
+		}
+		return deletedPmBasicCategoryList;
+	}
+
+	/**
+	 * @param deletedPmBasicCategoryList the deletedPmBasicCategoryList to set
+	 */
+	public void setDeletedPmBasicCategoryList(
+			List<PmBasicCategory> deletedPmBasicCategoryList) {
+		this.deletedPmBasicCategoryList = deletedPmBasicCategoryList;
+	}
+
+	/**
+	 * @return the deletedPmPmCategoryRestrList
+	 */
+	public List<PmCategoryRestr> getDeletedPmPmCategoryRestrList() {
+		if(deletedPmPmCategoryRestrList==null){
+			deletedPmPmCategoryRestrList=new ArrayList<PmCategoryRestr>();
+		}
+		
+		return deletedPmPmCategoryRestrList;
+	}
+
+	/**
+	 * @param deletedPmPmCategoryRestrList the deletedPmPmCategoryRestrList to set
+	 */
+	public void setDeletedPmPmCategoryRestrList(
+			List<PmCategoryRestr> deletedPmPmCategoryRestrList) {
+		this.deletedPmPmCategoryRestrList = deletedPmPmCategoryRestrList;
+	}
+
+	/**
+	 * @return the deletedPmMachineCategoryList
+	 */
+	public List<PmMachineCategory> getDeletedPmMachineCategoryList() {
+		if(deletedPmMachineCategoryList==null){
+			deletedPmMachineCategoryList=new ArrayList<PmMachineCategory>();
+		}
+		return deletedPmMachineCategoryList;
+	}
+
+	/**
+	 * @param deletedPmMachineCategoryList the deletedPmMachineCategoryList to set
+	 */
+	public void setDeletedPmMachineCategoryList(
+			List<PmMachineCategory> deletedPmMachineCategoryList) {
+		this.deletedPmMachineCategoryList = deletedPmMachineCategoryList;
 	}
 
 }

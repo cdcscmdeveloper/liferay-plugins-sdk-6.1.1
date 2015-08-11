@@ -82,6 +82,8 @@
 					value="#{categoryBackingBean.managedBean.pmCategoryL1.recordStatusFlg}"
 					disabled="false" style="width: 108px;">
 					<f:selectItems value="#{categoryBackingBean.getRecordStatusList()}"></f:selectItems>
+					<p:ajax event="change" process="@form" partialSubmit="true"
+						update="@form" />
 				</p:selectOneMenu>
 
 			</h:panelGrid>
