@@ -301,6 +301,9 @@ public class ReportsGenerateBean {
 		private boolean flGroupTwentyTwoView = false;
 		private boolean flSupplierInvoiceNoView = false;
 		private boolean flSupplierDeliveryOrderNoView = false;
+		private boolean flPaymentAdviceNoView = false;
+		private boolean flGroupTwentyThreeView = false;
+		
 		
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
@@ -522,6 +525,7 @@ public class ReportsGenerateBean {
 		private String flGroupSeventeenVar=ReportConst.EMPTY_VAL;
 		private String flStopInstructionNoVar=ReportConst.EMPTY_VAL;
 		private String flSupplierInvoiceNoVar=ReportConst.EMPTY_VAL;
+		private String flPaymentAdviceNoVar=ReportConst.EMPTY_VAL;
 		//PP
 		private String ppYearVar=ReportConst.EMPTY_VAL;
 		private String ppMinistryVar=ReportConst.EMPTY_VAL;
@@ -529,6 +533,24 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlGroupTwentyThreeView() {
+			return flGroupTwentyThreeView;
+		}
+		public void setFlGroupTwentyThreeView(boolean flGroupTwentyThreeView) {
+			this.flGroupTwentyThreeView = flGroupTwentyThreeView;
+		}
+		public boolean isFlPaymentAdviceNoView() {
+			return flPaymentAdviceNoView;
+		}
+		public void setFlPaymentAdviceNoView(boolean flPaymentAdviceNoView) {
+			this.flPaymentAdviceNoView = flPaymentAdviceNoView;
+		}
+		public String getFlPaymentAdviceNoVar() {
+			return flPaymentAdviceNoVar;
+		}
+		public void setFlPaymentAdviceNoVar(String flPaymentAdviceNoVar) {
+			this.flPaymentAdviceNoVar = flPaymentAdviceNoVar;
+		}
 		public boolean isFlSupplierDeliveryOrderNoView() {
 			return flSupplierDeliveryOrderNoView;
 		}

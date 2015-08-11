@@ -646,6 +646,7 @@ public class ReportConst {
 	public static final String FL_AMP_STOP_INSTR_NO_EQ = "&PSINO=";
 	public static final String FL_AMP_INV_NO_EQ = "&PINVNO=";
 	public static final String FL_AMP_SUPPL_INV_NO_EQ = "&PSUPPINVNO=";
+	public static final String FL_AMP_PAYMENT_ADV_NO_EQ = "&PPANO=";
 	//CT
 	public static final String CT_AMP_CONTRACT_NO_EQ = "&PCONTRACTNO=";
 	public static final String CT_AMP_PHYSICALCONTRACT_NO_EQ = "&PPHYSICALCONTRACTNO=";

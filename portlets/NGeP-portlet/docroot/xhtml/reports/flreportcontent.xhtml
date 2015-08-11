@@ -168,6 +168,12 @@
 									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
 					 				</p:inputText>
 									</c:if>
+									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flPaymentAdviceNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.paymentAdviceNo']}"  style="margin-top:5px;width:160px;"/>
+									<p:inputText value="#{reportBackingBean.flPaymentAdviceNo}"  style="margin-top:5px;width:290px;" >
+									<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />									
+					 				</p:inputText>
+									</c:if>
 									<c:if test="#{flReportBackingBean.managedBean.rptGenBean.flApproverNameView}">
 									<p:outputLabel value="#{lbl['lbl.rpt.approverName']}"  style="margin-top:5px;width:160px;"/>
 									
@@ -528,7 +534,18 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.initiator']}" itemValue="#{lbl['lbl.rpt.initiator']}"></f:selectItem>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																		
 									</p:selectOneMenu>
-								  </c:if>																				 			
+								  </c:if>	
+								  <c:if test="#{flReportBackingBean.managedBean.rptGenBean.flGroupTwentyThreeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.group']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu value="#{reportBackingBean.flGroupEleven}" style="margin-top:5px;width:300px;">									   
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.all']}" itemValue="#{null}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.supplerNm']}" itemValue="#{lbl['lbl.rpt.supplerNm']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.pkpNo']}" itemValue="#{lbl['lbl.rpt.pkpnumber']}"></f:selectItem>										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.itemType']}" itemValue="#{lbl['lbl.rpt.itmtype']}"></f:selectItem>		
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.procurementtypeScreen']}" itemValue="#{lbl['lbl.rpt.prcmnttype']}"></f:selectItem>	
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />										
+									</p:selectOneMenu>
+								  </c:if>																			 			
 							    </h:panelGrid>							    
 						    </td>
 						  </tr>						   
