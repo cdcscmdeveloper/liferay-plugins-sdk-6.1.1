@@ -31,7 +31,6 @@ import javax.xml.bind.JAXBException;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
@@ -39,7 +38,6 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
@@ -463,15 +461,11 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 				getTemplateDatatableList(templateSectionList);
 				getManagedBean().setSelectedTemplate(tplDocMasterDB);
 				
-				// TODO: common save for all process type from external page
+				// save for template doc of contract agreement
 				if (getManagedBean().getExternalPageUrl() != null && getManagedBean().getProcessType()!=null 
 					&& getManagedBean().getProcessType().equalsIgnoreCase(ParameterConst.TPL_DOC_PROCESS_TYPE_CONTRACT)) {
 					reqDTOS.setDocMasterId(resDTO.getTplDocMaster().getDocMasterId());
 					getManagedBean().getCtAgreementContent().setTplDocMaster(templateSO.getTemplateMaster(reqDTOS).getTplDocMaster());
-					ContractAgreementReqDTO contractAgreementReqDTO = new ContractAgreementReqDTO();					
-					contractAgreementReqDTO.setAgreementContent(getManagedBean().getCtAgreementContent());
-					IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT, IAgreementSO.class);
-					agreementSO.saveAgreementClause(contractAgreementReqDTO);	
 				}
 			}
 		} catch (Exception e) {
