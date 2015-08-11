@@ -33,11 +33,14 @@
 				<p:outputLabel value="#{lbl['lbl.pm.search.status']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" />
 				</td>
-				 <td><p:selectOneMenu style="width:178px;margin-bottom:5px;" required="true" label="#{lbl['lbl.pm.search.status']}"
+				<td><p:selectOneMenu style="width:178px;margin-bottom:5px;"
+						required="true" label="#{lbl['lbl.pm.search.status']}"
 						value="#{educationBackingBean.managedBean.pmEduField.recordStatusFlg}"
 						disabled="#{educationBackingBean.managedBean.pmEduField.brandNew}">
 						<f:selectItems
 							value="#{educationBackingBean.getPmEducationStatusList()}"></f:selectItems>
+						<p:ajax event="change" process="@form" partialSubmit="true"
+							update="@form" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>

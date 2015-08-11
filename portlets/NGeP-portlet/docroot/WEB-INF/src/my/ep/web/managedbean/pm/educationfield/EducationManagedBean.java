@@ -17,7 +17,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmEduFieldRestr;
 import my.ep.web.managedbean.BaseManagedBean;
 
 // TODO: Auto-generated Javadoc
@@ -35,12 +34,11 @@ public class EducationManagedBean extends BaseManagedBean {
 
 	/** The pm edu field. */
 	private PmEduField pmEduField;
+	
+	private PmEduField oldPmEduField;
 
 	/** The edu field. */
 	private List<PmEduField> eduField;
-
-	/** The pm edu field restr. */
-	private List<PmEduFieldRestr> pmEduFieldRestr;
 
 	/** The field codes. */
 	private String fieldCodes;
@@ -51,17 +49,12 @@ public class EducationManagedBean extends BaseManagedBean {
 	/** The status. */
 	private Long status;
 
-	/** The edu field retr. */
-	private PmEduFieldRestr eduFieldRetr;
-
-	/** The edu restr list. */
-	private List<PmEduFieldRestr> eduRestrList;
+	
 
 	/** The edu restr select list. */
 	private List<PmCategoryL3> eduRestrSelectList;
 
-	/** The edu restr delete list. */
-	private List<PmEduFieldRestr> eduRestrDeleteList;
+	
 
 	/** The is lazy. */
 	private boolean isLazy = false;
@@ -103,26 +96,8 @@ public class EducationManagedBean extends BaseManagedBean {
 	public void setEduField(List<PmEduField> eduField) {
 		this.eduField = eduField;
 	}
-
-	/**
-	 * Gets the pm edu field restr.
-	 * 
-	 * @return the pmEduFieldRestr
-	 */
-	public List<PmEduFieldRestr> getPmEduFieldRestr() {
-		return pmEduFieldRestr;
-	}
-
-	/**
-	 * Sets the pm edu field restr.
-	 * 
-	 * @param pmEduFieldRestr
-	 *            the pmEduFieldRestr to set
-	 */
-	public void setPmEduFieldRestr(List<PmEduFieldRestr> pmEduFieldRestr) {
-		this.pmEduFieldRestr = pmEduFieldRestr;
-	}
-
+	
+	
 	/**
 	 * Gets the field codes.
 	 * 
@@ -161,24 +136,9 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.fieldNames = fieldNames;
 	}
 
-	/**
-	 * Gets the edu field retr.
-	 * 
-	 * @return the edu field retr
-	 */
-	public PmEduFieldRestr getEduFieldRetr() {
-		return eduFieldRetr;
-	}
+	
 
-	/**
-	 * Sets the edu field retr.
-	 * 
-	 * @param eduFieldRetr
-	 *            the new edu field retr
-	 */
-	public void setEduFieldRetr(PmEduFieldRestr eduFieldRetr) {
-		this.eduFieldRetr = eduFieldRetr;
-	}
+	
 
 	/**
 	 * Gets the status.
@@ -199,24 +159,10 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.status = status;
 	}
 
-	/**
-	 * Gets the edu restr list.
-	 * 
-	 * @return the edu restr list
-	 */
-	public List<PmEduFieldRestr> getEduRestrList() {
-		return eduRestrList;
-	}
+	
 
 	/**
-	 * Sets the edu restr list.
-	 * 
-	 * @param eduRestrList
-	 *            the new edu restr list
-	 */
-	public void setEduRestrList(List<PmEduFieldRestr> eduRestrList) {
-		this.eduRestrList = eduRestrList;
-	}
+	
 
 	/**
 	 * Gets the edu restr select list.
@@ -237,24 +183,6 @@ public class EducationManagedBean extends BaseManagedBean {
 		this.eduRestrSelectList = eduRestrSelectList;
 	}
 
-	/**
-	 * Gets the edu restr delete list.
-	 * 
-	 * @return the edu restr delete list
-	 */
-	public List<PmEduFieldRestr> getEduRestrDeleteList() {
-		return eduRestrDeleteList;
-	}
-
-	/**
-	 * Sets the edu restr delete list.
-	 * 
-	 * @param eduRestrDeleteList
-	 *            the new edu restr delete list
-	 */
-	public void setEduRestrDeleteList(List<PmEduFieldRestr> eduRestrDeleteList) {
-		this.eduRestrDeleteList = eduRestrDeleteList;
-	}
 
 	/**
 	 * Checks if is lazy.
@@ -274,5 +202,21 @@ public class EducationManagedBean extends BaseManagedBean {
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
 	}
+
+	/**
+	 * @return the oldPmEduField
+	 */
+	public PmEduField getOldPmEduField() {
+		return oldPmEduField;
+	}
+
+	/**
+	 * @param oldPmEduField the oldPmEduField to set
+	 */
+	public void setOldPmEduField(PmEduField oldPmEduField) {
+		this.oldPmEduField = oldPmEduField;
+	}
+
+	
 
 }

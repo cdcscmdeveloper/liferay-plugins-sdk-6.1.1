@@ -1250,6 +1250,90 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 	
+	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL1(Long pmCategoryL1Id,String categoryL1Code,String actionDesc,
+			PmStatus status,String docType) {
+		
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(pmCategoryL1Id);
+        trckVO.setDocNo(categoryL1Code);
+        trckVO.setDocType("MBC");
+        trckVO.setStatus(status);	
+        trckVO.setGroupId(null);					
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL2(Long pmCategoryL2Id,String pmCategoryL2Code, Long pmCategoryL1Id,String actionDesc,
+			PmStatus status,String docType,String groupDocType) {
+		
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(pmCategoryL2Id);
+        trckVO.setDocNo(pmCategoryL2Code);
+        trckVO.setDocType("SBC");
+        trckVO.setStatus(status);	
+        trckVO.setGroupId(pmCategoryL1Id);					
+		trckVO.setGroupDocType(groupDocType);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL3(Long pmCategoryL3Id,Long pmCategoryL2Id,String categoryL3Code,String actionDesc,
+			PmStatus status,String groupDocType) {
+		
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(pmCategoryL3Id);
+        trckVO.setDocNo(categoryL3Code);
+        trckVO.setDocType("SDC");
+        trckVO.setStatus(status);	
+        trckVO.setGroupId(pmCategoryL2Id);					
+		trckVO.setGroupDocType(groupDocType);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForPmBasicCategory(Long pmCategoryL3Id,Long pmCategoryL2Id,String categoryL3Code,String actionDesc,
+			PmStatus status,String groupDocType) {
+		
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(pmCategoryL3Id);
+        trckVO.setDocNo(categoryL3Code);
+        trckVO.setDocType("SDC");
+        trckVO.setStatus(status);	
+        trckVO.setGroupId(pmCategoryL2Id);					
+		trckVO.setGroupDocType(groupDocType);
+		return trckVO;
+	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForEducation(Long eduFiledId,String eduFieldCode,String actionDesc) {
+		
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(eduFiledId);
+        trckVO.setDocNo(eduFieldCode);
+        trckVO.setDocType("EFL");
+        trckVO.setStatus(null);	
+        trckVO.setGroupId(null);					
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}	
+	
 	public static String getUserRoleValue() {		
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
