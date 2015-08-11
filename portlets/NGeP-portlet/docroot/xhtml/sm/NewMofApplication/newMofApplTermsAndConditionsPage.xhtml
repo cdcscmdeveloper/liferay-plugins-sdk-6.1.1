@@ -18,12 +18,14 @@
 			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 		
-		<p:scrollPanel style="border:0;" mode="native">
-			<b>#{lbl['lbl.sm.gst.tnc.header']}</b>
-			<br />
-			<p><h:outputText escape="false" value="#{lbl['lbl.sm.gst.tnc.msg']}" /></p>
-		</p:scrollPanel>
-		<br/>
+		<p:panel id="gstTncPanelId">
+			<p:scrollPanel style="height:200px;border:0;" mode="native">
+				<b>#{lbl['lbl.sm.gst.tnc.header']}</b>
+				<br />
+				<p><h:outputText escape="false" value="#{lbl['lbl.sm.gst.tnc.msg']}" /></p>
+			</p:scrollPanel>
+			<br/>
+		</p:panel>
 	
 		<div>
 			<table style="width: 100%">
