@@ -5126,9 +5126,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getCommonMinistry() != null)
 					&& (this.getCommonMinistry() != ReportConst.EMPTY_VAL)) {
-				Long orgprofileid = Long.parseLong(this.getCommonMinistry());
+				/*Long orgprofileid = Long.parseLong(this.getCommonMinistry());
 				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
-						+ retrieveMinistryName(orgprofileid));
+						+ retrieveMinistryName(orgprofileid));*/
+				rptGenBean.setCtMinistryVar(ReportConst.CT_AMP_PMINISTRY_EQ
+						+ this.getCommonMinistry());
 			}
 			if ((this.getCommonPtj() != null)
 					&& (this.getCommonPtj() != ReportConst.EMPTY_VAL)) {
