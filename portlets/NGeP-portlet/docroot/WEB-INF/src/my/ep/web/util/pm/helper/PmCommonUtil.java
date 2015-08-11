@@ -1250,8 +1250,8 @@ public class PmCommonUtil {
 		return trckVO;
 	}
 	
-	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL1(Long pmCategoryL1Id,String categoryL1Code,String actionDesc,
-			PmStatus status,String docType) {
+	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL1(Long pmCategoryL1Id,String categoryL1Code,
+			                                                 String actionDesc,PmStatus status,String docType) {
 		
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1260,15 +1260,15 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());       
         trckVO.setDocId(pmCategoryL1Id);
         trckVO.setDocNo(categoryL1Code);
-        trckVO.setDocType("MBC");
+        trckVO.setDocType(ParameterConst.MAIN_CATEGORY_PARAM_CODE);
         trckVO.setStatus(status);	
         trckVO.setGroupId(null);					
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
 	
-	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL2(Long pmCategoryL2Id,String pmCategoryL2Code, Long pmCategoryL1Id,String actionDesc,
-			PmStatus status,String docType,String groupDocType) {
+	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL2(Long pmCategoryL2Id,String pmCategoryL2Code,
+			         Long pmCategoryL1Id,String actionDesc,PmStatus status,String docType,String groupDocType) {
 		
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1277,15 +1277,15 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());       
         trckVO.setDocId(pmCategoryL2Id);
         trckVO.setDocNo(pmCategoryL2Code);
-        trckVO.setDocType("SBC");
+        trckVO.setDocType(ParameterConst.SUB_CATEGORY_PARAM_CODE);
         trckVO.setStatus(status);	
         trckVO.setGroupId(pmCategoryL1Id);					
 		trckVO.setGroupDocType(groupDocType);
 		return trckVO;
 	}
 	
-	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL3(Long pmCategoryL3Id,Long pmCategoryL2Id,String categoryL3Code,String actionDesc,
-			PmStatus status,String groupDocType) {
+	public static PmTrackingDairyVO assignTrackingDairyForPmCategoryL3(Long pmCategoryL3Id,Long pmCategoryL2Id,
+			                      String categoryL3Code,String actionDesc,PmStatus status,String groupDocType) {
 		
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1294,15 +1294,15 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());       
         trckVO.setDocId(pmCategoryL3Id);
         trckVO.setDocNo(categoryL3Code);
-        trckVO.setDocType("SDC");
+        trckVO.setDocType(ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE);
         trckVO.setStatus(status);	
         trckVO.setGroupId(pmCategoryL2Id);					
 		trckVO.setGroupDocType(groupDocType);
 		return trckVO;
 	}
 	
-	public static PmTrackingDairyVO assignTrackingDairyForPmBasicCategory(Long pmCategoryL3Id,Long pmCategoryL2Id,String categoryL3Code,String actionDesc,
-			PmStatus status,String groupDocType) {
+	public static PmTrackingDairyVO assignTrackingDairyForPmBasicCategory(Long pmCategoryL3Id,Long pmCategoryL2Id,
+			                        String categoryL3Code,String actionDesc,PmStatus status,String groupDocType) {
 		
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1311,7 +1311,7 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());       
         trckVO.setDocId(pmCategoryL3Id);
         trckVO.setDocNo(categoryL3Code);
-        trckVO.setDocType("SDC");
+        trckVO.setDocType(ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE);
         trckVO.setStatus(status);	
         trckVO.setGroupId(pmCategoryL2Id);					
 		trckVO.setGroupDocType(groupDocType);
@@ -1327,7 +1327,7 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());       
         trckVO.setDocId(eduFiledId);
         trckVO.setDocNo(eduFieldCode);
-        trckVO.setDocType("EFL");
+        trckVO.setDocType(ParameterConst.EDU_PARAM_CODE);
         trckVO.setStatus(null);	
         trckVO.setGroupId(null);					
 		trckVO.setGroupDocType(null);
