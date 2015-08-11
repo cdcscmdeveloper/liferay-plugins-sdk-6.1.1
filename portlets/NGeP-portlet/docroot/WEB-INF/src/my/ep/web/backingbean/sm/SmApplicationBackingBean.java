@@ -956,8 +956,7 @@ public class SmApplicationBackingBean extends
 							.getCompanyBasicGst()));
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
 					.getCompanyBasicGst(), getManagedBean().getSmAppl()
-					.getSmSupplierBranches(), getManagedBean()
-					.getSmAppl());
+					.getSmSupplierBranches(), getManagedBean().getSmAppl());
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -4313,10 +4312,8 @@ public class SmApplicationBackingBean extends
 		IMofRegistrationSO mofRegistrationSO = null;
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
 				.getCompanyBasicGst());
-		for (SmSupplierBranch br : getManagedBean().getSmAppl()
-				.getSmSupplierBranches()) {
-			SmCommonUtil.removeNotUploadedGstSuppDoc(br.getGst());
-		}
+		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+				.getSelectedBranch().getGst());
 		try {
 			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
 					.getInstance().getServiceObject("sm",
@@ -4339,8 +4336,12 @@ public class SmApplicationBackingBean extends
 							.getCompanyBasicGst()));
 			SmApplicationUtil.initBranchGstInformation(getManagedBean()
 					.getCompanyBasicGst(), getManagedBean().getSmAppl()
-					.getSmSupplierBranches(), getManagedBean()
-					.getSmAppl());
+					.getSmSupplierBranches(), getManagedBean().getSmAppl());
+			if (getManagedBean().getSelectedBranch() != null
+					&& getManagedBean().getSelectedBranch().getGst() != null) {
+				getManagedBean().getSelectedBranch()
+						.setGst(null);
+			}
 		}
 	}
 
