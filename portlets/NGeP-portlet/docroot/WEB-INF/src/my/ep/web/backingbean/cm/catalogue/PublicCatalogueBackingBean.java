@@ -10,6 +10,7 @@
  */
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +46,12 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "pCatalogueBackingBean")
 @RequestScoped
 public class PublicCatalogueBackingBean extends
-BaseBackingBean<PublicCatalogueManagedBean> {
+BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	/** The log. */
 	private static Logger log = Logger
 			.getLogger(PublicCatalogueBackingBean.class);
