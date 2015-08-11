@@ -854,6 +854,7 @@ public class ReportBackingBean extends
 	private String flGroupSeventeen;
 	private boolean reportCategoryView = false;
 	private String flStopInstructionNo;
+	private String flPaymentAdviceNo;
 	// sm
 	private String smThresholdFromYear;
 	private String smThresholdToYear;
@@ -933,202 +934,159 @@ public class ReportBackingBean extends
 	
 	
 
+	public String getFlPaymentAdviceNo() {
+		return flPaymentAdviceNo;
+	}
+	public void setFlPaymentAdviceNo(String flPaymentAdviceNo) {
+		this.flPaymentAdviceNo = flPaymentAdviceNo;
+	}
 	public String getFlSupplierDeliveryOrderNo() {
 		return flSupplierDeliveryOrderNo;
 	}
-
 	public void setFlSupplierDeliveryOrderNo(String flSupplierDeliveryOrderNo) {
 		this.flSupplierDeliveryOrderNo = flSupplierDeliveryOrderNo;
 	}
-
 	public String getSmGSTRegistrationNo() {
 		return smGSTRegistrationNo;
 	}
-
 	public void setSmGSTRegistrationNo(String smGSTRegistrationNo) {
 		this.smGSTRegistrationNo = smGSTRegistrationNo;
 	}
-
 	public String getSmGSTRegisteredStatus() {
 		return smGSTRegisteredStatus;
 	}
-
 	public void setSmGSTRegisteredStatus(String smGSTRegisteredStatus) {
 		this.smGSTRegisteredStatus = smGSTRegisteredStatus;
 	}
-
 	public String getSmProfileStatus() {
 		return smProfileStatus;
 	}
-
 	public void setSmProfileStatus(String smProfileStatus) {
 		this.smProfileStatus = smProfileStatus;
 	}
-
 	public String getFlSupplierInvoiceNo() {
 		return flSupplierInvoiceNo;
 	}
-
 	public void setFlSupplierInvoiceNo(String flSupplierInvoiceNo) {
 		this.flSupplierInvoiceNo = flSupplierInvoiceNo;
 	}
-
 	public String getFlStopInstructionNo() {
 		return flStopInstructionNo;
 	}
-
 	public void setFlStopInstructionNo(String flStopInstructionNo) {
 		this.flStopInstructionNo = flStopInstructionNo;
 	}
-
 	public String getSmRequestExpiryDate() {
 		return smRequestExpiryDate;
 	}
-
 	public void setSmRequestExpiryDate(String smRequestExpiryDate) {
 		this.smRequestExpiryDate = smRequestExpiryDate;
 	}
-
 	public String getSmUserName() {
 		return smUserName;
 	}
-
 	public void setSmUserName(String smUserName) {
 		this.smUserName = smUserName;
 	}
-
 	public String getSmThresholdFromYear() {
 		return smThresholdFromYear;
 	}
-
 	public void setSmThresholdFromYear(String smThresholdFromYear) {
 		this.smThresholdFromYear = smThresholdFromYear;
 	}
-
 	public String getSmThresholdToYear() {
 		return smThresholdToYear;
 	}
-
 	public void setSmThresholdToYear(String smThresholdToYear) {
 		this.smThresholdToYear = smThresholdToYear;
 	}
-
 	public String getSmFromMonth() {
 		return smFromMonth;
 	}
-
 	public void setSmFromMonth(String smFromMonth) {
 		this.smFromMonth = smFromMonth;
 	}
-
 	public String getSmToMonth() {
 		return smToMonth;
 	}
-
 	public void setSmToMonth(String smToMonth) {
 		this.smToMonth = smToMonth;
 	}
-
 	public boolean isReportCategoryView() {
 		return reportCategoryView;
 	}
-
 	public void setReportCategoryView(boolean reportCategoryView) {
 		this.reportCategoryView = reportCategoryView;
 	}
-
 	public String getMinistryName() {
 		return ministryName;
 	}
-
 	public void setMinistryName(String ministryName) {
 		this.ministryName = ministryName;
 	}
-
 	public String getSmPaymentMethod() {
 		return smPaymentMethod;
 	}
-
 	public void setSmPaymentMethod(String smPaymentMethod) {
 		this.smPaymentMethod = smPaymentMethod;
 	}
-
 	public String getSmProcessingType() {
 		return smProcessingType;
 	}
-
 	public void setSmProcessingType(String smProcessingType) {
 		this.smProcessingType = smProcessingType;
 	}
-
 	public String getSmReceiptNo() {
 		return smReceiptNo;
 	}
-
 	public void setSmReceiptNo(String smReceiptNo) {
 		this.smReceiptNo = smReceiptNo;
 	}
-
 	public String getSmProcessingOfficerName() {
 		return smProcessingOfficerName;
 	}
-
 	public void setSmProcessingOfficerName(String smProcessingOfficerName) {
 		this.smProcessingOfficerName = smProcessingOfficerName;
 	}
-
 	public String getSmIdentificationType() {
 		return smIdentificationType;
 	}
-
 	public void setSmIdentificationType(String smIdentificationType) {
 		this.smIdentificationType = smIdentificationType;
 	}
-
 	public String getSmIdentificationNumber() {
 		return smIdentificationNumber;
 	}
-
 	public void setSmIdentificationNumber(String smIdentificationNumber) {
 		this.smIdentificationNumber = smIdentificationNumber;
 	}
-
 	public String getSmCancellationBy() {
 		return smCancellationBy;
 	}
-
 	public void setSmCancellationBy(String smCancellationBy) {
 		this.smCancellationBy = smCancellationBy;
 	}
-
 	public String getSmPersonnelRole() {
 		return smPersonnelRole;
 	}
-
 	public void setSmPersonnelRole(String smPersonnelRole) {
 		this.smPersonnelRole = smPersonnelRole;
 	}
-
 	public String getSmMofRegNoFrom() {
 		return smMofRegNoFrom;
 	}
-
 	public void setSmMofRegNoFrom(String smMofRegNoFrom) {
 		this.smMofRegNoFrom = smMofRegNoFrom;
 	}
-
 	public String getSmMofRegNoTo() {
 		return smMofRegNoTo;
 	}
-
 	public void setSmMofRegNoTo(String smMofRegNoTo) {
 		this.smMofRegNoTo = smMofRegNoTo;
 	}
-
 	public String getSmPaidUpCapitalFrm() {
 		return smPaidUpCapitalFrm;
 	}
-
 	public void setSmPaidUpCapitalFrm(String smPaidUpCapitalFrm) {
 		this.smPaidUpCapitalFrm = smPaidUpCapitalFrm;
 	}
@@ -6272,6 +6230,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 				|| ((this.getFlMtoContract() != null) && (this.getFlMtoContract() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlInvoiceNo() != null) && (this.getFlInvoiceNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlSupplierInvoiceNo() != null) && (this.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getFlPaymentAdviceNo() != null) && (this.getFlPaymentAdviceNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlDeductionType() != null) && (this.getFlDeductionType() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlCrNo() != null) && (this.getFlCrNo() != ReportConst.EMPTY_VAL))
 				|| ((this.getFlApproverName() != null) && (this.getFlApproverName() != ReportConst.EMPTY_VAL))
@@ -6372,6 +6331,12 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					&& (this.getFlSupplierInvoiceNo() != ReportConst.EMPTY_VAL)) {
 				rptGenBean.setFlSupplierInvoiceNoVar(ReportConst.FL_AMP_SUPPL_INV_NO_EQ
 						+ this.getFlSupplierInvoiceNo());
+			}
+			
+			if ((this.getFlPaymentAdviceNo() != null)
+					&& (this.getFlPaymentAdviceNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setFlPaymentAdviceNoVar(ReportConst.FL_AMP_PAYMENT_ADV_NO_EQ
+						+ this.getFlPaymentAdviceNo());
 			}
 			if ((this.getFlDeductionType() != null)
 					&& (this.getFlDeductionType() != ReportConst.EMPTY_VAL)) {
@@ -6598,6 +6563,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 						+ rptGenBean.getMtoContractTotVar()
 						+ rptGenBean.getInvoiceNoTotVar()
 						+ rptGenBean.getFlSupplierInvoiceNoVar()
+						+ rptGenBean.getFlPaymentAdviceNoVar()
 						+ rptGenBean.getDeductionTypeTotVar()
 						+ rptGenBean.getCrNoTotVar()
 						+ rptGenBean.getApproverNameTotVar()
@@ -6882,6 +6848,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setFlStopInstructionNo(null);
 		this.setFlInvoiceNo(null);
 		this.setFlSupplierInvoiceNo(null);
+		this.setFlPaymentAdviceNo(null);
 		this.setFlDeliveryOrderNo(null);
 		this.setFlSupplierDeliveryOrderNo(null);
 		this.setFlItemCode(null);
