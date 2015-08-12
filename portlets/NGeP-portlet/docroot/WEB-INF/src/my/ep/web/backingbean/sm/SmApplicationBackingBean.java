@@ -2437,6 +2437,10 @@ public class SmApplicationBackingBean extends
 	 * information dialog
 	 */
 	public void assignCancelBranchBean() {
+		if (getManagedBean().getSelectedBranch() != null
+				&& getManagedBean().getSelectedBranch().getGst() != null) {
+			getManagedBean().getSelectedBranch().setGst(null);
+		}
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().reset(":form:tt:banchDialog");
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
