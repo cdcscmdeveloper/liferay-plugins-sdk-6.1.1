@@ -5560,9 +5560,8 @@ public class SmApplicationUtil {
 		if (gst == null) {
 			gst = new SmGstSupplier();
 		}
-		if (gst != null
-				&& (gst.getSmGstSupplierDocs() == null || gst
-						.getSmGstSupplierDocs().isEmpty())) {
+		if (gst.getSmGstSupplierDocs() == null
+				|| gst.getSmGstSupplierDocs().isEmpty()) {
 			gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
 			SmGstSupplierDoc suppDoc = null;
 			for (PmDocument doc : suppDocList) {
