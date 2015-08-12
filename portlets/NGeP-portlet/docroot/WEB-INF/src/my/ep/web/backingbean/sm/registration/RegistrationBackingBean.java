@@ -227,11 +227,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		//Validate GST No
 		//validateGstRegNo();
 		
-		if(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
-				StringUtils.isBlank(this.getManagedBean().getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
-			this.getManagedBean().getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
-		}
-		
 		if(this.getManagedBean().getSmSupp().getSmSupplierBusinesses().size() < 1){
 			throw new EpException(MessageConst.ERROR_721011);
 
@@ -588,12 +583,6 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
-		
-		//set GST date to null if gst no is null
-		if(smSupp.getSmAppl().getSmCompanyBasic().getGstRegistrationNo() == null || 
-				StringUtils.isBlank(smSupp.getSmAppl().getSmCompanyBasic().getGstRegistrationNo())){
-			smSupp.getSmAppl().getSmCompanyBasic().setGstRegistrationDate(null);
-		}
 		
 		if(this.getManagedBean().getSmSupp().getBusinessType().equals(SupplierManagementConst.INDIVIDUAL_FLAG)){
 			smSupp.getSmAppl().getSmCompanyBasic().getSmCompanyAddresses().get(0).setSmAddress(this.getManagedBean().getSmPermenantAdd());
@@ -1254,7 +1243,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 			setDisableCompanyNameBusinessTypeInMaintenance();
 			
 			//retrieve Supplier GST Info
-			SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(resDTO.getSmSupp().getSupplierId(), null, null);
+			SmGstSupplier gstSupp = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(resDTO.getSmSupp().getSupplierId(), null, null,true);
 			getManagedBean().setSmGstSupplier(gstSupp);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
