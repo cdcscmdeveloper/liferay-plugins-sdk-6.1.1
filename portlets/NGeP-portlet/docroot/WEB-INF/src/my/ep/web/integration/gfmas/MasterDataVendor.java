@@ -11,7 +11,7 @@ public class MasterDataVendor {
 
 	private String sapVendorCode; // for apove file
 
-	private CompanyBranch companyBranch; // for apove file
+	private CompanyBranch companyBranch = new CompanyBranch(); // for apove file
 
 	private List<CompanyBranch> companyBranchs;
 

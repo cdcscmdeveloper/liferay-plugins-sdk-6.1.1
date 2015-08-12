@@ -24,10 +24,9 @@ public class SFTPUtility {
 	
 	private static Logger log = BatchLogger.getLogger(SFTPUtility.class);
 
-	String hostName = IntegrationConstants.SFTP_HOST.trim();
-	String username = IntegrationConstants.SFTP_USER.trim();
-	String password = IntegrationConstants.SFTP_PASS.trim();
-
+	static String hostName = IntegrationConstants.SFTP_HOST.trim();
+	static String username = IntegrationConstants.SFTP_USER.trim();
+	static String password = IntegrationConstants.SFTP_PASS.trim();
 	
 	 /* public static void main(String[] args) {
 		   String remoteFilePath = "/batch/1GFMAS/IN/1000GLGLC40000120150609001.GPG"; 
@@ -85,7 +84,6 @@ public class SFTPUtility {
 			// Copy local file to sftp server
 			remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);
 
-			log.info("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
 		} catch (Exception e) {
 			System.out.println("Error Uploading file to SOA");
 			// Create Record in PmInterfaceLog
@@ -105,8 +103,10 @@ public class SFTPUtility {
 
 	public void upload(BatchReqDTO reqDTO) {
 		log.info("inside file upload...");
+		FileUtility fileUtility = new FileUtility();
 
 		File file = new File(reqDTO.getLocatFilePath());
+		
 		if (!file.exists())
 			throw new RuntimeException("Error. Local file not found");
 
@@ -129,19 +129,20 @@ public class SFTPUtility {
 
 			// Copy local file to sftp server
 			remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);
+			
+			//if FTP success
+			reqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+			reqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
+			fileUtility.setValuesToPmInterface(reqDTO);
 
-			log.info("File upload success "+"[ hostName :"+hostName+" username :"+username+" password :"+password+" ]");
 		} catch (Exception e) {
 			System.out.println("Error Uploading file to SOA");
-			// Create Record in PmInterfaceLog
 			
-				/*FileUtility fileUtility = new FileUtility();
-				fileUtility.setValuesToPmInterface(
-						IntegrationConstants.BATCH_DIRECTION_OUTBOUND, reqDTO.getDataStartTime(), reqDTO.getDataEndTime(),
-						IntegrationConstants.FILE_CREATION_SUCCESS,
-						IntegrationConstants.FTP_STATUS_FAIL,
-						IntegrationConstants.TARGET_SYSTEM_1GFMAS,
-						reqDTO.getServiceCode(), reqDTO.getProcessId(), reqDTO.getFileName());*/
+			// if FTP fail
+			
+				reqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+				reqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_FAIL);
+				fileUtility.setValuesToPmInterface(reqDTO);
 			throw new RuntimeException(e);
 		} finally {
 			manager.close();

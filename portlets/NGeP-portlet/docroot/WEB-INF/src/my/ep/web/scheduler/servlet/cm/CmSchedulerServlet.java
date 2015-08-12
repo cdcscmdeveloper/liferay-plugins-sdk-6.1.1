@@ -8,6 +8,7 @@ import my.ep.util.EpPropertiesUtils;
 import my.ep.web.integration.common.BatchLogger;
 import my.ep.web.scheduler.constants.cm.CmSchedulerConstants;
 import my.ep.web.scheduler.helper.EpSchedulerHelper;
+import my.ep.web.scheduler.job.phis.PhisBatchCmOutboundJob;
 import my.ep.web.scheduler.job.phis.PhisBatchPmOutboundJob;
 
 import org.apache.log4j.Logger;
@@ -31,7 +32,7 @@ public class CmSchedulerServlet extends HttpServlet {
 						CmSchedulerConstants.PHIS_SM_OUTBOUND_CONTINUOUS_JOB,
 						CmSchedulerConstants.PHIS_SM_OUTBOUND_JOB_GROUP),
 						PhisBatchSmOutboundJob.class, CmSchedulerConstants.PHIS_SM_CONTINUOUS_JOB_DESC,
-						EpPropertiesUtils.getInstance().getProperty("phis.sm.outbound")); 
+						EpPropertiesUtils.getInstance().getProperty("phis.sm.outbound"));  */
 				//PHIS CM Out bound Continuous job
 				EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.PHIS_CM_OUTBOUND_CONTINUOUS_JOB,
@@ -39,7 +40,7 @@ public class CmSchedulerServlet extends HttpServlet {
 						PhisBatchCmOutboundJob.class, CmSchedulerConstants.PHIS_CM_CONTINUOUS_JOB_DESC,
 						EpPropertiesUtils.getInstance().getProperty("phis.cm.outbound"));
 				//GFMAS PM IN bound Continuous job				
-				EpSchedulerHelper.scheduleJob(new JobKey(
+			/*	EpSchedulerHelper.scheduleJob(new JobKey(
 						CmSchedulerConstants.GFMAS_FL_IN_CONTINUOUS_JOB,
 						CmSchedulerConstants.GFMAS_FL_IN_JOB_GROUP),
 						GfmasBatchFlInboundJob.class, CmSchedulerConstants.GFMAS_FL_CONTINUOUS_JOB_DESC,
