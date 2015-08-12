@@ -338,9 +338,12 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 				this.getManagedBean().getPmEduField().getFieldCode()};
 
 		PmEduField olEduField=this.getManagedBean().getOldPmEduField();
+		
 		PmEduField eduField = this.getManagedBean().getPmEduField();
+		
 		validationMessage(eduField);
 		setUserDetails(eduField);
+		
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		reqDTO.setEduField(eduField);
 		reqDTO.setBrandNew(eduField.isBrandNew());
@@ -368,31 +371,30 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 			}
 
 			if(eduField.isBrandNew()){
-				messageId = MessageConst.TD_81000;
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),eduField.getFieldCode(),getPmActionDesc(messageId,msgParam)));
+				messageId = MessageConst.TD_81000;				
 			}
 			else 
 			{
 				messageId= MessageConst.TD_81001;
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),eduField.getFieldCode(),getPmActionDesc(messageId,msgParam)));
 			}
 			if(olEduField!=null && eduField!=null 
 					&& !olEduField.getRecordStatusFlg().equals(eduField.getRecordStatusFlg())){
 				if(eduField.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 					recordStatusMessageId = MessageConst.TD_81002;						
-					reqDTO.setTrackingStatus(true);
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),eduField.getFieldCode(),getPmActionDesc(recordStatusMessageId,msgParam)));
-				}
+					}
 				else{
-					recordStatusMessageId = MessageConst.TD_81003;					
-					reqDTO.setTrackingStatus(true);
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),
-							eduField.getFieldCode(),
-							getPmActionDesc(recordStatusMessageId,msgParam)));
-				}				
-			}
+					recordStatusMessageId = MessageConst.TD_81003;
+				}	
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),
+						eduField.getFieldCode(),
+						getPmActionDesc(recordStatusMessageId,msgParam)));
+			}			
+			reqDTO.setTrackingStatus(true);
+			
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),
+					eduField.getFieldCode(),getPmActionDesc(messageId,msgParam)));		
+			
+			
 			EducationFieldResDTO resDTO = iEducationfieldSO
 					.saveOrUpdateEduFieldDtls(reqDTO);
 			this.getManagedBean().setPmEduField(resDTO.getEduField());
