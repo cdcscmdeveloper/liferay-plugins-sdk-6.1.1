@@ -22,6 +22,9 @@ public class BatchReqDTO<T> implements Serializable {
 	private String targetSystem;
 	private String remoteFilePath;
 	private String locatFilePath;
+	private int fileCreationStatus;
+	private int fileFTPStatus;
+	private String batchDirection;
 
 	public List<T> getBatchContent() {
 		return batchContent;
@@ -109,6 +112,30 @@ public class BatchReqDTO<T> implements Serializable {
 
 	public void setLocatFilePath(String locatFilePath) {
 		this.locatFilePath = locatFilePath;
+	}
+
+	public int getFileCreationStatus() {
+		return fileCreationStatus;
+	}
+
+	public void setFileCreationStatus(int fileCreationStatus) {
+		this.fileCreationStatus = fileCreationStatus;
+	}
+
+	public int getFileFTPStatus() {
+		return fileFTPStatus;
+	}
+
+	public void setFileFTPStatus(int fileFTPStatus) {
+		this.fileFTPStatus = fileFTPStatus;
+	}
+
+	public String getBatchDirection() {
+		return batchDirection;
+	}
+
+	public void setBatchDirection(String batchDirection) {
+		this.batchDirection = batchDirection;
 	}
 
 }
