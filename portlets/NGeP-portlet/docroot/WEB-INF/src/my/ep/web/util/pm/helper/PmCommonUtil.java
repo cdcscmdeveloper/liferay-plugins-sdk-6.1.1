@@ -1334,6 +1334,38 @@ public class PmCommonUtil {
 		return trckVO;
 	}	
 	
+public static PmTrackingDairyVO assignTrackingDairyForUOM(Long eduFiledId,String eduFieldCode,String actionDesc) {
+		
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());       
+        trckVO.setDocId(eduFiledId);
+        trckVO.setDocNo(eduFieldCode);
+        trckVO.setDocType(ParameterConst.UOM_PARAM_CODE);
+        trckVO.setStatus(null);	
+        trckVO.setGroupId(null);					
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
+	
+public static PmTrackingDairyVO assignTrackingDairyForProfessional(Long eduFiledId,String eduFieldCode,String actionDesc) {
+	
+	PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+	PmUser user = new FacesScopes().getUserSessionBean();
+	trckVO.setActionDesc(actionDesc);
+	trckVO.setActionedBy(user != null ? user.getUserId() : null);
+	trckVO.setActionedByRole(getUserRoleValue());       
+    trckVO.setDocId(eduFiledId);
+    trckVO.setDocNo(eduFieldCode);
+    trckVO.setDocType(ParameterConst.PROFESSIONAL_CERT_BODY);
+    trckVO.setStatus(null);	
+    trckVO.setGroupId(null);					
+	trckVO.setGroupDocType(null);
+	return trckVO;
+}
+
 	public static String getUserRoleValue() {		
 		FacesScopes sc = new FacesScopes();
 		if (sc.hasRoleUser(RoleCode.EP_ADMIN.value())) {
