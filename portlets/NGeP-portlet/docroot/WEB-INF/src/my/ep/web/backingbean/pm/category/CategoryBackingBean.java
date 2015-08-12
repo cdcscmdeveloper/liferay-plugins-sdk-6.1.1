@@ -36,6 +36,7 @@ import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
@@ -852,43 +853,34 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			String messageId="";
 			String recordStatusMessageId="";
 
-			if(this.getManagedBean().isNewCategory()){				
-
-				messageId = MessageConst.TD_80700;
-				reqDTO.setTrackingStatus(true);
+			if(this.getManagedBean().isNewCategory()){
+				messageId = MessageConst.TD_80700;				
 				reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL1(this.getManagedBean().getPmCategoryL1().getCategoryL1Id(),
-						this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
-						getPmActionDesc(messageId,msgParam),null,null));
-
 			}
-			else /*if(oldPmCategoryL1!=null && newPmCategoryL1!=null && !oldPmCategoryL1.getCategoryName().equals(newPmCategoryL1.getCategoryName())){*/
-				{
+			else 
+			{
 				messageId= MessageConst.TD_80701;
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL1(this.getManagedBean().getPmCategoryL1().getCategoryL1Id(),
-						this.getManagedBean().getPmCategoryL1().getCategoryL1Code(), 
-						getPmActionDesc(messageId,msgParam),null,null));
-			}
 
-			if(oldPmCategoryL1!=null && newPmCategoryL1!=null 
-					&& !oldPmCategoryL1.getRecordStatusFlg().equals(newPmCategoryL1.getRecordStatusFlg())){
+				if(oldPmCategoryL1!=null && newPmCategoryL1!=null 
+						&& !oldPmCategoryL1.getRecordStatusFlg().equals(newPmCategoryL1.getRecordStatusFlg())){
+					if(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						recordStatusMessageId = MessageConst.TD_80703;						
 
-				if(this.getManagedBean().getPmCategoryL1().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					recordStatusMessageId = MessageConst.TD_80703;						
-					reqDTO.setTrackingStatus(true);
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL1(this.getManagedBean().getPmCategoryL1().getCategoryL1Id(),
-							this.getManagedBean().getPmCategoryL1().getCategoryL1Code(), 
-							getPmActionDesc(recordStatusMessageId,msgParam),null,null));
-				}
-				else{
-					recordStatusMessageId = MessageConst.TD_80702;					
-					reqDTO.setTrackingStatus(true);
+					}
+					else{
+						recordStatusMessageId = MessageConst.TD_80702;	
+					}					
 					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL1(this.getManagedBean().getPmCategoryL1().getCategoryL1Id(),
 							this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
 							getPmActionDesc(recordStatusMessageId,msgParam),null,null));
-				}				
+				}
 			}
+			reqDTO.setTrackingStatus(true);
+
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL1(this.getManagedBean().getPmCategoryL1().getCategoryL1Id(),
+					this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
+					getPmActionDesc(messageId,msgParam),null,null));
+
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveCategory(reqDTO);			
 			PmCategoryL1 oldCategoryL1 = (PmCategoryL1)BeanUtils.cloneBean(resDTO.getCategoryL1());
 			this.getManagedBean().setOldCategoryL1(oldCategoryL1);
@@ -1026,49 +1018,33 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 			if(this.getManagedBean().isNewCategory()){				
 
-				messageId = MessageConst.TD_80704;				
-
-				reqDTO.setTrackingStatus(true);
-
+				messageId = MessageConst.TD_80704;
 				reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
-
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-						this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
-						this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id(), 
-						getPmActionDesc(messageId,msgParam),null,null,"MBC"));
-
-			}
-			/*else if(oldPmCategoryL2!=null && newPmCategoryL2!=null && !oldPmCategoryL2.getCategoryName().equals(newPmCategoryL2.getCategoryName())){*/	
+			}				
 			else{
-				messageId= MessageConst.TD_80705;
-				reqDTO.setTrackingStatus(true);
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-						this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
-						this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id(), 
-						getPmActionDesc(messageId,msgParam),null,null,"MBC"));
-			}
-
-			if(oldPmCategoryL2!=null && newPmCategoryL2!=null && !oldPmCategoryL2.getRecordStatusFlg().equals(newPmCategoryL2.getRecordStatusFlg())){
-
+				messageId= MessageConst.TD_80705;				
+			
+			if(oldPmCategoryL2!=null && newPmCategoryL2!=null && 
+					!oldPmCategoryL2.getRecordStatusFlg().equals(newPmCategoryL2.getRecordStatusFlg())){
 				if(this.getManagedBean().getPmCategoryL2().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					recordStatusMessageId = MessageConst.TD_80706;						
-					reqDTO.setTrackingStatus(true);
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-							this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
-							this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id(), 
-							getPmActionDesc(recordStatusMessageId,msgParam),null,null,"MBC"));
+					recordStatusMessageId = MessageConst.TD_80706;
 				}
 				else{
-					recordStatusMessageId = MessageConst.TD_80707;					
-					reqDTO.setTrackingStatus(true);
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-							this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
-							this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id(), 
-							getPmActionDesc(recordStatusMessageId,msgParam),null,null,"MBC"));
-				}				
+					recordStatusMessageId = MessageConst.TD_80707;
+				}					
+				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+						this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
+						this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id(), 
+						getPmActionDesc(recordStatusMessageId,msgParam),null,null,ParameterConst.MAIN_CATEGORY_PARAM_CODE));
 			}
-
-
+	    }
+			reqDTO.setTrackingStatus(true);
+			
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+					this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
+					this.getManagedBean().getPmCategoryL2().getPmCategoryL1().getCategoryL1Id(), 
+					getPmActionDesc(messageId,msgParam),null,null,ParameterConst.MAIN_CATEGORY_PARAM_CODE));			
+			
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubCategory(reqDTO);			
 			preLoadPmCategoryl2(this.getManagedBean().getPmCategoryL2().getCategoryL2Id());
 			PmCategoryL2 oldCategoryL2 = (PmCategoryL2)BeanUtils.cloneBean(resDTO.getCategoryL2());
@@ -1144,7 +1120,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * @return the string
 	 */
 	public String saveSubDivision() {
-		
+
 		ICategoryCodeSO categoryCodeSO;
 		IParameterSO parameterSO;
 		PmCategoryL3 oldPmCategoryL3=this.getManagedBean().getOldCategoryL3();
@@ -1153,7 +1129,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		String recordStatusMessageId="";		
 		/*Integer oldVal=(oldPmCategoryL3.isByCompType()==true?1:0);
 		Integer newVal=(newPmCategoryL3.isByCompType()==true?1:0);*/
-		
+
 		/*if(oldPmCategoryL3!=null && newPmCategoryL3!=null 
 				&& oldPmCategoryL3.getCategoryName().equals(newPmCategoryL3.getCategoryName())
 				&& oldPmCategoryL3.getBumiPercentage().equals(newPmCategoryL3.getBumiPercentage())
@@ -1164,7 +1140,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				&& oldPmCategoryL3.getHomeOperated().equals(newPmCategoryL3.getHomeOperated())
 				&& oldVal.equals(newVal) 
 				&& (oldPmCategoryL3.getRecordStatusFlg().equals(newPmCategoryL3.getRecordStatusFlg()))){
-			
+
 			throw new EpException(MessageConst.ERROR_775007);	
 		}*/
 		try{
@@ -1245,68 +1221,50 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			reqDTO.setCategoryLevel(this.getManagedBean().getCatLevel());
 			reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
-			
+
 			PmCategoryL3 pmCategoryL3=this.getManagedBean().getPmCategoryL3();	
-			
+
 			String[] msgParam = new String[] {
 					pmCategoryL3.getCategoryL3Code(),this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
 					this.getManagedBean().getPmCategoryL2().getCategoryL2Code()};			
-		
+
 			if(this.getManagedBean().isNewCategory()){				
 
-				messageId = MessageConst.TD_80708;
-				reqDTO.setTrackingStatus(true);
-				reqDTO.setNewCategory(this.getManagedBean().isNewCategory());				
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL3(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-						this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),getPmActionDesc(messageId,msgParam),null,"SBC"));
-
+				messageId = MessageConst.TD_80708;				
+				reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
 			}
-			else{				
-				/*if(oldPmCategoryL3!=null && newPmCategoryL3!=null 
-					&& (!oldPmCategoryL3.getCategoryName().equals(newPmCategoryL3.getCategoryName())
-					|| !oldPmCategoryL3.getBumiPercentage().equals(newPmCategoryL3.getBumiPercentage())
-					|| !oldPmCategoryL3.getSupplierTypeCode().getParameterId().equals(newPmCategoryL3.getSupplierTypeCode().getParameterId())
-					|| !oldPmCategoryL3.getPaidUpCapital().equals(newPmCategoryL3.getPaidUpCapital())
-					|| !oldPmCategoryL3.getCategoryTypeCode().getParameterId().equals(newPmCategoryL3.getCategoryTypeCode().getParameterId())
-					|| !oldPmCategoryL3.getBasicCategoryReq().equals(newPmCategoryL3.getBasicCategoryReq())
-					|| !oldPmCategoryL3.getHomeOperated().equals(newPmCategoryL3.getHomeOperated())
-					|| !oldVal.equals(newVal)))*/			
+			else{
+				messageId= MessageConst.TD_80709;							
 
-				messageId= MessageConst.TD_80709;
-				reqDTO.setTrackingStatus(true);				
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL3(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-						this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),getPmActionDesc(messageId,msgParam),null,"SBC"));
-			}
+				if(oldPmCategoryL3!=null && newPmCategoryL3!=null 
+						&& !oldPmCategoryL3.getRecordStatusFlg().equals(newPmCategoryL3.getRecordStatusFlg())){
 
-			if(oldPmCategoryL3!=null && newPmCategoryL3!=null 
-					&& !oldPmCategoryL3.getRecordStatusFlg().equals(newPmCategoryL3.getRecordStatusFlg())){
+					if(this.getManagedBean().getPmCategoryL3().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
 
-				if(this.getManagedBean().getPmCategoryL3().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						recordStatusMessageId = MessageConst.TD_80711;
+					}
+					if(this.getManagedBean().getPmCategoryL3().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
 
-					recordStatusMessageId = MessageConst.TD_80711;						
-					reqDTO.setTrackingStatus(true);					
+						recordStatusMessageId = MessageConst.TD_80710; 	 
+					}					
 					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL3(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
 							this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
 							this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-							getPmActionDesc(recordStatusMessageId,msgParam),null,"SBC"));
-				}
-				if(this.getManagedBean().getPmCategoryL3().getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_SUSPENDED)){
-					
-					recordStatusMessageId = MessageConst.TD_80710;					
-					reqDTO.setTrackingStatus(true);
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL3(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-							this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-							this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-							getPmActionDesc(recordStatusMessageId,msgParam),null,"SBC"));
-				}				
-			}			
-			
+							getPmActionDesc(recordStatusMessageId,msgParam),null,ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE));					
+				 }
+			}
+			reqDTO.setTrackingStatus(true);						
+
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmCategoryL3(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+					this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+					getPmActionDesc(messageId,msgParam),null,ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE));			
+
 			getAllCategoryDetails(reqDTO);
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3)BeanUtils.cloneBean(resDTO.getCategoryL3());
 			this.getManagedBean().setOldCategoryL3(oldCategoryL3);
-			
+
 			if (resDTO.isSuccessful()) {
 				reset();
 				if (this.getManagedBean().isNewCategory()){
@@ -1388,37 +1346,38 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
 								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
 								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(delrecordStatusBasicMessageId,commonMsgParam),null,"SBC"));
+								getPmActionDesc(delrecordStatusBasicMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
 					}
 				}
 				this.getManagedBean().getDeletedPmBasicCategoryList().clear();
 			}
-			if(!this.getManagedBean().isNewCategory()){
-				for(PmBasicCategory pmBasicCategory:this.getManagedBean().getBasicCategoryList()){
-					if(pmBasicCategory.isBrandNew()){						
-						addrecordStatusBasicMessageId = MessageConst.TD_80716;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(addrecordStatusBasicMessageId,commonMsgParam),null,"SBC"));
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getBasicCategoryList())){
+				if(!this.getManagedBean().isNewCategory()){
+					for(PmBasicCategory pmBasicCategory:this.getManagedBean().getBasicCategoryList()){
+						if(pmBasicCategory.isBrandNew()){						
+							addrecordStatusBasicMessageId = MessageConst.TD_80716;
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+									getPmActionDesc(addrecordStatusBasicMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
+						}
 					}
 				}
-			}
-			else{
-				for(PmBasicCategory pmBasicCategory:this.getManagedBean().getBasicCategoryList()){
-					if(pmBasicCategory.isBrandNew()){						
-						addrecordStatusBasicMessageId = MessageConst.TD_80716;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(addrecordStatusBasicMessageId,commonMsgParam),null,"SBC"));
+				else{
+					for(PmBasicCategory pmBasicCategory:this.getManagedBean().getBasicCategoryList()){
+						if(pmBasicCategory.isBrandNew()){						
+							addrecordStatusBasicMessageId = MessageConst.TD_80716;
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+									getPmActionDesc(addrecordStatusBasicMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
+						}
 					}
 				}
 			}
 		}
-
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList()) 
 				|| CollectionUtils.isEmpty(this.getManagedBean().getPmMachineCategoryList())){
 			if( CollectionUtils.isNotEmpty(this.getManagedBean().getDeletedPmMachineCategoryList())){
@@ -1429,36 +1388,37 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
 								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
 								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(delrecordStatusMachineMessageId,commonMsgParam),null,"SBC"));
+								getPmActionDesc(delrecordStatusMachineMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
 					}
 				}
 				this.getManagedBean().getDeletedPmMachineCategoryList().clear();
 			}
-			if(!this.getManagedBean().isNewCategory()){
-				for(PmMachineCategory deleMachine:this.getManagedBean().getPmMachineCategoryList()){
-					if(deleMachine.isBrandNew()){						
-						addrecordStatusMachineMessageId = MessageConst.TD_80714;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(addrecordStatusMachineMessageId,commonMsgParam),null,"SBC"));
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getPmMachineCategoryList())){
+				if(!this.getManagedBean().isNewCategory()){
+					for(PmMachineCategory deleMachine:this.getManagedBean().getPmMachineCategoryList()){
+						if(deleMachine.isBrandNew()){						
+							addrecordStatusMachineMessageId = MessageConst.TD_80714;
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+									getPmActionDesc(addrecordStatusMachineMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
+						}
 					}
 				}
-			}
-			else{
-				for(PmMachineCategory deleMachine:this.getManagedBean().getPmMachineCategoryList()){
-					if(deleMachine.isBrandNew()){						
-						addrecordStatusMachineMessageId = MessageConst.TD_80714;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(addrecordStatusMachineMessageId,commonMsgParam),null,"SBC"));
+				else{
+					for(PmMachineCategory deleMachine:this.getManagedBean().getPmMachineCategoryList()){
+						if(deleMachine.isBrandNew()){						
+							addrecordStatusMachineMessageId = MessageConst.TD_80714;
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+									getPmActionDesc(addrecordStatusMachineMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
+						}
 					}
 				}
-			}
-		}	
+			}	}	
 
 		if(CollectionUtils.isNotEmpty(this.getManagedBean().getCategoryRestrList()) 
 				|| CollectionUtils.isEmpty(this.getManagedBean().getCategoryRestrList())){
@@ -1471,39 +1431,40 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
 								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
 								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(delrecordStatusCatRestrMessageId,commonMsgParam),null,"SBC"));
+								getPmActionDesc(delrecordStatusCatRestrMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
 					}
 				}
 				this.getManagedBean().getDeletedPmPmCategoryRestrList().clear();
 			}
-			if(!this.getManagedBean().isNewCategory()){
-				for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getCategoryRestrList()){
-					if(pmCategoryRestr.isBrandNew()){						
-						addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(addrecordStatusCatRestrMessageId,commonMsgParam),null,"SBC"));
+			if(CollectionUtils.isNotEmpty(this.getManagedBean().getCategoryRestrList())){
+				if(!this.getManagedBean().isNewCategory()){
+					for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getCategoryRestrList()){
+						if(pmCategoryRestr.isBrandNew()){						
+							addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+									getPmActionDesc(addrecordStatusCatRestrMessageId,commonMsgParam),null,"ParameterConst.SUB_CATEGORY_PARAM_CODE"));
+						}
 					}
 				}
-			}
-			else{
-				for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getCategoryRestrList()){
-					if(pmCategoryRestr.isBrandNew()){						
-						addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
-								this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
-								this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
-								getPmActionDesc(addrecordStatusCatRestrMessageId,commonMsgParam),null,"SBC"));
+				else{
+					for(PmCategoryRestr pmCategoryRestr:this.getManagedBean().getCategoryRestrList()){
+						if(pmCategoryRestr.isBrandNew()){						
+							addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
+							reqDTO.setTrackingStatus(true);
+							reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForPmBasicCategory(this.getManagedBean().getPmCategoryL3().getCategoryL3Id(),
+									this.getManagedBean().getPmCategoryL2().getCategoryL2Id(),
+									this.getManagedBean().getPmCategoryL3().getCategoryL3Code(),
+									getPmActionDesc(addrecordStatusCatRestrMessageId,commonMsgParam),null,ParameterConst.SUB_CATEGORY_PARAM_CODE));
+						}
 					}
 				}
 			}
 		}	
 
 	}
-	
 	/**
 	 * Delete basic category.
 	 */
