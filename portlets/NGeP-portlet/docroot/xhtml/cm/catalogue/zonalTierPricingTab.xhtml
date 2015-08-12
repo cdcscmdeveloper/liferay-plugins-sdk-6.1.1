@@ -61,6 +61,7 @@
 					<p:ajax event="change"
 						listener="#{catalogueBackingBean.updateZonalTierToQty(rowIndex)}"
 						update="@(.fromQty)" />
+					<p:ajax event="keyup" update="zTErrorLink," />
 				</p:inputText>
 			</p:column>
 			<p:column>
