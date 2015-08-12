@@ -5497,62 +5497,79 @@ public class SmApplicationUtil {
 	}
 
 	public static SmGstSupplier initHqGstInformation(SmAppl appl,
-			Long supplierId, SmGstSupplier gst) {
+			SmGstSupplier gst) {
 		SmGstSupplier gstCurrent = SmCommonUtil
-				.getSmGstSupplierBySupplierIdAndBranchCode(supplierId, null,
-						null, true);
-		if (appl.isActiveAppl()) {
-			gst = gstCurrent;
-			if (gst == null) {
-				gst = new SmGstSupplier();
-				if (gstCurrent != null) {
-					gst.setGstRegNo(gstCurrent.getGstRegNo());
-					gst.setGstEffDate(gstCurrent.getGstEffDate());
-					gst.setGstEndDate(gstCurrent.getGstEndDate());
-				}
-			}
+				.getSmGstSupplierBySupplierIdAndBranchCode(appl.getSmSupplier()
+						.getSupplierId(), null, null, true);
+		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+		gstReqDTO.setBranchCode(null);
+		gstReqDTO.setApplNo(appl.getApplNo());
+		SmGstSupplier gstByApplNo = SmServiceLookup.getSupplierGstSO()
+				.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
+				.getSmGstSupplier();
+
+		if (gstByApplNo != null) {
+			gst = gstByApplNo;
 		} else {
-			gst = SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
-					supplierId, null, appl.getApplNo(), false);
-			if (gst == null) {
-				gst = new SmGstSupplier();
-				if (gstCurrent != null) {
+			if (gstCurrent != null) {
+				if (gstCurrent.getApplNo().equals(appl.getApplNo())) {
+					gst = gstCurrent;
+				} else {
+					gst = new SmGstSupplier();
 					gst.setGstRegNo(gstCurrent.getGstRegNo());
 					gst.setGstEffDate(gstCurrent.getGstEffDate());
 					gst.setGstEndDate(gstCurrent.getGstEndDate());
 				}
+			} else {
+				gst = new SmGstSupplier();
 			}
 		}
 		initGstSuppDocs(gst);
 		return gst;
 	}
 
-	public static void initBranchGstInformation(SmGstSupplier hqGst,SmAppl appl) {
+	public static void initBranchGstInformation(SmGstSupplier hqGst, SmAppl appl) {
 		SupplierGstReqDTO reqDTO = null;
 		SmGstSupplier brCurr = null;
+		SmGstSupplier brByApplNo = null;
 		List<SmSupplierBranch> branchList = appl.getSmSupplierBranches();
-		if (!isGstEmpty(hqGst) && branchList!=null) {
+		if (!isGstEmpty(hqGst) && branchList != null) {
 			for (SmSupplierBranch br : branchList) {
 				reqDTO = new SupplierGstReqDTO();
 				reqDTO.setApplNo(appl.getApplNo());
 				reqDTO.setBranchCode(br.getBranchCode() == null ? br
 						.getSupplierBranchId() : br.getBranchCode());
-				brCurr = SmServiceLookup.getSupplierGstSO()
+				brByApplNo = SmServiceLookup.getSupplierGstSO()
 						.retrieveGstInfoByApplNoAndBranchCode(reqDTO)
 						.getSmGstSupplier();
-				br.setGst(brCurr);
-				if (br.getGst() != null) {
+				brCurr = SmCommonUtil
+						.getSmGstSupplierBySupplierIdAndBranchCode(appl
+								.getSmSupplier().getSupplierId(), br
+								.getBranchCode() != null ? br.getBranchCode()
+								: br.getSupplierBranchId(), null, true);
+
+				if (brByApplNo != null) {
+					br.setGst(brByApplNo);
 					br.setSameAsHq(SmApplicationUtil.isBranchGstSameAsHq(hqGst,
 							br.getGst()));
-					if (br.getGst().getSmGstSupplierDocs() == null
-							|| br.getGst().getSmGstSupplierDocs().isEmpty()) {
-						SmApplicationUtil.initGstSuppDocs(br.getGst());
-					}
 				} else {
-					br.setGst(new SmGstSupplier());
-					br.setSameAsHq(true);
-					SmCommonUtil.copyHqGstToBranch(hqGst, br.getGst(), true,
-							br.getBranchCode());
+					if (brCurr != null) {
+						if (brCurr.getApplNo().equals(appl.getApplNo())) {
+							br.setGst(brCurr);
+							br.setSameAsHq(SmApplicationUtil
+									.isBranchGstSameAsHq(hqGst, br.getGst()));
+						} else {
+							br.setGst(new SmGstSupplier());
+							br.getGst().setGstRegNo(brCurr.getGstRegNo());
+							br.getGst().setGstEffDate(brCurr.getGstEffDate());
+							br.getGst().setGstEndDate(brCurr.getGstEndDate());
+							br.setSameAsHq(SmApplicationUtil
+									.isBranchGstSameAsHq(hqGst, br.getGst()));
+						}
+					} else {
+						br.setGst(new SmGstSupplier());
+						br.setSameAsHq(true);
+					}
 				}
 			}
 		}
