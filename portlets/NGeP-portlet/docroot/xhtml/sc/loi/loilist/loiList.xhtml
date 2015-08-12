@@ -69,10 +69,17 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:30%">
-                   <h:panelGroup id="loiPrepareButton">
+                   <h:panelGroup id="loiPrepareButton" rendered="#{!isMultipleLoi}">
                           <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
 							partialSubmit="true" process="@form" update="@form"
 							rendered="#{!loiLoa.loiCreated and loiLoa.loiRequired eq true}"
+							actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
+					</h:panelGroup>
+					
+					  <h:panelGroup id="loiPrepareMLI" rendered="#{isMultipleLoi}">
+                          <p:commandButton value="#{lbl['lbl.sc.loiloa.create.loi']}"
+							partialSubmit="true" process="@form" update="@form"
+							rendered="#{!loiLoa.loiCreated and isMultipleLoi}"
 							actionListener="#{lOIDetailBackingBean.createLOI(loiLoa)}" />
 					</h:panelGroup>
 
