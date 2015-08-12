@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -31,6 +32,8 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 	private PmCertBody certBody;
 
 	private boolean islazy = false;
+	
+	private PmCertBody oldPmCertBody;
 
 	/**
 	 * @return the certBodyList
@@ -80,6 +83,20 @@ public class ProfCertifiedBodyManagedBean extends BaseManagedBean {
 
 	public void setIslazy(boolean islazy) {
 		this.islazy = islazy;
+	}
+
+	/**
+	 * @return the oldPmCertBody
+	 */
+	public PmCertBody getOldPmCertBody() {
+		return oldPmCertBody;
+	}
+
+	/**
+	 * @param oldPmCertBody the oldPmCertBody to set
+	 */
+	public void setOldPmCertBody(PmCertBody oldPmCertBody) {
+		this.oldPmCertBody = oldPmCertBody;
 	}
 
 }
