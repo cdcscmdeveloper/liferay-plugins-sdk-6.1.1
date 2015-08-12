@@ -66,7 +66,7 @@ public class SOABatchRetryBackingBean extends
 				logSO = (ISOABatchRetrySO) BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.SOABATCH,
 								ISOABatchRetrySO.class);
-
+				
 				SOABatchRetryReqDTO reqDTO = new SOABatchRetryReqDTO();
 				SOABatchRetryResDTO resDTO = logSO.searchSOABatchRetryList(reqDTO);
 				if (resDTO.isSuccessful()) {
@@ -88,10 +88,10 @@ public class SOABatchRetryBackingBean extends
 
 	public void refreshBatchRetryList() {
 		debugLogger("refreshBatchRetryList");
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Records refreshed.", ""));
+//		FacesContext.getCurrentInstance().addMessage(
+//				null,
+//				new FacesMessage(FacesMessage.SEVERITY_INFO,
+//						"Records refreshed.", ""));
 		resetAndReloadData();
 	}
 
