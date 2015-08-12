@@ -150,12 +150,28 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-			SuppLoiLoaBean suppLoaLoi = null;
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			AwardSupplierResDTO resDTO = null;
 			List<SuppLoiLoaBean> suppLoiLoaList = new ArrayList<>();
+			List<Long> loiLoaList = new ArrayList<Long>();
 			if (getManagedBean().getSelectedLoiLoa() != null) {
 				Long supplierId = getManagedBean().getSelectedLoiLoa().getSmSupplier().getSupplierId();
+
+				for(ScLoiLoa loiLoa : getManagedBean().getSuppLoiLoaMap().get(supplierId)) {
+					loiLoaList.add(loiLoa.getLoiLoaId());
+				}
+				
+				reqDTO.setLoiLoaIds(loiLoaList);
+				resDTO = qtAwardSO.getLoiAndLoaByLoiLoaList(reqDTO);
+				if(!CollectionUtils.isEmpty(resDTO.getScLoas()) ||
+						!CollectionUtils.isEmpty(resDTO.getScLois())) {
+					getManagedBean().setSuppLoiLoaList(
+							prepareLoiLoaList(resDTO.getScLois(), resDTO.getScLoas()));
+				}
+				else {
+					getManagedBean().setSuppLoiLoaList(new ArrayList<SuppLoiLoaBean>());
+				}
+				getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());/*
 				for(ScLoiLoa loiLoa : getManagedBean().getSuppLoiLoaMap().get(supplierId)) {
 					for (ScLoi scLoi : loiLoa.getScLois()) {
 						suppLoaLoi = new SuppLoiLoaBean();
@@ -177,8 +193,7 @@ public class QtLOABackingBean extends SourcingBaseBackingBean<QtLOAManagedBean> 
 						suppLoiLoaList.add(suppLoaLoi);
 					}
 				}
-
-				getManagedBean().setSuppLoiLoaList(suppLoiLoaList);
+*/
 				getLoiLoaListTitle(getManagedBean().getSelectedLoiLoa().getSmSupplier());
 			}
 		} catch (Exception e) {
