@@ -665,8 +665,8 @@ public class NoticeBoardBackingBean extends
 									new FacesScopes().getUserLocale())));
 							
 		}
-		managedBean.setActiveTabIndex(0);
-		managedBean.setSelectedZoneTabIndex(0);
+		//managedBean.setActiveTabIndex(0);
+		//managedBean.setSelectedZoneTabIndex(0);
 		managedBean.setBriefingDtls(null);
 		
 		return "/xhtml/sc/noticeboard/nbsupplierreg.xhtml";
