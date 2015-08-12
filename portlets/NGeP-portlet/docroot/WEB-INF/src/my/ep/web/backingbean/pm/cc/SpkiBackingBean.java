@@ -2,6 +2,7 @@ package my.ep.web.backingbean.pm.cc;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -41,7 +42,10 @@ import com.augtech.kmc.client.KMCRequestBuilder;
  */
 @ManagedBean(name = "spkiBackingBean")
 @SessionScoped
-public class SpkiBackingBean  extends BaseBackingBean{
+public class SpkiBackingBean  extends BaseBackingBean implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
 //	public static final int OPERATION_FAILED  = 0;
 //	public static final int OPERATION_SUCCESSFUL = 1;
