@@ -2,8 +2,6 @@ package my.ep.web.integration.common;
 
 import java.io.IOException;
 import java.rmi.RemoteException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,7 +66,7 @@ public class PhisIntegration {
 	
 	private static Logger log = BatchLogger.getLogger(PhisIntegration.class);
 	
-//	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException {
 //		PhisIntegration test = new PhisIntegration();
 //		test.createFilesforPHIS();
 //		test.masterDataMaterialInfoPHIS();
@@ -80,11 +78,11 @@ public class PhisIntegration {
 //		test.glAccount();
 		
 //		test.masterDataMaterialInfoPHIS();
-//	}
+	}
 	
-	IVotFundSO votFundSO = BusinessDelegate.getInstance()
-			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-					IVotFundSO.class);
+	IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
+			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
+	
 	IProgramActivitySO programActivitySO = BusinessDelegate
 			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 					IProgramActivitySO.class);
@@ -113,14 +111,14 @@ public class PhisIntegration {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		/*SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "23-06-2015";
+		String dateInString = "29-07-2015";
 		Date currentDate = new Date();
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}*/
-
+		}
+*/
 		reqDTO.setCreateDate(currentDate);
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 
@@ -219,12 +217,41 @@ public class PhisIntegration {
 					mClasses.add(mClass);
 				}
 			}
+			BatchReqDTO<MaterialClass> classBatchReqDTO = new BatchReqDTO<MaterialClass>();
+			classBatchReqDTO.setFilePath(filePath);
+			classBatchReqDTO.setBatchContent(mClasses);
+			classBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			classBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			
+			BatchReqDTO<MaterialBrand> brandBatchReqDTO = new BatchReqDTO<MaterialBrand>();
+			brandBatchReqDTO.setFilePath(filePath);
+			brandBatchReqDTO.setBatchContent(mBrands);
+			brandBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			brandBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			
+			BatchReqDTO<MaterialMeasurement> measureBatchReqDTO = new BatchReqDTO<MaterialMeasurement>();
+			measureBatchReqDTO.setFilePath(filePath);
+			measureBatchReqDTO.setBatchContent(mMeasures);
+			measureBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			measureBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			
+			BatchReqDTO<MaterialColor> colorBatchReqDTO = new BatchReqDTO<MaterialColor>();
+			colorBatchReqDTO.setFilePath(filePath);
+			colorBatchReqDTO.setBatchContent(mColors);
+			colorBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			colorBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			
+			BatchReqDTO<ItemType> itemBatchReqDTO = new BatchReqDTO<ItemType>();
+			itemBatchReqDTO.setFilePath(filePath);
+			itemBatchReqDTO.setBatchContent(itemTypes);
+			itemBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			itemBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			
+			utility.createPhisFileInLocal(itemBatchReqDTO, colorBatchReqDTO, measureBatchReqDTO, brandBatchReqDTO, classBatchReqDTO);
 			
 			// calling method to save data in files
-			utility.createPhisFileInLocal(itemTypes, mColors, mMeasures,mBrands,mClasses, filePath);
+//			utility.createPhisFileInLocal(itemTypes, mColors, mMeasures,mBrands,mClasses, filePath);
 			
-//			utility.setMasterDataMaterialInfo(resDTO.getCmSupplierItemsList());
-
 		}else{
 			log.info("createFilesforPHIS : Records not available.");
 		}
@@ -329,15 +356,19 @@ public class PhisIntegration {
 	public void votFund() {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();		
-		Date currentDate = null;//new Date();
+		/*Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-05-2015";
+		String dateInString = "20-09-2014";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 		reqDTO.setCreatedDate(currentDate);
+		
+		List<Long> listId = new ArrayList<Long>();
+		listId.add(278675L);
+		reqDTO.setOrgprofileId(listId);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundByCreatedDate(reqDTO);
 		
@@ -366,8 +397,15 @@ public class PhisIntegration {
 				votFundList.add(votFnd);
 			}
 
+			BatchReqDTO<PhisVotFund> batchReqDTO = new BatchReqDTO<PhisVotFund>();
+			batchReqDTO.setFilePath(filePath);
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setBatchContent(votFundList);
+			utility.votFundFileOutPutStream(batchReqDTO);
+			
 			// calling method to save data in files
-			utility.votFundFileOutPutStream(votFundList, filePath);
+//			utility.votFundFileOutPutStream(votFundList, filePath);
 			
 		}else{
 			log.info("votFund : Records not available....");
@@ -379,14 +417,14 @@ public class PhisIntegration {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
 		
-		Date currentDate = null;//new Date();
+		/*Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-05-2015";
+		String dateInString = "20-09-2014";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 		reqDTO.setCreatedDate(currentDate);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundDanaByCreatedDate(reqDTO);
@@ -411,8 +449,15 @@ public class PhisIntegration {
 				votFundList.add(votFnd);
 			}
 
+			BatchReqDTO<PhisVotFund> batchReqDTO = new BatchReqDTO<PhisVotFund>();
+			batchReqDTO.setFilePath(filePath);
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setBatchContent(votFundList);
+			utility.votFundDanaFileOutPutStream(batchReqDTO);
+			
 			// calling method to save data in files
-			utility.votFundDanaFileOutPutStream(votFundList, filePath);
+//			utility.votFundDanaFileOutPutStream(votFundList, filePath);
 			
 		}else{
 			log.info("votFundDana : Records not available....");
@@ -422,15 +467,19 @@ public class PhisIntegration {
 	public void programActivity() {
 
 		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-		Date currentDate = null;// new Date();
+		/*Date currentDate = null;// new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-05-2015";
+		String dateInString = "17-04-2014";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 		reqDTO.setCreatedDate(currentDate);
+		
+		List<Long> listId = new ArrayList<Long>();
+		listId.add(278675L);
+//		reqDTO.setOrgprofileIdList(listId);
 
 		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityByCreateDate(reqDTO);
 		
@@ -462,8 +511,15 @@ public class PhisIntegration {
     			prgActList.add(prgActivity);
     		}
 
+    		BatchReqDTO<PhisProgramActivity> batchReqDTO = new BatchReqDTO<PhisProgramActivity>();
+			batchReqDTO.setFilePath(filePath);
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setBatchContent(prgActList);
+			utility.programActivityFileOutPutStream(batchReqDTO);
+			
     		// calling method to save data in files
-    		utility.programActivityFileOutPutStream(prgActList, filePath);
+//    		utility.programActivityFileOutPutStream(prgActList, filePath);
         	
         }else{
 			log.info("programActivity : Records not available....");
@@ -472,18 +528,22 @@ public class PhisIntegration {
 
 	public void project() {		
 	
-		Date currentDate = null;//new Date();
+		/*Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-05-2015";
+		String dateInString = "01-01-2014";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}	
+		}*/	
 
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		
 		reqDTO.setCreateDate(currentDate);
+		
+		List<Long> listId = new ArrayList<Long>();
+		listId.add(278675L);
+//		reqDTO.setOrgProfileIdList(listId);
 
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectByCreateDate(reqDTO);
 		
@@ -518,8 +578,15 @@ public class PhisIntegration {
 				programList.add(project);
 			}
 
+			BatchReqDTO<PhisProject> batchReqDTO = new BatchReqDTO<PhisProject>();
+			batchReqDTO.setFilePath(filePath);
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setBatchContent(programList);
+			utility.projectFileOutPutStream(batchReqDTO);
+			
 			// calling method to save data in files
-			utility.projectFileOutPutStream(programList, filePath);
+//			utility.projectFileOutPutStream(programList, filePath);
 			
 		}else{
 			log.info("project : Records not available....");
@@ -530,17 +597,21 @@ public class PhisIntegration {
 	public void glAccount() {
 
 		
-		Date currentDate = null;//new Date();
+	/*	Date currentDate = null;//new Date();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-05-2015";
+		String dateInString = "31-03-2015";
 		try {
 			currentDate = sdf.parse(dateInString);
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
 		reqDTO.setCreatedDate(currentDate);
+		
+		List<Long> listId = new ArrayList<Long>();
+		listId.add(278675L);
+//		reqDTO.setOrgProfileIdList(listId);
 
 		GlAccountResDTO resDTO = glAccountSO.retrieveGlAccountByCreateDate(reqDTO);
 		
@@ -570,9 +641,15 @@ public class PhisIntegration {
 				glAccountList.add(glAccount);
 			}
 
-			// calling method to save data in files
-			utility.glAccountFileOutPutStream(glAccountList, filePath);
+			BatchReqDTO<PhisGlAccount> batchReqDTO = new BatchReqDTO<PhisGlAccount>();
+			batchReqDTO.setFilePath(filePath);
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			batchReqDTO.setBatchContent(glAccountList);
+			utility.glAccountFileOutPutStream(batchReqDTO);
 			
+			// calling method to save data in files
+//			utility.glAccountFileOutPutStream(glAccountList, filePath);
 			
 		}else{
 			log.info("glAccount : Records not available....");

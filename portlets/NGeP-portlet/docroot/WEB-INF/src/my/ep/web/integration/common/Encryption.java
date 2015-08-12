@@ -80,7 +80,7 @@ public class Encryption {
 	public void encryptGmas(BatchReqDTO reqDTO) {
 		System.out.println("inside encryptGmas....");
 	
-		FileUtility fileUtility = new FileUtility();
+//		FileUtility fileUtility = new FileUtility();
 		File inFile = new File(reqDTO.getFilePath() + reqDTO.getFileName());
 		File outFile = new File(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 	
@@ -205,6 +205,47 @@ public class Encryption {
 
 		sftpUtility.upload(outFilePath + fileName,
 				IntegrationConstants.PHIS_UPLOAD_DIR + fileName, null, null, null);
+
+		// once upload is done cal web service osb integration to transfer file.
+//		osbUtility.osbServiceCallOutBound(processId, fileName);
+
+	}
+	
+	public void encryptPhis(BatchReqDTO reqDTO) {
+
+		System.out.println("inside encryptPhis");
+		File inFile = new File(reqDTO.getFilePath() + reqDTO.getFileName());
+		File outFile = new File(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
+
+		URL resource = getClass().getResource(".");
+		String path = resource.getPath();
+
+		String substring = path.substring(0, path.indexOf("NGeP-portlet.war"));
+//		String substring = path.substring(0, path.indexOf("NGeP-portlet"));
+
+		String encryptKey = substring
+				+ IntegrationConstants.PHIS_PUBLIC_KEY_PATH;
+
+		// encript the content
+		String encrypted;
+		try {
+			encrypted = PGPProcessor.encryptContent(readFileContents(inFile),
+					encryptKey);
+
+			createFile(outFile, encrypted);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		// upload the encripted file to sftp server
+
+		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
+		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR);
+		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
+		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+		sftpUtility.upload(reqDTO);
+//		sftpUtility.upload(reqDTO.getEncryptFilePath() + reqDTO.getFileName(),
+//				IntegrationConstants.PHIS_UPLOAD_DIR + reqDTO.getFileName(), null, null, null);
 
 		// once upload is done cal web service osb integration to transfer file.
 //		osbUtility.osbServiceCallOutBound(processId, fileName);
