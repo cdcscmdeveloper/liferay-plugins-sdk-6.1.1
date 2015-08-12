@@ -2561,7 +2561,9 @@ public class LOIDetailBackingBean extends
 			int recommendedSupplierCount = 0;
 			for (ScQtRecommendDtl recommendDtl 
 						: recommendedItem.getRecommendDtls()) {
-				if (recommendDtl.isRecordStatus()) {
+				if (BooleanUtils.isTrue(
+						recommendDtl.getLoiAwarded()) && 
+							recommendDtl.isRecordStatus()) {
 					++recommendedSupplierCount;
 					break;
 				}
@@ -2592,7 +2594,9 @@ public class LOIDetailBackingBean extends
 				int recommendedSupplierCount = 0;
 				for (ScQtRecommendDtl recommendDtl 
 							: scQtRecommend.getRecommendDtls()) {
-					if (recommendDtl.isRecordStatus()) {
+					if (BooleanUtils.isTrue(
+							recommendDtl.getLoiAwarded()) &&
+								recommendDtl.isRecordStatus()) {
 						++recommendedSupplierCount;
 					}
 				}
@@ -2620,8 +2624,10 @@ public class LOIDetailBackingBean extends
 				.getQuantity();
 		BigDecimal tempQuantity = new BigDecimal(0.0);
 		for (ScQtRecommendDtl recommendDtl : scQtRecommend.getRecommendDtls()) {
-			if (recommendDtl.getRecordStatusFlg().equals(
-					DbValueConst.RECORD_STATUS_ACTIVE)) {
+			if (BooleanUtils.isTrue(
+					recommendDtl.getLoiAwarded()) && 
+					recommendDtl.getRecordStatusFlg().equals(
+								DbValueConst.RECORD_STATUS_ACTIVE)) {
 				BigDecimal quantityAwarded = recommendDtl.getAwardQty();
 				if (quantityAwarded == null
 						|| quantityAwarded.compareTo(totalQuantity) >= 0) {
@@ -4546,9 +4552,8 @@ public class LOIDetailBackingBean extends
 						Long supplierId = smSupplier.getSupplierId();
 	
 						if (!supplierIds.contains(supplierId)) {
-							selectItems.add(new SelectItem(supplierId, smSupplier
-									.getCompanyName()));
-	
+							selectItems.add(new SelectItem(
+									supplierId, smSupplier.getCompanyName()));
 							supplierIds.add(supplierId);
 						}
 					}
@@ -4639,17 +4644,20 @@ public class LOIDetailBackingBean extends
 			for (ScQtRecommend recommendedItem : recommendedItems) {
 				for (ScQtRecommendDtl recommendDtl 
 						: recommendedItem.getRecommendDtls()) {
-					Long recommendedSupplierId = recommendDtl.getSupplier()
-							.getSupplierId();
-					if (awardedSupplierId == recommendedSupplierId) {
-						recommendDtl.setRecordStatus(true);
-						recommendDtl.setRecordStatusFlg(
-								DbValueConst.RECORD_STATUS_ACTIVE);
-					} else if (BooleanUtils.isTrue(
-									recommendDtl.getLoiAwarded())) {
-						recommendDtl.setRecordStatus(false);
-						recommendDtl.setRecordStatusFlg(
-								DbValueConst.RECORD_STATUS_SUSPENDED);
+					if (BooleanUtils.isTrue(
+							recommendDtl.getLoiAwarded())) {
+						Long recommendedSupplierId = recommendDtl.getSupplier()
+								.getSupplierId();
+						if (awardedSupplierId == recommendedSupplierId) {
+							recommendDtl.setRecordStatus(true);
+							recommendDtl.setRecordStatusFlg(
+									DbValueConst.RECORD_STATUS_ACTIVE);
+						} else if (BooleanUtils.isTrue(
+										recommendDtl.getLoiAwarded())) {
+							recommendDtl.setRecordStatus(false);
+							recommendDtl.setRecordStatusFlg(
+									DbValueConst.RECORD_STATUS_SUSPENDED);
+						}
 					}
 				}
 			}
@@ -4805,15 +4813,12 @@ public class LOIDetailBackingBean extends
 							.getScQtProposal().getScQtSupplier().getSmSupplier()
 							.getSupplierId();
 					if (recommendDtlsMap.containsKey(supplierId)) {
-						
-						if(evaluationResultDtl.getScQtRecommendDtl()== null){
-							List<ScQtRecommendDtl> recommendDtl = new ArrayList<ScQtRecommendDtl>();
-							recommendDtl.add(recommendDtlsMap.get(supplierId));
-							evaluationResultDtl.setScQtRecommendDtl(recommendDtl);
-						} else {
-							evaluationResultDtl.getScQtRecommendDtl().add(
-									recommendDtlsMap.get(supplierId));
+						if (evaluationResultDtl.getScQtRecommendDtl() == null) {
+							evaluationResultDtl.setScQtRecommendDtl(
+										new ArrayList<ScQtRecommendDtl>());
 						}
+						evaluationResultDtl.getScQtRecommendDtl()
+							.add(recommendDtlsMap.get(supplierId));						
 						
 						scQtRecommend.getAwardSupplierList()
 									 .add(evaluationResultDtl);
