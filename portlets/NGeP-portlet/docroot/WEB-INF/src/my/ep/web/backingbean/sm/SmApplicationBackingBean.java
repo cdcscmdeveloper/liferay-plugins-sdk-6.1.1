@@ -1806,13 +1806,6 @@ public class SmApplicationBackingBean extends
 			log.info(" **** Total categories sent to Doc So ***"
 					+ rqDto.getCategoryL3Ids().size());
 		}
-		if (getManagedBean().getSmAppl().getSmCompanyBasic() != null
-				&& !StringUtils.isEmpty(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getGstRegistrationNo())) {
-			rqDto.setGst(true);
-		} else {
-			rqDto.setGst(false);
-		}
 		System.out.println("*** The certs size ********* "
 				+ getManagedBean().getSmAppl().getSmSupplierCerts().size());
 		if (!getManagedBean().getSmAppl().getSmSupplierCerts().isEmpty()) {
@@ -2315,35 +2308,6 @@ public class SmApplicationBackingBean extends
 	// -- Process Branches Start
 
 	/**
-	 * Assign Basic Company Gst Details For Selected Branch. (Ajax call to set
-	 * or reset the values based on the check box selection)
-	 * 
-	 * @param SmSupplierBranch
-	 *            - branch
-	 */
-	public void assignCompanyGstDetailsForSelectedBranch(SmSupplierBranch branch) {
-		if (branch.isSameGstRegNo()) {
-			if (getManagedBean().getSmAppl().getSmCompanyBasic() != null) {
-				if (StringUtils.isEmpty(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getGstRegistrationNo())) {
-					branch.setGstRegistrationNo(" --");
-				} else {
-					branch.setGstRegistrationNo(getManagedBean().getSmAppl()
-							.getSmCompanyBasic().getGstRegistrationNo());
-				}
-
-				branch.setGstRegistrationDate(getManagedBean().getSmAppl()
-						.getSmCompanyBasic().getGstRegistrationDate() == null ? null
-						: getManagedBean().getSmAppl().getSmCompanyBasic()
-								.getGstRegistrationDate());
-			}
-		} else {
-			branch.setGstRegistrationNo("");
-			branch.setGstRegistrationDate(null);
-		}
-	}
-
-	/**
 	 * Copy hq gst info to branch
 	 * 
 	 * @param SmSupplierBranch
@@ -2436,9 +2400,9 @@ public class SmApplicationBackingBean extends
 			branchBean.getGst().setSmGstSupplierDocs(
 					new ArrayList<SmGstSupplierDoc>());
 		}
+		SmApplicationUtil.initGstSuppDocs(branchBean.getGst());
 		getManagedBean().setSelectedBranch(branchBean);
 		assignValReqdToTrue();
-		SmApplicationUtil.setDisableBranchGst(getManagedBean());
 		RequestContext.getCurrentInstance().execute("banchDialog.show()");
 
 	}
@@ -2461,7 +2425,6 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setBranchCompanyDistricts(new ArrayList<PmDistrict>());
 		getManagedBean().setBranchCompanyCities(new ArrayList<PmCity>());
 		getManagedBean().setSelectedBranch(br);
-		SmApplicationUtil.setDisableBranchGst(getManagedBean());
 		SmApplicationUtil.addNewBranchGst(
 				getManagedBean().getCompanyBasicGst(), getManagedBean()
 						.getSelectedBranch());
