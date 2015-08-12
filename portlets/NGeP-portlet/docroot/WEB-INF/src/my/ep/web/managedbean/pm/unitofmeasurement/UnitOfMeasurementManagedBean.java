@@ -2,7 +2,6 @@ package my.ep.web.managedbean.pm.unitofmeasurement;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -30,6 +29,8 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 	private Long status;
 
 	private boolean isLazy = false;
+	
+	private PmUom oldPmUom;
 
 	/**
 	 * @return the pmUom
@@ -97,6 +98,20 @@ public class UnitOfMeasurementManagedBean extends BaseManagedBean {
 
 	public void setLazy(boolean isLazy) {
 		this.isLazy = isLazy;
+	}
+
+	/**
+	 * @return the oldPmUom
+	 */
+	public PmUom getOldPmUom() {
+		return oldPmUom;
+	}
+
+	/**
+	 * @param oldPmUom the oldPmUom to set
+	 */
+	public void setOldPmUom(PmUom oldPmUom) {
+		this.oldPmUom = oldPmUom;
 	}
 
 }
