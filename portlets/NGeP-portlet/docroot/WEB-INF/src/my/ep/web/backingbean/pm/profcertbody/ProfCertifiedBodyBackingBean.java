@@ -1,3 +1,13 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.profcertbody;
 
 import java.sql.Timestamp;
@@ -392,7 +402,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		certBodyReqDTO.setCertBody(certBody);
 		
 		CertBodyResDTO resDTO = certBodySO.saveOrUpdateCertBodyDtls(certBodyReqDTO);
-		
+		reloadProfCertData(resDTO.getCertBody());	
 		PmCertBody oldPmCertBody = (PmCertBody)BeanUtils.cloneBean(resDTO.getCertBody());
 		this.getManagedBean().setOldPmCertBody(oldPmCertBody);
 		
@@ -449,6 +459,26 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 		
 		return "/xhtml/pm/professionalCertifiedBody/professionalCertifiedMaintenance.xhtml";
 	}
+		
+	/**
+	 * Reload prof cert data.
+	 * 
+	 * @param certBody
+	 *            the cert body
+	 */
+	private void  reloadProfCertData(PmCertBody certBody){
+		this.getManagedBean().setCertBody(certBody);
+		PmCertBody oldPmCertBody = null;
+		try {
+			oldPmCertBody = (PmCertBody)BeanUtils.cloneBean(certBody);
+		     this.getManagedBean().setOldPmCertBody(oldPmCertBody);		
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public void preLoadgroupSearch(){
 		renewSesionObject();
