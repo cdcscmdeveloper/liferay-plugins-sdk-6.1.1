@@ -42,6 +42,8 @@
 						disabled="#{unitOfMeasurementBackingBean.managedBean.pmUom.brandNew}">
 						<f:selectItems
 							value="#{unitOfMeasurementBackingBean.getMeasurementStatusList()}"></f:selectItems>
+						<p:ajax event="change" process="@form" partialSubmit="true"
+							update="@form" />
 					</p:selectOneMenu></td>
 			</tr>
 		</table>
