@@ -53,6 +53,8 @@
      	<td><p:selectOneMenu id="selectStatusId" style="width:178px;margin-bottom:5px;" value="#{profcertifiedbodyBackingBean.managedBean.certBody.recordStatusFlg}"
      			disabled="#{profcertifiedbodyBackingBean.managedBean.certBody.brandNew}">   
 			  <f:selectItems value="#{profcertifiedbodyBackingBean.getCertStatusList()}" /> 
+			  <p:ajax event="change" process="@form" partialSubmit="true"
+							update="@form" />
     	    </p:selectOneMenu></td>				
 	    </tr>
 	</table>
