@@ -26,10 +26,7 @@
 				rowKey="#{scLoiLoa}" rowIndexVar="rowIndex" selectionMode="single">
 				<ac:paginator for="qtLoaTbl" />
 				<p:ajax event="rowSelect"
-					listener="#{qtLOABackingBean.generateSuppLoiLoaList}"
-					process="@this" update=":form:suppListPanel" />
-				<p:ajax event="rowUnselect"
-					listener="#{qtLOABackingBean.generateSuppLoiLoaList}"
+					listener="#{qtLOABackingBean.onRowRecSupplierAction}"
 					process="@this" update=":form:suppListPanel" />
 
 				<p:column headerText="#{lbl['lbl.sc.supplier.name']}">
