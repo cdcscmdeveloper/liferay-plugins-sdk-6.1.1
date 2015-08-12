@@ -1,7 +1,18 @@
+/* 
+ ***************************************************   
+ * Product nextgen
+ *                ePerolehan 
+ * Release 1.00    
+ *    
+ * Copyright © 2013 Archisoft. All rights reserved.
+ * 
+ ****************************************************
+*/
 package my.ep.web.backingbean.pm.unitofmeasurement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -21,6 +32,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -33,6 +45,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -98,8 +111,7 @@ public class UnitOfMeasurementBackingBean extends
 		this.getManagedBean().setStatus(null);
 		this.getManagedBean().setMeasurementNames(new String());
 		this.getManagedBean().setMeasurementCodes(new String());
-		unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();
-		
+		unitOfMeasurementDataModel = new UnitOfMeasurementPagingDataModel();	
 		
 	}	
 	
@@ -249,8 +261,37 @@ public class UnitOfMeasurementBackingBean extends
 	public String goToUnitMaintaincePage(PmUom pmUom){
 		debugLogger("goToUnitMaintaincePage");
 		this.getManagedBean().setPmUom(pmUom);
+		
+		PmUom oldPmUom = null;
+		try {
+			oldPmUom = (PmUom)BeanUtils.cloneBean(pmUom);
+		     this.getManagedBean().setOldPmUom(oldPmUom);		
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";		
+	}
+	
+	
+	/**
+	 * get unit of measurement info 
+	 * into maintenance page (PmUom pmUom)
+	 */	
+	private void reloadUOMData(PmUom pmUom){
+		debugLogger("goToUnitMaintaincePage");
+		this.getManagedBean().setPmUom(pmUom);
+		
+		PmUom oldPmUom = null;
+		try {
+			oldPmUom = (PmUom)BeanUtils.cloneBean(pmUom);
+		     this.getManagedBean().setOldPmUom(oldPmUom);		
+		}
+		catch (Exception e) {			
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -309,51 +350,108 @@ public class UnitOfMeasurementBackingBean extends
 	}
 	
 	/**
-	 * save and update unit of measurement details
+	 * save and update unit of measurement details.
 	 * 
+	 * @return the string
 	 */
 	public String saveMeasurementDtls() {
 		debugLogger("saveMeasurementDtls");
-		
-		PmUom uom = this.getManagedBean().getPmUom();
-		validationMessage(uom);
-		
+
+		String messageId=null;
+		String recordStatusMessageId=null;
+
+		PmUom oldPmUom=this.getManagedBean().getOldPmUom();
+		PmUom pmUom = this.getManagedBean().getPmUom();
+
+		validationMessage(pmUom);
+
 		UomReqDTO reqDTO = new UomReqDTO();
-		reqDTO.setPmUom(uom);
+		reqDTO.setPmUom(pmUom);
+
+		String[] msgParam = new String[] {pmUom.getUomCode()};
 
 		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
-	
-		UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
-//				this.getManagedBean().setPmUom(resDTO.getPmUom());
-		 
-		 if(resDTO.isSuccessful()){
-			 if(uom.isBrandNew()){
-			 FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(
-						    FacesMessage.SEVERITY_INFO,
-						    null,
-				    		MessageUtils.getMessage(MessageConst.INFO_780091, new String[]{resDTO.getPmUom().getUomCode()}, 
-					    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
-					    		new FacesScopes().getUserLocale())
-				    		));
-			 
-			 } else{
-				 FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(
-							    FacesMessage.SEVERITY_INFO,
-							    null,
-					    		MessageUtils.getMessage(MessageConst.INFO_780092, new String[]{resDTO.getPmUom().getUomCode()}, 
-						    		MessageUtils.BUNDLE_COMMON_MESSAGES, 
-						    		new FacesScopes().getUserLocale())
-					    		));
-			 }
-			 
+
+		try{
+
+			if(pmUom.isBrandNew()){
+				messageId = MessageConst.TD_80600;				
 			}
-	
-		 if(uom.isBrandNew())
-			 return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
-		 else
-			 return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";
+			else 
+			{
+				messageId= MessageConst.TD_80601;
+
+				if(oldPmUom!=null && pmUom!=null 
+						&& !oldPmUom.getRecordStatusFlg().equals(pmUom.getRecordStatusFlg())){
+					if(pmUom.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+						recordStatusMessageId = MessageConst.TD_80603;						
+					}
+					else{
+						recordStatusMessageId = MessageConst.TD_80602;
+					}
+					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(),
+							pmUom.getUomCode(),getPmActionDesc(recordStatusMessageId,msgParam)));
+				}	
+			}
+			reqDTO.setTrackingStatus(true);
+
+			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(),
+					pmUom.getUomCode(),getPmActionDesc(messageId,msgParam)));
+
+			UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
+			reloadUOMData(resDTO.getPmUom());
+			PmUom oldPmUomData = (PmUom)BeanUtils.cloneBean(resDTO.getPmUom());
+			this.getManagedBean().setOldPmUom(oldPmUomData);
+
+			if(resDTO.isSuccessful()){
+				if(pmUom.isBrandNew()){
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils.getMessage(MessageConst.INFO_780091, new String[]{resDTO.getPmUom().getUomCode()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES, 
+											new FacesScopes().getUserLocale())
+									));
+
+				} else{
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_INFO,
+									null,
+									MessageUtils.getMessage(MessageConst.INFO_780092, new String[]{resDTO.getPmUom().getUomCode()}, 
+											MessageUtils.BUNDLE_COMMON_MESSAGES, 
+											new FacesScopes().getUserLocale())
+									));
+				}
+
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
+		finally {
+			iUomSO = null;
+		}
+		if(pmUom.isBrandNew())
+			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
+		else
+			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";
 	}	
 
+	/**
+	 * Gets the pm action desc.
+	 * 
+	 * @param messageId
+	 *            the message id
+	 * @param params
+	 *            the params
+	 * @return the pm action desc
+	 */
+	private String getPmActionDesc(String messageId, String[] params) {
+		Locale myLocale = new Locale("ms", "MY");
+		return MessageUtils.getMessage(messageId, params,
+				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
+	}
+	
 }

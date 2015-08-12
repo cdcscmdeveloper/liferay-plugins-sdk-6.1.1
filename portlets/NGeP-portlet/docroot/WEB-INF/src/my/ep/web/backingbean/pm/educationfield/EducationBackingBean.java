@@ -300,6 +300,20 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 	}
 
+	private void reloadEduData(PmEduField pmEduField) {
+		debugLogger("goToMaintaincePage");
+
+		this.getManagedBean().setPmEduField(pmEduField);
+		PmEduField oldPmEduField = null;
+		try {
+			oldPmEduField = (PmEduField)BeanUtils.cloneBean(pmEduField);
+		     this.getManagedBean().setOldPmEduField(oldPmEduField);		
+		}
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Validation message for pmEdufield details.
 	 * 
@@ -398,6 +412,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 			EducationFieldResDTO resDTO = iEducationfieldSO
 					.saveOrUpdateEduFieldDtls(reqDTO);
 			this.getManagedBean().setPmEduField(resDTO.getEduField());
+			reloadEduData(resDTO.getEduField());
 			PmEduField oldPmEduField = (PmEduField)BeanUtils.cloneBean(resDTO.getEduField());
 			this.getManagedBean().setOldPmEduField(oldPmEduField);
 
