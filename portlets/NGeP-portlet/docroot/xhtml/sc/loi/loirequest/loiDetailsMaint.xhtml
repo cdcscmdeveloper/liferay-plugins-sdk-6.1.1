@@ -79,20 +79,6 @@
 								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
 								value="3" />
 						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
-							update="@form" 	rendered="#{isPendingNegotiation}" >
-							<f:setPropertyActionListener
-								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="4" />
-						</p:menuitem>
-
-						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" disabled="#{!isFulfilmentTypeScheduled}"
-							update="@form" rendered="#{isPendingNegotiation}">
-							<f:setPropertyActionListener
-								target="#{lOIDetailBackingBean.managedBean.selectedTabIndex}"
-								value="5"  />
-						</p:menuitem>
 					</p:tabMenu>			
 					</td>
 				<td width="80%" valign="top"><h:panelGroup>
@@ -118,14 +104,6 @@
 						
 						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 3 and isPendingNegotiation}">
 							<ui:include src="loiAfterNegoMenu.xhtml"/>
-						</c:if>
-						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 4 and isPendingNegotiation}">
-							<ui:include src="loiDeductionPaymentMenu.xhtml" />
-						</c:if>
-						
-						<c:if test="#{lOIDetailBackingBean.managedBean.selectedTabIndex == 5 and isPendingNegotiation}">
-							<ui:include src="loiFulfilmentSchedule.xhtml" />
 						</c:if>
 					</h:panelGroup></td>
 			</tr>
