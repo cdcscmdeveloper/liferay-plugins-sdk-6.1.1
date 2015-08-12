@@ -278,7 +278,7 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		//this.getManagedBean().setAppId(1257118);//Dev
 		//this.getManagedBean().setAppId(1259054);
 		//this.getManagedBean().setAppId(1258520);//#4126 #4377
-		//this.getManagedBean().setAppId(1437083);
+		//this.getManagedBean().setAppId(1259309); //FT
 		
 		this.getManagedBean().setActiveIndex(0);
 		
@@ -1356,9 +1356,11 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 		context.put("svAddresses", this.getManagedBean().getSmSvAddressMap().get(templateType));
 		context.put("addressFormatter", new AddressUtils());
 		
-		context.put("gstRegNo", getManagedBean().getSmGstSupplier().getGstRegNo());
-		context.put("gstEffDate", getManagedBean().getSmGstSupplier().getGstEffDate());
-		context.put("gstEndDate", getManagedBean().getSmGstSupplier().getGstEndDate());
+		if(getManagedBean().getSmGstSupplier() != null){
+			context.put("gstRegNo", getManagedBean().getSmGstSupplier().getGstRegNo());
+			context.put("gstEffDate", getManagedBean().getSmGstSupplier().getGstEffDate());
+			//context.put("gstEndDate", getManagedBean().getSmGstSupplier().getGstEndDate());
+		}
 
 		String fileName = fileInitName + "predetails.pdf";
 		
