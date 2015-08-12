@@ -143,7 +143,6 @@ import my.ep.web.util.sm.helper.SmCommonUtil;
 import my.ep.web.util.sm.helper.SmRuleHelper;
 import my.ep.web.util.sm.helper.SmServiceLookup;
 import my.ep.web.vo.SmAuthorizedPersonnelCountVO;
-import my.ep.web.vo.SmGstBranchVO;
 import my.ep.web.vo.SmPersonnleCalcVO;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -949,13 +948,7 @@ public class SmApplicationBackingBean extends
 			}
 
 			// init GST information
-			getManagedBean().setCompanyBasicGst(
-					SmApplicationUtil.initHqGstInformation(getManagedBean()
-							.getSmAppl(), getManagedBean().getSmSupplier()
-							.getSupplierId(), getManagedBean()
-							.getCompanyBasicGst()));
-			SmApplicationUtil.initBranchGstInformation(getManagedBean()
-					.getCompanyBasicGst(), getManagedBean().getSmAppl());
+			initGst();
 
 			return SmApplicationUtil.setNavigationForAppl(applicationType);
 		} finally {
@@ -1491,18 +1484,8 @@ public class SmApplicationBackingBean extends
 				// init business premise whether show or hide home office
 				initBusinessPremise();
 
-				// init gst info
-				getManagedBean().setCompanyBasicGst(
-						SmApplicationUtil.initHqGstInformation(getManagedBean()
-								.getSmAppl(), getManagedBean().getSmAppl()
-								.getSmSupplier().getSupplierId(),
-								getManagedBean().getCompanyBasicGst()));
-				SmApplicationUtil.initBranchGstInformation(getManagedBean()
-						.getCompanyBasicGst(), getManagedBean().getSmAppl());
-				if (getManagedBean().getSelectedBranch() != null
-						&& getManagedBean().getSelectedBranch().getGst() != null) {
-					getManagedBean().getSelectedBranch().setGst(null);
-				}
+				// init GST information
+				initGst();
 			}
 			assignValReqdToFalse();
 		}
@@ -2415,6 +2398,7 @@ public class SmApplicationBackingBean extends
 		assignValReqdToFalse();
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 		calcPersonnelListCount();
+		initGst();
 	}
 
 	/**
@@ -4341,13 +4325,6 @@ public class SmApplicationBackingBean extends
 		} finally {
 			mofRegistrationSO = null;
 			retriveLatestApplAfterUpdate("", "");
-			getManagedBean().setCompanyBasicGst(
-					SmApplicationUtil.initHqGstInformation(getManagedBean()
-							.getSmAppl(), getManagedBean().getSmAppl()
-							.getSmSupplier().getSupplierId(), getManagedBean()
-							.getCompanyBasicGst()));
-			SmApplicationUtil.initBranchGstInformation(getManagedBean()
-					.getCompanyBasicGst(), getManagedBean().getSmAppl());
 		}
 	}
 
@@ -9719,5 +9696,17 @@ public class SmApplicationBackingBean extends
 			}
 		}
 		return retVal;
+	}
+
+	private void initGst() {
+		// init GST information
+		getManagedBean().setCompanyBasicGst(
+				SmApplicationUtil.initHqGstInformation(getManagedBean()
+						.getSmAppl(), getManagedBean().getCompanyBasicGst()));
+		SmApplicationUtil.initBranchGstInformation(getManagedBean()
+				.getCompanyBasicGst(), getManagedBean().getSmAppl());
+		if (getManagedBean().getSelectedBranch() != null) {
+			getManagedBean().getSelectedBranch().setGst(null);
+		}
 	}
 }
