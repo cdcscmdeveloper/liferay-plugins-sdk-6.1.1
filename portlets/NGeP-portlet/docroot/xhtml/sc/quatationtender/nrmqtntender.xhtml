@@ -387,6 +387,7 @@
 					disabled="true" size="30" 
 					value="#{qTSupplierQulCriteriaBackingBean.managedBean.totalSuppliers}" /></td>
 			<td><p:commandButton value="#{lbl['lbl.btn.search']}"
+					onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 					update="totalSuppliersId" rendered="#{!qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_SUPPQUALIFICATION)}"
 					action="#{qTSupplierQulCriteriaBackingBean.searchForSupplierCount}"
 					partialSubmit="true" process="@this" /></td>
