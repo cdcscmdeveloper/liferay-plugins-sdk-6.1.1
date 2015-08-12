@@ -1,5 +1,6 @@
 package my.ep.web.bean;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +12,12 @@ import my.ep.persistence.entity.pm.authorization.PmScreenRestr;
  * @created 03.12.2012
  * 
  */
-public class SecurityFiltersBean {
+public class SecurityFiltersBean implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	// Map to keep Screen Filters
 	// The key is screen id with Map object
 	// Lastly the key is component id with screenAuth in the Map object
