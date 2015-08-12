@@ -7,6 +7,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+<style type="text/css">
+#qtPricePanelId:hover {
+	background-color: none !important;
+	box-shadow: none !important;
+}
+</style>
+
 	<ui:define name="contentSection">
 		<!-- <ac:title value="Offered Price" /> -->
 		<p:messages id="offeredPrices" showDetail="true" autoUpdate="true" closable="true" showSummary="false" severity="error, info" />
@@ -18,7 +26,7 @@
 				action="#{noticeBoardBackingBean.backBtn}" />
 		</div>
 		
-		<p:panel header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
+		<p:panel id="qtPricePanelId" header="#{lbl['lbl.sc.notice.board.pricingheader']}" toggleable="true">
 			<h:panelGrid border="0" width="100%" columns="2"
 				columnClasses="columnWidth20">
 
