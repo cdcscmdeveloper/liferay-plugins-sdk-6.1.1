@@ -61,6 +61,16 @@
 				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'EF'}">
 				<ui:include src="/xhtml/trackingdiary/pmEducationFieldSearch.xhtml" />
 			</h:panelGroup>
+			<h:panelGroup id="pmPcbSearchID"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'PB'}">
+				<ui:include
+					src="/xhtml/trackingdiary/pmProfessionalCertifiedBodyNames.xhtml" />
+			</h:panelGroup>
+			<h:panelGroup id="pmDocSearchID"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'SD'}">
+				<ui:include
+					src="/xhtml/trackingdiary/pmSupportingDocumentAndCheckList.xhtml" />
+			</h:panelGroup>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.pm.search.result']}"
 			toggleable="true">
@@ -243,31 +253,81 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
-			<p:dataTable id="dtEduResult" rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'EF'}"
-						emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-						value="#{pmTrackingDiaryBackingBean.managedBean.eduDataModel}"
-						lazy="true" var="edu" width="100%" rows="10">
+			<p:dataTable id="dtEduResult"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'EF'}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{pmTrackingDiaryBackingBean.managedBean.eduDataModel}"
+				lazy="true" var="edu" width="100%" rows="10">
 
-						<ac:paginator for="dtEduResult" />
+				<ac:paginator for="dtEduResult" />
 
-						<p:column width="15%">
-							<f:facet name="header">
-								<h:outputText
-									value="#{lbl['lbl.pm.ef.fname']}" />
-							</f:facet>
+				<p:column width="85%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.ef.fname']}" />
+					</f:facet>
 						#{edu.fieldName}
 				</p:column>
-						<p:column width="5%">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.td.action']}" />
-							</f:facet>
-							<p:commandLink
-								action="#{pmTrackingDiaryBackingBean.goToEduTrackingDiarySearch(edu)}">
-								<p:graphicImage value="/css/images/design/ico-view.png"
-									title="#{lbl['lbl.ct.view']}" />
-							</p:commandLink>
-						</p:column>
-					</p:dataTable>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.td.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{pmTrackingDiaryBackingBean.goToEduTrackingDiarySearch(edu)}">
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							title="#{lbl['lbl.ct.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:dataTable id="dtPcbResult"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'PB'}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{pmTrackingDiaryBackingBean.managedBean.pcbDataModel}"
+				lazy="true" var="pcb" width="100%" rows="10">
+
+				<ac:paginator for="dtPcbResult" />
+
+				<p:column width="85%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.pc.acname']}" />
+					</f:facet>
+						#{pcb.bodyName}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.td.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{pmTrackingDiaryBackingBean.goToPcbTrackingDiarySearch(pcb)}">
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							title="#{lbl['lbl.ct.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+				<p:dataTable id="dtDocResult"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'SD'}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{pmTrackingDiaryBackingBean.managedBean.pmDocumentDataModel}"
+				lazy="true" var="doc" width="100%" rows="10">
+
+				<ac:paginator for="dtDocResult" />
+
+				<p:column width="85%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.document.name']}" />
+					</f:facet>
+						#{doc.docName}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.td.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{pmTrackingDiaryBackingBean.goToDocTrackingDiarySearch(doc)}">
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							title="#{lbl['lbl.ct.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
 		</p:panel>
 	</h:panelGroup>
 
