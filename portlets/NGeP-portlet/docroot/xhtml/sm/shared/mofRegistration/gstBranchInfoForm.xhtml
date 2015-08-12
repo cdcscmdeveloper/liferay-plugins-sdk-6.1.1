@@ -7,10 +7,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 		
 		<p:outputPanel id="branchGstInfoPanelId" rendered="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
-			and not empty backingBean.managedBean.selectedBranch}">
+			and not empty backingBean.managedBean.selectedBranch.gst}">
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.supplierUser and (backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}">
 				<table style="width: 100%">
+					<tr><td height="15" colspan="2">&#160;</td></tr>
 					<tr>
 						<td style="border-style: none !important;float: right !important;">
 							<p:selectBooleanCheckbox value="#{backingBean.managedBean.selectedBranch.sameAsHq}">
