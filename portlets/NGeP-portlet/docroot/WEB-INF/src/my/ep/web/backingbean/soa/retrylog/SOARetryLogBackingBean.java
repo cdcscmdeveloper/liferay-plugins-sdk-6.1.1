@@ -86,10 +86,10 @@ public class SOARetryLogBackingBean extends
 
 	public void refreshRetryLogList() {
 		debugLogger("refreshRetryLogList");
-		FacesContext.getCurrentInstance().addMessage(
-				null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO,
-						"Records refreshed.", ""));
+//		FacesContext.getCurrentInstance().addMessage(
+//				null,
+//				new FacesMessage(FacesMessage.SEVERITY_INFO,
+//						"Records refreshed.", ""));
 		resetAndReloadData();
 	}
 
