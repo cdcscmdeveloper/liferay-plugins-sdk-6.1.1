@@ -1163,7 +1163,7 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());       
         trckVO.setDocId(pmUser.getUserId());
 		trckVO.setDocType(ParameterConst.USER_PROFILE_PARAM_CODE);
-		trckVO.setDocNo(pmUser.getLoginId());		
+		trckVO.setDocNo(Long.toString(pmUser.getUserId()));		
 		trckVO.setGroupId(null);		
 		trckVO.setStatus(status);				
 		trckVO.setGroupDocType(null);
