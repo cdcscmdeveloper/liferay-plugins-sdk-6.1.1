@@ -6,9 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -17,6 +20,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
@@ -26,10 +30,13 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -39,19 +46,24 @@ import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
+import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
+import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "pmTrackingDiaryBackingBean")
@@ -131,6 +143,118 @@ public class PmTrackingDiaryBackingBean extends
 		this.getManagedBean().resetEduResultBean();
 	}
 	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetPcbSearchBean() {
+		log.info("resetPcbSearchBean");
+		this.getManagedBean().setPcbSearchBean(new ProfCertifiedBodySearchBean());
+		this.getManagedBean().resetPcbResultBean();
+	}
+	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetDocSearchBean() {
+		log.info("resetDocSearchBean");
+		this.getManagedBean().setSupportDocSearchBean(new SupportDocumentSearchBean());
+		this.getManagedBean().resetDocResultBean();
+	}
+	
+	/**
+	 * retrieve document category (parameterId)
+	 * 
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] documentCategoryOptions(boolean byId) {
+		log.info("documentCategoryOptions");
+		SelectItem[] items = null;
+		try {
+			List<PmParameterDesc> parameterDescs = getDocumentCategoryFilteredOptions();
+			
+		    items = new SelectItem[parameterDescs.size()+1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+					getFacesScopes().getUserLocale()));
+		    int i = 1;
+		    if(byId){
+		    	 for(PmParameterDesc parameterDesc : parameterDescs) {
+				    	items[i++] = new SelectItem(
+				    			parameterDesc.getPmParameter().getParameterId(), 
+				    			parameterDesc.getCodeName());
+				    }
+		    }else{
+		    	 for(PmParameterDesc parameterDesc : parameterDescs) {
+				    	items[i++] = new SelectItem(
+				    			parameterDesc.getPmParameter().getParameterCode(), 
+				    			parameterDesc.getCodeName());
+				    }
+		    }
+		   
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null, 
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							e.toString(),
+							e.getMessage()));
+		}
+		
+	    return items;
+	}
+	
+	/**
+	 * Get only applicable doc category (Technical Check List, Financial Check List, Supplier Registration)
+	 * @return
+	 */
+	private List<PmParameterDesc>  getDocumentCategoryFilteredOptions(){
+		log.info("getDocumentCategoryFilteredOptions");
+		ISearchBean<PmParameterDesc> searchBean = super.createSearchBean(
+				PmParameterDesc.class, "somDocCate");
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+		bean.setSearchField("pmParameter.parameterCode");
+		bean.setSearchValue(new ArrayList(Arrays.asList(ProfileManagementConst.SUPPORT_DOC_CATEGORY)));
+		searchBean.getDataFilterBeans().add(bean);
+		return ParameterHelper.getInstance().getParameterDescListBySearchBean(ParameterTypeConst.DOCUMENT_CATEGORY, searchBean);
+	}
+	/**
+	 * reset doc search fields
+	 */
+	public void docCategorySearchChange(){
+		log.info("docCategorySearchChange");
+		if(this.getManagedBean().getSupportDocSearchBean()!=null){
+			if(ParameterConst.DOCUMENT_CATEGORY_SUPPLIER_DOCUMENT.equals(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
+				this.getManagedBean().getSupportDocSearchBean().setProcureCatParam(null);
+			}else if(ParameterConst.DOCUMENT_CATEGORY_TECHNICAL_CHECKLIST.equals(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())
+					|| ParameterConst.DOCUMENT_CATEGORY_FINANCIAL_CHECKLIST.equals(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
+				this.getManagedBean().getSupportDocSearchBean().setPmZone(null);
+			}
+		}
+	}
+	/**
+	 * retrieve supplier zone
+	 * 
+	 * @return List<PmZone>
+	 */
+	public List<PmZone> supplierZoneOptions() {
+		log.info("supplierZoneOptions");
+		List<PmZone> zoneList = new ArrayList<PmZone>();
+		try{
+			IZoneSO reqSO = (IZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IZoneSO.class);	
+			ZoneResDTO resDTO = reqSO.retrieveActiveZoneList();
+			if(resDTO.isSuccessful()){
+				zoneList = resDTO.getZoneList();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new EpException(MessageConst.ERROR_770065, new String[]{e.getMessage()});
+		}
+		return zoneList;
+	}
+	
+	
 	public void onFunctionSelect() {
 		System.out.println("............onFunctionSelect..............");
 		resetOrganisationSearchBean();
@@ -152,6 +276,12 @@ public class PmTrackingDiaryBackingBean extends
 			}else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("EF")) {
 				resetEduSearchBean();
+			}else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("PB")) {
+				resetPcbSearchBean();
+			}else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("SD")) {
+				resetPcbSearchBean();
 			}
 		}
 
@@ -188,6 +318,23 @@ public class PmTrackingDiaryBackingBean extends
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
+	
+	public String goToPcbTrackingDiarySearch(PmCertBody pcb) {
+		log.debug("**********goToPcbTrackingDiarySearch************"+ pcb.getCertBodyId());
+		getManagedBean().setSelectedDocType(ParameterConst.PROFESIONAL_BODIES_PARAM_CODE);
+		getManagedBean().setSelectedDocId(pcb.getCertBodyId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	
+	public String goToDocTrackingDiarySearch(PmDocument doc) {
+		log.debug("**********goToPcbTrackingDiarySearch************"+ doc.getDocumentId());
+		getManagedBean().setSelectedDocType(ParameterConst.SUPPORTING_DOC_PARAM_CODE);
+		getManagedBean().setSelectedDocId(doc.getDocumentId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	
 	public String goToRuleConfigTrackingDiarySearch(){
 		log.info("**********goToRuleConfigTrackingDiarySearch************");
 		getManagedBean().setSelectedDocType2(null);
@@ -285,6 +432,20 @@ public class PmTrackingDiaryBackingBean extends
 	public void searchEducationOfField(){
 		log.info(",,,searchEducationOfField");
 		this.getManagedBean().getEduDataModel().reloadData();
+	}
+	
+	public void searchSupportingDocument(){
+		log.info("searchDocument - Start");
+		if(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode()==null 
+				|| StringUtils.isBlank(this.getManagedBean().getSupportDocSearchBean().getDocCategoryParamCode())){
+			throw new EpException(MessageConst.ERROR_770083);
+		}
+		this.getManagedBean().getPmDocumentDataModel().reloadData();
+		log.info("searchDocument - End");
+	}
+	public void searchProfesionalCertified(){
+		log.info(",,,searchProfesionalCertified");
+		this.getManagedBean().getPcbDataModel().reloadData();
 	}
 	/**
 	 * change organization type

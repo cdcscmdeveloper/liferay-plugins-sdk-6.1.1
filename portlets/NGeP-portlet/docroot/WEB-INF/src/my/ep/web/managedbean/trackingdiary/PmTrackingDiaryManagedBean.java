@@ -13,6 +13,8 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.certbody.ICertBodySO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
@@ -23,6 +25,10 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
+import my.ep.dto.pm.common.certbody.CertBodyResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
@@ -32,6 +38,8 @@ import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmCertBody;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pm.common.PmUom;
@@ -41,9 +49,11 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
+import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -60,9 +70,14 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmOrgProfile> userOrgDataModel = new UserOrgPagingDataModel();
 	private IPagingDataModel<PmUom> uomDataModel = new UOMPagingDataModel();
 	private IPagingDataModel<PmEduField> eduDataModel = new EduPagingDataModel();
+	private IPagingDataModel<PmCertBody> pcbDataModel = new PcbPagingDataModel();
+	private IPagingDataModel<PmDocument> pmDocumentDataModel = new PmDocumentDataModel();
+
+	private SupportDocumentSearchBean supportDocSearchBean;
 	private OrganisationSearchBean organisationSearchBean;
 	private UserProfilesSearchBean userProfileSearchBean;
 	private UnitOfMeasurmentSearchBean uomSearchBean;
+	private ProfCertifiedBodySearchBean pcbSearchBean;
 	private String eduFieldName;
 	private boolean orgProfileRequired;
 	// private PmOrgProfile selectedOrgProfile;
@@ -72,6 +87,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String selectedDocType2;
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
+
+	public IPagingDataModel<PmCertBody> getPcbDataModel() {
+		return pcbDataModel;
+	}
+
+	public ProfCertifiedBodySearchBean getPcbSearchBean() {
+		return pcbSearchBean;
+	}
+
+	public void setPcbDataModel(IPagingDataModel<PmCertBody> pcbDataModel) {
+		this.pcbDataModel = pcbDataModel;
+	}
+
+	public void setPcbSearchBean(ProfCertifiedBodySearchBean pcbSearchBean) {
+		this.pcbSearchBean = pcbSearchBean;
+	}
 
 	public String getEduFieldName() {
 		return eduFieldName;
@@ -97,8 +128,29 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		this.selectedDocType = selectedDocType;
 	}
 
+	public IPagingDataModel<PmDocument> getPmDocumentDataModel() {
+		return pmDocumentDataModel;
+	}
+
+	public SupportDocumentSearchBean getSupportDocSearchBean() {
+		if(supportDocSearchBean == null){
+			supportDocSearchBean = new SupportDocumentSearchBean();
+		}
+		return supportDocSearchBean;
+	}
+
+	public void setPmDocumentDataModel(
+			IPagingDataModel<PmDocument> pmDocumentDataModel) {
+		this.pmDocumentDataModel = pmDocumentDataModel;
+	}
+
+	public void setSupportDocSearchBean(
+			SupportDocumentSearchBean supportDocSearchBean) {
+		this.supportDocSearchBean = supportDocSearchBean;
+	}
+
 	public List<PmZone> getZoneList() {
-		if(zoneList == null){
+		if (zoneList == null) {
 			this.zoneList = new ArrayList<PmZone>();
 		}
 		return zoneList;
@@ -113,7 +165,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public void setSelectedDocType2(String selectedDocType2) {
-		log.info(".......setSelectedDocType2........selectedDocType2="+selectedDocType2);
+		log.info(".......setSelectedDocType2........selectedDocType2="
+				+ selectedDocType2);
 		this.selectedDocType2 = selectedDocType2;
 	}
 
@@ -122,7 +175,8 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public void setMultiRuleType(boolean multiRuleType) {
-		log.info(".......setMultiRuleType........multiRuleType="+multiRuleType);
+		log.info(".......setMultiRuleType........multiRuleType="
+				+ multiRuleType);
 		this.multiRuleType = multiRuleType;
 	}
 
@@ -232,17 +286,31 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetUserResultBean() {
 		this.setUserDataModel(new UserPagingDataModel());
 	}
+
 	/**
 	 * reset result bean fields
 	 */
 	public void resetUOMResultBean() {
 		this.setUomDataModel(new UOMPagingDataModel());
 	}
+
 	/**
 	 * reset result bean fields
 	 */
 	public void resetEduResultBean() {
 		this.setEduDataModel(new EduPagingDataModel());
+	}
+	/**
+	 * reset result bean fields
+	 */
+	public void resetPcbResultBean() {
+		this.setPcbDataModel(new PcbPagingDataModel());
+	}
+	/**
+	 * reset result bean fields
+	 */
+	public void resetDocResultBean() {
+		this.setPmDocumentDataModel(new PmDocumentDataModel());
 	}
 
 	// pagination for user profile search list
@@ -358,109 +426,187 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 
 	}
+
 	// pagination for UOM search list
-		private class UOMPagingDataModel extends PagingDataModel<PmUom> {
-			private static final long serialVersionUID = 1L;
+	private class UOMPagingDataModel extends PagingDataModel<PmUom> {
+		private static final long serialVersionUID = 1L;
 
-			public UOMPagingDataModel() {
-				super("dtUOMResult");
+		public UOMPagingDataModel() {
+			super("dtUOMResult");
+		}
+
+		@Override
+		protected ISearchResultBean<PmUom> pageChangeListener(
+				ISearchBean<PmUom> searchBean) {
+			log.info("pageChangeListener");
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
 			}
+			boolean isSearchBeanEmpty = true;
+			IUomSO uomSO;
+			try {
 
-			@Override
-			protected ISearchResultBean<PmUom> pageChangeListener(
-					ISearchBean<PmUom> searchBean) {
-				log.info("pageChangeListener");
-				if (log.isDebugEnabled()) {
-					log.debug("pageChangeListener");
+				if (getUomSearchBean().getUOMCode() != null
+						&& !getUomSearchBean().getUOMCode().equals("")) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("uomCode",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getUomSearchBean().getUOMCode(), true));
+					isSearchBeanEmpty = false;
 				}
-				boolean isSearchBeanEmpty = true;
-				IUomSO uomSO;
-				try {
-
-					if (getUomSearchBean().getUOMCode() != null
-							&& !getUomSearchBean().getUOMCode().equals("")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("uomCode",
-										SearchOperator.OPERATOR_LIKE.value(),
-										getUomSearchBean().getUOMCode(),
-										true));
-						isSearchBeanEmpty = false;
-					}
-					if (getUomSearchBean().getUOMName() != null
-							&& !getUomSearchBean().getUOMName()
-									.equals("")) {
-						searchBean.getDataFilterBeans().add(
-								new SearchFilterBean("uomName",
-										SearchOperator.OPERATOR_LIKE.value(),
-										getUomSearchBean().getUOMName(), true));
-						isSearchBeanEmpty = false;
-					}
-					if (!isSearchBeanEmpty) {
-						uomSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
-
-						UomReqDTO uomReqDTO = new UomReqDTO();
-
-						uomReqDTO.setMeasurementSearchBean(searchBean);
-						UomResDTO resDto = uomSO.retrieveMeasurementBySearch(uomReqDTO);
-
-						return resDto.getMeasurementSearchResultBean();
-					} else {
-						return new SearchResultBean();
-					}
-				} finally {
-					uomSO = null;
+				if (getUomSearchBean().getUOMName() != null
+						&& !getUomSearchBean().getUOMName().equals("")) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("uomName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getUomSearchBean().getUOMName(), true));
+					isSearchBeanEmpty = false;
 				}
+				if (!isSearchBeanEmpty) {
+					uomSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+
+					UomReqDTO uomReqDTO = new UomReqDTO();
+
+					uomReqDTO.setMeasurementSearchBean(searchBean);
+					UomResDTO resDto = uomSO
+							.retrieveMeasurementBySearch(uomReqDTO);
+
+					return resDto.getMeasurementSearchResultBean();
+				} else {
+					return new SearchResultBean();
+				}
+			} finally {
+				uomSO = null;
 			}
 		}
-		
-		// pagination for Education fields search list
-				private class EduPagingDataModel extends PagingDataModel<PmEduField> {
-					private static final long serialVersionUID = 1L;
+	}
 
-					public EduPagingDataModel() {
-						super("dtEduResult");
-					}
+	// pagination for Education fields search list
+	private class EduPagingDataModel extends PagingDataModel<PmEduField> {
+		private static final long serialVersionUID = 1L;
 
-					@Override
-					protected ISearchResultBean<PmEduField> pageChangeListener(
-							ISearchBean<PmEduField> searchBean) {
-						log.info("pageChangeListener");
-						if (log.isDebugEnabled()) {
-							log.debug("pageChangeListener");
-						}
-						boolean isSearchBeanEmpty = true;
-						IEducationFieldSO eduSO;
-						try {
+		public EduPagingDataModel() {
+			super("dtEduResult");
+		}
 
-							if (getEduFieldName() != null
-									&& !getEduFieldName().equals("")) {
-								searchBean.getDataFilterBeans().add(
-										new SearchFilterBean("fieldName",
-												SearchOperator.OPERATOR_LIKE.value(),
-												getEduFieldName(),
-												true));
-								isSearchBeanEmpty = false;
-							}
-							if (!isSearchBeanEmpty) {
-								eduSO = BusinessDelegate.getInstance().getServiceObject(
-										ModuleCodeConst.PROFILE_MANAGEMENT, IEducationFieldSO.class);
+		@Override
+		protected ISearchResultBean<PmEduField> pageChangeListener(
+				ISearchBean<PmEduField> searchBean) {
+			log.info("pageChangeListener");
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			boolean isSearchBeanEmpty = true;
+			IEducationFieldSO eduSO;
+			try {
 
-								EducationFieldReqDTO eduReqDTO = new EducationFieldReqDTO();
-
-								eduReqDTO.setEducationSearchBean(searchBean);
-								EducationFieldResDTO resDto = eduSO.retrieveEducationBySearch(eduReqDTO);
-
-								return resDto.getEducationSearchResultBean();
-							} else {
-								return new SearchResultBean();
-							}
-						} finally {
-							eduSO = null;
-						}
-					}
+				if (getEduFieldName() != null && !getEduFieldName().equals("")) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("fieldName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getEduFieldName(), true));
+					isSearchBeanEmpty = false;
 				}
-				
+				if (!isSearchBeanEmpty) {
+					eduSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							IEducationFieldSO.class);
+
+					EducationFieldReqDTO eduReqDTO = new EducationFieldReqDTO();
+
+					eduReqDTO.setEducationSearchBean(searchBean);
+					EducationFieldResDTO resDto = eduSO
+							.retrieveEducationBySearch(eduReqDTO);
+
+					return resDto.getEducationSearchResultBean();
+				} else {
+					return new SearchResultBean();
+				}
+			} finally {
+				eduSO = null;
+			}
+		}
+	}
+
+	// pagination for Professional/Certified Body search list
+	private class PcbPagingDataModel extends PagingDataModel<PmCertBody> {
+		private static final long serialVersionUID = 1L;
+
+		public PcbPagingDataModel() {
+			super("dtPcbResult");
+		}
+
+		@Override
+		protected ISearchResultBean<PmCertBody> pageChangeListener(
+				ISearchBean<PmCertBody> searchBean) {
+			log.info("pageChangeListener");
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			boolean isSearchBeanEmpty = true;
+			ICertBodySO pcbSO;
+			try {
+
+				if (getPcbSearchBean().getBodyName() != null
+						&& !getPcbSearchBean().getBodyName().equals("")) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("bodyName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getPcbSearchBean().getBodyName(), true));
+					isSearchBeanEmpty = false;
+				}
+				if (!isSearchBeanEmpty) {
+					pcbSO = BusinessDelegate.getInstance().getServiceObject(
+							ModuleCodeConst.PROFILE_MANAGEMENT,
+							ICertBodySO.class);
+
+					CertBodyReqDTO pcbReqDTO = new CertBodyReqDTO();
+
+					pcbReqDTO.setCertBodySearchBean(searchBean);
+					CertBodyResDTO resDto = pcbSO.retrieveBodyList(pcbReqDTO);
+
+					return resDto.getCertBodyResultBean();
+				} else {
+					return new SearchResultBean();
+				}
+			} finally {
+				pcbSO = null;
+			}
+		}
+	}
+	private class PmDocumentDataModel extends PagingDataModel<PmDocument> {
+		private static final long serialVersionUID = 1L;
+
+		public PmDocumentDataModel() {
+			super("dtSupportDocResult");
+		}
+		
+		@Override
+		public ISearchResultBean<PmDocument> pageChangeListener(ISearchBean<PmDocument> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			
+			try {	
+				//ISearchBean<PmDocument> searchBeanData = getSearchBeanData(searchBean);
+				DocumentReqDTO reqDTO = new DocumentReqDTO();
+				reqDTO.setDocumentSearchBean(searchBean);
+				reqDTO.setDocCategoryCode(getSupportDocSearchBean().getDocCategoryParamCode());
+				reqDTO.setDocName(getSupportDocSearchBean().getDocName());		
+				reqDTO.setZoneId(getSupportDocSearchBean().getPmZone());
+				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
+				DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
+				if (resDTO.isSuccessful()) {
+					return resDTO.getDocumentResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
 	private class SearchTrackingDiaryPagingDataModel extends
 			PagingDataModel<PmTrackingDiary> {
 
@@ -476,23 +622,22 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 				ISearchBean<PmTrackingDiary> searchBean) {
 
 			TrackingDiaryReqDTO reqDTO = new TrackingDiaryReqDTO();
-			
-			log.info("...............isMultiRuleType()="+isMultiRuleType());
-			log.info("...............getSelectedDocType2()="+getSelectedDocType2());
+
+			log.info("...............isMultiRuleType()=" + isMultiRuleType());
+			log.info("...............getSelectedDocType2()="
+					+ getSelectedDocType2());
 			if (isMultiRuleType() && getSelectedDocType2() != null
 					&& !getSelectedDocType2().isEmpty()) {
-			
+
 				searchBean.getDataFilterBeans().add(
 						new SearchMultiFilterBean(new SearchFilterBean(
-								"docType",
-								SearchOperator.OPERATOR_EQUALS
-										.value(),getSelectedDocType()),
+								"docType", SearchOperator.OPERATOR_EQUALS
+										.value(), getSelectedDocType()),
 								new SearchFilterBean("docType",
-										SearchOperator.OPERATOR_EQUALS
-												.value(), getSelectedDocType2(),
-										SearchCondition.CONDITION_OR
-												.value())));
-			}else{
+										SearchOperator.OPERATOR_EQUALS.value(),
+										getSelectedDocType2(),
+										SearchCondition.CONDITION_OR.value())));
+			} else {
 				searchBean.getDataFilterBeans().add(
 						new SearchFilterBean("docType",
 								SearchOperator.OPERATOR_EQUALS.value(),
