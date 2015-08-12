@@ -4073,12 +4073,30 @@ public class LOIDetailBackingBean extends
 		attachment.setFileName("Negotiation_Recommendation.pdf");
 		populateAttachmentDetails(attachment);
 		VelocityContext context = new VelocityContext();
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 
 		if (getManagedBean().getRecommendList() != null) {
 			context.put("numberFormatter", new DecimalFormat("#,###,##0.00"));
 			context.put("recommendList", getManagedBean().getRecommendList());
 			context.put("bean", this);
+			context.put("recommendSupplierList", getManagedBean().getRecommendedSupplierList());
+			context.put("itemized", getManagedBean().isItemized());
 		}
+		String offeredPriceTotal = "";
+		List<ScLoi> lois = getManagedBean().getLois();
+		if (CollectionUtils.isNotEmpty(lois)) {
+			for (ScLoi loi : lois) {
+				if (loi.getOfferedPriceTotal() != null) {
+					offeredPriceTotal = amountDF.format(loi.getOfferedPriceTotal());
+				}
+			}
+			context.put("scLois", lois);
+		}
+		context.put("offeredPriceTotal", offeredPriceTotal);
+		context.put("isZonal", getManagedBean().isZonal());
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				"/sc/loi/loi-negotiationRecommendation.vm", context,
 				new FileOutputStream(getActualFilePath(attachment)));
