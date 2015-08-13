@@ -14,6 +14,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -181,6 +182,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
     private SpkiBackingBean spkiBackingBean;
     
     private boolean reliefDeclarationCheck = false;
+    
+    private FlInvoiceItemSummary invItemSummary;
 	
 	/**
 	 * Gets the doc type.
@@ -1006,5 +1009,19 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setReliefDeclarationCheck(boolean reliefDeclarationCheck) {
 		this.reliefDeclarationCheck = reliefDeclarationCheck;
+	}
+
+	/**
+	 * @return the invItemSummary
+	 */
+	public FlInvoiceItemSummary getInvItemSummary() {
+		return invItemSummary;
+	}
+
+	/**
+	 * @param invItemSummary the invItemSummary to set
+	 */
+	public void setInvItemSummary(FlInvoiceItemSummary invItemSummary) {
+		this.invItemSummary = invItemSummary;
 	}
 }

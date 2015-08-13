@@ -29,6 +29,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -74,9 +75,11 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.order.FlStopInstrItem;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
@@ -102,6 +105,9 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.InvoiceChargeLineLvl1VO;
+import my.ep.web.vo.InvoiceChargeLineLvl2VO;
+import my.ep.web.vo.InvoiceChargeLineLvl3VO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -178,9 +184,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			calInvSummary();
 			// Check is it DAN exist
 			BigDecimal adjustedAmt = new BigDecimal(0);
-			log.info("SIR6070 line183: "+getManagedBean().getInvoice().getFlInvoiceItem().size());
-			for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
-				adjustedAmt = invoiceItem.getInvAmt().subtract(invoiceItem.getOrderedAmt());
+			for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+				adjustedAmt = invItemSumm.getInvAmt().subtract(invItemSumm.getOrderedAmt());
 				if(adjustedAmt.doubleValue()>0) {
 					reqDTO.setDan(true);
 				} else if(adjustedAmt.doubleValue()<0) {
@@ -381,7 +386,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				
 				if(resDTO.getInvoice() == null){
 					getManagedBean().setInvoice(new FlInvoice());
-					getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
+					getManagedBean().getInvoice().setFlInvoiceItemSummary(new ArrayList<FlInvoiceItemSummary>());
 					reqDTO.setFlRequestId(paymentObj.getFlRequestId().longValue());
 					reqDTO.setDocType(ParameterConst.DOCTYPE_INVOICE);
 					resDTO = fulfilmentSO.retrieveFulfilmentRequestByDocType(reqDTO);
@@ -575,44 +580,162 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 * @param resDTO the res dto
 	 * @return the invoice table
 	 */
+//	private void getInvoiceTable1(FulfilmentResDTO resDTO){
+//		BigDecimal invoiceAmt = new BigDecimal(0);
+//		log.info("SIR6070 line579: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
+//		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
+//			FlInvoiceItem invoiceItem = new FlInvoiceItem();
+//			invoiceItem.setFlInvoice(getManagedBean().getInvoice());
+////			BigDecimal sumOrderedQty = new BigDecimal(0);
+////			BigDecimal sumOrderedAmt = new BigDecimal(0);
+//			BigDecimal sumRecalledQty = new BigDecimal(0);
+//			BigDecimal sumRecalledAmt = new BigDecimal(0);
+////			BigDecimal sumReceivedQty = new BigDecimal(0);
+////			BigDecimal sumReceivedAmt = new BigDecimal(0);
+//			invoiceItem.setFlFulfilmentItem(item);
+//			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
+////				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
+////				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
+////				sumReceivedQty = sumReceivedQty.add(itemAddr.getChargeReceivedQty());
+////				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getChargeReceivedAmt());
+//				if(itemAddr.getTempStopInstrItems()!=null && !itemAddr.getTempStopInstrItems().isEmpty()){
+//					for(FlStopInstrItem stopInstrItem : itemAddr.getTempStopInstrItems()){
+//						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
+//						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
+//					}
+//				}
+//			}
+////			invoiceItem.setOrderedQty(sumOrderedQty);
+////			invoiceItem.setOrderedAmt(sumOrderedAmt);
+//			invoiceItem.setRecalledQty(sumRecalledQty);
+//			invoiceItem.setRecalledAmt(sumRecalledAmt);
+////			invoiceItem.setReceivedQty(sumReceivedQty);
+////			invoiceItem.setReceivedAmt(sumReceivedAmt);
+//			invoiceItem.setInvAmt(sumReceivedAmt);
+//			getManagedBean().getInvoice().getFlInvoiceItem().add(invoiceItem);
+//			invoiceAmt = invoiceAmt.add(sumReceivedAmt);
+//		}
+//		getManagedBean().getInvoice().setInvoiceAmtOri(invoiceAmt);
+//		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceAmt);
+//	}
+	
 	private void getInvoiceTable(FulfilmentResDTO resDTO){
-		BigDecimal invoiceAmt = new BigDecimal(0);
-		log.info("SIR6070 line579: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
-		for(FlFulfilmentItem item : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
-			FlInvoiceItem invoiceItem = new FlInvoiceItem();
-			invoiceItem.setFlInvoice(getManagedBean().getInvoice());
-			BigDecimal sumOrderedQty = new BigDecimal(0);
-			BigDecimal sumOrderedAmt = new BigDecimal(0);
-			BigDecimal sumRecalledQty = new BigDecimal(0);
-			BigDecimal sumRecalledAmt = new BigDecimal(0);
-			BigDecimal sumReceivedQty = new BigDecimal(0);
-			BigDecimal sumReceivedAmt = new BigDecimal(0);
-			invoiceItem.setFlFulfilmentItem(item);
-			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
-				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedAmt());
-				sumReceivedQty = sumReceivedQty.add(itemAddr.getChargeReceivedQty());
-				sumReceivedAmt = sumReceivedAmt.add(itemAddr.getChargeReceivedAmt());
-				if(itemAddr.getTempStopInstrItems()!=null && !itemAddr.getTempStopInstrItems().isEmpty()){
-					for(FlStopInstrItem stopInstrItem : itemAddr.getTempStopInstrItems()){
-						sumRecalledQty = sumRecalledQty.add(stopInstrItem.getRecalledQty());
-						sumRecalledAmt = sumRecalledAmt.add(stopInstrItem.getRecalledAmt());
+
+		IReceivedNoteSO receivedNoteSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IReceivedNoteSO.class);
+		IFulfilmentOrderSO orderSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getInvoice().getFlRequest().getFulfilmentReqId());
+		FulfilmentResDTO frnNoteRes = receivedNoteSO.retrieveReceivedNoteByReqId(reqDTO);
+		Map<Long, FlInvoiceItemSummary> itemMapLv1 = null;
+		FlInvoiceItemSummary invItemSummary = null;
+		for(FlFulfilmentNote fulfilmentNote : frnNoteRes.getFulfilmentNoteList()){
+			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
+				if(noteItem.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
+					String key = noteItem.getGstUnitPrice().toString()+noteItem.getGstFlag().getParameterCode();
+					if(itemMapLv1 != null){
+						if(itemMapLv1.containsKey(noteItem.getFlItem().getFulfilmentItemId())){
+							FlInvoiceItemSummary extItemSumm = itemMapLv1.get(noteItem.getFlItem().getFulfilmentItemId());
+							List<FlInvoiceItem> invItemList = null;
+							for(FlInvoiceItem invItem : extItemSumm.getFlInvoiceItem()){
+								if(key.contains(invItem.getGstUnitPrice().toString()+invItem.getGstFlag().getParameterCode())){
+									invItem.setReceivedQty(invItem.getReceivedQty().add(noteItem.getReceivedQty()));
+									invItem.setReceivedAmt(invItem.getReceivedAmt().add(noteItem.getReceivedAmt()));
+									invItem.setInvAmt(invItem.getReceivedAmt());
+									invItem.setDeliveryAmt(invItem.getDeliveryAmt().add(noteItem.getFlDelOrderItem().getDeliveredAmt()));
+									invItem.setDeliveryQty(invItem.getDeliveryQty().add(noteItem.getFlDelOrderItem().getDeliveredQty()));
+									extItemSumm.setInvAmt(invItem.getReceivedAmt());
+								}else{
+									invItem = new FlInvoiceItem();
+									invItem.setReceivedQty(noteItem.getReceivedQty());
+									invItem.setReceivedAmt(noteItem.getReceivedAmt());
+									invItem.setInvAmt(noteItem.getReceivedAmt());
+									invItem.setGstAmount(noteItem.getGstAmount());
+									invItem.setGstUnitPrice(noteItem.getGstUnitPrice());
+									invItem.setDeliveryAmt(noteItem.getFlDelOrderItem().getDeliveredAmt());
+									invItem.setDeliveryQty(noteItem.getFlDelOrderItem().getDeliveredQty());
+									invItem.setGstFlag(noteItem.getGstFlag());
+									invItem.setFlInvoiceItemSummary(extItemSumm);
+									extItemSumm.setInvAmt(invItem.getReceivedAmt());
+
+									invItemList = new ArrayList<FlInvoiceItem>();
+									invItemList.add(invItem);
+								}
+							}
+							extItemSumm.getFlInvoiceItem().addAll(invItemList);
+						}else{
+							FulfilmentReqDTO siReqDTO = new FulfilmentReqDTO();
+							invItemSummary = new FlInvoiceItemSummary();
+							invItemSummary.setOrderedAmt(BigDecimal.ZERO);
+							invItemSummary.setOrderedQty(BigDecimal.ZERO);
+							invItemSummary.setFlInvoice(getManagedBean().getInvoice());
+							for(FlFulfilmentItemAddr itemAddr : noteItem.getFlItem().getFlFulfilmentItemAddr()){
+								invItemSummary.setOrderedQty(invItemSummary.getOrderedQty().add(itemAddr.getOrderedQty()));
+								invItemSummary.setOrderedAmt(invItemSummary.getOrderedAmt().add(itemAddr.getOrderedAmt()));
+							}
+							siReqDTO.setItemId(noteItem.getFlItem().getFulfilmentItemId());
+							siReqDTO.setFulfilmentOrderId(getManagedBean().getInvoice().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+							FulfilmentResDTO siResDTO = orderSO.retrieveStopInstrTotalRecallByOrderId(siReqDTO);
+							invItemSummary.setRecalledQty(siResDTO.getTotalRecallQty());
+							invItemSummary.setRecalledAmt(siResDTO.getTotalRecallAmt());
+							invItemSummary.setFlFulfilmentItem(noteItem.getFlItem());
+							invItemSummary.setInvAmt(noteItem.getReceivedAmt());
+
+							FlInvoiceItem invItem = new FlInvoiceItem();
+							invItem.setFlInvoiceItemSummary(invItemSummary);
+							invItem.setReceivedQty(noteItem.getReceivedQty());
+							invItem.setReceivedAmt(noteItem.getReceivedAmt());
+							invItem.setInvAmt(noteItem.getReceivedAmt());
+							invItem.setGstAmount(noteItem.getGstAmount());
+							invItem.setGstUnitPrice(noteItem.getGstUnitPrice());
+							invItem.setDeliveryAmt(noteItem.getFlDelOrderItem().getDeliveredAmt());
+							invItem.setDeliveryQty(noteItem.getFlDelOrderItem().getDeliveredQty());
+							invItem.setGstFlag(noteItem.getGstFlag());
+							invItemSummary.setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
+							invItemSummary.getFlInvoiceItem().add(invItem);
+							itemMapLv1.put(noteItem.getFlItem().getFulfilmentItemId(), invItemSummary);
+						}
+					}else{
+						FulfilmentReqDTO siReqDTO = new FulfilmentReqDTO();
+						invItemSummary = new FlInvoiceItemSummary();
+						invItemSummary.setOrderedAmt(BigDecimal.ZERO);
+						invItemSummary.setOrderedQty(BigDecimal.ZERO);
+						invItemSummary.setFlInvoice(getManagedBean().getInvoice());
+						for(FlFulfilmentItemAddr itemAddr : noteItem.getFlItem().getFlFulfilmentItemAddr()){
+							invItemSummary.setOrderedQty(invItemSummary.getOrderedQty().add(itemAddr.getOrderedQty()));
+							invItemSummary.setOrderedAmt(invItemSummary.getOrderedAmt().add(itemAddr.getOrderedAmt()));
+						}
+						siReqDTO.setItemId(noteItem.getFlItem().getFulfilmentItemId());
+						siReqDTO.setFulfilmentOrderId(getManagedBean().getInvoice().getFlRequest().getFlFulfilmentOrder().getFulfilmentOrderId());
+						FulfilmentResDTO siResDTO = orderSO.retrieveStopInstrTotalRecallByOrderId(siReqDTO);
+						invItemSummary.setRecalledQty(siResDTO.getTotalRecallQty());
+						invItemSummary.setRecalledAmt(siResDTO.getTotalRecallAmt());
+						invItemSummary.setFlFulfilmentItem(noteItem.getFlItem());
+						invItemSummary.setInvAmt(noteItem.getReceivedAmt());
+
+						FlInvoiceItem invItem = new FlInvoiceItem();
+						invItem.setFlInvoiceItemSummary(invItemSummary);
+						invItem.setReceivedQty(noteItem.getReceivedQty());
+						invItem.setReceivedAmt(noteItem.getReceivedAmt());
+						invItem.setInvAmt(noteItem.getReceivedAmt());
+						invItem.setGstAmount(noteItem.getGstAmount());
+						invItem.setGstUnitPrice(noteItem.getGstUnitPrice());
+						invItem.setDeliveryAmt(noteItem.getFlDelOrderItem().getDeliveredAmt());
+						invItem.setDeliveryQty(noteItem.getFlDelOrderItem().getDeliveredQty());
+						invItem.setGstFlag(noteItem.getGstFlag());
+						invItemSummary.setFlInvoiceItem(new ArrayList<FlInvoiceItem>());
+						invItemSummary.getFlInvoiceItem().add(invItem);
+						itemMapLv1 = new HashMap<Long, FlInvoiceItemSummary>();
+						itemMapLv1.put(noteItem.getFlItem().getFulfilmentItemId(), invItemSummary);
 					}
 				}
 			}
-			invoiceItem.setOrderedQty(sumOrderedQty);
-			invoiceItem.setOrderedAmt(sumOrderedAmt);
-			invoiceItem.setRecalledQty(sumRecalledQty);
-			invoiceItem.setRecalledAmt(sumRecalledAmt);
-			invoiceItem.setReceivedQty(sumReceivedQty);
-			invoiceItem.setReceivedAmt(sumReceivedAmt);
-			invoiceItem.setInvAmt(sumReceivedAmt);
-			getManagedBean().getInvoice().getFlInvoiceItem().add(invoiceItem);
-			invoiceAmt = invoiceAmt.add(sumReceivedAmt);
 		}
-		getManagedBean().getInvoice().setInvoiceAmtOri(invoiceAmt);
-		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceAmt);
+		for(Entry<Long, FlInvoiceItemSummary> itemEntry : itemMapLv1.entrySet()){	
+			FlInvoiceItemSummary invItemSummMapValue = itemEntry.getValue();
+			getManagedBean().getInvoice().getFlInvoiceItemSummary().add(invItemSummMapValue);
+		}
 	}
+	
 	
 	/**
 	 * Calculate invoice total amount.
@@ -620,31 +743,182 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 *
 	 * @param flInvoiceItem the fl invoice item
 	 */
-	public void retrieveInvTotalAmount(FlInvoiceItem flInvoiceItem){
-		if(flInvoiceItem.getInvAmt().doubleValue()>flInvoiceItem.getReceivedAmt().doubleValue()) {
-			flInvoiceItem.setInvAmt(flInvoiceItem.getReceivedAmt());
+//	public void retrieveInvTotalAmount1(FlInvoiceItem flInvoiceItem){
+//		if(flInvoiceItem.getInvAmt().doubleValue()>flInvoiceItem.getReceivedAmt().doubleValue()) {
+//			flInvoiceItem.setInvAmt(flInvoiceItem.getReceivedAmt());
+//			throw new EpException(MessageConst.ERROR_100032, new String[]{
+//					ResourceBundleUtils.getMessage("lbl.fl.amount.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
+//					ResourceBundleUtils.getMessage("lbl.fl.received.amount.message",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
+//		}
+//	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
+//	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
+//		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
+//		   
+//		   if(flInvoiceItem.getFlFulfilmentItem().getItemCode().equalsIgnoreCase(data.getFlFulfilmentItem().getItemCode())){
+//			   BigDecimal invoiceAmount=new BigDecimal(0);
+//			   for(TreeNode subNode:childNode.getChildren()){
+//				   FlInvoiceItem subData=(FlInvoiceItem)subNode.getData();
+//				   invoiceAmount=invoiceAmount.add(subData.getInvAmt());
+//			   }
+//			   data.setInvAmt(invoiceAmount);
+//			   totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);			  
+//		   } else {
+//			   totalInvoiceAmt = totalInvoiceAmt.add(data.getInvAmt());	
+//		   }
+//	   }
+//	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
+//	}
+	
+	/**
+	 * Calculate invoice total amount.
+	 * <p>if invoice amount is greater than received amount,we raise the exception
+	 *
+	 * @param invItemSumm the fl invoice item
+	 */
+	public void retrieveInvTotalAmount(InvoiceChargeLineLvl3VO invChargeLineLv3VO){
+		getManagedBean().setInvAmtGrandTotal(BigDecimal.ZERO);
+		if(invChargeLineLv3VO.getInvoiceAmt().doubleValue()>invChargeLineLv3VO.getReceivedAmt().doubleValue()) {
+			invChargeLineLv3VO.setInvoiceAmt(invChargeLineLv3VO.getReceivedAmt());
+			BigDecimal totalInvoiceAmt = BigDecimal.ZERO;
+			for(TreeNode lv1 : getManagedBean().getChargeLineItemRoot().getChildren()){
+				totalInvoiceAmt = BigDecimal.ZERO;
+				for(TreeNode lv2 : lv1.getChildren()){
+					for(TreeNode lv3 : lv2.getChildren()){
+						InvoiceChargeLineLvl3VO dataLv3= (InvoiceChargeLineLvl3VO) lv3.getData();
+
+						if(invChargeLineLv3VO.getParent().getParent().getItemCode().equalsIgnoreCase(dataLv3.getParent().getParent().getItemCode())){
+							BigDecimal invoiceAmount=new BigDecimal(0);
+							invoiceAmount=invoiceAmount.add(dataLv3.getInvoiceAmt());
+							dataLv3.setInvoiceAmt(invoiceAmount);
+							totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);
+							dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
+						} else {
+							totalInvoiceAmt = totalInvoiceAmt.add(dataLv3.getInvoiceAmt());
+							dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
+						}
+						getManagedBean().setInvAmtGrandTotal(getManagedBean().getInvAmtGrandTotal().add(dataLv3.getInvoiceAmt()));
+					}
+				}
+			}
 			throw new EpException(MessageConst.ERROR_100032, new String[]{
 					ResourceBundleUtils.getMessage("lbl.fl.amount.invoice",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale()),
 					ResourceBundleUtils.getMessage("lbl.fl.received.amount.message",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())});
 		}
-	   BigDecimal totalInvoiceAmt = new BigDecimal(0);
-	   for(TreeNode childNode : getManagedBean().getChargeLineItemRoot().getChildren()){
-		   FlInvoiceItem data= (FlInvoiceItem) childNode.getData();
-		   
-		   if(flInvoiceItem.getFlFulfilmentItem().getItemCode().equalsIgnoreCase(data.getFlFulfilmentItem().getItemCode())){
-			   BigDecimal invoiceAmount=new BigDecimal(0);
-			   for(TreeNode subNode:childNode.getChildren()){
-				   FlInvoiceItem subData=(FlInvoiceItem)subNode.getData();
-				   invoiceAmount=invoiceAmount.add(subData.getInvAmt());
-			   }
-			   data.setInvAmt(invoiceAmount);
-			   totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);			  
-		   } else {
-			   totalInvoiceAmt = totalInvoiceAmt.add(data.getInvAmt());	
-		   }
-	   }
-	   getManagedBean().setInvAmtGrandTotal(totalInvoiceAmt);
+		BigDecimal totalInvoiceAmt = BigDecimal.ZERO;
+		for(TreeNode lv1 : getManagedBean().getChargeLineItemRoot().getChildren()){
+			totalInvoiceAmt = BigDecimal.ZERO;
+			for(TreeNode lv2 : lv1.getChildren()){
+				for(TreeNode lv3 : lv2.getChildren()){
+					InvoiceChargeLineLvl3VO dataLv3= (InvoiceChargeLineLvl3VO) lv3.getData();
+
+					if(invChargeLineLv3VO.getParent().getParent().getItemCode().equalsIgnoreCase(dataLv3.getParent().getParent().getItemCode())){
+						BigDecimal invoiceAmount=new BigDecimal(0);
+						invoiceAmount=invoiceAmount.add(dataLv3.getInvoiceAmt());
+						dataLv3.setInvoiceAmt(invoiceAmount);
+						totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);
+						dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
+					} else {
+						totalInvoiceAmt = totalInvoiceAmt.add(dataLv3.getInvoiceAmt());
+						dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
+					}
+					getManagedBean().setInvAmtGrandTotal(getManagedBean().getInvAmtGrandTotal().add(dataLv3.getInvoiceAmt()));
+				}
+			}
+		}
+		String key = invChargeLineLv3VO.getGstUnitPrice()+invChargeLineLv3VO.getGstFlag();
+		for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+			if(invItemSumm.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId() == invChargeLineLv3VO.getItemId()){
+				for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
+					String key1 = invItem.getGstUnitPrice().toString()+invItem.getGstFlag().getParameterCode();
+					if(key.equalsIgnoreCase(key1)){
+						invItem.setInvAmt(invChargeLineLv3VO.getInvoiceAmt());
+					}
+				}
+			}
+		}
 	}
+	
+	/**
+	 * call this method  as user click on summary menu
+	 * <p>to calculate invoice summary.
+	 */
+//	public void calInvSummary1() {
+//		IFeeExemptionSO feeExemptionSO = (IFeeExemptionSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IFeeExemptionSO.class);
+//		FeeExemptionReqDTO reqDTO = new FeeExemptionReqDTO();
+//		FeeExemptionResDTO resDTO = new FeeExemptionResDTO();
+//		if (null == getManagedBean().getChargeLineItemRoot()) {
+//			populateChargeLineData();
+//		}
+//		TreeNode root = getManagedBean().getChargeLineItemRoot();
+//		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
+//		BigDecimal orderTotalAmount = new BigDecimal(0);
+//		
+//		for (TreeNode childNode : root.getChildren()) {
+//			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+//			invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
+//			orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
+//		}
+//		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
+//		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
+//		
+//		BigDecimal serviceFee = new BigDecimal(0);
+//		if(getManagedBean().getInvoice().getFlFulfilmentOrder().getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+//			serviceFee = new BigDecimal(FulfilmentConst.SERVICE_FEE_ZERO_POINT_EIGHT);
+//		} else {
+//			serviceFee = new BigDecimal(getManagedBean().getInvoice().getFlRequest().getCtContract().getServiceFee());
+//		}
+//		
+//		if(getManagedBean().getInvoice().getFlRequest().getProcurementType()!=null && getManagedBean().getInvoice().getFlRequest().getProcurementType().getParameterCode().equalsIgnoreCase(ParameterConst.PROC_TYPE_G2G)) {
+//			serviceFee = new BigDecimal(0);
+//		}
+//		
+//		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
+//		reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+//		if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+//			reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+//		}
+//		resDTO = feeExemptionSO.checkForFeeExceptionFirstLevel(reqDTO);
+//		if(resDTO.getFeeExemptionResult()!=null && resDTO.getFeeExemptionResult().booleanValue()) {
+//			serviceFee = new BigDecimal(0);
+//		}
+//		
+//		//check item whther is exempted for this supplier.
+//		if(serviceFee.doubleValue()>0){
+//			for (TreeNode childNode : root.getChildren()) {
+//				FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+//
+//				if(data.getFlFulfilmentItem().getCmItem()!=null) {
+//					reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
+//				} 
+//				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
+//				reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+//				if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+//					reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+//				}
+//				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
+//
+//				if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
+//					nonExemptedItemList.add(data.getInvAmt());
+//				}
+//			}
+//		}
+//		
+//		BigDecimal nonExemptedItem = new BigDecimal(0);
+//		if(!nonExemptedItemList.isEmpty()){
+//			for(BigDecimal normalItemAmt : nonExemptedItemList){
+//				nonExemptedItem = nonExemptedItem.add(normalItemAmt);
+//			}
+//		}
+//		
+//		getManagedBean().setServiceCharge(Double.toString(serviceFee.doubleValue()));
+//		BigDecimal percentage = new BigDecimal(100);
+//		BigDecimal invMulty = new BigDecimal(0.0);
+//		BigDecimal feeAmount = new BigDecimal(0.0);
+//		invMulty = nonExemptedItem.multiply(serviceFee);
+//		feeAmount = invMulty.divide(percentage,2,RoundingMode.HALF_UP);
+//		getManagedBean().getInvoice().setFeeAmt(feeAmount);
+//		getManagedBean().getInvoice().setSupplierOrFactorAmt(invoiceTotalAmount.subtract(feeAmount));
+//	}
 	
 	/**
 	 * call this method  as user click on summary menu
@@ -661,10 +935,13 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
 		BigDecimal orderTotalAmount = new BigDecimal(0);
 		
-		for (TreeNode childNode : root.getChildren()) {
-			FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
-			invoiceTotalAmount = invoiceTotalAmount.add(data.getInvAmt());
-			orderTotalAmount = orderTotalAmount.add(data.getOrderedAmt());
+		for (TreeNode lv1 : root.getChildren()) {
+			for(TreeNode lv2 : lv1.getChildren()){
+				InvoiceChargeLineLvl2VO dataLv2 = (InvoiceChargeLineLvl2VO) lv2.getData();
+				invoiceTotalAmount = invoiceTotalAmount.add(dataLv2.getInvoiceAmt());
+				orderTotalAmount = orderTotalAmount.add(dataLv2.getOrderedAmt());
+			}
+			
 		}
 		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
@@ -692,21 +969,25 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		
 		//check item whther is exempted for this supplier.
 		if(serviceFee.doubleValue()>0){
-			for (TreeNode childNode : root.getChildren()) {
-				FlInvoiceItem data = (FlInvoiceItem) childNode.getData();
+			for (TreeNode lv1 : root.getChildren()) {
+				InvoiceChargeLineLvl1VO dataLv1 = (InvoiceChargeLineLvl1VO) lv1.getData();
+				for(TreeNode lv2 : lv1.getChildren()){
+					for(TreeNode lv3 : lv2.getChildren()){
+						InvoiceChargeLineLvl3VO dataLv3 = (InvoiceChargeLineLvl3VO) lv3.getData();
+						if(dataLv3.getCmItemId()!=null) {
+							reqDTO.setItemId(dataLv3.getCmItemId());
+						} 
+						reqDTO.setRequestItemId(dataLv3.getItemId());
+						reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
+						if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
+							reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
+						}
+						resDTO = feeExemptionSO.checkForFeeException(reqDTO);
 
-				if(data.getFlFulfilmentItem().getCmItem()!=null) {
-					reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
-				} 
-				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
-				reqDTO.setOrgProfileId(getManagedBean().getInvoice().getFlRequest().getSmSupplier().getSupplierId());
-				if(getManagedBean().getInvoice().getFlRequest().getCtContract() != null){
-					reqDTO.setContractId(getManagedBean().getInvoice().getFlRequest().getCtContract().getContractId());
-				}
-				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
-
-				if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
-					nonExemptedItemList.add(data.getInvAmt());
+						if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
+							nonExemptedItemList.add(dataLv3.getInvoiceAmt());
+						}
+					}
 				}
 			}
 		}
@@ -1098,56 +1379,56 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	 * call this method  as user click on items menu
 	 * <p>Populate charge line data.
 	 */
-	private void populateChargeLineData(){
-		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-		
-		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
-		List<FlInvoiceItem> flInvoiceItemList = null;
-		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
-			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getItemCode())) {
-				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getItemCode());
-			} else {
-				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
-			}
-			flInvoiceItemList.add(flInvoiceItem);
-			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItemList);
-		}
-		
-		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-		//for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
-		for(Entry<String, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){	
-			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
-			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
-			flInvoiceItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItem, getManagedBean().getChargeLineItemRoot());
-			
-			BigDecimal totalOrderAmt = new BigDecimal(0);
-			BigDecimal totalReceiveAmt = new BigDecimal(0);
-			BigDecimal totalRecallAmt = new BigDecimal(0);
-			BigDecimal totalInvAmt = new BigDecimal(0);
-			for(FlInvoiceItem chargeLineItem : invoiceItems) {
-				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
-				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
-				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());
-				totalInvAmt=totalInvAmt.add(chargeLineItem.getInvAmt());
-			}			
-
-			flInvoiceItem.setOrderedAmt(totalOrderAmt);
-			flInvoiceItem.setReceivedAmt(totalReceiveAmt);
-			flInvoiceItem.setRecalledAmt(totalRecallAmt);
-			flInvoiceItem.setInvAmt(totalInvAmt);
-			
-			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
-			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
-		}
-		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
-	}
+//	private void populateChargeLineData1(){
+//		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
+//		
+//		Map<String, List<FlInvoiceItem>> invoiceItemsMap = new TreeMap<String, List<FlInvoiceItem>>();
+//		List<FlInvoiceItem> flInvoiceItemList = null;
+//		for (FlInvoiceItem flInvoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()) {
+//			if (invoiceItemsMap.containsKey(flInvoiceItem.getFlFulfilmentItem().getItemCode())) {
+//				flInvoiceItemList = invoiceItemsMap.get(flInvoiceItem.getFlFulfilmentItem().getItemCode());
+//			} else {
+//				flInvoiceItemList = new ArrayList<FlInvoiceItem>();
+//			}
+//			flInvoiceItemList.add(flInvoiceItem);
+//			invoiceItemsMap.put(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItemList);
+//		}
+//		
+//		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+//		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+//		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+//		//for(Entry<Long, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){
+//		for(Entry<String, List<FlInvoiceItem>> itemEntry : invoiceItemsMap.entrySet()){	
+//			List<FlInvoiceItem> invoiceItems = itemEntry.getValue();
+//			FlInvoiceItem flInvoiceItem = (FlInvoiceItem) invoiceItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
+//			flInvoiceItem.setParent(true);
+//			TreeNode childItemNode = new DefaultTreeNode(flInvoiceItem.getFlFulfilmentItem().getItemCode(), flInvoiceItem, getManagedBean().getChargeLineItemRoot());
+//			
+//			BigDecimal totalOrderAmt = new BigDecimal(0);
+//			BigDecimal totalReceiveAmt = new BigDecimal(0);
+//			BigDecimal totalRecallAmt = new BigDecimal(0);
+//			BigDecimal totalInvAmt = new BigDecimal(0);
+//			for(FlInvoiceItem chargeLineItem : invoiceItems) {
+//				new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
+//				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
+//				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getReceivedAmt());
+//				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getRecalledAmt());
+//				totalInvAmt=totalInvAmt.add(chargeLineItem.getInvAmt());
+//			}			
+//
+//			flInvoiceItem.setOrderedAmt(totalOrderAmt);
+//			flInvoiceItem.setReceivedAmt(totalReceiveAmt);
+//			flInvoiceItem.setRecalledAmt(totalRecallAmt);
+//			flInvoiceItem.setInvAmt(totalInvAmt);
+//			
+//			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+//			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
+//			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
+//		}
+//		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+//		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+//		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
+//	}
 	
 	/**
 	 * Page navigation to FLDoc search page in INV.
@@ -1280,8 +1561,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		String invAmt = "";
 		BigDecimal totalAmt = new BigDecimal(0);
 		
-		for(FlInvoiceItem invoiceItem : getManagedBean().getInvoice().getFlInvoiceItem()){
-			totalAmt = totalAmt.add(invoiceItem.getInvAmt());
+		for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+			totalAmt = totalAmt.add(invItemSumm.getInvAmt());
 		}
 		invAmt = totalAmt.toString();
 		return invAmt;
@@ -1451,5 +1732,95 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				invoice.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
 			}
 			
+		}
+		
+		/**
+		 * call this method  as user click on items menu
+		 * <p>Populate charge line data.
+		 */
+		private void populateChargeLineData(){
+			getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
+			
+			Map<String, List<FlInvoiceItemSummary>> invoiceItemSummaryMap = new TreeMap<String, List<FlInvoiceItemSummary>>();
+			List<FlInvoiceItem> flInvoiceItemList = null;
+			List<FlInvoiceItemSummary> invItemSummaryList = null;
+			for (FlInvoiceItemSummary invItemSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()) {
+				String key = invItemSummary.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().toString();
+				if (invoiceItemSummaryMap.containsKey(key)) {
+					invItemSummaryList = invoiceItemSummaryMap.get(key);
+				} else {
+					invItemSummaryList = new ArrayList<FlInvoiceItemSummary>();
+				}
+				invItemSummaryList.add(invItemSummary);
+				invoiceItemSummaryMap.put(key, invItemSummaryList);
+			}
+			
+			BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+			BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+			BigDecimal grandTotalInvAmt = new BigDecimal(0);
+			for(Entry<String, List<FlInvoiceItemSummary>> itemEntry : invoiceItemSummaryMap.entrySet()){	
+				List<FlInvoiceItemSummary> invItemSummary = itemEntry.getValue();
+				FlInvoiceItemSummary invItemSummObj = (FlInvoiceItemSummary) invItemSummary.get(0).cloneEntity(); // parent entity, no need stored in DB.
+				InvoiceChargeLineLvl1VO invVOLvl1 = new InvoiceChargeLineLvl1VO();
+				invVOLvl1.setLvl1(true);
+				invVOLvl1.setLvl2(false);
+				invVOLvl1.setLvl3(false);
+				invVOLvl1.setItemCode(invItemSummObj.getFlFulfilmentItem().getItemCode());
+				invVOLvl1.setItemName(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getItemName());
+				invVOLvl1.setUom(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getUom().getUomName());
+				invVOLvl1.setUomCode(invItemSummObj.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getUom().getUomCode());
+				TreeNode lv1TreeNode = new DefaultTreeNode(invVOLvl1.getItemCode(), invVOLvl1, getManagedBean().getChargeLineItemRoot());
+				BigDecimal totalOrderAmt = new BigDecimal(0);
+				BigDecimal totalReceiveAmt = new BigDecimal(0);
+				BigDecimal totalRecallAmt = new BigDecimal(0);
+				BigDecimal totalInvAmt = new BigDecimal(0);
+				
+				for(FlInvoiceItemSummary chargeLineItem : invItemSummary) {
+					InvoiceChargeLineLvl2VO invVOLvl2 = new InvoiceChargeLineLvl2VO();
+					invVOLvl2.setLvl1(false);
+					invVOLvl2.setLvl2(true);
+					invVOLvl2.setLvl3(false);
+					invVOLvl2.setUnitPrice(chargeLineItem.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getUnitPrice());
+					invVOLvl2.setOrderedQty(chargeLineItem.getOrderedQty());
+					invVOLvl2.setOrderedAmt(chargeLineItem.getOrderedAmt());
+					invVOLvl2.setRecalledQty(chargeLineItem.getRecalledQty());
+					invVOLvl2.setParent(invVOLvl1);
+					BigDecimal lvl2TotalInv = BigDecimal.ZERO;
+					for(FlInvoiceItem invItem : chargeLineItem.getFlInvoiceItem()){
+						lvl2TotalInv = lvl2TotalInv.add(invItem.getInvAmt());
+						invVOLvl2.setInvoiceAmt(lvl2TotalInv);
+					}
+					TreeNode lv2TreeNode = new DefaultTreeNode(invVOLvl2.getItemCode(),invVOLvl2,lv1TreeNode);
+					totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
+					
+					for(FlInvoiceItem invItem : chargeLineItem.getFlInvoiceItem()){
+						InvoiceChargeLineLvl3VO invVOLvl3 = new InvoiceChargeLineLvl3VO();
+						//						chargeLineItem.setLvl3(true);
+						invVOLvl3.setLvl1(false);
+						invVOLvl3.setLvl2(false);
+						invVOLvl3.setLvl3(true);
+						invVOLvl3.setGstAmount(invItem.getGstAmount());
+						invVOLvl3.setGstUnitPrice(invItem.getGstUnitPrice());
+						invVOLvl3.setReceivedQty(invItem.getReceivedQty());
+						invVOLvl3.setReceivedAmt(invItem.getReceivedAmt());
+						invVOLvl3.setInvoiceAmt(invItem.getInvAmt());
+						invVOLvl3.setParent(invVOLvl2);
+						invVOLvl3.setGstFlag(invItem.getGstFlag().getParameterCode());
+						invVOLvl3.setItemId(chargeLineItem.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
+						invVOLvl3.setCmItemId(chargeLineItem.getFlFulfilmentItem().getCmItem().getItemId());
+						totalInvAmt=totalInvAmt.add(invItem.getInvAmt());
+						totalReceiveAmt=totalReceiveAmt.add(invItem.getReceivedAmt());
+						new DefaultTreeNode(invVOLvl3.getItemCode(),invVOLvl3,lv2TreeNode);
+					}
+				}			
+
+				
+				grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
+				grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
+				grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
+			}
+			getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+			getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+			getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
 		}
 }
