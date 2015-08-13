@@ -1392,7 +1392,8 @@ public class PmCommonUtil {
 
 	public static PmTrackingDairyVO assignTrackingDairyForPmBasicCategory(
 			Long pmCategoryL3Id, Long pmCategoryL2Id, String categoryL3Code,
-			String actionDesc, PmStatus status, String groupDocType) {
+			PmStatus status, String actionDesc, String docType,
+			String groupDocType) {
 
 		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
 		PmUser user = new FacesScopes().getUserSessionBean();
@@ -1401,7 +1402,7 @@ public class PmCommonUtil {
 		trckVO.setActionedByRole(getUserRoleValue());
 		trckVO.setDocId(pmCategoryL3Id);
 		trckVO.setDocNo(categoryL3Code);
-		trckVO.setDocType(ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE);
+		trckVO.setDocType(docType);
 		trckVO.setStatus(status);
 		trckVO.setGroupId(pmCategoryL2Id);
 		trckVO.setGroupDocType(groupDocType);
