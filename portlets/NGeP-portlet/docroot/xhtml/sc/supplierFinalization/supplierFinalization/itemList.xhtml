@@ -15,36 +15,6 @@
 	</style>
 
 	<p:panel header="#{lbl['lbl.sc.item.list']}" toggleable="true">
-		<p:outputPanel id="itemOnlineBiddingPanel">
-				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-						columnClasses="columnWidth20"
-						rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding and 
-												suppFinalizationBackingBean.managedBean.itemize}">
-						<h:column>
-							<p:outputLabel value="#{lbl['lbl.sc.online.bidding.endorsement']}" />
-							<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
-						</h:column>
-						<h:column>
-							<table>
-								<tr>
-									<td>
-										<p:selectOneRadio id="itemBiddingEndorsement" required="true" 
-											label="#{lbl['lbl.sc.online.bidding.endorsement']}"
-											value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
-											disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
-											<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
-											<p:ajax partialSubmit="true" process="@this" update="@this"></p:ajax>
-							   			</p:selectOneRadio>
-									</td>
-									<td style="margin-top: -3px">
-										<ac:iconTooltip value="#{lbl['lbl.sc.online.bidding.endorsement.tooltip']}" />
-									</td>
-								</tr>
-							</table>
-						</h:column>
-				</h:panelGrid>
-				<p:spacer height="10px" rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding}"/>
-		</p:outputPanel>	
 		
 		<p:dataTable id="itemListTbl" var="item"
 			value="#{suppFinalizationBackingBean.managedBean.itemList}"
@@ -106,7 +76,7 @@
 						style="width:95%;">
 						<f:selectItems value="#{suppFinalizationBackingBean.getItemRecommendByDropDown(
 														item.requestItem.tplSpecQuestion.clPriceTypeCode, item)}" />
-						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=itemOnlineBiddingPanel])" 
+						<p:ajax event="change" update="@([id$=itemListTbl],[id$=supplierPanel],[id$=onlineBiddingPanel])" 
 								listener="#{suppFinalizationBackingBean.itemRecommendByEvent(item)}"
 								process="@this" partialSubmit="true"/>
 	   			</h:selectOneMenu>
