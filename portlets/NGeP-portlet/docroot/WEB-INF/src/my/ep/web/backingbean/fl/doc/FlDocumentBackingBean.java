@@ -25,6 +25,7 @@ import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.order.IReliefOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -65,6 +66,7 @@ import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
 import my.ep.web.backingbean.fl.paymentmatch.PaymentMatchBackingBean;
 import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
+import my.ep.web.backingbean.fl.relieforder.ReliefOrderBackingBean;
 import my.ep.web.backingbean.fl.stopinstr.StopInstrBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.report.CommonMethod;
@@ -124,6 +126,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	
 	/** The Constant NAV_TO_ADJUSTMENT_NOTE. */
 	public static final String NAV_TO_ADJUSTMENT_NOTE = "/xhtml/fl/invoice/adjustment/danBasePage.xhtml";
+	
+	/** The Constant NAV_TO_ADJUSTMENT_NOTE. */
+	public static final String NAV_TO_GST_RELIEF = "/xhtml/fl/relieforder/reliefOrderBasePage.xhtml";
+	
+	
 	
 	/**
 	 * Gets the faces scopes.
@@ -251,6 +258,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		IReceivedNoteSO receivedNoteSO = null;
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		IPaymentMatchSO paymentSO = null;
+		IReliefOrderSO reliwfOrderSo=null;
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IStatusSO.class);
 		StatusReqDTO statusReqDTO = null;
 		
@@ -664,7 +672,52 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			danBB.getManagedBean().setSelectedTabIndex(0);
 			danBB.setAdjustmentNote(resDTO);
 			navgPage=NAV_TO_ADJUSTMENT_NOTE;
-		}
+		}else if(docType.equals(ParameterConst.DOCTYPE_RELIEF_ORDER)){
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
+			reqDTO.setReliefOrderId(Long.valueOf(flDocId));
+			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByReliefOrderId(reqDTO);
+			reqDTO.setDocType(ParameterConst.DOCTYPE_RELIEF_ORDER);
+			reqDTO.setFlOrderId(Long.valueOf(rsResDto.getReliefOrder().getFlFulfilmentOrder().getFulfilmentOrderId()));
+			
+			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
+			ReliefOrderBackingBean reliefOrderBB=new ReliefOrderBackingBean();
+			
+			reliefOrderBB.getManagedBean().setButtonVal(buttonVal);
+			reliefOrderBB.getManagedBean().setSelectedTabIndex(0);
+			reliefOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
+			reliefOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
+			reliefOrderBB.getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
+			reliefOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
+					Long supplieContractId=coResDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					contractSupplierReqDTO.setContractId(supplieContractId);
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						coResDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
+							reliefOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						}
+					}else{
+						reliefOrderBB.getManagedBean().getFlRequest().getCtContract().setFactored(false);
+					}
+			}	
+			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
+				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
+				flBB.getManagedBean().setHideRemarks(true);
+			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			} else {
+				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
+			}	
+			if(!isGovtSeller()){
+				reliefOrderBB.getManagedBean().setSupplier(isFlFulfilmentSupplier());
+			}
+			navgPage=NAV_TO_GST_RELIEF;
+		}	
 		return navgPage;
 	}
 	
