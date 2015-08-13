@@ -6879,7 +6879,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setFlPmo(null);
 		this.setFlItemName(null);
 		this.setSmApplicationNo(null);
-		this.setSmZone(null);
+		if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
+				this.setSmZone(null);
+		}
 		this.setSmSupplierType(null);
 		this.setSmMofRegNo(null);
 		this.setSmRegistrationStatus(null);
