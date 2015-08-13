@@ -38,6 +38,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
@@ -162,6 +163,15 @@ public class PmTrackingDiaryBackingBean extends
 	}
 	
 	/**
+	 * reset search bean fields
+	 */
+	public void resetFOrgSearchBean() {
+		log.info("resetFOrgSearchBean");
+		this.getManagedBean().setFinancialOrgName("");
+		this.getManagedBean().resetFOrgResultBean();
+	}
+	
+	/**
 	 * retrieve document category (parameterId)
 	 * 
 	 * @return SelectItem[]
@@ -282,6 +292,9 @@ public class PmTrackingDiaryBackingBean extends
 			}else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("SD")) {
 				resetPcbSearchBean();
+			}else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("FO")) {
+				resetFOrgSearchBean();
 			}
 		}
 
@@ -341,6 +354,13 @@ public class PmTrackingDiaryBackingBean extends
 		getManagedBean().setMultiRuleType(false);
 		getManagedBean().setSelectedDocType(ParameterConst.RULE_CONFIG_PARAM_CODE);
 		getManagedBean().setSelectedDocId(null);
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	public String goToFOrgTrackingDiarySearch(PmFinancialOrg org){
+		log.debug("**********goToFOrgTrackingDiarySearch************"+ org.getFinancialOrgId());
+		getManagedBean().setSelectedDocType(ParameterConst.FINANCIAL_ORG_PARAM_CODE);
+		getManagedBean().setSelectedDocId(org.getFinancialOrgId());
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();	
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
@@ -446,6 +466,11 @@ public class PmTrackingDiaryBackingBean extends
 	public void searchProfesionalCertified(){
 		log.info(",,,searchProfesionalCertified");
 		this.getManagedBean().getPcbDataModel().reloadData();
+	}
+	
+	public void searchFinancialOrg(){
+		log.info(",,,searchFinancialOrg");
+		this.getManagedBean().getFinancialOrgDataModel().reloadData();
 	}
 	/**
 	 * change organization type

@@ -71,6 +71,11 @@
 				<ui:include
 					src="/xhtml/trackingdiary/pmSupportingDocumentAndCheckList.xhtml" />
 			</h:panelGroup>
+				<h:panelGroup id="pmFOrgSearchID"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'FO'}">
+				<ui:include
+					src="/xhtml/trackingdiary/pmFinancialOrgsearch.xhtml" />
+			</h:panelGroup>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.pm.search.result']}"
 			toggleable="true">
@@ -323,6 +328,31 @@
 					</f:facet>
 					<p:commandLink
 						action="#{pmTrackingDiaryBackingBean.goToDocTrackingDiarySearch(doc)}">
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							title="#{lbl['lbl.ct.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:dataTable id="dtFOrgResult"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'FO'}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{pmTrackingDiaryBackingBean.managedBean.financialOrgDataModel}"
+				lazy="true" var="org" width="100%" rows="10">
+
+				<ac:paginator for="dtDocResult" />
+
+				<p:column width="85%">
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.financialorg.name']}" />
+					</f:facet>
+						#{org.finOrgName}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.td.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{pmTrackingDiaryBackingBean.goToFOrgTrackingDiarySearch(org)}">
 						<p:graphicImage value="/css/images/design/ico-view.png"
 							title="#{lbl['lbl.ct.view']}" />
 					</p:commandLink>
