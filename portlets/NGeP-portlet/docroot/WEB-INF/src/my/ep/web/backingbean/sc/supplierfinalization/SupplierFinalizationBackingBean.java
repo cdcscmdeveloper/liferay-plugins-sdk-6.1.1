@@ -1276,8 +1276,8 @@ public class SupplierFinalizationBackingBean extends
 			}
 		}
 		
-		if (isSubmit && isZonal
-				&& CollectionUtils.isNotEmpty(toBeValidatedRecommendList)) {
+		if (isSubmit && isZonal && 
+				CollectionUtils.isNotEmpty(toBeValidatedRecommendList)) {
 			for (ScQtRecommend scQtRecommend : scQtRecommendList) {
 				if (!scQtRecommend.isAwardedItem()) {
 					validateByPackageByZone(scQtRecommend);
@@ -1508,8 +1508,7 @@ public class SupplierFinalizationBackingBean extends
 			if (((isFwdToHighAuth 
 					&& !scQtRecommend.isHigherAuthReq()) || 
 						ParameterConst.DECISION_RECOMMEND_SUPPLIER
-							.equals(decisionTypeCode)) && 
-							 	!scQtRecommend.isAwardedItem()) {
+							.equals(decisionTypeCode))) {
 				if (!scQtRecommend.isAwardedItem()) {
 					validateAwardOfItem(scQtRecommend);
 				}
@@ -5203,6 +5202,7 @@ public class SupplierFinalizationBackingBean extends
 					specZoneDtl.setZoneTabIndex(zoneTabIndex);
 
 					MenuItem zoneItem = new MenuItem();
+					zoneItem.setTransient(true);
 					zoneItem.setValue(specZoneDtl.getZoneName().toUpperCase());
 					//zoneItem.setAjax(true);
 					zoneItem.setPartialSubmit(true);
