@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.pm.settings;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -68,7 +69,7 @@ public class CalendarBackingBean extends
 
     }
 	public void updateEndDateVariable(){
-		Date endDate = DateUtils.minusDays(this.getManagedBean().getEvent().getEndDate(), 1);
+		Date endDate = DateUtils.addDays(this.getManagedBean().getEvent().getEndDate(), 1);
 		setEndDateTemp(endDate);
 //	/????can not set event endDate
 		
@@ -76,12 +77,19 @@ public class CalendarBackingBean extends
 	public void addOrUpdateEvent(ActionEvent actionEvent) {
 		System.out.println("......addOrUpdateEvent.......");
 		System.out.println("........getManagedBean().getEvent().getTitle()="+getManagedBean().getEvent().getTitle());
-	
+		System.out.println("........getManagedBean().getEvent().getStartDate()="+getManagedBean().getEvent().getStartDate());
+		System.out.println("........getManagedBean().getEvent().getEndDate()="+getManagedBean().getEvent().getEndDate());
 
 		if(getManagedBean().getEvent().getTitle() == null || getManagedBean().getEvent().getTitle().isEmpty()){
-			//
-			  FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_WARN, "key in the title of Event" , "");
-		        addMessage(message);
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									"title required",
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+		
 //			RequestContext.getCurrentInstance().execute("eventDialog.hide();");
 //		       throw new EpException("key in the title of Event");
 		}
@@ -190,8 +198,17 @@ public class CalendarBackingBean extends
 		holiday.setStartDate(getManagedBean().getEvent().getStartDate());
 		//increase end date for one day before persist because Scheduler component don't include endDate for holiday event
 //		holiday.setEndDate(DateUtils.addDays(getManagedBean().getEvent().getEndDate(), 1));
-		System.out.println(".....getManagedBean().getEvent().getEndDate()"+getManagedBean().getEvent().getEndDate());
-		holiday.setEndDate(getManagedBean().getEvent().getEndDate());
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(getManagedBean().getEvent().getEndDate());
+	    calendar.set(Calendar.HOUR_OF_DAY, 23);
+	    calendar.set(Calendar.MINUTE, 59);
+	    calendar.set(Calendar.SECOND, 0);
+	    
+	    Date endDate = new Timestamp(calendar.getTime().getTime());
+	    System.out.println(".....getManagedBean().getEvent().getEndDate()"+getManagedBean().getEvent().getEndDate());
+		System.out.println(".....getManagedBean().getEvent().getEndDate()"+endDate);
+		
+		holiday.setEndDate(endDate);
 	}
 	
 	public Calendar today() {
@@ -203,7 +220,7 @@ public class CalendarBackingBean extends
     }
 	public void onEventSelect(SelectEvent selectEvent) {
 		System.out.println("......getObject()).getStartDate()="+((ScheduleEvent) selectEvent.getObject()).getStartDate());
-		System.out.println("......getObject()).getEndDate()="+((ScheduleEvent) selectEvent.getObject()).getEndDate());
+		System.out.println("......getObject()).getEndDate()="+((ScheduleEvent) selectEvent.getObject()));
 		
 		getManagedBean().setEvent((ScheduleEvent) selectEvent.getObject());
     }
