@@ -16,6 +16,7 @@ import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
+import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
@@ -31,6 +32,8 @@ import my.ep.dto.pm.common.document.DocumentReqDTO;
 import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgReqDTO;
+import my.ep.dto.pm.common.financialorg.FinancialOrgResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
@@ -41,6 +44,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
@@ -72,6 +76,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmEduField> eduDataModel = new EduPagingDataModel();
 	private IPagingDataModel<PmCertBody> pcbDataModel = new PcbPagingDataModel();
 	private IPagingDataModel<PmDocument> pmDocumentDataModel = new PmDocumentDataModel();
+	private IPagingDataModel<PmFinancialOrg> financialOrgDataModel = new FinancialOrgPagingDataModel();
 
 	private SupportDocumentSearchBean supportDocSearchBean;
 	private OrganisationSearchBean organisationSearchBean;
@@ -79,6 +84,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private UnitOfMeasurmentSearchBean uomSearchBean;
 	private ProfCertifiedBodySearchBean pcbSearchBean;
 	private String eduFieldName;
+	private String financialOrgName;
 	private boolean orgProfileRequired;
 	// private PmOrgProfile selectedOrgProfile;
 	// private PmUser selectedUser;
@@ -87,6 +93,23 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String selectedDocType2;
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
+
+	public IPagingDataModel<PmFinancialOrg> getFinancialOrgDataModel() {
+		return financialOrgDataModel;
+	}
+
+	public void setFinancialOrgDataModel(
+			IPagingDataModel<PmFinancialOrg> financialOrgDataModel) {
+		this.financialOrgDataModel = financialOrgDataModel;
+	}
+
+	public String getFinancialOrgName() {
+		return financialOrgName;
+	}
+
+	public void setFinancialOrgName(String financialOrgName) {
+		this.financialOrgName = financialOrgName;
+	}
 
 	public IPagingDataModel<PmCertBody> getPcbDataModel() {
 		return pcbDataModel;
@@ -133,7 +156,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public SupportDocumentSearchBean getSupportDocSearchBean() {
-		if(supportDocSearchBean == null){
+		if (supportDocSearchBean == null) {
 			supportDocSearchBean = new SupportDocumentSearchBean();
 		}
 		return supportDocSearchBean;
@@ -300,19 +323,28 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetEduResultBean() {
 		this.setEduDataModel(new EduPagingDataModel());
 	}
+
 	/**
 	 * reset result bean fields
 	 */
 	public void resetPcbResultBean() {
 		this.setPcbDataModel(new PcbPagingDataModel());
 	}
+
 	/**
 	 * reset result bean fields
 	 */
 	public void resetDocResultBean() {
 		this.setPmDocumentDataModel(new PmDocumentDataModel());
 	}
-
+	
+	/**
+	 * reset result bean fields
+	 */
+	public void resetFOrgResultBean() {
+		this.setFinancialOrgDataModel(new FinancialOrgPagingDataModel());
+	}
+	
 	// pagination for user profile search list
 	private class UserPagingDataModel extends PagingDataModel<PmUser> {
 		private static final long serialVersionUID = 1L;
@@ -575,27 +607,34 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			}
 		}
 	}
+
 	private class PmDocumentDataModel extends PagingDataModel<PmDocument> {
 		private static final long serialVersionUID = 1L;
 
 		public PmDocumentDataModel() {
 			super("dtSupportDocResult");
 		}
-		
+
 		@Override
-		public ISearchResultBean<PmDocument> pageChangeListener(ISearchBean<PmDocument> searchBean) {
+		public ISearchResultBean<PmDocument> pageChangeListener(
+				ISearchBean<PmDocument> searchBean) {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			
-			try {	
-				//ISearchBean<PmDocument> searchBeanData = getSearchBeanData(searchBean);
+
+			try {
+				// ISearchBean<PmDocument> searchBeanData =
+				// getSearchBeanData(searchBean);
 				DocumentReqDTO reqDTO = new DocumentReqDTO();
 				reqDTO.setDocumentSearchBean(searchBean);
-				reqDTO.setDocCategoryCode(getSupportDocSearchBean().getDocCategoryParamCode());
-				reqDTO.setDocName(getSupportDocSearchBean().getDocName());		
+				reqDTO.setDocCategoryCode(getSupportDocSearchBean()
+						.getDocCategoryParamCode());
+				reqDTO.setDocName(getSupportDocSearchBean().getDocName());
 				reqDTO.setZoneId(getSupportDocSearchBean().getPmZone());
-				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IDocumentSO.class);	
+				IDocumentSO reqSO = (IDocumentSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IDocumentSO.class);
 				DocumentResDTO resDTO = reqSO.retrieveDocumentList(reqDTO);
 				if (resDTO.isSuccessful()) {
 					return resDTO.getDocumentResultBean();
@@ -607,6 +646,57 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			return null;
 		}
 	}
+
+	private class FinancialOrgPagingDataModel extends
+			PagingDataModel<PmFinancialOrg> {
+
+		private static final long serialVersionUID = 1L;
+
+		public FinancialOrgPagingDataModel() {
+
+			super("dtFOrgResult");
+		}
+
+		public ISearchResultBean<PmFinancialOrg> pageChangeListener(
+				ISearchBean<PmFinancialOrg> searchBean) {
+			
+			boolean isSearchBeanEmpty = true;
+			IFinancialOrgSO financialOrgSO;
+			try {
+
+				FinancialOrgReqDTO reqDTO = new FinancialOrgReqDTO();
+				if (getFinancialOrgName() != null
+						&& getFinancialOrgName().trim().length() > 0) {
+					searchBean.getDataFilterBeans().add(
+							new SearchFilterBean("finOrgName",
+									SearchOperator.OPERATOR_LIKE.value(),
+									getFinancialOrgName(), true));
+					isSearchBeanEmpty = false;
+				}
+				if (!isSearchBeanEmpty) {
+				reqDTO.setFinancialSearchBean(searchBean);
+				financialOrgSO = (IFinancialOrgSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IFinancialOrgSO.class);
+				FinancialOrgResDTO resDto = financialOrgSO
+						.searchFinancialOrgData(reqDTO);
+
+				if (resDto.isSuccessful()) {
+					return resDto.getFinaceialOrgResultBean();
+				}
+			} else {
+				return new SearchResultBean();
+			}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+
+	}
+
 	private class SearchTrackingDiaryPagingDataModel extends
 			PagingDataModel<PmTrackingDiary> {
 
