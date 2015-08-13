@@ -72,7 +72,7 @@ public class CalendarManageBean extends BaseManagedBean {
 			for (PmHoliday holiday : stateHolidayList) {
 				ScheduleEvent event = new DefaultScheduleEvent(
 						holiday.getHolidayName(), holiday.getStartDate(),
-						DateUtils.minusDays(holiday.getEndDate(),1));
+						holiday.getEndDate());
 				event.setId(String.valueOf(holiday.getHolidayId()));
 				eventModel.addEvent(event);
 			}
