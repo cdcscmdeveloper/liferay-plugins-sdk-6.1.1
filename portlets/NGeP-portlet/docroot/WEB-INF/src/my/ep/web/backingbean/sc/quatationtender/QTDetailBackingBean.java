@@ -1851,6 +1851,9 @@ public class QTDetailBackingBean extends
 				} else {
 					retrieveScheduleTabDtl();
 					qt.setClosingDate(getManagedBean().getQt().getClosingDate());
+					if (null == qt.getLatestBsvDate()) {
+						qt.setLatestBsvDate(getManagedBean().getQt().getLatestBsvDate());
+					}
 				}
 				/*QTScheduleDetailBackingBean scheduleBackingBean = new QTScheduleDetailBackingBean();
 				scheduleBackingBean.handlePublishClosingDate();
@@ -2654,6 +2657,9 @@ public class QTDetailBackingBean extends
 						for (ScQtBsvDtl bsvDtl : bsv.getScQtBsvDtls()) {
 							bsvDate = bsvDtl.getBsvDate();
 							this.getManagedBean().setBsvDate(bsvDate);
+							if (null != getManagedBean().getQt().getLatestBsvDate()) {
+								getManagedBean().getQt().setLatestBsvDate(bsvDate);
+							}
 							getManagedBean().getQt().setClosingDate(
 									DateUtils.addDays(bsvDate, this
 											.getManagedBean().getQt()
@@ -2677,6 +2683,9 @@ public class QTDetailBackingBean extends
 					for (ScQtBsvDtl scQtBsvDtl : selectedBriefList) {
 						bsvDate = scQtBsvDtl.getBsvDate();
 						this.getManagedBean().setBsvDate(bsvDate);
+						if (null != getManagedBean().getQt().getLatestBsvDate()) {
+							getManagedBean().getQt().setLatestBsvDate(bsvDate);
+						}
 						getManagedBean().getQt().setClosingDate(
 								DateUtils.addDays(bsvDate, this
 										.getManagedBean().getQt()
