@@ -78,6 +78,7 @@ import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
+import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
 import my.ep.persistence.entity.fl.payment.FlPaymentItem;
@@ -397,29 +398,32 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		setStopInstrNo(resDTO.getInvoice().getFlFulfilmentOrder());
 		FlPaymentItem flPaymentItem = null;
 		paymentAdvice.setFlPaymentItems(new ArrayList<FlPaymentItem>());
-		for(FlInvoiceItem invoiceItem : resDTO.getInvoice().getFlInvoiceItem()) {
-			flPaymentItem = new FlPaymentItem();
-			flPaymentItem.setFlPaymentAdvice(paymentAdvice);
-			flPaymentItem.setFlItem(invoiceItem.getFlFulfilmentItem());
-			flPaymentItem.setFlInvoiceItem(invoiceItem);
-			if(getManagedBean().getAdjustmentDocNo()!=null) {
-				for(FlAdjustment flAdjustment : paymentAdvice.getFlInvoice().getFlAdjustments()) {
-					if((flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) || flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)) && 
-							(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)) {
-						for(FlAdjustmentItem flAdjustmentItem : flAdjustment.getFlAdjustmentItem()) {
-							if(flAdjustmentItem.getFlInvoiceItem()==invoiceItem) {
-								flPaymentItem.setFlAdjustmentItem(flAdjustmentItem);
-								break;
+		for(FlInvoiceItemSummary invItemSumm : resDTO.getInvoice().getFlInvoiceItemSummary()) {
+			for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
+				flPaymentItem = new FlPaymentItem();
+				flPaymentItem.setFlPaymentAdvice(paymentAdvice);
+				flPaymentItem.setFlItem(invItem.getFlInvoiceItemSummary().getFlFulfilmentItem());
+				flPaymentItem.setFlInvoiceItem(invItem);
+				if(getManagedBean().getAdjustmentDocNo()!=null) {
+					for(FlAdjustment flAdjustment : paymentAdvice.getFlInvoice().getFlAdjustments()) {
+						if((flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) || flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)) && 
+								(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)) {
+							for(FlAdjustmentItem flAdjustmentItem : flAdjustment.getFlAdjustmentItem()) {
+								if(flAdjustmentItem.getFlInvoiceItem()==invItem) {
+									flPaymentItem.setFlAdjustmentItem(flAdjustmentItem);
+									break;
+								}
 							}
 						}
 					}
 				}
+				if(flPaymentItem.getFlAdjustmentItem()==null) {
+					flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
+					flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
+				}
+				paymentAdvice.getFlPaymentItems().add(flPaymentItem);
 			}
-			if(flPaymentItem.getFlAdjustmentItem()==null) {
-				flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
-				flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
-			}
-			paymentAdvice.getFlPaymentItems().add(flPaymentItem);
+			
 		}
 
 		return paymentAdvice;
