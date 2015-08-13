@@ -8,7 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.glaccount.IGlAccountSO;
 import my.ep.biz.service.pm.common.programactivity.IProgramActivitySO;
 import my.ep.biz.service.pm.common.projectsetia.IProjectSetiaSO;
@@ -16,8 +18,11 @@ import my.ep.biz.service.pm.common.votfund.IVotFundSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.confgeneral.ConfigGeneralResDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountReqDTO;
 import my.ep.dto.pm.common.glaccount.GlAccountResDTO;
 import my.ep.dto.pm.common.programactivity.ProgramActivityReqDTO;
@@ -31,12 +36,14 @@ import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.OrganizationType;
 import my.ep.web.integration.phis.ItemType;
 import my.ep.web.integration.phis.MasterDataMaterialInfo;
 import my.ep.web.integration.phis.MaterialBrand;
@@ -98,6 +105,12 @@ public class PhisIntegration {
 	
 	IAddressSO addressSO = BusinessDelegate
 			.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,	IAddressSO.class);
+	
+	IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+											IOrgProfileSO.class);
+	
+	IConfigGeneralSO configGeneralSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+			IConfigGeneralSO.class);
 	
 	FileUtility utility = new FileUtility();
 	String filePath = IntegrationConstants.FILE_PATH;
@@ -366,8 +379,9 @@ public class PhisIntegration {
 		}*/
 		reqDTO.setCreatedDate(currentDate);
 		
-		List<Long> listId = new ArrayList<Long>();
-		listId.add(278675L);
+		
+		List<Long> listId = getMOHkumpPtjIds();
+		
 		reqDTO.setOrgprofileId(listId);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundByCreatedDate(reqDTO);
@@ -411,6 +425,32 @@ public class PhisIntegration {
 			log.info("votFund : Records not available....");
 		}
 
+	}
+
+	/**
+	 * @return List of MOH Related kumpulan Ptjs
+	 */
+	public List<Long> getMOHkumpPtjIds() {
+		ConfigGeneralResDTO configResDTO = configGeneralSO.getConfigGeneral(null);
+		
+		Long ministryOrgId = null;
+		if(null!=configResDTO.getPmConfigGeneral()){
+			ministryOrgId = configResDTO.getPmConfigGeneral().getPhisMinistryId();
+		}
+		
+		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+		orgReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		orgReqDTO.setParentOrgProfileId(ministryOrgId);
+
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgReqDTO);
+		
+		List<Long> listId = new ArrayList<Long>();
+		if(null!=orgResDTO.getOrgProfileList() && orgResDTO.getOrgProfileList().size()>0){
+			for(PmOrgProfile pmOrgProfile:orgResDTO.getOrgProfileList()){
+				listId.add(pmOrgProfile.getOrgProfileId());
+			}
+		}
+		return listId;
 	}
 
 	public void votFundDana() {
@@ -477,9 +517,9 @@ public class PhisIntegration {
 		}*/
 		reqDTO.setCreatedDate(currentDate);
 		
-		List<Long> listId = new ArrayList<Long>();
-		listId.add(278675L);
-//		reqDTO.setOrgprofileIdList(listId);
+		List<Long> listId = getMOHkumpPtjIds();
+		
+		reqDTO.setOrgprofileIdList(listId);
 
 		ProgramActivityResDTO resDTO = programActivitySO.retrieveProgramActivityByCreateDate(reqDTO);
 		
@@ -541,9 +581,9 @@ public class PhisIntegration {
 		
 		reqDTO.setCreateDate(currentDate);
 		
-		List<Long> listId = new ArrayList<Long>();
-		listId.add(278675L);
-//		reqDTO.setOrgProfileIdList(listId);
+		List<Long> listId = getMOHkumpPtjIds();
+		
+		reqDTO.setOrgProfileIdList(listId);
 
 		ProjectSetiaResDTO resDTO = projectSetiaSO.retrieveProjectByCreateDate(reqDTO);
 		
@@ -609,9 +649,9 @@ public class PhisIntegration {
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
 		reqDTO.setCreatedDate(currentDate);
 		
-		List<Long> listId = new ArrayList<Long>();
-		listId.add(278675L);
-//		reqDTO.setOrgProfileIdList(listId);
+		List<Long> listId = getMOHkumpPtjIds();
+		
+		reqDTO.setOrgProfileIdList(listId);
 
 		GlAccountResDTO resDTO = glAccountSO.retrieveGlAccountByCreateDate(reqDTO);
 		
