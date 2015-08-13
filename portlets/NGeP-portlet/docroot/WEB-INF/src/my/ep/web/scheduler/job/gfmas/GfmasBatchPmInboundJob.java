@@ -34,32 +34,32 @@ public class GfmasBatchPmInboundJob implements Job {
 	public void execute(JobExecutionContext context)
 			throws JobExecutionException {
 
-		log.info("GfmasPMBatchIntegrationJob ");
+		log.info("GfmasBatchPmInboundJob  : Start");
 
-		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-		
-		gfmasIntegration.kumpulanPtjGfmasInbound();
-		
-        gfmasIntegration.votGfmasInbound();
-		
-		gfmasIntegration.votDanaGfmasInbound();
+		/*GfmasIntegration gfmasIntegration = new GfmasIntegration();
 		
 		gfmasIntegration.pejabatPerakaunanGfmasInbound();
 		
 		gfmasIntegration.pegawaiPengawalGfmasInbound();
 		
+        gfmasIntegration.votGfmasInbound();
+		
+		gfmasIntegration.votDanaGfmasInbound();
+		
+		gfmasIntegration.programAktivitiGfmasInbound();	
+		
         gfmasIntegration.projectGfmasInbound();
 		
-		gfmasIntegration.kodAkaunGfmasInbound();			
+		gfmasIntegration.kodAkaunGfmasInbound();
 		
-		gfmasIntegration.kodBankGfmasInbound();			
-		
-		gfmasIntegration.programAktivitiGfmasInbound();		
+		gfmasIntegration.kumpulanPtjGfmasInbound();
 		
 		gfmasIntegration.masterDataPtjGfmasInbound();
 		
+		gfmasIntegration.kodBankGfmasInbound();	*/
 		
-
+		log.info("GfmasBatchPmInboundJob  : End");
+		
 	}
 
 }
