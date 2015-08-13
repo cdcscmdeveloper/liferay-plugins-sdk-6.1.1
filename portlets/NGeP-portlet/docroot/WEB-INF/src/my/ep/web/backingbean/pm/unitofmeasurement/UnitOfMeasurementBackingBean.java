@@ -24,15 +24,18 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
@@ -357,83 +360,114 @@ public class UnitOfMeasurementBackingBean extends
 	public String saveMeasurementDtls() {
 		debugLogger("saveMeasurementDtls");
 
-		String messageId=null;
-		String recordStatusMessageId=null;
+		String messageId = null;
 
-		PmUom oldPmUom=this.getManagedBean().getOldPmUom();
+		// PmUom oldPmUom=this.getManagedBean().getOldPmUom();
 		PmUom pmUom = this.getManagedBean().getPmUom();
+
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 		validationMessage(pmUom);
 
 		UomReqDTO reqDTO = new UomReqDTO();
 		reqDTO.setPmUom(pmUom);
 
-		String[] msgParam = new String[] {pmUom.getUomCode()};
+		String[] msgParam = new String[] { pmUom.getUomCode() };
 
-		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
+		IUomSO iUomSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUomSO.class);
 
-		try{
+		statusReqDTO.setStatusId(pmUom.getRecordStatusFlg().longValue());
 
-			if(pmUom.isBrandNew()){
-				messageId = MessageConst.TD_80600;				
-			}
-			else 
-			{
-				messageId= MessageConst.TD_80601;
+		try {
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			System.out.println("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
+			debugLogger("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
 
-				if(oldPmUom!=null && pmUom!=null 
-						&& !oldPmUom.getRecordStatusFlg().equals(pmUom.getRecordStatusFlg())){
-					if(pmUom.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-						recordStatusMessageId = MessageConst.TD_80603;						
-					}
-					else{
-						recordStatusMessageId = MessageConst.TD_80602;
-					}
-					reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(),
-							pmUom.getUomCode(),getPmActionDesc(recordStatusMessageId,msgParam)));
-				}	
+			if (pmUom.isBrandNew()) {
+				messageId = MessageConst.TD_80600;
+			} else {
+				messageId = MessageConst.TD_80601;
+
+				/*
+				 * if(oldPmUom!=null && pmUom!=null &&
+				 * !oldPmUom.getRecordStatusFlg
+				 * ().equals(pmUom.getRecordStatusFlg())){
+				 * if(pmUom.getRecordStatusFlg
+				 * ().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+				 * recordStatusMessageId = MessageConst.TD_80603; } else{
+				 * recordStatusMessageId = MessageConst.TD_80602; }
+				 * reqDTO.getTrackDairyVOs
+				 * ().add(PmCommonUtil.assignTrackingDairyForUOM
+				 * (pmUom.getUomId(),
+				 * pmUom.getUomCode(),getPmActionDesc(recordStatusMessageId
+				 * ,msgParam))); }
+				 */
 			}
 			reqDTO.setTrackingStatus(true);
 
-			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForUOM(pmUom.getUomId(),
-					pmUom.getUomCode(),getPmActionDesc(messageId,msgParam)));
+			reqDTO.getTrackDairyVOs().add(
+					PmCommonUtil.assignTrackingDairyForUOM(pmUom
+							.getUomId(), pmUom.getUomCode(), statusResDTO
+							.getPmStatus() != null ? statusResDTO.getPmStatus()
+							: new PmStatus(),
+							getPmActionDesc(messageId, msgParam)));
 
 			UomResDTO resDTO = iUomSO.saveOrUpdateMeasurement(reqDTO);
 			reloadUOMData(resDTO.getPmUom());
-			PmUom oldPmUomData = (PmUom)BeanUtils.cloneBean(resDTO.getPmUom());
+			PmUom oldPmUomData = (PmUom) BeanUtils.cloneBean(resDTO.getPmUom());
 			this.getManagedBean().setOldPmUom(oldPmUomData);
 
-			if(resDTO.isSuccessful()){
-				if(pmUom.isBrandNew()){
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
+			if (resDTO.isSuccessful()) {
+				if (pmUom.isBrandNew()) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
 									null,
-									MessageUtils.getMessage(MessageConst.INFO_780091, new String[]{resDTO.getPmUom().getUomCode()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES, 
-											new FacesScopes().getUserLocale())
-									));
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_780091,
+															new String[] { resDTO
+																	.getPmUom()
+																	.getUomCode() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 
-				} else{
-					FacesContext.getCurrentInstance().addMessage(null,
-							new FacesMessage(
-									FacesMessage.SEVERITY_INFO,
+				} else {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
 									null,
-									MessageUtils.getMessage(MessageConst.INFO_780092, new String[]{resDTO.getPmUom().getUomCode()}, 
-											MessageUtils.BUNDLE_COMMON_MESSAGES, 
-											new FacesScopes().getUserLocale())
-									));
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_780092,
+															new String[] { resDTO
+																	.getPmUom()
+																	.getUomCode() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 				}
 
 			}
-		}
-		catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			iUomSO = null;
 		}
-		if(pmUom.isBrandNew())
+		if (pmUom.isBrandNew())
 			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMain.xhtml";
 		else
 			return "/xhtml/pm/unitofmeasurement/unitOfMeasurementMaintenance.xhtml";
