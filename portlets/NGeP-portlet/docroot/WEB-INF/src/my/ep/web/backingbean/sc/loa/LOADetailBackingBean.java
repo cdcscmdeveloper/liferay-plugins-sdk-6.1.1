@@ -456,6 +456,9 @@ public class LOADetailBackingBean extends
 			
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
+			
+			// Filter skop kerja dan perkhidmatan repo.
+			filterSkopKerjaDanPerkhidmatanRepo(scLoa);
 
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler()
@@ -762,6 +765,9 @@ public class LOADetailBackingBean extends
 		
 		// clauses title
 		getClausesTitle(null);
+		
+		//Filter skop kerja dan perkhidmatan repo.
+		filterSkopKerjaDanPerkhidmatanRepo(scLoa);
 	}
 	
 	/**
@@ -1226,8 +1232,6 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						/* scLoaReportAttachment = generateSkopPerkhidmatanPdfFromVelocity((ScAttachment) scLoaReportAttachment, 
-								docDefinitionKey, scLoaReport);*/
 					}
 					
 				}else if(scLoaReportAttachment != null && 
@@ -1270,8 +1274,6 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						/* scLoaReportAttachment = generateSkopPerkhidmatanPdfFromVelocity((ScAttachment) scLoaReportAttachment, 
-								docDefinitionKey, scLoaReport);*/
 					}
 					
 				}else if(scLoaReportAttachment != null && 
@@ -3803,101 +3805,6 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Generate skop perkhidmatan pdf from velocity.
-	 *
-	 * @param attachment the attachment
-	 * @param docDefinitionKey the doc definition key
-	 * @param scLoaReport the sc loa report
-	 * @return the sc qt doc report attachment
-	 * @throws Exception the exception
-	 */
-	private ScLoaReportAttachment generateSkopPerkhidmatanPdfFromVelocity(
-			ScAttachment attachment, String docDefinitionKey, ScLoaReport scLoaReport) throws Exception {
-		debugLogger("generateSkopPerkhidmatanPdfFromVelocity");
-		populateAttachmentDetails(attachment);
-		ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
-		IQTSpecSO specSo = null;
-		IQTDetailSO qtDetailSO = null;
-		SpecificationResDTO resDTO = null;
-		try {
-			specSo = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
-			qtDetailSO = BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTDetailSO.class);
-			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-			reqDTO.setScQt(getManagedBean().getScQt());
-			reqDTO.setSpecType(SourcingConstants.TECHNICAL_DOCTYPE);
-			resDTO = specSo.retrieveCheckLists(reqDTO);
-			
-			if (isAtleastOneSeriveReq(resDTO.getTechnicalCheckList())) {
-				if (null != resDTO.getTechnicalCheckList()) {
-					for (ScQtCheckList checklist : resDTO
-							.getTechnicalCheckList()) {
-						if (null != checklist.getPmDocument()) {
-							if (SourcingConstants.DOC_DEF_KEY_SERVICE_SCOPE.equalsIgnoreCase(checklist.getPmDocument().getDocDefinitionKey())) {
-								QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-								quationTenderReqDTO.setDocCategory(checklist.getDocCategory());
-								quationTenderReqDTO.setDocDefKey(docDefinitionKey);
-								quationTenderReqDTO.setScQtCheckList(checklist);
-								QuationTenderResDTO qtResDTO = qtDetailSO.retriveScQtReportByDefKey(quationTenderReqDTO);
-
-								ScQtCheckList qtCheckList = qtResDTO.getScQtCheckList();
-								if (qtCheckList != null && qtCheckList.getScQtCheckListAttachment() != null) {
-									attachment = qtCheckList.getScQtCheckListAttachment();
-								}
-								if (attachment != null) {
-									scLoaReportAttachment.setFileName(attachment.getFileName());
-									scLoaReportAttachment.setFilePath(attachment.getFilePath());
-									scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
-									scLoaReportAttachment.setScLoaReport(scLoaReport);
-								}
-								break;
-							} 
-						}  
-					}
-				} 
-			}
-		} finally {
-			specSo = null;
-			qtDetailSO = null;
-		}
-		return scLoaReportAttachment;
-
-	}
-
-
-	/**
-	 * @param technicalCheckList
-	 * @return
-	 */
-	private boolean isAtleastOneSeriveReq(List<ScQtCheckList> checklist) {
-		boolean isServiceItemFound = Boolean.FALSE;
-		if (null != checklist && !checklist.isEmpty()) {
-			for (ScQtCheckList specChecklist : checklist) {
-				if (QTConstants.TEMPLETE_SPEC_CODE
-						.equalsIgnoreCase(specChecklist.getDefinationType()
-								.getParameterCode())) {
-					if (null != specChecklist.getScQtDoc()) {
-						ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
-								.getInstance().getServiceObject(ModuleCodeConst.COMMON_COMPONENT, ITemplateSpecSO.class);
-						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
-						specReqDTO.setSpecMaster(specChecklist.getScQtDoc().getTplSpecMaster());
-						specReqDTO.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
-						TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(specReqDTO);
-						if (resDTO.getSpecMaster().getItemTypeCode()
-								.getParameterCode().equalsIgnoreCase(
-										ParameterConst.ITEM_TYPE_SERVICE)) {
-							isServiceItemFound = Boolean.TRUE;
-							break;
-						}
-					}
-				}
-			}
-		}
-		return isServiceItemFound;
-	}
-
-	
-
-	/**
 	 * Sort progressive payment list.
 	 *
 	 * @param progressivePaymentList the progressive payment list
@@ -4551,6 +4458,37 @@ public class LOADetailBackingBean extends
 		}
 		return isMinistry;		
 	}
+	
+	
+	/**
+	 * Filter skop kerja dan perkhidmatan repo.
+	 *
+	 * @param scLoa the sc loa
+	 */
+	private void filterSkopKerjaDanPerkhidmatanRepo(ScLoa scLoa){
+		// get this repo when qt with service scope otherwise empty
+		String SkopKerjaDP = "Skop Kerja dan Perkhidmatan ";
+		boolean isSkopKerja = Boolean.TRUE;
+		List<ScLoaReport> scLoaReports = new ArrayList<ScLoaReport>();
+
+		if(null  != scLoa.getScLoaReports() && scLoa.getScLoaReports().size()>0 ){
+			for (ScLoaReport scLoaReport : scLoa.getScLoaReports()) {
+
+				if (scLoaReport.getTitle().trim().equals(SkopKerjaDP.trim())) {
+					if (null == scLoaReport.getScLoaReportAttachment()) {
+						isSkopKerja = Boolean.FALSE;
+					} else{
+						isSkopKerja = Boolean.TRUE;
+					}
+				}
+				if(isSkopKerja){
+					scLoaReports.add(scLoaReport);	
+				}
+			}
+			scLoa.setScLoaReports(scLoaReports);
+		}
+	}
+
 	
 	/**
 	 * Validate deduction payment dtls.
