@@ -38,16 +38,6 @@
 			</p:column>
 		</p:dataTable>
 		
-		<p:spacer height="10"></p:spacer>
-		<div align="right">
-			<p:commandButton 
-				value="#{lbl['lbl.btn.send.reminder']}"
-				action="#{suppFinalizationBackingBean.showReminder}"
-				update=":form:reminderPopup"
-				oncomplete="reminder.show();" 
-				rendered="#{(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_ENDORSEMENT) || 
-									(suppFinalizationBackingBean.managedBean.currentStatusId eq QTStatusConst.DA_PENDING_SIGN_OFF)}" />
-		</div>
 	</p:panel>
 	
 </ui:composition>
