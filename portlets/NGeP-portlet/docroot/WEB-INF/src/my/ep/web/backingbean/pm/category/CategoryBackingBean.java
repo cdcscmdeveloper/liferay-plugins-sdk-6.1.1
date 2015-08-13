@@ -1755,7 +1755,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 							ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 							ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE));
 
-			getAllCategoryDetails(reqDTO);
+			getAllCategoryDetails(reqDTO,statusResDTO);
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
@@ -1852,7 +1852,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 
-	private void getAllCategoryDetails(CategoryCodeReqDTO reqDTO) {
+	private void getAllCategoryDetails(CategoryCodeReqDTO reqDTO,
+			StatusResDTO statusResDTO) {
 
 		String delrecordStatusBasicMessageId = "";
 		String addrecordStatusBasicMessageId = "";
@@ -1891,10 +1892,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 												this.getManagedBean()
 														.getPmCategoryL3()
 														.getCategoryL3Code(),
+												statusResDTO.getPmStatus() != null ? statusResDTO
+														.getPmStatus()
+														: new PmStatus(),
 												getPmActionDesc(
 														delrecordStatusBasicMessageId,
 														commonMsgParam),
-												null,
+												ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 												ParameterConst.SUB_CATEGORY_PARAM_CODE));
 					}
 				}
@@ -1920,10 +1924,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													this.getManagedBean()
 															.getPmCategoryL3()
 															.getCategoryL3Code(),
+													statusResDTO.getPmStatus() != null ? statusResDTO
+															.getPmStatus()
+															: new PmStatus(),
 													getPmActionDesc(
 															addrecordStatusBasicMessageId,
 															commonMsgParam),
-													null,
+													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 													ParameterConst.SUB_CATEGORY_PARAM_CODE));
 						}
 					}
@@ -1945,10 +1952,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													this.getManagedBean()
 															.getPmCategoryL3()
 															.getCategoryL3Code(),
+													statusResDTO.getPmStatus() != null ? statusResDTO
+															.getPmStatus()
+															: new PmStatus(),
 													getPmActionDesc(
 															addrecordStatusBasicMessageId,
 															commonMsgParam),
-													null,
+													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 													ParameterConst.SUB_CATEGORY_PARAM_CODE));
 						}
 					}
@@ -1979,10 +1989,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 												this.getManagedBean()
 														.getPmCategoryL3()
 														.getCategoryL3Code(),
+												statusResDTO.getPmStatus() != null ? statusResDTO
+														.getPmStatus()
+														: new PmStatus(),
 												getPmActionDesc(
 														delrecordStatusMachineMessageId,
 														commonMsgParam),
-												null,
+												ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 												ParameterConst.SUB_CATEGORY_PARAM_CODE));
 					}
 				}
@@ -2008,10 +2021,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													this.getManagedBean()
 															.getPmCategoryL3()
 															.getCategoryL3Code(),
+													statusResDTO.getPmStatus() != null ? statusResDTO
+															.getPmStatus()
+															: new PmStatus(),
 													getPmActionDesc(
 															addrecordStatusMachineMessageId,
 															commonMsgParam),
-													null,
+													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 													ParameterConst.SUB_CATEGORY_PARAM_CODE));
 						}
 					}
@@ -2033,10 +2049,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													this.getManagedBean()
 															.getPmCategoryL3()
 															.getCategoryL3Code(),
+													statusResDTO.getPmStatus() != null ? statusResDTO
+															.getPmStatus()
+															: new PmStatus(),
 													getPmActionDesc(
 															addrecordStatusMachineMessageId,
 															commonMsgParam),
-													null,
+													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 													ParameterConst.SUB_CATEGORY_PARAM_CODE));
 						}
 					}
@@ -2069,10 +2088,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 												this.getManagedBean()
 														.getPmCategoryL3()
 														.getCategoryL3Code(),
+												statusResDTO.getPmStatus() != null ? statusResDTO
+														.getPmStatus()
+														: new PmStatus(),
 												getPmActionDesc(
 														delrecordStatusCatRestrMessageId,
 														commonMsgParam),
-												null,
+												ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 												ParameterConst.SUB_CATEGORY_PARAM_CODE));
 					}
 				}
@@ -2098,11 +2120,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													this.getManagedBean()
 															.getPmCategoryL3()
 															.getCategoryL3Code(),
+													statusResDTO.getPmStatus() != null ? statusResDTO
+															.getPmStatus()
+															: new PmStatus(),
 													getPmActionDesc(
 															addrecordStatusCatRestrMessageId,
 															commonMsgParam),
-													null,
-													"ParameterConst.SUB_CATEGORY_PARAM_CODE"));
+													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
+													ParameterConst.SUB_CATEGORY_PARAM_CODE));
 						}
 					}
 				} else {
@@ -2123,10 +2148,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 													this.getManagedBean()
 															.getPmCategoryL3()
 															.getCategoryL3Code(),
+													statusResDTO.getPmStatus() != null ? statusResDTO
+															.getPmStatus()
+															: new PmStatus(),
 													getPmActionDesc(
 															addrecordStatusCatRestrMessageId,
 															commonMsgParam),
-													null,
+													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 													ParameterConst.SUB_CATEGORY_PARAM_CODE));
 						}
 					}
