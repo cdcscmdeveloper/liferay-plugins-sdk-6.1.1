@@ -220,50 +220,6 @@ public class SmUpdateGstInfoBackingBean extends
 						.getBranchCode());
 	}
 
-	public void onCheckHqEffectiveDate() {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getManagedBean().getHqGstSupplier().getGstEffDate());
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		if (day != 1) {
-			RequestContext.getCurrentInstance().execute("alertHq.show();");
-		}
-	}
-
-	public void onCheckBranchEffectiveDate(SmGstSupplier branchGst) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(branchGst.getGstEffDate());
-		int day = cal.get(Calendar.DAY_OF_MONTH);
-		if (day != 1) {
-			getManagedBean().setSelectedGstOnChangeEffDate(branchGst);
-			RequestContext.getCurrentInstance().execute("alertBranch.show();");
-		}
-	}
-
-	public void resetHqEffectiveDate() {
-		SmCommonUtil.resetGstEffectiveDate(getManagedBean().getHqGstSupplier());
-	}
-
-	public void resetBranchEffectiveDate() {
-		SmCommonUtil.resetGstEffectiveDate(getManagedBean()
-				.getSelectedGstOnChangeEffDate());
-		for (SmGstBranchVO brTmp : getManagedBean().getBranches()) {
-			if (brTmp.getGst() != null
-					&& brTmp.getBranch().getBranchCode() != null
-					&& getManagedBean().getSelectedGstOnChangeEffDate()
-							.getBranchCode() != null
-					&& brTmp.getBranch()
-							.getBranchCode()
-							.compareTo(
-									getManagedBean()
-											.getSelectedGstOnChangeEffDate()
-											.getBranchCode()) == 0) {
-				brTmp.getGst().setGstEffDate(
-						getManagedBean().getSelectedGstOnChangeEffDate()
-								.getGstEffDate());
-			}
-		}
-	}
-
 	public boolean isDisableDeclareButton() {
 		boolean retVal = false;
 
