@@ -38,14 +38,6 @@
 			</p:column>
 		</p:dataTable>
 		
-		<p:spacer height="10"></p:spacer>
-		<div align="right">
-			<p:commandButton 
-				value="#{lbl['lbl.btn.send.reminder']}"
-				action="#{suppFinalBiddingBackingBean.showReminder}"
-				update=":form:reminderPopup"
-				oncomplete="reminder.show();" />
-		</div>
 	</p:panel>
 	
 </ui:composition>
