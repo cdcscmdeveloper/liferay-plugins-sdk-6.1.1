@@ -2151,20 +2151,27 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		return newText;
 	}
 
+  /*
+   * Method to create tree node for doc section
+   * Method to make tree 
+   * */
   public static void getDocSectionList(int level,TreeNode node,List<TplDocSection> inputStreamList){
 	 if(node != null && node.getData() != null){
 		 for(TreeNode parent : node.getChildren()){
-			  TplDocSection docSec = (TplDocSection) parent.getData();
+			  TplDocSection docSec = (TplDocSection)parent.getData();
 			  docSec.setSectionLevel(level);
 			  inputStreamList.add(docSec);
-			if(!parent.isLeaf()){
-				getDocSectionList(level+1,parent,inputStreamList);
-				
-			}
-		}
+			  if(!parent.isLeaf()){
+				  getDocSectionList(level+1,parent,inputStreamList);	
+			  }
+		 }
 	}
 }
   
+  /*
+   * Call method retrievePtjBylovCondition to 
+   * retrieve value of ministry from lov
+   * */
   public String retrievePtjBylovCondition() {
 	  
 	      String condition = "recordStatusFlg^1|";
@@ -2286,17 +2293,32 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	    return null;
 	}
 	
+	/**
+	 * Call by ajax listener to set value of
+	 * @param officerProfileId  and jabatanProfileId
+	 * to set value null
+	 */
 	public void settingMinistryListener(){
 		getManagedBean().setOfficerProfileId(null);
 		getManagedBean().setJabatanProfileId(null);
 		getManagedBean().setPtjProfileId(null);
 	}
 	
+	/**
+	 * Call by ajax listener to set value of
+	 * @param jabatanProfileId  and ptjProfileId
+	 * to set value null
+	 */
 	public void settingPengawaiPengawalListener(){
 			getManagedBean().setJabatanProfileId(null);
 			getManagedBean().setPtjProfileId(null);
 	 }
 	
+	/**
+	 * Call by ajax listener to set value of
+	 * @param ptjProfileId the ptjProfileId 
+	 * to set value null
+	 */
 	public void settingJabatanListener(){
 		getManagedBean().setPtjProfileId(null);
  }
@@ -2414,6 +2436,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		  }
 	 }
 	
+	/*
+	 * Fetch organization name using profile id
+	 * @Return type string orgName
+	 * */
     public String retrieveOrgProfileByProfileId(Long profileId){
     	    IAgreementSO agreementSO = null;
     	    ContractAgreementReqDTO reqDTO = null;
