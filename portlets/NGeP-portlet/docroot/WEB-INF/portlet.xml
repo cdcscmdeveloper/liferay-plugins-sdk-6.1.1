@@ -6350,7 +6350,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/sm/gstHistory/searchGstHistory.xhtml
+				/xhtml/sm/gstHistory/preRenderGstInfo.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
