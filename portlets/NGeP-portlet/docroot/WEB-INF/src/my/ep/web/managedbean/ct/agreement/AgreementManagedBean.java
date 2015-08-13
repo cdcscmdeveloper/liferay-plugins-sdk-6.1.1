@@ -581,58 +581,100 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.pmDigiSign = pmDigiSign;
 	}
 
+	/**
+	 * @return the docSectionTN
+	 */
 	public TreeNode getDocSectionTN() {
 		return docSectionTN;
 	}
 
+	/**
+	 * @param docSectionTN the docSectionTN to set
+	 */
 	public void setDocSectionTN(TreeNode docSectionTN) {
 		this.docSectionTN = docSectionTN;
 	}
 
+	/**
+	 * @return the docSectionMap
+	 */
 	public Map<TplDocSection, TreeNode> getDocSectionMap() {
 		return docSectionMap;
 	}
 
+	/**
+	 * @param docSectionMap the docSectionMap to set
+	 */
 	public void setDocSectionMap(Map<TplDocSection, TreeNode> docSectionMap) {
 		this.docSectionMap = docSectionMap;
 	}
 
+	/**
+	 * @return the ministryProfileId
+	 */
 	public Long getMinistryProfileId() {
 		return ministryProfileId;
 	}
 
+	/**
+	 * @param ministryProfileId the ministryProfileId to set
+	 */
 	public void setMinistryProfileId(Long ministryProfileId) {
 		this.ministryProfileId = ministryProfileId;
 	}
 
+	/**
+	 * @return the officerProfileId
+	 */
 	public Long getOfficerProfileId() {
 		return officerProfileId;
 	}
 
+	/**
+	 * @param officerProfileId the officerProfileId to set
+	 */
 	public void setOfficerProfileId(Long officerProfileId) {
 		this.officerProfileId = officerProfileId;
 	}
 
+	/**
+	 * @return the jabatanProfileId
+	 */
 	public Long getJabatanProfileId() {
 		return jabatanProfileId;
 	}
 
+	/**
+	 * @param jabatanProfileId the jabatanProfileId to set
+	 */
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
 	}
 
+	/**
+	 * @return the ptjProfileId
+	 */
 	public Long getPtjProfileId() {
 		return ptjProfileId;
 	}
 
+	/**
+	 * @param ptjProfileId the ptjProfileId to set
+	 */
 	public void setPtjProfileId(Long ptjProfileId) {
 		this.ptjProfileId = ptjProfileId;
 	}
 
+	/**
+	 * @return the agencySignerDropDown
+	 */
 	public boolean isAgencySignerDropDown() {
 		return agencySignerDropDown;
 	}
 
+	/**
+	 * @param agencySignerDropDown the agencySignerDropDown to set
+	 */
 	public void setAgencySignerDropDown(boolean agencySignerDropDown) {
 		this.agencySignerDropDown = agencySignerDropDown;
 	}
