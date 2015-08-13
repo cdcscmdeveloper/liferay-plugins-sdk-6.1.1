@@ -880,7 +880,13 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	}
 
 	private void loadPmCategoryL3Data(Long id) {
+
+		List<PmMachineCategory> removedDuplicatePmMachineCategory = new ArrayList<>();
+		Set<PmMachineCategory> pmMachineCategorySet = null;
+		List<PmBasicCategory> removedDuplicatePmBasicCategory = new ArrayList<>();
+		Set<PmBasicCategory> pmBasicCategorySet = null;
 		ICategoryCodeSO categoryCodeSO;
+		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance()
@@ -934,11 +940,6 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						new ArrayList<PmMachineCategory>());
 				this.getManagedBean().setCategoryRestrList(
 						new ArrayList<PmCategoryRestr>());
-
-				List<PmMachineCategory> removedDuplicatePmMachineCategory = new ArrayList<>();
-				Set<PmMachineCategory> pmMachineCategorySet = null;
-				List<PmBasicCategory> removedDuplicatePmBasicCategory = new ArrayList<>();
-				Set<PmBasicCategory> pmBasicCategorySet = null;
 
 				if (this.getManagedBean().getPmCategoryL3() != null
 						&& this.getManagedBean().getPmCategoryL3()
@@ -1546,6 +1547,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		 * 
 		 * throw new EpException(MessageConst.ERROR_775007); }
 		 */
+		if (!checkCategoryRestrDuplicateCompanyType()) {
+			throw new EpException(MessageConst.ERROR_775006);
+		}
+		
 		try {
 			CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
 			categoryCodeSO = (ICategoryCodeSO) BusinessDelegate.getInstance()
@@ -1599,9 +1604,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 			// check the duplicate restriction
 
-			if (!checkCategoryRestrDuplicateCompanyType()) {
-				throw new EpException(MessageConst.ERROR_775006);
-			}
+			
 			if (CollectionUtils.isNotEmpty(this.getManagedBean()
 					.getTobeAddedPmBasicCategoryList())) {
 
