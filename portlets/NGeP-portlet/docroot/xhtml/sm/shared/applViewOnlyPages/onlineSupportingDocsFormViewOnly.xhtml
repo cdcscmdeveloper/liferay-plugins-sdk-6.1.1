@@ -59,11 +59,13 @@
 			</p:column>
 			
 			<p:column headerText="#{lbl['lbl.qt.nb.downloadDoc']}" style="width : 10%;">
-				<p:commandButton value="#{lbl['lbl.cm.download']}"
+				<p:commandLink rendered="#{not empty table.smApplDocFiles[0].fileName}"
 					action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.smApplDocFiles[0].fileName,table.smApplDocFiles[0].filePath)}"
-					update=":form" icon="ui-icon-download" ajax="false" rendered="#{not empty table.smApplDocFiles[0].fileName}">
+					update=":form" ajax="false">
 					<p:fileDownload value="#{viewSmApplBackingBean.file}" />
-				</p:commandButton>
+					<p:graphicImage value="/css/images/design/download.png"
+						style="margin-right:2px;" />
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 

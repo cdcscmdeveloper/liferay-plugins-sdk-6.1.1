@@ -21,34 +21,16 @@
 		
 		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
 		
-		<p:panel header="#{lbl['lbl.sm.gst.history.search']}" toggleable="true" id="searchGstHistoryPanelId">
+		<p:panel header="#{lbl['lbl.sm.search.supprofile']}" toggleable="true" id="searchGstHistoryPanelId">
 		
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.pm.supplier.zone']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu label="#{lbl['lbl.pm.supplier.zone']}" required="true"
-							id="zoneId" value="#{gstHistoryBackingBean.managedBean.searchPmZoneId}"
-							style="width: 207px;margin-bottom: 5px;">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItems
-								value="#{gstHistoryBackingBean.managedBean.zoneList}" var="zone"
-								itemLabel="#{zone.zoneName}"
-								itemValue="#{zone.zoneId}" /></p:selectOneMenu>
-						<p:message id="zoneIdMsg" for="zoneId" display="icon" />
-					</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.rpt.supplierType']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><p:selectOneMenu required="true" id="searchSuppTypeId" label="#{lbl['lbl.rpt.supplierType']}"
-							value="#{gstHistoryBackingBean.managedBean.searchSuppType}">
-							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
-							<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
-							<f:selectItem 
-								itemLabel="#{lbl['lbl.sm.basic.account.basic']/lbl['lbl.pm.sidemenu.general.org.govSeller']}" 
-								itemValue="B" />
-						</p:selectOneMenu>
-						<p:message id="searchSuppTypeIdMsg" for="searchSuppTypeId" display="icon" />
+					<td><p:outputLabel value="#{lbl['lbl.sm.epno']}" /></td>
+					<td>
+						<p:inputText id="regNoId"
+							label="#{lbl['lbl.sm.rocNo']}"
+							value="#{gstHistoryBackingBean.managedBean.searchSupplier.epNo}"
+							size="35" maxlength="20" />
 					</td>
 				</tr>
 				<tr>
@@ -70,20 +52,10 @@
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.rocNo']}" /></td>
-					<td>
-						<p:inputText id="regNoId"
-							label="#{lbl['lbl.sm.rocNo']}"
-							value="#{gstHistoryBackingBean.managedBean.searchSupplier.regNo}"
-							size="35" maxlength="20" />
-					</td>
-				</tr>
-			
-				<tr>
 					<td colspan="2">
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.btn.search']}" 
-								action="#{gstHistoryBackingBean.managedBean.searchGstHistory}"
+								action="#{gstHistoryBackingBean.search}"
 								update="@form" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							</p:commandButton>
@@ -96,44 +68,40 @@
 				</tr>
 			</table>
 		
-			<p:dataTable var="gst" widgetVar="smApplWidgetVar"
+			<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
 				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{gstHistoryBackingBean.managedBean.smGstDataModel}"
-				rowKey="#{gst}" rowIndexVar="index" id="supplierGstHistoryDtId">
-				<ac:paginator for="supplierGstHistoryDtId" />
+				rowKey="#{smSupplier}" rowIndexVar="index" id="searchGstHistoryDtId">
+				<ac:paginator for="searchGstHistoryDtId" />
 				
-				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :25%;white-space : normal">
-					<h:outputText value="#{gst.smSupplier.companyName}" />
+				<p:column headerText="#{lbl['lbl.sm.companyname']}" style="width :40%;white-space : normal">
+					<h:outputText value="#{smSupplier.companyName}" />
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.rpt.supplierType']}" style="width :10%;white-space : normal">
-					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{gst.smSupplier.smAppl.supplierType eq 'K'}"/>
-					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{gst.smSupplier.smAppl.supplierType eq 'J'}"/>
+				<p:column headerText="#{lbl['lbl.sm.businessregno']}" style="width :15%;white-space : normal">
+					<h:outputText value="#{smSupplier.regNo}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sm.epno']}" style="width :15%;white-space : normal">
+					<h:outputText value="#{smSupplier.epNo}" />
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.rpt.supplierType']}" style="width :15%;white-space : normal">
+					<h:outputText value="#{lbl['lbl.sm.contractor']}" rendered="#{smSupplier.smAppl.supplierType eq 'K'}"/>
+					<h:outputText value="#{lbl['lbl.sm.consultant']}" rendered="#{smSupplier.smAppl.supplierType eq 'J'}"/>
 					<h:outputText value="#{lbl['lbl.sm.basic.account.basic']}" 
-						rendered="#{gst.smSupplier.smAppl.supplierType eq 'B' and gst.smSupplier.businessType ne 'P'}"/>
-					<h:outputText value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{gst.smSupplier.businessType eq 'P'}"/>
+						rendered="#{smSupplier.smAppl.supplierType eq 'B' and smSupplier.businessType ne 'P'}"/>
+					<h:outputText value="#{lbl['lbl.pm.sidemenu.general.org.govSeller']}" rendered="#{smSupplier.businessType eq 'P'}"/>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sm.application.no']}" style="width :10%;white-space : normal">
-					<h:outputText value="#{applNo}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.gstNo']}" style="width :10%;white-space : normal">
-					<h:outputText value="#{gstRegNo}" rendered="#{not empty gstRegNo}"/>
-					<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty gstRegNo}"/>
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.application.no']}" style="width :10%;white-space : normal">
-					<p:outputPanel rendered="#{not gst.gstEffDate}">
-						<ac:labelDate value="#{viewSmApplBackingBean.managedBean.hqGst.gstEffDate}" styleClass="outputLabel-view" />
-					</p:outputPanel>
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" 
-						rendered="#{empty viewSmApplBackingBean.managedBean.hqGst.gstEffDate}"/>
-					<h:outputText value="#{applNo}" />
-				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sm.application.no']}" style="width :10%;white-space : normal">
-					<h:outputText value="#{applNo}" />
+				<p:column headerText="#{lbl['lbl.sm.label.action']}">
+					<p:commandLink onstart="blockWidget.show()"
+						oncomplete="blockWidget.hide()"
+						action="#{gstHistoryBackingBean.viewGst(smSupplier)}"
+						process="@this" partialSubmit="true" update="@([id$=searchGstHistoryPanelId])"
+						style="padding-right:5px;">
+						<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.sm.view']}" />
+					</p:commandLink>
 				</p:column>
 				
 			</p:dataTable>
