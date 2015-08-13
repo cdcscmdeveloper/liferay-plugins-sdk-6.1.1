@@ -1378,6 +1378,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.paymentTracking = paymentTracking;
 	}
 
+	/**
+	 * @return the itemIndex
+	 */
 	public int getItemIndex() {
 		return itemIndex;
 	}
@@ -1389,6 +1392,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.itemIndex = itemIndex;
 	}
 
+	/**
+	 * @return the settingIndex
+	 */
 	public int getSettingIndex() {
 		return settingIndex;
 	}
@@ -1456,18 +1462,30 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		this.index = index;
 	}
 
+	/**
+	 * @return the gstTotalAmount
+	 */
 	public BigDecimal getGstTotalAmount() {
 		return gstTotalAmount;
 	}
 
+	/**
+	 * @param gstTotalAmount the gstTotalAmount to set
+	 */
 	public void setGstTotalAmount(BigDecimal gstTotalAmount) {
 		this.gstTotalAmount = gstTotalAmount;
 	}
 
+	/**
+	 * @return boolean disableGstAmount
+	 */
 	public boolean isDisableGstAmount() {
 		return disableGstAmount;
 	}
-
+ 
+	/**
+	 * @param disableGstAmount the disableGstAmount to set
+	 */
 	public void setDisableGstAmount(boolean disableGstAmount) {
 		this.disableGstAmount = disableGstAmount;
 	}
