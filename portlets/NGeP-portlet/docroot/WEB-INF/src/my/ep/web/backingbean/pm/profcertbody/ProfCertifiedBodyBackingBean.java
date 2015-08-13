@@ -26,21 +26,20 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
-import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
-import my.ep.dto.pm.common.uom.UomReqDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCertBody;
-import my.ep.persistence.entity.pm.common.PmEduField;
-import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -346,99 +345,128 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 	 * to save professional / certified details
 	 * 
 	 */	
-	public String saveCertBodyDtls(){
+	public String saveCertBodyDtls() {
 		debugLogger("saveCertBodyDtls");
 		String redirectUrl = null;
-		PmCertBody certBody =  this.getManagedBean().getCertBody();
-		validationMessage(certBody);
-		
-		PmCertBody olPmCertBody=this.getManagedBean().getOldPmCertBody();
-		PmCertBody pmCertBody = this.getManagedBean().getCertBody();
+		ICertBodySO certBodySO = null;
+		IStatusSO statusSO = null;
 
-            
-		
-		if(certBody.isBrandNew()){			
-		setUserDetails(certBody);
-		generateCertBodyCode();
-		}
-		
-		ICertBodySO certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
-				
-		String messageId=null;
-		String recordStatusMessageId=null;
-		CertBodyReqDTO certBodyReqDTO= new CertBodyReqDTO();
-		
-		try{
-		
-		String[] msgParam = new String[] {certBody.getBodyCode()};
+		try {
+			PmCertBody certBody = this.getManagedBean().getCertBody();
+			validationMessage(certBody);
+			// PmCertBody olPmCertBody=this.getManagedBean().getOldPmCertBody();
+			// PmCertBody pmCertBody = this.getManagedBean().getCertBody();
 
-		if(certBody.isBrandNew()){
-			messageId = MessageConst.TD_81100;				
-		}
-		else 
-		{
-			messageId= MessageConst.TD_81101;
-
-			if(olPmCertBody!=null && pmCertBody!=null 
-					&& !olPmCertBody.getRecordStatusFlg().equals(pmCertBody.getRecordStatusFlg())){
-
-				if(certBody.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-
-					recordStatusMessageId = MessageConst.TD_81102;						
-				}
-				else{
-					recordStatusMessageId = MessageConst.TD_81103;
-				}				
-				certBodyReqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForProfessional(certBody.getCertBodyId(),
-						certBody.getBodyCode(),getPmActionDesc(recordStatusMessageId,msgParam)));
-			}	
-		}
-		certBodyReqDTO.setTrackingStatus(true);
-
-		certBodyReqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForProfessional(certBody.getCertBodyId(),
-				certBody.getBodyCode(),getPmActionDesc(messageId,msgParam)));
-		
-		
-		certBodyReqDTO.setCertBody(certBody);
-		
-		CertBodyResDTO resDTO = certBodySO.saveOrUpdateCertBodyDtls(certBodyReqDTO);
-		reloadProfCertData(resDTO.getCertBody());	
-		PmCertBody oldPmCertBody = (PmCertBody)BeanUtils.cloneBean(resDTO.getCertBody());
-		this.getManagedBean().setOldPmCertBody(oldPmCertBody);
-		
-		this.getManagedBean().setCertBody(resDTO.getCertBody());
-		if(resDTO.isSuccessful()){
 			if (certBody.isBrandNew()) {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_770091, new String[] {
-												resDTO.getCertBody().getBodyName()
-														 },
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				redirectUrl = NAV_TO_MAIN;
-			} else {
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-								MessageUtils.getMessage(
-										MessageConst.INFO_770092,
-										MessageUtils.BUNDLE_COMMON_MESSAGES,
-										new FacesScopes().getUserLocale())));
-				redirectUrl = null;
+				setUserDetails(certBody);
+				generateCertBodyCode();
 			}
+			statusSO = (IStatusSO) BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			certBodySO = EpEjbBusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, ICertBodySO.class);
 
-		}
-	}
-		catch(Exception e){
+			String messageId = null;
+			// String recordStatusMessageId=null;
+			CertBodyReqDTO certBodyReqDTO = new CertBodyReqDTO();
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+			statusReqDTO.setStatusId(certBody.getRecordStatusFlg().longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			System.out.println("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
+			debugLogger("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
+
+			String[] msgParam = new String[] { certBody.getBodyCode() };
+
+			if (certBody.isBrandNew()) {
+				messageId = MessageConst.TD_81100;
+			} else {
+				messageId = MessageConst.TD_81101;
+				/*
+				 * if(olPmCertBody!=null && pmCertBody!=null &&
+				 * !olPmCertBody.getRecordStatusFlg
+				 * ().equals(pmCertBody.getRecordStatusFlg())){
+				 * 
+				 * if(certBody.getRecordStatusFlg().equals(DbValueConst.
+				 * RECORD_STATUS_ACTIVE)){
+				 * 
+				 * recordStatusMessageId = MessageConst.TD_81102; } else{
+				 * recordStatusMessageId = MessageConst.TD_81103; }
+				 * certBodyReqDTO.getTrackDairyVOs().add(PmCommonUtil.
+				 * assignTrackingDairyForProfessional(certBody.getCertBodyId(),
+				 * certBody
+				 * .getBodyCode(),getPmActionDesc(recordStatusMessageId,msgParam
+				 * ))); }
+				 */
+			}
+			certBodyReqDTO.setTrackingStatus(true);
+
+			certBodyReqDTO.getTrackDairyVOs().add(
+					PmCommonUtil.assignTrackingDairyForProfessional(
+							certBody.getCertBodyId(),
+							certBody.getBodyCode(),
+							statusResDTO.getPmStatus() != null ? statusResDTO
+									.getPmStatus() : new PmStatus(),
+							getPmActionDesc(messageId, msgParam)));
+
+			certBodyReqDTO.setCertBody(certBody);
+
+			CertBodyResDTO resDTO = certBodySO
+					.saveOrUpdateCertBodyDtls(certBodyReqDTO);
+			reloadProfCertData(resDTO.getCertBody());
+			PmCertBody oldPmCertBody = (PmCertBody) BeanUtils.cloneBean(resDTO
+					.getCertBody());
+			this.getManagedBean().setOldPmCertBody(oldPmCertBody);
+
+			this.getManagedBean().setCertBody(resDTO.getCertBody());
+			if (resDTO.isSuccessful()) {
+				if (certBody.isBrandNew()) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_770091,
+															new String[] { resDTO
+																	.getCertBody()
+																	.getBodyName() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+					redirectUrl = NAV_TO_MAIN;
+				} else {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_770092,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+					redirectUrl = null;
+				}
+
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally{
-			certBodySO=null;
+		} finally {
+			certBodySO = null;
+			statusSO = null;
 		}
-	
-			return redirectUrl;
+
+		return redirectUrl;
 	}
 
 	/**

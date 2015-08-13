@@ -7,38 +7,36 @@
  * Copyright © 2013 Archisoft. All rights reserved.
  * 
  ****************************************************
-*/
+ */
 package my.ep.web.backingbean.pm.educationfield;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
-
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.common.PmTrackingDairyVO;
 import my.ep.dto.pm.common.educationfield.EducationFieldReqDTO;
 import my.ep.dto.pm.common.educationfield.EducationFieldResDTO;
-
-
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmEduField;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -49,11 +47,9 @@ import my.ep.web.managedbean.pm.educationfield.EducationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.PmCommonUtil;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
 
 /**
  * The Class EducationBackingBean.
@@ -66,7 +62,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 
 	/** The Constant NAV_TO_MAIN. */
 	private static final String NAV_TO_MAIN = "educationFieldMain";
-	
+
 	/** The Constant NAV_TO_MAINTAIN. */
 	public static final String NAV_TO_MAINTAIN = "/xhtml/pm/educationfield/educationFieldMaintenance";
 
@@ -105,7 +101,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 */
 	public String redirectEduSearch() {
 		debugLogger("redirectEduSearch");
-		//this.getManagedBean().setLazy(true);
+		// this.getManagedBean().setLazy(true);
 		return NAV_TO_MAIN;
 
 	}
@@ -120,7 +116,6 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		this.getManagedBean().setFieldNames(new String());
 		this.getManagedBean().setStatus(null);
 		educationFieldDataModel = new EducationFieldPagingDataModel();
-		
 
 	}
 
@@ -133,7 +128,6 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		debugLogger("createEducation");
 		PmEduField pmEduField = new PmEduField();
 		this.getManagedBean().setPmEduField(pmEduField);
-		
 
 		return "/xhtml/pm/educationfield/educationFieldMaintenance.xhtml";
 
@@ -150,8 +144,8 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		items[0] = new SelectItem(1, "Active");
 		items[1] = new SelectItem(0, "Inactive");
 		return items;
-	}	
-	
+	}
+
 	/**
 	 * Gets the pm education status list.
 	 * 
@@ -238,7 +232,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 */
 	private class EducationFieldPagingDataModel extends
 			PagingDataModel<PmEduField> {
-		
+
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
@@ -290,10 +284,9 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		this.getManagedBean().setPmEduField(pmEduField);
 		PmEduField oldPmEduField = null;
 		try {
-			oldPmEduField = (PmEduField)BeanUtils.cloneBean(pmEduField);
-		     this.getManagedBean().setOldPmEduField(oldPmEduField);		
-		}
-		catch (Exception e) {
+			oldPmEduField = (PmEduField) BeanUtils.cloneBean(pmEduField);
+			this.getManagedBean().setOldPmEduField(oldPmEduField);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -306,14 +299,14 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		this.getManagedBean().setPmEduField(pmEduField);
 		PmEduField oldPmEduField = null;
 		try {
-			oldPmEduField = (PmEduField)BeanUtils.cloneBean(pmEduField);
-		     this.getManagedBean().setOldPmEduField(oldPmEduField);		
-		}
-		catch (Exception e) {
+			oldPmEduField = (PmEduField) BeanUtils.cloneBean(pmEduField);
+			this.getManagedBean().setOldPmEduField(oldPmEduField);
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * Validation message for pmEdufield details.
 	 * 
@@ -345,19 +338,23 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	public String saveEducationDtls() {
 		debugLogger("saveEducationDtls");
 
-		String messageId="";
-		String recordStatusMessageId="";
+		String messageId = "";
+		// String recordStatusMessageId="";
 
-		String[] msgParam = new String[] {
-				this.getManagedBean().getPmEduField().getFieldCode()};
+		String[] msgParam = new String[] { this.getManagedBean()
+				.getPmEduField().getFieldCode() };
 
-		PmEduField olEduField=this.getManagedBean().getOldPmEduField();
-		
+		// PmEduField olEduField=this.getManagedBean().getOldPmEduField();
+
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
 		PmEduField eduField = this.getManagedBean().getPmEduField();
-		
+
 		validationMessage(eduField);
 		setUserDetails(eduField);
-		
+
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
 		reqDTO.setEduField(eduField);
 		reqDTO.setBrandNew(eduField.isBrandNew());
@@ -366,93 +363,116 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		IEducationFieldSO iEducationfieldSO = EpEjbBusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IEducationFieldSO.class);		
-		try{
-			if (eduField.isBrandNew()) {			
+						IEducationFieldSO.class);
+		try {
+			if (eduField.isBrandNew()) {
 				if (!isExistEduField(eduField.getFieldCode())) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-									MessageUtils.getMessage(
-											MessageConst.ERROR_770160, new String[] {
-													getManagedBean().getPmEduField().getFieldCode(),
-													getManagedBean().getPmEduField().getFieldName()},
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.ERROR_770160,
+															new String[] {
+																	getManagedBean()
+																			.getPmEduField()
+																			.getFieldCode(),
+																	getManagedBean()
+																			.getPmEduField()
+																			.getFieldName() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 					return NAV_TO_MAINTAIN;
 				}
 
 			}
 
-			if(eduField.isBrandNew()){
-				messageId = MessageConst.TD_81000;				
+			if (eduField.isBrandNew()) {
+				messageId = MessageConst.TD_81000;
+			} else {
+				messageId = MessageConst.TD_81001;
 			}
-			else 
-			{
-				messageId= MessageConst.TD_81001;
-			}
-			if(olEduField!=null && eduField!=null 
-					&& !olEduField.getRecordStatusFlg().equals(eduField.getRecordStatusFlg())){
-				if(eduField.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
-					recordStatusMessageId = MessageConst.TD_81002;						
-					}
-				else{
-					recordStatusMessageId = MessageConst.TD_81003;
-				}	
-				reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),
-						eduField.getFieldCode(),
-						getPmActionDesc(recordStatusMessageId,msgParam)));
-			}			
+
+			statusReqDTO.setStatusId(eduField.getRecordStatusFlg().longValue());
+			StatusResDTO statusResDTO = statusSO
+					.retrieveStatusByStatusId(statusReqDTO);
+			System.out.println("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
+			debugLogger("statusResDTO.getPmStatus().getStatusId():"
+					+ statusResDTO.getPmStatus().getStatusId());
 			reqDTO.setTrackingStatus(true);
-			
-			reqDTO.getTrackDairyVOs().add(PmCommonUtil.assignTrackingDairyForEducation(eduField.getEduFieldId(),
-					eduField.getFieldCode(),getPmActionDesc(messageId,msgParam)));		
-			
-			
+
+			reqDTO.getTrackDairyVOs().add(
+					PmCommonUtil.assignTrackingDairyForEducation(
+							eduField.getEduFieldId(),
+							eduField.getFieldCode(),
+							statusResDTO.getPmStatus() != null ? statusResDTO
+									.getPmStatus() : new PmStatus(),
+							getPmActionDesc(messageId, msgParam)));
+
 			EducationFieldResDTO resDTO = iEducationfieldSO
 					.saveOrUpdateEduFieldDtls(reqDTO);
 			this.getManagedBean().setPmEduField(resDTO.getEduField());
 			reloadEduData(resDTO.getEduField());
-			PmEduField oldPmEduField = (PmEduField)BeanUtils.cloneBean(resDTO.getEduField());
+			PmEduField oldPmEduField = (PmEduField) BeanUtils.cloneBean(resDTO
+					.getEduField());
 			this.getManagedBean().setOldPmEduField(oldPmEduField);
 
 			if (resDTO.isSuccessful()) {
-				if (eduField.isBrandNew()){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_780094, new String[] {
-													resDTO.getEduField()
-													.getFieldCode(),
-													resDTO.getEduField()
-													.getFieldName() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
+				if (eduField.isBrandNew()) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_780094,
+															new String[] {
+																	resDTO.getEduField()
+																			.getFieldCode(),
+																	resDTO.getEduField()
+																			.getFieldName() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 				} else {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(
-											MessageConst.INFO_780095, new String[] {
-													resDTO.getEduField()
-													.getFieldCode(),
-													resDTO.getEduField()
-													.getFieldName() },
-													MessageUtils.BUNDLE_COMMON_MESSAGES,
-													new FacesScopes().getUserLocale())));
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.INFO_780095,
+															new String[] {
+																	resDTO.getEduField()
+																			.getFieldCode(),
+																	resDTO.getEduField()
+																			.getFieldName() },
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
 				}
 			}
 
-		}	catch(Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			iEducationfieldSO = null;
 		}
-		if(!eduField.isBrandNew()){
+		if (!eduField.isBrandNew()) {
 			return NAV_TO_MAINTAIN;
-		}
-		else{
+		} else {
 			return NAV_TO_MAIN;
 		}
 	}
@@ -471,7 +491,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		return MessageUtils.getMessage(messageId, params,
 				MessageUtils.BUNDLE_COMMON_MESSAGES, myLocale);
 	}
-	
+
 	public boolean isExistEduField(String newEduFieldCode) {
 
 		EducationFieldReqDTO reqDTO = new EducationFieldReqDTO();
@@ -481,21 +501,21 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		IEducationFieldSO educationfieldSO = EpEjbBusinessDelegate
 				.getInstance().getServiceObject(
 						ModuleCodeConst.PROFILE_MANAGEMENT,
-						IEducationFieldSO.class);		
+						IEducationFieldSO.class);
 
-		EducationFieldResDTO resDTO=educationfieldSO.retrieveEducationFieldList(reqDTO);
-
+		EducationFieldResDTO resDTO = educationfieldSO
+				.retrieveEducationFieldList(reqDTO);
 
 		List<String> eduFieldTypeLs = new ArrayList<String>();
 
-		if(resDTO.getEduFieldList()!=null && !resDTO.getEduFieldList().isEmpty()){			
+		if (resDTO.getEduFieldList() != null
+				&& !resDTO.getEduFieldList().isEmpty()) {
 
-			for(PmEduField eduField:resDTO.getEduFieldList())
-			{
-				String oldEduField=eduField.getFieldCode().toString();
-				if(newEduFieldCode.equals(oldEduField)){
+			for (PmEduField eduField : resDTO.getEduFieldList()) {
+				String oldEduField = eduField.getFieldCode().toString();
+				if (newEduFieldCode.equals(oldEduField)) {
 					eduFieldTypeLs.add(oldEduField);
-					if(eduFieldTypeLs.contains(oldEduField)){
+					if (eduFieldTypeLs.contains(oldEduField)) {
 						return false;
 					}
 				}
@@ -506,7 +526,6 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		return true;
 	}
 
-	
 	/**
 	 * add list of category into PmEduFieldRestr.
 	 * 
@@ -523,7 +542,6 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 */
 	public void deleteEducationList() {
 		debugLogger("deleteEducationList");
-
 
 	}
 
@@ -547,7 +565,8 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	public void setUserDetails(BaseEntity baseObject) {
 		if (baseObject.isBrandNew()) {
 			baseObject.setCreatedBy(1L);
-			baseObject.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			baseObject
+					.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		}
 		baseObject.setChangedBy(1L);
 	}
