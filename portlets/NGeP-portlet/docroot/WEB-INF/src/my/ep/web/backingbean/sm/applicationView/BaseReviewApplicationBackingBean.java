@@ -501,17 +501,7 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		}
 
 		// init company basic gst
-		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
-		gstReqDTO.setBranchCode(null);
-		gstReqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
-		getManagedBean().setHqGst(
-				SmServiceLookup.getSupplierGstSO()
-						.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
-						.getSmGstSupplier());
-		if (getManagedBean().getHqGst() == null) {
-			getManagedBean().setHqGst(new SmGstSupplier());
-		}
-		SmApplicationUtil.initGstSuppDocs(getManagedBean().getHqGst());
+		getManagedBean().setHqGst(getSupplierGst(null));
 
 	}
 
@@ -524,22 +514,15 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					new ArrayList<SmSupplierBranch>());
 		} else {
-			SupplierGstReqDTO gstReqDTO = null;
 			getManagedBean().getSmAppl().setSmSupplierBranches(
 					getSmSupplierBranchByRevNo());
 			for (SmSupplierBranch smSupplierBranch : getManagedBean()
 					.getSmAppl().getSmSupplierBranches()) {
 				if (smSupplierBranch.getRecordStatusFlg() != DbValueConst.RECORD_STATUS_DELETED) {
-					gstReqDTO = new SupplierGstReqDTO();
-					gstReqDTO
-							.setBranchCode(smSupplierBranch.getBranchCode() != null ? smSupplierBranch
-									.getBranchCode() : smSupplierBranch
-									.getSupplierBranchId());
-					gstReqDTO.setApplNo(getManagedBean().getSmAppl()
-							.getApplNo());
-					smSupplierBranch.setGst(SmServiceLookup.getSupplierGstSO()
-							.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
-							.getSmGstSupplier());
+					smSupplierBranch.setGst(getSupplierGst(smSupplierBranch
+							.getBranchCode() != null ? smSupplierBranch
+							.getBranchCode() : smSupplierBranch
+							.getSupplierBranchId()));
 					if (smSupplierBranch.getGst() == null) {
 						smSupplierBranch.setGst(new SmGstSupplier());
 					}
@@ -2358,5 +2341,31 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			}
 		}
 		return objList;
+	}
+
+	private SmGstSupplier getSupplierGst(Long branchCode) {
+		SmGstSupplier gst = null;
+		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+		gstReqDTO.setBranchCode(branchCode);
+		if (getManagedBean().isViewSupplierProfile()) {
+			gstReqDTO.setSupplierId(getManagedBean().getSmSupplier()
+					.getSupplierId());
+			gst = SmServiceLookup.getSupplierGstSO()
+					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
+					.getSmGstSupplier();
+		} else {
+			gstReqDTO.setApplNo(getManagedBean().getSmAppl().getApplNo());
+			gst = SmServiceLookup.getSupplierGstSO()
+					.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
+					.getSmGstSupplier();
+			if (gst != null && gst.getGstDeclaredDate() != null) {
+				gst = new SmGstSupplier();
+			}
+		}
+		if (gst == null) {
+			gst = new SmGstSupplier();
+		}
+		SmApplicationUtil.initGstSuppDocs(gst);
+		return gst;
 	}
 }
