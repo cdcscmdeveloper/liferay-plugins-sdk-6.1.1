@@ -40,39 +40,11 @@
 			</h:column>
 		</h:panelGrid>
 		
-		<p:outputPanel id="onlineBiddingPanel">
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-					columnClasses="columnWidth20"
-					rendered="#{suppFinalizationBackingBean.managedBean.onlineBidding and 
-									!suppFinalizationBackingBean.managedBean.itemize}">
-					<h:column>
-						<p:outputLabel value="#{lbl['lbl.sc.online.bidding.endorsement']}" />
-						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
-					</h:column>
-					<h:column>
-						<table>
-							<tr>
-								<td>
-									<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
-										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
-										disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-														suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK)}">
-										<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
-										<p:ajax partialSubmit="true" process="@this" update="@this"/>
-						   			</p:selectOneRadio>
-								</td>
-								<td style="margin-top: -3px">
-									<ac:iconTooltip value="#{lbl['lbl.sc.online.bidding.endorsement.tooltip']}" />
-								</td>
-							</tr>
-						</table>
-					</h:column>
-			</h:panelGrid>
-		</p:outputPanel>
-					
 		<p:spacer height="20px" />
 		<p:outputPanel id="supplierListTblPanel">
-		
+			<ui:param name="showSelectionColumn" value="#{empty suppFinalizationBackingBean.managedBean.recommendBy or 
+		               			  			 				!(suppFinalizationBackingBean.managedBean.recommendBy eq 
+																ParameterConst.recommendByCancel)}" />
 			<p:dataTable id="supplierListTblSingle"
 				var="shortlistedSupp" 
 				widgetVar="shortlistedSuppDtls"
@@ -84,13 +56,13 @@
 				<ac:paginator for="supplierListTblSingle" />
 					
 				<p:ajax event="rowSelectRadio" process="@this" partialSubmit="true" 
-					update="@([id$=supplierListTblSingle])"/>
+						update="@([id$=supplierListTblSingle])"/>
 									
-				<p:ajax event="rowSelect" 
-					update="@([id$=supplierListTblSingle])" process="@this" partialSubmit="true"/>					
+				<p:ajax event="rowSelect" update="@([id$=supplierListTblSingle])" 
+						process="@this" partialSubmit="true"/>					
 					
-				<p:ajax event="rowEdit"
-					update="@([id$=supplierListTblSingle])" process="@this" partialSubmit="true"/>
+				<p:ajax event="rowEdit" update="@([id$=supplierListTblSingle])" 
+						process="@this" partialSubmit="true"/>
 				
 				<p:columnGroup type="header">
 		        	<p:row>
@@ -102,7 +74,8 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;" 
+		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
@@ -176,14 +149,15 @@
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 												shortlistedSupp.suppSelectionDisabled or 
-													suppFinalizationBackingBean.managedBean.disableSupplierSelection}"/> 
+													suppFinalizationBackingBean.managedBean.disableSupplierSelection}"
+		            rendered="#{showSelectionColumn}" />
 			</p:dataTable>
 			
 			<p:dataTable id="supplierListTblMultiple"
 					var="shortlistedSupp" 
 					widgetVar="shortlistedSuppDtls"
 					value="#{suppFinalizationBackingBean.managedBean.shortlistedSupplierList}"
-					editable="true" rowIndexVar="index" style="width:100%"
+					editable="true" rowIndexVar="index" style="width:100%;"
 					rowKey="#{shortlistedSupp}"
 					rendered="#{suppFinalizationBackingBean.managedBean.selectionMode == 'multiple'
 								 and !suppFinalizationBackingBean.managedBean.itemRecommendByAward}">
@@ -200,7 +174,8 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"
+		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
@@ -275,7 +250,7 @@
 	         		</p:commandLink> 
 				</p:column>
 				
-				<p:column style="text-align: center;">
+				<p:column style="text-align: center;" rendered="#{showSelectionColumn}">
 					<p:selectBooleanCheckbox id="selectAwardSupplier" value="#{shortlistedSupp.awareded}" 
 						disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 										suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
@@ -330,7 +305,8 @@
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.ranking']}" style="width:10%; text-align:right;"/>
 		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.mof.status']}" style="width:10%; white-space:normal;"/>
 		               	<p:column colspan="3" headerText="#{lbl['lbl.sc.sf.additional.information']}" style="width:15%; text-align:center;" />
-		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"/>
+		               	<p:column rowspan="2" headerText="#{lbl['lbl.sc.selection']}" style="width:10%; white-space:normal;"
+		               			  rendered="#{showSelectionColumn}" />
 		           	</p:row>
 		           	<p:row>
 		               <p:column colspan="1" headerText="#{lbl['lbl.sc.discipline.action.taken']}" style="width:7%; white-space:normal;"/>
@@ -408,7 +384,9 @@
 					disabledSelection="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
 											suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
 												shortlistedSupp.suppSelectionDisabled or 
-													suppFinalizationBackingBean.managedBean.disableSupplierSelection}" />				
+													suppFinalizationBackingBean.managedBean.disableSupplierSelection}" 
+		            rendered="#{showSelectionColumn}" />														
+																
 			</p:dataTable>				
 		</p:outputPanel>
 		<p:spacer height="20px" />

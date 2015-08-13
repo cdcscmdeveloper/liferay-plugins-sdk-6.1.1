@@ -147,6 +147,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	
 	private Map<TplSpecZoneDtl, List<ScQtEvaluationResultDtl>> shortlistedSupppliersByZone;
 	private Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone;
+	private Map<Long,String> rejectedScQtRecommendIdMap;
 	
 	//Committee Endorsement
 	private List<ScQtCommitteeActivity> reminderList;
@@ -820,11 +821,27 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 
 	/**
 	 * @param recommendedSupppliersByZone 
-	 * 								the recommendedSupppliersByZone to set
+	 * 				the recommendedSupppliersByZone to set
 	 */
 	public void setRecommendedSupppliersByZone(
 			Map<Long, List<ScQtEvaluationResultDtl>> recommendedSupppliersByZone) {
 		this.recommendedSupppliersByZone = recommendedSupppliersByZone;
+	}
+
+	/**
+	 * @return the rejectedScQtRecommendIdMap
+	 */
+	public Map<Long, String> getRejectedScQtRecommendIdMap() {
+		return rejectedScQtRecommendIdMap;
+	}
+
+	/**
+	 * @param rejectedScQtRecommendIdMap 
+	 * 				the rejectedScQtRecommendIdMap to set
+	 */
+	public void setRejectedScQtRecommendIdMap(
+			Map<Long, String> rejectedScQtRecommendIdMap) {
+		this.rejectedScQtRecommendIdMap = rejectedScQtRecommendIdMap;
 	}
 
 	/**
