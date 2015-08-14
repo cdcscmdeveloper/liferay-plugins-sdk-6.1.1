@@ -4625,4 +4625,19 @@ public class LOADetailBackingBean extends
 		getManagedBean()
 				.setOverallContractAmt(overallContractAmt);
 	}
+	
+	public boolean disableGstAmtField() {
+
+		boolean disabled = true;
+		SmSupplier supplier = getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier();
+		String procCatType = this.getParameterDesc(getManagedBean().getScLoa()
+				.getProcurementTypeCatId());
+		if ((supplier != null && supplier.getGstRegisteredFlag() == 1)
+				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
+						.equalsIgnoreCase(procCatType)) {
+			disabled = false;
+		}
+		return disabled;
+	}
 }
