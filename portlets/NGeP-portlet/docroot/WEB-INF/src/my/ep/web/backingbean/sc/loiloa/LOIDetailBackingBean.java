@@ -896,7 +896,7 @@ public class LOIDetailBackingBean extends
 			} 
 			calculateOfferedAndFinalPriceByItem(scLoi);
 			
-			if (getManagedBean().getScQt() != null) {
+			/*if (getManagedBean().getScQt() != null) {
 				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
 					// progressive payment.
 					formProgressivePayment(scLoi);
@@ -905,7 +905,7 @@ public class LOIDetailBackingBean extends
 					// Fulfilment Schedule
 					formFulfilmentSchedule(scLoi);
 				}
-			}
+			}*/
 		} else {
 			scLoi.setScNegoTerms(null);
 			scLoi.setScLoiSupportingDocs(null);
@@ -1709,21 +1709,16 @@ public class LOIDetailBackingBean extends
 		// TODO
 		scLoi.setFileExtnNo("001");
 
-		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
-				.getScWorkFlowStatus().getPmStatus().getStatusId())) {
-
-			if (getManagedBean().getScQt() != null) {
-				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-					// progressive payment.
-					formProgressivePayment(scLoi);
-				} else if (("F").equals(getManagedBean().getScQt()
-						.getScheduleType())) {
-					// Fulfilment Schedule
-					formFulfilmentSchedule(scLoi);
-				}
-			}
-
-		}
+		/*
+		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(scLoi
+		 * .getScWorkFlowStatus().getPmStatus().getStatusId())) {
+		 * 
+		 * if (getManagedBean().getScQt() != null) { if
+		 * (("P").equals(getManagedBean().getScQt().getScheduleType())) { //
+		 * progressive payment. formProgressivePayment(scLoi); } else if
+		 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) { //
+		 * Fulfilment Schedule formFulfilmentSchedule(scLoi); } } }
+		 */
 	}
 	
 	/**
@@ -2419,17 +2414,15 @@ public class LOIDetailBackingBean extends
 			reqDTO.setDigiSignData(digiSign);
 			
 			 // Prepare Fulfilment Schedule or Progressive payment
-			Long statusId  = getManagedBean().getCurrentStatusId();
-			if (QTStatusConst.MLI_PENDING_NEGOTIATION.equals(statusId)) {
-				if (getManagedBean().getScQt() != null) {
-					if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-						this.saveProgressivePaymntList();
-					} else if (("F").equals(getManagedBean().getScQt()
-							.getScheduleType())) {
-						this.saveScheduleList();
-					}
-				}
-			}
+			/*
+			 * Long statusId = getManagedBean().getCurrentStatusId(); if
+			 * (QTStatusConst.MLI_PENDING_NEGOTIATION.equals(statusId)) { if
+			 * (getManagedBean().getScQt() != null) { if
+			 * (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+			 * this.saveProgressivePaymntList(); } else if
+			 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) {
+			 * this.saveScheduleList(); } } }
+			 */
 			
 			reqDTO.setStatusId(getManagedBean().getCurrentStatusId());
 			AwardSupplierResDTO resDTO = getQtAwardSO().saveMultipleLOIDtl(
@@ -2492,14 +2485,13 @@ public class LOIDetailBackingBean extends
 			}
 			
 			// prepare fulfillment schedule
-			if (getManagedBean().getScQt() != null) {
-				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-					this.saveProgressivePaymntList();
-				} else if (("F").equals(getManagedBean().getScQt()
-						.getScheduleType())) {
-					this.saveScheduleList();
-				}
-			}
+			/*
+			 * if (getManagedBean().getScQt() != null) { if
+			 * (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+			 * this.saveProgressivePaymntList(); } else if
+			 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) {
+			 * this.saveScheduleList(); } }
+			 */
 		}
 		
 		ScQtFinalization scQtFinalization = getManagedBean()
@@ -3019,20 +3011,18 @@ public class LOIDetailBackingBean extends
 			}
 		}
 
-		if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) {
-			if (getManagedBean().getScQt() != null) {
-				if (("P").equals(getManagedBean().getScQt().getScheduleType())) {
-					this.saveProgressivePaymntList();
-				} else if (("F").equals(getManagedBean().getScQt()
-						.getScheduleType())) {
-					this.saveScheduleList();
-				}
-			}
-		}
+		/*
+		 * if (QTStatusConst.LOI_PENDING_NEGOTIATION.equals(statusId)) { if
+		 * (getManagedBean().getScQt() != null) { if
+		 * (("P").equals(getManagedBean().getScQt().getScheduleType())) {
+		 * this.saveProgressivePaymntList(); } else if
+		 * (("F").equals(getManagedBean().getScQt() .getScheduleType())) {
+		 * this.saveScheduleList(); } } }
+		 */
 	}
 	
 	/**
-	 * Validate loi details.
+	 * Validate loi details. 
 	 *
 	 * @param scLoi the sc loi
 	 * @param outcome the outcome
@@ -3401,7 +3391,6 @@ public class LOIDetailBackingBean extends
 					if (contractSigner.getUserId().equals(user.getUserId())) {
 						getManagedBean().getScLoi().setLoiSignerDesig(
 								user.getDesignation());
-						getManagedBean().setContractSignerUser(user);
 					}
 				}
 			}
