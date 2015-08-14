@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.cm.codification;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -20,14 +18,11 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IPendingCodifiedItemSO;
 import my.ep.biz.service.sc.requestitem.IRequestItemSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.PendingCodifiedItemReqDTO;
@@ -38,7 +33,6 @@ import my.ep.exception.EpException;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmKeyword;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmPendingCodifiedItem;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
@@ -46,6 +40,7 @@ import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.type.aut.SearchOperator;
@@ -70,8 +65,6 @@ import org.primefaces.event.NodeExpandEvent;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-import com.liferay.compat.portal.util.PortalUtil;
 
 @ManagedBean(name = "codificationBackingBean")
 @ViewScoped
@@ -2293,7 +2286,7 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 			reqDTO.setOutCome("SUBMIT");
 		} else {
 			log.info("***catalogue admin*** REQUEST EXTENSION");
-			reqDTO.setOutCome("REQUEST EXTENSION");
+			reqDTO.setOutCome("REQUEST_EXTENSION");
 		}
 
 		reqDTO.getRequestExtList().add(
@@ -3069,6 +3062,58 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 		System.out.println("****last****"+this.getManagedBean().isExtensionSearchcheckBoxAll());
 	}
+	
+	
+	
+	///////////////////GKPI testing
+	public String gpkiSignAction() throws Exception{
+		
+			
+			this.getManagedBean().setTextBeforeSign("gpki1234");
+			// set action
+			
+			this.getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		
+	}
+	
+	public void enableAutoUpdate(){
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		RequestContext.getCurrentInstance().update("@form");
+	}
+	
+	public String testGPKI(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		//getManagedBean().setValidated(Boolean.TRUE);
+		return null;
+	}
+	
+	
+	/////// SPKI testing
+	
+	public void spkiSignAction(){
+		
+	
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
+		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+	}
+	
+	
+	public String updateSpkiDigiSignData() {
+		
+		
+		byte [] signedData =  getManagedBean().getSpkiBackingBean().SpkiTesting();
+		System.out.println("signedData:"+signedData);
+		
+		return "";
+	}
+	
+	
 
 
 }
