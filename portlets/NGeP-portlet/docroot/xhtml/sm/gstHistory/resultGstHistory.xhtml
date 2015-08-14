@@ -99,9 +99,6 @@
 											<p:graphicImage value="/css/images/design/download.png"
 												style="margin-right:2px;" />
 										</p:commandLink>
-									</td>
-									<td style="border-style: none !important;">
-										<h:outputText value="#{suppDoc.pmDocument.docName}" style="white-space: normal;" rendered="#{not empty suppDoc.fileName}"/>
 										<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty suppDoc.fileName}"/>
 									</td>
 								</tr>
@@ -196,9 +193,6 @@
 											<p:graphicImage value="/css/images/design/download.png"
 												style="margin-right:2px;" />
 										</p:commandLink>
-									</td>
-									<td style="border-style: none !important;">
-										<h:outputText value="#{suppDoc.pmDocument.docName}" style="white-space: normal;" rendered="#{not empty suppDoc.fileName}"/>
 										<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty suppDoc.fileName}"/>
 									</td>
 								</tr>
