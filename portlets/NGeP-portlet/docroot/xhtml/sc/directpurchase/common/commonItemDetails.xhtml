@@ -5,26 +5,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel id="glb_panel_request_list" toggleable="true" toggleSpeed="500">
+	<p:panel id="requestNoteItemDetails" toggleable="true" toggleSpeed="500">
 	<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.requestnote.instruction']}"/>
 		<f:facet name="header">
 			<h:outputText value="* " styleClass="mandatory" />
 			<h:outputText value="#{lbl['lbl.sc.panel.title.item.detail']}" />
 		</f:facet>
         <ac:lovPopup />
-	   <table style="width:100%;margin-top: 10px;">
-	         <tr>
-				<td style="width:12%"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" /></td>
-				<td><p:inputText size="80" id="title" required="true"
-						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}"
-						value="#{requestNoteBackingBean.managedBean.requestNote.title}"
-						style="margin-bottom: 5px;">
-						 <p:ajax event="blur" partialSubmit="true" process="@this" /> 
-						</p:inputText>
-						<p:message id="titleMsg" for="title" display="icon" /></td>
-			</tr>
-	   </table>
 	 
 	 <h:panelGrid width="100%" style="margin-top:10px" id="itemDtlId">
 			<p:dataTable id="requestListDataTable" var="requestNoteDtl" style="white-space: normal;"
@@ -66,13 +53,9 @@
 					</h:panelGroup>
 					
 				</p:column>
-				
-				<p:column headerText="#{lbl['lbl.sc.uom']}" style="width:6%; white-space: normal;">
-					#{requestNoteDtl.requestItem.uom.uomName}
-				</p:column>
-				  
+
 				<p:column headerText="#{lbl['lbl.sc.request.note.proc.type']}" style="width:7%; white-space: normal;">
-				<ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'N'}">
+				  <ui:fragment rendered="#{requestNoteDtl.procurementType.parameterCode eq 'N'}">
 						<h:outputText value="#{lbl['lbl.sc.request.note.proc.type.normal']}" />
 					</ui:fragment>
 					
@@ -157,31 +140,6 @@
 			           </p:row>
 			          </p:panelGrid>
 			    </p:column>
-			 
-				<p:column style="width:11%;">
-					<f:facet name="header">
-						<h:outputText value="* " styleClass="mandatory" />
-						<h:outputText value="#{lbl['lbl.sc.request.note.price.type']}" />
-					</f:facet>
-				
-					<h:selectOneMenu id="priceType" style="width:90px;margin-top: 8px;"
-						required="#{!requestNoteDtl.selected}" 
-						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
-						label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
-						value="#{requestNoteDtl.priceType.parameterId}">
-						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
-						<f:selectItems 
-							value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
-							var="pmParameter"
-							itemLabel="#{requestNoteBackingBean.getParameterDesc(pmParameter)}"
-							itemValue="#{pmParameter.parameterId}" />
-							
-							<p:ajax event="change" update="offerPriceId" partialSubmit="true"
-									process="@this"
-									listener="#{requestNoteBackingBean.supplierListener(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
-					</h:selectOneMenu>
-					<p:message id="priceTypeMsg" for="priceType" display="icon" />
-				</p:column>
 				
 			    <p:column headerText="#{lbl['lbl.sc.request.note.price.offered']}"  style="width:7%;white-space: normal;">
 			    <h:panelGroup id="offerPriceId">
@@ -207,15 +165,6 @@
 						</h:panelGroup>
 					</h:panelGroup>
 				</p:column>
-				<p:column  style="width:10%; white-space: normal;">
-					<f:facet name="header">
-						<h:outputText value="#{lbl['lbl.sc.request.note.fulfill.type']}"/>
-						<ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" />
-					</f:facet>
-					<p:inputText value="#{requestNoteBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentType ,requestNoteDtl.fulfilmentType.parameterCode)}" 
-					   disabled="true" size="8" style="margin-top: 8px;"  />
-				</p:column>
-				
 				<p:column style="width:12%; white-space: normal;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
@@ -237,7 +186,7 @@
 					   <p:message id="prepareByMsg" for="prepareBy" display="icon" />
 				</p:column>
 			
-			    <p:column style="width:20%; white-space: normal;">
+			    <p:column style="width: 9%; white-space: normal;">
 			        <f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
@@ -253,29 +202,64 @@
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
-					<h:selectOneMenu  style="width:76px;margin-top: 8px;" required="#{!requestNoteDtl.selected}" id="deliveryType" 
-					    label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term.type']}"
-					    disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
-						value="#{requestNoteDtl.deliverTermTypeId}">
-						<f:selectItems value="#{requestNoteBackingBean.getDropdownValues(ParameterTypeConst.deliveryTerm)}"/>
-						
-						<p:ajax event="change" update="prepareBy" partialSubmit="true"
-									process="@this"
-									listener="#{requestNoteBackingBean.supplierListener(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId ,requestNoteDtl.deliverTermTypeId)}" />
-					</h:selectOneMenu>
+					   	<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.deliverTermType)}" 
+					   disabled="true" size="2"  />
+					
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
-					  <p:message id="deliveryTypeMsg" for="deliveryType" display="icon" />
 				</p:column>
+				
+				<p:column style="width:6%; white-space: normal;">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.procurment.type.category']}" />
+					</f:facet>
+					<h:selectOneMenu id="procTypeCategory"
+						value="#{requestNoteDtl.procTypeCategoryId}"
+						style="width:120px;margin-top: 8px;" required="true"
+						label="#{lbl['lbl.sc.procurment.type.category']}">
+
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{requestNoteBackingBean.procTypeCategories}"
+							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+							<p:ajax event="change" update="prepareBy" partialSubmit="true"
+									process="@this"
+									listener="#{requestNoteBackingBean.supplierListener(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId, requestNoteDtl.procTypeCategoryId)}" />
+					</h:selectOneMenu>
+					<p:message id="procTypeCategoryMsg" for="procTypeCategory"
+						display="icon" />
+
+				</p:column>
+				<p:column style="width:10%; white-space: normal;">
+					<f:facet name="header">
+						<h:outputText value="* " styleClass="mandatory" />
+						<h:outputText value="#{lbl['lbl.sc.direct.purchase.title']}" />
+					</f:facet>
+					 <p:inputTextarea id="procTypeCatTitle" rows="2" 
+					    cols="6" maxlength="100"  required="true"
+					    scrollHeight="3" value="#{requestNoteDtl.procurementTitle}" 
+					      autoResize="false" style="width:120px;">
+					    <p:ajax event="keyup" />
+					 </p:inputTextarea>
+					<p:message id="procTypeCatTitleMsg" for="procTypeCatTitle"
+						display="icon" />
+				</p:column>
+				
 			</p:dataTable>
 		</h:panelGrid>
 		
+		<ui:param name="isSourcheMethodAsSC"
+			value="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}" />
+			
 		<p:panelGrid styleClass="noBorder" id="prepareBy" style="width:100%"
 		    rendered="#{!requestNoteBackingBean.managedBean.viewOnly}">
 			<p:row>
 				<p:column>
 					<h:outputText value="#{lbl['lbl.sc.request.note.loa.prepare.by']}"/>
 					<p:spacer width="6px;"/>
-					<h:selectOneMenu style="width:155px;" 
+					<h:selectOneMenu style="width:115px;" 
 						value="#{requestNoteBackingBean.managedBean.assignedToUserId}"
 					    disabled="false">
 						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -286,19 +270,36 @@
 					</h:selectOneMenu>
 					
 					<p:spacer width="10px;"/>
-					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"  rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}"></h:outputText>
+					<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}"  rendered="#{isSourcheMethodAsSC}"/>
 					<p:spacer width="6px;"/>
-					<p:inputText id="periodId" style="width:20px;text-align:right;margin-top: 7px;" required="false"
-					    rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}"
+					<p:inputText id="periodId" style="width:20px;text-align:right;margin-top: 7px;"
+					    rendered="#{isSourcheMethodAsSC}"
 						value="#{requestNoteBackingBean.managedBean.periodValue}" />
+					<p:spacer width="6px;"/>
+					
+					<h:outputText value="#{lbl['lbl.sc.procurment.type.category']}" rendered="#{isSourcheMethodAsSC}"/>
 					<p:spacer width="4px;"/>
-					<h:selectOneMenu id="periodMode" 
-					    rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC'}"
-						value="#{requestNoteBackingBean.managedBean.periodType}"
-						style="width:120px;">
-						<f:selectItems value="#{requestNoteBackingBean.getDropdownCodeValues(ParameterTypeConst.deliveryTerm)}"/>
+					<h:selectOneMenu id="procTypeCategoryId"
+						value="#{requestNoteBackingBean.managedBean.procTypeCategoryId}"
+						style="width:120px;"
+						label="#{lbl['lbl.sc.procurment.type.category']}" rendered="#{isSourcheMethodAsSC}">
+
+						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+							itemValue="#{null}" />
+						<f:selectItems
+							value="#{requestNoteBackingBean.procTypeCategories}"
+							var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+							itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
 					</h:selectOneMenu>
-					<p:spacer width="5px;"/>
+					<p:spacer width="6px;"/>
+					
+					<h:outputText value="#{lbl['lbl.sc.direct.purchase.title']}" rendered="#{isSourcheMethodAsSC}"/>
+					<p:spacer width="4px;"/>
+					<p:inputText id="procTitle"
+					    rendered="#{isSourcheMethodAsSC}"
+						value="#{requestNoteBackingBean.managedBean.procTitle}" />
+					<p:spacer width="6px;"/>
+					
 					<p:commandButton value="#{lbl['lbl.btn.apply.to.all']}"
 					    partialSubmit="true"  process="@this prepareBy"
 						action="#{requestNoteBackingBean.applyForRequestNote}"
