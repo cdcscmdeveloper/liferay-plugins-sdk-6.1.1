@@ -135,7 +135,7 @@
 			
 							<p:commandLink oncomplete="gstUploadDialog.show();return false;"
 								rendered="#{!table.pmDocument.hardCopyReq}"
-								update="@([id$=gstUploadDialog])"
+								update="@([id$=gstUploadDialog])" process="@this"
 								action="#{backingBean.assignSelectedGstDoc(table)}">
 								<p:graphicImage value="/css/images/design/upload.png"
 									style="margin-right:2px;" />
