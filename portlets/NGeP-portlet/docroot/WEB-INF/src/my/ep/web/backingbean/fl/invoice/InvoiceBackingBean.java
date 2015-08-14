@@ -88,6 +88,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
@@ -940,15 +941,30 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		TreeNode root = getManagedBean().getChargeLineItemRoot();
 		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
 		BigDecimal orderTotalAmount = new BigDecimal(0);
+		BigDecimal gstTotalAmount = new BigDecimal(0);
 		
 		for (TreeNode lv1 : root.getChildren()) {
 			for(TreeNode lv2 : lv1.getChildren()){
 				InvoiceChargeLineLvl2VO dataLv2 = (InvoiceChargeLineLvl2VO) lv2.getData();
 				invoiceTotalAmount = invoiceTotalAmount.add(dataLv2.getInvoiceAmt());
 				orderTotalAmount = orderTotalAmount.add(dataLv2.getOrderedAmt());
+				for(TreeNode lv3 : lv2.getChildren()) {
+					InvoiceChargeLineLvl3VO dataLv3 = (InvoiceChargeLineLvl3VO) lv3.getData();
+					if(dataLv3.getGstFlag().equalsIgnoreCase(GSFType.STANDARD.value())) {
+						gstTotalAmount = gstTotalAmount.add(dataLv3.getInvoiceAmt());
+					}
+				}
 			}
-			
 		}
+		
+		if(gstTotalAmount.doubleValue()>0) {
+			BigDecimal gstAmount = getManagedBean().getInvoice().getFlRequest().getGstRate().multiply(gstTotalAmount).divide(BigDecimal.valueOf(106),2,RoundingMode.HALF_UP);
+			getManagedBean().setGstAmount(gstAmount);
+		} else {
+			getManagedBean().setGstAmount(BigDecimal.ZERO);
+		}
+		getManagedBean().setInvoiceAmountWithoutGST(invoiceTotalAmount.subtract(getManagedBean().getGstAmount()));
+		
 		getManagedBean().getInvoice().setInvoiceAmtOri(orderTotalAmount);
 		getManagedBean().getInvoice().setInvoiceAmtNew(invoiceTotalAmount);
 		
