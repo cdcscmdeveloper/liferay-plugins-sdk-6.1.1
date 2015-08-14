@@ -152,7 +152,8 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 	 * @return SelectItem[]
 	 */
 	public static SelectItem[] getPmEducationStatusList() {
-		return PmCommonUtil.getStatusOptions();
+		//return PmCommonUtil.getStatusOptions();
+		return PmCommonUtil.getCommonStatusOptions();
 	}
 
 	/**
