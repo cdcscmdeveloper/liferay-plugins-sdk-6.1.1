@@ -58,6 +58,7 @@ import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.EpPropertiesConst;
 import my.ep.constant.MessageConst;
@@ -87,6 +88,8 @@ import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
 import my.ep.exception.EpException;
@@ -123,6 +126,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -1263,6 +1267,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierByEpNo(suppReqDTO);
 				cmSupplierItem.setSmSupplier(suppResDTO.getSmSupplier());
 				this.getManagedBean().setSelectedMaintainItem(cmSupplierItem);
+				retriveSupplierGstInfomation(suppResDTO.getSmSupplier());
 			} else if(supplierItem.getContractNo()!=null) { // Contract Item 
 				CmSupplierItem cmSupplierItem = new CmSupplierItem();
 				this.getManagedBean().setDisplayCatalogue(true);
@@ -1295,7 +1300,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				SupplierSearchResDTO suppResDTO = supplierSearchSO.retriveSupplierByEpNo(suppReqDTO);
 				cmSupplierItem.setSmSupplier(suppResDTO.getSmSupplier());
 				this.getManagedBean().setSelectedMaintainItem(cmSupplierItem);
-
+				retriveSupplierGstInfomation(suppResDTO.getSmSupplier());
 			} else { // Catalogue Item
 				CatalogueResDTO resDTO = null;
 				resDTO = catalogueSO.viewSupplierItem(reqDTO);
@@ -1305,6 +1310,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 				reqDTO.setSupplierId(resDTO.getSupplierItemList().get(0).getSmSupplier().getSupplierId());
 				resDTO = catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
 				this.getManagedBean().setSupplierZoneList(resDTO.getSupplierZoneLs());
+				retriveSupplierGstInfomation(resDTO.getSupplierItemList().get(0).getSmSupplier());
 			}
 			//remove N/A from Item name if any
 			String itemNameForView = this.getManagedBean().getSelectedMaintainItem().getCmItem().getItemName().replaceAll("N/A", "");
@@ -9474,6 +9480,36 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 		System.out.println("****last****"+this.getManagedBean().isSupplierItemcheckBoxAll());
 	}
 
+	private void retriveSupplierGstInfomation(SmSupplier supplier) {
+		ISupplierGstSO supplierGstSo = null;
+		try {
+			if (null != supplier && null != supplier.getSupplierId()) {
+				supplierGstSo = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISupplierGstSO.class);
+				SupplierGstReqDTO supplierGstreqDTO = new SupplierGstReqDTO();
+				supplierGstreqDTO.setSupplierId(supplier.getSupplierId());
+				supplierGstreqDTO.setBranchCode(null);
+				SupplierGstResDTO supplierGstresDTO = supplierGstSo
+						.retrieveGstInfoBySupplierIdAndBranchCode(supplierGstreqDTO);
+				if (null != supplierGstresDTO
+						&& null != supplierGstresDTO.getSmGstSupplier()) {
+					this.getManagedBean().setSmGstSupplier(
+							supplierGstresDTO.getSmGstSupplier());
+
+				} else {
+					this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+				}
+
+			} else {
+				this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+			}
+
+		} finally {
+			supplierGstSo = null;
+		}
+		
+	}
 
 
 }
