@@ -3128,12 +3128,12 @@ public class SupplierFinalizationBackingBean extends
 								
 								if (scLoiLoaItem.getScLoi() != null) {
 									recommendBy = scLoiLoaItem.getScLoi().getScLoiLoa()
-												.getRecommendBy();
+														.getRecommendBy();
 									recommendType = scLoiLoaItem.getScLoi().getScLoiLoa()
 														.getRecommendTypeCode();
 								} else if (scLoiLoaItem.getScLoa() != null) {
 									recommendBy = scLoiLoaItem.getScLoa().getScLoiLoa()
-											.getRecommendBy();									
+														.getRecommendBy();									
 									recommendType = scLoiLoaItem.getScLoa().getScLoiLoa()
 														.getRecommendTypeCode();
 								}
@@ -3198,7 +3198,17 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().setShortlistedPackageList(
 							shortlistedPackageList);
 				}
-				disableAwardedItems(scQtFinalization.getScQtRecommends());
+				if (isQTRefinalized()) {
+					disableAwardedItems(scQtFinalization.getScQtRecommends());
+					
+					// Check if the any of the suppliers has awarded LOA's
+					reqDTO = new SuppFinalizationReqDTO();
+					reqDTO.setQtId(getManagedBean().getScQt().getQtId());
+					resDTO = qtSuppFinalizationSO.hasLOAAwarded(reqDTO);
+					if (resDTO.isSuccessful()) {
+						this.getManagedBean().setHasAwardedLOA(resDTO.isLoaAwarded());
+					}
+				}
 				
 				String decisionTypeCode = scQtFinalization.getDecision()
 						.getParameterCode();
@@ -3315,6 +3325,8 @@ public class SupplierFinalizationBackingBean extends
 
 	private void disableAwardedItems(List<ScQtRecommend> scQtRecommends) {
 		List<String> rejectedRecommendDtlIds = getRejectedRecommendDtlIds();
+		Map<Long,String> rejectedRecommendIdMap 
+							= getManagedBean().getRejectedScQtRecommendIdMap();
 		
 		if (CollectionUtils.isNotEmpty(
 							scQtRecommends)) {
@@ -3330,11 +3342,13 @@ public class SupplierFinalizationBackingBean extends
 						// if LOI awarded and LOA awarded,
 						// then consider the item as awarded
 						if (recommendDtlId != null) {
-							if ((BooleanUtils.isTrue(
+							if ( (BooleanUtils.isTrue(
 									recommendDtl.getLoiAwarded()) && 
 										recommendDtl.getLoaAwarded() == null && 
 											recommendDtl.getRecordStatusFlg().equals(
-														DbValueConst.RECORD_STATUS_ACTIVE)) ||
+														DbValueConst.RECORD_STATUS_ACTIVE) && 
+												!rejectedRecommendIdMap.containsKey(
+															recommend.getQtRecommendId()) ) ||
 											(BooleanUtils.isTrue(
 												recommendDtl.getLoiAwarded()) && 
 													BooleanUtils.isTrue(
@@ -3375,12 +3389,12 @@ public class SupplierFinalizationBackingBean extends
 	
 	private boolean isQTRefinalized() {
 		boolean isRefinalized = false;
-		
-		if (QTStatusConst.QT_RE_FINALIZATION
-				.equals(getManagedBean().getScQt().getCurrentWorkFlowStatus()
+		if (QTStatusConst.QT_RE_FINALIZATION.equals(
+				getManagedBean().getScQt().getCurrentWorkFlowStatus()
 						.getPmStatus().getStatusId())) {
 			isRefinalized = true;
 		}
+		
 		return isRefinalized;
 	}
 
@@ -4130,38 +4144,17 @@ public class SupplierFinalizationBackingBean extends
 		SelectItem[] items = null;
 		ISearchBean<PmParameterDesc> searchBean = null;
 		List<String> excludedDecisionList = null;
-		
-		boolean isRefinalization = this.isQTRefinalized();
-		
+
 		// 1. If re-finalized and (is zonal or isItemized) exclude the defined decision type(s)
-		// 2. Zonal package also cannot exclude the defined decision type(s)
-		if (isRefinalization) {
-			boolean hasLOAAwarded = false;
-			IQTSuppFinalizationSO qtSuppFinalizationSO = null;
-			
-			try {
-				qtSuppFinalizationSO = BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-								IQTSuppFinalizationSO.class);
-				SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-				reqDTO.setQtId(getManagedBean().getScQt().getQtId());
-				SuppFinalizationResDTO resDTO = qtSuppFinalizationSO.hasLOAAwarded(reqDTO);
-				if (resDTO.isSuccessful()) {
-					hasLOAAwarded = resDTO.isLoaAwarded();
-				}
-			} finally {
-				qtSuppFinalizationSO = null;
-			}
-			
-			if (hasLOAAwarded) {
-				excludedDecisionList = new ArrayList<String>();
-				excludedDecisionList.add(
-						ParameterConst.DECISION_CANCEL);
-				excludedDecisionList.add(
-						ParameterConst.DECISION_RE_PUBLISH);
-				excludedDecisionList.add(
-						ParameterConst.DECISION_RE_EVALUATION);	
-			}
+		// 2. For Zonal package also exclude the defined decision type(s)
+		if (getManagedBean().isHasAwardedLOA()) {
+			excludedDecisionList = new ArrayList<String>();
+			excludedDecisionList.add(
+					ParameterConst.DECISION_CANCEL);
+			excludedDecisionList.add(
+					ParameterConst.DECISION_RE_PUBLISH);
+			excludedDecisionList.add(
+					ParameterConst.DECISION_RE_EVALUATION);	
 		}
 		
 		if (getManagedBean().isInitialDecisionFwdToBPK()) {
@@ -5828,9 +5821,7 @@ public class SupplierFinalizationBackingBean extends
 		this.getManagedBean().setSelectedItemAlreadyAwarded(false);
 		
 		if (scQtRecommend.isDisabled() || 
-				scQtRecommend.isAwardedItem() || 
-					StringUtils.equals(ParameterConst.RECOMMEND_BY_CANCEL, 
-									   scQtRecommend.getRecommendByStr())) {
+				scQtRecommend.isAwardedItem()) {
 			if (this.getManagedBean().isItemRowSelect()) {
 				this.getManagedBean().setDisableSupplierSelection(true);
 				if (scQtRecommend.isAwardedItem()) {
@@ -5908,8 +5899,8 @@ public class SupplierFinalizationBackingBean extends
 			} else {
 				this.getManagedBean().setShortlistedSupplierList(null);
 			}
-			scQtRecommend
-					.setShortListedSupplierList(shortlistedItemSupplierList);
+			scQtRecommend.setShortListedSupplierList(
+							shortlistedItemSupplierList);
 			getManagedBean().getSelectedItemList().add(scQtRecommend);
 
 			List<ScQtEvaluationResultDtl> recommendedSupplierList = new ArrayList<ScQtEvaluationResultDtl>();
@@ -5955,11 +5946,8 @@ public class SupplierFinalizationBackingBean extends
 									evalResultDtl.setAwareded(false);
 									evalResultDtl.setShortListed(true);
 								}
-							} else {
-								evalResultDtl.setAwareded(false);
-								evalResultDtl.setShortListed(false);
-								evalResultDtl.setSuppSelectionDisabled(true);
 							}
+							
 						}
 					}
 				}
