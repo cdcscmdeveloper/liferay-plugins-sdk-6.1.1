@@ -8,7 +8,7 @@
 	<p:panel id="sqinfoId" header="#{lbl['lbl.sc.simple.quote.information']}" toggleable="true">
 	  <table style="width:100%;">
 			<tr>
-				<td style="width:18%"><p:outputLabel
+				<td style="width:19%"><p:outputLabel
 						value="#{lbl['lbl.sc.panel']}" /></td>
 				<td colspan="3">
 					<table>
@@ -41,6 +41,31 @@
 						</tr>
 					</table></td>
 			  </tr>
+			 <tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3">
+					<table>
+						<tr>
+							<td><p:selectOneMenu id="procTypeCategory"
+									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
+									style="width:120px;margin-bottom: 5px;" required="true"
+									label="#{lbl['lbl.sc.procurment.type.category']}">
+
+									<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
+										itemValue="#{null}" />
+									<f:selectItems
+										value="#{simpleQuoteBackingBean.procTypeCategories}"
+										var="pmParameterDesc" itemLabel="#{pmParameterDesc.codeName}"
+										itemValue="#{pmParameterDesc.pmParameter.parameterId}" />
+								    </p:selectOneMenu> <p:message id="procTypeCategoryMsg" for="procTypeCategory"
+									display="icon" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
 			<tr>
 				<td>
 				<p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" /> <p:outputLabel value="*" styleClass="mandatory" /></td>
@@ -71,7 +96,7 @@
 				<table style="width: 100%">
 				    <tr>
 					   <ui:fragment rendered="#{simpleQuoteBackingBean.managedBean.procTypeOption}">
-						 <td style="width: 18%">
+						 <td style="width: 19%">
 						     <p:outputLabel value="#{lbl['lbl.sc.reason']}" />
 						     <p:outputLabel value="*" styleClass="mandatory" />
 						 </td>
@@ -215,12 +240,14 @@
 							</td>
 
 						</tr>
-					</table></p:panel>
-	<p:panel label="#{lbl['lbl.sc.simple.quote.remark']}" header="#{lbl['lbl.sc.simple.quote.remark']}" id="rmkId" toggleable="true" toggleSpeed="500">
-	<p:outputPanel>
-	 <table style="width: 100%">
+					</table>
+	  </p:panel>
+	  <p:panel label="#{lbl['lbl.sc.simple.quote.remark']}" header="#{lbl['lbl.sc.simple.quote.remark']}" 
+	      id="rmkId" toggleable="true" toggleSpeed="500">
+	  <p:outputPanel>
+	     <table style="width: 100%">
 		<tr>
-			<td class="TableFieldLeft" style="width:13%"></td>
+			<td class="TableFieldLeft" style="width:15%"></td>
 			<td class="TableFieldRight">
 				<p:dataGrid id="catatan" value="#{simpleQuoteBackingBean.managedBean.scQuote.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
