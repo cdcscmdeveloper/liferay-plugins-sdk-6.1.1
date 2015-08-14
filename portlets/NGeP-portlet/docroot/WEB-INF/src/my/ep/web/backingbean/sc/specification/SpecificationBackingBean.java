@@ -3717,13 +3717,15 @@ public class SpecificationBackingBean extends
 
 			if (null != ministryId) {
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				// reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+				 reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 				reqDTO.setParentOrgProfileId(ministryId);
 				orgProfileSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
+			/*	OrgProfileResDTO resDTO = orgProfileSO
+						.retrievePTJGroupListByMinistry(reqDTO);*/
 				OrgProfileResDTO resDTO = orgProfileSO
-						.retrievePTJGroupListByMinistry(reqDTO);
+						.retrieveOrgProfileListByOrgType(reqDTO);
 				this.getManagedBean()
 						.setPtjtList(new ArrayList<PmOrgProfile>());
 
