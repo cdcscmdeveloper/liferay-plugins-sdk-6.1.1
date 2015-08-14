@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
@@ -26,9 +27,15 @@ import com.liferay.portal.kernel.util.StringUtil;
 @RequestScoped
 public class SmGstHistoryBackingBean extends
 		BaseReviewApplicationBackingBean<SmGstHistoryManagedBean> {
+
+	private static int SEARCH_BY_EPNO = 1;
+	private static int SEARCH_BY_MOFNO = 2;
+	private static int SEARCH_BY_COMP_NAME = 3;
+
 	public void preRenderGstHistory() {
 		renewSesionObject();
 		initLogin();
+		getManagedBean().setSearchBy(SEARCH_BY_EPNO);
 		if (getManagedBean().isSupplierUser()) {
 			SmSupplier supplier = SmApplicationUtil.getCurrentSupplier();
 			setHqAndBranchGst(supplier);
@@ -46,6 +53,19 @@ public class SmGstHistoryBackingBean extends
 		setHqAndBranchGst(supplier);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "");
+	}
+
+	public void onSearchBy(AjaxBehaviorEvent e) {
+		if (getManagedBean().getSearchBy() == SEARCH_BY_EPNO) {
+			getManagedBean().getSearchSupplier().setCompanyName("");
+			getManagedBean().setSearchMofNo("");
+		} else if (getManagedBean().getSearchBy() == SEARCH_BY_MOFNO) {
+			getManagedBean().getSearchSupplier().setCompanyName("");
+			getManagedBean().getSearchSupplier().setEpNo("");
+		} else if (getManagedBean().getSearchBy() == SEARCH_BY_COMP_NAME) {
+			getManagedBean().getSearchSupplier().setEpNo("");
+			getManagedBean().setSearchMofNo("");
+		}
 	}
 
 	private void setHqAndBranchGst(SmSupplier supplier) {
