@@ -30,6 +30,7 @@ public class SmGstHistoryManagedBean extends BaseReviewApplicationManagedBean {
 	private IPagingDataModel<SmSupplier> smGstDataModel = new SmGstPagingDataModel();
 	private List<SmGstSupplier> hqGstList;
 	private List<SmGstSupplier> branchGstList;
+	private SmSupplier selectedSupplier;
 
 	private class SmGstPagingDataModel extends PagingDataModel<SmSupplier> {
 		/**
@@ -106,6 +107,14 @@ public class SmGstHistoryManagedBean extends BaseReviewApplicationManagedBean {
 
 	public void setBranchGstList(List<SmGstSupplier> branchGstList) {
 		this.branchGstList = branchGstList;
+	}
+
+	public SmSupplier getSelectedSupplier() {
+		return selectedSupplier;
+	}
+
+	public void setSelectedSupplier(SmSupplier selectedSupplier) {
+		this.selectedSupplier = selectedSupplier;
 	}
 
 }
