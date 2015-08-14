@@ -161,21 +161,8 @@
 				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
 				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
 				fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
-				update="@form" oncomplete="gstUploadDialog.hide();" />
+				update="gstHqPanelId" oncomplete="gstUploadDialog.hide();" />
 		</p:dialog>
-		
-		<p:confirmDialog id="alertHq" closable="true"
-			message="#{lbl['lbl.sm.gst.seteffdate.to.first.of.mnth.msg']}"
-			header="#{lbl['lbl.sm.notification']}" severity="alert"
-			widgetVar="alertHq">
-			
-			<div align="right">
-				<p:commandButton id="okHqBtn" update="@([id$=gstHqPanelId])"
-					value="#{lbl['lbl.btn.ok']}" onclick="alertHq.hide()" 
-					onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-					action="#{backingBean.resetHqEffectiveDate}" />
-			</div>
-		</p:confirmDialog>
 	</p:panel>
 
 </ui:composition>
