@@ -185,6 +185,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
     
     private FlInvoiceItemSummary invItemSummary;
 	
+	private BigDecimal gstAmount;
+	private BigDecimal invoiceAmountWithoutGST;
+	
 	/**
 	 * Gets the doc type.
 	 *
@@ -1023,5 +1026,21 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setInvItemSummary(FlInvoiceItemSummary invItemSummary) {
 		this.invItemSummary = invItemSummary;
+	}
+
+	public BigDecimal getGstAmount() {
+		return gstAmount;
+	}
+
+	public void setGstAmount(BigDecimal gstAmount) {
+		this.gstAmount = gstAmount;
+	}
+
+	public BigDecimal getInvoiceAmountWithoutGST() {
+		return invoiceAmountWithoutGST;
+	}
+
+	public void setInvoiceAmountWithoutGST(BigDecimal invoiceAmountWithoutGST) {
+		this.invoiceAmountWithoutGST = invoiceAmountWithoutGST;
 	}
 }
