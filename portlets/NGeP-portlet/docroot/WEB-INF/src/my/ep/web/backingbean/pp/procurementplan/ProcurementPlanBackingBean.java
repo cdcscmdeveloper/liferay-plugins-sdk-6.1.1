@@ -1903,7 +1903,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 			reqDTO.setJustifications(justifications);
 			reqDTO.setPpPlan(ppPlan);
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken()); 
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+			reqDTO.setUserRole(getUserRoleValue());
 			if(!ppPlan.isBrandNew()){
 				reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			}	
@@ -3295,6 +3296,21 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		}
 	}
 	/* --------------------------------------------------------- Search & Result - END -----------------------------------------------------------------*/
+	
+	
+	private static String getUserRoleValue() {		
+		FacesScopes sc = new FacesScopes();
+		if (sc.hasRoleUser(RoleCode.PLAN_APPROVER.value())) {
+			return RoleCode.PLAN_APPROVER.value();
+		} else if (sc.hasRoleUser(RoleCode.PLAN_EXPEN_OFFICER.value())) {
+			return RoleCode.PLAN_EXPEN_OFFICER.value();
+		} else if (sc.hasRoleUser(RoleCode.PLAN_PROCU_OFFICER.value())) {
+			return RoleCode.PLAN_PROCU_OFFICER.value();
+		} else if (sc.hasRoleUser(RoleCode.PLAN_VERF_OFFICER.value())) {
+			return RoleCode.PLAN_VERF_OFFICER.value();
+		} 
+	return null;	
+	}
 	
 	
 	
