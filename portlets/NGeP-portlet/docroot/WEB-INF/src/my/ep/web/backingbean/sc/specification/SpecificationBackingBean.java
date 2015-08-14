@@ -300,10 +300,6 @@ public class SpecificationBackingBean extends
 		return "specificationview.xhtml";
 	}
 
-	
-
-
-
 	/**
 	 * Save specification dtls.method to save the businessOwner details.
 	 */
@@ -758,6 +754,11 @@ public class SpecificationBackingBean extends
 											.getScQt()
 											.setPmProcurementCategory(
 													new PmParameter());
+								}
+								if (null == this.getManagedBean().getScQt()
+										.getProcurementTypeCatId()) {
+									this.getManagedBean().getScQt()
+											.setProcurementTypeCatId(new PmParameter());
 								}
 								this.getManagedBean().getScQt().setZonal(false);
 								retriveZonesOrSuppliersByItem();
@@ -3717,13 +3718,15 @@ public class SpecificationBackingBean extends
 
 			if (null != ministryId) {
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				 reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 				reqDTO.setParentOrgProfileId(ministryId);
 				orgProfileSO = BusinessDelegate.getInstance()
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
-			/*	OrgProfileResDTO resDTO = orgProfileSO
-						.retrievePTJGroupListByMinistry(reqDTO);*/
+				/*
+				 * OrgProfileResDTO resDTO = orgProfileSO
+				 * .retrievePTJGroupListByMinistry(reqDTO);
+				 */
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
 				this.getManagedBean()
@@ -4998,6 +5001,9 @@ public class SpecificationBackingBean extends
 				if (null == scQt.getPmProcurementCategory()) {
 					scQt.setPmProcurementCategory(new PmParameter());
 				}
+				if (null == scQt.getProcurementTypeCatId()) {
+					scQt.setProcurementTypeCatId(new PmParameter());
+				}
 				this.getManagedBean().setPanelChange(scQt.isPanel());
 				this.getManagedBean().setScQt(scQt);
 				if (scQt.isZonal()
@@ -5203,6 +5209,11 @@ public class SpecificationBackingBean extends
 					this.getManagedBean().getScQt()
 							.setZoneLocationLevel(new PmParameter());
 				}
+				if (null == this.getManagedBean().getScQt()
+						.getProcurementTypeCatId()) {
+					this.getManagedBean().getScQt()
+							.setProcurementTypeCatId(new PmParameter());
+				}
 				this.getManagedBean().getScQt().setZonal(false);
 				getManagedBean().setZoneGeneralTrees(null);
 				getManagedBean().setZoneTrees(null);
@@ -5254,6 +5265,11 @@ public class SpecificationBackingBean extends
 						this.getManagedBean().getScQt()
 								.setPmProcurementCategory(new PmParameter());
 					}
+					if (null == this.getManagedBean().getScQt()
+							.getProcurementTypeCatId()) {
+						this.getManagedBean().getScQt()
+								.setProcurementTypeCatId(new PmParameter());
+					}
 
 				} else {
 					if (supplierCriteria != null
@@ -5275,6 +5291,11 @@ public class SpecificationBackingBean extends
 							this.getManagedBean()
 									.getScQt()
 									.setPmProcurementCategory(new PmParameter());
+						}
+						if (null == this.getManagedBean().getScQt()
+								.getProcurementTypeCatId()) {
+							this.getManagedBean().getScQt()
+									.setProcurementTypeCatId(new PmParameter());
 						}
 					}
 				}
