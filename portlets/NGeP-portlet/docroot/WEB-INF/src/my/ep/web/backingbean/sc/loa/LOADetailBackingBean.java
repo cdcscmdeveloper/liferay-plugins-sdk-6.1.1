@@ -38,8 +38,6 @@ import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
-import my.ep.biz.service.sc.quationtender.IQTDetailSO;
-import my.ep.biz.service.sc.quationtender.IQTSpecSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
@@ -68,10 +66,6 @@ import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
 import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
-import my.ep.dto.sc.quationtender.QuationTenderReqDTO;
-import my.ep.dto.sc.quationtender.QuationTenderResDTO;
-import my.ep.dto.sc.quationtender.SpecificationReqDTO;
-import my.ep.dto.sc.quationtender.SpecificationResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -107,7 +101,6 @@ import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtCategory;
-import my.ep.persistence.entity.sc.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
@@ -128,7 +121,6 @@ import my.ep.type.pm.RoleCode;
 import my.ep.type.sc.ApprovalAction;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.tpl.TemplateSpecBean;
@@ -649,7 +641,10 @@ public class LOADetailBackingBean extends
 		if (ParameterConst.CONTRACT_TYPE_CENTRAL.equals(contractType)) {
 			getManagedBean().setSelectedContractAgency(scLoa.getContractAgency().getOrgTypeCode().getParameterCode());
 		}
-
+		
+        //Supplier overall contract amount
+		getManagedBean().setOverallContractAmt(scLoa.getLoaAmt());
+		
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
 				scLoa.getSupplierBranch());
@@ -4611,5 +4606,23 @@ public class LOADetailBackingBean extends
 			fc.getApplication().getNavigationHandler()
 			.handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_PAGE);
 		}
+	}
+	
+	/**
+	 * Sum of gstAmount & loa offer price
+	 * 
+	 * @param gstAmount
+	 */
+	public void calculateOverallAmount(BigDecimal gstAmount) {
+
+		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
+		if (gstAmount != null) {
+			overallContractAmt = overallContractAmt.add(gstAmount);
+		}
+		overallContractAmt = overallContractAmt.setScale(2,
+				BigDecimal.ROUND_HALF_EVEN);
+
+		getManagedBean()
+				.setOverallContractAmt(overallContractAmt);
 	}
 }
