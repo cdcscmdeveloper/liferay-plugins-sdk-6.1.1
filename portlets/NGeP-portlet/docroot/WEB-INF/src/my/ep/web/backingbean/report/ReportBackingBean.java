@@ -736,7 +736,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -6436,7 +6436,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}
 			if ((this.getFlItemName() != null)
 					&& (this.getFlItemName() != ReportConst.EMPTY_VAL)) {
-				rptGenBean.setItemNameTotVar(ReportConst.AMP_ITM_NAME_EQ
+				rptGenBean.setItemNameTotVar(ReportConst.FL_AMP_ITM_NAME_EQ
 						+ this.getFlItemName());
 			}
 			SimpleDateFormat outputDateFormat = new SimpleDateFormat(

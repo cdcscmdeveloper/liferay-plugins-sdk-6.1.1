@@ -303,8 +303,46 @@ public class ReportsGenerateBean {
 		private boolean flSupplierDeliveryOrderNoView = false;
 		private boolean flPaymentAdviceNoView = false;
 		private boolean flGroupTwentyThreeView = false;
+		private boolean flGroupTwentyFourView = false;
+		private boolean flFromDateView = false;
+		private boolean flContractRequestCreatedDateView = false;
+		private boolean flContractOrderDateView = false;
+		private boolean flDeliveryOrderCreatedDateView = false;
+		private boolean flFRNCreatedDateView = false;
 		
 		
+		public boolean isFlFromDateView() {
+			return flFromDateView;
+		}
+		public void setFlFromDateView(boolean flFromDateView) {
+			this.flFromDateView = flFromDateView;
+		}
+		public boolean isFlContractRequestCreatedDateView() {
+			return flContractRequestCreatedDateView;
+		}
+		public void setFlContractRequestCreatedDateView(
+				boolean flContractRequestCreatedDateView) {
+			this.flContractRequestCreatedDateView = flContractRequestCreatedDateView;
+		}
+		public boolean isFlContractOrderDateView() {
+			return flContractOrderDateView;
+		}
+		public void setFlContractOrderDateView(boolean flContractOrderDateView) {
+			this.flContractOrderDateView = flContractOrderDateView;
+		}
+		public boolean isFlDeliveryOrderCreatedDateView() {
+			return flDeliveryOrderCreatedDateView;
+		}
+		public void setFlDeliveryOrderCreatedDateView(
+				boolean flDeliveryOrderCreatedDateView) {
+			this.flDeliveryOrderCreatedDateView = flDeliveryOrderCreatedDateView;
+		}
+		public boolean isFlFRNCreatedDateView() {
+			return flFRNCreatedDateView;
+		}
+		public void setFlFRNCreatedDateView(boolean flFRNCreatedDateView) {
+			this.flFRNCreatedDateView = flFRNCreatedDateView;
+		}
 		public boolean isSmStaticStateView() {
 			return smStaticStateView;
 		}
@@ -533,6 +571,12 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isFlGroupTwentyFourView() {
+			return flGroupTwentyFourView;
+		}
+		public void setFlGroupTwentyFourView(boolean flGroupTwentyFourView) {
+			this.flGroupTwentyFourView = flGroupTwentyFourView;
+		}
 		public boolean isFlGroupTwentyThreeView() {
 			return flGroupTwentyThreeView;
 		}
