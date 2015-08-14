@@ -834,13 +834,16 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		String key = invChargeLineLv3VO.getGstUnitPrice()+invChargeLineLv3VO.getGstFlag();
 		for(FlInvoiceItemSummary invItemSumm : getManagedBean().getInvoice().getFlInvoiceItemSummary()){
+			totalInvoiceAmt = BigDecimal.ZERO;
 			if(invItemSumm.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId() == invChargeLineLv3VO.getItemId()){
 				for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
 					String key1 = invItem.getGstUnitPrice().toString()+invItem.getGstFlag().getParameterCode();
 					if(key.equalsIgnoreCase(key1)){
 						invItem.setInvAmt(invChargeLineLv3VO.getInvoiceAmt());
 					}
+					totalInvoiceAmt = totalInvoiceAmt.add(invItem.getInvAmt());
 				}
+				invItemSumm.setInvAmt(totalInvoiceAmt);
 			}
 		}
 	}
