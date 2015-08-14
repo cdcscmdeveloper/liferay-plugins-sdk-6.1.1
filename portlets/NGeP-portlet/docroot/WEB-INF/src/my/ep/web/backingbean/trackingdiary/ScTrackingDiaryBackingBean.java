@@ -6,7 +6,6 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.naming.NamingException;
@@ -14,35 +13,29 @@ import javax.naming.NamingException;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
-import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.ResourceBundleUtils;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.trackingdiary.ScTrackingDiaryManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.StatusHelper;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 @ManagedBean(name = "scTrackingDiaryBackingBean")
@@ -54,29 +47,38 @@ public class ScTrackingDiaryBackingBean extends
 	public static final String NAV_TO_DETAIL_SEARCH = "scTrackingDiaryDetailSearch.xhtml";
 	private IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel 	= new SearchTrackingDiaryPagingDataModel();
 	
+	private FacesScopes getFacesScopes() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
 	public ScTrackingDiaryBackingBean() {
 	}
 
-	public SelectItem[] getDocumentType() {
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
+	public List<SelectItem> getDocumentType() {
+		List<SelectItem> items = null;
+		List<String> docTypeList = null;
 
 		try {
 
-			items = new SelectItem[5];
-
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+			items = new ArrayList<SelectItem>();
+			docTypeList = new ArrayList<String>();
+			
+			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-//			items[1] = new SelectItem(new String("SQ"), new String("Simple Quote"));
-//			items[2] = new SelectItem(new String("PI"), new String("Purchase Inquiry"));
-//			items[3] = new SelectItem(new String("PD"), new String("Purchase In Default"));
-//			items[4] = new SelectItem(new String("RN"), new String("Request Note"));
-			items[1] = new SelectItem(new String("QT"), new String("Quotation Tender"));
-			items[2] = new SelectItem(new String("BD"), new String("Online Bidding"));
-			items[3] = new SelectItem(new String("LI"), new String("Letter of Intent"));
-			items[4] = new SelectItem(new String("LA"), new String("Letter of Acceptance"));
-		} catch (Exception e) {
+					getFacesScopes().getUserLocale())));
+			
+			docTypeList.add(ParameterConst.DOCTYPE_QUOTATION);
+			docTypeList.add(ParameterConst.DOCTYPE_BIDDING_AWARD);
+			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+			docTypeList.add(ParameterConst.DOCTYPE_LETTER_OF_AWARD);
+			
+			for (String docType : docTypeList) {
+				items.add(new SelectItem(docType, ResourceBundleUtils.getMessage(
+						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						getFacesScopes().getUserLocale())));
+			}
+		}  catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -86,45 +88,21 @@ public class ScTrackingDiaryBackingBean extends
 		return items;
 	}
 
-	public SelectItem[] searchStatusDesc() throws NamingException {
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		IStatusSO statusSO = EpEjbBusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
-		SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
-		searchBean.getDataFilterBeans().add(new SearchFilterBean(
-				"pmStatus.moduleCode",
-				SearchOperator.OPERATOR_EQUALS.value(),
-				"SC"));
-		List<String> docTypeList = new ArrayList<String>();
-		docTypeList.add(getManagedBean().getSearchDocumentType());
-//		docTypeList.add("FA");
-		System.out.println("searchStatusDesc");
-		searchBean.getDataFilterBeans().add(new SearchFilterBean(
-				"pmStatus.docType",
-				SearchOperator.OPERATOR_IN.value(),
-				docTypeList));
-		searchBean.getDataFilterBeans().add(new SearchFilterBean(
-				"languageCode",
-				SearchOperator.OPERATOR_EQUALS.value(),
-				"en"));
-		
-		reqDTO.setStatusDescSearchBean(searchBean);
-		StatusResDTO resDTO = statusSO.searchStatusDesc(reqDTO);
-		
-		List<PmStatusDesc> list = resDTO.getStatusDescList();
-		SelectItem[] items = null;
-		FacesScopes face = new FacesScopes();
+	public List<SelectItem> searchStatusDesc() throws NamingException {
+		List<SelectItem> items = null;
 
 		try {
-			List<PmStatusDesc> statusDescs = resDTO.getStatusDescList();
+			items = new ArrayList<SelectItem>();
 
-			items = new SelectItem[statusDescs.size() + 1];
-			items[0] = new SelectItem(null, ResourceBundleUtils.getMessage(
+			items.add(new SelectItem(null, ResourceBundleUtils.getMessage(
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-					face.getUserLocale()));
-			int i = 1;
+					getFacesScopes().getUserLocale())));
+			
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
+					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), getManagedBean().getSearchDocumentType());
 			for (PmStatusDesc statusDesc : statusDescs) {
-				items[i++] = new SelectItem(statusDesc.getPmStatus()
-						.getStatusId(), statusDesc.getStatusName());
+				items.add(new SelectItem(statusDesc.getPmStatus()
+						.getStatusId(), statusDesc.getStatusName()));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
