@@ -263,6 +263,12 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	
 	/** The end loa rn. */
 	private ScRequestNote endLoaRN;
+	
+	/** The proc title. */
+	private String procTitle;
+	
+	/** The Proc type category id. */
+	private Long procTypeCategoryId;
     
     /**
      * Instantiates a new request note managed bean.
@@ -1583,6 +1589,34 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setEndLoaRN(ScRequestNote endLoaRN) {
 		this.endLoaRN = endLoaRN;
+	}
+
+	/**
+	 * @return the procTitle
+	 */
+	public String getProcTitle() {
+		return procTitle;
+	}
+
+	/**
+	 * @param procTitle the procTitle to set
+	 */
+	public void setProcTitle(String procTitle) {
+		this.procTitle = procTitle;
+	}
+
+	/**
+	 * @return the procTypeCategoryId
+	 */
+	public Long getProcTypeCategoryId() {
+		return procTypeCategoryId;
+	}
+
+	/**
+	 * @param procTypeCategoryId the procTypeCategoryId to set
+	 */
+	public void setProcTypeCategoryId(Long procTypeCategoryId) {
+		this.procTypeCategoryId = procTypeCategoryId;
 	}
 	
 }
