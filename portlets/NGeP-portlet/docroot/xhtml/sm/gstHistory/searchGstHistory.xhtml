@@ -56,7 +56,7 @@
 						<div style="text-align: right;">
 							<p:commandButton value="#{lbl['lbl.btn.search']}" 
 								action="#{gstHistoryBackingBean.search}"
-								update="@form" 
+								update=":form" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							</p:commandButton>
 							<p:commandButton value="#{lbl['lbl.btn.reset']}" 
@@ -71,6 +71,7 @@
 			<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
 				editable="false" lazy="true" rows="10" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{gstHistoryBackingBean.managedBean.smGstDataModel}"
+				selection="#{gstHistoryBackingBean.managedBean.selectedSupplier}"
 				rowKey="#{smSupplier}" rowIndexVar="index" id="searchGstHistoryDtId">
 				<ac:paginator for="searchGstHistoryDtId" />
 				
