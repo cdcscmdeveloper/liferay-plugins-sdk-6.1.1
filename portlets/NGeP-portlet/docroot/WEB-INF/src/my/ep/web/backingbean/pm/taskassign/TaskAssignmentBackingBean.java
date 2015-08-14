@@ -25,9 +25,11 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.ct.IContractIntegrationSO;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.pm.common.taskassginment.ITaskAssignmentSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.sc.ISourcingIntegrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -51,6 +53,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.pm.common.taskassignment.TaskAssignmentReqDTO;
+import my.ep.dto.pm.common.taskassignment.TaskAssignmentResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.dto.sc.SourcingIntegrationReqDTO;
@@ -66,6 +70,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.authorization.PmUserRole;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusRole;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -73,6 +78,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -447,11 +453,12 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 */
 	public void redirectToTaskReassign(WorklistItemVO item){
 		log.info("redirectToTaskReassign - Start");
+		IFulfilmentDocumentSO fulfilmentDocumentSO = null;
 		try{
 			this.getManagedBean().setAvailableUsers(new ArrayList<PmUser>());
 			this.getManagedBean().setSelectedUser(null);
 			this.getManagedBean().setSelectedTask(item);
-			this.getManagedBean().setAvailableUsers(generateAvailableUsers(item));
+			this.getManagedBean().setAvailableUsers(generateAvailableUsers(item));			
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -842,9 +849,9 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 	 */
 	public void confirmReassignTask(){
 		log.info("confirmReassignTask");
-		boolean isSuccess = false;
 		PmUser pmUser = this.getManagedBean().getSelectedUser();
 		WorklistItemVO task = this.getManagedBean().getSelectedTask();
+		ITaskAssignmentSO taskAssignmentSO = null;
 		if(pmUser==null){
 			throw new EpException(MessageConst.ERROR_770096);
 		}
@@ -852,70 +859,89 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 			throw new EpException(MessageConst.ERROR_770097);
 		}
 		
-		isSuccess = reassignTask(pmUser, task.getTaskId());
+		try{
+			TaskAssignmentReqDTO reqDTO = new TaskAssignmentReqDTO();
+			reqDTO.setTaskId(task.getTaskId());
+			reqDTO.setUser(pmUser);
+			reqDTO.setDocNumber(task.getDocNumber());
+			reqDTO.setDocId(task.getDocId());
+			reqDTO.setDocType(task.getDocType());
+			reqDTO.setDocStatus(task.getDocStatus());
+			reqDTO.setRoleCode(PmCommonUtil.getUserRoleValue());
+			reqDTO.setActionedByUser(getFacesScopes().getUserSessionBean().getUserId());
+			
+			taskAssignmentSO = (ITaskAssignmentSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, ITaskAssignmentSO.class);
+			TaskAssignmentResDTO resDTO  = taskAssignmentSO.reassignTask(reqDTO);
 		
-		if(isSuccess){
-			this.taskListDataModel.reloadData();
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-		    FacesMessage.SEVERITY_INFO,
-		    null,
-		    MessageUtils.getMessage(MessageConst.INFO_770104, new String[]{task.getDocNumber()}, 
-			MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			//	isSuccess = reassignTask(pmUser, task);		
+			if(resDTO != null && resDTO.isSuccessful()){
+				this.taskListDataModel.reloadData();
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+				FacesMessage.SEVERITY_INFO,
+				null,
+				MessageUtils.getMessage(MessageConst.INFO_770104, new String[]{task.getDocNumber()}, 
+				MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			}
+		}finally{
+					
 		}
+		
 	}
 	
-	/**
-	 * Invoke BPM & Reassign task to selected user
-	 * @param users
-	 */
-	private boolean reassignTask(PmUser user, String taskId)throws EpException{
-		log.info("reassignTask");
-		boolean isSuccess = false;
-		IBpmSO bpmSO = null;
-		BpmRequestDTO reqDTO = null;
-		BpmResponseDTO responseDTO = null;
-		Object token = null;
-		
-		try {
-
-			if(taskId==null){
-				throw new EpException(MessageConst.ERROR_770098);
-			}
-			log.info("BPM taskId******"+taskId);
-			log.info("BPM userId*****"+user.getLoginId());
-			
-			reqDTO = new BpmRequestDTO();
-			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			token = bpmSO.authenticate("weblogic","welcome1"); //TODO
-			
-			if(token==null){
-				throw new EpException(MessageConst.ERROR_770099); 
-			}
-		
-			log.info("BPM token******"+token);
-			
-			// set useful info
-			reqDTO.setCtxToken(token);
-			reqDTO.setTaskId(taskId);
-			reqDTO.getAssignee().add(new AssigneeVO(user.getLoginId(), "user"));
-
-			//invoke BPM
-			responseDTO = bpmSO.reassignTask(reqDTO);
-			
-			if(responseDTO.isSuccessful()){
-				isSuccess = true;
-			}else{
-				throw new EpException(MessageConst.ERROR_770100);
-			}
-		}catch(EpBpmException be){
-			throw new EpException(MessageConst.ERROR_770101, new String[]{be.getMessage()});
-		}catch(EpException e){
-			throw new EpException(MessageConst.ERROR_770102, new String[]{e.getMessage()});
-		} finally {
-			bpmSO = null;
-		}
-		return isSuccess;
-	}
+//	/**
+//	 * Invoke BPM & Reassign task to selected user
+//	 * @param users
+//	 */
+//	private boolean reassignTask(PmUser user, WorklistItemVO task)throws EpException{
+//		log.info("reassignTask");
+//		boolean isSuccess = false;
+//		IBpmSO bpmSO = null;
+//		BpmRequestDTO reqDTO = null;
+//		BpmResponseDTO responseDTO = null;
+//		Object token = null;
+//		String taskId = task.getTaskId();
+//		try {
+//
+//			if(taskId==null){
+//				throw new EpException(MessageConst.ERROR_770098);
+//			}
+//			log.info("BPM taskId******"+taskId);
+//			log.info("BPM userId*****"+user.getLoginId());
+//			
+//			reqDTO = new BpmRequestDTO();
+//			bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+//			token = bpmSO.authenticate("weblogic","welcome1"); //TODO
+//			
+//			if(token==null){
+//				throw new EpException(MessageConst.ERROR_770099); 
+//			}
+//		
+//			log.info("BPM token******"+token);
+//			
+//			// set useful info
+//			reqDTO.setCtxToken(token);
+//			reqDTO.setTaskId(taskId);
+//			reqDTO.getAssignee().add(new AssigneeVO(user.getLoginId(), "user"));
+//
+//			//invoke BPM
+//			responseDTO = bpmSO.reassignTask(reqDTO);
+//			
+//			if(responseDTO.isSuccessful()){
+//				isSuccess = true;					
+//				
+//			}else{
+//				throw new EpException(MessageConst.ERROR_770100);
+//			}
+//		}catch(EpBpmException be){
+//			throw new EpException(MessageConst.ERROR_770101, new String[]{be.getMessage()});
+//		}catch(EpException e){
+//			throw new EpException(MessageConst.ERROR_770102, new String[]{e.getMessage()});
+//		} finally {
+//			bpmSO = null;
+//		}
+//		return isSuccess;
+//	}
 	
 	/**
 	 * refresh the worklist item
