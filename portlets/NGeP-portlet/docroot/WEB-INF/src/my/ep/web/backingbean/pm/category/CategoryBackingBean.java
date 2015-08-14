@@ -2760,6 +2760,22 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 									+ pmCategoryL3.getCategoryL3Code());
 							pmBasicCategory.setBrandNew(true);
 						}
+						else{
+							pmBasicCategory.setBasicCategoryL1desc(pmCategoryL3
+									.getPmCategoryL2().getPmCategoryL1()
+									.getCategoryName());
+							pmBasicCategory.setBasicCategoryL2desc(pmCategoryL3
+									.getPmCategoryL2().getCategoryName());
+							pmBasicCategory.setBasicCategoryL3desc(pmCategoryL3
+									.getCategoryName());
+							pmBasicCategory.setCodeConcatenate(pmCategoryL3
+									.getPmCategoryL2().getPmCategoryL1()
+									.getCategoryL1Code()
+									+ pmCategoryL3.getPmCategoryL2()
+											.getCategoryL2Code()
+									+ pmCategoryL3.getCategoryL3Code());
+							pmBasicCategory.setBrandNew(true);
+						}
 					}
 					if (CollectionUtils.isNotEmpty(this.getManagedBean()
 							.getBasicCategoryList())) {
