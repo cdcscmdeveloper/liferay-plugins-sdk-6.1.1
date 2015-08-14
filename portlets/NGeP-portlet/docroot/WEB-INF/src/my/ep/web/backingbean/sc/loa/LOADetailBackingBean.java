@@ -390,7 +390,10 @@ public class LOADetailBackingBean extends
 				getManagedBean().setSelectedBankId(
 						getSelectedBankIdByScLoa(scLoa));
 			}
-
+			
+			// Setting OverallContractAmount
+			calculateOverallCtAmtForSupplier();
+			
 			// Supplier Witness
 			ScLoaWitness loaSupplierWitness = null;
 			List<ScLoaWitness> scLoaWitnesses = scLoa.getScLoaWitnesses();
@@ -1416,7 +1419,20 @@ public class LOADetailBackingBean extends
 			bondAmtStr = amountDF.format(scLoa.getBondAmt());
 		}
 		context.put("bondAmt", bondAmtStr);
-
+		
+		String gstAmount = "";
+		if (scLoa.getGstAmt() != null) {
+			gstAmount = amountDF.format(scLoa.getGstAmt());
+		}
+		context.put("gstAmt",gstAmount );
+		
+		String overallCtAmount = "";
+		if (getManagedBean().getOverallContractAmt() != null) {
+			overallCtAmount = amountDF.format(getManagedBean()
+					.getOverallContractAmt());
+		}
+		context.put("gstAmt", overallCtAmount);
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_CONTRACT_SUMMARY, context,
 				new FileOutputStream(getActualFilePath(attachment)));
@@ -1696,6 +1712,11 @@ public class LOADetailBackingBean extends
 		}
 		context.put("bankAddress", bankAddress);
 
+		// Setting GST info
+		if(scLoa.getGstRegNo() != null){
+			context.put("gstRegNo", scLoa.getGstRegNo());
+		}
+		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
@@ -4652,5 +4673,28 @@ public class LOADetailBackingBean extends
 			disabled = false;
 		}
 		return disabled;
+	}
+	
+	
+	private void calculateOverallCtAmtForSupplier(){
+		
+		SmSupplier supplier = getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier();
+		String procCatType = this.getParameterDesc(getManagedBean().getScLoa()
+				.getProcurementTypeCatId());
+		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
+
+		if ((supplier != null && supplier.getGstRegisteredFlag() == 1)
+				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
+						.equalsIgnoreCase(procCatType)) {
+
+			overallContractAmt.add(getManagedBean().getScLoa().getGstAmt());
+
+		} else if ((supplier != null && supplier.getGstRegisteredFlag() == 0)
+				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
+						.equalsIgnoreCase(procCatType)) {
+			// TODO need to write logic to calculate gsm amount for service item
+		}
+		getManagedBean().setOverallContractAmt(overallContractAmt);
 	}
 }

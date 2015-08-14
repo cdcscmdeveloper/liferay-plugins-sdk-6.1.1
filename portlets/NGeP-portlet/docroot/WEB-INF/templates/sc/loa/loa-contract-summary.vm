@@ -19,7 +19,9 @@ Terma-terma yang dipersetujui sebagai sebahagian dari terma terma kontrak
 	<li>No Rujukan: $fileNo $docNo</li>
 	<li>Skop / Tajuk: $title</li>
 	<li>Pembekal: $supplierName</li>
-	<li>Nilai Kontrak: $loaAmt</li>
+	<li>Harga Tawaran Asal: $loaAmt</li>
+	<li>Amaun CBP: $gstAmt</li>
+	<li>Nilai Keseluruhan Kontrak: $overallctAmt</li>
 	<li>Jenis Pemenuhan: $fulfilmentType</li>
 	<li>Jadual Penghantaran: Refer Attachment</li>
 	<li>Potongan Pembayaran: $deductionTypes</li>
