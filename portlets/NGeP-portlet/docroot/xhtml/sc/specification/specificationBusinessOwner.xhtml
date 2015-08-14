@@ -98,6 +98,23 @@
 							<p:message id="tenderMsg" for="tenderType" display="icon" />
 						</ui:fragment></td>
 				</tr>
+
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+							value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="procTypeBoCategory" required="true"
+							value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
+							style="margin-bottom:5px;width:209px;"
+							disabled="#{specificationBackingBean.managedBean.readOnly}"
+							label="#{lbl['lbl.sc.procurment.type.category']}">
+							<f:selectItems
+								value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+							<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
+						</p:selectOneMenu> <p:message id="procuremnttitleMsg" for="procTypeBoCategory"
+							display="icon" /></td>
+
+				</tr>
 				<tr>
 					<ui:fragment
 						rendered="#{specificationBackingBean.managedBean.scQt.qtType eq 'O' and specificationBackingBean.managedBean.scQt.panel eq 'No'}">
