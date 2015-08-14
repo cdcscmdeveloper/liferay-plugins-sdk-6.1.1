@@ -533,7 +533,7 @@ public class FinancialOrgBackingBean extends
 	 */
 	public static SelectItem[] getStatusOptions() {
 		log.info("getStatusOptions");
-		return PmCommonUtil.getStatusOptionsDefault();
+		return PmCommonUtil.getRecordStatusOptions();
 	}
 	
 	/**
