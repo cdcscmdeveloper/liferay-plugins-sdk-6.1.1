@@ -10,13 +10,13 @@
 		<table>
 			<tr>
 				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.invoice.amount.excl.gst']}" /></td>
-				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoice.invoiceAmtNew}"  disabled="true" style="text-align:right">
+				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.invoiceAmountWithoutGST}"  disabled="true" style="text-align:right">
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>			
 			</tr>
 			<tr>
 				<td style="width:185px"><p:outputLabel value="#{lbl['lbl.fl.gst.amt']}" /></td>
-				<td><p:inputText size="35" value=""  disabled="true" style="text-align:right">
+				<td><p:inputText size="35" value="#{invoiceBackingBean.managedBean.gstAmount}"  disabled="true" style="text-align:right">
 				<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" /></p:inputText></td>			
 			</tr>
