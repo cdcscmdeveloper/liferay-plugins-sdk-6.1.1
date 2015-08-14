@@ -48,6 +48,44 @@
 				</p:commandLink>
 			</td>
 		</tr>
+		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
+					disabled="true" />
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
+					disabled="true" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>
+				<p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
+			</td>
+			<td>
+				<p:inputText size="50"
+					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
+					disabled="true" >
+					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText>
+			</td>
+		</tr>
+		
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}" />
