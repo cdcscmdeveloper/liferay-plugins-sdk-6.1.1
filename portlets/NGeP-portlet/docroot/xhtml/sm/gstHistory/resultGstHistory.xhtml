@@ -28,6 +28,7 @@
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{gstHistoryBackingBean.back}" />
 			</div>
+			<br />
 		
 			<p:dataTable var="hqGst" widgetVar="smApplWidgetVar"
 				editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
@@ -91,8 +92,8 @@
 							<ui:repeat var="suppDoc" value="#{hqGst.smGstSupplierDocs}">
 								<tr>
 									<td style="border-style: none !important;">
-										<p:commandLink rendered="#{not empty table.fileName}"
-											action="#{gstHistoryBackingBean.downloadSelectedSuppDoc(table.fileName,table.filePath)}"
+										<p:commandLink rendered="#{not empty suppDoc.fileName}"
+											action="#{gstHistoryBackingBean.downloadSelectedSuppDoc(suppDoc.fileName,suppDoc.filePath)}"
 											update="@form" ajax="false">
 											<p:fileDownload value="#{gstHistoryBackingBean.file}" />
 											<p:graphicImage value="/css/images/design/download.png"
@@ -100,8 +101,8 @@
 										</p:commandLink>
 									</td>
 									<td style="border-style: none !important;">
-										<h:outputText value="#{suppDoc.pmDocument.docName}" style="white-space: normal;" rendered="#{not empty table.fileName}"/>
-										<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}"/>
+										<h:outputText value="#{suppDoc.pmDocument.docName}" style="white-space: normal;" rendered="#{not empty suppDoc.fileName}"/>
+										<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty suppDoc.fileName}"/>
 									</td>
 								</tr>
 							</ui:repeat>
@@ -115,6 +116,7 @@
 				</p:column>
 				
 			</p:dataTable>
+			<br />
 			
 		</p:panel>
 		
@@ -187,8 +189,8 @@
 							<ui:repeat var="suppDoc" value="#{brGst.smGstSupplierDocs}">
 								<tr>
 									<td style="border-style: none !important;">
-										<p:commandLink rendered="#{not empty table.fileName}"
-											action="#{gstHistoryBackingBean.downloadSelectedSuppDoc(table.fileName,table.filePath)}"
+										<p:commandLink rendered="#{not empty suppDoc.fileName}"
+											action="#{gstHistoryBackingBean.downloadSelectedSuppDoc(suppDoc.fileName,suppDoc.filePath)}"
 											update="@form" ajax="false">
 											<p:fileDownload value="#{gstHistoryBackingBean.file}" />
 											<p:graphicImage value="/css/images/design/download.png"
@@ -196,8 +198,8 @@
 										</p:commandLink>
 									</td>
 									<td style="border-style: none !important;">
-										<h:outputText value="#{suppDoc.pmDocument.docName}" style="white-space: normal;" rendered="#{not empty table.fileName}"/>
-										<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}"/>
+										<h:outputText value="#{suppDoc.pmDocument.docName}" style="white-space: normal;" rendered="#{not empty suppDoc.fileName}"/>
+										<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty suppDoc.fileName}"/>
 									</td>
 								</tr>
 							</ui:repeat>

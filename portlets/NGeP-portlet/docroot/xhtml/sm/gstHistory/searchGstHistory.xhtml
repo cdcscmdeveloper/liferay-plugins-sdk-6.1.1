@@ -23,7 +23,7 @@
 		
 		<p:panel header="#{lbl['lbl.sm.search.supprofile']}" toggleable="true" id="searchGstHistoryPanelId">
 		
-			<table style="width: 80%;">
+			<table style="width: 80%;table-layout:fixed">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.complaint.search.by']}" /></td>
 					<td><p:selectOneRadio id="searchBy" required="false" value="#{gstHistoryBackingBean.managedBean.searchBy}" >
@@ -34,6 +34,7 @@
 								listener="#{gstHistoryBackingBean.onSearchBy}" onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 						</p:selectOneRadio>
 					</td>
+					<td>&#160;</td>
 				</tr>
 				<p:outputPanel rendered="#{gstHistoryBackingBean.managedBean.searchBy eq 1}">
 					<tr>
@@ -45,6 +46,13 @@
 								size="35" maxlength="20" />
 							<p:message id="epNoIdMsg" for="epNoId"
 									showSummary="true" showDetail="false" display="icon" />
+						</td>
+						<td>
+							<p:commandButton value="#{lbl['lbl.btn.search']}" 
+								action="#{gstHistoryBackingBean.search}"
+								update=":form" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+							</p:commandButton>
 						</td>
 					</tr>
 				</p:outputPanel>
@@ -59,6 +67,13 @@
 							<p:message id="mofNoIdMsg" for="mofNoId"
 									showSummary="true" showDetail="false" display="icon" />
 						</td>
+						<td>
+							<p:commandButton value="#{lbl['lbl.btn.search']}" 
+								action="#{gstHistoryBackingBean.search}"
+								update=":form" 
+								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
+							</p:commandButton>
+						</td>
 					</tr>
 				</p:outputPanel>
 				<p:outputPanel rendered="#{gstHistoryBackingBean.managedBean.searchBy eq 3}">
@@ -72,19 +87,15 @@
 							<p:message id="companyNameIdMsg" for="companyNameId"
 									showSummary="true" showDetail="false" display="icon" />
 						</td>
-					</tr>
-				</p:outputPanel>
-				<tr>
-					<td colspan="2">
-						<div style="text-align: right;">
+						<td>
 							<p:commandButton value="#{lbl['lbl.btn.search']}" 
 								action="#{gstHistoryBackingBean.search}"
 								update=":form" 
 								onstart="blockWidget.show()" oncomplete="blockWidget.hide()">
 							</p:commandButton>
-						</div>
-					</td>
-				</tr>
+						</td>
+					</tr>
+				</p:outputPanel>
 			</table>
 			
 			<p:dataTable var="smSupplier" widgetVar="smApplWidgetVar"
