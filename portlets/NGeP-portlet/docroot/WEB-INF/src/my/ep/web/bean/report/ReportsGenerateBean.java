@@ -23,6 +23,7 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+
 import my.ep.web.constant.report.ReportConst;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -309,8 +310,76 @@ public class ReportsGenerateBean {
 		private boolean flContractOrderDateView = false;
 		private boolean flDeliveryOrderCreatedDateView = false;
 		private boolean flFRNCreatedDateView = false;
+		private boolean flStopInstructionCreatedDateView = false;
+		private boolean flInvoiceCreatedDateView = false;
+		private boolean flContractOrderCreatedDateView = false;
+		private boolean flContractRequestRejectionDateView = false;
+		private boolean flGroupTwentyFiveView = false;
+		private boolean flContractOrderCancellationDateView = false;
+		private boolean flDeliveryOrderCancellationDateView = false;
+		private boolean flGroupTwentySixView = false;
+		private boolean flFRNCancellationDateView = false;
 		
 		
+		public boolean isFlFRNCancellationDateView() {
+			return flFRNCancellationDateView;
+		}
+		public void setFlFRNCancellationDateView(boolean flFRNCancellationDateView) {
+			this.flFRNCancellationDateView = flFRNCancellationDateView;
+		}
+		public boolean isFlGroupTwentySixView() {
+			return flGroupTwentySixView;
+		}
+		public void setFlGroupTwentySixView(boolean flGroupTwentySixView) {
+			this.flGroupTwentySixView = flGroupTwentySixView;
+		}
+		public boolean isFlDeliveryOrderCancellationDateView() {
+			return flDeliveryOrderCancellationDateView;
+		}
+		public void setFlDeliveryOrderCancellationDateView(
+				boolean flDeliveryOrderCancellationDateView) {
+			this.flDeliveryOrderCancellationDateView = flDeliveryOrderCancellationDateView;
+		}
+		public boolean isFlContractOrderCancellationDateView() {
+			return flContractOrderCancellationDateView;
+		}
+		public void setFlContractOrderCancellationDateView(
+				boolean flContractOrderCancellationDateView) {
+			this.flContractOrderCancellationDateView = flContractOrderCancellationDateView;
+		}
+		public boolean isFlGroupTwentyFiveView() {
+			return flGroupTwentyFiveView;
+		}
+		public void setFlGroupTwentyFiveView(boolean flGroupTwentyFiveView) {
+			this.flGroupTwentyFiveView = flGroupTwentyFiveView;
+		}
+		public boolean isFlContractRequestRejectionDateView() {
+			return flContractRequestRejectionDateView;
+		}
+		public void setFlContractRequestRejectionDateView(
+				boolean flContractRequestRejectionDateView) {
+			this.flContractRequestRejectionDateView = flContractRequestRejectionDateView;
+		}
+		public boolean isFlContractOrderCreatedDateView() {
+			return flContractOrderCreatedDateView;
+		}
+		public void setFlContractOrderCreatedDateView(
+				boolean flContractOrderCreatedDateView) {
+			this.flContractOrderCreatedDateView = flContractOrderCreatedDateView;
+		}
+		public boolean isFlInvoiceCreatedDateView() {
+			return flInvoiceCreatedDateView;
+		}
+		public void setFlInvoiceCreatedDateView(boolean flInvoiceCreatedDateView) {
+			this.flInvoiceCreatedDateView = flInvoiceCreatedDateView;
+		}
+		public boolean isFlStopInstructionCreatedDateView() {
+			return flStopInstructionCreatedDateView;
+		}
+		public void setFlStopInstructionCreatedDateView(
+				boolean flStopInstructionCreatedDateView) {
+			this.flStopInstructionCreatedDateView = flStopInstructionCreatedDateView;
+		}
 		public boolean isFlFromDateView() {
 			return flFromDateView;
 		}
