@@ -50,11 +50,23 @@
 				<td><p:inputText readonly="true" size="24"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.quotationTenderType, specificationBackingBean.managedBean.scQt.qtType)}"
 						disabled="true" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+				<td><p:selectOneMenu id="specCommitteeprocTypeCategory"
+						value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
+						style="width: 178px;margin-bottom: 5px;" disabled="true">
+						<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+					</p:selectOneMenu></td>
 				<td style="width: 275px;"><h:outputLabel
 						value="#{lbl['lbl.sc.open.for']}" /></td>
 				<td><p:inputText readonly="true" size="30"
 						value="#{specificationBackingBean.getParameterDesc(ParameterTypeConst.scOpenFor, specificationBackingBean.managedBean.scQt.openFor)}"
 						disabled="true" /></td>
+
 			</tr>
 			<tr>
 				<td><h:outputLabel
@@ -71,6 +83,7 @@
 						value="#{lbl[specificationBackingBean.managedBean.scQt.zonal ? 'lbl.btn.yes' : 'lbl.btn.no' ]}" />
 				</td>
 			</tr>
+
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.evaluation.type']}" /></td>
 				<td><p:inputText size="24"
@@ -85,8 +98,7 @@
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.max.proposal']}" /></td>
-				<td><p:inputText id="proposalId" size="24"
-						disabled="true"
+				<td><p:inputText id="proposalId" size="24" disabled="true"
 						label="#{lbl['lbl.sc.max.proposal']}" maxlength="1"
 						value="#{specificationBackingBean.managedBean.scQt.maxProposal}"
 						style="text-align:right;margin-bottom: 5px;">
