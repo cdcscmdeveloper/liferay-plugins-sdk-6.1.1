@@ -643,7 +643,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 									invItem.setInvAmt(invItem.getReceivedAmt());
 									invItem.setDeliveryAmt(invItem.getDeliveryAmt().add(noteItem.getFlDelOrderItem().getDeliveredAmt()));
 									invItem.setDeliveryQty(invItem.getDeliveryQty().add(noteItem.getFlDelOrderItem().getDeliveredQty()));
-									extItemSumm.setInvAmt(invItem.getReceivedAmt());
 								}else{
 									invItem = new FlInvoiceItem();
 									invItem.setReceivedQty(noteItem.getReceivedQty());
@@ -655,13 +654,14 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 									invItem.setDeliveryQty(noteItem.getFlDelOrderItem().getDeliveredQty());
 									invItem.setGstFlag(noteItem.getGstFlag());
 									invItem.setFlInvoiceItemSummary(extItemSumm);
-									extItemSumm.setInvAmt(invItem.getReceivedAmt());
 
 									invItemList = new ArrayList<FlInvoiceItem>();
 									invItemList.add(invItem);
 								}
 							}
-							extItemSumm.getFlInvoiceItem().addAll(invItemList);
+							if(invItemList!=null) {
+								extItemSumm.getFlInvoiceItem().addAll(invItemList);
+							}
 						}else{
 							FulfilmentReqDTO siReqDTO = new FulfilmentReqDTO();
 							invItemSummary = new FlInvoiceItemSummary();
@@ -730,8 +730,14 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				}
 			}
 		}
+		FlInvoiceItemSummary invItemSummMapValue = null;
 		for(Entry<Long, FlInvoiceItemSummary> itemEntry : itemMapLv1.entrySet()){	
-			FlInvoiceItemSummary invItemSummMapValue = itemEntry.getValue();
+			invItemSummMapValue = itemEntry.getValue();
+			BigDecimal sumInvAmt = BigDecimal.ZERO;
+			for(FlInvoiceItem flInvoiceItem : invItemSummMapValue.getFlInvoiceItem()) {
+				sumInvAmt.add(flInvoiceItem.getInvAmt());
+			}
+			invItemSummMapValue.setInvAmt(sumInvAmt);
 			getManagedBean().getInvoice().getFlInvoiceItemSummary().add(invItemSummMapValue);
 		}
 	}
@@ -970,7 +976,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		//check item whther is exempted for this supplier.
 		if(serviceFee.doubleValue()>0){
 			for (TreeNode lv1 : root.getChildren()) {
-				InvoiceChargeLineLvl1VO dataLv1 = (InvoiceChargeLineLvl1VO) lv1.getData();
 				for(TreeNode lv2 : lv1.getChildren()){
 					for(TreeNode lv3 : lv2.getChildren()){
 						InvoiceChargeLineLvl3VO dataLv3 = (InvoiceChargeLineLvl3VO) lv3.getData();
@@ -1742,7 +1747,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
 			
 			Map<String, List<FlInvoiceItemSummary>> invoiceItemSummaryMap = new TreeMap<String, List<FlInvoiceItemSummary>>();
-			List<FlInvoiceItem> flInvoiceItemList = null;
 			List<FlInvoiceItemSummary> invItemSummaryList = null;
 			for (FlInvoiceItemSummary invItemSummary : getManagedBean().getInvoice().getFlInvoiceItemSummary()) {
 				String key = invItemSummary.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().toString();
@@ -1772,7 +1776,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 				TreeNode lv1TreeNode = new DefaultTreeNode(invVOLvl1.getItemCode(), invVOLvl1, getManagedBean().getChargeLineItemRoot());
 				BigDecimal totalOrderAmt = new BigDecimal(0);
 				BigDecimal totalReceiveAmt = new BigDecimal(0);
-				BigDecimal totalRecallAmt = new BigDecimal(0);
 				BigDecimal totalInvAmt = new BigDecimal(0);
 				
 				for(FlInvoiceItemSummary chargeLineItem : invItemSummary) {
@@ -1793,6 +1796,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 					TreeNode lv2TreeNode = new DefaultTreeNode(invVOLvl2.getItemCode(),invVOLvl2,lv1TreeNode);
 					totalOrderAmt=totalOrderAmt.add(chargeLineItem.getOrderedAmt());
 					
+					totalReceiveAmt = BigDecimal.ZERO;
 					for(FlInvoiceItem invItem : chargeLineItem.getFlInvoiceItem()){
 						InvoiceChargeLineLvl3VO invVOLvl3 = new InvoiceChargeLineLvl3VO();
 						//						chargeLineItem.setLvl3(true);
@@ -1812,11 +1816,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						totalReceiveAmt=totalReceiveAmt.add(invItem.getReceivedAmt());
 						new DefaultTreeNode(invVOLvl3.getItemCode(),invVOLvl3,lv2TreeNode);
 					}
+					invVOLvl2.setReceivedAmt(totalReceiveAmt);
+					grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
 				}			
 
-				
 				grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-				grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
 				grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
 			}
 			getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
