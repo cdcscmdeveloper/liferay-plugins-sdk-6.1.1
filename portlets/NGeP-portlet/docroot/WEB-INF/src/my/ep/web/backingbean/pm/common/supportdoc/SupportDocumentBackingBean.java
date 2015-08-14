@@ -897,7 +897,7 @@ public class SupportDocumentBackingBean extends BaseBackingBean<SupportDocumentM
 	 */
 	public SelectItem[] getStatusOptions() {
 
-	    return PmCommonUtil.getStatusOptionsDefault();
+	    return PmCommonUtil.getRecordStatusOptions();
 	}
 	
 	/**

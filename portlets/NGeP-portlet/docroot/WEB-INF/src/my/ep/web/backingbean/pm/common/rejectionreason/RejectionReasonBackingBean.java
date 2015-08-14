@@ -788,7 +788,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 	 * @return SelectItem[] 
 	 */
 	public SelectItem[] getStatusOptions() {
-	    return PmCommonUtil.getStatusOptionsDefault();
+	    return PmCommonUtil.getRecordStatusOptions();
 	}
 	
 
