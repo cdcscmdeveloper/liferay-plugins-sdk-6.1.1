@@ -32,6 +32,17 @@
 					</c:if></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+				<td><p:selectOneMenu id="qtmaintainprocTypeBoCategory"
+						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
+						style="width: 195px;margin-bottom: 5px;" disabled="true">
+						<f:selectItems
+							value="#{qTDetailBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+					</p:selectOneMenu></td>
+
+			</tr>
+			<tr>
 				<td colspan="4"><p:outputPanel id="testPanel">
 						<table style="width: 100%">
 							<tr>
@@ -40,7 +51,8 @@
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<td><p:inputText
 										value="#{lbl[qTDetailBB.managedBean.qt.panel ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"
-										readonly="true" size="30" disabled="true" style="width: 195px;"
+										readonly="true" size="30" disabled="true"
+										style="width: 195px;"
 										rendered="#{qTDetailBB.managedBean.qt.qtType ne 'R' and qTDetailBB.managedBean.qt.qtType ne 'I'}" /></td>
 								<ui:fragment
 									rendered="#{qTDetailBB.managedBean.qt.panel eq 'No'}">
@@ -64,7 +76,8 @@
 						headerText="Contract Lov" update=":form:qtdetailsid"
 						saveObject="qTDetailBB.managedBean.ctContract"
 						value="#{qTDetailBB.managedBean.ctContract.contractNo}" size="30"
-						conditionField="#{qTDetailBB.constuctConditionFields()}" style="width: 195px;">
+						conditionField="#{qTDetailBB.constuctConditionFields()}"
+						style="width: 195px;">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
