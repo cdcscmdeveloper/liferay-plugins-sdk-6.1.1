@@ -813,18 +813,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}
 		BigDecimal totalInvoiceAmt = BigDecimal.ZERO;
 		for(TreeNode lv1 : getManagedBean().getChargeLineItemRoot().getChildren()){
-			totalInvoiceAmt = BigDecimal.ZERO;
 			for(TreeNode lv2 : lv1.getChildren()){
+				totalInvoiceAmt = BigDecimal.ZERO;
 				for(TreeNode lv3 : lv2.getChildren()){
 					InvoiceChargeLineLvl3VO dataLv3= (InvoiceChargeLineLvl3VO) lv3.getData();
-
 					if(invChargeLineLv3VO.getParent().getParent().getItemCode().equalsIgnoreCase(dataLv3.getParent().getParent().getItemCode())){
-						BigDecimal invoiceAmount=new BigDecimal(0);
-						invoiceAmount=invoiceAmount.add(dataLv3.getInvoiceAmt());
-						dataLv3.setInvoiceAmt(invoiceAmount);
-						totalInvoiceAmt = totalInvoiceAmt.add(invoiceAmount);
-						dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
-					} else {
 						totalInvoiceAmt = totalInvoiceAmt.add(dataLv3.getInvoiceAmt());
 						dataLv3.getParent().setInvoiceAmt(totalInvoiceAmt);
 					}
