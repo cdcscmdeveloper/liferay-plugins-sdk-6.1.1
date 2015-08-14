@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.loa;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -246,6 +247,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	/** The zonal. */
 	private boolean zonal;
+	
+	private BigDecimal overallContractAmt;
 	
 	
 	/** The spki backing bean. */
@@ -1430,6 +1433,19 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	public void setZonal(boolean zonal) {
 		this.zonal = zonal;
 	}
-	
-	
+
+	/**
+	 * @return the overallContractAmt
+	 */
+	public BigDecimal getOverallContractAmt() {
+		return overallContractAmt;
+	}
+
+	/**
+	 * @param overallContractAmt the overallContractAmt to set
+	 */
+	public void setOverallContractAmt(BigDecimal overallContractAmt) {
+		this.overallContractAmt = overallContractAmt;
+	}
+
 }
