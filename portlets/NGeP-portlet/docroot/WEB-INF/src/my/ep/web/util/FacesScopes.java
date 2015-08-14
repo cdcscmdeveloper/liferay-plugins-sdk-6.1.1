@@ -20,6 +20,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -362,6 +363,23 @@ public class FacesScopes {
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(request);
 		
 		return originalServletRequest;
+	}
+	
+	
+	
+	public static void preRenderErrorMessage(String errorMsg){
+		
+		FacesContext.getCurrentInstance().addMessage(
+				null,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
+						MessageUtils.getMessage(errorMsg,
+								MessageUtils.BUNDLE_COMMON_MESSAGES,
+								new FacesScopes().getUserLocale())));
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+		.handleNavigation(fc, null, "/xhtml/cm/catalogue/preRenderErrorPage.xhtml");
+		
 	}
 
 }
