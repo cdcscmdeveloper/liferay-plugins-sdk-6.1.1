@@ -18,7 +18,7 @@
 
 				<td style="width: 20%;"><p:outputLabel
 						value="#{lbl['lbl.sc.supplier']}" /></td>
-				<td><p:inputText disabled="true" size="55"
+				<td><p:inputText disabled="true" size="50"
 						value="#{simpleQuoteBackingBean.managedBean.scQuoteSupplier.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
@@ -28,6 +28,28 @@
 						value="#{simpleQuoteBackingBean.managedBean.scQuoteSupplier.smSupplier.smMofAccounts[0].mofNo}" />
 
 				</td>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{simpleQuoteBackingBean.managedBean.smGstSupplier.gstRegNo}" /></td>
+			</tr>
+
+			<tr>
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
+				<td><p:inputText disabled="true"
+						value="#{simpleQuoteBackingBean.managedBean.smGstSupplier.gstEffDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+
+				<td style="width: 20%;"><p:outputLabel
+						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{simpleQuoteBackingBean.managedBean.smGstSupplier.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
