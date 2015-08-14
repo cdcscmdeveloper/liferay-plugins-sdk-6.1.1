@@ -2348,8 +2348,8 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 		SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
 		gstReqDTO.setBranchCode(branchCode);
 		if (getManagedBean().isViewSupplierProfile()) {
-			gstReqDTO.setSupplierId(getManagedBean().getSmSupplier()
-					.getSupplierId());
+			gstReqDTO.setSupplierId(getManagedBean().getSmAppl()
+					.getSmSupplier().getSupplierId());
 			gst = SmServiceLookup.getSupplierGstSO()
 					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO)
 					.getSmGstSupplier();

@@ -56,7 +56,7 @@ public class SmGstHistoryManagedBean extends BaseReviewApplicationManagedBean {
 			} catch (Exception ex) {
 				return new SearchResultBean();
 			} finally {
-				return null;
+				reqDTO = null;
 			}
 		}
 
