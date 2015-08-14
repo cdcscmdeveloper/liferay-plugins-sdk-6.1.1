@@ -1287,6 +1287,13 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
+					} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						saveScheduleList();
+						generateFrequencySchedulePdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
 					}
 					
 				}else if(scLoaReportAttachment != null && 
