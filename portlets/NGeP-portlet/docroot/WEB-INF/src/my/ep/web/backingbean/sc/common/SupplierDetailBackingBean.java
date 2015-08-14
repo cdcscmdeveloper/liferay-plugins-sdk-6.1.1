@@ -7,10 +7,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import my.ep.biz.service.sc.quationtender.IQTSupplierSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.sc.quationtender.QTSupplierReqDTO;
 import my.ep.dto.sc.quationtender.QTSupplierResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.sc.common.SupplierDetailManagedBean;
@@ -26,42 +30,69 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @RequestScoped
-public class SupplierDetailBackingBean extends SourcingBaseBackingBean<SupplierDetailManagedBean> {
-	public static Logger log = EpLogger.getLogger(SupplierDetailBackingBean.class);
-	
+public class SupplierDetailBackingBean extends
+		SourcingBaseBackingBean<SupplierDetailManagedBean> {
+	public static Logger log = EpLogger
+			.getLogger(SupplierDetailBackingBean.class);
+
 	private void debugLogger(Object message) {
-        if(log.isDebugEnabled()) {
-            log.debug(message);
-        }
-    }
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+	}
 
 	public SupplierDetailBackingBean() {
 	}
-	
+
 	public void setSmSupplier(SmSupplier smSupplier) {
 		debugLogger("setSmSupplier");
-		
+		ISupplierGstSO supplierGstSo = null;
 		SmSupplier selectedSupplier = getManagedBean().getSmSupplier();
-		
-		if (smSupplier != null && (selectedSupplier == null || smSupplier.getSupplierId().longValue() != selectedSupplier.getSupplierId().longValue())) {
+
+		if (smSupplier != null
+				&& (selectedSupplier == null || smSupplier.getSupplierId()
+						.longValue() != selectedSupplier.getSupplierId()
+						.longValue())) {
 			IQTSupplierSO qtSupplierSO = null;
 			try {
-				qtSupplierSO = BusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.SUPPLIER_SELECTION, IQTSupplierSO.class);
-				
+				qtSupplierSO = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+								IQTSupplierSO.class);
+
 				QTSupplierReqDTO reqDTO = new QTSupplierReqDTO();
 				reqDTO.setSupplierId(smSupplier.getSupplierId());
-				
-				QTSupplierResDTO resDTO = qtSupplierSO.retrieveSupplierDtlById(reqDTO);
-				
+
+				QTSupplierResDTO resDTO = qtSupplierSO
+						.retrieveSupplierDtlById(reqDTO);
+
 				getManagedBean().setSmSupplier(resDTO.getSmSupplier());
 				if (resDTO.getSmMofAccount() != null) {
-					getManagedBean().setMofNo(resDTO.getSmMofAccount().getMofNo());
+					getManagedBean().setMofNo(
+							resDTO.getSmMofAccount().getMofNo());
 				}
-				
+				supplierGstSo = BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT,
+								ISupplierGstSO.class);
+				SupplierGstReqDTO supplierGstreqDTO = new SupplierGstReqDTO();
+
+				supplierGstreqDTO.setSupplierId(smSupplier.getSupplierId());
+				supplierGstreqDTO.setBranchCode(null);
+
+				SupplierGstResDTO supplierGstresDTO = supplierGstSo
+						.retrieveGstInfoBySupplierIdAndBranchCode(supplierGstreqDTO);
+				if (null != supplierGstresDTO
+						&& null != supplierGstresDTO.getSmGstSupplier()) {
+					this.getManagedBean().setSmGstSupplier(
+							supplierGstresDTO.getSmGstSupplier());
+
+				} else {
+					this.getManagedBean().setSmGstSupplier(new SmGstSupplier());
+				}
+
 			} finally {
 				qtSupplierSO = null;
-			}	
+				supplierGstSo = null;
+			}
 		} else if (smSupplier == null) {
 			log.warn("smSupplier is null.");
 		} else {
