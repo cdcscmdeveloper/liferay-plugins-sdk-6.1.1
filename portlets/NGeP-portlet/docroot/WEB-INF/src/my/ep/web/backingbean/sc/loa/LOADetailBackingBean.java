@@ -243,31 +243,46 @@ public class LOADetailBackingBean extends
 			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOADtl(reqDTO);
 			scLoa = resDTO.getScLoa();
 			this.getManagedBean().setScQt(resDTO.getScQt());
+			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
 			if (awardDataType != null){
-				
+				String letterCreator = awardDataType.getLetterCreator();
+
 				if (scLoa != null
 						&& ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa().getDocType())) {
-					if (new FacesScopes()
-					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
-						awardDataType.setDeskOfficer(new FacesScopes()
-						.getUserSessionBean().getLoginId());
+					if(StringUtils.isBlank(letterCreator)) {
+						if (new FacesScopes()
+						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+							awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+							awardDataType.setDeskOfficer(currentUser);
+						} else {
+							awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
+							awardDataType.setRequisitioner(currentUser);
+						}
 					} else {
-						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
-						awardDataType.setRequisitioner(new FacesScopes()
-						.getUserSessionBean().getLoginId());
-					}
+						if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+							awardDataType.setDeskOfficer(currentUser);
+						} else {
+							awardDataType.setRequisitioner(currentUser);
+						}
+					} 
+
 				} else {
-					if (new FacesScopes()
-					.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
-						awardDataType.setDeskOfficer(new FacesScopes()
-						.getUserSessionBean().getLoginId());
+					if(StringUtils.isBlank(letterCreator)) { 
+						if (new FacesScopes()
+						.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+							awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+							awardDataType.setDeskOfficer(currentUser);
+						} else {
+							awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
+							awardDataType.setSecretary(currentUser);
+						}
 					} else {
-						awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
-						awardDataType.setSecretary(new FacesScopes()
-						.getUserSessionBean().getLoginId());
-					}
+						if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+							awardDataType.setDeskOfficer(currentUser);
+						} else {
+							awardDataType.setSecretary(currentUser);
+						}
+					} 
 				}
 			}
 
@@ -4462,19 +4477,17 @@ public class LOADetailBackingBean extends
 	 */
 	private void filterSkopKerjaDanPerkhidmatanRepo(ScLoa scLoa){
 		// get this repo when qt with service scope otherwise empty
-		String SkopKerjaDP = "Skop Kerja dan Perkhidmatan ";
-		boolean isSkopKerja = Boolean.TRUE;
+		String SkopKerjaDP = "Skop Kerja dan Perkhidmatan";
+		
 		List<ScLoaReport> scLoaReports = new ArrayList<ScLoaReport>();
 
 		if(null  != scLoa.getScLoaReports() && scLoa.getScLoaReports().size()>0 ){
 			for (ScLoaReport scLoaReport : scLoa.getScLoaReports()) {
-
+				boolean isSkopKerja = Boolean.TRUE;
 				if (scLoaReport.getTitle().trim().equals(SkopKerjaDP.trim())) {
 					if (null == scLoaReport.getScLoaReportAttachment()) {
 						isSkopKerja = Boolean.FALSE;
-					} else{
-						isSkopKerja = Boolean.TRUE;
-					}
+					} 
 				}
 				if(isSkopKerja){
 					scLoaReports.add(scLoaReport);	
