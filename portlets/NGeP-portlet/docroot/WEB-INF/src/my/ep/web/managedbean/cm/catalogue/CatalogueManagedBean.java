@@ -66,6 +66,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.EpPropertiesUtils;
@@ -88,9 +89,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 
-
 /**
  * The Class CatalogueManagedBean.
+ * 
  * @author hketan
  */
 @ManagedBean(name = "catalogueMB")
@@ -113,13 +114,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String contractNo;
 
 	/** The search type. */
-	private String searchType="S";
+	private String searchType = "S";
 
 	/** The search ind. */
-	private String searchInd="and";
+	private String searchInd = "and";
 
 	/** The advance search ind. */
-	private boolean advanceSearchInd=false;
+	private boolean advanceSearchInd = false;
 
 	/** The advance search list. */
 	private List<AdvanceSearchVO> advanceSearchList;
@@ -170,7 +171,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private CmSupplierItem selectedMaintainItem;
 
 	/** The selected maintain items. */
-	//private CmSupplierItem[] selectedMaintainItems;
+	// private CmSupplierItem[] selectedMaintainItems;
 
 	/** The supplier item list. */
 	private List<CmSupplierItem> supplierItemList;
@@ -199,7 +200,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	/** The expired item list. */
 	private List<CmSupplierItem> expiredItemList;
 
-
 	/** The selected rejected items. */
 	private CmSupplierItem[] selectedRejectedItems;
 
@@ -222,7 +222,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<CmSupplierItem> tempList;
 
 	/** The favorite supplier list. */
-	private List<CmFavoriteSupplier>favoriteSupplierList;
+	private List<CmFavoriteSupplier> favoriteSupplierList;
 
 	/** The payment term criteria. */
 	private List<SelectItem> paymentTermCriteria;
@@ -297,22 +297,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<SelectItem> optionList = new ArrayList<SelectItem>();
 
 	/** The option list value. */
-	private Integer optionListValue =0;
+	private Integer optionListValue = 0;
 
 	/** The pricing tab index. */
-	private Integer pricingTabIndex =0;
+	private Integer pricingTabIndex = 0;
 
 	/** The normal pricing index. */
-	private Integer normalPricingIndex =0;
+	private Integer normalPricingIndex = 0;
 
 	/** The tier pricing index. */
-	private Integer tierPricingIndex =0;
+	private Integer tierPricingIndex = 0;
 
 	/** The zonal pricing index. */
-	private Integer zonalPricingIndex =0;
+	private Integer zonalPricingIndex = 0;
 
 	/** The zonal tier pricing index. */
-	private Integer zonalTierPricingIndex=0;
+	private Integer zonalTierPricingIndex = 0;
 
 	/** The tier row index. */
 	private int tierRowIndex;
@@ -352,7 +352,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	/** The error9. */
 	private boolean error9 = false;
-	
+
 	/** The error9. */
 	private boolean error99 = false;
 
@@ -363,68 +363,82 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<VCmSupplierItem> ctRequestList;
 
 	/** The simple quote flag. */
-	private boolean simpleQuoteFlag = true; // enable or disable simple quote in search catalogue	
+	private boolean simpleQuoteFlag = true; // enable or disable simple quote in
+											// search catalogue
 
 	/** The display catalogue. */
 	private boolean displayCatalogue = false;
 
 	/** The previous screen. */
-	private int previousScreen = 0;//0=catSearch;1=catMaintenance;2=pendingTask;
+	private int previousScreen = 0;// 0=catSearch;1=catMaintenance;2=pendingTask;
 
 	/** The current date. */
 	private Date currentDate = new Date();
 
 	/** The item name filter bean. */
-	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The item code filter bean. */
-	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The supplier name filter bean. */
-	private SearchFilterBean supplierNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean supplierNameFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The contract no filter bean. */
-	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The physical contract no filter bean. */
-	private SearchFilterBean physicalContractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean physicalContractNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The circular no filter bean. */
-	private SearchFilterBean circularNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean circularNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The nature of business filter bean. */
-	private SearchFilterBean natureOfBusinessFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean natureOfBusinessFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
 
 	/** The ep no filter bean. */
-	private SearchFilterBean epNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean epNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The mof no filter bean. */
-	private SearchFilterBean mofNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean mofNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The biz reg no filter bean. */
-	private SearchFilterBean bizRegNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean bizRegNoFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	/** The district filter bean. */
-	private SearchFilterBean districtFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+	private SearchFilterBean districtFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_IN.value());
 
 	/** The state filter bean. */
-	private SearchFilterBean stateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+	private SearchFilterBean stateFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_IN.value());
 
 	/** The cat type filter bean. */
-	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_EQUALS.value());
 
 	/** The search data model. */
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
 
 	/** The upload dir. */
-	private String uploadDir = EpPropertiesUtils.getInstance().getProperty(EpPropertiesConst.UPLOAD_URL);
+	private String uploadDir = EpPropertiesUtils.getInstance().getProperty(
+			EpPropertiesConst.UPLOAD_URL);
 
 	private int resultTabActiveIndex;
 
 	private Long itemToDelete;
 
 	private Long supplierId;
-
 
 	private IPagingDataModel<CmSupplierItem> draftSearchDataModel = new DraftSearchPagingDataModel();
 
@@ -438,16 +452,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private IPagingDataModel<CmSupplierItem> expiredSearchDataModel = new ExpiredSearchPagingDataModel();
 
-	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-
+	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 	private List<CmSupplierItem> draftSupplierItemList;
 
 	private boolean supplierItemcheckBoxAll;
 
-	private boolean refreshDraftSuppItemFlag =true;
-
-
+	private boolean refreshDraftSuppItemFlag = true;
 
 	private int draftTabPageSize = 5;
 	private int pendingApprovalTabPageSize = 5;
@@ -457,12 +469,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private int expiredTabPageSize = 5;
 
 	private List<CmSupplierItem> cloneCmSupplierItemLs;
-	
-	
+
 	private int zonalRowIndex;
+	private SmGstSupplier smGstSupplier;
 
-
-	private class ExpiredSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class ExpiredSearchPagingDataModel extends
+			PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -477,8 +489,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<CmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<CmSupplierItem>
 		 */
 		@Override
@@ -491,7 +504,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 
 			try {
 				CatalogueBackingBean bb = new CatalogueBackingBean();
@@ -505,17 +519,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
-				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-						.getSupplierId());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+						.get(0).getSupplierId());
 				reqDTO.setItemStatus("E");
 				reqDTO.setSearchBean(searchBean);
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
 
 				return resDTO.getSuppItemResultBean();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -526,8 +541,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
-
-	private class PublishSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class PublishSearchPagingDataModel extends
+			PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -542,8 +557,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<CmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<CmSupplierItem>
 		 */
 		@Override
@@ -556,7 +572,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 
 			try {
 
@@ -570,17 +587,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
-				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-						.getSupplierId());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+						.get(0).getSupplierId());
 				reqDTO.setItemStatus("U");
 				reqDTO.setSearchBean(searchBean);
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
 
 				return resDTO.getSuppItemResultBean();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -591,9 +609,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
-
-
-	private class RejectSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class RejectSearchPagingDataModel extends
+			PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -608,8 +625,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<CmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<CmSupplierItem>
 		 */
 		@Override
@@ -622,7 +640,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 
 			try {
 
@@ -637,17 +656,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
-				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-						.getSupplierId());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+						.get(0).getSupplierId());
 				reqDTO.setItemStatus("R");
 				reqDTO.setSearchBean(searchBean);
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
 
 				return resDTO.getSuppItemResultBean();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -658,8 +678,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
-
-	private class ApprovedSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class ApprovedSearchPagingDataModel extends
+			PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -674,8 +694,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<CmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<CmSupplierItem>
 		 */
 		@Override
@@ -688,7 +709,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 
 			try {
 
@@ -703,17 +725,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
-				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-						.getSupplierId());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+						.get(0).getSupplierId());
 				reqDTO.setItemStatus("A");
 				reqDTO.setSearchBean(searchBean);
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
 
 				return resDTO.getSuppItemResultBean();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -724,8 +747,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
-
-	private class ApprovalSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class ApprovalSearchPagingDataModel extends
+			PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -740,8 +763,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<CmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<CmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<CmSupplierItem>
 		 */
 		@Override
@@ -754,12 +778,14 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 
 			try {
 
 				CatalogueBackingBean bb = new CatalogueBackingBean();
-				bb.getManagedBean().setPendingApprovalTabPageSize(this.getPageSize());
+				bb.getManagedBean().setPendingApprovalTabPageSize(
+						this.getPageSize());
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -769,17 +795,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
-				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-						.getSupplierId());
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+						.get(0).getSupplierId());
 				reqDTO.setItemStatus("P");
 				reqDTO.setSearchBean(searchBean);
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
 
 				return resDTO.getSuppItemResultBean();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -790,9 +817,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
-
-
-	private class DraftSearchPagingDataModel extends PagingDataModel<CmSupplierItem> {
+	private class DraftSearchPagingDataModel extends
+			PagingDataModel<CmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -807,8 +833,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<VCmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<VCmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<VCmSupplierItem>
 		 */
 		@Override
@@ -821,13 +848,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 			ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate
-					.getInstance().getServiceObject("sm", ISupplierSearchSO.class);
+					.getInstance().getServiceObject("sm",
+							ISupplierSearchSO.class);
 
 			try {
 
 				CatalogueBackingBean bb = new CatalogueBackingBean();
 				bb.getManagedBean().setDraftTabPageSize(this.getPageSize());
-
 
 				SupplierSearchReqDTO supplierReqDTO = new SupplierSearchReqDTO();
 
@@ -837,34 +864,37 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				SupplierSearchResDTO smResDTO = supplierSearchSO
 						.retriveSupplierProfiles(supplierReqDTO);
 
-				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList().get(0)
-						.getSupplierId());
-
-
-
+				reqDTO.setSupplierId(smResDTO.getResultBean().getResultList()
+						.get(0).getSupplierId());
 
 				reqDTO.setItemStatus(CmConst.ITEM_STATUS_DRAFT);
 				reqDTO.setSearchBean(searchBean);
-				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+				CatalogueResDTO resDTO = catalogueSO
+						.searchSupplierItemByStatus(reqDTO);
 				System.out.println("resDTO.getSupplierItemList():"
 						+ resDTO.getSupplierItemList().size());
 
-
-
 				Map tempMap = new HashMap();
-				for (int i = 0; i < resDTO.getSuppItemResultBean().getResultList().size(); i++) {
-					CmSupplierItem suppItem = resDTO.getSuppItemResultBean().getResultList().get(i);
+				for (int i = 0; i < resDTO.getSuppItemResultBean()
+						.getResultList().size(); i++) {
+					CmSupplierItem suppItem = resDTO.getSuppItemResultBean()
+							.getResultList().get(i);
 
-					if(bb.getManagedBean().getCloneCmSupplierItemLs() !=null && bb.getManagedBean().getCloneCmSupplierItemLs().size()>0){
+					if (bb.getManagedBean().getCloneCmSupplierItemLs() != null
+							&& bb.getManagedBean().getCloneCmSupplierItemLs()
+									.size() > 0) {
 
-						for(CmSupplierItem obj : bb.getManagedBean().getCloneCmSupplierItemLs()){
+						for (CmSupplierItem obj : bb.getManagedBean()
+								.getCloneCmSupplierItemLs()) {
 
-							if(suppItem.getSupplierItemId()==obj.getSupplierItemId()){
+							if (suppItem.getSupplierItemId() == obj
+									.getSupplierItemId()) {
 
-
-								if(!tempMap.containsKey(obj.getSupplierItemId())){
-									suppItem.setSelected(true);	
-									tempMap.put(obj.getSupplierItemId(), obj.getSupplierItemId());
+								if (!tempMap.containsKey(obj
+										.getSupplierItemId())) {
+									suppItem.setSelected(true);
+									tempMap.put(obj.getSupplierItemId(),
+											obj.getSupplierItemId());
 								}
 							}
 						}
@@ -872,15 +902,19 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					}
 
 				}
-				
-				System.out.println("bb.getManagedBean().isRefreshDraftSuppItemFlag()"+bb.getManagedBean().isRefreshDraftSuppItemFlag());
-				if(bb.getManagedBean().isRefreshDraftSuppItemFlag()){
-					RequestContext.getCurrentInstance().execute("refreshDraftSuppItem();");
+
+				System.out
+						.println("bb.getManagedBean().isRefreshDraftSuppItemFlag()"
+								+ bb.getManagedBean()
+										.isRefreshDraftSuppItemFlag());
+				if (bb.getManagedBean().isRefreshDraftSuppItemFlag()) {
+					RequestContext.getCurrentInstance().execute(
+							"refreshDraftSuppItem();");
 				}
 
 				return resDTO.getSuppItemResultBean();
 
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -891,13 +925,11 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	}
 
-
-
-
 	/**
 	 * The Class SearchPagingDataModel.
 	 */
-	private class SearchPagingDataModel extends PagingDataModel<VCmSupplierItem> {
+	private class SearchPagingDataModel extends
+			PagingDataModel<VCmSupplierItem> {
 
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
@@ -912,135 +944,161 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 		/**
 		 * page Change Listener.
-		 * @param  searchBean 
-		 *                  (ISearchBean<VCmSupplierItem> searchBean(mandatory))
+		 * 
+		 * @param searchBean
+		 *            (ISearchBean<VCmSupplierItem> searchBean(mandatory))
 		 * @return ISearchBean<VCmSupplierItem>
 		 */
 		@Override
 		protected ISearchResultBean<VCmSupplierItem> pageChangeListener(
 				ISearchBean<VCmSupplierItem> searchBean) {
 
-			if(StringUtils.isBlank((String)itemNameFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)contractNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)physicalContractNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)circularNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)mofNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)bizRegNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)keyWordFilterBean.getSearchValue())
-					&&districtId == null) {
+			if (StringUtils.isBlank((String) itemNameFilterBean
+					.getSearchValue())
+					&& StringUtils.isBlank((String) itemCodeFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) supplierNameFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) contractNoFilterBean
+							.getSearchValue())
+					&& StringUtils
+							.isBlank((String) physicalContractNoFilterBean
+									.getSearchValue())
+					&& StringUtils.isBlank((String) circularNoFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) mofNoFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) epNoFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) bizRegNoFilterBean
+							.getSearchValue())
+					&& StringUtils.isBlank((String) keyWordFilterBean
+							.getSearchValue()) && districtId == null) {
 				log.debug("******SearchResultBean******");
 				return new SearchResultBean();
 			}
 
 			IViewSupplierItemSO viewSO = null;
 
-			try {	
+			try {
 
-				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance().getServiceObject("cm",IViewSupplierItemSO.class);
+				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance()
+						.getServiceObject("cm", IViewSupplierItemSO.class);
 
-				System.out.println("catTypeFilterBean.getSearchValue(): " + catTypeFilterBean.getSearchValue());
-				if(catTypeFilterBean.getSearchValue() != null) {
+				System.out.println("catTypeFilterBean.getSearchValue(): "
+						+ catTypeFilterBean.getSearchValue());
+				if (catTypeFilterBean.getSearchValue() != null) {
 					catTypeFilterBean.setSearchField("CAT_TYPE");
-					//				catTypeFilterBean.setSearchValue("XC");
+					// catTypeFilterBean.setSearchValue("XC");
 					searchBean.getDataFilterBeans().add(catTypeFilterBean);
 				}
-				if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) itemNameFilterBean
+						.getSearchValue())) {
 					itemNameFilterBean.setSearchField("ITEM_NAME");
 					itemNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
-					System.out.println("(String)keyWordFilterBean.getSearchValue()"+(String)keyWordFilterBean.getSearchValue());
+				if (StringUtils.isNotBlank((String) keyWordFilterBean
+						.getSearchValue())) {
+					System.out
+							.println("(String)keyWordFilterBean.getSearchValue()"
+									+ (String) keyWordFilterBean
+											.getSearchValue());
 					keyWordFilterBean.setSearchField("KEYWORD");
 					keyWordFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(keyWordFilterBean);
 				}
 
-
-
-				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) itemCodeFilterBean
+						.getSearchValue())) {
 					itemCodeFilterBean.setSearchField("ITEM_CODE");
 					itemCodeFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) supplierNameFilterBean
+						.getSearchValue())) {
 					supplierNameFilterBean.setSearchField("COMPANY_NAME");
 					supplierNameFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) contractNoFilterBean
+						.getSearchValue())) {
 					contractNoFilterBean.setSearchField("CONTRACT_NO");
 					contractNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)physicalContractNoFilterBean.getSearchValue())) {
-					physicalContractNoFilterBean.setSearchField("CONTRACT_PHYSICAL_NO");
+				if (StringUtils
+						.isNotBlank((String) physicalContractNoFilterBean
+								.getSearchValue())) {
+					physicalContractNoFilterBean
+							.setSearchField("CONTRACT_PHYSICAL_NO");
 					physicalContractNoFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(physicalContractNoFilterBean);
+					searchBean.getDataFilterBeans().add(
+							physicalContractNoFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) circularNoFilterBean
+						.getSearchValue())) {
 					circularNoFilterBean.setSearchField("CIRCULAR_NO");
 					circularNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(circularNoFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) epNoFilterBean
+						.getSearchValue())) {
 					epNoFilterBean.setSearchField("EP_NO");
 					epNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(epNoFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) mofNoFilterBean
+						.getSearchValue())) {
 					mofNoFilterBean.setSearchField("MOF_NO");
 					mofNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(mofNoFilterBean);
 				}
 
-				if (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue())) {
+				if (StringUtils.isNotBlank((String) bizRegNoFilterBean
+						.getSearchValue())) {
 					bizRegNoFilterBean.setSearchField("BIZ_REG_NO");
 					bizRegNoFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
 				}
 
 				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
-				log.info("bb.isRequisitioner()"+bb.isRequisitioner());
-				if(!bb.isRequisitioner()){
+				log.info("bb.isRequisitioner()" + bb.isRequisitioner());
+				if (!bb.isRequisitioner()) {
 					catTypeFilterBean.setSearchField("CAT_TYPE");
 					catTypeFilterBean.setSearchValue("XC");
 					searchBean.getDataFilterBeans().add(catTypeFilterBean);
 				}
 
-
 				setDistrictLs(new ArrayList<Long>());
-				log.info("districtId:"+districtId);
-				for(Long district : districtId){
-					log.info("district:"+district);
+				log.info("districtId:" + districtId);
+				for (Long district : districtId) {
+					log.info("district:" + district);
 					districtLs.add(district);
 				}
 
-				log.debug("districtLs.size():"+districtLs.size());
-				if(districtLs != null && districtLs.size()>0){
+				log.debug("districtLs.size():" + districtLs.size());
+				if (districtLs != null && districtLs.size() > 0) {
 					districtFilterBean.setSearchField("DISTRICT_ID");
 					districtFilterBean.setSearchValue(districtLs);
 					searchBean.getDataFilterBeans().add(districtFilterBean);
 				}
 
 				setStateLs(new ArrayList<Long>());
-				for(Long state : stateId){
-					log.info("state:"+state);
+				for (Long state : stateId) {
+					log.info("state:" + state);
 					stateLs.add(state);
 				}
-				log.info("districtLs"+districtLs);
-				if(districtLs.isEmpty()){
-					if(stateLs!=null && stateLs.size()>0){
+				log.info("districtLs" + districtLs);
+				if (districtLs.isEmpty()) {
+					if (stateLs != null && stateLs.size() > 0) {
 						stateFilterBean.setSearchField("STATE_ID");
 						stateFilterBean.setSearchValue(stateLs);
 						searchBean.getDataFilterBeans().add(stateFilterBean);
@@ -1048,83 +1106,119 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					}
 
 				}
-				log.debug("stateLs"+stateLs);
+				log.debug("stateLs" + stateLs);
 
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
 
 				UserReqDTO userReqDTO = new UserReqDTO();
 				userReqDTO.setUserId(userId);
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO .class);
-				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+								IUserSO.class);
+				UserResDTO userResDTO = userSO
+						.retrieveUserOrgListByUserId(userReqDTO);
 				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
 
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								IOrgProfileSO.class);
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
-				if(orgProfileResDTO.getPmOrgProfile()!=null) {
-					String ministryId = "#"+orgProfileResDTO.getPmOrgProfile().getOrgProfileId()+"#";
-					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(new SearchFilterBean("EXEMPTED_MINISTRY_LIST", SearchOperator.OPERATOR_IS_NULL.value(), null), 
-							new SearchFilterBean("EXEMPTED_MINISTRY_LIST", SearchOperator.OPERATOR_NOT_LIKE.value(), ministryId, SearchCondition.CONDITION_OR.value()));
+				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile()
+						.getOrgProfileId());
+				OrgProfileResDTO orgProfileResDTO = orgProfileSO
+						.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
+				if (orgProfileResDTO.getPmOrgProfile() != null) {
+					String ministryId = "#"
+							+ orgProfileResDTO.getPmOrgProfile()
+									.getOrgProfileId() + "#";
+					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(
+							new SearchFilterBean("EXEMPTED_MINISTRY_LIST",
+									SearchOperator.OPERATOR_IS_NULL.value(),
+									null), new SearchFilterBean(
+									"EXEMPTED_MINISTRY_LIST",
+									SearchOperator.OPERATOR_NOT_LIKE.value(),
+									ministryId,
+									SearchCondition.CONDITION_OR.value()));
 					searchBean.getDataFilterBeans().add(ministryFilterBean);
 				}
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				searchBean.setUseEntityClass(true);
 				reqDTO.setViewSearchBean(searchBean);
-				reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
-				if(catTypeFilterBean!=null && catTypeFilterBean.getSearchValue()!=null) {
-					reqDTO.setCatType(catTypeFilterBean.getSearchValue().toString());
+				reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile()
+						.getOrgProfileId());
+				if (catTypeFilterBean != null
+						&& catTypeFilterBean.getSearchValue() != null) {
+					reqDTO.setCatType(catTypeFilterBean.getSearchValue()
+							.toString());
 				}
 
-				if(searchBean.getDataFilterBeans().size()<=0){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_INFO, null,
-									MessageUtils.getMessage(MessageConst.ERROR_716006,
-											MessageUtils.BUNDLE_COMMON_MESSAGES,
-											new FacesScopes().getUserLocale())));
-					//throw new EpException(MessageConst.ERROR_715014);
+				if (searchBean.getDataFilterBeans().size() <= 0) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_INFO,
+											null,
+											MessageUtils
+													.getMessage(
+															MessageConst.ERROR_716006,
+															MessageUtils.BUNDLE_COMMON_MESSAGES,
+															new FacesScopes()
+																	.getUserLocale())));
+					// throw new EpException(MessageConst.ERROR_715014);
 					return new SearchResultBean();
 				}
 
 				reqDTO.setUserId(userId);
 				log.debug("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
-				setViewSupplierItemList(resDTO.getViewSuppItemResultBean().getResultList());
+				setViewSupplierItemList(resDTO.getViewSuppItemResultBean()
+						.getResultList());
 				log.debug("*********after***********");
 
-
 				// enable or disable simple quote in search catalogue
-				if(resDTO.getViewSuppItemResultBean().getResultList() != null && resDTO.getViewSuppItemResultBean().getResultList().size()>0){
+				if (resDTO.getViewSuppItemResultBean().getResultList() != null
+						&& resDTO.getViewSuppItemResultBean().getResultList()
+								.size() > 0) {
 					setSimpleQuoteFlag(true);
 				} else {
 					setSimpleQuoteFlag(false);
 				}
 
-				SimpleQuoteBackingBean simpleQuoteBackingBean =  new SimpleQuoteBackingBean();
-				TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean.getManagedBean().getProductTemplateSpecBean();
-				TemplateSpecBean serviceTemplateSpecBean = simpleQuoteBackingBean.getManagedBean().getServiceTemplateSpecBean();
-				if(simpleQuoteBackingBean.getManagedBean() != null){
-					if(simpleQuoteBackingBean.getManagedBean().getScQuote() != null){
-						ScQuote scQuote = simpleQuoteBackingBean.getManagedBean().getScQuote();
-						if(scQuote.getPanelItem() != null){
+				SimpleQuoteBackingBean simpleQuoteBackingBean = new SimpleQuoteBackingBean();
+				TemplateSpecBean productTemplateSpecBean = simpleQuoteBackingBean
+						.getManagedBean().getProductTemplateSpecBean();
+				TemplateSpecBean serviceTemplateSpecBean = simpleQuoteBackingBean
+						.getManagedBean().getServiceTemplateSpecBean();
+				if (simpleQuoteBackingBean.getManagedBean() != null) {
+					if (simpleQuoteBackingBean.getManagedBean().getScQuote() != null) {
+						ScQuote scQuote = simpleQuoteBackingBean
+								.getManagedBean().getScQuote();
+						if (scQuote.getPanelItem() != null) {
 							setSimpleQuoteFlag(false);
-						} else{
-							if(productTemplateSpecBean.getSpecMaster() != null 
-									&& productTemplateSpecBean.getSpecMaster().getTplSpecQuestions() != null 
-									&& productTemplateSpecBean.getSpecMaster().getTplSpecQuestions().size()>0 || serviceTemplateSpecBean.getSpecMaster() != null 
-									&& serviceTemplateSpecBean.getSpecMaster().getTplSpecQuestions() != null 
-									&& serviceTemplateSpecBean.getSpecMaster().getTplSpecQuestions().size()>0){
+						} else {
+							if (productTemplateSpecBean.getSpecMaster() != null
+									&& productTemplateSpecBean.getSpecMaster()
+											.getTplSpecQuestions() != null
+									&& productTemplateSpecBean.getSpecMaster()
+											.getTplSpecQuestions().size() > 0
+									|| serviceTemplateSpecBean.getSpecMaster() != null
+									&& serviceTemplateSpecBean.getSpecMaster()
+											.getTplSpecQuestions() != null
+									&& serviceTemplateSpecBean.getSpecMaster()
+											.getTplSpecQuestions().size() > 0) {
 								setSimpleQuoteFlag(false);
 							}
 						}
 					}
-				} 
+				}
 
 				return resDTO.getViewSuppItemResultBean();
-			}catch(Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 				return new SearchResultBean();
 			} finally {
@@ -1156,65 +1250,70 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		boolean hasSearchValue = false;
 		log.info("hasSearchValue: " + hasSearchValue);
 
-		if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
+		if (StringUtils
+				.isNotBlank((String) itemNameFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
+		if (StringUtils
+				.isNotBlank((String) itemCodeFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) supplierNameFilterBean
+				.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) contractNoFilterBean
+				.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)physicalContractNoFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) physicalContractNoFilterBean
+				.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) circularNoFilterBean
+				.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) epNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) mofNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue())) {
+		if (StringUtils
+				.isNotBlank((String) bizRegNoFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
-		if(this.getDistrictId() != null && this.getDistrictId().length > 0) {
+		if (this.getDistrictId() != null && this.getDistrictId().length > 0) {
 			hasSearchValue = true;
 		}
 
-		if(this.getStateId() != null && this.getStateId().length > 0) {
+		if (this.getStateId() != null && this.getStateId().length > 0) {
 			hasSearchValue = true;
 		}
 
-		if (StringUtils.isNotBlank((String)keyWordFilterBean.getSearchValue())) {
+		if (StringUtils.isNotBlank((String) keyWordFilterBean.getSearchValue())) {
 			hasSearchValue = true;
 		}
 
 		log.info("hasSearchValue: " + hasSearchValue);
 
-		if(!hasSearchValue) {
+		if (!hasSearchValue) {
 			throw new EpException(MessageConst.ERROR_716006);
-		} else {		
-
+		} else {
 
 			searchDataModel.reloadData();
 		}
 	}
-
 
 	/**
 	 * Gets the item name filter bean.
@@ -1224,8 +1323,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getItemNameFilterBean() {
 		return itemNameFilterBean;
 	}
-
-
 
 	/**
 	 * Sets the item name filter bean.
@@ -1237,8 +1334,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.itemNameFilterBean = itemNameFilterBean;
 	}
 
-
-
 	/**
 	 * Gets the search data model.
 	 * 
@@ -1247,8 +1342,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public IPagingDataModel<VCmSupplierItem> getSearchDataModel() {
 		return searchDataModel;
 	}
-
-
 
 	/**
 	 * Sets the search data model.
@@ -1261,19 +1354,17 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.searchDataModel = searchDataModel;
 	}
 
-
 	/**
 	 * Gets the select view items.
 	 * 
 	 * @return the select view items
 	 */
 	public List<VCmSupplierItem> getSelectViewItems() {
-		if(selectViewItems == null){
+		if (selectViewItems == null) {
 			selectViewItems = new ArrayList<VCmSupplierItem>();
 		}
 		return selectViewItems;
 	}
-
 
 	/**
 	 * Sets the select view items.
@@ -1284,7 +1375,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSelectViewItems(List<VCmSupplierItem> selectViewItems) {
 		this.selectViewItems = selectViewItems;
 	}
-
 
 	/**
 	 * Gets the contract no.
@@ -1330,7 +1420,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the district list
 	 */
 	public List<PmDistrict> getDistrictList() {
-		if(districtList==null)
+		if (districtList == null)
 			districtList = new ArrayList<PmDistrict>();
 		return districtList;
 	}
@@ -1351,7 +1441,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the state list
 	 */
 	public List<PmState> getStateList() {
-		if(stateList==null)
+		if (stateList == null)
 			stateList = new ArrayList<PmState>();
 		return stateList;
 	}
@@ -1372,7 +1462,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the promotion price list
 	 */
 	public List<CmPricing> getPromotionPriceList() {
-		if(promotionPriceList==null)
+		if (promotionPriceList == null)
 			promotionPriceList = new ArrayList<CmPricing>();
 		return promotionPriceList;
 	}
@@ -1393,7 +1483,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the tier price list
 	 */
 	public List<CmPricing> getTierPriceList() {
-		if(tierPriceList==null)
+		if (tierPriceList == null)
 			tierPriceList = new ArrayList<CmPricing>();
 		return tierPriceList;
 	}
@@ -1414,7 +1504,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the promotion tier price list
 	 */
 	public List<CmPricing> getPromotionTierPriceList() {
-		if(promotionTierPriceList==null)
+		if (promotionTierPriceList == null)
 			promotionTierPriceList = new ArrayList<CmPricing>();
 		return promotionTierPriceList;
 	}
@@ -1435,7 +1525,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the selected lov uom
 	 */
 	public PmUom getSelectedLovUom() {
-		if(selectedLovUom==null)
+		if (selectedLovUom == null)
 			selectedLovUom = new PmUom();
 		return selectedLovUom;
 	}
@@ -1459,17 +1549,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel = new ArrayList<String>();
 
 		Locale locale = new FacesScopes().getUserLocale();
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.action",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.item.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.item.code",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.normal.price",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.supplier.name",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.sku",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.min.order",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.additional.item.description",ResourceBundleUtils.BUNDLE_COMMON_LABELS,locale));
-
-
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.action",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.item.name",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.item.code",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.normal.price",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.supplier.name",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.sku",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.min.order",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage("lbl.cm.delivery.term",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
+		compareLabel.add(ResourceBundleUtils.getMessage(
+				"lbl.cm.additional.item.description",
+				ResourceBundleUtils.BUNDLE_COMMON_LABELS, locale));
 
 		return compareLabel;
 	}
@@ -1485,9 +1583,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * Gets the  item specification.
+	 * Gets the item specification.
 	 * 
-	 * @return the  item specification
+	 * @return the item specification
 	 */
 	public List<CtPanelItemSpec> getItemSpec() {
 		if (itemSpec == null) {
@@ -1502,7 +1600,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @param itemSpec
 	 *            the new item specification
 	 */
-	public void setItemSpec(List<CtPanelItemSpec>  itemSpec) {
+	public void setItemSpec(List<CtPanelItemSpec> itemSpec) {
 		this.itemSpec = itemSpec;
 	}
 
@@ -1536,7 +1634,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the favorite supplier list
 	 */
 	public List<CmFavoriteSupplier> getFavoriteSupplierList() {
-		if(favoriteSupplierList==null)
+		if (favoriteSupplierList == null)
 			favoriteSupplierList = new ArrayList<CmFavoriteSupplier>();
 		return favoriteSupplierList;
 	}
@@ -1577,7 +1675,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the temp list
 	 */
 	public List<CmSupplierItem> getTempList() {
-		if(tempList==null)
+		if (tempList == null)
 			tempList = new ArrayList<CmSupplierItem>();
 		return tempList;
 	}
@@ -1598,7 +1696,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the cart list
 	 */
 	public List<CmSupplierItem> getCartList() {
-		if(cartList==null)
+		if (cartList == null)
 			cartList = new ArrayList<CmSupplierItem>();
 		return cartList;
 	}
@@ -1685,7 +1783,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @param selectedPublishedItems
 	 *            the new selected published items
 	 */
-	public void setSelectedPublishedItems(CmSupplierItem[] selectedPublishedItems) {
+	public void setSelectedPublishedItems(
+			CmSupplierItem[] selectedPublishedItems) {
 		this.selectedPublishedItems = selectedPublishedItems;
 	}
 
@@ -1695,7 +1794,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the rejected item list
 	 */
 	public List<CmSupplierItem> getRejectedItemList() {
-		if(rejectedItemList==null)
+		if (rejectedItemList == null)
 			rejectedItemList = new ArrayList<CmSupplierItem>();
 		return rejectedItemList;
 	}
@@ -1716,7 +1815,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the approval item list
 	 */
 	public List<CmSupplierItem> getApprovalItemList() {
-		if(approvalItemList==null)
+		if (approvalItemList == null)
 			approvalItemList = new ArrayList<CmSupplierItem>();
 		return approvalItemList;
 	}
@@ -1737,7 +1836,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the approved item list
 	 */
 	public List<CmSupplierItem> getApprovedItemList() {
-		if(approvedItemList==null)
+		if (approvedItemList == null)
 			approvedItemList = new ArrayList<CmSupplierItem>();
 		return approvedItemList;
 	}
@@ -1758,7 +1857,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the published item list
 	 */
 	public List<CmSupplierItem> getPublishedItemList() {
-		if(publishedItemList==null)
+		if (publishedItemList == null)
 			publishedItemList = new ArrayList<CmSupplierItem>();
 		return publishedItemList;
 	}
@@ -1773,8 +1872,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.publishedItemList = publishedItemList;
 	}
 
-
-
 	/**
 	 * Gets the supplier item obj.
 	 * 
@@ -1783,7 +1880,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public CmSupplierItem getSupplierItemObj() {
 		return supplierItemObj;
 	}
-
 
 	/**
 	 * Sets the supplier item obj.
@@ -1794,7 +1890,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSupplierItemObj(CmSupplierItem supplierItemObj) {
 		this.supplierItemObj = supplierItemObj;
 	}
-
 
 	/**
 	 * Gets the compare index.
@@ -1821,7 +1916,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the wish lists
 	 */
 	public List<CmWishlist> getWishLists() {
-		if(wishLists==null)
+		if (wishLists == null)
 			wishLists = new ArrayList<CmWishlist>();
 		return wishLists;
 	}
@@ -1842,7 +1937,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the selected maintain item
 	 */
 	public CmSupplierItem getSelectedMaintainItem() {
-		if(selectedMaintainItem==null)
+		if (selectedMaintainItem == null)
 			selectedMaintainItem = new CmSupplierItem();
 		return selectedMaintainItem;
 	}
@@ -1861,20 +1956,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * Gets the selected maintain items.
 	 * 
 	 * @return the selected maintain items
-	 *//*
-	public CmSupplierItem[] getSelectedMaintainItems() {
-		return selectedMaintainItems;
-	}
-
-	  *//**
-	  * Sets the selected maintain items.
-	  * 
-	  * @param selectedMaintainItems
-	  *            the new selected maintain items
-	  *//*
-	public void setSelectedMaintainItems(CmSupplierItem[] selectedMaintainItems) {
-		this.selectedMaintainItems = selectedMaintainItems;
-	}*/
+	 */
+	/*
+	 * public CmSupplierItem[] getSelectedMaintainItems() { return
+	 * selectedMaintainItems; }
+	 *//**
+	 * Sets the selected maintain items.
+	 * 
+	 * @param selectedMaintainItems
+	 *            the new selected maintain items
+	 */
+	/*
+	 * public void setSelectedMaintainItems(CmSupplierItem[]
+	 * selectedMaintainItems) { this.selectedMaintainItems =
+	 * selectedMaintainItems; }
+	 */
 
 	/**
 	 * Gets the unspsc.
@@ -1882,7 +1978,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the unspsc
 	 */
 	public CmUnspsc getUnspsc() {
-		if(unspsc==null)
+		if (unspsc == null)
 			unspsc = new CmUnspsc();
 		return unspsc;
 	}
@@ -1897,15 +1993,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.unspsc = unspsc;
 	}
 
-
-
 	/**
 	 * Gets the supplier item list.
 	 * 
 	 * @return the supplier item list
 	 */
 	public List<CmSupplierItem> getSupplierItemList() {
-		if(supplierItemList==null)
+		if (supplierItemList == null)
 			supplierItemList = new ArrayList<CmSupplierItem>();
 		return supplierItemList;
 	}
@@ -1919,8 +2013,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSupplierItemList(List<CmSupplierItem> supplierItemList) {
 		this.supplierItemList = supplierItemList;
 	}
-
-
 
 	/**
 	 * Gets the selected supplier items.
@@ -1966,7 +2058,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the selected pricing
 	 */
 	public PricingVO getSelectedPricing() {
-		if(selectedPricing==null)
+		if (selectedPricing == null)
 			selectedPricing = new PricingVO();
 		return selectedPricing;
 	}
@@ -1987,8 +2079,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the district pricing list
 	 */
 	public List<PricingVO> getDistrictPricingList() {
-		if(districtPricingList==null)
-			districtPricingList=new ArrayList<PricingVO>();
+		if (districtPricingList == null)
+			districtPricingList = new ArrayList<PricingVO>();
 		return districtPricingList;
 	}
 
@@ -2009,7 +2101,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 */
 	public List<CmPricing> getPricingList() {
 
-		if(pricingList==null)
+		if (pricingList == null)
 			pricingList = new ArrayList<CmPricing>();
 		return pricingList;
 	}
@@ -2023,7 +2115,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setPricingList(List<CmPricing> pricingList) {
 		this.pricingList = pricingList;
 	}
-
 
 	/**
 	 * Gets the pricing criteria.
@@ -2055,7 +2146,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the zonal pricing list
 	 */
 	public List<PricingVO> getZonalPricingList() {
-		if(zonalPricingList==null)
+		if (zonalPricingList == null)
 			zonalPricingList = new ArrayList<PricingVO>();
 		return zonalPricingList;
 	}
@@ -2175,7 +2266,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		searchCriteria.add(new SelectItem("Supplier", "Supplier Name"));
 		searchCriteria.add(new SelectItem("Item", "Item Code"));
 		searchCriteria.add(new SelectItem("Contract No", "Contract No"));
-		searchCriteria.add(new SelectItem("nature of business", "nature of business"));
+		searchCriteria.add(new SelectItem("nature of business",
+				"nature of business"));
 		searchCriteria.add(new SelectItem("State", "State"));
 		searchCriteria.add(new SelectItem("District", "District"));
 
@@ -2198,7 +2290,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the selected supplier item list
 	 */
 	public List<CmSupplierItem> getSelectedSupplierItemList() {
-		if(selectedSupplierItemList==null)
+		if (selectedSupplierItemList == null)
 			selectedSupplierItemList = new ArrayList<CmSupplierItem>();
 		return selectedSupplierItemList;
 	}
@@ -2209,7 +2301,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @param selectedSupplierItemList
 	 *            the new selected supplier item list
 	 */
-	public void setSelectedSupplierItemList(List<CmSupplierItem> selectedSupplierItemList) {
+	public void setSelectedSupplierItemList(
+			List<CmSupplierItem> selectedSupplierItemList) {
 		this.selectedSupplierItemList = selectedSupplierItemList;
 	}
 
@@ -2238,7 +2331,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the expired item list
 	 */
 	public List<CmSupplierItem> getExpiredItemList() {
-		if(expiredItemList==null)
+		if (expiredItemList == null)
 			expiredItemList = new ArrayList<CmSupplierItem>();
 		return expiredItemList;
 	}
@@ -2278,7 +2371,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @return the status desc list
 	 */
 	public List<PmStatusDesc> getStatusDescList() {
-		if(statusDescList==null)
+		if (statusDescList == null)
 			statusDescList = new ArrayList<PmStatusDesc>();
 		return statusDescList;
 	}
@@ -2312,7 +2405,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.itemCode = itemCode;
 	}
 
-
 	/**
 	 * Gets the item code filter bean.
 	 * 
@@ -2321,7 +2413,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getItemCodeFilterBean() {
 		return itemCodeFilterBean;
 	}
-
 
 	/**
 	 * Sets the item code filter bean.
@@ -2333,7 +2424,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.itemCodeFilterBean = itemCodeFilterBean;
 	}
 
-
 	/**
 	 * Gets the supplier name filter bean.
 	 * 
@@ -2343,17 +2433,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		return supplierNameFilterBean;
 	}
 
-
 	/**
 	 * Sets the supplier name filter bean.
 	 * 
 	 * @param supplierNameFilterBean
 	 *            the new supplier name filter bean
 	 */
-	public void setSupplierNameFilterBean(SearchFilterBean supplierNameFilterBean) {
+	public void setSupplierNameFilterBean(
+			SearchFilterBean supplierNameFilterBean) {
 		this.supplierNameFilterBean = supplierNameFilterBean;
 	}
-
 
 	/**
 	 * Gets the contract no filter bean.
@@ -2363,7 +2452,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getContractNoFilterBean() {
 		return contractNoFilterBean;
 	}
-
 
 	/**
 	 * Sets the contract no filter bean.
@@ -2375,7 +2463,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.contractNoFilterBean = contractNoFilterBean;
 	}
 
-
 	/**
 	 * Gets the circular no filter bean.
 	 * 
@@ -2384,7 +2471,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getCircularNoFilterBean() {
 		return circularNoFilterBean;
 	}
-
 
 	/**
 	 * Sets the circular no filter bean.
@@ -2396,7 +2482,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.circularNoFilterBean = circularNoFilterBean;
 	}
 
-
 	/**
 	 * Gets the nature of business filter bean.
 	 * 
@@ -2405,7 +2490,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getNatureOfBusinessFilterBean() {
 		return natureOfBusinessFilterBean;
 	}
-
 
 	/**
 	 * Sets the nature of business filter bean.
@@ -2418,7 +2502,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.natureOfBusinessFilterBean = natureOfBusinessFilterBean;
 	}
 
-
 	/**
 	 * Gets the ep no filter bean.
 	 * 
@@ -2427,7 +2510,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getEpNoFilterBean() {
 		return epNoFilterBean;
 	}
-
 
 	/**
 	 * Sets the ep no filter bean.
@@ -2439,7 +2521,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.epNoFilterBean = epNoFilterBean;
 	}
 
-
 	/**
 	 * Gets the mof no filter bean.
 	 * 
@@ -2448,7 +2529,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getMofNoFilterBean() {
 		return mofNoFilterBean;
 	}
-
 
 	/**
 	 * Sets the mof no filter bean.
@@ -2460,7 +2540,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.mofNoFilterBean = mofNoFilterBean;
 	}
 
-
 	/**
 	 * Gets the biz reg no filter bean.
 	 * 
@@ -2469,7 +2548,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getBizRegNoFilterBean() {
 		return bizRegNoFilterBean;
 	}
-
 
 	/**
 	 * Sets the biz reg no filter bean.
@@ -2481,18 +2559,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.bizRegNoFilterBean = bizRegNoFilterBean;
 	}
 
-
 	/**
 	 * Gets the view supplier item list.
 	 * 
 	 * @return the view supplier item list
 	 */
 	public List<VCmSupplierItem> getViewSupplierItemList() {
-		if(viewSupplierItemList==null)
+		if (viewSupplierItemList == null)
 			viewSupplierItemList = new ArrayList<VCmSupplierItem>();
 		return viewSupplierItemList;
 	}
-
 
 	/**
 	 * Sets the view supplier item list.
@@ -2500,10 +2576,10 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	 * @param viewSupplierItemList
 	 *            the new view supplier item list
 	 */
-	public void setViewSupplierItemList(List<VCmSupplierItem> viewSupplierItemList) {
+	public void setViewSupplierItemList(
+			List<VCmSupplierItem> viewSupplierItemList) {
 		this.viewSupplierItemList = viewSupplierItemList;
 	}
-
 
 	/**
 	 * Checks if is contracted exist.
@@ -2513,7 +2589,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isContractedExist() {
 		return contractedExist;
 	}
-
 
 	/**
 	 * Sets the contracted exist.
@@ -2525,7 +2600,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.contractedExist = contractedExist;
 	}
 
-
 	/**
 	 * Gets the state id.
 	 * 
@@ -2534,7 +2608,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public long[] getStateId() {
 		return stateId;
 	}
-
 
 	/**
 	 * Sets the state id.
@@ -2546,7 +2619,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.stateId = stateId;
 	}
 
-
 	/**
 	 * Gets the district id.
 	 * 
@@ -2555,7 +2627,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public long[] getDistrictId() {
 		return districtId;
 	}
-
 
 	/**
 	 * Sets the district id.
@@ -2567,7 +2638,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.districtId = districtId;
 	}
 
-
 	/**
 	 * Gets the district filter bean.
 	 * 
@@ -2576,7 +2646,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getDistrictFilterBean() {
 		return districtFilterBean;
 	}
-
 
 	/**
 	 * Sets the district filter bean.
@@ -2588,18 +2657,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.districtFilterBean = districtFilterBean;
 	}
 
-
 	/**
 	 * Gets the district ls.
 	 * 
 	 * @return the district ls
 	 */
 	public List<Long> getDistrictLs() {
-		if(districtLs==null)
+		if (districtLs == null)
 			districtLs = new ArrayList<Long>();
 		return districtLs;
 	}
-
 
 	/**
 	 * Sets the district ls.
@@ -2611,18 +2678,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.districtLs = districtLs;
 	}
 
-
 	/**
 	 * Gets the state ls.
 	 * 
 	 * @return the state ls
 	 */
 	public List<Long> getStateLs() {
-		if(stateLs==null)
+		if (stateLs == null)
 			stateLs = new ArrayList<Long>();
 		return stateLs;
 	}
-
 
 	/**
 	 * Sets the state ls.
@@ -2634,7 +2699,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.stateLs = stateLs;
 	}
 
-
 	/**
 	 * Gets the state filter bean.
 	 * 
@@ -2643,7 +2707,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getStateFilterBean() {
 		return stateFilterBean;
 	}
-
 
 	/**
 	 * Sets the state filter bean.
@@ -2672,7 +2735,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		return tabActiveIndex;
 	}
 
-
 	/**
 	 * Sets the tab active index.
 	 * 
@@ -2683,10 +2745,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.tabActiveIndex = tabActiveIndex;
 	}
 
-
 	/** The reject reason ids. */
 	private ArrayList<Long> rejectReasonIds = new ArrayList<Long>();
-
 
 	/**
 	 * Gets the reject reason ids.
@@ -2696,7 +2756,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public ArrayList<Long> getRejectReasonIds() {
 		return rejectReasonIds;
 	}
-
 
 	/**
 	 * Sets the reject reason ids.
@@ -2708,7 +2767,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.rejectReasonIds = rejectReasonIds;
 	}
 
-
 	/**
 	 * Gets the reject reason.
 	 * 
@@ -2717,7 +2775,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public String getRejectReason() {
 		return rejectReason;
 	}
-
 
 	/**
 	 * Sets the reject reason.
@@ -2729,7 +2786,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.rejectReason = rejectReason;
 	}
 
-
 	/**
 	 * Gets the cat type filter bean.
 	 * 
@@ -2738,7 +2794,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getCatTypeFilterBean() {
 		return catTypeFilterBean;
 	}
-
 
 	/**
 	 * Sets the cat type filter bean.
@@ -2750,18 +2805,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.catTypeFilterBean = catTypeFilterBean;
 	}
 
-
 	/**
 	 * Gets the supplier zone list.
 	 * 
 	 * @return the supplier zone list
 	 */
 	public List<CmSupplierZone> getSupplierZoneList() {
-		if(supplierZoneList==null)
+		if (supplierZoneList == null)
 			supplierZoneList = new ArrayList<CmSupplierZone>();
 		return supplierZoneList;
 	}
-
 
 	/**
 	 * Sets the supplier zone list.
@@ -2773,7 +2826,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.supplierZoneList = supplierZoneList;
 	}
 
-
 	/**
 	 * Gets the pricing tab index.
 	 * 
@@ -2782,7 +2834,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Integer getPricingTabIndex() {
 		return pricingTabIndex;
 	}
-
 
 	/**
 	 * Sets the pricing tab index.
@@ -2794,7 +2845,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.pricingTabIndex = pricingTabIndex;
 	}
 
-
 	/**
 	 * Gets the normal pricing index.
 	 * 
@@ -2803,7 +2853,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Integer getNormalPricingIndex() {
 		return normalPricingIndex;
 	}
-
 
 	/**
 	 * Sets the normal pricing index.
@@ -2815,7 +2864,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.normalPricingIndex = normalPricingIndex;
 	}
 
-
 	/**
 	 * Gets the tier pricing index.
 	 * 
@@ -2824,7 +2872,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Integer getTierPricingIndex() {
 		return tierPricingIndex;
 	}
-
 
 	/**
 	 * Sets the tier pricing index.
@@ -2836,7 +2883,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.tierPricingIndex = tierPricingIndex;
 	}
 
-
 	/**
 	 * Gets the zonal pricing index.
 	 * 
@@ -2845,7 +2891,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Integer getZonalPricingIndex() {
 		return zonalPricingIndex;
 	}
-
 
 	/**
 	 * Sets the zonal pricing index.
@@ -2857,7 +2902,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.zonalPricingIndex = zonalPricingIndex;
 	}
 
-
 	/**
 	 * Gets the zonal tier pricing index.
 	 * 
@@ -2866,7 +2910,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Integer getZonalTierPricingIndex() {
 		return zonalTierPricingIndex;
 	}
-
 
 	/**
 	 * Sets the zonal tier pricing index.
@@ -2878,7 +2921,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.zonalTierPricingIndex = zonalTierPricingIndex;
 	}
 
-
 	/**
 	 * Gets the tier row index.
 	 * 
@@ -2887,7 +2929,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public int getTierRowIndex() {
 		return tierRowIndex;
 	}
-
 
 	/**
 	 * Sets the tier row index.
@@ -2899,7 +2940,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.tierRowIndex = tierRowIndex;
 	}
 
-
 	/**
 	 * Checks if is error4.
 	 * 
@@ -2908,7 +2948,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError4() {
 		return error4;
 	}
-
 
 	/**
 	 * Sets the error4.
@@ -2920,7 +2959,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error4 = error4;
 	}
 
-
 	/**
 	 * Checks if is error3.
 	 * 
@@ -2929,7 +2967,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError3() {
 		return error3;
 	}
-
 
 	/**
 	 * Sets the error3.
@@ -2941,7 +2978,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error3 = error3;
 	}
 
-
 	/**
 	 * Checks if is error2.
 	 * 
@@ -2950,7 +2986,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError2() {
 		return error2;
 	}
-
 
 	/**
 	 * Sets the error2.
@@ -2962,7 +2997,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error2 = error2;
 	}
 
-
 	/**
 	 * Checks if is error1.
 	 * 
@@ -2971,7 +3005,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError1() {
 		return error1;
 	}
-
 
 	/**
 	 * Sets the error1.
@@ -2983,18 +3016,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error1 = error1;
 	}
 
-
 	/**
 	 * Gets the temp supplier list.
 	 * 
 	 * @return the temp supplier list
 	 */
 	public List<VCmSupplierItem> getTempSupplierList() {
-		if(tempSupplierList==null)
+		if (tempSupplierList == null)
 			tempSupplierList = new ArrayList<VCmSupplierItem>();
 		return tempSupplierList;
 	}
-
 
 	/**
 	 * Sets the temp supplier list.
@@ -3006,18 +3037,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.tempSupplierList = tempSupplierList;
 	}
 
-
 	/**
 	 * Gets the ct request list.
 	 * 
 	 * @return the ct request list
 	 */
 	public List<VCmSupplierItem> getCtRequestList() {
-		if(ctRequestList==null)
+		if (ctRequestList == null)
 			ctRequestList = new ArrayList<VCmSupplierItem>();
 		return ctRequestList;
 	}
-
 
 	/**
 	 * Sets the ct request list.
@@ -3047,7 +3076,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		return renderTableView;
 	}
 
-
 	/**
 	 * Sets the render table view.
 	 * 
@@ -3058,7 +3086,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.renderTableView = renderTableView;
 	}
 
-
 	/**
 	 * Checks if is render grid view.
 	 * 
@@ -3067,7 +3094,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isRenderGridView() {
 		return renderGridView;
 	}
-
 
 	/**
 	 * Sets the render grid view.
@@ -3079,7 +3105,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.renderGridView = renderGridView;
 	}
 
-
 	/**
 	 * Gets the selected ids.
 	 * 
@@ -3088,7 +3113,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Map<Long, Boolean> getSelectedIds() {
 		return selectedIds;
 	}
-
 
 	/**
 	 * Sets the selected ids.
@@ -3100,8 +3124,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.selectedIds = selectedIds;
 	}
 
-
-
 	/**
 	 * Sets the simple quote flag.
 	 * 
@@ -3112,7 +3134,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.simpleQuoteFlag = simpleQuoteFlag;
 	}
 
-
 	/**
 	 * Checks if is error5.
 	 * 
@@ -3121,7 +3142,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError5() {
 		return error5;
 	}
-
 
 	/**
 	 * Sets the error5.
@@ -3133,7 +3153,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error5 = error5;
 	}
 
-
 	/**
 	 * Checks if is error6.
 	 * 
@@ -3142,7 +3161,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError6() {
 		return error6;
 	}
-
 
 	/**
 	 * Sets the error6.
@@ -3154,7 +3172,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error6 = error6;
 	}
 
-
 	/**
 	 * Gets the zonal tier row index.
 	 * 
@@ -3163,7 +3180,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public int getZonalTierRowIndex() {
 		return zonalTierRowIndex;
 	}
-
 
 	/**
 	 * Sets the zonal tier row index.
@@ -3175,7 +3191,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.zonalTierRowIndex = zonalTierRowIndex;
 	}
 
-
 	/**
 	 * Gets the clone cm supplier item.
 	 * 
@@ -3184,7 +3199,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public CmSupplierItem getCloneCmSupplierItem() {
 		return cloneCmSupplierItem;
 	}
-
 
 	/**
 	 * Sets the clone cm supplier item.
@@ -3196,7 +3210,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.cloneCmSupplierItem = cloneCmSupplierItem;
 	}
 
-
 	/**
 	 * Gets the clone index.
 	 * 
@@ -3205,7 +3218,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public int getCloneIndex() {
 		return cloneIndex;
 	}
-
 
 	/**
 	 * Sets the clone index.
@@ -3217,7 +3229,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.cloneIndex = cloneIndex;
 	}
 
-
 	/**
 	 * Checks if is display catalogue.
 	 * 
@@ -3226,7 +3237,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isDisplayCatalogue() {
 		return displayCatalogue;
 	}
-
 
 	/**
 	 * Sets the display catalogue.
@@ -3238,7 +3248,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.displayCatalogue = displayCatalogue;
 	}
 
-
 	/**
 	 * Gets the current date.
 	 * 
@@ -3247,7 +3256,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Date getCurrentDate() {
 		return currentDate;
 	}
-
 
 	/**
 	 * Sets the current date.
@@ -3259,7 +3267,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.currentDate = currentDate;
 	}
 
-
 	/**
 	 * Gets the upload dir.
 	 * 
@@ -3268,7 +3275,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public String getUploadDir() {
 		return uploadDir;
 	}
-
 
 	/**
 	 * Sets the upload dir.
@@ -3279,7 +3285,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setUploadDir(String uploadDir) {
 		this.uploadDir = uploadDir;
 	}
-
 
 	/**
 	 * Gets the option list.
@@ -3294,7 +3299,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		return optionList;
 	}
 
-
 	/**
 	 * Sets the option list.
 	 * 
@@ -3305,7 +3309,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.optionList = optionList;
 	}
 
-
 	/**
 	 * Gets the option list value.
 	 * 
@@ -3314,7 +3317,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public Integer getOptionListValue() {
 		return optionListValue;
 	}
-
 
 	/**
 	 * Sets the option list value.
@@ -3326,7 +3328,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.optionListValue = optionListValue;
 	}
 
-
 	/**
 	 * Gets the selected items.
 	 * 
@@ -3335,7 +3336,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public VCmSupplierItem[] getSelectedItems() {
 		return selectedItems;
 	}
-
 
 	/**
 	 * Sets the selected items.
@@ -3347,7 +3347,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.selectedItems = selectedItems;
 	}
 
-
 	/**
 	 * Gets the previous screen.
 	 * 
@@ -3356,7 +3355,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public int getPreviousScreen() {
 		return previousScreen;
 	}
-
 
 	/**
 	 * Sets the previous screen.
@@ -3368,7 +3366,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.previousScreen = previousScreen;
 	}
 
-
 	/**
 	 * Checks if is error7.
 	 * 
@@ -3377,7 +3374,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError7() {
 		return error7;
 	}
-
 
 	/**
 	 * Sets the error7.
@@ -3389,7 +3385,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error7 = error7;
 	}
 
-
 	/**
 	 * Checks if is error8.
 	 * 
@@ -3398,7 +3393,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError8() {
 		return error8;
 	}
-
 
 	/**
 	 * Sets the error8.
@@ -3410,7 +3404,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error8 = error8;
 	}
 
-
 	/**
 	 * Checks if is error9.
 	 * 
@@ -3419,7 +3412,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isError9() {
 		return error9;
 	}
-
 
 	/**
 	 * Sets the error9.
@@ -3431,7 +3423,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.error9 = error9;
 	}
 
-
 	/**
 	 * Checks if is price type tariff.
 	 * 
@@ -3440,7 +3431,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public boolean isPriceTypeTariff() {
 		return priceTypeTariff;
 	}
-
 
 	/**
 	 * Sets the price type tariff.
@@ -3452,7 +3442,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.priceTypeTariff = priceTypeTariff;
 	}
 
-
 	/**
 	 * Gets the physical contract no filter bean.
 	 * 
@@ -3461,7 +3450,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public SearchFilterBean getPhysicalContractNoFilterBean() {
 		return physicalContractNoFilterBean;
 	}
-
 
 	/**
 	 * Sets the physical contract no filter bean.
@@ -3553,12 +3541,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmSupplierItem> getDraftSupplierItemList() {
-		if(draftSupplierItemList==null)
+		if (draftSupplierItemList == null)
 			draftSupplierItemList = new ArrayList<CmSupplierItem>();
 		return draftSupplierItemList;
 	}
 
-	public void setDraftSupplierItemList(List<CmSupplierItem> draftSupplierItemList) {
+	public void setDraftSupplierItemList(
+			List<CmSupplierItem> draftSupplierItemList) {
 		this.draftSupplierItemList = draftSupplierItemList;
 	}
 
@@ -3611,12 +3600,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	public List<CmSupplierItem> getCloneCmSupplierItemLs() {
-		if(cloneCmSupplierItemLs==null)
+		if (cloneCmSupplierItemLs == null)
 			cloneCmSupplierItemLs = new ArrayList<CmSupplierItem>();
 		return cloneCmSupplierItemLs;
 	}
 
-	public void setCloneCmSupplierItemLs(List<CmSupplierItem> cloneCmSupplierItemLs) {
+	public void setCloneCmSupplierItemLs(
+			List<CmSupplierItem> cloneCmSupplierItemLs) {
 		this.cloneCmSupplierItemLs = cloneCmSupplierItemLs;
 	}
 
@@ -3651,26 +3641,20 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setZonalRowIndex(int zonalRowIndex) {
 		this.zonalRowIndex = zonalRowIndex;
 	}
-	
-	
-	
 
+	/**
+	 * @return the smGstSupplier
+	 */
+	public SmGstSupplier getSmGstSupplier() {
+		return smGstSupplier;
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	/**
+	 * @param smGstSupplier
+	 *            the smGstSupplier to set
+	 */
+	public void setSmGstSupplier(SmGstSupplier smGstSupplier) {
+		this.smGstSupplier = smGstSupplier;
+	}
 
 }
