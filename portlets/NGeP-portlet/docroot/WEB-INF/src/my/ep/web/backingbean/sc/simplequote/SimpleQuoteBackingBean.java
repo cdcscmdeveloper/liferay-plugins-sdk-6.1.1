@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sc.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
@@ -54,6 +55,7 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
@@ -386,8 +388,13 @@ public class SimpleQuoteBackingBean extends
 			}
 		}
 		// for procurement type drop down
-		if (scQuote.getProcurementType() == null) {
+		if (null == scQuote.getProcurementType()) {
 			scQuote = checkGovtSeller(null, scQuote);
+		}
+		
+		// proc type category
+		if (null == scQuote.getProcurementTypeCategory()) {
+			scQuote.setProcurementTypeCategory(new PmParameter());
 		}
 
 		scQuote.setMultipleQuote(Boolean.FALSE);
@@ -905,6 +912,14 @@ public class SimpleQuoteBackingBean extends
 				}
 			} else {
 				quote.setJustificationType(null);
+			}
+			
+			// procurement type category
+			if(null != quote.getProcurementTypeCategory()){
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterId(quote.getProcurementTypeCategory().getParameterId());
+				PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
+				quote.setProcurementTypeCategory(procTypeCategory);
 			}
 
 			// by business nature
@@ -1650,6 +1665,14 @@ public class SimpleQuoteBackingBean extends
 								.getSupplierLocLevel()));
 			} else {
 				quote.setSupplierLocationLevel(null);
+			}
+
+			// procurement type category
+			if(null != quote.getProcurementTypeCategory()){
+				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
+				parameterReqDTO.setParameterId(quote.getProcurementTypeCategory().getParameterId());
+				PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
+				quote.setProcurementTypeCategory(procTypeCategory);
 			}
 
 			// justification type
@@ -5705,6 +5728,17 @@ public class SimpleQuoteBackingBean extends
 		}
 
 	}
+	
+
+	/**
+	 * Proc type categories.
+	 *
+	 * @return the list
+	 */
+	public List<PmParameterDesc> getProcTypeCategories(){
+		List<PmParameterDesc> procTypeCategories = ParameterHelper.getInstance().getParameterDescList(ParameterTypeConst.PROCUREMENT_TYPE_CATEGORY);
+	   return procTypeCategories;	
+	}
 
 	/**
 	 * Sets the text before sign.
@@ -5741,6 +5775,16 @@ public class SimpleQuoteBackingBean extends
 	private IStatusSO getStatusSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
+	}
+	
+	/**
+	 * Gets the parameter so.
+	 *
+	 * @return the parameter so
+	 */
+	private IParameterSO getParameterSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 	}
 
 }
