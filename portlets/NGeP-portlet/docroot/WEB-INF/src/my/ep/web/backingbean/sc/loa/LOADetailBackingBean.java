@@ -4704,4 +4704,55 @@ public class LOADetailBackingBean extends
 		}
 		getManagedBean().setOverallContractAmt(overallContractAmt);
 	}
+	
+	/**
+	 * @param event
+	 */
+	public void uploadBranchInfo(FileUploadEvent event) {
+
+		ScAttachment scAttachment = null;
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		ScLoaReport scLoaReport = new ScLoaReport();
+		scLoaReport.setScLoa(scLoa);
+		scLoaReport.setScLoaReportAttachment(new ScLoaReportAttachment());
+		scLoaReport.setTitle("Branch Information");
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			scLoaReport.setDefinationType(resDTO.getPmParameter());
+			scLoaReport
+					.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
+		} finally {
+			parameterSO = null;
+		}
+
+		ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+		scLoaReportAttachment.setScLoaReport(scLoaReport);
+		scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+		scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
+		scLoaReportAttachment.setScLoaReport(scLoaReport);
+		scAttachment = scLoaReportAttachment;
+		getManagedBean().setBranchInfoReport(scLoaReport);
+		
+		try {
+			uploadAttachment(event.getFile(), scAttachment);
+			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+			if(scLoaReports == null){
+				scLoaReports = new ArrayList<ScLoaReport>();
+				scLoa.setScLoaReports(scLoaReports);
+			}
+			scLoaReports.add(scLoaReport);
+		} catch (FileNotFoundException e) {
+			log.error("Exceptionn occured while uploading the file"+e.getMessage());
+		} catch (IOException e) {
+			log.error("Exceptionn occured while uploading the file"+e.getMessage());
+		}
+	}
 }
