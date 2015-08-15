@@ -96,6 +96,16 @@
 					disabled="true" />
 			</td>
 		</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.branch.information']}" />
+				</td>
+				<td><h:outputText
+						value="#{lOADetailBackingBean.managedBean.branchInfoReport.scLoaReportAttachment.fileName}" />
+					<p:commandButton oncomplete="attachmentPopupDlg.show();"
+						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
+						process="@this" update="@([id$=attachmentPopup])">
+					</p:commandButton></td>
+			</tr>
 		</table>
 	</p:panel>
 

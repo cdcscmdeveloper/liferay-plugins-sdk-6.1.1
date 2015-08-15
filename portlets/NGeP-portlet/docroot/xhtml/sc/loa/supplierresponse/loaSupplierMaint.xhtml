@@ -55,6 +55,7 @@
 				</p:tabMenu>
 			</td>
 			<td width="80%">
+				<h:panelGroup id="menuContent">
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 0}">
 						<ui:include src="loaDetailsSupplierMenu.xhtml" />
 					</c:if>
@@ -78,12 +79,27 @@
 					<c:if test="#{lOADetailBackingBean.managedBean.selectedTabIndex == 5}">
 						<ui:include src="loaLetterOfAcceptanceView.xhtml" />
 					</c:if>
-					
+					</h:panelGroup>
 					<h:panelGroup rendered="#{lOADetailBackingBean.managedBean.selectedTabIndex == 6}">
 						<ui:include src="loaIntegrityPactMenu.xhtml" />
 					</h:panelGroup>
 			</td>
 		</tr>
 		</table>
+
+		<p:dialog id="attachmentPopup" widgetVar="attachmentPopupDlg"
+			modal="true" resizable="false" width="700px" height="200"
+			styleClass="pop_up_top" header="#{lbl['lbl.txt.choose.files']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{lOADetailBackingBean.uploadBranchInfo}"
+				mode="advanced" id="uploadattachment"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
+		
 	</ui:define>
 </ui:composition>
