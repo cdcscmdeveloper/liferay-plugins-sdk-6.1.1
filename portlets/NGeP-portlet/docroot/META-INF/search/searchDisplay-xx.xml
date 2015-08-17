@@ -1568,14 +1568,16 @@
 					<property name="searchable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="smGstSupplier.gstEffDate" />
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.smGstSupplier.gstEffDate)" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sc.gst.effective.date" />
 					<property name="searchable" value="false" />
 				</bean>
 				<bean class="my.ep.web.bean.LovColumnBean">
-					<property name="columnName" value="smGstSupplier.gstDeclaredDate" />
+					<property name="methodName"
+						value="simpleQuoteBackingBean.retrieveSupplierGstDates(entity.smGstSupplier.gstDeclaredDate)" />
 					<property name="bundleFile"
 						value="messageprovider-config.bundles.labels.labels" />
 					<property name="bundleKey" value="lbl.sc.gst.declared.date" />
