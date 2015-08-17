@@ -31,7 +31,8 @@
 						value="#{lbl['lbl.sc.gst.register.num']}" /></td>
 				<td style="width: 250px;"><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstRegNo}"
-						size="40" /></td>
+						size="35" /> <ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.register.num.tooltip']}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
@@ -44,10 +45,11 @@
 						value="#{lbl['lbl.sc.gst.effective.date']}" /></td>
 				<td style="width: 250px;"><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstEffDate}"
-						size="40">
+						size="35">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText> <ac:iconTooltip
+						value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
@@ -62,10 +64,11 @@
 						value="#{lbl['lbl.sc.gst.declared.date']}" /></td>
 				<td style="width: 250px;"><p:inputText disabled="true"
 						value="#{purchaseInDefaultBackingBean.managedBean.smGstSupplier.gstDeclaredDate}"
-						size="40">
+						size="35">
 						<f:convertDateTime
 							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText></td>
+					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
+				</td>
 			</tr>
 			<tr>
 				<td style="width: 250px;"><p:outputLabel
@@ -244,22 +247,31 @@
 				<h:outputText
 					value="#{panelSupplier.supplier.smMofAccounts[0].mofNo}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.gst.register.num']}"
-				style="width:10%">
+			<p:column style="width:10%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.gst.register.num']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
+				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstRegNo}"></h:outputText>
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.gst.effective.date']}"
-				style="width:10%">
+			<p:column style="width:10%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.gst.effective.date']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" />
+				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstEffDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</h:outputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.gst.declared.date']}"
-				style="width:10%">
+			<p:column style="width:10%">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.sc.gst.declared.date']}" />
+					<ac:iconTooltip value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
+				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstDeclaredDate}">
 					<f:convertDateTime
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
