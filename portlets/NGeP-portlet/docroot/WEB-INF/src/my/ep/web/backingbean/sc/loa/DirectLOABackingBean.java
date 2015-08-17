@@ -61,6 +61,7 @@ import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCity;
@@ -79,6 +80,7 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
@@ -164,18 +166,12 @@ public class DirectLOABackingBean extends
 	 * save the LOA details. save - save data into database and initiate task
 	 * for LOA details. page navigate to loa details page.
 	 */
-	public void saveAction() {
+	public String saveAction() {
 		debugLogger("saveAction");
 
 		try {
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
-
-			if (CollectionUtils.isNotEmpty(scLoa.getScQt().getScQtSchedules())) {
-				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
-					freqScheduleValidation(scQtSchedule);
-				}
-			}
 
 			parseLOADetails(scLoa, "SAVE");
 
@@ -193,15 +189,31 @@ public class DirectLOABackingBean extends
 			if (resDTO.isSuccessful()) {
 				scLoa = resDTO.getLoa();
 
-				successMessage(MessageConst.INFO_700004,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.FALSE);
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700026,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_LETTER_OF_AWARD),
+																scLoa.getLoaNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 
 		} finally {
 			// qtAwardSO = null;
 		}
+		return null;
 	}
 
 	/**
@@ -212,16 +224,16 @@ public class DirectLOABackingBean extends
 	 *            the outcome
 	 * @return the string page navigate to acknowledge page.
 	 */
-	public String submitAction() {
+	public String submitAction(String outCome) {
 		debugLogger("submitAction");
 
 		try {
-			String outcome = BpmOutcomeConst.BPM_SUBMIT;
+			// String outcome = BpmOutcomeConst.BPM_SUBMIT;
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
-			validateLOADetails(scLoa, outcome);
+			// validateLOADetails(scLoa, outCome);
 
-			parseLOADetails(scLoa, outcome);
+			parseLOADetails(scLoa, outCome);
 			scLoa.setScLoaWorkFlowStatuses(null);
 			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
 			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
@@ -233,24 +245,40 @@ public class DirectLOABackingBean extends
 				}
 			}
 
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 			reqDTO.setScLoa(scLoa);
 			reqDTO.setPayLoad(getManagedBean().getPayLoad());
-			reqDTO.setOutcome(outcome);
+			reqDTO.setOutcome(outCome);
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-
-			AwardSupplierResDTO resDTO = getQtAwardSO().saveLOADtl(reqDTO);
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			DirectAwardResDTO resDTO = getQtDirectAwardSO()
+					.submitDirectAwardDetails(reqDTO);
 
 			if (resDTO.isSuccessful()) {
-				scLoa = resDTO.getScLoa();
-				renewSesionObject();
-				successMessage(MessageConst.INFO_700026,
-						ParameterTypeConst.DOCUMENT_TYPES,
-						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
-						scLoa.getLoaNo(), Boolean.TRUE);
+				scLoa = resDTO.getLoa();
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700026,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_LETTER_OF_AWARD),
+																scLoa.getLoaNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
 			}
 
 		} finally {
@@ -390,16 +418,16 @@ public class DirectLOABackingBean extends
 	 * @param loaId
 	 *            the loa id
 	 */
-	public void editSupplierLOAAction(Long loaId) {
+	public void getSupplierDeatilsByLoaId(Long loaId) {
 		debugLogger("editSupplierLOAAction");
 		try {
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 			reqDTO.setLoaId(loaId);
 
-			AwardSupplierResDTO resDTO = getQtAwardSO().retrieveSupplierLOADtl(
-					reqDTO);
+			DirectAwardResDTO resDTO = getQtDirectAwardSO()
+					.retriveSupplierDetails(reqDTO);
 
-			ScLoa scLoa = resDTO.getScLoa();
+			ScLoa scLoa = resDTO.getLoa();
 			getManagedBean().setScLoa(scLoa);
 
 			// Supplier Bank Account
@@ -425,10 +453,9 @@ public class DirectLOABackingBean extends
 				scLoaWitnesses.add(loaSupplierWitness);
 			}
 			getManagedBean().setLoaSupplierWitness(loaSupplierWitness);
-			ScQt scQt = resDTO.getScQt();
-			if (scQt != null) {
-				getManagedBean().setScQt(resDTO.getScQt());
-			}
+
+			getManagedBean().setScQt(scLoa.getScQt());
+
 			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
 
 			scLoa = calcBondAmount(scLoa);
@@ -448,7 +475,15 @@ public class DirectLOABackingBean extends
 
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
-
+			if (scLoa.getScQt().isZonal()) {
+				List<TplSpecZoneDtl> zoneDetails = resDTO.getSpecZoneDetails();
+				constructTreeNodeForzones(zoneDetails);
+			} /*
+			 * else { List<TplSpecLoc> specLocatations =
+			 * resDTO.getSpecLocations();
+			 * constructLocationTreeNode(specLocatations, this
+			 * .getManagedBean().getScQt()); }
+			 */
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -471,31 +506,15 @@ public class DirectLOABackingBean extends
 		debugLogger("preRenderSupplierView");
 
 		try {
-			/*
-			 * SCAwardSupplierDataType dpDataType =
-			 * getBpmTaskDetails(SCAwardSupplierDataType.class); Long sourceId =
-			 * Long.valueOf(dpDataType.getSourceId()); Long loaId =
-			 * Long.valueOf(dpDataType.getAwardId());
-			 * 
-			 * getManagedBean().setSourceId(sourceId);
-			 * getManagedBean().setPayLoad(dpDataType);
-			 */
-			/*
-			 * String[] outComes = new String[]{BpmOutcomeConst.BPM_ACCEPT,
-			 * BpmOutcomeConst.BPM_REJECT};
-			 * getManagedBean().setOutComes(outComes);
-			 * getManagedBean().setTaskId("123");
-			 * 
-			 * long loaId = 299L;
-			 */
 
-			// supplier witness
+			SCAwardSupplierDataType awardDateType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+			Long sourceId = Long.valueOf(awardDateType.getSourceId());
+			Long loaId = Long.valueOf(awardDateType.getAwardId());
 
-			if (null == getManagedBean().getLoaSupplierWitness()) {
-				getManagedBean().setLoaSupplierWitness(new ScLoaWitness());
-			}
+			getManagedBean().setSourceId(sourceId);
+			getManagedBean().setPayLoad(awardDateType);
 
-			editSupplierLOAAction(1561826L);
+			getSupplierDeatilsByLoaId(loaId);
 
 		} catch (Exception e) {
 			handleException(e);
@@ -941,87 +960,94 @@ public class DirectLOABackingBean extends
 	private void parseLOADetails(ScLoa scLoa, String outcome) {
 		if (scLoa.isBrandNew()) {
 			scLoa.setIssueDate(new Date());
+		}
 
-			Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+		Long statusId = scLoa.getPmStatus().getStatusId().longValue();
 
-			if (scLoa.isApprovalReq()
-					&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
-				PmUser approverUser = getManagedBean().getApproverUser();
+		if (scLoa.isApprovalReq()
+				&& QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)) {
+			PmUser approverUser = getManagedBean().getApproverUser();
 
-				if (approverUser.getUserId() != null) {
-					ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
-
-					if (scLoaApproval == null) {
-						scLoaApproval = new ScLoaApproval();
-						scLoaApproval.setScLoa(scLoa);
-						scLoaApproval.setApprover(approverUser);
-
-						scLoa.setScLoaApproval(scLoaApproval);
-					} else {
-						scLoaApproval.setApprover(approverUser);
-					}
-				}
-			} else if (scLoa.isApprovalReq()
-					&& QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+			if (approverUser.getUserId() != null) {
 				ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
-				String action = null;
-				if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
-					action = ApprovalAction.APPROVAL_APPROVED.value();
-				} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
-					action = ApprovalAction.APPROVAL_REJECTED.value();
-				} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
-					action = ApprovalAction.APPROVAL_REVISED.value();
+
+				if (scLoaApproval == null) {
+					scLoaApproval = new ScLoaApproval();
+					scLoaApproval.setScLoa(scLoa);
+					scLoaApproval.setApprover(approverUser);
+
+					scLoa.setScLoaApproval(scLoaApproval);
+				} else {
+					scLoaApproval.setApprover(approverUser);
 				}
-
-				scLoaApproval.setApproverAction(action);
-				scLoaApproval.setApproverActionDate(new Date());
-
-				scLoa.setScLoaApproval(scLoaApproval);
+			}
+		} else if (scLoa.isApprovalReq()
+				&& QTStatusConst.LOA_PENDING_APPROVAL.equals(statusId)) {
+			ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
+			String action = null;
+			if (BpmOutcomeConst.BPM_APPROVE.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_APPROVED.value();
+			} else if (BpmOutcomeConst.BPM_REJECT.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_REJECTED.value();
+			} else if (BpmOutcomeConst.BPM_REVISE.equals(outcome)) {
+				action = ApprovalAction.APPROVAL_REVISED.value();
 			}
 
-			if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
-					.equals(statusId)) {
-				scLoa.setAckDate(new Date());
-				scLoa.setAckBy(new FacesScopes().getUserSessionBean());
-				scLoa.setBondResDueDate(new Date());
-			}
+			scLoaApproval.setApproverAction(action);
+			scLoaApproval.setApproverActionDate(new Date());
+
+			scLoa.setScLoaApproval(scLoaApproval);
+		}
+
+		if (QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)) {
+			scLoa.setAckDate(new Date());
+			scLoa.setAckBy(new FacesScopes().getUserSessionBean());
+			scLoa.setBondResDueDate(new Date());
+		} else {
 
 			saveProgressivePaymntList();
-			scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
-
-			ScQt scQt = this.getManagedBean().getScQt();
-			if (scQt.isZonal()) {
-				ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
-						.getScQt().getScQtSupplierCriteria();
-				List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
-						this.getManagedBean().getZoneTrees(), null);
-
-				if (CollectionUtils.isNotEmpty(zoneDetails)) {
-
-					for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
-
-						tplSpecZoneDtl.setTplSpecZone(supplierCriteria
-								.getQtZoneCriterias());
-
-					}
+			constructScheduleDetails();
+			if (CollectionUtils.isNotEmpty(scLoa.getScQtSchedules())) {
+				for (ScQtSchedule scQtSchedule : scLoa.getScQtSchedules()) {
+					freqScheduleValidation(scQtSchedule);
 				}
-				supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
-
-				supplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
-						zoneDetails);
-			} else {
-				ScQtSupplierCriteria supplierCriteria = scQt
-						.getScQtSupplierCriteria();
-				List<ScQtLocCriteria> locCriterias = convertTreeNodesToLocationCriteria(
-						this.getManagedBean().getLocationTreeNodes(),
-						supplierCriteria);
-
-				supplierCriteria.setScQtLocCriteria(locCriterias);
-
-				supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
-				scQt.setZoneLocationLevel(null);
 			}
+		}
 
+		scLoa.setScLoaRemarks(finalizeRemarks(scLoa.getScLoaRemarks()));
+
+		ScQt scQt = this.getManagedBean().getScQt();
+		if (scQt.isZonal()) {
+			ScQtSupplierCriteria supplierCriteria = this.getManagedBean()
+					.getScQt().getScQtSupplierCriteria();
+			List<TplSpecZoneDtl> zoneDetails = convertTreeNodesToZoneCriteria(
+					this.getManagedBean().getZoneTrees(), null);
+
+			if (CollectionUtils.isNotEmpty(zoneDetails)) {
+
+				for (TplSpecZoneDtl tplSpecZoneDtl : zoneDetails) {
+
+					tplSpecZoneDtl.setTplSpecZone(supplierCriteria
+							.getQtZoneCriterias());
+
+				}
+			}
+			supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel());
+
+			supplierCriteria.getQtZoneCriterias().setTplSpecZoneDtls(
+					zoneDetails);
+		} else {/*
+				 * ScQtSupplierCriteria supplierCriteria = scQt
+				 * .getScQtSupplierCriteria(); List<ScQtLocCriteria>
+				 * locCriterias = convertTreeNodesToLocationCriteria(
+				 * this.getManagedBean().getLocationTreeNodes(),
+				 * supplierCriteria);
+				 * 
+				 * supplierCriteria.setScQtLocCriteria(locCriterias);
+				 * 
+				 * supplierCriteria.setLocationLevel(scQt.getZoneLocationLevel())
+				 * ; // scQt.setZoneLocationLevel(null);
+				 */
 		}
 
 	}
@@ -1120,8 +1146,7 @@ public class DirectLOABackingBean extends
 			String contractType = scLoa.getContractType().getParameterCode();
 			List<PmUser> userList = null;
 
-			if (scLoa.getContractAgency() != null
-					|| getManagedBean().getSelectedContractAgency() != null) {
+			if (scLoa.getContractAgency() != null) {
 				if (ParameterConst.CONTRACT_TYPE_MINISTRY.equals(contractType)) {
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.MIN_CONTRACT_ADMIN.value());
@@ -1137,11 +1162,9 @@ public class DirectLOABackingBean extends
 					// TODO - filter user based on central contract.
 					UserReqDTO reqDTO = new UserReqDTO();
 					reqDTO.setRoleCode(RoleCode.BPK_CCA.value());
-					reqDTO.setOrgType(getManagedBean()
-							.getSelectedContractAgency());
 
 					UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-					
+
 					userList = resDTO.getUserList();
 				}
 			}
@@ -1518,70 +1541,21 @@ public class DirectLOABackingBean extends
 				.getScLoa().getScQtProgPayments();
 
 		List<ScQtProgressivePayment> paymentList = new ArrayList<ScQtProgressivePayment>();
-		if (progressivePayemnt != null && !progressivePayemnt.isEmpty()) {
-			String startMonth = "";
-			String endmonth = "";
+		if (CollectionUtils.isNotEmpty(progressivePayemnt)) {
+
 			for (ScQtProgressivePayment payment : progressivePayemnt) {
-				if (payment.getStartMonth().equalsIgnoreCase("0")) {
-					startMonth = "01";
-				} else if (payment.getStartMonth().equalsIgnoreCase("1")) {
-					startMonth = "02";
-				} else if (payment.getStartMonth().equalsIgnoreCase("2")) {
-					startMonth = "03";
-				} else if (payment.getStartMonth().equalsIgnoreCase("3")) {
-					startMonth = "04";
-				} else if (payment.getStartMonth().equalsIgnoreCase("4")) {
-					startMonth = "05";
-				} else if (payment.getStartMonth().equalsIgnoreCase("5")) {
-					startMonth = "06";
-				} else if (payment.getStartMonth().equalsIgnoreCase("6")) {
-					startMonth = "07";
-				} else if (payment.getStartMonth().equalsIgnoreCase("7")) {
-					startMonth = "08";
-				} else if (payment.getStartMonth().equalsIgnoreCase("8")) {
-					startMonth = "09";
-				} else if (payment.getStartMonth().equalsIgnoreCase("9")) {
-					startMonth = "10";
-				} else if (payment.getStartMonth().equalsIgnoreCase("10")) {
-					startMonth = "11";
-				} else if (payment.getStartMonth().equalsIgnoreCase("11")) {
-					startMonth = "12";
-				}
-				if (payment.getEndMonth().equalsIgnoreCase("0")) {
-					endmonth = "01";
-				} else if (payment.getEndMonth().equalsIgnoreCase("1")) {
-					endmonth = "02";
-				} else if (payment.getEndMonth().equalsIgnoreCase("2")) {
-					endmonth = "03";
-				} else if (payment.getEndMonth().equalsIgnoreCase("3")) {
-					endmonth = "04";
-				} else if (payment.getEndMonth().equalsIgnoreCase("4")) {
-					endmonth = "05";
-				} else if (payment.getEndMonth().equalsIgnoreCase("5")) {
-					endmonth = "06";
-				} else if (payment.getEndMonth().equalsIgnoreCase("6")) {
-					endmonth = "07";
-				} else if (payment.getEndMonth().equalsIgnoreCase("7")) {
-					endmonth = "08";
-				} else if (payment.getEndMonth().equalsIgnoreCase("8")) {
-					endmonth = "09";
-				} else if (payment.getEndMonth().equalsIgnoreCase("9")) {
-					endmonth = "10";
-				} else if (payment.getEndMonth().equalsIgnoreCase("10")) {
-					endmonth = "11";
-				} else if (payment.getEndMonth().equalsIgnoreCase("11")) {
-					endmonth = "12";
-				}
+
 				Date d1 = new Date();
 
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
 				String localDate = format.format(d1);
 				String date = localDate.substring(0, 2);
-				String fromdate = date + "/" + startMonth + "/"
+				String fromdate = date + "/"
+						+ getMonth(payment.getStartMonth()) + "/"
 						+ payment.getStartYear();
-				String toDate = date + "/" + endmonth + "/"
-						+ payment.getEndYear();
+				String toDate = date + "/" + getMonth(payment.getEndMonth())
+						+ "/" + payment.getEndYear();
 				try {
 					if (df.parse(fromdate).after(df.parse(toDate))) {
 						throw new EpException(MessageConst.ERROR_715011);
@@ -1590,8 +1564,7 @@ public class DirectLOABackingBean extends
 						payment.setToDate(df.parse(toDate));
 					}
 				} catch (ParseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					debugLogger("Parce Exception");
 				}
 				getManagedBean().getScLoa().getScQtProgPayments();
 
@@ -1605,39 +1578,56 @@ public class DirectLOABackingBean extends
 	}
 
 	/**
+	 * Save progressive paymnt list.
+	 */
+	private void constructScheduleDetails() {
+		List<ScQtSchedule> schdules = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
+
+		List<ScQtSchedule> schedules = new ArrayList<ScQtSchedule>();
+		if (CollectionUtils.isNotEmpty(schdules)) {
+
+			for (ScQtSchedule schedule : schdules) {
+
+				Date d1 = new Date();
+
+				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+				String localDate = format.format(d1);
+				String date = localDate.substring(0, 2);
+				String fromdate = date + "/"
+						+ getMonth(schedule.getStartMonth()) + "/"
+						+ schedule.getStartYear();
+				String toDate = date + "/" + getMonth(schedule.getEndMonth())
+						+ "/" + schedule.getEndYear();
+				try {
+					if (df.parse(fromdate).after(df.parse(toDate))) {
+						throw new EpException(MessageConst.ERROR_715011);
+					} else {
+						schedule.setFromDate(df.parse(fromdate));
+						schedule.setToDate(df.parse(toDate));
+					}
+				} catch (ParseException e) {
+					debugLogger("Parce Exception");
+				}
+
+				schedules.add(schedule);
+			}
+			getManagedBean().getScLoa().setScQtSchedules(schedules);
+
+		} else {
+			getManagedBean().getScLoa().setScQtSchedules(null);
+		}
+	}
+
+	/**
 	 * Pre render page navigation to direct nego or loa
 	 */
 	public void preRenderDirectNegoView() {
 		debugLogger("preRenderDirectNegoView");
 		renewSesionObject();
 
-		// TODO Need to make a API Call if alredy Exists
-
-		// If from menu we need to create new objects.
-
-		IQTDirectAwardSO directAwardSO = BusinessDelegate.getInstance()
-				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
-						IQTDirectAwardSO.class);
-
-		DirectAwardReqDTO awardReqDTO = new DirectAwardReqDTO();
-		awardReqDTO.setScLoa(new ScLoa());
-		DirectAwardResDTO awardResDTO = directAwardSO
-				.retriveDirectAwardDetails(awardReqDTO);
-		ScLoa scLoa = awardResDTO.getLoa();
-		this.getManagedBean().setScLoa(scLoa);
-		this.getManagedBean().setScQt(scLoa.getScQt());
-		this.getManagedBean().setApproverUser(new PmUser());
-		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
-
-		// award details
-		getManagedBean().getTplSpecMaster()
-				.setItemOriginCode(new PmParameter());
-
-		scLoa.setScLoaRemarks(initializeRemarks(scLoa, scLoa
-				.getScLoaWorkFlowStatuses().get(0), scLoa.getScLoaRemarks(),
-				ScLoaRemark.class));
-		this.getManagedBean().setContractSignerList(
-				awardResDTO.getApproverList());
+		retriveLoaDetails(null);
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
@@ -3359,13 +3349,7 @@ public class DirectLOABackingBean extends
 
 			supplierCriteria.setScQtLocCriteria(null);
 
-			this.getManagedBean().setLocationTreeNodes(null);
 		} else {
-
-			supplierCriteria.setQtZoneCriterias(null);
-			if (null == supplierCriteria.getLocationLevel()) {
-				supplierCriteria.setLocationLevel(new PmParameter());
-			}
 
 			this.getManagedBean().setZoneTrees(null);
 			this.getManagedBean().setZoneBeans(new ArrayList<ZonesBean>());
@@ -3400,9 +3384,26 @@ public class DirectLOABackingBean extends
 			userReqDTO.setWithProfileGroup(true);
 			UserResDTO userResDTO = userSo
 					.retrieveUserListWithProfileGroupUserByRole(userReqDTO);
+			// TODO Need to remove this..
 			this.getManagedBean().setContractSignerList(
 					userResDTO.getUserList());
+			this.getManagedBean().setApproverList(userResDTO.getUserList());
 		}
+	}
+
+	public void getContractSigners() {
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		if (this.getManagedBean().getScLoa().getLoaAmt() != null) {
+			userReqDTO.setApprovalLimit(this.getManagedBean().getScLoa()
+					.getLoaAmt());
+		}
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.SUPPLIER_SELECTION, IUserSO.class);
+		userReqDTO.setOrgProfileId(this.getManagedBean().getScQt()
+				.getPmOrgProfile().getOrgProfileId());
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		this.getManagedBean().setContractSignerList(userResDTO.getUserList());
 	}
 
 	/**
@@ -3885,6 +3886,315 @@ public class DirectLOABackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
+	}
+
+	private void constructLocationTreeNode(
+			List<TplSpecLoc> supplierLocationList, ScQt scQt) {
+		if (null != supplierLocationList) {
+
+			if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
+				this.getManagedBean().setTotalSuppliersSpecLoc(
+						new ArrayList<TplSpecLoc>());
+			}
+			this.getManagedBean().getTotalSuppliersSpecLoc()
+					.addAll(supplierLocationList);
+			List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
+			for (TplSpecLoc localLoc : supplierLocationList) {
+				if (null != scQt.getScQtSupplierCriteria()
+						&& null != scQt.getScQtSupplierCriteria()
+								.getLocationLevel()) {
+					this.getManagedBean().setLocalLevelCode(
+							scQt.getScQtSupplierCriteria().getLocationLevel()
+									.getParameterCode());
+				}
+				getManagedBean()
+						.setLocationTreeNodes(new ArrayList<TreeNode>());
+				ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
+				locCriteria.add(criteria);
+			}
+			if (null != getManagedBean().getLocationTreeNodes()
+					&& getManagedBean().getLocationTreeNodes().size() == 0) {
+
+				this.getManagedBean().setExistingLocationList(locCriteria);
+				getManagedBean().getLocationTreeNodes().addAll(
+						LocationSingleton.getInstance().constuctTreeNode(
+								locCriteria));
+			}
+		}
+
+	}
+
+	/**
+	 * Retrive nonpanel zone dtls.retrive all the zones informations and
+	 * display.
+	 * 
+	 * @param zonedtls
+	 *            the zonedtls
+	 */
+	private void constructTreeNodeForzones(List<TplSpecZoneDtl> zonedtls) {
+
+		List<ZonesBean> beans = getManagedBean().getZoneBeans();
+
+		if (isNotNullOREmpty(zonedtls)) {
+
+			for (TplSpecZoneDtl zone : zonedtls) {
+
+				if (null != this.getManagedBean().getScQt()
+						&& !this.getManagedBean().getScQt().isPanel()) {
+					ZonesBean zonesBean = new ZonesBean();
+					zonesBean.setTplSpecZoneDtl(zone);
+					zonesBean.setTplSpecZoneLocs(zone.getTplSpecZoneLocs());
+					beans.add(zonesBean);
+				}
+
+				getManagedBean().getZoneTrees().add(
+						LocationSingleton.getInstance().constuctTreeNode(zone,
+								zone.getTplSpecZoneLocs()));
+
+			}
+			getManagedBean().setZoneBeans(beans);
+		}
+
+	}
+
+	public void preRenderDirectLoa() {
+
+		SCAwardSupplierDataType awardSupplierDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
+		retriveLoaDetails(awardSupplierDataType.getAwardId());
+
+		contractTypeChanged();
+		constructStartNEndMonth();
+		this.getManagedBean().setPayLoad(awardSupplierDataType);
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null, QTConstants.SC_DIRECT_LOA_MAIN_PAGE);
+
+	}
+
+	private void retriveLoaDetails(Long loaId) {
+		IQTDirectAwardSO directAwardSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
+						IQTDirectAwardSO.class);
+
+		DirectAwardReqDTO awardReqDTO = new DirectAwardReqDTO();
+		if (null == loaId) {
+			awardReqDTO.setScLoa(new ScLoa());
+		} else {
+			awardReqDTO.setLoaId(loaId);
+		}
+		DirectAwardResDTO awardResDTO = directAwardSO
+				.retriveDirectAwardDetails(awardReqDTO);
+		ScLoa scLoa = awardResDTO.getLoa();
+
+		ScQt scQt = scLoa.getScQt();
+		this.getManagedBean().setScQt(scLoa.getScQt());
+		this.getManagedBean().setApproverUser(new PmUser());
+		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
+
+		if (scQt.isZonal()) {
+			List<TplSpecZoneDtl> zoneDetails = awardResDTO.getSpecZoneDetails();
+			constructTreeNodeForzones(zoneDetails);
+		}
+		this.getManagedBean().setContractSignerList(
+				awardResDTO.getContractSignerList());
+		this.getManagedBean().setApproverList(awardResDTO.getApproverList());
+		// award details
+		getManagedBean().getTplSpecMaster()
+				.setItemOriginCode(new PmParameter());
+		if (null != scLoa.getScLoaApproval()) {
+			this.getManagedBean().setApproverUser(
+					scLoa.getScLoaApproval().getApprover());
+		}
+		scLoa.setScLoaRemarks(initializeRemarks(scLoa, null,
+				scLoa.getScLoaRemarks(), ScLoaRemark.class));
+		this.getManagedBean().setScLoa(scLoa);
+		this.getManagedBean().setContractSignerList(
+				awardResDTO.getApproverList());
+
+	}
+
+	private String getMonth(String month) {
+
+		if (StringUtils.isEmpty(month)) {
+			throw new EpException("");
+		}
+		int mon = Integer.parseInt(month);
+		String finalMonth = null;
+		if (mon <= 9) {
+			finalMonth = "0" + mon;
+		} else {
+			return month;
+		}
+		return finalMonth;
+
+	}
+
+	private void constructStartNEndMonth() {
+
+		List<ScQtSchedule> scheduleList = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
+		if (CollectionUtils.isNotEmpty(scheduleList)) {
+
+			this.getManagedBean().setTotalFrequency(scheduleList.size());
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			for (ScQtSchedule scQtSchedule : scheduleList) {
+
+				String fromdate = dateFormat.format(scQtSchedule.getFromDate());
+				String todate = dateFormat.format(scQtSchedule.getToDate());
+				String startdate = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
+
+				int start = Integer.parseInt(startdate);
+				int end = Integer.parseInt(enddate);
+
+				int sYear = Integer.parseInt(startYear);
+				int eYear = Integer.parseInt(endYear);
+				int diffYear = 0;
+				int count = 0;
+
+				if (eYear >= sYear) {
+					if (!endYear.equals(startYear)) {
+						diffYear = eYear - sYear;
+					}
+					for (int i = start + 1; i <= end + 1; i++) {
+						count++;
+					}
+					count = count + (diffYear * 12);
+					scQtSchedule.setTotalMonths(new BigDecimal(count));
+				} else {
+					scQtSchedule.setTotalMonths(BigDecimal.ZERO);
+				}
+				// scQtSchedule.setTotalMonths(new BigDecimal(months));
+
+				scQtSchedule.setStartMonth(Integer.valueOf(start).toString());
+				scQtSchedule.setEndMonth(Integer.valueOf(end).toString());
+				scQtSchedule.setStartYear(startYear);
+				scQtSchedule.setEndYear(endYear);
+
+			}
+
+		}
+
+		// this.getManagedBean().setProgressivePaymentList(resDTO.getProgressivePaymentResults().getResultList());
+
+		List<ScQtProgressivePayment> payments = this.getManagedBean()
+				.getScLoa().getScQtProgPayments();
+		if (CollectionUtils.isNotEmpty(payments)) {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+			for (ScQtProgressivePayment payment : payments) {
+
+				String fromdate = dateFormat.format(payment.getFromDate());
+				String todate = dateFormat.format(payment.getToDate());
+				String startdate = fromdate.substring(3, 5);
+				String startYear = fromdate.substring(6, fromdate.length());
+				String enddate = todate.substring(3, 5);
+				String endYear = todate.substring(6, todate.length());
+
+				payment.setStartMonth(startdate);
+				payment.setEndMonth(enddate);
+				payment.setStartYear(startYear);
+				payment.setEndYear(endYear);
+
+			}
+
+		}
+	}
+
+	/**
+	 * submit LOA details. submit - save data into database and BPM process will
+	 * route to the next respective user.
+	 * 
+	 * @param outcome
+	 *            the outcome
+	 * @return the string page navigate to acknowledge page.
+	 */
+	public String submitSupplierAction(String outCome) {
+		debugLogger("submitAction");
+
+		try {
+			// String outcome = BpmOutcomeConst.BPM_SUBMIT;
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+
+			validateLOADetails(scLoa, outCome);
+
+			parseLOADetails(scLoa, outCome);
+			scLoa.setScLoaWorkFlowStatuses(null);
+			scLoa.setIssueDate(DateUtils.getCurrentDateWithoutTime());
+			scLoa.setAckDueDate(DateUtils.addDays(scLoa.getIssueDate(), 14));
+
+			DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
+			reqDTO.setScLoa(scLoa);
+			reqDTO.setPayLoad(getManagedBean().getPayLoad());
+			reqDTO.setOutcome(outCome);
+			reqDTO.setSourceId(getManagedBean().getSourceId());
+			reqDTO.setRoleCode(getUserRoleCode());
+			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
+			DirectAwardResDTO resDTO = getQtDirectAwardSO()
+					.submitDirectAwardDetails(reqDTO);
+
+			if (resDTO.isSuccessful()) {
+				scLoa = resDTO.getLoa();
+
+				FacesContext
+						.getCurrentInstance()
+						.addMessage(
+								null,
+								new FacesMessage(
+										FacesMessage.SEVERITY_INFO,
+										null,
+										MessageUtils
+												.getMessage(
+														MessageConst.INFO_700026,
+														new String[] {
+																getParameterDesc(
+																		ParameterTypeConst.DOCUMENT_TYPES,
+																		ParameterConst.DOCTYPE_LETTER_OF_AWARD),
+																scLoa.getLoaNo() },
+														MessageUtils.BUNDLE_COMMON_MESSAGES,
+														new FacesScopes()
+																.getUserLocale())));
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}
+
+		} finally {
+			// qtAwardSO = null;
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the bond letter stream content.
+	 *
+	 * @return the bond letter stream content
+	 * @throws Exception the exception
+	 */
+	public StreamedContent getBondLetterStreamContent() throws Exception {
+
+		ScPbAttachment pbAttachment = new ScPbAttachment();
+		pbAttachment.setDocNo(getManagedBean().getScLoa().getLoaNo());
+		generateBondLetterFromVelocityToPdf((ScAttachment) pbAttachment,null);
+		StreamedContent pbStreamContent = getAttachmentStreamContent(
+				pbAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
+
+		return pbStreamContent;
+
+	}
+	
+	/**
+	 * Show verify button.
+	 */
+	public void showVeriryButton() {
+	       
+		if(getManagedBean().isVerifyBtnFlag()){
+			getManagedBean().setVerifyBtnFlag(false);
+		}
 	}
 
 }

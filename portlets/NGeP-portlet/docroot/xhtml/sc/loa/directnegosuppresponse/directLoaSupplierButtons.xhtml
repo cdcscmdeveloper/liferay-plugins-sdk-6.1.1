@@ -4,7 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<p:blockUI block=":form" widgetVar="blockWidget">
@@ -12,19 +11,26 @@
 	</p:blockUI>
 
 	<div class="ppRightBtn">
-	
-	<p:commandButton value="#{lbl['lbl.btn.save']}" process="@form"
-			partialSubmit="true" onstart="blockWidget.show();"
-			oncomplete="blockWidget.hide();" />
-	
-		<p:commandButton value="#{lbl['lbl.btn.accept']}" process="@form"
-			partialSubmit="true" onstart="blockWidget.show();"
-			oncomplete="blockWidget.hide();" />
 
 
-		<p:commandButton value="#{lbl['lbl.btn.reject']}" process="@form"
-			partialSubmit="true" onstart="blockWidget.show();"
-			oncomplete="blockWidget.hide();" />
+
+		<ui:repeat var="bpmAction"
+			value="#{directLOABackingBean.managedBean.outComes}">
+			<ui:param name="buttonLabel"
+				value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
+			<ui:param name="isReject" value="#{bpmAction == 'REJECT'}" />
+
+			<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
+				onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
+				action="#{directLOABackingBean.submitSupplierAction(bpmAction)}"
+				partialSubmit="true" process="@form" update="@form" />
+
+
+
+
+		</ui:repeat>
+
 
 	</div>
+	<p:spacer height="3px"></p:spacer>
 </ui:composition>

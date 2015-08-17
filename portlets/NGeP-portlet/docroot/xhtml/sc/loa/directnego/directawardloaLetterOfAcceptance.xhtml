@@ -17,27 +17,25 @@
 			<ac:paginator for="contentsTbl" />
 
 			<p:column selectionMode="multiple" style="width:2%"
-				disabledSelection="#{!empty scLoaReport.pmDocument}"
-				rendered="#{isEditableStatus}" />
+				disabledSelection="#{!empty scLoaReport.pmDocument}" />
 
 			<p:column headerText="#{lbl['lbl.sc.content']}">
 				<h:inputText style="width:96%" value="#{scLoaReport.title}"
-					rendered="#{empty scLoaReport.pmDocument}" >
-					 <p:ajax event="keyup" />
-					</h:inputText>
+					rendered="#{empty scLoaReport.pmDocument}">
+					<p:ajax event="keyup" />
+				</h:inputText>
 				<h:outputText value="#{scLoaReport.title}"
 					rendered="#{!empty scLoaReport.pmDocument}" />
 			</p:column>
 
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}"
-				rendered="#{isEditableStatus}">
+				disabled="#{!isEditableStatus}">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
 					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
-						value="#{lbl['lbl.txt.attachment']}"
-						partialSubmit="true" process="@this"
-						update="@([id$=attachmentPopup])">
+						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
+						process="@this" update="@([id$=attachmentPopup])">
 						<f:setPropertyActionListener
 							target="#{directLOABackingBean.managedBean.selectedScLoaReport}"
 							value="#{scLoaReport}" />
@@ -67,8 +65,7 @@
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
 				styleClass="ui-button" update="@([id$=loaButtonsId])"
 				onclick="printBtn.jq.click();"
-				actionListener="#{directLOABackingBean.showVeriryButton()}"
-				rendered="#{isPendingVerification}" />
+				actionListener="#{directLOABackingBean.showVeriryButton()}" />
 
 			<p:commandButton
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
@@ -76,18 +73,18 @@
 				widgetVar="printBtn" style="display:none;"
 				actionListener="#{directLOABackingBean.downloadAllReports}" />
 
-			<c:if test="#{isEditableStatus}">
-				<p:commandButton value="#{lbl['lbl.btn.add']}"
-					process="@this, contentsTbl" partialSubmit="true"
-					action="#{directLOABackingBean.addLoaContentAction}"
-					oncomplete="contentsTblWidget.paginator.endLink.click();"
-					update="contentsTbl" />
 
-				<p:commandButton value="#{lbl['lbl.btn.delete']}"
-					process="@this, contentsTbl" partialSubmit="true"
-					oncomplete="loaReportDeletePopUp.show();"
-					update="@([id$=#{loaReportDeleteId}])" />
-			</c:if>
+			<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{isEditableStatus}"
+				process="@this, contentsTbl" partialSubmit="true"
+				action="#{directLOABackingBean.addLoaContentAction}"
+				oncomplete="contentsTblWidget.paginator.endLink.click();"
+				update="contentsTbl" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"  rendered="#{isEditableStatus}"
+				process="@this, contentsTbl" partialSubmit="true"
+				oncomplete="loaReportDeletePopUp.show();"
+				update="@([id$=#{loaReportDeleteId}])" />
+
 
 		</div>
 		<ac:confirmationPopup id="loaReportDeleteId"

@@ -24,15 +24,15 @@
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
 
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" process="@form"> 
 						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
 					
-					<p:menuitem value="Financial Specification" update="@form">
+					<p:menuitem value="Financial Specification" update="@form" process="@form">
 						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form" process="@form"> 
 						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.integrity.pact']}" update="@form">
