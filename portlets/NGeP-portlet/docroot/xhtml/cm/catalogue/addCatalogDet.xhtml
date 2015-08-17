@@ -15,33 +15,33 @@
 
 	<h:outputScript library="jquery/slides" name="jquery.slides.js" />
 
-<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
-	<script>
-		$(function() {
-			$('#slides').slidesjs({
-				width : 940,
-				height : 528,
-				navigation : {
-					effect : "fade"
-				},
-				pagination : {
-					effect : "fade"
-				},
-				effect : {
-					fade : {
-						speed : 400
+	<h:panelGroup
+		rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+		<script>
+			$(function() {
+				$('#slides').slidesjs({
+					width : 940,
+					height : 528,
+					navigation : {
+						effect : "fade"
+					},
+					pagination : {
+						effect : "fade"
+					},
+					effect : {
+						fade : {
+							speed : 400
+						}
 					}
-				}
+				});
 			});
-		});
-	</script>
-</h:panelGroup>
+		</script>
+	</h:panelGroup>
 
-<style type="text/css" >
+	<style type="text/css">
 .ui-state-hover,.ui-state-active {
-box-shadow: none;
-background: none;
-
+	box-shadow: none;
+	background: none;
 }
 </style>
 
@@ -50,17 +50,18 @@ background: none;
 	<p:outputPanel id="addCatDet">
 
 		<div style="text-align: right; min-height: 40px;">
-				<div style="float: left; clear: both;">
-					<p:commandButton value="#{lbl['lbl.cm.back']}" 
-							action="#{catalogueBackingBean.navigate}">
-					</p:commandButton>
-				</div>
+			<div style="float: left; clear: both;">
+				<p:commandButton value="#{lbl['lbl.cm.back']}"
+					action="#{catalogueBackingBean.navigate}">
+				</p:commandButton>
+			</div>
 
-			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
+			<h:panelGroup
+				rendered="#{unspscCodeBackingBean.catalogueAdmin and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus!='U'}">
 
-				<p:commandButton value="#{lbl['lbl.btn.approve']}" 
+				<p:commandButton value="#{lbl['lbl.btn.approve']}"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.btn.reject']}" 
+				<p:commandButton value="#{lbl['lbl.btn.reject']}"
 					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
 
@@ -72,39 +73,45 @@ background: none;
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
-					<td rowspan="10">
-						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
-							<div style="display: block; max-width: 95%;width: 250px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
-						</h:panelGroup>
-							
-						<h:panelGroup rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
+					<td rowspan="10"><h:panelGroup
+							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) == 0 }">
+							<div
+								style="display: block; max-width: 95%; width: 250px; padding: 60px; text-align: center; vertical-align: middle; border: 1px solid rgb(204, 204, 204);">#{lbl['lbl.cm.no.image.available']}</div>
+						</h:panelGroup> <h:panelGroup
+							rendered="#{fn:length(catalogueBackingBean.managedBean.selectedMaintainItem.cmImages) > 0 }">
 							<div id="slides" style="width: 250px;">
-									<ui:repeat var="cmImage" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
-										<img src="/NGeP-portlet/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" style="height: 150px; left: 0px !important;" />
-									</ui:repeat>
+								<ui:repeat var="cmImage"
+									value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}">
+									<p:graphicImage styleClass="catImageStyle"
+										value="/image?imageName=#{catalogueBackingBean.managedBean.selectedMaintainItem.smSupplier.epNo}/#{cmImage.imageName}" />
+								</ui:repeat>
 							</div>
-						</h:panelGroup>
-					</td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.code']}" /></td>
+						</h:panelGroup></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label"  value="#{lbl['lbl.cm.item.name']}" /></td>
-					<td style="overflow-wrap:break-word;width:25%;"><p:outputLabel styleClass="outputLabel-view"
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.item.name']}" /></td>
+					<td style="overflow-wrap: break-word; width: 25%;"><p:outputLabel
+							styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel>
-						<p:spacer width="5" />
-						<p:commandLink rendered="#{fn:length(catalogueBackingBean.managedBean.itemSpec) > 0}"
+						<p:spacer width="5" /> <p:commandLink
+							rendered="#{fn:length(catalogueBackingBean.managedBean.itemSpec) > 0}"
 							update=":form:itemSpecDlg" oncomplete="itemSpecDlg.show();">
-							<p:graphicImage value="/css/images/design/ico-view.png" title="#{lbl['lbl.ct.specification']}" />
-						</p:commandLink>
-					</td>
+							<p:graphicImage value="/css/images/design/ico-view.png"
+								title="#{lbl['lbl.ct.specification']}" />
+						</p:commandLink></td>
 				</tr>
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.item.table.uom']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.item.table.uom']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"></p:outputLabel></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.sku']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:outputLabel></td>
 					<td></td>
@@ -115,59 +122,73 @@ background: none;
 							value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"></p:outputLabel></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.model']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.model']}" /></td>
 					<td colspan="1"><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"></p:outputLabel></td>
 				</tr>
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.min.order']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:outputLabel styleClass="outputLabel-view"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></p:outputLabel></td>
-					<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.cm.delivery.term']}" /></td>
+					<td><p:outputLabel styleClass="outputLabel-view-label"
+							value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td colspan="1"><p:outputLabel styleClass="outputLabel-view"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}"/>
-						<p:outputLabel styleClass="outputLabel-view" style="margin-left: 2px;"  value="#{lbl['lbl.cm.days']}" /></td>
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
+						<p:outputLabel styleClass="outputLabel-view"
+							style="margin-left: 2px;" value="#{lbl['lbl.cm.days']}" /></td>
 				</tr>
 
 
 				<tr style="height: 30px;">
 					<td><p:outputLabel styleClass="outputLabel-view-label"
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:outputLabel styleClass="outputLabel-view" value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"/></td>
+					<td colspan="3"><p:outputLabel styleClass="outputLabel-view"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 
 				</tr>
 
 
 			</table>
 		</p:panel>
-		<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg" header="#{lbl['lbl.ct.item.specification.list']}" 
-	   		styleClass="pop_up_top" modal="true" width="700" height="450">
-	   		<h:panelGrid columns="1">
-	    		<p:outputLabel value="#{lbl['lbl.cm.item.name']}" >: #{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}</p:outputLabel>
-	     	</h:panelGrid>
-	     	<p:spacer  height="5"/>
-	     	<p:dataTable emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="itemSpecDt" var="data" value="#{catalogueBackingBean.managedBean.itemSpec}" rowIndexVar="index">
+		<p:dialog id="itemSpecDlg" widgetVar="itemSpecDlg"
+			header="#{lbl['lbl.ct.item.specification.list']}"
+			styleClass="pop_up_top" modal="true" width="700" height="450">
+			<h:panelGrid columns="1">
+				<p:outputLabel value="#{lbl['lbl.cm.item.name']}">: #{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}</p:outputLabel>
+			</h:panelGrid>
+			<p:spacer height="5" />
+			<p:dataTable
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				id="itemSpecDt" var="data"
+				value="#{catalogueBackingBean.managedBean.itemSpec}"
+				rowIndexVar="index">
 				<ac:paginator for="itemSpecDt" />
-				<p:column headerText="#{lbl['lbl.ct.specification']}" style="width:45%; white-space:normal">
-					<p:inputTextarea value="#{data.specification}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
-							disabled="true" />
-				</p:column>	
-				<p:column headerText="#{lbl['lbl.ct.description']}" style="width:45%; white-space:normal">
-					<p:inputTextarea value="#{data.description}" maxlength="200" rows="3" style="width:98%;" autoResize="false"
-							disabled="true" />
-				</p:column>	
+				<p:column headerText="#{lbl['lbl.ct.specification']}"
+					style="width:45%; white-space:normal">
+					<p:inputTextarea value="#{data.specification}" maxlength="200"
+						rows="3" style="width:98%;" autoResize="false" disabled="true" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ct.description']}"
+					style="width:45%; white-space:normal">
+					<p:inputTextarea value="#{data.description}" maxlength="200"
+						rows="3" style="width:98%;" autoResize="false" disabled="true" />
+				</p:column>
 			</p:dataTable>
 			<p:spacer height="2" />
-			<div class="ppRightBtn"> 
-				<p:commandButton value="#{lbl['lbl.btn.close']}"  onclick="itemSpecDlg.hide();" />
-			</div>	
-   		</p:dialog>
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.btn.close']}"
+					onclick="itemSpecDlg.hide();" />
+			</div>
+		</p:dialog>
 
 		<p:remoteCommand name="refresh" id="refresh"
 			action="#{catalogueBackingBean.refreshImage}" />
-			
-		<p:tabView id="pricingTabID" orientation="left" style="margin-top: 10px;"
+
+		<p:tabView id="pricingTabID" orientation="left"
+			style="margin-top: 10px;"
 			activeIndex="#{reviewCatBackingBean.managedBean.catDetTabActiveIndex}">
 
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
@@ -195,7 +216,8 @@ background: none;
 
 					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70}">
+					<p:tab title="#{lbl['lbl.cm.tier']}"
+						rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70}">
 
 						<p:tabView id="tierId"
 							activeIndex="#{catalogueBackingBean.managedBean.tierPricingIndex}">
@@ -235,7 +257,8 @@ background: none;
 
 					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.zonal.tier']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70}">
+					<p:tab title="#{lbl['lbl.cm.zonal.tier']}"
+						rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70}">
 
 						<p:tabView id="zonalTierId"
 							activeIndex="#{catalogueBackingBean.managedBean.zonalTierPricingIndex}">
@@ -253,32 +276,34 @@ background: none;
 
 
 					</p:tab>
-					
-					
-					<c:if test="#{!unspscCodeBackingBean.catalogueAdmin}">
-					<p:tab title="#{lbl['lbl.cm.tariff']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and catalogueBackingBean.managedBean.priceTypeTariff}">
-						<p:tabView id="tariffId">
-							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="view/pricingTariffTab.xhtml" />
-							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="view/pricingPromotionTierTab.xhtml" />
-							</p:tab>
-						</p:tabView>
-					</p:tab>
 
-					<p:tab title="#{lbl['lbl.cm.zonal.tariff']}" rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and catalogueBackingBean.managedBean.priceTypeTariff}">
-						<p:tabView id="zonalTariffId">
-							<p:tab title="#{lbl['lbl.cm.standard']}">
-								<ui:include src="view/zonalTariffPricingTab.xhtml"></ui:include>
-							</p:tab>
-							<p:tab title="#{lbl['lbl.cm.promotion']}">
-								<ui:include src="view/zonalPromotionTierPricingTab.xhtml"></ui:include>
-							</p:tab>
-						</p:tabView>
-					</p:tab>
+
+					<c:if test="#{!unspscCodeBackingBean.catalogueAdmin}">
+						<p:tab title="#{lbl['lbl.cm.tariff']}"
+							rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and catalogueBackingBean.managedBean.priceTypeTariff}">
+							<p:tabView id="tariffId">
+								<p:tab title="#{lbl['lbl.cm.standard']}">
+									<ui:include src="view/pricingTariffTab.xhtml" />
+								</p:tab>
+								<p:tab title="#{lbl['lbl.cm.promotion']}">
+									<ui:include src="view/pricingPromotionTierTab.xhtml" />
+								</p:tab>
+							</p:tabView>
+						</p:tab>
+
+						<p:tab title="#{lbl['lbl.cm.zonal.tariff']}"
+							rendered="#{CommonUtils.convertStringToInteger(fn:substring(catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode, 0, 2)) lt 70 and catalogueBackingBean.managedBean.priceTypeTariff}">
+							<p:tabView id="zonalTariffId">
+								<p:tab title="#{lbl['lbl.cm.standard']}">
+									<ui:include src="view/zonalTariffPricingTab.xhtml"></ui:include>
+								</p:tab>
+								<p:tab title="#{lbl['lbl.cm.promotion']}">
+									<ui:include src="view/zonalPromotionTierPricingTab.xhtml"></ui:include>
+								</p:tab>
+							</p:tabView>
+						</p:tab>
 					</c:if>
-					
+
 				</p:tabView>
 
 
