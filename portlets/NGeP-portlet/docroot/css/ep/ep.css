@@ -3556,3 +3556,16 @@ table.taxableGuidelineTable td {
 .ui-spinner-input{
 	width:auto !important;
 }
+
+
+.catImageStyle{
+	
+	height: 150px !important; 
+	left: 0px !important;
+}
+
+
+.pubCatImageStyle{
+	position: initial !important; 
+	
+}
