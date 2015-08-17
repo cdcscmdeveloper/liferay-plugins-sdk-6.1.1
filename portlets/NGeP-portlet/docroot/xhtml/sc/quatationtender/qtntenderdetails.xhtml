@@ -41,6 +41,7 @@
 						style="width: 195px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{qTDetailBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:selectOneMenu> <p:message id="procuremntypeCategoryquotationTender"
 						for="qtmaintainprocTypeBoCategory" display="icon" /></td>
 
