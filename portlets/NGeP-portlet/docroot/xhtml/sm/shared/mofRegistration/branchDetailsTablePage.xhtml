@@ -13,7 +13,10 @@
 					label=" #{lbl['lbl.sm.branch.branchName']}" id="supBranchName"
 					maxlength="100"
 					value="#{backingBean.managedBean.selectedBranch.branchName}"
-					size="35" /> <p:message id="supBranchNameMsg" for="supBranchName"
+					size="35" >
+						<p:ajax process="@this" partialSubmit="true"/>
+					</p:inputText> 
+					<p:message id="supBranchNameMsg" for="supBranchName"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 		<tr>
@@ -23,7 +26,10 @@
 					label="#{lbl['lbl.sm.companyaddress']}" id="supBrnAddr"
 					maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
-					size="35" /> <p:message id="supBrnAddrMsg" for="supBrnAddr"
+					size="35" >
+					<p:ajax process="@this" partialSubmit="true"/>
+					</p:inputText> 
+					<p:message id="supBrnAddrMsg" for="supBrnAddr"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
 
@@ -31,19 +37,25 @@
 			<td></td>
 			<td><p:inputText maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
-					size="35" /></td>
+					size="35" >
+					<p:ajax process="@this" partialSubmit="true"/>
+					</p:inputText></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td><p:inputText maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
-					size="35" /></td>
+					size="35" >
+					<p:ajax process="@this" partialSubmit="true"/>
+					</p:inputText></td>
 		</tr>
 		<tr>
 			<td></td>
 			<td><p:inputText maxlength="35"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.address4}"
-					size="35" /></td>
+					size="35">
+					<p:ajax process="@this" partialSubmit="true"/>
+					</p:inputText></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /> <p:outputLabel
@@ -58,7 +70,7 @@
 						value="#{backingBean.managedBean.countryLs}"
 						itemValue="#{branchCountry.countryId}"
 						itemLabel="#{branchCountry.countryName}" />
-					<p:ajax event="change"
+					<p:ajax event="change" process="@this"
 						listener="#{backingBean.populateStatesByCountry(backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryId, 
 								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmState,
@@ -81,7 +93,7 @@
 					<f:selectItems var="brnState"
 						value="#{backingBean.managedBean.branchCompanyStates}"
 						itemValue="#{brnState.stateId}" itemLabel="#{brnState.stateName}" />
-					<p:ajax event="change"
+					<p:ajax event="change" process="@this"
 						listener="#{backingBean.populateDistrictsByState(backingBean.managedBean.selectedBranch.smAddress.pmState.stateId, 
 								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmDistrict,
@@ -100,11 +112,11 @@
 					label="#{lbl['lbl.sm.district']}"
 					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId}">
 					<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-					<f:selectItems var="brnDist"
+					<f:selectItems var="brnDist" 
 						value="#{backingBean.managedBean.branchCompanyDistricts}"
 						itemValue="#{brnDist.districtId}"
 						itemLabel="#{brnDist.districtName}" />
-					<p:ajax event="change"
+					<p:ajax event="change" process="@this"
 						listener="#{backingBean.populateCitiesByDistrict(backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtId, 
 								SupplierManagementConst.SM_BRANCH_PANEL,
 								backingBean.managedBean.selectedBranch.smAddress.pmCity)}"
@@ -124,6 +136,7 @@
 						value="#{backingBean.managedBean.branchCompanyCities}"
 						itemValue="#{branchCity.cityId}"
 						itemLabel="#{branchCity.cityName}" />
+					<p:ajax process="@this" partialSubmit="true"/>
 				</p:selectOneMenu> <p:message id="branchCityMsg" for="branchCity" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
@@ -140,6 +153,7 @@
 							validatorMessage="#{lbl['lbl.sm.postcode.numberformat.errmsg']}"
 							size="35">
 							<f:validator validatorId="postcodeValidator" />
+							<p:ajax process="@this" partialSubmit="true"/>
 						</p:inputText>
 						<p:message id="branchPostCodeMyMsg" for="branchPostCodeMy"
 							showSummary="true" showDetail="false" display="icon" />
@@ -151,6 +165,7 @@
 							label="#{lbl['lbl.sm.postcode']}" id="branchPostCodeForeign"
 							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
 							size="35">
+							<p:ajax process="@this" partialSubmit="true"/>
 						</p:inputText>
 						<p:message id="branchPostCodeForeignMsg"
 							for="branchPostCodeForeign" showSummary="true" showDetail="false"
@@ -166,6 +181,7 @@
 					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35"
 					maxlength="12">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					<p:ajax process="@this" partialSubmit="true"/>
 				</p:inputText> <p:message id="branchPhoneNoMsg" for="branchPhoneNo"
 					showSummary="true" showDetail="false" display="icon" /></td>
 		</tr>
@@ -176,6 +192,7 @@
 					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35"
 					maxlength="12">
 					<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
+					<p:ajax process="@this" partialSubmit="true"/>
 				</p:inputText> <p:message id="branchFaxNoMsg" for="branchFaxNo" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
@@ -192,6 +209,7 @@
 						value="#{backingBean.managedBean.smAppl.smPersonnels}"
 						var="brPerBean" itemLabel="#{brPerBean.name}"
 						itemValue="#{brPerBean.personnelId}" />
+					<p:ajax process="@this" partialSubmit="true"/>
 				</p:selectOneMenu> <p:message id="brnPerValMsg" for="brnPerVal" showSummary="true"
 					showDetail="false" display="icon" /></td>
 		</tr>
