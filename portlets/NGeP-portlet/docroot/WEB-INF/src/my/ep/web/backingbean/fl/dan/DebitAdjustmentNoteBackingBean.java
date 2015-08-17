@@ -17,14 +17,12 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -38,15 +36,12 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
-import my.ep.jaxb.fl.maintenace.cancel.dofulfillment.FLDOFulfillmentCancelReqType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
+import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.pm.common.PmContact;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
@@ -63,10 +58,13 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.AdjustmentItemNodeVO;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -254,9 +252,9 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 		BigDecimal sumInvoiceAmt = new BigDecimal(0);
 		BigDecimal sumDanAmt = new BigDecimal(0);
 		for(FlAdjustmentItem adjustmentItem : adjustment.getFlAdjustmentItem()){
-			sumOrderedAmt =sumOrderedAmt.add(adjustmentItem.getFlInvoiceItem().getOrderedAmt());
-			sumInvoiceAmt = sumInvoiceAmt.add(adjustmentItem.getFlInvoiceItem().getInvAmt());
-			sumDanAmt = sumDanAmt.add(adjustmentItem.getFlInvoiceItem().getInvAmt().subtract(adjustmentItem.getFlInvoiceItem().getOrderedAmt()));
+			sumOrderedAmt =sumOrderedAmt.add(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt());
+			sumInvoiceAmt = sumInvoiceAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt());
+			sumDanAmt = sumDanAmt.add(adjustmentItem.getFlInvoiceItemSummary().getInvAmt().subtract(adjustmentItem.getFlInvoiceItemSummary().getOrderedAmt()));
 			getManagedBean().setOrderedAmtTotal(sumOrderedAmt);
 			getManagedBean().setInvAmtTotal(sumInvoiceAmt);
 			getManagedBean().setDanAmtTotal(sumDanAmt);
@@ -303,27 +301,30 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 * 
 	 */
 	public void selectDanItem() {
-		if(getManagedBean().getSelectedDanItem()!=null) {
-			if(null !=getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund()){
-				getManagedBean().setVotFundCode(getManagedBean().getSelectedDanItem().getFlItem().getPmVotFund().getVotFundCode());
-			}
-			if(null != getManagedBean().getSelectedDanItem().getFlItem().getAssetInd()) {
-				getManagedBean().setAssetIndCode(getManagedBean().getSelectedDanItem().getFlItem().getAssetInd().getParameterCode());
-			}
-			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmGlAccount()) {
-				getManagedBean().setGlAccountCode(getManagedBean().getSelectedDanItem().getFlItem().getPmGlAccount().getGlAccCode());
-			}
-			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmPrgActivity()) {
-				getManagedBean().setPrgActivityCode( getManagedBean().getSelectedDanItem().getFlItem().getPmPrgActivity().getPrgActivityCode());
-			}
-			if(null != getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia()) {
-				getManagedBean().setSubSetiaCode((getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getSubSetiaCode()));
-				
-				if( getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia()!=null) {
-					getManagedBean().setSetiaCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getSetiaCode());
-					getManagedBean().setProjectCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getProjectCode());
+		if(getManagedBean().getSelectedNode()!=null) {
+			AdjustmentItemNodeVO adjustmentItemNodeVO = (AdjustmentItemNodeVO) getManagedBean().getSelectedNode().getData();
+			if(adjustmentItemNodeVO.getFlAdjustmentItem()!=null) {
+				if(null !=adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmVotFund()){
+					getManagedBean().setVotFundCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmVotFund().getVotFundCode());
 				}
-				getManagedBean().setFinancingTypeCode(getManagedBean().getSelectedDanItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
+				if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getAssetInd()) {
+					getManagedBean().setAssetIndCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getAssetInd().getParameterCode());
+				}
+				if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmGlAccount()) {
+					getManagedBean().setGlAccountCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmGlAccount().getGlAccCode());
+				}
+				if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmPrgActivity()) {
+					getManagedBean().setPrgActivityCode( adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmPrgActivity().getPrgActivityCode());
+				}
+				if(null != adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia()) {
+					getManagedBean().setSubSetiaCode((adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getSubSetiaCode()));
+					
+					if( adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia()!=null) {
+						getManagedBean().setSetiaCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getSetiaCode());
+						getManagedBean().setProjectCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getProjectCode());
+					}
+					getManagedBean().setFinancingTypeCode(adjustmentItemNodeVO.getFlAdjustmentItem().getFlItem().getPmSubSetia().getFinancingType().getParameterCode());
+				}
 			}
 		}
 	}
@@ -425,6 +426,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	public void onTabChange(int selectedTabIndex){
 		if(selectedTabIndex==1){
 			sortItems(getManagedBean().getAdjustment().getFlAdjustmentItem());
+			populateChargeLineData();
 		}
 		
 	}
@@ -480,4 +482,25 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "danBasePage?faces-redirect=true");
 		}
 	}
+	
+	private void populateChargeLineData() {
+		getManagedBean().setDanChargeLineTree(new DefaultTreeNode("root", null));
+		
+		AdjustmentItemNodeVO adjustmentItemNodeVO = null;
+		TreeNode childItemNode = null;
+		for(FlAdjustmentItem adjustmentItem : getManagedBean().getAdjustment().getFlAdjustmentItem()) {
+			adjustmentItemNodeVO = new AdjustmentItemNodeVO();
+			adjustmentItemNodeVO.setLevel(1);
+			adjustmentItemNodeVO.setFlAdjustmentItem(adjustmentItem);
+			childItemNode = new DefaultTreeNode(adjustmentItem.getAdjustmentItemId().toString(), adjustmentItemNodeVO, getManagedBean().getDanChargeLineTree());
+			
+			for(FlInvoiceItem invoiceItem : adjustmentItem.getFlInvoiceItemSummary().getFlInvoiceItem()) {
+				adjustmentItemNodeVO = new AdjustmentItemNodeVO();
+				adjustmentItemNodeVO.setLevel(2);
+				adjustmentItemNodeVO.setFlInvoiceItem(invoiceItem);
+				new DefaultTreeNode(invoiceItem.getInvoiceItemId().toString(), adjustmentItemNodeVO, childItemNode);
+			}
+		}
+	}
+	
 }
