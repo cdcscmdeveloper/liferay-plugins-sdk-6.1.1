@@ -171,6 +171,7 @@ public class LOADetailBackingBean extends
 	/** The text before sign. */
 	private String textBeforeSign;
 
+	private static final String  BRANCH_INFO_TITLE = "Branch Information";
 	/**
 	 * Instantiates a new LOA detail backing bean.
 	 */
@@ -4667,23 +4668,27 @@ public class LOADetailBackingBean extends
 				.setOverallContractAmt(overallContractAmt);
 	}
 	
-	public boolean disableGstAmtField() {
+	public boolean isGSTRegActive() {
 
-		boolean disabled = true;
-		SmSupplier supplier = getManagedBean().getScLoa().getScLoiLoa()
-				.getSmSupplier();
+		boolean isActive = true;
+		ScLoa scLoa = getManagedBean().getScLoa();
+		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		String procCatType = this.getParameterDesc(getManagedBean().getScLoa()
 				.getProcurementTypeCatId());
 		if ((supplier != null && supplier.getGstRegisteredFlag() == 1)
 				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
-						.equalsIgnoreCase(procCatType)) {
-			disabled = false;
+						.equalsIgnoreCase(procCatType)
+				&& (null != scLoa.getGstEffDate()  && scLoa.getGstEffDate()
+						.compareTo(new Date()) >= 0)) {
+			isActive = false;
 		}
-		return disabled;
+		return isActive;
 	}
 	
 	
 	private void calculateOverallCtAmtForSupplier(){
+		
+		ScLoa scLoa = getManagedBean().getScLoa();
 		
 		SmSupplier supplier = getManagedBean().getScLoa().getScLoiLoa()
 				.getSmSupplier();
@@ -4696,13 +4701,30 @@ public class LOADetailBackingBean extends
 						.equalsIgnoreCase(procCatType)) {
 
 			overallContractAmt.add(getManagedBean().getScLoa().getGstAmt());
-
+			overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			
 		} else if ((supplier != null && supplier.getGstRegisteredFlag() == 0)
 				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
 						.equalsIgnoreCase(procCatType)) {
-			// TODO need to write logic to calculate gsm amount for service item
-		}
+			BigDecimal durationMnth = new BigDecimal(0);
+			BigDecimal noOfMnth = new BigDecimal(12);
+			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+			if (scLoiLoa.getScLois() != null) {
+				for (ScLoi scLoi : scLoiLoa.getScLois()) {
+					for (ScLoiLoaItem loiLoaItem : scLoi.getScLoiLoaItems()) {
+						TplSpecQuestion specQuestion = loiLoaItem.getScRequestItem().getTplSpecQuestion();
+						if (specQuestion != null) {
+							durationMnth = specQuestion.getTplSpecMaster().getDurationMonth();
+							break;
+						}
+					}
+				}
+			}
+			overallContractAmt =  (overallContractAmt.divide(durationMnth)).multiply(noOfMnth);
+			overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+	}
 		getManagedBean().setOverallContractAmt(overallContractAmt);
+		
 	}
 	
 	/**
@@ -4715,7 +4737,7 @@ public class LOADetailBackingBean extends
 		ScLoaReport scLoaReport = new ScLoaReport();
 		scLoaReport.setScLoa(scLoa);
 		scLoaReport.setScLoaReportAttachment(new ScLoaReportAttachment());
-		scLoaReport.setTitle("Branch Information");
+		scLoaReport.setTitle(BRANCH_INFO_TITLE);
 		IParameterSO parameterSO = null;
 		try {
 			parameterSO = BusinessDelegate.getInstance().getServiceObject(
