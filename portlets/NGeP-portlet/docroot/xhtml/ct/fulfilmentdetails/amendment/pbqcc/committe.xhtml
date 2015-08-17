@@ -14,7 +14,7 @@
 			      <f:facet name="header">
 					<p:selectBooleanCheckbox value="#{amendmentBackingBean.managedBean.selectAll}">
 						<p:ajax partialSubmit="true" process="@this"
-							update="committeTable" listener="#{amendmentBackingBean.selectAllCommittee()}" />
+							update="committeTable" listener="#{amendmentBackingBean.selectAllCommittees()}" />
 					</p:selectBooleanCheckbox>
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{ctCommitteeVar.selectedCheckBox}" styleClass="myCustomChekBox"
