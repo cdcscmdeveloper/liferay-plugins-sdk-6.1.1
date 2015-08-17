@@ -16,7 +16,7 @@
 		</p:blockUI>
 
 		<p:messages id="catSrchMsg" showDetail="true" autoUpdate="true"
-			closable="true" showSummary="true"></p:messages>
+			closable="true" showSummary="false"></p:messages>
 
 		<p:panel id="searchPanel" header="#{lbl['lbl.pm.search.search']}"
 			toggleable="true">
@@ -26,7 +26,7 @@
 
 				<h:column>
 
-					<p:outputLabel value="#{lbl['lbl.pm.tr.function']}" />
+					<p:outputLabel value="#{lbl['lbl.pm.tr.option']}" />
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</h:column>
 				<h:column>
@@ -316,7 +316,7 @@
 
 				<ac:paginator for="dtDocResult" />
 
-				<p:column width="85%">
+				<p:column style="white-space:normal;" width="85%">
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.pm.document.name']}" />
 					</f:facet>
@@ -341,7 +341,7 @@
 
 				<ac:paginator for="dtDocResult" />
 
-				<p:column width="85%">
+				<p:column width="85%" >
 					<f:facet name="header">
 						<h:outputText value="#{lbl['lbl.pm.financialorg.name']}" />
 					</f:facet>

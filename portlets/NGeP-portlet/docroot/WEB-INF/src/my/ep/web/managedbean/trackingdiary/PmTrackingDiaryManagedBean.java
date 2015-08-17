@@ -417,18 +417,27 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			log.info("pageChangeListener");
 			try {
 				if (getOrganisationSearchBean().getOrgProfile() != null)
-					log.info("......getOrganisationSearchBean().getOrgProfile().getOrgProfileId()="
-							+ getOrganisationSearchBean().getOrgProfile()
-									.getOrgProfileId());
-				if (getOrganisationSearchBean().getOrgProfile() != null
-						&& getOrganisationSearchBean().getOrgProfile()
-								.getOrgProfileId() != null) {
+//					log.info("......getOrganisationSearchBean().getOrgProfile().getOrgProfileId()="
+//							+ getOrganisationSearchBean().getOrgProfile()
+//									.getOrgProfileId());
+				
+				if (getOrganisationSearchBean().getOrgType() != null
+						&& getOrganisationSearchBean().getOrgName() != null) {
 					searchBean.getDataFilterBeans().add(
-							new SearchFilterBean("orgProfileId",
+							new SearchFilterBean("orgTypeCode.parameterId",
 									SearchOperator.OPERATOR_EQUALS.value(),
-									getOrganisationSearchBean().getOrgProfile()
-											.getOrgProfileId()));
-
+									getOrganisationSearchBean().getOrgType()
+									.getParameterId()));
+			
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmOrgValidity.orgName",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getOrganisationSearchBean().getOrgName()));
+						
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("recordStatus",
+										SearchOperator.OPERATOR_EQUALS.value(),1));
+						
 					OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 					reqDTO.setOrgProfileSearchBean(searchBean);
 					IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
