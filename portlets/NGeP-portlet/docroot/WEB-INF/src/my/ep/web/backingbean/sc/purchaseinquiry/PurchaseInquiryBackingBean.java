@@ -759,15 +759,6 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 					for (ScRequestNoteDtl scRequestNoteDtl : requestNote.getRequestNoteDtls()) {
 						scRequestNoteDtl.setFulfilmentType(getParameterByTypeAndCode(
 								ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF));
-
-						if(scRequestNoteDtl.getDeliverTermType() == null){
-							scRequestNoteDtl.setDeliverTermType(getParameterByTypeAndCode(
-									ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY));
-							scRequestNoteDtl.setDeliverTermTypeId(getParameterByTypeAndCode(
-									ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY).getParameterId());
-						}else{
-							scRequestNoteDtl.setDeliverTermTypeId(scRequestNoteDtl.getDeliverTermType().getParameterId());
-						}
 						
 						// get PI id to Request note
 						if(scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy() != null){
@@ -790,7 +781,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
 						requestNoteBackingBean.supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),
-								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurmentTypeCategory().getParameterId());
+								scRequestNoteDtl.getPriceType().getParameterId(), scRequestNoteDtl, scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 						
 						// fulfilmentTypeEvent
 						requestNoteBackingBean.getManagedBean().setRequestNote(requestNote);
