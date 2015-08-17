@@ -54,13 +54,20 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+						value="#{lbl['lbl.sc.procurment.type.category']}" /> <ui:fragment
+						rendered="#{!specificationBackingBean.managedBean.readOnly}">
+						<p:outputLabel value="*" styleClass="mandatory" />
+					</ui:fragment></td>
 				<td><p:selectOneMenu id="specCommitteeprocTypeCategory"
+						label="#{lbl['lbl.sc.procurment.type.category']}"
+						disabled="#{specificationBackingBean.managedBean.readOnly}"
+						required="true"
 						value="#{specificationBackingBean.managedBean.scQt.procurementTypeCatId.parameterId}"
-						style="width: 178px;margin-bottom: 5px;" disabled="true">
+						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="procuremntypeCategorySpecCommittee"
+						for="specCommitteeprocTypeCategory" display="icon" /></td>
 				<td style="width: 275px;"><h:outputLabel
 						value="#{lbl['lbl.sc.open.for']}" /></td>
 				<td><p:inputText readonly="true" size="30"
