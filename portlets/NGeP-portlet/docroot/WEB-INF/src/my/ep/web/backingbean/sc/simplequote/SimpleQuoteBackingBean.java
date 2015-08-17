@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.sc.simplequote;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -391,7 +392,7 @@ public class SimpleQuoteBackingBean extends
 		if (null == scQuote.getProcurementType()) {
 			scQuote = checkGovtSeller(null, scQuote);
 		}
-		
+
 		// proc type category
 		if (null == scQuote.getProcurementTypeCategory()) {
 			scQuote.setProcurementTypeCategory(new PmParameter());
@@ -913,12 +914,15 @@ public class SimpleQuoteBackingBean extends
 			} else {
 				quote.setJustificationType(null);
 			}
-			
+
 			// procurement type category
-			if(null != quote.getProcurementTypeCategory()){
+			if (null != quote.getProcurementTypeCategory()) {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterId(quote.getProcurementTypeCategory().getParameterId());
-				PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
+				parameterReqDTO.setParameterId(quote
+						.getProcurementTypeCategory().getParameterId());
+				PmParameter procTypeCategory = getParameterSO()
+						.retrieveParameterById(parameterReqDTO)
+						.getPmParameter();
 				quote.setProcurementTypeCategory(procTypeCategory);
 			}
 
@@ -1668,10 +1672,13 @@ public class SimpleQuoteBackingBean extends
 			}
 
 			// procurement type category
-			if(null != quote.getProcurementTypeCategory()){
+			if (null != quote.getProcurementTypeCategory()) {
 				ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
-				parameterReqDTO.setParameterId(quote.getProcurementTypeCategory().getParameterId());
-				PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
+				parameterReqDTO.setParameterId(quote
+						.getProcurementTypeCategory().getParameterId());
+				PmParameter procTypeCategory = getParameterSO()
+						.retrieveParameterById(parameterReqDTO)
+						.getPmParameter();
 				quote.setProcurementTypeCategory(procTypeCategory);
 			}
 
@@ -5728,16 +5735,36 @@ public class SimpleQuoteBackingBean extends
 		}
 
 	}
-	
 
 	/**
 	 * Proc type categories.
-	 *
+	 * 
 	 * @return the list
 	 */
-	public List<PmParameterDesc> getProcTypeCategories(){
-		List<PmParameterDesc> procTypeCategories = ParameterHelper.getInstance().getParameterDescList(ParameterTypeConst.PROCUREMENT_TYPE_CATEGORY);
-	   return procTypeCategories;	
+	public List<PmParameterDesc> getProcTypeCategories() {
+		List<PmParameterDesc> procTypeCategories = ParameterHelper
+				.getInstance().getParameterDescList(
+						ParameterTypeConst.PROCUREMENT_TYPE_CATEGORY);
+		return procTypeCategories;
+	}
+
+	/**
+	 * param is SmGstSupplier.
+	 * 
+	 * @return supplier gst dates.
+	 */
+	public String retrieveSupplierGstDates(Date date) {
+		String gstDate = "";
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
+			if (null != date) {
+				gstDate = dateFormat.format(date);
+			}
+
+		} finally {
+
+		}
+		return gstDate;
 	}
 
 	/**
@@ -5776,10 +5803,10 @@ public class SimpleQuoteBackingBean extends
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
-	
+
 	/**
 	 * Gets the parameter so.
-	 *
+	 * 
 	 * @return the parameter so
 	 */
 	private IParameterSO getParameterSO() {
