@@ -47,7 +47,7 @@
 			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
-					disabled="true" /> <ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}" />
+					disabled="true" /><ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}"/>
 			</td>
 		</tr>
 		<tr>
@@ -59,7 +59,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
 					disabled="true" >
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}" />
+					</p:inputText><ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}" />
 			</td>
 		</tr>
 		<tr>
@@ -71,7 +71,7 @@
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
 					disabled="true" >
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}" />
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}" />
 			</td>
 		</tr>
 		<tr>
@@ -669,9 +669,9 @@
 	<h:outputText styleClass="instruction"
 						value=" #{lbl['lbl.sc.gst.remainder.one.instruction']}"
 						escape="false" /> <br/>
-						<h:outputText value="Remainder 2 :" style="font-weight:bold;" rendered="#{!lOADetailBackingBean.isGSTRegActive()}"></h:outputText>
+						<h:outputText value="Remainder 2 :" style="font-weight:bold;" rendered="#{lOADetailBackingBean.managedBean.renderRemainder}"></h:outputText>
 						<h:outputText styleClass="instruction"
 						value="#{lbl['lbl.sc.gst.remainder.two.instruction']}"
 						escape="false"
-						rendered="#{!lOADetailBackingBean.isGSTRegActive()}" /></div>
+						rendered="#{lOADetailBackingBean.managedBean.renderRemainder}" /></div>
 </ui:composition>
