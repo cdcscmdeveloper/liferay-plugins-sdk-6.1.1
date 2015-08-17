@@ -33,13 +33,16 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="#{lbl['lbl.sc.procurment.type.category']}" /></td>
+						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="qtmaintainprocTypeBoCategory"
+						required="true" label="#{lbl['lbl.sc.procurment.type.category']}"
 						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
-						style="width: 195px;margin-bottom: 5px;" disabled="true">
+						style="width: 195px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{qTDetailBB.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
-					</p:selectOneMenu></td>
+					</p:selectOneMenu> <p:message id="procuremntypeCategoryquotationTender"
+						for="qtmaintainprocTypeBoCategory" display="icon" /></td>
 
 			</tr>
 			<tr>
