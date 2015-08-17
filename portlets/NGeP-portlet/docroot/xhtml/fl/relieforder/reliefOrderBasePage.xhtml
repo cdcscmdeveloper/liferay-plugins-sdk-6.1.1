@@ -19,15 +19,11 @@
 		<f:event listener="#{reliefOrderBB.preRenderView}" type="preRenderView" />
 		<p:messages id="messages" showDetail="true" autoUpdate="#{reliefOrderBB.managedBean.autoUpdate}"
 			closable="true" severity="error, info" />
+			
 		<ac:gpkiPopup 
 			textBeforeSign="#{reliefOrderBB.managedBean.textBeforeSign}"
-			postSignAction="#{reliefOrderBB.preSubmitFulfillmentOrder(gpkiBackingBean.pmDigiSign)}" />	
-		<ac:spkiPopup id="spkiPopUp"
-			password="#{reliefOrderBB.managedBean.spkiBackingBean.password}"
-   		 	challengeAns1="#{reliefOrderBB.managedBean.spkiBackingBean.challengeAns1}"
-  		 	challengeQues1="#{reliefOrderBB.managedBean.spkiBackingBean.challengeQues1}"
-			textBeforeSign="#{reliefOrderBB.managedBean.textBeforeSign}"
-			postSignAction="#{reliefOrderBB.preSubmitFulfillmentOrder(spkiBackingBean.pmDigiSign)}"/>
+			postSignAction="#{reliefOrderBB.preSubmitFulfillmentRequest(gpkiBackingBean.pmDigiSign)}"
+			enableAutoUpdate="#{reliefOrderBB.enableAutoUpdate()}"	/>
 
 		<table style="width: 100%;">
 			<tr>
@@ -40,18 +36,9 @@
 						<p:commandButton value="#{lbl[buttonLabel]}"
 							styleClass="ui-button" 
 							update="@form" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
-							action="#{reliefOrderBB.signingAction(bpmAction)}" />
+							action="#{reliefOrderBB.gpkiSignAction(bpmAction)}" />
 					</ui:repeat>
 					</td>
-			</tr>
-		</table>
-		<table style="width: 100%;">
-			<tr>
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="Approve"
-							action="#{reliefOrderBB.submitAction('APPROVE')}">
-							<f:param name="actionName" value="APPROVE" />
-						</p:commandButton></td>
 			</tr>
 		</table>
 		<ui:include src="/xhtml/fl/relieforder/reliefOrderHeaderPage.xhtml" />

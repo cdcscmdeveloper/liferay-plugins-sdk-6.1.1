@@ -63,11 +63,11 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-			<p:column headerText="GST FLAG ID" style="white-space:normal;text-align:right;">
+			<p:column headerText="#{lbl['lbl.fl.gst.rate']}" style="white-space:normal;text-align:right;">
 				<f:facet name="footer">
 					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
 				</f:facet>
-				<h:outputText value="#{reliefOrderBB.getParameterDesc(chargeLineNode.gstFlag)}" rendered="#{chargeLineNode.parent == 'true'}">
+				<h:outputText value="#{chargeLineNode.gstFlag.parameterCode}" rendered="#{chargeLineNode.parent == 'true'}">
 				</h:outputText>
 			</p:column>
 			<p:column  style="white-space:normal;text-align:right;">

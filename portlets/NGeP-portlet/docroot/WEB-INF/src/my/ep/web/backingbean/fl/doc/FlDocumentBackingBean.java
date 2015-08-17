@@ -28,8 +28,10 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.order.IReliefOrderSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
@@ -39,9 +41,13 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
@@ -53,6 +59,7 @@ import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmReason;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
@@ -372,15 +379,22 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);			
 			if(buttonVal.equalsIgnoreCase("Stop Fulfilment")) {
 				FlStopInstr flStopInstr = new FlStopInstr();
-
+				StopInstrBackingBean stopInstrBB = new StopInstrBackingBean();
 				statusReqDTO = new StatusReqDTO();
+				
 				statusReqDTO.setStatusId(FulfilmentStatusConst.SD_PENDING_SUBMISSION);
+				SupplierGstResDTO suppGstResDTO =getSupplierGst(resDTO.getFlOrder().getFlFulfilmentRequest());
+				if(suppGstResDTO.getSmGstSupplier() != null){
+					flStopInstr.setGstEffectiveDate(suppGstResDTO.getSmGstSupplier().getGstEffDate());
+					flStopInstr.setGstDeclaredDate(suppGstResDTO.getSmGstSupplier().getGstDeclaredDate());
+					flStopInstr.setGstRegNo(suppGstResDTO.getSmGstSupplier().getGstRegNo());
+				}
 				flStopInstr.setPmStatus(statusSO.retrieveStatusByStatusId(statusReqDTO).getPmStatus());
 				flStopInstr.setPmReason(new PmReason());
 				flStopInstr.setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 				flStopInstr.setFlFulfilmentOrder(resDTO.getFlOrder());
 				
-				StopInstrBackingBean stopInstrBB = new StopInstrBackingBean();
+				
 				stopInstrBB.renewSesionObject();
 				stopInstrBB.getManagedBean().setStopInstr(flStopInstr);
 				stopInstrBB.getManagedBean().setSelectedTabIndex(0);
@@ -989,5 +1003,39 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			 financialYearOpt.add(new SelectItem(years, Integer.toString(years)));
 		}
 		return financialYearOpt;
-	} 
+	}
+
+	/**
+	 * Gets the ministry List based on org type.
+	 *
+	 * @return the ministry List
+	 */
+	public List<SelectItem> getMinistryList() {
+		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		retrievePTJList.add(new SelectItem("", ResourceBundleUtils.getMessage("lbl.txt.select",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale())));
+		orgProfileReqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
+		resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+			
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+			for(PmOrgProfile obj : listDB){
+				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+			}
+		}		
+		return retrievePTJList;
+	}
+	public SupplierGstResDTO getSupplierGst(FlFulfilmentRequest flRequest) {
+		ISupplierGstSO supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+		
+		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+		reqDTO.setBranchCode(flRequest.getFlSupplierDtl().getBranchCode());
+		reqDTO.setSupplierId(flRequest.getSmSupplier().getSupplierId());
+		SupplierGstResDTO resDTO = supplierGstSO.retrieveGstInfoBySupplierIdAndBranchCode(reqDTO);
+		
+		return resDTO;
+		
+	}
 }

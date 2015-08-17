@@ -2,30 +2,52 @@ package my.ep.web.backingbean.fl.relieforder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.order.IReliefOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.fl.common.order.FLOrderDataType;
+import my.ep.persistence.entity.fl.order.FlReliefOrder;
 import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.managedbean.fl.relieforder.ReliefOrderManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -52,6 +74,8 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	
 	/** The class name. */
 	private String className="@(.myReliefOrderClassName)";
+	
+	FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 	/**
 	 * Gets the faces scopes.
 	 *
@@ -71,8 +95,64 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		IFulfilmentOrderSO fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+		IReliefOrderSO reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
 		
+		FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
 		if(taskId != null){
+
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			Object ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
+			
+			FLOrderDataType flOrd = (FLOrderDataType)obj;
+			
+			fulfilmentReqDTO.setDocType(ParameterConst.DOCTYPE_RELIEF_ORDER);
+			fulfilmentReqDTO.setFlOrderId(flOrd.getOrderId());
+			
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
+			reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
+			Long fulfilmentOrderId=flOrd.getOrderId();
+			fulfilmentReqDTO.setFulfilmentOrderId(fulfilmentOrderId);
+			fulfilmentReqDTO.setFlOrderId(flOrd.getOrderId());
+			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByOrderId(fulfilmentReqDTO);
+			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
+			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(fulfilmentReqDTO);
+			//getManagedBean().setButtonVal(buttonVal);
+			String[] outcome = new String[res.getAction().length + 1];
+			outcome[0] = BpmOutcomeConst.BPM_SAVE;
+			int i = 1;
+			for (String action : res.getAction()) {
+				outcome[i++] = action;
+			}
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(outcome);
+			getManagedBean().setSelectedTabIndex(0);
+			getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
+			getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
+			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
+			//getManagedBean().setPmUser(reqDTO.getPmUser());
+			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
+			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
+			if(getManagedBean().getFlRequest().getCtContract().isFactored()){
+					Long supplieContractId=coResDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					contractSupplierReqDTO.setContractId(supplieContractId);
+					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
+					if(contractSupplierResDTO.getFactoring() != null){
+						coResDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
+							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
+							getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
+						}
+					}else{
+						getManagedBean().getFlRequest().getCtContract().setFactored(false);
+					}
+			}	
 			
 		}
 	}
@@ -86,24 +166,48 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	 *  navigate to acknowledge page.
 	 */
 	public String submitAction(String action) throws Exception {
+		FulfilmentReqDTO reliefOrderReqDTO = new FulfilmentReqDTO();
+		IReliefOrderSO reliwfOrderSo = null;
 		
 		if(null==getManagedBean().getChargeLineItemRoot()){
 			populateReliefItemData();
 		}
-			
-		if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			TreeNode root=getManagedBean().getChargeLineItemRoot();
-			for(TreeNode node:root.getChildren()){
-				node.getChildCount();
-				FlReliefOrderItem reliefItem=(FlReliefOrderItem) node.getData();
-				if(!reliefItem.isSelectedReliefChargeItem()){
-					throw new EpException(MessageConst.ERROR_745073);
-				}else{
-					//TODO
-					System.out.println("selected");
-				}
-			}
+		//saveReliefOrder
+		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
+		//FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reliefOrderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reliefOrderReqDTO.setOutcome(action);
+		reliefOrderReqDTO.setToken(token);
+		reliefOrderReqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+		if(!flBB.getManagedBean().getRemarkList().isEmpty()){
+			reliefOrderReqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 		}
+		FlReliefOrder reliefOrder=getManagedBean().getFlReliefOrder();
+		
+		reliefOrderReqDTO.setReliefOrder(reliefOrder);
+		reliefOrderReqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+		reliefOrderReqDTO.setUserRole(getUserRole());
+		reliefOrderReqDTO.setTaskName(getManagedBean().getTaskName());
+		reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
+		FulfilmentResDTO resDTO =reliwfOrderSo.saveReliefOrder(reliefOrderReqDTO);
+		if (resDTO.isSuccessful()) {
+			log.info("Record saved successfully");
+			String messageId = MessageConst.INFO_700005;
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
+				messageId = MessageConst.INFO_700004;
+			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+				messageId = MessageConst.INFO_700007;
+				//messageId = MessageConst.INFO_700007;
+			} 
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(messageId, 
+							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_RELIEF_ORDER), reliefOrder.getReliefOrderNo()}, 
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				renewSesionObject();
+				return CommonUIConst.ACKNOWLEDGE_PAGE;
+			}	
+		} 
 			
 		return null;
 	}
@@ -314,6 +418,77 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		else
 			return null;
 	}
+	
+	/**
+	 * Gpki sign action.
+	 *
+	 * @param outcome the outcome
+	 * @return the string
+	 * @throws Exception the exception
+	 */
+	public String gpkiSignAction(String outcome) throws Exception{
+		if ((BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
+			validateReliefOrder(outcome);
+			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
+			StringBuilder sb = new StringBuilder();
+			sb.append(getManagedBean().getFlRequest().getDocNo());
+			sb.append(outcome);
+			getManagedBean().setTextBeforeSign(sb.toString());
+			// set action
+			getManagedBean().setButtonAction(outcome);
+			getManagedBean().setAutoUpdate(Boolean.FALSE);
+			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
+			return null;
+		}	
+		return submitAction(outcome);
+	}
+	
+	public String preSubmitFulfillmentRequest(
+			PmDigiSign pmDigiSign) throws Exception {
+		if (pmDigiSign != null) {
+			this.getManagedBean().setPmDigiSign(pmDigiSign);
+		}
+		//getManagedBean().setValidated(Boolean.TRUE);
+		log.info("######## PR SLA start : "+System.currentTimeMillis()+" : "+new Date());
+		return submitAction(getManagedBean().getButtonAction());
+	}
+	
+	/**
+	 * Method do validations Before save purchase request details
+	 *
+	 * @param outcome the outcome
+	 */
+	public void validateReliefOrder(String outcome){		
+		IFulfilmentRequestSO fulfilmentRequestSO = null;
+		try {
+			getManagedBean().setAutoUpdate(Boolean.TRUE);
+			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+				if(null==getManagedBean().getChargeLineItemRoot()){
+					populateReliefItemData();
+				}
+				TreeNode root=getManagedBean().getChargeLineItemRoot();
+				for(TreeNode node:root.getChildren()){
+					node.getChildCount();
+					FlReliefOrderItem reliefItem=(FlReliefOrderItem) node.getData();
+					if(!reliefItem.isSelectedReliefChargeItem()){
+						throw new EpException(MessageConst.ERROR_745073);
+					}else{
+							//TODO
+						System.out.println("selected");
+					}
+				}
+			}	
+			
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
+			reqDTO.setOutcome(outcome);
+			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
+			
+		}finally{
+			fulfilmentRequestSO = null;
+		}
+	}
+	
 	
 		/**
 		 * Page navigation to FLDoc search page in Order.
