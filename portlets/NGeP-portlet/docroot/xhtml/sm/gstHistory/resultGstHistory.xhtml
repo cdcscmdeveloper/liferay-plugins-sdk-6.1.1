@@ -21,15 +21,16 @@
 		
 		<p:messages id="messages" showDetail="true" closable="false" showSummary="false" escape="false"/>
 		
-		<p:panel header="#{lbl['lbl.sm.gst.history.hq.panel']}" toggleable="true" id="resultGstHistoryPanelId">
-			
-			<div align="left">
-				<p:commandButton id="btnProceed" value="#{lbl['lbl.btn.back']}"
+		<div align="left">
+			<p:commandButton id="btnProceed" value="#{lbl['lbl.btn.back']}" 
+				rendered="#{gstHistoryBackingBean.managedBean.renderedBackButton}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 				action="#{gstHistoryBackingBean.back}" />
-			</div>
-			<br />
+		</div>
+		<br />
 		
+		<p:panel header="#{lbl['lbl.sm.gst.history.hq.panel']}" toggleable="true" id="resultGstHistoryPanelId">
+			
 			<p:dataTable var="hqGst" widgetVar="smApplWidgetVar"
 				editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{gstHistoryBackingBean.managedBean.hqGstList}"
