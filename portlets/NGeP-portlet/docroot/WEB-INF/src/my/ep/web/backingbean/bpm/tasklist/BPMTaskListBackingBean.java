@@ -196,6 +196,8 @@ public class BPMTaskListBackingBean extends
 				+ FLProcessNameConst.CREATE_INVOICE, "invoice");
 		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
 				+ FLProcessNameConst.PERFORM_PAYMNET_MATCH_HT, "payment-match");
+		temp.put(FLProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME
+				+ FLProcessNameConst.REVIEW_GST, "review-gst");
 
 		temp.put(FLProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME,
 				"fulfilment-received-note");
