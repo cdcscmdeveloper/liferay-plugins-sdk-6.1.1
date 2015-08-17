@@ -404,7 +404,14 @@
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<css-class-wrapper>flviewda-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
+	<portlet>
+		<portlet-name>flReliefOrder</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<css-class-wrapper>flReliefOrder-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
