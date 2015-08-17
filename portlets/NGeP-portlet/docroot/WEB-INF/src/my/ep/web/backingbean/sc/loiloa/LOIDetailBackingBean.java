@@ -849,22 +849,46 @@ public class LOIDetailBackingBean extends
 	 * @param bean
 	 *            the bean
 	 */
-	public void viewItemDetails(LoiLoaBean bean) {
-		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+	public void viewItemDetail(LoiLoaBean bean) {
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
 
-		reqDTO = new AwardSupplierReqDTO();
+			String language = new FacesScopes().getUserLocale().getLanguage();
 
-		if (bean.getScLoi() != null) {
-			reqDTO.setScLoi(bean.getScLoi());
-		}
-		if (bean.getScLoa() != null) {
-			reqDTO.setScLoa(bean.getScLoa());
-		}
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			AwardSupplierResDTO resDTO = null;
+			reqDTO.setLanguageCode(language);
 
-		AwardSupplierResDTO resDTO = getQtAwardSO().retrieveLOIDtl(reqDTO);
+			if (bean.getScLoa() != null) {
+				reqDTO.setScLoa(bean.getScLoa());
+				resDTO = qtAwardSO.retrieveLOADtl(reqDTO);
+			} else if (bean.getScLoi() != null) {
+				reqDTO.setScLoi(bean.getScLoi());
+				resDTO = qtAwardSO.retrieveLOIDtl(reqDTO);
+			}
 
-		if (resDTO.getScLoi() != null) {
-			getManagedBean().setScLoi(resDTO.getScLoi());
+			if (resDTO != null) {
+				if (resDTO.getScLoa() != null) {
+					ScLoa loa = resDTO.getScLoa();
+					bean.setScLoa(loa);
+					bean.setScLoiLoaItems(loa.getScLoiLoaItems());
+					bean.setSupplierName(loa.getScLoiLoa().getSupplierName());
+				} else if (resDTO.getScLoi() != null) {
+					ScLoi loi = resDTO.getScLoi();
+					bean.setScLoi(loi);
+					bean.setScLoiLoaItems(loi.getScLoiLoaItems());
+					bean.setSupplierName(loi.getScLoiLoa().getSupplierName());
+				}
+			}
+
+			getManagedBean().setSelectedLoiLoaBean(bean);
+
+		} catch (Exception e) {
+			throw new EpException(e.toString());
+		} finally {
+			qtAwardSO = null;
 		}
 	}
 

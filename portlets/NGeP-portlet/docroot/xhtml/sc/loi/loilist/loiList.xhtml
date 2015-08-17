@@ -116,7 +116,7 @@
 							<ac:iconTooltip value="#{lbl['lbl.sc.loiloa.item.view.tooltip']}" />
 						</f:facet>
 						<p:commandLink
-							actionListener="#{lOIDetailBackingBean.viewItemDetails(loiloaBean)}"
+							actionListener="#{lOIDetailBackingBean.viewItemDetail(loiloaBean)}"
 							oncomplete="ItemDetailsPopup.show()" update=":form:ItemDetailsPopup"
 							process="@this">
 							<p:graphicImage title="Item Detail" value="#{CommonUIConstant.imagePathUptoDesign}/ico-view.png"
