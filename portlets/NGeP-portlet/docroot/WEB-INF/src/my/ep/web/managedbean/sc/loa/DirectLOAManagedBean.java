@@ -72,8 +72,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The selected supplier branch name. */
 	private String selectedSupplierBranchName;
 
-	/** The selected contract agency. */
-	private String selectedContractAgency;
+
 
 	/** The attachment doc type. */
 	private String attachmentDocType;
@@ -430,24 +429,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.selectedSupplierBranchName = selectedSupplierBranchName;
 	}
 
-	/**
-	 * Gets the selected contract agency.
-	 * 
-	 * @return the selectedContractAgency
-	 */
-	public String getSelectedContractAgency() {
-		return selectedContractAgency;
-	}
-
-	/**
-	 * Sets the selected contract agency.
-	 * 
-	 * @param selectedContractAgency
-	 *            the selectedContractAgency to set
-	 */
-	public void setSelectedContractAgency(String selectedContractAgency) {
-		this.selectedContractAgency = selectedContractAgency;
-	}
+	
 
 	/**
 	 * Gets the attachment doc type.

@@ -9,7 +9,24 @@
 	<p:panel header="#{lbl['lbl.sc.zone.details']}" toggleable="true">
 
 
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
+					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
+				<td><p:selectOneMenu id="locationLevels"  disabled="#{!isEditableStatus}"
+						label="#{lbl['lbl.sc.zone.location.level']}"
+						value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
+						style="width: 209px;">
 
+						<f:selectItems
+							value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
+						<p:ajax event="change" update="generalLocationList"
+							listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
+					</p:selectOneMenu> <ac:iconTooltip
+						value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
+						id="withzone" for="locationLevels" display="icon"></p:message></td>
+			</tr>
+		</table>
 		<h:panelGrid width="100%">
 			<p:dataTable id="zoneGeneralDataTable" rows="10"
 				value="#{directLOABackingBean.managedBean.zoneTrees}" var="zoneTree"
@@ -43,7 +60,6 @@
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;">
 					<p:commandLink
-						
 						actionListener="#{directLOABackingBean.editZones(zoneTree,index)}"
 						process="@this" update="@([id$=dlgId])"
 						oncomplete="ZoneGeneral.show();">
@@ -54,12 +70,12 @@
 		</h:panelGrid>
 		<div align="right" style="width: 100%">
 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all"
+			<p:commandButton value="#{lbl['lbl.btn.add']}" process="@all" rendered="#{isEditableStatus}"
 				update="@([id$=zonePopupGeneral])"
 				actionListener="#{directLOABackingBean.showGeneralZonesPopup}" />
 			<p:commandButton value="#{lbl['lbl.btn.delete']}" process="@this"
 				partialSubmit="true" oncomplete="zonesNonpanelDeletePopUp.show();"
-				update="@([id$=#{zonesNonpanelDeleteId}])" />
+				update="@([id$=#{zonesNonpanelDeleteId}])"  rendered="#{isEditableStatus}" />
 		</div>
 		<ui:param name="zonesNonpanelDeleteId" value="zonesNonpanelDeleteId"></ui:param>
 		<ac:confirmationPopup id="#{zonesNonpanelDeleteId}"

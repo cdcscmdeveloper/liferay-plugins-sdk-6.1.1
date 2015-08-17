@@ -14,7 +14,7 @@
 					rendered="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode eq 'PS'}">
 					<td width="150px"><h:outputLabel
 							value="#{lbl['lbl.sc.periodic.fullfillent.type']}" /></td>
-					<td><p:selectOneRadio
+					<td><p:selectOneRadio disabled="#{!isEditableStatus}"
 							value="#{directLOABackingBean.managedBean.scQt.scheduleType}">
 							<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
 							<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
@@ -42,7 +42,7 @@
 						<h:panelGroup>
 							<td><h:outputLabel
 									value="#{lbl['lbl.sc.spec.total.frequency']}"></h:outputLabel></td>
-							<td><p:inputText style="text-align:right;"
+							<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus}"
 									value="#{directLOABackingBean.managedBean.totalFrequency}">
 									<p:ajax event="blur" update="frequencySchedule"
 										partialSubmit="true" process="@this"
@@ -176,7 +176,7 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.spec.total.phase']}"></h:outputLabel>
 					</td>
-					<td><p:inputText style="text-align:right;"
+					<td><p:inputText style="text-align:right;" disabled="#{!isEditableStatus}"
 							value="#{directLOABackingBean.managedBean.totalProgressivePayment}">
 							<p:ajax event="blur" update="progressivePayment"
 								partialSubmit="true" process="@this"

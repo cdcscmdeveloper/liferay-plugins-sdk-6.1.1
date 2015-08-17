@@ -6,61 +6,36 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.loiloa.payment.details']}"
+		toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="18%">
-				<h:outputLabel value="#{lbl['lbl.sc.account.no']}" />
-				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isSupplierAckStatus}" />
-			</td>
-			<td width="82%">
-				<c:if test="#{isSupplierAckStatus}">
-					<p:selectOneMenu
-						value="#{directLOABackingBean.managedBean.selectedBankId}"
-						style="width: 280px;margin-bottom: 5px;"
-						required="true"
-						label="#{lbl['lbl.sc.account.no']}">
-						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
-						<f:selectItems
-							value="#{directLOABackingBean.managedBean.bankList}"
-							var="smSupplierBank" 
-							itemValue="#{smSupplierBank.supplierBankId}" itemLabel="#{smSupplierBank.accountNo}" />
-						<p:ajax event="change"
-							listener="#{directLOABackingBean.handleBankDetailsChanged}"
-							partialSubmit="true" process="@this" update="bankName, bankBranch, bankAddress" />
-					</p:selectOneMenu>
-				</c:if>
-				<c:if test="#{!isSupplierAckStatus}">
-					<p:inputText value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}" disabled="true" size="50" />
-				</c:if>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h:outputLabel value="#{lbl['lbl.sc.bank.name']}" />
-			</td>
-			<td>
-				<p:inputText id="bankName" value="#{directLOABackingBean.managedBean.scLoa.bankName}" disabled="true" size="50" />
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h:outputLabel value="#{lbl['lbl.sc.bank.branch']}" />
-			</td>
-			<td>
-				<p:inputText id="bankBranch" value="#{directLOABackingBean.managedBean.scLoa.bankBranch}" disabled="true" size="50" />
-			</td>
-		</tr>
-		<tr>
-			<td valign="top">
-				<h:outputLabel value="#{lbl['lbl.sc.bank.address']}" />
-			</td>
-			<td>
-				<p:inputTextarea id="bankAddress" cols="50" rows="5" 
-					value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.bankAddress)}"
-					style=" margin-bottom:5px; width: 325px;" disabled="true" />
-			</td>
-		</tr>
+			<tr>
+				<td width="18%"><h:outputLabel
+						value="#{lbl['lbl.sc.account.no']}" /> <p:outputLabel value="*"
+						styleClass="mandatory" /></td>
+				<td width="82%"><p:inputText
+						value="#{directLOABackingBean.managedBean.scLoa.bankAccNo}"
+						disabled="true" size="50" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.bank.name']}" /></td>
+				<td><p:inputText id="bankName"
+						value="#{directLOABackingBean.managedBean.scLoa.bankName}"
+						disabled="true" size="50" /></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel value="#{lbl['lbl.sc.bank.branch']}" /></td>
+				<td><p:inputText id="bankBranch"
+						value="#{directLOABackingBean.managedBean.scLoa.bankBranch}"
+						disabled="true" size="50" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><h:outputLabel
+						value="#{lbl['lbl.sc.bank.address']}" /></td>
+				<td><p:inputTextarea id="bankAddress" cols="50" rows="5"
+						value="#{directLOABackingBean.getFullAddress(directLOABackingBean.managedBean.scLoa.bankAddress)}"
+						style=" margin-bottom:5px; width: 325px;" disabled="true" /></td>
+			</tr>
 		</table>
 	</p:panel>
 </ui:composition>

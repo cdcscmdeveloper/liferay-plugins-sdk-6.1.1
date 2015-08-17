@@ -21,6 +21,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -56,6 +58,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.RuleTypeConst;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
@@ -87,6 +90,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.common.ScRemark;
 import my.ep.persistence.entity.sc.common.ScWorkFlowStatus;
+import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -118,15 +122,19 @@ import my.ep.web.format.AttachmentDefaultFormat;
 import my.ep.web.format.AttachmentFormat;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.sc.quationtender.ApprovalStatus;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.NumberWordUtil;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.QTFiledMapper;
+import my.ep.web.util.template.DocumentGenerator;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.velocity.VelocityContext;
 import org.docx4j.jaxb.Context;
 import org.docx4j.openpackaging.contenttype.ContentType;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
@@ -1831,7 +1839,60 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		return locCriterias;
 	}
-
+	/**
+	 * Generate bond letter from velocity to pdf.
+	 *
+	 * @param attachment the attachment
+	 * @param scLoa the sc loa
+	 * @throws Exception the exception
+	 */
+	public void generateBondLetterFromVelocityToPdf(ScAttachment attachment,ScLoa scLoa)
+			throws Exception {
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		attachment.setFileName("Bond Letter.pdf");
+		populateAttachmentDetails(attachment);
+		VelocityContext context = new VelocityContext();
+		String contractNo = "Contract Number";
+		String supplierName = null;
+		String sourcingTitle = null;
+		String bondAmount = null;
+		String bondAmountWord = null; 
+		String expiryPeriod = null;
+		int type = 0;
+		
+		if(scLoa != null){
+			type = 1;
+			supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
+			sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
+			bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
+			expiryPeriod = scLoa.getBondResDueDate() != null ? dateFormat.format(scLoa.getBondResDueDate()) : " ";
+			bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(scLoa.getBondAmt().longValue()) : " ";
+			
+		}else{
+			type = 0;
+			supplierName ="Supplier Name";
+			sourcingTitle ="Sourcing Title";
+			bondAmount ="Bond Amount";
+			expiryPeriod = "Expiry Period";
+			bondAmountWord = "Bond Amount Word"; 
+		}
+		
+		context.put("type", type);
+		context.put("contractNo", contractNo);
+		context.put("supplierName", supplierName);
+		context.put("sourcingTitle", sourcingTitle);
+		context.put("bondAmount", bondAmount);
+		context.put("bondAmountWord", bondAmountWord);
+		context.put("expiryPeriod", expiryPeriod);
+		
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_BOND_LETTER, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
 
 
 }

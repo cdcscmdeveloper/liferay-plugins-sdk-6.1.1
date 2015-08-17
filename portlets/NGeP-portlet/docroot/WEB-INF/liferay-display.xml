@@ -129,10 +129,11 @@
 		    <portlet id="Review Simple Quote"></portlet>
 		    <portlet id="Review Supplier View"></portlet>
 		    <portlet id="scRequestNoteSearch" />
-		    <portlet id="Direct Nego"></portlet>
+		    <portlet id="scCreateManualSourcing"></portlet>
+		     <portlet id="scReviewManualSourcing"></portlet>
 		    <portlet id="scAddtionalAttandance" />
 		    <portlet id="scCreateQuotationTender" />
-		    <portlet id="directNegoSupplierResponse"/>
+		    <portlet id="scManualSourcingSupplierResponse"/>
 		    
 		</category>
 
