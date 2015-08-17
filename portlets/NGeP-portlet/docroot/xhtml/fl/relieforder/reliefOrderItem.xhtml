@@ -74,7 +74,7 @@
 				<f:facet name="footer">
 					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
 				</f:facet>
-				<h:outputText value="#{reliefOrderBB.getParameterDesc(chargeLineNode.gstFlag)}" rendered="#{chargeLineNode.parent == 'true'}">
+				<h:outputText value="#{chargeLineNode.gstFlag.parameterCode}" rendered="#{chargeLineNode.parent == 'true'}">
 				</h:outputText>
 			</p:column>
 			<p:column  style="white-space:normal;text-align:right;">
