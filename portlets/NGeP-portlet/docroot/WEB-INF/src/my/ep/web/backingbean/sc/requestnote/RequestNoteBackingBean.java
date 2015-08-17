@@ -371,19 +371,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				vCmSupplierItem.setCompanyName(scRequestSupplierItem.getSmSupplier().getCompanyName());
 				scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
 
-				if( null != scRequestNoteDtl.getProcurmentTypeCategory()){
-					scRequestNoteDtl.setProcTypeCategoryId(scRequestNoteDtl.getProcurmentTypeCategory().getParameterId());
+				if( null != scRequestNoteDtl.getProcurementTypeCategory()){
+					scRequestNoteDtl.setProcTypeCategoryId(scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 				}
 				
 				if(scRequestNoteDtl.getAssignedUser() == null){
 					FacesScopes facesScopes = new FacesScopes();
 					scRequestNoteDtl.setAssignedUser(facesScopes.getUserSessionBean());
 				}
+				
+				if(scRequestNoteDtl.getPriceType() != null){
+					scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
+				}
 			}
 			
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
+		getManagedBean().setRequestNoteDtl(requestNoteDtls.get(0));
 
 		// remarks
 		requestNote.setRemarks(initializeRemarks(
@@ -492,11 +497,27 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					sb.append(spacer).append(requestNoteDtl.getProcurementTitle());
 					++counter;
 				} 
+
+				// title validation
+				if(StringUtils.isBlank(requestNoteDtl.getProcurementTitle())){
+					throw new EpException(
+							MessageConst.ERROR_760315,
+							new String[] {ResourceBundleUtils.getMessage("lbl.sc.direct.purchase.title",
+									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "in Item Details"});
+				}
+
+				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+					// validate price type
+					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
+						throw new EpException(
+								MessageConst.ERROR_760315,
+								new String[] {ResourceBundleUtils.getMessage("lbl.sc.request.note.price.type",
+										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "in Item Detail Pop-Up"});
+					}
+				}
 			}	
-			
-			if(StringUtils.isBlank(requestNote.getTitle())){
-				requestNote.setTitle(sb.toString());
-			}
+
+			requestNote.setTitle(sb.toString());
 		}
 
 		// adding request note delete list
@@ -674,16 +695,18 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				
 				if(null == scRequestNoteDtl.getPriceType()){
 					scRequestNoteDtl.setPriceType(new PmParameter());
+				} else{
+					scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
 				}
 				
 				if(null == scRequestNoteDtl.getAssignedUser()){
 					scRequestNoteDtl.setAssignedUser(new PmUser());	
 				}
 				
-				if(null == scRequestNoteDtl.getProcurmentTypeCategory()){
+				if(null == scRequestNoteDtl.getProcurementTypeCategory()){
 					scRequestNoteDtl.setProcurementTypeCategory(new PmParameter());
 				} else {
-					scRequestNoteDtl.setProcTypeCategoryId(scRequestNoteDtl.getProcurmentTypeCategory().getParameterId());
+					scRequestNoteDtl.setProcTypeCategoryId(scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 				}
 				
 				if(scRequestNoteDtl.getJustificationType() != null){
@@ -696,7 +719,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getJustification() != null){
 					getManagedBean().setJustification(scRequestNoteDtl.getJustification());
 				}
-
+				
+				if(null == scRequestNoteDtl.getDeliverTermType()){
+					scRequestNoteDtl.setDeliverTermType(getDeliveryTermType());
+				}
 			
 				if(null == scRequestNoteDtl.getScRequestSupplierItem()){
 					ScRequestSupplierItem  requestSupplierItem = new ScRequestSupplierItem();
@@ -719,7 +745,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				//scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
 
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),scRequestNoteDtl.getPriceType().getParameterId() ,
-						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurmentTypeCategory().getParameterId());
+						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 				requestNoteDtls.add(scRequestNoteDtl);
 			}
 			
@@ -941,15 +967,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					} 
 					
 					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
-						// delivery term
-						/*if(getManagedBean().getPeriodType() != null && !getManagedBean().getPeriodType().isEmpty()){
-							selectedReqDtl.setDeliverTermType(getParameterByTypeAndCode(
-									ParameterTypeConst.DELIVERY_TERM, getManagedBean().getPeriodType()));
-							selectedReqDtl.setDeliverTermTypeId(getParameterByTypeAndCode(
-									ParameterTypeConst.DELIVERY_TERM, getManagedBean().getPeriodType()).getParameterId());
-						  } 
-                        */
-						
 						// procurement type category
 						if(getManagedBean().getProcTypeCategoryId()>0){
 							ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
@@ -1598,8 +1615,8 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		scRequestNoteDtl.setJustification(getManagedBean().getJustification());
 		scRequestNoteDtl.setScRequestNote(requestNote);
 		
-		scRequestNoteDtl.setDeliverTermType(getParameterByTypeAndCode(
-				ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY));
+		// delivery term type as days.
+		scRequestNoteDtl.setDeliverTermType(getDeliveryTermType());
 		
 	    scRequestNoteDtl.setFulfilmentType(getParameterByTypeAndCode(
 				ParameterTypeConst.FULFILMENT_TYPE, ParameterConst.FULFILMENT_TYPE_ONE_OFF));
@@ -1607,6 +1624,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	    if(getManagedBean().getPriceType() != null){
 	    	scRequestNoteDtl.setPriceType(getParameterByTypeAndCode(
 					ParameterTypeConst.PRICE_TYPE, getManagedBean().getPriceType()));
+	    	scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
 	    }
 	    
 	    if(selectedSupplierItem.getLeadTime() != null){
@@ -2633,6 +2651,46 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
 			}
 	}
+	
+	
+	
+	/**
+	 * Price type change listener.
+	 *
+	 * @param priceTypeId the price type id
+	 * @param requestNoteDtl the request note dtl
+	 */
+	public void priceTypeChangeListener(Long priceTypeId, ScRequestNoteDtl requestNoteDtl) {
+		debugLogger("priceTypeChangeListener");
+		// lov changes 
+		ScRequestSupplierItem scRequestSupplierItem = requestNoteDtl.getScRequestSupplierItem();
+
+		if(priceTypeId != null && priceTypeId > 0){
+			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size()>0){
+
+				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
+					// zonal item price  
+					if(requestNoteDtl.getTplSpecZoneDtl() != null){
+						if(requestNoteDtl.getTplSpecZoneDtl().getSpecZoneId().equals(scSupplierItemPrice.getTplSpecZone().getSpecZoneId())){
+							scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+							requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+							break;
+						}
+					}else {
+						// non zonal item price 
+						if(scSupplierItemPrice.getPriceType() != null){
+							if(scSupplierItemPrice.getPriceType().getParameterId().equals(priceTypeId)){
+								scRequestSupplierItem.setSupplierItemPrice(scSupplierItemPrice);
+								requestNoteDtl.setPriceType(scSupplierItemPrice.getPriceType());
+								break;
+							}
+						}
+					}
+				}
+			}
+		} 
+	}
+
 
 	/**
 	 * Before save post listener.
@@ -3081,6 +3139,17 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	   return procTypeCategories;	
 	}
 
+
+	/**
+	 * Gets the delivery term type.
+	 *
+	 * @return the delivery term type
+	 */
+	private PmParameter getDeliveryTermType(){
+		PmParameter deliveryTermType = getParameterByTypeAndCode(
+				ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
+				return deliveryTermType;
+	}
 
 	/**
 	 * Generate market summary pdf from velocity.
