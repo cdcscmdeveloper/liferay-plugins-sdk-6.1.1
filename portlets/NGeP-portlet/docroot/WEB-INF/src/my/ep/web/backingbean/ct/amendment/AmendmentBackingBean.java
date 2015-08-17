@@ -2439,16 +2439,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * The method used to select all added meeting committee(s).
      */
 	public void selectAllCommittees() {
-	    if (getManagedBean().isSelectAll()) {
-	    	for (CtCommitteeMember  ctCommiteMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
-	    		if (ctCommiteMember.getMemberRole() != null 
-	    				&& ctCommiteMember.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
-	    			continue;
-	    		} else {
-	    			ctCommiteMember.setSelectedCheckBox(true);
-	    		}
-	    	}
-	    }
+	    
+		    if(getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers() != null 
+		    	 && getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers().size() > 0){
+	    	    
+		    	  for (CtCommitteeMember  ctCommiteMember : getManagedBean().getContractVer().getCtAmendment().getCtCommitteeMembers()) {
+	    		         if (getManagedBean().isSelectAll()) {
+	    		               if (ctCommiteMember.getMemberRole() != null 
+	    				              && ctCommiteMember.getMemberRole().getParameterCode().equalsIgnoreCase(ParameterConst.COMMITTEE_ROLE_SECRETARY)) {
+	    			                 continue;
+	    		                } else {
+	    			               ctCommiteMember.setSelectedCheckBox(true);
+	    		                }
+	    		         } else {
+	    		        	 ctCommiteMember.setSelectedCheckBox(false);
+	    		         }
+	    	       }
+	        }
 	}
 	
 	/**
