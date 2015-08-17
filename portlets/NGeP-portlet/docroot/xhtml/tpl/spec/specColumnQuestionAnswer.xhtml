@@ -15,14 +15,23 @@
 			<h:outputText value="#{lbl['lbl.tpl.spec.specification.total']}" rendered="#{isAllPriceTypesStandard}" />
 		</f:facet>
 		
-		<p:inputText id="ratePerUom" style="min-width:0px !important;width:86px; text-align:right;"
-			value="#{question.tplSpecAnswers[0].ratePerUom}"
-			rendered="#{isQuestionTypeItem and isPriceTypeStandard}" required="true" maxlength="19"
-			label="#{lbl['lbl.tpl.spec.content.unit.price']}">
-			<p:ajax event="blur" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, tplSpecAnswer, isItemTypeService)}" />
-			<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-		</p:inputText>
-		<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
+		<h:panelGroup id="ratePerUomPG">
+			<p:inputText id="ratePerUom" style="min-width:0px !important;width:86px; text-align:right;"
+				value="#{question.tplSpecAnswers[0].ratePerUom}"
+				rendered="#{isQuestionTypeItem and isPriceTypeStandard}" required="true" maxlength="19"
+				label="#{lbl['lbl.tpl.spec.content.unit.price']}">
+				<p:ajax event="blur" partialSubmit="true" process="@this" update="@this, ansYearPG, ansPG, @(.calcAmount)" listener="#{templateSpecBackingBean.calcTotalAmount(templateSpecBean, question.tplSpecAnswers[0], isItemTypeService)}" />
+				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
+			</p:inputText>
+			<p:message id="ratePerUomMsg" for="ratePerUom" display="icon" />
+			<p:commandButton id="ratePerUomBtn" icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;"  
+				action="#{templateSpecBackingBean.zoneTierPricePopupAction(templateSpecBean)}"
+				oncomplete="#{zoneTierPricePopup}.show();"
+				partialSubmit="true" process="@this" update="@([id$=zoneTierPricePopup])"
+				rendered="#{isQuestionTypeItem and !isPriceTypeStandard and !empty question.clPriceTypeCode.parameterCode}">
+				<f:setPropertyActionListener target="#{templateSpecBean.selectedSpecQuestion}" value="#{question}" />
+			</p:commandButton>
+		</h:panelGroup>
 	</p:column>
 	<p:column style="width:90px;white-space:normal;text-align:right;" rendered="#{isItemTypeService}" headerText="#{lbl['lbl.tpl.spec.content.amount.per.year']}">
 		<f:facet name="footer">

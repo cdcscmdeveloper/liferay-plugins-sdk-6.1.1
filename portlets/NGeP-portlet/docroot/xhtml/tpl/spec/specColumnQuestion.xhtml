@@ -166,7 +166,7 @@
 			rendered="#{isQuestionTypeItem}"
 			label="#{lbl['lbl.tpl.spec.content.price.type']}">
 			<f:selectItems value="#{templateSpecBackingBean.getPriceTypeDropdownList(templateSpecBean.specMaster)}" />
-			<p:ajax event="change" listener="#{templateSpecBackingBean.priceTypeChange(templateSpecBean, question)}" partialSubmit="true" process="@this" update="priceTypeMsg, qtyPG, @([id$=estPG])" />
+			<p:ajax event="change" listener="#{templateSpecBackingBean.priceTypeChange(templateSpecBean, question)}" partialSubmit="true" process="@this" update="priceTypeMsg, qtyPG, @([id$=estPG],[id$=ratePerUomPG])" />
 		</h:selectOneMenu>
 		<p:message id="priceTypeMsg" for="priceType" display="icon" />
 	</p:column>

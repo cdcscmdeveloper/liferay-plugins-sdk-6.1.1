@@ -34,7 +34,7 @@
 				label="#{lbl['lbl.tpl.spec.content.estimate.cost']}"
 				disabled="#{!editable}">
 				<ac:validateNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" maxIntegerDigits="14" />
-				<p:ajax partialSubmit="true" process="@this" update="@this" />
+				<p:ajax partialSubmit="true" process="@this" update="@this, estCostMsg" />
 			</p:inputText>
 			<p:message id="estCostMsg" for="estCost" display="icon" />
 		</p:column>
