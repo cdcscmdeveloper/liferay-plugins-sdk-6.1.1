@@ -10,7 +10,7 @@
 	<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
 		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
 			selection="#{paymentMatchBackingBean.managedBean.selectedNode}"
-			selectionMode="single"
+			selectionMode="single" 
 			value="#{paymentMatchBackingBean.managedBean.chargeLineItemRoot}">
 			<p:ajax event="expand" 
                 onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />  			
@@ -29,29 +29,29 @@
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
 				<h:outputText
-					value="#{chargeLineNode.flItem.itemCode}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+					value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.itemCode}"
+					rendered="#{chargeLineNode.level == 1}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName}"
+				rendered="#{chargeLineNode.level == 1}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" 
+				rendered="#{chargeLineNode.level == 1}"/>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right">
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flItem.unitPrice}"
-					rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flFulfilmentItem.unitPrice}"
+				rendered="#{chargeLineNode.level == 2}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
@@ -59,18 +59,25 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].gstAmount}"
-					rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstAmount}"
+				rendered="#{chargeLineNode.level == 3}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
+				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:right">
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flItem.flFulfilmentItemAddr[0].gstUnitPrice}"
-					rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstUnitPrice}" rendered="#{chargeLineNode.level == 3}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>
+			</p:column>
+			<p:column style="white-space:normal;text-align:right;">
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.fl.gst.rate']}"/>
+				</f:facet>
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.gstFlag.parameterCode}" rendered="#{chargeLineNode.level == 3}">
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal; text-align:right" >
@@ -81,9 +88,9 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedQty}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.orderedQty}" rendered="#{chargeLineNode.level == 2}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal; text-align:right">
@@ -94,9 +101,9 @@
 			<f:facet name="footer">
 				<h:outputText value=""></h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedQty}" rendered="#{chargeLineNode.level == 3}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal;text-align:right">
@@ -107,9 +114,9 @@
 			<f:facet name="footer">
 				<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}"/>					
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.recalledQty}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.recalledQty}" rendered="#{chargeLineNode.level == 2}">
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />		
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flInvoiceSummary.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />		
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:right">
@@ -118,10 +125,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>	
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.orderedAmt}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.orderedAmt}" rendered="#{chargeLineNode.level == 2}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
@@ -131,10 +135,7 @@
 						<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					</h:outputText>
 				</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedAmt}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceItem.receivedAmt}" rendered="#{chargeLineNode.level == 3}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
@@ -146,10 +147,10 @@
 					</h:outputText>
 				</f:facet>		
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flInvoiceItem.invAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.parent == 'true'}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.invAmt}" id="invSumAmountTxt" rendered="#{chargeLineNode.level == 2}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
-				<h:outputText  value="#{chargeLineNode.flInvoiceItem.invAmt}" style="text-align:right;" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText  value="#{chargeLineNode.flInvoiceItem.invAmt}" style="text-align:right;" rendered="#{chargeLineNode.level == 3}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
@@ -159,7 +160,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>			
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flAdjustmentItem.adjustedAmt}" rendered="#{chargeLineNode.flAdjustmentItem.flAdjustment.docType eq ParameterConst.doctypeDebitAdjustmentNote}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flAdjustmentItem.adjustedAmt}" rendered="#{chargeLineNode.flInvoiceSummary.flAdjustmentItem.flAdjustment.docType eq ParameterConst.doctypeDebitAdjustmentNote and chargeLineNode.level == 2}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
@@ -169,7 +170,7 @@
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>				
 			</f:facet>
-				<h:outputText value="#{chargeLineNode.flAdjustmentItem.adjustedAmt}" rendered="#{chargeLineNode.flAdjustmentItem.flAdjustment.docType eq ParameterConst.doctypeCreditAdjustmentNote}">
+				<h:outputText value="#{chargeLineNode.flInvoiceSummary.flAdjustmentItem.adjustedAmt}" rendered="#{chargeLineNode.flInvoiceSummary.flAdjustmentItem.flAdjustment.docType eq ParameterConst.doctypeCreditAdjustmentNote and chargeLineNode.level == 2}">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>

@@ -236,6 +236,8 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentNote> fulfilmentNoteList;
 	private boolean gfmasError=false;
 	private String gfmasErrorContent;
+	private BigDecimal gstAmount;
+	private BigDecimal invoiceAmountWithoutGST;
 
 	/**
 	 * Gets the doc type.
@@ -1412,5 +1414,33 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	/**
+	 * @return the gstAmount
+	 */
+	public BigDecimal getGstAmount() {
+		return gstAmount;
+	}
+
+	/**
+	 * @param gstAmount the gstAmount to set
+	 */
+	public void setGstAmount(BigDecimal gstAmount) {
+		this.gstAmount = gstAmount;
+	}
+
+	/**
+	 * @return the invoiceAmountWithoutGST
+	 */
+	public BigDecimal getInvoiceAmountWithoutGST() {
+		return invoiceAmountWithoutGST;
+	}
+
+	/**
+	 * @param invoiceAmountWithoutGST the invoiceAmountWithoutGST to set
+	 */
+	public void setInvoiceAmountWithoutGST(BigDecimal invoiceAmountWithoutGST) {
+		this.invoiceAmountWithoutGST = invoiceAmountWithoutGST;
 	}
 }
