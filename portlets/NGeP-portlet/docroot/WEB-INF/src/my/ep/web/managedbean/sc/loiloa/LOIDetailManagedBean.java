@@ -373,6 +373,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtMeetingAttendance> deletedMeetingAttendanceList;
 	
+	/** The selected supp loi loa bean. */
+	private LoiLoaBean selectedLoiLoaBean;
+	
     /**
      * Gets the spki backing bean.
      *
@@ -2183,6 +2186,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setDeletedMeetingAttendanceList(
 			List<ScQtMeetingAttendance> deletedMeetingAttendanceList) {
 		this.deletedMeetingAttendanceList = deletedMeetingAttendanceList;
+	}
+
+	/**
+	 * @return the selectedLoiLoaBean
+	 */
+	public LoiLoaBean getSelectedLoiLoaBean() {
+		return selectedLoiLoaBean;
+	}
+
+	/**
+	 * @param selectedLoiLoaBean the selectedLoiLoaBean to set
+	 */
+	public void setSelectedLoiLoaBean(LoiLoaBean selectedLoiLoaBean) {
+		this.selectedLoiLoaBean = selectedLoiLoaBean;
 	}
 	
 }
