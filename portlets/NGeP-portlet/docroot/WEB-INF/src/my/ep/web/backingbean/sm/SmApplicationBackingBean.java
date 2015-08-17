@@ -5812,6 +5812,8 @@ public class SmApplicationBackingBean extends
 			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
+			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+					.getCompanyBasicGst());
 			reqDTO.setCompanyBasicGst(getManagedBean().getCompanyBasicGst());
 			resDTO = regSo.initiateSmApplicationTask(reqDTO);
 			// if(resDTO!=null && !resDTO.isBpmSuccess()){
