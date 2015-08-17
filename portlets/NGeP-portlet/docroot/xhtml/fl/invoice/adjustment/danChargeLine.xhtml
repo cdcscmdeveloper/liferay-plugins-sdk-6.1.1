@@ -43,67 +43,68 @@
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.dan.charge.line.items']}">
 		<h:outputText styleClass="instruction" value="#{lbl['lbl.fl.instruction.charge.line.summary']}" escape="false"/>
-		<p:dataTable id="danItemDt" var="danItem" width="100%"
-			value="#{danBackingBean.managedBean.adjustment.flAdjustmentItem}"
-			rowIndexVar="index"
-			selection="#{danBackingBean.managedBean.selectedDanItem}"
-			selectionMode="single" rowKey="#{danItem}" >
-			<p:ajax event="rowSelect" update=":form:chargeLineSection"
-				listener="#{danBackingBean.selectDanItem()}" />
-			<p:ajax event="rowUnselect" listener="#{danBackingBean.onNodeUnSelect()}"
-				update=":form:chargeLineSection" />				
-			<ac:paginator for="itemDataTable" />
+		<p:treeTable id="danItemDt" var="danItem" selectionMode="single" style="width: 100%"
+			selection="#{danBackingBean.managedBean.selectedNode}"
+			value="#{danBackingBean.managedBean.danChargeLineTree}" >
+			<p:ajax event="expand" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" />  
+			<p:ajax event="select" update=":form:chargeLineSection"
+				listener="#{danBackingBean.selectDanItem()}" disabled="#{danItem.level == 2}" />
+			<p:ajax event="unselect" listener="#{danBackingBean.onNodeUnSelect()}"
+				update=":form:chargeLineSection" disabled="#{danItem.level == 2}" />				
 			<p:column>
 			<f:facet name="header" style="width:8%;">
 					<h:outputText value="#{lbl['lbl.fl.item.code']}"/>
 					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.item.code']}"/>
 				</f:facet>
-				<h:outputText value="#{danItem.flItem.itemCode}" />
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.itemCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;">
-				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" />
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}">
-				<h:outputText value="#{danItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="text-align:right;white-space:normal">
-				<h:outputText value="#{danItem.flItem.unitPrice}">
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flItem.unitPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="text-align:right;white-space:normal">
-				<h:outputText value="#{danItem.flItem.gstAmount}">
+				<h:outputText rendered="#{danItem.level == 2}" value="#{danItem.flInvoiceItem.gstAmount}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="text-align:right;white-space:normal">
-				<h:outputText value="#{danItem.flItem.gstUnitPrice}">
+				<h:outputText rendered="#{danItem.level == 2}" value="#{danItem.flInvoiceItem.gstUnitPrice}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="text-align:right">
-				<h:outputText value="#{danItem.flInvoiceItem.orderedAmt}">
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flInvoiceItemSummary.orderedAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.amount.invoice']}" style="text-align:right">
-				<h:outputText value="#{danItem.flInvoiceItem.invAmt}">
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.flInvoiceItemSummary.invAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
+				<h:outputText rendered="#{danItem.level == 2}" value="#{danItem.flInvoiceItem.invAmt}">
+					<f:convertNumber
+						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+				</h:outputText>				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.dan.dan.amount']}" style="text-align:right">
-				<h:outputText
-					value="#{danItem.adjustedAmt}">
+				<h:outputText rendered="#{danItem.level == 1}" value="#{danItem.flAdjustmentItem.adjustedAmt}">
 					<f:convertNumber
 						pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-		</p:dataTable>
+		</p:treeTable>
 		<br />
 		<br />
 		<br />

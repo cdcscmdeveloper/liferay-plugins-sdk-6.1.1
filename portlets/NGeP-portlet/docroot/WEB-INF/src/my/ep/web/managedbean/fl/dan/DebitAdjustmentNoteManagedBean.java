@@ -13,7 +13,6 @@ import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
@@ -30,9 +29,6 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 	
-	/** The log. */
-	private static Logger log = Logger.getLogger(DebitAdjustmentNoteManagedBean.class);
-	
 	/** The adjustment. */
 	private FlAdjustment adjustment;
 	
@@ -40,10 +36,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	private TreeNode danChargeLineTree;
 	
 	/** The selected nodes. */
-	private TreeNode[] selectedNodes;
-	//private TreeNode selectedNode;
-	//private TreeNode chargeLineItemRoot ;
-	
+	private TreeNode selectedNode;
 	
 	/** The is dan. */
 	private boolean isDan = false;
@@ -176,24 +169,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	public void setDanChargeLineTree(TreeNode danChargeLineTree) {
 		this.danChargeLineTree = danChargeLineTree;
 	}
-	
-	/**
-	 * Gets the selected nodes.
-	 *
-	 * @return the selectedNodes
-	 */
-	public TreeNode[] getSelectedNodes() {
-		return selectedNodes;
-	}
-	
-	/**
-	 * Sets the selected nodes.
-	 *
-	 * @param selectedNodes the selectedNodes to set
-	 */
-	public void setSelectedNodes(TreeNode[] selectedNodes) {
-		this.selectedNodes = selectedNodes;
-	}
+
 	
 	/**
 	 * Gets the selected tab index.
@@ -649,6 +625,14 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setGfmasErrorContent(String gfmasErrorContent) {
 		this.gfmasErrorContent = gfmasErrorContent;
+	}
+
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
 	}
 	
 }
