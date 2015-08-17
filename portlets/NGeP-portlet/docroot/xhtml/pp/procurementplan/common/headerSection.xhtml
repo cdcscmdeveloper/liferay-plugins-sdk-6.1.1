@@ -24,7 +24,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 					var="bpmAction"
 					value="#{pPlanBackingBean.managedBean.outComes}">
 					<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" 
+					<p:commandButton value="#{lbl[buttonLabel]}" update="@form" rendered="#{bpmAction != 'CANCEL'}"
 						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
 						action="#{pPlanBackingBean.savePlan(bpmAction)}">
 						<f:param name="disableValidation" value="true" />     
