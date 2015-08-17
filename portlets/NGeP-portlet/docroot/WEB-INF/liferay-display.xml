@@ -163,6 +163,7 @@
 			<portlet id="flViewContractOrder" />
 			<portlet id="flViewPaymentMatch" />
 			<portlet id="flViewDebitAdjustment" />
+			<portlet id="flReliefOrder" />
 			
 		</category>
 		<!-- Fulfilment End Added by Giri -->
