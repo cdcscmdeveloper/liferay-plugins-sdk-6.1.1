@@ -28,12 +28,12 @@
 			<table style="width: 100%;">
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.submissionType']}" /></td>
-					<td><p:selectOneRadio id="onLnSuppDocs"
+					<td><p:selectOneRadio id="onLnSuppDocs" disabled="#{empty softCertBackingBean.managedBean.softcertUploadSuppDocList}"
 							value="#{softCertBackingBean.managedBean.suppDocMode}">
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.offline']}"
 								itemValue="H" />
 							<f:selectItem itemLabel="#{lbl['lbl.sm.suppDoc.online']}"
-								itemValue="S" />
+								itemValue="S"/>
 							<p:ajax update="@([id$=uploadPanelId])" event="change" />
 						</p:selectOneRadio></td>
 				</tr>
