@@ -157,16 +157,14 @@
 									and (backingBean.managedBean.smAppl.applType eq 'N' 
 									or backingBean.managedBean.smAppl.applType eq 'R')}">
 									
-									<ui:remove>
-										<p:commandLink oncomplete="gstBrUploadDialog.show();return false;"
-											rendered="#{!table.pmDocument.hardCopyReq}"
-											update="@([id$=gstBrUploadDialog])"
-											action="#{backingBean.assignSelectedGstDoc(table)}">
-											<p:graphicImage value="/css/images/design/upload.png"
-												style="margin-right:2px;" />
-										</p:commandLink>
-									</ui:remove>
-					
+									<p:commandLink oncomplete="hideBranchDialog();"
+										rendered="#{!table.pmDocument.hardCopyReq}" 
+										update="@([id$=banchDialog])"
+										process="@this" action="#{backingBean.assignSelectedGstDoc(table)}">
+										<p:graphicImage value="/css/images/design/upload.png"
+											style="margin-right:2px;" />
+									</p:commandLink>
+										
 								</p:column>
 								<p:column headerText="#{lbl['lbl.pm.document.name']}"
 									style="width : 20%;">
@@ -198,16 +196,5 @@
 			</p:outputPanel>
 			
 		</p:outputPanel>
-		
-		<p:dialog id="gstBrUploadDialog" widgetVar="gstBrUploadDialog" modal="true"
-			dynamic="true" resizable="false" width="700px" height="200"
-			styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
-			<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
-				sizeLimit="1000000"
-				invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
-				invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
-				fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
-				update="branchGstInfoPanelId" oncomplete="gstBrUploadDialog.hide();" />
-		</p:dialog>
 
 </ui:composition>
