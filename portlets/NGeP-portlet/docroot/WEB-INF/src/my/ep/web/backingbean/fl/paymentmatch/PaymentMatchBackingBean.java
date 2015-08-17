@@ -587,17 +587,35 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-		
+		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+		BigDecimal grandTotalDanAmt = new BigDecimal(0);
+		BigDecimal grandTotalCanAmt = new BigDecimal(0);
 		for(FlInvoiceItemSummary invItemSummLv2 : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()){
 			InvoiceChargeLineVO chargeLineLv1 = new InvoiceChargeLineVO();
 			chargeLineLv1.setLevel(1);
 			chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
+			
+			grandTotalOrderAmt = grandTotalOrderAmt.add(invItemSummLv2.getOrderedAmt());
+			grandTotalInvAmt = grandTotalInvAmt.add(invItemSummLv2.getInvAmt());
+			if(invItemSummLv2.getFlAdjustmentItem() != null){
+				if(invItemSummLv2.getFlAdjustmentItem().getFlAdjustment() != null){
+					if(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE.equalsIgnoreCase(invItemSummLv2.getFlAdjustmentItem().getFlAdjustment().getDocType())){
+						grandTotalCanAmt = grandTotalCanAmt.add(invItemSummLv2.getFlAdjustmentItem().getAdjustedAmt());
+					}else if(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE.equalsIgnoreCase(invItemSummLv2.getFlAdjustmentItem().getFlAdjustment().getDocType())){
+						grandTotalDanAmt = grandTotalDanAmt.add(invItemSummLv2.getFlAdjustmentItem().getAdjustedAmt());
+					}
+				}
+			}
+			
 			TreeNode lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getChargeLineItemRoot());
 			InvoiceChargeLineVO chargeLineLv2 = new InvoiceChargeLineVO();
 			chargeLineLv2.setLevel(2);
 			chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
 			TreeNode lv2TreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
 			for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
+				grandTotalReceivedAmt = grandTotalReceivedAmt.add(invItemLv3.getReceivedAmt());
 				InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
 				chargeLineLv3.setLevel(3);
 				chargeLineLv3.setFlInvoiceItem(invItemLv3);
@@ -609,50 +627,11 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				onNodeSelect();
 			}
 		}
-		
-		
-		//Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
-//		Map<String, List<FlInvoiceItemSummary>> invItemSummMap = new TreeMap<String, List<FlInvoiceItemSummary>>();
-//		List<FlInvoiceItemSummary> flPaymentItemList = null;
-//		for (FlInvoiceItemSummary invItemSumm : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()) {
-//			String key = invItemSumm.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().toString();
-//			if (invItemSummMap.containsKey(key)) {
-//				flPaymentItemList = invItemSummMap.get(key);
-//			} else {
-//				flPaymentItemList = new ArrayList<FlInvoiceItemSummary>();
-//			}
-//			flPaymentItemList.add(invItemSumm);
-//			invItemSummMap.put(key, flPaymentItemList);
-//		}
-//		
-//		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-//		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-//		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-//		BigDecimal grandTotalDanAmt = new BigDecimal(0);
-//		BigDecimal grandTotalCanAmt = new BigDecimal(0);
-//		for(Entry<String, List<FlInvoiceItemSummary>> itemEntry : invItemSummMap.entrySet()){
-//			List<FlInvoiceItemSummary> invItemSumm = itemEntry.getValue();
-//			FlInvoiceItemSummary invItemSummlv1 = (FlInvoiceItemSummary) invItemSumm.get(0).cloneEntity(); // parent entity, no need stored in DB.
-//			TreeNode lv1TreeNode = new DefaultTreeNode(invItemSummlv1.getFlFulfilmentItem().getItemCode(), invItemSummlv1, getManagedBean().getChargeLineItemRoot());
-//			for(FlInvoiceItemSummary lv2 : invItemSumm){
-//				TreeNode lv2TreeNode = new DefaultTreeNode(invItemSummlv1.getFlFulfilmentItem().getItemCode(), lv2, lv1TreeNode);
-//				for(FlInvoiceItem lv3 : lv2.getFlInvoiceItem()){
-//					new DefaultTreeNode(invItemSummlv1.getFlFulfilmentItem().getItemCode(), lv3, lv2TreeNode);
-//				}
-//				
-//			}
-			
-//			if(getManagedBean().getSelectedNode()==null) {
-//				getManagedBean().setSelectedNode(lv1TreeNode);
-//				lv1TreeNode.setSelected(true);
-//				onNodeSelect();
-//			}
-//		}
-//		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-//		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-//		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
-//		getManagedBean().setCanAmtGrandTotal(grandTotalCanAmt);
-//		getManagedBean().setDanAmtGrandTotal(grandTotalDanAmt);
+		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
+		getManagedBean().setCanAmtGrandTotal(grandTotalCanAmt);
+		getManagedBean().setDanAmtGrandTotal(grandTotalDanAmt);
 	}
 	
 	/**
