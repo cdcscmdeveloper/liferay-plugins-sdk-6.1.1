@@ -94,7 +94,7 @@
 
 							</p:column>
 						</p:dataTable>
-	                <p:spacer height="2px"></p:spacer>
+						<p:spacer height="2px"></p:spacer>
 						<div align="right" style="width: 100%">
 							<c:if test="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}">
 								<p:commandButton value="#{lbl['lbl.btn.add']}"
@@ -212,7 +212,7 @@
 										<table>
 											<tr>
 												<td class="TableFieldLeft"><ac:lov id="supplier"
-														lovId="SM_SUPPLIER"
+														lovId="SM_SUPPLIER_SQ"
 														postUpdateListener="simpleQuoteBackingBean.supplierListListener(simpleQuoteBackingBean.managedBean.smSuppliers, simpleQuoteBackingBean.managedBean.scQuote)"
 														headerText="Supplier List"
 														buttonLabel="#{lbl['lbl.btn.add']}"
@@ -342,8 +342,7 @@
 														process="@this,bypanelItemId" partialSubmit="true"
 														rendered="#{simpleQuoteBackingBean.managedBean.rnToSQFlag}"
 														oncomplete="panelSupplierDeletePopUp.show();"
-														update="@([id$=#{panelSupplierDeleteId}])" /> 
-													<ac:confirmationPopup
+														update="@([id$=#{panelSupplierDeleteId}])" /> <ac:confirmationPopup
 														id="panelSupplierDeleteId"
 														widget="panelSupplierDeletePopUp"
 														okAction="simpleQuoteBackingBean.deletePanelSupplier"
