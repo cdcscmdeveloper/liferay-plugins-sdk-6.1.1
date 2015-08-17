@@ -301,6 +301,7 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	 * 
 	 */
 	public void selectDanItem() {
+		onNodeUnSelect();
 		if(getManagedBean().getSelectedNode()!=null) {
 			AdjustmentItemNodeVO adjustmentItemNodeVO = (AdjustmentItemNodeVO) getManagedBean().getSelectedNode().getData();
 			if(adjustmentItemNodeVO.getFlAdjustmentItem()!=null) {
