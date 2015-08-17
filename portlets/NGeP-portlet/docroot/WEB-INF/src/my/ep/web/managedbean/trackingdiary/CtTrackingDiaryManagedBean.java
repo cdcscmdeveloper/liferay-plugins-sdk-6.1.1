@@ -15,7 +15,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.ct.ContractIntegrationReqDTO;
 import my.ep.dto.ct.ContractIntegrationResDTO;
 import my.ep.persistence.entity.ct.VCtDocument;
-import my.ep.type.aut.SearchOperator;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -42,6 +42,8 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 	private String searchPhysicalDocNo;	
 	private String searchLoaNo;
 	private String searchPhysicalLoaNo;
+	private Long searchMinistryProfileId;
+	private PmOrgProfile searchPtjProfile;
 	private VCtDocument vCtDocument;
 	private IPagingDataModel<VCtDocument> ctDocumentDataModel = new CtDocumentPagingDataModel();
 	
@@ -68,46 +70,39 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			try {				
+			try {
+				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();				
+				searchBean.setUseEntityClass(true);
+				reqDTO.setCtDocumentSearchBean(searchBean);
+				
 				if (getSearchTransactionType() != null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("TRANSACTION_TYPE",SearchOperator.OPERATOR_EQUALS.value(),getSearchTransactionType()));
+					reqDTO.setTransactionType(getSearchTransactionType());
 				}		
 				
 				if (getSearchDocNo() != null && getSearchDocNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("DOC_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchDocNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);					
+					reqDTO.setDocNo(getSearchDocNo());
 				}
 				if (getSearchDocType() != null) {
-					SearchFilterBean filterBean = new SearchFilterBean("DOC_TYPE",SearchOperator.OPERATOR_LIKE.value(),getSearchDocType());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);					
+					reqDTO.setDocType(getSearchDocType());
 				}
 				if (getSearchPhysicalDocNo() != null && getSearchPhysicalDocNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("PHYSICAL_DOC_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalDocNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
+					reqDTO.setPhysicalDocNo(getSearchPhysicalDocNo());
 				}
 				if (getSearchLoaNo() != null && getSearchLoaNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("LOA_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchLoaNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
+					reqDTO.setLoaNo(getSearchLoaNo());
 				}
 				if (getSearchPhysicalLoaNo() != null && getSearchPhysicalLoaNo().trim() != "") {
-					SearchFilterBean filterBean = new SearchFilterBean("PHYSICAL_LOA_NO",SearchOperator.OPERATOR_LIKE.value(),getSearchPhysicalLoaNo());
-					filterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(filterBean);
+					reqDTO.setPhysicalLoaNo(getSearchPhysicalLoaNo());
+				}
+				if (getSearchPtjProfile() != null) {
+					reqDTO.setPtjOrgId(getSearchPtjProfile().getOrgProfileId());
+					
+				} else if (getSearchMinistryProfileId() != null) {
+					reqDTO.setMinistryOrgId(getSearchMinistryProfileId());
 				}
 				
-				// Order by document number
-				searchBean.getSortColumns().add(new SearchOrderBean("DOC_NO"));
-				
 				IContractIntegrationSO contractIntegrationSO = (IContractIntegrationSO) EpEjbBusinessDelegate.getInstance().getServiceObject(
-						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);
-				ContractIntegrationReqDTO reqDTO = new ContractIntegrationReqDTO();
-				
-				searchBean.setUseEntityClass(true);
-				reqDTO.setCtDocumentSearchBean(searchBean);
+						ModuleCodeConst.CONTRACT_MANAGEMENT, IContractIntegrationSO.class);								
 				ContractIntegrationResDTO resDTO = contractIntegrationSO.searchContractDocument(reqDTO);
 				
 				return resDTO.getCtDocumentSearchResultBean();
@@ -200,6 +195,34 @@ public class CtTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void setSearchPhysicalLoaNo(String searchPhysicalLoaNo) {
 		this.searchPhysicalLoaNo = searchPhysicalLoaNo;
+	}	
+
+	/**
+	 * @return the searchMinistryProfileId
+	 */
+	public Long getSearchMinistryProfileId() {
+		return searchMinistryProfileId;
+	}
+
+	/**
+	 * @param searchMinistryProfileId the searchMinistryProfileId to set
+	 */
+	public void setSearchMinistryProfileId(Long searchMinistryProfileId) {
+		this.searchMinistryProfileId = searchMinistryProfileId;
+	}
+
+	/**
+	 * @return the searchPtjProfile
+	 */
+	public PmOrgProfile getSearchPtjProfile() {
+		return searchPtjProfile;
+	}
+
+	/**
+	 * @param searchPtjProfile the searchPtjProfile to set
+	 */
+	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
+		this.searchPtjProfile = searchPtjProfile;
 	}
 
 	/**
