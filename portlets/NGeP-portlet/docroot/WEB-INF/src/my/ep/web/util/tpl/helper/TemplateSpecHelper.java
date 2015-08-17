@@ -35,6 +35,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecScoring;
 import my.ep.persistence.entity.tpl.spec.TplSpecSuppAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecTierQty;
 import my.ep.persistence.entity.tpl.spec.TplSpecZone;
+import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -676,7 +677,7 @@ public class TemplateSpecHelper {
 	 * 		the template specification tier quantity
 	 * @return	the TplSpecAnswer instance
 	 */
-	public TplSpecAnswer createNewSpecAnswer(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion, 
+	public TplSpecAnswer createNewSpecAnswer(TemplateSpecBean templateSpecBean, TplSpecQuestion specQuestion, TplSpecZoneDtl specZoneDtl,
 			TplSpecTierQty specTierQty) {
 		
 		TplSpecAnswer newSpecAnswer = new TplSpecAnswer();
@@ -687,7 +688,7 @@ public class TemplateSpecHelper {
 		
 		TplSpecSuppAnswer newSpecSuppAnswer = new TplSpecSuppAnswer();
 		newSpecSuppAnswer.setSmSupplier(templateSpecBean.getSupplier());
-		newSpecSuppAnswer.setTplSpecZoneDtl(templateSpecBean.getTplSpecZoneDtl());
+		newSpecSuppAnswer.setTplSpecZoneDtl(specZoneDtl);
 		newSpecAnswer.setTplSpecSuppAnswer(newSpecSuppAnswer);
 		setUserDetails(newSpecSuppAnswer);
 		
