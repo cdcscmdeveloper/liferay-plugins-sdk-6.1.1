@@ -66,6 +66,7 @@
 						style="width: 178px;margin-bottom: 5px;">
 						<f:selectItems
 							value="#{specificationBackingBean.getDropdownValues(ParameterTypeConst.procurementTypeCategory)}" />
+						<p:ajax event="change" process="@this" partialSubmit="true"></p:ajax>
 					</p:selectOneMenu> <p:message id="procuremntypeCategorySpecCommittee"
 						for="specCommitteeprocTypeCategory" display="icon" /></td>
 				<td style="width: 275px;"><h:outputLabel
