@@ -26,6 +26,22 @@
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" maxlength="17" style="width:170px;"/>
            <p:outputLabel value="#{lbl['lbl.ct.contract.title']}" />
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}" maxlength="1000" style="width:170px;"/>
+           <p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
+           <p:selectOneMenu id="searchMinistry" style="width:300px" disabled="#{contractDetailsBackingBean.disableMinistrySelection()}"
+                rendered="#{!contractDetailsBackingBean.isBPKCCA()}"
+                value="#{contractDetailsBackingBean.managedBean.searchMinistryProfileId}" >
+      	   		<f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
+      	   		<p:ajax event="change" process="@form" update="@([id$=searchPtj])"  listener="#{contractDetailsBackingBean.resetPtjProfile}"/>
+           </p:selectOneMenu>
+           <p:inputText value="#{lbl['lbl.pm.org.gst.na']}" maxlength="50" disabled="true" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
+           <p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
+           <ac:lov id="searchPtj" lovId="PM_ORG_PROFILE" size="40" readonly="true"
+				disabled="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.managedBean.searchMinistryProfileId==null}"
+				headerText="#{lbl['lbl.ct.ptj']}"
+				value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.pmOrgValidity.orgName}"
+				saveObject="contractDetailsBackingBean.managedBean.searchPtjProfile"
+				conditionField="#{contractDetailsBackingBean.getPTJCondition()}">			
+			</ac:lov>
            <p:outputLabel value="#{lbl['lbl.ct.physical.circular.no']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" maxlength="50" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:outputLabel value="#{lbl['lbl.ct.circular.name']}" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
@@ -66,7 +82,8 @@
         	 id="searchButtonId" value="#{lbl['lbl.btn.search']}" validateClient="true"  action="#{contractDetailsBackingBean.searchContract}" 
         	 onstart="blkContractSearchTable.show();" oncomplete="blkContractSearchTable.hide();"    update="contractTbl"/>
              <p:commandButton value="#{lbl['lbl.ct.reset']}" action="#{contractDetailsBackingBean.searchReset}"    update=":form"/>
-	  	</div>	
+	  	</div>	  		  
+	  	<ac:lovPopup />
 	  </p:panel>
 		<p:panel id="searchResulId"	header="#{lbl['lbl.ct.search.result']}" toggleable="true"	toggleSpeed="500">
 			<div style="overflow-x: auto">				

@@ -81,6 +81,40 @@
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.loa.physical.no']}"/>
 					</td>
 				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.ministry']}" />
+					</td>
+					<td width="35%">
+						<p:selectOneMenu id="searchMinistry" style="width:314px" disabled="#{ctTrackingDiaryBackingBean.disableMinistrySelection()}"
+			                rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != ParameterConst.contractTypeCentral}"
+			                value="#{ctTrackingDiaryBackingBean.managedBean.searchMinistryProfileId}" >
+			      	   		<f:selectItems value="#{ctTrackingDiaryBackingBean.getMinistryDropdown()}"/>
+			      	   		<p:ajax event="change" process="@form" update="@([id$=searchPtj])"  listener="#{ctTrackingDiaryBackingBean.resetPtjProfile}"/>
+			           </p:selectOneMenu>
+			           <p:inputText value="#{lbl['lbl.pm.org.gst.na']}" disabled="true" style="width:314px;" rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral}"/>
+			           
+					</td>
+				</tr>
+				<tr>
+					<td width="35%">
+						<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
+					</td>
+					<td width="35%">
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE" size="40" readonly="true" style="width:314px"
+							disabled="#{ctTrackingDiaryBackingBean.isContractAdmin() or ctTrackingDiaryBackingBean.isApprover() 
+								or ctTrackingDiaryBackingBean.managedBean.searchMinistryProfileId==null}"
+							rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != ParameterConst.contractTypeCentral
+								or !ctTrackingDiaryBackingBean.isGeneralAuditor()}"
+							headerText="#{lbl['lbl.ct.ptj']}"
+							value="#{ctTrackingDiaryBackingBean.managedBean.searchPtjProfile.pmOrgValidity.orgName}"
+							saveObject="ctTrackingDiaryBackingBean.managedBean.searchPtjProfile"
+							conditionField="#{ctTrackingDiaryBackingBean.getPTJCondition()}">			
+						</ac:lov>
+						<p:inputText value="#{lbl['lbl.pm.org.gst.na']}" disabled="true" style="width:314px;" rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.contractTypeCentral
+							and ctTrackingDiaryBackingBean.isGeneralAuditor()}"/>
+					</td>
+				</tr>
 				</h:panelGroup>
 				<h:panelGroup rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.doctypeCentralContractCircular
 					or ctTrackingDiaryBackingBean.managedBean.searchTransactionType eq ParameterConst.doctypePanelCircular}"> 
@@ -101,6 +135,7 @@
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{ctTrackingDiaryBackingBean.reset}" update=":form"  process="@this"/>
 			</div>
+			<ac:lovPopup />
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<p:dataTable id="ctDocListDt"

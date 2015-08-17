@@ -19,15 +19,12 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
@@ -167,7 +164,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	//private SmAddress smAddress;
 	private PmDigiSign pmDigiSign;	
 	private IPagingDataModel<VCtContract> contractDataModel = new ContractPagingDataModel();
-		
+	
+	private Long searchMinistryProfileId;
+	private PmOrgProfile searchPtjProfile;
+	
 	public int deductionIndex =99;
 	public int scheduleIndex =99;
 	public int factoring = 99;
@@ -597,7 +597,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	public void setJabatanProfileId(Long jabatanProfileId) {
 		this.jabatanProfileId = jabatanProfileId;
 	}
-
+	
 	/**
 	 * @return the paidAdvancePaymentAmt
 	 */
@@ -1502,6 +1502,34 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 	 */
 	public void setPmDigiSign(PmDigiSign pmDigiSign) {
 		this.pmDigiSign = pmDigiSign;
+	}	
+
+	/**
+	 * @return the searchMinistryProfile
+	 */
+	public Long getSearchMinistryProfileId() {
+		return searchMinistryProfileId;
+	}
+
+	/**
+	 * @param searchMinistryProfile the searchMinistryProfileId to set
+	 */
+	public void setSearchMinistryProfileId(Long searchMinistryProfileId) {
+		this.searchMinistryProfileId = searchMinistryProfileId;
+	}
+
+	/**
+	 * @return the searchPtjProfile
+	 */
+	public PmOrgProfile getSearchPtjProfile() {
+		return searchPtjProfile;
+	}
+
+	/**
+	 * @param searchPtjProfile the searchPtjProfile to set
+	 */
+	public void setSearchPtjProfile(PmOrgProfile searchPtjProfile) {
+		this.searchPtjProfile = searchPtjProfile;
 	}
 
 	/**
@@ -1538,38 +1566,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		@Override
 		public ISearchResultBean<VCtContract> pageChangeListener(ISearchBean<VCtContract> searchBean) {
 			IContractSO contractSO = null;
-			IUserSO userSO = null;
 			try {
 				FacesScopes fc = new FacesScopes();
-				if (fc.hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
-					// by pass authorization filtering for AUDITOR_GENERAL
-				}
-				else if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())
-						|| fc.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
-						|| fc.hasRoleUser(RoleCode.BPK_CCA.value())) {
-					
-					userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-					UserReqDTO reqDTO = new UserReqDTO();
-					reqDTO.setUserId(fc.getUserSessionBean().getUserId());
-					
-					UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-					PmOrgProfile orgProfile = null;
-					String searchBeanStr = "ctContract.ownerOrgProfile.orgProfileId";
-					if (resDTO.getUserOrgList() != null) {
-						orgProfile = resDTO.getUserOrgList().get(0).getPmOrgProfile();
-						
-						if (fc.hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {
-							searchBeanStr = "ctContract.ownerOrgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
-						}
-						
-						SearchFilterBean filterBean = new SearchFilterBean(searchBeanStr, SearchOperator.OPERATOR_EQUALS.value(),
-								orgProfile.getOrgProfileId());
-						searchBean.getDataFilterBeans().add(filterBean);
-					} else {
-						return null;
-					}
-				} else if (fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
+				if (fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_ADMIN.value())
 						|| fc.hasRoleUser(RoleCode.BASIC_SUPPLIER_USER.value())
 						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_ADMIN.value())
 						|| fc.hasRoleUser(RoleCode.MOF_SUPPLIER_USER.value())) {
@@ -1577,7 +1576,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 					SupplierSearchReqDTO supplierSearchReqDTO = new SupplierSearchReqDTO();
 					supplierSearchReqDTO.setUserId(fc.getUserSessionBean().getUserId());
 					ISupplierSearchSO supplierSearchSO = (ISupplierSearchSO) BusinessDelegate.getInstance().getServiceObject(
-							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);					
+							ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierSearchSO.class);	
 					SupplierSearchResDTO supplierSearchResDTO = supplierSearchSO.retriveSupplierProfiles(supplierSearchReqDTO);
 					
 					if (supplierSearchResDTO.getResultBean() != null && supplierSearchResDTO.getResultBean().getResultList() != null 
@@ -1586,12 +1585,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 		  		        for (SmSupplier supplier : supplierSearchResDTO.getResultBean().getResultList()) {
 		  		        	supplierIdList.add(supplier.getSupplierId());
 		  		        }
-						
-						SearchFilterBean filterBean = new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_IN.value(), supplierIdList);
-						searchBean.getDataFilterBeans().add(filterBean);
-					}
-				} else {
-					return null;
+						searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_IN.value(), 
+								supplierIdList));
+					}					
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("agStatus",SearchOperator.OPERATOR_NOT_EQUALS.value(), 2));		
 				}
 				
 				if (getCtNumber() != null && getCtNumber().length() > 0) {
@@ -1605,6 +1602,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 													getCtName());
 					filterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(filterBean);				
+				}
+				if (getSearchPtjProfile() != null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.ownerOrgProfile.orgProfileId", SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchPtjProfile().getOrgProfileId()));
+					
+				} else if (getSearchMinistryProfileId() != null) {
+					String searchBeanStr = "ctContract.ownerOrgProfile." + OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value());
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(searchBeanStr, SearchOperator.OPERATOR_EQUALS.value(),
+							getSearchMinistryProfileId()));
 				}
 				if (getCtCircularNo() != null && getCtCircularNo().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("ctCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
@@ -1620,7 +1626,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean {
 				}
 				if (getCtSupplierId() != null && getCtSupplierId().length() > 0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_EQUALS.value(),
-					getCtSupplierId()));
+							getCtSupplierId()));
 				}
 				if (getCtSupplierName() != null && getCtSupplierName().length() > 0) {
 					SearchFilterBean filterBean = new SearchFilterBean("companyName",SearchOperator.OPERATOR_LIKE.value(),
