@@ -1309,6 +1309,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			FulfilmentResDTO resDTO = adjustmentSO.retrieveAdjustmentById(reqDTO);
 			DebitAdjustmentNoteBackingBean adjBB = new DebitAdjustmentNoteBackingBean();
 			adjBB.getManagedBean().setAdjustment(resDTO.getAdjustment());
+			adjBB.getManagedBean().setSelectedTabIndex(0);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			resDTO.setAdjLink(true);
 			adjBB.setAdjustmentNote(resDTO);
