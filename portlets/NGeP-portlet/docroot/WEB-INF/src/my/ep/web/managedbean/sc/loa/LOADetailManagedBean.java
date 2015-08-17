@@ -250,6 +250,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	private BigDecimal overallContractAmt;
 	
+	private ScLoaReport branchInfoReport;
+	
 	
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1446,6 +1448,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setOverallContractAmt(BigDecimal overallContractAmt) {
 		this.overallContractAmt = overallContractAmt;
+	}
+
+	/**
+	 * @return the branchInfoReport
+	 */
+	public ScLoaReport getBranchInfoReport() {
+		return branchInfoReport;
+	}
+
+	/**
+	 * @param branchInfoReport the branchInfoReport to set
+	 */
+	public void setBranchInfoReport(ScLoaReport branchInfoReport) {
+		this.branchInfoReport = branchInfoReport;
 	}
 
 }
