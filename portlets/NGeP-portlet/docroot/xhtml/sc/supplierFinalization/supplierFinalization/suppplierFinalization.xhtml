@@ -16,15 +16,20 @@
 			text-align: left; 
 		}
 		
-		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
+		<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.zonal}">
 			.tdWidth: { 86%; }
 		</c:if>
-		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.isZonal()}">
+		<c:if test="#{!suppFinalizationBackingBean.managedBean.scQt.zonal}">
 			.tdWidth: { 100%; }
 		</c:if>		
 	</style>
-	
+
+	<ui:param name="decisionSupplFinalOrFwdHighAuth"
+			  value="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
+							suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}" />
+
 	<p:panel header="#{lbl['lbl.sc.sf.committee.decision']}" toggleable="true">
+
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
 			columnClasses="columnWidth20">
 			
@@ -57,9 +62,7 @@
 				
 		<p:outputPanel id="recommendSupplierPanel">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-				columnClasses="columnWidth20"
-				rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
-								suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
+				columnClasses="columnWidth20" rendered="#{decisionSupplFinalOrFwdHighAuth}">
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.recomend.type']}" />
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -92,9 +95,7 @@
 			</h:panelGrid>
 				
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-				columnClasses="columnWidth20"
-				rendered="#{suppFinalizationBackingBean.managedBean.recommendSupplier or 
-								suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
+				columnClasses="columnWidth20" rendered="#{decisionSupplFinalOrFwdHighAuth}">
 				<h:column>
 					<p:outputLabel value="#{lbl['lbl.sc.loi.loa.prepared.by']}" />
 					<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -111,8 +112,7 @@
 
 			<p:outputPanel id="fwdHigherAuthorityPanel">
 				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2"
-					columnClasses="columnWidth20"
-					rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
+					columnClasses="columnWidth20" rendered="#{suppFinalizationBackingBean.managedBean.forwardToHigherAuthority}">
 					
 					<h:column rendered="#{!suppFinalizationBackingBean.managedBean.forwardToBpk}">
 						<p:outputLabel value="#{lbl['lbl.sc.sf.higher.authority']}" />
@@ -177,7 +177,8 @@
 		
 		<p:outputPanel id="onlineBiddingPanel">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" 
-						 width="100%" columns="2" columnClasses="columnWidth20">
+						 width="100%" columns="2" columnClasses="columnWidth20" 
+						 rendered="#{decisionSupplFinalOrFwdHighAuth}">
 					<h:column>
 						<p:outputLabel value="#{lbl['lbl.sc.online.bidding.endorsement']}" />
 						<p:outputLabel value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory"/>
@@ -281,9 +282,8 @@
 	<p:outputPanel id="itemSupplierPanel">
 		<table style="border: 0px;width:100%;">
 			<tr>
-				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.isZonal() and
-				 			  (suppFinalizationBackingBean.managedBean.recommendSupplier or 
-				 			  	suppFinalizationBackingBean.managedBean.forwardToHigherAuthority)}">
+				<c:if test="#{suppFinalizationBackingBean.managedBean.scQt.zonal and
+				 			  decisionSupplFinalOrFwdHighAuth}">
 				 			  	
 					<td width="14%" class="sidemenutd" valign="top">
 						<p:remoteCommand name="onZoneTabChangeAction" update="@form" 
