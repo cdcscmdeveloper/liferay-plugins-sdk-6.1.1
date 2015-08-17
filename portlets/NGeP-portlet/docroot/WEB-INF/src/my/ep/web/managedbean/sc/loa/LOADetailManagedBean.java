@@ -252,6 +252,9 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	
 	private ScLoaReport branchInfoReport;
 	
+	private boolean renderRemainder;
+	
+	private boolean displayAlert;
 	
 	/** The spki backing bean. */
     @ManagedProperty(value="#{spkiBackingBean}")
@@ -1462,6 +1465,34 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	 */
 	public void setBranchInfoReport(ScLoaReport branchInfoReport) {
 		this.branchInfoReport = branchInfoReport;
+	}
+
+	/**
+	 * @return the renderRemainder
+	 */
+	public boolean isRenderRemainder() {
+		return renderRemainder;
+	}
+
+	/**
+	 * @param renderRemainder the renderRemainder to set
+	 */
+	public void setRenderRemainder(boolean renderRemainder) {
+		this.renderRemainder = renderRemainder;
+	}
+
+	/**
+	 * @return the displayAlert
+	 */
+	public boolean isDisplayAlert() {
+		return displayAlert;
+	}
+
+	/**
+	 * @param displayAlert the displayAlert to set
+	 */
+	public void setDisplayAlert(boolean displayAlert) {
+		this.displayAlert = displayAlert;
 	}
 
 }
