@@ -6658,8 +6658,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>Direct Nego</portlet-name>
-		<display-name>Direct Nego/LOA</display-name>
+		<portlet-name>scCreateManualSourcing</portlet-name>
+		<display-name>Create Manual Sourcing</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -6673,7 +6673,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Direct Nego/LOA</title>
+			<title>Create Manual Sourcing</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -6690,7 +6690,39 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+	<portlet>
+		<portlet-name>scReviewManualSourcing</portlet-name>
+		<display-name>Review Manual Sourcing</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sc/loa/directnego/preRenderSubmitDirectLoa.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Review Manual Sourcing</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<portlet>
 		<portlet-name>scCreateQuotationTender</portlet-name>
 		<display-name>Create Quotation / Tender</display-name>
@@ -6899,8 +6931,8 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>directNegoSupplierResponse</portlet-name>
-		<display-name>Direct Nego Supplier Response</display-name>
+		<portlet-name>scManualSourcingSupplierResponse</portlet-name>
+		<display-name>Manual Sourcing Supplier Response</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -6914,7 +6946,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Direct Nego Supplier Response</title>
+			<title>Manual Sourcing Supplier Response</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>

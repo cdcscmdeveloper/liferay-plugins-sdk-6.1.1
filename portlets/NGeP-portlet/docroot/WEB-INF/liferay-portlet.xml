@@ -2062,14 +2062,24 @@
 		</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Direct Nego</portlet-name>
+		<portlet-name>scCreateManualSourcing</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
-		<css-class-wrapper>directnego-portlet</css-class-wrapper>
+		<css-class-wrapper>manual-sourcing-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>scReviewManualSourcing</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>review-manual-sourcing-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>scCreateQuotationTender</portlet-name>
@@ -2139,7 +2149,7 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>directNegoSupplierResponse</portlet-name>
+		<portlet-name>scManualSourcingSupplierResponse</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
@@ -2147,7 +2157,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			directnegosupplierresponse-portlet
+			manual-sourcing-supplier-response-portlet
 		</css-class-wrapper>
 	</portlet>
 	

@@ -18,8 +18,7 @@
 			<tr>
 				<td width="21%"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.contract.signer']}" /> <p:outputLabel
-						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
-				</td>
+						value="*" styleClass="mandatory" /></td>
 				<td><c:if test="#{isEditableStatus}">
 						<p:selectOneMenu id="contractSigner"
 							value="#{directLOABackingBean.managedBean.scLoa.contractSigner.userId}"
@@ -27,7 +26,8 @@
 							label="#{lbl['lbl.sc.loiloa.loa.contract.signer']}">
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
-							<f:selectItems value="#{directLOABackingBean.managedBean.contractSignerList}"
+							<f:selectItems
+								value="#{directLOABackingBean.managedBean.contractSignerList}"
 								var="contractUser" itemLabel="#{contractUser.userName}"
 								itemValue="#{contractUser.userId}" />
 
@@ -49,7 +49,6 @@
 						value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 				</td>
 				<td><p:inputText id="loaSignerDesigId"
-						disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scLoa.loaSignerDesig}"
 						label="#{lbl['lbl.sc.loiloa.loa.signer.desig']}" required="true"
 						size="34">
@@ -69,21 +68,21 @@
 						value="#{lbl['lbl.sc.approver']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="loaApprover"
+						disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.approverUser.userId}"
-						disabled="#{!(isPendingSubmissionStatus or isPendingRevisionStatus)}"
-						required="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
+						r="#{directLOABackingBean.managedBean.scLoa.approvalReq}"
 						label="#{lbl['lbl.sc.approver']}"
 						style="width: 240px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 							itemValue="#{null}" />
-						<f:selectItems value="#{directLOABackingBean.managedBean.contractSignerList}"
+						<f:selectItems
+							value="#{directLOABackingBean.managedBean.approverList}"
 							var="pmUser" itemLabel="#{pmUser.userName}"
 							itemValue="#{pmUser.userId}" />
 						<p:ajax event="change"
 							listener="#{directLOABackingBean.approverChanged()}"
 							partialSubmit="true" process="@this" update="@this" />
-					</p:selectOneMenu>
-					<p:message id="loaApproverMsg" for="loaApprover" display="icon" />
+					</p:selectOneMenu> <p:message id="loaApproverMsg" for="loaApprover" display="icon" />
 				</td>
 			</tr>
 		</table>

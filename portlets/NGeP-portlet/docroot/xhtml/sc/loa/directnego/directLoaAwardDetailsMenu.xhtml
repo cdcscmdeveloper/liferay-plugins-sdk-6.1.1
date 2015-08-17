@@ -22,7 +22,7 @@
 				<td style="width: 10%"><h:outputLabel
 						value="#{lbl['lbl.sc.item.type']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="itemType"
+				<td><p:selectOneMenu id="itemType" disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.itemTypeId}"
 						style="width: 178px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
@@ -57,7 +57,7 @@
 			<tr>
 				<td valign="top" width="18%"><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td><p:selectOneRadio
-						value="#{directLOABackingBean.managedBean.scQt.zonal}">
+						value="#{directLOABackingBean.managedBean.scQt.zonal}"  disabled="#{!isEditableStatus}">
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
@@ -73,33 +73,16 @@
 		</table>
 		<h:panelGroup id="generalLocationList">
 
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
-						<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-					<td><p:selectOneMenu id="locationLevels"
-							label="#{lbl['lbl.sc.zone.location.level']}"
-							value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
-							style="width: 209px;">
-
-							<f:selectItems
-								value="#{directLOABackingBean.getDropdownLocationValues(ParameterTypeConst.locationLevel)}" />
-							<p:ajax event="change" update="generalLocationList"
-								listener="#{directLOABackingBean.selectZoneLocationLevel}"></p:ajax>
-						</p:selectOneMenu> <ac:iconTooltip
-							value="#{lbl['lbl.sc.zone.location.level.tooltip']}" /> <p:message
-							id="withzone" for="locationLevels" display="icon"></p:message></td>
-				</tr>
-			</table>
+			
 
 
 			<c:if test="#{directLOABackingBean.managedBean.scQt.zonal}">
 				<ui:include src="zonelocdetails.xhtml"></ui:include>
 			</c:if>
 
-			<c:if test="#{!directLOABackingBean.managedBean.scQt.zonal}">
+			<!-- <c:if test="#{!directLOABackingBean.managedBean.scQt.zonal}">
 				<ui:include src="locationDetails.xhtml"></ui:include>
-			</c:if>
+			</c:if> -->
 		</h:panelGroup>
 
 	</p:panel>
