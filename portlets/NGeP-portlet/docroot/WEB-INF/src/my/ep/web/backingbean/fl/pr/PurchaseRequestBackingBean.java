@@ -586,7 +586,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
 			setManualAddressList();
-		}		
+		}
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 	
 	/**
@@ -643,6 +644,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 * add manual delivery address to delivery address list(intended address for goods delivery).
 	 */
 	public void updateManualDeliveryAddrDt() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		getManagedBean().setEmailValidate(true);
 		if(null== getManagedBean().getFlManulaAddress().getAddressType().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
 			// add to cart validation

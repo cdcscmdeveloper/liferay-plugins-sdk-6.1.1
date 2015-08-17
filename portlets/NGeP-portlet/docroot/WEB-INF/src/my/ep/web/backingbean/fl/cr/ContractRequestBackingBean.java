@@ -708,7 +708,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 		if(getManagedBean().getManualAddressMap() == null || getManagedBean().getManualAddressMap().size() == 0){
 			setManualAddressList();
-		}		
+		}
+		getManagedBean().setAutoUpdate(Boolean.FALSE);
 	}
 	
 	/**
@@ -794,6 +795,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	 * 
 	 */
 	public void updateManualDeliveryAddrDt() {
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
 		getManagedBean().setEmailValidate(true);
 		IContractZoneSO contractZoneSO = (IContractZoneSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractZoneSO.class);
 		if(null== getManagedBean().getFlManulaAddress().getAddressType().getPmAddress() ||  getManagedBean().getFlManulaAddress().isEditable()){
