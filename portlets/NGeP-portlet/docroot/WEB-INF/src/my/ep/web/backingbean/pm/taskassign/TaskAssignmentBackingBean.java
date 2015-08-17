@@ -884,7 +884,7 @@ public class TaskAssignmentBackingBean extends BaseBackingBean<TaskAssignmentMan
 				MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
 			}
 		}finally{
-					
+			taskAssignmentSO = null;		
 		}
 		
 	}
