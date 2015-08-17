@@ -109,7 +109,7 @@ runScript: function(src,callback,failedcallback){
 	   $(".modal").append("<p/>");
 	}
     if (typeof message == 'undefined'){
-        $(".modal > p").html("Please wait .......");
+       // $(".modal > p").html("Please wait .......");
     }
     else {    
         $(".modal > p").html(message);
