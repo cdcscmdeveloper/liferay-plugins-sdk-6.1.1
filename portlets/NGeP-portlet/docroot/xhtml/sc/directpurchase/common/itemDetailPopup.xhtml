@@ -106,11 +106,10 @@
                 <ui:param name="requestNoteDtl" value="#{requestNoteBackingBean.managedBean.requestNoteDtl}"></ui:param>				
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.request.note.price.type']}"/> <p:outputLabel value="*" styleClass="mandatory" /></td>
-					<td><h:selectOneMenu id="priceType" style="width:90px;margin-top: 8px;"
-						required="#{!requestNoteBackingBean.managedBean.requestNoteDtl.selected}" 
+					<td><h:selectOneMenu id="priceType" style="width:189px;"
 						disabled="#{requestNoteBackingBean.managedBean.viewOnly}"
 						label="#{requestNoteBackingBean.managedBean.requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.price.type']}"
-						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.priceType.parameterId}">
+						value="#{requestNoteBackingBean.managedBean.requestNoteDtl.priceTypeId}">
 						 <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
 						<f:selectItems 
 							value="#{requestNoteBackingBean.getPriceTypeByPrice(requestNoteDtl.scRequestSupplierItem.supplierItemPrices)}"
@@ -120,7 +119,7 @@
 							
 							<p:ajax event="change" partialSubmit="true" 
 									process="@this"
-									listener="#{requestNoteBackingBean.supplierListener(requestNoteDtl.scRequestSupplierItem.supplierId, requestNoteDtl.priceType.parameterId, requestNoteDtl, requestNoteDtl.assignedUser.userId, requestNoteDtl.deliverTermTypeId)}" />
+									listener="#{requestNoteBackingBean.priceTypeChangeListener(requestNoteDtl.priceTypeId, requestNoteDtl)}" />
 					</h:selectOneMenu>
 					<p:message id="priceTypeMsg" for="priceType" display="icon" /> </td>
 				</tr>
@@ -128,7 +127,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.request.note.fulfill.type']}"/></td>
 					<td>	<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteBackingBean.managedBean.requestNoteDtl.fulfilmentType)}" 
-					   disabled="true" size="8" style="margin-top: 8px;"/> <ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" /></td>
+					   disabled="true" size="8" style="width: 177px;margin-top: 5px;"/> <ac:iconTooltip value="#{lbl['lbl.sc.fulfilment.tooltip']}" /></td>
 				</tr>
 
 			</table>

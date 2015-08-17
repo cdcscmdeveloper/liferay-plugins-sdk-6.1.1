@@ -202,7 +202,7 @@
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
-					   	<p:inputText value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.deliverTermType)}" 
+					   	<p:inputText style="margin-top: 8px;" value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.deliverTermType)}" 
 					   disabled="true" size="2"  />
 					
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
@@ -238,6 +238,7 @@
 						<h:outputText value="#{lbl['lbl.sc.direct.purchase.title']}" />
 					</f:facet>
 					 <p:inputTextarea id="procTypeCatTitle" rows="2" 
+					    label="#{lbl['lbl.sc.direct.purchase.title']}"
 					    cols="6" maxlength="100"  required="true"
 					    scrollHeight="3" value="#{requestNoteDtl.procurementTitle}" 
 					      autoResize="false" style="width:120px;">
