@@ -5,6 +5,7 @@ package my.ep.web.backingbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -16,18 +17,27 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.persistence.entity.ct.VCtDocument;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmTrackingDiary;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.ResourceBundleUtils;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -87,27 +97,16 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
 			
-			// Document type list for MC & CC
-			//if (getManagedBean().getSearchTransactionType() != null && getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_MINISTRY)
-			//		|| getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
-				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
-				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
-				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
-				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
-				docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
-				docTypeList.add(ParameterConst.DOCTYPE_REQUEST_FACTORING);
-				docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
-				docTypeList.add(ParameterConst.DOCTYPE_AGREEMENT);
-				docTypeList.add(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
-			//}
-			// Document type list for CQ & PQ
-//			else if (getManagedBean().getSearchTransactionType() != null && getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR)
-//					|| getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.DOCTYPE_PANEL_CIRCULAR)) {
-//				docTypeList.add(ParameterConst.DOCTYPE_CENTRAL_CONTRACT_CIRCULAR);
-//				docTypeList.add(ParameterConst.DOCTYPE_PANEL_CIRCULAR);
-//				docTypeList.add(ParameterConst.DOCTYPE_CANCEL_CIRCULAR_REQUEST);
-//			}
-			
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_CREATION);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_UPDATE);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_AMENDMENT);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_TERMINATION);
+			docTypeList.add(ParameterConst.DOCTYPE_CONTRACT_SUSPEND_ACTIVE);
+			docTypeList.add(ParameterConst.DOCTYPE_REQUEST_FACTORING);
+			docTypeList.add(ParameterConst.DOCTYPE_CHANGE_BANK_ACCOUNT);
+			docTypeList.add(ParameterConst.DOCTYPE_AGREEMENT);
+			docTypeList.add(ParameterConst.DOCTYPE_SUPPLEMENTAL_AGREEMENT);
+				
 			for (String docType : docTypeList) {
 				items.add(new SelectItem(docType, ResourceBundleUtils.getMessage(
 						getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, docType), ResourceBundleUtils.BUNDLE_COMMON_LABELS,
@@ -121,6 +120,134 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 							e.getMessage()));
 		}
 		return items;
+	}
+	
+	/**
+	 * The method used for generating a list of available ministry
+	 * for searching agency as selection.
+	 * 
+	 * @return the selection list of ministry
+	 */
+	public SelectItem[] getMinistryDropdown() {		
+		SelectItem[] items = null;
+		
+		try {
+		    int i = 1;
+		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByMinistry(reqDTO);
+		    
+		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		    items = new SelectItem[list.size() + 1];
+		    items[0] = new SelectItem(null, ResourceBundleUtils.getMessage("lbl.txt.select", 
+		    		ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()));
+			for (PmOrgProfile orgProfile : list) {
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+    
+    /**
+	 * Get PTJ condition for construct the LOV listing
+	 * @return String
+	 */
+	public String getPTJCondition() {
+		String condition = OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value())+"^"+
+				this.getManagedBean().getSearchMinistryProfileId();
+		return condition;
+	}
+	
+	/**
+	 * The method used to verify the login user is central contract 
+	 * administrator or ministry administrator.
+	 * 
+	 * @return true, if login user is central contract administrator or ministry administrator
+	 *         false, if login user is not central contract administrator or ministry administrator
+     */
+    public boolean isContractAdmin() {
+		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
+	}
+    
+    /**
+     * The method used to verify the login user is BPK approver 
+     * or contract approver.
+	 * 
+	 * @return true, if login user is BPK approver or contract approver
+	 *         false, if login user is not BPK approver or contract approver
+     */
+    public boolean isApprover() {
+		return (getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value()) 
+				|| getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()));
+	} 
+    
+    /**
+     * The method used to verify the login user is general auditor.
+	 * 
+	 * @return true, if login user is general auditor
+	 *         false, if login user is not general auditor
+     */
+    public boolean isGeneralAuditor() {
+		return (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value()));
+	} 
+    
+    /**
+   	 * The method used to disable the ministry selection
+   	 * if login user is central contract administrator
+   	 * or ministry administrator
+   	 * or internal auditor.
+   	 * 
+   	 * @return true, if login user is central contract administrator/ministry administrator/internal auditor
+   	 *         false, if login user is not central contract administrator/ministry administrator/internal auditor
+	 */
+    public boolean disableMinistrySelection() {
+    	return (isContractAdmin() || isApprover() || (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value()) 
+				&& !isGeneralAuditor()));
+    }
+    	
+	private void defaultMinistryPtjSearchValue() {
+		if (getManagedBean().getSearchTransactionType() != null) {				
+	    	if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_GENERAL.value())) {
+	    		this.getManagedBean().setSearchMinistryProfileId(null);
+	    		this.getManagedBean().setSearchPtjProfile(null);
+				
+			} else {
+				IUserSO userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+				UserReqDTO userReqDTO = new UserReqDTO();
+				userReqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+				UserResDTO userResDTO = userSO.retrieveUserOrgListByUserId(userReqDTO);
+				PmOrgProfile orgProfile = null;
+				if (userResDTO.getUserOrgList()!=null && userResDTO.getUserOrgList().size()>0) {
+					orgProfile = userResDTO.getUserOrgList().get(0).getPmOrgProfile();
+				}
+				
+				if (getManagedBean().getSearchTransactionType().equalsIgnoreCase(ParameterConst.CONTRACT_TYPE_CENTRAL)) {
+					this.getManagedBean().setSearchMinistryProfileId(null);
+					this.getManagedBean().setSearchPtjProfile(orgProfile);
+				} else {
+					if (getFacesScopes().hasRoleUser(RoleCode.AUDITOR_INTERNAL.value())) {			
+						this.getManagedBean().setSearchMinistryProfileId(orgProfile.getOrgProfileId());
+						this.getManagedBean().setSearchPtjProfile(null);
+					} else if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())
+							|| getFacesScopes().hasRoleUser(RoleCode.CT_APPROVER.value())) {
+						this.getManagedBean().setSearchMinistryProfileId(retrieveMinistryOrgProfile(orgProfile.getOrgProfileId()).getOrgProfileId());
+						this.getManagedBean().setSearchPtjProfile(orgProfile);
+					}
+				}
+			}
+		}
+    }
+	
+	/**
+	 * The method used reset PTJ profile value once select the Ministry
+	 */
+	public void resetPtjProfile() {
+		getManagedBean().setSearchPtjProfile(null);
 	}
 	
 	/**
@@ -142,6 +269,10 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 		this.getManagedBean().setSearchLoaNo(null);
 		this.getManagedBean().setSearchPhysicalDocNo(null);
 		this.getManagedBean().setSearchPhysicalLoaNo(null);
+		this.getManagedBean().setSearchMinistryProfileId(null);
+		this.getManagedBean().setSearchPtjProfile(null);
+		this.getManagedBean().resetCtDocumentDataModel();
+		defaultMinistryPtjSearchValue();
 	}
 	
 	/**
@@ -150,7 +281,6 @@ public class CtTrackingDiaryBackingBean extends BaseBackingBean<CtTrackingDiaryM
 	public void reset() {
 		this.getManagedBean().setSearchTransactionType(null);
 		resetSearchCriteria();
-		this.getManagedBean().resetCtDocumentDataModel();
 	}
 	
 	/**
