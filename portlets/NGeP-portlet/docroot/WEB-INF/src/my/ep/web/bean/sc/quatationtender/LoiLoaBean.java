@@ -10,9 +10,12 @@
  */
 package my.ep.web.bean.sc.quatationtender;
 
+import java.util.List;
+
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,6 +40,12 @@ public class LoiLoaBean {
 	
 	/** The pm status. */
 	private PmStatus pmStatus;
+	
+	/** The sc loi loa items. */
+	private List<ScLoiLoaItem> scLoiLoaItems;
+	
+	/** The supplier name */
+	private String supplierName;
 	
 	/**
 	 * Gets the sc loi.
@@ -122,6 +131,34 @@ public class LoiLoaBean {
 	 */
 	public void setPmStatus(PmStatus pmStatus) {
 		this.pmStatus = pmStatus;
+	}
+
+	/**
+	 * @return the scLoiLoaItems
+	 */
+	public List<ScLoiLoaItem> getScLoiLoaItems() {
+		return scLoiLoaItems;
+	}
+
+	/**
+	 * @param scLoiLoaItems the scLoiLoaItems to set
+	 */
+	public void setScLoiLoaItems(List<ScLoiLoaItem> scLoiLoaItems) {
+		this.scLoiLoaItems = scLoiLoaItems;
+	}
+
+	/**
+	 * @return the supplierName
+	 */
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+	/**
+	 * @param supplierName the supplierName to set
+	 */
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
 	}
 	
 }

@@ -15,7 +15,7 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sc.supp.name']}" /></td>
 					<td><p:inputText disabled="true" size="60"
-							value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoa.smSupplier.companyName}" /></td>
+							value="#{lOIDetailBackingBean.managedBean.selectedLoiLoaBean.supplierName}" /></td>
 				</tr>
 
 			</table>
@@ -24,7 +24,7 @@
 		<h:panelGroup>
 			<p:spacer height="15px" />
 			<p:dataTable id="itemDtl" var="loiLoaItem"
-				value="#{lOIDetailBackingBean.managedBean.scLoi.scLoiLoaItems}"
+				value="#{lOIDetailBackingBean.managedBean.selectedLoiLoaBean.scLoiLoaItems}"
 				rowKey="#{itemPrice}" rowIndexVar="index">
 
 				<p:column headerText="#{lbl['lbl.sc.zone']}" rendered="#{isZonal}">
