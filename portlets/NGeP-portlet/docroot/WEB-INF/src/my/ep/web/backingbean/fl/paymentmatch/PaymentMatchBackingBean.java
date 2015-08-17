@@ -28,7 +28,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
@@ -41,7 +40,6 @@ import my.ep.biz.service.pm.common.confgeneral.IConfigGeneralSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.fee.settings.IFeeExemptionSO;
-import my.ep.biz.service.sm.mofAccount.IMofAccountSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -63,8 +61,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionReqDTO;
 import my.ep.dto.pm.fee.settings.FeeExemptionResDTO;
-import my.ep.dto.sm.mofAccount.MofAccountReqDTO;
-import my.ep.dto.sm.mofAccount.MofAccountResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.payment.instruction.FLPaymentInstructionDataType;
 import my.ep.persistence.constant.DbValueConst;
@@ -72,7 +68,6 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
-import my.ep.persistence.entity.fl.adjust.FlAdjustmentItem;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
@@ -81,7 +76,6 @@ import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.persistence.entity.fl.payment.FlInvoiceItemSummary;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.payment.FlPaymentDeduction;
-import my.ep.persistence.entity.fl.payment.FlPaymentItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -93,9 +87,9 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmPrgActivity;
 import my.ep.persistence.entity.pm.common.PmSubSetia;
 import my.ep.persistence.entity.pm.common.PmVotFund;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.GSFType;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -115,6 +109,7 @@ import my.ep.web.constant.report.ReportConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.vo.InvoiceChargeLineVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -260,12 +255,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 					
 					getManagedBean().setSelectedTabIndex(0);
 					getManagedBean().setPaymentAdvice(resDTO.getPaymentAdvice());
-					for(FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
-						if(flPaymentItem.getFlAdjustmentItem()==null) {
-							flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
-							flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
-						}
-					}					
 					setAdjustmentDocNo(resDTO.getPaymentAdvice().getFlInvoice());
 					setStopInstrNo(resDTO.getPaymentAdvice().getFulfilmentOrder());					
 					flBB.initializeRemarkAndAttachement(resDTO.getPaymentAdvice().getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -320,12 +309,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				paymentAdvice = resDTO.getPaymentAdvice();
-				for(FlPaymentItem flPaymentItem : paymentAdvice.getFlPaymentItems()) {
-					if(flPaymentItem.getFlAdjustmentItem()==null) {
-						flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
-						flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
-					}
-				}
 				setAdjustmentDocNo(paymentAdvice.getFlInvoice());
 				setStopInstrNo(paymentAdvice.getFulfilmentOrder());
 				flBB.initializeRemarkAndAttachement(paymentAdvice.getFlWorkflowStatus(), resDTO.getRemarkList(), resDTO.getAttachmentList());
@@ -396,35 +379,6 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		
 		setAdjustmentDocNo(resDTO.getInvoice());
 		setStopInstrNo(resDTO.getInvoice().getFlFulfilmentOrder());
-		FlPaymentItem flPaymentItem = null;
-		paymentAdvice.setFlPaymentItems(new ArrayList<FlPaymentItem>());
-		for(FlInvoiceItemSummary invItemSumm : resDTO.getInvoice().getFlInvoiceItemSummary()) {
-			for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
-				flPaymentItem = new FlPaymentItem();
-				flPaymentItem.setFlPaymentAdvice(paymentAdvice);
-				flPaymentItem.setFlItem(invItem.getFlInvoiceItemSummary().getFlFulfilmentItem());
-				flPaymentItem.setFlInvoiceItem(invItem);
-				if(getManagedBean().getAdjustmentDocNo()!=null) {
-					for(FlAdjustment flAdjustment : paymentAdvice.getFlInvoice().getFlAdjustments()) {
-						if((flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE) || flAdjustment.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE)) && 
-								(flAdjustment.getRecordStatusFlg().intValue()==DbValueConst.RECORD_STATUS_ACTIVE)) {
-							for(FlAdjustmentItem flAdjustmentItem : flAdjustment.getFlAdjustmentItem()) {
-								if(flAdjustmentItem.getFlInvoiceItem()==invItem) {
-									flPaymentItem.setFlAdjustmentItem(flAdjustmentItem);
-									break;
-								}
-							}
-						}
-					}
-				}
-				if(flPaymentItem.getFlAdjustmentItem()==null) {
-					flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
-					flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(new BigDecimal(0));
-				}
-				paymentAdvice.getFlPaymentItems().add(flPaymentItem);
-			}
-			
-		}
 
 		return paymentAdvice;
 	}
@@ -633,82 +587,72 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	 */
 	public void populateChargeLineData(){
 		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-		 
-		//Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
-		Map<String, List<FlPaymentItem>> paymentItemsMap = new TreeMap<String, List<FlPaymentItem>>();
-		List<FlPaymentItem> flPaymentItemList = null;
-		for (FlPaymentItem flPaymentItem : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
-			if (paymentItemsMap.containsKey(flPaymentItem.getFlItem().getItemCode())) {
-				flPaymentItemList = paymentItemsMap.get(flPaymentItem.getFlItem().getItemCode());
-			} else {
-				flPaymentItemList = new ArrayList<FlPaymentItem>();
-			}
-			flPaymentItemList.add(flPaymentItem);
-			paymentItemsMap.put(flPaymentItem.getFlItem().getItemCode(), flPaymentItemList);
-		}
 		
-		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-		BigDecimal grandTotalInvAmt = new BigDecimal(0);
-		BigDecimal grandTotalDanAmt = new BigDecimal(0);
-		BigDecimal grandTotalCanAmt = new BigDecimal(0);
-		for(Entry<String, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
-		//for(Entry<Long, List<FlPaymentItem>> itemEntry : paymentItemsMap.entrySet()){
-			List<FlPaymentItem> paymentItems = itemEntry.getValue();
-			FlPaymentItem flPaymentItem = (FlPaymentItem) paymentItems.get(0).cloneEntity(); // parent entity, no need stored in DB.
-			flPaymentItem.setFlInvoiceItem((FlInvoiceItem) flPaymentItem.getFlInvoiceItem().cloneEntity());
-			if(flPaymentItem.getFlAdjustmentItem()==null) {
-				flPaymentItem.setFlAdjustmentItem(new FlAdjustmentItem());
-			} else {
-				flPaymentItem.setFlAdjustmentItem((FlAdjustmentItem) flPaymentItem.getFlAdjustmentItem().cloneEntity());
+		for(FlInvoiceItemSummary invItemSummLv2 : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()){
+			InvoiceChargeLineVO chargeLineLv1 = new InvoiceChargeLineVO();
+			chargeLineLv1.setLevel(1);
+			chargeLineLv1.setFlInvoiceSummary(invItemSummLv2);
+			TreeNode lv1TreeNode = new DefaultTreeNode(chargeLineLv1, getManagedBean().getChargeLineItemRoot());
+			InvoiceChargeLineVO chargeLineLv2 = new InvoiceChargeLineVO();
+			chargeLineLv2.setLevel(2);
+			chargeLineLv2.setFlInvoiceSummary(invItemSummLv2);
+			TreeNode lv2TreeNode = new DefaultTreeNode(chargeLineLv2, lv1TreeNode);
+			for(FlInvoiceItem invItemLv3 : invItemSummLv2.getFlInvoiceItem()){
+				InvoiceChargeLineVO chargeLineLv3 = new InvoiceChargeLineVO();
+				chargeLineLv3.setLevel(3);
+				chargeLineLv3.setFlInvoiceItem(invItemLv3);
+				new DefaultTreeNode(chargeLineLv3, lv2TreeNode);
 			}
-			flPaymentItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flPaymentItem.getFlItem().getItemCode(), flPaymentItem, getManagedBean().getChargeLineItemRoot());
-			
-			BigDecimal totalOrderAmt = new BigDecimal(0);
-			BigDecimal totalReceiveAmt = new BigDecimal(0);
-			BigDecimal totalRecallAmt = new BigDecimal(0);
-			BigDecimal totalInvAmt = new BigDecimal(0);
-			BigDecimal totalDanAmt = new BigDecimal(0);
-			for(FlPaymentItem chargeLineItem : paymentItems) {
-				new DefaultTreeNode(chargeLineItem.getFlItem().getItemCode(),chargeLineItem,childItemNode);
-				totalOrderAmt=totalOrderAmt.add(chargeLineItem.getFlInvoiceItem().getOrderedAmt());
-				totalReceiveAmt=totalReceiveAmt.add(chargeLineItem.getFlInvoiceItem().getReceivedAmt());
-				totalRecallAmt=totalRecallAmt.add(chargeLineItem.getFlInvoiceItem().getRecalledAmt());
-				totalInvAmt=totalInvAmt.add(chargeLineItem.getFlInvoiceItem().getInvAmt());
-				if(chargeLineItem.getFlAdjustmentItem()!=null) {
-					totalDanAmt=totalDanAmt.add(chargeLineItem.getFlAdjustmentItem().getAdjustedAmt());
-					if(null != chargeLineItem.getFlAdjustmentItem().getFlAdjustment()){
-						if(ParameterConst.DOCTYPE_CREDIT_ADJUSTMENT_NOTE.equalsIgnoreCase(chargeLineItem.getFlAdjustmentItem().getFlAdjustment().getDocType())){
-							grandTotalCanAmt = grandTotalCanAmt.add(totalDanAmt);
-						}else if(ParameterConst.DOCTYPE_DEBIT_ADJUSTMENT_NOTE.equalsIgnoreCase(chargeLineItem.getFlAdjustmentItem().getFlAdjustment().getDocType())){
-							grandTotalDanAmt = grandTotalDanAmt.add(totalDanAmt);
-						}
-					}
-				}
-			}			
-
-			flPaymentItem.getFlInvoiceItem().setOrderedAmt(totalOrderAmt);
-			flPaymentItem.getFlInvoiceItem().setReceivedAmt(totalReceiveAmt);
-			flPaymentItem.getFlInvoiceItem().setRecalledAmt(totalRecallAmt);
-			flPaymentItem.getFlInvoiceItem().setInvAmt(totalInvAmt);
-			flPaymentItem.getFlAdjustmentItem().setAdjustedAmt(totalDanAmt);
-			
-			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
-			grandTotalInvAmt = grandTotalInvAmt.add(totalInvAmt);
-			
 			if(getManagedBean().getSelectedNode()==null) {
-				getManagedBean().setSelectedNode(childItemNode);
-				childItemNode.setSelected(true);
+				getManagedBean().setSelectedNode(lv1TreeNode);
+				lv1TreeNode.setSelected(true);
 				onNodeSelect();
 			}
 		}
-		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
-		getManagedBean().setCanAmtGrandTotal(grandTotalCanAmt);
-		getManagedBean().setDanAmtGrandTotal(grandTotalDanAmt);
+		
+		
+		//Map<Long, List<FlPaymentItem>> paymentItemsMap = new HashMap<Long, List<FlPaymentItem>>();
+//		Map<String, List<FlInvoiceItemSummary>> invItemSummMap = new TreeMap<String, List<FlInvoiceItemSummary>>();
+//		List<FlInvoiceItemSummary> flPaymentItemList = null;
+//		for (FlInvoiceItemSummary invItemSumm : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()) {
+//			String key = invItemSumm.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId().toString();
+//			if (invItemSummMap.containsKey(key)) {
+//				flPaymentItemList = invItemSummMap.get(key);
+//			} else {
+//				flPaymentItemList = new ArrayList<FlInvoiceItemSummary>();
+//			}
+//			flPaymentItemList.add(invItemSumm);
+//			invItemSummMap.put(key, flPaymentItemList);
+//		}
+//		
+//		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
+//		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
+//		BigDecimal grandTotalInvAmt = new BigDecimal(0);
+//		BigDecimal grandTotalDanAmt = new BigDecimal(0);
+//		BigDecimal grandTotalCanAmt = new BigDecimal(0);
+//		for(Entry<String, List<FlInvoiceItemSummary>> itemEntry : invItemSummMap.entrySet()){
+//			List<FlInvoiceItemSummary> invItemSumm = itemEntry.getValue();
+//			FlInvoiceItemSummary invItemSummlv1 = (FlInvoiceItemSummary) invItemSumm.get(0).cloneEntity(); // parent entity, no need stored in DB.
+//			TreeNode lv1TreeNode = new DefaultTreeNode(invItemSummlv1.getFlFulfilmentItem().getItemCode(), invItemSummlv1, getManagedBean().getChargeLineItemRoot());
+//			for(FlInvoiceItemSummary lv2 : invItemSumm){
+//				TreeNode lv2TreeNode = new DefaultTreeNode(invItemSummlv1.getFlFulfilmentItem().getItemCode(), lv2, lv1TreeNode);
+//				for(FlInvoiceItem lv3 : lv2.getFlInvoiceItem()){
+//					new DefaultTreeNode(invItemSummlv1.getFlFulfilmentItem().getItemCode(), lv3, lv2TreeNode);
+//				}
+//				
+//			}
+			
+//			if(getManagedBean().getSelectedNode()==null) {
+//				getManagedBean().setSelectedNode(lv1TreeNode);
+//				lv1TreeNode.setSelected(true);
+//				onNodeSelect();
+//			}
+//		}
+//		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
+//		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
+//		getManagedBean().setInvAmtGrandTotal(grandTotalInvAmt);
+//		getManagedBean().setCanAmtGrandTotal(grandTotalCanAmt);
+//		getManagedBean().setDanAmtGrandTotal(grandTotalDanAmt);
 	}
 	
 	/**
@@ -721,7 +665,25 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		List<BigDecimal> nonExemptedItemList = new ArrayList<BigDecimal>();
 		getManagedBean().getPaymentAdvice().setFeeAmt(new BigDecimal(0));
 		getManagedBean().setDeductionAmt(new BigDecimal(0));
-
+		getManagedBean().setGstAmount(BigDecimal.ZERO);
+		BigDecimal invoiceTotalAmount = new BigDecimal(0);//total non-exempted amt
+		BigDecimal gstTotalAmount = new BigDecimal(0);
+		
+		for(FlInvoiceItemSummary invItemSumm : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()){
+			invoiceTotalAmount = invoiceTotalAmount.add(invItemSumm.getInvAmt());
+			for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
+				if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())) {
+					gstTotalAmount = gstTotalAmount.add(invItem.getInvAmt());
+				}
+			}
+		}
+		if(gstTotalAmount.doubleValue()>0) {
+			BigDecimal gstAmount = getManagedBean().getPaymentAdvice().getFlRequest().getGstRate().multiply(gstTotalAmount).divide(BigDecimal.valueOf(106),2,RoundingMode.HALF_UP);
+			getManagedBean().setGstAmount(gstAmount);
+		} else {
+			getManagedBean().setGstAmount(BigDecimal.ZERO);
+		}
+		getManagedBean().setInvoiceAmountWithoutGST(invoiceTotalAmount.subtract(getManagedBean().getGstAmount()));
 		BigDecimal serviceFee = new BigDecimal(0);
 		if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 			serviceFee = new BigDecimal(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getServiceFee());
@@ -743,20 +705,20 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		}
 
 		if(serviceFee.doubleValue()>0){
-			for (FlPaymentItem data : getManagedBean().getPaymentAdvice().getFlPaymentItems()) {
+			for (FlInvoiceItemSummary data : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()) {
 				//check item whther is exempted for this supplier.
 
-				if(data.getFlItem().getCmItem()!=null) {
-					reqDTO.setItemId(data.getFlItem().getCmItem().getItemId());
+				if(data.getFlFulfilmentItem().getCmItem()!=null) {
+					reqDTO.setItemId(data.getFlFulfilmentItem().getCmItem().getItemId());
 				} 
-				reqDTO.setRequestItemId(data.getFlItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
+				reqDTO.setRequestItemId(data.getFlFulfilmentItem().getFlFulfilmentItemAddr().get(0).getScRequestItem().getRequestNoteItemId());
 				reqDTO.setOrgProfileId(getManagedBean().getPaymentAdvice().getFlRequest().getSmSupplier().getSupplierId());
 				if(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract() != null){
 					reqDTO.setContractId(getManagedBean().getPaymentAdvice().getFlRequest().getCtContract().getContractId());
 				}
 				resDTO = feeExemptionSO.checkForFeeException(reqDTO);
 				if(resDTO.getFeeExemptionResult() == null ||resDTO.getFeeExemptionResult() == false){
-					nonExemptedItemList.add(data.getFlInvoiceItem().getInvAmt());
+					nonExemptedItemList.add(data.getInvAmt());
 				}
 			}
 		}
@@ -839,31 +801,35 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		TreeNode selectedNode=getManagedBean().getSelectedNode();
 		onNodeUnSelect();
 		if(null!=selectedNode){
-			for(TreeNode children:selectedNode.getChildren()){
-				FlFulfilmentItem childData=((FlPaymentItem)children.getData()).getFlItem();
-				if(null !=childData.getPmVotFund()){
-					String votFundCode = childData.getPmVotFund().getVotFundCode();
-					getManagedBean().setVotFundCode(votFundCode);
-				}
-				if(childData.getAssetInd()!=null) {
-					getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
-				}
-				if(childData.getPmGlAccount()!=null) {
-					String glAccountCode = childData.getPmGlAccount().getGlAccCode();
-					getManagedBean().setGlAccountCode(glAccountCode);
-				}
-				if(childData.getPmPrgActivity()!=null) {
-					String progActvCode = childData.getPmPrgActivity().getPrgActivityCode();
-					getManagedBean().setPrgActivityCode(progActvCode);
-				}
-				if(childData.getPmSubSetia()!=null) {
-					String subSetiaCode = childData.getPmSubSetia().getSubSetiaCode();
-					getManagedBean().setSubSetiaCode((subSetiaCode));
-					getManagedBean().setSetiaCode(childData.getPmSubSetia().getSetiaCode());
-					getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
-					getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingType().getParameterCode());
+			InvoiceChargeLineVO treeNode = (InvoiceChargeLineVO)selectedNode.getData();
+			if(treeNode.getLevel() == 1){
+				for(TreeNode lv2Tree:selectedNode.getChildren()){
+					FlFulfilmentItem childData=((InvoiceChargeLineVO)lv2Tree.getData()).getFlInvoiceSummary().getFlFulfilmentItem();
+					if(null !=childData.getPmVotFund()){
+						String votFundCode = childData.getPmVotFund().getVotFundCode();
+						getManagedBean().setVotFundCode(votFundCode);
+					}
+					if(childData.getAssetInd()!=null) {
+						getManagedBean().setAssetIndCode(childData.getAssetInd().getParameterCode());
+					}
+					if(childData.getPmGlAccount()!=null) {
+						String glAccountCode = childData.getPmGlAccount().getGlAccCode();
+						getManagedBean().setGlAccountCode(glAccountCode);
+					}
+					if(childData.getPmPrgActivity()!=null) {
+						String progActvCode = childData.getPmPrgActivity().getPrgActivityCode();
+						getManagedBean().setPrgActivityCode(progActvCode);
+					}
+					if(childData.getPmSubSetia()!=null) {
+						String subSetiaCode = childData.getPmSubSetia().getSubSetiaCode();
+						getManagedBean().setSubSetiaCode((subSetiaCode));
+						getManagedBean().setSetiaCode(childData.getPmSubSetia().getSetiaCode());
+						getManagedBean().setProjectCode(childData.getPmSubSetia().getProjectCode());
+						getManagedBean().setFinancingTypeCode(childData.getPmSubSetia().getFinancingType().getParameterCode());
+					}
 				}
 			}
+			
 		}
 	}
 	
