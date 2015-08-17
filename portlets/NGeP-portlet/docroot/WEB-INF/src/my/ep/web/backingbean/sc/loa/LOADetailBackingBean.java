@@ -1434,12 +1434,12 @@ public class LOADetailBackingBean extends
 		}
 		context.put("gstAmt",gstAmount );
 		
-		String overallCtAmount = "";
+		String overallctAmt = "";
 		if (getManagedBean().getOverallContractAmt() != null) {
-			overallCtAmount = amountDF.format(getManagedBean()
+			overallctAmt = amountDF.format(getManagedBean()
 					.getOverallContractAmt());
 		}
-		context.put("gstAmt", overallCtAmount);
+		context.put("overallctAmt", overallctAmt);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_CONTRACT_SUMMARY, context,
@@ -4677,10 +4677,15 @@ public class LOADetailBackingBean extends
 				.getProcurementTypeCatId());
 		if ((supplier != null && supplier.getGstRegisteredFlag() == 1)
 				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
-						.equalsIgnoreCase(procCatType)
-				&& (null != scLoa.getGstEffDate()  && scLoa.getGstEffDate()
-						.compareTo(new Date()) >= 0)) {
-			isActive = false;
+						.equalsIgnoreCase(procCatType)){
+			if (null != scLoa.getGstEffDate()  && scLoa.getGstEffDate()
+						.compareTo(new Date()) >= 0) {
+					isActive = false;
+		      } else {
+		    	  isActive = true;
+		    	  getManagedBean().setRenderRemainder(isActive) ;
+		      }
+			
 		}
 		return isActive;
 	}
@@ -4708,6 +4713,7 @@ public class LOADetailBackingBean extends
 						.equalsIgnoreCase(procCatType)) {
 			BigDecimal durationMnth = new BigDecimal(0);
 			BigDecimal noOfMnth = new BigDecimal(12);
+			BigDecimal awardedPrice = new BigDecimal(0);
 			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 			if (scLoiLoa.getScLois() != null) {
 				for (ScLoi scLoi : scLoiLoa.getScLois()) {
@@ -4720,8 +4726,11 @@ public class LOADetailBackingBean extends
 					}
 				}
 			}
-			overallContractAmt =  (overallContractAmt.divide(durationMnth)).multiply(noOfMnth);
-			overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			awardedPrice =  (overallContractAmt.divide(durationMnth)).multiply(noOfMnth);
+			awardedPrice = awardedPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+			if(awardedPrice.intValue() > 500000){
+				getManagedBean().setDisplayAlert(true);
+			}
 	}
 		getManagedBean().setOverallContractAmt(overallContractAmt);
 		
