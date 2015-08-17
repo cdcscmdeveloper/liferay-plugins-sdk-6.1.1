@@ -2442,6 +2442,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedBranch().setGst(null);
 		}
 		assignValReqdToFalse();
+		initGst();
 		RequestContext.getCurrentInstance().reset(":form:tt:banchDialog");
 		RequestContext.getCurrentInstance().execute("banchDialog.hide()");
 	}
