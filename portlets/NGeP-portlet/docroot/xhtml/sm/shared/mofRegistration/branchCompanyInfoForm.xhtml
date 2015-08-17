@@ -5,6 +5,17 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<script type="text/javascript">
+		function hideBranchDialog() {
+			banchDialog.hide();
+			gstBrUploadDialog.show();
+		}
+		function hideUploadDialog() {
+			banchDialog.show();
+			gstBrUploadDialog.hide();
+		}
+	</script>
 
 	<p:panel toggleable="true" id="sample">
 		<f:facet name="header">
@@ -169,10 +180,9 @@
 			</p:outputPanel>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="550px" height="500px"
+	<p:dialog width="550px" height="500px" style="z-index:-1;"
 		header="#{lbl['lbl.sm.branch.branchDiaHdr']}" widgetVar="banchDialog"
-		id="banchDialog" resizable="false" showEffect="fade" hideEffect="fade"
-		modal="true" closable="false">
+		id="banchDialog" resizable="false" modal="true" closable="false">
 		<p:messages id="suppBranchMsg" showSummary="false" showDetail="true"
 			autoUpdate="true" closable="true" />
 		<ui:fragment
@@ -196,5 +206,16 @@
 				partialSubmit="true" process="@this"
 				action="#{backingBean.assignCancelBranchBean}" />
 		</div>
+	</p:dialog>
+	
+	<p:dialog id="gstBrUploadDialog" widgetVar="gstBrUploadDialog" modal="true"
+		dynamic="true" resizable="false" width="700px" height="200" onHide="banchDialog.show()"
+		position="top" style="z-index:-1;" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload allowTypes="/(\.|\/)(pdf|doc|docx)$/"
+			sizeLimit="1000000" process="@this"
+			invalidFileMessage="#{lbl['lbl.sm.upload.format.errmsg']}"
+			invalidSizeMessage="#{lbl['lbl.sm.upload.fileSize.exceed1Mb']}"
+			fileUploadListener="#{backingBean.handleGstSupDocFileAttachment}"
+			update="banchDialog" oncomplete="hideUploadDialog();" />
 	</p:dialog>
 </ui:composition>
