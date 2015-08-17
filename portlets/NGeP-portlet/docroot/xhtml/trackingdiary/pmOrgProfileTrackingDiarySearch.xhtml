@@ -14,7 +14,7 @@
 			<h:column>
 				<p:selectOneMenu 
 					value="#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgType.parameterId}"
-					styleClass="ppDropDownWidthM" id="somOrgType"
+					styleClass="ppDropDownWidthM" id="somOrgType" required="true"
 					label="#{lbl['lbl.pm.ta.org.type.name']}">
 						<p:ajax event="change" partialSubmit="true"
 							listener="#{pmTrackingDiaryBackingBean.changeOrgType()}"
@@ -27,14 +27,18 @@
 				<p:outputLabel value="#{lbl['lbl.pm.ta.org.name']}"/><p:outputLabel value="*" styleClass="mandatory" />
 			</h:column>
 			<h:column>
-			<ac:lov id="lovMinistry2" lovId="PM_ORG_PROFILE" size="55"
+			<p:inputText id="ministry" value="#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgName}" size="55"  disabled = "#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgType.parameterId == null}" required="true" label="#{lbl['lbl.pm.ta.org.name']}" />
+	
+		<!--	<ac:lov id="lovMinistry2" lovId="PM_ORG_PROFILE" size="55"
 				   disabled = "#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgType.parameterId == null or !pmTrackingDiaryBackingBean.managedBean.orgProfileRequired}"
-					update="@this"
+					update="@this" required="true" label="#{lbl['lbl.pm.ta.org.name']}"
 					headerText="#{lbl['lbl.pm.profiles.authorisation.org.lov']}"
 					value="#{pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgProfile.pmOrgValidity.orgName}"
 					saveObject="pmTrackingDiaryBackingBean.managedBean.organisationSearchBean.orgProfile"
 					conditionField="#{pmTrackingDiaryBackingBean.constructConditionFields()}" />
 					<p:message id="lovMinistryMsg" for="lovMinistry2" display="icon" />
+					
+					-->
 			</h:column>
 		</h:panelGrid>
 

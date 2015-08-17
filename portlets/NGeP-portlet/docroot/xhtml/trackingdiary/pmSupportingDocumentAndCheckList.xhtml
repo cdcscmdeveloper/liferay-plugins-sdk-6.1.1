@@ -13,8 +13,8 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 			</h:column>
 			<h:column>	
-					<p:selectOneMenu id="somDocCate" label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM"  
-						value="#{pmTrackingDiaryBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}">
+					<p:selectOneMenu id="somDocCate" label="#{lbl['lbl.pm.document.category']}" styleClass="ppDropDownWidthM" required="true"  
+						value="#{pmTrackingDiaryBackingBean.managedBean.supportDocSearchBean.docCategoryParamCode}" >
 						<f:selectItems  value="#{pmTrackingDiaryBackingBean.documentCategoryOptions(false)}"/>
 						<p:ajax event="change" update="pmDocSearchID" listener="#{pmTrackingDiaryBackingBean.docCategorySearchChange()}"/>
 					</p:selectOneMenu>
