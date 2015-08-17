@@ -37,6 +37,8 @@ public class TemplateSpecBean {
 	private List<TplSpecAnswer> specAnswerList;
 	private TplSpecZoneDtl tplSpecZoneDtl;
 	private boolean updateSpecByAnswers;
+	private List<TplSpecAnswer> specAnswersToDelete;
+	
 	/**
 	 * Constructor for template specification bean
 	 */
@@ -206,6 +208,20 @@ public class TemplateSpecBean {
 	 */
 	public void setUpdateSpecByAnswers(boolean updateSpecByAnswers) {
 		this.updateSpecByAnswers = updateSpecByAnswers;
+	}
+
+	/**
+	 * @return the specAnswersToDelete
+	 */
+	public List<TplSpecAnswer> getSpecAnswersToDelete() {
+		return specAnswersToDelete;
+	}
+
+	/**
+	 * @param specAnswersToDelete the specAnswersToDelete to set
+	 */
+	public void setSpecAnswersToDelete(List<TplSpecAnswer> specAnswersToDelete) {
+		this.specAnswersToDelete = specAnswersToDelete;
 	}
 	
 }
