@@ -3804,60 +3804,6 @@ public class LOADetailBackingBean extends
 
 	}
 
-	/**
-	 * Generate bond letter from velocity to pdf.
-	 *
-	 * @param attachment the attachment
-	 * @param scLoa the sc loa
-	 * @throws Exception the exception
-	 */
-	private void generateBondLetterFromVelocityToPdf(ScAttachment attachment,ScLoa scLoa)
-			throws Exception {
-		CommonUtils commonUtils = new CommonUtils();
-		SimpleDateFormat dateFormat = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT);
-		DecimalFormat amountDF = new DecimalFormat(
-				commonUtils
-						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
-		attachment.setFileName("Bond Letter.pdf");
-		populateAttachmentDetails(attachment);
-		VelocityContext context = new VelocityContext();
-		String contractNo = "Contract Number";
-		String supplierName = null;
-		String sourcingTitle = null;
-		String bondAmount = null;
-		String bondAmountWord = null; 
-		String expiryPeriod = null;
-		int type = 0;
-		
-		if(scLoa != null){
-			type = 1;
-			supplierName = scLoa.getScLoiLoa() != null ? scLoa.getScLoiLoa().getSupplierName() : " ";
-			sourcingTitle = scLoa.getScLoiLoa() != null? scLoa.getScLoiLoa().getTitle() : " ";
-			bondAmount = scLoa.getBondAmt() !=null ? amountDF.format(scLoa.getBondAmt()): " ";	
-			expiryPeriod = scLoa.getBondResDueDate() != null ? dateFormat.format(scLoa.getBondResDueDate()) : " ";
-			bondAmountWord = scLoa.getBondAmt() !=null ?  NumberWordUtil.convert(scLoa.getBondAmt().longValue()) : " ";
-			
-		}else{
-			type = 0;
-			supplierName ="Supplier Name";
-			sourcingTitle ="Sourcing Title";
-			bondAmount ="Bond Amount";
-			expiryPeriod = "Expiry Period";
-			bondAmountWord = "Bond Amount Word"; 
-		}
-		
-		context.put("type", type);
-		context.put("contractNo", contractNo);
-		context.put("supplierName", supplierName);
-		context.put("sourcingTitle", sourcingTitle);
-		context.put("bondAmount", bondAmount);
-		context.put("bondAmountWord", bondAmountWord);
-		context.put("expiryPeriod", expiryPeriod);
-		
-		DocumentGenerator.getInstance().generatePdfFromVelocity(
-				SourcingConstants.LOA_BOND_LETTER, context,
-				new FileOutputStream(getActualFilePath(attachment)));
-	}
 	
 	/**
 	 * Sort progressive payment list.
