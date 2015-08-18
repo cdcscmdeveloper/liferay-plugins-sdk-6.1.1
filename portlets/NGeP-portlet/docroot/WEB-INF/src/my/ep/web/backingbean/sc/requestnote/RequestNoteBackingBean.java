@@ -320,45 +320,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	}
 	
 	/**
-	 * Gets the pid for request item.
-	 *
-	 * @param rnDtl the rn dtl
-	 * @return the pid for request item
-	 */
-	private ScRequestNoteDtl getPidForRequestItem(ScRequestNoteDtl rnDtl) {
-		if(rnDtl.getRequestItem() != null && rnDtl.getRequestItem().getPurchaseInDefault() == null
-				&& getManagedBean().getPurchaseInDefaultId() != null) {
-			IPurchaseInDefaultSO purchaseInDefaultSO  = null;
-			try {
-				//TODO Based on ptj selection have to get pid for request note 
-				purchaseInDefaultSO = (IPurchaseInDefaultSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IPurchaseInDefaultSO.class);
-				PurchaseInDefaultReqDTO purchaseInDefaultReqDTO = new PurchaseInDefaultReqDTO();
-				// fetch pid item for request note item	
-
-				purchaseInDefaultReqDTO.setPurchaseInDefaultId(getManagedBean().getPurchaseInDefaultId());
-				PurchaseInDefaultResDTO defaultResDTO = purchaseInDefaultSO.getPurchaseInDefault(purchaseInDefaultReqDTO);
-
-				// pid to request note
-				if(defaultResDTO.getPurchaseInDefaultDtl() != null){
-					ScPurchaseInDefault  purchaseInDefault = defaultResDTO.getPurchaseInDefaultDtl();
-					rnDtl.getRequestItem().setPurchaseInDefault(purchaseInDefault);
-				}
-			}
-			finally {
-				purchaseInDefaultSO = null;
-			}
-		}
-		
-		return rnDtl;
-	}
-	
-	/**
 	 * Reload request note.
 	 *
 	 * @param requestNote the request note
 	 */
 	private void reloadRequestNote(ScRequestNote requestNote){
-		getManagedBean().setPiRNChecker(false);
+		boolean itemSearchBackBtn = Boolean.TRUE;	
 		getManagedBean().setAutoUpdate(true);
 		getCurrentStatus(requestNote.getCurrentStatus().getPmStatus());
 		getManagedBean().setTitleChecker(true);
@@ -383,10 +350,24 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				if(scRequestNoteDtl.getPriceType() != null){
 					scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());
 				}
+				
+				// get PI and PID id to Request note
+				if(scRequestSupplierItem.getScPrInquiy() != null){
+					getManagedBean().setPrInquiryId(scRequestSupplierItem.getScPrInquiy().getPrInquiryId());
+					// back to search catalouge button hide and show
+					itemSearchBackBtn = Boolean.FALSE;
+				} else if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+					itemSearchBackBtn = Boolean.FALSE;
+				}
 			}
 			
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
+		
+		// item search back button 
+		getManagedBean().setItemSearchBackBtn(itemSearchBackBtn);
+		
+		
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
 		getManagedBean().setRequestNoteDtl(requestNoteDtls.get(0));
 
@@ -663,8 +644,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param docStatusId the doc status id
 	 * @param zoneFlag the zone flag
 	 */
-	private void retrieveRequestNoteDetails(ScRequestNote requestNote , Long docStatusId , boolean zoneFlag) {
+	private void retrieveRequestNoteDetails(ScRequestNote requestNote, Long docStatusId, boolean zoneFlag) {
 		//RequestNote Details
+		boolean itemSearchBackBtn = Boolean.TRUE;
 		getManagedBean().setRequestNote(requestNote);
 		List<ScRequestNoteDtl>  requestNoteDtls = new ArrayList<ScRequestNoteDtl>();
 		if(requestNote.getRequestNoteDtls()  != null && requestNote.getRequestNoteDtls().size() >0){
@@ -680,11 +662,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 						scRequestNoteDtl.setvCmSupplierItem(vCmSupplierItem);
 					}
 
-					// get PI id to Request note
+					// get PI and PID id to Request note
 					if(scRequestSupplierItem.getScPrInquiy() != null){
 						getManagedBean().setPrInquiryId(scRequestSupplierItem.getScPrInquiy().getPrInquiryId());
 						// back to search catalouge button hide and show
-						getManagedBean().setPiRNChecker(Boolean.FALSE);
+						itemSearchBackBtn = Boolean.FALSE;
+					} else if(scRequestNoteDtl.getRequestItem() != null && scRequestNoteDtl.getRequestItem().getPurchaseInDefault() != null){
+						itemSearchBackBtn = Boolean.FALSE;
 					}
 				}
 
@@ -742,8 +726,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					scRequestNoteDtl.setConditionField(sb.toString());
 				}
 
-				//scRequestNoteDtl = getPidForRequestItem(scRequestNoteDtl);
-
 				supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),scRequestNoteDtl.getPriceType().getParameterId() ,
 						scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 				requestNoteDtls.add(scRequestNoteDtl);
@@ -758,13 +740,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// created by 
 		getManagedBean().setCreatedBy(getUserById(requestNote.getCreatedBy()).getUserName());
 
-		if (requestNote.getQuote() != null) {
-			//getManagedBean().setSourceMethod(ParameterConst.METHOD_SQ);
-
-		} else {
-			//getManagedBean().setSourceMethod(ParameterConst.METHOD_SC);
+		
+		if(requestNote.getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
 			getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
 		}
+		
+		getManagedBean().setItemSearchBackBtn(itemSearchBackBtn);
 		
 		// For status 
 		if(docStatusId != null){
@@ -1031,7 +1012,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 */
 	public void requestNoteAction() {
 		debugLogger("requestNoteAction");
-
+		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
+		
+		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
+			priceTypeChangeListener(requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl);
+		}
+		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "commonRequestNote");
 	}
@@ -1808,6 +1794,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}
 			getManagedBean().setRequestSupplierItem(scRequestSupplierItem);
+			
+			if(null != scRequestNoteDtl.getPriceType()){
+				scRequestNoteDtl.setPriceTypeId(scRequestNoteDtl.getPriceType().getParameterId());	
+			}
+			
 			getManagedBean().setRequestNoteDtl(scRequestNoteDtl);
 			getManagedBean().setAutoUpdate(Boolean.FALSE);
 		}
@@ -2651,8 +2642,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				requestNoteDtl.setAssignedUser(resDTO.getPmUser());	
 			}
 	}
-	
-	
 	
 	/**
 	 * Price type change listener.

@@ -837,9 +837,7 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						ScRequestNoteRemark.class));
 				
 				requestNoteBackingBean.getManagedBean().setFulfillmentType(ParameterConst.FULFILMENT_TYPE_ONE_OFF);
-				
-				// back to search catalouge button hide
-				requestNoteBackingBean.getManagedBean().setPiRNChecker(Boolean.FALSE);
+			
 				//redirect to RequestNote screen
 				return "commonRequestNote";
 			} else {

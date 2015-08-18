@@ -20,7 +20,7 @@
 				style="float:left;" id="backButton" partialSubmit="true"
 				process="@this" immediate="true"
 				action="#{requestNoteBackingBean.backToPrevious}"
-				rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}"
+				rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.itemSearchBackBtn}"
 				title="#{lbl['lbl.sc.itemsearch.tooltip']}">
 			</p:commandButton>
 
@@ -50,7 +50,7 @@
 								process="@this" partialSubmit="true" style="float:left;"
 								immediate="true"
 								action="#{requestNoteBackingBean.backToPrevious}"
-								rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.piRNChecker}" />
+								rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SC' and requestNoteBackingBean.managedBean.itemSearchBackBtn}" />
 						</c:if> <c:if test="#{isPendingApprovalStatus or isPendingSubmissionStatus 
 									  or isPendingRevisionStatus}">
 							<p:commandButton value="#{lbl['lbl.btn.save']}"
