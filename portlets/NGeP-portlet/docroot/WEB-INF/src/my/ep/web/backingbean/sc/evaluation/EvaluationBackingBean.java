@@ -8389,6 +8389,8 @@ public class EvaluationBackingBean extends
 		List<Integer> settinglist = new ArrayList<Integer>();
 		settinglist.add(1);
 		reqDTO.setSettingTypes(settinglist);
+		
+		log.info("before retrieveScoreSettingDtls");
 
 		specSo = BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
@@ -8396,6 +8398,8 @@ public class EvaluationBackingBean extends
 
 		List<ScQtScoreSetting> list = resDTO.getScoreSettingResultBean()
 				.getResultList();
+		
+		log.info("after retrieveScoreSettingDtls");
 
 		if (ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE.equals(this
 				.getManagedBean().getCommitteeType())) {
@@ -8426,15 +8430,21 @@ public class EvaluationBackingBean extends
 				}
 			}
 		}
+		
+		log.info("before paramMap");
 
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put(ReportConst.PARAM_QUOTE_ID_EQ, qtId + "");
 		paramMap.put(ReportConst.PARAM_KEY_USER_ID, facesScopes
 				.getUserSessionBean().getUserId() + "");
 		paramMap.put(ReportConst.PARAM_KEY_REPORT_ID, reportId + "");
+		
+		log.info("after paramMap");
 
 		generatePdfFromOracle(reportName, paramMap, attachment, this
 				.getManagedBean().isCheckReportDownload());
+		
+		log.info("end generateTeknikalSpecificationPdf");
 	}
 
 	/**
