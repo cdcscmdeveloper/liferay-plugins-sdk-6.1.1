@@ -3557,6 +3557,7 @@ public class QTDetailBackingBean extends
 
 		// this.getManagedBean().setToBeDelCommitteMemebers(null);
 		this.getManagedBean().setSelectedTabIndex(selectedCommitteeTabIndex);
+		this.getManagedBean().setSelectedCommitteeTabIndex(selectedCommitteeTabIndex);
 		TabBean committeTabBean = this.getManagedBean()
 				.getScCommitteeMemberTabList().get(selectedCommitteeTabIndex);
 
