@@ -210,8 +210,9 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     /** The compare supplier items. */
     private List<CmSupplierItem> compareSupplierItems = new ArrayList<CmSupplierItem>(); // copy supplier items from the compare screen
     
-    /** The pi rn checker. */
-    private boolean piRNChecker = Boolean.TRUE;
+ 
+    /** The item search back btn. */
+    private boolean itemSearchBackBtn;
     
     /** The delete request note dtls. */
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
@@ -1268,24 +1269,6 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	}
 	
 	/**
-	 * Checks if is pi rn checker.
-	 *
-	 * @return the piRNChecker
-	 */
-	public boolean isPiRNChecker() {
-		return piRNChecker;
-	}
-	
-	/**
-	 * Sets the pi rn checker.
-	 *
-	 * @param piRNChecker the piRNChecker to set
-	 */
-	public void setPiRNChecker(boolean piRNChecker) {
-		this.piRNChecker = piRNChecker;
-	}
-	
-	/**
 	 * Gets the delete request note dtls.
 	 *
 	 * @return the deleteRequestNoteDtls
@@ -1618,5 +1601,20 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	public void setProcTypeCategoryId(Long procTypeCategoryId) {
 		this.procTypeCategoryId = procTypeCategoryId;
 	}
+
+	/**
+	 * @return the itemSearchBackBtn
+	 */
+	public boolean isItemSearchBackBtn() {
+		return itemSearchBackBtn;
+	}
+
+	/**
+	 * @param itemSearchBackBtn the itemSearchBackBtn to set
+	 */
+	public void setItemSearchBackBtn(boolean itemSearchBackBtn) {
+		this.itemSearchBackBtn = itemSearchBackBtn;
+	}
+	
 	
 }
