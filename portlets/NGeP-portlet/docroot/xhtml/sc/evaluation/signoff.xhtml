@@ -48,7 +48,8 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip id="signOff#{row}" value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					<ac:iconTooltip id="signOff#{row}"
+						value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
@@ -65,7 +66,8 @@
 
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.action']}" style="width:10%;white-space: normal;">
+			<p:column headerText="#{lbl['lbl.sc.action']}"
+				style="width:10%;white-space: normal;">
 
 
 				<h:outputText
@@ -85,8 +87,7 @@
 		<ui:include src="/xhtml/sc/evaluation/chairPersonSignOff.xhtml" />
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.remark']}"
-		toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
 
 		<table style="width: 100%" id="remarkslist">
 			<tr>
@@ -116,8 +117,7 @@
 									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 											style="width:75%;" maxlength="1000"
 											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="blur" partialSubmit="true" process="@this"
-												listener="#{evaluationBackingBean.committeeRemarksSave}"></p:ajax>
+											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
 										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
 											rendered="#{remarkVar.remarkId ne null}"
 											style="display: inline-block; width:220px;word-wrap: break-word;" />
@@ -148,8 +148,7 @@
 									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 											style="width:75%;" maxlength="1000"
 											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="blur" partialSubmit="true" process="@this"
-												listener="#{evaluationBackingBean.committeeRemarksSave}"></p:ajax>
+											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
 										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
 											rendered="#{remarkVar.remarkId ne null}"
 											style="display: inline-block; width:220px;word-wrap: break-word;" />
@@ -180,8 +179,7 @@
 									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 											style="width:75%;" maxlength="1000"
 											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="blur" partialSubmit="true" process="@this"
-												listener="#{evaluationBackingBean.committeeRemarksSave}"></p:ajax>
+											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
 										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
 											rendered="#{remarkVar.remarkId ne null}"
 											style="display: inline-block; width:220px;word-wrap: break-word;" />
@@ -212,8 +210,7 @@
 									<td><p:inputTextarea cols="40" value="#{remarkVar.remark}"
 											style="width:75%;" maxlength="1000"
 											rendered="#{remarkVar.remarkId eq null}">
-											<p:ajax event="blur" partialSubmit="true" process="@this"
-												listener="#{evaluationBackingBean.committeeRemarksSave}"></p:ajax>
+											<p:ajax event="change" partialSubmit="true" process="@this"></p:ajax>
 										</p:inputTextarea> <h:outputText value="#{remarkVar.remark}"
 											rendered="#{remarkVar.remarkId ne null}"
 											style="display: inline-block; width:220px;word-wrap: break-word;" />
@@ -230,8 +227,7 @@
 			<td><div align="left" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.btn.prev']}"
 						actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
-						action="#{evaluationBackingBean.updateSmAppl}" 
-						update=":form" />
+						action="#{evaluationBackingBean.updateSmAppl}" update=":form" />
 				</div></td>
 
 		</tr>
