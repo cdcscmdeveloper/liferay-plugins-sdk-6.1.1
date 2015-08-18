@@ -6660,6 +6660,10 @@ public class EvaluationBackingBean extends
 						}
 					}
 				}
+				if (null != remarks && !remarks.isEmpty()) {
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evaluationSo.saveReportDtls(reqDTO);
+				}
 			} else if (ParameterConst.COMMITTEE_TYPE_OPENING_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
 				List<ScQtOpeningCommitteeRemark> remarks = this
@@ -6672,6 +6676,10 @@ public class EvaluationBackingBean extends
 							remarks.remove(i);
 						}
 					}
+				}
+				if (null != remarks && !remarks.isEmpty()) {
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evaluationSo.saveReportDtls(reqDTO);
 				}
 
 			} else if (ParameterConst.COMMITTEE_TYPE_TECHNICAL_EVALUATION_COMMITTEE
@@ -6687,6 +6695,10 @@ public class EvaluationBackingBean extends
 						}
 					}
 				}
+				if (null != remarks && !remarks.isEmpty()) {
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evaluationSo.saveReportDtls(reqDTO);
+				}
 
 			} else if (ParameterConst.COMMITTEE_TYPE_FINANCIAL_EVALUATION_COMMITTEE
 					.equalsIgnoreCase(this.getManagedBean().getCommitteeType())) {
@@ -6701,11 +6713,12 @@ public class EvaluationBackingBean extends
 						}
 					}
 				}
+				if (null != remarks && !remarks.isEmpty()) {
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evaluationSo.saveReportDtls(reqDTO);
+				}
 
 			}
-
-			reqDTO.setScQt(this.getManagedBean().getScQt());
-			EvaluationResDTO evalResDTO = evaluationSo.saveReportDtls(reqDTO);
 
 		} finally {
 			evaluationSo = null;
@@ -6949,7 +6962,7 @@ public class EvaluationBackingBean extends
 					qtCommittee.setMeetingAttendances(getManagedBean()
 							.getMeetingAttendanceList());
 				}
-				
+
 			} else {
 				qtCommittee.setMeetingAttendances(null);
 			}
@@ -7634,6 +7647,7 @@ public class EvaluationBackingBean extends
 		IQTEvaluationSO evaluationso = BusinessDelegate.getInstance()
 				.getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION,
 						IQTEvaluationSO.class);
+		committeeRemarksSave();
 		EvaluationReqDTO reqDtO = evaluationPreparation();
 		ScQt scQt = this.getManagedBean().getScQt();
 		reqDtO.setOutcome(action);
