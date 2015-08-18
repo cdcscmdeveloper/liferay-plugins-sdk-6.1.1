@@ -1605,85 +1605,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			// check the duplicate restriction
 
 			
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getTobeAddedPmBasicCategoryList())) {
-
-				if (this.getManagedBean().getPmCategoryL3()
-						.getPmBasicCategory() == null) {
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.setPmBasicCategory(
-									new ArrayList<PmBasicCategory>());
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.getPmBasicCategory()
-							.addAll(this.getManagedBean()
-									.getTobeAddedPmBasicCategoryList());
-					this.getManagedBean().getTobeAddedPmBasicCategoryList()
-							.clear();
-				} else {
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.getPmBasicCategory()
-							.addAll(this.getManagedBean()
-									.getTobeAddedPmBasicCategoryList());
-					this.getManagedBean().getTobeAddedPmBasicCategoryList()
-							.clear();
-				}
-			}
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getTobeAddedPmMachineCategoryList())) {
-
-				if (this.getManagedBean().getPmCategoryL3()
-						.getPmMachineCategory() == null) {
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.setPmMachineCategory(
-									new ArrayList<PmMachineCategory>());
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.getPmMachineCategory()
-							.addAll(this.getManagedBean()
-									.getTobeAddedPmMachineCategoryList());
-					this.getManagedBean().getTobeAddedPmMachineCategoryList()
-							.clear();
-				} else {
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.getPmMachineCategory()
-							.addAll(this.getManagedBean()
-									.getTobeAddedPmMachineCategoryList());
-					this.getManagedBean().getTobeAddedPmMachineCategoryList()
-							.clear();
-				}
-			}
-
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getTobeAddedCategoryRestrList())) {
-
-				if (this.getManagedBean().getPmCategoryL3()
-						.getPmCategoryRestrs() == null) {
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.setPmCategoryRestrs(
-									new ArrayList<PmCategoryRestr>());
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.getPmCategoryRestrs()
-							.addAll(this.getManagedBean()
-									.getTobeAddedCategoryRestrList());
-					this.getManagedBean().getTobeAddedCategoryRestrList()
-							.clear();
-				} else {
-					this.getManagedBean()
-							.getPmCategoryL3()
-							.getPmCategoryRestrs()
-							.addAll(this.getManagedBean()
-									.getTobeAddedCategoryRestrList());
-					this.getManagedBean().getTobeAddedCategoryRestrList()
-							.clear();
-				}
-			}
+			getBasicCategoryData();
+			getMachineData();
+			getCategoryRestrData();
 
 			reqDTO.setPmCategoryL3(this.getManagedBean().getPmCategoryL3());
 			reqDTO.setNewCategory(this.getManagedBean().isNewCategory());
@@ -1758,7 +1682,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 							ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
 							ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE));
 
-			getAllCategoryDetails(reqDTO,statusResDTO);
+			getAllCategoryDetailsForTracking(reqDTO,statusResDTO);
 			CategoryCodeResDTO resDTO = categoryCodeSO.saveSubDivision(reqDTO);
 
 			PmCategoryL3 oldCategoryL3 = (PmCategoryL3) BeanUtils
@@ -1855,217 +1779,111 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		return "/xhtml/pm/category/categoryl3.xhtml";
 	}
 
-	private void getAllCategoryDetails(CategoryCodeReqDTO reqDTO,
+	private void getCategoryRestrData() {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getTobeAddedCategoryRestrList())) {
+
+			if (this.getManagedBean().getPmCategoryL3()
+					.getPmCategoryRestrs() == null) {
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.setPmCategoryRestrs(
+								new ArrayList<PmCategoryRestr>());
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.getPmCategoryRestrs()
+						.addAll(this.getManagedBean()
+								.getTobeAddedCategoryRestrList());
+				this.getManagedBean().getTobeAddedCategoryRestrList()
+						.clear();
+			} else {
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.getPmCategoryRestrs()
+						.addAll(this.getManagedBean()
+								.getTobeAddedCategoryRestrList());
+				this.getManagedBean().getTobeAddedCategoryRestrList()
+						.clear();
+			}
+		}
+	}
+
+	private void getMachineData() {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getTobeAddedPmMachineCategoryList())) {
+
+			if (this.getManagedBean().getPmCategoryL3()
+					.getPmMachineCategory() == null) {
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.setPmMachineCategory(
+								new ArrayList<PmMachineCategory>());
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.getPmMachineCategory()
+						.addAll(this.getManagedBean()
+								.getTobeAddedPmMachineCategoryList());
+				this.getManagedBean().getTobeAddedPmMachineCategoryList()
+						.clear();
+			} else {
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.getPmMachineCategory()
+						.addAll(this.getManagedBean()
+								.getTobeAddedPmMachineCategoryList());
+				this.getManagedBean().getTobeAddedPmMachineCategoryList()
+						.clear();
+			}
+		}
+	}
+
+	private void getBasicCategoryData() {
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getTobeAddedPmBasicCategoryList())) {
+
+			if (this.getManagedBean().getPmCategoryL3()
+					.getPmBasicCategory() == null) {
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.setPmBasicCategory(
+								new ArrayList<PmBasicCategory>());
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.getPmBasicCategory()
+						.addAll(this.getManagedBean()
+								.getTobeAddedPmBasicCategoryList());
+				this.getManagedBean().getTobeAddedPmBasicCategoryList()
+						.clear();
+			} else {
+				this.getManagedBean()
+						.getPmCategoryL3()
+						.getPmBasicCategory()
+						.addAll(this.getManagedBean()
+								.getTobeAddedPmBasicCategoryList());
+				this.getManagedBean().getTobeAddedPmBasicCategoryList()
+						.clear();
+			}
+		}
+	}
+
+	private void getAllCategoryDetailsForTracking(CategoryCodeReqDTO reqDTO,
 			StatusResDTO statusResDTO) {
 
-		String delrecordStatusBasicMessageId = "";
-		String addrecordStatusBasicMessageId = "";
-		String delrecordStatusMachineMessageId = "";
-		String addrecordStatusMachineMessageId = "";
-		String delrecordStatusCatRestrMessageId = "";
-		String addrecordStatusCatRestrMessageId = "";
-
+			
 		String[] commonMsgParam = new String[] {
 				this.getManagedBean().getPmCategoryL1().getCategoryL1Code(),
 				this.getManagedBean().getPmCategoryL2().getCategoryL2Code(),
 				this.getManagedBean().getPmCategoryL3().getCategoryL3Code() };
 
-		if (CollectionUtils.isNotEmpty(this.getManagedBean()
-				.getBasicCategoryList())
-				|| CollectionUtils.isEmpty(this.getManagedBean()
-						.getBasicCategoryList())) {
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getDeletedPmBasicCategoryList())) {
-				for (PmBasicCategory deleBasic : this.getManagedBean()
-						.getDeletedPmBasicCategoryList()) {
-					if (!this.getManagedBean().getBasicCategoryList()
-							.contains(deleBasic)) {
+		getBasicCategoryForTrackingDairy(reqDTO, statusResDTO, commonMsgParam);
+		getMachineForTrackingData(reqDTO, statusResDTO, commonMsgParam);
+		getCategoryRestrData(reqDTO, statusResDTO, commonMsgParam);
 
-						delrecordStatusBasicMessageId = MessageConst.TD_80717;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs()
-								.add(PmCommonUtil
-										.assignTrackingDairyForPmBasicCategory(
-												this.getManagedBean()
-														.getPmCategoryL3()
-														.getCategoryL3Id(),
-												this.getManagedBean()
-														.getPmCategoryL2()
-														.getCategoryL2Id(),
-												this.getManagedBean()
-														.getPmCategoryL3()
-														.getCategoryL3Code(),
-												statusResDTO.getPmStatus() != null ? statusResDTO
-														.getPmStatus()
-														: new PmStatus(),
-												getPmActionDesc(
-														delrecordStatusBasicMessageId,
-														commonMsgParam),
-												ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-												ParameterConst.SUB_CATEGORY_PARAM_CODE));
-					}
-				}
-				this.getManagedBean().getDeletedPmBasicCategoryList().clear();
-			}
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getBasicCategoryList())) {
-				if (!this.getManagedBean().isNewCategory()) {
-					for (PmBasicCategory pmBasicCategory : this
-							.getManagedBean().getBasicCategoryList()) {
-						if (pmBasicCategory.isBrandNew()) {
-							addrecordStatusBasicMessageId = MessageConst.TD_80716;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs()
-									.add(PmCommonUtil
-											.assignTrackingDairyForPmBasicCategory(
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Id(),
-													this.getManagedBean()
-															.getPmCategoryL2()
-															.getCategoryL2Id(),
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Code(),
-													statusResDTO.getPmStatus() != null ? statusResDTO
-															.getPmStatus()
-															: new PmStatus(),
-													getPmActionDesc(
-															addrecordStatusBasicMessageId,
-															commonMsgParam),
-													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-													ParameterConst.SUB_CATEGORY_PARAM_CODE));
-						}
-					}
-				} else {
-					for (PmBasicCategory pmBasicCategory : this
-							.getManagedBean().getBasicCategoryList()) {
-						if (pmBasicCategory.isBrandNew()) {
-							addrecordStatusBasicMessageId = MessageConst.TD_80716;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs()
-									.add(PmCommonUtil
-											.assignTrackingDairyForPmBasicCategory(
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Id(),
-													this.getManagedBean()
-															.getPmCategoryL2()
-															.getCategoryL2Id(),
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Code(),
-													statusResDTO.getPmStatus() != null ? statusResDTO
-															.getPmStatus()
-															: new PmStatus(),
-													getPmActionDesc(
-															addrecordStatusBasicMessageId,
-															commonMsgParam),
-													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-													ParameterConst.SUB_CATEGORY_PARAM_CODE));
-						}
-					}
-				}
-			}
-		}
-		if (CollectionUtils.isNotEmpty(this.getManagedBean()
-				.getPmMachineCategoryList())
-				|| CollectionUtils.isEmpty(this.getManagedBean()
-						.getPmMachineCategoryList())) {
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getDeletedPmMachineCategoryList())) {
-				for (PmMachineCategory deleMachine : this.getManagedBean()
-						.getDeletedPmMachineCategoryList()) {
-					if (!this.getManagedBean().getPmMachineCategoryList()
-							.contains(deleMachine)) {
-						delrecordStatusMachineMessageId = MessageConst.TD_80715;
-						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs()
-								.add(PmCommonUtil
-										.assignTrackingDairyForPmBasicCategory(
-												this.getManagedBean()
-														.getPmCategoryL3()
-														.getCategoryL3Id(),
-												this.getManagedBean()
-														.getPmCategoryL2()
-														.getCategoryL2Id(),
-												this.getManagedBean()
-														.getPmCategoryL3()
-														.getCategoryL3Code(),
-												statusResDTO.getPmStatus() != null ? statusResDTO
-														.getPmStatus()
-														: new PmStatus(),
-												getPmActionDesc(
-														delrecordStatusMachineMessageId,
-														commonMsgParam),
-												ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-												ParameterConst.SUB_CATEGORY_PARAM_CODE));
-					}
-				}
-				this.getManagedBean().getDeletedPmMachineCategoryList().clear();
-			}
-			if (CollectionUtils.isNotEmpty(this.getManagedBean()
-					.getPmMachineCategoryList())) {
-				if (!this.getManagedBean().isNewCategory()) {
-					for (PmMachineCategory deleMachine : this.getManagedBean()
-							.getPmMachineCategoryList()) {
-						if (deleMachine.isBrandNew()) {
-							addrecordStatusMachineMessageId = MessageConst.TD_80714;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs()
-									.add(PmCommonUtil
-											.assignTrackingDairyForPmBasicCategory(
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Id(),
-													this.getManagedBean()
-															.getPmCategoryL2()
-															.getCategoryL2Id(),
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Code(),
-													statusResDTO.getPmStatus() != null ? statusResDTO
-															.getPmStatus()
-															: new PmStatus(),
-													getPmActionDesc(
-															addrecordStatusMachineMessageId,
-															commonMsgParam),
-													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-													ParameterConst.SUB_CATEGORY_PARAM_CODE));
-						}
-					}
-				} else {
-					for (PmMachineCategory deleMachine : this.getManagedBean()
-							.getPmMachineCategoryList()) {
-						if (deleMachine.isBrandNew()) {
-							addrecordStatusMachineMessageId = MessageConst.TD_80714;
-							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs()
-									.add(PmCommonUtil
-											.assignTrackingDairyForPmBasicCategory(
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Id(),
-													this.getManagedBean()
-															.getPmCategoryL2()
-															.getCategoryL2Id(),
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Code(),
-													statusResDTO.getPmStatus() != null ? statusResDTO
-															.getPmStatus()
-															: new PmStatus(),
-													getPmActionDesc(
-															addrecordStatusMachineMessageId,
-															commonMsgParam),
-													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-													ParameterConst.SUB_CATEGORY_PARAM_CODE));
-						}
-					}
-				}
-			}
-		}
+	}
 
+	private void getCategoryRestrData(CategoryCodeReqDTO reqDTO,
+			StatusResDTO statusResDTO, String[] commonMsgParam) {
+		String statusMessageId;
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getCategoryRestrList())
 				|| CollectionUtils.isEmpty(this.getManagedBean()
@@ -2077,28 +1895,11 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					if (!this.getManagedBean().getCategoryRestrList()
 							.contains(catResstr)) {
 
-						delrecordStatusCatRestrMessageId = MessageConst.TD_80713;
+						statusMessageId = MessageConst.TD_80713;
 						reqDTO.setTrackingStatus(true);
-						reqDTO.getTrackDairyVOs()
-								.add(PmCommonUtil
-										.assignTrackingDairyForPmBasicCategory(
-												this.getManagedBean()
-														.getPmCategoryL3()
-														.getCategoryL3Id(),
-												this.getManagedBean()
-														.getPmCategoryL2()
-														.getCategoryL2Id(),
-												this.getManagedBean()
-														.getPmCategoryL3()
-														.getCategoryL3Code(),
-												statusResDTO.getPmStatus() != null ? statusResDTO
-														.getPmStatus()
-														: new PmStatus(),
-												getPmActionDesc(
-														delrecordStatusCatRestrMessageId,
-														commonMsgParam),
-												ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-												ParameterConst.SUB_CATEGORY_PARAM_CODE));
+						trackingDairyData(reqDTO, statusResDTO,
+								statusMessageId,
+								commonMsgParam);
 					}
 				}
 				this.getManagedBean().getDeletedPmPmCategoryRestrList().clear();
@@ -2109,62 +1910,153 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					for (PmCategoryRestr pmCategoryRestr : this
 							.getManagedBean().getCategoryRestrList()) {
 						if (pmCategoryRestr.isBrandNew()) {
-							addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
+							statusMessageId = MessageConst.TD_80712;
 							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs()
-									.add(PmCommonUtil
-											.assignTrackingDairyForPmBasicCategory(
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Id(),
-													this.getManagedBean()
-															.getPmCategoryL2()
-															.getCategoryL2Id(),
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Code(),
-													statusResDTO.getPmStatus() != null ? statusResDTO
-															.getPmStatus()
-															: new PmStatus(),
-													getPmActionDesc(
-															addrecordStatusCatRestrMessageId,
-															commonMsgParam),
-													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-													ParameterConst.SUB_CATEGORY_PARAM_CODE));
+							trackingDairyData(reqDTO, statusResDTO,
+									statusMessageId,
+									commonMsgParam);
 						}
 					}
 				} else {
 					for (PmCategoryRestr pmCategoryRestr : this
 							.getManagedBean().getCategoryRestrList()) {
 						if (pmCategoryRestr.isBrandNew()) {
-							addrecordStatusCatRestrMessageId = MessageConst.TD_80712;
+							statusMessageId = MessageConst.TD_80712;
 							reqDTO.setTrackingStatus(true);
-							reqDTO.getTrackDairyVOs()
-									.add(PmCommonUtil
-											.assignTrackingDairyForPmBasicCategory(
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Id(),
-													this.getManagedBean()
-															.getPmCategoryL2()
-															.getCategoryL2Id(),
-													this.getManagedBean()
-															.getPmCategoryL3()
-															.getCategoryL3Code(),
-													statusResDTO.getPmStatus() != null ? statusResDTO
-															.getPmStatus()
-															: new PmStatus(),
-													getPmActionDesc(
-															addrecordStatusCatRestrMessageId,
-															commonMsgParam),
-													ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
-													ParameterConst.SUB_CATEGORY_PARAM_CODE));
+							trackingDairyData(reqDTO, statusResDTO,
+									statusMessageId,
+									commonMsgParam);
 						}
 					}
 				}
 			}
 		}
+	}
 
+	private void getMachineForTrackingData(CategoryCodeReqDTO reqDTO,
+			StatusResDTO statusResDTO, String[] commonMsgParam) {
+		String statusMessageId;
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getPmMachineCategoryList())
+				|| CollectionUtils.isEmpty(this.getManagedBean()
+						.getPmMachineCategoryList())) {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getDeletedPmMachineCategoryList())) {
+				for (PmMachineCategory deleMachine : this.getManagedBean()
+						.getDeletedPmMachineCategoryList()) {
+					if (!this.getManagedBean().getPmMachineCategoryList()
+							.contains(deleMachine)) {
+						statusMessageId = MessageConst.TD_80715;
+						reqDTO.setTrackingStatus(true);
+						trackingDairyData(reqDTO, statusResDTO,
+								statusMessageId, commonMsgParam);
+					}
+				}
+				this.getManagedBean().getDeletedPmMachineCategoryList().clear();
+			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getPmMachineCategoryList())) {
+				if (!this.getManagedBean().isNewCategory()) {
+					for (PmMachineCategory deleMachine : this.getManagedBean()
+							.getPmMachineCategoryList()) {
+						if (deleMachine.isBrandNew()) {
+							statusMessageId = MessageConst.TD_80714;
+							reqDTO.setTrackingStatus(true);
+							trackingDairyData(reqDTO, statusResDTO,
+									statusMessageId,
+									commonMsgParam);
+						}
+					}
+				} else {
+					for (PmMachineCategory deleMachine : this.getManagedBean()
+							.getPmMachineCategoryList()) {
+						if (deleMachine.isBrandNew()) {
+							statusMessageId = MessageConst.TD_80714;
+							reqDTO.setTrackingStatus(true);
+							trackingDairyData(reqDTO, statusResDTO,
+									statusMessageId,
+									commonMsgParam);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void getBasicCategoryForTrackingDairy(CategoryCodeReqDTO reqDTO,
+			StatusResDTO statusResDTO, String[] commonMsgParam) {
+		String statusMessageId;
+		if (CollectionUtils.isNotEmpty(this.getManagedBean()
+				.getBasicCategoryList())
+				|| CollectionUtils.isEmpty(this.getManagedBean()
+						.getBasicCategoryList())) {
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getDeletedPmBasicCategoryList())) {
+				for (PmBasicCategory deleBasic : this.getManagedBean()
+						.getDeletedPmBasicCategoryList()) {
+					if (!this.getManagedBean().getBasicCategoryList()
+							.contains(deleBasic)) {
+
+						statusMessageId = MessageConst.TD_80717;
+						reqDTO.setTrackingStatus(true);
+						trackingDairyData(reqDTO, statusResDTO,
+								statusMessageId, commonMsgParam);
+					}
+				}
+				this.getManagedBean().getDeletedPmBasicCategoryList().clear();
+			}
+			if (CollectionUtils.isNotEmpty(this.getManagedBean()
+					.getBasicCategoryList())) {
+				if (!this.getManagedBean().isNewCategory()) {
+					for (PmBasicCategory pmBasicCategory : this
+							.getManagedBean().getBasicCategoryList()) {
+						if (pmBasicCategory.isBrandNew()) {
+							statusMessageId = MessageConst.TD_80716;
+							reqDTO.setTrackingStatus(true);
+							trackingDairyData(reqDTO, statusResDTO,
+									statusMessageId,
+									commonMsgParam);
+						}
+					}
+				} else {
+					for (PmBasicCategory pmBasicCategory : this
+							.getManagedBean().getBasicCategoryList()) {
+						if (pmBasicCategory.isBrandNew()) {
+							statusMessageId = MessageConst.TD_80716;
+							reqDTO.setTrackingStatus(true);
+							trackingDairyData(reqDTO, statusResDTO,
+									statusMessageId,
+									commonMsgParam);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void trackingDairyData(CategoryCodeReqDTO reqDTO,
+			StatusResDTO statusResDTO, String statusMessageId,
+			String[] commonMsgParam) {
+		reqDTO.getTrackDairyVOs()
+				.add(PmCommonUtil
+						.assignTrackingDairyForPmBasicCategory(
+								this.getManagedBean()
+										.getPmCategoryL3()
+										.getCategoryL3Id(),
+								this.getManagedBean()
+										.getPmCategoryL2()
+										.getCategoryL2Id(),
+								this.getManagedBean()
+										.getPmCategoryL3()
+										.getCategoryL3Code(),
+								statusResDTO.getPmStatus() != null ? statusResDTO
+										.getPmStatus()
+										: new PmStatus(),
+								getPmActionDesc(
+										statusMessageId,
+										commonMsgParam),
+								ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE,
+								ParameterConst.SUB_CATEGORY_PARAM_CODE));
 	}
 
 	/**
