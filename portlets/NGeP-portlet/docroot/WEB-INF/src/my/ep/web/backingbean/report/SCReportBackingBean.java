@@ -271,7 +271,7 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	if((approverNayakTarafList.size()>0)){
 	        		rptGenBean.setScPtjView(true);
 	        	}
-	        	rptGenBean.setScStatusView(true);
+	        	//rptGenBean.setScStatusView(true);
 	        	rptGenBean.setScCreatedFromView(true);	
 	        	rptGenBean.setScPublishDateView(true);
 	            break;
@@ -309,15 +309,16 @@ public class SCReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setScPublishDateView(true);
 	            break;
 	        case ReportConst.SC_COMMITTEE_DTLS_TD_RPT_VAL:
-	        	rptGenBean.setScQuotationNoView(true);	        	
-	        	if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
+	        	rptGenBean.setScQuotationNoView(true);
+	        	rptGenBean.setExtraTwoColumnView(true);
+	        	/*if((approverNayakTarafList.size()>0)||((authoriztionList!=null)&&(authoriztionList.contains(ReportConst.BPK_APPROVER)||authoriztionList.contains(ReportConst.COMMITTEE_APPROVER)||authoriztionList.contains(ReportConst.PUBLICATION_APPROVER)))){
 	        		rptGenBean.setScDeskOfficerView(true);
 				}else{
 					rptGenBean.setExtraTwoColumnView(true);
 				}
 	        	if((authoriztionList!=null)&&(approverNayakTarafList.size()>0)){
 	        		rptGenBean.setScPtjView(true);
-	        	}        	
+	        	}*/        	
 	            break;
 	        case ReportConst.SC_PROPOSAL_DTLS_PRODUCT_RPT_VAL:
 	        	rptGenBean.setScQuotationNoView(true);

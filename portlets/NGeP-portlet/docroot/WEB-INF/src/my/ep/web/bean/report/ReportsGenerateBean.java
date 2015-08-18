@@ -274,37 +274,85 @@ public class ReportsGenerateBean {
 		private boolean flContractRequestView = false;
 		private boolean flPurchaseOrderNoView = false;
 		private boolean flGroupOneView = false;
+		private boolean flGroupOneWithSupplView = false;
+		private boolean flGroupOneWithoutSupplView = false;
 		private boolean flGroupTwoView = false;
+		private boolean flGroupTwoWithoutSupplView = false;
+		private boolean flGroupTwoWithSupplView = false;
 		private boolean flGroupThreeView = false;
+		private boolean flGroupThreeWithoutSupplView = false;
+		private boolean flGroupThreeWithSupplView = false;
 		private boolean flGroupFourView = false;
+		private boolean flGroupFourWithoutSupplView = false;
+		private boolean flGroupFourWithSupplView = false;
 		private boolean flGroupFiveView = false;
+		private boolean flGroupFiveWithoutSupplView = false;
+		private boolean flGroupFiveWithSupplView = false;
 		private boolean flGroupSixView = false;
+		private boolean flGroupSixWithoutSupplView = false;
+		private boolean flGroupSixWithSupplView = false;
 		private boolean flGroupSevenView = false;
+		private boolean flGroupSevenWithoutSupplView = false;
+		private boolean flGroupSevenWithSupplView = false;
 		private boolean flGroupEightView = false;
+		private boolean flGroupEightWithoutSupplView = false;
+		private boolean flGroupEightWithSupplView = false;
 		private boolean flGroupNineView = false;
+		private boolean flGroupNineWithoutSupplView = false;
+		private boolean flGroupNineWithSupplView = false;
 		private boolean flGroupTenView = false;
+		private boolean flGroupTenWithoutSupplView = false;
+		private boolean flGroupTenWithSupplView = false;
 		private boolean flGroupElevenView = false;
+		private boolean flGroupElevenWithoutSupplView = false;
+		private boolean flGroupElevenWithSupplView = false;
 		private boolean flGroupTwelveView = false;
+		private boolean flGroupTwelveWithoutSupplView = false;
+		private boolean flGroupTwelveWithSupplView = false;
 		private boolean flGroupThirteenView = false;
+		private boolean flGroupThirteenWithoutSupplView = false;
+		private boolean flGroupThirteenWithSupplView = false;
 		private boolean flGroupFourteenView = false;
+		private boolean flGroupFourteenWithoutSupplView = false;
+		private boolean flGroupFourteenWithSupplView = false;
 		private boolean flGroupFifteenView = false;
+		private boolean flGroupFifteenWithoutSupplView = false;		
+		private boolean flGroupFifteenWithSupplView = false;
 		private boolean flGroupSixteenView = false;
+		private boolean flGroupSixteenWithoutSupplView = false;
+		private boolean flGroupSixteenWithSupplView = false;
 		private boolean flSupplierTextView = false;
 		private boolean flSupplierDropdownView = false;
 		private boolean flGroupSeventeenView = false;
+		private boolean flGroupSeventeenWithoutSupplView = false;
+		private boolean flGroupSeventeenWithSupplView = false;
 		private boolean flMandatoryMinistryView = false;
 		private boolean flMandatoryPtjView = false;
 		private boolean flStopInstructionNoView = false;
 		private boolean flGroupEighteenView = false;
+		private boolean flGroupEighteenWithoutSupplView = false;
+		private boolean flGroupEighteenWithSupplView = false;
 		private boolean flGroupNineteenView = false;
+		private boolean flGroupNineteenWithoutSupplView = false;
+		private boolean flGroupNineteenWithSupplView = false;
 		private boolean flGroupTwentyView = false;
+		private boolean flGroupTwentyWithoutSupplView = false;
+		private boolean flGroupTwentyWithSupplView = false;
 		private boolean flGroupTwentyOneView = false;
+		private boolean flGroupTwentyOneWithoutSupplView = false;
+		private boolean flGroupTwentyOneWithSupplView = false;
 		private boolean flGroupTwentyTwoView = false;
+		private boolean flGroupTwentyTwoWithoutSupplView = false;
+		private boolean flGroupTwentyTwoWithSupplView = false;
 		private boolean flSupplierInvoiceNoView = false;
 		private boolean flSupplierDeliveryOrderNoView = false;
 		private boolean flPaymentAdviceNoView = false;
 		private boolean flGroupTwentyThreeView = false;
+		private boolean flGroupTwentyThreeWithoutSupplView = false;
+		private boolean flGroupTwentyThreeWithSupplView = false;
 		private boolean flGroupTwentyFourView = false;
+		private boolean flGroupTwentyFourWithoutSupplView = false;
+		private boolean flGroupTwentyFourWithSupplView = false;
 		private boolean flFromDateView = false;
 		private boolean flContractRequestCreatedDateView = false;
 		private boolean flContractOrderDateView = false;
@@ -315,12 +363,383 @@ public class ReportsGenerateBean {
 		private boolean flContractOrderCreatedDateView = false;
 		private boolean flContractRequestRejectionDateView = false;
 		private boolean flGroupTwentyFiveView = false;
+		private boolean flGroupTwentyFiveWithoutSupplView = false;
+		private boolean flGroupTwentyFiveWithSupplView = false;
 		private boolean flContractOrderCancellationDateView = false;
 		private boolean flDeliveryOrderCancellationDateView = false;
 		private boolean flGroupTwentySixView = false;
+		private boolean flGroupTwentySixWithoutSupplView = false;
+		private boolean flGroupTwentySixWithSupplView = false;
 		private boolean flFRNCancellationDateView = false;
+		private boolean flInvoiceCancellationDateView = false;
+		private boolean flGroupTwentySevenView = false;
+		private boolean flGroupTwentySevenWithoutSupplView = false;
+		private boolean flGroupTwentySevenWithSupplView = false;
 		
 		
+		
+		public boolean isFlGroupFifteenWithSupplView() {
+			return flGroupFifteenWithSupplView;
+		}
+		public void setFlGroupFifteenWithSupplView(boolean flGroupFifteenWithSupplView) {
+			this.flGroupFifteenWithSupplView = flGroupFifteenWithSupplView;
+		}
+		public boolean isFlGroupTwoWithoutSupplView() {
+			return flGroupTwoWithoutSupplView;
+		}
+		public void setFlGroupTwoWithoutSupplView(boolean flGroupTwoWithoutSupplView) {
+			this.flGroupTwoWithoutSupplView = flGroupTwoWithoutSupplView;
+		}
+		public boolean isFlGroupTwoWithSupplView() {
+			return flGroupTwoWithSupplView;
+		}
+		public void setFlGroupTwoWithSupplView(boolean flGroupTwoWithSupplView) {
+			this.flGroupTwoWithSupplView = flGroupTwoWithSupplView;
+		}
+		public boolean isFlGroupThreeWithoutSupplView() {
+			return flGroupThreeWithoutSupplView;
+		}
+		public void setFlGroupThreeWithoutSupplView(boolean flGroupThreeWithoutSupplView) {
+			this.flGroupThreeWithoutSupplView = flGroupThreeWithoutSupplView;
+		}
+		public boolean isFlGroupThreeWithSupplView() {
+			return flGroupThreeWithSupplView;
+		}
+		public void setFlGroupThreeWithSupplView(boolean flGroupThreeWithSupplView) {
+			this.flGroupThreeWithSupplView = flGroupThreeWithSupplView;
+		}
+		public boolean isFlGroupFourWithoutSupplView() {
+			return flGroupFourWithoutSupplView;
+		}
+		public void setFlGroupFourWithoutSupplView(boolean flGroupFourWithoutSupplView) {
+			this.flGroupFourWithoutSupplView = flGroupFourWithoutSupplView;
+		}
+		public boolean isFlGroupFourWithSupplView() {
+			return flGroupFourWithSupplView;
+		}
+		public void setFlGroupFourWithSupplView(boolean flGroupFourWithSupplView) {
+			this.flGroupFourWithSupplView = flGroupFourWithSupplView;
+		}
+		public boolean isFlGroupFiveWithoutSupplView() {
+			return flGroupFiveWithoutSupplView;
+		}
+		public void setFlGroupFiveWithoutSupplView(boolean flGroupFiveWithoutSupplView) {
+			this.flGroupFiveWithoutSupplView = flGroupFiveWithoutSupplView;
+		}
+		public boolean isFlGroupFiveWithSupplView() {
+			return flGroupFiveWithSupplView;
+		}
+		public void setFlGroupFiveWithSupplView(boolean flGroupFiveWithSupplView) {
+			this.flGroupFiveWithSupplView = flGroupFiveWithSupplView;
+		}
+		public boolean isFlGroupSixWithoutSupplView() {
+			return flGroupSixWithoutSupplView;
+		}
+		public void setFlGroupSixWithoutSupplView(boolean flGroupSixWithoutSupplView) {
+			this.flGroupSixWithoutSupplView = flGroupSixWithoutSupplView;
+		}
+		public boolean isFlGroupSixWithSupplView() {
+			return flGroupSixWithSupplView;
+		}
+		public void setFlGroupSixWithSupplView(boolean flGroupSixWithSupplView) {
+			this.flGroupSixWithSupplView = flGroupSixWithSupplView;
+		}
+		public boolean isFlGroupSevenWithoutSupplView() {
+			return flGroupSevenWithoutSupplView;
+		}
+		public void setFlGroupSevenWithoutSupplView(boolean flGroupSevenWithoutSupplView) {
+			this.flGroupSevenWithoutSupplView = flGroupSevenWithoutSupplView;
+		}
+		public boolean isFlGroupSevenWithSupplView() {
+			return flGroupSevenWithSupplView;
+		}
+		public void setFlGroupSevenWithSupplView(boolean flGroupSevenWithSupplView) {
+			this.flGroupSevenWithSupplView = flGroupSevenWithSupplView;
+		}
+		public boolean isFlGroupEightWithoutSupplView() {
+			return flGroupEightWithoutSupplView;
+		}
+		public void setFlGroupEightWithoutSupplView(boolean flGroupEightWithoutSupplView) {
+			this.flGroupEightWithoutSupplView = flGroupEightWithoutSupplView;
+		}
+		public boolean isFlGroupEightWithSupplView() {
+			return flGroupEightWithSupplView;
+		}
+		public void setFlGroupEightWithSupplView(boolean flGroupEightWithSupplView) {
+			this.flGroupEightWithSupplView = flGroupEightWithSupplView;
+		}
+		public boolean isFlGroupNineWithoutSupplView() {
+			return flGroupNineWithoutSupplView;
+		}
+		public void setFlGroupNineWithoutSupplView(boolean flGroupNineWithoutSupplView) {
+			this.flGroupNineWithoutSupplView = flGroupNineWithoutSupplView;
+		}
+		public boolean isFlGroupNineWithSupplView() {
+			return flGroupNineWithSupplView;
+		}
+		public void setFlGroupNineWithSupplView(boolean flGroupNineWithSupplView) {
+			this.flGroupNineWithSupplView = flGroupNineWithSupplView;
+		}
+		public boolean isFlGroupTenWithoutSupplView() {
+			return flGroupTenWithoutSupplView;
+		}
+		public void setFlGroupTenWithoutSupplView(boolean flGroupTenWithoutSupplView) {
+			this.flGroupTenWithoutSupplView = flGroupTenWithoutSupplView;
+		}
+		public boolean isFlGroupTenWithSupplView() {
+			return flGroupTenWithSupplView;
+		}
+		public void setFlGroupTenWithSupplView(boolean flGroupTenWithSupplView) {
+			this.flGroupTenWithSupplView = flGroupTenWithSupplView;
+		}
+		public boolean isFlGroupElevenWithoutSupplView() {
+			return flGroupElevenWithoutSupplView;
+		}
+		public void setFlGroupElevenWithoutSupplView(
+				boolean flGroupElevenWithoutSupplView) {
+			this.flGroupElevenWithoutSupplView = flGroupElevenWithoutSupplView;
+		}
+		public boolean isFlGroupElevenWithSupplView() {
+			return flGroupElevenWithSupplView;
+		}
+		public void setFlGroupElevenWithSupplView(boolean flGroupElevenWithSupplView) {
+			this.flGroupElevenWithSupplView = flGroupElevenWithSupplView;
+		}
+		public boolean isFlGroupTwelveWithoutSupplView() {
+			return flGroupTwelveWithoutSupplView;
+		}
+		public void setFlGroupTwelveWithoutSupplView(
+				boolean flGroupTwelveWithoutSupplView) {
+			this.flGroupTwelveWithoutSupplView = flGroupTwelveWithoutSupplView;
+		}
+		public boolean isFlGroupTwelveWithSupplView() {
+			return flGroupTwelveWithSupplView;
+		}
+		public void setFlGroupTwelveWithSupplView(boolean flGroupTwelveWithSupplView) {
+			this.flGroupTwelveWithSupplView = flGroupTwelveWithSupplView;
+		}
+		public boolean isFlGroupThirteenWithoutSupplView() {
+			return flGroupThirteenWithoutSupplView;
+		}
+		public void setFlGroupThirteenWithoutSupplView(
+				boolean flGroupThirteenWithoutSupplView) {
+			this.flGroupThirteenWithoutSupplView = flGroupThirteenWithoutSupplView;
+		}
+		public boolean isFlGroupThirteenWithSupplView() {
+			return flGroupThirteenWithSupplView;
+		}
+		public void setFlGroupThirteenWithSupplView(boolean flGroupThirteenWithSupplView) {
+			this.flGroupThirteenWithSupplView = flGroupThirteenWithSupplView;
+		}
+		public boolean isFlGroupFourteenWithoutSupplView() {
+			return flGroupFourteenWithoutSupplView;
+		}
+		public void setFlGroupFourteenWithoutSupplView(
+				boolean flGroupFourteenWithoutSupplView) {
+			this.flGroupFourteenWithoutSupplView = flGroupFourteenWithoutSupplView;
+		}
+		public boolean isFlGroupFourteenWithSupplView() {
+			return flGroupFourteenWithSupplView;
+		}
+		public void setFlGroupFourteenWithSupplView(boolean flGroupFourteenWithSupplView) {
+			this.flGroupFourteenWithSupplView = flGroupFourteenWithSupplView;
+		}
+		public boolean isFlGroupFifteenWithoutSupplView() {
+			return flGroupFifteenWithoutSupplView;
+		}
+		public void setFlGroupFifteenWithoutSupplView(
+				boolean flGroupFifteenWithoutSupplView) {
+			this.flGroupFifteenWithoutSupplView = flGroupFifteenWithoutSupplView;
+		}		
+		public boolean isFlGroupSixteenWithoutSupplView() {
+			return flGroupSixteenWithoutSupplView;
+		}
+		public void setFlGroupSixteenWithoutSupplView(
+				boolean flGroupSixteenWithoutSupplView) {
+			this.flGroupSixteenWithoutSupplView = flGroupSixteenWithoutSupplView;
+		}
+		public boolean isFlGroupSixteenWithSupplView() {
+			return flGroupSixteenWithSupplView;
+		}
+		public void setFlGroupSixteenWithSupplView(boolean flGroupSixteenWithSupplView) {
+			this.flGroupSixteenWithSupplView = flGroupSixteenWithSupplView;
+		}
+		public boolean isFlGroupSeventeenWithoutSupplView() {
+			return flGroupSeventeenWithoutSupplView;
+		}
+		public void setFlGroupSeventeenWithoutSupplView(
+				boolean flGroupSeventeenWithoutSupplView) {
+			this.flGroupSeventeenWithoutSupplView = flGroupSeventeenWithoutSupplView;
+		}
+		public boolean isFlGroupSeventeenWithSupplView() {
+			return flGroupSeventeenWithSupplView;
+		}
+		public void setFlGroupSeventeenWithSupplView(
+				boolean flGroupSeventeenWithSupplView) {
+			this.flGroupSeventeenWithSupplView = flGroupSeventeenWithSupplView;
+		}
+		public boolean isFlGroupEighteenWithoutSupplView() {
+			return flGroupEighteenWithoutSupplView;
+		}
+		public void setFlGroupEighteenWithoutSupplView(
+				boolean flGroupEighteenWithoutSupplView) {
+			this.flGroupEighteenWithoutSupplView = flGroupEighteenWithoutSupplView;
+		}
+		public boolean isFlGroupEighteenWithSupplView() {
+			return flGroupEighteenWithSupplView;
+		}
+		public void setFlGroupEighteenWithSupplView(boolean flGroupEighteenWithSupplView) {
+			this.flGroupEighteenWithSupplView = flGroupEighteenWithSupplView;
+		}
+		public boolean isFlGroupNineteenWithoutSupplView() {
+			return flGroupNineteenWithoutSupplView;
+		}
+		public void setFlGroupNineteenWithoutSupplView(
+				boolean flGroupNineteenWithoutSupplView) {
+			this.flGroupNineteenWithoutSupplView = flGroupNineteenWithoutSupplView;
+		}
+		public boolean isFlGroupNineteenWithSupplView() {
+			return flGroupNineteenWithSupplView;
+		}
+		public void setFlGroupNineteenWithSupplView(boolean flGroupNineteenWithSupplView) {
+			this.flGroupNineteenWithSupplView = flGroupNineteenWithSupplView;
+		}
+		public boolean isFlGroupTwentyWithoutSupplView() {
+			return flGroupTwentyWithoutSupplView;
+		}
+		public void setFlGroupTwentyWithoutSupplView(
+				boolean flGroupTwentyWithoutSupplView) {
+			this.flGroupTwentyWithoutSupplView = flGroupTwentyWithoutSupplView;
+		}
+		public boolean isFlGroupTwentyWithSupplView() {
+			return flGroupTwentyWithSupplView;
+		}
+		public void setFlGroupTwentyWithSupplView(boolean flGroupTwentyWithSupplView) {
+			this.flGroupTwentyWithSupplView = flGroupTwentyWithSupplView;
+		}
+		public boolean isFlGroupTwentyOneWithoutSupplView() {
+			return flGroupTwentyOneWithoutSupplView;
+		}
+		public void setFlGroupTwentyOneWithoutSupplView(
+				boolean flGroupTwentyOneWithoutSupplView) {
+			this.flGroupTwentyOneWithoutSupplView = flGroupTwentyOneWithoutSupplView;
+		}
+		public boolean isFlGroupTwentyOneWithSupplView() {
+			return flGroupTwentyOneWithSupplView;
+		}
+		public void setFlGroupTwentyOneWithSupplView(
+				boolean flGroupTwentyOneWithSupplView) {
+			this.flGroupTwentyOneWithSupplView = flGroupTwentyOneWithSupplView;
+		}
+		public boolean isFlGroupTwentyTwoWithoutSupplView() {
+			return flGroupTwentyTwoWithoutSupplView;
+		}
+		public void setFlGroupTwentyTwoWithoutSupplView(
+				boolean flGroupTwentyTwoWithoutSupplView) {
+			this.flGroupTwentyTwoWithoutSupplView = flGroupTwentyTwoWithoutSupplView;
+		}
+		public boolean isFlGroupTwentyTwoWithSupplView() {
+			return flGroupTwentyTwoWithSupplView;
+		}
+		public void setFlGroupTwentyTwoWithSupplView(
+				boolean flGroupTwentyTwoWithSupplView) {
+			this.flGroupTwentyTwoWithSupplView = flGroupTwentyTwoWithSupplView;
+		}
+		public boolean isFlGroupTwentyThreeWithoutSupplView() {
+			return flGroupTwentyThreeWithoutSupplView;
+		}
+		public void setFlGroupTwentyThreeWithoutSupplView(
+				boolean flGroupTwentyThreeWithoutSupplView) {
+			this.flGroupTwentyThreeWithoutSupplView = flGroupTwentyThreeWithoutSupplView;
+		}
+		public boolean isFlGroupTwentyThreeWithSupplView() {
+			return flGroupTwentyThreeWithSupplView;
+		}
+		public void setFlGroupTwentyThreeWithSupplView(
+				boolean flGroupTwentyThreeWithSupplView) {
+			this.flGroupTwentyThreeWithSupplView = flGroupTwentyThreeWithSupplView;
+		}
+		public boolean isFlGroupTwentyFourWithoutSupplView() {
+			return flGroupTwentyFourWithoutSupplView;
+		}
+		public void setFlGroupTwentyFourWithoutSupplView(
+				boolean flGroupTwentyFourWithoutSupplView) {
+			this.flGroupTwentyFourWithoutSupplView = flGroupTwentyFourWithoutSupplView;
+		}
+		public boolean isFlGroupTwentyFourWithSupplView() {
+			return flGroupTwentyFourWithSupplView;
+		}
+		public void setFlGroupTwentyFourWithSupplView(
+				boolean flGroupTwentyFourWithSupplView) {
+			this.flGroupTwentyFourWithSupplView = flGroupTwentyFourWithSupplView;
+		}
+		public boolean isFlGroupTwentyFiveWithoutSupplView() {
+			return flGroupTwentyFiveWithoutSupplView;
+		}
+		public void setFlGroupTwentyFiveWithoutSupplView(
+				boolean flGroupTwentyFiveWithoutSupplView) {
+			this.flGroupTwentyFiveWithoutSupplView = flGroupTwentyFiveWithoutSupplView;
+		}
+		public boolean isFlGroupTwentyFiveWithSupplView() {
+			return flGroupTwentyFiveWithSupplView;
+		}
+		public void setFlGroupTwentyFiveWithSupplView(
+				boolean flGroupTwentyFiveWithSupplView) {
+			this.flGroupTwentyFiveWithSupplView = flGroupTwentyFiveWithSupplView;
+		}
+		public boolean isFlGroupTwentySixWithoutSupplView() {
+			return flGroupTwentySixWithoutSupplView;
+		}
+		public void setFlGroupTwentySixWithoutSupplView(
+				boolean flGroupTwentySixWithoutSupplView) {
+			this.flGroupTwentySixWithoutSupplView = flGroupTwentySixWithoutSupplView;
+		}
+		public boolean isFlGroupTwentySixWithSupplView() {
+			return flGroupTwentySixWithSupplView;
+		}
+		public void setFlGroupTwentySixWithSupplView(
+				boolean flGroupTwentySixWithSupplView) {
+			this.flGroupTwentySixWithSupplView = flGroupTwentySixWithSupplView;
+		}
+		public boolean isFlGroupTwentySevenWithoutSupplView() {
+			return flGroupTwentySevenWithoutSupplView;
+		}
+		public void setFlGroupTwentySevenWithoutSupplView(
+				boolean flGroupTwentySevenWithoutSupplView) {
+			this.flGroupTwentySevenWithoutSupplView = flGroupTwentySevenWithoutSupplView;
+		}
+		public boolean isFlGroupTwentySevenWithSupplView() {
+			return flGroupTwentySevenWithSupplView;
+		}
+		public void setFlGroupTwentySevenWithSupplView(
+				boolean flGroupTwentySevenWithSupplView) {
+			this.flGroupTwentySevenWithSupplView = flGroupTwentySevenWithSupplView;
+		}
+		public boolean isFlGroupOneWithSupplView() {
+			return flGroupOneWithSupplView;
+		}
+		public void setFlGroupOneWithSupplView(boolean flGroupOneWithSupplView) {
+			this.flGroupOneWithSupplView = flGroupOneWithSupplView;
+		}
+		public boolean isFlGroupOneWithoutSupplView() {
+			return flGroupOneWithoutSupplView;
+		}
+		public void setFlGroupOneWithoutSupplView(boolean flGroupOneWithoutSupplView) {
+			this.flGroupOneWithoutSupplView = flGroupOneWithoutSupplView;
+		}
+		public boolean isFlGroupTwentySevenView() {
+			return flGroupTwentySevenView;
+		}
+		public void setFlGroupTwentySevenView(boolean flGroupTwentySevenView) {
+			this.flGroupTwentySevenView = flGroupTwentySevenView;
+		}
+		public boolean isFlInvoiceCancellationDateView() {
+			return flInvoiceCancellationDateView;
+		}
+		public void setFlInvoiceCancellationDateView(
+				boolean flInvoiceCancellationDateView) {
+			this.flInvoiceCancellationDateView = flInvoiceCancellationDateView;
+		}
 		public boolean isFlFRNCancellationDateView() {
 			return flFRNCancellationDateView;
 		}

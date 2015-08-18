@@ -736,7 +736,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)116205;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -3824,12 +3824,13 @@ public class ReportBackingBean extends
 								getManagedBean().getRptGenBean().setFlSupplierDropdownView(true);
 							}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
 								getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-							}
+							}							
 						}else{
 							if(getManagedBean().getRptGenBean().isFlSupplierView()){
 								getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-							}
+							}							
 						}
+					 paramCodeSupplierGroupDropdown(parameterCodeType);		
 			}else{
 				retrieveParameterCodeType();
 			}
@@ -3884,7 +3885,7 @@ public class ReportBackingBean extends
 				//retrieveFPJPTJList();
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-				}
+				}				
 			}else if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
 				retrieveSupplierCompName();	
 				if((this.getSupplCompanyList().size()>0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
@@ -3892,12 +3893,129 @@ public class ReportBackingBean extends
 				}else if((this.getSupplCompanyList().size()==0)&&(getManagedBean().getRptGenBean().isFlSupplierView())){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
 				}
+				
 			}else{
 				if(getManagedBean().getRptGenBean().isFlSupplierView()){
 					getManagedBean().getRptGenBean().setFlSupplierTextView(true);
-				}
-			}			
+				}				
+			}
+			paramCodeSupplierGroupDropdown(parameterCodeType);				
 		}		
+	}
+	public void  paramCodeSupplierGroupDropdown(String parameterCodeType) {
+		if((parameterCodeType!=null)&&(parameterCodeType.equals(ReportConst.ROLE_CODE_SUP))){
+			if((getManagedBean().getRptGenBean().isFlGroupOneView())){
+				getManagedBean().getRptGenBean().setFlGroupOneWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwoView())){
+				getManagedBean().getRptGenBean().setFlGroupTwoWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupThreeView())){
+				getManagedBean().getRptGenBean().setFlGroupThreeWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFourView())){
+				getManagedBean().getRptGenBean().setFlGroupFourWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFiveView())){
+				getManagedBean().getRptGenBean().setFlGroupFiveWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSixView())){
+				getManagedBean().getRptGenBean().setFlGroupSixWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSevenView())){
+				getManagedBean().getRptGenBean().setFlGroupSevenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupEightView())){
+				getManagedBean().getRptGenBean().setFlGroupEightWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupNineView())){
+				getManagedBean().getRptGenBean().setFlGroupNineWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTenView())){
+				getManagedBean().getRptGenBean().setFlGroupTenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupElevenView())){
+				getManagedBean().getRptGenBean().setFlGroupElevenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwelveView())){
+				getManagedBean().getRptGenBean().setFlGroupTwelveWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupThirteenView())){
+				getManagedBean().getRptGenBean().setFlGroupThirteenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFourteenView())){
+				getManagedBean().getRptGenBean().setFlGroupFourteenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFifteenView())){
+				getManagedBean().getRptGenBean().setFlGroupFifteenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSixteenView())){
+				getManagedBean().getRptGenBean().setFlGroupSixteenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSeventeenView())){
+				getManagedBean().getRptGenBean().setFlGroupSeventeenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupEighteenView())){
+				getManagedBean().getRptGenBean().setFlGroupEighteenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupNineteenView())){
+				getManagedBean().getRptGenBean().setFlGroupNineteenWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyOneView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyOneWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyTwoView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyTwoWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyThreeView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyThreeWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFourView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyFourWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFiveView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyFiveWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySixView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentySixWithoutSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySevenView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentySevenWithoutSupplView(true);
+			}
+		}else{
+			if((getManagedBean().getRptGenBean().isFlGroupOneView())){
+				getManagedBean().getRptGenBean().setFlGroupOneWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwoView())){
+				getManagedBean().getRptGenBean().setFlGroupTwoWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupThreeView())){
+				getManagedBean().getRptGenBean().setFlGroupThreeWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFourView())){
+				getManagedBean().getRptGenBean().setFlGroupFourWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFiveView())){
+				getManagedBean().getRptGenBean().setFlGroupFiveWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSixView())){
+				getManagedBean().getRptGenBean().setFlGroupSixWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSevenView())){
+				getManagedBean().getRptGenBean().setFlGroupSevenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupEightView())){
+				getManagedBean().getRptGenBean().setFlGroupEightWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupNineView())){
+				getManagedBean().getRptGenBean().setFlGroupNineWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTenView())){
+				getManagedBean().getRptGenBean().setFlGroupTenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupElevenView())){
+				getManagedBean().getRptGenBean().setFlGroupElevenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwelveView())){
+				getManagedBean().getRptGenBean().setFlGroupTwelveWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupThirteenView())){
+				getManagedBean().getRptGenBean().setFlGroupThirteenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFourteenView())){
+				getManagedBean().getRptGenBean().setFlGroupFourteenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupFifteenView())){
+				getManagedBean().getRptGenBean().setFlGroupFifteenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSixteenView())){
+				getManagedBean().getRptGenBean().setFlGroupSixteenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupSeventeenView())){
+				getManagedBean().getRptGenBean().setFlGroupSeventeenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupEighteenView())){
+				getManagedBean().getRptGenBean().setFlGroupEighteenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupNineteenView())){
+				getManagedBean().getRptGenBean().setFlGroupNineteenWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyOneView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyOneWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyTwoView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyTwoWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyThreeView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyThreeWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFourView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyFourWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentyFiveView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentyFiveWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySixView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentySixWithSupplView(true);
+			}else if((getManagedBean().getRptGenBean().isFlGroupTwentySevenView())){
+				getManagedBean().getRptGenBean().setFlGroupTwentySevenWithSupplView(true);
+			}
+		}
 	}
 	public void  enableSupplierCompNameTextOrDropdown() {
 		if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase(
@@ -6694,13 +6812,15 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		String ptString = ReportConst.NUMERIC_CHAR_PATTERN_ONLY;
 		Pattern pattern = Pattern.compile(ptString);
 		Matcher match;
-		if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
+		if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
+			//if(this.getScProcessRptQuotationNo() != null){
 			match = pattern.matcher(this.getScProcessRptQuotationNo());
+		  //}
 		}else {
 			match = pattern.matcher(this.getScQuotationNo());
 		}
 		if (match.matches()) {
-			if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL))){
+			if((getManagedBean().getReportValue() != null)&&(getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_S1_SIMPLE_QUOTE_PROCESS_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_DTL_STS_COMPLD_S1_RPT_VAL)||getManagedBean().getReportValue().trim().equalsIgnoreCase(ReportConst.SC_SIMPLE_QUOTE_SMRY_BY_SUPPL_S1_RPT_VAL))){
 				retrieveSimpleQuoteNo();
 			}else {
 				getQuotationNumber();
