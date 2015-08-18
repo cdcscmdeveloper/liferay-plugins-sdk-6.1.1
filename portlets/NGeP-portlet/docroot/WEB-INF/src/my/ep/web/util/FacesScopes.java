@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -369,10 +370,12 @@ public class FacesScopes {
 	
 	public static void preRenderErrorMessage(String errorMsg){
 		
+		
 		FacesContext.getCurrentInstance().addMessage(
 				null,
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
-						MessageUtils.getMessage(errorMsg,
+				new FacesMessage(FacesMessage.SEVERITY_ERROR, null, MessageUtils
+						.getMessage(MessageConst.ERROR_700200, new String[] { ""
+								+ errorMsg },
 								MessageUtils.BUNDLE_COMMON_MESSAGES,
 								new FacesScopes().getUserLocale())));
 
