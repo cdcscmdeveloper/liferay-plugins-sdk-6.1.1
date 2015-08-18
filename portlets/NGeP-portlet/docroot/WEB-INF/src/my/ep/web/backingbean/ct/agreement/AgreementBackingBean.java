@@ -1465,9 +1465,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			vmFile = "/ct/agreement/agreement-cover-page.vm";
 			context.put("imgUrl", imgUrl);
 			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
-				context.put("agreementTypeUpper", ContractConst.SUPP_AGREEMENT_STRING_UPPER_CASE);
+				context.put("agreementTypeUpper", ContractConst.SUPP_AGREEMENT_STRING.toUpperCase());
 			} else {
-				context.put("agreementTypeUpper", ContractConst.AGREEMENT_STRING_UPPER_CASE);
+				context.put("agreementTypeUpper", ContractConst.AGREEMENT_STRING.toUpperCase());
 			}
 			context.put("contractTitle", getManagedBean().getCtContract().getContractName());
 			context.put("supplierName", getManagedBean().getContractVer().getCtContractValue().getSupplierName());
@@ -1508,11 +1508,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				pmAddressType = addressResDTO.getAddressTypeList().get(0);
 			}
 			if (getManagedBean().getAgreementType().equalsIgnoreCase(ContractConst.SUPPLEMENTAL_AGREEMENT)) {
-				context.put("agreementTypeUpper", ContractConst.SUPP_AGREEMENT_STRING_UPPER_CASE);
-				context.put("agreementTypeLower", ContractConst.SUPP_AGREEMENT_STRING_LOWER_CASE);
+				context.put("agreementTypeUpper", ContractConst.SUPP_AGREEMENT_STRING.toUpperCase());
+				context.put("agreementTypeLower", ContractConst.SUPP_AGREEMENT_STRING);
 			} else {
-				context.put("agreementTypeUpper", ContractConst.AGREEMENT_STRING_UPPER_CASE);
-				context.put("agreementTypeLower", ContractConst.SUPP_AGREEMENT_STRING_LOWER_CASE);
+				context.put("agreementTypeUpper", ContractConst.AGREEMENT_STRING.toUpperCase());
+				context.put("agreementTypeLower", ContractConst.AGREEMENT_STRING);
 			}
 			context.put("userInputDate", c.get(Calendar.DATE) + "");
 			context.put("userInputMonth", c.get(Calendar.MONTH) + "");
