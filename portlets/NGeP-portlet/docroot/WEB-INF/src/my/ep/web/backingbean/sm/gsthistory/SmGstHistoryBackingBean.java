@@ -127,9 +127,10 @@ public class SmGstHistoryBackingBean extends
 
 	private String getGstActionedBy(SmGstSupplier gst) {
 		String retVal = "";
-		if (gst != null && gst.getCreatedBy() != null) {
+		if (gst != null) {
 			UserReqDTO reqDTO = new UserReqDTO();
-			reqDTO.setUserId(gst.getCreatedBy());
+			reqDTO.setUserId(gst.getChangedBy() != null ? gst.getChangedBy()
+					: gst.getCreatedBy());
 			PmUser user = SmServiceLookup.getUserSO()
 					.retrieveUserByUserId(reqDTO).getPmUser();
 			if (user != null) {

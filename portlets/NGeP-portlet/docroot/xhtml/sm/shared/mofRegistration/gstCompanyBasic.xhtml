@@ -31,8 +31,7 @@
 								id="smGstRegistrationNo" size="35" maxlength="12"
 								validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-								<p:ajax process="@this" partialSubmit="true" update="@([id$=gstHqPanelId])" 
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+								<p:ajax process="@this" partialSubmit="true" update="@([id$=gstHqPanelId])" />
 							</p:inputText>
 							<p:message id="smgstRegistrationNoMsg" for="smGstRegistrationNo"
 								showSummary="true" showDetail="false" display="icon" />
@@ -67,8 +66,7 @@
 								value="#{backingBean.managedBean.companyBasicGst.gstEffDate}" 
 								required="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
 								or not empty backingBean.managedBean.companyBasicGst.gstEndDate}">
-								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this"
-									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
+								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this" />
 							</p:calendar>
 							<p:message id="gstEffDateMsg" for="gstEffDate"
 								showSummary="true" showDetail="false" display="icon" />
@@ -154,6 +152,18 @@
 				</td>
 			</tr>
 		</table>
+		
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+				rendered="#{backingBean.managedBean.supplierUser and 
+						(backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}"
+				partialSubmit="true" process="@this" update=":#{p:component('gstHqPanelId')}"
+				disabled="#{empty backingBean.managedBean.companyBasicGst 
+					or empty backingBean.managedBean.companyBasicGst.gstRegNo}"
+				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+				action="#{backingBean.deleteGst(backingBean.managedBean.companyBasicGst)}">
+			</p:commandButton>
+		</div>
 		
 		<p:dialog id="gstUploadDialog" widgetVar="gstUploadDialog" modal="true"
 			dynamic="true" resizable="false" width="700px" height="200"
