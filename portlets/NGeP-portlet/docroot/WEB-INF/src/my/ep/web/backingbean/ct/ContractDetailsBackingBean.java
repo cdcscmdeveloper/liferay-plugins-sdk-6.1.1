@@ -1330,15 +1330,13 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
       	}
 		if (outputTab.equalsIgnoreCase("SE")) {
 			if (getManagedBean().getCtContract().isZonalPricing()) {  
-				if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() 
-						&& outputTab.equalsIgnoreCase("FT")) {
+				if(getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
 					getManagedBean().setSelectedTabIndex(4);
 				} else {
 					getManagedBean().setSelectedTabIndex(3);
 				}
        	  	} else {
-       	  		if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate() 
-       	  				&& outputTab.equalsIgnoreCase("FT")) {
+       	  		if (getManagedBean().getCtContract().isFactored() && checkFactoringExpiryDate()) {
        	  			getManagedBean().setSelectedTabIndex(3);
        	  		} else {
        	  			getManagedBean().setSelectedTabIndex(2);
@@ -3646,8 +3644,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 				//Retrieve amendment
 				amendmentReqDTO.setContractId(getManagedBean().getCtContract().getContractId());
 				amendmentReqDTO.setAmendmentEffectiveDate(getManagedBean().getCtContractAmount().getEffDate());
-				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);
-				
+				amendmentResDTO = amendmentSO.getCtAmendmentByAmendmentEffDate(amendmentReqDTO);				
 				if (amendmentResDTO.getCtAmendment() != null) {
 					getManagedBean().setAgreementContractVer(amendmentResDTO.getCtAmendment().getCtContractVer());
 				} else {
