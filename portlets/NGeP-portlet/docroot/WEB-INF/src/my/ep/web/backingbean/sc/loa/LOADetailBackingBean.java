@@ -1214,9 +1214,9 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						saveScheduleList();
+						// saveScheduleList();
 						generateFrequencySchedulePdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
 							.equals(docDefinitionKey)) {
 						filename.append(".xlsx");
@@ -1292,9 +1292,9 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						saveScheduleList();
+						// saveScheduleList();
 						generateFrequencySchedulePdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}
 					
 				}else if(scLoaReportAttachment != null && 
@@ -1304,9 +1304,9 @@ public class LOADetailBackingBean extends
 							.equals(docDefinitionKey)) {
 						filename.append(".pdf");
 						scLoaReportAttachment.setFileName(filename.toString());
-						saveScheduleList();
+						// saveScheduleList();
 						generateFrequencySchedulePdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa);
+								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}
 				}
 			} catch (Exception e) {
@@ -3200,13 +3200,21 @@ public class LOADetailBackingBean extends
 	 * @throws Exception the exception
 	 */
 	private void generateFrequencySchedulePdfFromVelocity(
-			ScAttachment attachment, ScLoa scLoa) throws Exception {
+			ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
 
 		populateAttachmentDetails(attachment);
+		VelocityContext context = new VelocityContext();
+		
+		String frequencyScheduleType = "";
+		if (scQt.getScheduleType() != null) {
+			frequencyScheduleType = scQt.getScheduleType();
+		}
+		context.put("frequencyScheduleType", frequencyScheduleType);
+		
 		SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
 		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
 		IParameterSO parameterSO = null;
-		VelocityContext context = new VelocityContext();
+		
 		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
 		List<ScQtSchedule> scheduleReportList = new ArrayList<ScQtSchedule>();
 		ScQtSchedule reportSchedule = null;
@@ -3242,10 +3250,18 @@ public class LOADetailBackingBean extends
 					parameterSO = null;
 				}
 			}
+			context.put("totalFrequency", totalFrequency);
+			context.put("scheduleList", scheduleReportList);
+			context.put("bean", this);
 		}
-		context.put("totalFrequency", totalFrequency);
-		context.put("scheduleList", scheduleReportList);
-		context.put("bean", this);
+		int totalPhase = 0;
+		List<ScQtProgressivePayment> progressivePayments = scLoa.getScQtProgPayments();
+		if (null != progressivePayments && progressivePayments.size() > 0) {
+			totalPhase = progressivePayments.size();
+			context.put("totalPhase", totalPhase);
+			context.put("paymentList", progressivePayments);
+			
+		}
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
