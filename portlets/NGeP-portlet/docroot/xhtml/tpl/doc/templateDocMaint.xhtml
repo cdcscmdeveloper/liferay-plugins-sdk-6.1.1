@@ -242,6 +242,10 @@
 		
 		<p:dialog id="popupImportSec" widgetVar="popupImportSec" modal="false" 
 			resizable="false" header="#{lbl['lbl.tpl.doc.import.section']}" width="850" height="460">
+			
+			<p:remoteCommand name="tempDocFunc" action="#{templateDocBackingBean.imptSearchResult}" 
+			process="@this,imptTemplateCategory,imptProcessType,imptTitle" update="impMasterList,impSectionList"></p:remoteCommand>
+			
 			<table width="100%">
 				<tr>
 					<td class="TableFieldLeft" style="width: 80px"><h:outputLabel value="#{lbl['lbl.sc.procurement.category']}" /></td>
@@ -259,12 +263,13 @@
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width: 80px"><h:outputLabel value="#{lbl['lbl.tpl.doc.section.title']}" /></td>
-					<td class="TableFieldRight"><p:inputText id="imptTitle" style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" /></td>
+					<td class="TableFieldRight"><p:inputText id="imptTitle" style="width:180px" value="#{templateDocBackingBean.managedBean.impTitle}" onkeypress="if (event.keyCode == 13) { tempDocFunc(); return false; }" /></td>
 					<td>
-						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
+						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}"
 							process="@this,imptTemplateCategory,imptProcessType,imptTitle" update="impMasterList,impSectionList">
 							<h:graphicImage value="/css/images/design/ico-search.png"/> 
 						</p:commandLink> 
+
 					</td>
 				</tr>
 				<tr>
