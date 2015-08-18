@@ -75,35 +75,42 @@
 				<p:column headerText="#{lbl['lbl.sm.branch.branchName']}">
 					<table style="width: 100%">
 						<tr>
-							<td colspan="2" style="border-style: none !important;"><h:outputText
-									value="#{branchBean.branchName}" /></td>
+							<td colspan="2" style="border-style: none !important;">
+								<h:outputText value="#{branchBean.branchName}" />
+							</td>
 						</tr>
 						<tr>
 							<td style="border-style: none !important; width: 40%;"><h:outputText
 									value="#{lbl['lbl.sm.gstNo']}" /></td>
 							<td style="border-style: none !important; width: 5%;">:</td>
-							<td style="border-style: none !important;; width: 55%;"><h:outputText
-									value="#{branchBean.gst.gstRegNo}" /></td>
+							<td style="border-style: none !important;; width: 55%;">
+								<h:outputText value="#{branchBean.gst.gstRegNo}" rendered="#{not empty branchBean.gst.gstRegNo}"/>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstRegNo}"/>
+							</td>
 						</tr>
 						<tr>
 							<td style="border-style: none !important;"><h:outputText
 									value="#{lbl['lbl.sm.gst.effdate']}" /></td>
 							<td style="border-style: none !important;">:</td>
-							<td style="border-style: none !important;"><h:outputText
-									value="#{branchBean.gst.gstEffDate}">
+							<td style="border-style: none !important;">
+								<h:outputText value="#{branchBean.gst.gstEffDate}" rendered="#{not empty branchBean.gst.gstEffDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-								</h:outputText></td>
+								</h:outputText>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstEffDate}"/>
+							</td>
 						</tr>
 						<tr>
 							<td style="border-style: none !important;"><h:outputText
 									value="#{lbl['lbl.sm.gst.eff.end.date']}" /></td>
 							<td style="border-style: none !important;">:</td>
-							<td style="border-style: none !important;"><h:outputText
-									value="#{branchBean.gst.gstEndDate}">
+							<td style="border-style: none !important;">
+								<h:outputText value="#{branchBean.gst.gstEndDate}" rendered="#{not empty branchBean.gst.gstEndDate}">
 									<f:convertDateTime
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-								</h:outputText></td>
+								</h:outputText>
+								<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty branchBean.gst.gstEndDate}"/>
+							</td>
 						</tr>
 					</table>
 
