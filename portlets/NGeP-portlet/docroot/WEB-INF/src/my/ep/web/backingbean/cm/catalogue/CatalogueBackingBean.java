@@ -5186,23 +5186,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 					+ smResDTO.getResultBean().getResultList().get(0)
 					.getCompanyName());
 
-			/*
-			 * CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-			 * reqDTO.setSupplierId
-			 * (smResDTO.getResultBean().getResultList().get(0)
-			 * .getSupplierId()); reqDTO.setItemStatus("D"); CatalogueResDTO
-			 * resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-			 * 
-			 * this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList
-			 * ());
-			 * 
-			 * CatalogueResDTO resDTO2 =
-			 * catalogueSO.retrieveSupplierZoneBySuppId(reqDTO);
-			 * log.info("zone size:" + resDTO2.getSupplierZoneLs().size());
-			 * this.
-			 * getManagedBean().setSupplierZoneList(resDTO2.getSupplierZoneLs
-			 * ());
-			 */
+			
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil
 					.getOriginalServletRequest(servletRequest);
@@ -5218,19 +5202,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean> 
 						.getResultBean().getResultList().get(0).getSupplierId(), null);
 
 			}
-
-			// } catch (Exception e) {
-			// e.printStackTrace();
-		} finally {
+			
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "catalogMaintenanceFile");
+			
+		}catch(Exception ex){
+			FacesScopes.preRenderErrorMessage(ex.getMessage());
+		}finally {
 			catalogueSO = null;
 			supplierSearchSO = null;
 		}
 
 		log.debug("Exit preRenderCatalogue");
 
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-		.handleNavigation(fc, null, "catalogMaintenanceFile");
+		
 
 	}
 
