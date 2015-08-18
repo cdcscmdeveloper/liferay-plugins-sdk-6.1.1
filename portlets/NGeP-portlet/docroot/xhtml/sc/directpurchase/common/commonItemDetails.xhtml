@@ -195,14 +195,14 @@
 						</h:panelGroup>
 						
 					</f:facet>
-					<p:inputText style="width:15px;margin-top: 8px;margin-right: 1px;" 
+					<p:inputText style="width:21px;margin-top: 8px;margin-right: 1px;" 
 					   label="#{requestNoteDtl.requestItem.itemName} : #{lbl['lbl.sc.request.note.delivery.term']}"
 					   size="6" maxlength="4"
 					   disabled="#{requestNoteDtl.requestItem.quote ne null and requestNoteDtl.prodAndServiceFlag}"
 					   id="deliveryTerm" value="#{requestNoteDtl.deliverTerm}" required="#{!requestNoteDtl.selected}">
 					   	<p:ajax partialSubmit="true" process="@this" update="@this" />
 					   </p:inputText>
-					   	<p:inputText style="margin-top: 8px;" value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.deliverTermType)}" 
+					   	<p:inputText style="width: 30px;margin-top: 8px;" value="#{requestNoteBackingBean.getParameterDesc(requestNoteDtl.deliverTermType)}" 
 					   disabled="true" size="2"  />
 					
 					  <p:message id="deliveryTermMsg" for="deliveryTerm" display="icon" />
@@ -238,10 +238,9 @@
 						<h:outputText value="#{lbl['lbl.sc.direct.purchase.title']}" />
 					</f:facet>
 					 <p:inputTextarea id="procTypeCatTitle" rows="2" 
-					    label="#{lbl['lbl.sc.direct.purchase.title']}"
-					    cols="6" maxlength="100" 
-					    scrollHeight="3" value="#{requestNoteDtl.procurementTitle}" 
-					      autoResize="false" style="width:120px;">
+					     label="#{lbl['lbl.sc.direct.purchase.title']}"  maxlength="100" 
+					     value="#{requestNoteDtl.procurementTitle}" 
+					     autoResize="false" style="width:140px;">
 					    <p:ajax event="keyup" partialSubmit="true" 
 									process="@this"
 									listener="#{requestNoteBackingBean.priceTypeChangeListener(requestNoteDtl.priceTypeId, requestNoteDtl)}" />
