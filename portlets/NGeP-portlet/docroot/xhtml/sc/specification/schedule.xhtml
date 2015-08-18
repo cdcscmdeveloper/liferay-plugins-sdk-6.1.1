@@ -19,7 +19,8 @@
 							value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
 							<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
 							<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
-							<p:ajax event="change" update="progressive,schedule"
+							<p:ajax event="change" process="@this" partialSubmit="true"
+								update="@([id$=progressive],[id$=schedule])"
 								listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
 						</p:selectOneRadio></td>
 					<td style="margin-top: -3px"><ac:iconTooltip
