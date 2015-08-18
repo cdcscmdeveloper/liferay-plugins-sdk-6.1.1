@@ -360,13 +360,13 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					itemSearchBackBtn = Boolean.FALSE;
 				}
 			}
-			
+			supplierListener(scRequestNoteDtl.getScRequestSupplierItem().getSupplierId(),scRequestNoteDtl.getPriceType().getParameterId() ,
+					scRequestNoteDtl,scRequestNoteDtl.getAssignedUser().getUserId(), scRequestNoteDtl.getProcurementTypeCategory().getParameterId());
 			requestNoteDtls.add(scRequestNoteDtl);
 		}
 		
 		// item search back button 
 		getManagedBean().setItemSearchBackBtn(itemSearchBackBtn);
-		
 		
 		getManagedBean().setRequestNoteDtls(requestNoteDtls);
 		getManagedBean().setRequestNoteDtl(requestNoteDtls.get(0));
