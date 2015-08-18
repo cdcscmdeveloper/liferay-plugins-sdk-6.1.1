@@ -2323,6 +2323,20 @@ public class SmApplicationBackingBean extends
 	}
 
 	/**
+	 * Delete GST
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 */
+	public void deleteGst(SmGstSupplier gst) {
+		gst.setGstRegNo(null);
+		gst.setGstEffDate(null);
+		gst.setGstEndDate(null);
+		gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+		SmApplicationUtil.initGstSuppDocs(gst);
+	}
+
+	/**
 	 * Add or update selected branch info to SmSupplierBranch list of the
 	 * application.
 	 */
