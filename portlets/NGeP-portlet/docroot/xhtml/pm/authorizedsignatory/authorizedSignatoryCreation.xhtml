@@ -31,8 +31,8 @@
 		<br />
 		<ac:lovPopup />
 		<p:dataTable id="searchSignatoryResults" rowIndexVar="index"
-			rowKey="#{certSignatory}" rows="10"
-			emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			rowKey="#{certSignatory}" rows="10" sortMode="multiple"
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}"			
 			selection="#{authorizedsignatoryBackingBean.managedBean.deletedCertSignatories}"
 			value="#{authorizedsignatoryBackingBean.managedBean.certSignatories}"
 			var="certSignatory">
@@ -50,23 +50,25 @@
 				<p:message id="asNameMsg" for="asName" display="icon" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" style="width :20%">
+			<p:column headerText="#{lbl['lbl.pm.as.effdate']}" sortBy="#{certSignatory.effDate}" parser="date" style="width :20%">
 				<p:calendar id="effDateId" value="#{certSignatory.effDate}"
 					navigator="true" maxdate="#{ProfileManagementConst.maxDate}"
 					disabled="#{!certSignatory.brandNew}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
-					yearRange="c-50:c+99" showOn="button"
+					yearRange="0:+99" showOn="button"
+					mindate="#{CommonConstants.CURRENT_DATE}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
 				</p:calendar>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.pm.as.expdate']}" style="width :20%">
+			<p:column headerText="#{lbl['lbl.pm.as.expdate']}" sortBy="#{certSignatory.expDate}" parser="date" style="width :20%">
 				<p:calendar id="expDateId" value="#{certSignatory.expDate}" valueChangeListener="#{authorizedsignatoryBackingBean.expDateChangedListener}" 
 					disabled="#{!authorizedsignatoryBackingBean.checkExpDate(certSignatory)}" navigator="true"
 					maxdate="#{ProfileManagementConst.maxDate}"
 					label="#{lbl['lbl.pm.as.effdate']}" readonlyInput="true"
-					yearRange="c-50:c+99" showOn="button"
+					yearRange="0:+99" showOn="button"
+					mindate="#{CommonConstants.CURRENT_DATE}"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<f:attribute name="certSignatory" value="#{certSignatory}"/>
 					<p:ajax event="dateSelect" process="@this" />
@@ -105,4 +107,5 @@
 					update="searchSignatoryResults" />
 			</div>
 		</p:panel>
+	
 </ui:composition>

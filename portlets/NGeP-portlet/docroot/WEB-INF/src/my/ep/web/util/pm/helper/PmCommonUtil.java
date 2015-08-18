@@ -1461,6 +1461,22 @@ public class PmCommonUtil {
 		trckVO.setGroupDocType(null);
 		return trckVO;
 	}
+	
+	public static PmTrackingDairyVO assignTrackingDairyForSupportingDocument(Long docId,String docCode,PmStatus status,String actionDesc) {
+
+		PmTrackingDairyVO trckVO = new PmTrackingDairyVO();
+		PmUser user = new FacesScopes().getUserSessionBean();
+		trckVO.setActionDesc(actionDesc);
+		trckVO.setActionedBy(user != null ? user.getUserId() : null);
+		trckVO.setActionedByRole(getUserRoleValue());
+		trckVO.setDocId(docId);
+		trckVO.setDocNo(docCode);
+		trckVO.setDocType(ParameterConst.SUPPORTING_DOC_QUOTATION_TENDER);
+		trckVO.setStatus(status);
+		trckVO.setGroupId(null);
+		trckVO.setGroupDocType(null);
+		return trckVO;
+	}
 
 	public static String getUserRoleValue() {
 		FacesScopes sc = new FacesScopes();
