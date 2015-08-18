@@ -60,7 +60,7 @@
 									value="#{br.gst.gstRegNo}" required="true"
 									size="35" label="#{lbl['lbl.sm.gst.regno']}" 
 									validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
-									<p:ajax event="blur" update="branchGstRegDateCalId" process="@this"/>
+									<p:ajax event="blur" process="@this"/>
 									<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
 									</p:inputText>
 									<p:message id="branchGstRegNoMsg"

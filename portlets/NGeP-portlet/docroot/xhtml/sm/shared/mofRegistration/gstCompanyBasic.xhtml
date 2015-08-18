@@ -31,7 +31,8 @@
 								id="smGstRegistrationNo" size="35" maxlength="12"
 								validatorMessage="#{lbl['lbl.sm.gstNo']} - #{lbl['lbl.sm.invalidNo']}">
 								<f:validateRegex pattern="^-?\d*(\.\d+)?$" />
-								<p:ajax process="@this" partialSubmit="true" update="@([id$=gstHqPanelId])" />
+								<p:ajax process="@this" partialSubmit="true" update="@([id$=gstHqPanelId])" 
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 							</p:inputText>
 							<p:message id="smgstRegistrationNoMsg" for="smGstRegistrationNo"
 								showSummary="true" showDetail="false" display="icon" />
@@ -66,7 +67,8 @@
 								value="#{backingBean.managedBean.companyBasicGst.gstEffDate}" 
 								required="#{not empty backingBean.managedBean.companyBasicGst.gstRegNo 
 								or not empty backingBean.managedBean.companyBasicGst.gstEndDate}">
-								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this"/>
+								<p:ajax event="dateSelect"  update="@([id$=gstHqPanelId])" process="@this"
+									onstart="blockWidget.show()" oncomplete="blockWidget.hide()"/>
 							</p:calendar>
 							<p:message id="gstEffDateMsg" for="gstEffDate"
 								showSummary="true" showDetail="false" display="icon" />
