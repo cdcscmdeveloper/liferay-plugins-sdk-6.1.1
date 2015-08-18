@@ -1,12 +1,14 @@
 package my.ep.web.backingbean.sc.supplierproposal;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -40,6 +42,7 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sc.quationtender.IQTProposalSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -66,6 +69,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.common.ScAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtAmend;
 import my.ep.persistence.entity.sc.quationtender.ScQtCheckListValue;
 import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtDocReport;
@@ -207,9 +211,18 @@ public class SPDetailBackingBean extends
 
 			ProposalResDTO resDTO = getProposalSO()
 					.retrieveProposalDtlBySupplierId(reqDTO);
+			
+			ScQt scQt = resDTO.getScQt();
+			
 			getManagedBean().setQt(resDTO.getScQt());
 
 			getManagedBean().setScQtDocReports(resDTO.getScQtDocReports());
+			
+			QtAmendMentBean amendMentBean = getAmendMentDtls(resDTO);
+			if (amendMentBean != null) {
+				setQtAmendMentData(scQt, amendMentBean);
+			}
+			
 			getManagedBean().setQtProposal(resDTO.getScQtProposal());
 			getManagedBean().setSupplierId(resDTO.getSupplierId());
 
@@ -262,6 +275,50 @@ public class SPDetailBackingBean extends
 			getProposalSO().validateSupplierProposal(reqDTO);
 
 		} finally {
+		}
+	}
+
+	private QtAmendMentBean getAmendMentDtls(ProposalResDTO resDTO) {
+		debugLogger("getAmendMentDtls");
+		ByteArrayInputStream byteArrayInputStream = null;
+		ObjectInputStream objectInputStream = null;
+		QtAmendMentBean amendMentBean = null;
+		ScQtAmend scQtAmend = resDTO.getScQtAmend();
+
+		if (scQtAmend != null) {
+			byteArrayInputStream = new ByteArrayInputStream(
+					scQtAmend.getAmendContent());
+			try {
+				objectInputStream = new ObjectInputStream(byteArrayInputStream);
+				amendMentBean = (QtAmendMentBean) objectInputStream
+						.readObject();
+			} catch (IOException e) {
+				log.error("Problem while doing deserialization"
+						+ e.getMessage());
+			} catch (ClassNotFoundException e) {
+				log.error("Problem while doing deserialization"
+						+ e.getMessage());
+			}
+		}
+		return amendMentBean;
+	}
+	
+	private void setQtAmendMentData(ScQt scQt, QtAmendMentBean amendMentBean){
+		debugLogger("setQtAmendMentData");
+		if (0 != amendMentBean.getNewValidityPeriodDays()) {
+			scQt.setQtValidityPeriod(amendMentBean
+					.getNewValidityPeriodDays());
+		}
+		if (0 != amendMentBean.getNewPublishPeriodDays()) {
+			scQt.setPublishPeriod(amendMentBean
+					.getNewPublishPeriodDays());
+		}
+		if (null != amendMentBean.getNewTitle()) {
+			scQt.setQtTitle(amendMentBean.getNewTitle());
+		}
+		if (null != amendMentBean.getNewEstmtPrice()) {
+			scQt.setEstimatedAmount(amendMentBean
+					.getNewEstmtPrice());
 		}
 	}
 
