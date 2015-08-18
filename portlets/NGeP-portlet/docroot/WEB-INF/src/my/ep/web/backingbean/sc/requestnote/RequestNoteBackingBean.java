@@ -2632,6 +2632,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				parameterReqDTO.setParameterId(procTypeCatId);
 				PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
 				requestNoteDtl.setProcurementTypeCategory(procTypeCategory);
+				requestNoteDtl.setProcTypeCategoryId(procTypeCategory.getParameterId());
 			}
 			
 			// prepared by
