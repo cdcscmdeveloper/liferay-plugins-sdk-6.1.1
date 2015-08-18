@@ -5570,6 +5570,14 @@ public class SmApplicationUtil {
 				suppDoc.setSmGstSupplier(gst);
 				gst.getSmGstSupplierDocs().add(suppDoc);
 			}
+		} else {
+			if (StringUtils.isBlank(gst.getGstRegNo())
+					&& gst.getSmGstSupplierDocs() != null) {
+				for (SmGstSupplierDoc doc : gst.getSmGstSupplierDocs()) {
+					doc.setFilePath(null);
+					doc.setFileName(null);
+				}
+			}
 		}
 	}
 
