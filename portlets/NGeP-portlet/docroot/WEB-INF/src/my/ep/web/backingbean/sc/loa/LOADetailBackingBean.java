@@ -72,6 +72,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -138,6 +139,7 @@ import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
@@ -394,6 +396,7 @@ public class LOADetailBackingBean extends
 			
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
+			isGSTRegActive();
 			
 			// Supplier Witness
 			ScLoaWitness loaSupplierWitness = null;
@@ -662,7 +665,7 @@ public class LOADetailBackingBean extends
 		}
 		
         //Supplier overall contract amount
-		getManagedBean().setOverallContractAmt(scLoa.getLoaAmt());
+		calculateOverallAmount(scLoa.getGstAmt());
 		
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
@@ -1249,7 +1252,8 @@ public class LOADetailBackingBean extends
 					}
 					
 				}else if(scLoaReportAttachment != null && 
-						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)){
+						QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId) || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)
+						|| QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
 					// if pending supplier acknowledgement , always regenerate 
 					
 					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
@@ -1297,17 +1301,6 @@ public class LOADetailBackingBean extends
 								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
 					}
 					
-				}else if(scLoaReportAttachment != null && 
-						QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){
-					// if pending submission , always regenerate 
-					if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
-							.equals(docDefinitionKey)) {
-						filename.append(".pdf");
-						scLoaReportAttachment.setFileName(filename.toString());
-						// saveScheduleList();
-						generateFrequencySchedulePdfFromVelocity(
-								(ScAttachment) scLoaReportAttachment, scLoa, getManagedBean().getScQt());
-					}
 				}
 			} catch (Exception e) {
 				//e.printStackTrace();
@@ -1429,16 +1422,15 @@ public class LOADetailBackingBean extends
 		context.put("bondAmt", bondAmtStr);
 		
 		String gstAmount = "";
+		String overallctAmt = "";
+		BigDecimal loaAmount = scLoa.getLoaAmt();
 		if (scLoa.getGstAmt() != null) {
 			gstAmount = amountDF.format(scLoa.getGstAmt());
+			overallctAmt = amountDF.format(loaAmount.add(scLoa.getGstAmt()));
+		} else {
+			overallctAmt = amountDF.format(scLoa.getLoaAmt());
 		}
 		context.put("gstAmt",gstAmount );
-		
-		String overallctAmt = "";
-		if (getManagedBean().getOverallContractAmt() != null) {
-			overallctAmt = amountDF.format(getManagedBean()
-					.getOverallContractAmt());
-		}
 		context.put("overallctAmt", overallctAmt);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
@@ -1719,16 +1711,22 @@ public class LOADetailBackingBean extends
 			bankAddress = bankAddress.replaceAll("&", "&#38;");
 		}
 		context.put("bankAddress", bankAddress);
-
+       
 		// Setting GST info
-		if(scLoa.getGstRegNo() != null){
-			context.put("gstRegNo", scLoa.getGstRegNo());
+		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+	    String gstRegFlag = "false";
+		if(supplier != null && supplier.getGstRegisteredFlag()== DbValueConst.RECORD_STATUS_ACTIVE){
+			gstRegFlag = "true";
+			setGstInfoForDoc(context, scLoa, amountDF, myLocale);
 		}
+		context.put("gstRegFlag", gstRegFlag);
 		
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
 				SourcingConstants.LOA_AGREEMENT_LETTER, context,
 				new FileOutputStream(getActualFilePath(attachment)));
 	}
+
+	
 
 	/**
 	 * Generate declaration pdf from velocity in Performance Bond.
@@ -3803,7 +3801,6 @@ public class LOADetailBackingBean extends
 		return pbStreamContent;
 
 	}
-
 	
 	/**
 	 * Sort progressive payment list.
@@ -4618,7 +4615,7 @@ public class LOADetailBackingBean extends
 	 * @param gstAmount
 	 */
 	public void calculateOverallAmount(BigDecimal gstAmount) {
-
+		
 		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
 		if (gstAmount != null) {
 			overallContractAmt = overallContractAmt.add(gstAmount);
@@ -4637,11 +4634,12 @@ public class LOADetailBackingBean extends
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
 		String procCatType = this.getParameterDesc(getManagedBean().getScLoa()
 				.getProcurementTypeCatId());
-		if ((supplier != null && supplier.getGstRegisteredFlag() == 1)
-				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
+		getManagedBean().setRenderRemainder(false);
+		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
+				&& ParameterConst.PROC_CAT_TYPE_SERVICES_STRING
 						.equalsIgnoreCase(procCatType)){
 			if (null != scLoa.getGstEffDate()  && scLoa.getGstEffDate()
-						.compareTo(new Date()) >= 0) {
+						.compareTo(new Date()) <= 0) {
 					isActive = false;
 		      } else {
 		    	  isActive = true;
@@ -4663,14 +4661,12 @@ public class LOADetailBackingBean extends
 				.getProcurementTypeCatId());
 		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
 
-		if ((supplier != null && supplier.getGstRegisteredFlag() == 1)
+		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
 				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
-						.equalsIgnoreCase(procCatType)) {
-
+						.equalsIgnoreCase(procCatType) && null != getManagedBean().getScLoa().getGstAmt()) {
 			overallContractAmt.add(getManagedBean().getScLoa().getGstAmt());
-			overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 			
-		} else if ((supplier != null && supplier.getGstRegisteredFlag() == 0)
+		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)
 				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
 						.equalsIgnoreCase(procCatType)) {
 			BigDecimal durationMnth = new BigDecimal(0);
@@ -4694,6 +4690,7 @@ public class LOADetailBackingBean extends
 				getManagedBean().setDisplayAlert(true);
 			}
 	}
+		overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		getManagedBean().setOverallContractAmt(overallContractAmt);
 		
 	}
@@ -4747,5 +4744,51 @@ public class LOADetailBackingBean extends
 		} catch (IOException e) {
 			log.error("Exceptionn occured while uploading the file"+e.getMessage());
 		}
+	}
+	
+	private void setGstInfoForDoc(VelocityContext context, ScLoa scLoa,
+			DecimalFormat amountDF, Locale myLocale) {
+
+		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): "";
+		context.put("gstRegNo", gstRegNo);
+
+		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
+				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "";
+		context.put("gstEffectiveDate", gstEffectiveDate);
+
+		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "";
+		context.put("gstDeclaredDate", gstDeclaredDate);
+
+		String offerPrice = "";
+		String offerPriceWording = "";
+		BigDecimal loaAmount = scLoa.getLoaAmt();
+		if (loaAmount != null) {
+			offerPrice = amountDF.format(loaAmount);
+			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
+		}
+		context.put("offerPrice", offerPrice);
+		context.put("offerPriceWording", offerPriceWording);
+
+		String gstAmount = "";
+		String gstAmountWording = "";
+		String overallctAmt = "";
+		String overallctAmtWording = "";
+		BigDecimal gstAmt = scLoa.getGstAmt();
+		if (gstAmt != null) {
+			gstAmount = amountDF.format(gstAmt);
+			gstAmountWording = WordUtils.capitalizeFully(NumberWordUtil.convert(gstAmt
+					.toString()));
+			overallctAmt = amountDF.format(loaAmount.add(gstAmt));
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.add(gstAmt).toString()));
+		} else {
+			overallctAmt = amountDF.format(loaAmount);
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil.convert(loaAmount.toString()));
+		}
+		context.put("gstAmt", gstAmount);
+		context.put("gstAmtWording", gstAmountWording);
+		context.put("overallCtAmt", overallctAmt);
+		context.put("overallCtAmtWording", overallctAmtWording);
+
 	}
 }
