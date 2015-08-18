@@ -19,39 +19,25 @@
 		</p:blockUI>
 		
 		<p:panel id="gstTncPanelId" header="#{lbl['lbl.sm.term.and.condition.header']}">
-			<p:scrollPanel style="height:100px;border:0;" mode="native">
+			<p:scrollPanel style="height:300px;border:0;" mode="native">
 				<b>#{lbl['lbl.sm.gst.tnc.header']}</b>
 				<br />
 				<p><h:outputText escape="false" value="#{lbl['lbl.sm.gst.tnc.msg']}" /></p>
+				<br /><br />
+				<p><h:outputText value="#{lbl['lbl.sm.mofReg.descData']}" escape="false" /></p>
+				<br /><br />
+				<table style="width: 33%">
+					<tr>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
+						<td><p:selectOneMenu
+								value="#{backingBean.managedBean.newSupplierType}">
+								<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
+								<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
 			</p:scrollPanel>
 			<br/>
-		</p:panel>
-	
-		<div>
-			<table style="width: 100%">
-				<tr>
-					<td style="padding-left: 4px;"><p:outputPanel>
-							<p>
-								<h:outputText value="#{lbl['lbl.sm.mofReg.descData']}"
-									escape="false" />
-							</p>
-							<h:outputText value="#{lbl['lbl.sm.mofReg.note']}" escape="false" />
-							<table style="width: 33%">
-								<tr>
-									<td><p:outputLabel
-											value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
-									<td><p:selectOneMenu
-											value="#{backingBean.managedBean.newSupplierType}">
-											<f:selectItem itemLabel="#{lbl['lbl.sm.contractor']}" itemValue="K" />
-											<f:selectItem itemLabel="#{lbl['lbl.sm.consultant']}" itemValue="J" />
-										</p:selectOneMenu></td>
-								</tr>
-							</table>
-						</p:outputPanel></td>
-
-				</tr>
-			</table>
-			<p:separator />
 			<table>
 				<tr>
 
@@ -70,6 +56,6 @@
 					disabled="#{!backingBean.managedBean.termsAccepted}" 
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 			</div>
-		</div>
+		</p:panel>
 	</ui:define>
 </ui:composition>
