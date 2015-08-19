@@ -41,6 +41,7 @@ public class ContractManagedBean extends BaseManagedBean {
 	private boolean updateSupplierAddress;
 	private SmAddress smAddress;
 	private boolean directPurchase;
+	private boolean gstCheckingGUI;
 	/**
 	 * @return the fileDirectory
 	 */
@@ -196,4 +197,14 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setDirectPurchase(boolean directPurchase) {
 		this.directPurchase = directPurchase;
 	}
+
+	public boolean isGstCheckingGUI() {
+		return gstCheckingGUI;
+	}
+
+	public void setGstCheckingGUI(boolean gstCheckingGUI) {
+		this.gstCheckingGUI = gstCheckingGUI;
+	}
+	
+	
 }
