@@ -1029,7 +1029,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		// Mandatory attachements for other
 	    if(getManagedBean().getContractVer().getCtAmendment().isOtherChange()){
 	    	if(getManagedBean().getAttachmentList() == null || getManagedBean().getAttachmentList().isEmpty()) {
-		       throw new EpException(MessageConst.ERROR_100022,new String[] { "Document attachement for checkbox selection other " });
+		       throw new EpException(MessageConst.ERROR_750033);
 	        }
 	    }
 	    
