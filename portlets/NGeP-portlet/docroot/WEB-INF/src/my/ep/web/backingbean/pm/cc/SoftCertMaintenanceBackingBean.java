@@ -3,18 +3,22 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
 import my.ep.biz.service.sm.search.ISupplierSearchSO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.dto.sm.search.SupplierSearchResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 import com.augtech.kmc.client.IKMCAPIResponse;
 import com.augtech.kmc.client.IKMCAPIResponse.GenSecToken;
@@ -33,8 +37,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 @SessionScoped
 public class SoftCertMaintenanceBackingBean {
 	public static final String PATH = "NGeP-portlet.war/WEB-INF/config/soft-certificate/kmc.properties";
-
-    FacesScopes facesScope = new FacesScopes();
 
 	public SoftCertMaintenanceBackingBean() {}
 	
@@ -79,6 +81,7 @@ public class SoftCertMaintenanceBackingBean {
 		} catch (Exception ex)
 		{
 			ex.printStackTrace();
+			throw new EpException(ex.getMessage());
 //			fail(ex.getMessage());
 		}
 		
@@ -86,16 +89,19 @@ public class SoftCertMaintenanceBackingBean {
 	}
 	
 	public String getDigiCertUserId() {
-				
-		return facesScope.getUserSessionBean().getIdentificationNo();	
+		FacesScopes facesScope = new FacesScopes();
+		PmUser user  = facesScope.getUserSessionBean(); 		
+		return user.getIdentificationNo();	
 	}
 
 	public String getSupplierEmail() {
-		
-		return facesScope.getUserSessionBean().getEmail();
+		FacesScopes facesScope = new FacesScopes();
+		PmUser user  = facesScope.getUserSessionBean();
+		return user.getEmail();
 	}
 
 	public String getSupplierEpNo() {
+		FacesScopes facesScope = new FacesScopes();
 		ISupplierSearchSO smSupplierSO = null;
 		System.out.println("ISearchResultBean<SmSupplier> pageChangeListener");
 		smSupplierSO = (ISupplierSearchSO) BusinessDelegate.getInstance()
