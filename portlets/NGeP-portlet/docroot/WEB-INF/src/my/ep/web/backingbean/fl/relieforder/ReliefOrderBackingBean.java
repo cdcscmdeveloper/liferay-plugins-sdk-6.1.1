@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.order.IReliefOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -34,6 +33,7 @@ import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -333,25 +333,14 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	 * @param outcome the outcome
 	 */
 	public void validateReliefOrder(String outcome){		
-		IFulfilmentRequestSO fulfilmentRequestSO = null;
-		try {
-			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
-				for(FlReliefOrderItem  reliefItem : getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
-					if(!reliefItem.isSelectedReliefChargeItem()){
-						throw new EpException(MessageConst.ERROR_745073);
-					}
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			for(FlReliefOrderItem  reliefItem : getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
+				if(reliefItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.RELIEF.value()) && !reliefItem.isSelectedReliefChargeItem()){
+					throw new EpException(MessageConst.ERROR_745073);
 				}
-			}	
-			
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			reqDTO.setOutcome(outcome);
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			
-		}finally{
-			fulfilmentRequestSO = null;
-		}
+			}
+		}	
 	}
 	
 	
