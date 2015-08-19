@@ -12,7 +12,7 @@
 		#foreach($equipMaint in $equipmentMaintenance)
 		<tr>
 			<td>$velocityCount</td>
-			<td class="txtBold">$equipMaint.codeName</td>
+			<td class="txtBold">$!equipMaint.pmMachine.machineDesc</td>
 			<td><br /></td>
 			<td><br /></td>
 		</tr>
@@ -35,7 +35,7 @@
 		#foreach($equipBeating in $equipmentBeating)
 		<tr>
 			<td>$velocityCount</td>
-			<td class="txtBold">$equipBeating.codeName</td>
+			<td class="txtBold">$!equipBeating.pmMachine.machineDesc</td>
 			<td><br /></td>
 			<td><br /></td>
 		</tr>
