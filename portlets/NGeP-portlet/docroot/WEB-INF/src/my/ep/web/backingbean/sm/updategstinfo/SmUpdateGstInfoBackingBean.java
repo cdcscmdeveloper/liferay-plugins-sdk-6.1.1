@@ -411,13 +411,4 @@ public class SmUpdateGstInfoBackingBean extends
 			}
 		}
 	}
-
-	private boolean noGstInfoEntered(SmGstSupplier gst) {
-		boolean retVal = false;
-		if (gst != null && StringUtils.isBlank(gst.getGstRegNo())
-				&& gst.getGstEffDate() == null) {
-			retVal = true;
-		}
-		return retVal;
-	}
 }
