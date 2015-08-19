@@ -1,6 +1,5 @@
 package my.ep.web.managedbean.fl.relieforder;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,6 +11,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.order.FlReliefOrder;
+import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -22,8 +22,6 @@ import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
-
-import org.primefaces.model.TreeNode;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -166,22 +164,14 @@ public class ReliefOrderManagedBean extends BaseManagedBean {
     private SpkiBackingBean spkiBackingBean;
     
     private boolean supplier = false;
-    
-
- 	/** The charge line item root. */
- 	private TreeNode chargeLineItemRoot ;
- 	
- 	/** The charge line item root for non relief items. */
- 	private TreeNode chargeLineNonReliefItemRoot ;
  	
  	private FlReliefOrder flReliefOrder;
  	
- 	//grand total
- 	/** The ordered amt grand total. */
- 	private BigDecimal orderedAmtGrandTotal ;
- 		
- 	/** The received amt grand total. */
- 	private BigDecimal receivedAmtGrandTotal ;
+ 	private boolean nonReliefMenuDisplay=false;
+ 	
+ 	private List<FlReliefOrderItem> reliefItems;
+ 	
+ 	private List<FlReliefOrderItem> nonReliefItems;
 	
 	
 	/* (non-Javadoc)
@@ -913,20 +903,6 @@ public class ReliefOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the chargeLineItemRoot
-	 */
-	public TreeNode getChargeLineItemRoot() {
-		return chargeLineItemRoot;
-	}
-
-	/**
-	 * @param chargeLineItemRoot the chargeLineItemRoot to set
-	 */
-	public void setChargeLineItemRoot(TreeNode chargeLineItemRoot) {
-		this.chargeLineItemRoot = chargeLineItemRoot;
-	}
-
-	/**
 	 * @return the flReliefOrder
 	 */
 	public FlReliefOrder getFlReliefOrder() {
@@ -939,47 +915,47 @@ public class ReliefOrderManagedBean extends BaseManagedBean {
 	public void setFlReliefOrder(FlReliefOrder flReliefOrder) {
 		this.flReliefOrder = flReliefOrder;
 	}
-
+	
 	/**
-	 * @return the orderedAmtGrandTotal
+	 * @return the nonReliefMenuDisplay
 	 */
-	public BigDecimal getOrderedAmtGrandTotal() {
-		return orderedAmtGrandTotal;
+	public boolean isNonReliefMenuDisplay() {
+		return nonReliefMenuDisplay;
 	}
 
 	/**
-	 * @param orderedAmtGrandTotal the orderedAmtGrandTotal to set
+	 * @param nonReliefMenuDisplay the nonReliefMenuDisplay to set
 	 */
-	public void setOrderedAmtGrandTotal(BigDecimal orderedAmtGrandTotal) {
-		this.orderedAmtGrandTotal = orderedAmtGrandTotal;
+	public void setNonReliefMenuDisplay(boolean nonReliefMenuDisplay) {
+		this.nonReliefMenuDisplay = nonReliefMenuDisplay;
 	}
 
 	/**
-	 * @return the receivedAmtGrandTotal
+	 * @return the reliefItems
 	 */
-	public BigDecimal getReceivedAmtGrandTotal() {
-		return receivedAmtGrandTotal;
+	public List<FlReliefOrderItem> getReliefItems() {
+		return reliefItems;
 	}
 
 	/**
-	 * @param receivedAmtGrandTotal the receivedAmtGrandTotal to set
+	 * @param reliefItems the reliefItems to set
 	 */
-	public void setReceivedAmtGrandTotal(BigDecimal receivedAmtGrandTotal) {
-		this.receivedAmtGrandTotal = receivedAmtGrandTotal;
+	public void setReliefItems(List<FlReliefOrderItem> reliefItems) {
+		this.reliefItems = reliefItems;
 	}
 
 	/**
-	 * @return the chargeLineNonReliefItemRoot
+	 * @return the nonReliefItems
 	 */
-	public TreeNode getChargeLineNonReliefItemRoot() {
-		return chargeLineNonReliefItemRoot;
+	public List<FlReliefOrderItem> getNonReliefItems() {
+		return nonReliefItems;
 	}
 
 	/**
-	 * @param chargeLineNonReliefItemRoot the chargeLineNonReliefItemRoot to set
+	 * @param nonReliefItems the nonReliefItems to set
 	 */
-	public void setChargeLineNonReliefItemRoot(TreeNode chargeLineNonReliefItemRoot) {
-		this.chargeLineNonReliefItemRoot = chargeLineNonReliefItemRoot;
+	public void setNonReliefItems(List<FlReliefOrderItem> nonReliefItems) {
+		this.nonReliefItems = nonReliefItems;
 	}
 
 }
