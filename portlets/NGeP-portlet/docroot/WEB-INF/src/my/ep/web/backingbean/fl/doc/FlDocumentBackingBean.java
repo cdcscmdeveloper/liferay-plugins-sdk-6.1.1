@@ -696,13 +696,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByReliefOrderId(reqDTO);
 			
 			reqDTO.setFlOrderId(Long.valueOf(rsResDto.getReliefOrder().getFlFulfilmentOrder().getFulfilmentOrderId()));
-			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
+			FulfilmentResDTO resDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 			ReliefOrderBackingBean reliefOrderBB=new ReliefOrderBackingBean();
 			
 			reliefOrderBB.getManagedBean().setButtonVal(buttonVal);
 			reliefOrderBB.getManagedBean().setSelectedTabIndex(0);
-			reliefOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
-			reliefOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
+			reliefOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			reliefOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
 			reliefOrderBB.getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
 			reliefOrderBB.getManagedBean().setNonReliefItems(new ArrayList<FlReliefOrderItem>());
 			reliefOrderBB.getManagedBean().setReliefItems(new ArrayList<FlReliefOrderItem>());
@@ -719,11 +719,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
-					Long supplieContractId=coResDTO.getFlFulfilmentRequest().getCtContract().getContractId();
+					Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
 					contractSupplierReqDTO.setContractId(supplieContractId);
 					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
 					if(contractSupplierResDTO.getFactoring() != null){
-						coResDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						resDTO.getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
 							reliefOrderBB.getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
@@ -733,7 +733,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					}
 			}	
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
-				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(null, rsResDto.getRemarkList(), rsResDto.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
