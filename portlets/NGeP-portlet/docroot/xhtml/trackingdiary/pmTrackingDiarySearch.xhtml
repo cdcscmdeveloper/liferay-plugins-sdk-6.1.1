@@ -71,10 +71,20 @@
 				<ui:include
 					src="/xhtml/trackingdiary/pmSupportingDocumentAndCheckList.xhtml" />
 			</h:panelGroup>
-				<h:panelGroup id="pmFOrgSearchID"
+			<h:panelGroup id="pmFOrgSearchID"
 				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'FO'}">
 				<ui:include
 					src="/xhtml/trackingdiary/pmFinancialOrgsearch.xhtml" />
+			</h:panelGroup>
+			<h:panelGroup id="pmUGSearchID"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'UG'}">
+				<ui:include
+					src="/xhtml/trackingdiary/pmUserGroupSearch.xhtml" />
+			</h:panelGroup>
+			<h:panelGroup id="pmCatCodeSearchID"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'CC'}">
+				<ui:include
+					src="/xhtml/trackingdiary/pmCategoryCodeSearch.xhtml" />
 			</h:panelGroup>
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.pm.search.result']}"
@@ -358,6 +368,76 @@
 					</p:commandLink>
 				</p:column>
 			</p:dataTable>
+				<p:dataTable id="dtUSGResult"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'UG'}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{pmTrackingDiaryBackingBean.managedBean.userGroupDataModel}"
+				lazy="true" var="usrGroup" width="100%" rows="10">
+
+				<ac:paginator for="dtUSGResult" />
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.ug.result.groupcode']}" />
+					</f:facet>
+						#{usrGroup.groupCode}
+				</p:column>
+				<p:column width="85%" >
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.pm.ug.result.groupname']}" />
+					</f:facet>
+						#{usrGroup.groupName}
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.td.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{pmTrackingDiaryBackingBean.goToUSGTrackingDiarySearch(usrGroup)}">
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							title="#{lbl['lbl.ct.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:dataTable id="dtCatCodeResult"
+				rendered="#{pmTrackingDiaryBackingBean.managedBean.functionType == 'CC'}"
+				emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+				value="#{pmTrackingDiaryBackingBean.managedBean.categoryDataModel}"
+				lazy="true" var="category" width="100%" rows="10">
+
+				<ac:paginator for="dtCatCodeResult" />
+
+					<p:column headerText="#{lbl['lbl.pm.category.level']}"
+					style="width :15%">
+					<h:outputText value="#{lbl['lbl.pm.main.category']}"
+						rendered="#{category[0]==1}" />
+					<h:outputText value="#{lbl['lbl.pm.sub.category']}"
+						rendered="#{category[0]==2}" />
+					<h:outputText value="#{lbl['lbl.pm.sub.div']}"
+						rendered="#{category[0]==3}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.category.code']}"
+					style="width :15%">
+					<h:outputText value="#{category[2]}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.pm.category.desc']}">
+					<h:outputText value="#{category[3]}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="#{lbl['lbl.td.action']}" />
+					</f:facet>
+					<p:commandLink
+						action="#{pmTrackingDiaryBackingBean.goToCategoryTrackingDiarySearch(category[1], category[0])}">
+						<p:graphicImage value="/css/images/design/ico-view.png"
+							title="#{lbl['lbl.ct.view']}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			
 		</p:panel>
 	</h:panelGroup>
 

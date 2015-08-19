@@ -35,6 +35,7 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmEduField;
@@ -56,6 +57,7 @@ import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.bean.pm.TaskAssignmentSearchBean;
 import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
+import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.managedbean.trackingdiary.PmTrackingDiaryManagedBean;
@@ -93,7 +95,14 @@ public class PmTrackingDiaryBackingBean extends
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
-
+	/**
+	 * Update category level.
+	 */
+	public void updateCategoryLevel() {
+		log.info("getManagedBean().getPmCategoryLevel() "
+				+ getManagedBean().getPmCategoryLevel());
+	}
+	
 	/**
 	 * reset search bean fields
 	 */
@@ -134,7 +143,16 @@ public class PmTrackingDiaryBackingBean extends
 				.setUomSearchBean(new UnitOfMeasurmentSearchBean());
 		this.getManagedBean().resetUOMResultBean();
 	}
-
+	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetUGSearchBean() {
+		log.info("resetUGSearchBean");
+		this.getManagedBean()
+				.setUserGroupSearchBean(new UserGroupSearchBean());
+		this.getManagedBean().resetUSGResultBean();
+	}
 	/**
 	 * reset search bean fields
 	 */
@@ -163,7 +181,17 @@ public class PmTrackingDiaryBackingBean extends
 				new SupportDocumentSearchBean());
 		this.getManagedBean().resetDocResultBean();
 	}
-
+	
+	/**
+	 * reset search bean fields
+	 */
+	public void resetCategorySearchBean() {
+		log.info("resetCategorySearchBean");
+		this.getManagedBean().setCategoryCode("");
+		this.getManagedBean().setCategoryDesc("");
+		this.getManagedBean().setPmCategoryLevel(0);
+		this.getManagedBean().resetCatResultBean();
+	}
 	/**
 	 * reset search bean fields
 	 */
@@ -280,12 +308,12 @@ public class PmTrackingDiaryBackingBean extends
 	}
 
 	public void onFunctionSelect() {
-		System.out.println("............onFunctionSelect..............");
-		resetOrganisationSearchBean();
+		System.out.println("............onFunctionSelect..........this.getManagedBean().getFunctionType()...."+this.getManagedBean().getFunctionType());
+
 		if (this.getManagedBean().getFunctionType() != null) {
 			if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase(ParameterConst.ORG_PROFILE_PARAM_CODE)) {
-
+				resetOrganisationSearchBean();
 				retrieveOrgTypeMap();
 				this.getManagedBean().setOrgProfileRequired(true);
 			} else if (this.getManagedBean().getFunctionType()
@@ -309,6 +337,12 @@ public class PmTrackingDiaryBackingBean extends
 			} else if (this.getManagedBean().getFunctionType()
 					.equalsIgnoreCase("FO")) {
 				resetFOrgSearchBean();
+			}else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("UG")) {
+				resetUGSearchBean();
+			}else if (this.getManagedBean().getFunctionType()
+					.equalsIgnoreCase("CC")) {
+				resetCategorySearchBean();
 			}
 		}
 
@@ -343,7 +377,34 @@ public class PmTrackingDiaryBackingBean extends
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
 		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
 	}
-
+	
+	public String goToCategoryTrackingDiarySearch(Long id, int catLevel) {
+		log.debug("**********goToCategoryTrackingDiarySearch************"
+				+"..id="+ id +"...level="+catLevel);
+		if(catLevel == 1){
+		getManagedBean().setSelectedDocType(
+				ParameterConst.MAIN_CATEGORY_PARAM_CODE);
+		}else if(catLevel == 2){
+			getManagedBean().setSelectedDocType(
+					ParameterConst.SUB_CATEGORY_PARAM_CODE);
+		}else if(catLevel == 3){
+			getManagedBean().setSelectedDocType(
+					ParameterConst.SUB_DIVISION_CATEGORY_PARAM_CODE);
+		}
+		
+		getManagedBean().setSelectedDocId(id);
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
+	public String goToUSGTrackingDiarySearch(PmUserGroup userGroup) {
+		log.debug("**********goToUSGTrackingDiarySearch************"
+				+ userGroup.getUserGroupId());
+		getManagedBean().setSelectedDocType(
+				ParameterConst.USER_GROUP_PARAM_CODE);
+		getManagedBean().setSelectedDocId(userGroup.getUserGroupId());
+		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
+		return NAV_TO_PM_DETAIL_SEARCH + "?faces-redirect=true";
+	}
 	public String goToEduTrackingDiarySearch(PmEduField edu) {
 		log.debug("**********goToEduTrackingDiarySearch************"
 				+ edu.getEduFieldId());
@@ -474,6 +535,11 @@ public class PmTrackingDiaryBackingBean extends
 		this.getManagedBean().getUserOrgDataModel().reloadData();
 	}
 
+	public void searchUserGroup() {
+		log.info("searchUserGroup");
+		this.getManagedBean().getUserGroupDataModel().reloadData();
+	}
+	
 	public void searchUserProfile() {
 		log.info(",,,searchUserProfile");
 		if ((getManagedBean().getUserProfileSearchBean().getIdentificationNo() == null || getManagedBean()
@@ -498,6 +564,11 @@ public class PmTrackingDiaryBackingBean extends
 		}
 		this.getManagedBean().getUomDataModel().reloadData();
 	}
+	public void searchCategoryCode() {
+		log.info(",,,searchCategoryCode");
+		this.getManagedBean().getCategoryDataModel().reloadData();
+	}
+	
 
 	public void searchEducationOfField() {
 		log.info(",,,searchEducationOfField");
