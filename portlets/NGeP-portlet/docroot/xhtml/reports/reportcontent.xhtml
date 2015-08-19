@@ -173,9 +173,8 @@
 					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
 		            
-		            <p:commandButton onstart="blkReportContent.show();" 
-				    oncomplete="blkReportContent.hide();" value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
-		            update="@form" partialSubmit="true" process="@form">
+		            <p:commandButton  value="#{lbl['lbl.rpt.generate']}"  ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"
+		            update=":form" >
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
     				</p:commandButton> 	           
 					<p:commandButton   value="#{lbl['lbl.btn.reset']}"	action="#{reportBackingBean.resetReportForm}"
@@ -186,7 +185,10 @@
 				  </c:if>
 				  </td>
 				  </tr>								    
-				  </table>	
+				  </table>
+				  <p:dialog id="statusDialog" modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">
+		            <p:graphicImage value="/css/images/ajax-loader.gif" />
+		         </p:dialog>	
 					<p:dialog id="reportGenDialog" widgetVar="reportGenDialog"
 						modal="true" header="Report" width="1100" height="500" 
 						resizable="false" position="right" closable="true"
@@ -203,14 +205,28 @@
 			}
 			function handleLocalesDialogComplete(xhr, status, args)
 			{
+				//alert("Download started!");
+			    statusDialog.show();
 			   if (args) {
 			      var reportInValid = args.reportInValid;			
 			     if(reportInValid){
-			    	 window.open(args.reportViewUrl,'_blank');
+			    	 //window.open(args.reportViewUrl,'_blank');
 			    	 //reportGenDialog.show();
+			    	// alert("Download finished!");
+					    statusDialog.hide();
 			     }
 			   }
 			}
+			function start() {
+				 //alert("Download started!");
+			    statusDialog.show();
+			}
+
+			function stop() {
+				 //alert("Download finished!");
+			    statusDialog.hide();
+			}
+			
 		     </script>
 		</p:panel>
 		</td>

@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.regex.Pattern;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
@@ -5022,11 +5024,19 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					getManagedBean().getRptGenBean().setGenerateButtonView(false);
 					throw new EpException(MessageConst.ERROR_REPORT_780009);
 				}*/
-			} 
+			}
+			//InputStream stream = ((ServletContext)FacesContext.getCurrentInstance().getExternalContext().getContext()).getResourceAsStream("/css/images/optimus.jpg");
+			////file = new DefaultStreamedContent(stream, "image/jpg", "downloaded_optimus.jpg");
+	        //RequestContext.getCurrentInstance().execute("statusDialog.hide()");
 			/*RequestContext context = RequestContext.getCurrentInstance();
 			context.addCallbackParam(ReportConst.RPT_IN_VALID,
 					ReportConst.RPT_TRUE);*/
+			//externalContext.addResponseCookie("primefaces.download", "true", Collections.<String, Object>emptyMap());
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 		} else {
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 	}
@@ -7276,12 +7286,18 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			buf.close();
 			out.close();
 		} catch (MalformedURLException e) {
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
-		}catch ( IllegalArgumentException e) {	
+		}catch ( IllegalArgumentException e) {
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		}catch (IOException e) {
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
 		}
