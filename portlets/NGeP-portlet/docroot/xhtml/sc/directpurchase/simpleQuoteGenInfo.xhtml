@@ -50,6 +50,7 @@
 						<tr>
 							<td><p:selectOneMenu id="procTypeCategory"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.procurementTypeCategory.parameterId}"
+									disabled="#{!isPendingSubmissionStatus}"
 									style="width:120px;margin-bottom: 5px;" required="true"
 									label="#{lbl['lbl.sc.procurment.type.category']}">
 
