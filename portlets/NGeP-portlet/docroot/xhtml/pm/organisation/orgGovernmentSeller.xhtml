@@ -88,6 +88,7 @@
 					required="true" disabled="#{personnel.brandNew}" style="margin-bottom: 5px;">
 					<f:selectItems
 						value="#{organisationBackingBean.getStatusOptions()}" />
+					<p:ajax event="change" partialSubmit="true" process="@this" update="@this" />
 				</p:selectOneMenu>
 
 			</p:column>
