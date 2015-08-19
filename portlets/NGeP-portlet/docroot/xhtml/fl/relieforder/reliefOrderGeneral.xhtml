@@ -76,12 +76,12 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.payment.match.mto']}" /></td>
 				<td><p:selectBooleanCheckbox
-						value="#{reliefOrderBB.managedBean.flRequest.ctContract.mto}"
+						value="#{reliefOrderBB.managedBean.flRequest.ctContract.mto}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.mto']}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.factored.contract']}" /></td>
-				<td><p:selectBooleanCheckbox disabled="true"
+				<td><p:selectBooleanCheckbox disabled="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"
 						value="#{reliefOrderBB.managedBean.flRequest.ctContract.factored}" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.factored']}"/></td>
 			</tr>
 			<tr>
@@ -90,14 +90,14 @@
 						value="#{reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : reliefOrderBB.getParameterDesc(reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory)}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"/></td>
 				<td><p:inputText size="12" disabled="true" style="text-align:right"
 						value="#{reliefOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTerm}"
-						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}" />
+						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}" />
 					<p:spacer width="5" /> <p:inputText size="2"
 						value="#{reliefOrderBB.getParameterDesc(reliefOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.deliveryTermUom)}"
 						disabled="true"
-						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}" />
+						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}" />
 				</td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.approved.date']}" /></td>
 				<td><p:inputText size="20" disabled="true"
@@ -109,10 +109,10 @@
 					</td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"/></td>
 				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true"
 						value="#{reliefOrderBB.managedBean.flRequest.startDate}"
-						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
+						rendered="#{reliefOrderBB.managedBean.flRequest != null}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 						<p:ajax event="dateSelect"
 							listener="#{reliefOrderBB.updateDeliveryDate}"
@@ -120,15 +120,15 @@
 					</p:calendar></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.zonal.price']}"  /></td>
 				<td><p:selectBooleanCheckbox style="vertical-align:-4px"
-						value="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing}"
+						value="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"
 						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.ct.zonal.price']}" />
 				</td>	
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"/></td>
 				<td><p:calendar mode="popup" showOn="button" disabled="true" readonlyInput="true" id="delEndDate"
 						value="#{reliefOrderBB.managedBean.flRequest.endDate}"
-						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract.zonalPricing =='false'}"
+						rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}"
 						pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					</p:calendar></td>
 			</tr>
