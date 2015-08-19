@@ -101,7 +101,7 @@
 						<p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
 					</td>
 					<td width="35%">
-						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE" size="40" readonly="true" style="width:314px"
+						<ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="46" readonly="true" style="width:314px"
 							disabled="#{ctTrackingDiaryBackingBean.isContractAdmin() or ctTrackingDiaryBackingBean.isApprover() 
 								or ctTrackingDiaryBackingBean.managedBean.searchMinistryProfileId==null}"
 							rendered="#{ctTrackingDiaryBackingBean.managedBean.searchTransactionType != ParameterConst.contractTypeCentral
@@ -135,7 +135,6 @@
 				<p:commandButton value="#{lbl['lbl.btn.reset']}" onstart="blockWidget.show();" oncomplete="blockWidget.hide();" 
 					action="#{ctTrackingDiaryBackingBean.reset}" update=":form"  process="@this"/>
 			</div>
-			<ac:lovPopup />
 		</p:panel>
 		<p:panel id="resultPanel" header="#{lbl['lbl.fl.result']}" toggleable="true">
 			<p:dataTable id="ctDocListDt"
