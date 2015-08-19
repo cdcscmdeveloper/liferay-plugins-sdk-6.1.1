@@ -22,6 +22,9 @@ public class UserGroupSearchBean implements Serializable {
 	
 	private String status;
 	
+	private String groupCode;
+	
+	private String groupName;
 	
 	public String getUserName() {
 		return userName;
@@ -62,4 +65,21 @@ public class UserGroupSearchBean implements Serializable {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public String getGroupCode() {
+		return groupCode;
+	}
+
+	public String getGroupName() {
+		return groupName;
+	}
+
+	public void setGroupCode(String groupCode) {
+		this.groupCode = groupCode;
+	}
+
+	public void setGroupName(String groupName) {
+		this.groupName = groupName;
+	}
+	
 }
