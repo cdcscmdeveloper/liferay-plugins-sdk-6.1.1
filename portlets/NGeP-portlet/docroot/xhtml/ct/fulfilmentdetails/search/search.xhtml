@@ -35,7 +35,7 @@
            </p:selectOneMenu>
            <p:inputText value="#{lbl['lbl.pm.org.gst.na']}" maxlength="50" disabled="true" style="width:170px;" rendered="#{contractDetailsBackingBean.isBPKCCA()}"/>
            <p:outputLabel value="#{lbl['lbl.ct.ptj']}" />
-           <ac:lov id="searchPtj" lovId="PM_ORG_PROFILE" size="40" readonly="true"
+           <ac:lov id="searchPtj" lovId="PM_ORG_PROFILE_PTJ" size="40" readonly="true"
 				disabled="#{contractDetailsBackingBean.isContractAdmin() or contractDetailsBackingBean.managedBean.searchMinistryProfileId==null}"
 				headerText="#{lbl['lbl.ct.ptj']}"
 				value="#{contractDetailsBackingBean.managedBean.searchPtjProfile.pmOrgValidity.orgName}"
