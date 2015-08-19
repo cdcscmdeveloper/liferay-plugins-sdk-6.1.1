@@ -2399,8 +2399,8 @@ public class SupplierFinalizationBackingBean extends
 		context.put("publishDate", publishDate);
 
 		String closingDate = "";
-		if (scQt.getChangedDate() != null) {
-			closingDate = dateSDF.format(scQt.getChangedDate());
+		if (scQt.getClosingDate() != null) {
+			closingDate = dateSDF.format(scQt.getClosingDate());
 		}
 		context.put("closingDate", closingDate);
 		
@@ -2411,7 +2411,7 @@ public class SupplierFinalizationBackingBean extends
 		context.put("zoneDetails", zoneDetails);
 
 		// get Total Suppliers based on Zone
-		List<Object[]> list = new ArrayList<Object[]>();
+		Object[] object = null;
 		BriefingZoneBean briefingZoneBean = null;
 		Map<Long,BriefingZoneBean> zoneBeansMap 
 					= new HashMap<Long,BriefingZoneBean>();
@@ -2436,42 +2436,40 @@ public class SupplierFinalizationBackingBean extends
 							reqDTO.setSpecZoneId(specZoneDtl.getSpecZoneId());
 							BriefingResDTO briefingResDTO = qTBriefingSO
 									.getTotalAttendedSupplier(reqDTO);
-							list = briefingResDTO.getTotalAttendedSupplier();
-							log.info("Size : " + list.size());
+							object = briefingResDTO.getTotalAttendedSupplier();
 							ScQtBsv scQtBsv = briefingResDTO.getScQtBsv();
 							briefingZoneBean = new BriefingZoneBean(specZoneDtl,
 									briefingResDTO.getBriefingList(),
 									briefingResDTO.getSiteVisitList(), scQtBsv);
+							
+							int totalAttendedSuppliers = 0;
+							if (object != null) {
+								Long totalAttended = (Long) object[1];
+								if (totalAttended != null) {
+									totalAttendedSuppliers = totalAttended.intValue();
+								}
+							}
 							briefingZoneBean.setTotalSuppliersAttended(
-									list != null ? list.size() : 0);
-//							zoneBeans.add(briefingZoneBean);
+													totalAttendedSuppliers);
 							zoneBeansMap.put(specZoneDtl.getSpecZoneId(),briefingZoneBean);
-							/*
-							 * for(Object[] object : list){ TplSpecZoneDtl
-							 * tplSpecZoneDtl = (TplSpecZoneDtl) object[0]; Long
-							 * totalAttended = (Long) object[1]; ScQtBsvDtl
-							 * scQtBsvDtl = (ScQtBsvDtl) object[2];
-							 * log.info("tplSpecZoneDtl.getZoneName() : "+
-							 * tplSpecZoneDtl.getZoneName());
-							 * log.info("totalAttended : "+ totalAttended);
-							 * log.info("scQtBsvDtl.getBsvDesc() : "+
-							 * scQtBsvDtl.getBsvDesc()); }
-							 */
 						}
 					}
 					context.put("zoneBeansMap", zoneBeansMap);					
 				} else {
 					BriefingResDTO briefingResDTO = qTBriefingSO
 							.getTotalAttendedSupplier(reqDTO);
-					list = briefingResDTO.getTotalAttendedSupplier();
+					object = briefingResDTO.getTotalAttendedSupplier();
 				}
 			} finally {
 				qTBriefingSO = null;
 			}
 		} 
 		String supplierSize = "";
-		if (CollectionUtils.isNotEmpty(list)) {
-			supplierSize = String.valueOf(list.size());
+		if (object != null) {
+			Long totalAttended = (Long) object[1];
+			if (totalAttended != null) {
+				supplierSize = totalAttended.toString();
+			}
 		}
 		context.put("supplierSize", supplierSize);		
 
