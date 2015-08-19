@@ -51,11 +51,11 @@
 							<f:setPropertyActionListener
 								target="#{reliefOrderBB.managedBean.selectedTabIndex}" value="0" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.relief.item']}" update="@form" actionListener="#{reliefOrderBB.onTabChange(1)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.relief.item']}" update="@form" >
 							<f:setPropertyActionListener
 								target="#{reliefOrderBB.managedBean.selectedTabIndex}" value="1" />
 						</p:menuitem>
-						<p:menuitem value="#{lbl['lbl.fl.menu.non.relief.item']}" update="@form" actionListener="#{reliefOrderBB.onTabChange(2)}">
+						<p:menuitem value="#{lbl['lbl.fl.menu.non.relief.item']}" update="@form" rendered="#{reliefOrderBB.managedBean.nonReliefMenuDisplay=='true'}">
 							<f:setPropertyActionListener
 								target="#{reliefOrderBB.managedBean.selectedTabIndex}" value="2" />
 						</p:menuitem>
