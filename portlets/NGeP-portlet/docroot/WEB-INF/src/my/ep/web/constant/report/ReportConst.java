@@ -268,6 +268,8 @@ public class ReportConst {
 	public static final String PP_EXPEND_MINISTRY_BY_GOSO_VOT_LEVEL_RPT_VAL = "PP_007";
 	public static final String PP_EXPENDITURE_BPK_LEVEL_RPT_VAL = "PP_008";
 	public static final String PP_EXPENDITURE_UNPLANNED_LEVEL_RPT_VAL = "PP_009";
+	//PM
+	public static final String PM_LIST_OF_FINACIAL_INSTITUTIONS_RPT_VAL = "PM_001";
 	//JSP
 	public static final String FL_NGEP_PURCHASE_ORDER = "FL_NGEP_PURCHASE_ORDER.jsp";
 	public static final String FL_NGEP_DELIVERY = "FL_NGEP_DELIVERY.jsp";
@@ -667,6 +669,11 @@ public class ReportConst {
 	public static final String CT_AMP_PROCUREMENTMODE_EQ = "&PPROCUREMENTMODE=";
 	public static final String CT_AMP_USERTYPE_EQ = "&PUSERTYPE=";
 	public static final String CT_AMP_SUBTYPE_EQ = "&PUSERSUBTYPE=";
+	//PM
+	public static final String PM_AMP_SERVICE_TYPE_EQ = "&SERVICETYPEID=";
+	public static final String PM_AMP_FINORG_NAME_EQ = "&FINORGNAME=";
+	public static final String PM_AMP_BIZREG_NO_EQ = "&BIZREGNO=";
+	public static final String PM_AMP_STATUS_EQ = "&STATUS=";
 	
 	public static final String EXC_PREV_URL = "http://ngepdevrps01.ngep.com:8891/reports/rwservlet?server=rptsvr_ngepdevrps01_asinst_2";
 	public static final String EXC_NEXT_URL = "&destype=cache&desformat=pdf&userid=ngep_dev/ngep_dev@ngepdb";
