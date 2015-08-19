@@ -50,7 +50,7 @@
 				<td colspan="4" style="text-align: right">
 					<ui:repeat var="bpmAction" value="#{stopInstrBB.managedBean.outComes}">
 						<ui:param name="buttonLabel" value="lbl.btn.#{fn:toLowerCase(bpmAction)}" />
-						<p:commandButton value="#{bpmAction}" styleClass="ui-button"
+						<p:commandButton value="#{lbl[buttonLabel]}" styleClass="ui-button"
 							onstart="blockWidget.show();" oncomplete="blockWidget.hide();"
 							action="#{stopInstrBB.signingAction(bpmAction)}"  update="@form"  />
 					</ui:repeat> 
