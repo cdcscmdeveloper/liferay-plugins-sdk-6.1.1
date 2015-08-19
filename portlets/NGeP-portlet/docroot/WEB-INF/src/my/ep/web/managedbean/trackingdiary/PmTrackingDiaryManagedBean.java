@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.trackingdiary;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -13,6 +14,8 @@ import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.authorization.usergroup.IUserGroupSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.certbody.ICertBodySO;
 import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.educationfield.IEducationFieldSO;
@@ -20,12 +23,17 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.ModuleCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupReqDTO;
+import my.ep.dto.pm.authorization.usergroup.UserGroupResDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgReqDTO;
 import my.ep.dto.pm.authorization.userorg.UserOrgResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.certbody.CertBodyReqDTO;
 import my.ep.dto.pm.common.certbody.CertBodyResDTO;
 import my.ep.dto.pm.common.document.DocumentReqDTO;
@@ -40,6 +48,7 @@ import my.ep.dto.pm.common.uom.UomReqDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmDocument;
@@ -50,15 +59,21 @@ import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.util.pm.OrgProfileUtil;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pm.OrganisationSearchBean;
 import my.ep.web.bean.pm.SupportDocumentSearchBean;
 import my.ep.web.bean.pm.UnitOfMeasurmentSearchBean;
+import my.ep.web.bean.pm.UserGroupSearchBean;
 import my.ep.web.bean.pm.UserProfilesSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.managedbean.pm.profcertbody.ProfCertifiedBodySearchBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.PmCommonUtil;
 
 import org.apache.log4j.Logger;
 
@@ -77,12 +92,17 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private IPagingDataModel<PmCertBody> pcbDataModel = new PcbPagingDataModel();
 	private IPagingDataModel<PmDocument> pmDocumentDataModel = new PmDocumentDataModel();
 	private IPagingDataModel<PmFinancialOrg> financialOrgDataModel = new FinancialOrgPagingDataModel();
+	private IPagingDataModel<PmUserGroup> userGroupDataModel = new USGPagingDataModel();
 
+	/** The search category. */
+	private IPagingDataModel<Object[]> categoryDataModel = new SearchCategoryPagingDataModel();
+	
 	private SupportDocumentSearchBean supportDocSearchBean;
 	private OrganisationSearchBean organisationSearchBean;
 	private UserProfilesSearchBean userProfileSearchBean;
 	private UnitOfMeasurmentSearchBean uomSearchBean;
 	private ProfCertifiedBodySearchBean pcbSearchBean;
+	private UserGroupSearchBean userGroupSearchBean;
 	private String eduFieldName;
 	private String financialOrgName;
 	private boolean orgProfileRequired;
@@ -93,6 +113,68 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private String selectedDocType2;
 	private Long selectedDocId;
 	private List<PmZone> zoneList;
+	
+	/** The category code. */
+	private String categoryCode;
+	
+	/** The category desc. */
+	private String categoryDesc;
+	
+	/** The pm category level. */
+	private Integer pmCategoryLevel;
+
+	public String getCategoryCode() {
+		return categoryCode;
+	}
+
+	public IPagingDataModel<Object[]> getCategoryDataModel() {
+		return categoryDataModel;
+	}
+
+	public void setCategoryDataModel(IPagingDataModel<Object[]> categoryDataModel) {
+		this.categoryDataModel = categoryDataModel;
+	}
+
+	public String getCategoryDesc() {
+		return categoryDesc;
+	}
+
+	public Integer getPmCategoryLevel() {
+		return pmCategoryLevel;
+	}
+
+	public void setCategoryCode(String categoryCode) {
+		this.categoryCode = categoryCode;
+	}
+
+	public void setCategoryDesc(String categoryDesc) {
+		this.categoryDesc = categoryDesc;
+	}
+
+	public void setPmCategoryLevel(Integer pmCategoryLevel) {
+		this.pmCategoryLevel = pmCategoryLevel;
+	}
+
+	public IPagingDataModel<PmUserGroup> getUserGroupDataModel() {
+		return userGroupDataModel;
+	}
+
+	public UserGroupSearchBean getUserGroupSearchBean() {
+		
+		if(userGroupSearchBean == null){
+			userGroupSearchBean = new UserGroupSearchBean();
+		}
+		return userGroupSearchBean;
+	}
+
+	public void setUserGroupDataModel(
+			IPagingDataModel<PmUserGroup> userGroupDataModel) {
+		this.userGroupDataModel = userGroupDataModel;
+	}
+
+	public void setUserGroupSearchBean(UserGroupSearchBean userGroupSearchBean) {
+		this.userGroupSearchBean = userGroupSearchBean;
+	}
 
 	public IPagingDataModel<PmFinancialOrg> getFinancialOrgDataModel() {
 		return financialOrgDataModel;
@@ -188,8 +270,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public void setSelectedDocType2(String selectedDocType2) {
-		log.info(".......setSelectedDocType2........selectedDocType2="
-				+ selectedDocType2);
 		this.selectedDocType2 = selectedDocType2;
 	}
 
@@ -198,8 +278,6 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	}
 
 	public void setMultiRuleType(boolean multiRuleType) {
-		log.info(".......setMultiRuleType........multiRuleType="
-				+ multiRuleType);
 		this.multiRuleType = multiRuleType;
 	}
 
@@ -239,7 +317,7 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 
 	public void setOrganisationSearchBean(
 			OrganisationSearchBean organisationSearchBean) {
-		log.info("..............setOrganisationSearchBean...............");
+		
 		this.organisationSearchBean = organisationSearchBean;
 	}
 
@@ -316,6 +394,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	public void resetUOMResultBean() {
 		this.setUomDataModel(new UOMPagingDataModel());
 	}
+	
+	/**
+	 * reset result bean fields
+	 */
+	public void resetUSGResultBean() {
+		this.setUserGroupDataModel(new USGPagingDataModel());
+	}
 
 	/**
 	 * reset result bean fields
@@ -336,6 +421,13 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	 */
 	public void resetDocResultBean() {
 		this.setPmDocumentDataModel(new PmDocumentDataModel());
+	}
+	
+	/**
+	 * reset result bean fields
+	 */
+	public void resetCatResultBean() {
+		this.setCategoryDataModel(new SearchCategoryPagingDataModel());
 	}
 	
 	/**
@@ -401,7 +493,75 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 			}
 		}
 	}
+	/**
+	 * The Class SearchCategoryPagingDataModel.
+	 */
+	private class SearchCategoryPagingDataModel extends
+			PagingDataModel<Object[]> {
 
+		/** The Constant serialVersionUID. */
+		private static final long serialVersionUID = 1L;
+
+		/**
+		 * Instantiates a new search category paging data model.
+		 */
+		public SearchCategoryPagingDataModel() {
+			super("dtCatCodeResult");
+
+		}
+
+		public ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+			ICategoryCodeSO categoryCodeSO;
+			try {
+
+				categoryCodeSO = (ICategoryCodeSO) BusinessDelegate
+						.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT,
+								ICategoryCodeSO.class);
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				if (getPmCategoryLevel() != null
+						&& getPmCategoryLevel().intValue() > 0) {
+					
+					reqDTO.setPmCategoryLevel(getPmCategoryLevel());
+					
+				if (getCategoryCode() != null && !getCategoryCode().isEmpty()) {
+					switch(getPmCategoryLevel()){
+					case 1 : { reqDTO.setMainCatCode(getCategoryCode()); break;}
+					case 2 : {reqDTO.setSubCatCode(getCategoryCode()); break;}
+					case 3 : {reqDTO.setSubDivCode(getCategoryCode()); break;}
+					}
+				}
+				if (getCategoryDesc() != null && !getCategoryDesc().isEmpty()) {
+					switch(getPmCategoryLevel()){
+					case 1 : {reqDTO.setMainCatDesc(getCategoryDesc()); break;}
+					case 2 : {reqDTO.setSubCatDesc(getCategoryDesc()); break;}
+					case 3 : {reqDTO.setSubDivDesc(getCategoryDesc()); break;}
+					}
+				}
+
+					reqDTO.setSearchBeanObject(searchBean);
+					CategoryCodeResDTO resDTO = categoryCodeSO
+							.searchAllCategory(reqDTO);
+
+					if (resDTO.isSuccessful()) {
+			
+						return resDTO.getCategoryResultBean();
+					}
+				}else {
+					return new SearchResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				categoryCodeSO = null;
+			}
+
+			return null;
+
+		}
+	}
 	// /////////////////////////////////////////////////
 	// pagination for user org search list
 	private class UserOrgPagingDataModel extends PagingDataModel<PmOrgProfile> {
@@ -467,7 +627,73 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 		}
 
 	}
+	
+	// pagination for UserGroup search list
+		private class USGPagingDataModel extends PagingDataModel<PmUserGroup> {
+			private static final long serialVersionUID = 1L;
 
+			public USGPagingDataModel() {
+				super("dtUSGResult");
+			}
+
+			@Override
+			protected ISearchResultBean<PmUserGroup> pageChangeListener(
+					ISearchBean<PmUserGroup> searchBean) {
+				log.info("pageChangeListener");
+				if (log.isDebugEnabled()) {
+					log.debug("pageChangeListener");
+				}
+				IUserGroupSO groupSO;
+				try {
+				if (getUserGroupSearchBean().getPtjName() != null
+							&& !"".equalsIgnoreCase(getUserGroupSearchBean().getPtjName())) {
+					SearchFilterBean codesSearchBean = new SearchFilterBean(
+							SearchOperator.OPERATOR_LIKE.value());
+					codesSearchBean
+							.setSearchField("pmOrgProfile.pmOrgValidity.orgName");
+					codesSearchBean.setCaseInsensitive(true);
+					codesSearchBean.setSearchValue(getUserGroupSearchBean().getPtjName());
+					searchBean.getDataFilterBeans().add(codesSearchBean);
+					
+					if (getUserGroupSearchBean().getGroupCode() != null
+							&& !"".equalsIgnoreCase(getUserGroupSearchBean().getGroupCode())) {
+						codesSearchBean = new SearchFilterBean(
+								SearchOperator.OPERATOR_LIKE.value());
+						codesSearchBean.setSearchField("groupCode");
+						codesSearchBean.setSearchValue(getUserGroupSearchBean().getGroupCode());
+						codesSearchBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(codesSearchBean);
+					}
+
+					if (getUserGroupSearchBean().getGroupName() != null
+							&& !"".equalsIgnoreCase(getUserGroupSearchBean().getGroupName())) {
+						codesSearchBean = new SearchFilterBean(
+								SearchOperator.OPERATOR_LIKE.value());
+						codesSearchBean.setSearchField("groupName");
+						codesSearchBean.setSearchValue(getUserGroupSearchBean().getGroupName());
+						codesSearchBean.setCaseInsensitive(true);
+						searchBean.getDataFilterBeans().add(codesSearchBean);
+					}
+
+
+						UserGroupReqDTO reqDTO = new UserGroupReqDTO();
+						reqDTO.setUserGroupSearchBean(searchBean);
+						 groupSO = EpEjbBusinessDelegate.getInstance()
+								.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+										IUserGroupSO.class);
+						UserGroupResDTO resDTO = groupSO.retrieveUserGroups(reqDTO);
+						ISearchResultBean<PmUserGroup> iSearchResultBean = resDTO
+								.getUserGroupResultBean();
+						return iSearchResultBean;
+
+					} else {
+						return new SearchResultBean();
+					}
+				} finally {
+					groupSO = null;
+				}
+			}
+		}
 	// pagination for UOM search list
 	private class UOMPagingDataModel extends PagingDataModel<PmUom> {
 		private static final long serialVersionUID = 1L;
