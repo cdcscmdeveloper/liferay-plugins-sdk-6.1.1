@@ -62,7 +62,7 @@
 			<p:selectBooleanCheckbox value="#{selectedSuppCat.selected}">
 				<p:ajax event="change"
 					listener="#{catalogueBackingBean.cloneItemSelection(rowIndex)}"
-					update=":form:draftSupplierItemID, :form:downloadLink, :form:submitLink"></p:ajax>
+					update=":form:downloadLink, :form:submitLink"></p:ajax>
 			</p:selectBooleanCheckbox>
 		</p:column>
 
