@@ -212,7 +212,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
     
  
     /** The item search back btn. */
-    private boolean itemSearchBackBtn;
+    private boolean itemSearchBackBtn = Boolean.TRUE;
     
     /** The delete request note dtls. */
     private	List<ScRequestNoteDtl>	deleteRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
