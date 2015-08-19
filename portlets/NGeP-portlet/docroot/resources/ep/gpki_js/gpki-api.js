@@ -99,7 +99,7 @@ runScript: function(src,callback,failedcallback){
 	 * while waiting, it is "Please Wait..." by defualt @returns {undefined}
 	 */
 ,start : function (message){
-   if($('.modal').length < 1)	{
+   /*if($('.modal').length < 1)	{
 			var $div = $('<div/>').appendTo('body');
 			$div.attr('class', 'modal');
     }
@@ -113,7 +113,7 @@ runScript: function(src,callback,failedcallback){
     }
     else {    
         $(".modal > p").html(message);
-    }
+    }*/
 }
 /*
  * Hides loading bar @returns {undefined}
