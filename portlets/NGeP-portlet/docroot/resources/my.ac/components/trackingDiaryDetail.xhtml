@@ -51,7 +51,7 @@
 					<f:facet name="header">
 					#{lbl['lbl.td.doc.status']}
 					</f:facet>
-				#{trackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId)}
+				#{not empty trackingDiaryObj.statusId ? trackingDiaryBackingBean.getStatusDescById(trackingDiaryObj.statusId) : null}
 				</p:column>
 
 		</p:dataTable>
