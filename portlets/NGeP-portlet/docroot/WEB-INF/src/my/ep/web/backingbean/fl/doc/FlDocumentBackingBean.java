@@ -55,6 +55,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
+import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
 import my.ep.persistence.entity.fl.order.FlStopInstr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -691,10 +692,10 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IFulfilmentOrderSO.class);
 			reliwfOrderSo = (IReliefOrderSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT,IReliefOrderSO.class);
 			reqDTO.setReliefOrderId(Long.valueOf(flDocId));
-			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByReliefOrderId(reqDTO);
 			reqDTO.setDocType(ParameterConst.DOCTYPE_RELIEF_ORDER);
-			reqDTO.setFlOrderId(Long.valueOf(rsResDto.getReliefOrder().getFlFulfilmentOrder().getFulfilmentOrderId()));
+			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByReliefOrderId(reqDTO);
 			
+			reqDTO.setFlOrderId(Long.valueOf(rsResDto.getReliefOrder().getFlFulfilmentOrder().getFulfilmentOrderId()));
 			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(reqDTO);
 			ReliefOrderBackingBean reliefOrderBB=new ReliefOrderBackingBean();
 			
@@ -703,6 +704,17 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reliefOrderBB.getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
 			reliefOrderBB.getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			reliefOrderBB.getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
+			reliefOrderBB.getManagedBean().setNonReliefItems(new ArrayList<FlReliefOrderItem>());
+			reliefOrderBB.getManagedBean().setReliefItems(new ArrayList<FlReliefOrderItem>());
+			reliefOrderBB.getManagedBean().setNonReliefMenuDisplay(false);
+			for(FlReliefOrderItem  flReliefOrderItem : reliefOrderBB.getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
+				if(!flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
+					reliefOrderBB.getManagedBean().setNonReliefMenuDisplay(true);
+					reliefOrderBB.getManagedBean().getNonReliefItems().add(flReliefOrderItem);
+				}else{
+					reliefOrderBB.getManagedBean().getReliefItems().add(flReliefOrderItem);
+				}
+			}
 			reliefOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -723,8 +735,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.initializeRemarkAndAttachement(null, coResDTO.getRemarkList(), coResDTO.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
-			} else if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_UPDATE) || buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL)){
-				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			} else {
 				flBB.initializeRemarkAndAttachement(null, new ArrayList<FlRemark>(), new ArrayList<FlAttachment>());
 			}	

@@ -7,87 +7,48 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="#{lbl['lbl.fl.relief.item.details']}" toggleable="true" styleClass="reliefOrderItemPnlClass">
-
-		<p:treeTable id="chargeLineTbl" var="chargeLineNode"
-			styleClass="invItemChange" value="#{reliefOrderBB.managedBean.chargeLineItemRoot}">
-			<p:ajax event="expand" 
-                onstart="blockTreeTable.show();" oncomplete="blockTreeTable.hide();" />
-            
-            <p:column style="white-space:normal;width:5%">    
-	            <p:selectBooleanCheckbox
-						value="#{chargeLineNode.selectedReliefChargeItem}"
-						rendered="#{chargeLineNode.parent == 'true'}">
+		<p:dataTable id="reliefItemDataTable" var="reliefItem"
+			value="#{reliefOrderBB.managedBean.reliefItems}" rowIndexVar="index"
+			rowKey="#{reliefItem}">
+			<ac:paginator for="reliefItemDataTable" />
+			<p:column>
+				<p:selectBooleanCheckbox
+					value="#{reliefItem.selectedReliefChargeItem}"
+					disabled="#{reliefOrderBB.managedBean.buttonVal=='View'}"
+					styleClass="myCustomChekBox">
 				</p:selectBooleanCheckbox>
-			</p:column> 
-			<!-- disabled="#{reliefOrderBB.managedBean.buttonVal=='View'}"     -->		
+			</p:column>
 			<p:column style="white-space:normal; width:145px;">
 				<f:facet name="header" style="width:8%;">
     				 <h:outputText value="#{lbl['lbl.fl.item.code']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.item.code']}"/>
     				</f:facet>
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
 				<h:outputText
-					value="#{chargeLineNode.flFulfilmentItem.itemCode}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+					value="#{reliefItem.flFulfilmentItem.itemCode}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.item.name']}" style="white-space:normal;" >
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<h:outputText value="#{reliefItem.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.itemName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.uom']}" style="white-space:normal;">
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}"
-					rendered="#{chargeLineNode.parent == 'true'}" />
+				<h:outputText value="#{reliefItem.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomName}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price']}" style="white-space:normal;text-align:right;">
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].unitPrice}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{reliefItem.flFulfilmentItem.flFulfilmentItemAddr[0].unitPrice}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;text-align:right;">
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].gstAmount}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{reliefItem.flFulfilmentItem.flFulfilmentItemAddr[0].gstAmount}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.unit.price.w.gst']}" style="white-space:normal;text-align:right;">
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].gstUnitPrice}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{reliefItem.flFulfilmentItem.flFulfilmentItemAddr[0].gstUnitPrice}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.gst.rate']}" style="white-space:normal;text-align:right;">
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.gstFlag.parameterCode}" rendered="#{chargeLineNode.parent == 'true'}">
-				</h:outputText>
-			</p:column>
-			<p:column  style="white-space:normal;text-align:right;">
-				<f:facet name="header" >
-    				 <h:outputText value="#{lbl['lbl.fl.ordered.qty']}"/>
-     					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.order.qty']}"/>
-    				</f:facet>
-				<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.item.total']}" rendered="#{chargeLineNode.parent == 'test'}"/>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].orderedQty}" rendered="#{chargeLineNode.parent == 'false'}">
-					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
+				<h:outputText value="#{reliefItem.gstFlag.parameterCode}" >
 				</h:outputText>
 			</p:column>
 			<p:column style="white-space:normal;text-align:right;">
@@ -95,45 +56,18 @@
     				 <h:outputText value="#{lbl['lbl.fl.received.qty']}"/>
      					<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.do.received.qty']}"/>
     				</f:facet>
-    			<f:facet name="footer">
-					<h:outputText value="#{lbl['lbl.fl.charge.line.grandtotal']}"/>
-				</f:facet>	
-				<h:outputText value="#{chargeLineNode.receivedQty}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{reliefItem.receivedQty}" >
 					<f:converter converterId="dynamicNumberConverter" />
-					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, chargeLineNode.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
-				</h:outputText>
-			</p:column>
-			<p:column headerText="#{lbl['lbl.fl.ordered.amount']}" style="white-space:normal;text-align:right;">
-				<f:facet name="footer">
-					<h:outputText value="#{reliefOrderBB.managedBean.orderedAmtGrandTotal}">
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.orderAmount}" rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				<h:outputText value="#{chargeLineNode.orderAmount}" rendered="#{chargeLineNode.parent == 'false'}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+					<f:attribute name="pattern" value="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_QTY, reliefItem.flFulfilmentItem.flFulfilmentItemAddr[0].scRequestItem.uom.uomCode)}" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.fl.received.amount']}" style="white-space:normal;text-align:right;">
-				<f:facet name="footer">
-					<h:outputText value="#{reliefOrderBB.managedBean.receivedAmtGrandTotal}">
-							<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-						</h:outputText>
-				</f:facet>
-				<h:outputText value="#{chargeLineNode.receivedAmt}" rendered="#{chargeLineNode.parent == 'true'}">
-					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
-				</h:outputText>
-				<h:outputText value="#{chargeLineNode.receivedAmt}" rendered="#{chargeLineNode.parent == 'false'}">
+				<h:outputText value="#{reliefItem.receivedAmt}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</h:outputText>
 			</p:column>
-		</p:treeTable>
-		<p:spacer height="2px"></p:spacer>
+		</p:dataTable>
 		
-		<p:blockUI widgetVar="blockTreeTable" block="chargeLineTbl">  
-			<p:graphicImage value="/css/images/ajax-loader.gif"></p:graphicImage>  
-		</p:blockUI> 			
+		<p:spacer height="2px"></p:spacer>
 	</p:panel>
 </ui:composition>
