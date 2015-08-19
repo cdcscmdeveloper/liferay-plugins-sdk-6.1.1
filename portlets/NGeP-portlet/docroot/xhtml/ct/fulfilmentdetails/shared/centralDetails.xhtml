@@ -58,10 +58,14 @@
 					<td>
 						<p:inputText for="gstAmountCentral" styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
 			   				 disabled="#{!contractDetailsBackingBean.managedBean.disableGstAmount}" 
+			   				 rendered="#{contractDetailsBackingBean.contractWithGst()}"
 			   				 value="#{contractDetailsBackingBean.managedBean.ctContractAmount.gstAmount}" >
 			   				<p:ajax  event="blur" update="overAllAmtsCentral" process="@this"
 				   			   listener="#{contractDetailsBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+						<p:inputText styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+			   				 disabled="true" value="#{lbl['lbl.ct.gst.na']}"  rendered="#{!contractDetailsBackingBean.contractWithGst()}">
 						</p:inputText>
 					</td>
 		    	    <td class="columnWidth150">
@@ -122,7 +126,7 @@
 					</td>
 					<td>
 						<p:inputTextarea id="centralAstatus" autoResize="false" maxlength="1000" 
-							disabled="true" rows="2" style="width:140px;margin-bottom:5px;"
+							disabled="true" rows="2" style="width:130px;margin-bottom:5px;"
 							value="#{contractDetailsBackingBean.getStatusDescById(contractDetailsBackingBean.managedBean.ctContractAmount.ctAgreement.status.statusId)}" />
 						<ac:iconTooltip value="#{lbl['lbl.ct.tooltip.agreement.status']}" />
 					</td>
@@ -173,7 +177,7 @@
 					</td>
 					<td colspan="3">
 						<p:inputTextarea id="centralContractName" autoResize="false" maxlength="1000"
-							disabled="true" rows="4" style="width:470px; margin-bottom:5px;" 
+							disabled="true" rows="4" style="width:455px; margin-bottom:5px;" 
 							value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}" />
 					</td>					
 				</tr>
@@ -226,7 +230,7 @@
   			rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.ap201Exempt}">
    			<p:outputLabel id="justificationOutputLbls" value="#{lbl['lbl.ct.justification.ap201']}" style="width:120px;" />
 			<p:inputTextarea id="justificationCentralLbl" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.justification}"
-  				rows="3" style="width:470px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
+  				rows="3" style="width:455px;" maxlength="200" label="#{lbl['lbl.ct.justification.ap201']}"
       			autoResize="false" disabled="#{contractDetailsBackingBean.managedBean.viewContract}"></p:inputTextarea>	
    		</h:panelGrid> 
  	</p:outputPanel>
