@@ -3730,14 +3730,14 @@ public class SpecificationBackingBean extends
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
 				this.getManagedBean()
-						.setPtjtList(new ArrayList<PmOrgProfile>());
+						.setPtjtList(new ArrayList<Object[]>());
 
 				this.getManagedBean().setDepartmentList(
 						resDTO.getOrgProfileList());
 
 			} else {
 				this.getManagedBean()
-						.setPtjtList(new ArrayList<PmOrgProfile>());
+						.setPtjtList(new ArrayList<Object[]>());
 
 				this.getManagedBean().setDepartmentList(
 						new ArrayList<PmOrgProfile>());
@@ -3764,21 +3764,22 @@ public class SpecificationBackingBean extends
 						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
 								IOrgProfileSO.class);
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setOrgProfileId(ptjGroupId);
+				reqDTO.setParentOrgProfileId(ptjGroupId);
+				reqDTO.setOrgCode(OrganizationType.DIVISION.value());
 				/*
 				 * OrgProfileResDTO resDTO = orgProfileSO
 				 * .retrievePTJListByMinistry(reqDTO);
 				 */
 
 				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveChildListByOrgProfileId(reqDTO);
-				if (null != resDTO.getOrgProfileList()) {
+						.retrieveChildDDListByParentOrgProfileId(reqDTO);
+				if (null != resDTO.getOrgProfileDDList()) {
 					this.getManagedBean().setPtjtList(
-							resDTO.getOrgProfileList());
+							resDTO.getOrgProfileDDList());
 				}
 			} else {
 				this.getManagedBean()
-						.setPtjtList(new ArrayList<PmOrgProfile>());
+						.setPtjtList(new ArrayList<Object[]>());
 			}
 
 		} finally {

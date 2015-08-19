@@ -486,7 +486,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<PmOrgProfile> departmentList;
 
 	/** The ptjt list. */
-	private List<PmOrgProfile> ptjtList;
+	private List<Object[]> ptjtList;
 
 	/** The ptj profile dd list. */
 	private List<Object[]> ptjProfileDDList;
@@ -3320,7 +3320,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 * 
 	 * @return the ptjt list
 	 */
-	public List<PmOrgProfile> getPtjtList() {
+	public List<Object[]> getPtjtList() {
 		return ptjtList;
 	}
 
@@ -3330,7 +3330,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 * @param ptjtList
 	 *            the new ptjt list
 	 */
-	public void setPtjtList(List<PmOrgProfile> ptjtList) {
+	public void setPtjtList(List<Object[]> ptjtList) {
 		this.ptjtList = ptjtList;
 	}
 
