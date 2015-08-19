@@ -764,10 +764,19 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						if(scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy() != null){
 							requestNoteBackingBean.getManagedBean().setPrInquiryId(scRequestNoteDtl.getScRequestSupplierItem().getScPrInquiy().getPrInquiryId());
 						}
-
-						if(scRequestNoteDtl.getAssignedUser() == null){
-							scRequestNoteDtl.setAssignedUser(new PmUser());
+						
+						if(null == scRequestNoteDtl.getPriceType()){
+							scRequestNoteDtl.setPriceType(new PmParameter());
+						} 
+						
+						if(null == scRequestNoteDtl.getAssignedUser()){
+							scRequestNoteDtl.setAssignedUser(new PmUser());	
 						}
+						
+						if(null == scRequestNoteDtl.getProcurementTypeCategory()){
+							scRequestNoteDtl.setProcurementTypeCategory(new PmParameter());
+						} 
+						
 						scRequestNoteDtl.getScRequestSupplierItem().setSupplierId(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId());
 
 						if (scRequestNoteDtl.getJustificationType() != null){
