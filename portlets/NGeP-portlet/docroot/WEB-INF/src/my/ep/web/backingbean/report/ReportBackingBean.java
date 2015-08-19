@@ -173,6 +173,7 @@ public class ReportBackingBean extends
 	SMReportBackingBean smReportBackingBean;
 	CTReportBackingBean ctReportBackingBean;
 	PPReportBackingBean ppReportBackingBean;
+	PMReportBackingBean pmReportBackingBean;
 	Long unspid = null;
 	Long ministryId= null;
 	
@@ -615,6 +616,14 @@ public class ReportBackingBean extends
 	}
 	
 
+	public PMReportBackingBean getPmReportBackingBean() {
+		return pmReportBackingBean;
+	}
+
+	public void setPmReportBackingBean(PMReportBackingBean pmReportBackingBean) {
+		this.pmReportBackingBean = pmReportBackingBean;
+	}
+
 	public PPReportBackingBean getPpReportBackingBean() {
 		return ppReportBackingBean;
 	}
@@ -736,7 +745,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)116205;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)219490;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -931,8 +940,43 @@ public class ReportBackingBean extends
 	private String ppPTJ;	
 	private long[] lngStateId;
 	private long[] lngDistrictId;
+	//PM
+	private String pmServiceType;
+	private String pmStatus;
+	private String pmFinancialOrgName;
+	private String pmBusinessRegNo;
 	
 	
+	public String getPmStatus() {
+		return pmStatus;
+	}
+
+	public void setPmStatus(String pmStatus) {
+		this.pmStatus = pmStatus;
+	}
+
+	public String getPmFinancialOrgName() {
+		return pmFinancialOrgName;
+	}
+
+	public void setPmFinancialOrgName(String pmFinancialOrgName) {
+		this.pmFinancialOrgName = pmFinancialOrgName;
+	}
+
+	public String getPmBusinessRegNo() {
+		return pmBusinessRegNo;
+	}
+
+	public void setPmBusinessRegNo(String pmBusinessRegNo) {
+		this.pmBusinessRegNo = pmBusinessRegNo;
+	}
+
+	public String getPmServiceType() {
+		return pmServiceType;
+	}
+	public void setPmServiceType(String pmServiceType) {
+		this.pmServiceType = pmServiceType;
+	}
 
 	public String getFlPaymentAdviceNo() {
 		return flPaymentAdviceNo;
@@ -4454,6 +4498,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		smReportBackingBean = new SMReportBackingBean();
 		ctReportBackingBean = new CTReportBackingBean();
 		ppReportBackingBean = new PPReportBackingBean();
+		pmReportBackingBean = new PMReportBackingBean();
 		if(rptGenBean.isReportCategoryView()==true||(this.getModuleValue()
 				.equalsIgnoreCase(ModuleCodeConst.ORDER_FULFILLMENT)&&this.getReportCategory()!=null)){
 			rptGenBean = new ReportsGenerateBean();
@@ -4551,6 +4596,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}else if ((this.getModuleValue()
 					.equalsIgnoreCase(ModuleCodeConst.PROCUREMENT_PLAN))) {
 				ppReportBackingBean.enableCriteriaVariablesByReportByPP(
+						rptGenBean, authoriztionList);
+			}else if ((this.getModuleValue()
+					.equalsIgnoreCase(ModuleCodeConst.PROFILE_MANAGEMENT))) {
+				pmReportBackingBean.enableCriteriaVariablesByReportByPM(
 						rptGenBean, authoriztionList);
 			}
 			rptGenBean.isReportCategoryView();
@@ -4955,6 +5004,9 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}else if (this.getModuleValue().equalsIgnoreCase(
 					ModuleCodeConst.PROCUREMENT_PLAN)) {
 				generatePPReport();
+			}else if (this.getModuleValue().equalsIgnoreCase(
+					ModuleCodeConst.PROFILE_MANAGEMENT)) {
+				generatePMReport();
 			}
 			if (null != constructedParamString
 					&& !ReportConst.EMPTY_VAL.equals(constructedParamString)) {
@@ -6793,6 +6845,52 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		}
 	}
 	/*
+	 * Generate PM module report
+	 */
+	public void generatePMReport() {
+		if (((this.getPmServiceType() != null) && (this.getPmServiceType() != ReportConst.EMPTY_VAL))
+				|| ((this.getPmBusinessRegNo() != null) && (this.getPmBusinessRegNo() != ReportConst.EMPTY_VAL))
+				|| ((this.getPmStatus() != null) && (this.getPmStatus() != ReportConst.EMPTY_VAL))
+				|| ((this.getPmFinancialOrgName() != null) && (this.getPmFinancialOrgName() != ReportConst.EMPTY_VAL))) {
+			if ((this.getPmServiceType() != null)
+					&& (this.getPmServiceType() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmServiceTypeVar(ReportConst.PM_AMP_SERVICE_TYPE_EQ
+						+ this.getPmServiceType());
+			}
+			if ((this.getPmBusinessRegNo() != null)
+					&& (this.getPmBusinessRegNo() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmBusinessRegNoVar(ReportConst.PM_AMP_BIZREG_NO_EQ
+						+ this.getPmBusinessRegNo());
+			}
+			if ((this.getPmStatus() != null)
+					&& (this.getPmStatus() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmStatusVar(ReportConst.PM_AMP_STATUS_EQ
+						+ this.getPmStatus());
+			}
+			if ((this.getPmFinancialOrgName() != null)
+					&& (this.getPmFinancialOrgName() != ReportConst.EMPTY_VAL)) {
+				rptGenBean.setPmFinancialOrgNameVar(ReportConst.PM_AMP_FINORG_NAME_EQ
+						+ this.getPmFinancialOrgName());
+			}
+			rptGenBean.setUrlReportJSPName(getManagedBean().getReportJsp());
+			if ((rptGenBean.getUrlReportJSPName() != null)
+					&& (rptGenBean.getUrlReportJSPName() != ReportConst.EMPTY_VAL)) {
+				setConstructedParamString(ReportConst.AMP_REPORT_NAME
+						+ rptGenBean.getUrlReportJSPName()
+						+ rptGenBean.getPmServiceTypeVar()
+						+ rptGenBean.getPmBusinessRegNoVar()
+						+ rptGenBean.getPmStatusVar()
+						+ rptGenBean.getPmFinancialOrgNameVar()
+						+ rptGenBean.getReportValueIdVar()
+						+ rptGenBean.getUserIdVar());
+			} else {
+				throw new EpException(MessageConst.ERROR_REPORT_780007);
+			}
+		} else {
+			throw new EpException(MessageConst.ERROR_REPORT_780003);
+		}
+	}
+	/*
 	 * validate quotNo
 	 */
 	public void quotationNumberValidation() {
@@ -7121,6 +7219,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setPpPTJ(null);
 		this.setPpYear(null);
 		this.setMinistryName(null);
+		this.setPmServiceType(null);
+		this.setPmBusinessRegNo(null);
+		this.setPmStatus(null);
+		this.setPmFinancialOrgName(null);
 		changeReportType();
 		retrieveDates();
 		applicationStatusDateChange();

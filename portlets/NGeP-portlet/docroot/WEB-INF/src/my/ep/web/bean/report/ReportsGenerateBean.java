@@ -862,7 +862,13 @@ public class ReportsGenerateBean {
 		//PP
 		private boolean ppYearView = false;
 		private boolean ppMinistryView = false;
-		private boolean ppPTJView = false;	
+		private boolean ppPTJView = false;
+		//PM
+		private boolean pmServiceTypeView = false;		
+		private boolean pmStatusView = false;
+		private boolean pmFinancialOrgNameView = false;
+		private boolean pmBusinessRegNoView = false;
+		
 	   //URL variables start
 		private String quotationIdTotVar=ReportConst.EMPTY_VAL;
 		private String itemTypeTotVar=ReportConst.EMPTY_VAL;
@@ -1056,9 +1062,61 @@ public class ReportsGenerateBean {
 		private String ppYearVar=ReportConst.EMPTY_VAL;
 		private String ppMinistryVar=ReportConst.EMPTY_VAL;
 		private String ppPTJVar=ReportConst.EMPTY_VAL;
+		//PM
+		private String pmServiceTypeVar=ReportConst.EMPTY_VAL;
+		private String pmStatusVar=ReportConst.EMPTY_VAL;
+		private String pmFinancialOrgNameVar=ReportConst.EMPTY_VAL;
+		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;
 		
 		
-		
+		public boolean isPmStatusView() {
+			return pmStatusView;
+		}
+		public void setPmStatusView(boolean pmStatusView) {
+			this.pmStatusView = pmStatusView;
+		}
+		public boolean isPmFinancialOrgNameView() {
+			return pmFinancialOrgNameView;
+		}
+		public void setPmFinancialOrgNameView(boolean pmFinancialOrgNameView) {
+			this.pmFinancialOrgNameView = pmFinancialOrgNameView;
+		}
+		public boolean isPmBusinessRegNoView() {
+			return pmBusinessRegNoView;
+		}
+		public void setPmBusinessRegNoView(boolean pmBusinessRegNoView) {
+			this.pmBusinessRegNoView = pmBusinessRegNoView;
+		}
+		public String getPmStatusVar() {
+			return pmStatusVar;
+		}
+		public void setPmStatusVar(String pmStatusVar) {
+			this.pmStatusVar = pmStatusVar;
+		}
+		public String getPmFinancialOrgNameVar() {
+			return pmFinancialOrgNameVar;
+		}
+		public void setPmFinancialOrgNameVar(String pmFinancialOrgNameVar) {
+			this.pmFinancialOrgNameVar = pmFinancialOrgNameVar;
+		}
+		public String getPmBusinessRegNoVar() {
+			return pmBusinessRegNoVar;
+		}
+		public void setPmBusinessRegNoVar(String pmBusinessRegNoVar) {
+			this.pmBusinessRegNoVar = pmBusinessRegNoVar;
+		}
+		public String getPmServiceTypeVar() {
+			return pmServiceTypeVar;
+		}
+		public void setPmServiceTypeVar(String pmServiceTypeVar) {
+			this.pmServiceTypeVar = pmServiceTypeVar;
+		}
+		public boolean isPmServiceTypeView() {
+			return pmServiceTypeView;
+		}
+		public void setPmServiceTypeView(boolean pmServiceTypeView) {
+			this.pmServiceTypeView = pmServiceTypeView;
+		}
 		public boolean isFlGroupTwentyFourView() {
 			return flGroupTwentyFourView;
 		}

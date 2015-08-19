@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+ 		
+		         <div>						 
+					 <table style="width:100%;" >
+						  <tr>
+						    <td width="100%">
+							    <h:panelGrid  id="pmReportCriteria" columns="4" style="width:85%;">
+							    	<c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmServiceTypeView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu  value="#{reportBackingBean.pmServiceType}" style="margin-top:5px;width:300px;">										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendaftaran']}" itemValue="#{lbl['lbl.rpt.drpdown.pendaftaran']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.bonperlaksanaan']}" itemValue="#{lbl['lbl.rpt.drpdown.bonperlaksanaan']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.bankpembayaran']}" itemValue="#{lbl['lbl.rpt.drpdown.bankpembayaran']}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.syarikatpemfaktoran']}" itemValue="#{lbl['lbl.rpt.drpdown.syarikatpemfaktoran']}"></f:selectItem>
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																																							
+									</p:selectOneMenu>	
+								  </c:if>	
+								  <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmBusinessRegNoView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.businessregnoscreen']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText value="#{reportBackingBean.pmBusinessRegNo}"	style="margin-top:5px;width:290px;">
+									</p:inputText>	
+								  </c:if>
+								  <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmFinancialOrgNameView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.financialOrgNamescreen']}" style="margin-top:5px;width:160px;" />									
+									<p:inputText value="#{reportBackingBean.pmFinancialOrgName}"	style="margin-top:5px;width:290px;">
+									</p:inputText>	
+								  </c:if>
+								  <c:if test="#{pmReportBackingBean.managedBean.rptGenBean.pmStatusView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
+									<p:selectOneMenu  value="#{reportBackingBean.pmStatus}" style="margin-top:5px;width:300px;">										
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{1}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{0}"></f:selectItem>
+										
+										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																																							
+									</p:selectOneMenu>	
+								  </c:if>								
+									<c:if test="#{pmReportBackingBean.managedBean.rptGenBean.extraTwoColumnView}">
+										<p:outputLabel value=""  style="margin-top:5px;width:162px;"/>
+										<p:outputLabel value="" style="margin-top:5px;width:290px;"/>
+								  </c:if>	   
+								  			 			
+							    </h:panelGrid>							    
+						    </td>
+						  </tr>							  
+					</table>
+		       </div>
+		      
+  </ui:composition>
