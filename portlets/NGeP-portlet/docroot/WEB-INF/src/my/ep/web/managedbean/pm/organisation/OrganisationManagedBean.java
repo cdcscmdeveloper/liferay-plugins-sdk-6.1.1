@@ -18,6 +18,7 @@ import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmFinancialAcc;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.bean.pm.OrganisationSearchBean;
@@ -85,6 +86,8 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	private boolean emptyMinistry;
 
 	private boolean islazy = false;
+	
+	private SmGstSupplier gstSupplier;
 
 	public OrganisationManagedBean() {
 
@@ -753,5 +756,19 @@ public class OrganisationManagedBean extends BaseManagedBean{
 	 */
 	public void setIslazy(boolean islazy) {
 		this.islazy = islazy;
+	}
+
+	/**
+	 * @return the gstSupplier
+	 */
+	public SmGstSupplier getGstSupplier() {
+		return gstSupplier;
+	}
+
+	/**
+	 * @param gstSupplier the gstSupplier to set
+	 */
+	public void setGstSupplier(SmGstSupplier gstSupplier) {
+		this.gstSupplier = gstSupplier;
 	}
 }
