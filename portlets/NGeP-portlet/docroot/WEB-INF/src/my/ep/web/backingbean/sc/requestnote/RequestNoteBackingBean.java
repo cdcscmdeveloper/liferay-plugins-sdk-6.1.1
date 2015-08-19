@@ -761,7 +761,6 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		// For status 
 		if(docStatusId != null){
 			try {
-
 				StatusReqDTO statusReqDTO = new StatusReqDTO();
 				if (DPStatusConstants.PRI_PENDING_RN_CREATION.equals(docStatusId) || 
 						DPStatusConstants.PID_PENDING_RN_CREATION.equals(docStatusId) ||
@@ -1799,8 +1798,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 			if(scRequestSupplierItem.getSupplierItemPrices() != null && scRequestSupplierItem.getSupplierItemPrices().size() >0){
 				for (ScSupplierItemPrice scSupplierItemPrice : scRequestSupplierItem.getSupplierItemPrices()) {
-					if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
-						scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
+					if(null != scRequestNoteDtl.getPriceType()){
+						if(scSupplierItemPrice.getPriceType().getParameterId() == scRequestNoteDtl.getPriceType().getParameterId()){
+							scRequestSupplierItem.getSupplierItemPrice().setPriceType(scSupplierItemPrice.getPriceType());
+						}
 					}
 				}
 			}
