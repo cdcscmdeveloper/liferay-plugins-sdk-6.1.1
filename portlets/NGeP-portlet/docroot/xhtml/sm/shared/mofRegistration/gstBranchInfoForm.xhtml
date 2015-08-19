@@ -155,7 +155,9 @@
 								<p:column headerText="#{lbl['lbl.btn.upload.doc']}"
 									style="width : 20%;" rendered="#{backingBean.managedBean.supplierUser 
 									and (backingBean.managedBean.smAppl.applType eq 'N' 
-									or backingBean.managedBean.smAppl.applType eq 'R')}">
+									or backingBean.managedBean.smAppl.applType eq 'R') 
+									and not empty backingBean.managedBean.selectedBranch.gst 
+									and not empty backingBean.managedBean.selectedBranch.gst.gstRegNo}">
 									
 									<p:commandLink oncomplete="hideBranchDialog();"
 										rendered="#{!table.pmDocument.hardCopyReq}" 
@@ -176,6 +178,18 @@
 						</td>
 					</tr>
 				</table>
+				
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sm.button.delete']}"
+						rendered="#{backingBean.managedBean.supplierUser and 
+								(backingBean.managedBean.smAppl.applType eq 'N' or backingBean.managedBean.smAppl.applType eq 'R')}"
+						partialSubmit="true" process="@this" update=":#{p:component('branchGstInfoPanelId')}"
+						disabled="#{empty backingBean.managedBean.selectedBranch.gst 
+							or empty backingBean.managedBean.selectedBranch.gst.gstRegNo}"
+						onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
+						action="#{backingBean.deleteGst(backingBean.managedBean.selectedBranch.gst)}">
+					</p:commandButton>
+				</div>
 			</p:outputPanel>
 			
 			<p:outputPanel rendered="#{backingBean.managedBean.selectedBranch.sameAsHq}">

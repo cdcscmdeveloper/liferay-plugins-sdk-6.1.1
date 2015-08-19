@@ -139,37 +139,32 @@ public class SmUpdateGstInfoBackingBean extends
 	}
 
 	public void declareGst() {
-		if (noGstInfoEntered(getManagedBean().getHqGstSupplier())) {
-			// No GST information to be declared
-			throw new EpException(MessageConst.ERROR_722613);
-		} else {
-			List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
-			SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
-					.getHqGstSupplier());
-			supplierGstList.add(getManagedBean().getHqGstSupplier());
-			if (getManagedBean().getBranches() != null) {
-				for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
-					if (brVO.getGst() != null) {
-						if (brVO.isSameWithHq()) {
-							SmCommonUtil.copyHqGstToBranch(getManagedBean()
-									.getHqGstSupplier(), brVO.getGst(), true,
-									brVO.getBranch().getBranchCode());
-						}
-						SmCommonUtil.removeNotUploadedGstSuppDoc(brVO.getGst());
-						supplierGstList.add(brVO.getGst());
+		List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
+		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
+				.getHqGstSupplier());
+		supplierGstList.add(getManagedBean().getHqGstSupplier());
+		if (getManagedBean().getBranches() != null) {
+			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
+				if (brVO.getGst() != null) {
+					if (brVO.isSameWithHq()) {
+						SmCommonUtil.copyHqGstToBranch(getManagedBean()
+								.getHqGstSupplier(), brVO.getGst(), true,
+								brVO.getBranch().getBranchCode());
 					}
+					SmCommonUtil.removeNotUploadedGstSuppDoc(brVO.getGst());
+					supplierGstList.add(brVO.getGst());
 				}
 			}
-			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
-			reqDTO.setSmGstSupplierList(supplierGstList);
-			reqDTO.setSupplierId(getManagedBean().getSmSupplier()
-					.getSupplierId());
-			SmServiceLookup.getSupplierGstSO().declareSupplierGst(reqDTO);
-			renewSesionObject();
-			SmCommonUtil.redirectToPage(
-					SmApplicationUtil.getApplicationErrorPage(),
-					MessageConst.INFO_721062);
 		}
+		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+		reqDTO.setSmGstSupplierList(supplierGstList);
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier()
+				.getSupplierId());
+		SmServiceLookup.getSupplierGstSO().declareSupplierGst(reqDTO);
+		renewSesionObject();
+		SmCommonUtil.redirectToPage(
+				SmApplicationUtil.getApplicationErrorPage(),
+				MessageConst.INFO_721062);
 	}
 
 	public void deleteBranchGst(SmGstBranchVO branch) {
@@ -335,6 +330,9 @@ public class SmUpdateGstInfoBackingBean extends
 			deleteGst.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 			deleteGst.setGstDeletedDate(new Date());
 			deleteGst.setIsCurrent(false);
+			deleteGst.setGstRegNo(null);
+			deleteGst.setGstEffDate(null);
+			deleteGst.setGstEndDate(null);
 		} else {
 			deleteGst = null;
 		}
