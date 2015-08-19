@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<c:forEach items="#{svoSiteVisitBackingBean.managedBean.printingCatLs}" var="item">
-	<ui:param name="lblVar" value="lbl.sm.sitevisit.printing.#{item}" />
+<!-- 	<ui:param name="lblVar" value="lbl.sm.sitevisit.printing.#{item}" /> -->
 		<p:panel header="#{lbl[lblVar]}" toggleable="true">
 			<p:dataTable  toggleable = "true" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}" id="dtlPrintMac"
 				value="#{svoSiteVisitBackingBean.managedBean.printingCatMap[item].smSvPrintmachines}" var="acc"
@@ -24,7 +24,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.sitevisit.printing.apparatus.mchne']}
 					</f:facet>
-					<h:outputText value="#{svoSiteVisitBackingBean.getParameterDesc(acc.pmParameter)}"></h:outputText>
+					<h:outputText value="#{acc.pmMachine.machineDesc}"></h:outputText>
 				</p:column>
 
 				<p:column>
@@ -39,7 +39,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.sitevisit.printing.qty.set']}
 					</f:facet>
-					<p:inputText value="#{acc.qty}" id="printingQtySetId"
+					<p:inputText value="#{acc.qty}" id="printingQtySetId" size="5"
 						maxlength="8" label="#{lbl['lbl.sm.sitevisit.printing.qty.set']}" disabled="#{viewFlag || !acc.selected}" 
 						required="#{acc.selected}" converterMessage="#{lbl['lbl.sm.sitevisit.printing.qty.set']}: #{lbl['lbl.sm.validator.number.min1']}" 
 						validatorMessage="#{lbl['lbl.sm.sitevisit.printing.qty.set']}: #{lbl['lbl.sm.validator.number.min1']}">
@@ -59,7 +59,7 @@
 					<f:facet name="header">
 						#{lbl['lbl.sm.sitevisit.printing.reg.year']}
 					</f:facet>
-					<p:inputText value="#{acc.requisiteYear}" id="printingRegYearId" maxlength="4" 
+					<p:inputText value="#{acc.requisiteYear}" id="printingRegYearId" maxlength="4" size="5"
 					label="#{lbl['lbl.sm.sitevisit.printing.reg.year']}" disabled="#{viewFlag || !acc.selected}" required="#{acc.selected}"  />
 				</p:column>
 

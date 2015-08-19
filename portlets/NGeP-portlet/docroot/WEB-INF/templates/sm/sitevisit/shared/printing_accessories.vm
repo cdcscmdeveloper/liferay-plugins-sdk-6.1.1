@@ -1,4 +1,4 @@
-<u>Accesories/Apparatus</u>
+<u class="txtBold">Accesories/Apparatus</u>
 <br /><br />
 <table class="descTable" width="100%">
 	<tr style="background-color:#99ccff;" align="center">
@@ -17,7 +17,7 @@
 				#foreach($category in $printingCat.get($pCat))
 					<tr>
 						<td>$velocityCount</td>
-						<td>$category.codeName</td>
+						<td>$!category.pmMachine.machineDesc</td>
 						<td></td>
 						<td></td>
 						<td></td>
