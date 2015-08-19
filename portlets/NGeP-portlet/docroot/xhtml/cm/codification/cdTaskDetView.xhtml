@@ -14,15 +14,19 @@
 
 			<p:panel header="#{lbl['lbl.cm.define.search']}" toggleable="true">
 
-				<table style="width:100%;">
+				<table style="width: 100%;">
 					<tr>
 
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.doc.no']}" /></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.doc.no']}" /></td>
 						<td width="35%"><p:inputText size="50"
 								value="#{requestCodeBackingBean.managedBean.docNo}"></p:inputText></td>
-						<td width="15%"><p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" rendered="#{!unspscCodeBackingBean.allSupplier}" /></td>
+						<td width="15%"><p:outputLabel
+								value="#{lbl['lbl.cm.supplier.name']}"
+								rendered="#{!unspscCodeBackingBean.allSupplier}" /></td>
 						<td width="35%"><p:inputText size="50"
-								value="#{requestCodeBackingBean.managedBean.supplierName}" rendered="#{!unspscCodeBackingBean.allSupplier}"></p:inputText></td>
+								value="#{requestCodeBackingBean.managedBean.supplierName}"
+								rendered="#{!unspscCodeBackingBean.allSupplier}"></p:inputText></td>
 
 					</tr>
 
@@ -33,7 +37,7 @@
 					<p:commandButton value="#{lbl['lbl.cm.search']}"
 						action="#{requestCodeBackingBean.taskDetSearch}"
 						update="cdTaskDetId">
-					
+
 					</p:commandButton>
 				</div>
 
@@ -76,6 +80,21 @@
 							#{lbl['lbl.cm.supplier.name']}
 						</f:facet>
 						#{obj[2]}
+
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.doc.createdDate']}
+						</f:facet>
+
+
+						<h:outputText value="#{obj[3]}">
+							<f:convertDateTime
+								pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
+						
+						
+						</h:outputText>
 
 					</p:column>
 

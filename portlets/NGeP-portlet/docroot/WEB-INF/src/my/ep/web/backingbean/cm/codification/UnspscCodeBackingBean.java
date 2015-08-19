@@ -232,7 +232,19 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if (this.getManagedBean().getRequestCode().isBrandNew()) {					
 					log.info("Tracking diary for UNSPSC Code Request---submitForRequest()");
 					reqDTO.setTrackingStatus(true);
-					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST, new PmStatus()));
+					
+					
+					IStatusSO statusSO = (IStatusSO) BusinessDelegate
+									.getInstance()
+									.getServiceObject("pm", IStatusSO.class);
+
+					StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+					statusReqDTO.setStatusId(15011L);
+					StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+
+					
+					reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 					if(resDTO.isSuccessful()){
@@ -293,6 +305,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate
 					.getInstance()
 					.getServiceObject("cm", ICodificationSO.class);
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
 			FacesScopes face = new FacesScopes();
 			Object token = face.getBPMAuthenticationCtxToken();
 
@@ -346,11 +361,20 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 
 			CodificationResDTO resDTO = null;
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+			
+			
 
 			if (this.getManagedBean().getRequestCode().isBrandNew()) {
 				log.info("tracking diary for UNSPSC CODE REQUEST By CatalogAdmin:addCodificationRequest");
 				reqDTO.setTrackingStatus(true);
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST_ADMIN, new PmStatus()));
+				
+				
+			
+				statusReqDTO.setStatusId(15011L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REQUEST_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
 
 				resDTO = unspscSO.addCodificationRequest(reqDTO);
 
@@ -369,7 +393,7 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
 				{	log.info("tracking diary for status:bpmTesting");			
 				reqDTO.setTrackingStatus(true);
-				UNSPSCCodeRequestReviewByUser(reqDTO,face,action);					
+				UNSPSCCodeRequestReviewByUser(reqDTO,face,action,statusSO,statusReqDTO);					
 				}
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			}
@@ -397,25 +421,42 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 	}
 
-	public void UNSPSCCodeRequestReviewByUser(CodificationReqDTO reqDTO,FacesScopes face,String action){     
+	public void UNSPSCCodeRequestReviewByUser(CodificationReqDTO reqDTO,FacesScopes face,String action, IStatusSO statusSO, StatusReqDTO statusReqDTO ){
+		
+
 		if(action.equalsIgnoreCase("SUBMIT")){
 			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 				log.info("Tracking diary for UNSPSC Code Review by Catalog_Admin");
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CATALOG_ADMIN, new PmStatus()));
+				
+				statusReqDTO.setStatusId(15014L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CATALOG_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
 			}
 			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
 				log.info("Tracking diary for UNSPSC Code Review CODIFICATION_OFFICER");
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, new PmStatus()));
+				statusReqDTO.setStatusId(15004L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
 			}
 
 		}
 		else {
 			if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by Catalog_Admin");
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, new PmStatus()));
+				
+				statusReqDTO.setStatusId(15015L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus(): new PmStatus()));
 			}			
 			else if (face.hasRoleUser(CmConst.CODIFICATION_OFFICER)) {
 				log.info("Tracking diary for UNSPSC Code Recomended To Supplier by CODIFICATION_OFFICER");
+				
+				statusReqDTO.setStatusId(15013L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
 				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, new PmStatus()));
 			}
 		}
@@ -477,7 +518,17 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			log.info("tracking diary for Catalog_Admin:selectSubmitRecommend");
 			reqDTO.setTrackingStatus(true);
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, new PmStatus()));
+			
+			IStatusSO statusSO = (IStatusSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+
+			StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+			statusReqDTO.setStatusId(15015L);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CATALOG_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -879,6 +930,12 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		CodificationBackingBean bb = new CodificationBackingBean();
+		
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
 
 		try {
 
@@ -1194,7 +1251,11 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				}
 				log.info("tracking diary for Codification_Officer:savetempCode");
 				reqDTO.setTrackingStatus(true);
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, new PmStatus()));	
+				
+				statusReqDTO.setStatusId(15004L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_REVIEW_CODIFICATION_OFFICER, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1238,7 +1299,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				reqDTO.setOutCome(outcome);
 				log.info("tracking diary for UNSPSC Code Recomended to Supplier by Codification_Officer");
 				reqDTO.setTrackingStatus(true);
-				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, new PmStatus()));	
+				
+				
+				statusReqDTO.setStatusId(15013L);
+				StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+				
+				
+				reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.UNSPSC_CODE_RECOMEND_TO_SUPPLIER_BY_CODIFICATION_OFFICER, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
@@ -1563,15 +1630,29 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);		
-		log.info("Tracking diary for Extension Code---submitToBPM()");			
+		log.info("Tracking diary for Extension Code---submitToBPM()");	
+		
+
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate
+						.getInstance()
+						.getServiceObject("pm", IStatusSO.class);
+
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+		statusReqDTO.setStatusId(15001L);
+		StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+
+		
 		if(face.hasRoleUser(CmConst.CM_ADMIN)){
 			reqDTO.setTrackingStatus(true);
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST_ADMIN, new PmStatus()));	
+			
+			
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));	
 
 		}
 		else {
 			reqDTO.setTrackingStatus(true);
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST, new PmStatus()));				
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REQUEST, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));				
 		}		
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);		
@@ -1920,7 +2001,15 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 		System.out.println("consensus" + reqDTO.isConsensus());
 
 		System.out.println("action" + action);
+		
 
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate
+						.getInstance()
+						.getServiceObject("pm", IStatusSO.class);
+
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+		
 		if (action.equalsIgnoreCase("PUBLISH")) {
 
 			reqDTO.setUnspscCode(this.getManagedBean().getReviewExtCodeList()
@@ -1932,7 +2021,13 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 
 			log.info("Tracking diary for Extension Code Published by Code_Officer");
 			reqDTO.setTrackingStatus(true);
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_PUBLISHED_CODE_OFFICER, new PmStatus()));
+			
+			
+			
+			statusReqDTO.setStatusId(15005L);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_PUBLISHED_CODE_OFFICER, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 
 			resDTO = unspscSO.publishExtensionRequest(reqDTO);
 
@@ -2059,8 +2154,9 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 				if(!action.equalsIgnoreCase(CmConst.ACTIONSTATUS))
 				{   
 					log.info("tracking diary for ExtensionCodeReviewStatus: submitToReviewExt");
-					reqDTO.setTrackingStatus(true);					
-					getExtensionCodeReviewStatus(reqDTO,face);
+					reqDTO.setTrackingStatus(true);			
+					
+					getExtensionCodeReviewStatus(reqDTO,face, statusSO, statusReqDTO );
 				}
 
 			}
@@ -2084,18 +2180,28 @@ BaseBackingBean<UnspscCodeManagedBean>implements Serializable {
 	}
 
 
-	public void getExtensionCodeReviewStatus(CodificationReqDTO reqDTO,FacesScopes face){			
+	public void getExtensionCodeReviewStatus(CodificationReqDTO reqDTO,FacesScopes face, IStatusSO statusSO, StatusReqDTO statusReqDTO ){
+		
+		
+		
 		if (face.hasRoleUser(CmConst.CM_ADMIN)){		
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by Catalog_Admin");
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CATALOG_ADMIN, new PmStatus()));
+			statusReqDTO.setStatusId(15004L);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CATALOG_ADMIN, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 		}
 		else if (face.hasRoleUser(CmConst.CD_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by CD_COMMITTE");
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CD_COMMITTE, new PmStatus()));
+			statusReqDTO.setStatusId(15025L);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_REVIEW_CD_COMMITTE, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 		}
 		else if (face.hasRoleUser(CmConst.EP_COMMITTEE)) {
 			log.info("Tracking diary for Extension Code Creation or Extension Code Review by EP_COMMITTE");
-			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_EP_COMMITTE, new PmStatus()));
+			statusReqDTO.setStatusId(15003L);
+			StatusResDTO statusResDTO = statusSO.retrieveStatusByStatusId(statusReqDTO);
+			reqDTO.setTrackingDairyVO(CmApplicationUtil.assignTrackingDiaryValuesForUNSPSCExtension(CmConst.EXTENSION_CODE_EP_COMMITTE, statusResDTO.getPmStatus()!=null?statusResDTO.getPmStatus():new PmStatus()));
 		}
 	}
 
