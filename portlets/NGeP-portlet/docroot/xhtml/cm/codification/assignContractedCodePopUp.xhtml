@@ -50,7 +50,7 @@
 							saveObject="codificationBackingBean.managedBean.selectedUNSPSCObj"
 							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
 							conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{codificationBackingBean.managedBean.selectedLovUnspscClass.unspscCode}"
-							postUpdateListener="#{codificationBackingBean.fillExtensionLists()}">
+							postUpdateListener="codificationBackingBean.fillExtensionLists">
 						</ac:lov></td>
 				</tr>
 				<h:panelGroup
