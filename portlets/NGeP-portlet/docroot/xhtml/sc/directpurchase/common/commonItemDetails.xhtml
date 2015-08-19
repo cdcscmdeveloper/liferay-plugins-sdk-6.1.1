@@ -94,7 +94,7 @@
 					</h:commandLink> 
 					</h:panelGroup>
 				</p:column>
-                <p:column style="width:18%;">
+                <p:column style="width:width: 150px;">
 					<f:facet name="header">
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.rec.suppier']}"/>
@@ -102,7 +102,7 @@
 					
 				   <p:panelGrid styleClass="ppPanelGrid"  style="border:hidden;word-spacing: -1px;margin-top: 8px;" >	
 					   <p:row>
-			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;width: 130px;">
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important;padding-left: 0px;padding-right: 0px;padding-bottom: 0px;width: 88%;">
 			               	 <ac:lov id="beforeSave" lovId="V_SUPPLIER_ITEM" size="12"  headerText="#{lbl['lbl.sc.request.note.rec.suppier']}"  readonly="true"
 									 postUpdateListener="requestNoteBackingBean.beforeSavePostListener(requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}])"
 									 saveObject="requestNoteBackingBean.managedBean.requestNoteDtls[#{rowIndex}].vCmSupplierItem"
@@ -126,7 +126,7 @@
 			                         rendered="#{!requestNoteDtl.brandNew or requestNoteDtl.reRecommend}">    
 								</ac:lov>
 			             </p:column>
-			             <p:column  styleClass="ppPanelGrid" style="border:none !important; padding-left: 2px;padding-right: 0px;vertical-align: super">
+			             <p:column  styleClass="ppPanelGrid" style="border:none !important; padding-left: 1px;padding-right: 0px;vertical-align: super;width:12%;">
 						   <p:commandLink action="#{requestNoteBackingBean.supplierViewAction}" partialSubmit="true" process="@this" id="supplierViewId"
 						      onstart="blockWidget.show();"
 						      oncomplete="blockWidget.hide();"
