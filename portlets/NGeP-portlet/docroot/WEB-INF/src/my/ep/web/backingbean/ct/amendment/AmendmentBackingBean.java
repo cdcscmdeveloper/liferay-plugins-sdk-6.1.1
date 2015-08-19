@@ -746,6 +746,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			    getManagedBean().setAttachmentList(resDTO.getCtAttachments());	
 			    ctBackingBean = new ContractBackingBean(this.getManagedBean().getFileDirectory());
 			    ctBackingBean.getManagedBean().setViewContract(false);
+			    ctBackingBean.getManagedBean().setUpdateCompanyName(false);
+			    ctBackingBean.getManagedBean().setUpdateSupplierAddress(false);
 			    ctBackingBean.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			     // Amendment process	  
 			    getManagedBean().setCommitteeType(retrieveCommitteeType());
