@@ -19,18 +19,16 @@
                                 </td>
                                 <td>
                                    <h:panelGrid columns="3" style="width:300px;" >
-                                          <h:panelGrid columns="3">
+                                          <h:panelGrid columns="2">
 	                                          <p:inputText disabled="true" style="width:85px;" 
 	                                              value="#{ctBackingBean.managedBean.ctContractVer.ctContract.smSupplier.regNo}" />
-	                                          <p:spacer width="1"/>
-					                          <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
+	                                            <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.business.reg.no']}" />
 					                    </h:panelGrid>
                                        <p:outputLabel value="#{lbl['lbl.ct.mof.no']}" />
-                                      <h:panelGrid columns="3"> 
+                                      <h:panelGrid columns="2"> 
 	                                     <p:inputText disabled="true" style="width:85px;" 
 	             	                         value="#{ctBackingBean.managedBean.ctContractVer.ctContract.loa.scLoiLoa.mofNo}" />
-	             	                     <p:spacer width="1"/>
-					                     <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
+	             	                      <ac:iconTooltip value="#{lbl['lbl.ct.tooltip.mof.no']}" />
 					                 </h:panelGrid>
                                   </h:panelGrid>
                              </td>
@@ -121,6 +119,13 @@
 		           </h:panelGrid>
                  </h:panelGrid>
                  </td>
+                 </tr>
+                 <tr>
+                 <td>
+                    <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
+                <td>  <p:inputText disabled="true" style="width:260px;margin-bottom: 5px;" 
+                      value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
+                </td>
                  </tr>
                   <tr>
                       <td>
