@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.questionnaire;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -32,6 +31,7 @@ public class QuestionnaireBackingBean extends BaseBackingBean<QuestionnaireManag
 	public static Logger log = Logger.getLogger(QuestionnaireBackingBean.class);
 
 	public QuestionnaireBackingBean() {
+		SmCommonUtil.setMDCUserId();
 //		if (MDC.get(LogKey.USER_ID) == null) {
 //			MDC.put(LogKey.USER_ID, 1L);
 //		}
