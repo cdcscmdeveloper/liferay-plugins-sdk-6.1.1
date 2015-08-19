@@ -58,8 +58,8 @@
 								itemValue="#{null}" />
 							<f:selectItems
 								value="#{specificationBackingBean.managedBean.ptjtList}"
-								var="orgProfile" itemLabel="#{orgProfile.orgName}"
-								itemValue="#{orgProfile.orgProfileId}"></f:selectItems>
+								var="orgProfile" itemLabel="#{orgProfile[1]}"
+								itemValue="#{orgProfile[0]}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true" />
 						</p:selectOneMenu></td>
 				</tr>
