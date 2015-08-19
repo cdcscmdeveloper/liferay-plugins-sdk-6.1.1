@@ -37,19 +37,19 @@
 						activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
 
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}"
-							update="@form" disabled="#{isPendingVerification}">
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="0" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.award.details']}"
-							update="@form" disabled="#{isPendingVerification}">
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="1" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
-							update="@form" disabled="#{isPendingVerification}">
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="2" />
@@ -82,7 +82,7 @@
 								value="6" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.approval.details']}"
-							update="@form" disabled="#{isPendingVerification}">
+							update="@form">
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
 								value="7" />

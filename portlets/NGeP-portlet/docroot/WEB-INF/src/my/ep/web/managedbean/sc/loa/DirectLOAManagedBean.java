@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtProposalRanking;
@@ -217,11 +218,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The ptj dropdown list. */
 	private List<PmOrgProfile> ptjDropdownList; // direct nego
 
-	/** The product template spec bean. */
-	private TemplateSpecBean productTemplateSpecBean = new TemplateSpecBean();
-
-	/** The service template spec bean. */
-	private TemplateSpecBean serviceTemplateSpecBean = new TemplateSpecBean();
+	
 
 	/** The map supp scloiloa list */
 	private Map<Long, List<ScLoiLoa>> suppLoiLoaMap;
@@ -229,7 +226,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The item type id. */
 	private long itemTypeId = 1;// Item type Id
 
-	private TplSpecMaster tplSpecMaster = new TplSpecMaster(); // temp
+	private ScQtDoc scQtDoc;
 
 	/** The agreement Required Flag */
 	private boolean agreementMandatory = false;
@@ -241,7 +238,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private String clausesTitle;
 
 	/** The template spec bean. */
-	private TemplateSpecBean templateSpecBean = new TemplateSpecBean();
+	private TemplateSpecBean templateSpecBean ;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -1310,61 +1307,7 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.ptjDropdownList = ptjDropdownList;
 	}
 
-	/**
-	 * @return the tplSpecMaster
-	 */
-	public TplSpecMaster getTplSpecMaster() {
-		return tplSpecMaster;
-	}
-
-	/**
-	 * @param tplSpecMaster
-	 *            the tplSpecMaster to set
-	 */
-	public void setTplSpecMaster(TplSpecMaster tplSpecMaster) {
-		this.tplSpecMaster = tplSpecMaster;
-	}
-
-	/**
-	 * Gets the product template spec bean.
-	 * 
-	 * @return the productTemplateSpecBean
-	 */
-	public TemplateSpecBean getProductTemplateSpecBean() {
-		return productTemplateSpecBean;
-	}
-
-	/**
-	 * Sets the product template spec bean.
-	 * 
-	 * @param productTemplateSpecBean
-	 *            the productTemplateSpecBean to set
-	 */
-	public void setProductTemplateSpecBean(
-			TemplateSpecBean productTemplateSpecBean) {
-		this.productTemplateSpecBean = productTemplateSpecBean;
-	}
-
-	/**
-	 * Gets the service template spec bean.
-	 * 
-	 * @return the serviceTemplateSpecBean
-	 */
-	public TemplateSpecBean getServiceTemplateSpecBean() {
-		return serviceTemplateSpecBean;
-	}
-
-	/**
-	 * Sets the service template spec bean.
-	 * 
-	 * @param serviceTemplateSpecBean
-	 *            the serviceTemplateSpecBean to set
-	 */
-	public void setServiceTemplateSpecBean(
-			TemplateSpecBean serviceTemplateSpecBean) {
-		this.serviceTemplateSpecBean = serviceTemplateSpecBean;
-	}
-
+	
 	/**
 	 * Gets the item type id.
 	 * 
@@ -1627,6 +1570,14 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	public void setToBeRemoveProgPayments(
 			List<ScQtProgressivePayment> toBeRemoveProgPayments) {
 		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
+	}
+
+	public ScQtDoc getScQtDoc() {
+		return scQtDoc;
+	}
+
+	public void setScQtDoc(ScQtDoc scQtDoc) {
+		this.scQtDoc = scQtDoc;
 	}
 
 }
