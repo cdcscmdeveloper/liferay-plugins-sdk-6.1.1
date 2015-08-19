@@ -51,7 +51,7 @@
                                    <p:spacer width="5"/>
                                    <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
                                           and ctBackingBean.managedBean.updateCompanyName}">
-			                         <p:selectBooleanCheckbox 
+			                         <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
 			                              value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.companyNameChange}">
 				                         <p:ajax event="change" 
 				                             listener="#{ctBackingBean.retrieveCompanyName}" update="supplierCompanyName, supplierBranchName" />
@@ -108,8 +108,8 @@
                         value="#{ctBackingBean.managedBean.supplierAddress}"  style="width:170px; margin-bottom: 5px;" />
                      <p:spacer width="5"/>
                      <h:panelGrid columns="4" rendered="#{!ctBackingBean.managedBean.viewContract 
-                                          and ctBackingBean.managedBean.updateCompanyName}">
-			            <p:selectBooleanCheckbox 
+                                          and ctBackingBean.managedBean.updateSupplierAddress}">
+			            <p:selectBooleanCheckbox disabled="#{ctBackingBean.isApprover()}"
 			                value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.addressChange}" >
 			                <p:ajax event="change" listener="#{ctBackingBean.retrieveSupplierAddress}" update="supplierAddress" />
 			            </p:selectBooleanCheckbox>
@@ -124,7 +124,7 @@
                  <td>
                     <p:outputLabel value="#{lbl['lbl.ct.contact.person']}"/>  </td>
                 <td>  <p:inputText disabled="true" style="width:260px;margin-bottom: 5px;" 
-                      value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.supplierContact}" />
+                      value="#{ctBackingBean.managedBean.ctContractVer.ctContractValue.supplierContact}" />
                 </td>
                  </tr>
                   <tr>
