@@ -777,6 +777,10 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 							scRequestNoteDtl.setProcurementTypeCategory(new PmParameter());
 						} 
 						
+						if(null == scRequestNoteDtl.getDeliverTermType()){
+							scRequestNoteDtl.setDeliverTermType(getDeliveryTermType());
+						}
+						
 						scRequestNoteDtl.getScRequestSupplierItem().setSupplierId(scRequestNoteDtl.getScRequestSupplierItem().getSmSupplier().getSupplierId());
 
 						if (scRequestNoteDtl.getJustificationType() != null){
@@ -877,6 +881,18 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 		}
 	}
 
+	
+	/**
+	 * Gets the delivery term type.
+	 *
+	 * @return the delivery term type
+	 */
+	private PmParameter getDeliveryTermType(){
+		PmParameter deliveryTermType = getParameterByTypeAndCode(
+				ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
+				return deliveryTermType;
+	}
+	
 	/**
 	 * Pre render page navigation to purchase inquiry based on task id
 	 * @return void
