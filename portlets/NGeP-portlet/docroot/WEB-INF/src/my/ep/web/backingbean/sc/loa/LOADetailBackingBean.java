@@ -39,6 +39,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
@@ -67,6 +68,8 @@ import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
@@ -108,6 +111,7 @@ import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -2048,8 +2052,8 @@ public class LOADetailBackingBean extends
 					.getBranchsList();
 
 			for (SmSupplierBranch supplierBranch : supplierBranchs) {
-				if (supplierBranch.getBranchName().equals(
-						selectedSupplierBranchName)) {
+				if (selectedSupplierBranchName.equals(supplierBranch
+						.getBranchName())) {
 					log.info("found branch address");
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
@@ -2062,7 +2066,16 @@ public class LOADetailBackingBean extends
 							.getMobileNo());
 					scLoa.setSupplierEmail(supplierBranch.getSmPersonnel()
 							.getEmail());
-
+					
+					// Get Gst info based on branch
+					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
+					SupplierGstResDTO resDTO = getGSTInfo(supplierBranch.getSupplierBranchId(),supplierId);
+					if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
+						SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
+						scLoa.setGstRegNo(gstSupplier.getGstRegNo());
+						scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
+						scLoa.setGstEffDate(gstSupplier.getGstEffDate());
+					}
 					break;
 				}
 			}
@@ -4632,67 +4645,60 @@ public class LOADetailBackingBean extends
 		boolean isActive = true;
 		ScLoa scLoa = getManagedBean().getScLoa();
 		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
-		String procCatType = this.getParameterDesc(getManagedBean().getScLoa()
-				.getProcurementTypeCatId());
 		getManagedBean().setRenderRemainder(false);
-		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& ParameterConst.PROC_CAT_TYPE_SERVICES_STRING
-						.equalsIgnoreCase(procCatType)){
-			if (null != scLoa.getGstEffDate()  && scLoa.getGstEffDate()
-						.compareTo(new Date()) <= 0) {
+		if ((supplier != null && supplier.getGstRegisteredFlag() == 
+												DbValueConst.RECORD_STATUS_ACTIVE)) {
+			if (null != scLoa.getGstEffDate()){
+				if(scLoa.getGstEffDate().compareTo(new Date()) <= 0){
 					isActive = false;
-		      } else {
-		    	  isActive = true;
-		    	  getManagedBean().setRenderRemainder(isActive) ;
-		      }
-			
+				}else {
+					getManagedBean().setRenderRemainder(isActive);
+				}
+			}
 		}
+		
 		return isActive;
 	}
-	
 	
 	private void calculateOverallCtAmtForSupplier(){
 		
 		ScLoa scLoa = getManagedBean().getScLoa();
-		
 		SmSupplier supplier = getManagedBean().getScLoa().getScLoiLoa()
 				.getSmSupplier();
-		String procCatType = this.getParameterDesc(getManagedBean().getScLoa()
-				.getProcurementTypeCatId());
 		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
-
 		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)
-				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
-						.equalsIgnoreCase(procCatType) && null != getManagedBean().getScLoa().getGstAmt()) {
+				&& null != getManagedBean().getScLoa().getGstAmt()) {
 			overallContractAmt.add(getManagedBean().getScLoa().getGstAmt());
-			
-		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)
-				&& ParameterConst.ITEM_TYPE_SERVICE_STRING
-						.equalsIgnoreCase(procCatType)) {
-			BigDecimal durationMnth = new BigDecimal(0);
+
+		} else if ((supplier != null && supplier.getGstRegisteredFlag() != DbValueConst.RECORD_STATUS_ACTIVE)) {
+
+			BigDecimal durationMnth = null;
 			BigDecimal noOfMnth = new BigDecimal(12);
-			BigDecimal awardedPrice = new BigDecimal(0);
 			ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
 			if (scLoiLoa.getScLois() != null) {
 				for (ScLoi scLoi : scLoiLoa.getScLois()) {
 					for (ScLoiLoaItem loiLoaItem : scLoi.getScLoiLoaItems()) {
-						TplSpecQuestion specQuestion = loiLoaItem.getScRequestItem().getTplSpecQuestion();
+						TplSpecQuestion specQuestion = loiLoaItem
+								.getScRequestItem().getTplSpecQuestion();
 						if (specQuestion != null) {
-							durationMnth = specQuestion.getTplSpecMaster().getDurationMonth();
+							durationMnth = specQuestion.getTplSpecMaster()
+									.getDurationMonth();
 							break;
 						}
 					}
 				}
 			}
-			awardedPrice =  (overallContractAmt.divide(durationMnth)).multiply(noOfMnth);
-			awardedPrice = awardedPrice.setScale(2, BigDecimal.ROUND_HALF_EVEN);
-			if(awardedPrice.intValue() > 500000){
-				getManagedBean().setDisplayAlert(true);
+			if (durationMnth != null) {
+				BigDecimal awardedPrice = (overallContractAmt.divide(durationMnth)).multiply(noOfMnth);
+				awardedPrice = awardedPrice.setScale(2,BigDecimal.ROUND_HALF_EVEN);
+				if (awardedPrice.intValue() > 500000) {
+					getManagedBean().setDisplayAlert(true);
+				}
 			}
-	}
+		}
 		overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		getManagedBean().setOverallContractAmt(overallContractAmt);
-		
+
 	}
 	
 	/**
@@ -4730,15 +4736,30 @@ public class LOADetailBackingBean extends
 		scLoaReportAttachment.setScLoaReport(scLoaReport);
 		scAttachment = scLoaReportAttachment;
 		getManagedBean().setBranchInfoReport(scLoaReport);
-		
+		boolean titlePresent = false;
 		try {
 			uploadAttachment(event.getFile(), scAttachment);
 			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
 			if(scLoaReports == null){
 				scLoaReports = new ArrayList<ScLoaReport>();
 				scLoa.setScLoaReports(scLoaReports);
+				
+			} else {
+				for (int i = 0; i < scLoaReports.size(); i++) {
+					if (scLoaReport.getTitle().equalsIgnoreCase(
+							scLoaReports.get(i).getTitle())) {
+						titlePresent = true;
+						scLoaReports.get(i).setRecordStatus(false);
+						scLoaReports.get(i).setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
+						scLoaReports.add(scLoaReport);
+						break;
+					}
+				}
 			}
-			scLoaReports.add(scLoaReport);
+			if(!titlePresent){
+				scLoaReports.add(scLoaReport);
+			}
+			
 		} catch (FileNotFoundException e) {
 			log.error("Exceptionn occured while uploading the file"+e.getMessage());
 		} catch (IOException e) {
@@ -4790,5 +4811,32 @@ public class LOADetailBackingBean extends
 		context.put("overallCtAmt", overallctAmt);
 		context.put("overallCtAmtWording", overallctAmtWording);
 
+	}
+	
+	private SupplierGstResDTO getGSTInfo(Long supplierId, Long branchId) {
+		
+		ISupplierGstSO supplierGstSO = null;
+		try {
+			supplierGstSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);
+			SupplierGstReqDTO gstReqDTO = new SupplierGstReqDTO();
+			gstReqDTO.setSupplierId(supplierId);
+			gstReqDTO.setBranchCode(branchId);
+			SupplierGstResDTO gstResDTO = supplierGstSO
+					.retrieveGstInfoBySupplierIdAndBranchCode(gstReqDTO);
+			return gstResDTO;
+		} finally {
+			supplierGstSO = null;
+		}
+	}
+	
+	public void tabChangeAction(int selectedTabIndex){
+		
+		if(selectedTabIndex != 0 && this.getManagedBean().isDisplayAlert()){
+			this.getManagedBean().setDisplayAlert(false);
+			RequestContext.getCurrentInstance().execute(
+					"gstConfirmPopupWid.show()");
+		}
+		
 	}
 }
