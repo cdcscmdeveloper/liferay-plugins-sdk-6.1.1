@@ -36,6 +36,7 @@ import my.ep.persistence.entity.ct.CtWorkflowStatus;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyAddress;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
@@ -321,7 +322,9 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
             reqDTO.setSmAppl(this.getManagedBean().getCtContractVer().getCtContract().getSmSupplier().getSmAppl());
             SupplierSearchResDTO resDTO = supplierSearchSO.retrieveUpdateSmSupplierBranchFromLatestApplication(reqDTO);			
-			this.getManagedBean().setSupplierBranchName(resDTO.getLatestBranch().getBranchName());
+			if (resDTO.getLatestBranch() != null) {
+				this.getManagedBean().setSupplierBranchName(resDTO.getLatestBranch().getBranchName());
+			}
 		} else {
 			  getManagedBean().setSupplierCompanyName(
 				getManagedBean().getCtContractVer().getCtContractValue().getSupplierName());
@@ -347,6 +350,19 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 			e.printStackTrace();
 		}
 	
-   return false;
-}
+		return false;
+	}
+	
+	/**
+     * The method used to verify the login user is BPK approver 
+     * or contract approver.
+	 * 
+	 * @return true, if login user is BPK approver or contract approver
+	 *         false, if login user is not BPK approver or contract approver
+     */
+    public boolean isApprover() {
+    	FacesScopes facesScopes = new FacesScopes();
+		return (facesScopes.hasRoleUser(RoleCode.CT_APPROVER.value()) 
+				|| facesScopes.hasRoleUser(RoleCode.BPK_APPROVER.value()));
+	}
 }
