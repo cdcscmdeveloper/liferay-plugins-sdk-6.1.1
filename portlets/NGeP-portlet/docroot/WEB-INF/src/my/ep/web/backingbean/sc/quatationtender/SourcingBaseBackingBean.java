@@ -987,6 +987,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		pmDigiSign.setDocId(new BigDecimal(docId));
 		pmDigiSign.setDocNo(docNumber);
 		pmDigiSign.setDocType(docType);
+		pmDigiSign.setOriginalData(docNumber);
 	}
 
 	/**

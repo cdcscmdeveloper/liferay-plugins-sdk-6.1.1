@@ -22,7 +22,7 @@
 				<c:when
 					test="#{isEditableStatus and empty directLOABackingBean.managedBean.taskId}">
 					<p:commandButton value="#{lbl['lbl.btn.submit']}"
-						action="#{directLOABackingBean.submitAction('null')}"
+						action="#{directLOABackingBean.updateBpmTaskAction('null')}"
 						process="@form" update="@form" onstart="blockWidget.show();"
 						oncomplete="blockWidget.hide();" />
 				</c:when>
@@ -38,7 +38,7 @@
 							styleClass="ui-button" onstart="blockWidget.show();"
 							rendered="#{!isPendingVerification}"
 							oncomplete="blockWidget.hide();"
-							action="#{directLOABackingBean.submitAction(bpmAction)}"
+							action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
 							partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 							update="#{isReject ? '@this' : '@form'}" />
 
@@ -48,7 +48,7 @@
 							rendered="#{isPendingVerification}"
 							oncomplete="blockWidget.hide();"
 							disabled="#{directLOABackingBean.managedBean.verifyBtnFlag}"
-							action="#{directLOABackingBean.submitAction(bpmAction)}"
+							action="#{directLOABackingBean.updateBpmTaskAction(bpmAction)}"
 							partialSubmit="true" process="#{isReject ? '@this' : '@form'}"
 							update="#{isReject ? '@this' : '@form'}" />
 

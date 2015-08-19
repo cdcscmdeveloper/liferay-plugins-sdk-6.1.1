@@ -16,14 +16,15 @@
 						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
 				<td colspan="3"><p:inputText size="95"
 						style="margin-bottom:5px;"
-						value="#{directLOABackingBean.managedBean.tplSpecMaster.specName}" /></td>
+						value="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.specName}" /></td>
 			</tr>
 			<tr>
 				<td style="width: 10%"><h:outputLabel
 						value="#{lbl['lbl.sc.item.type']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="itemType" disabled="#{!isEditableStatus}"
-						value="#{directLOABackingBean.managedBean.itemTypeId}"
+				<td><p:selectOneMenu id="itemType"
+						disabled="#{!isEditableStatus}"
+						value="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.itemTypeCode.parameterId}"
 						style="width: 178px;margin-bottom: 5px;"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItems value="#{directLOABackingBean.itemTypeValues}" />
@@ -38,7 +39,7 @@
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.sc.spec.local.goods']}" /></td>
 				<td><p:selectOneRadio
-						value="#{directLOABackingBean.managedBean.tplSpecMaster.weightageReq}">
+						value="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.weightageReq}">
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 					</p:selectOneRadio></td>
@@ -55,9 +56,11 @@
 
 		<table>
 			<tr>
-				<td valign="top" width="18%"><h:outputLabel value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+				<td valign="top" width="18%"><h:outputLabel
+						value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
 				<td><p:selectOneRadio
-						value="#{directLOABackingBean.managedBean.scQt.zonal}"  disabled="#{!isEditableStatus}">
+						value="#{directLOABackingBean.managedBean.scQt.zonal}"
+						disabled="#{!isEditableStatus}">
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
@@ -73,7 +76,7 @@
 		</table>
 		<h:panelGroup id="generalLocationList">
 
-			
+
 
 
 			<c:if test="#{directLOABackingBean.managedBean.scQt.zonal}">
@@ -90,17 +93,17 @@
 	<p:panel header="Specification Content" toggleable="true"
 		id="productAndServiceId">
 		<h:panelGroup id="productListId"
-			rendered="#{directLOABackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeProduct}">
+			rendered="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.itemTypeCode.parameterId eq 164}">
 			<ac:templateSpec
-				templateSpecBean="#{directLOABackingBean.managedBean.productTemplateSpecBean}"
-				title="#{lbl['lbl.txt.product']}" />
+				templateSpecBean="#{directLOABackingBean.managedBean.templateSpecBean}"
+				title="#{lbl['lbl.txt.product']}" newable="#{isPendingVerification or isSupplierAckStatus}" />
 
 		</h:panelGroup>
 		<h:panelGroup id="serviceListId"
-			rendered="#{directLOABackingBean.managedBean.itemTypeId eq ParameterConst.itemTypeService}">
+			rendered="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.itemTypeCode.parameterId eq 165}">
 			<ac:templateSpec
-				templateSpecBean="#{directLOABackingBean.managedBean.serviceTemplateSpecBean}"
-				title="#{lbl['lbl.txt.service']}" />
+				templateSpecBean="#{directLOABackingBean.managedBean.templateSpecBean}"
+				title="#{lbl['lbl.txt.service']}" newable="#{isPendingVerification or isSupplierAckStatus}" />
 
 		</h:panelGroup>
 
