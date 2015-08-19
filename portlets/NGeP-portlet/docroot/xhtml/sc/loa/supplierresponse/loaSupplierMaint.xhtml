@@ -27,28 +27,28 @@
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{lOADetailBackingBean.managedBean.selectedTabIndex}">
 
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(0)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(1)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(2)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="2" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}">	
+					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}" actionListener="#{lOADetailBackingBean.tabChangeAction(3)}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(5)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.integrity.pact']}" update="@form">
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.integrity.pact']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(6)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
 					</p:menuitem>
 					
@@ -100,6 +100,16 @@
 				update="menuContent" oncomplete="attachmentPopupDlg.hide()">
 			</p:fileUpload>
 		</p:dialog>
-		
+
+		<p:confirmDialog widgetVar="gstConfirmPopupWid" id="gstConfirmPopup"
+			width="500px" message="#{lbl['lbl.sc.gst.nonreg.supplier.alert.msg']}" >
+			<div align="center">
+				<p:commandButton value="#{lbl['lbl.btn.ok']}" oncomplete="gstConfirmPopupWid.hide()"
+					process="@this"></p:commandButton>
+			</div>
+			
+		</p:confirmDialog>
+
+
 	</ui:define>
 </ui:composition>
