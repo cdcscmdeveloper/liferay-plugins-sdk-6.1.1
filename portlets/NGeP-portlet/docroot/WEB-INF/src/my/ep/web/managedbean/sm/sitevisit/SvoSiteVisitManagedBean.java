@@ -83,8 +83,8 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private SmMachineDtl[] selectedWorkshopMachine;
 	
 	//private Map<Long, PmParameterDesc> printingParamMap;
-	private ArrayList<String> printingCatLs;
-	private Map<String, SmSvCategory> printingCatMap;
+	private ArrayList<Long> printingCatLs;
+	private Map<Long, SmSvCategory> printingCatMap;
 	private SmSvPrintwork[] selectedPrintWorks;
 	
 	private List<SmSupplierCategory> categoryApplicable;
@@ -437,19 +437,19 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		this.printingParamMap = printingParamMap;
 	}*/
 
-	public ArrayList<String> getPrintingCatLs() {
+	public ArrayList<Long> getPrintingCatLs() {
 		return printingCatLs;
 	}
 
-	public void setPrintingCatLs(ArrayList<String> printingCatLs) {
+	public void setPrintingCatLs(ArrayList<Long> printingCatLs) {
 		this.printingCatLs = printingCatLs;
 	}
 
-	public Map<String, SmSvCategory> getPrintingCatMap() {
+	public Map<Long, SmSvCategory> getPrintingCatMap() {
 		return printingCatMap;
 	}
 
-	public void setPrintingCatMap(Map<String, SmSvCategory> printingCatMap) {
+	public void setPrintingCatMap(Map<Long, SmSvCategory> printingCatMap) {
 		this.printingCatMap = printingCatMap;
 	}
 
