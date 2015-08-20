@@ -36,6 +36,7 @@
 						value="#{lbl['lbl.sc.procurment.type.category']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:selectOneMenu id="qtmaintainprocTypeBoCategory"
+						disabled="#{qTDetailBB.enableFieldByStatusNFiledName(QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID)}"
 						required="true" label="#{lbl['lbl.sc.procurment.type.category']}"
 						value="#{qTDetailBB.managedBean.qt.procurementTypeCatId.parameterId}"
 						style="width: 195px;margin-bottom: 5px;">
