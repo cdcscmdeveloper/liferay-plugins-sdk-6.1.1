@@ -46,14 +46,6 @@ public class Encryption {
 		} catch (Exception e) {
 			
 			System.out.println("Error Creating Encryption File");
-			// Create Record in PmInterfaceLog
-	
-			/*fileUtility.setValuesToPmInterface(
-					IntegrationConstants.BATCH_DIRECTION_OUTBOUND, null, null,
-					IntegrationConstants.FILE_CREATION_SUCCESS,
-					IntegrationConstants.FTP_STATUS_FAIL,
-					IntegrationConstants.TARGET_SYSTEM_1GFMAS,
-					serviceCode,processId, fileName);*/
 	
 			e.printStackTrace();
 		}
@@ -62,17 +54,8 @@ public class Encryption {
 	
 		sftpUtility.upload(outFilePath + fileName,IntegrationConstants.GMAS_UPLOAD +fileName,fileName,serviceCode,processId);
 		
-		// Create record in PmInterfaceLog with FTP=1 and FCP =1 and Current = 1
-		
-	/*	fileUtility.setValuesToPmInterface(
-				IntegrationConstants.BATCH_DIRECTION_OUTBOUND, null, null,
-				IntegrationConstants.FILE_CREATION_SUCCESS,
-				IntegrationConstants.FTP_STATUS_SUCCESS,
-				IntegrationConstants.TARGET_SYSTEM_1GFMAS,
-				serviceCode,processId, fileName);*/
-	
 		// call osb service for transfering from host to 1GFMAS
-		// osbUtility.osbServiceCallOutBound(processId,fileName);
+		 osbUtility.osbServiceCallOutBound(processId,fileName);
 	
 	}
 	
@@ -109,35 +92,22 @@ public class Encryption {
 		} catch (Exception e) {
 			
 			System.out.println("Error Creating Encryption File");
-			// Create Record in PmInterfaceLog
-	
-			/*fileUtility.setValuesToPmInterface(
-					IntegrationConstants.BATCH_DIRECTION_OUTBOUND, reqDTO.getDataStartTime(), reqDTO.getDataEndTime(),
-					IntegrationConstants.FILE_CREATION_SUCCESS,
-					IntegrationConstants.FTP_STATUS_FAIL,
-					IntegrationConstants.TARGET_SYSTEM_1GFMAS,
-					reqDTO.getServiceCode(),reqDTO.getProcessId(), reqDTO.getFileName());*/
-	
 			e.printStackTrace();
 		}
 		// upload the encripted file to sftp server
 		
-		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
+//		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
 		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD + reqDTO.getFileName());
+		
+		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
+//		reqDTO.setRemoteFilePath(IntegrationConstants.GMAS_UPLOAD);
+		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_1GFMAS);
+		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 	
 		sftpUtility.upload(reqDTO);
 		
-		// Create record in PmInterfaceLog with FTP=1 and FCP =1 and Current = 1
-		
-	/*	fileUtility.setValuesToPmInterface(
-				IntegrationConstants.BATCH_DIRECTION_OUTBOUND, null, null,
-				IntegrationConstants.FILE_CREATION_SUCCESS,
-				IntegrationConstants.FTP_STATUS_SUCCESS,
-				IntegrationConstants.TARGET_SYSTEM_1GFMAS,
-				reqDTO.getServiceCode(),reqDTO.getProcessId(), reqDTO.getFileName());*/
-	
 		// call osb service for transfering from host to 1GFMAS
-		// osbUtility.osbServiceCallOutBound(processId,fileName);
+		 osbUtility.osbServiceCallOutBound(reqDTO.getProcessId(),reqDTO.getFileName());
 	
 	}
 

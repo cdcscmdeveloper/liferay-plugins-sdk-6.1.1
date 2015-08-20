@@ -37,8 +37,6 @@ public class OsbUtility {
 			epmfRq_Type.setRqHeader(header_Type);
 			epmfRq_Type.setBatchOutboundRq(batchOutboundRq_Type);
 
-//			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy("http://192.168.120.14:8011/Batch/Generic/Outbound/v1.0?wsdl");
-			
 			my.ep.web.integration.osb.BatchPortTypeProxy batchPortTypeProxy = new BatchPortTypeProxy();
 
 			my.ep.web.integration.osb.EPMFRs_Type epmfRs_Type = batchPortTypeProxy.invoke(epmfRq_Type);
@@ -61,7 +59,8 @@ public class OsbUtility {
 //		   header_Type.setOrgUnit(processId);
 //		   header_Type.setSegment(IntegrationConstants.SEQUENCE_NO);
 
-		   my.ep.web.integration.osb.inbound.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.inbound.RqUID_Type(UUID.randomUUID().toString(), IntegrationConstants.EMPTY_TRING);
+		   my.ep.web.integration.osb.inbound.RqUID_Type rqUID_Type = new my.ep.web.integration.osb.inbound.RqUID_Type();
+		   rqUID_Type.setRqUID(UUID.randomUUID().toString());
 		   header_Type.setUID(rqUID_Type);
 
 		   my.ep.web.integration.osb.inbound.BatchInboundRq_Type batchOutboundRq_Type = new my.ep.web.integration.osb.inbound.BatchInboundRq_Type();
