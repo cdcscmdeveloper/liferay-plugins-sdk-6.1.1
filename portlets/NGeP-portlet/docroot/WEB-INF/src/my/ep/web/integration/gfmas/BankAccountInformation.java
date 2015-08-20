@@ -1,5 +1,10 @@
 package my.ep.web.integration.gfmas;
 
+import my.ep.web.integration.phis.ItemType;
+
+/*
+ * @author P GANGA PRASAD
+ */
 public class BankAccountInformation {
 
 	private int recordType;
@@ -8,16 +13,14 @@ public class BankAccountInformation {
 	private String bankKey;
 	private String bankAccount;
 	private String currency;
-	private String bankActionIndicator; // version 2.7
-
-	private int kodBankIndicator; // version 2.7     values 0,1,3
-
-	// for APOVE
-	private String AccountHolderName;
-
+	private String bankActionIndicator;
+	private int kodBankIndicator;
 	private String swiftCode;
 	private String status;
 	private String bankName;
+
+	// for APOVE
+	private String AccountHolderName;
 
 	public String getSwiftCode() {
 		return swiftCode;
@@ -113,6 +116,23 @@ public class BankAccountInformation {
 
 	public void setKodBankIndicator(int kodBankIndicator) {
 		this.kodBankIndicator = kodBankIndicator;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof ItemType)
+	    {
+	    	BankAccountInformation temp = (BankAccountInformation) obj;
+	        if(this.bankKey.equalsIgnoreCase(temp.bankKey) && this.bankAccount.equalsIgnoreCase(temp.bankAccount))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.bankKey.hashCode()+this.bankAccount.hashCode());        
 	}
 
 }
