@@ -41,6 +41,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.ct.supplier.IPanelSupplierSO;
@@ -160,6 +161,7 @@ import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.AddressType;
 import my.ep.type.pm.OrganizationType;
@@ -10895,6 +10897,35 @@ public class SpecificationBackingBean extends
 							getManagedBean().getScQt()
 									.getPmProcurementCategory()
 									.getParameterId());
+					
+					// Filter By - ministry orgProfileId
+					IOrgProfileSO orgProfileSO = null;
+					try {
+						orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+								ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+						
+						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+						orgProfileReqDTO.setOrgProfileId(getManagedBean().getScQt()
+								.getPmOrgProfile().getOrgProfileId());
+						PmOrgProfile ministryOrgProfile = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
+							.getPmOrgProfile();
+						if (ministryOrgProfile != null) {
+							searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
+									new SearchFilterBean(
+											"orgProfile.orgProfileId",
+											SearchOperator.OPERATOR_EQUALS.value(),
+											ministryOrgProfile.getOrgProfileId()), 
+									new SearchFilterBean(
+											"orgProfile.orgProfileId",
+											SearchOperator.OPERATOR_IS_NULL.value(), 
+											null,
+											SearchCondition.CONDITION_OR.value())));	
+						}
+					} finally {
+						orgProfileSO = null;
+					}
+					
+					qtTemplateReqDTO.setOrderByBlankTemplate(true);
 
 				} else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
 						.equalsIgnoreCase(getManagedBean()
