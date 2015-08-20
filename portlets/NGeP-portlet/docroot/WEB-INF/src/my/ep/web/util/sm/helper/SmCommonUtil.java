@@ -2326,7 +2326,9 @@ public class SmCommonUtil {
 	public static boolean isSoftcertReadyForRenewal(Long supplierId,
 			SmPersonnel personnel) {
 		boolean retVal = false;
-		if (personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
+		if (supplierId != null
+				&& personnel != null
+				&& personnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_ISSUED
 				&& personnel.getPmUser() != null
 				&& personnel.getAuthorizedFlg() == DbValueConst.RECORD_STATUS_ACTIVE) {
 			PersonnelReqDTO reqDTO = new PersonnelReqDTO();
@@ -2338,6 +2340,7 @@ public class SmCommonUtil {
 							reqDTO).getSoftcertRequest();
 
 			if (softcertRequest != null
+					&& softcertRequest.getPmDigiCert() != null
 					&& softcertRequest.getPmDigiCert().getValidTo() != null) {
 				Calendar renewDate = Calendar.getInstance();
 				renewDate.setTime(softcertRequest.getPmDigiCert().getValidTo());
