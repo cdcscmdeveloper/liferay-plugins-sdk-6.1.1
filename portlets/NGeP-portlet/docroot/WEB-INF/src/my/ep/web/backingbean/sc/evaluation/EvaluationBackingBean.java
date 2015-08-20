@@ -968,6 +968,13 @@ public class EvaluationBackingBean extends
 
 			getManagedBean().setComplianceSummaryGenerated(false);
 			updateSummaryGeneratedStatus();
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())) {
+				complianceChangeScQtStatusUpdate();
+			}
 
 			FacesContext
 					.getCurrentInstance()
@@ -1098,6 +1105,13 @@ public class EvaluationBackingBean extends
 
 			getManagedBean().setComplianceSummaryGenerated(false);
 			updateSummaryGeneratedStatus();
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())) {
+				complianceChangeScQtStatusUpdate();
+			}
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
@@ -10853,4 +10867,41 @@ public class EvaluationBackingBean extends
 		}
 	}
 
+	private void complianceChangeScQtStatusUpdate() {
+		IQTEvaluationSO evaluationSo = null;
+		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		try {
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())
+					&& !this.getManagedBean().isReadOnly()) {
+				if (null != this.getManagedBean().getScQt()
+						.getTecEvaluationCheck()
+						|| null != this.getManagedBean().getScQt()
+								.getFecEvaluationCheck()) {
+					evaluationSo = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
+					EvaluationReqDTO checkListreqDTO = new EvaluationReqDTO();
+					checkListreqDTO.setQtId(this.getManagedBean().getScQt()
+							.getQtId());
+					evaluationSo.retriveAllChecklist(checkListreqDTO);
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
+					this.getManagedBean().getScQt().setTecEvaluationCheck(null);
+					this.getManagedBean().getScQt().setFecEvaluationCheck(null);
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+					this.getManagedBean().setScQt(evalResDTO.getScQt());
+
+				}
+
+			}
+		} finally {
+
+		}
+
+	}
 }
