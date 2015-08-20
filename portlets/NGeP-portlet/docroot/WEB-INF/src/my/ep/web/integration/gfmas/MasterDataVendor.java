@@ -11,11 +11,11 @@ public class MasterDataVendor {
 
 	private String sapVendorCode; // for apove file
 
-	private CompanyBranch companyBranch = new CompanyBranch(); // for apove file
+//	private CompanyBranch companyBranch = new CompanyBranch(); // for apove file
 
 	private List<CompanyBranch> companyBranchs;
 
-	BankAccountInformation bankAccountInformation; // for apove file
+//	BankAccountInformation bankAccountInformation; // for apove file
 
 //	List<BankAccountInformation> bankAccountInfoList;
 
@@ -59,7 +59,7 @@ public class MasterDataVendor {
 		this.sapVendorCode = sapVendorCode;
 	}
 
-	public CompanyBranch getCompanyBranch() {
+/*	public CompanyBranch getCompanyBranch() {
 		return companyBranch;
 	}
 
@@ -69,7 +69,7 @@ public class MasterDataVendor {
 
 	public BankAccountInformation getBankAccountInformation() {
 		return bankAccountInformation;
-	}
+	}*/
 
 	public List<CompanyBranch> getCompanyBranchs() {
 		return companyBranchs;
@@ -79,10 +79,10 @@ public class MasterDataVendor {
 		this.companyBranchs = companyBranchs;
 	}
 
-	public void setBankAccountInformation(
+/*	public void setBankAccountInformation(
 			BankAccountInformation bankAccountInformation) {
 		this.bankAccountInformation = bankAccountInformation;
-	}
+	}*/
 
 	/*public List<BankAccountInformation> getBankAccountInfoList() {
 		return bankAccountInfoList;
