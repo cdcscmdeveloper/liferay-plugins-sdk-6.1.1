@@ -32,6 +32,8 @@ public class ReactivateBasicBackingBean extends
 	private String loginId;
 	private String activationKey;
 	private String encryptActivationKey;
+	private String createdTimeParam;
+	private String adminPersonnelIdParam;
 
 	/**
 	 * Pre-render reactivate basic account
@@ -51,12 +53,13 @@ public class ReactivateBasicBackingBean extends
 		try {
 			HttpServletRequest originalServletRequest = new FacesScopes()
 					.getOriginalServletRequest();
+			encryptActivationKey = originalServletRequest.getParameter("kp");
+			createdTimeParam = originalServletRequest.getParameter("ct");
+			adminPersonnelIdParam = originalServletRequest
+					.getParameter("pr");
 
 			RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-			reqDTO.setPersonnelId(Long.parseLong(originalServletRequest
-					.getParameter("pr")));
-			encryptActivationKey = originalServletRequest.getParameter("kp");
-
+			reqDTO.setPersonnelId(Long.parseLong(adminPersonnelIdParam));
 			PersonnelReqDTO personnelReqDTO = new PersonnelReqDTO();
 			personnelReqDTO.setPersonnelId(reqDTO.getPersonnelId());
 			basicSupplierAdmin = SmServiceLookup.getPersonnelSO()
@@ -64,18 +67,7 @@ public class ReactivateBasicBackingBean extends
 			basicSupplier = SmServiceLookup.getRegistrationSO()
 					.retrieveValidReactivateBasicSupplier(reqDTO).getSmSupp();
 			loginId = basicSupplierAdmin.getPmUser().getLoginId();
-			if (basicSupplier == null
-					|| StringUtils.isBlank(encryptActivationKey)
-					|| basicSupplierAdmin == null) {
-				SmCommonUtil.redirectToPage(
-						SmApplicationUtil.getApplicationErrorPage(),
-						MessageConst.INFO_721031);
-			} else {
-				SmCommonUtil
-						.redirectToPage(
-								"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
-								"");
-			}
+			validateActivationUrl();
 		} catch (Exception ex) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
@@ -138,6 +130,32 @@ public class ReactivateBasicBackingBean extends
 			} catch (Exception ex) {
 				throw new EpException(ex.getMessage());
 			}
+		}
+
+	}
+
+	private void validateActivationUrl() {
+		if (basicSupplier == null || StringUtils.isBlank(encryptActivationKey)
+				|| basicSupplierAdmin == null) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.INFO_721031);
+		} else if (createdTimeParam != null
+				&& StringUtils.isNotBlank(createdTimeParam)
+				&& new Long(createdTimeParam).compareTo(basicSupplier
+						.getCreatedDate().getTime()) != 0) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.INFO_721031);
+		} else if (createdTimeParam == null
+				|| StringUtils.isBlank(createdTimeParam)) {
+			SmCommonUtil.redirectToPage(
+					SmApplicationUtil.getApplicationErrorPage(),
+					MessageConst.INFO_721031);
+		} else {
+			SmCommonUtil.redirectToPage(
+					"/xhtml/sm/reactivatebasic/basicAccountActivation.xhtml",
+					"");
 		}
 
 	}
