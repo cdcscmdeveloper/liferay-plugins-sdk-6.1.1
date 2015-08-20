@@ -3,7 +3,9 @@ package my.ep.web.managedbean.pm.settings;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -13,6 +15,8 @@ import org.primefaces.model.DefaultScheduleEvent;
 import org.primefaces.model.DefaultScheduleModel;
 import org.primefaces.model.ScheduleEvent;
 import org.primefaces.model.ScheduleModel;
+
+import sun.util.logging.resources.logging;
 
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.dto.pm.general.settings.calendar.CalendarReqDTO;
@@ -32,7 +36,7 @@ public class CalendarManageBean extends BaseManagedBean {
 	private Long selectedStateId;
 	private PmState selectedState;
 	private ScheduleEvent event;
-
+	private Map<String, String> eventToExTitleValueMap = new HashMap<String, String>();
 	@PostConstruct
 	public void init() {
 		//loadSchedule(2);
@@ -55,6 +59,14 @@ public class CalendarManageBean extends BaseManagedBean {
 		}
 		
 		selectedStateId = stateId;
+	}
+
+	public Map<String, String> getEventToExTitleValueMap() {
+		return eventToExTitleValueMap;
+	}
+
+	public void setEventToExTitleValueMap(Map<String, String> eventToExTitleValueMap) {
+		this.eventToExTitleValueMap = eventToExTitleValueMap;
 	}
 
 	private void loadStateSchedule(long stateId) {
@@ -112,10 +124,12 @@ public class CalendarManageBean extends BaseManagedBean {
 	}
 
 	public ScheduleEvent getEvent() {
+		System.out.println("get event title to= "+this.event.getTitle());
 		return event;
 	}
 
 	public void setEvent(ScheduleEvent event) {
+		System.out.println("set event title to= "+event.getTitle());
 		this.event = event;
 	}
 
