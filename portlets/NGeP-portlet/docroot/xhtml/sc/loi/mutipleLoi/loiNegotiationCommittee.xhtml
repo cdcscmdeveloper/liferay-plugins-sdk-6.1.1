@@ -198,9 +198,10 @@
 
 <p:panel header="#{lbl['lbl.sc.committee.endorsement']}" toggleable="true">
 	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(
-				lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="false">
+				lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="false"
+				rendered="#{lOIDetailBackingBean.managedBean.scQtCommittee ne null}">
 		<p:dataTable id="fcMemberTbl" var="committeeDtl"
-			value="#{lOIDetailBackingBean.managedBean.scQtCommittee.committeeActivities}"
+			value="#{lOIDetailBackingBean.managedBean.fcActivityList}" 
 			rowKey="#{committeeDtl}" rowIndexVar="rowIndex">
 		
 			<ac:paginator for="fcMemberTbl" />
