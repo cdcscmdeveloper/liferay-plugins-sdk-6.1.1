@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sc.loa;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -286,6 +287,10 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	private List<ScQtSchedule> toBeRemoveSchedules;
 	private List<ScQtProgressivePayment> toBeRemoveProgPayments;
+	
+	private BigDecimal overallContractAmt;
+	
+	private boolean renderRemainder;
 
 	/**
 	 * Gets the spki backing bean.
@@ -1578,6 +1583,22 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	public void setScQtDoc(ScQtDoc scQtDoc) {
 		this.scQtDoc = scQtDoc;
+	}
+
+	public BigDecimal getOverallContractAmt() {
+		return overallContractAmt;
+	}
+
+	public void setOverallContractAmt(BigDecimal overallContractAmt) {
+		this.overallContractAmt = overallContractAmt;
+	}
+
+	public boolean isRenderRemainder() {
+		return renderRemainder;
+	}
+
+	public void setRenderRemainder(boolean renderRemainder) {
+		this.renderRemainder = renderRemainder;
 	}
 
 }
