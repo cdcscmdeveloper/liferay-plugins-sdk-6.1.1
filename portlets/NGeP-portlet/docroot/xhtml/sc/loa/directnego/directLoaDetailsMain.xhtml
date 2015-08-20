@@ -161,6 +161,21 @@
 				</p:fileUpload>
 			</c:if>
 		</p:dialog>
+		
+		<p:dialog id="loaSuppAttmPopup" widgetVar="loaSuppAttmPopupDlg" 
+			modal="true" resizable="false" width="700px" height="200" styleClass="pop_up_top" 
+			header="#{lbl['lbl.txt.choose.files']}">
+			
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{directLOABackingBean.handleSuppDocFileUpload}"
+				mode="advanced" id="uploadloaattachment"
+				sizeLimit="#{CommonConstants.FILE_UPLOAD_SIZE_LIMIT}"
+				allowTypes="#{CommonConstants.FILE_UPLOAD_ALLOW_TYPES}"
+				invalidFileMessage="#{lbl['lbl.txt.upload.invalid.file']}"
+				update="@form" oncomplete="loiSuppAttmPopupDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
 
 	</ui:define>
 </ui:composition>

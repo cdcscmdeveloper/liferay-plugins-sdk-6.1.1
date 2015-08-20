@@ -17,6 +17,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.sc.loaloi.ScLoa;
 import my.ep.persistence.entity.sc.loaloi.ScLoaApproval;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
+import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
@@ -32,7 +33,6 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
-import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.type.pm.PTJLocalityCode;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -291,7 +291,10 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private BigDecimal overallContractAmt;
 	
 	private boolean renderRemainder;
+	
+	private List<ScLoaSupportingDoc>  selectedScLoaSuppDocs;
 
+	private ScLoaSupportingDoc selectedScLoaSuppDoc;
 	/**
 	 * Gets the spki backing bean.
 	 * 
@@ -1599,6 +1602,23 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	public void setRenderRemainder(boolean renderRemainder) {
 		this.renderRemainder = renderRemainder;
+	}
+
+	public List<ScLoaSupportingDoc> getSelectedScLoaSuppDocs() {
+		return selectedScLoaSuppDocs;
+	}
+
+	public void setSelectedScLoaSuppDocs(
+			List<ScLoaSupportingDoc> selectedScLoaSuppDocs) {
+		this.selectedScLoaSuppDocs = selectedScLoaSuppDocs;
+	}
+
+	public ScLoaSupportingDoc getSelectedScLoaSuppDoc() {
+		return selectedScLoaSuppDoc;
+	}
+
+	public void setSelectedScLoaSuppDoc(ScLoaSupportingDoc selectedScLoaSuppDoc) {
+		this.selectedScLoaSuppDoc = selectedScLoaSuppDoc;
 	}
 
 }

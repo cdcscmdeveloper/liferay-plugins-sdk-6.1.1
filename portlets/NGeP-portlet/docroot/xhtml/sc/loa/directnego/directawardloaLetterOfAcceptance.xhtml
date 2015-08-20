@@ -74,15 +74,16 @@
 				actionListener="#{directLOABackingBean.downloadAllReports}" />
 
 
-			<p:commandButton value="#{lbl['lbl.btn.add']}" rendered="#{isEditableStatus}"
-				process="@this, contentsTbl" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				rendered="#{isEditableStatus}" process="@this, contentsTbl"
+				partialSubmit="true"
 				action="#{directLOABackingBean.addLoaContentAction}"
 				oncomplete="contentsTblWidget.paginator.endLink.click();"
 				update="contentsTbl" />
 
-			<p:commandButton value="#{lbl['lbl.btn.delete']}"  rendered="#{isEditableStatus}"
-				process="@this, contentsTbl" partialSubmit="true"
-				oncomplete="loaReportDeletePopUp.show();"
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				rendered="#{isEditableStatus}" process="@this, contentsTbl"
+				partialSubmit="true" oncomplete="loaReportDeletePopUp.show();"
 				update="@([id$=#{loaReportDeleteId}])" />
 
 
@@ -94,4 +95,65 @@
 			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
 
 	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
+		toggleable="false">
+		<p:dataTable id="suppDocTbl" var="scLoaSuppDoc"
+			widgetVar="suppDocTblWidget"
+			value="#{directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs}"
+			rows="10" rowKey="#{scLoaSuppDoc}"
+			selection="#{directLOABackingBean.managedBean.selectedScLoaSuppDocs}">
+
+			<ac:paginator for="suppDocTbl" />
+
+			<p:column selectionMode="multiple" style="width:2%"
+				rendered="#{isEditableStatus}" />
+
+			<p:column headerText="#{lbl['lbl.sc.document.title']}">
+				<p:inputText style="width:85%" value="#{scLoaSuppDoc.title}">
+					<p:ajax event="keyup" />
+				</p:inputText>
+			</p:column>
+
+
+			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
+				<ui:fragment>
+					<h:commandLink
+						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
+
+					<p:commandButton oncomplete="loaSuppAttmPopupDlg.show();"
+						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
+						process="@this" update="@([id$=loaSuppAttmPopup])">
+						<f:setPropertyActionListener
+							target="#{directLOABackingBean.managedBean.selectedScLoaSuppDoc}"
+							value="#{scLoaSuppDoc}" />
+					</p:commandButton>
+				</ui:fragment>
+			</p:column>
+
+		</p:dataTable>
+
+		<p:spacer height="2" />
+		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.btn.add']}"
+				process="@this, suppDocTbl" partialSubmit="true"
+				action="#{directLOABackingBean.addLoaSuppDocAction}"
+				oncomplete="suppDocTblWidget.paginator.endLink.click();"
+				update="suppDocTbl" />
+
+			<p:commandButton value="#{lbl['lbl.btn.delete']}"
+				process="@this, suppDocTbl" partialSubmit="true"
+				oncomplete="supporingDocDeletePopUp.show();"
+				update="@([id$=#{supporingDocDeleteId}])" />
+
+		</div>
+		<ac:confirmationPopup id="supporingDocDeleteId"
+			widget="supporingDocDeletePopUp"
+			okAction="directLOABackingBean.deleteSupporingDocs" width="400"
+			height="100" title="#{lbl['lbl.msg.confirm.delete.header']}"
+			content="#{lbl['lbl.msg.confirm.delete']}" update="@form" />
+	</p:panel>
+
 </ui:composition>

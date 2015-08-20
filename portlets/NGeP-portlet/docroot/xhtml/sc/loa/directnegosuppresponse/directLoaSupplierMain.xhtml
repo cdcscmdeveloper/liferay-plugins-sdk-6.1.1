@@ -10,55 +10,107 @@
 
 
 	<ui:define name="contentSection">
-		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true" closable="true" showSummary="false" />
+		<p:messages id="loaMaintMsg" showDetail="true" autoUpdate="true"
+			closable="true" showSummary="false" />
 		<ui:param name="isEditableStatus" value="false" />
-		<ui:param name="isSupplierAckStatus" value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
-		
-		<ui:include src="directLoaSupplierButtons.xhtml" />
-		
-		<ui:include src="directLoaSupplierHeader.xhtml" />
-		
-		<table border="0" cellspacing="0" cellpadding="0" width="100%">
-		<tr>
-			<td width="20%" valign="top" class="sidemenutd">
-				<p:tabMenu styleClass="sidemenu"
-					activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
+		<ui:param name="isSupplierAckStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" > 
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="0" />
-					</p:menuitem>
-					
-					<p:menuitem value="Financial Specification" update="@form">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="1" />
-					</p:menuitem>
-					
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form"> 
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="2" />
-					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.integrity.pact']}" update="@form">
-						<f:setPropertyActionListener target="#{directLOABackingBean.managedBean.selectedTabIndex}" value="3" />
-					</p:menuitem>
-					
-				</p:tabMenu>
-			</td>
-			<td width="80%" valign="top">
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
+		<ui:include src="directLoaSupplierButtons.xhtml" />
+
+		<ui:include src="directLoaSupplierHeader.xhtml" />
+
+		<table border="0" cellspacing="0" cellpadding="0" width="100%">
+			<tr>
+				<td width="20%" valign="top" class="sidemenutd"><p:tabMenu
+						styleClass="sidemenu"
+						activeIndex="#{directLOABackingBean.managedBean.selectedTabIndex}">
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="0" />
+						</p:menuitem>
+
+						<p:menuitem value="Financial Specification" update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="1" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="2" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.deduction.payment']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="3" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="5" />
+						</p:menuitem>
+
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="6" />
+						</p:menuitem>
+						<p:menuitem value="#{lbl['lbl.sc.loiloa.integrity.pact']}"
+							update="@form">
+							<f:setPropertyActionListener
+								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
+								value="7" />
+						</p:menuitem>
+
+					</p:tabMenu></td>
+				<td width="80%" valign="top"><c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 0}">
 						<ui:include src="directLoaDetailsSupplierMenu.xhtml" />
-					</c:if>
-									
-		           <c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
-						<ui:include src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
-					</c:if>
-					
-					<c:if test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
+					</c:if> <c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 1}">
+						<ui:include
+							src="/xhtml/sc/loa/directnego/directLoaAwardDetailsMenu.xhtml" />
+					</c:if> <c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 2}">
+						<ui:include
+							src="/xhtml/sc/loa/directnego/directawardloaLetterOfAcceptance.xhtml" />
+					</c:if> <c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
+						<ui:include
+							src="/xhtml/sc/loa/directnego/directawardloaDeductionPaymentMenu.xhtml" />
+					</c:if> <c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 4}">
+						<ui:include
+							src="/xhtml/sc/loa/directnego/directawardloaFulfilmentSchedule.xhtml" />
+					</c:if> <c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 5}">
+						<ui:include
+							src="/xhtml/sc/loa/directnego/directawardloaPerformanceBondMenu.xhtml" />
+					</c:if> <c:if
+						test="#{directLOABackingBean.managedBean.selectedTabIndex == 6}">
 						<ui:include src="directLoaLetterOfAcceptance.xhtml" />
-					</c:if>
-					
-					<h:panelGroup rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 3}">
+					</c:if> <h:panelGroup
+						rendered="#{directLOABackingBean.managedBean.selectedTabIndex == 7}">
 						<ui:include src="directLoaIntegrityPactMenu.xhtml" />
-					</h:panelGroup>
-			</td>
-		</tr>
+					</h:panelGroup></td>
+			</tr>
 		</table>
 	</ui:define>
 </ui:composition>
