@@ -24,7 +24,6 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
@@ -1878,10 +1877,11 @@ public class TemplateSpecBackingBean extends
 									SearchOperator.OPERATOR_LIKE.value(),
 									getManagedBean().getSearchSpecName()));
 				}
-
-				// Order by created date
-				searchBean.getSortColumns().add(
-						new SearchOrderBean("specMasterId", false));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("specName",
+								SearchOperator.OPERATOR_NOT_EQUALS.value(),
+								TemplateSpecConst.TEMPLATE_SPEC_BLANK));
 
 				TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 				reqDTO.setSearchBean(searchBean);
