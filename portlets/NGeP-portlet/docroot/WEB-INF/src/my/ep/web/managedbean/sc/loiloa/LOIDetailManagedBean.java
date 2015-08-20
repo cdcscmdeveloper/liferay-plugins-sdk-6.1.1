@@ -229,6 +229,9 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	/** The fec activity list. */
 	private List<ScQtCommitteeActivity> fecActivityList;
 	
+	/** The finalization committee activity list */
+	private List<ScQtCommitteeActivity> fcActivityList;
+	
 	/** The sc qt committee. */
 	private ScQtCommittee scQtCommittee;
 	
@@ -1347,7 +1350,23 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	public void setFecActivityList(List<ScQtCommitteeActivity> fecActivityList) {
 		this.fecActivityList = fecActivityList;
 	}
+	
+	/**
+	 * @return the fcActivityList
+	 */
+	public List<ScQtCommitteeActivity> getFcActivityList() {
+		return fcActivityList;
+	}
 
+	/**
+	 * @param fcActivityList 
+	 * 				the fcActivityList to set
+	 */
+	public void setFcActivityList(
+					List<ScQtCommitteeActivity> fcActivityList) {
+		this.fcActivityList = fcActivityList;
+	}
+	
 	/**
 	 * Gets the sc qt committee.
 	 *
