@@ -13,7 +13,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sc.location.level']}" />
 					<p:outputLabel value="*" styleClass="mandatory"></p:outputLabel></td>
-				<td><p:selectOneMenu id="locationLevels"  disabled="#{!isEditableStatus}"
+				<td><p:selectOneMenu id="locationLevels"  disabled="#{!isEditableStatus}" required="true"
 						label="#{lbl['lbl.sc.zone.location.level']}"
 						value="#{directLOABackingBean.managedBean.scQt.zoneLocationLevel.parameterId}"
 						style="width: 209px;">
