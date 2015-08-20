@@ -472,8 +472,10 @@ public class TemplateSpecBackingBean extends
 				newQuestion.setClPriceTypeCode(new PmParameter());
 			}
 			TemplateSpecHelper.getInstance().resetPriceTypeDtl(newQuestion);
-
-			newQuestion.setClDeliveryTermTypeCode(new PmParameter());
+			
+			pmParameter = getParameterByTypeAndCode(
+					ParameterTypeConst.DELIVERY_TERM, ParameterConst.SQ_DURATION_DAY);
+			newQuestion.setClDeliveryTermTypeCode(pmParameter);
 
 			PmUom uom = new PmUom();
 			newQuestion.setClUom(uom);
