@@ -1,0 +1,86 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
+	<p:dialog id="dlPPOrgProfile" modal="true" widgetVar="dlgPPOrgProfile" header="#{lbl['lbl.pp.ptj']}"
+		width="700" position="top">
+		<p:panel id="dlPPOrgProfilePanel" header="#{lbl['lbl.cm.search']}" toggleable="true" >
+			<p:messages id="messagesPPOrgProfile" showDetail="true" autoUpdate="true"
+				closable="true" showSummary="false" />
+			<h:panelGrid columns="2" id="orgProfileCriteria" cellpadding="0" cellspacing="0">
+				<p:selectOneMenu id="somSearchType" value="#{pPlanBackingBean.managedBean.selectedSearchType}" 							
+							required="true" style="width:150px">							
+							<f:selectItems value="#{pPlanBackingBean.managedBean.searchOptions}" />					
+				</p:selectOneMenu>
+				<p:inputText styleClass="ppDisplayTextM" 
+					value="#{pPlanBackingBean.managedBean.searchValue}"
+				onkeypress="if (event.keyCode == 13) { ppOrgSearchBtn.jq.click(); return false; }"/>				
+			</h:panelGrid>		
+			
+			<table style="width:100%;"><tr><TD style="text-align:right;">
+			<p:commandButton 
+				value="#{lbl['lbl.btn.search']}"
+				action="#{pPlanBackingBean.searchAction}"
+				partialSubmit="true"
+				process="dlPPOrgProfilePanel"
+				update="ppOrgProfileResultPanel"
+				widgetVar="ppOrgSearchBtn">
+			</p:commandButton>		
+			<p:commandButton
+				value="#{lbl['lbl.btn.reset']}"
+				action="#{pPlanBackingBean.resetAction}"
+				partialSubmit="true"
+				process="dlPPOrgProfilePanel"
+				update="dlPPOrgProfilePanel ppOrgProfileResultPanel">
+			</p:commandButton>
+		</TD></tr></table>
+		</p:panel>
+		<p:panel header="#{lbl['lbl.fl.result']}" toggleable="true">
+		<h:panelGroup id="ppOrgProfileResultPanel" style="width:100%;">
+			<p:dataTable id="opresultTb"
+					var="orgProfile" 
+					selection="#{pPlanBackingBean.managedBean.selectedPTJ}"
+					selectionMode="single"
+					rowIndexVar="rowIndex"
+					rowKey="#{orgProfile}"
+					rows="10"
+					lazy="true"
+					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
+					value="#{pPlanBackingBean.ppOrgProfileDataModel}" >
+					
+					<ac:paginator for="opresultTb" />					
+					<p:column width="10%" headerText ="#{lbl['lbl.pm.org.ministryCode']}">				
+						<h:outputText value="#{pPlanBackingBean.retrieveMinistryCodeByOrgProfileId(orgProfile.orgProfileId)}" />
+					</p:column> 
+					<p:column width="40%" headerText ="#{lbl['lbl.pm.org.ministryName']}">				
+						<h:outputText value="#{pPlanBackingBean.retrieveMinistryByOrgProfileId(orgProfile.orgProfileId)}" />
+					</p:column> 
+					<p:column width="20%" headerText ="#{lbl['lbl.pp.ptj.code']}">				
+						<h:outputText value="#{orgProfile.orgCode}" />
+					</p:column> 
+					<p:column width="40%" headerText ="#{lbl['lbl.pp.ptj.name']}">				
+						<h:outputText value="#{orgProfile.orgName}" />
+					</p:column> 
+					
+			</p:dataTable>
+			<br/>
+			<table style="width:100%;"><tr><TD style="text-align:right;">
+				<p:commandButton 
+					id="opSelectBtn"
+					value="#{lbl['lbl.btn.select']}"
+					action="#{pPlanBackingBean.populateSaveObject}"
+					update="ppOrgProfileResultPanel "
+					oncomplete="dlgPPOrgProfile.hide();"
+					process="ppOrgProfileResultPanel,pPlanSearch"
+					partialSubmit="true" />	
+			</TD></tr></table>
+		</h:panelGroup>
+		</p:panel>
+	</p:dialog>
+	
+	</ui:composition>

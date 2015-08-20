@@ -21,14 +21,18 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:outputLabel value="#{lbl['lbl.pp.ptj']}"/>
 				</th>
 				<td>
-				 	<ac:lov id="lovSearchAll" lovId="PM_ORG_PROFILE_ALL" size="50" 
-		            	readonly="true" update=":form:lovSearchAll:lovSearchAll"
-						headerText="#{lbl['lbl.pp.ptj']}"
-						value="#{pPlanBackingBean.managedBean.planSearchBean.ptj.pmOrgValidity.orgName}" 
-						saveObject="pPlanBackingBean.managedBean.planSearchBean.ptj"
-						conditionField="orgTypeCode.parameterCode^#{ParameterConst.orgTypePtj}|recordStatus^1#{pPlanBackingBean.managedBean.filterOrgCondition}" 
-						
-					/>
+				 	<p:inputText 
+						size="35"
+						id="opSearchIT" 
+						value="#{pPlanBackingBean.managedBean.selectedPTJ.orgName}" 
+						disabled="true"
+						/>
+					<p:commandLink id="ppOrgProfileCl" partialSubmit="true"
+						process="@this"
+						action="#{pPlanBackingBean.resetAction}"
+						oncomplete="dlgPPOrgProfile.show();" >
+						<p:graphicImage value="/css/images/design/search.png"></p:graphicImage>
+					</p:commandLink>
 				</td>
 			</tr>
 			<tr>
@@ -93,19 +97,19 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<tr>
 				<td colspan="4">
 					<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.btn.search']}" 
+						<p:commandButton value="#{lbl['lbl.btn.search']}"  id="ppSearchBtn"
 							process="pPlanSearch"
 							update="dtPlanResult" 
 							action="#{pPlanBackingBean.searchPlan}"
 							/>&#160;
-						<p:commandButton value="#{lbl['lbl.btn.reset']}" action="#{pPlanBackingBean.resetPlanSearchBean}"
+						<p:commandButton id="ppResetBtn" value="#{lbl['lbl.btn.reset']}" action="#{pPlanBackingBean.resetPlanSearchBean}"
 							update="pPlanSearch, dtPlanResult" 
 							/> 
 					</div>
 				</td>
 			</tr>
 		</table>
-		<ac:lovPopup /> 	
+		 <ui:include src="/xhtml/pp/procurementplan/search/ppOrgProfilePopUp.xhtml" />	
 	</p:panel>
 
 </ui:composition>
