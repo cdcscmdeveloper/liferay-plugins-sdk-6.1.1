@@ -1,16 +1,22 @@
 package my.ep.web.backingbean.sc.loa;
 
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -29,12 +35,14 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
+import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -49,6 +57,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
 import my.ep.dto.pm.common.country.CountryReqDTO;
@@ -61,11 +71,16 @@ import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
 import my.ep.dto.sc.quationtender.DirectAwardResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.awardsupplierdata.SCAwardSupplierDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
@@ -82,6 +97,9 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
+import my.ep.persistence.entity.sc.loaloi.ScLoi;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
+import my.ep.persistence.entity.sc.loaloi.ScLoiLoaItem;
 import my.ep.persistence.entity.sc.loaloi.ScPbAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
@@ -100,6 +118,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecLoc;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneDtl;
 import my.ep.persistence.entity.tpl.spec.TplSpecZoneLoc;
@@ -112,6 +131,7 @@ import my.ep.type.sc.ApprovalAction;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.ct.amendment.JadualHargaBean;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.sc.common.ZonesBean;
@@ -119,6 +139,7 @@ import my.ep.web.bean.tpl.TemplateSpecBean;
 import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sc.QTConstants;
 import my.ep.web.managedbean.sc.loa.DirectLOAManagedBean;
+import my.ep.web.util.CommonUtils;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.NumberWordUtil;
@@ -126,11 +147,20 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
 import my.ep.web.util.sc.helper.LocationSingleton;
 import my.ep.web.util.sc.helper.SourcingLocationHelper;
+import my.ep.web.util.template.DocumentGenerator;
+import my.ep.web.util.tpl.helper.TemplateSpecHelper;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.WordUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.apache.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.velocity.VelocityContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.NodeSelectEvent;
@@ -214,6 +244,21 @@ public class DirectLOABackingBean extends
 		}
 
 	}
+	
+	/**
+	 * Download report as pdf or xlsx files in Letter of Acceptance.
+	 *
+	 * @param scLoaReport the sc loa report
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
+		debugLogger("downloadReport");
+		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
+				.getScLoaReportAttachment();
+		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
+		downloadFile(scLoaReportAttachment);
+	}
+
 
 	/**
 	 * submit LOA details. submit - save data into database and BPM process will
@@ -275,29 +320,35 @@ public class DirectLOABackingBean extends
 		StreamedContent loaStreamContent = getManagedBean()
 				.getLoaStreamContent();
 
-		/*
-		 * if (loaStreamContent == null) { ScLoaReport agreementLetterReport =
-		 * null; for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
-		 * .getScLoaReports()) { String docDefinitionKey =
-		 * scLoaReport.getPmDocument() .getDocDefinitionKey();
-		 * 
-		 * if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-		 * .equals(docDefinitionKey)) { agreementLetterReport = scLoaReport;
-		 * 
-		 * break; } }
-		 * 
-		 * if (agreementLetterReport != null) { ScLoaReportAttachment
-		 * agreementLetterAttachment =
-		 * generateDocumentAttachment(agreementLetterReport);
-		 * agreementLetterReport
-		 * .setScLoaReportAttachment(agreementLetterAttachment);
-		 * 
-		 * loaStreamContent = getAttachmentStreamContent(
-		 * agreementLetterAttachment, CommonConstants.FILE_CONTENT_TYPE_PDF);
-		 * 
-		 * getManagedBean().setLoaStreamContent(loaStreamContent); } } else {
-		 * loaStreamContent.getStream().reset(); }
-		 */
+		if (loaStreamContent == null) {
+			ScLoaReport agreementLetterReport = null;
+			for (ScLoaReport scLoaReport : getManagedBean().getScLoa()
+					.getScLoaReports()) {
+				String docDefinitionKey = scLoaReport.getPmDocument()
+						.getDocDefinitionKey();
+
+				if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+						.equals(docDefinitionKey)) {
+					agreementLetterReport = scLoaReport;
+
+					break;
+				}
+			}
+
+			if (agreementLetterReport != null) {
+				ScLoaReportAttachment agreementLetterAttachment = generateDocumentAttachment(agreementLetterReport);
+				agreementLetterReport
+						.setScLoaReportAttachment(agreementLetterAttachment);
+
+				loaStreamContent = getAttachmentStreamContent(
+						agreementLetterAttachment,
+						CommonConstants.FILE_CONTENT_TYPE_PDF);
+
+				getManagedBean().setLoaStreamContent(loaStreamContent);
+			}
+		} else {
+			loaStreamContent.getStream().reset();
+		}
 
 		return loaStreamContent;
 	}
@@ -448,7 +499,7 @@ public class DirectLOABackingBean extends
 						scLoa.getContractSigner());
 			}
 
-			// generateDeclarationFromVelocity(scLoa,scQt);
+			 generateDeclarationFromVelocity(scLoa, scLoa.getScQt());
 
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
@@ -1230,29 +1281,33 @@ public class DirectLOABackingBean extends
 
 				AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 				reqDTO.setScLoa(scLoa);
+				if (null != this.getManagedBean().getScLoa().getScLoiLoa()
+						.getPmOrgProfile().getOrgProfileId()) {
+					AwardSupplierResDTO resDTO = getQtAwardSO()
+							.retrieveMinistryAgencyList(reqDTO);
 
-				AwardSupplierResDTO resDTO = getQtAwardSO()
-						.retrieveMinistryAgencyList(reqDTO);
+					getManagedBean().setAgencyProfileDDList(
+							resDTO.getAgencyProfileDDList());
 
-				getManagedBean().setAgencyProfileDDList(
-						resDTO.getAgencyProfileDDList());
-
-				if (scLoa.getScLoiLoa().getPmOrgProfile() != null) {
-					boolean found = false;
-					for (Object[] object : resDTO.getAgencyProfileDDList()) {
-						if (object[0].toString().equals(
-								scLoa.getScLoiLoa().getPmOrgProfile()
-										.getOrgProfileId().toString())) {
-							found = true;
-							break;
+					if (scLoa.getScLoiLoa().getPmOrgProfile() != null) {
+						boolean found = false;
+						for (Object[] object : resDTO.getAgencyProfileDDList()) {
+							if (object[0].toString().equals(
+									scLoa.getScLoiLoa().getPmOrgProfile()
+											.getOrgProfileId().toString())) {
+								found = true;
+								break;
+							}
+						}
+						if (found) {
+							scLoa.setContractAgency(scLoa.getScLoiLoa()
+									.getPmOrgProfile());
 						}
 					}
-					if (found) {
-						scLoa.setContractAgency(scLoa.getScLoiLoa()
-								.getPmOrgProfile());
-					}
-				}
 
+				} else {
+					debugLogger("org profile is null");
+				}
 			} finally {
 				// qtAwardSO = null;
 			}
@@ -1777,6 +1832,16 @@ public class DirectLOABackingBean extends
 		renewSesionObject();
 
 		retriveLoaDetails(null);
+		this.getManagedBean().getScQt()
+				.setPmOrgProfile(ptjOrgProfileByLoginUser());
+		this.getManagedBean()
+				.getScLoa()
+				.getScLoiLoa()
+				.setPmOrgProfile(
+						this.getManagedBean().getScQt().getPmOrgProfile());
+		this.getManagedBean().getScQt()
+				.setMinistryOrgProfile(getMinistryOrgProfile());
+		getApprovalUsers();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
@@ -1801,7 +1866,7 @@ public class DirectLOABackingBean extends
 				.setSupplierName(mofAccount.getSmSupplier().getCompanyName());
 		this.getManagedBean().getTemplateSpecBean()
 				.setSupplier(mofAccount.getSmSupplier());
-		
+
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
 
@@ -1860,10 +1925,12 @@ public class DirectLOABackingBean extends
 	 */
 	public List<PmOrgProfile> ptjDropdownList() {
 		debugLogger("ptjDropdownList");
-		PmUser user = new FacesScopes().getUserSessionBean();
-		if (user != null && user.getUserId() != null) {
+		// PmUser user = new FacesScopes().getUserSessionBean();
+		Long parentOrgProfileId = this.getManagedBean().getScQt()
+				.getMinistryOrgProfile().getOrgProfileId();
+		if (null != parentOrgProfileId) {
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setUserId(user.getUserId());
+			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 			reqDTO.setOrgType(OrganizationType.DIVISION.value());
 			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
 			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
@@ -1874,6 +1941,31 @@ public class DirectLOABackingBean extends
 			List<PmOrgProfile> pmOrgProfiles = resDTO.getOrgProfileList();
 			this.getManagedBean().setPtjDropdownList(pmOrgProfiles);
 			return pmOrgProfiles;
+		}
+		return null;
+	}
+
+	/**
+	 * Ptj dropdown list.
+	 * 
+	 * @return the list
+	 */
+	public PmOrgProfile getMinistryOrgProfile() {
+		debugLogger("ministry drop downs");
+
+		if (null != this.getManagedBean().getScQt().getPmOrgProfile()
+				.getOrgProfileId()) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+			reqDTO.setOrgProfileId(this.getManagedBean().getScQt()
+					.getPmOrgProfile().getOrgProfileId());
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveMinistryByOrgProfileId(reqDTO);
+
+			return resDTO.getPmOrgProfile();
 		}
 		return null;
 	}
@@ -3928,103 +4020,141 @@ public class DirectLOABackingBean extends
 		ScLoaReportAttachment scLoaReportAttachment = scLoaReport
 				.getScLoaReportAttachment();
 
-		/*
-		 * if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
-		 * .equals(definitionType)) { try { String docDefinitionKey =
-		 * scLoaReport.getPmDocument() .getDocDefinitionKey(); ScLoa scLoa =
-		 * getManagedBean().getScLoa(); Long statusId =
-		 * scLoa.getPmStatus().getStatusId().longValue(); StringBuilder filename
-		 * = new StringBuilder(); //replace white space due to firefox
-		 * filename.append(scLoaReport.getTitle().replaceAll("\\s","")); if
-		 * (scLoaReportAttachment == null) { scLoaReportAttachment = new
-		 * ScLoaReportAttachment();
-		 * scLoaReportAttachment.setScLoaReport(scLoaReport);
-		 * scLoaReportAttachment.setDocNo(scLoaReport.getScLoa() .getLoaNo());
-		 * 
-		 * if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateContractSummaryPdfFromVelocity( (ScAttachment)
-		 * scLoaReportAttachment, scLoa); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateAgreementLetterPdfFromVelocity( (ScAttachment)
-		 * scLoaReportAttachment, scLoa, getManagedBean().getScQt()); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateDeclarationPdfFromVelocity( (ScAttachment)
-		 * scLoaReportAttachment, scLoa); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * saveScheduleList(); generateFrequencySchedulePdfFromVelocity(
-		 * (ScAttachment) scLoaReportAttachment, scLoa); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
-		 * .equals(docDefinitionKey)) { filename.append(".xlsx");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * formJadualHarga((ScAttachment) scLoaReportAttachment, scLoa);
-		 * 
-		 * }else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION
-		 * .equals(docDefinitionKey)) { filename.append(".xlsx");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * formSpecification((ScAttachment) scLoaReportAttachment, scLoa);
-		 * 
-		 * }else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateBondLetterFromVelocityToPdf((ScAttachment)
-		 * scLoaReportAttachment,scLoa); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment); }
-		 * 
-		 * }else if(scLoaReportAttachment != null &&
-		 * QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT.equals(statusId)
-		 * || QTStatusConst.LOA_PENDING_VERIFICATION.equals(statusId)){ // if
-		 * pending supplier acknowledgement , always regenerate
-		 * 
-		 * if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateContractSummaryPdfFromVelocity( (ScAttachment)
-		 * scLoaReportAttachment, scLoa); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateAgreementLetterPdfFromVelocity( (ScAttachment)
-		 * scLoaReportAttachment, scLoa, getManagedBean().getScQt()); } else if
-		 * (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateDeclarationPdfFromVelocity( (ScAttachment)
-		 * scLoaReportAttachment, scLoa);
-		 * 
-		 * } else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
-		 * .equals(docDefinitionKey)) { filename.append(".xlsx");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * formJadualHarga((ScAttachment) scLoaReportAttachment, scLoa);
-		 * 
-		 * } else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment); }
-		 * }else if(scLoaReportAttachment != null &&
-		 * QTStatusConst.LOA_PENDING_SUBMISSION.equals(statusId)){ // if pending
-		 * submission , always regenerate if
-		 * (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
-		 * .equals(docDefinitionKey)) { filename.append(".pdf");
-		 * scLoaReportAttachment.setFileName(filename.toString());
-		 * saveScheduleList(); generateFrequencySchedulePdfFromVelocity(
-		 * (ScAttachment) scLoaReportAttachment, scLoa); } } } catch (Exception
-		 * e) { //e.printStackTrace(); throw new EpException(e.getMessage()); }
-		 * 
-		 * // TODOs if (scLoaReportAttachment.getFileName() != null &&
-		 * scLoaReportAttachment.getFilePath() != null) {
-		 * scLoaReport.setScLoaReportAttachment(scLoaReportAttachment); } }
-		 */
+		if (ParameterConst.DOCUMENT_DEFINITION_TYPE_SYSTEM_DEFINED
+				.equals(definitionType)) {
+			try {
+				String docDefinitionKey = scLoaReport.getPmDocument()
+						.getDocDefinitionKey();
+				ScLoa scLoa = getManagedBean().getScLoa();
+				Long statusId = scLoa.getPmStatus().getStatusId().longValue();
+				StringBuilder filename = new StringBuilder(); // replace white
+																// space due to
+																// firefox
+				filename.append(scLoaReport.getTitle().replaceAll("\\s", ""));
+				if (scLoaReportAttachment == null) {
+					scLoaReportAttachment = new ScLoaReportAttachment();
+					scLoaReportAttachment.setScLoaReport(scLoaReport);
+					scLoaReportAttachment.setDocNo(scLoaReport.getScLoa()
+							.getLoaNo());
+
+					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateContractSummaryPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAgreementLetterPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa,
+								getManagedBean().getScQt());
+					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						saveScheduleList();
+						generateFrequencySchedulePdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa,
+								getManagedBean().getScQt());
+					} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+							.equals(docDefinitionKey)) {
+						filename.append(".xlsx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						formJadualHarga((ScAttachment) scLoaReportAttachment,
+								scLoa);
+
+					} else if (SourcingConstants.DOC_DEF_KEY_SPECIFICATION
+							.equals(docDefinitionKey)) {
+						filename.append(".xlsx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						formSpecification((ScAttachment) scLoaReportAttachment,
+								scLoa);
+
+					} else if (SourcingConstants.DOC_DEF_KEY_FORMAT_BOND_EXECUTION
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateBondLetterFromVelocityToPdf(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
+					}
+
+				} else if (scLoaReportAttachment != null
+						&& QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT
+								.equals(statusId)
+						|| QTStatusConst.LOA_PENDING_VERIFICATION
+								.equals(statusId)) { // if
+					// pending supplier acknowledgement , always regenerate
+
+					if (SourcingConstants.DOC_DEF_KEY_CONTRACT_SUMMARY
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateContractSummaryPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+					} else if (SourcingConstants.DOC_DEF_KEY_SUPPLIER_AGREEMENT_LETTER
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateAgreementLetterPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa,
+								getManagedBean().getScQt());
+					} else if (SourcingConstants.DOC_DEF_KEY_INTEGRITY_PACT
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateDeclarationPdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa);
+
+					} else if (SourcingConstants.DOC_DEF_KEY_JADUAL_HARGA
+							.equals(docDefinitionKey)) {
+						filename.append(".xlsx");
+						scLoaReportAttachment.setFileName(filename.toString());
+						formJadualHarga((ScAttachment) scLoaReportAttachment,
+								scLoa);
+
+					} else if (SourcingConstants.DOC_DEF_KEY_LOI_NEGOTIATIONS_OUTCOME
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						generateNegotiationResultPdf((ScAttachment) scLoaReportAttachment);
+					}
+				} else if (scLoaReportAttachment != null
+						&& QTStatusConst.LOA_PENDING_SUBMISSION
+								.equals(statusId)) {
+					// if pending submission , always regenerate
+					if (SourcingConstants.DOC_DEF_KEY_FREQUENCY_SCHEDULE
+							.equals(docDefinitionKey)) {
+						filename.append(".pdf");
+						scLoaReportAttachment.setFileName(filename.toString());
+						saveScheduleList();
+						generateFrequencySchedulePdfFromVelocity(
+								(ScAttachment) scLoaReportAttachment, scLoa,
+								getManagedBean().getScQt());
+					}
+				}
+			} catch (Exception e) { // e.printStackTrace(); throw new
+									// EpException(e.getMessage()); }
+
+				// TODOs
+			}
+			if (scLoaReportAttachment.getFileName() != null
+					&& scLoaReportAttachment.getFilePath() != null) {
+				scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			}
+		}
 
 		return scLoaReportAttachment;
 	}
@@ -4037,42 +4167,6 @@ public class DirectLOABackingBean extends
 	private IQTAwardSO getQtAwardSO() {
 		return BusinessDelegate.getInstance().getServiceObject(
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	}
-
-	private void constructLocationTreeNode(
-			List<TplSpecLoc> supplierLocationList, ScQt scQt) {
-		if (null != supplierLocationList) {
-
-			if (null == this.getManagedBean().getTotalSuppliersSpecLoc()) {
-				this.getManagedBean().setTotalSuppliersSpecLoc(
-						new ArrayList<TplSpecLoc>());
-			}
-			this.getManagedBean().getTotalSuppliersSpecLoc()
-					.addAll(supplierLocationList);
-			List<ScQtLocCriteria> locCriteria = new ArrayList<ScQtLocCriteria>();
-			for (TplSpecLoc localLoc : supplierLocationList) {
-				if (null != scQt.getScQtSupplierCriteria()
-						&& null != scQt.getScQtSupplierCriteria()
-								.getLocationLevel()) {
-					this.getManagedBean().setLocalLevelCode(
-							scQt.getScQtSupplierCriteria().getLocationLevel()
-									.getParameterCode());
-				}
-				getManagedBean()
-						.setLocationTreeNodes(new ArrayList<TreeNode>());
-				ScQtLocCriteria criteria = (ScQtLocCriteria) localLoc;
-				locCriteria.add(criteria);
-			}
-			if (null != getManagedBean().getLocationTreeNodes()
-					&& getManagedBean().getLocationTreeNodes().size() == 0) {
-
-				this.getManagedBean().setExistingLocationList(locCriteria);
-				getManagedBean().getLocationTreeNodes().addAll(
-						LocationSingleton.getInstance().constuctTreeNode(
-								locCriteria));
-			}
-		}
-
 	}
 
 	/**
@@ -4139,6 +4233,7 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = awardResDTO.getLoa();
 		this.getManagedBean().setScLoa(scLoa);
 		ScQt scQt = scLoa.getScQt();
+
 		this.getManagedBean().setScQt(scLoa.getScQt());
 		this.getManagedBean().setApproverUser(new PmUser());
 		getManagedBean().setLoaAgencyWitness(scLoa.getScLoaWitnesses().get(0));
@@ -4508,5 +4603,1437 @@ public class DirectLOABackingBean extends
 				.append(countryCode);
 		orginalText = sb.toString();
 		return orginalText;
+	}
+
+	private PmOrgProfile ptjOrgProfileByLoginUser() {
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+			reqDTO.setUserId(new FacesScopes().getUserSessionBean().getUserId());
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			// reqDTO.setParentOrgProfileId(parentOrgProfileId);
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+							IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+			return resDTO.getOrgProfileList().get(0);
+		} else {
+			throw new EpException("Please login");
+
+		}
+	}
+
+	public List<PmOrgProfile> ministryDropdownList() {
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+
+		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+		// reqDTO.setParentOrgProfileId(parentOrgProfileId);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IOrgProfileSO.class);
+		OrgProfileResDTO resDTO = orgProfileSO
+				.retrieveOrgProfileListByOrgType(reqDTO);
+		return resDTO.getOrgProfileList();
+	}
+
+	/**
+	 * Generate declaration from velocity.
+	 * 
+	 * @param scLoa
+	 *            the sc loa
+	 * @param scQt
+	 *            the sc qt
+	 * @return the string
+	 * @throws Exception
+	 *             the exception
+	 */
+	private String generateDeclarationFromVelocity(ScLoa scLoa, ScQt scQt)
+			throws Exception {
+		PmUser pmUser = scLoa.getAckBy();
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		VelocityContext context = new VelocityContext();
+		String procurementMode = null;
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (scQt != null) {
+				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
+						.getProcurementMode().getParameterCode())) {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+				} else {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+				}
+			}
+		}
+		String title = procurementMode != null ? procurementMode + " "
+				+ scLoiLoa.getTitle() : scLoiLoa.getTitle();
+		context.put("title", title);
+
+		String userName = "&#60;supplier user name&#62;";
+		String icNo = "&#60;ic no&#62;";
+		if (pmUser != null) {
+			userName = pmUser.getUserName();
+			icNo = pmUser.getIdentificationNo();
+		}
+		context.put("userName", userName);
+		context.put("icNo", icNo);
+
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		// show (MOF/PKK/CIDB/ROS/ROC/ROB) in declaration.
+		if (scLoiLoa.getSmSupplier() != null) {
+			SmSupplier smSupplier = scLoiLoa.getSmSupplier();
+			if (smSupplier.getSmMofAccounts() != null
+					&& smSupplier.getSmMofAccounts().size() > 0) {
+				context.put("mofNo", smSupplier.getSmMofAccounts().get(0)
+						.getMofNo());
+			} else {
+				context.put("mofNo", smSupplier.getRegNo());
+			}
+		}
+		context.put("agency", pmOrgProfile.getOrgName());
+
+		String termsConditions = DocumentGenerator
+				.getInstance()
+				.getHtmlFromVelocity(SourcingConstants.LOA_DECLARATION, context);
+
+		getManagedBean().setTermsConditions(termsConditions);
+
+		return termsConditions;
+	}
+
+	/**
+	 * Generate contract summary pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void generateContractSummaryPdfFromVelocity(ScAttachment attachment,
+			ScLoa scLoa) throws Exception {
+
+		populateAttachmentDetails(attachment);
+
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		VelocityContext context = new VelocityContext();
+
+		context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+		context.put("docNo", "");
+		context.put("title", scLoiLoa.getTitle());
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		context.put("loaAmt", amountDF.format(scLoa.getLoaAmt()));
+		context.put("fulfilmentType",
+				getParameterDesc(scLoiLoa.getFulfilmentTypeCode()));
+
+		StringBuilder deductionTypes = new StringBuilder();
+		List<ScQtDeduction> scQtDeductions = scLoa.getScQtDeductions();
+		if (scQtDeductions != null) {
+			for (ScQtDeduction scQtDeduction : scQtDeductions) {
+				if (deductionTypes.length() > 0) {
+					deductionTypes.append(",");
+				}
+				deductionTypes.append(getParameterDesc(scQtDeduction
+						.getDeductionType()));
+			}
+		}
+		context.put("deductionTypes", deductionTypes.toString());
+
+		context.put("contractDuration", scLoa.getContractDuration());
+
+		if (null == scLoa.getContractEffDate()) {
+			context.put("contractEffDate", "");
+		} else {
+			context.put("contractEffDate",
+					dateSDF.format(scLoa.getContractEffDate()));
+		}
+
+		if (null == scLoa.getContractExpDate()) {
+			context.put("contractExpDate", "");
+		} else {
+			context.put("contractExpDate",
+					dateSDF.format(scLoa.getContractExpDate()));
+		}
+
+		String bondAmtStr = "";
+		if (scLoa.getBondAmt() != null) {
+			bondAmtStr = amountDF.format(scLoa.getBondAmt());
+		}
+		context.put("bondAmt", bondAmtStr);
+
+		String gstAmount = "";
+		String overallctAmt = "";
+		BigDecimal loaAmount = scLoa.getLoaAmt();
+		if (scLoa.getGstAmt() != null) {
+			gstAmount = amountDF.format(scLoa.getGstAmt());
+			overallctAmt = amountDF.format(loaAmount.add(scLoa.getGstAmt()));
+		} else {
+			overallctAmt = amountDF.format(scLoa.getLoaAmt());
+		}
+		context.put("gstAmt", gstAmount);
+		context.put("overallctAmt", overallctAmt);
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_CONTRACT_SUMMARY, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	/**
+	 * Generate agreement letter pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @param scQt
+	 *            the sc qt
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void generateAgreementLetterPdfFromVelocity(ScAttachment attachment,
+			ScLoa scLoa, ScQt scQt) throws Exception {
+		populateAttachmentDetails(attachment);
+		Locale myLocale = new Locale(CommonConstants.LANGUAGE_CODE_MALAY,
+				CommonConstants.DEFAULT_COUNTRY_CODE);
+		ScLoiLoa scLoiLoa = scLoa.getScLoiLoa();
+		PmOrgProfile pmOrgProfile = scLoiLoa.getPmOrgProfile();
+		PmUser ackByUser = scLoa.getAckBy();
+		CommonUtils commonUtils = new CommonUtils();
+		DecimalFormat amountDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
+		DecimalFormat percentageDF = new DecimalFormat(
+				commonUtils
+						.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
+		VelocityContext context = new VelocityContext();
+
+		FacesScopes fs = new FacesScopes();
+		String hostUrl = fs.getRequest().getServerName() + ":"
+				+ fs.getRequest().getServerPort();
+		context.put("hostUrl", hostUrl);
+
+		IAddressSO addressSO = null;
+		PmAddressType pmAddressType = null;
+		IOrgProfileSO orgProfileSO = null;
+		try {
+			addressSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IAddressSO.class);
+
+			AddressReqDTO reqDTO = new AddressReqDTO();
+			reqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			reqDTO.setAddressType(AddressType.CONTACT_ADDRESS.value());
+			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
+
+			if (resDTO.getAddressTypeList().size() > 0) {
+				pmAddressType = resDTO.getAddressTypeList().get(0);
+			}
+
+			orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			orgProfileReqDTO.setOrgProfileId(pmOrgProfile.getOrgProfileId());
+			OrgProfileResDTO orgProfileResDTO = orgProfileSO
+					.retrieveOrgProfileDtlByProfileId(orgProfileReqDTO);
+
+			if (orgProfileResDTO.getPmOrgProfile() != null) {
+				context.put("agency", orgProfileResDTO.getPmOrgProfile()
+						.getOrgName());
+				context.put("ministry", orgProfileResDTO.getPmOrgProfile()
+						.getParentOrgProfile().getOrgName());
+			}
+
+		} finally {
+			addressSO = null;
+			orgProfileSO = null;
+		}
+
+		String agencyAddress = "";
+		String agencyPhoneNo = "";
+		String agencyFaxNo = "";
+		if (pmAddressType != null) {
+			PmAddress pmAddress = pmAddressType.getPmAddress();
+
+			agencyAddress = getFullAddress(pmAddress);
+			agencyAddress = agencyAddress.replaceAll("\r\n", "<br />");
+			agencyPhoneNo = pmAddress.getPhoneNo();
+			agencyFaxNo = pmAddress.getFaxNo();
+		}
+		context.put("agencyAddress", agencyAddress);
+		context.put("agencyPhoneNo", agencyPhoneNo);
+		context.put("agencyFaxNo", agencyFaxNo);
+		context.put("fileNo", scLoiLoa.getFileNo() + "-" + scLoa.getFileExtNo());
+		context.put("loaNo", scLoa.getLoaNo());
+
+		String issueDate = "";
+		if (scLoa.getIssueDate() != null) {
+			issueDate = DateUtils.getLocalizeDate(scLoa.getIssueDate(),
+					myLocale);
+		}
+		context.put("issueDate", issueDate);
+
+		context.put("supplierName", scLoiLoa.getSupplierName());
+		String supplierAddress = "";
+		if (scLoa.getSupplierAddress() != null) {
+			supplierAddress = getFullAddress(scLoa.getSupplierAddress());
+			supplierAddress = supplierAddress.replaceAll("\r\n", "<br />");
+			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
+		}
+		context.put("supplierAddress", supplierAddress);
+		String supplierPhoneNo = scLoa.getSupplierPhoneNo();
+		if (supplierPhoneNo == null) {
+			supplierPhoneNo = "";
+		}
+		context.put("supplierPhoneNo", supplierPhoneNo);
+		String supplierFaxNo = scLoa.getSupplierFaxNo();
+		if (supplierFaxNo == null) {
+			supplierFaxNo = "";
+		}
+		context.put("supplierFaxNo", supplierFaxNo);
+		String supplierMobNo = scLoa.getSupplierMobNo();
+		if (supplierMobNo == null) {
+			supplierMobNo = "";
+		}
+		context.put("supplierMobNo", supplierMobNo);
+		String supplierEmail = scLoa.getSupplierEmail();
+		if (supplierEmail == null) {
+			supplierEmail = "";
+		}
+		context.put("supplierEmail", supplierEmail);
+
+		String procurementMode = null;
+		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
+		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+				.getDocType())) {
+			if (scQt != null) {
+				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
+						.getProcurementMode().getParameterCode())) {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_QUOTATION;
+				} else {
+					procurementMode = SourcingConstants.PROCUREMENT_MODE_TENDER;
+				}
+			}
+		}
+
+		context.put("procurementMode", procurementMode);
+		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
+
+		context.put("hasLoi", false); // TODO
+		context.put("bondReq", scLoa.isBondReq());
+
+		String bondAmt = "";
+		if (scLoa.getBondAmt() != null) {
+			bondAmt = amountDF.format(scLoa.getBondAmt());
+		}
+		context.put("bondAmt", bondAmt);
+		context.put("bondAmtText", bondAmt);
+
+		String bondPercentage = "";
+		if (scLoa.getBondPercentage() != null) {
+			bondPercentage = percentageDF.format(scLoa.getBondPercentage());
+		}
+		context.put("bondPercentage", bondPercentage);
+		context.put("bondExpDate", ""); // TODO
+
+		/*
+		 * String bondResDueDays = ""; if (scLoa.getBondResDueDate() != null) {
+		 * bondResDueDays =
+		 * DateUtils.getDaysDifference(DateUtils.getCurrentDate(),
+		 * scLoa.getBondResDueDate()) + ""; }
+		 */
+
+		// bond response due days - 30
+		context.put("bondResDueDays", 30);
+
+		String ackDate = "";
+		if (scLoa.getAckDate() != null) {
+			ackDate = DateUtils.getLocalizeDate(scLoa.getAckDate(), myLocale);
+		}
+		context.put("ackDate", ackDate);
+
+		context.put("insWarrantyReq", scLoa.isInsWarrantyReq());
+
+		String contractEffDate = "";
+		if (scLoa.getContractEffDate() != null) {
+			contractEffDate = DateUtils.getLocalizeDate(
+					scLoa.getContractEffDate(), myLocale);
+		}
+		context.put("contractEffDate", contractEffDate);
+
+		String LoaSigner = "";
+		if (getManagedBean().getContractSignerUser() != null) {
+			if (getManagedBean().getContractSignerUser().getUserName() != null
+					&& !getManagedBean().getContractSignerUser().getUserName()
+							.isEmpty()) {
+				LoaSigner = getManagedBean().getContractSignerUser()
+						.getUserName();
+			}
+		}
+		context.put("loaSigner", LoaSigner);
+
+		String LoaSignerDesig = "";
+		if (getManagedBean().getContractSignerUser().getUserName() != null
+				&& !getManagedBean().getContractSignerUser().getUserName()
+						.isEmpty()) {
+			LoaSignerDesig = scLoa.getLoaSignerDesig();
+		}
+		context.put("loaSignerDesignation", LoaSignerDesig);
+
+		// Supplier user details
+		String supplierUser = "";
+		String supplierIcNo = "";
+		String supplierDesignation = "";
+		if (ackByUser != null) {
+			supplierUser = ackByUser.getUserName();
+			supplierIcNo = ackByUser.getIdentificationNo();
+			supplierDesignation = ackByUser.getDesignation();
+		}
+		context.put("supplierUser", supplierUser);
+		context.put("supplierIcNo", supplierIcNo);
+		context.put("supplierDesignation", supplierDesignation);
+
+		// with LOI and without LOI content for LOA to display in acceptance
+		// letter
+		if (scLoa.getScLoiLoa() != null
+				&& scLoa.getScLoiLoa().getScLois() != null
+				&& scLoa.getScLoiLoa().getScLois().size() > 0) {
+			context.put("loiContentFlag", true);
+		} else {
+			context.put("loiContentFlag", false);
+		}
+
+		// Supplier Witness
+		String supplierWitnessUser = "";
+		String supplierWitnessIcNo = "";
+		String supplierWitnessDesignation = "";
+		String supplierWitnessAddress = "";
+		String supplierWitnessPhoneNo = "";
+		String supplierWitnessFaxNo = "";
+		String supplierWitnessMobNo = "";
+		String supplierWitnessEmail = "";
+		ScLoaWitness supplierWitness = null;
+		for (ScLoaWitness scLoaWitness : scLoa.getScLoaWitnesses()) {
+			String partyType = scLoaWitness.getPartyType();
+
+			if (ParameterConst.WITNESS_PARTY_TYPE_SUPPLIER.equals(partyType)) {
+				supplierWitness = scLoaWitness;
+
+				break;
+			}
+		}
+		if (supplierWitness != null) {
+			supplierWitnessUser = supplierWitness.getWitnessName();
+			supplierWitnessIcNo = supplierWitness.getIdentificationNo();
+			supplierWitnessDesignation = supplierWitness.getDesignation();
+			supplierWitnessAddress = supplierWitness.getAddress();
+			supplierWitnessPhoneNo = supplierWitness.getPhoneNo();
+			supplierWitnessFaxNo = supplierWitness.getFaxNo();
+			supplierWitnessMobNo = supplierWitness.getMobileNo();
+			supplierWitnessEmail = supplierWitness.getEmail();
+		}
+		context.put("supplierWitnessUser", supplierWitnessUser);
+		context.put("supplierWitnessIcNo", supplierWitnessIcNo);
+		context.put("supplierWitnessDesignation", supplierWitnessDesignation);
+		context.put("supplierWitnessAddress", supplierWitnessAddress);
+		context.put("supplierWitnessPhoneNo", supplierWitnessPhoneNo);
+		context.put("supplierWitnessFaxNo", supplierWitnessFaxNo);
+		context.put("supplierWitnessMobNo", supplierWitnessMobNo);
+		context.put("supplierWitnessEmail", supplierWitnessEmail);
+
+		// Bank account details.
+		String bankAccNo = scLoa.getBankAccNo();
+		if (bankAccNo == null) {
+			bankAccNo = "";
+		}
+		context.put("bankAccNo", bankAccNo);
+		String bankName = scLoa.getBankName();
+		if (bankName == null) {
+			bankName = "";
+		}
+		context.put("bankName", bankName.replaceAll("&", "&#38;"));
+		String bankBranch = scLoa.getBankBranch();
+		if (bankBranch == null) {
+			bankBranch = "";
+		}
+		context.put("bankBranch", bankBranch);
+		String bankAddress = "";
+		if (scLoa.getBankAddress() != null) {
+			bankAddress = getFullAddress(scLoa.getBankAddress());
+			bankAddress = bankAddress.replaceAll("\r\n", "<br />");
+			bankAddress = bankAddress.replaceAll("&", "&#38;");
+		}
+		context.put("bankAddress", bankAddress);
+
+		// Setting GST info
+		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+		String gstRegFlag = "false";
+		if (supplier != null
+				&& supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE) {
+			gstRegFlag = "true";
+			setGstInfoForDoc(context, scLoa, amountDF, myLocale);
+		}
+		context.put("gstRegFlag", gstRegFlag);
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_AGREEMENT_LETTER, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	private void setGstInfoForDoc(VelocityContext context, ScLoa scLoa,
+			DecimalFormat amountDF, Locale myLocale) {
+
+		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo()
+				: "";
+		context.put("gstRegNo", gstRegNo);
+
+		String gstEffectiveDate = scLoa.getGstEffDate() != null ? DateUtils
+				.getLocalizeDate(scLoa.getGstEffDate(), myLocale) : "";
+		context.put("gstEffectiveDate", gstEffectiveDate);
+
+		String gstDeclaredDate = scLoa.getGstDeclaredDate() != null ? gstEffectiveDate = DateUtils
+				.getLocalizeDate(scLoa.getGstDeclaredDate(), myLocale) : "";
+		context.put("gstDeclaredDate", gstDeclaredDate);
+
+		String offerPrice = "";
+		String offerPriceWording = "";
+		BigDecimal loaAmount = scLoa.getLoaAmt();
+		if (loaAmount != null) {
+			offerPrice = amountDF.format(loaAmount);
+			offerPriceWording = WordUtils.capitalizeFully(NumberWordUtil
+					.convert(loaAmount.toString()));
+		}
+		context.put("offerPrice", offerPrice);
+		context.put("offerPriceWording", offerPriceWording);
+
+		String gstAmount = "";
+		String gstAmountWording = "";
+		String overallctAmt = "";
+		String overallctAmtWording = "";
+		BigDecimal gstAmt = scLoa.getGstAmt();
+		if (gstAmt != null) {
+			gstAmount = amountDF.format(gstAmt);
+			gstAmountWording = WordUtils.capitalizeFully(NumberWordUtil
+					.convert(gstAmt.toString()));
+			overallctAmt = amountDF.format(loaAmount.add(gstAmt));
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil
+					.convert(loaAmount.add(gstAmt).toString()));
+		} else {
+			overallctAmt = amountDF.format(loaAmount);
+			overallctAmtWording = WordUtils.capitalizeFully(NumberWordUtil
+					.convert(loaAmount.toString()));
+		}
+		context.put("gstAmt", gstAmount);
+		context.put("gstAmtWording", gstAmountWording);
+		context.put("overallCtAmt", overallctAmt);
+		context.put("overallCtAmtWording", overallctAmtWording);
+
+	}
+
+	/**
+	 * Generate declaration pdf from velocity in Performance Bond.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void generateDeclarationPdfFromVelocity(ScAttachment attachment,
+			ScLoa scLoa) throws Exception {
+		String termsConditions = generateDeclarationFromVelocity(scLoa,
+				getManagedBean().getScQt());
+
+		populateAttachmentDetails(attachment);
+
+		DocumentGenerator.getInstance().generatePdf(
+				new FileOutputStream(getActualFilePath(attachment)),
+				termsConditions);
+	}
+
+	/**
+	 * Save schedule list.
+	 */
+	private void saveScheduleList() {
+		List<ScQtSchedule> freqschedule = this.getManagedBean().getScLoa()
+				.getScQtSchedules();
+		List<ScQtSchedule> localScheduleList = new ArrayList<ScQtSchedule>();
+		if (freqschedule != null && !freqschedule.isEmpty()) {
+			for (ScQtSchedule schedule : freqschedule) {
+				Date currentDate = new Date();
+				SimpleDateFormat df = new SimpleDateFormat(
+						CommonConstants.DEFAULT_DATE_FORMAT);
+				String localDate = df.format(currentDate);
+				String day = localDate.substring(0, 2);
+				String fromdate = day + "/" + schedule.getStartMonth() + "/"
+						+ schedule.getStartYear();
+				String toDate = day + "/" + schedule.getEndMonth() + "/"
+						+ schedule.getEndYear();
+
+				schedule.setScheduleNo(schedule.getScheduleNo());
+
+				try {
+					if (df.parse(fromdate).after(df.parse(toDate))) {
+						throw new EpException(MessageConst.ERROR_715011);
+					} else {
+						schedule.setFromDate(df.parse(fromdate));
+						schedule.setToDate(df.parse(toDate));
+					}
+				} catch (ParseException e) {
+					throw new EpException(e.toString());
+				}
+				if (schedule.getScLoa() == null) {
+					schedule.setScLoa(this.getManagedBean().getScLoa());
+				}
+				localScheduleList.add(schedule);
+			}
+			getManagedBean().getScLoa().setScQtSchedules(localScheduleList);
+		} else {
+			getManagedBean().getScLoa().setScQtSchedules(null);
+		}
+	}
+
+	/**
+	 * Generate frequency schedule pdf from velocity.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateFrequencySchedulePdfFromVelocity(
+			ScAttachment attachment, ScLoa scLoa, ScQt scQt) throws Exception {
+
+		populateAttachmentDetails(attachment);
+		VelocityContext context = new VelocityContext();
+
+		String frequencyScheduleType = "";
+		if (scQt.getScheduleType() != null) {
+			frequencyScheduleType = scQt.getScheduleType();
+		}
+		context.put("frequencyScheduleType", frequencyScheduleType);
+
+		SimpleDateFormat monthFormat = new SimpleDateFormat("MMM");
+		SimpleDateFormat yearFormat = new SimpleDateFormat("yyyy");
+		IParameterSO parameterSO = null;
+
+		List<ScQtSchedule> scheduleList = scLoa.getScQtSchedules();
+		List<ScQtSchedule> scheduleReportList = new ArrayList<ScQtSchedule>();
+		ScQtSchedule reportSchedule = null;
+		int totalFrequency = 0;
+		if (scheduleList != null && scheduleList.size() > 0) {
+			totalFrequency = scheduleList.size();
+			for (ScQtSchedule schedule : scheduleList) {
+				try {
+					reportSchedule = new ScQtSchedule();
+					parameterSO = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IParameterSO.class);
+					ParameterReqDTO reqDTO = new ParameterReqDTO();
+					reqDTO.setParameterId(schedule.getScheduleType()
+							.getParameterId());
+					ParameterResDTO resDTO = parameterSO
+							.retrieveParameterById(reqDTO);
+					reportSchedule.setScheduleType(resDTO.getPmParameter());
+					reportSchedule.setStartMonth(monthFormat.format(schedule
+							.getFromDate()));
+					reportSchedule.setStartYear(yearFormat.format(schedule
+							.getFromDate()));
+					reportSchedule.setEndMonth(monthFormat.format(schedule
+							.getToDate()));
+					reportSchedule.setEndYear(yearFormat.format(schedule
+							.getToDate()));
+					reportSchedule.setScheduleNo(schedule.getScheduleNo());
+					reportSchedule.setTotalMonths(schedule.getTotalMonths());
+					scheduleReportList.add(reportSchedule);
+
+				} finally {
+					parameterSO = null;
+				}
+			}
+			context.put("totalFrequency", totalFrequency);
+			context.put("scheduleList", scheduleReportList);
+			context.put("bean", this);
+		}
+		int totalPhase = 0;
+		List<ScQtProgressivePayment> progressivePayments = scLoa
+				.getScQtProgPayments();
+		if (null != progressivePayments && progressivePayments.size() > 0) {
+			totalPhase = progressivePayments.size();
+			context.put("totalPhase", totalPhase);
+			context.put("paymentList", progressivePayments);
+
+		}
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOA_FREQUENCY_SCHEDULE, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	/**
+	 * Form jadual harga. To download jadual-harga.xlsx file
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void formJadualHarga(ScAttachment attachment, ScLoa scLoa)
+			throws Exception {
+		populateAttachmentDetails(attachment);
+		List<JadualHargaBean> productJadualHargaList = new ArrayList<>();
+		List<JadualHargaBean> serviceJadualHargaList = new ArrayList<>();
+		JadualHargaBean jadualHarga = null;
+		String itemType = null;
+		for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+			jadualHarga = mappingJadualHarga(item);
+			itemType = item.getScRequestItem().getItemType().getParameterCode();
+			if (ParameterConst.ITEM_TYPE_PRODUCT.equals(itemType)) {
+				productJadualHargaList.add(jadualHarga);
+			} else if (itemType.equals(ParameterConst.ITEM_TYPE_SERVICE)) {
+				serviceJadualHargaList.add(jadualHarga);
+			}
+		}
+
+		// check whether loa from s1 or s2.
+		boolean isS1OrS2 = Boolean.TRUE;
+		if (scLoa.getScLoiLoa() != null) {
+			if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
+					.getDocType())) {
+				isS1OrS2 = Boolean.FALSE;
+			}
+		}
+
+		generateJadualHarga(attachment, productJadualHargaList,
+				serviceJadualHargaList, isS1OrS2);
+
+	}
+
+	/**
+	 * Mapping jadual harga.
+	 * 
+	 * @param item
+	 *            the item
+	 * @return the jadual harga bean
+	 */
+	private JadualHargaBean mappingJadualHarga(ScLoiLoaItem item) {
+		JadualHargaBean jadualHarga = new JadualHargaBean();
+
+		jadualHarga.setZone(item.getTplSpecZoneDtl() != null ? item
+				.getTplSpecZoneDtl().getZoneName() : "");
+		jadualHarga.setItem(item.getScRequestItem().getItemName());
+
+		BigDecimal unitPrice = item.getUnitPrice().setScale(2,
+				BigDecimal.ROUND_HALF_EVEN);
+		jadualHarga.setUnitPrice(unitPrice.toString());
+		jadualHarga.setUom(item.getScRequestItem().getTplSpecQuestion()
+				.getClUom().getUomName());
+		jadualHarga.setFreqUom(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomFrequency() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomFrequency()
+				.toString());
+		jadualHarga.setUomPerDay(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomPerDay() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomPerDay()
+				.toString());
+		jadualHarga.setUomPerMonth(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClUomPerMonth() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClUomPerMonth()
+				.toString());
+		jadualHarga.setUomPerYear(null == item.getScRequestItem()
+				.getTplSpecQuestion().getClDurationMonth() ? "" : item
+				.getScRequestItem().getTplSpecQuestion().getClDurationMonth()
+				.toString());
+		jadualHarga.setQuantity(null == item.getQty() ? "" : item.getQty()
+				.toString());
+
+		BigDecimal totalAmount = BigDecimal.valueOf(0d);
+		BigDecimal subTotal = TemplateSpecHelper.getInstance().calcTotalAmount(
+				item.getScRequestItem().getTplSpecQuestion(),
+				item.getUnitPrice(), item.getQty());
+		totalAmount = totalAmount.add(subTotal);
+		totalAmount = totalAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		jadualHarga.setTotalAmount(totalAmount.toString());
+		return jadualHarga;
+
+	}
+
+	/**
+	 * Generate jadual harga.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param productList
+	 *            the product list
+	 * @param serviceList
+	 *            the service list
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateJadualHarga(ScAttachment attachment,
+			List<JadualHargaBean> productList,
+			List<JadualHargaBean> serviceList, boolean isS1OrS2)
+			throws Exception {
+		if (serviceList.size() > 0 || productList.size() > 0) {
+			try {
+				/*
+				 * FileInputStream inputStream = new FileInputStream(new File(
+				 * FacesContext.getCurrentInstance().getExternalContext()
+				 * .getRealPath("/WEB-INF/templates") +
+				 * "/sc/loa/jadual-harga.xlsx"));
+				 */
+
+				final String templatePath = "templates"
+						+ SourcingConstants.DOCPATH_SC_LOA_JADUAL_HARGA;
+				InputStream inputStream = this.getClass().getClassLoader()
+						.getResourceAsStream(templatePath);
+				if (inputStream != null) {
+					XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
+																		// HSSFWorkbook();
+
+					boolean emptyProductList = false;
+					Sheet productSheet = null;
+					Sheet serviceSheet = null;
+					Row row = null;
+					int rowIndex = 0;
+					int cellIndex = 0;
+					if (productList.size() > 0) {
+						rowIndex = 0;
+						productSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ProductSheet");
+						for (JadualHargaBean product : productList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = productSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(
+									product.getZone());
+							row.createCell(cellIndex++).setCellValue(
+									product.getItem());
+							row.createCell(cellIndex++).setCellValue(
+									product.getUom());
+							row.createCell(cellIndex++).setCellValue(
+									product.getQuantity());
+							row.createCell(cellIndex++).setCellValue(
+									product.getSubSequence());
+							row.createCell(cellIndex++).setCellValue(
+									product.getUnitPrice());
+							row.createCell(cellIndex++).setCellValue(
+									product.getTotalAmount());
+						}
+						// Auto size all the columns
+						for (int x = 0; x < productSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							productSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(0);
+						emptyProductList = true;
+					}
+
+					if (serviceList.size() > 0) {
+						rowIndex = 0;
+						if (emptyProductList) {
+							serviceSheet = wb.getSheetAt(0);
+							wb.setSheetName(0, "ServiceSheet");
+						} else {
+							serviceSheet = wb.getSheetAt(1);
+							wb.setSheetName(1, "ServiceSheet");
+						}
+
+						if (isS1OrS2) {
+							Row row0 = serviceSheet.getRow(0);
+							Cell cell9 = row0.getCell(9);
+							cell9.setCellValue("Total Amount (RM)");
+						}
+
+						for (JadualHargaBean service : serviceList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = serviceSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(
+									service.getZone());
+							row.createCell(cellIndex++).setCellValue(
+									service.getItem());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUom());
+							row.createCell(cellIndex++).setCellValue(
+									service.getFreqUom());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUomPerDay());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUomPerMonth());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUomPerYear());
+							row.createCell(cellIndex++).setCellValue(
+									service.getQuantity());
+							row.createCell(cellIndex++).setCellValue(
+									service.getUnitPrice());
+							row.createCell(cellIndex++).setCellValue(
+									service.getTotalAmount());
+
+						}
+
+						for (int x = 0; x < serviceSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							serviceSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(1);
+					}
+
+					wb.setActiveSheet(0);
+					FileOutputStream os = new FileOutputStream(
+							getActualFilePath(attachment));
+					wb.write(os);
+					os.flush();
+					os.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Form specification. To download specification.xlsx file
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	public void formSpecification(ScAttachment attachment, ScLoa scLoa)
+			throws Exception {
+		populateAttachmentDetails(attachment);
+		ITemplateSpecSO templateSpecSO = (ITemplateSpecSO) BusinessDelegate
+				.getInstance()
+				.getServiceObject(ModuleCodeConst.COMMON_COMPONENT,
+						ITemplateSpecSO.class);
+		TemplateSpecReqDTO templateSpecReqDTO = new TemplateSpecReqDTO();
+
+		List<String> itemNames = new ArrayList<String>();
+		if (scLoa.getScLoiLoaItems() != null
+				&& scLoa.getScLoiLoaItems().size() > 0) {
+			for (ScLoiLoaItem item : scLoa.getScLoiLoaItems()) {
+				itemNames.add(item.getScRequestItem().getItemName());
+			}
+		}
+		templateSpecReqDTO.setQtId(scLoa.getScLoiLoa().getDocId());
+		templateSpecReqDTO.setSupplier(scLoa.getScLoiLoa().getSmSupplier());
+		templateSpecReqDTO.setItemNameList(itemNames);
+
+		List<TplSpecAnswer> serviceAnswers = new ArrayList<>();
+		List<TplSpecAnswer> productAnswers = new ArrayList<>();
+		TemplateSpecResDTO templateSpecResDTO = templateSpecSO
+				.retrieveSupplierTechAnswersByItemNames(templateSpecReqDTO);
+		if (templateSpecResDTO.getSpecAnswerList() != null
+				&& templateSpecResDTO.getSpecAnswerList().size() > 0) {
+			for (TplSpecAnswer tplSpecAnswer : templateSpecResDTO
+					.getSpecAnswerList()) {
+				if (ParameterConst.ITEM_TYPE_PRODUCT.equals(tplSpecAnswer
+						.getTplSpecQuestion().getTplSpecMaster()
+						.getItemTypeCode().getParameterCode())) {
+					productAnswers.add(tplSpecAnswer);
+				} else if (ParameterConst.ITEM_TYPE_SERVICE
+						.equals(tplSpecAnswer.getTplSpecQuestion()
+								.getTplSpecMaster().getItemTypeCode()
+								.getParameterCode())) {
+					serviceAnswers.add(tplSpecAnswer);
+				}
+			}
+			generateSpecification(attachment, productAnswers, serviceAnswers);
+		}
+	}
+
+	/**
+	 * Generate Specification.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param productList
+	 *            the product list
+	 * @param serviceList
+	 *            the service list
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateSpecification(ScAttachment attachment,
+			List<TplSpecAnswer> productList, List<TplSpecAnswer> serviceList)
+			throws Exception {
+		if (serviceList.size() > 0 || productList.size() > 0) {
+			try {
+				/*
+				 * FileInputStream inputStream = new FileInputStream(new File(
+				 * FacesContext.getCurrentInstance().getExternalContext()
+				 * .getRealPath("/WEB-INF/templates") +
+				 * "/sc/loa/specification.xlsx"));
+				 */
+
+				final String templatePath = "templates"
+						+ SourcingConstants.DOCPATH_SC_LOA_SPECIFICATION;
+				InputStream inputStream = this.getClass().getClassLoader()
+						.getResourceAsStream(templatePath);
+				if (inputStream != null) {
+					XSSFWorkbook wb = new XSSFWorkbook(inputStream); // or new
+																		// HSSFWorkbook();
+					boolean emptyProductList = false;
+					Sheet productSheet = null;
+					Sheet serviceSheet = null;
+					Row row = null;
+					int rowIndex = 0;
+					int cellIndex = 0;
+					if (productList.size() > 0) {
+						rowIndex = 0;
+						productSheet = wb.getSheetAt(0);
+						wb.setSheetName(0, "ProductSheet");
+						for (TplSpecAnswer answer : productList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = productSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClItem() ? "" : answer
+											.getTplSpecQuestion().getClItem());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClSpecDetail() ? "" : answer
+											.getTplSpecQuestion()
+											.getClSpecDetail());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClUom() ? "" : answer
+											.getTplSpecQuestion().getClUom()
+											.getUomName());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClPriceTypeCode() ? ""
+											: getParameterDesc(answer
+													.getTplSpecQuestion()
+													.getClPriceTypeCode()));
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClQuantity() ? "" : answer
+											.getTplSpecQuestion()
+											.getClQuantity().toString());
+
+						}
+
+						// Auto size all the columns
+						for (int x = 0; x < productSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							productSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(0);
+						emptyProductList = true;
+					}
+
+					if (serviceList.size() > 0) {
+						rowIndex = 0;
+						if (emptyProductList) {
+							serviceSheet = wb.getSheetAt(0);
+							wb.setSheetName(0, "ServiceSheet");
+						} else {
+							serviceSheet = wb.getSheetAt(1);
+							wb.setSheetName(1, "ServiceSheet");
+						}
+
+						for (TplSpecAnswer answer : serviceList) {
+							rowIndex++;
+							cellIndex = 0;
+							row = serviceSheet.createRow(rowIndex);
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClItem() ? "" : answer
+											.getTplSpecQuestion().getClItem());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClSpecDetail() ? "" : answer
+											.getTplSpecQuestion()
+											.getClSpecDetail());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClUom() ? "" : answer
+											.getTplSpecQuestion().getClUom()
+											.getUomName());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClUomFrequency() ? "" : answer
+											.getTplSpecQuestion()
+											.getClUomFrequency().toString());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClUomPerDay() ? "" : answer
+											.getTplSpecQuestion()
+											.getClUomPerDay().toString());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClUomPerMonth() ? "" : answer
+											.getTplSpecQuestion()
+											.getClUomPerMonth().toString());
+
+							row.createCell(cellIndex++).setCellValue(
+									null == answer.getTplSpecQuestion()
+											.getClQuantity() ? "" : answer
+											.getTplSpecQuestion()
+											.getClQuantity().toString());
+						}
+
+						for (int x = 0; x < serviceSheet.getRow(0)
+								.getPhysicalNumberOfCells(); x++) {
+							serviceSheet.autoSizeColumn(x);
+						}
+					} else {
+						wb.removeSheetAt(1);
+					}
+
+					wb.setActiveSheet(0);
+					FileOutputStream os = new FileOutputStream(
+							getActualFilePath(attachment));
+					wb.write(os);
+					os.flush();
+					os.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Generate negotiation result pdf.
+	 * 
+	 * @param attachment
+	 *            the attachment
+	 * @param scLoa
+	 *            the sc loa
+	 * @throws Exception
+	 *             the exception
+	 */
+	private void generateNegotiationResultPdf(ScAttachment attachment)
+			throws Exception {
+		attachment.setFileName("Negotiation_Result.pdf");
+		ScLoa scLoa = getManagedBean().getScLoa();
+		populateAttachmentDetails(attachment);
+		List<ScLoi> lois = new ArrayList<ScLoi>();
+		if (getManagedBean().getSuppLoiLoaMap() != null
+				&& getManagedBean().getSuppLoiLoaMap().size() > 0) {
+			Map<Long, List<ScLoiLoa>> suppLoiLoaMap = getManagedBean()
+					.getSuppLoiLoaMap();
+			if (scLoa.getScLoiLoa() != null
+					&& scLoa.getScLoiLoa().getSmSupplier() != null) {
+				List<ScLoiLoa> loiloas = suppLoiLoaMap.get(scLoa.getScLoiLoa()
+						.getSmSupplier().getSupplierId());
+				if (loiloas != null && loiloas.size() > 0) {
+					for (ScLoiLoa scLoiLoa : loiloas) {
+						if (scLoiLoa.getScLois() != null
+								&& scLoiLoa.getScLois().size() > 0) {
+							lois.addAll(scLoiLoa.getScLois());
+						}
+					}
+				}
+			}
+		} else {
+			if (scLoa.getScLoiLoa() != null
+					&& scLoa.getScLoiLoa().getScLois() != null
+					&& scLoa.getScLoiLoa().getScLois().size() > 0) {
+				lois = scLoa.getScLoiLoa().getScLois();
+			}
+		}
+
+		if (lois != null && lois.size() > 0) {
+			for (ScLoi scLoi : lois) {
+				calculateOfferedAndFinalPriceByItem(scLoi);
+			}
+		}
+
+		VelocityContext context = new VelocityContext();
+
+		context.put("isZonal", getManagedBean().getScQt().isZonal());
+		context.put("scLois", lois);
+		context.put("bean", this);
+
+		DocumentGenerator.getInstance().generatePdfFromVelocity(
+				SourcingConstants.LOI_NEGOTIONATION_RESULT, context,
+				new FileOutputStream(getActualFilePath(attachment)));
+	}
+
+	/**
+	 * Calculate offered and final price by item.
+	 * 
+	 * @param scLoi
+	 *            the sc loi
+	 */
+	private void calculateOfferedAndFinalPriceByItem(ScLoi scLoi) {
+		boolean isCalculateMaxPriceItem = Boolean.FALSE;// calculate max price
+														// items only.
+		boolean isZonal = Boolean.FALSE;
+		// calc total items in award details
+		if (scLoi.getScLoiLoaItems() != null
+				&& scLoi.getScLoiLoaItems().size() > 0) {
+			BigDecimal offerPrice = BigDecimal.valueOf(0d);
+			BigDecimal finalPrice = BigDecimal.valueOf(0d);
+			BigDecimal offeredPriceSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal offeredPriceAmount = BigDecimal.valueOf(0d);
+
+			BigDecimal afterNegoSubTotal = BigDecimal.valueOf(0d);
+			BigDecimal afterNegoTotalAmount = BigDecimal.valueOf(0d);
+			BigDecimal quantity = BigDecimal.valueOf(0d);
+
+			List<ScLoiLoaItem> scLoiLoaItems = scLoi.getScLoiLoaItems();
+			for (ScLoiLoaItem scLoiLoaItem : scLoiLoaItems) {
+
+				if (scLoiLoaItem.getTplSpecZoneDtl() != null) {
+					isZonal = Boolean.TRUE;
+				}
+
+				if (null == scLoiLoaItem.getTplSpecTierQty()) {
+					// without Tier quantity
+					quantity = scLoiLoaItem.getQty();
+					isCalculateMaxPriceItem = Boolean.TRUE;
+				} else {
+
+					// Tier - max quantity.
+					quantity = scLoiLoaItem.getScRequestItem()
+							.getTplSpecQuestion().getClQuantity();
+
+					// filter zone tier price items to calculate
+					if (null != scLoiLoaItem.getTplSpecZoneDtl()) {
+						Map<TplSpecZoneDtl, ScLoiLoaItem> maxZoneTierPriceItemMap = new HashMap<TplSpecZoneDtl, ScLoiLoaItem>();
+						maxZoneTierPriceItemMap = filterZoneTierPriceItemsByItem(
+								scLoiLoaItem, maxZoneTierPriceItemMap, scLoi);
+						if (maxZoneTierPriceItemMap != null
+								&& !maxZoneTierPriceItemMap.isEmpty()
+								&& maxZoneTierPriceItemMap
+										.containsValue(scLoiLoaItem)) {
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else {
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
+
+					} else {
+						// filter tier price items to calc
+						Map<Long, ScLoiLoaItem> maxPriceItemMap = new HashMap<Long, ScLoiLoaItem>();
+						maxPriceItemMap = filterTierPriceItemsByItem(
+								scLoiLoaItem, maxPriceItemMap, scLoi);
+						if (maxPriceItemMap != null
+								&& !maxPriceItemMap.isEmpty()
+								&& maxPriceItemMap.containsValue(scLoiLoaItem)) {
+							isCalculateMaxPriceItem = Boolean.TRUE;
+						} else {
+							isCalculateMaxPriceItem = Boolean.FALSE;
+						}
+					}
+				}
+
+				if (isCalculateMaxPriceItem) {
+					if (scLoiLoaItem.getScQtProposalItem() != null) {
+						offerPrice = new BigDecimal(Float.toString(scLoiLoaItem
+								.getScQtProposalItem().getOfferPrice()));
+						offerPrice = offerPrice.setScale(2,
+								BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.getScQtProposalItem().setOfferPrice(
+								offerPrice.floatValue());
+
+						offeredPriceSubTotal = TemplateSpecHelper.getInstance()
+								.calculateTotalAmount(
+										scLoiLoaItem.getScRequestItem()
+												.getTplSpecQuestion(),
+										offerPrice, quantity);
+
+						finalPrice = new BigDecimal(Float.toString(scLoiLoaItem
+								.getScQtProposalItem().getFinalPrice()));
+						finalPrice = finalPrice.setScale(2,
+								BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem.getScQtProposalItem().setFinalPrice(
+								finalPrice.floatValue());
+
+						// offered price sub total and total
+						offeredPriceAmount = offeredPriceAmount
+								.add(offeredPriceSubTotal);
+						offeredPriceSubTotal = offeredPriceSubTotal.setScale(2,
+								BigDecimal.ROUND_HALF_EVEN);
+						scLoiLoaItem
+								.setOfferedPriceSubTotal(offeredPriceSubTotal);
+						offeredPriceAmount = offeredPriceAmount.setScale(2,
+								BigDecimal.ROUND_HALF_EVEN);
+					}
+
+					afterNegoSubTotal = TemplateSpecHelper.getInstance()
+							.calculateTotalAmount(
+									scLoiLoaItem.getScRequestItem()
+											.getTplSpecQuestion(), finalPrice,
+									quantity);
+					afterNegoSubTotal = afterNegoSubTotal.setScale(2,
+							BigDecimal.ROUND_HALF_EVEN);
+
+					// after nego price sub total and total
+					afterNegoTotalAmount = afterNegoTotalAmount
+							.add(afterNegoSubTotal);
+					afterNegoTotalAmount = afterNegoTotalAmount.setScale(2,
+							BigDecimal.ROUND_HALF_EVEN);
+
+					scLoiLoaItem.setAfterNegoSubTotal(afterNegoSubTotal);
+					// scLoiLoaItem.setSubTotal(afterNegoSubTotal);
+				}
+			}
+
+			scLoi.setScLoiLoaItems(scLoiLoaItems);
+			scLoi.setOfferedPriceTotal(offeredPriceAmount); // offered price
+															// total
+			scLoi.setLoiAmt(afterNegoTotalAmount); // unit price total
+			scLoi.setAfterNegoTotal(afterNegoTotalAmount); // after nego total
+
+		}
+	}
+
+	/**
+	 * Filter tier price items by item.
+	 * 
+	 * @param scLoiLoaItem
+	 *            the sc loi loa item
+	 * @param map
+	 *            the map
+	 * @return the map
+	 */
+	private Map<Long, ScLoiLoaItem> filterTierPriceItemsByItem(
+			ScLoiLoaItem scLoiLoaItem, Map<Long, ScLoiLoaItem> map, ScLoi loi) {
+		boolean isFindMaxPriceItem = Boolean.FALSE;
+		List<ScLoiLoaItem> sameItems = new ArrayList<ScLoiLoaItem>();
+		if (null == map || map.isEmpty()) {
+			isFindMaxPriceItem = Boolean.TRUE;
+
+		} else {
+			if (!map.containsKey(scLoiLoaItem.getScRequestItem()
+					.getRequestNoteItemId())) {
+				isFindMaxPriceItem = Boolean.TRUE;
+			} else {
+				isFindMaxPriceItem = Boolean.FALSE;
+			}
+		}
+
+		if (isFindMaxPriceItem) {
+			List<ScLoiLoaItem> scLoiLoaItems = null;
+			if (loi != null) {
+				scLoiLoaItems = loi.getScLoiLoaItems();
+			} else {
+				scLoiLoaItems = getManagedBean().getScLoa().getScLoiLoaItems();
+			}
+			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
+				if (loiLoaItem
+						.getScRequestItem()
+						.getRequestNoteItemId()
+						.equals(scLoiLoaItem.getScRequestItem()
+								.getRequestNoteItemId())) {
+					sameItems.add(loiLoaItem);
+				}
+			}
+			ScLoiLoaItem maxPriceItem = findMaxPriceItem(sameItems);
+			map.put(maxPriceItem.getScRequestItem().getRequestNoteItemId(),
+					maxPriceItem);
+		}
+		return map;
+	}
+
+	/**
+	 * Filter zone tier price items by item.
+	 * 
+	 * @param scLoiLoaItem
+	 *            the sc loi loa item
+	 * @param map
+	 *            the map
+	 * @return the map
+	 */
+	private Map<TplSpecZoneDtl, ScLoiLoaItem> filterZoneTierPriceItemsByItem(
+			ScLoiLoaItem scLoiLoaItem, Map<TplSpecZoneDtl, ScLoiLoaItem> map,
+			ScLoi loi) {
+		boolean isMaxZoneTierPriceItem = Boolean.FALSE;
+		List<ScLoiLoaItem> sortGroupItems = new ArrayList<ScLoiLoaItem>();
+		if (null == map || map.isEmpty()) {
+			isMaxZoneTierPriceItem = Boolean.TRUE;
+
+		} else {
+			if (!map.containsKey(scLoiLoaItem.getTplSpecZoneDtl())) {
+				isMaxZoneTierPriceItem = Boolean.TRUE;
+			} else {
+				isMaxZoneTierPriceItem = Boolean.FALSE;
+			}
+		}
+
+		if (isMaxZoneTierPriceItem) {
+			List<ScLoiLoaItem> scLoiLoaItems = null;
+			if (loi != null) {
+				scLoiLoaItems = loi.getScLoiLoaItems();
+			} else {
+				scLoiLoaItems = getManagedBean().getScLoa().getScLoiLoaItems();
+			}
+			for (ScLoiLoaItem loiLoaItem : scLoiLoaItems) {
+				if (loiLoaItem
+						.getScRequestItem()
+						.getRequestNoteItemId()
+						.equals(scLoiLoaItem.getScRequestItem()
+								.getRequestNoteItemId())
+						&& loiLoaItem
+								.getTplSpecZoneDtl()
+								.getZoneName()
+								.equals(scLoiLoaItem.getTplSpecZoneDtl()
+										.getZoneName())) {
+					sortGroupItems.add(loiLoaItem);
+				}
+			}
+			ScLoiLoaItem maxPriceItem = findMaxPriceItem(sortGroupItems);
+			map.put(maxPriceItem.getTplSpecZoneDtl(), maxPriceItem);
+		}
+		return map;
+	}
+
+	/**
+	 * Find max price item.
+	 * 
+	 * @param items
+	 *            the items
+	 * @return the sc loi loa item
+	 */
+	private ScLoiLoaItem findMaxPriceItem(List<ScLoiLoaItem> items) {
+		Comparator<ScLoiLoaItem> comparator = new Comparator<ScLoiLoaItem>() {
+			@Override
+			public int compare(ScLoiLoaItem o1, ScLoiLoaItem o2) {
+				return new CompareToBuilder().append(
+						o1.getScQtProposalItem().getOfferPrice(),
+						o2.getScQtProposalItem().getOfferPrice())
+						.toComparison();
+			}
+		};
+		ScLoiLoaItem scLoiLoaItem = Collections.max(items, comparator);
+		return scLoiLoaItem;
 	}
 }
