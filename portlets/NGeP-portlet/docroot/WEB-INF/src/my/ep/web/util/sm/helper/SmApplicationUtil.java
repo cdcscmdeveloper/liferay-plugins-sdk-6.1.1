@@ -5615,7 +5615,10 @@ public class SmApplicationUtil {
 	public static boolean isBranchGstSameAsHq(SmGstSupplier hqGst,
 			SmGstSupplier brGst) {
 		boolean retVal = false;
-		if (brGst.getGstRegNo().equals(hqGst.getGstRegNo())
+		if (hqGst.getGstEffDate() != null && brGst.getGstEffDate() != null
+				&& StringUtils.isNotBlank(brGst.getGstRegNo())
+				&& StringUtils.isNotBlank(hqGst.getGstRegNo())
+				&& brGst.getGstRegNo().equals(hqGst.getGstRegNo())
 				&& brGst.getGstEffDate().compareTo(hqGst.getGstEffDate()) == 0) {
 			retVal = true;
 		}

@@ -31,7 +31,7 @@
 		
 		<p:panel header="#{lbl['lbl.sm.gst.history.hq.panel']}" toggleable="true" id="resultGstHistoryPanelId">
 			
-			<p:dataTable var="hqGst" widgetVar="smApplWidgetVar"
+			<p:dataTable var="hqGst" widgetVar="hqGstWidgetVar"
 				editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{gstHistoryBackingBean.managedBean.hqGstList}"
 				rowKey="#{hqGst}" rowIndexVar="index" id="resultGstHistoryDtId">
@@ -120,7 +120,7 @@
 		
 		<p:panel header="#{lbl['lbl.sm.gst.history.branch.panel']}" toggleable="true" id="resultBranchGstHistoryPanelId">
 		
-			<p:dataTable var="brGst" widgetVar="smApplWidgetVar"
+			<p:dataTable var="brGst" widgetVar="brGstWidgetVar"
 				editable="false" emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
 				value="#{gstHistoryBackingBean.managedBean.branchGstList}"
 				rowKey="#{brGst}" rowIndexVar="index" id="resultBranchGstHistoryDtId">
