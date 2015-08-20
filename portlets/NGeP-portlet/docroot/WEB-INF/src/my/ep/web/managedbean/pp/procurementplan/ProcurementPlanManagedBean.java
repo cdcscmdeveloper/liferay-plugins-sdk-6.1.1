@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -88,10 +89,11 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	private List<PpRemark> selectedJustifications;
 	private List<PpRemark> selectedItemRemarks;
 	private BigDecimal ppTotalEst;
-	
-	
 
-
+	private int selectedSearchType;
+	private List<SelectItem> searchOptions;
+	private String searchValue;
+	private PmOrgProfile selectedPTJ;
 
 	/**
 	 * @return the epItemsB
@@ -874,6 +876,62 @@ public class ProcurementPlanManagedBean extends BaseManagedBean{
 	 */
 	public void setOrgProfile(PmOrgProfile orgProfile) {
 		this.orgProfile = orgProfile;
+	}
+
+	/**
+	 * @return the selectedSearchType
+	 */
+	public int getSelectedSearchType() {
+		return selectedSearchType;
+	}
+
+	/**
+	 * @param selectedSearchType the selectedSearchType to set
+	 */
+	public void setSelectedSearchType(int selectedSearchType) {
+		this.selectedSearchType = selectedSearchType;
+	}
+
+	/**
+	 * @return the searchOptions
+	 */
+	public List<SelectItem> getSearchOptions() {
+		return searchOptions;
+	}
+
+	/**
+	 * @param searchOptions the searchOptions to set
+	 */
+	public void setSearchOptions(List<SelectItem> searchOptions) {
+		this.searchOptions = searchOptions;
+	}
+
+	/**
+	 * @return the selectedPTJ
+	 */
+	public PmOrgProfile getSelectedPTJ() {
+		return selectedPTJ;
+	}
+
+	/**
+	 * @param selectedPTJ the selectedPTJ to set
+	 */
+	public void setSelectedPTJ(PmOrgProfile selectedPTJ) {
+		this.selectedPTJ = selectedPTJ;
+	}
+
+	/**
+	 * @return the searchValue
+	 */
+	public String getSearchValue() {
+		return searchValue;
+	}
+
+	/**
+	 * @param searchValue the searchValue to set
+	 */
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
 	}
 
 }

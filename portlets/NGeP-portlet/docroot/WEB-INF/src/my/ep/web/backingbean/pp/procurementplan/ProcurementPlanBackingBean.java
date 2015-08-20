@@ -24,6 +24,7 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -36,6 +37,8 @@ import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.pm.ProfileManagementConst;
 import my.ep.constant.pp.ProcurementPlanConst;
 import my.ep.constants.PPProcessNameConst;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.exception.EpException;
@@ -44,6 +47,7 @@ import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
@@ -75,8 +79,8 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pm.helper.ParameterHelper;
-import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.pm.helper.PmCommonUtil;
+import my.ep.web.util.pm.helper.StatusHelper;
 import my.ep.web.util.pp.common.PpCommonUtil;
 
 import org.apache.commons.lang.StringUtils;
@@ -103,6 +107,7 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	//List for Paging
 	private IPagingDataModel<PpPlan> ppPlanDataModel = new PpPlanDataModel();
+	private IPagingDataModel<PmOrgProfile> ppOrgProfileDataModel = new PpOrgProfileDataModel();
 	
 	//Default value
 	public static final boolean SEARCH_DEFAULT = false;
@@ -113,6 +118,13 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	
 	//Authorization 
 	private ISearchBean<PmParameterDesc> planTypeSearchBean;
+	
+	//Search Org Profie
+	private static final int SEARCH_MINISTRY_CODE = 0;
+	private static final int SEARCH_MINISTRY_NAME = 1;
+	private static final int SEARCH_PTJ_CODE = 2;
+	private static final int SEARCH_PTJ_NAME = 3;
+	
 	
 	public ISearchBean<PmParameterDesc> getPlanTypeSearchBean() {
 		log.info("getPlanTypeSearchBean");
@@ -151,6 +163,8 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 		this.retrievePlanTypeMapper();
 		initialSearchPlan();
 		this.resetPlanSearchBean();
+		generateSearchOptions();
+		
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, NAV_TO_SEARCH);
@@ -3312,11 +3326,181 @@ public class ProcurementPlanBackingBean extends BaseBackingBean<ProcurementPlanM
 	return null;	
 	}
 	
+	private void generateSearchOptions(){
+		List<SelectItem> items = new ArrayList<SelectItem>();
+		SelectItem item = new SelectItem(SEARCH_MINISTRY_CODE, 
+				ResourceBundleUtils.getMessage("lbl.pm.org.ministryCode",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items.add(item);
+		item = new SelectItem(SEARCH_MINISTRY_NAME, 
+				ResourceBundleUtils.getMessage("lbl.pm.org.ministryName",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items.add(item);
+		item = new SelectItem(SEARCH_PTJ_CODE, 
+				ResourceBundleUtils.getMessage("lbl.pp.ptj.code",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items.add(item);
+		item = new SelectItem(SEARCH_PTJ_NAME, 
+				ResourceBundleUtils.getMessage("lbl.pp.ptj.name",
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		items.add(item);
+		getManagedBean().setSearchOptions(items);
+		this.getManagedBean().setSelectedSearchType(SEARCH_MINISTRY_CODE);
+		getManagedBean().setSearchValue(null);
+	}
 	
 	
-	
-	
-	
-	
+	/**
+	 * paginate for org profile list
+	 * @author Ken
+	 *
+	 */
+	private class PpOrgProfileDataModel extends PagingDataModel<PmOrgProfile> {
+		private static final long serialVersionUID = 1L;
 
+		public PpOrgProfileDataModel() {
+			super("opresultTb");
+		}
+		@Override
+		public ISearchResultBean<PmOrgProfile> pageChangeListener(ISearchBean<PmOrgProfile> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			
+			try {				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("orgTypeCode.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								ParameterConst.ORG_TYPE_PTJ));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("pmOrgValidity.recordStatusFlg",
+								SearchOperator.OPERATOR_EQUALS.value(),
+								DbValueConst.RECORD_STATUS_ACTIVE));
+				
+				if(StringUtils.isNotBlank(getManagedBean().getSearchValue())){
+					if(getManagedBean().getSelectedSearchType() == SEARCH_MINISTRY_CODE){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(OrgProfileUtil.getSearchBeanParentWithoutParentIdString(OrganizationType.MINISTRY.value()) + 
+										"pmOrgValidity.orgCode",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getManagedBean().getSearchValue(), true));
+					}else if(getManagedBean().getSelectedSearchType() == SEARCH_MINISTRY_NAME){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(OrgProfileUtil.getSearchBeanParentWithoutParentIdString(OrganizationType.MINISTRY.value()) +
+										"pmOrgValidity.orgName",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getManagedBean().getSearchValue(), true));
+					}else if(getManagedBean().getSelectedSearchType() == SEARCH_PTJ_CODE){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmOrgValidity.orgCode",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getManagedBean().getSearchValue(), true));
+					}else if(getManagedBean().getSelectedSearchType() == SEARCH_PTJ_NAME){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("pmOrgValidity.orgName",
+										SearchOperator.OPERATOR_LIKE.value(),
+										getManagedBean().getSearchValue(), true));
+					}  
+					
+				}
+				
+				//user authorisation
+				PmUser user = getFacesScopes().getUserSessionBean();
+				List<PmUserOrg> userOrgList = PmCommonUtil.retrieveActiveOrg(user.getUserId());
+				PmOrgProfile orgProfile = null;
+				if(userOrgList != null && !userOrgList.isEmpty()){
+					orgProfile = userOrgList.get(0).getPmOrgProfile();
+				}
+				//PTJ & MINISTRY
+				if(orgProfile != null){
+					if(OrganizationType.DIVISION.value().equals(orgProfile.getOrgTypeCode().getParameterCode())){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean("orgProfileId",
+										SearchOperator.OPERATOR_EQUALS.value(),
+										orgProfile.getOrgProfileId()));
+					}else if(OrganizationType.MINISTRY.value().equals(orgProfile.getOrgTypeCode().getParameterCode())){
+						searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(OrgProfileUtil.getSearchBeanParentString(OrganizationType.MINISTRY.value()),
+										SearchOperator.OPERATOR_EQUALS.value(),
+										orgProfile.getOrgProfileId()));
+					}
+				}
+				
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+
+				orgProfileReqDTO.setOrgProfileSearchBean(searchBean);
+				OrgProfileResDTO resDto = getOrgProfileSO()
+						.searchOrgProfile(orgProfileReqDTO);
+
+				if (resDto.isSuccessful()) {
+					return resDto.getOrgProfileResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+	
+	/**
+	 * Gets the org profile so.
+	 * 
+	 * @return the org profile so
+	 */
+	private IOrgProfileSO getOrgProfileSO() {
+		return BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
+	}
+
+
+	/**
+	 * @return the ppOrgProfileDataModel
+	 */
+	public IPagingDataModel<PmOrgProfile> getPpOrgProfileDataModel() {
+		return ppOrgProfileDataModel;
+	}
+
+
+	/**
+	 * @param ppOrgProfileDataModel the ppOrgProfileDataModel to set
+	 */
+	public void setPpOrgProfileDataModel(IPagingDataModel<PmOrgProfile> ppOrgProfileDataModel) {
+		this.ppOrgProfileDataModel = ppOrgProfileDataModel;
+	}	
+	
+	/**
+	 * This method used for cater org profile search action.
+	 * 
+	 **/
+	public void searchAction() {
+		ppOrgProfileDataModel.reloadData();
+	}
+	
+	/**
+	 * This method used for cater org profile reset search action.
+	 * 
+	 **/
+	public void resetAction() {
+		getManagedBean().setSelectedSearchType(SEARCH_MINISTRY_CODE);
+		getManagedBean().setSearchValue(null);
+		getManagedBean().setSelectedPTJ(null);
+		ppOrgProfileDataModel.reloadData();
+	}
+	
+	public void populateSaveObject(){
+		if(getManagedBean().getSelectedPTJ() != null){
+			getManagedBean().getPlanSearchBean().setPtj(getManagedBean().getSelectedPTJ());
+		}
+	}
 }
