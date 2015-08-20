@@ -17,7 +17,7 @@ public class MasterDataVendor {
 
 	BankAccountInformation bankAccountInformation; // for apove file
 
-	List<BankAccountInformation> bankAccountInfoList;
+//	List<BankAccountInformation> bankAccountInfoList;
 
 	public int getRecordType() {
 		return recordType;
@@ -84,13 +84,13 @@ public class MasterDataVendor {
 		this.bankAccountInformation = bankAccountInformation;
 	}
 
-	public List<BankAccountInformation> getBankAccountInfoList() {
+	/*public List<BankAccountInformation> getBankAccountInfoList() {
 		return bankAccountInfoList;
 	}
 
 	public void setBankAccountInfoList(
 			List<BankAccountInformation> bankAccountInfoList) {
 		this.bankAccountInfoList = bankAccountInfoList;
-	}
+	}*/
 
 }

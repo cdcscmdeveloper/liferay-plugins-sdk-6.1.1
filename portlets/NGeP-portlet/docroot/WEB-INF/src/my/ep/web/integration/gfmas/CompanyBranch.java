@@ -1,7 +1,39 @@
 package my.ep.web.integration.gfmas;
 
+import java.util.List;
+
+/*
+ * @authot P GANGA PRASAD
+ */
+
 public class CompanyBranch {
 
+	private int recordType;
+	private String name;
+	private String name2;
+	private String address;
+	private String address2;
+	private String address3;
+	private String postCode;
+	private String city;
+	private String region;
+	private String country;
+	private String telephoneNo;
+	private String faxNo;
+	private String emailAddress;
+	private String glReconAccount;
+	private String currency;
+	private String incoTerm;
+	private String paymentTerm;
+	private int bankAccountInfoCount;
+	private int status;
+	private String mobileNo;
+	// version 2.7
+	private String indicatorCode;
+	private String accountActionIndicator;
+	private String referenceNoGST;
+
+	List<BankAccountInformation> bankAccountInfoList;
 
 	public int getRecordType() {
 		return recordType;
@@ -187,29 +219,13 @@ public class CompanyBranch {
 		this.referenceNoGST = referenceNoGST;
 	}
 
-	private int recordType;
-	private String name;
-	private String name2;
-	private String address;
-	private String address2;
-	private String address3;
-	private String postCode;
-	private String city;
-	private String region;
-	private String country;
-	private String telephoneNo;
-	private String faxNo;
-	private String emailAddress;
-	private String glReconAccount;
-	private String currency;
-	private String incoTerm;
-	private String paymentTerm;
-	private int bankAccountInfoCount;
-	private int status;
-	private String mobileNo;
-	// version 2.7
-	private String indicatorCode;
-	private String accountActionIndicator;
-	private String referenceNoGST;
+	public List<BankAccountInformation> getBankAccountInfoList() {
+		return bankAccountInfoList;
+	}
+
+	public void setBankAccountInfoList(
+			List<BankAccountInformation> bankAccountInfoList) {
+		this.bankAccountInfoList = bankAccountInfoList;
+	}
 
 }
