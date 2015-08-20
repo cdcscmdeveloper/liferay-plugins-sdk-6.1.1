@@ -28,9 +28,8 @@ public class GfmasBatchSmInboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("GfmasSMInboundIntegrationJob ");
-
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.masterDataVendorGfmasInbound();
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.masterDataVendorGfmasInbound();
 		
 
 	}

@@ -28,8 +28,8 @@ public class GfmasBatchFlInboundJob implements Job {
 			throws JobExecutionException {
 
 		log.info("AP511 : GfmasBatchFlInboundJob start ");
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.paymentGfmasInbound();
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.paymentGfmasInbound();
 		log.info("AP511 : GfmasBatchFlInboundJob end");
 
 	}
