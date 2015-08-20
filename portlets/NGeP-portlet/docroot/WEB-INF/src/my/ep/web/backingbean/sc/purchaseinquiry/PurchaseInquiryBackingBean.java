@@ -790,6 +790,14 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 						if (scRequestNoteDtl.getJustification() != null){
 							requestNoteBackingBean.getManagedBean().setJustification(scRequestNoteDtl.getJustification());
 						}
+						
+						// set condition field for saved request note
+						if(!scRequestNoteDtl.isReRecommend()) {
+							StringBuilder sb = new StringBuilder();
+							sb.append("requestNoteItem.requestNoteItemId^");
+							sb.append(scRequestNoteDtl.getRequestItem().getRequestNoteItemId());
+							scRequestNoteDtl.setConditionField(sb.toString());
+						}
 
 						requestNoteBackingBean.getManagedBean().setProcurementType(scRequestNoteDtl.getProcurementType().getParameterCode());
 						requestNoteBackingBean.getManagedBean().setRequestSupplierItem(scRequestNoteDtl.getScRequestSupplierItem());
@@ -936,6 +944,14 @@ public class PurchaseInquiryBackingBean extends SourcingBaseBackingBean<Purchase
 				// lead time 
 				if(requestSupplierItem.getSupplierItemPrices() != null && requestSupplierItem.getSupplierItemPrices().size() >0){
 					requestSupplierItem.getRequestNoteItem().setLeadTime( requestSupplierItem.getSupplierItemPrices().get(0).getPricing().getCmSupplierItem().getLeadTime());
+				}
+				
+				// set condition field for saved request note
+				if(!requestNoteDtl.isReRecommend()) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("requestNoteItem.requestNoteItemId^");
+					sb.append(requestNoteDtl.getRequestItem().getRequestNoteItemId());
+					requestNoteDtl.setConditionField(sb.toString());
 				}
 
 				// price type drop down
