@@ -1,12 +1,6 @@
 package my.ep.web.backingbean.fl.relieforder;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -17,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.order.IReliefOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -37,10 +30,10 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.fl.common.order.FLOrderDataType;
 import my.ep.persistence.entity.fl.order.FlReliefOrder;
 import my.ep.persistence.entity.fl.order.FlReliefOrderItem;
-import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.pm.common.PmContact;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.type.pm.AddressType;
+import my.ep.type.pm.GSFType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
@@ -54,8 +47,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -71,9 +62,6 @@ import com.liferay.portal.util.PortalUtil;
 public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBean>{
 
 	private static Logger log = Logger.getLogger(ReliefOrderBackingBean.class);
-	
-	/** The class name. */
-	private String className="@(.myReliefOrderClassName)";
 	
 	FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 	/**
@@ -91,6 +79,10 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	 */
 	public ReliefOrderBackingBean(){
 	}
+	
+	/**
+	 * Pre render view.
+	 */
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -123,7 +115,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByOrderId(fulfilmentReqDTO);
 			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
 			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(fulfilmentReqDTO);
-			//getManagedBean().setButtonVal(buttonVal);
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
@@ -136,6 +127,17 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
 			getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
 			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
+			getManagedBean().setNonReliefItems(new ArrayList<FlReliefOrderItem>());
+			getManagedBean().setReliefItems(new ArrayList<FlReliefOrderItem>());
+			getManagedBean().setNonReliefMenuDisplay(false);
+			for(FlReliefOrderItem  flReliefOrderItem : getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
+				if(!flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
+					getManagedBean().setNonReliefMenuDisplay(true);
+					getManagedBean().getNonReliefItems().add(flReliefOrderItem);
+				}else{
+					getManagedBean().getReliefItems().add(flReliefOrderItem);
+				}
+			}
 			//getManagedBean().setPmUser(reqDTO.getPmUser());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
@@ -155,24 +157,25 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 					}
 				}
 			}
+			
+			
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(null, rsResDto.getRemarkList(), rsResDto.getAttachmentList());
+			
 		}
 	}
 	
 	/**
-	 * save,submit the relief order
+	 * save,approve the relief order
 	 * 
 	 * * @param String action 
-	 *  <p>submit - save data into database and BPM process will route to the next respective user.
+	 *  <p>approve - save data into database and BPM process will route to the next respective user.
 	 * 	<p>save - save data into database.
 	 *  navigate to acknowledge page.
 	 */
 	public String submitAction(String action) throws Exception {
 		FulfilmentReqDTO reliefOrderReqDTO = new FulfilmentReqDTO();
 		IReliefOrderSO reliwfOrderSo = null;
-		
-		if(null==getManagedBean().getChargeLineItemRoot()){
-			populateReliefItemData();
-		}
 		//saveReliefOrder
 		Object token = getFacesScopes().getBPMAuthenticationCtxToken();
 		//FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -196,14 +199,15 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			String messageId = MessageConst.INFO_700005;
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
 				messageId = MessageConst.INFO_700004;
-			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			}else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
 				messageId = MessageConst.INFO_700007;
-				//messageId = MessageConst.INFO_700007;
 			} 
+			
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
 					MessageUtils.getMessage(messageId, 
 							new String[]{getParameterDesc(ParameterTypeConst.DOCUMENT_TYPES, ParameterConst.DOCTYPE_RELIEF_ORDER), reliefOrder.getReliefOrderNo()}, 
 							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			
 			if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 				renewSesionObject();
 				return CommonUIConst.ACKNOWLEDGE_PAGE;
@@ -248,111 +252,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		}
 	}
 	
-	/**
-	 * call this method  as user click on relief order items menu
-	 * <p>Populate relief item details.
-	 */
-	private void populateReliefItemData(){
-		getManagedBean().setChargeLineItemRoot(new DefaultTreeNode("root", null));
-		
-		Map<String, List<FlReliefOrderItem>> reliefOrderItemsMap = new TreeMap<String, List<FlReliefOrderItem>>();
-		List<FlReliefOrderItem> flReliefOrderItemList = null;
-			for(FlReliefOrderItem  flReliefOrderItem : getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
-				if(flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
-					if (reliefOrderItemsMap.containsKey(flReliefOrderItem.getFlFulfilmentItem().getItemCode())) {
-						flReliefOrderItemList = reliefOrderItemsMap.get(flReliefOrderItem.getFlFulfilmentItem().getItemCode());
-					} else {
-						flReliefOrderItemList = new ArrayList<FlReliefOrderItem>();
-					}
-					flReliefOrderItemList.add(flReliefOrderItem);
-					reliefOrderItemsMap.put(flReliefOrderItem.getFlFulfilmentItem().getItemCode(), flReliefOrderItemList);
-				}
-				
-			}
-		
-		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-		for(Entry<String, List<FlReliefOrderItem>> itemEntry : reliefOrderItemsMap.entrySet()){	
-			List<FlReliefOrderItem> reliefOrderItems = itemEntry.getValue();
-			FlReliefOrderItem flReliefOrderItem = (FlReliefOrderItem) reliefOrderItems.get(0).cloneEntity(); 
-			flReliefOrderItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flReliefOrderItem.getFlFulfilmentItem().getItemCode(), flReliefOrderItem, getManagedBean().getChargeLineItemRoot());
-			
-			BigDecimal totalOrderAmt = new BigDecimal(0);
-			BigDecimal totalReceiveAmt = new BigDecimal(0);
-			for(FlReliefOrderItem chargeLineItem : reliefOrderItems) {
-				if(flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
-					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-					for(FlFulfilmentItemAddr itemAddress: chargeLineItem.getFlFulfilmentItem().getFlFulfilmentItemAddr()){
-						totalOrderAmt=totalOrderAmt.add(itemAddress.getOrderedAmt());
-						totalReceiveAmt=totalReceiveAmt.add(itemAddress.getReceivedAmt());
-					}
-				}
-			}			
-
-			flReliefOrderItem.setOrderAmount(totalOrderAmt);
-			flReliefOrderItem.setReceivedAmt(totalReceiveAmt);
-			
-			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
-		}
-		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-	}
-	
-	
-	/**
-	 * call this method  as user click on Non relief order items menu
-	 * <p>Populate non relief item details.
-	 */
-	private void populateNonReliefItemData(){
-		getManagedBean().setChargeLineNonReliefItemRoot(new DefaultTreeNode("root", null));
-		
-		Map<String, List<FlReliefOrderItem>> reliefOrderItemsMap = new TreeMap<String, List<FlReliefOrderItem>>();
-		List<FlReliefOrderItem> flReliefOrderItemList = null;
-			for(FlReliefOrderItem  flReliefOrderItem : getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
-				if(!flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
-					if (reliefOrderItemsMap.containsKey(flReliefOrderItem.getFlFulfilmentItem().getItemCode())) {
-						flReliefOrderItemList = reliefOrderItemsMap.get(flReliefOrderItem.getFlFulfilmentItem().getItemCode());
-					} else {
-						flReliefOrderItemList = new ArrayList<FlReliefOrderItem>();
-					}
-					flReliefOrderItemList.add(flReliefOrderItem);
-					reliefOrderItemsMap.put(flReliefOrderItem.getFlFulfilmentItem().getItemCode(), flReliefOrderItemList);
-				}
-				
-			}
-		
-		BigDecimal grandTotalOrderAmt = new BigDecimal(0);
-		BigDecimal grandTotalReceivedAmt = new BigDecimal(0);
-		for(Entry<String, List<FlReliefOrderItem>> itemEntry : reliefOrderItemsMap.entrySet()){	
-			List<FlReliefOrderItem> reliefOrderItems = itemEntry.getValue();
-			FlReliefOrderItem flReliefOrderItem = (FlReliefOrderItem) reliefOrderItems.get(0).cloneEntity(); 
-			flReliefOrderItem.setParent(true);
-			TreeNode childItemNode = new DefaultTreeNode(flReliefOrderItem.getFlFulfilmentItem().getItemCode(), flReliefOrderItem, getManagedBean().getChargeLineNonReliefItemRoot());
-			
-			BigDecimal totalOrderAmt = new BigDecimal(0);
-			BigDecimal totalReceiveAmt = new BigDecimal(0);
-			for(FlReliefOrderItem chargeLineItem : reliefOrderItems) {
-				if(!flReliefOrderItem.getGstFlag().getParameterCode().equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)){
-					new DefaultTreeNode(chargeLineItem.getFlFulfilmentItem().getItemCode(),chargeLineItem,childItemNode);
-					for(FlFulfilmentItemAddr itemAddress: chargeLineItem.getFlFulfilmentItem().getFlFulfilmentItemAddr()){
-						totalOrderAmt=totalOrderAmt.add(itemAddress.getOrderedAmt());
-						totalReceiveAmt=totalReceiveAmt.add(itemAddress.getReceivedAmt());
-					}
-				}
-			}			
-
-			flReliefOrderItem.setOrderAmount(totalOrderAmt);
-			flReliefOrderItem.setReceivedAmt(totalReceiveAmt);
-			
-			grandTotalOrderAmt = grandTotalOrderAmt.add(totalOrderAmt);
-			grandTotalReceivedAmt = grandTotalReceivedAmt.add(totalReceiveAmt);
-		}
-		getManagedBean().setOrderedAmtGrandTotal(grandTotalOrderAmt);
-		getManagedBean().setReceivedAmtGrandTotal(grandTotalReceivedAmt);
-	}
-	
 	public String getPortletTitle() {
 		String rfc = ResourceBundleUtils.getMessage("lbl.fl.rfc",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
 		String title = ResourceBundleUtils.getMessage("lbl.fl.doc.maintenance",ResourceBundleUtils.BUNDLE_COMMON_LABELS,new FacesScopes().getUserLocale());
@@ -371,26 +270,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	public boolean isFlFulfilmentApprover() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.FL_APPROVER.value());
-	}
-	
-	/**
-	 * On tab change.
-	 *
-	 * @param selectedTabIndex the selected tab index
-	 */
-	public void onTabChange(int selectedTabIndex){
-		
-		if(selectedTabIndex==1){
-			if(null==getManagedBean().getChargeLineItemRoot()){
-				populateReliefItemData();
-			}
-			setClassName("@(.reliefOrderItemPnlClass)");
-		}else if(selectedTabIndex==2){
-			if(null==getManagedBean().getChargeLineNonReliefItemRoot()){
-				populateNonReliefItemData();
-			}
-			setClassName("@(.nonReliefOrderItemPnlClass)");
-		}
 	}
 
 	// Please add role if there is new role for this backingbean
@@ -430,7 +309,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	public String gpkiSignAction(String outcome) throws Exception{
 		if ((BpmOutcomeConst.BPM_APPROVE.equalsIgnoreCase(outcome))) {
 			validateReliefOrder(outcome);
-			// Temp setTextBeforeSign : DocNo+StartDate+EndDate+Type
 			StringBuilder sb = new StringBuilder();
 			sb.append(getManagedBean().getFlRequest().getDocNo());
 			sb.append(outcome);
@@ -449,8 +327,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		if (pmDigiSign != null) {
 			this.getManagedBean().setPmDigiSign(pmDigiSign);
 		}
-		//getManagedBean().setValidated(Boolean.TRUE);
-		log.info("######## PR SLA start : "+System.currentTimeMillis()+" : "+new Date());
 		return submitAction(getManagedBean().getButtonAction());
 	}
 	
@@ -460,34 +336,14 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 	 * @param outcome the outcome
 	 */
 	public void validateReliefOrder(String outcome){		
-		IFulfilmentRequestSO fulfilmentRequestSO = null;
-		try {
-			getManagedBean().setAutoUpdate(Boolean.TRUE);
-			if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
-				if(null==getManagedBean().getChargeLineItemRoot()){
-					populateReliefItemData();
+		getManagedBean().setAutoUpdate(Boolean.TRUE);
+		if(BpmOutcomeConst.BPM_APPROVE.equals(outcome)){
+			for(FlReliefOrderItem  reliefItem : getManagedBean().getFlReliefOrder().getFlReliefOrderItems()){
+				if(reliefItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.RELIEF.value()) && !reliefItem.isSelectedReliefChargeItem()){
+					throw new EpException(MessageConst.ERROR_745073);
 				}
-				TreeNode root=getManagedBean().getChargeLineItemRoot();
-				for(TreeNode node:root.getChildren()){
-					node.getChildCount();
-					FlReliefOrderItem reliefItem=(FlReliefOrderItem) node.getData();
-					if(!reliefItem.isSelectedReliefChargeItem()){
-						throw new EpException(MessageConst.ERROR_745073);
-					}else{
-							//TODO
-						System.out.println("selected");
-					}
-				}
-			}	
-			
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFulfilmentRequestSO.class);
-			reqDTO.setOutcome(outcome);
-			reqDTO.setPmUser(getFacesScopes().getUserSessionBean());
-			
-		}finally{
-			fulfilmentRequestSO = null;
-		}
+			}
+		}	
 	}
 	
 	
@@ -499,14 +355,6 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		public String backToPervious() {
 			return "flDocSearch";
 		}
-		
-		/**
-		 * Signing action.
-		 *
-		 * @param outcome the outcome
-		 * @return the string
-		 * @throws Exception the exception
-		 */
 				
 		/**
 		 * Enable auto update.
@@ -514,19 +362,5 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 		public void enableAutoUpdate(){
 			getManagedBean().setAutoUpdate(Boolean.TRUE);
 			RequestContext.getCurrentInstance().update("@form");
-		}
-
-		/**
-		 * @return the className
-		 */
-		public String getClassName() {
-			return className;
-		}
-
-		/**
-		 * @param className the className to set
-		 */
-		public void setClassName(String className) {
-			this.className = className;
 		}
 }
