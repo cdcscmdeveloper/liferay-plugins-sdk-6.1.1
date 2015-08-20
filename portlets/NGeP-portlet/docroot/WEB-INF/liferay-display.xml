@@ -134,6 +134,7 @@
 		    <portlet id="scAddtionalAttandance" />
 		    <portlet id="scCreateQuotationTender" />
 		    <portlet id="scManualSourcingSupplierResponse"/>
+		    <portlet id="scBriefingSiteVisitRegistration"/>
 		    
 		</category>
 

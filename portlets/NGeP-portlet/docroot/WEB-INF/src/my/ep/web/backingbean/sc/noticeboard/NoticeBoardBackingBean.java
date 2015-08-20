@@ -15,6 +15,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.sc.QtAmendMentBean;
 import my.ep.biz.bean.sc.SupplierQualificationBean;
@@ -134,6 +135,8 @@ import org.primefaces.model.DefaultMenuModel;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.MenuModel;
 import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Notice Board Backing Bean class will display the status of 
@@ -635,6 +638,27 @@ public class NoticeBoardBackingBean extends
 			this.getManagedBean().setMofNo(mofNo);
 		}
 		return "/xhtml/sc/noticeboard/nbsupplierqulificationcriteria.xhtml";
+	}
+	
+	/**
+	 * Pre-render view to navigate porlet to bsv supplier registration screen
+	 */
+	public void preRenderBsvRegistration() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String qtId = originalServletRequest.getParameter("qtId");
+		
+		super.renewSesionObject();
+		
+		isUser();
+
+		String url = gotoSupplierRegistration(Long.parseLong(qtId));
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, url);
 	}
 
 	/**
