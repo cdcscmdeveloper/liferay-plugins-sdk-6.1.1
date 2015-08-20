@@ -1939,14 +1939,16 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 				Long lv2 = svCat.getPmCategoryL2().getCategoryL2Id();
 				Long lv3 = svCat.getPmCategoryL3().getCategoryL3Id();
 				
-				if(retrieveCategoryTypeByLvl3Id(lv3).equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING)){
-
-					if(this.getManagedBean().getPrintingCatLs() == null){
-						this.getManagedBean().setPrintingCatLs(new ArrayList<Long>());
+				if(retrieveCategoryTypeByLvl3Id(lv3).equalsIgnoreCase(SupplierManagementConst.CAT_TYPE_PRINTING)){			
+					if(getManagedBean().getPrintingCategoryCodeMap() == null){
+						getManagedBean().setPrintingCategoryCodeMap(new HashMap<Long, String>());
 					}
-
-					if(!this.getManagedBean().getPrintingCatLs().contains(lv3)){
-						this.getManagedBean().getPrintingCatLs().add(lv3);
+					
+					if(getManagedBean().getPrintingCategoryCodeMap().get(lv3) == null){
+						String catCode = svCat.getPmCategoryL1().getCategoryL1Code() + svCat.getPmCategoryL2().getCategoryL2Code() + 
+										svCat.getPmCategoryL3().getCategoryL3Code();
+						
+						getManagedBean().getPrintingCategoryCodeMap().put(lv3, catCode + " " +svCat.getPmCategoryL3().getCategoryName());
 					}
 					
 					if(svCat.getSmSvPrintmachines() == null || svCat.getSmSvPrintmachines().size() < 1){
@@ -1983,8 +1985,8 @@ public class SvoSiteVisitBackingBean extends BaseBackingBean<SvoSiteVisitManaged
 
 				}
 				
-				log.info("printingMap>>>>>" + this.getManagedBean().getPrintingCatMap().size());
-				log.info("printingLs>>>>>" + this.getManagedBean().getPrintingCatLs().size());
+//				log.info("printingMap>>>>>" + this.getManagedBean().getPrintingCatMap().size());
+//				log.info("printingLs>>>>>" + this.getManagedBean().getPrintingCategoryCodeMap().size());
 			}
 		}
 	}
