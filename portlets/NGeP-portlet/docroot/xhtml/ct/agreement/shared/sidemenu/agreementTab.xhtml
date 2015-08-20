@@ -46,11 +46,11 @@
 				<p:tabMenu styleClass="sidemenu"
 					activeIndex="#{agreementBackingBean.managedBean.selectedTabIndex}">
                    
-                    <p:menuitem style="white-space:normal;" value="#{agreementBackingBean.managedBean.agreementType eq ContractConst.supplemntalAgreement ? lbl['lbl.ct.menu.create.sup.agreement'] : lbl['lbl.ct.menu.create.agreement']}" update="@all">
+                    <p:menuitem style="white-space:normal;" value="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement ? lbl['lbl.ct.menu.create.sup.agreement'] : lbl['lbl.ct.menu.create.agreement']}" update="@all">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
 					
-					<p:menuitem style="white-space:normal;" value="#{agreementBackingBean.managedBean.agreementType eq ContractConst.supplemntalAgreement ? lbl['lbl.ct.menu.signing.sup.agreement'] : lbl['lbl.ct.menu.signing.agreement']}" update="@all">
+					<p:menuitem style="white-space:normal;" value="#{agreementBackingBean.managedBean.agreementType eq CtConst.supplementalAgreement ? lbl['lbl.ct.menu.signing.sup.agreement'] : lbl['lbl.ct.menu.signing.agreement']}" update="@all">
 						<f:setPropertyActionListener target="#{agreementBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
 					<p:menuitem style="white-space:normal;" value="#{lbl['lbl.ct.menu.signed']}" update="@all" rendered="#{agreementBackingBean.managedBean.uploadStampedAndSignedPage}">
