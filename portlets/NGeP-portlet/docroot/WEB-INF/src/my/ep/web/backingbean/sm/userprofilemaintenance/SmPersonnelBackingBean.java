@@ -1510,8 +1510,7 @@ public class SmPersonnelBackingBean extends
 				: DbValueConst.RECORD_STATUS_DELETED);
 
 		PersonnelResDTO resDTO = new PersonnelResDTO();
-		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(
-				reqDTO);
+		resDTO = SmServiceLookup.getPersonnelSO().reassignSupplierAdmin(reqDTO);
 
 		if (resDTO.isSuccessful()) {
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -1535,6 +1534,7 @@ public class SmPersonnelBackingBean extends
 	 * Redirect to liferay logout url
 	 */
 	public void proceedToLogout() {
+		RequestContext.getCurrentInstance().execute("successDialog.hide()");
 		SmCommonUtil.redirectToLogoutUrl();
 	}
 
