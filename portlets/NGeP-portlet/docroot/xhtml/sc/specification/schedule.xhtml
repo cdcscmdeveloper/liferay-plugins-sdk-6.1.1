@@ -17,11 +17,11 @@
 					<td><p:selectOneRadio
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
 							value="#{specificationBackingBean.managedBean.scQt.scheduleType}">
-							<f:selectItem itemLabel="Frequency Schedule" itemValue="F"></f:selectItem>
-							<f:selectItem itemLabel="Progressive Payment" itemValue="P"></f:selectItem>
+							<f:selectItems
+								value="#{specificationBackingBean.fulFilmentTypeRadioValues}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								update="@([id$=progressive],[id$=schedule])"
-								listener="#{specificationBackingBean.scheduleTypeChange}"></p:ajax>
+								listener="#{specificationBackingBean.scheduleTypeChange(specificationBackingBean.managedBean.scQt)}"></p:ajax>
 						</p:selectOneRadio></td>
 					<td style="margin-top: -3px"><ac:iconTooltip
 							value="#{lbl['lbl.sc.periodic.fullfillent.type.tooltip']}" /></td>
@@ -46,7 +46,7 @@
 							<td><p:inputText style="text-align:right;"
 									disabled="#{specificationBackingBean.managedBean.readOnly}"
 									value="#{specificationBackingBean.managedBean.totalFrequency}">
-									<p:ajax event="blur" update="frequencySchedule"
+									<p:ajax event="blur" update="@([id$=frequencySchedule])"
 										partialSubmit="true" process="@this"
 										listener="#{specificationBackingBean.addScheduleDetails}" />
 								</p:inputText> <ac:iconTooltip
@@ -191,7 +191,7 @@
 						<td><p:inputText style="text-align:right;"
 								disabled="#{specificationBackingBean.managedBean.readOnly}"
 								value="#{specificationBackingBean.managedBean.totalProgressivePayment}">
-								<p:ajax event="blur" update="progressivePayment"
+								<p:ajax event="blur" update="@([id$=progressivePayment])"
 									partialSubmit="true" process="@this"
 									listener="#{specificationBackingBean.addProgressiveDetails}" />
 							</p:inputText> <ac:iconTooltip
