@@ -36,7 +36,7 @@ public class GfmasBatchPmInboundJob implements Job {
 
 		log.info("GfmasBatchPmInboundJob  : Start");
 
-		/*GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
 		
 		gfmasIntegration.pejabatPerakaunanGfmasInbound();
 		
@@ -56,7 +56,7 @@ public class GfmasBatchPmInboundJob implements Job {
 		
 		gfmasIntegration.masterDataPtjGfmasInbound();
 		
-		gfmasIntegration.kodBankGfmasInbound();	*/
+		gfmasIntegration.kodBankGfmasInbound();	
 		
 		log.info("GfmasBatchPmInboundJob  : End");
 		

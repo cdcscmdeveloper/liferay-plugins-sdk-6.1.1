@@ -29,8 +29,8 @@ public class GfmasBatchScInboundJob implements Job {
 
 		log.info("AP516 : GfmasSCBatchIntegrationJob start");
 
-//		GfmasIntegration gfmasIntegration = new GfmasIntegration();
-//		gfmasIntegration.sstInformationGfmas();
+		GfmasIntegration gfmasIntegration = new GfmasIntegration();
+		gfmasIntegration.sstInformationGfmas();
 		 
 		log.info("AP516 : GfmasSCBatchIntegrationJob end");
 		
