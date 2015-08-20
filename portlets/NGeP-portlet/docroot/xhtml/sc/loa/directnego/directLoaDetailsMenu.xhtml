@@ -201,17 +201,7 @@
 						maxlength="3" disabled="#{!isEditableStatus}" /> <p:message
 						id="fileExtNoMsg" for="fileExtNo" display="icon" /></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="loatypeId" required="true"
-						disabled="#{!isEditableStatus}"
-						value="#{directLOABackingBean.managedBean.scLoa.contractType.parameterId}"
-						style="width: 212px;margin-bottom: 5px;">
-						<f:selectItems
-							value="#{directLOABackingBean.getDropdownValues(ParameterTypeConst.directLoaType)}" />
-					</p:selectOneMenu></td>
-			</tr>
+			
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" /></td>

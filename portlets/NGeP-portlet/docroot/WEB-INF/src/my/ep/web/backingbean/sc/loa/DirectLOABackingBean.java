@@ -96,6 +96,8 @@ import my.ep.persistence.entity.sc.loaloi.ScLoaAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaRemark;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReport;
 import my.ep.persistence.entity.sc.loaloi.ScLoaReportAttachment;
+import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDoc;
+import my.ep.persistence.entity.sc.loaloi.ScLoaSupportingDocAttachment;
 import my.ep.persistence.entity.sc.loaloi.ScLoaWitness;
 import my.ep.persistence.entity.sc.loaloi.ScLoi;
 import my.ep.persistence.entity.sc.loaloi.ScLoiLoa;
@@ -244,12 +246,14 @@ public class DirectLOABackingBean extends
 		}
 
 	}
-	
+
 	/**
 	 * Download report as pdf or xlsx files in Letter of Acceptance.
-	 *
-	 * @param scLoaReport the sc loa report
-	 * @throws IOException Signals that an I/O exception has occurred.
+	 * 
+	 * @param scLoaReport
+	 *            the sc loa report
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
 	 */
 	public void downloadReport(ScLoaReport scLoaReport) throws IOException {
 		debugLogger("downloadReport");
@@ -258,7 +262,6 @@ public class DirectLOABackingBean extends
 		scLoaReportAttachment = generateDocumentAttachment(scLoaReport);
 		downloadFile(scLoaReportAttachment);
 	}
-
 
 	/**
 	 * submit LOA details. submit - save data into database and BPM process will
@@ -499,7 +502,7 @@ public class DirectLOABackingBean extends
 						scLoa.getContractSigner());
 			}
 
-			 generateDeclarationFromVelocity(scLoa, scLoa.getScQt());
+			generateDeclarationFromVelocity(scLoa, scLoa.getScQt());
 
 			getManagedBean().setSelectedSupplierBranchName(
 					scLoa.getSupplierBranch());
@@ -6035,5 +6038,133 @@ public class DirectLOABackingBean extends
 		};
 		ScLoiLoaItem scLoiLoaItem = Collections.max(items, comparator);
 		return scLoiLoaItem;
+	}
+
+	/**
+	 * Sum of gstAmount & loa offer price
+	 * 
+	 * @param gstAmount
+	 */
+	public void calculateOverallAmount(BigDecimal gstAmount) {
+
+		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
+		if (gstAmount != null) {
+			overallContractAmt = overallContractAmt.add(gstAmount);
+		}
+		overallContractAmt = overallContractAmt.setScale(2,
+				BigDecimal.ROUND_HALF_EVEN);
+
+		getManagedBean().setOverallContractAmt(overallContractAmt);
+	}
+
+	public boolean isGSTRegActive() {
+
+		boolean isActive = true;
+		ScLoa scLoa = getManagedBean().getScLoa();
+		SmSupplier supplier = scLoa.getScLoiLoa().getSmSupplier();
+		getManagedBean().setRenderRemainder(false);
+		if ((supplier != null && supplier.getGstRegisteredFlag() == DbValueConst.RECORD_STATUS_ACTIVE)) {
+			if (null != scLoa.getGstEffDate()) {
+				if (scLoa.getGstEffDate().compareTo(new Date()) <= 0) {
+					isActive = false;
+				} else {
+					getManagedBean().setRenderRemainder(isActive);
+				}
+			}
+		}
+
+		return isActive;
+	}
+
+	/**
+	 * Adds the loi supp doc action.
+	 */
+	public void addLoaSuppDocAction() {
+		debugLogger("addLoiSuppDocAction");
+
+		ScLoa scLoa = this.getManagedBean().getScLoa();
+		List<ScLoaSupportingDoc> scLoaSuppDocs = scLoa.getScLoaSupportingDocs();
+
+		if (scLoaSuppDocs == null) {
+			scLoaSuppDocs = new ArrayList<ScLoaSupportingDoc>();
+			scLoa.setScLoiSupportingDocs(scLoaSuppDocs);
+		}
+
+		ScLoaSupportingDoc scLoaSuppDoc = new ScLoaSupportingDoc();
+		scLoaSuppDoc.setScLoa(scLoa);
+		//scLoaSuppDoc.setDocId(scLoa.getLoaId().toString());
+		scLoaSuppDoc.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
+		scLoaSuppDoc
+				.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOI_SUPPORTING_DOC);
+		scLoaSuppDoc.setPmDocument(null);
+
+		IParameterSO parameterSO = null;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
+
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+			ParameterResDTO resDTO = parameterSO
+					.retrieveParameterByTypeAndCode(reqDTO);
+			scLoaSuppDoc.setDefinationType(resDTO.getPmParameter());
+		} finally {
+			parameterSO = null;
+		}
+
+		scLoaSuppDocs.add(scLoaSuppDoc);
+	}
+
+	/**
+	 * Delete supporing docs in negotiation details.
+	 */
+	public void deleteSupporingDocs() {
+		ScLoa scLoa = getManagedBean().getScLoa();
+		List<ScLoaSupportingDoc> selectedScLoiSuppDocs = getManagedBean()
+				.getSelectedScLoaSuppDocs();
+
+		if (selectedScLoiSuppDocs != null && selectedScLoiSuppDocs.size() > 0) {
+			deleteRowsAction(scLoa.getScLoaSupportingDocs(),
+					selectedScLoiSuppDocs);
+		} else {
+			throw new EpException("Please select At least one Item");
+		}
+	}
+
+	/**
+	 * Handle supp doc file upload.
+	 * 
+	 * @param event
+	 *            the event
+	 * @throws FileNotFoundException
+	 *             the file not found exception
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	public void handleSuppDocFileUpload(FileUploadEvent event)
+			throws FileNotFoundException, IOException {
+		debugLogger("handleSuppDocFileUpload");
+		if (event.getFile() != null) {
+			// String attachmentDocType =
+			// getManagedBean().getAttachmentDocType();
+			ScAttachment scAttachment = null;
+			ScLoaSupportingDoc selectedScLoaSuppDoc = this.getManagedBean()
+					.getSelectedScLoaSuppDoc();
+			ScLoaSupportingDocAttachment scLoaSupportingDocAttachment = selectedScLoaSuppDoc
+					.getScLoaSupportingDocAttachment();
+			if (null == scLoaSupportingDocAttachment) {
+				scLoaSupportingDocAttachment = new ScLoaSupportingDocAttachment();
+				scLoaSupportingDocAttachment
+						.setScLoaSupportingDoc(selectedScLoaSuppDoc);
+				selectedScLoaSuppDoc
+						.setScLoaSupportingDocAttachment(scLoaSupportingDocAttachment);
+			}
+			scLoaSupportingDocAttachment.setDocNo(selectedScLoaSuppDoc
+					.getScLoa().getLoaNo());
+			scAttachment = scLoaSupportingDocAttachment;
+
+			uploadAttachment(event.getFile(), scAttachment);
+		}
 	}
 }
