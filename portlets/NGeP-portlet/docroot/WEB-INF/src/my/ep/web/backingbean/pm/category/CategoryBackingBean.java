@@ -1544,6 +1544,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 		if (!checkCategoryRestrDuplicateCompanyType()) {
 			throw new EpException(MessageConst.ERROR_775006);
 		}
+		//validation for fields
+		if (!validatePmCategoryL3()) {
+			return "/xhtml/pm/category/categoryl3.xhtml";
+		}
+		
+		//machine category data information
 		getMachineCategoryData();
 
 		try {
@@ -1594,11 +1600,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().getPmCategoryL3()
 						.setCategoryTypeCode(parameterResDTO.getPmParameter());
 			}
-
-			if (!validatePmCategoryL3()) {
-				return "/xhtml/pm/category/categoryl3.xhtml";
-			}
-
+			
 			getBasicCategoryData();
 			getCategoryRestrData();
 
