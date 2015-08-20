@@ -162,7 +162,8 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_GOSODO,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
 						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
-						QTFieldConst.FILED_QT_SUPPQUALIFICATION, }),
+						QTFieldConst.FILED_QT_SUPPQUALIFICATION,
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID }),
 
 		QT_PENDING_APPROVALS_CHECKLIST_SCORING(
 				QTStatusConst.QT_PENDING_APPROVALS_CHECKLIST_SCORING,
@@ -170,7 +171,8 @@ public class QTFiledMapper {
 				new String[] { QTFieldConst.FILED_QT_SUPPQUALIFICATION,
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_VALIDITY_PERIOD,
-						QTFieldConst.FILED_QT_PUBLISH_PERIOD }), QT_PENDING_SCHEDULE_DOCUMENT(
+						QTFieldConst.FILED_QT_PUBLISH_PERIOD,
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID }), QT_PENDING_SCHEDULE_DOCUMENT(
 				QTStatusConst.QT_PENDING_SCHEDULE_DOCUMENT, new String[] {
 						QTFieldConst.FILED_QT_BSVDETAILS,
 						QTFieldConst.FILED_QT_PUBLISH_DATE,
@@ -178,7 +180,8 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
-						QTFieldConst.FILED_QT_PUB_APPROVAL }), QT_REVISION_PUBLICATION(
+						QTFieldConst.FILED_QT_PUB_APPROVAL,
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID }), QT_REVISION_PUBLICATION(
 				QTStatusConst.QT_REVISION_PUBLICATION, new String[] {
 						QTFieldConst.FILED_QT_ESTMT_AMT,
 						QTFieldConst.FILED_QT_TITLE,
@@ -189,7 +192,8 @@ public class QTFiledMapper {
 						QTFieldConst.FILED_QT_SCHDETAILS,
 						QTFieldConst.FILED_QT_DEDUCTIONPAYMENT,
 						QTFieldConst.FILED_QT_DOCUMENTS,
-						QTFieldConst.FILED_QT_PUB_APPROVAL });
+						QTFieldConst.FILED_QT_PUB_APPROVAL,
+						QTFieldConst.FILED_QT_PROCUREMENT_TYPE_CAT_ID });
 
 		private Long statusId;
 		private String[] toBeEnableFields;
