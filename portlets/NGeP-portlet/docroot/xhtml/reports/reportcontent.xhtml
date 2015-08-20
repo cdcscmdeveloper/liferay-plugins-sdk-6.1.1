@@ -173,10 +173,11 @@
 					<h:panelGroup id="rptbtnGroup"  style="margin-top:10px;">
 		            <div align="right">	
 		            
-		            <p:commandButton  value="#{lbl['lbl.rpt.generate']}"  ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"
-		            update=":form" >
+		           <p:commandButton onstart="blkReportContent.show();" 
+				    oncomplete="blkReportContent.hide();" value="#{lbl['lbl.rpt.generate']}" disabled="#{reportBackingBean.managedBean.rptGenBean.generateButtonView}" ajax="false" onclick="handleLocalesDialogComplete(xhr, status, args)" 
+		            update="@form" partialSubmit="true" process="@form">
         				<p:fileDownload value="#{reportBackingBean.generateReport()}" />
-    				</p:commandButton> 	           
+    				</p:commandButton> 	  	           
 					<p:commandButton   value="#{lbl['lbl.btn.reset']}"	action="#{reportBackingBean.resetReportForm}"
 					 update="@form" partialSubmit="true" process="@form" />					        					
 				   </div>
@@ -206,14 +207,14 @@
 			function handleLocalesDialogComplete(xhr, status, args)
 			{
 				//alert("Download started!");
-			    statusDialog.show();
+			    //statusDialog.show();
 			   if (args) {
 			      var reportInValid = args.reportInValid;			
 			     if(reportInValid){
 			    	 //window.open(args.reportViewUrl,'_blank');
 			    	 //reportGenDialog.show();
 			    	// alert("Download finished!");
-					    statusDialog.hide();
+					    //statusDialog.hide();
 			     }
 			   }
 			}
