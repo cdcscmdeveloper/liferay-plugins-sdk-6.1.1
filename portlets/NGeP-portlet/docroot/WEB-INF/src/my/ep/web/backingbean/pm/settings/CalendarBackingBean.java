@@ -12,6 +12,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 
 import my.ep.biz.service.pm.general.settings.calendar.ICalendarSO;
 import my.ep.constant.MessageConst;
@@ -79,8 +80,10 @@ public class CalendarBackingBean extends
 		System.out.println("........getManagedBean().getEvent().getTitle()="+getManagedBean().getEvent().getTitle());
 		System.out.println("........getManagedBean().getEvent().getStartDate()="+getManagedBean().getEvent().getStartDate());
 		System.out.println("........getManagedBean().getEvent().getEndDate()="+getManagedBean().getEvent().getEndDate());
+		System.out.println("........getManagedBean().getEvent().getId()="+getManagedBean().getEvent().getId());
 
 		if(getManagedBean().getEvent().getTitle() == null || getManagedBean().getEvent().getTitle().isEmpty()){
+			System.out.println("......title is empty error.......");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(
 					null,
@@ -89,10 +92,10 @@ public class CalendarBackingBean extends
 									"title required",
 									MessageUtils.BUNDLE_COMMON_MESSAGES,
 									new FacesScopes().getUserLocale())));
-		
+		return;
 //			RequestContext.getCurrentInstance().execute("eventDialog.hide();");
 //		       throw new EpException("key in the title of Event");
-		}
+		}else{
 		ICalendarSO calendarSO = null;
 		CalendarResDTO resDTO = null;
 		
@@ -110,6 +113,10 @@ public class CalendarBackingBean extends
 				reqDTO.setHoliday(holiday);
 				resDTO = calendarSO.addHoliday(reqDTO);
 			} else {
+				 String exTitle = this.getManagedBean().getEventToExTitleValueMap().get(id);
+				 if(exTitle != null && !exTitle.isEmpty()){
+					 holiday.setHolidayExName(exTitle);
+				 }
 				reqDTO.setStateId(stateId);
 				reqDTO.setHoliday(holiday);
 				resDTO = calendarSO.updateHoliday(reqDTO);
@@ -118,14 +125,36 @@ public class CalendarBackingBean extends
 			if (resDTO.isSuccessful()) {
 				getManagedBean().getEventModel()
 						.updateEvent(getManagedBean().getEvent());
+//				this.getManagedBean().setEvent(new DefaultScheduleEvent());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			getManagedBean().loadSchedule(stateId);
 		}
+		}
 	}
-	
+	public void holidayTitleValChange(ValueChangeEvent event){
+		System.out.println("holidayTitleValChange");
+		System.out.println("event.getOldValue()="+event.getOldValue());
+		System.out.println("event.getNewValue()="+event.getNewValue());
+
+		String eventId = this.getManagedBean().getEvent().getId();
+		System.out.println("........getManagedBean().getEvent().getId()="+eventId);
+		if (eventId != null) {
+			String exTitle = this.getManagedBean().getEventToExTitleValueMap()
+					.get(eventId);
+			if (exTitle != null) {
+				if (exTitle == (String) event.getNewValue()) {
+					this.getManagedBean().getEventToExTitleValueMap()
+							.remove(eventId);
+				}
+			} else {
+				this.getManagedBean().getEventToExTitleValueMap()
+						.put(eventId, (String) event.getOldValue());
+			}
+		}
+	}
 	public void preLoadingCalendar() {
 		System.out.println("........preLoadingCalendar.......");
 		renewSesionObject() ;	
@@ -189,6 +218,15 @@ public class CalendarBackingBean extends
 		if (this.getManagedBean().getSelectedState() != null && this.getManagedBean().getSelectedState().getStateId() != null) {
 			getManagedBean().loadSchedule(this.getManagedBean().getSelectedState().getStateId());
 		}
+		
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(
+									"tsssssstt msggggg",
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
 	}
 
 	public void fillHolidayModelByEvent(PmHoliday holiday) {
@@ -196,8 +234,6 @@ public class CalendarBackingBean extends
 		holiday.setState(getManagedBean().getSelectedState());
 		holiday.setHolidayName(getManagedBean().getEvent().getTitle());
 		holiday.setStartDate(getManagedBean().getEvent().getStartDate());
-		//increase end date for one day before persist because Scheduler component don't include endDate for holiday event
-//		holiday.setEndDate(DateUtils.addDays(getManagedBean().getEvent().getEndDate(), 1));
 		Calendar calendar = Calendar.getInstance();
 	    calendar.setTime(getManagedBean().getEvent().getEndDate());
 	    calendar.set(Calendar.HOUR_OF_DAY, 23);
@@ -217,12 +253,14 @@ public class CalendarBackingBean extends
         calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE), 0, 0, 0);
 
         return calendar;
-    }
+    } 
+	
 	public void onEventSelect(SelectEvent selectEvent) {
-		System.out.println("......getObject()).getStartDate()="+((ScheduleEvent) selectEvent.getObject()).getStartDate());
-		System.out.println("......getObject()).getEndDate()="+((ScheduleEvent) selectEvent.getObject()));
+//		System.out.println("......getObject()).getStartDate()="+((ScheduleEvent) selectEvent.getObject()).getStartDate());
+//		System.out.println("......(ScheduleEvent) selectEvent.getObject()).getTitle()="+((ScheduleEvent) selectEvent.getObject()).getTitle());
 		
 		getManagedBean().setEvent((ScheduleEvent) selectEvent.getObject());
+//		 RequestContext.getCurrentInstance().execute("eventDialog.show()");
     }
 	     
     public void onDateSelect(SelectEvent selectEvent) {
