@@ -1947,7 +1947,7 @@ public class GfmasIntegration {
 	reqDTO.setDataEndTime(null);
 	reqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_FAIL);
 	reqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_FAIL);
-	reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPERUNDING);
+	reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
 	reqDTO.setServiceCode(reqDTO.getServiceCode());
 	reqDTO.setProcessId(reqDTO.getProcessId());
 	reqDTO.setFileName(IntegrationConstants.VAVLUE_NA);
