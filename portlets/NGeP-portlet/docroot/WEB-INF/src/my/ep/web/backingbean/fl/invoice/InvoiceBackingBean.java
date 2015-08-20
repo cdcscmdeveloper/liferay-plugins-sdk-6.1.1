@@ -679,7 +679,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 							invItemSummary.setRecalledQty(siResDTO.getTotalRecallQty());
 							invItemSummary.setRecalledAmt(siResDTO.getTotalRecallAmt());
 							invItemSummary.setFlFulfilmentItem(noteItem.getFlItem());
-							invItemSummary.setInvAmt(noteItem.getReceivedAmt());
+							
 
 							FlInvoiceItem invItem = new FlInvoiceItem();
 							invItem.setFlInvoiceItemSummary(invItemSummary);
@@ -711,7 +711,6 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 						invItemSummary.setRecalledQty(siResDTO.getTotalRecallQty());
 						invItemSummary.setRecalledAmt(siResDTO.getTotalRecallAmt());
 						invItemSummary.setFlFulfilmentItem(noteItem.getFlItem());
-						invItemSummary.setInvAmt(noteItem.getReceivedAmt());
 
 						FlInvoiceItem invItem = new FlInvoiceItem();
 						invItem.setFlInvoiceItemSummary(invItemSummary);
@@ -732,11 +731,12 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 		}
 		FlInvoiceItemSummary invItemSummMapValue = null;
+		
 		for(Entry<Long, FlInvoiceItemSummary> itemEntry : itemMapLv1.entrySet()){	
 			invItemSummMapValue = itemEntry.getValue();
 			BigDecimal sumInvAmt = BigDecimal.ZERO;
 			for(FlInvoiceItem flInvoiceItem : invItemSummMapValue.getFlInvoiceItem()) {
-				sumInvAmt.add(flInvoiceItem.getInvAmt());
+				sumInvAmt = sumInvAmt.add(flInvoiceItem.getInvAmt());
 			}
 			invItemSummMapValue.setInvAmt(sumInvAmt);
 			getManagedBean().getInvoice().getFlInvoiceItemSummary().add(invItemSummMapValue);
