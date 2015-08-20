@@ -379,10 +379,9 @@ public class GfmasIntegration {
 			BankAccountInformation accountInformation = null;
 			CompanyBranch companyBranch = null;
 			
-			companyBranchs = new ArrayList<CompanyBranch>();
-
 			for(SmSupplier smSupplier : resDTO.getSmSuppliers()){
 				
+				companyBranchs = new ArrayList<CompanyBranch>();
 				dataVendor = new MasterDataVendor();
 				dataVendor.setRecordType(IntegrationConstants.RECORD_TYPE_ZERO);
 				dataVendor.setAgencyId(IntegrationConstants.AGENSI_ID_ePerolehan);  
@@ -582,7 +581,7 @@ public class GfmasIntegration {
 					
 						dataVendor.setCompanyBranchs(companyBranchs);
 						if(!dataVendors.contains(dataVendor))
-						dataVendors.add(dataVendor);
+							dataVendors.add(dataVendor);
 						
 					} 
 			fileUtility.masterDataVendorFileOutPutStream(dataVendors,IntegrationConstants.FILE_PATH);
@@ -634,7 +633,7 @@ public class GfmasIntegration {
 							reqDTO = new SupplierSearchReqDTO();
 							smSupplier = new SmSupplier();
 							smSupplier.setSapVendorCode(vendor.getSapVendorCode());
-							smSupplier.setCompanyName(vendor.getCompanyBranch().getName());
+//							smSupplier.setCompanyName(vendor.getCompanyBranch().getName());
 							smSupplier.setChangedBy(IntegrationConstants.BATCH_USER);
 							reqDTO.setSmSupplier(smSupplier);
 							supplierSearchSO.saveOrUpdateSmSupplier(reqDTO);
