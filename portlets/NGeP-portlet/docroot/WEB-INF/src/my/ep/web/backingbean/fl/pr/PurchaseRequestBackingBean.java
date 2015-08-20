@@ -2995,6 +2995,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 					throw new EpException(MessageConst.ERROR_750010);
 				}
 				if(!getManagedBean().isDeclarationCheck()){
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745071);
 				}
 			} else if(BpmOutcomeConst.BPM_REVISE.equals(outcome) || BpmOutcomeConst.BPM_CANCEL.equals(outcome) || BpmOutcomeConst.BPM_REJECT.equals(outcome)){

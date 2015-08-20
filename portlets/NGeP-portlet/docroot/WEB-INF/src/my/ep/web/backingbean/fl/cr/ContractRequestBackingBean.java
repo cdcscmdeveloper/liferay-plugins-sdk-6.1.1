@@ -3870,6 +3870,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					}
 				}
 				if(!getManagedBean().isDeclarationCheck()){
+					getManagedBean().setSelectedTabIndex(0);
 					throw new EpException(MessageConst.ERROR_745071);
 				}
 			} else if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_CANCEL) || action.equalsIgnoreCase(BpmOutcomeConst.BPM_REJECT)){
