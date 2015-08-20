@@ -402,6 +402,9 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 					FulfilmentResDTO errRes = fulfilmentSO.retrieveErrorContent(errReq);
 					getManagedBean().setGfmasErrorContent(errRes.getFlErrorContent());
 				}
+				if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
+					getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
+				}
 				getSupplierGst(getManagedBean().getFulfilmentNote());
 			}
 			
@@ -415,14 +418,14 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 				retrieveCriteriaList();
 			}
 			if(null == getManagedBean().getFulfilmentNote().getReceivedDate()){
-				getManagedBean().getFulfilmentNote().setReceivedDate(getCurrentDate());
+				getManagedBean().getFulfilmentNote().setReceivedDate(DateUtils.getCurrentDateWithoutTime());
 			}
 			if(null == getManagedBean().getFulfilmentNote().getCreatedDate()){
 				getManagedBean().getFulfilmentNote().setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			}		
 			if(null == getManagedBean().getFulfilmentNote().getSubmissionDate() || 
 				(getManagedBean().getFulfilmentNote().getStatus()!=null && getManagedBean().getFulfilmentNote().getStatus().getStatusId().longValue()==FulfilmentStatusConst.FN_PENDING_DO_ACKNOWLEDGMENT.longValue())){
-				getManagedBean().getFulfilmentNote().setSubmissionDate(getCurrentDate());
+				getManagedBean().getFulfilmentNote().setSubmissionDate(DateUtils.getCurrentDateWithoutTime());
 			}			
 		}
 	}
@@ -866,49 +869,47 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fulfilmentNote.setGstDeclaredDate(resDTO.getSmGstSupplier().getGstDeclaredDate());
 			fulfilmentNote.setGstRegNo(resDTO.getSmGstSupplier().getGstRegNo());
 		}
-		boolean amtChanged = false;
-		if(resDTO.getSmGstSupplier() == null && fulfilmentNote.getFlDeliveryOrder().getGstRegNo() == null){//no GST previous n current
-			for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
-				noteItem.setGstAmount(BigDecimal.ZERO);
-				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
-			}
-			return;
-		}else{
-			amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(),amtChanged,fulfilmentNote);
-		}
+
+		boolean amtChanged = reCalculateGstUnitPrice(resDTO.getSmGstSupplier(), fulfilmentNote);
 		if(amtChanged == true){
-//			getManagedBean().setAutoUpdate(Boolean.FALSE);
-//			RequestContext.getCurrentInstance().update("@form");
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,null,"Unit price have changed"));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+					MessageUtils.getMessage(MessageConst.INFO_745009, new String[]{getManagedBean().getFulfilmentNote().getFlRequest().getFlFulfilmentOrder().getDocNo()}, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
 		}
 	}
 	
-	private boolean reCalculateGstUnitPrice(SmGstSupplier smGstSupplier, boolean amtChanged,FlFulfilmentNote fulfilmentNote){
+	private boolean reCalculateGstUnitPrice(SmGstSupplier smGstSupplier, FlFulfilmentNote fulfilmentNote){
+		boolean amtChanged = false;
 		if(fulfilmentNote.getFlRequest().getGstRate() == null){
 			fulfilmentNote.getFlRequest().setGstRate(BigDecimal.ZERO);
 		}
 		
+		boolean isDoGST = fulfilmentNote.getFlDeliveryOrder().getGstEffectiveDate()!=null && fulfilmentNote.getFlDeliveryOrder().getGstEffectiveDate().getTime() <= fulfilmentNote.getFlDeliveryOrder().getChangedDate().getTime(); 
+		
 		for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
-				if(smGstSupplier != null){
-					Double gstAmt = new Double(0);
-					gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().doubleValue() / 100;
-					if(smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime()
-							&& noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){//check effDate and isGST checked
+			if(smGstSupplier != null){
+				Double gstAmt = new Double(0);
+				gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().doubleValue() / 100;
+				if(smGstSupplier.getGstEffDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime()
+						&& noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){//check effDate and isGST checked
+					if(noteItem.getFlDelOrderItem().getGstAmount().compareTo(new BigDecimal(gstAmt).multiply(fulfilmentNote.getFlRequest().getGstRate()))!=0) {
 						noteItem.setGstAmount(new BigDecimal(gstAmt).multiply(fulfilmentNote.getFlRequest().getGstRate()));
 
 						if(noteItem.getGstAmount().doubleValue() > 0){
 							noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().add(noteItem.getGstAmount()));
 							amtChanged = true;
 						}
-					}else{//not effective date
-						noteItem.setGstAmount(BigDecimal.ZERO);
-						noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 					}
-				}else if(smGstSupplier == null){//DO isGST and current non GST
+				}else{//not effective date
+					noteItem.setGstAmount(BigDecimal.ZERO);
+					noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+				}
+			} else if(smGstSupplier == null) {//DO isGST and current non GST
+				if(isDoGST) {
 					noteItem.setGstAmount(BigDecimal.ZERO);
 					noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
 					amtChanged = true;
 				}
+			}
 		}
 		return amtChanged;
 	}
