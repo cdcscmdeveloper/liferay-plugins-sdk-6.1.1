@@ -127,12 +127,10 @@ public class EperundingIntegration {
 
 		for (SmSupplier smSupplier : resDTO.getSmSuppliers()) {
 
-			if (smSupplier.getSmMofAccounts().size() > 0
-					&& !smSupplier.getSmMofAccounts().isEmpty()) {
+			if (smSupplier.getSmMofAccounts().size() > 0  && !smSupplier.getSmMofAccounts().isEmpty()) {
 				// if (null != smSupplier.getSmAppl()) {
 				// if (null != smSupplier.getSmAppl().getSmPersonnels()) {
-				for (SmPersonnel personnel : smSupplier.getSmAppl()
-						.getSmPersonnels()) {
+				for (SmPersonnel personnel : smSupplier.getSmAppl().getSmPersonnels()) {
 
 					equityOwner = new EquityOwner();
 					profBodyDetail = new ProfBodyDetail();
@@ -688,9 +686,9 @@ public class EperundingIntegration {
 						
 						
 						// New columns added
-						profile.setGSTNo(smSupplier.getSmAppl().getSmCompanyBasic().getGstRegistrationNo());
+//						profile.setGSTNo(smSupplier.getSmAppl().getSmCompanyBasic().getGstRegistrationNo());
 						profile.setVirtualCertNo(smSupplier.getSmMofAccounts().get(0).getSmMofCerts().get(0).getCertSerialNo());
-						profile.setGSTEffectiveDate(smSupplier.getSmAppl().getSmCompanyBasic().getGstRegistrationDate());
+//						profile.setGSTEffectiveDate(smSupplier.getSmAppl().getSmCompanyBasic().getGstRegistrationDate());
 						profile.setFirstTaxablePeriod(null);
 						// End
 						profile.setCompanyType(getCompanyType(smSupplier.getBusinessType()));
@@ -1340,16 +1338,16 @@ public class EperundingIntegration {
 
 		SupplierSearchReqDTO reqDTO = new SupplierSearchReqDTO();
 		
-		Date currentDate = null;//new Date();
+		Date currentDate = new Date();
 	
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	/*	SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 		try {
 			currentDate = sdf.parse(DateString);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		log.info("date :" + currentDate);
+		log.info("date :" + currentDate);*/
 
 		reqDTO.setCreateDate(currentDate);
 		reqDTO.setTaskId(taskId);
