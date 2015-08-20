@@ -40,7 +40,7 @@
 					disabled="true" />
 			</td>
 		</tr>
-	<h:panelGroup id="gstInfoPanelId">
+	
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
@@ -48,7 +48,7 @@
 			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
-					disabled="true" /><ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}"/>
+					disabled="true" id="gstRegNoId"/> <ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}"/>
 			</td>
 		</tr>
 		<tr>
@@ -58,9 +58,9 @@
 			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
-					disabled="true" >
+					disabled="true" id="gstEffDateId">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText><ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}" />
+					</p:inputText> <ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}"/>
 			</td>
 		</tr>
 		<tr>
@@ -70,12 +70,12 @@
 			<td>
 				<p:inputText size="50"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
-					disabled="true" >
+					disabled="true" id="gstDeclaredDateId">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
-					</p:inputText><ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}" />
+					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}"/>
 			</td>
 		</tr>
-	</h:panelGroup>
+	
 		<tr>
 			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.branch']}"/>
@@ -97,7 +97,7 @@
 										itemValue="#{smSupplierBranch.branchName}" itemLabel="#{smSupplierBranch.branchName}" />
 									<p:ajax event="change"
 										listener="#{lOADetailBackingBean.handleBranchDetailsChanged}"
-										partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstInfoPanelId" />
+										partialSubmit="true" process="@this" update="suppAddr, suppPhoneNo, suppFaxNo, suppMobNo, suppContact, suppEmail, gstDeclaredDateId, gstEffDateId, gstRegNoId , gstAmtId" />
 								</p:selectOneMenu>
 								<p:message id="branchMsg" for="branch" display="icon" />
 							</td>
@@ -254,7 +254,7 @@
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
 						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="30">
+						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="30" id="gstAmtId">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
