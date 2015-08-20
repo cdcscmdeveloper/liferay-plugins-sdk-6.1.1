@@ -22,7 +22,7 @@ public class BatchPortType_ServiceLocator extends org.apache.axis.client.Service
     }
 
     // Use to get a proxy class for BatchPortTypePort
-    private java.lang.String BatchPortTypePort_address = "http://eposb:8011/Batch/Generic/Outbound/v1.2";
+    private java.lang.String BatchPortTypePort_address = "http://192.168.62.18:8011/Batch/Generic/Outbound/v1.2";
 
     public java.lang.String getBatchPortTypePortAddress() {
         return BatchPortTypePort_address;

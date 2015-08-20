@@ -210,6 +210,7 @@ public class SFTPUtility {
 			log.info("File download success");
 			return true;
 		} catch (Exception e) {
+			System.out.println("error downloading file from SOA");
 			throw new RuntimeException(e);
 		} finally {
 			manager.close();
@@ -384,7 +385,7 @@ public class SFTPUtility {
 					for (int i = 0; i < exists.length; i++) {
 
 						fileName = exists[i].getName().toString();
-						String subFile = fileName.substring(53);
+						String subFile = fileName.substring(55);
 						
 						if(subFile.contains(serviceId )){
 							log.info("subFile :"+subFile);

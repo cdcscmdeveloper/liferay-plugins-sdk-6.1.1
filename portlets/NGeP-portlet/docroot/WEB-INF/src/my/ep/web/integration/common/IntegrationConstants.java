@@ -36,10 +36,10 @@ public class IntegrationConstants {
 	 public static final String DECRYPTED_FILE_PATH="/batch/Encryption/decrypt/";
 //	public static final String DECRYPTED_FILE_PATH = "C:/Integration/Encryption/decrypt/";
 
-	public static final String SFTP_HOST = EpPropertiesUtils.getInstance().getProperty("sftp.host");    //Stg
+	public static final String SFTP_HOST = EpPropertiesUtils.getInstance().getProperty("sftp.host");
 	public static final int SFTP_PORT = 22;// Integer.parseInt("22");
-	public static final String SFTP_USER = EpPropertiesUtils.getInstance().getProperty("sftp.user");//"oracle";  // "support";
-	public static final String SFTP_PASS = EpPropertiesUtils.getInstance().getProperty("sftp.pass");//"welcome1"; // "suPPort!@#";
+	public static final String SFTP_USER = EpPropertiesUtils.getInstance().getProperty("sftp.user");
+	public static final String SFTP_PASS = EpPropertiesUtils.getInstance().getProperty("sftp.pass");
 
 	public static final String GMAS_PUBLIC_KEY_PATH = "NGeP-portlet.war/encryptionKeys/1gfmasdev_pub.id";
 	public static final String GMAS_PRIVATE_KEY_PATH = "NGeP-portlet.war/encryptionKeys/privatekey";
@@ -149,7 +149,9 @@ public class IntegrationConstants {
 	
 	public static final String TARGET_SYSTEM_PHIS = "PHIS";
 	
-	public static final String TARGET_SYSTEM_EPERUNDING = "EPERUNDING";
+	public static final String TARGET_SYSTEM_EPERUNDING = "ePerunding";
+	
+	public static final String TARGET_SYSTEM_EPEROLEHAN = "ePerolehan";
 	
 	// For Payment Information
 	

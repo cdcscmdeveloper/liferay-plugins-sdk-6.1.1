@@ -304,7 +304,7 @@ public class FileUtility {
 
 	public void masterDataVendorFileOutPutStream(List<MasterDataVendor> content, String filePath) {
 		log.info("inside masterDataVendorFileOutPutStream");
-		String PROCESS_ID = "APIVE";
+		String PROCESS_ID = ProcessCode.APIVE.value();
 		
 		String fileName = createFileNameGfmas(PROCESS_ID);
 
@@ -322,15 +322,12 @@ public class FileUtility {
 					line = new StringBuffer();
 					line.append(formatIntegerField(mDataVendor.getRecordType(),	1, "R"));
 					line.append(formatStringField(mDataVendor.getAgencyId(), 6,	"L"));
-//					if(null!=mDataVendor.getVendorIdCode())
-						line.append(formatStringField(mDataVendor.getVendorIdCode(), 20, "L"));
-//					else
-//						line.append(formatStringField(IntegrationConstants.EMPTY_TRING, 20, "L"));
+					line.append(formatStringField(mDataVendor.getVendorIdCode(), 20, "L"));
 					line.append(formatStringField(mDataVendor.getEntityCode(),4, "L"));
 					line.append(System.getProperty("line.separator"));
 					writer.write(line.toString());
 						
-					if (mDataVendor.getCompanyBranchs().size() != 0) {
+					if (mDataVendor.getCompanyBranchs()!= null) {
 						for (CompanyBranch companyBranch : mDataVendor.getCompanyBranchs()) {
 							
 							branchLine = new StringBuffer();
@@ -359,26 +356,25 @@ public class FileUtility {
 							branchLine.append(formatStringField(companyBranch.getReferenceNoGST(), 20,"L"));
 							branchLine.append(System.getProperty("line.separator"));
 							writer.write(branchLine.toString());
-								
-							}
+							
+							if (companyBranch.getBankAccountInfoList().size() != 0) {
+								for (BankAccountInformation bankInfo : companyBranch.getBankAccountInfoList()) {
+									subLine = new StringBuffer();
+									subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
+									subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
+									subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
+									subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
+									subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
+									subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
+									subLine.append(formatStringField(bankInfo.getBankActionIndicator(), 1, "L"));
+//									subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));   // removed in 2.7
+									subLine.append(System.getProperty("line.separator"));
+									writer.write(subLine.toString());
+									writer.flush();
 						}
-						if (mDataVendor.getBankAccountInfoList().size() != 0) {
-							for (BankAccountInformation bankInfo : mDataVendor.getBankAccountInfoList()) {
-								subLine = new StringBuffer();
-								subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
-								subLine.append(formatIntegerField(bankInfo.getRecordNumber(), 3, "R"));
-								subLine.append(formatStringField(bankInfo.getBankCountry(), 2, "L"));
-								subLine.append(formatStringField(bankInfo.getBankKey(), 15, "L"));
-								subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
-								subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
-								subLine.append(formatStringField(bankInfo.getBankActionIndicator(), 1, "L"));
-//								subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));   // removed in 2.7
-								subLine.append(System.getProperty("line.separator"));
-								writer.write(subLine.toString());
-								writer.flush();
+						}
 					}
-						}
-//					}
+				}
 				}
 			}else{
 				log.info("content is null");
@@ -400,7 +396,7 @@ public class FileUtility {
 	}
 
 	public void sstInformationFileOutPutStream(BatchReqDTO<SSTInformation> reqDTO) {
-		String PROCESS_ID = "AP516";
+		String PROCESS_ID = ProcessCode.AP516.value();
 		String fileName = createFileNameGfmas(PROCESS_ID);
 		Writer writer = null;
 
@@ -424,7 +420,7 @@ public class FileUtility {
 				
 				reqDTO.setProcessId(PROCESS_ID);
 				reqDTO.setFileName(fileName);
-				reqDTO.setServiceCode("GFM-350");
+				reqDTO.setServiceCode(ServiceCode.AP516.value());
 				reqDTO.setEncryptFilePath(IntegrationConstants.ENCRYPTED_FILE_PATH);
 				
 				encryption.encryptGmas(reqDTO);
