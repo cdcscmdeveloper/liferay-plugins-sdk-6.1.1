@@ -4763,13 +4763,12 @@ public class LOADetailBackingBean extends
 				ParameterResDTO resDTO = parameterSO
 						.retrieveParameterByTypeAndCode(reqDTO);
 				scLoaReport.setDefinationType(resDTO.getPmParameter());
-				scLoaReport
-						.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
-				String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // S2
+				String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // AQ
 				if (ParameterConst.DOCTYPE_PURCHASE_REQUEST
 						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
-					docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // S1
+					docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // AD
 				}
+				scLoaReport.setDocCategory(docCategory); 
 				scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM document
 				
 			} finally {
