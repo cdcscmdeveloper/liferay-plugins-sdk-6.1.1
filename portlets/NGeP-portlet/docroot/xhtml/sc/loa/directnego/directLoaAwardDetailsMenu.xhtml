@@ -13,8 +13,9 @@
 		<table>
 			<tr>
 				<td valign="top" width="18%"><h:outputLabel
-						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel></td>
-				<td colspan="3"><p:inputText size="95"
+						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel> <p:outputLabel
+						value="*" styleClass="mandatory" /></td>
+				<td colspan="3"><p:inputText size="95" required="true"
 						style="margin-bottom:5px;"
 						value="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.specName}" /></td>
 			</tr>
@@ -22,7 +23,7 @@
 				<td style="width: 10%"><h:outputLabel
 						value="#{lbl['lbl.sc.item.type']}" /> <p:outputLabel value="*"
 						styleClass="mandatory" /></td>
-				<td><p:selectOneMenu id="itemType"
+				<td><p:selectOneMenu id="itemType" required="true"
 						disabled="#{!isEditableStatus}"
 						value="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.itemTypeCode.parameterId}"
 						style="width: 178px;margin-bottom: 5px;"
@@ -96,14 +97,16 @@
 			rendered="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.itemTypeCode.parameterId eq 164}">
 			<ac:templateSpec
 				templateSpecBean="#{directLOABackingBean.managedBean.templateSpecBean}"
-				title="#{lbl['lbl.txt.product']}" newable="#{isPendingVerification or isSupplierAckStatus}" />
+				title="#{lbl['lbl.txt.product']}"
+				newable="#{isPendingVerification or isSupplierAckStatus}" />
 
 		</h:panelGroup>
 		<h:panelGroup id="serviceListId"
 			rendered="#{directLOABackingBean.managedBean.scQtDoc.tplSpecMaster.itemTypeCode.parameterId eq 165}">
 			<ac:templateSpec
 				templateSpecBean="#{directLOABackingBean.managedBean.templateSpecBean}"
-				title="#{lbl['lbl.txt.service']}" newable="#{isPendingVerification or isSupplierAckStatus}" />
+				title="#{lbl['lbl.txt.service']}"
+				newable="#{isPendingVerification or isSupplierAckStatus}" />
 
 		</h:panelGroup>
 
