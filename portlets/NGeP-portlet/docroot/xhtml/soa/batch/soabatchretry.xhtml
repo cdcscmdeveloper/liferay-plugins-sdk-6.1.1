@@ -23,10 +23,7 @@
 									update=":form:batchRetryTable" /> <p:commandButton
 									value="#{lbl['lbl.portal.soa.btn.refresh']}" id="refresh"
 									action="#{soaBatchRetryBackingBean.refreshBatchRetryList}"
-									update=":form:batchRetryTable" /> <p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.delete']}" id="delete"
-									action="#{soaBatchRetryBackingBean.removeBatchRetryList}"
-									update=":form:batchRetryTable" /></td>
+									update=":form:batchRetryTable" /> </td>
 						</tr>
 						<tr>
 							<td colspan="2" width="100%" valign="top"><p:dataTable
@@ -38,45 +35,45 @@
 
 									<ac:paginator for="batchRetryTable" />
 
-									<p:column selectionMode="multiple" style="width:7%" />
+									<p:column selectionMode="multiple" style="width:2%;text-align:center"/>
 
-									<p:column headerText="Tran Id">
+									<p:column headerText="#{lbl['lbl.portal.soa.transId']}">
 										#{batchRetry.transId}
 									</p:column>
 
-									<p:column headerText="RQ Uid">
+									<p:column headerText="#{lbl['lbl.portal.soa.rqUid']}">
 										#{batchRetry.rqUid}
 									</p:column>
 
-									<p:column headerText="Service Code">
+									<p:column headerText="#{lbl['lbl.portal.soa.serviceCode']}">
 										#{batchRetry.serviceCode}
 									</p:column>
 
-									<p:column headerText="Service Module">
-										#{batchRetry.serviceModule}
+									<p:column headerText="#{lbl['lbl.portal.soa.ibob']}">
+										#{batchRetry.serviceModule == 'IB' ? 'Inbound' : 'Outbound'}
 									</p:column>
 
-									<p:column headerText="Source System">
+									<p:column headerText="#{lbl['lbl.portal.soa.sourceSystem']}">
 										#{batchRetry.sourceSystem}
 									</p:column>
 
-									<p:column headerText="Target System">
+									<p:column headerText="#{lbl['lbl.portal.soa.targetSystem']}">
 										#{batchRetry.targetSystem}
 									</p:column>
 
-									<p:column headerText="Status Code">
+									<p:column headerText="#{lbl['lbl.portal.soa.statusCode']}">
 										#{batchRetry.statusCode}
 									</p:column>
 
-									<p:column headerText="Status Desc">
+									<p:column headerText="#{lbl['lbl.portal.soa.statusDesc']}">
 										#{batchRetry.statusDesc}
 									</p:column>
 
-									<p:column headerText="File Name">
+									<p:column headerText="#{lbl['lbl.portal.soa.fileName']}">
 										#{batchRetry.fileName}
 									</p:column>
 
-									<p:column headerText="#{lbl['lbl.portal.soa.datetime']}"
+									<p:column headerText="#{lbl['lbl.portal.soa.dateTime']}"
 										style="text-align: right;width:2%;">
 										<h:outputText value="#{batchRetry.createdDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />
