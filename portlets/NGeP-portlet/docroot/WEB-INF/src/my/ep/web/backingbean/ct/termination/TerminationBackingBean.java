@@ -333,9 +333,14 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	    }
 		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
 		    ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-			ctBB.getManagedBean().setGstCheckingGUI(isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode()));  
-
-		     flush();
+		    if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+		    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+		    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().intValue() > 0)) {
+		    	ctBB.getManagedBean().setGstCheckingGUI(true);
+		    } else {
+		    	ctBB.getManagedBean().setGstCheckingGUI(false);
+		    }
+		    flush();
 		if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
 				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
 					getManagedBean().setRemedy(true);

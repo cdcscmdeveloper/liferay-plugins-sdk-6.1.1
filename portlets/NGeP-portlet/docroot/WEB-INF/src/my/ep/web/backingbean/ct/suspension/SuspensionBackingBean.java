@@ -284,8 +284,13 @@ public class SuspensionBackingBean extends ContractBaseBackingBean<SuspensionMan
 		    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 		    	ctBB.getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 		    }
-		    
-		    ctBB.getManagedBean().setGstCheckingGUI(isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode()));  
+		    if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+		    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+		    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().intValue() > 0)) {
+		    	ctBB.getManagedBean().setGstCheckingGUI(true);
+		    } else {
+		    	ctBB.getManagedBean().setGstCheckingGUI(false);
+		    }
 	 }
 	
 	 /**
