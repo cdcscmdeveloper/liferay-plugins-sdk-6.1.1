@@ -12,7 +12,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
-             
+				
 		<style type="text/css">
 .value {
 	width: 1000px;
@@ -100,10 +100,9 @@
 			td[6].style.background=color;
 		}
 	</script>
-
-    <p:growl id="calendarMsg" showDetail="true" />
+         
+         <p:growl id="calendarMsg" showDetail="true" />
 		<p:panel id="ruleConfigId">
-
 
 			<h:panelGroup id="calendarId">
 				<table width="100%">
@@ -125,7 +124,7 @@
 								<p:ajax event="change"
 									listener="#{calendarBackingBean.updateState}"
 									partialSubmit="true" process="@this"
-									update="schedule, weekend1, weekend2"
+									update="schedule, weekend1 , weekend2" 
 									oncomplete="changeWeekEndColor()" />
 							</p:selectOneMenu> <h:inputHidden id="weekend1"
 								value="#{calendarBackingBean.managedBean.selectedState.weekend1}" />
@@ -151,7 +150,8 @@
 								<p:ajax event="eventSelect"
 									listener="#{calendarBackingBean.onEventSelect}"
 									update="eventDetails, calendarMsg"
-									oncomplete="eventDialog.show();" />
+									oncomplete="eventDialog.show();"
+									/>
 								<p:ajax event="eventMove"
 									listener="#{calendarBackingBean.onEventMove}"
 									update="calendarMsg" />
@@ -169,8 +169,10 @@
 					<table width="100%">
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.title']}" /></td>
-							<td><p:inputText id="title" size="30" maxlength="30"
-									value="#{calendarBackingBean.managedBean.event.title}" /></td>
+							<td><p:inputText id="title" size="30" maxlength="30" valueChangeListener="#{calendarBackingBean.holidayTitleValChange}"
+									value="#{calendarBackingBean.managedBean.event.title}" >		
+									</p:inputText>
+									</td>
 						</tr>
 						<tr>
 
@@ -185,7 +187,7 @@
 							<td><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /></td>
 							<td><p:calendar showOn="button" id="toDateId"
 									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
-									validatorMessage="To Date should be greater than from Date"  valueChangeListener="#{calendarBackingBean.updateEndDateVariable()}"
+									validatorMessage="To Date should be greater than from Date"
 									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
 									value="#{calendarBackingBean.managedBean.event.endDate}">
 									<f:attribute name="startDate"
@@ -200,9 +202,9 @@
 							<td>
 								<div style="float: right;">
 									<p:commandButton id="addButton" value="#{lbl['lbl.btn.save']}"
-										actionListener="#{calendarBackingBean.addOrUpdateEvent}" 
-								    	oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
-										update="@form"/>
+										actionListener="#{calendarBackingBean.addOrUpdateEvent}"
+								    	oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor();"
+										update="schedule ,calendarMsg"/>
 									<p:commandButton value="#{lbl['lbl.btn.delete']}"
 										actionListener="#{calendarBackingBean.deleteEvent}"
 										oncomplete="myschedule.update();eventDialog.hide();changeWeekEndColor()"
