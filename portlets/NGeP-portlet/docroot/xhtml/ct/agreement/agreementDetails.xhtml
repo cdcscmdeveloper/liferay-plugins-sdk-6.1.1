@@ -112,6 +112,13 @@
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
+					   <td>
+			            <p:outputLabel value="#{lbl['lbl.ct.proc.type.category']}" />
+			        </td>
+			        <td>
+			           <p:inputText style="width:130px;" disabled="true"  
+			                value="#{agreementBackingBean.getParameterDesc(agreementBackingBean.managedBean.contractVer.ctContractValue.procurementTypeCategory)}" />		
+			        </td>
 					</tr>
 				<tr rowspan="4">
 					<td class="columnWidth150">
