@@ -628,6 +628,7 @@ public class QTCommitteBackingBean extends
 		CommitteReqDTO reqDTO = new CommitteReqDTO();
 		// reqDTO.setCommitteeType(getManagedBean().getCommType());
 		reqDTO.setQtId(scQt.getQtId());
+		reqDTO.setEvaluationType(getManagedBean().getQt().getEvaluationType());
 		CommitteResDTO resDTO = null;
 		try {
 			ICommitteSO committeSO = BusinessDelegate.getInstance()
