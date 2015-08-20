@@ -718,7 +718,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reliefOrderBB.getManagedBean().setPmUser(reqDTO.getPmUser());
 			IContractSupplierSO contractSupplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSupplierSO.class);
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
-			if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
+			if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract() != null){
+				if(reliefOrderBB.getManagedBean().getFlRequest().getCtContract().isFactored()){
 					Long supplieContractId=resDTO.getFlFulfilmentRequest().getCtContract().getContractId();
 					contractSupplierReqDTO.setContractId(supplieContractId);
 					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
@@ -731,7 +732,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					}else{
 						reliefOrderBB.getManagedBean().getFlRequest().getCtContract().setFactored(false);
 					}
-			}	
+				}
+			}
+				
 			if(buttonVal.equalsIgnoreCase(BpmOutcomeConst.BPM_VIEW)){
 				flBB.initializeRemarkAndAttachement(null, rsResDto.getRemarkList(), rsResDto.getAttachmentList());
 				flBB.getManagedBean().setHideRemarks(true);
