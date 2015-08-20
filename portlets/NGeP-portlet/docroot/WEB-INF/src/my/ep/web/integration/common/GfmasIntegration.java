@@ -601,50 +601,57 @@ public class GfmasIntegration {
 	public void masterDataVendorGfmasInbound() {
 		log.info("inside masterDataVendorGfmasInbound : APOVE");
 
-		String fileName = "1000APOVE40000120150429001.GPG";   
+		String fileName = null;   
 
-//		if (osbUtility.osbServiceCallInBound("GFM-370","")) {
-//			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, "APOVE");
+		if (osbUtility.osbServiceCallInBound(ServiceCode.APOVE.value(),"")) {
+			fileName = sftpUtility.findFileNameInDirectory(IntegrationConstants.GMAS_DOWNLOAD, ProcessCode.APOVE.value());
 				if(null!=fileName){
 				
-//					if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
-//						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
-//						encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
+					if (sftpUtility.download(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.GMAS_DOWNLOAD + fileName)) {
+						sftpUtility.move(IntegrationConstants.GMAS_DOWNLOAD + fileName,	IntegrationConstants.GMAS_ARCHIVE + fileName);
+						encryption.decryptGmas(IntegrationConstants.ENCRYPTED_FILE_PATH + fileName, IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
 				        
-					// Add code to insert record into pm_interface_log
-					    
 					   BatchReqDTO<MasterDataVendor> batchReqDTO = new BatchReqDTO<MasterDataVendor>();
-					   batchReqDTO.setFileFTPStatus(1);
-					   batchReqDTO.setFileCreationStatus(1);
-					   batchReqDTO.setProcessId("APOVE");
-					   batchReqDTO.setBatchDirection("I");
+					   batchReqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_SUCCESS);
+					   batchReqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_SUCCESS);
+					   batchReqDTO.setProcessId(ProcessCode.APOVE.value());
+					   batchReqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_INBOUND);
 					   batchReqDTO.setFileName(fileName);
-					   batchReqDTO.setTargetSystem("1GFMAS");
-					   batchReqDTO.setServiceCode("GFM-370");
+					   batchReqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_EPEROLEHAN);
+					   batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
 					   
 					   fileUtility.setValuesToPmInterface(batchReqDTO);
 					   
 					
 						List<MasterDataVendor> dataVendors = fileUtility.masterDataVendorFileInPutStream(IntegrationConstants.DECRYPTED_FILE_PATH + fileName);
 						SupplierSearchReqDTO reqDTO = null;
-						SmSupplier smSupplier = null;
 
 						for (MasterDataVendor vendor : dataVendors) {
-							reqDTO = new SupplierSearchReqDTO();
-							smSupplier = new SmSupplier();
-							smSupplier.setSapVendorCode(vendor.getSapVendorCode());
-//							smSupplier.setCompanyName(vendor.getCompanyBranch().getName());
-							smSupplier.setChangedBy(IntegrationConstants.BATCH_USER);
-							reqDTO.setSmSupplier(smSupplier);
-							supplierSearchSO.saveOrUpdateSmSupplier(reqDTO);
+							
+							SupplierSearchResDTO resDTO = supplierSearchSO.retrieveActiveSupplierByEpNo(vendor.getVendorIdCode());
+							
+							if(resDTO.isSuccessful()){
+								SmSupplier smSupplier = resDTO.getSmSupplier();
+								reqDTO = new SupplierSearchReqDTO();
+								smSupplier.setSapVendorCode(vendor.getSapVendorCode());
+								smSupplier.setChangedBy(IntegrationConstants.BATCH_USER);
+								reqDTO.setSmSupplier(smSupplier);
+								supplierSearchSO.saveOrUpdateSmSupplier(reqDTO);
+							}else{
+								System.out.println("supplier not available");
+							}
 					}
-//				}
-//				log.info("masterDataVendorGfmasInbound updated ");
+				}
+				log.info("masterDataVendorGfmasInbound updated ");
 			}
 
-//		} else {
-//			log.info("file not available masterDataVendorGfmasInbound : APOVE");
-//		}
+		} else {
+			log.info("file not available masterDataVendorGfmasInbound : APOVE");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.APOVE.value());
+			batchReqDTO.setProcessId(ProcessCode.APOVE.value());
+			insertRecordforEmptyDataOut(batchReqDTO);
+		}
 	}
 	
 	
@@ -1256,7 +1263,6 @@ public class GfmasIntegration {
 	public void masterDataPtjGfmasInbound() {
 		log.info("inside masterDataPtjGfmasInbound :GLPTJ");
 
-//		String fileName = "1000GLPTJ40000120150331001.GPG";
 		String fileName =  null;
 		
 		if (osbUtility.osbServiceCallInBound("GFM-280","")) {
