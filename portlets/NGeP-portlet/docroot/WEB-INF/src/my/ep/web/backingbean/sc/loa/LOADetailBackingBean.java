@@ -34,6 +34,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
+import my.ep.biz.service.pm.common.document.IDocumentSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
@@ -59,6 +60,8 @@ import my.ep.dto.pm.common.address.AddressReqDTO;
 import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.clause.ClauseReqDTO;
 import my.ep.dto.pm.common.clause.ClauseResDTO;
+import my.ep.dto.pm.common.document.DocumentReqDTO;
+import my.ep.dto.pm.common.document.DocumentResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -86,6 +89,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmClause;
 import my.ep.persistence.entity.pm.common.PmDigiSign;
+import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.general.settings.rule.PmConfigRuleValue;
@@ -401,6 +405,20 @@ public class LOADetailBackingBean extends
 			// Setting OverallContractAmount
 			calculateOverallCtAmtForSupplier();
 			isGSTRegActive();
+			
+			// Setting BI Report
+			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+			if (scLoaReports != null && !scLoaReports.isEmpty()) {
+				for (ScLoaReport report : scLoaReports) {
+					// Check whether Branch Info attachment is existed or not
+					PmDocument document = report.getPmDocument();
+					if (null != document && SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+							.equalsIgnoreCase(document.getDocDefinitionKey())) {
+						getManagedBean().setBranchInfoReport(report);
+						break;
+					}
+				}
+			}
 			
 			// Supplier Witness
 			ScLoaWitness loaSupplierWitness = null;
@@ -2075,6 +2093,7 @@ public class LOADetailBackingBean extends
 						scLoa.setGstRegNo(gstSupplier.getGstRegNo());
 						scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
 						scLoa.setGstEffDate(gstSupplier.getGstEffDate());
+						isGSTRegActive();
 					}
 					break;
 				}
@@ -4698,68 +4717,76 @@ public class LOADetailBackingBean extends
 		}
 		overallContractAmt = overallContractAmt.setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		getManagedBean().setOverallContractAmt(overallContractAmt);
-
 	}
 	
 	/**
 	 * @param event
 	 */
 	public void uploadBranchInfo(FileUploadEvent event) {
-
-		ScAttachment scAttachment = null;
+		
 		ScLoa scLoa = this.getManagedBean().getScLoa();
-		ScLoaReport scLoaReport = new ScLoaReport();
-		scLoaReport.setScLoa(scLoa);
-		scLoaReport.setScLoaReportAttachment(new ScLoaReportAttachment());
-		scLoaReport.setTitle(BRANCH_INFO_TITLE);
-		IParameterSO parameterSO = null;
-		try {
-			parameterSO = BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
-
-			ParameterReqDTO reqDTO = new ParameterReqDTO();
-			reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
-			reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
-			ParameterResDTO resDTO = parameterSO
-					.retrieveParameterByTypeAndCode(reqDTO);
-			scLoaReport.setDefinationType(resDTO.getPmParameter());
-			scLoaReport
-					.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
-		} finally {
-			parameterSO = null;
+		List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
+		ScAttachment scAttachment = null;
+		boolean isBIReport = false;
+		if(scLoaReports == null){
+			scLoaReports = new ArrayList<ScLoaReport>();
+			scLoa.setScLoaReports(scLoaReports);
 		}
+		for(ScLoaReport report:scLoaReports){
+			PmDocument document = report.getPmDocument();
+			// Check whether Branch Info attachment is existed or not
+			if (null != document && SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+					.equalsIgnoreCase(report.getPmDocument().getDocDefinitionKey())) {
+				ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+				report.setScLoaReportAttachment(scLoaReportAttachment);
+				scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
+				scLoaReportAttachment.setScLoaReport(report);
+				report.setScLoaReportAttachment(scLoaReportAttachment);
+				scAttachment = scLoaReportAttachment;
+				isBIReport = true;
+				getManagedBean().setBranchInfoReport(report);
+				break;
+			}
+		}
+		if(!isBIReport){
+			ScLoaReport scLoaReport = new ScLoaReport();
+			scLoaReport.setScLoa(scLoa);
+			scLoaReport.setTitle(BRANCH_INFO_TITLE);
+			IParameterSO parameterSO = null;
+			try {
+				parameterSO = BusinessDelegate.getInstance().getServiceObject(
+						ModuleCodeConst.PROFILE_MANAGEMENT, IParameterSO.class);
 
-		ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
-		scLoaReportAttachment.setScLoaReport(scLoaReport);
-		scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
-		scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
-		scLoaReportAttachment.setScLoaReport(scLoaReport);
-		scAttachment = scLoaReportAttachment;
-		getManagedBean().setBranchInfoReport(scLoaReport);
-		boolean titlePresent = false;
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterType(ParameterTypeConst.DOCUMENT_DEFINITION_TYPE);
+				reqDTO.setParameterCode(ParameterConst.DOCUMENT_DEFINITION_TYPE_UPLOAD);
+				ParameterResDTO resDTO = parameterSO
+						.retrieveParameterByTypeAndCode(reqDTO);
+				scLoaReport.setDefinationType(resDTO.getPmParameter());
+				scLoaReport
+						.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER); // AQ
+				String docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_QUOTATION_TENDER; // S2
+				if (ParameterConst.DOCTYPE_PURCHASE_REQUEST
+						.equalsIgnoreCase(scLoa.getScLoiLoa().getDocType())) {
+					docCategory = ParameterConst.DOCUMENT_CATEGORY_LOA_FOR_DIRECT_PURCHASE; // S1
+				}
+				scLoaReport.setPmDocument(getDocumentDtls(docCategory)); // PM document
+				
+			} finally {
+				parameterSO = null;
+			}
+			ScLoaReportAttachment scLoaReportAttachment = new ScLoaReportAttachment();
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			scLoaReportAttachment.setDocNo(scLoa.getLoaNo());
+			scLoaReportAttachment.setScLoaReport(scLoaReport);
+			scLoaReport.setScLoaReportAttachment(scLoaReportAttachment);
+			scAttachment = scLoaReportAttachment;
+			getManagedBean().setBranchInfoReport(scLoaReport);
+			scLoaReports.add(scLoaReport);
+		}
+		
 		try {
 			uploadAttachment(event.getFile(), scAttachment);
-			List<ScLoaReport> scLoaReports = scLoa.getScLoaReports();
-			if(scLoaReports == null){
-				scLoaReports = new ArrayList<ScLoaReport>();
-				scLoa.setScLoaReports(scLoaReports);
-				
-			} else {
-				for (int i = 0; i < scLoaReports.size(); i++) {
-					if (scLoaReport.getTitle().equalsIgnoreCase(
-							scLoaReports.get(i).getTitle())) {
-						titlePresent = true;
-						scLoaReports.get(i).setRecordStatus(false);
-						scLoaReports.get(i).setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
-						scLoaReports.add(scLoaReport);
-						break;
-					}
-				}
-			}
-			if(!titlePresent){
-				scLoaReports.add(scLoaReport);
-			}
-			
 		} catch (FileNotFoundException e) {
 			log.error("Exceptionn occured while uploading the file"+e.getMessage());
 		} catch (IOException e) {
@@ -4839,4 +4866,31 @@ public class LOADetailBackingBean extends
 		}
 		
 	}
+	
+	private PmDocument getDocumentDtls(String docCategoryCode){
+		
+		IDocumentSO documentSO = null;
+		PmDocument document = null;
+		try{
+		documentSO = (IDocumentSO) BusinessDelegate.getInstance()
+				.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+						IDocumentSO.class);
+		DocumentReqDTO reqDTO = new DocumentReqDTO();
+		reqDTO.setDocCategoryCode(docCategoryCode);
+		DocumentResDTO resDTO = documentSO.retrieveDocumentCheckList(reqDTO);
+
+		for (PmDocument pmDocument : resDTO.getDocumentList()) {
+			if (SourcingConstants.DOC_DEF_KEY_BRANCH_INFORMATION
+					.equalsIgnoreCase(pmDocument.getDocDefinitionKey())) {
+				document = pmDocument;
+				break;
+			}
+		}
+		return document;
+		}
+		finally{
+			documentSO = null;
+		}
+	}
+	
 }
