@@ -759,8 +759,10 @@ public class SpecificationBackingBean extends
 								}
 								if (null == this.getManagedBean().getScQt()
 										.getProcurementTypeCatId()) {
-									this.getManagedBean().getScQt()
-											.setProcurementTypeCatId(new PmParameter());
+									this.getManagedBean()
+											.getScQt()
+											.setProcurementTypeCatId(
+													new PmParameter());
 								}
 								this.getManagedBean().getScQt().setZonal(false);
 								retriveZonesOrSuppliersByItem();
@@ -3731,15 +3733,13 @@ public class SpecificationBackingBean extends
 				 */
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
-				this.getManagedBean()
-						.setPtjtList(new ArrayList<Object[]>());
+				this.getManagedBean().setPtjtList(new ArrayList<Object[]>());
 
 				this.getManagedBean().setDepartmentList(
 						resDTO.getOrgProfileList());
 
 			} else {
-				this.getManagedBean()
-						.setPtjtList(new ArrayList<Object[]>());
+				this.getManagedBean().setPtjtList(new ArrayList<Object[]>());
 
 				this.getManagedBean().setDepartmentList(
 						new ArrayList<PmOrgProfile>());
@@ -3780,8 +3780,7 @@ public class SpecificationBackingBean extends
 							resDTO.getOrgProfileDDList());
 				}
 			} else {
-				this.getManagedBean()
-						.setPtjtList(new ArrayList<Object[]>());
+				this.getManagedBean().setPtjtList(new ArrayList<Object[]>());
 			}
 
 		} finally {
@@ -6099,10 +6098,12 @@ public class SpecificationBackingBean extends
 	 * @param event
 	 *            (String ScheduleType).
 	 */
-	public void scheduleTypeChange(AjaxBehaviorEvent event) {
+	public void scheduleTypeChange(ScQt scqt) {
 
-		String scheduleType = (String) event.getComponent().getAttributes()
-				.get("value");
+		String scheduleType = scqt.getScheduleType();
+		log.info("display schedule type" + scheduleType);
+		log.info("display fulfilment  type"
+				+ this.getManagedBean().getFulfilmentType());
 		if (SourcingConstants.FREQUENCY_SCHEDULE.equalsIgnoreCase(scheduleType)) {
 			scheduleType = SourcingConstants.PROGRESSIVE_PAYMENT;
 			this.getManagedBean().setTotalProgressivePayment(0);
@@ -6112,7 +6113,6 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setTotalFrequency(0);
 		}
 		removefullfillmentDetails(scheduleType);
-
 	}
 
 	/**
@@ -10897,34 +10897,43 @@ public class SpecificationBackingBean extends
 							getManagedBean().getScQt()
 									.getPmProcurementCategory()
 									.getParameterId());
-					
+
 					// Filter By - ministry orgProfileId
 					IOrgProfileSO orgProfileSO = null;
 					try {
-						orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT, IOrgProfileSO.class);
-						
+						orgProfileSO = BusinessDelegate.getInstance()
+								.getServiceObject(
+										ModuleCodeConst.PROFILE_MANAGEMENT,
+										IOrgProfileSO.class);
+
 						OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-						orgProfileReqDTO.setOrgProfileId(getManagedBean().getScQt()
-								.getPmOrgProfile().getOrgProfileId());
-						PmOrgProfile ministryOrgProfile = orgProfileSO.retrieveMinistryByOrgProfileId(orgProfileReqDTO)
-							.getPmOrgProfile();
+						orgProfileReqDTO.setOrgProfileId(getManagedBean()
+								.getScQt().getPmOrgProfile().getOrgProfileId());
+						PmOrgProfile ministryOrgProfile = orgProfileSO
+								.retrieveMinistryByOrgProfileId(
+										orgProfileReqDTO).getPmOrgProfile();
 						if (ministryOrgProfile != null) {
-							searchBean.getDataFilterBeans().add(new SearchMultiFilterBean(
-									new SearchFilterBean(
-											"orgProfile.orgProfileId",
-											SearchOperator.OPERATOR_EQUALS.value(),
-											ministryOrgProfile.getOrgProfileId()), 
-									new SearchFilterBean(
-											"orgProfile.orgProfileId",
-											SearchOperator.OPERATOR_IS_NULL.value(), 
-											null,
-											SearchCondition.CONDITION_OR.value())));	
+							searchBean
+									.getDataFilterBeans()
+									.add(new SearchMultiFilterBean(
+											new SearchFilterBean(
+													"orgProfile.orgProfileId",
+													SearchOperator.OPERATOR_EQUALS
+															.value(),
+													ministryOrgProfile
+															.getOrgProfileId()),
+											new SearchFilterBean(
+													"orgProfile.orgProfileId",
+													SearchOperator.OPERATOR_IS_NULL
+															.value(),
+													null,
+													SearchCondition.CONDITION_OR
+															.value())));
 						}
 					} finally {
 						orgProfileSO = null;
 					}
-					
+
 					qtTemplateReqDTO.setOrderByBlankTemplate(true);
 
 				} else if (TemplateSpecConst.PROCESS_TYPE_SOURCING
@@ -16088,6 +16097,25 @@ public class SpecificationBackingBean extends
 									new FacesScopes().getUserLocale())));
 		}
 
+	}
+
+	/**
+	 * Gets the FulfilmentType Radi Values for Frequency schedule tab.
+	 * 
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> getFulFilmentTypeRadioValues() {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+
+		try {
+
+			selectItems.add(new SelectItem("F", "Frequency Schedule"));
+			selectItems.add(new SelectItem("P", "Progressive Payment"));
+
+		} finally {
+
+		}
+		return selectItems;
 	}
 
 }
