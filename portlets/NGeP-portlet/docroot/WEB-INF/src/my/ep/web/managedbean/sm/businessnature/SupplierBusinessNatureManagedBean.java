@@ -1,5 +1,6 @@
 package my.ep.web.managedbean.sm.businessnature;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ public class SupplierBusinessNatureManagedBean extends BaseManagedBean{
 	private SmSupplierBusiness[] selectedBusinessNatureLs;
 	private SmSupplier smSupplier;
 	private List<PmBusinessNature> bizNatures;
-	private Map<Long, SmSupplierBusiness> supplierBusinessMap;
+	private Map<Long, SmSupplierBusiness> supplierBusinessMap = new HashMap<Long, SmSupplierBusiness>();
 
 	public SmSupplierBusiness[] getSelectedBusinessNatureLs() {
 		return selectedBusinessNatureLs;
