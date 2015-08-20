@@ -3614,8 +3614,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			retrieveContractVerOfAgreement();
     	}
     	// Retrieve overall contract amount
-    	if(getManagedBean().getCtContractAmount().getGstAmount() !=  null 
-    			&& isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())){
+    	if (getManagedBean().getCtContractAmount().getGstAmount() != null) {
     		getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getGstAmount().add(getManagedBean().getCtContractAmount().getContractAmount()));
 	    } else {
 	    	getManagedBean().setGstTotalAmount(getManagedBean().getCtContractAmount().getContractAmount());
@@ -3860,6 +3859,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	}
 	
 	public boolean contractWithGst(){
-		return isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode());
+		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().intValue() > 0)) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
 	}
 }
