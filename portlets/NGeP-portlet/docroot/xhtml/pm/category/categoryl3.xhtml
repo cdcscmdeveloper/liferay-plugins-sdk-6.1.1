@@ -440,10 +440,12 @@
 				<p:column>
 					<f:facet name="header">
 						<h:outputText value="*" styleClass="mandatory" />
-					#{lbl['lbl.pm.machine.display.sequence']}
+					#{lbl['lbl.pm.machine.display.sequence']} 
 				</f:facet>
-					<h:inputText label ="#{lbl['lbl.pm.machine.display.sequence']}" maxlength="3"
-					value="#{pmMachineCategory.displaySeq}"  required="true" />
+					<h:inputText label="#{lbl['lbl.pm.machine.display.sequence']}"
+						maxlength="3" value="#{pmMachineCategory.displaySeq}"
+						requiredMessage="#{lbl['lbl.pm.machine.display.sequence.reqmsg']}"
+						required="true" />
 				</p:column>
 
 				<p:column width="7%" headerText="#{lbl['lbl.pm.action']}">
