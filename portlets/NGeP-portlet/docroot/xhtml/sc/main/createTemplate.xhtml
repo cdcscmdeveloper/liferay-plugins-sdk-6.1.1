@@ -38,11 +38,9 @@
 					<table>
 						<tr>
 							<td style="width: 150px;"><p:outputLabel
-									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
+									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel>
+							</td>
 							<td><p:selectOneMenu style="width:120px; margin-bottom:5px;"
-									required="#{specificationBackingBean.managedBean.required}"
-									label="#{lbl['lbl.sc.item.type']}"
 									id="templateSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}">
 									<f:selectItems
@@ -61,12 +59,9 @@
 					<table width="100%">
 						<tr>
 							<td><p:outputLabel
-									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel> <p:outputLabel
-									value="*" styleClass="mandatory" /></td>
-							<td><p:selectOneMenu 
-									required="#{specificationBackingBean.managedBean.required}"
-									label="#{lbl['lbl.sc.item.type']}"
-									id="sourcingSpecItemType"
+									value="#{lbl['lbl.sc.item.type']}"></p:outputLabel>
+							</td>
+							<td><p:selectOneMenu id="sourcingSpecItemType"
 									value="#{specificationBackingBean.managedBean.searchItemTypeId}" style="width:120px; margin-bottom:5px;">
 									<f:selectItems
 										value="#{specificationBackingBean.getRoleTypeDropdownValues(ParameterTypeConst.scItemType)}" />
