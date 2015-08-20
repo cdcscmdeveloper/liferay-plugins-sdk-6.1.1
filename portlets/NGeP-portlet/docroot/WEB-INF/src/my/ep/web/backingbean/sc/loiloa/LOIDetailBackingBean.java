@@ -573,11 +573,15 @@ public class LOIDetailBackingBean extends
 				getManagedBean().setFecActivityList(
 						resDTO.getFecActivityList());
 				getManagedBean().setScQtCommittee(scQtCommittee);
-				scQtCommittee.setQtCommitteRemarks(initializeRemarks(
-						scQtCommittee, scQtFinalization.getCurrentStatus(),
-						scQtCommittee.getQtCommitteRemarks(),
-						ScQtCommitteRemarks.class));
-
+				if (scQtCommittee != null) {
+					getManagedBean().setFcActivityList(
+							scQtCommittee.getCommitteeActivities());
+					scQtCommittee.setQtCommitteRemarks(initializeRemarks(
+							scQtCommittee, scQtFinalization.getCurrentStatus(),
+							scQtCommittee.getQtCommitteRemarks(),
+							ScQtCommitteRemarks.class));
+				}
+			
 				// LOI Reports
 				getManagedBean().setRecommendedLoi(resDTO.getScLoi());
 				getManagedBean().setScLoi(resDTO.getScLoi());
