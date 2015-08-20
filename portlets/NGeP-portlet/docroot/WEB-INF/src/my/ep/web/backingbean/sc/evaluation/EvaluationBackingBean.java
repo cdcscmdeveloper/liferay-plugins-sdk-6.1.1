@@ -10875,8 +10875,7 @@ public class EvaluationBackingBean extends
 					.getManagedBean().getScQt().getEvaluationType())
 					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
 							.equalsIgnoreCase(this.getManagedBean()
-									.getCommitteeType())
-					&& !this.getManagedBean().isReadOnly()) {
+									.getCommitteeType())) {
 				if (null != this.getManagedBean().getScQt()
 						.getTecEvaluationCheck()
 						|| null != this.getManagedBean().getScQt()
