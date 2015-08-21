@@ -9,15 +9,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
-
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
+
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.web.backingbean.sc.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.report.ReportsGenerateBean;
