@@ -23,6 +23,7 @@ import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmGlAccount;
 import my.ep.persistence.entity.pm.common.PmVotFund;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.TaxInvoiceVO;
 
 import org.primefaces.model.TreeNode;
 
@@ -238,6 +239,7 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	private String gfmasErrorContent;
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
+	private List<TaxInvoiceVO> taxInvoiceList;
 
 	/**
 	 * Gets the doc type.
@@ -1442,5 +1444,19 @@ public class PaymentMatchManagedBean extends BaseManagedBean {
 	 */
 	public void setInvoiceAmountWithoutGST(BigDecimal invoiceAmountWithoutGST) {
 		this.invoiceAmountWithoutGST = invoiceAmountWithoutGST;
+	}
+
+	/**
+	 * @return the taxInvoiceList
+	 */
+	public List<TaxInvoiceVO> getTaxInvoiceList() {
+		return taxInvoiceList;
+	}
+
+	/**
+	 * @param taxInvoiceList the taxInvoiceList to set
+	 */
+	public void setTaxInvoiceList(List<TaxInvoiceVO> taxInvoiceList) {
+		this.taxInvoiceList = taxInvoiceList;
 	}
 }
