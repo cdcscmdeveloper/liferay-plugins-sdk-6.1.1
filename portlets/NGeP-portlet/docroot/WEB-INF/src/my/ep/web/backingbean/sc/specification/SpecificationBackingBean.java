@@ -1654,25 +1654,31 @@ public class SpecificationBackingBean extends
 			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					&& !this.getManagedBean().getScQt().isTechEvaluationReq()) {
-				if (ParameterConst.FULFILMENT_TYPE_SCHEDULED
-						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())
+				if (null == this.getManagedBean().getFulfilmentType()
+						|| "".equals(this.getManagedBean().getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_SCHEDULED
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
+								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_ONE_OFF
 								.equalsIgnoreCase(this.getManagedBean()
 										.getFulfilmentType())) {
 					retriveFulfilmentDtls();
 					checktemplateSpecStatus(this.getManagedBean().getScQt());
 					checkFinancialSpecStatus(this.getManagedBean().getScQt());
-				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
-						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())
-						|| null == this.getManagedBean().getFulfilmentType()
-						|| "".equals(this.getManagedBean().getFulfilmentType())) {
-					retriveCommitteeEndorsment();
-					checktemplateSpecStatus(this.getManagedBean().getScQt());
-					checkFinancialSpecStatus(this.getManagedBean().getScQt());
-
-				}
+				} /*
+				 * else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
+				 * .equalsIgnoreCase(this.getManagedBean() .getFulfilmentType())
+				 * || null == this.getManagedBean().getFulfilmentType() ||
+				 * "".equals(this.getManagedBean().getFulfilmentType())) {
+				 * retriveCommitteeEndorsment();
+				 * checktemplateSpecStatus(this.getManagedBean().getScQt());
+				 * checkFinancialSpecStatus(this.getManagedBean().getScQt());
+				 * 
+				 * }
+				 */
 			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
 					.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
@@ -1691,8 +1697,10 @@ public class SpecificationBackingBean extends
 				retriveCommitteeEndorsment();
 				checktemplateSpecStatus(this.getManagedBean().getScQt());
 				checkFinancialSpecStatus(this.getManagedBean().getScQt());
-			} else if (QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
-					.getManagedBean().getScQt().getEvaluationType())
+			} else if (null == this.getManagedBean().getFulfilmentType()
+					|| "".equals(this.getManagedBean().getFulfilmentType())
+					|| QTConstants.EVALUATION_TWO_TIER.equalsIgnoreCase(this
+							.getManagedBean().getScQt().getEvaluationType())
 					|| (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
 							.getManagedBean().getScQt().getEvaluationType()) && this
 							.getManagedBean().getScQt().isTechEvaluationReq())) {
@@ -1701,20 +1709,24 @@ public class SpecificationBackingBean extends
 								.getFulfilmentType())
 						|| ParameterConst.FULFILMENT_TYPE_AS_AND_WHEN
 								.equalsIgnoreCase(this.getManagedBean()
+										.getFulfilmentType())
+						|| ParameterConst.FULFILMENT_TYPE_ONE_OFF
+								.equalsIgnoreCase(this.getManagedBean()
 										.getFulfilmentType())) {
 					retriveFulfilmentDtls();
 					checktemplateSpecStatus(this.getManagedBean().getScQt());
 					checkFinancialSpecStatus(this.getManagedBean().getScQt());
-				} else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
-						.equalsIgnoreCase(this.getManagedBean()
-								.getFulfilmentType())
-						|| null == this.getManagedBean().getFulfilmentType()
-						|| "".equals(this.getManagedBean().getFulfilmentType())) {
-					retriveCommitteeEndorsment();
-					checktemplateSpecStatus(this.getManagedBean().getScQt());
-					checkFinancialSpecStatus(this.getManagedBean().getScQt());
-
-				}
+				}/*
+				 * else if (ParameterConst.FULFILMENT_TYPE_ONE_OFF
+				 * .equalsIgnoreCase(this.getManagedBean() .getFulfilmentType())
+				 * || null == this.getManagedBean().getFulfilmentType() ||
+				 * "".equals(this.getManagedBean().getFulfilmentType())) {
+				 * retriveCommitteeEndorsment();
+				 * checktemplateSpecStatus(this.getManagedBean().getScQt());
+				 * checkFinancialSpecStatus(this.getManagedBean().getScQt());
+				 * 
+				 * }
+				 */
 			}
 			break;
 
