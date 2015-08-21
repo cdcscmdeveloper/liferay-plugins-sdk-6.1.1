@@ -1031,7 +1031,7 @@ public class FileUtility {
 		String fileName = IntegrationConstants.PHIS_BUSINESS_AREA + serviceCode
 				+ IntegrationConstants.AGENSI_ID_ePerolehan + DATE;
 
-		String seqNo = generateSeqNo(fileName, serviceCode, "pharma");
+		String seqNo = generateSeqNo(fileName, serviceCode, "pharma",DATE);
 		FILE_NAME = fileName + seqNo + IntegrationConstants.FILE_EXTENSION_PHIS;
 		return FILE_NAME;
 	}
@@ -1046,14 +1046,14 @@ public class FileUtility {
 		String fileName = IntegrationConstants.GMAS_BUSINESS_AREA + serviceCode
 				+ IntegrationConstants.AGENSI_ID_ePerolehan + DATE;
 
-		String seqNo = generateSeqNo(fileName, serviceCode, "gfmas");
+		String seqNo = generateSeqNo(fileName, serviceCode, "gfmas",DATE);
 		FILE_NAME = fileName + seqNo
 				+ IntegrationConstants.FILE_EXTENSION_GFMAS;
 		return FILE_NAME;
 	}
 
 	public String generateSeqNo(String fileName, String serviceCode,
-			String region) {
+			String region,String date) {
 
 		String sequenceNo = IntegrationConstants.SEQUENCE_NO;
 
@@ -1075,7 +1075,7 @@ public class FileUtility {
 			for (int i = 0; i < filesInPath.length; i++) {
 
 				String fileName1 = filesInPath[i];
-				if (fileName1.contains(serviceCode)) {
+				if (fileName1.contains(serviceCode+date)) {
 					int index = fileName1.indexOf('.');
 					seqNo = Integer.parseInt(fileName1.substring(index - 3,
 							index));
