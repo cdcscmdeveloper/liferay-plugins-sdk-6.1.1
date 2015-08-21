@@ -2627,7 +2627,13 @@ public class ReportBackingBean extends
 		getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(false);
 		if ((null != this.getReportValue())&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMPANY_SUPTYPE_RPT_VAL))) {			
 			if ((null != this.getSmPaidUpCapitalNaccum())&&(ReportConst.EMPTY_VAL !=this.getSmApplicationStatus())) {
-				getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(true);				
+				if (this.getSmPaidUpCapitalNaccum().trim().equalsIgnoreCase("P")) {
+					getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(true);
+					getManagedBean().getRptGenBean().setSmPaidUpCptlDateView(true);
+				}else if (this.getSmPaidUpCapitalNaccum().trim().equalsIgnoreCase("A")){
+					getManagedBean().getRptGenBean().setSmPaidUpCapitalFrmView(true);
+					getManagedBean().getRptGenBean().setSmAccmltdCptlDateView(true);
+				}
 			}
 		}
 	}

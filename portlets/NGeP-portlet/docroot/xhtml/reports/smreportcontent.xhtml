@@ -1501,10 +1501,18 @@
 						<c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCapitalFrmView}">
 						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
-								<TD>
-									<p:outputLabel value="#{lbl['lbl.rpt.capitalNaccumFrm']}"
+							   <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCptlDateView}">
+							    <TD>
+									<p:outputLabel value="#{lbl['lbl.rpt.paidupshare']}"
 								style="margin-top:5px;width:165px;" />
 								</TD>
+								</c:if>	
+								 <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smAccmltdCptlDateView}">
+								<TD>
+									<p:outputLabel value="#{lbl['lbl.rpt.accumulatedshare']}"
+								style="margin-top:5px;width:165px;" />
+								</TD>
+								</c:if>	
 								<TD>
 									<p:inputText maxlength="40"	value="#{reportBackingBean.smPaidUpCapitalFrm}"	style="margin-top:5px;width:150px;">
 										<p:ajax event="blur" partialSubmit="true"	update="@([id$=Msg])" />

@@ -201,6 +201,8 @@ public class ReportsGenerateBean {
 		private boolean smMofRegNoFromView = false;
 		private boolean smMofRegNoToView = false;
 		private boolean smPaidUpCapitalFrmView = false;
+		private boolean smPaidUpCptlDateView = false;
+		private boolean smAccmltdCptlDateView = false;
 		private boolean smPaidUpCapitalToView = false;
 		private boolean smPaidUpCapitalNaccumView = false;
 		private boolean smMandatoryMofRegNoFromView = false;
@@ -378,6 +380,18 @@ public class ReportsGenerateBean {
 		
 		
 		
+		public boolean isSmPaidUpCptlDateView() {
+			return smPaidUpCptlDateView;
+		}
+		public void setSmPaidUpCptlDateView(boolean smPaidUpCptlDateView) {
+			this.smPaidUpCptlDateView = smPaidUpCptlDateView;
+		}
+		public boolean isSmAccmltdCptlDateView() {
+			return smAccmltdCptlDateView;
+		}
+		public void setSmAccmltdCptlDateView(boolean smAccmltdCptlDateView) {
+			this.smAccmltdCptlDateView = smAccmltdCptlDateView;
+		}
 		public boolean isFlGroupFifteenWithSupplView() {
 			return flGroupFifteenWithSupplView;
 		}
