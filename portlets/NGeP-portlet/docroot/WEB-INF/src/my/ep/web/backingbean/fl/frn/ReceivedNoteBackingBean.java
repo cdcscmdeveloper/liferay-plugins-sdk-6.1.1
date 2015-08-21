@@ -36,6 +36,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.fl.FulfilmentStatusConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constants.CommonConstants;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -883,32 +884,20 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fulfilmentNote.getFlRequest().setGstRate(BigDecimal.ZERO);
 		}
 		
-		boolean isDoGST = fulfilmentNote.getFlDeliveryOrder().getGstEffectiveDate()!=null && fulfilmentNote.getFlDeliveryOrder().getGstEffectiveDate().getTime() <= fulfilmentNote.getFlDeliveryOrder().getChangedDate().getTime(); 
+		boolean isFrnGST = smGstSupplier!=null && smGstSupplier.getGstEffDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime();
+		BigDecimal gstAmt = BigDecimal.ZERO;
 		
 		for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
-			if(smGstSupplier != null){
-				Double gstAmt = new Double(0);
-				gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().doubleValue() / 100;
-				if(smGstSupplier.getGstEffDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime()
-						&& noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){//check effDate and isGST checked
-					if(noteItem.getFlDelOrderItem().getGstAmount().compareTo(new BigDecimal(gstAmt).multiply(fulfilmentNote.getFlRequest().getGstRate()))!=0) {
-						noteItem.setGstAmount(new BigDecimal(gstAmt).multiply(fulfilmentNote.getFlRequest().getGstRate()));
-
-						if(noteItem.getGstAmount().doubleValue() > 0){
-							noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().add(noteItem.getGstAmount()));
-							amtChanged = true;
-						}
-					}
-				}else{//not effective date
-					noteItem.setGstAmount(BigDecimal.ZERO);
-					noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
-				}
-			} else if(smGstSupplier == null) {//DO isGST and current non GST
-				if(isDoGST) {
-					noteItem.setGstAmount(BigDecimal.ZERO);
-					noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
-					amtChanged = true;
-				}
+			if(isFrnGST && noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().isGst()){
+				gstAmt = noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().multiply(fulfilmentNote.getFlRequest().getGstRate().divide(new BigDecimal(100)));
+				noteItem.setGstAmount(gstAmt.setScale(CommonConstants.DEFAULT_AMOUNT_DECIMAL_SCALE, BigDecimal.ROUND_HALF_UP));
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().add(noteItem.getGstAmount()));
+			} else {
+				noteItem.setGstAmount(BigDecimal.ZERO);
+				noteItem.setGstUnitPrice(noteItem.getFlDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice());
+			}
+			if(!amtChanged && noteItem.getFlDelOrderItem().getGstAmount().compareTo(noteItem.getGstAmount())!=0) {
+				amtChanged = true;
 			}
 		}
 		return amtChanged;
