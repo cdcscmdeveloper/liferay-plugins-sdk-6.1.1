@@ -5556,21 +5556,45 @@ public class SmApplicationUtil {
 		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO()
 				.retrieveGstSuppDocuments(new DocumentReqDTO())
 				.getDocumentList();
-
+		SmGstSupplierDoc suppDoc = null;
 		if (gst == null) {
 			gst = new SmGstSupplier();
 		}
-		if (gst.getSmGstSupplierDocs() == null
-				|| gst.getSmGstSupplierDocs().isEmpty()) {
-			gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
-			SmGstSupplierDoc suppDoc = null;
-			for (PmDocument doc : suppDocList) {
-				suppDoc = new SmGstSupplierDoc();
-				suppDoc.setPmDocument(doc);
-				suppDoc.setSmGstSupplier(gst);
-				gst.getSmGstSupplierDocs().add(suppDoc);
+		if (suppDocList != null && !suppDocList.isEmpty()) {
+			if (gst.getSmGstSupplierDocs() == null
+					|| gst.getSmGstSupplierDocs().isEmpty()) {
+				gst.setSmGstSupplierDocs(new ArrayList<SmGstSupplierDoc>());
+				for (PmDocument doc : suppDocList) {
+					suppDoc = new SmGstSupplierDoc();
+					suppDoc.setPmDocument(doc);
+					suppDoc.setSmGstSupplier(gst);
+					gst.getSmGstSupplierDocs().add(suppDoc);
+				}
+			} else {
+				for (PmDocument doc : suppDocList) {
+					if (!isGstPmDocumentAlreadyAdded(doc,
+							gst.getSmGstSupplierDocs())) {
+						suppDoc = new SmGstSupplierDoc();
+						suppDoc.setPmDocument(doc);
+						suppDoc.setSmGstSupplier(gst);
+						gst.getSmGstSupplierDocs().add(suppDoc);
+					}
+				}
 			}
 		}
+	}
+
+	private static boolean isGstPmDocumentAlreadyAdded(PmDocument gstPmDoc,
+			List<SmGstSupplierDoc> gstDocList) {
+		boolean retVal = false;
+		for (SmGstSupplierDoc gstDoc : gstDocList) {
+			if (gstDoc.getPmDocument() != null
+					&& gstDoc.getPmDocument().getDocumentId()
+							.compareTo(gstPmDoc.getDocumentId()) == 0) {
+				retVal = true;
+			}
+		}
+		return retVal;
 	}
 
 	private static void validateRenewalApplTypeForSpecialCategory(SmAppl smAppl) {
