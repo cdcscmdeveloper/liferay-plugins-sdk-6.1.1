@@ -298,6 +298,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if ((getManagedBean().getSoftCertPayList() != null && getManagedBean()
 				.getSoftCertPayList().size() > 0)
 				|| getManagedBean().getFreeSoftCertPersonnel() != null) {
+			validateRequestSoftcert();
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			List<String> userList = new ArrayList<String>();
 			userList.add(pmUser.getLoginId());
@@ -909,6 +910,30 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 						SmApplicationUtil.getApplicationErrorPage());
 		fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, null,
 				msg));
+	}
+
+	/**
+	 * Validate personnel to request softcert
+	 */
+	private void validateRequestSoftcert() {
+		if (getManagedBean().getFreeSoftCertPersonnel() != null) {
+			if (getManagedBean().getFreeSoftCertPersonnel()
+					.getSmPersonnelAddresses() == null
+					|| getManagedBean().getFreeSoftCertPersonnel()
+							.getSmPersonnelAddresses().isEmpty()) {
+				throw new EpException(MessageConst.ERROR_722614,
+						new String[] { getManagedBean()
+								.getFreeSoftCertPersonnel().getName() });
+			}
+		} else if (getManagedBean().getSoftCertPayList() != null) {
+			for (SmPersonnel personnel : getManagedBean().getSoftCertPayList()) {
+				if (personnel.getSmPersonnelAddresses() == null
+						|| personnel.getSmPersonnelAddresses().isEmpty()) {
+					throw new EpException(MessageConst.ERROR_722614,
+							new String[] { personnel.getName() });
+				}
+			}
+		}
 	}
 
 }
