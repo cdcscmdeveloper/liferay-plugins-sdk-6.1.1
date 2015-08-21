@@ -1446,7 +1446,7 @@
 						<TABLE style="margin-top:10px;width:50%;">
 							<TR>
 								<TD>
-									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"	style="margin-top:5px;width:160px;" />
+									<p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}"	style="margin-top:5px;width:185px;" />
 								</TD>
 								<TD>
 									<p:inputText maxlength="22"	value="#{reportBackingBean.smMofRegNoFrom}"	style="margin-top:5px;width:150px;">
@@ -1470,7 +1470,7 @@
 							test="#{smReportBackingBean.managedBean.rptGenBean.smMandatoryMofRegNoFromView}">
 							<TABLE style="margin-top: 10px; width: 50%;">
 								<TR>
-									<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}" />
+									<TD style="width:185px;" ><p:outputLabel value="#{lbl['lbl.rpt.mofRegNoFrom']}" />
 										<p:outputLabel value="*" styleClass="mandatory"/></TD>
 				
 									<TD><p:inputText label="#{lbl['lbl.rpt.mofRegNoFrom']}" id="smMofRegNoFrom"	maxlength="16" value="#{reportBackingBean.smMofRegNoFrom}"
@@ -1504,13 +1504,13 @@
 							   <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smPaidUpCptlDateView}">
 							    <TD>
 									<p:outputLabel value="#{lbl['lbl.rpt.paidupshare']}"
-								style="margin-top:5px;width:165px;" />
+								style="margin-top:5px;width:170px;" />
 								</TD>
 								</c:if>	
 								 <c:if test="#{smReportBackingBean.managedBean.rptGenBean.smAccmltdCptlDateView}">
 								<TD>
 									<p:outputLabel value="#{lbl['lbl.rpt.accumulatedshare']}"
-								style="margin-top:5px;width:165px;" />
+								style="margin-top:5px;width:170px;" />
 								</TD>
 								</c:if>	
 								<TD>
@@ -1542,23 +1542,23 @@
 							 /><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
 				    <c:if test="#{reportBackingBean.managedBean.rptGenBean.smExpiryDateView}">
-					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.expirydatefrom']}"
+					<TD style="width:175px;"><p:outputLabel value="#{lbl['lbl.rpt.expirydatefrom']}"
 							 /><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationDateView}">
-					<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationdatefrom']}"
+					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationdatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>	
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActivationDateView}">
-					<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.activationdatefrom']}"
+					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.activationdatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smSubmissionDateView}">
-					<TD style="width:160px;"><p:outputLabel value="#{lbl['lbl.rpt.submissiondatefrom']}"
+					<TD style="width:175px;"><p:outputLabel value="#{lbl['lbl.rpt.submissiondatefrom']}"
 							 /><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>							
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryDateView}">
-					<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
+					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.dtRangeFrm']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>	
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryExpectedSiteVisitDateView}">
@@ -1566,20 +1566,20 @@
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smMandatoryActualSiteVisitDateView}">
-					<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.actualsitevisitdatefrom']}"
+					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.actualsitevisitdatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>	
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smApplicationReceivedDateView}">
-					<TD style="width:170px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationreceiveddatefrom']}"
+					<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.applicationreceiveddatefrom']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>
 					</c:if>
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smPaymentDateView}">
 							    
-		            <TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.paymentdate']}"
+		            <TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.paymentdate']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>			
 					</c:if>
 					<c:if test="#{reportBackingBean.managedBean.rptGenBean.smGSTEffectiveDateView}">							    
-						<TD style="width:160px;" ><p:outputLabel value="#{lbl['lbl.rpt.gsteffectivedate']}"
+						<TD style="width:175px;" ><p:outputLabel value="#{lbl['lbl.rpt.gsteffectivedate']}"
 							/><p:outputLabel value="*" styleClass="mandatory"/></TD>		
 					</c:if>
                     <c:if test="#{reportBackingBean.managedBean.rptGenBean.smGSTEffectiveDateView}">
@@ -1709,12 +1709,12 @@
 							<TR>
 							<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActivationDateView}">
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.activationdatefrom']}" style="width:158px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.activationdatefrom']}" style="width:175px;"/>
 								</TD>
 								</c:if>
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smSubmissionDateView}">
 								<TD>
-									<p:outputLabel  value="#{lbl['lbl.rpt.submissiondatefrom']}" style="width:158px;"/>
+									<p:outputLabel  value="#{lbl['lbl.rpt.submissiondatefrom']}" style="width:175px;"/>
 								</TD>
 								</c:if>
 								<c:if test="#{reportBackingBean.managedBean.rptGenBean.smActSubmisAllDateView}">
@@ -1802,7 +1802,7 @@
 				   </c:if>
 				   <TD>
 					<p:selectOneMenu value="#{reportBackingBean.smThresholdFromYear}" 
-							style="margin-top:5px;width:150px;">
+							style="margin-top:5px;width:175px;">
 							
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
@@ -1863,7 +1863,7 @@
 					<p:selectOneMenu label="#{lbl['lbl.rpt.registeredyearfrom']}"
 							id="MandatoryFromYear"
 							value="#{reportBackingBean.smCreatedFromYear}" required="true"
-							style="margin-top:5px;width:150px;">
+							style="margin-top:5px;width:170px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
@@ -1873,7 +1873,7 @@
 					<p:selectOneMenu label="#{lbl['lbl.rpt.receivedyearfrom']}"
 							id="MandatoryFromYear"
 							value="#{reportBackingBean.smCreatedFromYear}" required="true"
-							style="margin-top:5px;width:150px;">
+							style="margin-top:5px;width:170px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
@@ -1883,7 +1883,7 @@
 					<p:selectOneMenu label="#{lbl['lbl.rpt.approvedyearfrom']}"
 							id="MandatoryFromYear"
 							value="#{reportBackingBean.smCreatedFromYear}" required="true"
-							style="margin-top:5px;width:150px;">
+							style="margin-top:5px;width:170px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
@@ -1893,7 +1893,7 @@
 					<p:selectOneMenu label="#{lbl['lbl.rpt.rejectedyearfrom']}"
 							id="MandatoryFromYear"
 							value="#{reportBackingBean.smCreatedFromYear}" required="true"
-							style="margin-top:5px;width:150px;">
+							style="margin-top:5px;width:170px;">
 							<f:selectItems
 								value="#{reportBackingBean.managedBean.rptGenBean.yearList}"></f:selectItems>
 								<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />
