@@ -2827,6 +2827,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				pmMachineCategory.setCategoryL2id(this.getManagedBean()
 						.getPmCategoryL3().getPmCategoryL2().getCategoryL2Id());
 				pmMachineCategory.setPmMachine(pmMachine);
+				pmMachineCategory.setDisplaySeq(0);
 
 				// Check if the pmMachineCategory already exists in DB with
 				// categoryL1id, categoryL2id, categoryL3id, machineId
@@ -2841,15 +2842,14 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 						.getCategoryL3Id());
 			
 				resDTO = categoryCodeSO
-							.retrievePmMachineByCategoryIds(reqDTO);
-				 
+							.retrievePmMachineByCategoryIds(reqDTO);				 
 
 				if (resDTO.getPmMachine() != null) {
 					pmMachineCategory = resDTO.getPmMachineCategory();
 					pmMachineCategory
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					pmMachineCategory.setBrandNew(true);
-					pmMachineCategory.setDisplaySeq(0);
+					
 				}
 
 				if (CollectionUtils.isEmpty(this.getManagedBean()
