@@ -959,7 +959,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 					
 					if(selectedReqDtl.getScRequestNote().getSourceMethod().equals(ParameterConst.REQUEST_NOTE_SC)){
 						// procurement type category
-						if(getManagedBean().getProcTypeCategoryId()>0){
+						if(getManagedBean().getProcTypeCategoryId() != null && getManagedBean().getProcTypeCategoryId()>0){
 							ParameterReqDTO parameterReqDTO = new ParameterReqDTO();
 							parameterReqDTO.setParameterId(getManagedBean().getProcTypeCategoryId());
 							PmParameter procTypeCategory = getParameterSO().retrieveParameterById(parameterReqDTO).getPmParameter();
@@ -972,7 +972,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 							selectedReqDtl.setProcurementTitle(getManagedBean().getProcTitle());
 						}
 						
-						if(getManagedBean().getPeriodValue() >0){
+						if( getManagedBean().getPeriodValue() != null && getManagedBean().getPeriodValue() >0){
 							selectedReqDtl.setDeliverTerm(getManagedBean().getPeriodValue());  
 						}
 					}
