@@ -1852,6 +1852,15 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		trBB.getManagedBean().setExternalPageUrl(null);
+		trBB.setCtBB(new ContractBackingBean());	
+		trBB.getCtBB().getManagedBean().setCtContractVer(resDTO.getCtContractVer());
+		if (isContractWithGst(trBB.getManagedBean().getCtContract().getSmSupplier().getSupplierId(), trBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+	    		|| (trBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& trBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+			trBB.getCtBB().getManagedBean().setGstCheckingGUI(true);
+	    } else {
+	    	trBB.getCtBB().getManagedBean().setGstCheckingGUI(false);
+	    }
 		trBB.retrieveContractVerOfAgreement();
 		
 		resDTO = contractSO.retrieveTerminationHistoryList(ctReqDTO);
@@ -3858,6 +3867,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		getManagedBean().setSearchPtjProfile(null);
 	}
 	
+	/**
+	 * The method used to check whether the contract is with gst.
+	 * 
+	 * @return true, if the contract is with gst
+	 *         false, if the contract is without gst
+     */
 	public boolean contractWithGst(){
 		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
 	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 

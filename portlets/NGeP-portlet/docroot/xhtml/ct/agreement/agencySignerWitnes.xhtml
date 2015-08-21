@@ -34,12 +34,12 @@
 		                            <h:outputText value="#{agSignerVar.ministryName}"/>
 		                   </p:column>
 		               
-		               <p:column style="width:15%;white-space:normal;" headerText="Officer Name" 
+		               <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.pengawai.pengawal']}" 
                              rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					               <h:outputText  value="#{agSignerVar.pengawaiPengawalName}"/>
 					       </p:column>
 			
-					     <p:column style="width:15%;white-space:normal;" headerText="Jabatan Name" 
+					     <p:column style="width:15%;white-space:normal;" headerText="#{lbl['lbl.ct.jabatan']}" 
                              rendered="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
 					               <h:outputText  value="#{agSignerVar.jabatanName}"/>
 					        </p:column>
