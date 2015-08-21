@@ -115,9 +115,9 @@ public class IntegrationConstants {
 	
 	public static final int RECORD_TYPE_THREE = 3;
 	
-	public static final String HQ_INDICATOR_CODE = "000";
+	public static final String HQ_INDICATOR_CODE = "012";
 	
-	public static final String BRANCH_INDICATOR_CODE = "111";
+	public static final String BRANCH_INDICATOR_CODE = "004";
 	
 	public static final String ACCOUNT_ACTION_CREATE = "C";
 	
