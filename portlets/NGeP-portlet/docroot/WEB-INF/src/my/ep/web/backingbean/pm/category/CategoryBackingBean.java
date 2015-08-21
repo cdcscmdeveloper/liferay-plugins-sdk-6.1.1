@@ -1600,7 +1600,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				this.getManagedBean().getPmCategoryL3()
 						.setCategoryTypeCode(parameterResDTO.getPmParameter());
 			}
-			
+			//Basic category and  Category Restr data information
 			getBasicCategoryData();
 			getCategoryRestrData();
 
@@ -1818,7 +1818,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 			}
 		}
 
-		if (CollectionUtils.isEmpty(pmMachineCategoryList) && !isActive) {
+		if (CollectionUtils.isEmpty(pmMachineCategoryList) && isActive) {
 			throw new EpException(MessageConst.ERROR_775008);
 		}
 
@@ -3096,7 +3096,10 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 	 * 
 	 * } else { this.getManagedBean().setCheckSpecialCategory(true); } } } } }
 	 */
-
+	
+	/**
+	 * Update special category.
+	 */
 	public void updateSpecialCategory() {
 
 		List<PmParameterDesc> paramDescList = this.getManagedBean()
@@ -3104,31 +3107,44 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		PmCategoryL3 categoryL3 = this.getManagedBean().getPmCategoryL3();
 
-		Long parameterId = categoryL3.getCategoryTypeCodeVal() != 0 ? categoryL3
-				.getCategoryTypeCodeVal() : categoryL3.getCategoryTypeCode()
-				.getParameterId();
+		Long parameterId = 0L;
 
 		this.getManagedBean().setCheckSpecialCategory(false);
+		/*
+		 * parameterId = categoryL3.getCategoryTypeCodeVal() != 0 ? categoryL3
+		 * .getCategoryTypeCodeVal() : categoryL3
+		 * .getCategoryTypeCode().getParameterId();
+		 */
 
-		if (paramDescList != null && !paramDescList.isEmpty()) {
-			for (PmParameterDesc PmParameterDesc : paramDescList) {
+		if (categoryL3.getCategoryTypeCodeVal() != 0) {
 
-				PmParameter pmParameter = PmParameterDesc.getPmParameter();
+			parameterId = categoryL3.getCategoryTypeCodeVal();
 
-				if (pmParameter.getParameterId().equals(parameterId)) {
-					String parameterCode = pmParameter.getParameterCode();
+		} else if (categoryL3.getCategoryTypeCode() != null) {
 
-					if (parameterCode
-							.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_PRINTING)) {
-						if (!this.getManagedBean().isNewCategory()) {
-							this.getManagedBean().setCheckSpecialCategory(true);
-						} else {
-							this.getManagedBean().setCheckSpecialCategory(true);
+			parameterId = categoryL3.getCategoryTypeCode().getParameterId();
+		}
+
+		if (parameterId != 0) {
+			if (paramDescList != null && !paramDescList.isEmpty()) {
+				for (PmParameterDesc PmParameterDesc : paramDescList) {
+
+					PmParameter pmParameter = PmParameterDesc.getPmParameter();
+
+					if (pmParameter.getParameterId().equals(parameterId)) {
+						String parameterCode = pmParameter.getParameterCode();
+
+						if (parameterCode
+								.equals(ParameterTypeConst.SPECIAL_CATEGORY_TYPE_PRINTING)) {
+							if (!this.getManagedBean().isNewCategory()) {
+								this.getManagedBean().setCheckSpecialCategory(true);
+							} else {
+								this.getManagedBean().setCheckSpecialCategory(true);
+							}
 						}
 					}
 				}
 			}
-
 		}
 	}
 
