@@ -14,6 +14,10 @@
 	<ui:define name="resourceSection">
 		<script>
 			$('#portlet_smDeactivateAdmin_WAR_NGePportlet').find('.portlet-title-text').html("#{lbl['lbl.sm.userprofile.deactivate.admin']}");
+			
+			function clickLogout() {
+				$('[id*="yui_patched_v3_11_0_1"]').click();
+			}
 		</script>
 	</ui:define>
 
@@ -127,8 +131,7 @@
 			<p:messages id="successDialogMsg" showSummary="false"
 				showDetail="true" autoUpdate="true" closable="false" />
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.btn.proceed']}" action="#{smPersonnelBackingBean.proceedToLogout}" 
-					onclick="_145_deleteAllCookies();" ajax="false" />
+				<p:commandButton value="#{lbl['lbl.btn.proceed']}" onclick="clickLogout();" ajax="false" />
 			</div>
 		</p:dialog>
 	</ui:define>
