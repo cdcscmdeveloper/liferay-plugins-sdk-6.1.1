@@ -1487,13 +1487,8 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	 */
 	public void resetSessionData() {
 		log.debug("renewing session object..");
-
 		renewSesionObject();
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler()
-				.handleNavigation(fc, null, "signUp");
-
+		validateLoginSession();
 	}
 	
 	/**
@@ -2207,7 +2202,7 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 	/**
 	 * Validate user login
 	 */
-	public void validateLoginSession(){
+	private void validateLoginSession(){
 		String screenName = new FacesScopes().getUserScreenName();
 		FacesContext fc = FacesContext.getCurrentInstance();
 		if (screenName != null && StringUtils.isNotEmpty(screenName)) {
