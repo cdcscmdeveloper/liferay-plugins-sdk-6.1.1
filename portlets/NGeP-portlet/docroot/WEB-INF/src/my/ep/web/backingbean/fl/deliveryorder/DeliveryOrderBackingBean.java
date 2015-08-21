@@ -1206,7 +1206,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	
 	private boolean reCalculateGstUnitPrice(SmGstSupplier smGstSupplier, FlFulfilmentRequest flRequest){
 		boolean amtChanged = false;
-		boolean isDoGST = smGstSupplier!=null && smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime();
+		boolean isDoGST = smGstSupplier!=null && smGstSupplier.getGstEffDate()!=null && smGstSupplier.getGstEffDate().getTime() <= DateUtils.getCurrentDateWithoutTime().getTime();
 
 		if(flRequest.getGstRate() == null){
 			flRequest.setGstRate(BigDecimal.ZERO);
