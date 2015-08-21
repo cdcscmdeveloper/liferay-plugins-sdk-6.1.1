@@ -22,7 +22,7 @@ public class PHISMasterDataDeliveryAddressPortType_ServiceLocator extends org.ap
     }
 
     // Use to get a proxy class for PHISMasterDataDeliveryAddressPortTypePort
-    private java.lang.String PHISMasterDataDeliveryAddressPortTypePort_address = "http://localhost:2016/PHISMasterDataDeliveryAddress/v1.1";
+    private java.lang.String PHISMasterDataDeliveryAddressPortTypePort_address = "http://192.168.62.18:8011/PHISMasterDataDeliveryAddress/v1.1";
 
     public java.lang.String getPHISMasterDataDeliveryAddressPortTypePortAddress() {
         return PHISMasterDataDeliveryAddressPortTypePort_address;

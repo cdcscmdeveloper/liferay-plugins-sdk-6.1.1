@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -147,7 +148,7 @@ public class PhisIntegration {
 				itemType.setItemCode(cmType.getTypeCode().trim());
 				itemType.setItemDescription(cmType.getTypeName().trim());
 				itemType.setItemAction(utility.checkAction(cmType.getCreatedDate(),cmType.getChangedDate()).trim());
-				itemType.setItemOldcode("");
+				itemType.setItemOldcode(IntegrationConstants.EMPTY_TRING);
 				if(!itemTypes.contains(itemType)){
 					itemTypes.add(itemType);
 				}
@@ -163,7 +164,7 @@ public class PhisIntegration {
 				mBrand.setMaterialBrandDescription(cmBrand.getBrandName().trim());
 				mBrand.setMaterialBrandAction(utility.checkAction(
 						cmBrand.getCreatedDate(), cmBrand.getChangedDate()).trim());
-				mBrand.setMaterialOldBrandCode("");
+				mBrand.setMaterialOldBrandCode(IntegrationConstants.EMPTY_TRING);
 				if(!mBrands.contains(mBrand)){
 					mBrands.add(mBrand);
 				}
@@ -180,7 +181,7 @@ public class PhisIntegration {
 						.getMeasurementName().trim());
 				mMeasure.setMeasurementAction(utility.checkAction(
 						cmMeasure.getCreatedDate(), cmMeasure.getChangedDate()).trim());
-				mMeasure.setMeasurementOldCode("");
+				mMeasure.setMeasurementOldCode(IntegrationConstants.EMPTY_TRING);
 				if(!mMeasures.contains(mMeasure)){
 					mMeasures.add(mMeasure);
 				}
@@ -196,7 +197,7 @@ public class PhisIntegration {
 				mColor.setMaterialColorDescription(cmColor.getColorName().trim());
 				mColor.setMaterialColorAction(utility.checkAction(
 						cmColor.getCreatedDate(), cmColor.getChangedDate()).trim());
-				mColor.setMaterialOldColorCode("");
+				mColor.setMaterialOldColorCode(IntegrationConstants.EMPTY_TRING);
 				if(!mColors.contains(mColor)){
 					mColors.add(mColor);
 				}
@@ -211,7 +212,7 @@ public class PhisIntegration {
 				mClass = new MaterialClass();
 				mClass.setMaterialClassCode(cmUnspsc.getUnspscParentCode().trim());
 				mClass.setMaterialClassAction(utility.checkAction(cmUnspsc.getCreatedDate(), cmUnspsc.getChangedDate()).trim());
-				mClass.setMaterialOldClassCode("");
+				mClass.setMaterialOldClassCode(IntegrationConstants.EMPTY_TRING);
 				mClass.setMaterialClassDescription(cmUnspsc.getUnspscTitle().trim());
 				
 				if(cmUnspsc.getUnspscParentCode()==null){
@@ -267,101 +268,125 @@ public class PhisIntegration {
 			
 		}else{
 			log.info("createFilesforPHIS : Records not available.");
+			BatchReqDTO classBatchReqDTO = new BatchReqDTO();
+			classBatchReqDTO.setServiceCode(ServiceCode.PHS001.value());
+			classBatchReqDTO.setProcessId(ProcessCode.PHS001.value());
+			classBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			classBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(classBatchReqDTO);
+			
+			BatchReqDTO brandBatchReqDTO = new BatchReqDTO();
+			brandBatchReqDTO.setServiceCode(ServiceCode.PHS002.value());
+			brandBatchReqDTO.setProcessId(ProcessCode.PHS002.value());
+			brandBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			brandBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(brandBatchReqDTO);
+			
+			BatchReqDTO colorBatchReqDTO = new BatchReqDTO();
+			colorBatchReqDTO.setServiceCode(ServiceCode.PHS003.value());
+			colorBatchReqDTO.setProcessId(ProcessCode.PHS003.value());
+			colorBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			colorBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(colorBatchReqDTO);
+			
+			BatchReqDTO measureBatchReqDTO = new BatchReqDTO();
+			measureBatchReqDTO.setServiceCode(ServiceCode.PHS004.value());
+			measureBatchReqDTO.setProcessId(ProcessCode.PHS004.value());
+			measureBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			measureBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(measureBatchReqDTO);
+			
+			BatchReqDTO typeBatchReqDTO = new BatchReqDTO();
+			typeBatchReqDTO.setServiceCode(ServiceCode.PHS005.value());
+			typeBatchReqDTO.setProcessId(ProcessCode.PHS005.value());
+			typeBatchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			typeBatchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(typeBatchReqDTO);
+			
 		}
 
 	}
 	
 	public void deliveryAddress() {
 		{
+			
+			System.out.println("inside deliveryAddress");
 			AddressReqDTO reqDTO = new AddressReqDTO();
-			reqDTO.setOrgProfileId(329280L);
 			reqDTO.setAddressType(AddressType.DELIVERY_ADDRESS.value());
+			reqDTO.setCreatedDate(currentDate);
+			reqDTO.setOrgprofileIdList(getMOHPtjIds());
+			// add org profile ids
 			
-			AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-			List<PmAddressType> addressTypeLst = resDTO.getAddressTypeList();
-			EPMFRs_Type rs_Type = null;
+			AddressResDTO resDTO = addressSO.retrieveDeliverAddressTypeList(reqDTO);
 			
-			EPMFRq_Type part = new EPMFRq_Type();
-			try {
-
-				RqHeader_Type header_Type = new RqHeader_Type();
-				header_Type.setConsumerID("EPP-001");
-//				header_Type.setIpAddress("192.168.62.17");
-//				header_Type.setOrgUnit("1");
-//				header_Type.setSegment("2");
-
-				RqUID_Type rqUID_Type = new RqUID_Type();
-//				rqUID_Type.setAsyncRqUID("001");
-//				rqUID_Type.setRqUID("PTJ");
-				header_Type.setUID(rqUID_Type);	
-
-				DeliveryAddressRq_Type deliveryAddressRq_Type = new DeliveryAddressRq_Type();
-				deliveryAddressRq_Type.setAction("CRE");
-				deliveryAddressRq_Type.setPTJCode("42060401");
-				//deliveryAddressRq_Type.setDeliveryAddressArray(deliveryAddressArray);
+			if(resDTO.isSuccessful()){
 				
-				DeliveryAddress_Type[] address_Type = new DeliveryAddress_Type[1];
-				//DeliveryAddress_Type.
-				int i = 0;
-				DeliveryAddress_Type deliveryAddress = null;
-				
-				for (PmAddressType addressType : addressTypeLst) {
+				try {
+
+					RqHeader_Type header_Type = new RqHeader_Type();
+					header_Type.setConsumerID("EPP-001");
+//					header_Type.setIpAddress("192.168.62.17");
+//					header_Type.setOrgUnit("1");
+//					header_Type.setSegment("2");
+
+					RqUID_Type rqUID_Type = new RqUID_Type();
+					rqUID_Type.setAsyncRqUID(null);
+					rqUID_Type.setRqUID(UUID.randomUUID().toString());
+					header_Type.setUID(rqUID_Type);	
 					
-					deliveryAddress= new DeliveryAddress_Type();
-					deliveryAddress.setAddress1(addressType.getPmAddress().getAddress1());
-					deliveryAddress.setAddress2(addressType.getPmAddress().getAddress2());
-					deliveryAddress.setAddress3(addressType.getPmAddress().getAddress3());
-					deliveryAddress.setAddress4(addressType.getPmAddress().getAddress4());
-					deliveryAddress.setCity(addressType.getPmAddress().getPmState().getStateName());
-					deliveryAddress.setDistrict(addressType.getPmAddress().getPmDistrict().getDistrictName());			
-					deliveryAddress.setState(addressType.getPmAddress().getPmState().getStateName());
-					deliveryAddress.setStatus(addressType.getRecordStatusFlg());
-					deliveryAddress.setDeliveryAddressID(addressType.getAddressTypeId().toString());
-				
-					//				deliveryAddress.setAddress1("Address 1");
-					//				deliveryAddress.setAddress2("Address 2");
-					//				deliveryAddress.setAddress3("Address 3");
-					//				deliveryAddress.setAddress4("Address 4");
-					//				deliveryAddress.setCity("Coty ");
-					//				deliveryAddress.setDistrict("Distric");			
-					//				deliveryAddress.setState("state");
-//				deliveryAddress.setStatus(1);
-//				deliveryAddress.setDeliveryAddressID("2");;
-				
-					address_Type[i] = deliveryAddress;
-					i++;
-				}			
-				
-				deliveryAddressRq_Type.setNoOfDeliveryAddress(address_Type.length);
-				deliveryAddressRq_Type.setDeliveryAddressArray(address_Type);
-				
-				log.info("address_Type.length :"+address_Type.length);
+					DeliveryAddress_Type[] address_Type = new DeliveryAddress_Type[1];
+					DeliveryAddressRq_Type deliveryAddressRq_Type =null;
+					DeliveryAddress_Type deliveryAddress = null;
+					
+					List<PmAddressType> addressTypeLst = resDTO.getAddressTypeList();
+					
+					if(null!=addressTypeLst && addressTypeLst.size()>0){
+						
+						for(PmAddressType pmAddressType:addressTypeLst){
+							
+							deliveryAddressRq_Type = new DeliveryAddressRq_Type();
+							deliveryAddressRq_Type.setAction(IntegrationConstants.CRE);
+							deliveryAddressRq_Type.setPTJCode(pmAddressType.getPmOrgProfile().getOrgCode());
+							deliveryAddressRq_Type.setNoOfDeliveryAddress(1);
+							
+							if(null!=pmAddressType.getPmAddress()){
+								
+								deliveryAddress= new DeliveryAddress_Type();
+								deliveryAddress.setAddress1(pmAddressType.getPmAddress().getAddress1());
+								deliveryAddress.setAddress2(pmAddressType.getPmAddress().getAddress2());
+								deliveryAddress.setAddress3(pmAddressType.getPmAddress().getAddress3());
+								deliveryAddress.setAddress4(pmAddressType.getPmAddress().getAddress4());
+								deliveryAddress.setCity(pmAddressType.getPmAddress().getPmState().getStateName());
+								deliveryAddress.setDistrict(pmAddressType.getPmAddress().getPmDistrict().getDistrictName());			
+								deliveryAddress.setState(pmAddressType.getPmAddress().getPmState().getStateName());
+								deliveryAddress.setStatus(pmAddressType.getRecordStatusFlg());
+								deliveryAddress.setDeliveryAddressID(pmAddressType.getAddressTypeId().toString());
+								
+								address_Type[0] = deliveryAddress;
+							}
+							
+							
+							deliveryAddressRq_Type.setDeliveryAddressArray(address_Type);
+							
+						}
+						PHISMasterDataDeliveryAddressPortTypeProxy typeProxy = new PHISMasterDataDeliveryAddressPortTypeProxy();
+						EPMFRq_Type part = new EPMFRq_Type();
+						part.setRqHeader(header_Type);
+						part.setDeliveryAddressRq(deliveryAddressRq_Type);	
 
-				PHISMasterDataDeliveryAddressPortTypeProxy typeProxy = new PHISMasterDataDeliveryAddressPortTypeProxy();
-				part.setRqHeader(header_Type);
-				part.setDeliveryAddressRq(deliveryAddressRq_Type);	
+						EPMFRs_Type rs_Type = typeProxy.inquire(part);
+						
+						log.info("getStatusCode  :"+ rs_Type.getRsHeader().getStatus().getStatusCode());
+						log.info("getStatusDesc :"+ rs_Type.getRsHeader().getStatus().getStatusDesc());
+						
+					}
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
 
-				rs_Type = typeProxy.inquire(part);
-//				log.info("No of delivery Addreee:::"+part.getDeliveryAddressRq().getNoOfDeliveryAddress());
-//				log.info("Action:::"+part.getDeliveryAddressRq().getAction());
-//				log.info("PTJ CODe:::"+part.getDeliveryAddressRq().getPTJCode());
-//				log.info("No of delivery Addreee"+part.getDeliveryAddressRq().getDeliveryAddressArray());
-			//	DeliveryAddress_Type[] address_Type2 = part.getDeliveryAddressRq().getDeliveryAddressArray();
-//				
-//				my.ep.web.integration.phis.ptj.deliveryaddress
-			//	log.info("address_Type2 :"+address_Type2.length);
-				
-				
-//				for(DeliveryAddress_Type addr:address_Type2){
-//					log.info("Address1"+addr.getAddress1());
-//				}
-				
-			} catch (RemoteException e) {
-				e.printStackTrace();
+			}else{
+				System.out.println("Records not available");
 			}
-
-			log.info("getStatusCode  :"+ rs_Type.getRsHeader().getStatus().getStatusCode());
-			log.info("getStatusDesc :"+ rs_Type.getRsHeader().getStatus().getStatusDesc());
 
 		}
 	}
@@ -423,6 +448,13 @@ public class PhisIntegration {
 			
 		}else{
 			log.info("votFund : Records not available....");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.PHS006.value());
+			batchReqDTO.setProcessId(ProcessCode.PHS006.value());
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(batchReqDTO);
+			
 		}
 
 	}
@@ -440,6 +472,29 @@ public class PhisIntegration {
 		
 		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
 		orgReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		orgReqDTO.setParentOrgProfileId(ministryOrgId);
+
+		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgReqDTO);
+		
+		List<Long> listId = new ArrayList<Long>();
+		if(null!=orgResDTO.getOrgProfileList() && orgResDTO.getOrgProfileList().size()>0){
+			for(PmOrgProfile pmOrgProfile:orgResDTO.getOrgProfileList()){
+				listId.add(pmOrgProfile.getOrgProfileId());
+			}
+		}
+		return listId;
+	}
+	
+	public List<Long> getMOHPtjIds() {
+		ConfigGeneralResDTO configResDTO = configGeneralSO.getConfigGeneral(null);
+		
+		Long ministryOrgId = null;
+		if(null!=configResDTO.getPmConfigGeneral()){
+			ministryOrgId = configResDTO.getPmConfigGeneral().getPhisMinistryId();
+		}
+		
+		OrgProfileReqDTO orgReqDTO = new OrgProfileReqDTO();
+		orgReqDTO.setOrgType(OrganizationType.DIVISION.value());
 		orgReqDTO.setParentOrgProfileId(ministryOrgId);
 
 		OrgProfileResDTO orgResDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgReqDTO);
@@ -501,6 +556,12 @@ public class PhisIntegration {
 			
 		}else{
 			log.info("votFundDana : Records not available....");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.PHS007.value());
+			batchReqDTO.setProcessId(ProcessCode.PHS007.value());
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(batchReqDTO);
 		}
 	}
 
@@ -563,6 +624,13 @@ public class PhisIntegration {
         	
         }else{
 			log.info("programActivity : Records not available....");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.PHS008.value());
+			batchReqDTO.setProcessId(ProcessCode.PHS008.value());
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(batchReqDTO);
+			
 		}
 	}
 
@@ -630,6 +698,12 @@ public class PhisIntegration {
 			
 		}else{
 			log.info("project : Records not available....");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.PHS009.value());
+			batchReqDTO.setProcessId(ProcessCode.PHS009.value());
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(batchReqDTO);
 		}
 		
 	}
@@ -693,6 +767,12 @@ public class PhisIntegration {
 			
 		}else{
 			log.info("glAccount : Records not available....");
+			BatchReqDTO batchReqDTO = new BatchReqDTO();
+			batchReqDTO.setServiceCode(ServiceCode.PHS010.value());
+			batchReqDTO.setProcessId(ProcessCode.PHS010.value());
+			batchReqDTO.setDataStartTime(resDTO.getDataStartTime());
+			batchReqDTO.setDataEndTime(resDTO.getDataEndTime());
+			insertRecordforEmptyData(batchReqDTO);
 		}
 		
 	}
@@ -781,4 +861,23 @@ public class PhisIntegration {
 				recordStatus = IntegrationConstants.RECORD_IN_VALID;
 		return recordStatus;
 	}
+	
+	// Insert Record if data not found
+	
+	private void insertRecordforEmptyData(BatchReqDTO reqDTO){
+		
+		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
+		reqDTO.setDataStartTime(reqDTO.getDataStartTime());
+		reqDTO.setDataEndTime(reqDTO.getDataEndTime());
+		reqDTO.setFileCreationStatus(IntegrationConstants.FILE_CREATION_FAIL);
+		reqDTO.setFileFTPStatus(IntegrationConstants.FTP_STATUS_FAIL);
+		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
+		reqDTO.setServiceCode(reqDTO.getServiceCode());
+		reqDTO.setProcessId(reqDTO.getProcessId());
+		reqDTO.setFileName(IntegrationConstants.VAVLUE_NA);
+		
+		utility.setValuesToPmInterface(reqDTO);
+		
+	}
+	
 }
