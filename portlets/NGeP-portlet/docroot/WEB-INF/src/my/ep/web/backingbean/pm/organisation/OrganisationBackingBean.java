@@ -76,6 +76,7 @@ import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pm.fee.settings.PmFeeExemption;
+import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -242,6 +243,7 @@ public class OrganisationBackingBean extends
 		getManagedBean().setOrgProfile(orgProifle);
 		// set org category to others
 		getManagedBean().setOrgCategory(OTHERS);
+		getManagedBean().setGstSupplier(new SmGstSupplier());
 		// getManagedBean().setAddressTypesList(null);
 	}
 
@@ -304,6 +306,13 @@ public class OrganisationBackingBean extends
 										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
 				   }
 				   
+			   }else if(OrganizationType.PENGAWAI_PENGAWAL.value().equals(orgTypeParameter.getParameterCode())){
+				   if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
+					   searchBean.getDataFilterBeans().add(
+								new SearchFilterBean(OrgProfileUtil.getFromToSearchBeanParentString(OrganizationType.PENGAWAI_PENGAWAL.value(),OrganizationType.MINISTRY.value()),
+										SearchOperator.OPERATOR_EQUALS.value(),orgProfile.getOrgProfileId()));
+						
+				   }				   
 			   }else if(OrganizationType.DEPARTMENT.value().equals(orgTypeParameter.getParameterCode())){
 				   if (getFacesScopes().hasRoleUser(RoleCode.MINISTRY_ADMIN.value())) {
 					   searchBean.getDataFilterBeans().add(
@@ -627,15 +636,15 @@ public class OrganisationBackingBean extends
 						+ orgProfile.getSmSupplier().getSmAppl()
 								.getSmPersonnels().size());
 				
-//				if(orgProfile.getSmSupplier().getSmGstSuppliers() != null 
-//						&& !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
-//					for(SmGstSupplier gstSupplier : orgProfile.getSmSupplier().getSmGstSuppliers()){
-//						if(gstSupplier.getIsCurrent()){
-//							getManagedBean().setGstSupplier(gstSupplier);
-//							break;
-//						}
-//					}
-//				}
+				if(orgProfile.getSmSupplier().getSmGstSuppliers() != null 
+						&& !orgProfile.getSmSupplier().getSmGstSuppliers().isEmpty()){
+					for(SmGstSupplier gstSupplier : orgProfile.getSmSupplier().getSmGstSuppliers()){
+						if(gstSupplier.getIsCurrent()){
+							getManagedBean().setGstSupplier(gstSupplier);
+							break;
+						}
+					}
+				}
 			}
 
 		}
@@ -2105,6 +2114,10 @@ public class OrganisationBackingBean extends
 	 */
 	public int getOthers() {
 		return OTHERS;
+	}
+	
+	public boolean isEPAdmin(){
+		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 
 }
