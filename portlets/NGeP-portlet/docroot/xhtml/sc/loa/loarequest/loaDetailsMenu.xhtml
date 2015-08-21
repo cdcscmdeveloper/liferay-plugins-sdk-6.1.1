@@ -14,7 +14,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 			</td>
 			<td>
-				<p:inputText size="50"
+				<p:inputText size="49"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.epNo}"
 					disabled="true" />
 			</td>
@@ -25,7 +25,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
 			<td>
-				<p:inputText size="50"
+				<p:inputText size="49"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
@@ -35,7 +35,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
 			</td>
 			<td>
-				<p:inputText size="50"
+				<p:inputText size="49"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 					disabled="true" />
 			</td>
@@ -46,8 +46,8 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
 			</td>
 			<td>
-				<p:inputText size="50"
-					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
+				<p:inputText size="49"
+					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
 					disabled="true" id="gstRegNoId"/> <ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}"/>
 			</td>
 		</tr>
@@ -56,8 +56,8 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
 			</td>
 			<td>
-				<p:inputText size="50"
-					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
+				<p:inputText size="49"
+					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
 					disabled="true" id="gstEffDateId">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText> <ac:iconTooltip value="#{lbl['lb.sc.gst.effective.date.tooltip']}"/>
@@ -68,8 +68,8 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
 			</td>
 			<td>
-				<p:inputText size="50"
-					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
+				<p:inputText size="49"
+					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na'] : lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
 					disabled="true" id="gstDeclaredDateId">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.gst.declartive.date.tooltip']}"/>
@@ -544,7 +544,7 @@
 	<p:panel header="#{lbl['lbl.sc.loiloa.agency.witness.detail']}" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
-			<td  width="24%">
+			<td  width="21%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.witness.full.name']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
