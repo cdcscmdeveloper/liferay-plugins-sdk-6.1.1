@@ -2061,7 +2061,10 @@ public class LOADetailBackingBean extends
 					scLoa.setSupplierFaxNo(smCompanyBasic.getFaxNo());
 					scLoa.setSupplierMobNo(supplierHQPersonnel.getMobileNo());
 					scLoa.setSupplierEmail(supplierHQPersonnel.getEmail());
-
+					// Get Gst info for HQ
+					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
+					SupplierGstResDTO resDTO = getGSTInfo(supplierId,null);
+					setGSTInfo(resDTO,scLoa);
 					break;
 				}
 			}
@@ -2087,14 +2090,8 @@ public class LOADetailBackingBean extends
 					
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
-					SupplierGstResDTO resDTO = getGSTInfo(supplierBranch.getSupplierBranchId(),supplierId);
-					if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
-						SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
-						scLoa.setGstRegNo(gstSupplier.getGstRegNo());
-						scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
-						scLoa.setGstEffDate(gstSupplier.getGstEffDate());
-						isGSTRegActive();
-					}
+					SupplierGstResDTO resDTO = getGSTInfo(supplierId,supplierBranch.getSupplierBranchId());
+					setGSTInfo(resDTO,scLoa);
 					break;
 				}
 			}
@@ -4853,6 +4850,21 @@ public class LOADetailBackingBean extends
 			return gstResDTO;
 		} finally {
 			supplierGstSO = null;
+		}
+	}
+	
+	private void setGSTInfo(SupplierGstResDTO resDTO, ScLoa scLoa){
+		
+		if(resDTO.isSuccessful() && resDTO.getSmGstSupplier() != null){
+			SmGstSupplier gstSupplier = resDTO.getSmGstSupplier();
+			scLoa.setGstRegNo(gstSupplier.getGstRegNo());
+			scLoa.setGstDeclaredDate(gstSupplier.getGstDeclaredDate());
+			scLoa.setGstEffDate(gstSupplier.getGstEffDate());
+		} else {
+			scLoa.setGstRegNo(null);
+			scLoa.setGstDeclaredDate(null);
+			scLoa.setGstEffDate(null);
+			scLoa.setGstAmt(null);
 		}
 	}
 	
