@@ -15,10 +15,7 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.servicescreen']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu  value="#{reportBackingBean.pmServiceType}" style="margin-top:5px;width:300px;">										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.pendaftaran']}" itemValue="#{lbl['lbl.rpt.drpdown.pendaftaran']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.bonperlaksanaan']}" itemValue="#{lbl['lbl.rpt.drpdown.bonperlaksanaan']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.bankpembayaran']}" itemValue="#{lbl['lbl.rpt.drpdown.bankpembayaran']}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.drpdown.syarikatpemfaktoran']}" itemValue="#{lbl['lbl.rpt.drpdown.syarikatpemfaktoran']}"></f:selectItem>
+										<f:selectItems value="#{reportBackingBean.serviceTypeList}"></f:selectItems>
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																																							
 									</p:selectOneMenu>	
 								  </c:if>	
