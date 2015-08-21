@@ -166,6 +166,7 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Long qtId;
 	private boolean  renderRegisterBtn = true;
 	private boolean  disableRegisterBtn;
+	private boolean isNavigateFromNoticeBoard = true;
 	
 	public NoticeBoardManagedBean() {
 		// scQt = new ScQt();
@@ -1199,6 +1200,20 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	 */
 	public void setDisableRegisterBtn(boolean disableRegisterBtn) {
 		this.disableRegisterBtn = disableRegisterBtn;
+	}
+
+	/**
+	 * @return the isNavigateFromNoticeBoard
+	 */
+	public boolean isNavigateFromNoticeBoard() {
+		return isNavigateFromNoticeBoard;
+	}
+
+	/**
+	 * @param isNavigateFromNoticeBoard the isNavigateFromNoticeBoard to set
+	 */
+	public void setNavigateFromNoticeBoard(boolean isNavigateFromNoticeBoard) {
+		this.isNavigateFromNoticeBoard = isNavigateFromNoticeBoard;
 	}
 
 

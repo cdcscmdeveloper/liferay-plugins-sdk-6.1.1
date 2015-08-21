@@ -18,7 +18,8 @@
 			<p:row>
 				<p:column width="100%" style="text-align:left">
 					<p:commandButton value="#{lbl['lbl.btn.back']}"
-						action="#{noticeBoardBackingBean.backBtn}" style="float:left;" />
+						action="#{noticeBoardBackingBean.backBtn}" style="float:left;"
+						rendered="#{noticeBoardBackingBean.managedBean.navigateFromNoticeBoard}" />
 				</p:column>
 				<p:column width="100%" style="text-align:right">
 				<h:panelGroup id="registerBtnId">
