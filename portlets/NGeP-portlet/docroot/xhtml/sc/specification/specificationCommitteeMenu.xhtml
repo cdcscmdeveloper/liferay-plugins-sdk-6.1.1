@@ -59,26 +59,21 @@
 							update="@form" />
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA'}"
+								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PA' 
+								 or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
 								update="@form" />
-							<p:menuitem
-								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
-								update="@form" />
+
 						</c:if>
 
 
+						<p:menuitem
+							value="#{lbl['lbl.sc.committee.endorsement.specification']}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(9)}"
+							update="@form" />
 
-						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-							<p:menuitem
-								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
-								update="@form" />
-						</c:if>
 
 					</p:tabMenu></td>
 				<td width="80%;" valign="top"><c:if
@@ -122,25 +117,16 @@
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.activeIndex eq '8' and (specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA')}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 
 							<ui:include src="schedule.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{specificationBackingBean.managedBean.activeIndex eq '8' and (specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq null)}">
-							<ui:param name="committeeActivityList"
-								value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-							<ui:param name="specificationEndorsedSignOffId"
-								value="fullfilemtNullorOneOfftwoTier" />
-							<ui:include src="specificationSignoff.xhtml" />
-						</c:if>
+
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
 						<ui:param name="committeeActivityList"
 							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-						<ui:param name="specificationEndorsedSignOffId"
-							value="fullfilemttypeperiodicAsandWhenTwotier" />
 						<ui:include src="specificationSignoff.xhtml" />
 
 					</c:if></td>
@@ -202,26 +188,19 @@
 							update="@form" />
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 							<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq 'PA'}"
+								disabled="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PA'  or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}"
 								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
 								update="@form" />
 
-							<p:menuitem
-								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
-								update="@form" />
-						</c:if>
 
-
-						<c:if
-							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
-							<p:menuitem
-								value="#{lbl['lbl.sc.committee.endorsement.specification']}"
-								actionListener="#{specificationBackingBean.qtChecklistTabChange(7)}"
-								update="@form" />
 						</c:if>
+						<p:menuitem
+							value="#{lbl['lbl.sc.committee.endorsement.specification']}"
+							actionListener="#{specificationBackingBean.qtChecklistTabChange(8)}"
+							update="@form" />
+
 
 
 
@@ -262,26 +241,16 @@
 						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
 
 						<c:if
-							test="#{specificationBackingBean.managedBean.activeIndex eq '7' and (specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA')}">
+							test="#{specificationBackingBean.managedBean.fulfilmentType eq null or specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA' or specificationBackingBean.managedBean.fulfilmentType eq 'OF'}">
 
 							<ui:include src="schedule.xhtml" />
 						</c:if>
 
-						<c:if
-							test="#{specificationBackingBean.managedBean.activeIndex eq '7' and (specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq null)}">
-							<ui:param name="committeeActivityList"
-								value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-							<ui:param name="specificationEndorsedSignOffId"
-								value="fullfilemttypenullOneoffonetier" />
-							<ui:include src="specificationSignoff.xhtml" />
 
-						</c:if>
 					</c:if> <c:if
 						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
 						<ui:param name="committeeActivityList"
 							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-						<ui:param name="specificationEndorsedSignOffId"
-							value="fullfilemttypeperiodicAsandWhenonetier" />
 						<ui:include src="specificationSignoff.xhtml" />
 
 					</c:if></td>

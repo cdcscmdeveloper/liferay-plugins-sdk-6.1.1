@@ -9,10 +9,10 @@
 	<p:panel header="#{lbl['lbl.sc.committee.endorsement.specification']}"
 		toggleable="true">
 
-		<p:dataTable id="#{specificationEndorsedSignOffId}"
-			var="committeActivity" rows="10" rowIndexVar="index"
-			widgetVar="prepareCommittee" value="#{committeeActivityList}">
-			<ac:paginator for="#{specificationEndorsedSignOffId}" />
+		<p:dataTable id="scEndorsement" var="committeActivity" rows="10"
+			rowIndexVar="index" widgetVar="prepareCommittee"
+			value="#{committeeActivityList}">
+			<ac:paginator for="scEndorsement" />
 
 			<p:column style="width:30%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.name']}">
@@ -44,7 +44,8 @@
 			<p:column>
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
+					<ac:iconTooltip id="pnp#{index}sc"
+						value="#{lbl['lbl.sc.pnp.tooltip']}" />
 				</f:facet>
 				<h:outputText
 					value="#{lbl[committeActivity.scCommitteeMember.PNP ? 'lbl.btn.yes' : 'lbl.btn.no' ]}"></h:outputText>
@@ -70,11 +71,18 @@
 			</p:column>
 
 		</p:dataTable>
+		<!--  commented by sagar for temporarly -->
+		<!-- <p:spacer height="20"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.reminder']}"
+				onclick="reminder.show();" />
 
+		</div>
+		<ui:include src="reminderpopup.xhtml" /> -->
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.remark']}" toggleable="true">
-		<table style="width: 100%">
+		<table style="width: 100%" id="remarkslist">
 			<tr>
 				<td class="TableFieldLeft" style="width: 96px;"><p:outputLabel
 						value="#{lbl['lbl.sc.remark']}" /></td>
@@ -88,7 +96,7 @@
 										width="30" /></td>
 								<td width="5"></td>
 								<td><h:outputText value="#{remarkVar.createdUser.userName}" />,
-									<h:outputText value="#{remarkVar.changedDate}">
+									<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
 										<f:convertDateTime
 											pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" />
 									</h:outputText></td>
