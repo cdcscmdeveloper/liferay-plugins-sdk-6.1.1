@@ -884,7 +884,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			fulfilmentNote.getFlRequest().setGstRate(BigDecimal.ZERO);
 		}
 		
-		boolean isFrnGST = smGstSupplier!=null && smGstSupplier.getGstEffDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime();
+		boolean isFrnGST = smGstSupplier!=null && smGstSupplier.getGstEffDate()!=null && smGstSupplier.getGstEffDate().getTime() <= getManagedBean().getFulfilmentNote().getReceivedDate().getTime();
 		BigDecimal gstAmt = BigDecimal.ZERO;
 		
 		for(FlFulfilmentNoteItem noteItem : fulfilmentNote.getFlFulfilmentNoteItem()){
