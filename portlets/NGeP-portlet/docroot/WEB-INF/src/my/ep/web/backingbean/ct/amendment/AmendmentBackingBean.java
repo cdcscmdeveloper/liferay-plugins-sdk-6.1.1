@@ -611,11 +611,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					getManagedBean().getContractVer().getCtAmendment().setDescription(contractName);
 				}
 				getManagedBean().getContractVer().getCtAmendment().setAmendmentEffDate(getManagedBean().getNewAmendmentEffDate());
-				getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(new BigDecimal(0));
+				getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
 				if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
 					getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(getManagedBean().getContractVer().getCtContractAmount().getGstAmount());	
 				} else {
-					getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(new BigDecimal(0));	
+					getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);	
 				}
 				getManagedBean().getContractVer().getCtAmendment().setExtendPeriod(0);
 				getManagedBean().getContractVer().getCtAmendment().setExtendStartDate(null);
@@ -1834,7 +1834,11 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new overall contract amount
 	 */
 	public BigDecimal newOverallContractAmt() {
-		return newContractAmt().add(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+		BigDecimal contractAmt = newContractAmt();
+		if (getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null) {
+			contractAmt =  newContractAmt().add(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
+		}
+		return contractAmt;
 	}
 	
 	/**
@@ -2632,6 +2636,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		}
 		ConstructTabSideMenu();
 	}
+	
+//	/**
+//	 * The method used to set the amendment information
+//	 * when user wish to amend the contract period.
+//	 */
+//	public void onChangeValueChecked() {
+//		if (!getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
+//			getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+//			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+//				getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(getManagedBean().getContractVer().getCtContractAmount().getGstAmount());	
+//			} else {
+//				getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+//			}			
+//		}
+//	}
 	
 	/**
 	 * The method used to set the related amendment information
@@ -4606,5 +4625,21 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
     public boolean isContractAdmin() {
 		return (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value()) 
 				|| getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value()));
+	}
+    
+    /**
+	 * The method used to check whether the contract is with gst.
+	 * 
+	 * @return true, if the contract is with gst
+	 *         false, if the contract is without gst
+     */
+	public boolean contractWithGst(){
+		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
 	}
 }
