@@ -715,6 +715,8 @@ public class QTCommitteBackingBean extends
 										.getParent()));
 					}
 				}
+				
+				treeNodes[nodes].setSelected(false);
 			}
 		} else {
 			throw new EpException(MessageConst.ERROR_760103);
