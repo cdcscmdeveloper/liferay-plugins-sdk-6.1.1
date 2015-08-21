@@ -327,7 +327,6 @@ public class SmUpdateGstInfoBackingBean extends
 
 	private void setDeleteGst(SmGstSupplier deleteGst) {
 		if (deleteGst.getGstSupplierId() != null) {
-			deleteGst.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);
 			deleteGst.setGstDeletedDate(new Date());
 			deleteGst.setIsCurrent(false);
 			deleteGst.setGstRegNo(null);
