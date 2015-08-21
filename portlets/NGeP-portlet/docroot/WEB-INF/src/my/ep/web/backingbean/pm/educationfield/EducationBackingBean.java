@@ -343,7 +343,7 @@ public class EducationBackingBean extends BaseBackingBean<EducationManagedBean> 
 		// String recordStatusMessageId="";
 
 		String[] msgParam = new String[] { this.getManagedBean()
-				.getPmEduField().getFieldCode() };
+				.getPmEduField().getFieldName() };
 
 		// PmEduField olEduField=this.getManagedBean().getOldPmEduField();
 
