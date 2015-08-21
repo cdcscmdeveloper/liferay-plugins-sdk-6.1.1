@@ -379,7 +379,7 @@ BaseBackingBean<ProfCertifiedBodyManagedBean> {
 			debugLogger("statusResDTO.getPmStatus().getStatusId():"
 					+ statusResDTO.getPmStatus().getStatusId());
 
-			String[] msgParam = new String[] { certBody.getBodyCode() };
+			String[] msgParam = new String[] { certBody.getBodyName() };
 
 			if (certBody.isBrandNew()) {
 				messageId = MessageConst.TD_81100;
