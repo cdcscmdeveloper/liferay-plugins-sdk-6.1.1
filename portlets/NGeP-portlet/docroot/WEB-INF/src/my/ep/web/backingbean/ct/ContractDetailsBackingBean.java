@@ -232,7 +232,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 * @return the paidAdvancePercentage
 	 */
 	public BigDecimal getPaidAdvancePercentage() {
-		if (getManagedBean().getPaidAdvancePaymentAmt().intValue() != 0) {
+		if (getManagedBean().getPaidAdvancePaymentAmt().doubleValue() != 0) {
 		    paidAdvancePercentage = (getManagedBean().getPaidAdvancePaymentAmt().multiply(
 		    		BigDecimal.valueOf(100)).divide(
 		    				BigDecimal.valueOf(getManagedBean().getAdvancePaymentAmt()), 2, RoundingMode.HALF_UP));
@@ -3861,7 +3861,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	public boolean contractWithGst(){
 		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
 	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().intValue() > 0)) {
+	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
 	    	return true;
 	    } else {
 	    	return false;
