@@ -129,6 +129,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private boolean isInitialDecisionFwdToBPK;
 	private boolean isSelectedItemAlreadyAwarded;
 	private boolean hasAwardedLOA;
+	private boolean hasPreviousMeeting;
 	
 	private ScQtEvaluationResultDtl shortlistedSupplier;
 	private ScQtFinalization scQtFinalization;
@@ -164,6 +165,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Object payLoad;
 	
 	private boolean selectAll;
+	private boolean selectAllMeetings;
 	private String action;
 	private Long loggedInUserId;
 	
@@ -717,6 +719,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setHasAwardedLOA(boolean hasAwardedLOA) {
 		this.hasAwardedLOA = hasAwardedLOA;
+	}
+
+	/**
+	 * @return the hasPreviousMeeting
+	 */
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	/**
+	 * @param hasPreviousMeeting 
+	 * 				the hasPreviousMeeting to set
+	 */
+	public void setHasPreviousMeeting(boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 
 	/**
@@ -1435,6 +1452,21 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAll(boolean selectAll) {
 		this.selectAll = selectAll;
+	}
+
+	/**
+	 * @return the selectAllMeetings
+	 */
+	public boolean isSelectAllMeetings() {
+		return selectAllMeetings;
+	}
+
+	/**
+	 * @param selectAllMeetings 
+	 * 				the selectAllMeetings to set
+	 */
+	public void setSelectAllMeetings(boolean selectAllMeetings) {
+		this.selectAllMeetings = selectAllMeetings;
 	}
 
 	/**

@@ -441,6 +441,10 @@ public class SupplierFinalizationBackingBean extends
 						Long meetingStatusId = scQtMeeting.getMeetingStatus() != null ? scQtMeeting
 								.getMeetingStatus().getStatusId() : null;
 						scQtMeeting.setMeetingStatusStr(meetingStatusId);
+						if (scQtMeeting.getRecordStatusFlg().equals(
+									DbValueConst.RECORD_STATUS_SUSPENDED)) {
+							this.getManagedBean().setHasPreviousMeeting(true);
+						}
 					}
 				}
 
@@ -561,26 +565,53 @@ public class SupplierFinalizationBackingBean extends
 	 * @param selectedMeetingList
 	 *            the selected list of ScQtMeeting entities
 	 */
-	public void deleteMeetingDetails(List<ScQtMeeting> selectedMeetingList) {
+	public void deleteMeetingDetails() {
+//		List<ScQtMeeting> selectedMeetingList = getManagedBean()
+//				.getSelectedMeetingList();
+//		List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
+//		List<ScQtMeeting> deletedMeetingList = getManagedBean()
+//				.getDeletedMeetingList();
+//		if (deletedMeetingList == null) {
+//			getManagedBean()
+//					.setDeletedMeetingList(new ArrayList<ScQtMeeting>());
+//		}
+//
+//		List<ScQtMeeting> tempDeletedList = new ArrayList<ScQtMeeting>();
+//		for (ScQtMeeting meeting : selectedMeetingList) {
+//			if (DbValueConst.RECORD_STATUS_ACTIVE == meeting
+//					.getRecordStatusFlg()) {
+//				meeting.setDeleted(true);
+//				tempDeletedList.add(meeting);
+//			}
+//		}
+//
+//		getManagedBean().setSelectedMeetingList(null);
+//		getManagedBean().setDeletedMeetingList(tempDeletedList);
+//		deleteRowsAction(meetingList, tempDeletedList);
 		try {
 			List<ScQtMeeting> meetingList = getManagedBean().getMeetingList();
-			List<ScQtMeeting> deletedMeetingList = getManagedBean()
-					.getDeletedMeetingList();
-			if (deletedMeetingList == null) {
-				getManagedBean().setDeletedMeetingList(
-						new ArrayList<ScQtMeeting>());
+			List<ScQtMeeting> deletedMeetingList = getManagedBean().getDeletedMeetingList();
+			if (deletedMeetingList == null){
+				getManagedBean().setDeletedMeetingList(new ArrayList<ScQtMeeting>());
 			}
-
+			
 			List<ScQtMeeting> tempDeletedList = new ArrayList<ScQtMeeting>();
-			for (ScQtMeeting meeting : selectedMeetingList) {
-				meeting.setDeleted(true);
-				tempDeletedList.add(meeting);
+			for (ScQtMeeting meeting : meetingList){
+				if (this.getManagedBean().isSelectAll() || meeting.isSelected()) {
+					tempDeletedList.add(meeting);
+					
+					if (!meeting.isBrandNew()) {
+						meeting.setDeleted(true);
+						getManagedBean().getDeletedMeetingList().add(meeting);
+					}
+				}
 			}
-			getManagedBean().setDeletedMeetingList(tempDeletedList);
-
-			deleteRowsAction(meetingList, tempDeletedList);
+			if (CollectionUtils.isNotEmpty(tempDeletedList)) {
+				meetingList.removeAll(tempDeletedList);
+				getManagedBean().getScQtCommittee().setScQtMeetings(meetingList);
+			}			
 		} finally {
-		}
+		}		
 	}
 
 	/**
@@ -920,6 +951,49 @@ public class SupplierFinalizationBackingBean extends
 			List<ScQtCommitteeActivity> committeeList = getManagedBean()
 					.getCommitteeList();
 			if (CollectionUtils.isNotEmpty(committeeList)) {
+						
+				// Reset endorsement status by respective finalization method(s)
+				if (isQTRefinalized()) {
+					Map<Long, String> rejectedRecommendIdMap 
+							= getManagedBean().getRejectedScQtRecommendIdMap();
+					
+					if (MapUtils.isNotEmpty(rejectedRecommendIdMap)) {
+						boolean hasAwardType = false;
+						boolean hasBiddingType = false;
+						boolean hasMultiLoiType = false;
+						
+						if (rejectedRecommendIdMap.containsValue(
+									ParameterConst.RECOMMEND_BY_AWARD) || 
+								rejectedRecommendIdMap.containsValue(
+										ParameterConst.RECOMMEND_BY_SINGLE_AWARD) || 
+									rejectedRecommendIdMap.containsValue(
+											ParameterConst.RECOMMEND_BY_MULTIPLE_AWARD)) {
+							hasAwardType = true;
+						}
+						if (rejectedRecommendIdMap.containsValue(
+									ParameterConst.RECOMMEND_BY_ONLINE_BIDDING) ||
+								rejectedRecommendIdMap.containsValue(
+									ParameterConst.RECOMMEND_BY_BIDDING_NEXT_RANK)) {
+							hasBiddingType = true;
+						}
+						if (rejectedRecommendIdMap.containsValue(
+									ParameterConst.RECOMMEND_BY_MULTIPLE_LOI)) {
+							hasMultiLoiType = true;
+						}		
+						
+						for (ScQtCommitteeActivity commActivity : committeeList) {
+							if (hasAwardType) {
+								commActivity.setSignedOff(false);
+							}
+							if (hasBiddingType) {
+								commActivity.setBiddingSignedOff(false);
+							}		
+							if (hasMultiLoiType) {
+								commActivity.setMultiLoiSignedOff(false);
+							}
+						}
+					}
+				}
 				scQtCommittee.setCommitteeActivities(committeeList);
 			}
 
@@ -1645,8 +1719,10 @@ public class SupplierFinalizationBackingBean extends
 			if (CollectionUtils.isNotEmpty(meetingList)) {
 				boolean atleastOneMeetingIsDone = false;
 				for (ScQtMeeting meeting : meetingList) {
-					if (QTConstants.SC_MEETING_DONE_STATUS_ID
-									.equals(meeting.getMeetingStatus()
+					if ((DbValueConst.RECORD_STATUS_ACTIVE
+							== meeting.getRecordStatusFlg()) && 
+									QTConstants.SC_MEETING_DONE_STATUS_ID
+										.equals(meeting.getMeetingStatus()
 												   .getStatusId())) {
 						atleastOneMeetingIsDone = true;
 					}
@@ -4001,8 +4077,8 @@ public class SupplierFinalizationBackingBean extends
 	 * Finalization or chairperson sign off the Supplier Finalization
 	 */
 	public void signOff() {
-		if (CollectionUtils.isNotEmpty(
-				getManagedBean().getCommitteeList())) {
+		if (StringUtils.isNotBlank(
+				getManagedBean().getCommitteeType())) {
 			for (ScQtCommitteeActivity scQtCommitteeActivity 
 						: getManagedBean().getCommitteeList()) {
 				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()

@@ -13,8 +13,11 @@
 			<p:graphicImage value="#{CommonUIConstant.imagePath}/ajax-loader.gif"></p:graphicImage>
 		</p:blockUI>
 			
-		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.scQt.currentWorkFlowStatus.pmStatus.statusId == QTStatusConst.QT_RE_FINALIZATION}" />
-	
+		<ui:param name="isQTStatusReFinalized" value="#{suppFinalizationBackingBean.managedBean.scQt.currentWorkFlowStatus.pmStatus.statusId 
+															== QTStatusConst.QT_RE_FINALIZATION}" />
+		<ui:param name="isSupplierFinalization" value="#{suppFinalizationBackingBean.managedBean.currentStatusId 
+															== QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION}" />
+																
 		<p:messages id="supplierFinalization" showDetail="true" showSummary="false" 
 					autoUpdate="true" closable="true" severity="error, info" />
 		
@@ -23,9 +26,7 @@
 		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.btn.save']}" 
-				process="@all"
-				partialSubmit="true"
-				update="@form"
+				process="@all" partialSubmit="true" update="@form" 
 				action="#{suppFinalizationBackingBean.saveSupplierFinalization}" 
 				rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser or 
 								suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK}"
