@@ -190,8 +190,8 @@
 			</h:panelGrid>
 			
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
-				<p:inputText id="addValueTxt" style="width:70px;" required="true" label="#{lbl['lbl.ct.additional.contract.amt']}"  
-				   styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
+				<p:inputText id="addValueTxt" styleClass="ppRightBtn" style="width:80px;" required="true" label="#{lbl['lbl.ct.additional.contract.amt']}"  
+				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.additionalAmount}" 
 				   disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="addValueTxt, addValue, overallAmt" process="@this" 
@@ -243,14 +243,18 @@
 			</h:panelGrid>
 			
 			<h:panelGrid columns="5" rendered="#{amendmentBackingBean.getAmendValue(1)}" >
-				<p:inputText id="newGstAmtTxt" style="width:70px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
-				   styleClass="ppRightBtn" value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
-				   disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}">
+				<p:inputText id="newGstAmtTxt" styleClass="ppRightBtn" size="22" style="width:80px;" required="true" label="#{lbl['lbl.ct.new.gst.amt']}"  
+				   value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.newGstAmount}" 
+				   disabled="#{amendmentBackingBean.managedBean.disableAmendDetails}"
+				   rendered="#{amendmentBackingBean.contractWithGst()}">
 					 <f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 					 <p:ajax event="blur" update="newGstAmtTxt, overallAmt" process="@this" 
 					   onstart="blockWidget.show();"  oncomplete="blockWidget.hide();" />
 				</p:inputText>
 				<p:message for="newGstAmtTxt" display="icon" />
+				<p:inputText styleClass="ppRightBtn" style="width:100px;" disabled="true" 
+	   				 rendered="#{!amendmentBackingBean.contractWithGst()}" value="#{lbl['lbl.ct.gst.na']}">
+				</p:inputText>
 			</h:panelGrid>
 			
 			<p:outputLabel value="#{lbl['lbl.ct.new.overall.contract.amt']}" rendered="#{amendmentBackingBean.getAmendValue(1)}"/>
@@ -259,7 +263,7 @@
 					value="#{amendmentBackingBean.newOverallContractAmt()}" >
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
-			</h:panelGrid>			
+			</h:panelGrid>
 		</h:panelGrid>
 		
 		<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth225"
