@@ -899,6 +899,7 @@ public class QTSupplierQulCriteriaBackingBean extends
 					this.getManagedBean().getTotalSuppliersSpecLoc().addAll(specLoc);
 					locationDTOs.addAll(locationDTO);
 				}
+				treeNode.setSelected(false);
 			}
 			getManagedBean().setSelectedNodes(null);
 		}
