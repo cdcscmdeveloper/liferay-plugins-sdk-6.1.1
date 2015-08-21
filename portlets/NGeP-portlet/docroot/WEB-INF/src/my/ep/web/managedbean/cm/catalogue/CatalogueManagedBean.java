@@ -1110,45 +1110,49 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 				FacesScopes facesScopes = new FacesScopes();
 				Long userId = facesScopes.getUserSessionBean().getUserId();
-
-				UserReqDTO userReqDTO = new UserReqDTO();
-				userReqDTO.setUserId(userId);
-				IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
-						.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-								IUserSO.class);
-				UserResDTO userResDTO = userSO
-						.retrieveUserOrgListByUserId(userReqDTO);
-				PmUserOrg userOrg = userResDTO.getUserOrgList().get(0);
-
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
-						.getInstance().getServiceObject(
-								ModuleCodeConst.PROFILE_MANAGEMENT,
-								IOrgProfileSO.class);
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile()
-						.getOrgProfileId());
-				OrgProfileResDTO orgProfileResDTO = orgProfileSO
-						.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
-				if (orgProfileResDTO.getPmOrgProfile() != null) {
-					String ministryId = "#"
-							+ orgProfileResDTO.getPmOrgProfile()
-									.getOrgProfileId() + "#";
-					SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(
-							new SearchFilterBean("EXEMPTED_MINISTRY_LIST",
-									SearchOperator.OPERATOR_IS_NULL.value(),
-									null), new SearchFilterBean(
-									"EXEMPTED_MINISTRY_LIST",
-									SearchOperator.OPERATOR_NOT_LIKE.value(),
-									ministryId,
-									SearchCondition.CONDITION_OR.value()));
-					searchBean.getDataFilterBeans().add(ministryFilterBean);
+				PmUserOrg userOrg = null;
+				
+				if (bb.isRequisitioner()) {
+					UserReqDTO userReqDTO = new UserReqDTO();
+					userReqDTO.setUserId(userId);
+					IUserSO userSO = (IUserSO) BusinessDelegate.getInstance()
+							.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
+									IUserSO.class);
+					UserResDTO userResDTO = userSO
+							.retrieveUserOrgListByUserId(userReqDTO);
+					userOrg = userResDTO.getUserOrgList().get(0);
+	
+					IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+							.getInstance().getServiceObject(
+									ModuleCodeConst.PROFILE_MANAGEMENT,
+									IOrgProfileSO.class);
+					OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+					orgProfileReqDTO.setOrgProfileId(userOrg.getPmOrgProfile()
+							.getOrgProfileId());
+					OrgProfileResDTO orgProfileResDTO = orgProfileSO
+							.retrieveMinistryByOrgProfileId(orgProfileReqDTO);
+					if (orgProfileResDTO.getPmOrgProfile() != null) {
+						String ministryId = "#"
+								+ orgProfileResDTO.getPmOrgProfile()
+										.getOrgProfileId() + "#";
+						SearchMultiFilterBean ministryFilterBean = new SearchMultiFilterBean(
+								new SearchFilterBean("EXEMPTED_MINISTRY_LIST",
+										SearchOperator.OPERATOR_IS_NULL.value(),
+										null), new SearchFilterBean(
+										"EXEMPTED_MINISTRY_LIST",
+										SearchOperator.OPERATOR_NOT_LIKE.value(),
+										ministryId,
+										SearchCondition.CONDITION_OR.value()));
+						searchBean.getDataFilterBeans().add(ministryFilterBean);
+					}
 				}
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				searchBean.setUseEntityClass(true);
 				reqDTO.setViewSearchBean(searchBean);
-				reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile()
-						.getOrgProfileId());
+				if(userOrg!=null) {
+					reqDTO.setUserOrgProfileId(userOrg.getPmOrgProfile().getOrgProfileId());
+				}
 				if (catTypeFilterBean != null
 						&& catTypeFilterBean.getSearchValue() != null) {
 					reqDTO.setCatType(catTypeFilterBean.getSearchValue()
