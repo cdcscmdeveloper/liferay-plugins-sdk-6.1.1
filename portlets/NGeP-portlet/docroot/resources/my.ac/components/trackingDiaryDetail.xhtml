@@ -9,12 +9,13 @@
 	<cc:interface>
 		<cc:attribute name="action" method-signature="void action()" />
 		<cc:attribute name="dataTable" />
+		<cc:attribute name="showBackButton" default="true" />
 	</cc:interface>
 
 	<cc:implementation>
 		<div style="text-align: right; min-height: 40px;">	
 			<div style="float: left; clear: both;">
-				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" />
+				<p:commandButton value="#{lbl['lbl.btn.back']}" action="#{cc.attrs.action}" rendered="#{cc.attrs.showBackButton}" />
 			</div>
 		</div>
 	<p:panel header="#{lbl['lbl.td.doc.trackingDiaryDetails']}" toggleable="true" >
