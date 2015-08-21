@@ -11,7 +11,6 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.pm.ParameterConst;
@@ -20,14 +19,13 @@ import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FLProcessNameConst;
 import my.ep.constants.PPProcessNameConst;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.log4j.Logger;
 
@@ -699,20 +697,13 @@ public class BPMTaskListBackingBean extends
 	}
 
 	public String applicationStatus(Integer docInt) {
-		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
-				.getServiceObject("pm", IStatusSO.class);
-		String languageCode = new FacesScopes().getUserLocale().getLanguage();
+		PmStatusDesc pmStatusDesc = StatusHelper.getInstance().getStatusDescById(docInt.longValue());
 
-		StatusReqDTO reqDTO = new StatusReqDTO();
+		if (log.isDebugEnabled()) {
+			log.debug("docInt:" + docInt);	
+		}
 
-		reqDTO.setLanguageCode(languageCode);
-		reqDTO.setStatusId(docInt.longValue());
-		StatusResDTO resDTO = statusSO.retrieveStatusDescById(reqDTO);
-
-		System.out.println("docInt:" + docInt);
-
-		return resDTO.getPmStatusDesc() != null ? resDTO.getPmStatusDesc()
-				.getStatusName() : "Review";
+		return pmStatusDesc != null ? pmStatusDesc.getStatusName() : "Review";
 	}
 
 	public void refreshTaskList() {
