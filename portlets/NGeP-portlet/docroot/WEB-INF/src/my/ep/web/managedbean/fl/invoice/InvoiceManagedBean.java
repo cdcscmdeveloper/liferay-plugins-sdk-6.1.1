@@ -23,6 +23,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.TaxInvoiceVO;
 
 import org.primefaces.model.TreeNode;
 
@@ -187,6 +188,7 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private BigDecimal gstAmount;
 	private BigDecimal invoiceAmountWithoutGST;
+	private List<TaxInvoiceVO> taxInvoiceList;
 	
 	/**
 	 * Gets the doc type.
@@ -1042,5 +1044,19 @@ public class InvoiceManagedBean extends BaseManagedBean {
 
 	public void setInvoiceAmountWithoutGST(BigDecimal invoiceAmountWithoutGST) {
 		this.invoiceAmountWithoutGST = invoiceAmountWithoutGST;
+	}
+
+	/**
+	 * @return the taxInvoiceList
+	 */
+	public List<TaxInvoiceVO> getTaxInvoiceList() {
+		return taxInvoiceList;
+	}
+
+	/**
+	 * @param taxInvoiceList the taxInvoiceList to set
+	 */
+	public void setTaxInvoiceList(List<TaxInvoiceVO> taxInvoiceList) {
+		this.taxInvoiceList = taxInvoiceList;
 	}
 }

@@ -14,7 +14,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -110,6 +109,7 @@ import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.InvoiceChargeLineVO;
+import my.ep.web.vo.TaxInvoiceVO;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -771,6 +771,66 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			
 		} 
 		getManagedBean().getPaymentAdvice().setPaymentAmt(calPaymentAmt);
+		getTaxinvoice();
+	}
+	
+	private void getTaxinvoice(){
+		getManagedBean().setTaxInvoiceList(null);
+		Map<String, TaxInvoiceVO> taxAmountMap = null;
+		for(FlInvoiceItemSummary invItemSumm : getManagedBean().getPaymentAdvice().getFlInvoice().getFlInvoiceItemSummary()){
+			for(FlInvoiceItem invItem : invItemSumm.getFlInvoiceItem()){
+				if(taxAmountMap != null){
+					if(taxAmountMap.containsKey(invItem.getGstFlag().getParameterCode())){
+						TaxInvoiceVO taxInvVO = taxAmountMap.get(invItem.getGstFlag().getParameterCode());
+						taxInvVO.setAmountWithoutGst(taxInvVO.getAmountWithoutGst().add(invItem.getInvAmt()));
+						taxAmountMap.put(invItem.getGstFlag().getParameterCode(), taxInvVO);
+					}else{
+						TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
+						taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
+						if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlInvoice().getFlRequest().getGstRate()+"%");
+							taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
+						}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
+							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
+							taxInvVO.setGstAmount(BigDecimal.ZERO.toString());	
+						}else {
+							taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = Nil");
+							taxInvVO.setGstAmount("Nil");	
+						}
+						taxInvVO.setGstFlagCode(invItem.getGstFlag().getParameterCode());
+						taxAmountMap.put(invItem.getGstFlag().getParameterCode(), taxInvVO);
+					}
+				}else{
+					taxAmountMap = new HashMap<String, TaxInvoiceVO>();
+					TaxInvoiceVO taxInvVO = new TaxInvoiceVO();
+					taxInvVO.setAmountWithoutGst(invItem.getInvAmt());
+					if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+						taxInvVO.setGstAmount(getManagedBean().getGstAmount().toString());	
+						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = " +getManagedBean().getPaymentAdvice().getFlInvoice().getFlRequest().getGstRate()+"%");
+					}else if(invItem.getGstFlag().getParameterCode().equalsIgnoreCase(GSFType.ZERO_RATED.value())){
+						taxInvVO.setGstAmount(BigDecimal.ZERO.toString());	
+						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = 0%");
+					}else {
+						taxInvVO.setGstAmount("Nil");	
+						taxInvVO.setGstFlag(invItem.getGstFlag().getParameterCode()+" = Nil");
+					}
+					taxInvVO.setGstFlagCode(invItem.getGstFlag().getParameterCode());
+					
+					taxAmountMap.put(invItem.getGstFlag().getParameterCode(), taxInvVO);
+				}
+				
+				
+			}
+		}
+		getManagedBean().setTaxInvoiceList(new ArrayList<TaxInvoiceVO>());
+		for(Entry<String, TaxInvoiceVO> itemEntry : taxAmountMap.entrySet()){
+			TaxInvoiceVO taxInvoice = itemEntry.getValue();
+			if(taxInvoice.getGstFlagCode().equalsIgnoreCase(GSFType.STANDARD.value())){
+				BigDecimal amtWithoutGst = taxInvoice.getAmountWithoutGst().subtract(getManagedBean().getGstAmount()) ;
+				taxInvoice.setAmountWithoutGst(amtWithoutGst);
+			}
+			getManagedBean().getTaxInvoiceList().add(taxInvoice);
+		}
 	}
 	
 	/**
