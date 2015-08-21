@@ -76,6 +76,15 @@
 				</tr>
 				<tr>
 					<td class="columnWidth200">
+						<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
+					</td>
+					<td>
+						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
+			   				value="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+					</td>
+					<td class="columnWidth200">
 						<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effective.date']}" />
 					</td>
 					<td>
@@ -84,6 +93,23 @@
 							<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 			  			</p:inputText>
 			  		</td>
+			  	</tr>
+				<tr>
+			  		<td class="columnWidth200">
+						<p:outputLabel id="gstAmount" value="#{lbl['lbl.ct.gst.amt']}"  />
+					</td>
+					<td>
+						<p:inputText for="gstAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
+			   				 disabled="true" 
+			   				 rendered="#{terminationBackingBean.contractWithGst()}"
+			   				 value="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.gstAmount}" >
+			   				<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
+						</p:inputText>
+						<p:inputText styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
+			   				 disabled="true" 
+			   				  rendered="#{!terminationBackingBean.contractWithGst()}" value="#{lbl['lbl.ct.gst.na']}">
+						</p:inputText>
+					</td>
 					<td class="columnWidth200">
 						<p:outputLabel id="edate" value="#{lbl['lbl.ct.expiry.date']}" />
 					</td> 
@@ -95,28 +121,28 @@
 			  		</td>
 				</tr>
 				<tr>
-					<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeMinistry}">
 					<td class="columnWidth200">
-						<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contract.amount']}" />
+						<p:outputLabel id="overAllAmt" value="#{lbl['lbl.ct.gst.all.amt']}" />
 					</td>
 					<td>
-						<p:inputText for="contractAmount" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
-			   				value="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
+						<p:inputText id="overAllAmts" styleClass="ppRightBtn"  maxlength="22" style="width:160px;"
+			   				value="#{terminationBackingBean.managedBean.contractVer.ctContractAmount.gstAmount + terminationBackingBean.managedBean.contractVer.ctContractAmount.contractAmount}"  disabled="true">
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
 					</td>
-					</h:panelGroup>
-					<h:panelGroup rendered="#{!terminationBackingBean.managedBean.ctContract.zonalPricing}">
+					<h:panelGroup rendered="#{!terminationBackingBean.managedBean.contractVer.ctContract.zonalPricing}">
 					<td class="columnWidth200">
-							<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" styleClass="required"   />
-	                  </td> 
+	     	             	<p:outputLabel id="dperiodtxt" value="#{lbl['lbl.ct.delivery.period']}" style="width:100%" styleClass="required" />
+					</td> 
 					<td><p:inputText id="dperiod" styleClass="ppRightBtn" validator="#{webappBean.validateDPeriod}" required="true" style="width:45px;"
 		              		maxlength="4" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />
                 		<p:spacer width="3"/>
                 		<h:outputText value="#{lbl['lbl.ct.days']}" />
                 	</td>
                 	</h:panelGroup>
-                	<h:panelGroup rendered="#{terminationBackingBean.managedBean.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral 
+          		</tr>
+				<tr>
+				  	<h:panelGroup rendered="#{terminationBackingBean.managedBean.contractVer.ctContract.contractType.parameterCode eq ParameterConst.contractTypeCentral 
                 		and !terminationBackingBean.managedBean.contractVer.ctContractAmount.agreement}">
 					<td class="columnWidth200">
 						<p:outputLabel id="signBy1" value="#{lbl['lbl.ct.signed.date']}" />
