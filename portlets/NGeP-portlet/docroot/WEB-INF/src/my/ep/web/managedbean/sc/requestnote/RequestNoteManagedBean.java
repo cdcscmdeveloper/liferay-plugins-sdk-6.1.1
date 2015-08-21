@@ -101,7 +101,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	private	String	periodType;
 	
 	/** The period value. */
-	private	int	periodValue;
+	private	Integer	periodValue;
 	
 	/** The user division list. */
 	private List<PmOrgProfile> userDivisionList;
@@ -463,7 +463,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 *
 	 * @return the periodValue
 	 */
-	public int getPeriodValue() {
+	public Integer getPeriodValue() {
 		return periodValue;
 	}
 	
@@ -472,7 +472,7 @@ public class RequestNoteManagedBean extends BaseManagedBean{
 	 *
 	 * @param periodValue the periodValue to set
 	 */
-	public void setPeriodValue(int periodValue) {
+	public void setPeriodValue(Integer periodValue) {
 		this.periodValue = periodValue;
 	}
 
