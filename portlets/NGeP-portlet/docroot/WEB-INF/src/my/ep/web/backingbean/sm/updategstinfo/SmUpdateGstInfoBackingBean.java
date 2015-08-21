@@ -1,7 +1,6 @@
 package my.ep.web.backingbean.sm.updategstinfo;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +12,6 @@ import my.ep.constant.MessageConst;
 import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.search.SupplierSearchReqDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.sm.SmGstSupplier;
 import my.ep.persistence.entity.sm.SmGstSupplierDoc;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
@@ -382,11 +380,7 @@ public class SmUpdateGstInfoBackingBean extends
 	private void validateDeclare() {
 		StringBuffer sb = new StringBuffer();
 		SmGstSupplier gst = getManagedBean().getHqGstSupplier();
-		if (StringUtils.isNotBlank(gst.getGstRegNo())
-				&& gst.getGstRegNo().length() != SmRuleHelper.getInstance()
-						.getGstRegNumLength()) {
-			throw new EpException(MessageConst.ERROR_721044);
-		} else if (gst.getGstEndDate() != null
+		if (gst.getGstEndDate() != null
 				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
 			throw new EpException(MessageConst.ERROR_721044);
 		}
