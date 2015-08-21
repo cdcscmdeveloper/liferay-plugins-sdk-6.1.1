@@ -155,8 +155,22 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			 getManagedBean().setApproverModel(new DualListModel<PmUser>(source, target));
 		}
 	}
-	 
+	
 	 /**
+	 * @return the ctBB
+	 */
+	public ContractBackingBean getCtBB() {
+		return ctBB;
+	}
+
+	/**
+	 * @param ctBB the ctBB to set
+	 */
+	public void setCtBB(ContractBackingBean ctBB) {
+		this.ctBB = ctBB;
+	}
+
+	/**
 		 * This  method call once user navigate termination  page from task list
 		 * Method used to retrieve all information from BPM
 		 * Method used to retrieve contract information from BPM
@@ -1280,21 +1294,5 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	public void setSelectedTerminationReasonsList(
 			CtTerminationReason[] selectedTerminationReasonsList) {
 		this.selectedTerminationReasonsList = selectedTerminationReasonsList;
-	}
-	
-	/**
-	 * The method used to check whether the contract is with gst.
-	 * 
-	 * @return true, if the contract is with gst
-	 *         false, if the contract is without gst
-     */
-	public boolean contractWithGst(){
-		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
-	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
-	    	return true;
-	    } else {
-	    	return false;
-	    }
 	}
 }
