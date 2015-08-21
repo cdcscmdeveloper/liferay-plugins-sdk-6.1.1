@@ -9,10 +9,10 @@
 	<p:panel header="#{lbl['lbl.sc.committee.endorsement.specification']}"
 		toggleable="true">
 
-		<p:dataTable id="scEndorsement" var="committeActivity" rows="10"
-			rowIndexVar="index" widgetVar="prepareCommittee"
-			value="#{committeeActivityList}">
-			<ac:paginator for="scEndorsement" />
+		<p:dataTable id="#{specificationEndorsedSignOffId}"
+			var="committeActivity" rows="10" rowIndexVar="index"
+			widgetVar="prepareCommittee" value="#{committeeActivityList}">
+			<ac:paginator for="#{specificationEndorsedSignOffId}" />
 
 			<p:column style="width:30%;white-space: normal;"
 				headerText="#{lbl['lbl.sc.name']}">
