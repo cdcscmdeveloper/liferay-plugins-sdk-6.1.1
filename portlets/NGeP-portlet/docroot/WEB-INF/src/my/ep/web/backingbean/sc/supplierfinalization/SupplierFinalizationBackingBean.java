@@ -1716,22 +1716,25 @@ public class SupplierFinalizationBackingBean extends
 		String exceptionMsgConstant = null;
 		
 		if (!getManagedBean().isInitialDecisionFwdToBPK()) {
-			if (CollectionUtils.isNotEmpty(meetingList)) {
-				boolean atleastOneMeetingIsDone = false;
-				for (ScQtMeeting meeting : meetingList) {
-					if ((DbValueConst.RECORD_STATUS_ACTIVE
-							== meeting.getRecordStatusFlg()) && 
-									QTConstants.SC_MEETING_DONE_STATUS_ID
-										.equals(meeting.getMeetingStatus()
-												   .getStatusId())) {
-						atleastOneMeetingIsDone = true;
+			if (QTStatusConst.SF_PENDING_SUPPLIER_FINALIZATION
+					.equals(getManagedBean().getCurrentStatusId())) {
+				if (CollectionUtils.isNotEmpty(meetingList)) {
+					boolean atleastOneMeetingIsDone = false;
+					for (ScQtMeeting meeting : meetingList) {
+						if ((DbValueConst.RECORD_STATUS_ACTIVE
+								== meeting.getRecordStatusFlg()) && 
+										QTConstants.SC_MEETING_DONE_STATUS_ID
+											.equals(meeting.getMeetingStatus()
+													   .getStatusId())) {
+							atleastOneMeetingIsDone = true;
+						}
 					}
+					if (!atleastOneMeetingIsDone) {
+						exceptionMsgConstant = MessageConst.ERROR_760292;
+					}
+				} else {
+					exceptionMsgConstant = MessageConst.ERROR_760291;
 				}
-				if (!atleastOneMeetingIsDone) {
-					exceptionMsgConstant = MessageConst.ERROR_760292;
-				}
-			} else {
-				exceptionMsgConstant = MessageConst.ERROR_760291;
 			}
 			
 			scQtCommittee = preparationDtlsInfo();
