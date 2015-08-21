@@ -119,29 +119,22 @@
 
 						<ui:include src="deliveryAddress.xhtml" />
 					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
+						test="#{specificationBackingBean.managedBean.activeIndex eq '8' or specificationBackingBean.managedBean.activeIndex eq '9'}">
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
+							rendered="#{specificationBackingBean.managedBean.activeIndex eq '8' and (specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA')}">
 
 							<ui:include src="schedule.xhtml" />
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq null}">
+							rendered="#{((specificationBackingBean.managedBean.activeIndex eq '8' and (specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq null) or (specificationBackingBean.managedBean.activeIndex eq '9')))}">
 							<ui:param name="committeeActivityList"
 								value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 							<ui:param name="specificationEndorsedSignOffId"
 								value="fullfilemtNullorOneOfftwoTier" />
 							<ui:include src="specificationSignoff.xhtml" />
 						</ui:fragment>
-					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '9'}">
-						<ui:param name="committeeActivityList"
-							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-						<ui:param name="specificationEndorsedSignOffId"
-							value="fullfilemtPeriodicAsandWhentwotier" />
-						<ui:include src="specificationSignoff.xhtml" />
 					</c:if></td>
 			</tr>
 		</table>
@@ -258,29 +251,22 @@
 
 						<ui:include src="deliveryAddress.xhtml" />
 					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '7'}">
+						test="#{specificationBackingBean.managedBean.activeIndex eq '7' or specificationBackingBean.managedBean.activeIndex eq '8'}">
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA'}">
+							rendered="#{specificationBackingBean.managedBean.activeIndex eq '7' and (specificationBackingBean.managedBean.fulfilmentType eq 'PS' or specificationBackingBean.managedBean.fulfilmentType eq 'PA')}">
 
 							<ui:include src="schedule.xhtml" />
 						</ui:fragment>
 
 						<ui:fragment
-							rendered="#{specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq null}">
+							rendered="#{((specificationBackingBean.managedBean.activeIndex eq '7' and (specificationBackingBean.managedBean.fulfilmentType eq 'OF' or specificationBackingBean.managedBean.fulfilmentType eq null)) or (specificationBackingBean.managedBean.activeIndex eq '8'))}">
 							<ui:param name="committeeActivityList"
 								value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
 							<ui:param name="specificationEndorsedSignOffId"
 								value="fullfilemttypenullOneoffonetier" />
 							<ui:include src="specificationSignoff.xhtml" />
 						</ui:fragment>
-					</c:if> <c:if
-						test="#{specificationBackingBean.managedBean.activeIndex eq '8'}">
-						<ui:param name="committeeActivityList"
-							value="#{specificationBackingBean.managedBean.committeeActivities}"></ui:param>
-						<ui:param name="specificationEndorsedSignOffId"
-							value="fullfilemtPeriodicAsandWhenoneTier" />
-						<ui:include src="specificationSignoff.xhtml" />
 					</c:if></td>
 			</tr>
 		</table>
