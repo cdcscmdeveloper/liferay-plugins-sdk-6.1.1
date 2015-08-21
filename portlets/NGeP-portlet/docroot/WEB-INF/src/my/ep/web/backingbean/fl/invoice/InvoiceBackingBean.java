@@ -1507,7 +1507,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			return null;
 		}else if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)){
 				if(!getManagedBean().isReliefDeclarationCheck()){
-						throw new EpException(MessageConst.ERROR_745072);
+					getManagedBean().setSelectedTabIndex(1);
+					throw new EpException(MessageConst.ERROR_745072);
 				}
 			if(hasGovtSellerRole()){
 				reqDTO.setOutcome(outcome);
