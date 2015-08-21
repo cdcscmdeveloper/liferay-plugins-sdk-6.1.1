@@ -51,6 +51,7 @@ import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.sc.DPStatusConstants;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
@@ -509,7 +510,12 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 				}
 			}	
 
-			requestNote.setTitle(sb.toString());
+			if(!sb.toString().isEmpty() && sb.toString().length() >= SourcingConstants.PROCUREMENT_TITLE_LIMIT){
+				String procTitle = sb.substring(0, SourcingConstants.PROCUREMENT_TITLE_LIMIT);
+				requestNote.setTitle(procTitle);
+			} else{
+				requestNote.setTitle(sb.toString());
+			}
 		}
 
 		// adding request note delete list
