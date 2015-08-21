@@ -43,7 +43,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu id="somPlanYearSearch" label="#{lbl['lbl.pp.plan.year']}" 
 						styleClass="ppDropDownWidthM"  value="#{pPlanBackingBean.managedBean.planSearchBean.year}"
 						>
-						<f:selectItems value="#{pPlanBackingBean.getExistingPlanYearOptions()}"/>
+						<f:selectItems value="#{pPlanBackingBean.getPlanYearOptions(false)}"/>
 					</p:selectOneMenu>
 				</td>
 				<th>
