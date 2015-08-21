@@ -331,16 +331,16 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 	    if(roleResDTO.isSuccessful() && roleResDTO.getRuleValueList()!=null && roleResDTO.getRuleValueList().size()>0) {
 	    	getManagedBean().setPerformanceBondRuleAmt(Double.parseDouble(roleResDTO.getRuleValueList().get(0).getRuleValue()));
 	    }
-		    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
-		    ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
-		    if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
-		    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
-		    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().intValue() > 0)) {
-		    	ctBB.getManagedBean().setGstCheckingGUI(true);
-		    } else {
-		    	ctBB.getManagedBean().setGstCheckingGUI(false);
-		    }
-		    flush();
+	    ctBB.getManagedBean().setViewContract(getManagedBean().isViewContract());
+	    ctBB.initializeRemarkAndAttachement(getManagedBean().getContractVer().getCtWorkflowStatus(), getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
+	    if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+	    	ctBB.getManagedBean().setGstCheckingGUI(true);
+	    } else {
+	    	ctBB.getManagedBean().setGstCheckingGUI(false);
+	    }
+	    flush();
 		if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode() != null) {
 				if(getManagedBean().getContractVer().getCtTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ContractConst.TR_LETTER_REMEDY)){
 					getManagedBean().setRemedy(true);
