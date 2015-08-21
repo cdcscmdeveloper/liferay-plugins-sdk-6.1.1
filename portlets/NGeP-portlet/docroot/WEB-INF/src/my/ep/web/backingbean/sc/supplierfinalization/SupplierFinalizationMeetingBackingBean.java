@@ -56,6 +56,7 @@ import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.evaluationdata.SCEvaluationDataType;
+import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmRole;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -194,6 +195,12 @@ public class SupplierFinalizationMeetingBackingBean extends
 			MeetingResDTO resDTO = qtMeetingSO.retrieveMeetingDls(reqDTO);
 
 			if (resDTO.getMeetingDtls() != null) {
+				for (ScQtMeeting meeting : resDTO.getMeetingDtls()) {
+					if (meeting.getRecordStatusFlg().equals(
+							DbValueConst.RECORD_STATUS_SUSPENDED)) {
+						getManagedBean().setHasPreviousMeeting(true);
+					}
+				}
 				getManagedBean().setScQtMeetings(resDTO.getMeetingDtls());
 			}
 			
@@ -226,6 +233,10 @@ public class SupplierFinalizationMeetingBackingBean extends
 			List<ScQtCommitteeActivity> activities = committee.getCommitteeActivities();
 			if (CollectionUtils.isNotEmpty(activities)) {
 				for (ScQtCommitteeActivity activity : activities) {
+					
+					// Reset attendance of the committee member
+					activity.setAttended(false);
+					
 					PmParameter memberRole = activity.getScCommitteeMember().getMemberRole();
 					if (activity.getScCommitteeMember().getRepresentativeType() == null && 
 							ParameterConst.COMMITTEE_ROLE_MEMBER.equals(memberRole.getParameterCode())) {
