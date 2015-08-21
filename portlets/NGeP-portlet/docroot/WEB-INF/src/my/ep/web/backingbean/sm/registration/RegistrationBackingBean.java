@@ -79,6 +79,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.util.EpPropertiesUtils;
 import my.ep.util.MessageUtils;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.CommonUIConst;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -2203,6 +2204,22 @@ public class RegistrationBackingBean extends BaseBackingBean<RegistrationManaged
 		this.getManagedBean().setSelectedGstSupplierDoc(gstSupplierDoc);
 	}
 
+	/**
+	 * Validate user login
+	 */
+	public void validateLoginSession(){
+		String screenName = new FacesScopes().getUserScreenName();
+		FacesContext fc = FacesContext.getCurrentInstance();
+		if (screenName != null && StringUtils.isNotEmpty(screenName)) {
+			fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "",
+					MessageUtils.getMessage(MessageConst.ERROR_721045,
+							MessageUtils.BUNDLE_COMMON_MESSAGES, new FacesScopes().getUserLocale())));
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, CommonUIConst.ACKNOWLEDGE_ERROR_PAGE);			
+
+		}else{
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, signUp);
+		}
+	}
 }
 
 
