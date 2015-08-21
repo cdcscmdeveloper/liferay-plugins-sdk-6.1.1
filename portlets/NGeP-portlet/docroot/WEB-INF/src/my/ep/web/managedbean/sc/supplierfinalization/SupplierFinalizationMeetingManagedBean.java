@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.sc.supplierfinalization;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -70,6 +69,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	
 	private boolean selectAll;
 	private boolean selectAllMembers;
+	private boolean hasPreviousMeeting;
 	
 	public SupplierFinalizationMeetingManagedBean() {
 		this.userSearchBean = new UserCommitteeSearchBean();
@@ -441,7 +441,7 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	}
 	/**
 	 * @param selectedCommitteeMembersList 
-	 * 							the selectedCommitteeMembersList to set
+	 * 					the selectedCommitteeMembersList to set
 	 */
 	public void setSelectedCommitteeMembersList(
 			List<ScCommitteeMember> selectedCommitteeMembersList) {
@@ -514,6 +514,22 @@ public class SupplierFinalizationMeetingManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectAllMembers(boolean selectAllMembers) {
 		this.selectAllMembers = selectAllMembers;
+	}
+
+	/**
+	 * @return the hasPreviousMeeting
+	 */
+	public boolean isHasPreviousMeeting() {
+		return hasPreviousMeeting;
+	}
+
+	/**
+	 * @param hasPreviousMeeting 
+	 * 				the hasPreviousMeeting to set
+	 */
+	public void setHasPreviousMeeting(
+						boolean hasPreviousMeeting) {
+		this.hasPreviousMeeting = hasPreviousMeeting;
 	}
 	
 }
