@@ -1281,4 +1281,20 @@ public class TerminationBackingBean extends ContractBaseBackingBean<TerminationM
 			CtTerminationReason[] selectedTerminationReasonsList) {
 		this.selectedTerminationReasonsList = selectedTerminationReasonsList;
 	}
+	
+	/**
+	 * The method used to check whether the contract is with gst.
+	 * 
+	 * @return true, if the contract is with gst
+	 *         false, if the contract is without gst
+     */
+	public boolean contractWithGst(){
+		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
+	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
+	    	return true;
+	    } else {
+	    	return false;
+	    }
+	}
 }
