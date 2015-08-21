@@ -209,10 +209,6 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 				reqDTO.setAssignment(getAssignment());
 				reqDTO.setCtxToken(token);
 				BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
-				
-				BpmResponseDTO responseDTO2 = bpmSO.getDashSummary(reqDTO);
-				System.out.println("responseDTO2: " + responseDTO2);
-				
 				SearchResultBean<WorklistItemVO> resultBean = new SearchResultBean<WorklistItemVO>();
 				
 				if (responseDTO.getWorklistVO() != null) {
