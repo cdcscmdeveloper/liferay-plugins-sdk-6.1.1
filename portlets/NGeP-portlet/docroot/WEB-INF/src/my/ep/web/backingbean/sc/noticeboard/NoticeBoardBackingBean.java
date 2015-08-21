@@ -653,6 +653,8 @@ public class NoticeBoardBackingBean extends
 		super.renewSesionObject();
 		
 		isUser();
+		
+		getManagedBean().setNavigateFromNoticeBoard(false);
 
 		String url = gotoSupplierRegistration(Long.parseLong(qtId));
 		
