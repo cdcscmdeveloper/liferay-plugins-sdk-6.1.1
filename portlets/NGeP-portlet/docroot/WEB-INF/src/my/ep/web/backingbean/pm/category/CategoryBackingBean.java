@@ -898,7 +898,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		loadPmCategoryL3Data(id);
 
-		return "/xhtml/pm/category/categoryl3.xhtml";
+		return "/xhtml/pm/category/categoryl3.xhtml?faces-redirect=true";
 	}
 
 	/**
@@ -944,7 +944,9 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 				for (PmBasicCategory pmBasicCategory : this.getManagedBean()
 						.getPmCategoryL3().getPmBasicCategory()) {
+					
 					reqDTO.setCategoryL3Id(pmBasicCategory.getBasicCategoryL3());
+					
 					CategoryCodeResDTO bresDTO = categoryCodeSO
 							.retrieveCategoryL3DtlById(reqDTO);
 

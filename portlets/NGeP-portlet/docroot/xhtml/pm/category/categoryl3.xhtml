@@ -253,7 +253,7 @@
 								itemValue="#{specialCategory.pmParameter.parameterId}"></f:selectItems>
 							<p:ajax event="change" process="@this" partialSubmit="true"
 								listener="#{categoryBackingBean.updateSpecialCategory}"
-								update="@form" />
+								update="panelMachineDtls" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
@@ -411,6 +411,7 @@
 				</div>
 			</p:panel>
 		</p:outputPanel>
+	 	<p:outputPanel id="panelMachineDtls">		
 		<p:panel header="#{lbl['lbl.pm.special.equipment']}"
 			id="machineDetails"
 			rendered="#{categoryBackingBean.managedBean.checkSpecialCategory}"
@@ -463,6 +464,7 @@
 					oncomplete="lovPopupPmMachine.show();" update="lovPopupPmMachine" />
 			</div>
 		</p:panel>
+	</p:outputPanel>
 		<p:remoteCommand name="updateCategory"
 			update="panelgroupdetails,resultPanel"
 			action="#{categoryBackingBean.populateToSaveLOV}" />
