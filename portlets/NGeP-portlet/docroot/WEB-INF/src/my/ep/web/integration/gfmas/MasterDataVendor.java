@@ -2,6 +2,9 @@ package my.ep.web.integration.gfmas;
 
 import java.util.List;
 
+/*
+ *@author P Ganga Prasad
+ */
 public class MasterDataVendor {
 
 	private int recordType;
@@ -9,15 +12,12 @@ public class MasterDataVendor {
 	private String vendorIdCode;
 	private String entityCode;
 
-	private String sapVendorCode; // for apove file
-
-//	private CompanyBranch companyBranch = new CompanyBranch(); // for apove file
-
 	private List<CompanyBranch> companyBranchs;
 
-//	BankAccountInformation bankAccountInformation; // for apove file
-
-//	List<BankAccountInformation> bankAccountInfoList;
+	// for apove file
+	private String sapVendorCode;
+	private CompanyBranch companyBranch = new CompanyBranch();
+	List<BankAccountInformation> bankAccountInfoList;
 
 	public int getRecordType() {
 		return recordType;
@@ -59,17 +59,13 @@ public class MasterDataVendor {
 		this.sapVendorCode = sapVendorCode;
 	}
 
-/*	public CompanyBranch getCompanyBranch() {
+	public CompanyBranch getCompanyBranch() {
 		return companyBranch;
 	}
 
 	public void setCompanyBranch(CompanyBranch companyBranch) {
 		this.companyBranch = companyBranch;
 	}
-
-	public BankAccountInformation getBankAccountInformation() {
-		return bankAccountInformation;
-	}*/
 
 	public List<CompanyBranch> getCompanyBranchs() {
 		return companyBranchs;
@@ -79,18 +75,13 @@ public class MasterDataVendor {
 		this.companyBranchs = companyBranchs;
 	}
 
-/*	public void setBankAccountInformation(
-			BankAccountInformation bankAccountInformation) {
-		this.bankAccountInformation = bankAccountInformation;
-	}*/
-
-	/*public List<BankAccountInformation> getBankAccountInfoList() {
+	public List<BankAccountInformation> getBankAccountInfoList() {
 		return bankAccountInfoList;
 	}
 
 	public void setBankAccountInfoList(
 			List<BankAccountInformation> bankAccountInfoList) {
 		this.bankAccountInfoList = bankAccountInfoList;
-	}*/
+	}
 
 }

@@ -317,6 +317,8 @@ public class FileUtility {
 				StringBuffer line;
 				StringBuffer branchLine;
 				StringBuffer subLine;
+				
+				System.out.println("content :"+content.size());
 				for (MasterDataVendor mDataVendor : content) {
 					
 					line = new StringBuffer();
@@ -357,7 +359,7 @@ public class FileUtility {
 							branchLine.append(System.getProperty("line.separator"));
 							writer.write(branchLine.toString());
 							
-							if (companyBranch.getBankAccountInfoList().size() != 0) {
+							if (companyBranch.getBankAccountInfoList()!= null) {
 								for (BankAccountInformation bankInfo : companyBranch.getBankAccountInfoList()) {
 									subLine = new StringBuffer();
 									subLine.append(formatIntegerField(bankInfo.getRecordType(), 1, "R"));
@@ -367,7 +369,6 @@ public class FileUtility {
 									subLine.append(formatStringField(bankInfo.getBankAccount(), 18, "L"));
 									subLine.append(formatStringField(bankInfo.getCurrency(), 5, "L"));
 									subLine.append(formatStringField(bankInfo.getBankActionIndicator(), 1, "L"));
-//									subLine.append(formatStringField(bankInfo.getAccountHolderName(), 60, "L"));   // removed in 2.7
 									subLine.append(System.getProperty("line.separator"));
 									writer.write(subLine.toString());
 									writer.flush();
@@ -449,7 +450,7 @@ public class FileUtility {
 		    String line;
 		    List<MasterDataVendor> masterDataVendorList = new ArrayList<MasterDataVendor>();
 		    MasterDataVendor masterDataVendor = null;
-//		    List<BankAccountInformation> bankAccountInformationList = new ArrayList<BankAccountInformation>();
+		    List<BankAccountInformation> bankAccountInformationList = null;
 		    BankAccountInformation bankAccountInformation = null;
 			
 			  try (Scanner scanner =  new Scanner(path, IntegrationConstants.ENCODING.name())){
@@ -458,6 +459,7 @@ public class FileUtility {
 			    	  line = scanner.nextLine();
 			    	  if(line.startsWith(IntegrationConstants.VALUE_ZERO)){
 			    		  masterDataVendor = new MasterDataVendor();
+			    		  bankAccountInformationList = new ArrayList<BankAccountInformation>();
 			    		  masterDataVendor.setRecordType(Integer.parseInt(getValue(line,0 ,1 )));
 			    		  masterDataVendor.setAgencyId(getValue(line,1 ,6 ));
 			    		  masterDataVendor.setVendorIdCode(getValue(line,7 ,20 ));
@@ -484,10 +486,10 @@ public class FileUtility {
 			    		  bankAccountInformation.setBankCountry(getValue(line,4 ,2 ));
 			    		  bankAccountInformation.setBankKey(getValue(line,6 ,15 ));
 			    		  bankAccountInformation.setBankAccount(getValue(line,21 ,18 ));
-			    		//  bankAccountInformation.setCurrency(getValue(line,39 ,5 ));
 			    		  bankAccountInformation.setAccountHolderName(getValue(line,39 ,60 ));
-//			    		  bankAccountInformationList.add(bankAccountInformation);
-			    		  masterDataVendor.setBankAccountInformation(bankAccountInformation);
+			    		  if(!bankAccountInformationList.contains(bankAccountInformation))
+			    			  bankAccountInformationList.add(bankAccountInformation);
+			    		  masterDataVendor.setBankAccountInfoList(bankAccountInformationList);
 			    		  masterDataVendorList.add(masterDataVendor);
 			    	  }
 			      }  
