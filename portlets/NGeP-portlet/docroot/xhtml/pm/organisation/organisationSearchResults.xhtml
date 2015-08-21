@@ -39,9 +39,8 @@
 		</p:dataTable>
 	</p:panel>
 	<div class="ppRightBtn">
-
 		<p:commandButton id="addOrgProfileBtnId" partialSubmit="true" process="@this"
-			value="#{lbl['lbl.pm.create.location']}" 
+			value="#{lbl['lbl.pm.create.location']}"  rendered="#{organisationBackingBean.isEPAdmin()}"
 			action="#{organisationBackingBean.redirectToOrganisation(null)}" />
 	</div>
 </ui:composition>
