@@ -217,18 +217,26 @@ public class LOIDetailBackingBean extends
 			SCAwardSupplierDataType awardDataType = getBpmTaskDetails(SCAwardSupplierDataType.class);
 
 			Long sourceId = Long.valueOf(awardDataType.getSourceId());
-
-			if (new FacesScopes().hasRoleUser(RoleCode.DESK_OFFICER.value())) {
-				awardDataType
-						.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
-				awardDataType.setDeskOfficer(new FacesScopes()
-						.getUserSessionBean().getLoginId());
+			
+			String letterCreator = awardDataType.getLetterCreator();
+			String currentUser = new FacesScopes().getUserSessionBean().getLoginId();
+			
+			if(StringUtils.isBlank(letterCreator)) {
+				if (new FacesScopes()
+				.hasRoleUser(RoleCode.DESK_OFFICER.value())) {
+					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER);
+					awardDataType.setDeskOfficer(currentUser);
+				} else {
+					awardDataType.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_REQUISITIONER);
+					awardDataType.setRequisitioner(currentUser);
+				}
 			} else {
-				awardDataType
-						.setLetterCreator(SourcingConstants.SC_LETTER_CREATOR_SECRETARY);
-				awardDataType.setSecretary(new FacesScopes()
-						.getUserSessionBean().getLoginId());
-			}
+				if(letterCreator.equals(SourcingConstants.SC_LETTER_CREATOR_DESK_OFFICER)) {
+					awardDataType.setDeskOfficer(currentUser);
+				} else {
+					awardDataType.setRequisitioner(currentUser);
+				}
+			} 
 
 			getManagedBean().setSourceId(sourceId);
 			getManagedBean().setPayLoadData(awardDataType);
