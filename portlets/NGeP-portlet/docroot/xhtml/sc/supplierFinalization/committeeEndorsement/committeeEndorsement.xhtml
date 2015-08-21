@@ -33,8 +33,10 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
-				<h:outputText value="#{lbl['lbl.sc.pending']}" rendered="#{!endorsement.signedOff}"></h:outputText>
-				<h:outputText value="#{lbl['lbl.sc.endorse']}" rendered="#{endorsement.signedOff}"></h:outputText>
+				<h:outputText value="#{lbl['lbl.sc.pending']}" 
+							  rendered="#{!endorsement.signedOff or isSupplierFinalization}" />
+				<h:outputText value="#{lbl['lbl.sc.endorse']}" 
+							  rendered="#{endorsement.signedOff and !isSupplierFinalization}" />
 			</p:column>
 		</p:dataTable>
 		
