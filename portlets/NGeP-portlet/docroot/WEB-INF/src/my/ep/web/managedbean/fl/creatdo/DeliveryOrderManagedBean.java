@@ -209,6 +209,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
     private Date gstDeclareDate;
     private Date gstEffDate;
     private String gstRegNo;
+    private boolean gstAmtChanged;
     
 	/**
 	 * Gets the item selected for cal.
@@ -1210,6 +1211,14 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setGstRegNo(String gstRegNo) {
 		this.gstRegNo = gstRegNo;
+	}
+
+	public boolean isGstAmtChanged() {
+		return gstAmtChanged;
+	}
+
+	public void setGstAmtChanged(boolean gstAmtChanged) {
+		this.gstAmtChanged = gstAmtChanged;
 	}
 
 	
