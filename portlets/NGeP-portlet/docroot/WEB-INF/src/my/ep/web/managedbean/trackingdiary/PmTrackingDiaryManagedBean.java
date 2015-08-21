@@ -2,6 +2,7 @@ package my.ep.web.managedbean.trackingdiary;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -84,6 +85,9 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	private static Logger log = Logger
 			.getLogger(PmTrackingDiaryManagedBean.class);
 	private String functionType;
+	private String transactionType;
+	private Date fromDate;
+	private Date toDate;
 	// Paging for listing
 	private IPagingDataModel<PmUser> userDataModel = new UserPagingDataModel();
 	private IPagingDataModel<PmOrgProfile> userOrgDataModel = new UserOrgPagingDataModel();
@@ -122,6 +126,30 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 	
 	/** The pm category level. */
 	private Integer pmCategoryLevel;
+
+	public String getTransactionType() {
+		return transactionType;
+	}
+
+	public Date getFromDate() {
+		return fromDate;
+	}
+
+	public Date getToDate() {
+		return toDate;
+	}
+
+	public void setFromDate(Date fromDate) {
+		this.fromDate = fromDate;
+	}
+
+	public void setToDate(Date toDate) {
+		this.toDate = toDate;
+	}
+
+	public void setTransactionType(String transactionType) {
+		this.transactionType = transactionType;
+	}
 
 	public String getCategoryCode() {
 		return categoryCode;
@@ -973,6 +1001,16 @@ public class PmTrackingDiaryManagedBean extends BaseManagedBean {
 						new SearchFilterBean("docId",
 								SearchOperator.OPERATOR_EQUALS.value(),
 								getSelectedDocId()));
+			}
+			if(getFromDate() != null && getToDate() != null){
+			searchBean.getDataFilterBeans().add(
+					new SearchMultiFilterBean(new SearchFilterBean(
+							"actionedDate", SearchOperator.OPERATOR_GREATER_EQUAL
+									.value(), getFromDate()),
+							new SearchFilterBean("actionedDate",
+									SearchOperator.OPERATOR_LESS_EQUAL.value(),
+									getToDate(),
+									SearchCondition.CONDITION_AND.value())));
 			}
 			System.out.println("TrackingDiaryReqDTO-docType"
 					+ getSelectedDocType());
