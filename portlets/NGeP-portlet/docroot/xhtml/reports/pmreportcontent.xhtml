@@ -33,8 +33,8 @@
 									<p:outputLabel value="#{lbl['lbl.rpt.status']}" style="margin-top:5px;width:160px;" />									
 									<p:selectOneMenu  value="#{reportBackingBean.pmStatus}" style="margin-top:5px;width:300px;">										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.active']}" itemValue="#{1}"></f:selectItem>
-										<f:selectItem itemLabel="#{lbl['lbl.rpt.inactive']}" itemValue="#{0}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.pm.status.active']}" itemValue="#{1}"></f:selectItem>
+										<f:selectItem itemLabel="#{lbl['lbl.pm.status.inactive']}" itemValue="#{0}"></f:selectItem>
 										
 										<p:ajax event="change" partialSubmit="true"	update="@([id$=Msg])" />																																																							
 									</p:selectOneMenu>	
