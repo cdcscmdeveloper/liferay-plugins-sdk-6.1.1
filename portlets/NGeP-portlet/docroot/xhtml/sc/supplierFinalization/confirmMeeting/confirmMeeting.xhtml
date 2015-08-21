@@ -43,20 +43,27 @@
 						<ui:include src="/xhtml/sc/supplierFinalization/confirmMeeting/suppFinalizationHeader.xhtml"></ui:include>
 
 						<p:panel header="#{lbl['lbl.sc.meeting.details']}" id="meetingDetailPanel" toggleable="true">
-							<p:dataTable id="meetingTbl"
-								var="meeting" widgetVar="meetingDtls"
-								rowKey="#{meeting}" rowIndexVar="rowIndex"
-								editable="true" style="width:100%"
-								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}">
+							<p:dataTable id="meetingTbl" style="width:100%"  
+								value="#{suppFinalMeetingBackingBean.managedBean.scQtMeetings}"
+								var="meeting" widgetVar="meetingDtls" rowKey="#{meeting}" 
+								rowIndexVar="rowIndex" editable="true">
+								
+								<ui:param name="disableMeeting" value="#{meeting.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+								
 								<ac:paginator for="meetingTbl" />
 								
 								<p:column style="width:20px;">
 									<f:facet name="header">
-										<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalMeetingBackingBean.managedBean.selectAll}">
-											<p:ajax partialSubmit="true" process="@this" update="meetingTbl"  listener="#{suppFinalMeetingBackingBean.selectAll(suppFinalMeetingBackingBean.managedBean.selectAll, suppFinalMeetingBackingBean.managedBean.scQtMeetings)}" />
+										<p:selectBooleanCheckbox id="selAllChk" value="#{suppFinalMeetingBackingBean.managedBean.selectAll}"
+											disabled="#{suppFinalMeetingBackingBean.managedBean.hasPreviousMeeting}">
+											<p:ajax partialSubmit="true" process="@this" update="meetingTbl"  
+													listener="#{suppFinalMeetingBackingBean.selectAll(
+																	suppFinalMeetingBackingBean.managedBean.selectAll, 
+																	suppFinalMeetingBackingBean.managedBean.scQtMeetings)}" />
 										</p:selectBooleanCheckbox>
 									</f:facet>
-									<p:selectBooleanCheckbox id="selectMeeting" value="#{meeting.selected}">
+									<p:selectBooleanCheckbox id="selectMeeting" value="#{meeting.selected}"
+										disabled="#{disableMeeting}">
 										<p:ajax partialSubmit="true" process="@this" update="@this"/>
 									</p:selectBooleanCheckbox>
 								</p:column>								
@@ -71,7 +78,8 @@
 										mindate="#{CommonConstants.CURRENT_DATE}"
 										pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}" 
 										label="#{lbl['lbl.sc.meeting.date']}" 
-										required="#{!meeting.selected}" style="width:27%;">
+										required="#{!meeting.selected}" style="width:27%;" 
+										disabled="#{disableMeeting}">
 									   <p:ajax event="dateSelect" process="@this" partialSubmit="true"
 												update="@this,mtgDate" />										
 									</p:calendar>
@@ -84,10 +92,10 @@
 										<h:outputText value="#{lbl['lbl.sc.meeting.location']}" />
 										<ac:iconTooltip value="#{lbl['lbl.sc.meeting.location.tooltip']}" />
 									</f:facet>
-									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" cols="100" maxlength="255"
-										label="#{lbl['lbl.sc.meeting.location']}" required="#{!meeting.selected}">
-										<p:ajax process="@this" partialSubmit="true"
-												update="@this,mtgLoc" />
+									<p:inputTextarea value="#{meeting.meetingLocation}" id="meetingLocation" rows="2" 
+										cols="100" maxlength="255" label="#{lbl['lbl.sc.meeting.location']}" 
+										required="#{!meeting.selected}" disabled="#{disableMeeting}">
+										<p:ajax process="@this" partialSubmit="true" update="@this,mtgLoc" />
 									</p:inputTextarea>
 									<p:message id="mtgLoc" for="meetingLocation" display="icon" showDetail="false"></p:message>
 								</p:column>
@@ -147,7 +155,7 @@
 								<p:column style="width:20px;">
 									<f:facet name="header">
 										<p:selectBooleanCheckbox id="selAllMemChk" value="#{suppFinalMeetingBackingBean.managedBean.selectAllMembers}"
-											disabled="#{committeeMember.memberRole.parameterCode eq ParameterConst.committeeRoleSecretary}">
+											disabled="true">
 											<p:ajax partialSubmit="true" process="@this" update="memberListTbl"  
 													listener="#{suppFinalMeetingBackingBean.selectAllMembers(
 																	suppFinalMeetingBackingBean.managedBean.selectAllMembers)}" />
