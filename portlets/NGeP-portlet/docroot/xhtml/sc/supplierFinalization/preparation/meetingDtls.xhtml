@@ -5,6 +5,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 
 	<table style="border: 0px;width:100%; align:center">
 		<tr>
@@ -12,13 +13,31 @@
 				<p:panel header="#{lbl['lbl.sc.meeting.details']}" toggleable="true">
 					<p:dataTable id="meetingDtlTbl" var="meetingDtl" 
 						value="#{suppFinalizationBackingBean.managedBean.meetingList}" 
-						rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex" editable="true"
-						selection="#{suppFinalizationBackingBean.managedBean.selectedMeetingList}">
-						<ac:paginator for="meetingDtlTbl" />
-
-						<p:column selectionMode="multiple" style="width:2%" 
-							rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"></p:column>
+						rows="10" rowKey="#{meetingDtl}" rowIndexVar="rowIndex" 
+						editable="true">
 						
+						<ac:paginator for="meetingDtlTbl" />
+						
+						<ui:param name="disableMeeting" value="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
+																  meetingDtl.recordStatusFlg ne DbValueConst.recordStatusActive}" />
+						<p:column style="width:20px;">
+							<f:facet name="header">
+								<p:selectBooleanCheckbox id="selAllChk"
+									value="#{suppFinalizationBackingBean.managedBean.selectAllMeetings}"
+									disabled="#{suppFinalizationBackingBean.managedBean.hasPreviousMeeting}">
+									
+									<p:ajax partialSubmit="true" process="@this" update="meetingDtlTbl" 
+											listener="#{suppFinalizationBackingBean.selectAll(
+															suppFinalizationBackingBean.managedBean.selectAllMeetings, 
+															suppFinalizationBackingBean.managedBean.meetingList)}" />
+								</p:selectBooleanCheckbox>
+							</f:facet>
+							<p:selectBooleanCheckbox id="selectMeeting" value="#{meetingDtl.selected}" 
+										disabled="#{disableMeeting}">
+								<p:ajax partialSubmit="true" process="@this" update="@this" />
+							</p:selectBooleanCheckbox>
+						</p:column>
+
 						<p:column style="width:18%">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.txt.mandatory']}" styleClass="mandatory" />
@@ -28,8 +47,7 @@
 								mindate="#{CommonConstants.CURRENT_DATE}"
 								value="#{meetingDtl.meetingDate}" readonlyInput="true"
 								pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATETIME)}"
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}" 
-								id="meetingDate">
+								disabled="#{disableMeeting}" id="meetingDate">
 								<p:ajax event="dateSelect" partialSubmit="true" process="@this" update="@this,mtgDate"/>
 							</p:calendar>
 							<p:message id="mtgDate" for="meetingDate" display="icon" showDetail="false"></p:message>
@@ -43,7 +61,7 @@
 							</f:facet>
 							<p:inputTextarea label="#{lbl['lbl.sc.meeting.location']}" required="true" rows="2" cols="50" maxlength="255"
 								value="#{meetingDtl.meetingLocation}" id="meetingLocation" 
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+								disabled="#{disableMeeting}">
 								<p:ajax partialSubmit="true" process="@this" update="@this,mtgLoc"/>
 							</p:inputTextarea>
 							<p:message id="mtgLoc" for="meetingLocation" display="icon" showDetail="false"></p:message>
@@ -55,19 +73,20 @@
 								<h:outputText value="#{lbl['lbl.sc.status']}" />
 							</f:facet>
 							<p:selectOneMenu label="#{lbl['lbl.sc.status']}" required="false" value="#{meetingDtl.meetingStatusStr}" 
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+								disabled="#{disableMeeting}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getMeetingStatusDropDown()}"/>
-								<p:ajax partialSubmit="true" process="@this" update="@this" listener="#{suppFinalizationBackingBean.changeMeetingStatus(meetingDtl)}"/>
+								<p:ajax partialSubmit="true" process="@this" update="@this" 
+										listener="#{suppFinalizationBackingBean.changeMeetingStatus(meetingDtl)}"/>
 							</p:selectOneMenu>
 						</p:column>
 						
 						<p:column headerText="#{lbl['lbl.sc.remark']}" style="width:30%">
 							<p:inputTextarea value="#{meetingDtl.remark}" rows="2" cols="30" 
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+								disabled="#{disableMeeting}">
 								<p:ajax partialSubmit="true" process="@this" update="@this"/>
 							</p:inputTextarea>
 						</p:column>
-					</p:dataTable>
+					</p:dataTable> 
 					
 					<p:spacer height="10px"></p:spacer>
 					<div align="right">
@@ -79,11 +98,29 @@
 							rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 							
 						<p:commandButton value="#{lbl['lbl.btn.delete']}"
-							process="@this, meetingDtlTbl" partialSubmit="true"
-							action="#{suppFinalizationBackingBean.deleteMeetingDetails(suppFinalizationBackingBean.managedBean.selectedMeetingList)}"
+							onsuccess="dlgPerformDel.show();"
 							update="meetingDtlTbl" rendered="#{suppFinalizationBackingBean.managedBean.secretaryUser}"/>
 	
 					</div>
+					
+					<!-- Dialog to prompt the user before deleting attendance records -->
+					<p:dialog id="dlgPerformDel" widgetVar="dlgPerformDel" styleClass="screen-title" 
+							  resizable="false" modal="true" width="330">
+						<h:panelGrid columns="3">
+							<p:graphicImage value="#{CommonUIConstant.imagePathUptoDesign}/exclamation.png"
+								styleClass="ui-icon-complain"></p:graphicImage>
+							<p:spacer width="10" />
+							<div class="confirmation-message-box" style="font-size:11px;">#{lbl['lbl.sc.dialog.confirm.message']}</div>
+						</h:panelGrid>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.btn.yes']}"  update="@this, meetingDtlTbl" 
+						         process="@this, meetingDtlTbl" 
+						         actionListener="#{suppFinalizationBackingBean.deleteMeetingDetails()}" 
+						         onclick="dlgPerformDel.hide();">
+						    </p:commandButton>
+							<p:commandButton value="#{lbl['lbl.btn.no']}"  onclick="dlgPerformDel.hide();" type="button" />
+						</div>
+					</p:dialog>						
 				</p:panel> 
 			</td>
 		</tr>
