@@ -143,7 +143,7 @@ public class ReactivateBasicBackingBean extends
 		} else if (createdTimeParam != null
 				&& StringUtils.isNotBlank(createdTimeParam)
 				&& new Long(createdTimeParam).compareTo(basicSupplier
-						.getCreatedDate().getTime()) != 0) {
+						.getChangedDate().getTime()) != 0) {
 			SmCommonUtil.redirectToPage(
 					SmApplicationUtil.getApplicationErrorPage(),
 					MessageConst.INFO_721031);
