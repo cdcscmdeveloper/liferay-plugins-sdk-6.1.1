@@ -4101,11 +4101,20 @@ public class LOADetailBackingBean extends
 	}
 	
 	/**
-	 * Page navigation from loa details page to loa list.
+	 * Page navigation from loa details page to qt loa list or dp loa list.
 	 */
 	public void backToPrevious() {
 		log.info("backToPrevious");
-		retrieveLOILOAList(getManagedBean().getSourceId());
+		
+		// back to qt loa list
+		if(getManagedBean().getScQt() != null){
+			retrieveLOILOAList(getManagedBean().getSourceId());	
+		} else{
+			// back to dp loa list
+			DpLOABackingBean dpLOABackingBean = new DpLOABackingBean();
+			dpLOABackingBean.retrieveLOAList(getManagedBean().getSourceId());
+		}
+		
 		getManagedBean().setEditFlag(false);
 		getManagedBean().setSelectedTabIndex(0);
 		FacesContext fc = FacesContext.getCurrentInstance();
