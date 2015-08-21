@@ -64,7 +64,7 @@
 				   			   listener="#{contractDetailsBackingBean.calculateOrverAllAmt()}"></p:ajax>
 				   			<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						</p:inputText>
-						<p:inputText styleClass="ppRightBtn"  maxlength="22" style="width:130px;"
+						<p:inputText style="width:130px;"
 			   				 disabled="true" value="#{lbl['lbl.ct.gst.na']}"  rendered="#{!contractDetailsBackingBean.contractWithGst()}">
 						</p:inputText>
 					</td>
