@@ -168,6 +168,7 @@ public class ReportBackingBean extends
 	private List<SelectItem> accumulatedPaidUpCptlList = new ArrayList<SelectItem>();
 	private List<SelectItem> registrationStatusList = new ArrayList<SelectItem>();
 	private List<String> simpleQuoteNoList = new ArrayList<String>();
+	private List<String> serviceTypeList = new ArrayList<String>();
 	
 	SCReportBackingBean scReportBackingBean;
 	CMReportBackingBean cmReportBackingBean;
@@ -202,6 +203,14 @@ public class ReportBackingBean extends
 	private List<PmCategoryL2> supplierChildCatList;
 	private List<PmCategoryL3> supplierSubChildCatList;
 		
+
+	public List<String> getServiceTypeList() {
+		return serviceTypeList;
+	}
+
+	public void setServiceTypeList(List<String> serviceTypeList) {
+		this.serviceTypeList = serviceTypeList;
+	}
 
 	public String getReportCategory() {
 		return reportCategory;
@@ -747,7 +756,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)219490;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2621,6 +2630,22 @@ public class ReportBackingBean extends
 
 	public void setEnableValue(boolean enableValue) {
 		this.enableValue = enableValue;
+	}
+	
+	public List<String> retrievePMServiceType(){
+		serviceTypeList = new ArrayList<String>();
+        if (null != new FacesScopes().getUserSessionBean().getUserId()) {
+					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
+									IPMReportSO.class);
+					String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					List<String> serviceTypeLst = reportSO.retrievePMServiceType(language);			
+					for (int i = 0; i < serviceTypeLst.size(); i++) {
+						serviceTypeList.add(serviceTypeLst.get(i));
+					}        	    
+        }
+		return serviceTypeList;
 	}
 	
 	public void showCapitalNaccumShare(){
@@ -4622,6 +4647,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			zoneByRolecode();
 			retrieveProcessingOfficerList();
+			retrievePMServiceType();
 		}
 	}
 	
