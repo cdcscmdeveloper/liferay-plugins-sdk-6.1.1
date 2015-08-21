@@ -85,4 +85,20 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:panel>
+		<p:panel>
+		<p:dataTable value="#{invoiceBackingBean.managedBean.taxInvoiceList}" var="taxInvoice" style="width:50%">
+			<p:column headerText="#{lbl['lbl.fl.gst.rate']}" style="white-space:normal;">
+				<h:outputText value="#{taxInvoice.gstFlag}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.amt.wo.gst']}" style="white-space:normal;">
+				<h:outputText value="#{taxInvoice.amountWithoutGst}" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.fl.gst.amt']}" style="white-space:normal;">
+				<h:outputText value="#{taxInvoice.gstAmount}" />
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+	</p:panel>
 </ui:composition>
