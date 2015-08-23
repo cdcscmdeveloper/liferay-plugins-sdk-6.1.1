@@ -23,9 +23,6 @@
 									update=":form:retryLogTable" /> <p:commandButton
 									value="#{lbl['lbl.portal.soa.btn.refresh']}"
 									action="#{soaRetryLogBackingBean.refreshRetryLogList}"
-									update=":form:retryLogTable" /> <p:commandButton
-									value="#{lbl['lbl.portal.soa.btn.delete']}"
-									action="#{soaRetryLogBackingBean.removeRetryLogList}"
 									update=":form:retryLogTable" /></td>
 						</tr>
 						<tr>
@@ -51,7 +48,7 @@
 									<p:column headerText="#{lbl['lbl.portal.soa.servicename']}">
 							#{retrylog.serviceName}
 									</p:column>
-									<p:column headerText="#{lbl['lbl.portal.soa.datetime']}"
+									<p:column headerText="#{lbl['lbl.portal.soa.dateTime']}"
 										style="text-align: right;width:2%;">
 										<h:outputText value="#{retrylog.createdDate}">
 											<f:convertDateTime pattern="dd-MM-yyyy hh:mm:ss a" />

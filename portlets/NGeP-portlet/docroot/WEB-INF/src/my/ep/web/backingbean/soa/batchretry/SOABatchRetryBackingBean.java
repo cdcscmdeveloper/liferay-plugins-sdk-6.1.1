@@ -8,16 +8,19 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.service.soa.batchretry.ISOABatchRetrySO;
-import my.ep.biz.service.soa.retrylog.ISOARetryLogSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.dto.soa.batchretry.SOABatchRetryReqDTO;
 import my.ep.dto.soa.batchretry.SOABatchRetryResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.osb.OsbBatchRetryDtl;
+import my.ep.util.MessageUtils;
+import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.soa.batchretry.SOABatchRetryManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -88,10 +91,6 @@ public class SOABatchRetryBackingBean extends
 
 	public void refreshBatchRetryList() {
 		debugLogger("refreshBatchRetryList");
-//		FacesContext.getCurrentInstance().addMessage(
-//				null,
-//				new FacesMessage(FacesMessage.SEVERITY_INFO,
-//						"Records refreshed.", ""));
 		resetAndReloadData();
 	}
 
@@ -124,10 +123,14 @@ public class SOABatchRetryBackingBean extends
 		}
 
 		if (reqDTO.getOsbBatchRetryDtl().isEmpty()) {
+				
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Please select at least a record. ", ""));
+							MessageUtils.getMessage(MessageConst.ERROR_990001,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())
+							, null));
 			
 			return;
 		}
@@ -150,29 +153,45 @@ public class SOABatchRetryBackingBean extends
 
 			if (resDTO.isSuccessful()) {
 
-				String message = null;
+				String[] message = null;
 
 				if (resDTO.isAllRemoved()) {
-					message = "Record submits successfully.";
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									MessageUtils.getMessage(MessageConst.ERROR_990002,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())
+									, ""));
+					
 				} else {
-					message = "Some record submits successfully.";
+					
+					FacesContext.getCurrentInstance().addMessage(
+							null,
+							new FacesMessage(FacesMessage.SEVERITY_ERROR,
+									MessageUtils.getMessage(MessageConst.ERROR_990003,
+											MessageUtils.BUNDLE_COMMON_MESSAGES,
+											new FacesScopes().getUserLocale())
+									, ""));
 				}
-
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, message,
-								""));
+						
 			} else {
 				FacesContext.getCurrentInstance().addMessage(
 						null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Unable to remove any record due to " + resDTO.getErrorMessage(), ""));
+								MessageUtils.getMessage(MessageConst.ERROR_990004,
+										MessageUtils.BUNDLE_COMMON_MESSAGES,
+										new FacesScopes().getUserLocale())
+								, ""));
 			}
 		} catch (Exception ex){
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Unable to remove any record due to " + ex.getMessage(),""));
+							MessageUtils.getMessage(MessageConst.ERROR_990004,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale()) + ex.getMessage()
+							, ""));
 		}
 
 		resetAndReloadData();
