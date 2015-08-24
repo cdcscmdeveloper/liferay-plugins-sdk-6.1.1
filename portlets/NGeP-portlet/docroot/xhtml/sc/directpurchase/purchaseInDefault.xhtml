@@ -224,42 +224,41 @@
 				value="#{purchaseInDefaultBackingBean.retrivePanelSupplierGstInfomation(panelSupplier.supplier)}"></ui:param>
 			<ac:paginator for="panelSuppId" />
 			<p:column
-				headerText="#{lbl['lbl.sc.purchase.in.default.supplier.supp.name']}"
-				style="width:40%">
+				headerText="#{lbl['lbl.sc.purchase.in.default.supplier.supp.name']}">
 				<h:outputText value="#{panelSupplier.supplier.companyName}" />
 			</p:column>
 
 			<p:column
 				headerText="#{lbl['lbl.sc.purchase.in.default.supplier.Reg.no']}"
-				style="width:10%">
+				style="width:7%">
 				<h:outputText value="#{panelSupplier.supplier.regNo}" />
 			</p:column>
 
 			<p:column
 				headerText="#{lbl['lbl.sc.purchase.in.default.supplier.ep.no']}"
-				style="width:10%">
+				style="width:8%">
 				<h:outputText value="#{panelSupplier.supplier.epNo}" />
 			</p:column>
 
 			<p:column
 				headerText="#{lbl['lbl.sc.purchase.in.default.supplier.mof.no']}"
-				style="width:10%">
+				style="width:8%">
 				<h:outputText
 					value="#{panelSupplier.supplier.smMofAccounts[0].mofNo}" />
 			</p:column>
-			<p:column style="width:10%">
+			<p:column style="width:14%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.gst.register.num']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
+					<ac:iconTooltip id="gstRegNo#{index}" value="#{lbl['lbl.sc.gst.register.num.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstRegNo}"></h:outputText>
 
 			</p:column>
 
-			<p:column style="width:10%">
+			<p:column style="width:14%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.gst.effective.date']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" />
+					<ac:iconTooltip id="gstEffDate#{index}" value="#{lbl['lbl.sc.gst.effective.date.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstEffDate}">
 					<f:convertDateTime
@@ -267,10 +266,10 @@
 				</h:outputText>
 			</p:column>
 
-			<p:column style="width:10%">
+			<p:column style="width:14%">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.gst.declared.date']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
+					<ac:iconTooltip id="gstDecDate#{index}" value="#{lbl['lbl.sc.gst.declared.date.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{smGstSupplier.gstDeclaredDate}">
 					<f:convertDateTime
