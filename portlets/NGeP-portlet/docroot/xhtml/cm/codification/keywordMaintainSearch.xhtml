@@ -110,7 +110,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
-								value="#{codificationBackingBean.typeFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.typeFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -118,7 +118,7 @@
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
-								value="#{codificationBackingBean.brandFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.brandFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -129,7 +129,7 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
-								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.measurementFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -137,7 +137,7 @@
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
 						<td><p:selectOneMenu
-								value="#{codificationBackingBean.colorFilterBean.searchValue}"
+								value="#{codificationBackingBean.managedBean.colorFilterBean.searchValue}"
 								style="width:278px;">
 								<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="" />
 								<f:selectItems
@@ -149,7 +149,7 @@
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.btn.search']}"
 						id="searchButtonId"
-						action="#{codificationBackingBean.extensionCodeSearch}"
+						action="#{codificationBackingBean.keywordExtensionCodeSearch}"
 						update="keywordId" />
 				</div>
 			</p:panel>
@@ -172,7 +172,7 @@
 
 				<p:dataTable id="keywordId"
 					emptyMessage="#{lbl['lbl.datatable.msg.no.records.found']}"
-					value="#{codificationBackingBean.extensionSearchItemDataModel}"
+					value="#{codificationBackingBean.managedBean.keywordExtensionSearchItemDataModel}"
 					selectionMode="single" rowKey="#{obj}" var="obj"
 					rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedKeywordObject}"

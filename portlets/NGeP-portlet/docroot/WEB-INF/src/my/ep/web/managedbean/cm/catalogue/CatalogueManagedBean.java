@@ -996,10 +996,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 						.getSearchValue())) {
 					itemNameFilterBean.setSearchField("ITEM_NAME");
 					itemNameFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+					itemNameFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					//searchBean.getDataFilterBeans().add(itemNameFilterBean);
+					
+					
+					keyWordFilterBean.setSearchField("KEYWORD");
+					keyWordFilterBean.setSearchValue((String) itemNameFilterBean.getSearchValue());
+					keyWordFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					keyWordFilterBean.setCaseInsensitive(true);
+					
+					
+					
+					SearchMultiFilterBean multi = new SearchMultiFilterBean(itemNameFilterBean
+							, keyWordFilterBean);
+					searchBean.getDataFilterBeans().add(multi);
+					
+					
 				}
 
-				if (StringUtils.isNotBlank((String) keyWordFilterBean
+				/*if (StringUtils.isNotBlank((String) keyWordFilterBean
 						.getSearchValue())) {
 					System.out
 							.println("(String)keyWordFilterBean.getSearchValue()"
@@ -1008,7 +1023,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					keyWordFilterBean.setSearchField("KEYWORD");
 					keyWordFilterBean.setCaseInsensitive(true);
 					searchBean.getDataFilterBeans().add(keyWordFilterBean);
-				}
+				}*/
 
 				if (StringUtils.isNotBlank((String) itemCodeFilterBean
 						.getSearchValue())) {

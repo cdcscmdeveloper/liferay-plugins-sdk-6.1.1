@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
@@ -27,9 +28,11 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPendingCodifiedItem;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.sc.common.ScRequestItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -151,6 +154,8 @@ public class CodificationManagedBean extends BaseManagedBean {
 
 
 	private IPagingDataModel<Object[]> extensionSearchItemDataModel = new ExtensionSearchItemDataModel();
+	
+	private IPagingDataModel<Object[]> keywordExtensionSearchItemDataModel = new KeywordExtensionSearchItemDataModel();
 
 	private SearchFilterBean colorFilterBean = new SearchFilterBean(
 			SearchOperator.OPERATOR_EQUALS.value());
@@ -284,8 +289,94 @@ public class CodificationManagedBean extends BaseManagedBean {
 		}
 
 	}
+	
+	
+	
+	private class KeywordExtensionSearchItemDataModel extends
+	PagingDataModel<Object[]> {
+
+		public KeywordExtensionSearchItemDataModel() {
+			super("keywordId");
+		}
+
+		@Override
+		protected ISearchResultBean<Object[]> pageChangeListener(
+				ISearchBean<Object[]> searchBean) {
+
+			System.out.println("........KeywordExtensionSearchItemDataModel.................");
+
+			CodificationBackingBean bb = new CodificationBackingBean();
+
+			ICodificationSO codificationSO = null;
+			CodificationResDTO resDTO = null;
+			try {
+				codificationSO = (ICodificationSO) BusinessDelegate
+						.getInstance().getServiceObject("cm",
+								ICodificationSO.class);
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setExtSearchBean(searchBean);
+
+				reqDTO.setUnspscCode(getSelectedUNSPSCObj()
+						.getUnspscCode());
+
+				if (StringUtils.isNotBlank((String) colorFilterBean
+						.getSearchValue())) {
+					reqDTO.setColorId(Long.valueOf(colorFilterBean
+							.getSearchValue().toString()));
+				}
 
 
+				if (StringUtils.isNotBlank((String) typeFilterBean
+						.getSearchValue())) {
+					reqDTO.setTypeId(Long.valueOf(typeFilterBean
+							.getSearchValue().toString()));
+
+				}
+
+				if (StringUtils.isNotBlank((String) brandFilterBean
+						.getSearchValue())) {
+					reqDTO.setBrandId(Long.valueOf(brandFilterBean
+							.getSearchValue().toString()));
+
+				}
+
+				if (StringUtils.isNotBlank((String) measurementFilterBean
+						.getSearchValue())) {
+					reqDTO.setMeasurementId(Long.valueOf(measurementFilterBean
+							.getSearchValue().toString()));
+				}
+
+				resDTO = codificationSO.searchExtension(reqDTO);
+				
+
+		
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				codificationSO = null;
+			}
+			if (resDTO != null) {
+				System.out.println("*******end************");
+				return resDTO.getExtensionResultBean();
+			}
+			return null;
+		}
+
+	}
+	
+	
+
+
+	public IPagingDataModel<Object[]> getKeywordExtensionSearchItemDataModel() {
+		return keywordExtensionSearchItemDataModel;
+	}
+
+	public void setKeywordExtensionSearchItemDataModel(
+			IPagingDataModel<Object[]> keywordExtensionSearchItemDataModel) {
+		this.keywordExtensionSearchItemDataModel = keywordExtensionSearchItemDataModel;
+	}
 
 
 	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
@@ -1169,6 +1260,53 @@ public class CodificationManagedBean extends BaseManagedBean {
 	public void setRefreshPageNoFlag(boolean refreshPageNoFlag) {
 		this.refreshPageNoFlag = refreshPageNoFlag;
 	}
+	
+	
+	private String textBeforeSign;
+	private boolean autoUpdate = true;
+	private PmDigiSign pmDigiSign;
+	 
+	@ManagedProperty(value="#{spkiBackingBean}")
+	private SpkiBackingBean spkiBackingBean;
+
+
+	public String getTextBeforeSign() {
+		return textBeforeSign;
+	}
+
+	public void setTextBeforeSign(String textBeforeSign) {
+		this.textBeforeSign = textBeforeSign;
+	}
+
+	public boolean isAutoUpdate() {
+		return autoUpdate;
+	}
+
+	public void setAutoUpdate(boolean autoUpdate) {
+		this.autoUpdate = autoUpdate;
+	}
+
+	public PmDigiSign getPmDigiSign() {
+		return pmDigiSign;
+	}
+
+	public void setPmDigiSign(PmDigiSign pmDigiSign) {
+		this.pmDigiSign = pmDigiSign;
+	}
+
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
+	}
+	
+	
+	
+	
+	
+	
 	
 	
 

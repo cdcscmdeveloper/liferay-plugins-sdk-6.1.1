@@ -212,6 +212,7 @@ BaseBackingBean<PublicCatalogueManagedBean> implements Serializable {
 		this.getManagedBean().setPriceForm(null);
 		this.getManagedBean().setSelectedUnspscObj(null);
 		this.getManagedBean().setCloneNameFlag(false);
+		this.getManagedBean().setFamilyList(null);
 
 
 		this.getManagedBean().setKeyWord(false);
