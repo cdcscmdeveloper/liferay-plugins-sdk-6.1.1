@@ -73,9 +73,6 @@ import org.apache.commons.collections.CollectionUtils;
 
 import org.apache.log4j.Logger;
 
-import com.liferay.portal.kernel.util.StringUtil;
-
-import sun.swing.StringUIClientPropertyKey;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -1810,6 +1807,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				.getPmCategoryL3().getPmMachineCategory();
 		boolean isActive = false;
 
+		if(!this.getManagedBean().isNewCategory()){
 		if (CollectionUtils.isNotEmpty(pmMachineCategoryList)) {
 			for (PmMachineCategory mechineCat : pmMachineCategoryList) {
 				if (DbValueConst.RECORD_STATUS_ACTIVE == mechineCat
@@ -1819,10 +1817,12 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				}
 			}
 		}
-
-		if (CollectionUtils.isEmpty(pmMachineCategoryList) && isActive) {
-			throw new EpException(MessageConst.ERROR_775008);
+		}else{			
+			this.getManagedBean().getPmCategoryL3().setPmMachineCategory(this.getManagedBean().getPmMachineCategoryList());			
 		}
+		/*if (CollectionUtils.isEmpty(pmMachineCategoryList) && !isActive) {
+			throw new EpException(MessageConst.ERROR_775008);
+		}*/
 
 		List<PmMachineCategory> tobeAddedPmMachineCategory = this
 				.getManagedBean().getTobeAddedPmMachineCategoryList();
@@ -2181,8 +2181,22 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 
 		if (CollectionUtils.isNotEmpty(this.getManagedBean()
 				.getPmMachineCategoryList())) {
+
 			this.getManagedBean().getPmMachineCategoryList()
 					.remove(pmMachineCategory);
+
+			/*if (CollectionUtils.isEmpty(this.getManagedBean()
+					.getTobeAddedPmMachineCategoryList())) {
+
+				this.getManagedBean().setTobeAddedPmMachineCategoryList(
+						new ArrayList<PmMachineCategory>());
+				this.getManagedBean().getTobeAddedPmMachineCategoryList()
+						.add(pmMachineCategory);
+			} else {
+
+				this.getManagedBean().getTobeAddedPmMachineCategoryList()
+						.add(pmMachineCategory);
+			}*/
 		}
 		this.getManagedBean().getDeletedPmMachineCategoryList()
 				.add(pmMachineCategory);
@@ -2819,6 +2833,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					pmMachineCategory
 							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 					pmMachineCategory.setBrandNew(true);
+					pmMachineCategory.setDisplaySeq(0);
 					
 				}
 
@@ -2853,6 +2868,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					this.getManagedBean().getPmMachineCategoryList().clear();
 					this.getManagedBean().getPmMachineCategoryList()
 							.addAll(pmMachineCategorieSet);
+					
 				}
 
 				if (CollectionUtils.isEmpty(this.getManagedBean()
