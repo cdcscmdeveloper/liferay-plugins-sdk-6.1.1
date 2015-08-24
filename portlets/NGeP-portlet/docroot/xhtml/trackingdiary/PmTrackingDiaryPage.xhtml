@@ -21,57 +21,57 @@
 		<p:panel id="searchPanel" header="#{lbl['lbl.pm.search.search']}"
 			toggleable="true">
 
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-				columns="4" columnClasses="columnWidth20">
 
-				<h:column>
-
-					<p:outputLabel value="#{lbl['lbl.pm.tr.transaction.type']}" />
-					<p:outputLabel value="*" styleClass="mandatory" />
-				</h:column>
-				<h:column>
-					<p:selectOneMenu id="searchFunctionType"
-						value="#{pmTrackingDiaryBackingBean.managedBean.functionType}"
-						style="width: 314px;">
-						<f:selectItems
-							value="#{pmTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.profileManagementFunctionType)}" />
-						<p:ajax event="change"
-							listener="#{pmTrackingDiaryBackingBean.onTransactionTypeSelect()}"
-							partialSubmit="true" process="@this"
-							update="searchPanel" />
-					</p:selectOneMenu>
-				</h:column>
-	<h:column />
-	<h:column />
-		<h:column><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" /><p:outputLabel value="*" styleClass="mandatory" /> </h:column>
-				<h:column> <p:calendar showOn="button" id="fromDateId"
-									label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									value="#{pmTrackingDiaryBackingBean.managedBean.fromDate}">
-								</p:calendar></h:column>
-						<h:column>
-							<p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" /><p:outputLabel value="*" styleClass="mandatory" /></h:column>
-							<h:column><p:calendar showOn="button" id="toDateId"
-									label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
-									validatorMessage="To Date should be greater than from Date"
-									pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
-									value="#{pmTrackingDiaryBackingBean.managedBean.toDate}">
-									<f:attribute name="startDate"
-										value="#{pmTrackingDiaryBackingBean.managedBean.fromDate}" />
-									<f:validator validatorId="primeDateRangeValidator" />
-								</p:calendar>	
-								</h:column>	
-			</h:panelGrid>
+			<table width="100%">
+				<tr>
+					<td><p:outputLabel
+							value="#{lbl['lbl.pm.tr.transaction.type']}" /><p:outputLabel value="*" styleClass="mandatory" /></td>
+					<td><p:selectOneMenu id="searchFunctionType"
+							value="#{pmTrackingDiaryBackingBean.managedBean.transactionType}"
+							style="width: 250px;">
+							<f:selectItems
+								value="#{pmTrackingDiaryBackingBean.getDropdownCodeValues(ParameterTypeConst.profileManagementFunctionType)}" />
+					     <p:ajax event="change" update="searchPanel" />
+						</p:selectOneMenu></td>
+					<td />
+					<td/>
+					</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.pm.cal.frmdate']}" />
+						</td>
+					<td><p:calendar showOn="button" id="fromDateId"
+							label="#{lbl['lbl.pm.cal.frmdate']}" readonlyInput="true"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							value="#{pmTrackingDiaryBackingBean.managedBean.fromDate}">
+							<p:ajax event="dateSelect" process="@this" />
+						</p:calendar></td>
+					<td ><p:outputLabel value="#{lbl['lbl.pm.cal.todate']}" />
+						</td>
+					<td><p:calendar showOn="button" id="toDateId"
+							label="#{lbl['lbl.pm.cal.todate']}" readonlyInput="true"
+							validatorMessage="To Date should be greater than from Date"
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}"
+							value="#{pmTrackingDiaryBackingBean.managedBean.toDate}">
+							<f:attribute name="startDate"
+								value="#{pmTrackingDiaryBackingBean.managedBean.fromDate}" />
+							<f:validator validatorId="primeDateRangeValidator" />
+							<p:ajax event="dateSelect" process="@this" />
+						</p:calendar></td>
+						
+				</tr>
+				</table>
 				<div class="ppRightBtn">
-			<p:commandButton value="#{lbl['lbl.btn.search']}"
-				action="#{pmTrackingDiaryBackingBean.searchTrackingDiaryByDocType(pmTrackingDiaryBackingBean.managedBean.functionType)}" partialSubmit="true" process="@this"
-				update="searchPanel" />
-		</div>
-		
-             <ac:trackingDiaryDetail action="#{pmTrackingDiaryBackingBean.backToPrev}" showBackButton="false"
-					dataTable="#{pmTrackingDiaryBackingBean.managedBean.searchTrackingDiaryDataModel}"  /> 
-			
-		</p:panel>
-	</h:panelGroup>
+					<p:commandButton value="#{lbl['lbl.btn.search']}"
+						action="#{pmTrackingDiaryBackingBean.searchTrackingDiaryByDocType(pmTrackingDiaryBackingBean.managedBean.transactionType)}"
+						partialSubmit="true" process="@this" update="searchPanel" />
+				</div>
 
-</ui:composition>
+				<ac:trackingDiaryDetail
+					action="#{pmTrackingDiaryBackingBean.backToPrev}"
+					showBackButton="false"
+					dataTable="#{pmTrackingDiaryBackingBean.managedBean.searchTrackingDiaryDataModel}" />
+
+				</p:panel>
+				</h:panelGroup>
+
+				</ui:composition>
