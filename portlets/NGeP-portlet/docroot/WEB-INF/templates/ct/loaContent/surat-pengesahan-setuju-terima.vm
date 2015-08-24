@@ -69,7 +69,13 @@
 			<br />
 			Kepada: <br />
 			$supplierName <br />
-			$supplierAddress <br /><br />
+			$supplierAddress <br />
+			#if ( $contractWithGst == 'true' )
+			No. Pendaftaran CBP: $gstRegNo <br />
+			Tarikh Kuatkuasa CBP: $gstEffDate <br />
+			Tarikh Pengisytiharan di eP: $gstDeclareDate <br />
+			#end
+			<br />
 		</td>
 	</tr>
 	<tr>
@@ -82,7 +88,12 @@
 	<tr>
 		<td>
 			<ol style="padding-left: 20px;" >
-				<li style="padding-bottom:20px;">Merujuk kepada $contractPhysicalNo tuan untuk $contractTitle yang tersebut di atas, Kerajaan Malaysia dengan sukacitanya memberitahu bahawa Kerajaan telah bersetuju menerima tawaran  tuan. <br /></li>
+				#if ( $contractWithGst == 'false' )
+				<li style="padding-bottom:20px;">Kerajaan telah bersetuju menerima $procurementMode tuan dengan nilai RM$overallContractValue (Ringgit Malaysia: $overallContractValueTxt).<br /></li>
+				#end
+				#if ( $contractWithGst == 'true' )
+				<li style="padding-bottom:20px;">Kerajaan telah bersetuju menerima $procurementMode tuan dengan nilai RM$overallContractValue (Ringgit Malaysia: $overallContractValueTxt) yang mengandungi harga tawaran syarikat sebanyak RM$contractAmt (Ringgit Malaysia: $contractAmtTxt) dan kenaan Cukai Barangan dan Perkhidmatan (CBP) sebanyak RM$gstAmt (Ringgit Malaysia: $gstAmtTxt)<br /></li>
+				#end
 				<li style="padding-bottom:20px;">Dengan penerimaan tawaran tuan oleh Kerajaan, tuan adalah dinasihatkan bahawa suatu ikatan Kontrak terwujud antara Kerajaan dengan tuan. Suatu Kontrak Rasmi akan disempurnakan kemudiannya dengan memasukkan semua terma  sebagaimana yang diubahsuaikan. Tuan akan diberitahu oleh Kerajaan apabila Dokumen Kontrak siap sedia untuk ditandatangani oleh tuan. Surat Setuju Terima ini merupakan sebahagian daripada syarat-syarat kontrak dan perlu dibaca bersama. Bagaimanapun, sehinggalah Perjanjian Kontrak yang formal itu dilaksanakan, Surat Setuju Terima ini akan menjadi kontrak yang sah mengikat di antara tuan dan Kerajaan. <br /></li>
 				#if ( $bondAmt200k == 'true' )
 				<li style="padding-bottom:20px;">
@@ -93,16 +104,13 @@
 				</li>
 				#end
 				<li style="padding-bottom:20px;">Tarikh permulaan sebagaimana yang disebutkan dalam syarat-syarat kontrak adalah pada $contractEffDate. Perubahan/Tambahan kepada syarat-syarat kontrak adalah seperti di lampiran.<br /></li>
-				<li style="padding-bottom:20px;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.<br /></li>
-				#if ( $contractWithGst == 'true' )
-				<li style="padding-bottom:20px;">Merujuk kepada Sebutharga tuan untuk *Pembekalan/Perkhidmatan yang tersebut di atas, Kerajaan Malaysia dengan ini memberitahu tuan dengan sukacitanya bahawa kerajaan telah bersetuju menerima Sebutharga tuan dengan nilai RM $overallContractValue yang mengandungi harga cadangan tawaran syarikat sebanyak RM $contractAmount dan kenaan CBP sebanyak RM $gstAmount.<br /></li>
-				#end
+				<li style="padding-bottom:20px;">Penyetujuan/penolakan surat setuju terima ini hendaklah dibuat secara atas talian dalam tempoh 14 hari dari tarikh surat ini. Sekiranya pihak kerajaan tidak menerima maklum balas surat setuju terima ini dalam tempoh yang dinyatakan maka tawaran ini dengan sendirinya terbatal.<br /><br /></li>
 			</ol>
 		</td>
 	</tr>	
 	<tr>
 		<td>
-			<br />Sekian, terima kasih. <br /><br />
+			Sekian, terima kasih. <br /><br />
 		</td>
 	</tr>
 	<tr>
