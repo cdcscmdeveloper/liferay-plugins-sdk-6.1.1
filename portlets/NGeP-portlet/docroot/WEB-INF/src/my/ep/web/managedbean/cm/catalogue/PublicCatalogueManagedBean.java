@@ -15,6 +15,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchMultiFilterBean;
 import my.ep.biz.bean.search.SearchOrderBean;
 import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
@@ -27,6 +28,7 @@ import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.VCmPubSuppItem;
+import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.cm.catalogue.PublicCatalogueBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
@@ -110,6 +112,9 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	private IPagingDataModel<VCmPubSuppItem> searchDataModel = new SearchPagingDataModel();
 
 	private String itemTypeParameter;
+	
+	private SearchFilterBean keyWordFilterBean = new SearchFilterBean(
+			SearchOperator.OPERATOR_LIKE.value());
 
 
 	private class SearchPagingDataModel extends PagingDataModel<VCmPubSuppItem> {
@@ -146,12 +151,22 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 
 					itemNameFilterBean.setSearchValue(bb.getManagedBean().getItemName());
 					itemNameFilterBean.setSearchField("itemName");
+					itemNameFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
 					itemNameFilterBean.setCaseInsensitive(true);
-					searchBean.getDataFilterBeans().add(itemNameFilterBean);
+					//searchBean.getDataFilterBeans().add(itemNameFilterBean);
+					
+					
+					keyWordFilterBean.setSearchField("keyword");
+					keyWordFilterBean.setSearchValue(bb.getManagedBean().getItemName());
+					keyWordFilterBean.setAndOr(SearchCondition.CONDITION_OR.value());
+					keyWordFilterBean.setCaseInsensitive(true);
+					
+					SearchMultiFilterBean multi = new SearchMultiFilterBean(itemNameFilterBean
+							, keyWordFilterBean);
+					searchBean.getDataFilterBeans().add(multi);
 
 				}
-				
-				
+
 				
 				if (bb.getManagedBean().getPriceForm() != null
 						&& bb.getManagedBean().getPriceForm()
@@ -748,6 +763,16 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	public void setCloneNameFlag(boolean cloneNameFlag) {
 		this.cloneNameFlag = cloneNameFlag;
 	}
+
+	public SearchFilterBean getKeyWordFilterBean() {
+		return keyWordFilterBean;
+	}
+
+	public void setKeyWordFilterBean(SearchFilterBean keyWordFilterBean) {
+		this.keyWordFilterBean = keyWordFilterBean;
+	}
+	
+	
 
 
 
