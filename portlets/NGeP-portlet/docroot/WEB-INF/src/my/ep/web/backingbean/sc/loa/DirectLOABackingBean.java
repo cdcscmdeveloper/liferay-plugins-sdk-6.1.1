@@ -483,7 +483,7 @@ public class DirectLOABackingBean extends
 
 			TemplateSpecBean serviceBean = new TemplateSpecBean(
 					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
-			serviceBean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
+			serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
 					.getTplSpecMaster());
 
 			this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
