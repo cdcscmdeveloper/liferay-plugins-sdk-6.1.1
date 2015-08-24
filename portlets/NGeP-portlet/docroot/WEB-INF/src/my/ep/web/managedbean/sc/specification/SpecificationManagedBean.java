@@ -771,6 +771,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private boolean zoneSpecUpdate;
 	private boolean zonesWarnMessageUpdate;
 	private List<ScQtCategory> tobeRemoveCategoryCodes;
+	private boolean isSpecItemWeightageRequired;
+	
 
 	/**
 	 * Checks if is spec complete.
@@ -5192,6 +5194,14 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setTobeRemoveCategoryCodes(
 			List<ScQtCategory> tobeRemoveCategoryCodes) {
 		this.tobeRemoveCategoryCodes = tobeRemoveCategoryCodes;
+	}
+
+	public boolean isSpecItemWeightageRequired() {
+		return isSpecItemWeightageRequired;
+	}
+
+	public void setSpecItemWeightageRequired(boolean isSpecItemWeightageRequired) {
+		this.isSpecItemWeightageRequired = isSpecItemWeightageRequired;
 	}
 
 }
