@@ -227,7 +227,9 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	/** The item type id. */
 	private long itemTypeId = 1;// Item type Id
 
-	private ScQtDoc scQtDoc;
+	private ScQtDoc prodscQtDoc;
+	
+	private ScQtDoc servicescQtDoc;
 
 	/** The agreement Required Flag */
 	private boolean agreementMandatory = false;
@@ -239,7 +241,10 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 	private String clausesTitle;
 
 	/** The template spec bean. */
-	private TemplateSpecBean templateSpecBean ;
+	private TemplateSpecBean prodTemplateSpecBean ;
+	
+	/** The template spec bean. */
+	private TemplateSpecBean specTemplateSpecBean ;
 
 	/** The spki backing bean. */
 	@ManagedProperty(value = "#{spkiBackingBean}")
@@ -1403,20 +1408,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.clausesTitle = clausesTitle;
 	}
 
-	/**
-	 * @return the templateSpecBean
-	 */
-	public TemplateSpecBean getTemplateSpecBean() {
-		return templateSpecBean;
-	}
-
-	/**
-	 * @param templateSpecBean
-	 *            the templateSpecBean to set
-	 */
-	public void setTemplateSpecBean(TemplateSpecBean templateSpecBean) {
-		this.templateSpecBean = templateSpecBean;
-	}
 
 	public List<TreeNode> getLocationTreeNodes() {
 		return locationTreeNodes;
@@ -1580,13 +1571,6 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 		this.toBeRemoveProgPayments = toBeRemoveProgPayments;
 	}
 
-	public ScQtDoc getScQtDoc() {
-		return scQtDoc;
-	}
-
-	public void setScQtDoc(ScQtDoc scQtDoc) {
-		this.scQtDoc = scQtDoc;
-	}
 
 	public BigDecimal getOverallContractAmt() {
 		return overallContractAmt;
@@ -1619,6 +1603,38 @@ public class DirectLOAManagedBean extends BaseManagedBean {
 
 	public void setSelectedScLoaSuppDoc(ScLoaSupportingDoc selectedScLoaSuppDoc) {
 		this.selectedScLoaSuppDoc = selectedScLoaSuppDoc;
+	}
+
+	public TemplateSpecBean getProdTemplateSpecBean() {
+		return prodTemplateSpecBean;
+	}
+
+	public void setProdTemplateSpecBean(TemplateSpecBean prodTemplateSpecBean) {
+		this.prodTemplateSpecBean = prodTemplateSpecBean;
+	}
+
+	public TemplateSpecBean getSpecTemplateSpecBean() {
+		return specTemplateSpecBean;
+	}
+
+	public void setSpecTemplateSpecBean(TemplateSpecBean specTemplateSpecBean) {
+		this.specTemplateSpecBean = specTemplateSpecBean;
+	}
+
+	public ScQtDoc getProdscQtDoc() {
+		return prodscQtDoc;
+	}
+
+	public void setProdscQtDoc(ScQtDoc prodscQtDoc) {
+		this.prodscQtDoc = prodscQtDoc;
+	}
+
+	public ScQtDoc getServicescQtDoc() {
+		return servicescQtDoc;
+	}
+
+	public void setServicescQtDoc(ScQtDoc servicescQtDoc) {
+		this.servicescQtDoc = servicescQtDoc;
 	}
 
 }
