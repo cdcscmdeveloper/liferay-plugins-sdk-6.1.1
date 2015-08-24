@@ -32,8 +32,9 @@
 				disabled="#{!isEditableStatus}">
 				<ui:fragment
 					rendered="#{scLoaReport.definationType.parameterCode eq ParameterConst.documentDefinitionTypeUpload}">
-					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
+
 					<p:commandButton oncomplete="attachmentPopupDlg.show();"
+						rendered="#{isEditableStatus}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=attachmentPopup])">
 						<f:setPropertyActionListener
@@ -43,6 +44,7 @@
 							target="#{directLOABackingBean.managedBean.attachmentDocType}"
 							value="LAR" />
 					</p:commandButton>
+					<h:outputText value="#{scLoaReport.scLoaReportAttachment.fileName}" />
 				</ui:fragment>
 			</p:column>
 
@@ -61,13 +63,13 @@
 				styleClass="ui-button"
 				action="#{directLOABackingBean.downloadAllReports}" />
 
-			<p:commandButton
+			<p:commandButton rendered="#{isPendingVerification}"
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}"
 				styleClass="ui-button" update="@([id$=loaButtonsId])"
 				onclick="printBtn.jq.click();"
 				actionListener="#{directLOABackingBean.showVeriryButton()}" />
 
-			<p:commandButton
+			<p:commandButton rendered="#{isPendingVerification}"
 				value="#{lbl['lbl.sc.loiloa.download.all.and.print']}" ajax="false"
 				partialSubmit="true" process="@form" styleClass="ui-button"
 				widgetVar="printBtn" style="display:none;"
@@ -97,7 +99,7 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.supporting.document']}"
-		toggleable="false">
+		rendered="#{!isSupplierAckStatus}" toggleable="false">
 		<p:dataTable id="suppDocTbl" var="scLoaSuppDoc"
 			widgetVar="suppDocTblWidget"
 			value="#{directLOABackingBean.managedBean.scLoa.scLoaSupportingDocs}"
@@ -118,18 +120,21 @@
 
 			<p:column style="width:15%;" headerText="#{lbl['lbl.sc.upload']}">
 				<ui:fragment>
-					<h:commandLink
-						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
-						styleClass="blue_font" immediate="true"
-						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
 
 					<p:commandButton oncomplete="loaSuppAttmPopupDlg.show();"
+						rendered="#{isEditableStatus}"
 						value="#{lbl['lbl.txt.attachment']}" partialSubmit="true"
 						process="@this" update="@([id$=loaSuppAttmPopup])">
 						<f:setPropertyActionListener
 							target="#{directLOABackingBean.managedBean.selectedScLoaSuppDoc}"
 							value="#{scLoaSuppDoc}" />
 					</p:commandButton>
+
+					<h:commandLink
+						value="#{scLoaSuppDoc.scLoaSupportingDocAttachment.fileName}"
+						styleClass="blue_font" immediate="true"
+						action="#{directLOABackingBean.downloadFile(scLoaSuppDoc.scLoaSupportingDocAttachment)}" />
+
 				</ui:fragment>
 			</p:column>
 
@@ -139,13 +144,14 @@
 		<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.btn.add']}"
 				process="@this, suppDocTbl" partialSubmit="true"
+				rendered="#{isEditableStatus}"
 				action="#{directLOABackingBean.addLoaSuppDocAction}"
 				oncomplete="suppDocTblWidget.paginator.endLink.click();"
 				update="suppDocTbl" />
 
 			<p:commandButton value="#{lbl['lbl.btn.delete']}"
-				process="@this, suppDocTbl" partialSubmit="true"
-				oncomplete="supporingDocDeletePopUp.show();"
+				rendered="#{isEditableStatus}" process="@this, suppDocTbl"
+				partialSubmit="true" oncomplete="supporingDocDeletePopUp.show();"
 				update="@([id$=#{supporingDocDeleteId}])" />
 
 		</div>

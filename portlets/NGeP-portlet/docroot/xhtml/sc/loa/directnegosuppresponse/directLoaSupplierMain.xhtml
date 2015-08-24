@@ -16,6 +16,19 @@
 		<ui:param name="isSupplierAckStatus"
 			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
 
+		<ui:param name="isPendingSubmissionStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_SUBMISSION}" />
+		<ui:param name="isPendingApprovalStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_APPROVAL}" />
+		<ui:param name="isPendingRevisionStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_REVISION}" />
+		<ui:param name="isEditableStatus"
+			value="#{isPendingSubmissionStatus or isPendingRevisionStatus}" />
+		<ui:param name="isAfterSupplierResponseStatus"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId > QTStatusConst.LOA_PENDING_SUPPLIER_ACKNOWLEDGEMENT}" />
+		<ui:param name="isPendingVerification"
+			value="#{directLOABackingBean.managedBean.scLoa.pmStatus.statusId == QTStatusConst.LOA_PENDING_VERIFICATION}" />
+
 		<ui:include src="directLoaSupplierButtons.xhtml" />
 
 		<ui:include src="directLoaSupplierHeader.xhtml" />
@@ -54,10 +67,12 @@
 						</p:menuitem>
 
 						<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}"
-							update="@form">
+							update="@form"
+							disabled="#{directLOABackingBean.managedBean.scQt.fulfilmentType.parameterCode ne ParameterConst.fulfilmentTypeScheduled}">
+
 							<f:setPropertyActionListener
 								target="#{directLOABackingBean.managedBean.selectedTabIndex}"
-								value="3" />
+								value="4" />
 						</p:menuitem>
 						<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
 							update="@form">

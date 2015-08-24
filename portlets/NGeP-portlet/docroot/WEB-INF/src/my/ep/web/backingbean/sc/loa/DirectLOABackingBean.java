@@ -39,7 +39,6 @@ import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.clause.IClauseSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
-import my.ep.biz.service.pm.general.settings.rule.IRuleSO;
 import my.ep.biz.service.sc.quationtender.IQTAwardSO;
 import my.ep.biz.service.sc.quationtender.IQTDirectAwardSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
@@ -48,7 +47,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -65,8 +63,6 @@ import my.ep.dto.pm.common.country.CountryReqDTO;
 import my.ep.dto.pm.common.country.CountryResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
-import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.DirectAwardReqDTO;
@@ -107,7 +103,6 @@ import my.ep.persistence.entity.sc.loaloi.ScPerformanceBond;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.sc.quationtender.ScQtDeductionClause;
-import my.ep.persistence.entity.sc.quationtender.ScQtDoc;
 import my.ep.persistence.entity.sc.quationtender.ScQtLocCriteria;
 import my.ep.persistence.entity.sc.quationtender.ScQtProgressivePayment;
 import my.ep.persistence.entity.sc.quationtender.ScQtSchedule;
@@ -211,11 +206,12 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE);
-			validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
+			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 			DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
-			reqDTO.setScQtDoc(this.getManagedBean().getScQtDoc());
+			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
 			reqDTO.setOutcome(BpmOutcomeConst.BPM_SAVE);
 			reqDTO.setRoleCode(getUserRoleCode());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
@@ -233,8 +229,20 @@ public class DirectLOABackingBean extends
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
 						scLoa.getLoaNo(), Boolean.TRUE);
 			} else {
+				int selectedTabIndx = this.getManagedBean()
+						.getSelectedTabIndex();
+				String taskId = this.getManagedBean().getTaskId();
+				String[] outComes = this.getManagedBean().getOutComes();
+				SCAwardSupplierDataType awardSupplierDataType = (SCAwardSupplierDataType) this
+						.getManagedBean().getPayLoad();
 				renewSesionObject();
+				this.getManagedBean().setTaskId(taskId);
+				this.getManagedBean().setOutComes(outComes);
+				this.getManagedBean().setSelectedTabIndex(selectedTabIndx);
+				this.getManagedBean().setPayLoad(awardSupplierDataType);
 				retriveLoaDetails(scLoa.getLoaId());
+				contractTypeChanged();
+				constructStartNEndMonth();
 				successMessage(MessageConst.INFO_700025,
 						ParameterTypeConst.DOCUMENT_TYPES,
 						ParameterConst.DOCTYPE_LETTER_OF_AWARD,
@@ -293,7 +301,8 @@ public class DirectLOABackingBean extends
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setToken(new FacesScopes().getBPMAuthenticationCtxToken());
-			reqDTO.setScQtDoc(this.getManagedBean().getScQtDoc());
+			reqDTO.setScQtDoc(this.getManagedBean().getProdscQtDoc());
+			reqDTO.setServiceQtDoc(this.getManagedBean().getServicescQtDoc());
 			DirectAwardResDTO resDTO = getQtDirectAwardSO()
 					.submitDirectAwardDetails(reqDTO);
 
@@ -379,71 +388,6 @@ public class DirectLOABackingBean extends
 	}
 
 	/**
-	 * Calculate bond amount.
-	 * 
-	 * @param scLoa
-	 *            the sc loa
-	 * @return the big decimal
-	 */
-	private ScLoa calcBondAmount(ScLoa scLoa) {
-		BigDecimal loaAmt = BigDecimal.ZERO;
-		BigDecimal bondAmt = BigDecimal.ZERO;
-		double totalDuration = 0;
-		double loaAmtForBondPercentage = 0;
-		double bondPercentage = 0;
-		if (scLoa.getLoaAmt() != null) {
-			BigDecimal lamt = scLoa.getLoaAmt();
-			lamt = lamt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-			double loaAmount = lamt.doubleValue();
-
-			if (scLoa.getContractDuration() != null) {
-				BigDecimal duration = scLoa.getContractDuration();
-				duration = duration.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				double cduration = duration.doubleValue();
-				if (cduration > 0) {
-					totalDuration = cduration / 12;
-				}
-
-				if (totalDuration > 0) {
-					loaAmtForBondPercentage = loaAmount / totalDuration;
-				}
-
-				if (loaAmtForBondPercentage > 0) {
-					loaAmt = new BigDecimal(
-							String.valueOf(loaAmtForBondPercentage));
-					loaAmt = loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				}
-			}
-
-			// Get performance bond rule percentage
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-			ruleReqDTO.setCompareValue(loaAmt.toString());
-			RuleResDTO roleResDTO = ruleSO
-					.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
-
-			if (roleResDTO.isSuccessful()
-					&& roleResDTO.getRuleValueStrList() != null
-					&& roleResDTO.getRuleValueStrList().size() > 0) {
-				String percentage = roleResDTO.getRuleValueStrList().get(0);
-				double res = Double.valueOf(percentage);
-				bondPercentage = res / 100;
-				scLoa.setBondPercentage(new BigDecimal(percentage));
-			}
-			if (bondPercentage > 0 && loaAmtForBondPercentage > 0) {
-				double total = loaAmtForBondPercentage * bondPercentage;
-				bondAmt = new BigDecimal(String.valueOf(total));
-				bondAmt = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				scLoa.setBondAmt(bondAmt);
-			}
-		}
-		return scLoa;
-	}
-
-	/**
 	 * Edits the supplier loa action. page navigate to loa supplier page.
 	 * 
 	 * @param loaId
@@ -460,7 +404,7 @@ public class DirectLOABackingBean extends
 
 			ScLoa scLoa = resDTO.getLoa();
 			getManagedBean().setScLoa(scLoa);
-
+			this.getManagedBean().setScQt(scLoa.getScQt());
 			// Supplier Bank Account
 			getManagedBean().setBankList(resDTO.getSmSupplierBanks());
 
@@ -511,23 +455,53 @@ public class DirectLOABackingBean extends
 				constructTreeNodeForzones(zoneDetails);
 			}
 
-			this.getManagedBean().setScQtDoc(resDTO.getScQtDoc());
+			this.getManagedBean().setProdscQtDoc(resDTO.getProductDoc());
+
 			TemplateSpecBean bean = new TemplateSpecBean(
 					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
-			bean.setSpecMaster(this.getManagedBean().getScQtDoc()
+			bean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
 					.getTplSpecMaster());
-			bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
-					.getSmSupplier());
-			this.getManagedBean().setTemplateSpecBean(bean);
 
-			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
-			backingBean.retrieveTemplateSpecMaster(bean);
-			this.getManagedBean()
-					.getScQtDoc()
-					.setTplSpecMaster(
-							this.getManagedBean().getTemplateSpecBean()
-									.getSpecMaster());
+			this.getManagedBean().setProdTemplateSpecBean(bean);
 
+			if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+					.isBrandNew()) {
+
+				bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+						.getSmSupplier());
+
+				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+				backingBean.retrieveTemplateSpecMaster(bean);
+				this.getManagedBean()
+						.getProdscQtDoc()
+						.setTplSpecMaster(
+								this.getManagedBean().getProdTemplateSpecBean()
+										.getSpecMaster());
+			}
+
+			this.getManagedBean().setServicescQtDoc(resDTO.getServiceDoc());
+
+			TemplateSpecBean serviceBean = new TemplateSpecBean(
+					TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+			serviceBean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
+					.getTplSpecMaster());
+
+			this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
+
+			if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+					.isBrandNew()) {
+
+				serviceBean.setSupplier(this.getManagedBean().getScLoa()
+						.getScLoiLoa().getSmSupplier());
+
+				TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+				backingBean.retrieveTemplateSpecMaster(serviceBean);
+				this.getManagedBean()
+						.getServicescQtDoc()
+						.setTplSpecMaster(
+								this.getManagedBean().getSpecTemplateSpecBean()
+										.getSpecMaster());
+			}
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()
@@ -1867,9 +1841,11 @@ public class DirectLOABackingBean extends
 				.setMofNo(mofAccount.getMofNo());
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setSupplierName(mofAccount.getSmSupplier().getCompanyName());
-		this.getManagedBean().getTemplateSpecBean()
+		this.getManagedBean().getProdTemplateSpecBean()
 				.setSupplier(mofAccount.getSmSupplier());
 
+		this.getManagedBean().getSpecTemplateSpecBean()
+				.setSupplier(mofAccount.getSmSupplier());
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setSupplierId(mofAccount.getSmSupplier().getSupplierId());
 
@@ -1898,7 +1874,10 @@ public class DirectLOABackingBean extends
 		getManagedBean().getScLoa().getScLoiLoa().setSmSupplier(suSmSupplier);
 		getManagedBean().getScLoa().getScLoiLoa()
 				.setSupplierName(suSmSupplier.getCompanyName());
-		this.getManagedBean().getTemplateSpecBean().setSupplier(suSmSupplier);
+		this.getManagedBean().getProdTemplateSpecBean()
+				.setSupplier(suSmSupplier);
+		this.getManagedBean().getSpecTemplateSpecBean()
+				.setSupplier(suSmSupplier);
 		AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 		reqDTO.setSupplierId(suSmSupplier.getSupplierId());
 		AwardSupplierResDTO resDTO = getQtAwardSO()
@@ -4250,18 +4229,17 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setApproverList(awardResDTO.getApproverList());
 		// award details
 
-		ScQtDoc scQtDoc = awardResDTO.getScQtDoc();
-
-		this.getManagedBean().setScQtDoc(scQtDoc);
+		this.getManagedBean().setProdscQtDoc(awardResDTO.getProductDoc());
 
 		TemplateSpecBean bean = new TemplateSpecBean(
 				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
-		bean.setSpecMaster(this.getManagedBean().getScQtDoc()
+		bean.setSpecMaster(this.getManagedBean().getProdscQtDoc()
 				.getTplSpecMaster());
 
-		this.getManagedBean().setTemplateSpecBean(bean);
+		this.getManagedBean().setProdTemplateSpecBean(bean);
 
-		if (!this.getManagedBean().getScQtDoc().getTplSpecMaster().isBrandNew()) {
+		if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+				.isBrandNew()) {
 
 			bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
 					.getSmSupplier());
@@ -4269,9 +4247,33 @@ public class DirectLOABackingBean extends
 			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 			backingBean.retrieveTemplateSpecMaster(bean);
 			this.getManagedBean()
-					.getScQtDoc()
+					.getProdscQtDoc()
 					.setTplSpecMaster(
-							this.getManagedBean().getTemplateSpecBean()
+							this.getManagedBean().getProdTemplateSpecBean()
+									.getSpecMaster());
+		}
+
+		this.getManagedBean().setServicescQtDoc(awardResDTO.getServiceDoc());
+
+		TemplateSpecBean serviceBean = new TemplateSpecBean(
+				TemplateSpecConst.CONTENT_TYPE_QUESTION_AND_ASNWER);
+		serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
+				.getTplSpecMaster());
+
+		this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
+
+		if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+				.isBrandNew()) {
+
+			serviceBean.setSupplier(this.getManagedBean().getScLoa()
+					.getScLoiLoa().getSmSupplier());
+
+			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
+			backingBean.retrieveTemplateSpecMaster(serviceBean);
+			this.getManagedBean()
+					.getServicescQtDoc()
+					.setTplSpecMaster(
+							this.getManagedBean().getSpecTemplateSpecBean()
 									.getSpecMaster());
 		}
 		if (null != scLoa.getScLoaApproval()) {
@@ -4283,6 +4285,8 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setScLoa(scLoa);
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getApproverList());
+		this.getManagedBean().setSupplierHQPersonnel(awardResDTO.getSupplierHQPersonnel());
+		this.getManagedBean().setBranchsList(awardResDTO.getSmSupplierBranchs());
 
 	}
 
@@ -4513,7 +4517,8 @@ public class DirectLOABackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setDigiSignData(digiSign);
 			reqDTO.setRoleCode(getUserRoleCode());
-			reqDTO.setScQtDoc(this.getManagedBean().getScQtDoc());
+			reqDTO.setScQtDoc(this.getManagedBean().getServicescQtDoc());
+			reqDTO.setServiceQtDoc(this.getManagedBean().getProdscQtDoc());
 			reqDTO.setPmUser(new FacesScopes().getUserSessionBean());
 			resDTO = getQtDirectAwardSO().updateBpmTask(reqDTO);
 
@@ -6092,7 +6097,7 @@ public class DirectLOABackingBean extends
 
 		ScLoaSupportingDoc scLoaSuppDoc = new ScLoaSupportingDoc();
 		scLoaSuppDoc.setScLoa(scLoa);
-		//scLoaSuppDoc.setDocId(scLoa.getLoaId().toString());
+		// scLoaSuppDoc.setDocId(scLoa.getLoaId().toString());
 		scLoaSuppDoc.setDocType(ParameterConst.DOCTYPE_LETTER_OF_INTENT);
 		scLoaSuppDoc
 				.setDocCategory(ParameterConst.DOCUMENT_CATEGORY_LOI_SUPPORTING_DOC);
@@ -6166,5 +6171,27 @@ public class DirectLOABackingBean extends
 
 			uploadAttachment(event.getFile(), scAttachment);
 		}
+	}
+
+	/**
+	 * To check is performance bond required
+	 * 
+	 * @return boolean isPerformanceBondRequired
+	 */
+	public boolean getPerformanceBondEnableOrNot() {
+		boolean isPerformanceBondMandatory = false;
+		ScLoa loa = getManagedBean().getScLoa();
+		BigDecimal loaAmt = loa.getLoaAmt();
+
+		if (null != loaAmt) {
+			if (loaAmt.compareTo(new BigDecimal(200000)) > 0) {
+				isPerformanceBondMandatory = true;
+				getManagedBean().getScLoa().setBondReq(true);
+			} else if (loaAmt.compareTo(new BigDecimal(200000)) <= 0) {
+				isPerformanceBondMandatory = true;
+				getManagedBean().getScLoa().setBondReq(false);
+			}
+		}
+		return isPerformanceBondMandatory;
 	}
 }

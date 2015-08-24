@@ -318,65 +318,7 @@ public class LOADetailBackingBean extends
 		return QTConstants.LOA_PAGE;
 	}
 	
-	/**
-	 * Calculate bond amount.
-	 *
-	 * @param scLoa the sc loa
-	 * @return the big decimal
-	 */
-	private ScLoa  calcBondAmount(ScLoa scLoa){
-		BigDecimal loaAmt  = BigDecimal.ZERO;
-		BigDecimal bondAmt  = BigDecimal.ZERO; 
-		double totalDuration = 0;
-		double loaAmtForBondPercentage = 0;
-		double bondPercentage =0;
-		if(scLoa.getLoaAmt() != null){
-			BigDecimal  lamt  = scLoa.getLoaAmt();
-			lamt =  lamt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-			double loaAmount =  lamt.doubleValue();
-
-			if(scLoa.getContractDuration() != null){
-				BigDecimal  duration  = scLoa.getContractDuration();
-				duration = duration.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				double cduration =  duration.doubleValue();
-				if(cduration >0){
-					totalDuration = cduration/12;
-				}
-
-				if(totalDuration >0){
-					loaAmtForBondPercentage = loaAmount/totalDuration;
-				}
-
-				if(loaAmtForBondPercentage >0){
-					loaAmt  = new BigDecimal(String.valueOf(loaAmtForBondPercentage));
-					loaAmt =  loaAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				}
-			}
-
-			// Get performance bond rule percentage
-			IRuleSO ruleSO = (IRuleSO) BusinessDelegate.getInstance().getServiceObject(
-					ModuleCodeConst.PROFILE_MANAGEMENT, IRuleSO.class);
-			RuleReqDTO ruleReqDTO = new RuleReqDTO();
-			ruleReqDTO.setRuleType(RuleTypeConst.BOND_PERCENTAGE);
-			ruleReqDTO.setCompareValue(loaAmt.toString());
-			RuleResDTO roleResDTO = ruleSO.getRuleValuesByTypeAndCurrentDateRange(ruleReqDTO);
-
-			if (roleResDTO.isSuccessful() && roleResDTO.getRuleValueStrList() != null 
-					&& roleResDTO.getRuleValueStrList().size() > 0) {
-				String percentage = roleResDTO.getRuleValueStrList().get(0);
-				double res = Double.valueOf(percentage);
-				bondPercentage = res/100;
-				scLoa.setBondPercentage(new BigDecimal(percentage));
-			}
-			if(bondPercentage >0 && loaAmtForBondPercentage >0){
-				double total  = loaAmtForBondPercentage * bondPercentage;
-				bondAmt  = new BigDecimal(String.valueOf(total));
-				bondAmt  = bondAmt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-				scLoa.setBondAmt(bondAmt);
-			}
-		}
-		return scLoa;
-	}
+	
 
 	/**
 	 * Edits the supplier loa action.
