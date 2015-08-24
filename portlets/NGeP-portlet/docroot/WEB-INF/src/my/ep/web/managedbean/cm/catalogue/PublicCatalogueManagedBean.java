@@ -135,8 +135,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 					.getInstance().getServiceObject("cm", ICatalogueSO.class);
 			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate
 					.getInstance().getServiceObject("cm", ICodificationSO.class);
-
-
+			
 			try {
 
 
@@ -204,14 +203,14 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 				
 				
 
-
+				boolean singleCommoditySelected = false;
 				if(bb.getManagedBean().getSelectedUnspscObj()!=null && bb.getManagedBean().getSelectedUnspscObj().getUnspscCode() !=null && bb.getManagedBean().getSelectedUnspscObj().getUnspscCode().trim().length()>0){
 					System.out.println("********commodityCode*******"+bb.getManagedBean().getSelectedUnspscObj().getUnspscCode());
 					searchBean.getDataFilterBeans().add(
 							new SearchFilterBean("commodityCode",
 									SearchOperator.OPERATOR_EQUALS.value(), bb.getManagedBean().getSelectedUnspscObj().getUnspscCode()));
 
-
+					singleCommoditySelected = true;
 				}
 
 
@@ -220,45 +219,33 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 				CatalogueResDTO resDTO = catalogueSO
 						.searchPublicCatalogueBy(reqDTO);
 
-				System.out.println("*******size*******"+resDTO.getViewPublicSuppItemResultBean()
-							.getResultList().size());
+				int totalRecord = resDTO.getViewPublicSuppItemResultBean().getTotalRecord();
+				System.out.println("*******size*******"+totalRecord);
 				System.out.println("isCloneNameFlag:"+bb.getManagedBean().isCloneNameFlag());
-				if(bb.getManagedBean().isCloneNameFlag()){
-					List<String> itemNames = new ArrayList<String>();
-					for (VCmPubSuppItem cat : resDTO.getViewPublicSuppItemResultBean()
-							.getResultList()) {
-						System.out.println("cat.getCommodityCode():"+cat.getCommodityCode());
-						if (itemNames != null && itemNames.size() > 0) {
-							if (!itemNames.contains(cat.getCommodityCode())) {
-								itemNames.add(cat.getCommodityCode());
-							}
-						} else {
-							itemNames
-							.add(cat.getCommodityCode());
-						}
-					}
-
-
-					bb.getManagedBean().setCloneItemNames(itemNames);
-
-					bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
-					CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-					for (String code : itemNames) {
-
-						codeReqDTO.setUnspscCode(code);
-						CodificationResDTO codeResDTO = codificationSO
-								.searchUnspscObj(codeReqDTO);
-						bb.getManagedBean().getFamilyList()
-						.add(codeResDTO.getUnspscObj());
-
-						if (code != null && code.trim().length() > 0) {
-							bb.getManagedBean().getFamilyCodeList().add(code);
-						}
-
-					}
-
-					if(bb.getManagedBean().getFamilyCodeList().size() == 1){
-						CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
+				CatalogueReqDTO reqDTO1 = new CatalogueReqDTO();
+				if (bb.getManagedBean().getItemName() != null && bb.getManagedBean().getItemName().trim().length()>0) {
+					reqDTO1.setItemName(bb.getManagedBean().getItemName());
+				}
+				
+				if (bb.getManagedBean().getPriceForm() != null
+						&& bb.getManagedBean().getPriceForm()
+								.compareTo(new BigDecimal("0.00")) > 0) {
+					reqDTO1.setPriceFrom(bb.getManagedBean().getPriceForm());
+				}
+				if (bb.getManagedBean().getPriceTo() != null
+						&& bb.getManagedBean().getPriceTo()
+								.compareTo(new BigDecimal("0.00")) > 0) {
+					reqDTO1.setPriceTo(bb.getManagedBean().getPriceTo());
+				}
+				CodificationReqDTO codeReqDTO = new CodificationReqDTO();
+				if(singleCommoditySelected){
+					bb.getManagedBean().setFamilyList(null);
+					codeReqDTO.setUnspscCode(bb.getManagedBean().getSelectedUnspscObj().getUnspscCode());
+					CodificationResDTO codeResDTO = codificationSO
+							.searchUnspscObj(codeReqDTO);
+					bb.getManagedBean().getFamilyList().add(codeResDTO.getUnspscObj());
+				
+						CmUnspsc commodity = codeResDTO.getUnspscObj();
 						bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
 						System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
 						for (CmBrand brand : commodity.getCmBrand()) {
@@ -268,72 +255,88 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 							.add(new SelectItem(brand.getBrandId(), brand
 									.getBrandName()));
 						}
-					}
+						
+					
 				}else{
-					
-					List<String> itemNames = new ArrayList<String>();
-					for (VCmPubSuppItem cat : resDTO.getViewPublicSuppItemResultBean()
-							.getResultList()) {
-						System.out.println("cat.getCommodityCode():"+cat.getCommodityCode());
-						if (itemNames != null && itemNames.size() > 0) {
-							if (!itemNames.contains(cat.getCommodityCode())) {
-								itemNames.add(cat.getCommodityCode());
+				
+					CatalogueResDTO resDTO1 = catalogueSO.searchPublicCatalogueByNamePrice(reqDTO1);
+					if(bb.getManagedBean().isCloneNameFlag()){
+						List<String> itemNames = new ArrayList<String>();
+	
+						bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
+						for (CmUnspsc cat : resDTO1.getCommodityList()) {
+							System.out.println("cat.getCommodityCode():"+cat.getUnspscCode());
+						
+							itemNames.add(cat.getUnspscCode());
+							
+							
+							bb.getManagedBean().getFamilyList().add(cat);
+						}
+	
+	
+						bb.getManagedBean().setCloneItemNames(itemNames);
+	
+						
+						
+						for (String code : itemNames) {
+	
+							if (code != null && code.trim().length() > 0) {
+								bb.getManagedBean().getFamilyCodeList().add(code);
 							}
-						} else {
-							itemNames
-							.add(cat.getCommodityCode());
+	
 						}
-					}
-
-
-					//bb.getManagedBean().setCloneItemNames(itemNames);
-
-					bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
-					CodificationReqDTO codeReqDTO = new CodificationReqDTO();
-					for (String code : itemNames) {
-
-						codeReqDTO.setUnspscCode(code);
-						CodificationResDTO codeResDTO = codificationSO
-								.searchUnspscObj(codeReqDTO);
-						bb.getManagedBean().getFamilyList()
-						.add(codeResDTO.getUnspscObj());
-
-						if (code != null && code.trim().length() > 0) {
-							bb.getManagedBean().getFamilyCodeList().add(code);
+	
+						if(bb.getManagedBean().getFamilyCodeList().size() == 1){
+							CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
+							bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
+							System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
+							for (CmBrand brand : commodity.getCmBrand()) {
+	
+								bb.getManagedBean()
+								.getBrandCriteria()
+								.add(new SelectItem(brand.getBrandId(), brand
+										.getBrandName()));
+							}
 						}
-
-					}
-
-					if(bb.getManagedBean().getFamilyCodeList().size() == 1|| bb.getManagedBean().getFamilyList().size()==1){
-						CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
-						bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
-						System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
-						for (CmBrand brand : commodity.getCmBrand()) {
-
-							bb.getManagedBean()
-							.getBrandCriteria()
-							.add(new SelectItem(brand.getBrandId(), brand
-									.getBrandName()));
+					}else{
+						bb.getManagedBean().setFamilyList(new ArrayList<CmUnspsc>());
+						List<String> itemNames = new ArrayList<String>();
+							
+						for (CmUnspsc cat : resDTO1.getCommodityList()) {
+							
+							itemNames.add(cat.getUnspscCode());
+							bb.getManagedBean().getFamilyList().add(cat);
 						}
+						
+	
+						for (String code : itemNames) {
+	
+							if (code != null && code.trim().length() > 0) {
+								bb.getManagedBean().getFamilyCodeList().add(code);
+							}
+	
+						}
+	
+						if(bb.getManagedBean().getFamilyCodeList().size() == 1|| bb.getManagedBean().getFamilyList().size()==1){
+							CmUnspsc commodity = bb.getManagedBean().getFamilyList().get(0);
+							bb.getManagedBean().setCommodityCode(commodity.getUnspscCode());
+							System.out.println("commodity.getCmBrand():"+commodity.getCmBrand().size());
+							for (CmBrand brand : commodity.getCmBrand()) {
+	
+								bb.getManagedBean()
+								.getBrandCriteria()
+								.add(new SelectItem(brand.getBrandId(), brand
+										.getBrandName()));
+							}
+						}		
+						
 					}
-					
-					
-					
-					
-					
-					
 				}
 
 
-				/*for (VCmPubSuppItem view : resDTO.getViewPublicSuppItemResultBean()
-						.getResultList()) {
-					bb.getManagedBean().getCatalogueList()
-							.add(view);
-				}*/
-
 				System.out.println("***************getFamilyList().size()*************"+bb.getManagedBean().getFamilyList().size());
 				System.out.println("getCloneItemNames:"+bb.getManagedBean().getCloneItemNames().size());
-				bb.getManagedBean().setTotalRecord(resDTO.getViewPublicSuppItemResultBean().getTotalRecord());
+				bb.getManagedBean().setTotalRecord(totalRecord);
 
 				RequestContext.getCurrentInstance().execute("refreshCatalogue();");
 
@@ -344,7 +347,7 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 				e.printStackTrace();
 			} finally {
 				catalogueSO = null;
-				codificationSO = null;
+				
 			}
 			return new SearchResultBean();
 		}
@@ -422,24 +425,14 @@ public class PublicCatalogueManagedBean extends BaseManagedBean {
 	}
 
 
-	/**
-	 * Gets the family list.
-	 * 
-	 * @return the family list
-	 */
+	
+
 	public List<CmUnspsc> getFamilyList() {
 		if(familyList==null)
 			familyList = new ArrayList<CmUnspsc>();
 		return familyList;
 	}
 
-
-	/**
-	 * Sets the family list.
-	 * 
-	 * @param familyList
-	 *            the new family list
-	 */
 	public void setFamilyList(List<CmUnspsc> familyList) {
 		this.familyList = familyList;
 	}

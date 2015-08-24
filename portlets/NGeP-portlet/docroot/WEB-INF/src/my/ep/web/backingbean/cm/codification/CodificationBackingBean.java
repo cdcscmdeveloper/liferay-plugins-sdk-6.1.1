@@ -280,6 +280,14 @@ BaseBackingBean<CodificationManagedBean> implements Serializable {
 
 	}
 	
+	
+	public void keywordExtensionCodeSearch(){
+		
+		this.getManagedBean().getKeywordExtensionSearchItemDataModel().reloadData();
+		
+	}
+	
+	
 	public void extensionCodeSearchForAssign() {
 	
 		extensionSearchItemDataModel.reloadData();
