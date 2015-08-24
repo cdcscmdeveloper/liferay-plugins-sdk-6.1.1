@@ -149,7 +149,8 @@
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.schedule.type']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
+							<ac:iconTooltip id="frequencyScheduleType#{index}Sc"
+								value="#{lbl['lbl.sc.schedule.type.tooltip']}" />
 						</f:facet>
 
 						<p:selectOneMenu style="width:120px;" required="true"
@@ -220,7 +221,7 @@
 								update="@this,progressivePayment" />
 							<ac:validateNumber integerOnly="true" maxIntegerDigits="3"></ac:validateNumber>
 						</p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.sc.spec.phase.tooltip']}" />
+						<ac:iconTooltip id="progressivePaymentPhaseno#{index}SC" value="#{lbl['lbl.sc.spec.phase.tooltip']}" />
 						<p:message id="phaseNumId" for="progressivePhase" display="icon"></p:message>
 					</p:column>
 					<p:column style="width:10%">
@@ -296,7 +297,8 @@
 						<f:facet name="header">
 							<h:outputText value="* " styleClass="mandatory" />
 							<h:outputText value="#{lbl['lbl.sc.percentage']}" />
-							<ac:iconTooltip value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
+							<ac:iconTooltip id="progressivePercentage#{index}Sc"
+								value="#{lbl['lbl.sc.spec.percentage.tooltip']}" />
 						</f:facet>
 						<p:inputText value="#{payment.percentage}" required="true"
 							disabled="#{specificationBackingBean.managedBean.readOnly}"
