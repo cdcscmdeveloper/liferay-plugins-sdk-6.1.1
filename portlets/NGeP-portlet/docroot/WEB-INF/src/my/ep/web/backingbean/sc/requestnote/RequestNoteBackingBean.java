@@ -252,7 +252,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteResDTO requestNoteResDTO = null;
     try {
     	
-    	parseRequestNote(requestNote, outcome);
+    	parseRequestNote(requestNote, outcome, Boolean.FALSE);
 	    
 	    setUserDetails(requestNote);
 	    requestNoteReqDTO.setRequestNote(requestNote);
@@ -405,7 +405,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		RequestNoteReqDTO requestNoteReqDTO = new RequestNoteReqDTO();
 		ScRequestNote requestNote = getManagedBean().getRequestNote();
 		try {
-			parseRequestNote(requestNote, outcome);
+			parseRequestNote(requestNote, outcome, Boolean.TRUE);
 			if(getManagedBean().getPrInquiryId() != null){
 				requestNoteReqDTO.setPurchaseInquiryId(getManagedBean().getPrInquiryId());
 			}
@@ -461,7 +461,7 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 	 * @param requestNote the request note
 	 * @param outcome the outcome
 	 */
-	private void parseRequestNote(ScRequestNote requestNote, String outcome) {
+	private void parseRequestNote(ScRequestNote requestNote, String outcome, boolean isAction) {
 		List<ScRequestNoteDtl>	requestNoteDtls  = this.getManagedBean().getRequestNoteDtls();
 		
 		// check empty Objects. and concatenation RN title
@@ -473,7 +473,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			for (ScRequestNoteDtl requestNoteDtl : requestNoteDtls) {
 				if (requestNoteDtl.getPriceType() != null && null == requestNoteDtl.getPriceType().getParameterId()) {
 					requestNoteDtl.setPriceType(null);
+				} else if(requestNoteDtl.getPriceType() != null){
+					requestNoteDtl.setPriceTypeId(requestNoteDtl.getPriceType().getParameterId());
 				}
+
 				if(requestNoteDtl.getAssignedUser() != null && null == requestNoteDtl.getAssignedUser().getUserId()){
 					requestNoteDtl.setAssignedUser(null);
 				}
@@ -499,13 +502,10 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 									ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "in Item Details"});
 				}
 
-				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome)){
+				if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || isAction){
 					// validate price type
 					if(null == requestNoteDtl.getPriceType() || null == requestNoteDtl.getPriceType().getParameterId()){
-						throw new EpException(
-								MessageConst.ERROR_760315,
-								new String[] {ResourceBundleUtils.getMessage("lbl.sc.request.note.price.type",
-										ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale()), "in Item Detail Pop-Up"});
+						throw new EpException(MessageConst.ERROR_760343, new String[]{requestNoteDtl.getRequestItem().getCmItem().getItemName(),""});
 					}
 				}
 			}	
@@ -1031,7 +1031,9 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 		ScRequestNote scRequestNote = getManagedBean().getRequestNote();
 		
 		for (ScRequestNoteDtl requestNoteDtl : scRequestNote.getRequestNoteDtls()) {
-			priceTypeChangeListener(requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl);
+			if(requestNoteDtl.getPriceType() != null){
+				priceTypeChangeListener(requestNoteDtl.getPriceType().getParameterId(), requestNoteDtl);
+			}
 		}
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
