@@ -15,15 +15,11 @@
 		<li>No Rujukan: $fileNo</li>
 		<li>Skop / Tajuk: $sourcingTitle</li>
 		<li>Pembekal: $successfulSupplierName</li>
-		<li>Harga Tawaran Asal: $contractValue</li>
-		<li>Harga Baru Tawaran Tambahan: $newContractValue</li>
-		#if ( $contractWithGst == 'true' )
-		<li>Jumlah Nilai CBP $gstRate%: $newGSTAmout</li>
-		<li>Jumlah Harga Tawaran Keseluruhan : $newOverallAmt
-			<br />
-			(Harga Baru Tawaran Tambahan + Jumlah Nilai CBP $gstRate%)
+		<li>Nilai Kontrak Asal: $contractValue</li>
+		<li>Nilai Baru Kontrak Tambahan: $newContractValue</li>
+		<li>Amaun CBP: $newGSTAmout</li>
+		<li>Nilai Keseluruhan Kontrak : $newOverallAmt
 		</li>
-		#end
 		<li>Jenis Pemenuhan: $fulfilmentType</li>
 		<li>Jadual Penghantaran: Seperti di lampiran</li>
 		<li>Potongan Pembayaran: $deductionAmount **tertakluk kepada potongan tetap sahaja</li>
