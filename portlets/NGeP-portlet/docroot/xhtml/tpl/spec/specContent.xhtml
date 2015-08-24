@@ -59,7 +59,7 @@
 			<ui:param name="durationMonth" value="#{templateSpecBean.specMaster.durationMonth}" />
 			<ui:param name="isUpdateSpecByAnswers" value="#{templateSpecBean.updateSpecByAnswers}" />
 			
-			<c:if test="#{isItemTypeService and !isDurationByItem}">
+			<c:if test="#{isItemTypeService and !isDurationByItem and !isContentTypeQuestion}">
 				<table style="width:100%">
 				<tr>
 					<td width="16%" class="TableFieldLeft">
