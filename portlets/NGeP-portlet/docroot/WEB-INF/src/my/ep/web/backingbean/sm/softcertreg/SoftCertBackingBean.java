@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.softcertreg;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,6 +24,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.constant.DbValueConst;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmDigiSign;
 import my.ep.persistence.entity.pm.common.PmDocument;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSoftcertDoc;
@@ -30,6 +32,7 @@ import my.ep.persistence.entity.sm.SmSoftcertDocFile;
 import my.ep.persistence.entity.sm.SmSoftcertRequest;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.backingbean.sm.payment.PaymentBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.softcertreg.SoftCertManagedBean;
@@ -74,6 +77,9 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		getManagedBean().setTargetPage(SELECT_PERSONNELS_PAGE);
 		getManagedBean().setSuppDocMode(
 				SupplierManagementConst.SUPPORTING_DOC_ONLINE);
+		getManagedBean().setSoftcertDocNo(
+				SmCommonUtil.getSoftcertDocNo(getManagedBean()
+						.getLoginUserPersonnelInfo().getSmAppl()));
 		SmCommonUtil.redirectToPage("softCertBasePage.xhtml", "");
 	}
 
@@ -176,6 +182,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				this.getManagedBean().getSoftCertSelectList());
 		updateAmount();
 		setSoftCertPaymentBpmTask();
+		setSoftcertApplyFor();
 		getManagedBean().setTargetPage(PAYMENT_PAGE);
 	}
 
@@ -254,6 +261,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		BigDecimal amountPerPersonnel = BigDecimal.ZERO;
 		int i = 0;
 		SmSoftcertRequest softcertRequest = null;
+		getManagedBean().setFreeSoftCertPersonnel(null);
 		for (SmPersonnel personnel : this.getManagedBean().getSoftCertPayList()) {
 			if (i == 0 && !getManagedBean().isAlreadyHadFreeSoftcert()) {
 				personnel.setFreeSoftCert(true);
@@ -328,6 +336,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 					.getSoftCertBpmTask().getTaskId());
 			reqDTO.setSoftcertDocList(getUploadedSoftcertDocs());
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
+			reqDTO.setSoftcertDocNo(getManagedBean().getSoftcertDocNo());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
@@ -441,10 +450,88 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	}
 
 	/**
-	 * Call confirmation dialog
+	 * If supplier admin apply for others, show SPKI and if apply for himself
+	 * just directly show declaration popup
 	 */
 	public void showConfirmDialog() {
+		if (getManagedBean().isApplySoftcertForOthers()) {
+			onDisplaySpkiPopup();
+		} else {
+			RequestContext.getCurrentInstance().execute("confirmDialog.show()");
+		}
+	}
+
+	/**
+	 * Call SPKI Popup dialog
+	 */
+	public void onDisplaySpkiPopup() {
+		getManagedBean().getSpkiBackingBean().getChallengeQuestions();
+		RequestContext.getCurrentInstance().execute("spki_dlg.show()");
+	}
+
+	/**
+	 * On click SPKI popup dialog
+	 * 
+	 * @param PmDigiSign
+	 *            pmDigiSign
+	 */
+	public void onClickSignSpki() {
+		PmDigiSign pmDigiSign = new PmDigiSign();
+		setSpkiInformation(pmDigiSign, StringUtils.isNotBlank(getManagedBean()
+				.getLoginUserPersonnelInfo().getSmAppl().getApplNo()) ? "SR"
+				: "SC", getManagedBean().getLoginUserPersonnelInfo()
+				.getSmAppl().getApplId(), getManagedBean().getSoftcertDocNo(),
+				prepareOriginalText());
+		SpkiBackingBean spkiBackingBean = new SpkiBackingBean();
+		byte[] signedData = spkiBackingBean
+				.spkiSignTransaction(prepareOriginalText());
+		pmDigiSign.setSpkiSignedData(signedData);
+		RequestContext.getCurrentInstance().execute("spki_dlg.hide()");
 		RequestContext.getCurrentInstance().execute("confirmDialog.show()");
+		RequestContext.getCurrentInstance().update("@form");
+	}
+
+	/**
+	 * 
+	 * @param PmDigiSign
+	 *            pmDigiSign
+	 * @param String
+	 *            docType
+	 * @param Long
+	 *            docId
+	 * @param String
+	 *            docNumber
+	 * @param String
+	 *            textBeforeSign
+	 */
+	private void setSpkiInformation(PmDigiSign pmDigiSign, String docType,
+			Long docId, String docNumber, String textBeforeSign) {
+		FacesScopes facesScope = new FacesScopes();
+		Long userId = facesScope.getUserSessionBean().getUserId();
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		pmDigiSign.setDocId(new BigDecimal(docId));
+		pmDigiSign.setDocNo(docNumber);
+		pmDigiSign.setDocType(docType);
+		pmDigiSign.setCreatedBy(userId);
+		pmDigiSign.setCreatedDate(date);
+		pmDigiSign.setOriginalData(textBeforeSign);
+	}
+
+	/**
+	 * text to be signed for SM: applNo + userId (IC or password) + epNo
+	 * 
+	 * @return
+	 */
+	private String prepareOriginalText() {
+		String softcertDocNo = this.getManagedBean()
+				.getLoginUserPersonnelInfo().getSmAppl().getApplNo();
+		String userIdentificationNo = new FacesScopes().getUserSessionBean()
+				.getIdentificationNo();
+		String epNo = this.getManagedBean().getLoginUserPersonnelInfo()
+				.getSmAppl().getSmSupplier().getEpNo();
+		String originalText = softcertDocNo + "|" + userIdentificationNo + "|"
+				+ epNo;
+		return originalText;
 	}
 
 	/**
@@ -934,6 +1021,24 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 				}
 			}
 		}
+	}
+
+	private void setSoftcertApplyFor() {
+		boolean applyForOthers = false;
+		if (getManagedBean().getSoftCertPayList() != null) {
+			for (SmPersonnel payPersonnel : getManagedBean()
+					.getSoftCertPayList()) {
+				if (getManagedBean().getLoginUserPersonnelInfo() != null
+						&& !getManagedBean()
+								.getLoginUserPersonnelInfo()
+								.getIdentificationNo()
+								.equalsIgnoreCase(
+										payPersonnel.getIdentificationNo())) {
+					applyForOthers = true;
+				}
+			}
+		}
+		getManagedBean().setApplySoftcertForOthers(applyForOthers);
 	}
 
 }

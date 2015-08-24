@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.web.backingbean.pm.cc.SoftCertMaintenanceBackingBean;
+import my.ep.web.backingbean.pm.cc.SpkiBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -48,8 +50,12 @@ public class SoftCertManagedBean extends BaseManagedBean {
 	private List<SmPersonnel> authorizedPersonnels;
 	private boolean alreadyHadFreeSoftcert;
 	private boolean declare;
+	private String softcertDocNo;
 	private List<SoftcertUploadSuppDocVO> softcertUploadSuppDocList;
 	private SoftCertMaintenanceBackingBean softCertMaintenanceBackingBean = new SoftCertMaintenanceBackingBean();
+	private boolean applySoftcertForOthers;
+	@ManagedProperty(value = "#{spkiBackingBean}")
+	private SpkiBackingBean spkiBackingBean;
 
 	public SoftCertManagedBean() {
 		super();
@@ -252,6 +258,30 @@ public class SoftCertManagedBean extends BaseManagedBean {
 
 	public void setDeclare(boolean declare) {
 		this.declare = declare;
+	}
+
+	public SpkiBackingBean getSpkiBackingBean() {
+		return spkiBackingBean;
+	}
+
+	public void setSpkiBackingBean(SpkiBackingBean spkiBackingBean) {
+		this.spkiBackingBean = spkiBackingBean;
+	}
+
+	public String getSoftcertDocNo() {
+		return softcertDocNo;
+	}
+
+	public void setSoftcertDocNo(String softcertDocNo) {
+		this.softcertDocNo = softcertDocNo;
+	}
+
+	public boolean isApplySoftcertForOthers() {
+		return applySoftcertForOthers;
+	}
+
+	public void setApplySoftcertForOthers(boolean applySoftcertForOthers) {
+		this.applySoftcertForOthers = applySoftcertForOthers;
 	}
 
 }
