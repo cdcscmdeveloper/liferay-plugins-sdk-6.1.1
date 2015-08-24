@@ -326,8 +326,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										.getDataFilterBeans()
 										.add(new SearchFilterBean(
 												"categoryL3Code",
-												Integer.parseInt(getManagedBean()
-														.getSearchOperatorValue()[i]),
+												SearchOperator.OPERATOR_EQUALS.value(),
 												getManagedBean()
 														.getSearchValue()[i]));
 							else if (getManagedBean().getSearchFieldValue()[i]
@@ -336,8 +335,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										.getDataFilterBeans()
 										.add(new SearchFilterBean(
 												"categoryName",
-												Integer.parseInt(getManagedBean()
-														.getSearchOperatorValue()[i]),
+												SearchOperator.OPERATOR_LIKE.value(),
 												getManagedBean()
 														.getSearchValue()[i]));
 						}
@@ -405,7 +403,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 				 * .parseInt(getManagedBean().getSearchOperatorValue()[i]),
 				 * getManagedBean().getSearchValue()[i])); }
 				 */
-
+								
 				for (int i = 0; i < 2; i++) {
 					if (getManagedBean().getSearchValue()[i] != null
 							&& !getManagedBean().getSearchValue()[i].equals("")) {
@@ -418,8 +416,7 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										.getDataFilterBeans()
 										.add(new SearchFilterBean(
 												"machineCode",
-												Integer.parseInt(getManagedBean()
-														.getSearchOperatorValue()[i]),
+												SearchOperator.OPERATOR_EQUALS.value(),
 												getManagedBean()
 														.getSearchValue()[i]
 														.toUpperCase()));
@@ -429,15 +426,29 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 										.getDataFilterBeans()
 										.add(new SearchFilterBean(
 												"machineDesc",
-												Integer.parseInt(getManagedBean()
-														.getSearchOperatorValue()[i]),
+												SearchOperator.OPERATOR_LIKE.value(),
 												getManagedBean()
 														.getSearchValue()[i]
 														.toUpperCase()));
 						}
 					}
 				}
+                 
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean("recordStatusFlg", 
+								SearchOperator.OPERATOR_EQUALS.value(),DbValueConst.RECORD_STATUS_ACTIVE));
+				
+                
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmMachineSection.categoryType.parameterType",
+								SearchOperator.OPERATOR_EQUALS.value(),"CAT"));
 
+				searchBean.getDataFilterBeans().add(
+						new SearchFilterBean(
+								"pmMachineSection.categoryType.parameterCode",
+								SearchOperator.OPERATOR_EQUALS.value(), "PC"));
+				
 				reqDTO.setSearchMachineBean(searchBean);
 				CategoryCodeResDTO resDTO = categoryCodeSO
 						.searchAllPmMachine(reqDTO);
@@ -982,6 +993,8 @@ public class CategoryBackingBean extends BaseBackingBean<CategoryManagedBean> {
 					for (PmBasicCategory removedDpmBasicCategory : removedDuplicatePmBasicCategory) {
 						if (!removedDpmBasicCategory.getRecordStatusFlg()
 								.equals(DbValueConst.RECORD_STATUS_DELETED)) {
+							removedDpmBasicCategory
+							.setRecordStatusFlg(DbValueConst.RECORD_STATUS_ACTIVE);
 							this.getManagedBean().getBasicCategoryList()
 									.add(removedDpmBasicCategory);
 						}
