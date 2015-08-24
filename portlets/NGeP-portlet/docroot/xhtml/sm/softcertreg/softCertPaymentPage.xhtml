@@ -86,10 +86,10 @@
 				<tr>
 					<td>
 						<h:outputText value="#{lbl['lbl.sm.softcert.admin.himself.declare']}" 
-							rendered="#{not empty softCertBackingBean.managedBean.supplierTmpPersonnel}" 
+							rendered="#{!softCertBackingBean.managedBean.applySoftcertForOthers}" 
 							style="float: left;white-space: normal;" escape="false"/>
 						<h:outputText value="#{lbl['lbl.sm.softcert.admin.others.declare']}" 
-							rendered="#{empty softCertBackingBean.managedBean.supplierTmpPersonnel}" 
+							rendered="#{softCertBackingBean.managedBean.applySoftcertForOthers}" 
 							style="float: left;white-space: normal;" escape="false"/>
 					</td>
 				</tr>
@@ -102,5 +102,13 @@
 			<p:commandButton value="#{lbl['lbl.btn.cancel']}" onclick="confirmDialog.hide();" />
 		</div>
 	</p:dialog>
+	
+	<p:outputPanel id="spkiOutPanel">
+		<ac:spkiPopup id="spkiPopup"
+			password="#{softCertBackingBean.managedBean.spkiBackingBean.password}"
+			challengeAns1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeAns1}"
+			challengeQues1="#{softCertBackingBean.managedBean.spkiBackingBean.challengeQues1}"
+			postSignAction="#{softCertBackingBean.onClickSignSpki()}" />
+	</p:outputPanel>
 
 </ui:composition>
