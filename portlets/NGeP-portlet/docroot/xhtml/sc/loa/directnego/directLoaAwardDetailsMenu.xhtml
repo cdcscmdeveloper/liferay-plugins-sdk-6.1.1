@@ -16,7 +16,7 @@
 						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText size="30" required="true"
-						disabled="#{!isEditableStatus}" style="margin-bottom:5px;"
+						disabled="#{!isEditableStatus}" style="margin-bottom:5px;" label="#{lbl['lbl.sc.document.title']}"
 						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.specName}" /></td>
 			</tr>
 			<tr>
@@ -52,7 +52,7 @@
 						<f:selectItems
 							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
 
-						<p:ajax event="change" update="generalLocationList"
+						<p:ajax event="change" update="generalLocationList"  partialSubmit="true" immediate="true"
 							process="@this"
 							listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
 					</p:selectOneRadio></td>
@@ -65,15 +65,11 @@
 		<h:panelGroup id="generalLocationList">
 
 
-
-
 			<c:if test="#{directLOABackingBean.managedBean.scQt.zonal}">
 				<ui:include src="zonelocdetails.xhtml"></ui:include>
 			</c:if>
 
-			<!-- <c:if test="#{!directLOABackingBean.managedBean.scQt.zonal}">
-				<ui:include src="locationDetails.xhtml"></ui:include>
-			</c:if> -->
+			
 		</h:panelGroup>
 
 	</p:panel>
