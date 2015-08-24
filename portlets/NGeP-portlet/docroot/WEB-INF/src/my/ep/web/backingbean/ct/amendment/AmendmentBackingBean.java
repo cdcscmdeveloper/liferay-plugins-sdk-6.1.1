@@ -2614,6 +2614,7 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			onChangeValueChecked();
 		}
 		ConstructTabSideMenu();
 	}
@@ -2634,24 +2635,23 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		} else if(!getManagedBean().getContractVer().getCtAmendment().isItemPriceChange() 
 				&& !getManagedBean().getContractVer().getCtAmendment().isQuantityChange()) {
 			getManagedBean().getContractVer().getCtAmendment().setValueChange(false);
+			onChangeValueChecked();
 		}
 		ConstructTabSideMenu();
 	}
 	
-//	/**
-//	 * The method used to set the amendment information
-//	 * when user wish to amend the contract period.
-//	 */
-//	public void onChangeValueChecked() {
-//		if (!getManagedBean().getContractVer().getCtAmendment().isValueChange()) {
-//			getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
-//			if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
-//				getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(getManagedBean().getContractVer().getCtContractAmount().getGstAmount());	
-//			} else {
-//				getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
-//			}			
-//		}
-//	}
+	/**
+	 * The method used to set the amendment information
+	 * when user wish to amend the contract period.
+	 */
+	public void onChangeValueChecked() {
+		getManagedBean().getContractVer().getCtAmendment().setAdditionalAmount(BigDecimal.ZERO);
+		if (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null) {
+			getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(getManagedBean().getContractVer().getCtContractAmount().getGstAmount());	
+		} else {
+			getManagedBean().getContractVer().getCtAmendment().setNewGstAmount(BigDecimal.ZERO);
+		}
+	}
 	
 	/**
 	 * The method used to set the related amendment information
