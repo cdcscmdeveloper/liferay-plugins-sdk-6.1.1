@@ -1363,25 +1363,29 @@ public class SupportDocumentBackingBean extends
 			StatusResDTO statusResDTO) {
 
 		String docRestreMessageId = "";		
-		String[] commonMsgParam = new String[] {};
+		String[] commonMsgParam =null;
 
 		if (pmDocument.isByAppType()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80804;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			} else {
 				docRestreMessageId = MessageConst.TD_80805;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			}
 		} else if (pmDocument.isByCompType()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80806;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			} else {
 				docRestreMessageId = MessageConst.TD_80807;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			}
@@ -1389,10 +1393,12 @@ public class SupportDocumentBackingBean extends
 		} else if (pmDocument.isBySupplierType()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80808;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			} else {
 				docRestreMessageId = MessageConst.TD_80809;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			}
@@ -1400,30 +1406,36 @@ public class SupportDocumentBackingBean extends
 		} else if (pmDocument.isByCategory()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80810;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			} else {
 				docRestreMessageId = MessageConst.TD_80811;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			}
 		} else if (pmDocument.isByCertBody()) {
 			if (!documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80812;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			} else {
 				docRestreMessageId = MessageConst.TD_80813;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			}
 		} else {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80802;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			} else {
 				docRestreMessageId = MessageConst.TD_80803;
+				commonMsgParam = new String[] {pmDocument.getDocName()};
 				trackingDairyData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId, commonMsgParam);
 			}
@@ -1720,6 +1732,7 @@ public class SupportDocumentBackingBean extends
 
 			// this is for tracking diary
 			String messageId = "";
+			String[] msgParam = new String[] {pmDocument.getDocName()};
 
 			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance()
 					.getServiceObject("pm", IStatusSO.class);
@@ -1751,7 +1764,7 @@ public class SupportDocumentBackingBean extends
 							pmDocument.getDocCategoryCode().getParameterCode(),
 							statusResDTO.getPmStatus() != null ? statusResDTO
 									.getPmStatus() : new PmStatus(),
-							getPmActionDesc(messageId, new String[] {})));
+							getPmActionDesc(messageId, msgParam)));
 
 			reqDTO.setPmDocument(pmDocument);
 			reqSO = (IDocumentSO) BusinessDelegate.getInstance()
