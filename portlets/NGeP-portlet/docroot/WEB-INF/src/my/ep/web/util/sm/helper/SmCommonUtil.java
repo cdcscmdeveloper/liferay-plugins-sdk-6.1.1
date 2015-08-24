@@ -2580,4 +2580,21 @@ public class SmCommonUtil {
 	public static String getUploadFilePath(String path) {
 		return Calendar.getInstance().get(Calendar.YEAR) + path;
 	}
+
+	/**
+	 * Return softcert doc no
+	 * 
+	 * @param SmAppl
+	 *            latestAppl
+	 * @return String
+	 */
+	public static String getSoftcertDocNo(SmAppl latestAppl) {
+		if(latestAppl==null){
+			throw new EpException("Not valid login user!!");
+		}
+		PersonnelReqDTO reqDTO = new PersonnelReqDTO();
+		reqDTO.setAppl(latestAppl);
+		return SmServiceLookup.getPersonnelSO().getSoftcertDocNo(reqDTO)
+				.getSoftcertDocNo();
+	}
 }
