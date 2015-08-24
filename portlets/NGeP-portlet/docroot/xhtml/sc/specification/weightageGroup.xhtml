@@ -54,7 +54,8 @@
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.max.score']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
+					<ac:iconTooltip id="technicalScoringMaxScore#{index}SC"
+						value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
 				</f:facet>
 				<h:outputText value="#{tech.qtScoreWeightage.score}"
 					rendered="#{tech.definationType.parameterCode eq 'TS' or tech.definationType.parameterCode eq 'SD' or tech.definationType.parameterCode eq 'WF'}" />
@@ -77,7 +78,8 @@
 				rendered="#{specificationBackingBean.managedBean.technicalScoreSetting.weightageReq ne 'false'}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
+					<ac:iconTooltip id="technicalScoringWeightageScore#{index}SC"
+						value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
 				</f:facet>
 				<p:inputText value="#{tech.qtScoreWeightage.weightage}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -147,9 +149,8 @@
 							value="#{specificationBackingBean.managedBean.demoScoreSetting.passingScore}">
 							<p:ajax event="blur" process="@all" partialSubmit="true"
 								listener="#{specificationBackingBean.checkDemoPassingScore(specificationBackingBean.managedBean.demoScoreSetting)}" />
-						</p:inputText>
-						<ac:iconTooltip value="#{lbl['lbl.sc.spec.qual.present.demo.tooltip']}" />
-					</td>
+						</p:inputText> <ac:iconTooltip
+							value="#{lbl['lbl.sc.spec.qual.present.demo.tooltip']}" /></td>
 				</tr>
 			</ui:fragment>
 
@@ -163,8 +164,7 @@
 						value="#{specificationBackingBean.managedBean.technicalScoreSetting.passingScore}">
 						<p:ajax event="blur" process="@all" partialSubmit="true"
 							listener="#{specificationBackingBean.checkTechnicalPassingScore(specificationBackingBean.managedBean.technicalScoreSetting)}" />
-					</p:inputText>
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.technical.tooltip']}" />
+					</p:inputText> <ac:iconTooltip value="#{lbl['lbl.sc.spec.technical.tooltip']}" />
 				</td>
 			</tr>
 		</table>

@@ -89,7 +89,7 @@
 			<p:column style="width:10%;white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.type']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.type.technical.tooltip']}" />
+					<ac:iconTooltip id="technicalChecklistType#{index}SC" value="#{lbl['lbl.sc.type.technical.tooltip']}" />
 				</f:facet>
 
 				<h:panelGroup id="technicalChecklisttypes">
@@ -168,7 +168,7 @@
 			<p:column style="width:8%;white-space: normal;">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.supplier.action']}" />
-					<ac:iconTooltip
+					<ac:iconTooltip id="technicalChecklistSupplierAction#{index}SC"
 						value="#{lbl['lbl.sc.spec.supplier.action.tooltip']}" />
 				</f:facet>
 
