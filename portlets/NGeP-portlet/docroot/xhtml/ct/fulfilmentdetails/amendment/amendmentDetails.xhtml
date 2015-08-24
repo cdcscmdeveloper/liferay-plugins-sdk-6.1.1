@@ -62,8 +62,9 @@
 				    or (amendmentBackingBean.managedBean.ctContract.contractType.parameterCode == ParameterConst.contractTypeCentral
 				    	and !amendmentBackingBean.managedBean.contractVer.ctContractValue.followLoaAmt)}"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
-					<p:ajax event="change"  update=":form:amend" process="@form" 
-					  onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
+					<p:ajax event="change"  update=":form:amend" process="@form"
+						listener="#{amendmentBackingBean.onChangeValueChecked}"
+					  	onstart="blockWidget.show();" oncomplete="blockWidget.hide();"  /> 
 					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<h:panelGrid columns="2">
