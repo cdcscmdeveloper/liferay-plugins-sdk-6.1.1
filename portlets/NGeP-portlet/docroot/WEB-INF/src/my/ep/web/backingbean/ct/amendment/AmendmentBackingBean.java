@@ -1872,7 +1872,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	 * @return new bond amount in text format.
 	 */
 	public String getBondAmountInText() {
-		if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue() == 0) {
+		if (getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() == null
+				|| getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue() == 0) {
 			return "";
 		}
 		DecimalFormat df = new DecimalFormat("#.00");		
@@ -3832,7 +3833,6 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 		DecimalFormat percentageDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_PERCENTAGE));
 		DecimalFormat amountDF = new DecimalFormat(commonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT));
 		DecimalFormat amountNoCommaDF = new DecimalFormat("#.00");
-		boolean contractWithGst = isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode());
 		
 		// Ringkasan Kontrak
 		if (ContractConst.DOC_DEF_KEY_CONTRACT_SUMMARY.equals(docDefinitionKey)) {
@@ -3846,25 +3846,20 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 					? getManagedBean().getContractVer().getCtContractAmount().getContractAmount() : BigDecimal.ZERO;			
 			context.put("contractValue", amountDF.format(contractValue));
 				
-			if (getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() !=null) {
+			if (getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount() != null) {
 				contractValue = contractValue.add(getManagedBean().getContractVer().getCtAmendment().getAdditionalAmount());
 			}				
-			context.put("newContractValue", amountDF.format(contractValue));			
+			context.put("newContractValue", amountDF.format(contractValue));
 			
-			if (contractWithGst) {
-				context.put("contractWithGst", true);
-				context.put("gstRate", percentageDF.format(getManagedBean().getContractVer().getCtContractValue().getGstRate()));
+			if (contractWithGst()) {
 				context.put("newGSTAmout", amountDF.format(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount()));
-				
-				BigDecimal overallContractValue = contractValue;
-				if (getManagedBean().getContractVer().getCtAmendment().getNewGstAmount() != null) {
-					overallContractValue = contractValue.add(getManagedBean().getContractVer().getCtAmendment().getNewGstAmount());
-				}				
-				context.put("newOverallAmt", amountDF.format(overallContractValue));
+				context.put("newOverallAmt", amountDF.format(contractValue.add(
+						getManagedBean().getContractVer().getCtAmendment().getNewGstAmount())));
 			} else {
-				context.put("contractWithGst", false);
-			}
-			
+				context.put("newGSTAmout", "TB");
+				context.put("newOverallAmt", amountDF.format(contractValue));
+			}			
+						
 			String fulfilmentType = getParameterDesc(getManagedBean().getCtContract().getFulfillmentType());
 			fulfilmentType = fulfilmentType.replaceAll("&", "&#38;");
 			context.put("fulfilmentType", fulfilmentType);
@@ -3897,8 +3892,8 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("amendBondValue", getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt() != null 
 						? amountDF.format(getManagedBean().getContractVer().getCtAmendment().getAmendmentLoa().getBondAmt()) : amountDF.format(BigDecimal.ZERO));
 			} else {
-				context.put("bondValue","N/A");
-				context.put("amendBondValue","N/A");
+				context.put("bondValue","TB");
+				context.put("amendBondValue","TB");
 			}
 		}
 		// Integrity Pact (Akuan Pembida Berjaya)
@@ -4066,15 +4061,18 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 			}
 			String supplierAddress = sb.toString();
 			supplierAddress = supplierAddress.replaceAll("&", "&#38;");
-			context.put("supplierAddress", supplierAddress);
-			
-			context.put("contractTitle",getManagedBean().getCtContract().getContractName());
+			context.put("supplierAddress", supplierAddress);			
 			context.put("contractNo",getManagedBean().getCtContract().getContractNo());
-			if (getManagedBean().getAgreementContractVer().getContractPhysicalNo() != null) {
-				context.put("contractPhysicalNo",getManagedBean().getAgreementContractVer().getContractPhysicalNo());
-			} else {
-				context.put("contractPhysicalNo",getManagedBean().getCtContract().getContractNo());
+			
+			String procurementMode = "";
+			if (getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO)) {
+				procurementMode = "Tawaran Pelawaan Harga";
+			} else if (getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_QUOTATION)) {
+				procurementMode = "Sebut Harga";
+			} else if (getManagedBean().getCtContract().getProcurementMode().getParameterCode().equalsIgnoreCase(ParameterConst.PROCUREMENT_MODE_TENDER)) {
+				procurementMode = "Tender";
 			}
+			context.put("procurementMode", procurementMode);
 			
 			if (scLoa.getBondAmt() != null && scLoa.isBondReq()) {
 				context.put("bondAmt200k", true);
@@ -4107,24 +4105,39 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				context.put("bondAmt200k", false);
 			}
 			
-			if (contractWithGst) {
-				context.put("contractWithGst", true);
-				String gstAmt = "";
-				String overallAmt = "";
-				String contractAmt = amountDF.format(scLoa.getLoaAmt());
+			context.put("contractWithGst", contractWithGst());
+			String gstRegNo = "TB";
+			String gstEffDate = "TB";
+			String gstDeclareDate = "TB";
+			BigDecimal overallAmt = scLoa.getLoaAmt();
+			
+			if (contractWithGst()) {
+				context.put("contractAmt", amountDF.format(overallAmt));
+				context.put("contractAmtTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
+				
+				if (getManagedBean().getContractVer().getCtContractValue().getGstRegNo() != null)
+					gstRegNo = getManagedBean().getContractVer().getCtContractValue().getGstRegNo();
+				if (getManagedBean().getContractVer().getCtContractValue().getGstEffDate() != null)
+					gstEffDate = df.format(getManagedBean().getContractVer().getCtContractValue().getGstEffDate());
+				if (getManagedBean().getContractVer().getCtContractValue().getGstDeclaredDate() != null)
+					gstDeclareDate = df.format(getManagedBean().getContractVer().getCtContractValue().getGstDeclaredDate());
 				
 				if (scLoa.getGstAmt() != null) {
-					gstAmt = amountDF.format(scLoa.getGstAmt());
-					overallAmt = amountDF.format(scLoa.getLoaAmt().add(scLoa.getGstAmt()));
+					context.put("gstAmt", amountDF.format(scLoa.getGstAmt()));
+					context.put("gstAmtTxt", scLoa.getGstAmt().doubleValue() != 0 ? NumberWordUtil.convert(amountNoCommaDF.format(scLoa.getGstAmt())) : ""); 
+					overallAmt = scLoa.getLoaAmt().add(scLoa.getGstAmt());
 				} else {
-					overallAmt = amountDF.format(scLoa.getLoaAmt());
+					context.put("gstAmt", "TB");
+					context.put("gstAmtTxt", "TB");
 				}
-				context.put("gstAmount", gstAmt);
-				context.put("contractAmount", contractAmt);
-				context.put("overallContractValue", overallAmt);
-			} else {
-				context.put("contractWithGst", false);
 			}
+			
+			context.put("gstRegNo", gstRegNo);
+			context.put("gstEffDate", gstEffDate);
+			context.put("gstDeclareDate", gstDeclareDate);
+			context.put("overallContractValue", amountDF.format(overallAmt));
+			context.put("overallContractValueTxt", (scLoa.getLoaAmt() != null && scLoa.getLoaAmt().doubleValue() != 0) ? NumberWordUtil.convert(amountNoCommaDF.format(overallAmt)) : ""); 
+			
 						
 			String contractEffDate = "";
 			if (getManagedBean().getContractVer().getCtAmendment().getAmendmentEffDate() != null) {

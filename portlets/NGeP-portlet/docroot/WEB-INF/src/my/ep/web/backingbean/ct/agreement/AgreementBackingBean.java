@@ -1483,13 +1483,15 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
 					if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 						context.put("performanceBondValue", nf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt()) + "");
-						context.put("performanceBondValueText", NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString()));
+						context.put("performanceBondValueText", NumberWordUtil.convert(
+								getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString() : ""));
 					}
 					
 				} else {
 					if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
 						context.put("performanceBondValue", nf.format(getManagedBean().getCtContract().getLoa().getBondAmt()) + "");
-						context.put("performanceBondValueText", NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondAmt().toString()));
+						context.put("performanceBondValueText", NumberWordUtil.convert(
+								getManagedBean().getCtContract().getLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtContract().getLoa().getBondAmt().toString() : ""));
 					}
 				}
 			}
@@ -1995,7 +1997,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				if (getManagedBean().getCtAgreement().getCtAmendment() != null) {
 					if (getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt() != null) {
 						bondAmount = af.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt());
-						bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString());
+						bondAmountTxt =  NumberWordUtil.convert(
+								getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondAmt().toString() : "");
 						bondPercentage = pf.format(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage());
 						//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtAgreement().getCtAmendment().getAmendmentLoa().getBondPercentage().toString());
 						bondPercentageTxt = bondPercentage;
@@ -2003,7 +2006,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				} else {
 					if (getManagedBean().getCtContract().getLoa().getBondAmt() != null) {
 						bondAmount = af.format(getManagedBean().getCtContract().getLoa().getBondAmt());
-						bondAmountTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondAmt().toString());
+						bondAmountTxt =  NumberWordUtil.convert(
+								getManagedBean().getCtContract().getLoa().getBondAmt().doubleValue() != 0 ? getManagedBean().getCtContract().getLoa().getBondAmt().toString() : "");
 						bondPercentage = pf.format(getManagedBean().getCtContract().getLoa().getBondPercentage());
 						//bondPercentageTxt =  NumberWordUtil.convert(getManagedBean().getCtContract().getLoa().getBondPercentage().toString());
 						bondPercentageTxt = bondPercentage;
