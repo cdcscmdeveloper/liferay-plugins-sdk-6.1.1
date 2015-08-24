@@ -50,7 +50,8 @@
 						<h:outputText value="* " styleClass="mandatory" />
 					</ui:fragment>
 					<h:outputText value="#{lbl['lbl.sc.spec.max.score']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
+					<ac:iconTooltip id="financialScoreMaxScore#{index}SC"
+						value="#{lbl['lbl.sc.spec.max.score.tooltip']}" />
 				</f:facet>
 				<ui:fragment
 					rendered="#{finance.definationType.parameterCode eq 'TS' or finance.definationType.parameterCode eq 'SD' or finance.definationType.parameterCode eq 'WF'}">
@@ -75,7 +76,8 @@
 				rendered="#{specificationBackingBean.managedBean.financialScoreSetting.weightageReq ne 'false'}">
 				<f:facet name="header">
 					<h:outputText value="#{lbl['lbl.sc.spec.weight.weight']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
+					<ac:iconTooltip id="financialScoreWeightageScore#{index}SC"
+						value="#{lbl['lbl.sc.spec.weight.weight.tooltip']}" />
 				</f:facet>
 				<p:inputText value="#{finance.qtScoreWeightage.weightage}"
 					disabled="#{specificationBackingBean.managedBean.readOnly and specificationBackingBean.managedBean.currentStatusId != QTStatusConst.SPEC_COMMITTEE_PENDING_SUBMISSION}"
@@ -122,8 +124,10 @@
 	</p:panel>
 	<h:panelGroup id="offeredPrice">
 		<p:panel header="#{lbl['lbl.sc.by.package']}" toggleable="true">
-			<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.passing.score.financial.instruction']}" escape="false" />
-			
+			<h:outputText styleClass="instruction"
+				value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
+				escape="false" />
+
 			<table>
 				<tr>
 					<td style="width: 215px;"><h:outputText
@@ -141,7 +145,8 @@
 			<h:outputText styleClass="instruction"
 				value="#{lbl['lbl.sc.spec.score.variance.instruction']}"
 				escape="false" />
-			<ac:iconTooltip value="#{lbl['lbl.sc.spec.scoring.offered.price.tooltip']}" />
+			<ac:iconTooltip
+				value="#{lbl['lbl.sc.spec.scoring.offered.price.tooltip']}" />
 
 			<p:panelGrid style="margin-top:5px;width:100%;"
 				styleClass="panelGridBorders tr, panelGridBorders td">
@@ -206,7 +211,9 @@
 	</h:panelGroup>
 	<p:panel id="financialScoringItemPanle"
 		header="#{lbl['lbl.sc.by.item']}" toggleable="true">
-		<h:outputText  styleClass="instruction" value="#{lbl['lbl.sc.passing.score.financial.instruction']}" escape="false" />
+		<h:outputText styleClass="instruction"
+			value="#{lbl['lbl.sc.passing.score.financial.instruction']}"
+			escape="false" />
 
 		<table>
 			<tr>
