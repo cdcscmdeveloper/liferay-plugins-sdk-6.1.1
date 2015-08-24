@@ -191,7 +191,7 @@
 						<h:outputText value="* " styleClass="mandatory" />
 						<h:outputText value="#{lbl['lbl.sc.request.note.delivery.term']}" />
 						<h:panelGroup rendered="#{requestNoteBackingBean.managedBean.requestNote.sourceMethod eq 'SQ'}">
-							<ac:iconTooltip value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
+							<ac:iconTooltip id="deliveryTermId#{rowIndex}" value="#{lbl['lbl.sc.delivery.term.tooltip']}" />
 						</h:panelGroup>
 						
 					</f:facet>
@@ -241,7 +241,7 @@
 					     label="#{lbl['lbl.sc.direct.purchase.title']}"  maxlength="100" 
 					     value="#{requestNoteDtl.procurementTitle}" 
 					     autoResize="false" style="width:140px;">
-					    <p:ajax event="keyup" partialSubmit="true" 
+					    <p:ajax event="blur" partialSubmit="true" 
 									process="@this"
 									listener="#{requestNoteBackingBean.priceTypeChangeListener(requestNoteDtl.priceTypeId, requestNoteDtl)}" />
 					 </p:inputTextarea>
