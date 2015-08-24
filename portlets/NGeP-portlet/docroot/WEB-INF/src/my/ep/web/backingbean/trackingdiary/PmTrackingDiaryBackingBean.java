@@ -353,39 +353,39 @@ public class PmTrackingDiaryBackingBean extends
 		System.out.println("............onTransactionTypeSelect..........this.getManagedBean().getTransactionType...."+this.getManagedBean().getTransactionType());
 
 		if (this.getManagedBean().getTransactionType() != null) {
-			if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.ORG_PROFILE_PARAM_CODE)) {
-				resetOrganisationSearchBean();
-				retrieveOrgTypeMap();
-				this.getManagedBean().setOrgProfileRequired(true);
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.USER_PROFILE_PARAM_CODE)) {
-				resetUserProfilesSearchBean();
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
-//				this.getManagedBean().getZoneList().addAll(retrieveZones());
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.UNIT_OF_MEASUREMENT_PARAM_CODE)) {
-				resetUOMSearchBean();
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.EDU_PARAM_CODE)) {
-				resetEduSearchBean();
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.PROFESSIONAL_CERT_BODY)) {
-				resetPcbSearchBean();
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.SUPPORTING_DOC_PARAM_CODE)) {
-				resetDocSearchBean();
-			} else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.FINANCIAL_ORG_PARAM_CODE)) {
-				resetFOrgSearchBean();
-			}else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.USER_GROUP_PARAM_CODE)) {
-				resetUGSearchBean();
-			}else if (this.getManagedBean().getTransactionType()
-					.equalsIgnoreCase(ParameterConst.CATEGORY_CODE_PARAM_CODE)) {
-				resetCategorySearchBean();
-			}
+//			if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.ORG_PROFILE_PARAM_CODE)) {
+//				resetOrganisationSearchBean();
+//				retrieveOrgTypeMap();
+//				this.getManagedBean().setOrgProfileRequired(true);
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.USER_PROFILE_PARAM_CODE)) {
+//				resetUserProfilesSearchBean();
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.VIRTUAL_CERTIFICATE_PARAM_CODE)) {
+////				this.getManagedBean().getZoneList().addAll(retrieveZones());
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.UNIT_OF_MEASUREMENT_PARAM_CODE)) {
+//				resetUOMSearchBean();
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.EDU_PARAM_CODE)) {
+//				resetEduSearchBean();
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.PROFESSIONAL_CERT_BODY)) {
+//				resetPcbSearchBean();
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.SUPPORTING_DOC_PARAM_CODE)) {
+//				resetDocSearchBean();
+//			} else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.FINANCIAL_ORG_PARAM_CODE)) {
+//				resetFOrgSearchBean();
+//			}else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.USER_GROUP_PARAM_CODE)) {
+//				resetUGSearchBean();
+//			}else if (this.getManagedBean().getTransactionType()
+//					.equalsIgnoreCase(ParameterConst.CATEGORY_CODE_PARAM_CODE)) {
+//				resetCategorySearchBean();
+//			}
 		}
 
 	}
@@ -578,6 +578,7 @@ public class PmTrackingDiaryBackingBean extends
 	public void searchTrackingDiaryByDocType(String docType){
 		log.debug("**********searchTrackingDiaryByDocType************"
 				+ docType);
+	
 		getManagedBean().setSelectedDocType(docType);
 		getManagedBean().getSearchTrackingDiaryDataModel().reloadData();
 	}
