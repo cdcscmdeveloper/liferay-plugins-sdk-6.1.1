@@ -1363,83 +1363,80 @@ public class SupportDocumentBackingBean extends
 			StatusResDTO statusResDTO) {
 
 		String docRestreMessageId = "";		
-		String[] commonMsgParam =null;
+		//String[] commonMsgParam =null;
 
 		if (pmDocument.isByAppType()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80804;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			} else {
 				docRestreMessageId = MessageConst.TD_80805;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			}
 		} else if (pmDocument.isByCompType()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80806;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			} else {
 				docRestreMessageId = MessageConst.TD_80807;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			}
 
 		} else if (pmDocument.isBySupplierType()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80808;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			} else {
 				docRestreMessageId = MessageConst.TD_80809;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			}
 
 		} else if (pmDocument.isByCategory()) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80810;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			} else {
 				docRestreMessageId = MessageConst.TD_80811;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			}
 		} else if (pmDocument.isByCertBody()) {
 			if (!documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80812;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			} else {
 				docRestreMessageId = MessageConst.TD_80813;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			}
 		} else {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80802;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			} else {
 				docRestreMessageId = MessageConst.TD_80803;
-				commonMsgParam = new String[] {pmDocument.getDocName()};
-				trackingDairyData(pmDocument, reqDTO, statusResDTO,
-						docRestreMessageId, commonMsgParam);
+				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
+						docRestreMessageId);
 			}
 		}
+	}
+
+	private void commonTrackingDiaryData(PmDocument pmDocument,
+			DocumentReqDTO reqDTO, StatusResDTO statusResDTO,
+			String docRestreMessageId) {
+		String[] commonMsgParam;
+		commonMsgParam = new String[] {pmDocument.getDocName()};
+		trackingDairyData(pmDocument, reqDTO, statusResDTO,
+				docRestreMessageId, commonMsgParam);
 	}
 
 	private void trackingDairyData(PmDocument pmDocument,
