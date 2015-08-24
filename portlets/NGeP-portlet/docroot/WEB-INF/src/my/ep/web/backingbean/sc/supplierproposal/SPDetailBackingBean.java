@@ -402,6 +402,7 @@ public class SPDetailBackingBean extends
 
 			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
 			setUserDetails(scQtProposal);
+			scQtProposal.setLastSubmitDate(new Date());
 			scQtProposal.setSubmitted(true);
 
 			scQtProposalChecklists.addAll(technicalChecklist);
