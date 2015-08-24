@@ -13381,7 +13381,7 @@ public class SpecificationBackingBean extends
 				ModuleCodeConst.SUPPLIER_SELECTION, IQTSpecSO.class);
 		ScQtCheckList checkList = this.getManagedBean().getScQtChecklist();
 		if (null != checkList.getQtChecklistId()) {
-			checkList.setDeleted(true);
+			//checkList.setDeleted(true);
 			List<ScQtCheckList> toBeRemoveCheckLists = new ArrayList<ScQtCheckList>();
 			// toBeRemoveCheckLists.add(checkList);
 			List<ScQtCheckList> technicalCheckLIsts = this.getManagedBean()
@@ -14353,6 +14353,7 @@ public class SpecificationBackingBean extends
 	public String createTemplateSpec(TplSpecMaster tplSpecMaster,
 			String flowtype) {
 		this.getManagedBean().setSpecSelectStats(false);
+		this.getManagedBean().setSpecItemWeightageRequired(false);
 		try {
 			ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
 					.getInstance().getServiceObject(
@@ -14389,7 +14390,18 @@ public class SpecificationBackingBean extends
 
 			TemplateSpecBean templateSpecBean = getManagedBean()
 					.getTemplateSpecBean();
+			List<ScQtCheckList> technicalCheckList = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+			if (null != technicalCheckList && !technicalCheckList.isEmpty()) {
+				boolean istechnicalSpec = isAtleastTechnicalSpec(technicalCheckList);
+				this.getManagedBean().setSpecItemWeightageRequired(
+						istechnicalSpec);
+				boolean weightageType = retriveExistingTemplatespec(technicalCheckList);
+				specMaster.setWeightageReq(weightageType);
 
+			} else {
+				this.getManagedBean().setSpecItemWeightageRequired(false);
+			}
 			templateSpecBean.setSpecMaster(specMaster);
 
 			this.getManagedBean().setScQtChecklist(qtCheckList);
@@ -16128,6 +16140,63 @@ public class SpecificationBackingBean extends
 
 		}
 		return selectItems;
+	}
+
+	private boolean retriveExistingTemplatespec(List<ScQtCheckList> checkList) {
+		if (null != checkList && !checkList.isEmpty()) {
+			for (ScQtCheckList specChecklist : checkList) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						ITemplateSpecSO templateSpecSO = EpEjbBusinessDelegate
+								.getInstance().getServiceObject(
+										ModuleCodeConst.COMMON_COMPONENT,
+										ITemplateSpecSO.class);
+						TemplateSpecReqDTO specReqDTO = new TemplateSpecReqDTO();
+						specReqDTO.setSpecMaster(specChecklist.getScQtDoc()
+								.getTplSpecMaster());
+						specReqDTO
+								.setContentType(TemplateSpecConst.CONTENT_TYPE_QUESTION);
+						TemplateSpecResDTO resDTO = templateSpecSO
+								.getTemplateMaster(specReqDTO);
+
+						return resDTO.getSpecMaster().isWeightageReq();
+
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if is atleast one serive req.check service spec is existing or not
+	 * in Technical checklist.
+	 * 
+	 * @param checklist
+	 *            (List<ScQtCheckList> checklist)
+	 * @return true, if is atleast one serive req
+	 */
+	private boolean isAtleastTechnicalSpec(List<ScQtCheckList> checklist) {
+		int i = 0;
+		if (null != checklist && !checklist.isEmpty()) {
+			for (ScQtCheckList specChecklist : checklist) {
+				if (QTConstants.TEMPLETE_SPEC_CODE
+						.equalsIgnoreCase(specChecklist.getDefinationType()
+								.getParameterCode())) {
+					if (null != specChecklist.getScQtDoc()) {
+						i++;
+						if (i >= 1) {
+							return true;
+						}
+
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 }
