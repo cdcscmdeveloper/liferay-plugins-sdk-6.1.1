@@ -57,7 +57,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 6 : 5}" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{isPendingVerification}" actionListener="#{lOADetailBackingBean.prepareSignerInfo()}">
+					<p:menuitem value="#{lbl['lbl.sc.approval.details']}" update="@form" disabled="#{isPendingVerification}" >
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="#{isDocTypeQuotation ? 7 : 6}" />
 					</p:menuitem>
 				</p:tabMenu>
