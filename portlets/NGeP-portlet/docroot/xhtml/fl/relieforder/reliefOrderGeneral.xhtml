@@ -58,7 +58,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}">
 		<table style="width: 100%">
 			<tr>
 				<td rowspan="3" valign="top" style="width: 138px;"><p:outputLabel
@@ -145,7 +145,82 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.fl.req.details']}" toggleable="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract == null}">
+		<table>
+			<tr>
+				<td rowspan="3" valign="top" style="width: 142px;"><p:outputLabel
+						value="#{lbl['lbl.fl.title']}" /></td>
+				<td rowspan="3"><p:inputTextarea cols="50" rows="4"
+						style=" margin-bottom:5px;"
+						value="#{reliefOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
+				<td style="width: 134px;"><p:outputLabel
+						value="#{lbl['lbl.fl.procurement.type']}" /></td>
+				<td style="width:215px;"><p:inputText size="25" 
+						value="#{reliefOrderBB.getParameterDesc(reliefOrderBB.managedBean.flRequest.procurementType)}"
+						disabled="true" /><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.procurement.type']}"/></td>
+			</tr>
+			<tr>		
+				<td><p:outputLabel value="#{lbl['lbl.fl.approved.date']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.agApprovedDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText><ac:iconTooltip value="#{lbl['lbl.fl.tooltip.approver.date']}"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.po.factored']} " /></td>
+				<td><p:selectOneRadio disabled="#{reliefOrderBB.managedBean.buttonVal!=null or reliefOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck or reliefOrderBB.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" 
+						value="#{reliefOrderBB.managedBean.factoringCheck}">
+						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
+						<p:ajax event="change" process="@this"
+							listener="#{reliefOrderBB.factoringChecked}" update="@(.factStyle)"
+							partialSubmit="true" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.procur.type.category']}" /></td>
+				<td><p:inputText size="50" disabled="true"
+						value="#{reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory ==null ? lbl['lbl.fl.supp.na'] : reliefOrderBB.getParameterDesc(reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.procurementTypeCategory)}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.period']}" /></td>
+				<td><p:inputText size="12" disabled="true" value="#{reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.deliveryTerm}" /> <p:spacer
+						width="5" /> <p:inputText size="2" value="#{reliefOrderBB.getParameterDesc(reliefOrderBB.managedBean.fulfilmentOrder.flFulfilmentRequest.pmUom)}" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.start']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{reliefOrderBB.managedBean.flRequest.startDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>	
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.delivery.end']}" /></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{reliefOrderBB.managedBean.flRequest.endDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" rendered="false"/></td>
+				<td><p:inputText size="25"
+						value="#{reliefOrderBB.managedBean.flRequest.financialYear}"
+						disabled="true" rendered="false"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.prepared.date']}" rendered="false"/></td>
+				<td><p:inputText size="25" disabled="true"
+						value="#{reliefOrderBB.managedBean.fulfilmentOrder.createdDate}" rendered="false">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract != null}">
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 136px;"><p:outputLabel
@@ -239,6 +314,101 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
 				<td><p:inputText disabled="true" size="15" value="#{reliefOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.supplierFaxNo}"
 						 /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.supp.details']}" toggleable="true" rendered="#{reliefOrderBB.managedBean.flRequest.ctContract == null}">
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 136px;"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 127px;"><p:inputText size="15"
+									disabled="true"
+									value="#{reliefOrderBB.managedBean.flRequest.smSupplier.regNo}" /></td>
+							<td><ac:iconTooltip
+									value="#{lbl['lbl.fl.tooltip.supp.buss.reg.no']}" /></td>
+							<td><p:outputLabel
+									value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
+							<td><p:inputText size="15" disabled="true"
+									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.mofNo}" />
+								<ac:iconTooltip value="#{lbl['lbl.fl.tooltip.supp.mof.no']}" /></td>
+						</tr>
+					</table></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.basic.acct.no']}" /></td>
+				<td style="width: 295px;"><p:inputText size="15"
+						disabled="true"
+						value="#{reliefOrderBB.managedBean.flRequest.smSupplier.epNo ==null ? lbl['lbl.fl.supp.na'] : reliefOrderBB.managedBean.flRequest.smSupplier.epNo}"></p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.reg.no']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{reliefOrderBB.managedBean.flRequest.gstRegNo ==null ? lbl['lbl.fl.supp.na'] : reliefOrderBB.managedBean.flRequest.gstRegNo}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ep.declared.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{reliefOrderBB.managedBean.flRequest.gstDeclaredDate ==null ? lbl['lbl.fl.supp.na'] : reliefOrderBB.managedBean.flRequest.gstDeclaredDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.gst.effective.date']}" /></td>
+				<td><p:inputText size="15" disabled="true"
+						value="#{reliefOrderBB.managedBean.flRequest.gstEffectiveDate ==null ? lbl['lbl.fl.supp.na'] : reliefOrderBB.managedBean.flRequest.gstEffectiveDate}">
+						<f:convertDateTime
+							pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
+					</p:inputText></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.supplierName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.branchName}" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td><p:inputTextarea cols="50" rows="8" disabled="true"
+						style=" margin-bottom:5px;"
+						value="#{reliefOrderBB.getFullAddress(reliefOrderBB.managedBean.flRequest.flSupplierDtl.smAddress)}" /></td>
+			</tr>
+			<tr>
+				<td style="width: 117px;"><p:outputLabel
+						value="#{lbl['lbl.fl.telno']}" /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td style="width: 25px;"><p:inputText size="16"
+									disabled="true"
+									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.phoneNo}" /></td>
+							<td style="width: 72px;"><p:outputLabel
+									value="#{lbl['lbl.fl.faxno']}" /></td>
+							<td><p:inputText size="15" disabled="true"
+									value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.faxNo}" /></td>
+						</tr>
+					</table></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.supp.contact.person']}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.contactPerson}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.fl.email']}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.contactEmail}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.mobile']}" /></td>
+				<td><p:inputText disabled="true" size="25"
+						value="#{reliefOrderBB.managedBean.flRequest.flSupplierDtl.contactPhoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>
