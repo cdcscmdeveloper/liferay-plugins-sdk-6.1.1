@@ -196,7 +196,8 @@
 	</p:panel> 
 </p:panel>
 
-<p:panel header="#{lbl['lbl.sc.committee.endorsement']}" toggleable="true">
+<p:panel header="#{lbl['lbl.sc.committee.endorsement']}" toggleable="true" 
+		 rendered="#{lOIDetailBackingBean.managedBean.committeeType ne null}">
 	<p:panel header="#{lOIDetailBackingBean.getParameterDesc(
 				lOIDetailBackingBean.managedBean.scQtFinalization.scQt.finalizationCommitte)}" toggleable="false"
 				rendered="#{lOIDetailBackingBean.managedBean.scQtCommittee ne null}">
@@ -221,27 +222,16 @@
 			<p:column headerText="#{lbl['lbl.sc.email']}">
 				#{committeeDtl.scCommitteeMember.email}
 			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.sc.grade']}">
-				#{committeeDtl.scCommitteeMember.grade}
-			</p:column>
-			
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.sc.pnp']}" />
-					<ac:iconTooltip value="#{lbl['lbl.sc.pnp.tooltip']}" />
-				</f:facet>
-				#{lOIDetailBackingBean.getParameterDesc(ParameterTypeConst.yesNoFlag, 
-										fn:toUpperCase(committeeDtl.scCommitteeMember.PNP))}				
-			</p:column>
 						
 			<p:column headerText="#{lbl['lbl.sc.role']}">
-				#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.memberRole)}
+				#{lOIDetailBackingBean.getParameterDesc(
+							committeeDtl.scCommitteeMember.memberRole)}
 			</p:column>
-						
-			<p:column headerText="#{lbl['lbl.sc.representative.type']}" style="width:6%; white-space: normal;">
-				#{lOIDetailBackingBean.getParameterDesc(committeeDtl.scCommitteeMember.representativeType)}
-			</p:column>
+					
+			<p:column headerText="#{lbl['lbl.sc.status']}" style="width:20%">
+				<h:outputText value="#{lbl['lbl.sc.pending']}" rendered="#{!committeeDtl.multiLoiSignedOff}" />
+				<h:outputText value="#{lbl['lbl.sc.endorse']}" rendered="#{committeeDtl.multiLoiSignedOff}" />
+			</p:column>						
 			
 		</p:dataTable>
 	</p:panel>
