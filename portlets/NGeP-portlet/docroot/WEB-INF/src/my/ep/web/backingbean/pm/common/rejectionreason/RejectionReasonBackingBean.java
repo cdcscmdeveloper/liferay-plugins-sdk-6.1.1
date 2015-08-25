@@ -248,7 +248,7 @@ public class RejectionReasonBackingBean extends BaseBackingBean<RejectionReasonM
 			List <PmSupplierReason> comTypeRestrictions = new ArrayList<PmSupplierReason>();
 			List <PmSupplierReason> suppTypeRestrictions = new ArrayList<PmSupplierReason>();
 			for(PmSupplierReason pmSuppReason:pmReason.getPmSupplierReasons()){
-				if(pmSuppReason.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE)){
+				if(pmSuppReason.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_ACTIVE){
 					if(pmSuppReason.getRestrType()!=null){
 						if(ParameterTypeConst.SUPPLIER_APPLICATION_TYPES.equals(pmSuppReason.getRestrType().getPmParameterType().getParameterType())){
 							appTypeRestrictions.add(pmSuppReason);
