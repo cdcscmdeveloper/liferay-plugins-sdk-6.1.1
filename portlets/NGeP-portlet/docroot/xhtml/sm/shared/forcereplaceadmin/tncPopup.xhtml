@@ -22,7 +22,8 @@
 			<p:commandButton value="#{lbl['lbl.sm.declare']}" id="btnYes" onclick="tncDialog.hide();" 
 				action="#{forceReplaceSuppAdminBackingBean.replaceWithExistingUser}"
 				onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
-			<p:commandButton value="#{lbl['lbl.btn.cancel']}" action="#{forceReplaceSuppAdminBackingBean.cancelTncPopup}"  />
+			<p:commandButton value="#{lbl['lbl.btn.cancel']}" action="#{forceReplaceSuppAdminBackingBean.cancelTncPopup}"  
+				update="@form" process="@this"/>
 		</div>
 	</p:dialog>
 
