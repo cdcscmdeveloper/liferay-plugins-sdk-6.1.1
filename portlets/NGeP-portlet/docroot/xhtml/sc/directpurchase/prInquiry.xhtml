@@ -8,7 +8,7 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.inquiry.detail']}" toggleable="true" id="addToCartId">
 		<table>
 			<tr>
-				<td style="width: 19%;"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
+				<td style="width: 21%;"><p:outputLabel value="#{lbl['lbl.sc.direct.purchase.title']}" /> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td><p:inputText size="46" id="title" required="true"
 						maxlength="100" label="#{lbl['lbl.sc.direct.purchase.title']}" disabled="#{!isPendingSubmissionStatus}"
@@ -148,7 +148,7 @@
 			    
 					<table style="width: 100%">
 					  <tr>
-						 <td style="width: 18%">
+						 <td style="width: 20%">
 						     <p:outputLabel value="#{lbl['lbl.sc.procurement.type']}" />  
 						     <p:outputLabel value="*" styleClass="mandatory" /></td>
 						 <td>
@@ -212,7 +212,7 @@
 	<p:panel header="#{lbl['lbl.sc.price.inquiry.header.response.detail']}" toggleable="true">
 		 <table style="width: 100%">
 			<tr>
-				<td style="width: 17%;">
+				<td style="width: 18%;">
 					<p:outputLabel value="#{lbl['lbl.sc.price.inquiry.stock.avail']}" />
 					<p:outputLabel value="*" styleClass="mandatory"  rendered="#{isPendingSupplierRespStatus}"/>
 				</td>
