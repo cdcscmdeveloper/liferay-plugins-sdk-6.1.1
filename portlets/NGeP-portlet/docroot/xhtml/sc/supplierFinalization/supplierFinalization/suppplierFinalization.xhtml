@@ -48,7 +48,7 @@
 								<f:selectItems value="#{suppFinalizationBackingBean.getDecisionDropDown()}" />
 								<p:ajax event="change" 
 									update="@([id$=recommendSupplierPanel],[id$=reEvaluatePanel],
-												[id$=rePublishPanel],[id$=itemSupplierPanel])" 
+												[id$=rePublishPanel],[id$=itemSupplierPanel],[id$=onlineBiddingPanel])" 
 									listener="#{suppFinalizationBackingBean.decisionEvent}" process="@this" />
 				   			</p:selectOneMenu>
 						</td>
@@ -134,7 +134,8 @@
 							<f:selectItem itemLabel="#{lbl['lbl.txt.select']}"
 								itemValue="#{null}" />
 							<f:selectItems var="usersSecretary"
-								value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterCode)}"
+								value="#{suppFinalizationBackingBean.retrieveCommitteeSecretary(
+											suppFinalizationBackingBean.managedBean.scQtFinalization.higherCommitte.parameterCode)}"
 								itemLabel="#{usersSecretary.userName}"
 								itemValue="#{usersSecretary.userId}" />
 						</p:selectOneMenu>
@@ -189,8 +190,7 @@
 								<td>
 									<p:selectOneRadio id="biddingEndorsement" required="true" label="#{lbl['lbl.sc.online.bidding.endorsement']}"
 										value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.onlineBiddingEndorse}" 
-										disabled="#{!(suppFinalizationBackingBean.managedBean.secretaryUser or 
-														suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK) or 
+										disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser or 
 															!suppFinalizationBackingBean.managedBean.onlineBidding}">
 										<f:selectItems value="#{suppFinalizationBackingBean.getBiddingEndorsementRadioBtn()}" />
 										<p:ajax partialSubmit="true" process="@this" update="@this"/>
@@ -217,7 +217,8 @@
 						<div style="float:left; display:inline-block;">
 							<p:selectBooleanCheckbox id="reEvaluateReqForTech" 
 									value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateTechReq}" 
-									disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>		
+									disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+													suppFinalizationBackingBean.managedBean.secretaryUser)}"/>		
 							<p:outputLabel value="#{lbl['lbl.sc.technical']}" />
 						</div>
 					</h:column>
@@ -228,7 +229,8 @@
 						<div style="float:left; display:inline-block;">
 							<p:selectBooleanCheckbox id="reEvaluateReqForFin" 
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateFinReq}" 
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>	
+								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+													suppFinalizationBackingBean.managedBean.secretaryUser)}"/>	
 							<p:outputLabel value="#{lbl['lbl.sc.financial']}" />
 						</div>									
 					</h:column>
@@ -243,7 +245,8 @@
 						<td>
 							<p:selectOneRadio id="reEvaluateBy" required="true" label="#{lbl['lbl.sc.reevaluate.by']}"
 								value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.reEvaluateCommitte}" 
-								disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}">
+								disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+													suppFinalizationBackingBean.managedBean.secretaryUser)}">
 								<f:selectItems value="#{suppFinalizationBackingBean.getReEvaluateByRadioBtn()}" />
 				   			</p:selectOneRadio>
 						</td>
@@ -269,7 +272,8 @@
 		   			<div class="checkbox">
 						<p:selectBooleanCheckbox id="reqSpecChanges" 
 							value="#{suppFinalizationBackingBean.managedBean.scQtFinalization.specChangeReq}" 
-							disabled="#{!suppFinalizationBackingBean.managedBean.secretaryUser}"/>
+							disabled="#{!(suppFinalizationBackingBean.managedBean.initialDecisionFwdToBPK or 
+													suppFinalizationBackingBean.managedBean.secretaryUser)}"/>
 					</div>
 					<ac:iconTooltip value="#{lbl['lbl.sc.required.specification.changes.tooltip']}" />
 				</h:column>
