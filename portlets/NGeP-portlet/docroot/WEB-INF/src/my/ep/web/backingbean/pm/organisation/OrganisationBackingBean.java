@@ -476,6 +476,7 @@ public class OrganisationBackingBean extends
 		this.getManagedBean().setSmPersonnels(new ArrayList<SmPersonnel>());
 		this.getManagedBean().setSelectedTabIndex(PROFILE_DETAIL);
 		retrieveSupplierUserList(id);
+		getManagedBean().setGstSupplier(new SmGstSupplier());
 
 		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		reqDTO.setOrgProfileId(id);
@@ -830,12 +831,21 @@ public class OrganisationBackingBean extends
 					reqDTO.setSupplierUsers(getManagedBean()
 							.getSupplierUsers());
 					reqDTO.setSupplierBanks(getManagedBean().getSmSupplierBanks());
-					reqDTO.setSmPersonnels(getManagedBean().getSmPersonnels());					
+					reqDTO.setSmPersonnels(getManagedBean().getSmPersonnels());
+					SmGstSupplier gstSupplier = getManagedBean().getGstSupplier();
+					if(StringUtils.isNotBlank(gstSupplier.getGstRegNo())){
+						reqDTO.setGstSupplier(gstSupplier);
+					}else{
+						if(!gstSupplier.isBrandNew()){
+							reqDTO.setGstSupplier(gstSupplier);
+						}
+					}
+					
 					
 				} else {
 					log.info("Deactvate Supplier=======");
 					reqDTO.setSupplierBanks(getManagedBean().getSmSupplierBanks());
-					reqDTO.setSmPersonnels(getManagedBean().getSmPersonnels());
+					reqDTO.setSmPersonnels(getManagedBean().getSmPersonnels());				
 				}
 			}
 			// PTJ
@@ -2028,56 +2038,25 @@ public class OrganisationBackingBean extends
 	}
 	
 	private void validateGstDetails(){
-		IOrgProfileSO orgProfileSO = null;
-		try {
-			PmOrgProfile orgProfile = this.getManagedBean().getOrgProfile();
-			if(StringUtils.isNotBlank(orgProfile.getGstRegNo())){
-				//validate gst eff date
-				if(orgProfile.getGstEffDate() == null){
-					throw new EpException(MessageConst.ERROR_775118);
-				}
-				
-				//validate end date
-				if(orgProfile.getGstEndDate() != null && orgProfile.getGstEndDate().before(orgProfile.getGstEffDate())){
-					throw new EpException(MessageConst.ERROR_775119);
-				}
-				
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				if(!orgProfile.isBrandNew()){
-					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-				}
-				reqDTO.setGstRegNo(orgProfile.getGstRegNo());
-				orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance()
-					.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT,
-							IOrgProfileSO.class);
-				// validate unique gst registration no.
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByGstRegNo(reqDTO);
-				if(resDTO.isSuccessful() && resDTO.getOrgProfileList() !=null 
-						&&!resDTO.getOrgProfileList().isEmpty()){
-							throw new EpException(MessageConst.ERROR_775117);
-			    }
-				
-				//check if GST Details has been changed - set ep declare date
-				if(!orgProfile.isBrandNew()){
-					reqDTO = new OrgProfileReqDTO();
-					reqDTO.setOrgProfileId(orgProfile.getOrgProfileId());
-					
-					resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
-					if(resDTO.isSuccessful() && resDTO.getPmOrgProfile() !=null ){
-						PmOrgProfile oriOrgProfile = resDTO.getPmOrgProfile();
-						if(!oriOrgProfile.getGstRegNo().equals(orgProfile.getGstRegNo()) 
-								|| !oriOrgProfile.getGstEffDate().equals(orgProfile.getGstEffDate())){
-							orgProfile.setGstDeclaredDate(new Date());
-						}
-				
-				    }
-				}else{
-					orgProfile.setGstDeclaredDate(new Date());
-				}				
-			}
+		SmGstSupplier gstSupplier = getManagedBean().getGstSupplier();
+		if(StringUtils.isNotBlank(gstSupplier.getGstRegNo())){
+			String pattern = "\\d{12}";
+		    if(!gstSupplier.getGstRegNo().matches(pattern)){
+		    	throw new EpException(ResourceBundleUtils.getMessage(
+		    			"lbl.pm.org.gst.invalid.gst", null,
+						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
+						new FacesScopes().getUserLocale()));
+		    }
 			
-		}finally{
-			orgProfileSO = null;
+			//validate gst eff date
+			if(gstSupplier.getGstEffDate() == null){
+				throw new EpException(MessageConst.ERROR_775118);
+			}
+				
+			//validate end date
+			if(gstSupplier.getGstEndDate() != null && gstSupplier.getGstEndDate().before(gstSupplier.getGstEffDate())){
+				throw new EpException(MessageConst.ERROR_775119);
+			}								
 		}
 	}
 
