@@ -278,6 +278,8 @@ public class ReportConst {
 	public static final String FL_NGEP_PAYMENT_MATCH = "FL_NGEP_PAYMENT_MATCH.jsp";
 	public static final String FL_NGEP_CREDIT_NOTE = "FL_NGEP_CREDIT_NOTE.jsp";
 	public static final String FL_NGEP_DEBIT_NOTE = "FL_NGEP_DEBIT_NOTE.jsp";
+	public static final String FL_NGEP_COGSTR = "FL_NGEP_COGSTR.jsp";
+	
 	//FL Module reports end
 	//SM Module report start
 		/*public static final String SM_LST_OF_APP_RPT_NAME = "lbl.rpt.sm.SM_LST_OF_APP_RPT_NAME";
@@ -748,6 +750,7 @@ public class ReportConst {
 	public static final String PARAM_USER_ID = "PUSER";
 	public static final String PARAM_QUOTE_ID_EQ = "qtid";
 	public static final String PARAM_KEY_REPORT_ID = "preportid";
+	public static final String PARAM_RELIEF_ORDER_DOC_NO = "PRELIEFORDERNO";
 	
 	// Report parameter key for s1 market research report
 	public static final String PARAM_BIZ_REG_NO = "PBIZREGNO";
