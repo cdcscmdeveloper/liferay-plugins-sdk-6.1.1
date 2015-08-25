@@ -206,7 +206,7 @@ public class DirectLOABackingBean extends
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 
 			parseLOADetails(scLoa, BpmOutcomeConst.BPM_SAVE);
-			// validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
+			validateLOADetails(scLoa, BpmOutcomeConst.BPM_DRAFT);
 			DirectAwardReqDTO reqDTO = new DirectAwardReqDTO();
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setScLoa(scLoa);
@@ -1393,7 +1393,9 @@ public class DirectLOABackingBean extends
 		ScLoa scLoa = getManagedBean().getScLoa();
 		Date contractEffDate = scLoa.getContractEffDate();
 		BigDecimal contractDuration = scLoa.getContractDuration();
-
+		if (null == contractDuration) {
+			throw new EpException(MessageConst.ERROR_760344);
+		}
 		Calendar contractExpDate = Calendar.getInstance();
 		contractExpDate.setTime(contractEffDate);
 		contractExpDate.add(Calendar.MONTH, contractDuration.intValue());
@@ -3282,6 +3284,7 @@ public class DirectLOABackingBean extends
 		} else {
 			throw new EpException("Please select At least one Zone Location");
 		}
+
 		this.getManagedBean().setZoneLocation(false);
 		getManagedBean().setZoneName(null);
 		getManagedBean().setTempZoneName(null);
@@ -3574,29 +3577,21 @@ public class DirectLOABackingBean extends
 
 			supplierCriteria.setScQtLocCriteria(null);
 
+			this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
+					.setTplSpecZone(zoneCriteria);
+			this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
+					.setTplSpecZone(zoneCriteria);
 		} else {
-
+			supplierCriteria.setQtZoneCriterias(null);
 			this.getManagedBean().setZoneTrees(null);
 			this.getManagedBean().setZoneBeans(new ArrayList<ZonesBean>());
 
 		}
 		scQt.setScQtSupplierCriteria(supplierCriteria);
+
 		this.getManagedBean().setScQt(scQt);
 
 	}
-
-	/*
-	 * public void getLoaReports() { ScLoa scLoa =
-	 * this.getManagedBean().getScLoa(); if
-	 * (CollectionUtils.isEmpty(scLoa.getScLoaReports())) { IQTAwardSO awardSO =
-	 * BusinessDelegate.getInstance()
-	 * .getServiceObject(ModuleCodeConst.SUPPLIER_SELECTION, IQTAwardSO.class);
-	 * 
-	 * AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
-	 * AwardSupplierResDTO awardSupplierResDTO = awardSO
-	 * .getAwardReports(awardSupplierReqDTO); this.getManagedBean().getScLoa()
-	 * .setScLoaReports(awardSupplierResDTO.getLoaReports()); } }
-	 */
 
 	public void getApprovalUsers() {
 		if (CollectionUtils.isEmpty(this.getManagedBean().getApproverList())) {
@@ -4237,12 +4232,10 @@ public class DirectLOABackingBean extends
 				.getTplSpecMaster());
 
 		this.getManagedBean().setProdTemplateSpecBean(bean);
-
+		bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier());
 		if (!this.getManagedBean().getProdscQtDoc().getTplSpecMaster()
 				.isBrandNew()) {
-
-			bean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
-					.getSmSupplier());
 
 			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 			backingBean.retrieveTemplateSpecMaster(bean);
@@ -4260,13 +4253,12 @@ public class DirectLOABackingBean extends
 		serviceBean.setSpecMaster(this.getManagedBean().getServicescQtDoc()
 				.getTplSpecMaster());
 
+		serviceBean.setSupplier(this.getManagedBean().getScLoa().getScLoiLoa()
+				.getSmSupplier());
 		this.getManagedBean().setSpecTemplateSpecBean(serviceBean);
 
 		if (!this.getManagedBean().getServicescQtDoc().getTplSpecMaster()
 				.isBrandNew()) {
-
-			serviceBean.setSupplier(this.getManagedBean().getScLoa()
-					.getScLoiLoa().getSmSupplier());
 
 			TemplateSpecBackingBean backingBean = new TemplateSpecBackingBean();
 			backingBean.retrieveTemplateSpecMaster(serviceBean);
@@ -4285,8 +4277,10 @@ public class DirectLOABackingBean extends
 		this.getManagedBean().setScLoa(scLoa);
 		this.getManagedBean().setContractSignerList(
 				awardResDTO.getApproverList());
-		this.getManagedBean().setSupplierHQPersonnel(awardResDTO.getSupplierHQPersonnel());
-		this.getManagedBean().setBranchsList(awardResDTO.getSmSupplierBranchs());
+		this.getManagedBean().setSupplierHQPersonnel(
+				awardResDTO.getSupplierHQPersonnel());
+		this.getManagedBean()
+				.setBranchsList(awardResDTO.getSmSupplierBranchs());
 
 	}
 
@@ -6193,5 +6187,11 @@ public class DirectLOABackingBean extends
 			}
 		}
 		return isPerformanceBondMandatory;
+	}
+
+	public void resetContractDates() {
+		this.getManagedBean().getScLoa().setContractEffDate(null);
+		this.getManagedBean().getScLoa().setContractExpDate(null);
+
 	}
 }
