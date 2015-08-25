@@ -210,7 +210,7 @@ public class Encryption {
 		// upload the encripted file to sftp server
 
 		reqDTO.setLocatFilePath(reqDTO.getEncryptFilePath() + reqDTO.getFileName());
-		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR);
+		reqDTO.setRemoteFilePath(IntegrationConstants.PHIS_UPLOAD_DIR + reqDTO.getFileName());
 		reqDTO.setTargetSystem(IntegrationConstants.TARGET_SYSTEM_PHIS);
 		reqDTO.setBatchDirection(IntegrationConstants.BATCH_DIRECTION_OUTBOUND);
 		sftpUtility.upload(reqDTO);
