@@ -2354,9 +2354,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 				gst = SmServiceLookup.getSupplierGstSO()
 						.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
 						.getSmGstSupplier();
-				if (gst != null) {
-					gst = new SmGstSupplier();
-				}
 			} else {
 				gstReqDTO.setSupplierId(getManagedBean().getSmAppl()
 						.getSmSupplier().getSupplierId());
@@ -2369,9 +2366,6 @@ public abstract class BaseReviewApplicationBackingBean<T extends BaseReviewAppli
 			gst = SmServiceLookup.getSupplierGstSO()
 					.retrieveGstInfoByApplNoAndBranchCode(gstReqDTO)
 					.getSmGstSupplier();
-			if (gst != null && gst.getGstDeclaredDate() != null) {
-				gst = new SmGstSupplier();
-			}
 		}
 		if (gst == null) {
 			gst = new SmGstSupplier();
