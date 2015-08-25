@@ -756,7 +756,7 @@ public class ReportBackingBean extends
 
 	private String userId;	
 	private Long lngUserId = new FacesScopes().getUserSessionBean().getUserId();
-	//private Long lngUserId = (long)219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
+	//private Long lngUserId = (long)61745;//219490;//240790;//183931;//20854;//243371;//20854;//168887;//221747;//219490;//243394;//243371;//243371;//219490;//148500;//103852;//46;//61745;//41747;//220152;//229703;//25;//45;//62114;//235459;
 	private String roleCode;
 	private Date fromDate;
 	private Date toDate;
@@ -2968,9 +2968,9 @@ public class ReportBackingBean extends
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	if (null != this.getCtUserType()) {
         		String userTypeRoleCode = null;
-        		if (this.getCtUserType().equals(ReportConst.MINISTRY_CONTRACT_ADMIN)) {
+        		if (this.getCtUserType().equalsIgnoreCase(ReportConst.MINISTRY_CONTRACT_ADMIN)) {
         			userTypeRoleCode=ReportConst.MIN_CONTRACT_ADMIN;
-        		}else if(this.getCtUserType().equals(ReportConst.APPROVER_LBL)) {
+        		}else if(this.getCtUserType().equalsIgnoreCase(ReportConst.APPROVER_LBL)) {
         			userTypeRoleCode=ReportConst.ROLE_CODE_CT_APPROVER;
         		}
         		if (null != userTypeRoleCode) {

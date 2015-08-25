@@ -833,7 +833,7 @@ public class ReportConst {
 	public static final String DOC_TYPE_DN="DN";
 	public static final String DOC_TYPE_PO="PO";
 	public static final String DOC_TYPE_PR="PR";
-	public static final String MINISTRY_CONTRACT_ADMIN="Minsitry Contract Admin";
+	public static final String MINISTRY_CONTRACT_ADMIN="Ministry Contract Admin";
 	public static final String MIN_CONTRACT_ADMIN="MIN_CONTRACT_ADMIN";
 	public static final String APPROVER_LBL="Approver";
 	public static final String PARAM_CODE_TYPE_FPJ="FPJ";
