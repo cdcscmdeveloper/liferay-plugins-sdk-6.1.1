@@ -169,13 +169,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel styleClass="highlight-mark" value="#{lbl['lbl.fl.po.factored']} " /></td>
-				<td><p:selectOneRadio disabled="#{reliefOrderBB.managedBean.buttonVal!=null or reliefOrderBB.managedBean.fulfilmentOrder.status.statusId eq FulfilmentStatusCont.poPendingRejAck or reliefOrderBB.managedBean.flRequest.procurementType.parameterCode eq ParameterConst.procurementTypeG2G}" 
+				<td><p:selectOneRadio disabled="true" 
 						value="#{reliefOrderBB.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="#{lbl['lbl.btn.yes']}" itemValue="true" />
 						<f:selectItem itemLabel="#{lbl['lbl.btn.no']}" itemValue="false" />
-						<p:ajax event="change" process="@this"
-							listener="#{reliefOrderBB.factoringChecked}" update="@(.factStyle)"
-							partialSubmit="true" />
 					</p:selectOneRadio></td>
 			</tr>
 			<tr>

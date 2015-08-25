@@ -118,7 +118,7 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			fulfilmentReqDTO.setFlOrderId(flOrd.getOrderId());
 			FulfilmentResDTO rsResDto = reliwfOrderSo.retrieveReliefOrderByOrderId(fulfilmentReqDTO);
 			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
-			FulfilmentResDTO coResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(fulfilmentReqDTO);
+			FulfilmentResDTO orderResDTO=fulfilmentOrderSO.retrieveFulfilmentOrderById(fulfilmentReqDTO);
 			String[] outcome = new String[res.getAction().length + 1];
 			outcome[0] = BpmOutcomeConst.BPM_SAVE;
 			int i = 1;
@@ -128,8 +128,13 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(outcome);
 			getManagedBean().setSelectedTabIndex(0);
-			getManagedBean().setFlRequest(coResDTO.getFlOrder().getFlFulfilmentRequest());
-			getManagedBean().setFulfilmentOrder(coResDTO.getFlOrder());
+			getManagedBean().setFlRequest(orderResDTO.getFlOrder().getFlFulfilmentRequest());
+			getManagedBean().setFulfilmentOrder(orderResDTO.getFlOrder());
+			if(orderResDTO.getFlOrder().isFactored()) {
+				getManagedBean().setFactoringCheck("true");
+			} else {
+				getManagedBean().setFactoringCheck("false");
+			}
 			getManagedBean().setFlReliefOrder(rsResDto.getReliefOrder());
 			getManagedBean().setNonReliefItems(new ArrayList<FlReliefOrderItem>());
 			getManagedBean().setReliefItems(new ArrayList<FlReliefOrderItem>());
@@ -147,11 +152,11 @@ public class ReliefOrderBackingBean extends BaseBackingBean<ReliefOrderManagedBe
 			ContractSupplierReqDTO contractSupplierReqDTO = new ContractSupplierReqDTO();
 			if(getManagedBean().getFlRequest().getCtContract() != null){
 				if(getManagedBean().getFlRequest().getCtContract().isFactored()){
-					Long supplieContractId=coResDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().getContractId();
+					Long supplieContractId=orderResDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().getContractId();
 					contractSupplierReqDTO.setContractId(supplieContractId);
 					ContractSupplierResDTO contractSupplierResDTO = contractSupplierSO.retrieveFactoringByContract(contractSupplierReqDTO);
 					if(contractSupplierResDTO.getFactoring() != null){
-						coResDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
+						orderResDTO.getFlOrder().getFlFulfilmentRequest().getCtContract().setCtFactoring(contractSupplierResDTO.getFactoring());
 						if(contractSupplierResDTO.getFactoring().getFinancialOrg() != null){
 							contractSupplierResDTO.getFactoring().getFinancialOrg().getFinOrgName();
 							getCrSelectedFactoringCompDtl(contractSupplierResDTO.getFactoring().getFinancialOrg().getFinancialOrgId());
