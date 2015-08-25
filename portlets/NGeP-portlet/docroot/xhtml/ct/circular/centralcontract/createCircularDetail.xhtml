@@ -18,7 +18,7 @@
 						
 					 <h:outputLabel value="#{lbl['lbl.ct.circular.name']}"   styleClass="required"/>
 				    <h:panelGrid columns="2">
-				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:250px;" maxlength="200" required="true" 
+				       <p:inputTextarea id="circularNameTxt" rows="4" style="width:250px;" maxlength="500" required="true" 
 						   disabled="#{centralContractBackingBean.managedBean.viewContract}" autoResize="false"
 						   label="#{lbl['lbl.ct.circular.name']}" value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 				         	<p:message for="circularNameTxt" display="icon" />
