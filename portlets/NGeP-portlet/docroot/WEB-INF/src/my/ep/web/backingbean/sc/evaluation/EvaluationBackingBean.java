@@ -7132,6 +7132,7 @@ public class EvaluationBackingBean extends
 						.getQtProposalChecklist(), getManagedBean()
 						.getCheckListType());
 				checkDemoStatusForQtCheckList();
+				evaluationTechnicalChangeScQtStatusUpdate();
 			} else {
 				getManagedBean().setFinancialSummaryGenerated(false);
 				financialSupplierEvaluate(getManagedBean()
@@ -7530,6 +7531,7 @@ public class EvaluationBackingBean extends
 				getManagedBean().setPresentationDemoSummaryGenerated(false);
 				updateSummaryGeneratedStatus();
 				checkDemoStatusForQtCheckList();
+				evaluationTechnicalChangeScQtStatusUpdate();
 			}
 			if (QTConstants.FINANCIAL_SPEC_TYPE
 					.equalsIgnoreCase(getManagedBean().getCheckListType())) {
@@ -9850,6 +9852,7 @@ public class EvaluationBackingBean extends
 					getManagedBean().setTechnicalSummaryGenerated(false);
 					getManagedBean().setPresentationDemoSummaryGenerated(false);
 					checkDemoStatusForQtCheckList();
+					evaluationTechnicalChangeScQtStatusUpdate();
 				} else {
 					EvaluationReqDTO finreqDTO = new EvaluationReqDTO();
 
@@ -10857,7 +10860,8 @@ public class EvaluationBackingBean extends
 								.getCommitteeType())
 				&& this.getManagedBean().getScQt().isDemoRequired()
 				&& null != getManagedBean().getScQt()
-						.getDemoNotificationCheck()) {
+						.getDemoNotificationCheck()
+						&& !this.getManagedBean().isReadOnly()) {
 			if (null != getManagedBean().getScQt().getDemoNotificationCheck()
 					&& 1 == getManagedBean().getScQt()
 							.getDemoNotificationCheck()) {
@@ -10887,9 +10891,50 @@ public class EvaluationBackingBean extends
 					EvaluationReqDTO checkListreqDTO = new EvaluationReqDTO();
 					checkListreqDTO.setQtId(this.getManagedBean().getScQt()
 							.getQtId());
+					checkListreqDTO.setStatusUpdateChecklistType(null);
 					evaluationSo.retriveAllChecklist(checkListreqDTO);
 					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 					this.getManagedBean().getScQt().setTecEvaluationCheck(null);
+					this.getManagedBean().getScQt().setFecEvaluationCheck(null);
+					reqDTO.setScQt(this.getManagedBean().getScQt());
+					evalResDTO = evaluationSo.saveReportDtls(reqDTO);
+					this.getManagedBean().setScQt(evalResDTO.getScQt());
+
+				}
+
+			}
+		} finally {
+
+		}
+
+	}
+
+	private void evaluationTechnicalChangeScQtStatusUpdate() {
+		IQTEvaluationSO evaluationSo = null;
+		EvaluationResDTO evalResDTO = new EvaluationResDTO();
+		try {
+			if (QTConstants.EVALUATION_ONE_TIER.equalsIgnoreCase(this
+					.getManagedBean().getScQt().getEvaluationType())
+					&& ParameterConst.COMMITTEE_TYPE_EVALUATION_COMMITTEE
+							.equalsIgnoreCase(this.getManagedBean()
+									.getCommitteeType())
+					&& this.getManagedBean().getScQt().isTechEvaluationReq()
+					&& null != this.getManagedBean().getScQt()
+							.getFecEvaluationCheck()
+							&& !this.getManagedBean().isReadOnly()) {
+				if (null != this.getManagedBean().getScQt()
+						.getFecEvaluationCheck()) {
+					evaluationSo = BusinessDelegate.getInstance()
+							.getServiceObject(
+									ModuleCodeConst.SUPPLIER_SELECTION,
+									IQTEvaluationSO.class);
+					EvaluationReqDTO checkListreqDTO = new EvaluationReqDTO();
+					checkListreqDTO.setQtId(this.getManagedBean().getScQt()
+							.getQtId());
+					checkListreqDTO
+							.setStatusUpdateChecklistType(SourcingConstants.FINANCIAL_DOCTYPE);
+					evaluationSo.retriveAllChecklist(checkListreqDTO);
+					EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 					this.getManagedBean().getScQt().setFecEvaluationCheck(null);
 					reqDTO.setScQt(this.getManagedBean().getScQt());
 					evalResDTO = evaluationSo.saveReportDtls(reqDTO);
