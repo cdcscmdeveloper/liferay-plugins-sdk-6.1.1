@@ -582,8 +582,16 @@ public class LOIDetailBackingBean extends
 						resDTO.getFecActivityList());
 				getManagedBean().setScQtCommittee(scQtCommittee);
 				if (scQtCommittee != null) {
-					getManagedBean().setFcActivityList(
-							scQtCommittee.getCommitteeActivities());
+					List<ScQtCommitteeActivity> fcActivityList
+								= new ArrayList<ScQtCommitteeActivity>();
+					for (ScQtCommitteeActivity commActivity 
+											: fcActivityList) {
+						if (commActivity.isAttended()) {
+							fcActivityList.add(commActivity);
+						}
+					}
+					getManagedBean().setFcActivityList(fcActivityList);
+					
 					scQtCommittee.setQtCommitteRemarks(initializeRemarks(
 							scQtCommittee, scQtFinalization.getCurrentStatus(),
 							scQtCommittee.getQtCommitteRemarks(),
@@ -2373,8 +2381,8 @@ public class LOIDetailBackingBean extends
 	 */
 	public void saveMultipleLoiAction() {
 		debugLogger("saveMultipleLoiAction");
+		
 		try {
-
 			ScQtFinalization scQtFinalization = getManagedBean()
 					.getScQtFinalization();
 
@@ -2409,10 +2417,14 @@ public class LOIDetailBackingBean extends
 	public void updateMultiLoiBpmTaskAction(String outcome) {
 		debugLogger("updateMultiLoiBpmTaskAction");
 		this.getManagedBean().setAction(outcome);
-		String roleCode = getRoleCode();
-		if (SourcingConstants.MEMBER_ROLE_CHAIRPERSON.equalsIgnoreCase(roleCode)) {
+		String committeeType = getManagedBean().getCommitteeType();
+		
+		if (StringUtils.isNotBlank(committeeType) && 
+				isDigiSigningRequired(committeeType + QTConstants.CHAIRPERSON,
+						this.getManagedBean().getFcActivityList())) {
 			RequestContext.getCurrentInstance().execute("gpki_dlg.show()");
 		} else {
+			signOff();
 			updateMultiLoiBpmTask(outcome, null);
 		}
 	}
@@ -2438,6 +2450,7 @@ public class LOIDetailBackingBean extends
 			reqDTO.setSourceId(getManagedBean().getSourceId());
 			reqDTO.setOutcome(outcome);
 			if (null != digiSign) {
+				signOff();
 				updatePmDigiSignData(digiSign,
 						ParameterConst.DOCTYPE_MULTIPLE_LOI, scQtFinalization
 								.getScQt().getQtId(), scQtFinalization
@@ -2475,6 +2488,23 @@ public class LOIDetailBackingBean extends
 
 		} finally {
 			// qtAwardSO = null;
+		}
+	}
+	
+	/**
+	 * Action performed when committee members endorsed the Supplier
+	 */
+	public void signOff() {
+		if (StringUtils.isNotBlank(
+				getManagedBean().getCommitteeType())) {
+			for (ScQtCommitteeActivity scQtCommitteeActivity 
+								: getManagedBean().getFcActivityList()) {
+				if (scQtCommitteeActivity.getScCommitteeMember().getPmUser().getUserId()
+						.equals(getFacesScopes().getUserSessionBean().getUserId())) {
+					scQtCommitteeActivity.setMultiLoiSignedOff(true);
+					break;
+				}
+			}
 		}
 	}
 
@@ -2569,10 +2599,11 @@ public class LOIDetailBackingBean extends
 //		}
 
 		ScQtCommittee scQtCommittee = getManagedBean().getScQtCommittee();
-		scQtCommittee.setQtCommitteRemarks(finalizeRemarks(scQtCommittee
-				.getQtCommitteRemarks()));
-		reqDTO.setScQtCommittee(scQtCommittee);
-
+		if (scQtCommittee != null) {
+			scQtCommittee.setQtCommitteRemarks(finalizeRemarks(scQtCommittee
+					.getQtCommitteRemarks()));
+			reqDTO.setScQtCommittee(scQtCommittee);
+		}
 		reqDTO.setScQtRecommendList(getManagedBean().getRecommendList());
 		reqDTO.setItemized(this.getManagedBean().isItemized());
 		reqDTO.setDeletedMeetingAttendanceList(
