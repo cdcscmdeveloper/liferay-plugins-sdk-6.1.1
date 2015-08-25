@@ -142,12 +142,9 @@
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 				<td><p:inputText id="gstRegNoId" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
-						value="#{organisationBackingBean.managedBean.orgProfile.gstRegNo}"
+						value="#{organisationBackingBean.managedBean.gstSupplier.gstRegNo}"
 						size="50" styleClass="ppDisplayTextL"
-						maxlength="12" 
-						validatorMessage="#{lbl['lbl.pm.org.gst.invalid.gst']}">
-						<f:validateRegex pattern="[0-9]+" disabled="#{empty organisationBackingBean.managedBean.orgProfile.gstRegNo}"/>
-						<f:validateLength minimum="12"  disabled="#{empty organisationBackingBean.managedBean.orgProfile.gstRegNo}"/>
+						maxlength="12" >						
 				</p:inputText></td>
 				</ui:fragment>	
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
@@ -164,7 +161,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.eff.date']}" /> </td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 				<td><p:calendar id="gstEffDateId"  beforeShowDay="firstDayEnabled"					
-					value="#{organisationBackingBean.managedBean.orgProfile.gstEffDate}" 
+					value="#{organisationBackingBean.managedBean.gstSupplier.gstEffDate}" 
 					mindate="#{ProfileManagementConst.gstMinDate}"
 					navigator="true"
 					disabled="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}"					
@@ -188,7 +185,7 @@
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.end.date']}" /> </td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
 				<td><p:calendar id="gstEndDateId"  beforeShowDay="firstDayEnabled"					
-					value="#{organisationBackingBean.managedBean.orgProfile.gstEndDate}" 
+					value="#{organisationBackingBean.managedBean.gstSupplier.gstEndDate}" 
 					mindate="#{ProfileManagementConst.gstMinDate}"
 					navigator="true"
 					disabled="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}"					
@@ -213,7 +210,7 @@
 				<td><p:inputText id="gstDeclareDateId" 
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.declare.date']}"
-						value="#{organisationBackingBean.managedBean.orgProfile.gstDeclaredDate}"
+						value="#{organisationBackingBean.managedBean.gstSupplier.gstDeclaredDate}"
 						size="25" styleClass="ppDisplayTextL">
 						<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 						</p:inputText></td>				
