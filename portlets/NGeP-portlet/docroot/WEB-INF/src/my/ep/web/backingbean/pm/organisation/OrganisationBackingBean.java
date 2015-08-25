@@ -650,8 +650,8 @@ public class OrganisationBackingBean extends
 
 				if (pmAddressType.getAddressType().equalsIgnoreCase(
 						AddressType.BILLING_ADDRESS.value())
-						&& (pmAddressType.getRecordStatusFlg()
-								.equals(DbValueConst.RECORD_STATUS_ACTIVE))) {
+						&& (pmAddressType.getRecordStatusFlg().intValue() == 
+								DbValueConst.RECORD_STATUS_ACTIVE)) {
 					//cater for sarawak if no division
 					if(pmAddressType.getPmAddress().getPmState() != null 
 							&& pmAddressType.getPmAddress().getPmDivision() == null){
@@ -840,8 +840,8 @@ public class OrganisationBackingBean extends
 						.getOrgProfile().getPmAddressTypes()) {
 					if (addressType.getAddressType().equals(
 							AddressType.BILLING_ADDRESS.value())
-							&& (addressType.getRecordStatusFlg()
-									.equals(DbValueConst.RECORD_STATUS_ACTIVE))
+							&& (addressType.getRecordStatusFlg().intValue() == 
+									DbValueConst.RECORD_STATUS_ACTIVE)
 							&& !getManagedBean().getAddressTypesList()
 									.contains(addressType)) {
 						getManagedBean().getAddressTypesList().add(addressType);
@@ -1970,7 +1970,7 @@ public class OrganisationBackingBean extends
 						+ supplierBank.getRecordStatusFlg());
 				log.info("..............supplierBank.isRecordStatus="
 						+ supplierBank.isRecordStatus());
-				if (supplierBank.getRecordStatusFlg() == 1) {
+				if (supplierBank.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					tempSupplierBankList.add(supplierBank);
 				}
 			}
@@ -1988,7 +1988,7 @@ public class OrganisationBackingBean extends
 			List<SmPersonnel> tempPersonnelList = new ArrayList<SmPersonnel>();
 			for (SmPersonnel personnel : this.getManagedBean()
 					.getSmPersonnels()) {
-				if (personnel.getRecordStatusFlg() == 1) {
+				if (personnel.getRecordStatusFlg().intValue() == DbValueConst.RECORD_STATUS_ACTIVE) {
 					tempPersonnelList.add(personnel);
 				}
 			}
@@ -2026,10 +2026,7 @@ public class OrganisationBackingBean extends
 		if(StringUtils.isNotBlank(gstSupplier.getGstRegNo())){
 			String pattern = "\\d{12}";
 		    if(!gstSupplier.getGstRegNo().matches(pattern)){
-		    	throw new EpException(ResourceBundleUtils.getMessage(
-		    			"lbl.pm.org.gst.invalid.gst", null,
-						ResourceBundleUtils.BUNDLE_COMMON_LABELS,
-						new FacesScopes().getUserLocale()));
+		    	throw new EpException(MessageConst.ERROR_775120);		    
 		    }
 			
 			//validate gst eff date
@@ -2041,6 +2038,8 @@ public class OrganisationBackingBean extends
 			if(gstSupplier.getGstEndDate() != null && gstSupplier.getGstEndDate().before(gstSupplier.getGstEffDate())){
 				throw new EpException(MessageConst.ERROR_775119);
 			}								
+		}else{
+			throw new EpException(MessageConst.ERROR_775120);	
 		}
 	}
 
