@@ -482,6 +482,7 @@ public class SupportDocumentBackingBean extends
 	public void addRestriction(int restrictionType) {
 		log.info("addRestriction");
 		log.info("restrictionType = " + restrictionType);
+		
 		if (validateUniqueRestrType(restrictionType)) {
 			PmDocumentRestr pmDocumentRestr = new PmDocumentRestr();
 			if (restrictionType == RESTR_APP) {
@@ -1362,71 +1363,77 @@ public class SupportDocumentBackingBean extends
 			PmDocumentRestr documentRestr, DocumentReqDTO reqDTO,
 			StatusResDTO statusResDTO) {
 
-		String docRestreMessageId = "";		
-		//String[] commonMsgParam =null;
+		String docRestreMessageId = "";
+		// String[] commonMsgParam =null;
 
-		if (pmDocument.isByAppType()) {
+		if (pmDocument.isByAppType() && documentRestr.getAppTypeCode() != null ) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80804;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
-			} else {
+			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80805;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
 			}
-		} else if (pmDocument.isByCompType()) {
+		}
+		if (pmDocument.isByCompType() && documentRestr.getCompanyTypeCode()!=null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80806;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
-			} else {
+			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80807;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
 			}
 
-		} else if (pmDocument.isBySupplierType()) {
+		}
+		if (pmDocument.isBySupplierType() && documentRestr.getSupplierTypeCode() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80808;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
-			} else {
+			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80809;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
 			}
+		}
 
-		} else if (pmDocument.isByCategory()) {
+		if (pmDocument.isByCategory() && documentRestr.getPmCategoryL3() != null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80810;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
-			} else {
+			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80811;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
 			}
-		} else if (pmDocument.isByCertBody()) {
+		}
+		if (pmDocument.isByCertBody() && documentRestr.getPmCertBody() != null) {
 			if (!documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80812;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
-			} else {
+			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80813;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
 			}
-		} else {
+		}
+		if (pmDocument.isByProcureCat() && documentRestr.getProcurementCatCode()!=null) {
 			if (documentRestr.isDeleted()) {
 				docRestreMessageId = MessageConst.TD_80802;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
-			} else {
+			} else if (documentRestr.isBrandNew()) {
 				docRestreMessageId = MessageConst.TD_80803;
 				commonTrackingDiaryData(pmDocument, reqDTO, statusResDTO,
 						docRestreMessageId);
 			}
+
 		}
 	}
 
@@ -1720,6 +1727,7 @@ public class SupportDocumentBackingBean extends
 		IDocumentSO reqSO = null;
 		try {
 			PmDocument pmDocument = this.getManagedBean().getSelectedDocument();
+			
 			reqDTO = new DocumentReqDTO();
 			validateDocument(pmDocument);
 			validateRestrictions(pmDocument);
