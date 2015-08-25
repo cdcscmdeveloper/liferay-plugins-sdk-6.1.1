@@ -19,10 +19,12 @@ import my.ep.persistence.entity.sc.bidding.ScBidItem;
 import my.ep.persistence.entity.sc.bidding.ScBidPrice;
 import my.ep.persistence.entity.sc.bidding.ScBidSchedule;
 import my.ep.persistence.entity.sc.quationtender.ScQt;
+import my.ep.persistence.entity.sc.quationtender.ScQtCommittee;
 import my.ep.persistence.entity.sc.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.sc.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalization;
 import my.ep.persistence.entity.sc.quationtender.ScQtFinalizationEndorsementRemarks;
+import my.ep.persistence.entity.sc.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.sc.quationtender.ScQtRecommend;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmCompanyBasic;
@@ -57,7 +59,11 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	private ScBidItem selectedBiddingItem;
 	private List<ScBidPrice> biddingItemPriceList;
 	private List<BidPackageBean> biddingPackagePriceList;
-		
+	
+	//Meeting preparation
+	private ScQtCommittee scQtCommittee;
+	private List<ScQtMeeting> meetingList;
+	
 	//Online Bidding Endorsement
 	private List<ScQtCommitteeActivity> committeeEndorsementList;
 	private List<ScQtCommitteeActivity> reminderList;
@@ -140,6 +146,30 @@ public class SupplierFinalizationBiddingManagedBean extends BaseManagedBean {
 	 */
 	public void setScQtFinalization(ScQtFinalization scQtFinalization) {
 		this.scQtFinalization = scQtFinalization;
+	}
+	/**
+	 * @return the scQtCommittee
+	 */
+	public ScQtCommittee getScQtCommittee() {
+		return scQtCommittee;
+	}
+	/**
+	 * @param scQtCommittee the scQtCommittee to set
+	 */
+	public void setScQtCommittee(ScQtCommittee scQtCommittee) {
+		this.scQtCommittee = scQtCommittee;
+	}
+	/**
+	 * @return the meetingList
+	 */
+	public List<ScQtMeeting> getMeetingList() {
+		return meetingList;
+	}
+	/**
+	 * @param meetingList the meetingList to set
+	 */
+	public void setMeetingList(List<ScQtMeeting> meetingList) {
+		this.meetingList = meetingList;
 	}
 	/**
 	 * @return the committeeEndorsementList
