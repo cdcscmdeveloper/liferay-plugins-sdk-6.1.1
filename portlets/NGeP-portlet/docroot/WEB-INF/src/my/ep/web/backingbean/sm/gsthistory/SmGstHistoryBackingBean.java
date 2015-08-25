@@ -32,6 +32,9 @@ public class SmGstHistoryBackingBean extends
 	private static int SEARCH_BY_MOFNO = 2;
 	private static int SEARCH_BY_COMP_NAME = 3;
 
+	/**
+	 * Pre-render gst update information screen
+	 */
 	public void preRenderGstHistory() {
 		renewSesionObject();
 		initLogin();
@@ -49,12 +52,23 @@ public class SmGstHistoryBackingBean extends
 		}
 	}
 
+	/**
+	 * Load gst history for HQ and branch and redirect to result screen
+	 * 
+	 * @param supplier
+	 */
 	public void viewGst(SmSupplier supplier) {
 		setHqAndBranchGst(supplier);
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/gstHistory/resultGstHistory.xhtml", "");
 	}
 
+	/**
+	 * Event to handle search by radio button on click
+	 * 
+	 * @param AjaxBehaviorEvent
+	 *            e
+	 */
 	public void onSearchBy(AjaxBehaviorEvent e) {
 		if (getManagedBean().getSearchBy() == SEARCH_BY_EPNO) {
 			getManagedBean().getSearchSupplier().setCompanyName("");
@@ -68,6 +82,12 @@ public class SmGstHistoryBackingBean extends
 		}
 	}
 
+	/**
+	 * Set HQ and branch gst history information by supplier
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 */
 	private void setHqAndBranchGst(SmSupplier supplier) {
 		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 		reqDTO.setSupplierId(supplier.getSupplierId());
@@ -125,6 +145,13 @@ public class SmGstHistoryBackingBean extends
 
 	}
 
+	/**
+	 * Get gst declared action by for displaying purposes
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 * @return String
+	 */
 	private String getGstActionedBy(SmGstSupplier gst) {
 		String retVal = "";
 		if (gst != null) {
@@ -140,6 +167,13 @@ public class SmGstHistoryBackingBean extends
 		return retVal;
 	}
 
+	/**
+	 * Get branch name for displaying purposes
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 * @return String
+	 */
 	private String getBranchName(SmGstSupplier gst) {
 		String retVal = "";
 		if (gst != null && gst.getBranchCode() != null) {
@@ -154,11 +188,17 @@ public class SmGstHistoryBackingBean extends
 		return retVal;
 	}
 
+	/**
+	 * Back and redirect to search supplier screen
+	 */
 	public void back() {
 		SmCommonUtil.redirectToPage(
 				"/xhtml/sm/gstHistory/searchGstHistory.xhtml", "");
 	}
 
+	/**
+	 * Perform search supplier
+	 */
 	public void search() {
 		getManagedBean().searchGstHistory();
 	}
