@@ -32,7 +32,7 @@
 				<td colspan="3">
 					<table>
 						<tr>
-							<td><p:inputText size="80" id="title" required="true" maxlength="100"
+							<td><p:inputText size="84" id="title" required="true" maxlength="100"
 									label="#{lbl['lbl.sc.document.title']}"
 									disabled="#{!isPendingSubmissionStatus}"
 									value="#{simpleQuoteBackingBean.managedBean.scQuote.title}"
@@ -199,7 +199,7 @@
 									value="#{lbl['lbl.sc.sq.duration']}" /></td>
 						<td colspan="3"><p:outputPanel autoUpdate="true"
 									id="durationId">
-									<p:inputText size="6"
+									<p:inputText size="14"
 										label="#{lbl['lbl.sc.sq.duration']}" maxlength="5"
 										value="#{simpleQuoteBackingBean.managedBean.duration}"
 										disabled="true" style="text-align:right; margin-top: 4px">
