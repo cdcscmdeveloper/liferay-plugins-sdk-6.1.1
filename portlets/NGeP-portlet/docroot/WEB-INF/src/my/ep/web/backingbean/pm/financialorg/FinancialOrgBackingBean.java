@@ -306,7 +306,8 @@ public class FinancialOrgBackingBean extends
 		if (finAddressTypes != null && !finAddressTypes.isEmpty()) {
 			for (PmAddressType pmAddressType : finAddressTypes) {
 				// financial address
-				if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())&&(pmAddressType.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_ACTIVE))) {
+				if (pmAddressType.getAddressType().equalsIgnoreCase(AddressType.BILLING_ADDRESS.value())&&(pmAddressType.getRecordStatusFlg() ==
+						DbValueConst.RECORD_STATUS_ACTIVE)) {
 					this.getManagedBean().setPmAddress(pmAddressType.getPmAddress());
 					addrExist = true;
 					// financial contact
@@ -816,7 +817,7 @@ public class FinancialOrgBackingBean extends
 			System.out.println("Record Status Fin SVC---====>>>"+financialSvc.getRecordStatusFlg());
 			PmParameter pmParameter = (PmParameter) serviceTypeMapper.get(financialSvc.getServiceTypeCode().getParameterId());
 			if(ParameterConst.BANK_SERVICES_FACTORING_COMPANY.equalsIgnoreCase(pmParameter.getParameterCode())){
-				if(financialSvc.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+				if(financialSvc.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
 					for(PmFinancialAcc finAcc:financialOrg.getPmFinancialAccs()){
 						System.out.println("Record Status Fin ACC---====>>>"+finAcc.getRecordStatusFlg());
 						finAcc.setRecordStatusFlg(DbValueConst.RECORD_STATUS_DELETED);

@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<script type="text/javascript">
 		function firstDayEnabled(date){
@@ -139,28 +140,32 @@
 				rendered="#{organisationBackingBean.managedBean.orgType eq 'FPJ' }">
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.reg.no']}" /> </td>
+				<td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-				<td><p:inputText id="gstRegNoId" 
+				<p:inputText id="gstRegNoId" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{organisationBackingBean.managedBean.gstSupplier.gstRegNo}"
 						size="50" styleClass="ppDisplayTextL"
 						maxlength="12" >						
-				</p:inputText></td>
+				</p:inputText>				
 				</ui:fragment>	
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
-				<td><p:inputText id="gstRegId" 
+				<p:inputText id="gstRegId" 
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.reg.no']}"
 						value="#{lbl['lbl.pm.org.gst.na']}"
 						size="50" styleClass="ppDisplayTextL"
-						/></td>
+						/>
 				</ui:fragment>
+				<ac:iconTooltip value="#{lbl['lbl.pm.org.gst.reg.no.tooltip']}" />
+				</td>
 				<td><p:message id="gstRegNoIdMsg" for="gstRegNoId" display="icon" /></td>
 			</tr>
 			<tr>
 				<td><h:outputLabel value="#{lbl['lbl.pm.org.gst.eff.date']}" /> </td>
+				<td>
 				<ui:fragment rendered="#{organisationBackingBean.managedBean.orgProfile.govtSeller}">
-				<td><p:calendar id="gstEffDateId"  beforeShowDay="firstDayEnabled"					
+				<p:calendar id="gstEffDateId"  beforeShowDay="firstDayEnabled"					
 					value="#{organisationBackingBean.managedBean.gstSupplier.gstEffDate}" 
 					mindate="#{ProfileManagementConst.gstMinDate}"
 					navigator="true"
@@ -169,16 +174,18 @@
 					yearRange="c-50:c+99" showOn="button"
 					pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}">
 					<p:ajax event="dateSelect" process="@this" />
-				</p:calendar></td>
+				</p:calendar>
 				</ui:fragment>
 				<ui:fragment rendered="#{!(organisationBackingBean.managedBean.orgProfile.govtSeller)}">
-				<td><p:inputText id="gstEffDate" 
+				<p:inputText id="gstEffDate" 
 						disabled="true" 
 						label="#{lbl['lbl.pm.org.gst.eff.date']}"
 						value=" "
 						size="25" styleClass="ppDisplayTextL"
-						/></td>
+						/>
 				</ui:fragment>
+				<ac:iconTooltip value="#{lbl['lbl.pm.org.gst.eff.date.tooltip']}" />
+				</td>
 				<td></td>
 			</tr>
 			<tr>

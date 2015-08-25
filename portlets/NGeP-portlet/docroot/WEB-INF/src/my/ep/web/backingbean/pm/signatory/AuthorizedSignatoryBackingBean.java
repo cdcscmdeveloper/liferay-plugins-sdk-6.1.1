@@ -363,7 +363,7 @@ public class AuthorizedSignatoryBackingBean extends
 		reqDTO.setTrackDairyVOs(new ArrayList<PmTrackingDairyVO>());
 		for(PmCertSignatory pmcertSignatory:certSignatories){
 				
-			if(pmcertSignatory.getRecordStatusFlg().equals(DbValueConst.RECORD_STATUS_DELETED)){
+			if(pmcertSignatory.getRecordStatusFlg() == DbValueConst.RECORD_STATUS_DELETED){
 				pmcertSignatory.setExpDate(new Date());
 			}
 			String messageId = null;
