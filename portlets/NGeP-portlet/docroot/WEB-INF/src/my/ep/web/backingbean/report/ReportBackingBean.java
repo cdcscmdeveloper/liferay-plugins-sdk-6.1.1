@@ -2708,13 +2708,13 @@ public class ReportBackingBean extends
 			getManagedBean().getRptGenBean().setSmMandatoryRecievedReportTypeView(false);
 			getManagedBean().getRptGenBean().setSmMandatoryApprovedReportTypeView(false);
 			getManagedBean().getRptGenBean().setSmMandatoryRejectedReportTypeView(false);
-			if (null != this.getSmReportType()&&this.getSmReportType().equals("RECEIVED")) {
+			if (null != this.getSmReportType()&&this.getSmReportType().equalsIgnoreCase("RECEIVED")) {
 				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean().setSmMandatoryRecievedReportTypeView(true);
-			} else if (null != this.getSmReportType()&&this.getSmReportType().equals("APPROVED")) {
+			} else if (null != this.getSmReportType()&&this.getSmReportType().equalsIgnoreCase("APPROVED")) {
 				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean().setSmMandatoryApprovedReportTypeView(true);
-			} else if (null != this.getSmReportType()&&this.getSmReportType().equals("REJECTED")) {
+			} else if (null != this.getSmReportType()&&this.getSmReportType().equalsIgnoreCase("REJECTED")) {
 				getManagedBean().getRptGenBean().setSmMandatoryCreatedFromYearView(true);
 				getManagedBean().getRptGenBean().setSmMandatoryRejectedReportTypeView(true);
 			} /*else {
@@ -4940,7 +4940,11 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			}			
 		}else if(fromyear>toyear){			
 			throw new EpException(MessageConst.ERROR_REPORT_780015);
-		}		
+		}else if(toyear>fromyear+1){			
+			throw new EpException(MessageConst.ERROR_REPORT_780011);
+		}
+		
+		
 	}
 
 	/*

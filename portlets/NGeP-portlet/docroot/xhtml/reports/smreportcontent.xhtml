@@ -805,7 +805,8 @@
 												label="#{lbl['lbl.rpt.reportType']}" id="ReportType"
 												value="#{reportBackingBean.smReportType}" required="true"
 												style="margin-top:5px;width:300px;">
-												
+												<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}"
+													itemValue="#{null}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttyperecieved']}"
 													itemValue="#{lbl['lbl.rpt.rpttyperecieved']}"></f:selectItem>
 												<f:selectItem itemLabel="#{lbl['lbl.rpt.rpttypeapproved']}"
