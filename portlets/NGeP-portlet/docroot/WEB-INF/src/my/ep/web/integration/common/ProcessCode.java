@@ -33,7 +33,20 @@ public enum ProcessCode {
 	APERR("APERR"), 
 	CMBNK("CMBNK"), 
 	APOVE("APOVE"), 
-	AR902("AR902");
+	AR902("AR902"),
+	//Eperunding
+	EPE01("EPE01"),
+	EPE02("EPE02"),
+	EPE03("EPE03"),
+	EPE04("EPE04"),
+	EPE05("EPE05"),
+	EPE06("EPE06"),
+	EPE07("EPE07"),
+	EPE08("EPE08"),
+	EPE09("EPE09"),
+	EPE10("EPE10"),
+	EPE11("EPE11");
+		
 
 	private String processCode;
 

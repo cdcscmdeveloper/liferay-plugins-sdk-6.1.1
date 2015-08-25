@@ -30,5 +30,22 @@ public class ProfBodyDetail {
 	public void setProfBodyExpiry(Date profBodyExpiry) {
 		this.profBodyExpiry = profBodyExpiry;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof ProfBodyDetail)
+	    {
+	    	ProfBodyDetail temp = (ProfBodyDetail) obj;
+	        if(this.profBody.equalsIgnoreCase(temp.profBody)&& this.profBodyNo.equalsIgnoreCase(temp.profBodyNo)&& this.profBodyExpiry.equals(temp.profBodyExpiry))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.profBody.hashCode()+this.profBodyNo.hashCode()+this.profBodyExpiry.hashCode());        
+	}
 
 }

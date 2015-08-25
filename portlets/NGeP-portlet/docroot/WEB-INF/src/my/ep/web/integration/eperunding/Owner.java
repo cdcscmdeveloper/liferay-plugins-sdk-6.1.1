@@ -1,5 +1,7 @@
 package my.ep.web.integration.eperunding;
 
+import java.util.List;
+
 public class Owner {
 
 	private String isEquityOwner;
@@ -12,6 +14,8 @@ public class Owner {
 	private String equityPercentage;
 	private String Race;
 	private String designation;
+
+	private List<Qualification> qualificationList;
 
 	public String getIsEquityOwner() {
 		return isEquityOwner;
@@ -91,6 +95,31 @@ public class Owner {
 
 	public void setDesignation(String designation) {
 		this.designation = designation;
+	}
+
+	public List<Qualification> getQualificationList() {
+		return qualificationList;
+	}
+
+	public void setQualificationList(List<Qualification> qualificationList) {
+		this.qualificationList = qualificationList;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof Owner)
+	    {
+	    	Owner temp = (Owner) obj;
+	        if(this.name.equalsIgnoreCase(temp.name)&& this.newICNo.equalsIgnoreCase(temp.newICNo)&& this.passport.equalsIgnoreCase(temp.passport))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.name.hashCode()+this.newICNo.hashCode()+this.passport.hashCode());        
 	}
 
 }

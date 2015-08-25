@@ -1,5 +1,8 @@
 package my.ep.web.integration.eperunding;
 
+/*
+ * @author P Ganga prasad
+ */
 public class AssociatedCompany {
 
 	private String mOFNo;
@@ -172,6 +175,26 @@ public class AssociatedCompany {
 
 	public void setFaxNo(String faxNo) {
 		this.faxNo = faxNo;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AssociatedCompany) {
+			AssociatedCompany temp = (AssociatedCompany) obj;
+			if (this.mOFNo.equalsIgnoreCase(temp.mOFNo)
+					&& this.companyName.equalsIgnoreCase(temp.companyName)
+					&& this.sSMNO.equalsIgnoreCase(temp.sSMNO))
+				return true;
+		}
+		return false;
+
+	}
+
+	@Override
+	public int hashCode() {
+
+		return (this.mOFNo.hashCode() + this.companyName.hashCode() + this.sSMNO
+				.hashCode());
 	}
 
 }
