@@ -184,11 +184,19 @@
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.ctMinsitryContractAdmin']}" itemValue="#{lbl['lbl.rpt.ctMinsitryContractAdmin']}"></f:selectItem>
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.ctApprover']}" itemValue="#{lbl['lbl.rpt.ctApprover']}"></f:selectItem>	
-										<p:ajax event="change" listener="#{reportBackingBean.retrieveSubTypeList}" process="@this" partialSubmit="true" update="ctSubType,@([id$=Msg])" />																												
+										<p:ajax event="change" listener="#{reportBackingBean.retrieveSubTypeList}" process="@this" partialSubmit="true" update="@form,@([id$=Msg])" />																												
 									</p:selectOneMenu>
 								  </c:if>
 								  <c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeView}">
-									<p:outputLabel value="#{lbl['lbl.rpt.ctsubtype']}" style="margin-top:5px;width:160px;" />									
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeOnlyView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.ctsubtype']}" style="margin-top:5px;width:160px;" />
+									</c:if>
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeMCAView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.minsitrycontractadminscreen']}" style="margin-top:5px;width:160px;" />
+									</c:if>
+									<c:if test="#{ctReportBackingBean.managedBean.rptGenBean.ctSubTypeApproverView}">
+									<p:outputLabel value="#{lbl['lbl.rpt.approverscreen']}" style="margin-top:5px;width:160px;" />
+									</c:if>									
 									<p:selectOneMenu id="ctSubType" value="#{reportBackingBean.ctSubType}" style="margin-top:5px;width:300px;">
 										<f:selectItem itemLabel="#{lbl['lbl.rpt.selectOne']}" itemValue="#{null}"></f:selectItem>										
 										<f:selectItems value="#{reportBackingBean.ctSubTypeList}"></f:selectItems>

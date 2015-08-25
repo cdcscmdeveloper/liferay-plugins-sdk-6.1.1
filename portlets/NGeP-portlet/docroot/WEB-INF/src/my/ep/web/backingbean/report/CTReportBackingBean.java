@@ -56,6 +56,7 @@ public class CTReportBackingBean  extends SourcingBaseBackingBean<ReportMangedBe
 	        	rptGenBean.setCtLOAPhysicalNoView(true);
 	        	rptGenBean.setCtUserTypeView(true);
 	        	rptGenBean.setCtSubTypeView(true);
+	        	rptGenBean.setCtSubTypeOnlyView(true);
 				rptGenBean.setFromDateView(true);
 				rptGenBean.setToDateView(true);
 	            break;

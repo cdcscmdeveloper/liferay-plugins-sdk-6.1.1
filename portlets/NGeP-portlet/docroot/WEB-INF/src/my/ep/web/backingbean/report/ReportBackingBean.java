@@ -2965,13 +2965,22 @@ public class ReportBackingBean extends
     }
 	public List<SelectItem> retrieveSubTypeList(){
 		ctSubTypeList = new ArrayList<SelectItem>();
+		getManagedBean().getRptGenBean().setCtSubTypeOnlyView(true);
+		getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
+		getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
         if (null != new FacesScopes().getUserSessionBean().getUserId()) {
         	if (null != this.getCtUserType()) {
-        		String userTypeRoleCode = null;
+        		String userTypeRoleCode = null;        		
         		if (this.getCtUserType().equalsIgnoreCase(ReportConst.MINISTRY_CONTRACT_ADMIN)) {
         			userTypeRoleCode=ReportConst.MIN_CONTRACT_ADMIN;
+        			getManagedBean().getRptGenBean().setCtSubTypeOnlyView(false);
+        			getManagedBean().getRptGenBean().setCtSubTypeApproverView(false);
+        			getManagedBean().getRptGenBean().setCtSubTypeMCAView(true);
         		}else if(this.getCtUserType().equalsIgnoreCase(ReportConst.APPROVER_LBL)) {
         			userTypeRoleCode=ReportConst.ROLE_CODE_CT_APPROVER;
+        			getManagedBean().getRptGenBean().setCtSubTypeOnlyView(false);
+        			getManagedBean().getRptGenBean().setCtSubTypeMCAView(false);
+        			getManagedBean().getRptGenBean().setCtSubTypeApproverView(true);
         		}
         		if (null != userTypeRoleCode) {
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
@@ -5081,10 +5090,10 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 					ReportConst.RPT_TRUE);*/
 			//externalContext.addResponseCookie("primefaces.download", "true", Collections.<String, Object>emptyMap());
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 		} else {
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 			throw new EpException(MessageConst.ERROR_REPORT_780001);
 		}
 	}
@@ -7256,6 +7265,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 		this.setCtSubType(null);
 		this.setCtUserType(null);		
 		this.setCtProcurementMode(null);
+		ctSubTypeList = new ArrayList<SelectItem>();
 		this.setFlGroupOne(null);
 		this.setFlGroupTwo(null);
 		this.setFlGroupThree(null);
@@ -7345,7 +7355,7 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			throw new EpException(MessageConst.ERROR_REPORT_780009);
 		}catch (IOException e) {
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			externalContext.addResponseCookie(org.primefaces.util.Constants.DOWNLOAD_COOKIE, ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
+			externalContext.addResponseCookie("primefaces.download", ReportConst.RPT_TRUE, Collections.<String, Object>emptyMap());
 			getManagedBean().getRptGenBean().setGenerateButtonView(false);
 			throw new EpException(MessageConst.ERROR_REPORT_780020);
 		}

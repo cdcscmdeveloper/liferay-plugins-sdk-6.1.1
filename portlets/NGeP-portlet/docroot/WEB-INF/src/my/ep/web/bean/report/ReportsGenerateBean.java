@@ -873,6 +873,9 @@ public class ReportsGenerateBean {
 		private boolean ctGroupFourView = false;
 		private boolean ctGroupFiveView = false;
 		private boolean ctStatusThreeView = false;
+		private boolean ctSubTypeOnlyView = false;
+		private boolean ctSubTypeMCAView = false;
+		private boolean ctSubTypeApproverView = false;
 		//PP
 		private boolean ppYearView = false;
 		private boolean ppMinistryView = false;
@@ -1083,6 +1086,24 @@ public class ReportsGenerateBean {
 		private String pmBusinessRegNoVar=ReportConst.EMPTY_VAL;
 		
 		
+		public boolean isCtSubTypeOnlyView() {
+			return ctSubTypeOnlyView;
+		}
+		public void setCtSubTypeOnlyView(boolean ctSubTypeOnlyView) {
+			this.ctSubTypeOnlyView = ctSubTypeOnlyView;
+		}
+		public boolean isCtSubTypeMCAView() {
+			return ctSubTypeMCAView;
+		}
+		public void setCtSubTypeMCAView(boolean ctSubTypeMCAView) {
+			this.ctSubTypeMCAView = ctSubTypeMCAView;
+		}
+		public boolean isCtSubTypeApproverView() {
+			return ctSubTypeApproverView;
+		}
+		public void setCtSubTypeApproverView(boolean ctSubTypeApproverView) {
+			this.ctSubTypeApproverView = ctSubTypeApproverView;
+		}
 		public boolean isPmStatusView() {
 			return pmStatusView;
 		}
