@@ -61,6 +61,14 @@
 							<h:outputText value="#{table.fileName}" rendered="#{not empty table.fileName}"
 								style="float: left;white-space: normal;" />
 							<h:outputText value="#{lbl['lbl.sm.no.available']}" rendered="#{empty table.fileName}" />
+							&#160;&#160;
+							<p:commandLink rendered="#{not empty table.fileName}"
+								action="#{viewSmApplBackingBean.downloadSelectedSuppDoc(table.fileName,table.filePath)}"
+								update="@form" ajax="false">
+								<p:fileDownload value="#{viewSmApplBackingBean.file}" />
+								<p:graphicImage value="/css/images/design/download.png"
+									style="margin-right:2px;" />
+							</p:commandLink>
 						</p:column>
 					</p:dataTable>
 				</td>
