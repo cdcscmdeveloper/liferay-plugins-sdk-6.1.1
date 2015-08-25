@@ -1,5 +1,9 @@
 package my.ep.web.integration.eperunding;
 
+/*
+ * @author P Ganga prasad
+ */
+
 public class RegisteredCategory {
 
 	private String mOFNo;
@@ -20,6 +24,28 @@ public class RegisteredCategory {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof RegisteredCategory) {
+			RegisteredCategory temp = (RegisteredCategory) obj;
+			if (this.mOFNo.equalsIgnoreCase(temp.mOFNo)
+					&& this.category.getMainCat().equalsIgnoreCase(
+							temp.category.getMainCat())
+					&& this.category.getSubCat().equalsIgnoreCase(
+							temp.category.getSubCat()))
+				return true;
+		}
+		return false;
+
+	}
+
+	@Override
+	public int hashCode() {
+
+		return (this.mOFNo.hashCode() + this.category.getMainCat().hashCode() + this.category
+				.getSubCat().hashCode());
 	}
 
 }

@@ -1,5 +1,9 @@
 package my.ep.web.integration.eperunding;
 
+/*
+ * @author P Ganga prasad
+ */
+
 public class AuthorizedSignatory {
 
 	private String name;
@@ -46,6 +50,23 @@ public class AuthorizedSignatory {
 
 	public void setDesignation(String designation) {
 		this.designation = designation;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof AuthorizedSignatory)
+	    {
+	    	AuthorizedSignatory temp = (AuthorizedSignatory) obj;
+	        if(this.name.equalsIgnoreCase(temp.name)&& this.newICNo.equalsIgnoreCase(temp.newICNo)&& this.passport.equalsIgnoreCase(temp.passport))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.name.hashCode()+this.newICNo.hashCode()+this.passport.hashCode());        
 	}
 
 }

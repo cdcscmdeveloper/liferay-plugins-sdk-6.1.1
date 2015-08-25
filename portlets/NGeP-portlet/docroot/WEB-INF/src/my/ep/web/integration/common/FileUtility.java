@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import my.ep.biz.service.pm.common.batch.IPmInterfaceSO;
 import my.ep.constant.ModuleCodeConst;
@@ -36,6 +38,8 @@ import my.ep.web.integration.eperunding.DeletedCompany;
 import my.ep.web.integration.eperunding.EquityOwner;
 import my.ep.web.integration.eperunding.GovernmentProject;
 import my.ep.web.integration.eperunding.ManagementPersonnel;
+import my.ep.web.integration.eperunding.ProfBodyDetail;
+import my.ep.web.integration.eperunding.Qualification;
 import my.ep.web.integration.eperunding.RegisteredCategory;
 import my.ep.web.integration.eperunding.Signatory;
 import my.ep.web.integration.eterimaan.BillingInformationLine;
@@ -80,13 +84,14 @@ public class FileUtility {
 	
 	private static Logger log = BatchLogger.getLogger(FileUtility.class);
 	
+	private static final String valuestar =".*";
+	
 	SFTPUtility sftpUtility = new SFTPUtility();
 	OsbUtility osbUtility = new OsbUtility();
 	Encryption encryption = new Encryption();
 	
 	IPmInterfaceSO interfaceSO = BusinessDelegate.getInstance().getServiceObject(
 			ModuleCodeConst.PROFILE_MANAGEMENT, IPmInterfaceSO.class);
-	
 
 	/**
 	 * Write character data to a big file - use BufferedWriter
@@ -1056,26 +1061,29 @@ public class FileUtility {
 			String region,String date) {
 
 		String sequenceNo = IntegrationConstants.SEQUENCE_NO;
-
-		String fileExtn = null;
+		String fileExtn = null,filePattern = null; 
 		if (region.equals("pharma")) {
 			fileExtn = IntegrationConstants.FILE_EXTENSION_PHIS;
+			filePattern = IntegrationConstants.AGENSI_ID_ePerolehan;
 		} else if (region.equals("gfmas")) {
 			fileExtn = IntegrationConstants.FILE_EXTENSION_GFMAS;
+			filePattern = IntegrationConstants.AGENSI_ID_ePerolehan;
 		}
-		int seqNo;
+		int seqNo = 0;
 		if (!new File(IntegrationConstants.FILE_PATH + fileName
-				+ IntegrationConstants.SEQUENCE_NO + fileExtn).exists()) {
+				+ sequenceNo + fileExtn).exists()) {
 			return sequenceNo;
 		} else {
 
 			File dir = new File(IntegrationConstants.FILE_PATH);
 			String[] filesInPath = dir.list();
 			List<Integer> seqNos = new ArrayList<Integer>();
+			Pattern p = Pattern.compile(valuestar + serviceCode+filePattern+date+valuestar);
+			
 			for (int i = 0; i < filesInPath.length; i++) {
-
 				String fileName1 = filesInPath[i];
-				if (fileName1.contains(serviceCode+date)) {
+				 Matcher m = p.matcher(fileName1);
+				if (m.matches()) {
 					int index = fileName1.indexOf('.');
 					seqNo = Integer.parseInt(fileName1.substring(index - 3,
 							index));
@@ -1083,7 +1091,11 @@ public class FileUtility {
 				}
 			}
 			Collections.sort(seqNos);
-			seqNo = seqNos.get(seqNos.size() - 1);
+			if (seqNos != null && !seqNos.isEmpty()) {
+				seqNo =  seqNos.get(seqNos.size()-1);
+				}else{
+					System.out.println("seqNos :"+seqNos);
+				}
 			sequenceNo = formatIntegerField(seqNo + 1, 3, "R");
 
 		}
@@ -1160,8 +1172,7 @@ public class FileUtility {
 	//===============================Eperunding files creation===========================
 	
 	
-	public void equityOwnerOutPutStream(List<EquityOwner> content,
-			String filePath) {
+	public void equityOwnerOutPutStream(List<EquityOwner> content,String filePath) {
 		String fileName = "EquityOwner.txt";
 		String SERVICE_CODE = "EPE04";
 
@@ -1169,42 +1180,39 @@ public class FileUtility {
 
 		try {
 			writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath + fileName), "utf-8"));
-
-			
 			if (content.size() != 0) {
 				StringBuffer line;
 				writer.write("         " + content.size() + " Rows Selected");
 				for (EquityOwner eOwner : content) {
 					line = new StringBuffer();
-
 					line.append(System.getProperty("line.separator"));
-
 					line.append(formatString(eOwner.getMOFNo(),20));
-
-					line.append(formatString(eOwner.getOwner().getIsEquityOwner(),1));
-					line.append(formatString(eOwner.getOwner().getName(),50));
-					line.append(formatString(eOwner.getOwner().getNewICNo(),12));
-					line.append(formatString(eOwner.getOwner().getPassport(),20));
-					line.append(formatString(eOwner.getOwner().getIsBumi(),1));
-					line.append(formatInt(eOwner.getOwner().getCitizenOf()));
-					line.append(formatString(eOwner.getOwner().getEquityValue(),20));
-					line.append(formatString(eOwner.getOwner().getEquityPercentage(),5));
-					line.append(formatString(eOwner.getOwner().getRace(),100));
-					line.append(formatString(eOwner.getOwner().getDesignation(),50));
-
-					line.append(formatString(eOwner.getQualification().getMajorIn(),300));
-					line.append(formatString(eOwner.getQualification().getQualification(),300));
-					line.append(formatInt(eOwner.getQualification().getQualificationLevel()));
-					line.append(formatString(eOwner.getQualification().getInstitute(),255));
-					line.append(formatString(eOwner.getQualification().getYear(),30));
-					line.append(formatString(eOwner.getQualification().getEducationField(),12));
-
-					line.append(formatString(eOwner.getProfBodyDetail().getProfBody(),12));
-					line.append(formatString(eOwner.getProfBodyDetail().getProfBodyNo(),30));
-					line.append(formatDateEperunding(eOwner.getProfBodyDetail().getProfBodyExpiry(),false));
-
+					if(null!=eOwner.getOwner()){
+						line.append(formatString(eOwner.getOwner().getIsEquityOwner(),1));
+						line.append(formatString(eOwner.getOwner().getName(),50));
+						line.append(formatString(eOwner.getOwner().getNewICNo(),12));
+						line.append(formatString(eOwner.getOwner().getPassport(),20));
+						line.append(formatString(eOwner.getOwner().getIsBumi(),1));
+						line.append(formatInt(eOwner.getOwner().getCitizenOf()));
+						line.append(formatString(eOwner.getOwner().getEquityValue(),20));
+						line.append(formatString(eOwner.getOwner().getEquityPercentage(),5));
+						line.append(formatString(eOwner.getOwner().getRace(),100));
+						line.append(formatString(eOwner.getOwner().getDesignation(),50));
+						for(Qualification qualification:eOwner.getOwner().getQualificationList()){
+							line.append(formatString(qualification.getMajorIn(),300));
+							line.append(formatString(qualification.getQualification(),300));
+							line.append(formatInt(qualification.getQualificationLevel()));
+							line.append(formatString(qualification.getInstitute(),255));
+							line.append(formatString(qualification.getYear(),30));
+							line.append(formatString(qualification.getEducationField(),12));
+						}
+					}
+					for(ProfBodyDetail profBodyDetail:eOwner.getProfBodyDetailList()){
+						line.append(formatString(profBodyDetail.getProfBody(),12));
+						line.append(formatString(profBodyDetail.getProfBodyNo(),30));
+						line.append(formatDateEperunding(profBodyDetail.getProfBodyExpiry(),false));
+					}
 					line.append(String.format("%s", eOwner.getExpertise().getCategoryClassification()));
-
 				writer.write(line.toString());
 			}
 			}
@@ -1230,8 +1238,7 @@ public class FileUtility {
 		}
 	}
 	
-	public void consultantProfileFileOutPutStream(
-			List<ConsultantProfile> content, String filePath) {
+	public void consultantProfileFileOutPutStream(List<ConsultantProfile> content, String filePath) {
 
 		String fileName = "ConsultantProfiles.txt";
 		String SERVICE_CODE = "EPE01";
@@ -1349,13 +1356,13 @@ public class FileUtility {
 				line = new StringBuffer();
 				line.append(System.getProperty("line.separator"));
 				line.append(formatString(signatory.getMOFNo(),20));
-				line.append(formatString(signatory.getAuthorizedSignatory().getName(),20));
-				line.append(formatString(signatory.getAuthorizedSignatory().getNewICNo(),12));
-				line.append(formatString(signatory.getAuthorizedSignatory().getPassport(),20));
-				line.append(formatString(signatory.getAuthorizedSignatory().getIsBumi(),1));
-				line.append(String.format("%s", signatory.getAuthorizedSignatory().getDesignation()));
-
-				// line.append(System.getProperty("line.separator"));
+				if(null!=signatory.getAuthorizedSignatory()){
+					line.append(formatString(signatory.getAuthorizedSignatory().getName(),20));
+					line.append(formatString(signatory.getAuthorizedSignatory().getNewICNo(),12));
+					line.append(formatString(signatory.getAuthorizedSignatory().getPassport(),20));
+					line.append(formatString(signatory.getAuthorizedSignatory().getIsBumi(),1));
+					line.append(String.format("%s", signatory.getAuthorizedSignatory().getDesignation()));
+				}
 				writer.write(line.toString());
 			}
 			
@@ -1400,30 +1407,36 @@ public class FileUtility {
 				line.append(System.getProperty("line.separator"));
 
 				line.append(formatString(mPersonnel.getMOFNo(),20));
-
-				line.append(formatString(mPersonnel.getPersonnel().getIsManagement(),1));
-				line.append(formatString(mPersonnel.getPersonnel().getIsProfessional(),1));
-				line.append(formatString(mPersonnel.getPersonnel().getIsSemiProf(),1));
-				line.append(formatString(mPersonnel.getPersonnel().getIsClerical(),1));
-				line.append(formatString(mPersonnel.getPersonnel().getName(),50));
-				line.append(formatString(mPersonnel.getPersonnel().getNewICNo(),12));
-				line.append(formatString(mPersonnel.getPersonnel().getPassport(),20));
-				line.append(formatString(mPersonnel.getPersonnel().getIsBumi(),1));
-				line.append(formatInt(mPersonnel.getPersonnel().getCitizenOf()));
-				line.append(formatString(mPersonnel.getPersonnel().getRace(),100));
-				line.append(formatString(mPersonnel.getPersonnel().getDesignation(),50));
-				line.append(formatBigDecimal(mPersonnel.getPersonnel().getWorkExperience()));
-
-				line.append(formatString(mPersonnel.getQualification().getMajorIn(),300));
-				line.append(formatString(mPersonnel.getQualification().getQualification(),300));
-				line.append(formatInt(mPersonnel.getQualification().getQualificationLevel()));
-				line.append(formatString(mPersonnel.getQualification().getInstitute(),255));
-				line.append(formatString(mPersonnel.getQualification().getYear(),30));
-				line.append(formatString(mPersonnel.getQualification().getEducationField(),12));
-
-				line.append(formatString(mPersonnel.getProfBodyDetail().getProfBody(),12));
-				line.append(formatString(mPersonnel.getProfBodyDetail().getProfBodyNo(),30));
-				line.append(formatDateEperunding(mPersonnel.getProfBodyDetail().getProfBodyExpiry(),false));
+				
+				if(null!=mPersonnel.getPersonnel()){
+					
+					line.append(formatString(mPersonnel.getPersonnel().getIsManagement(),1));
+					line.append(formatString(mPersonnel.getPersonnel().getIsProfessional(),1));
+					line.append(formatString(mPersonnel.getPersonnel().getIsSemiProf(),1));
+					line.append(formatString(mPersonnel.getPersonnel().getIsClerical(),1));
+					line.append(formatString(mPersonnel.getPersonnel().getName(),50));
+					line.append(formatString(mPersonnel.getPersonnel().getNewICNo(),12));
+					line.append(formatString(mPersonnel.getPersonnel().getPassport(),20));
+					line.append(formatString(mPersonnel.getPersonnel().getIsBumi(),1));
+					line.append(formatInt(mPersonnel.getPersonnel().getCitizenOf()));
+					line.append(formatString(mPersonnel.getPersonnel().getRace(),100));
+					line.append(formatString(mPersonnel.getPersonnel().getDesignation(),50));
+					line.append(formatBigDecimal(mPersonnel.getPersonnel().getWorkExperience()));
+					
+					for(Qualification qualification:mPersonnel.getPersonnel().getQualificationList()){
+						line.append(formatString(qualification.getMajorIn(),300));
+						line.append(formatString(qualification.getQualification(),300));
+						line.append(formatInt(qualification.getQualificationLevel()));
+						line.append(formatString(qualification.getInstitute(),255));
+						line.append(formatString(qualification.getYear(),30));
+						line.append(formatString(qualification.getEducationField(),12));
+					}
+				}
+				for(ProfBodyDetail profBodyDetail :mPersonnel.getProfBodyDetailList()){
+					line.append(formatString(profBodyDetail.getProfBody(),12));
+					line.append(formatString(profBodyDetail.getProfBodyNo(),30));
+					line.append(formatDateEperunding(profBodyDetail.getProfBodyExpiry(),false));
+				}
 
 				line.append(String.format("%s", mPersonnel.getExpertise().getCategoryClassification()));
 
@@ -1460,7 +1473,6 @@ public class FileUtility {
 		Writer writer = null;
 
 		try {
-
 			writer = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(filePath + fileName), "utf-8"));
 
@@ -1472,31 +1484,35 @@ public class FileUtility {
 				line.append(System.getProperty("line.separator"));
 
 				line.append(formatString(bDirector.getMOFNo(),20));
-
-				line.append(formatString(bDirector.getDirector().getIsBOD(),1));
-				line.append(formatString(bDirector.getDirector().getIsCEO(),1));
-				line.append(formatString(bDirector.getDirector().getName(),50));
-				line.append(formatString(bDirector.getDirector().getNewICNo(),12));
-				line.append(formatString(bDirector.getDirector().getPassport(),20));
-				line.append(formatString(bDirector.getDirector().getIsBumi(),1));
-				line.append(formatInt(bDirector.getDirector().getCitizenOf()));
-				line.append(formatString(bDirector.getDirector().getRace(),100));
-				line.append(formatString(bDirector.getDirector().getDesignation(),50));
-				line.append(formatBigDecimal(bDirector.getDirector().getWorkExperience()));
-
-				line.append(formatString(bDirector.getQualification().getMajorIn(),300));
-				line.append(formatString(bDirector.getQualification().getQualification(),300));
-				line.append(formatInt(bDirector.getQualification().getQualificationLevel()));
-				line.append(formatString(bDirector.getQualification().getInstitute(),255));
-				line.append(formatString(bDirector.getQualification().getYear(),30));
-				line.append(formatString(bDirector.getQualification().getEducationField(),12));
-
-				line.append(formatString(bDirector.getProfBodyDetail().getProfBody(),12));
-				line.append(formatString(bDirector.getProfBodyDetail().getProfBodyNo(),30));
-				line.append(formatDateEperunding(bDirector.getProfBodyDetail().getProfBodyExpiry(),false));
+				
+				if (null!=bDirector.getDirector()){
+					line.append(formatString(bDirector.getDirector().getIsBOD(),1));
+					line.append(formatString(bDirector.getDirector().getIsCEO(),1));
+					line.append(formatString(bDirector.getDirector().getName(),50));
+					line.append(formatString(bDirector.getDirector().getNewICNo(),12));
+					line.append(formatString(bDirector.getDirector().getPassport(),20));
+					line.append(formatString(bDirector.getDirector().getIsBumi(),1));
+					line.append(formatInt(bDirector.getDirector().getCitizenOf()));
+					line.append(formatString(bDirector.getDirector().getRace(),100));
+					line.append(formatString(bDirector.getDirector().getDesignation(),50));
+					line.append(formatBigDecimal(bDirector.getDirector().getWorkExperience()));
+					
+					for(Qualification qualification:bDirector.getDirector().getQualificationList()){
+						line.append(formatString(qualification.getMajorIn(),300));
+						line.append(formatString(qualification.getQualification(),300));
+						line.append(formatInt(qualification.getQualificationLevel()));
+						line.append(formatString(qualification.getInstitute(),255));
+						line.append(formatString(qualification.getYear(),30));
+						line.append(formatString(qualification.getEducationField(),12));
+					}
+				}
+				for(ProfBodyDetail profBodyDetail:bDirector.getProfBodyDetailList()){
+					line.append(formatString(profBodyDetail.getProfBody(),12));
+					line.append(formatString(profBodyDetail.getProfBodyNo(),30));
+					line.append(formatDateEperunding(profBodyDetail.getProfBodyExpiry(),false));
+				}
 
 				line.append(String.format("%s", bDirector.getExpertise().getCategoryClassification()));
-
 				writer.write(line.toString());
 			}
 			
@@ -3030,7 +3046,6 @@ public class FileUtility {
 				}
 
 			}
-	
 			reqDTO.setProcessId("PHS-001");
 			reqDTO.setFileName(fileName);
 			reqDTO.setServiceCode(SERVICE_CODE);

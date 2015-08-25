@@ -1,13 +1,18 @@
 package my.ep.web.integration.eperunding;
 
+import java.util.List;
+
+/*
+ * @author P Ganga prasad
+ */
 public class ManagementPersonnel {
 
 	private String MOFNo;
 
 	private Personnel personnel;
+
+	private List<ProfBodyDetail> profBodyDetailList;
 	private Expertise expertise;
-	private Qualification qualification;
-	private ProfBodyDetail profBodyDetail;
 
 	public String getMOFNo() {
 		return MOFNo;
@@ -17,6 +22,14 @@ public class ManagementPersonnel {
 		MOFNo = mOFNo;
 	}
 
+	public Expertise getExpertise() {
+		return expertise;
+	}
+
+	public void setExpertise(Expertise expertise) {
+		this.expertise = expertise;
+	}
+	
 	public Personnel getPersonnel() {
 		return personnel;
 	}
@@ -25,28 +38,29 @@ public class ManagementPersonnel {
 		this.personnel = personnel;
 	}
 
-	public Expertise getExpertise() {
-		return expertise;
+	public List<ProfBodyDetail> getProfBodyDetailList() {
+		return profBodyDetailList;
 	}
 
-	public void setExpertise(Expertise expertise) {
-		this.expertise = expertise;
+	public void setProfBodyDetailList(List<ProfBodyDetail> profBodyDetailList) {
+		this.profBodyDetailList = profBodyDetailList;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof ManagementPersonnel)
+	    {
+	    	ManagementPersonnel temp = (ManagementPersonnel) obj;
+	        if(this.MOFNo.equalsIgnoreCase(temp.MOFNo) && this.personnel.getName().equalsIgnoreCase(temp.personnel.getName()))
+	            return true;
+	    }
+	    return false;
 
-	public Qualification getQualification() {
-		return qualification;
 	}
+	@Override
+	public int hashCode() {
 
-	public void setQualification(Qualification qualification) {
-		this.qualification = qualification;
-	}
-
-	public ProfBodyDetail getProfBodyDetail() {
-		return profBodyDetail;
-	}
-
-	public void setProfBodyDetail(ProfBodyDetail profBodyDetail) {
-		this.profBodyDetail = profBodyDetail;
+	    return (this.MOFNo.hashCode() + this.personnel.getName().hashCode());        
 	}
 
 }
