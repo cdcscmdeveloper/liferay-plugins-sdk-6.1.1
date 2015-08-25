@@ -3237,18 +3237,19 @@ public class ReportBackingBean extends
 						getManagedBean().getRptGenBean().setSmZoneLabelView(true);
 					//}
 					
-				}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
-					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
-						getManagedBean().getRptGenBean().setSmZoneView(true);
-						getManagedBean().getRptGenBean().setSmMandatoryZoneView(true);
-					//}
-					
 				}else if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_MOF_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_USER)||allRoleCodesList.contains(ReportConst.ROLE_CODE_BASIC_SUPPLIER_ADMIN))){
 					if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_APPL_CLIENT_CHARTER_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_DIR_OWN_CEO_COMPANY_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){
 						rptGenBean.setSmMandatorySupplierTypeView(false);
 						rptGenBean.setSmSupplierTypeView(false);
 					}
-				}
+				}else {
+					//if((allRoleCodesList!=null)&&(allRoleCodesList.contains(ReportConst.ROLE_CODE_EP_ADMIN)||allRoleCodesList.contains(ReportConst.ROLE_CODE_PTJ_ADMIN))){
+					//if((this.getReportValue()!=null)&&(this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_DIR_OWN_CEO_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_LIST_OF_COMP_SORT_ALPHA_RPT_VAL)||this.getReportValue().equals(ReportConst.SM_PERSON_BRANCH_BANK))){				
+					getManagedBean().getRptGenBean().setSmZoneView(true);
+					getManagedBean().getRptGenBean().setSmMandatoryZoneView(true);
+				//}
+				
+			}
 			}	
 		}
 	}
