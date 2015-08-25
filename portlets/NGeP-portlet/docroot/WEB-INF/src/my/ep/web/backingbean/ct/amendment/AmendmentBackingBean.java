@@ -1173,12 +1173,22 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 				throw new EpException(MessageConst.ERROR_750002);
 			}
 		}
-		//Validation for committee
+		
 		if ((getManagedBean().getTaskName() != null 
 				&& getManagedBean().getTaskName().equalsIgnoreCase(CTProcessNameConst.REVIEW_FA_HT_NAME))
 				&& action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
+			
 			if (!getManagedBean().getContractVer().getCtContractValue().isAp201Exempt()
 					&& !getManagedBean().getContractVer().getCtAmendment().isRouteToBPK()) {
+				// Validation for remark is mandatory if isComplyAP201
+		 		if (getManagedBean().getContractVer().getCtAmendment().isComplyAP201()) {		 			
+					if ((getManagedBean().getRemarkList().get(0).getRemark() == null 
+							|| getManagedBean().getRemarkList().get(0).getRemark().length() == 0)) {
+						RequestContext.getCurrentInstance().addCallbackParam("epException",true);
+						throw new EpException(MessageConst.ERROR_750034);
+					}
+		 		}				
+				//Validation for committee
 				if (getManagedBean().getContractVer().getCtAmendment().getSecretary() == null) {
 					RequestContext.getCurrentInstance().addCallbackParam("epException", true);
 					throw new EpException(MessageConst.ERROR_100022, 
