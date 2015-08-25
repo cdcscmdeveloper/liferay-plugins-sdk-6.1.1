@@ -78,7 +78,7 @@
 				<td class="standard border-bottom left">$scLoi.scLoiLoa.supplierName</td>
 				#foreach( $scNegoLocation in $scLoi.scNegoLocations )
 					<td class="standard border-bottom left">$scNegoLocation.negoLocation</td>
-					<td class="standard border-bottom left-right">$commonUtils.getFormattedDate($scNegoLocation.negoDate,"dd/MM/yyyy hh:mm a")</td>
+					<td class="standard border-bottom left-right">$dateSDF.format($scNegoLocation.negoDate)</td>
 				#end
 			</tr>
 		#end
