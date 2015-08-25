@@ -300,7 +300,7 @@ public class LOADetailBackingBean extends
 				scLoa.setContractAgency(null);
 				resDTO.setScLoa(scLoa);
 			}
-
+			
 			populateLOADetails(resDTO);
 			getManagedBean().setEditFlag(true);
 			
@@ -694,6 +694,9 @@ public class LOADetailBackingBean extends
 		if (scLoa.getContractType().getParameterId() != null) {
 			contractTypeChanged();
 		}
+		
+		// Contract Signer
+		prepareSignerInfo();
 		
 		// Approver
 		ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
@@ -4582,8 +4585,10 @@ public class LOADetailBackingBean extends
 		if (null != getManagedBean().getContractSignerUser()
 				&& getManagedBean().getContractSignerUser().getUserId() != null) {
 
-			getManagedBean().getContractSignerUser().setUserId(null);
 			getManagedBean().getScLoa().setLoaSignerDesig(null);
+			getManagedBean().setContractSignerUser(null);
+			getManagedBean().getScLoa().setContractSigner(null);
+			prepareSignerInfo();
 			RequestContext.getCurrentInstance().execute(
 					"gstSignerConfirmPopupWin.show()");
 		}
@@ -4840,28 +4845,29 @@ public class LOADetailBackingBean extends
 	/**
 	 * @param scLoa
 	 */
-	public void prepareSignerInfo() {
+	private void prepareSignerInfo() {
 		
 		ScLoa scLoa = getManagedBean().getScLoa();
-		// Contract Signer
-		PmUser contractSignerUser = scLoa.getContractSigner();
-		if (contractSignerUser == null) {
-			contractSignerUser = new PmUser();
-		}
+		
+			// Contract Signer
+			PmUser contractSignerUser = scLoa.getContractSigner();
+			if (contractSignerUser == null) {
+				contractSignerUser = new PmUser();
+			}
 
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-		if (scLoa.getLoaAmt() != null) {
-			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
-					scLoa.getGstAmt()));
+			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+					ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+			if (scLoa.getLoaAmt() != null) {
+				userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
+						scLoa.getGstAmt()));
+			}
+			userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
+					.getOrgProfileId());
+			UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+			getManagedBean().setContractSignerList(userResDTO.getUserList());
+			getManagedBean().setContractSignerUser(contractSignerUser);
 		}
-		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
-				.getOrgProfileId());
-		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
-		getManagedBean().setContractSignerList(userResDTO.getUserList());
-		getManagedBean().setContractSignerUser(contractSignerUser);
-	}
 	
 }
