@@ -16,7 +16,8 @@
 						value="#{lbl['lbl.sc.document.title']}"></h:outputLabel> <p:outputLabel
 						value="*" styleClass="mandatory" /></td>
 				<td colspan="3"><p:inputText size="30" required="true"
-						disabled="#{!isEditableStatus}" style="margin-bottom:5px;" label="#{lbl['lbl.sc.document.title']}"
+						disabled="#{!isEditableStatus}" style="margin-bottom:5px;"
+						label="#{lbl['lbl.sc.document.title']}"
 						value="#{directLOABackingBean.managedBean.prodscQtDoc.tplSpecMaster.specName}" /></td>
 			</tr>
 			<tr>
@@ -41,51 +42,51 @@
 	</p:panel>
 	<p:panel header="Zone / Location Details" toggleable="false">
 
-
-		<table>
-			<tr>
-				<td valign="top" width="52%"><h:outputLabel
-						value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
-				<td colspan="3"><p:selectOneRadio
-						value="#{directLOABackingBean.managedBean.scQt.zonal}"
-						disabled="#{!isEditableStatus}">
-						<f:selectItems
-							value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
-
-						<p:ajax event="change" update="generalLocationList"  partialSubmit="true" immediate="true"
-							process="@this"
-							listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
-					</p:selectOneRadio></td>
-				<td style="margin-top: -3px"><ac:iconTooltip
-						value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
-			</tr>
-
-
-		</table>
 		<h:panelGroup id="generalLocationList">
+			<table>
+				<tr>
+					<td valign="top" width="52%"><h:outputLabel
+							value="#{lbl['lbl.sc.qt.zone.location']}" /></td>
+					<td colspan="3"><p:selectOneRadio
+							value="#{directLOABackingBean.managedBean.scQt.zonal}"
+							disabled="#{!isEditableStatus}">
+							<f:selectItems
+								value="#{directLOABackingBean.getRadioButtonCodeValues(ParameterTypeConst.yesNoFlag)}" />
+
+							<p:ajax event="change" partialSubmit="true" process="@this"
+								update="@this,generalLocationList"
+								listener="#{directLOABackingBean.zoneRadioChange}"></p:ajax>
+						</p:selectOneRadio></td>
+					<td style="margin-top: -3px"><ac:iconTooltip
+							value="#{lbl['lbl.sc.qt.zone.location.tooltip']}" /></td>
+				</tr>
 
 
-			<c:if test="#{directLOABackingBean.managedBean.scQt.zonal}">
+			</table>
+
+
+
+			<ui:fragment rendered="#{directLOABackingBean.managedBean.scQt.zonal}">
 				<ui:include src="zonelocdetails.xhtml"></ui:include>
-			</c:if>
+			</ui:fragment>
 
-			
+
 		</h:panelGroup>
 
 	</p:panel>
 
 	<p:panel header="Specification Content" toggleable="true"
 		id="productAndServiceId">
-		
-			<ac:templateSpec
-				templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
-				title="#{lbl['lbl.txt.product']}" newable="true" />
-		
-		
-			<ac:templateSpec
-				templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
-				title="#{lbl['lbl.txt.service']}" newable="true" />
-	
+
+		<ac:templateSpec
+			templateSpecBean="#{directLOABackingBean.managedBean.prodTemplateSpecBean}"
+			title="#{lbl['lbl.txt.product']}" newable="true" />
+
+
+		<ac:templateSpec
+			templateSpecBean="#{directLOABackingBean.managedBean.specTemplateSpecBean}"
+			title="#{lbl['lbl.txt.service']}" newable="true" />
+
 
 
 	</p:panel>
