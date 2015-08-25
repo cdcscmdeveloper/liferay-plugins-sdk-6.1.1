@@ -33,15 +33,25 @@ import org.primefaces.event.FileUploadEvent;
 public class SmUpdateGstInfoBackingBean extends
 		BaseBackingBean<SmUpdateGstInfoManagedBean> {
 
+	/**
+	 * Declare constructor and initialized login user log key
+	 */
 	public SmUpdateGstInfoBackingBean() {
 		SmCommonUtil.setMDCUserId();
 	}
 
+	/**
+	 * Pre-render update gst terms and condition page
+	 */
 	public void preRenderGstInfo() {
 		renewSesionObject();
 		SmCommonUtil.redirectToPage("gstUpdateInfoTnc.xhtml", "");
 	}
 
+	/**
+	 * Proceed to update gst page after accept terms and condition. Initialized
+	 * all related gst information
+	 */
 	public void proceedAfterAcceptTnC() {
 		getManagedBean().setSmSupplier(SmApplicationUtil.getCurrentSupplier());
 		getManagedBean().setMofAccount(
@@ -62,6 +72,9 @@ public class SmUpdateGstInfoBackingBean extends
 		SmCommonUtil.redirectToPage("gstInfoBasePage.xhtml", "");
 	}
 
+	/**
+	 * Add HQ gst information in session
+	 */
 	public void addHqGst() {
 		getManagedBean().setGstEmpty(false);
 		getManagedBean().setHqGstSupplier(new SmGstSupplier());
@@ -79,6 +92,9 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Delete HQ gst information in session
+	 */
 	public void deleteHqGst() {
 		if (getManagedBean().getHqGstSupplier() == null) {
 			// No GST information to be deleted.
@@ -87,10 +103,22 @@ public class SmUpdateGstInfoBackingBean extends
 		setDeleteHq();
 	}
 
+	/**
+	 * Assign selected gst supporting document to HQ
+	 * 
+	 * @param SmGstSupplierDoc
+	 *            doc
+	 */
 	public void assignSelectedHqSupportDoc(SmGstSupplierDoc doc) {
 		getManagedBean().setSelectedHqSuppDoc(doc);
 	}
 
+	/**
+	 * Upload event to handle upload gst supporting documents
+	 * 
+	 * @param FileUploadEvent
+	 *            event
+	 */
 	public void handleHqSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
 			if (getManagedBean().getSelectedHqSuppDoc() != null) {
@@ -114,6 +142,12 @@ public class SmUpdateGstInfoBackingBean extends
 
 	}
 
+	/**
+	 * Add Branch gst information in session
+	 * 
+	 * @param SmGstBranchVO
+	 *            branch
+	 */
 	public void addBranchGst(SmGstBranchVO branch) {
 		if (getManagedBean().getBranches() != null
 				&& !getManagedBean().getBranches().isEmpty()) {
@@ -130,12 +164,19 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Call confirmation dialog when click declare button
+	 */
 	public void onDeclareGst() {
 		validateDeclare();
 		RequestContext.getCurrentInstance().execute(
 				"confirmDeclareDialog.show();");
 	}
 
+	/**
+	 * Process save or update declare gst for HQ and branch. Also notify
+	 * contract approver on the gst declaration
+	 */
 	public void declareGst() {
 		List<SmGstSupplier> supplierGstList = new ArrayList<SmGstSupplier>();
 		SmCommonUtil.removeNotUploadedGstSuppDoc(getManagedBean()
@@ -146,8 +187,8 @@ public class SmUpdateGstInfoBackingBean extends
 				if (brVO.getGst() != null) {
 					if (brVO.isSameWithHq()) {
 						SmCommonUtil.copyHqGstToBranch(getManagedBean()
-								.getHqGstSupplier(), brVO.getGst(), true,
-								brVO.getBranch().getBranchCode());
+								.getHqGstSupplier(), brVO.getGst(), true, brVO
+								.getBranch().getBranchCode());
 					}
 					SmCommonUtil.removeNotUploadedGstSuppDoc(brVO.getGst());
 					supplierGstList.add(brVO.getGst());
@@ -156,8 +197,7 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 		SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
 		reqDTO.setSmGstSupplierList(supplierGstList);
-		reqDTO.setSupplierId(getManagedBean().getSmSupplier()
-				.getSupplierId());
+		reqDTO.setSupplierId(getManagedBean().getSmSupplier().getSupplierId());
 		SmServiceLookup.getSupplierGstSO().declareSupplierGst(reqDTO);
 		renewSesionObject();
 		SmCommonUtil.redirectToPage(
@@ -165,6 +205,12 @@ public class SmUpdateGstInfoBackingBean extends
 				MessageConst.INFO_721062);
 	}
 
+	/**
+	 * Delete branch gst information in session
+	 * 
+	 * @param SmGstBranchVO
+	 *            branch
+	 */
 	public void deleteBranchGst(SmGstBranchVO branch) {
 		if (branch == null || branch.getGst() == null) {
 			// No GST information entered to be deleted.
@@ -173,12 +219,26 @@ public class SmUpdateGstInfoBackingBean extends
 		setDeleteBranch(branch);
 	}
 
+	/**
+	 * Assign selected branch supporting documents to upload
+	 * 
+	 * @param SmGstBranchVO
+	 *            brVO
+	 * @param SmGstSupplierDoc
+	 *            doc
+	 */
 	public void assignSelectedBranchSupportDoc(SmGstBranchVO brVO,
 			SmGstSupplierDoc doc) {
 		brVO.setDoc(doc);
 		getManagedBean().setSelectedBranchDoc(brVO);
 	}
 
+	/**
+	 * Handle file upload event for branch gst supporting document
+	 * 
+	 * @param FileUploadEvent
+	 *            event
+	 */
 	public void handleBranchSupDocFileAttachment(FileUploadEvent event) {
 		if (event.getFile() != null) {
 			if (getManagedBean().getSelectedBranchDoc() != null) {
@@ -203,6 +263,12 @@ public class SmUpdateGstInfoBackingBean extends
 
 	}
 
+	/**
+	 * Copy HQ gst information to Branch
+	 * 
+	 * @param SmGstBranchVO
+	 *            brVO
+	 */
 	public void copyHqGstToBranch(SmGstBranchVO brVO) {
 		if (brVO.getGst() == null) {
 			brVO.setGst(new SmGstSupplier());
@@ -213,6 +279,11 @@ public class SmUpdateGstInfoBackingBean extends
 						.getBranchCode());
 	}
 
+	/**
+	 * Check whether declare button is disable or not
+	 * 
+	 * @return boolean
+	 */
 	public boolean isDisableDeclareButton() {
 		boolean retVal = false;
 
@@ -223,6 +294,11 @@ public class SmUpdateGstInfoBackingBean extends
 		return retVal;
 	}
 
+	/**
+	 * Get gst upload directory
+	 * 
+	 * @return String
+	 */
 	private String getGstSuppDocBasePath() {
 		return SmCommonUtil
 				.getUploadFilePath(SupplierManagementConst.GST_FILE_PATH)
@@ -231,6 +307,9 @@ public class SmUpdateGstInfoBackingBean extends
 				+ System.currentTimeMillis() + "/";
 	}
 
+	/**
+	 * Initialized HQ gst information
+	 */
 	private void initHqGstInfo() {
 		getManagedBean().setHqGstSupplier(
 				SmCommonUtil.getSmGstSupplierBySupplierIdAndBranchCode(
@@ -246,6 +325,9 @@ public class SmUpdateGstInfoBackingBean extends
 		getManagedBean().setInitialHqGst(getManagedBean().getHqGstSupplier());
 	}
 
+	/**
+	 * Init Branch gst information
+	 */
 	private void initBranchGstInfo() {
 		getManagedBean()
 				.setInitialBranchGstList(new ArrayList<SmGstSupplier>());
@@ -290,6 +372,9 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Set deleted HQ value in session
+	 */
 	private void setDeleteHq() {
 		getManagedBean().setGstEmpty(true);
 		setDeleteGst(getManagedBean().getHqGstSupplier());
@@ -307,6 +392,12 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Set deleted branch in session
+	 * 
+	 * @param SmGstBranchVO
+	 *            branch
+	 */
 	private void setDeleteBranch(SmGstBranchVO branch) {
 		for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
 			if (brVO.getGst() != null
@@ -323,6 +414,12 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Set deleted gst values in session
+	 * 
+	 * @param SmGstSupplier
+	 *            deleteGst
+	 */
 	private void setDeleteGst(SmGstSupplier deleteGst) {
 		if (deleteGst.getGstSupplierId() != null) {
 			deleteGst.setGstDeletedDate(new Date());
@@ -335,6 +432,9 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Set HQ gst file attachment to VO
+	 */
 	private void setHqSuppDocFileAttachment() {
 		Iterator<SmGstSupplierDoc> docVOIter = getManagedBean()
 				.getHqGstSupplier().getSmGstSupplierDocs().iterator();
@@ -353,6 +453,9 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Set branch gst file attachment to VO
+	 */
 	private void setBranchSuppDocFileAttachment() {
 		Iterator<SmGstBranchVO> brVOIter = getManagedBean().getBranches()
 				.iterator();
@@ -377,16 +480,26 @@ public class SmUpdateGstInfoBackingBean extends
 		}
 	}
 
+	/**
+	 * Validate gst registration no, effective date and end date entered
+	 */
 	private void validateDeclare() {
 		StringBuffer sb = new StringBuffer();
 		SmGstSupplier gst = getManagedBean().getHqGstSupplier();
 		if (gst.getGstEndDate() != null
 				&& gst.getGstEffDate().compareTo(gst.getGstEndDate()) > 0) {
 			throw new EpException(MessageConst.ERROR_721044);
+		} else if (StringUtils.isNotBlank(gst.getGstRegNo())
+				&& gst.getGstRegNo().length() != SmRuleHelper.getInstance()
+						.getGstRegNumLength()) {
+			throw new EpException(MessageConst.ERROR_721027);
 		}
 		validateBranch(sb);
 	}
 
+	/**
+	 * Validate branch gst registration no, effective date and end date entered
+	 */
 	private void validateBranch(StringBuffer sb) {
 		if (getManagedBean().getBranches() != null) {
 			for (SmGstBranchVO brVO : getManagedBean().getBranches()) {
