@@ -306,7 +306,6 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 		if ((getManagedBean().getSoftCertPayList() != null && getManagedBean()
 				.getSoftCertPayList().size() > 0)
 				|| getManagedBean().getFreeSoftCertPersonnel() != null) {
-			validateRequestSoftcert();
 			PmUser pmUser = new FacesScopes().getUserSessionBean();
 			List<String> userList = new ArrayList<String>();
 			userList.add(pmUser.getLoginId());
@@ -454,6 +453,7 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 * just directly show declaration popup
 	 */
 	public void showConfirmDialog() {
+		validateRequestSoftcert();
 		if (getManagedBean().isApplySoftcertForOthers()) {
 			onDisplaySpkiPopup();
 		} else {
