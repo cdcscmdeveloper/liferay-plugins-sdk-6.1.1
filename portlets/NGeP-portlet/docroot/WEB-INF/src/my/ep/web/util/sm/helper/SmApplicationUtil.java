@@ -4731,6 +4731,14 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Set personnel whether already need to renew softcert
+	 * 
+	 * @param SmSupplier
+	 *            supplier
+	 * @param List
+	 *            <SmPersonnel> personnelList
+	 */
 	public static void setPersonnelSoftcertRenewalStatus(SmSupplier supplier,
 			List<SmPersonnel> personnelList) {
 		if (personnelList != null && !personnelList.isEmpty()) {
@@ -5440,6 +5448,13 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Get latest resubmit application by rejected application
+	 * 
+	 * @param SmAppl
+	 *            rejectedAppl
+	 * @return SmAppl
+	 */
 	public static SmAppl getLatesResubmitApplicationByRejectedAppl(
 			SmAppl rejectedAppl) {
 		MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
@@ -5449,6 +5464,15 @@ public class SmApplicationUtil {
 				.getSmAppl();
 	}
 
+	/**
+	 * Initialized gst information for HQ
+	 * 
+	 * @param SmAppl
+	 *            appl
+	 * @param SmGstSupplier
+	 *            gst
+	 * @return SmGstSupplier
+	 */
 	public static SmGstSupplier initHqGstInformation(SmAppl appl,
 			SmGstSupplier gst) {
 		SmGstSupplier gstCurrent = SmCommonUtil
@@ -5481,6 +5505,14 @@ public class SmApplicationUtil {
 		return gst;
 	}
 
+	/**
+	 * Initialized gst information for Branch
+	 * 
+	 * @param SmGstSupplier
+	 *            hqGst
+	 * @param SmAppl
+	 *            appl
+	 */
 	public static void initBranchGstInformation(SmGstSupplier hqGst, SmAppl appl) {
 		SupplierGstReqDTO reqDTO = null;
 		SmGstSupplier brCurr = null;
@@ -5528,6 +5560,15 @@ public class SmApplicationUtil {
 		}
 	}
 
+	/**
+	 * Add new gst to branch and check whether need to be copied gst information
+	 * from HQ
+	 * 
+	 * @param SmGstSupplier
+	 *            hqGst
+	 * @param SmSupplierBranch
+	 *            br
+	 */
 	public static void addNewBranchGst(SmGstSupplier hqGst, SmSupplierBranch br) {
 		if (!isGstEmpty(hqGst)) {
 			br.setGst(new SmGstSupplier());
@@ -5541,6 +5582,13 @@ public class SmApplicationUtil {
 		SmApplicationUtil.initGstSuppDocs(br.getGst());
 	}
 
+	/**
+	 * Check whether gst is empty or not
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 * @return boolean
+	 */
 	public static boolean isGstEmpty(SmGstSupplier gst) {
 		boolean retVal = false;
 		if (gst == null) {
@@ -5552,6 +5600,12 @@ public class SmApplicationUtil {
 		return retVal;
 	}
 
+	/**
+	 * Initialized gst supporting documents
+	 * 
+	 * @param SmGstSupplier
+	 *            gst
+	 */
 	public static void initGstSuppDocs(SmGstSupplier gst) {
 		List<PmDocument> suppDocList = SmServiceLookup.getDocumentSO()
 				.retrieveGstSuppDocuments(new DocumentReqDTO())
