@@ -13,13 +13,18 @@ import javax.naming.NamingException;
 import my.ep.biz.bean.search.BaseSearchFilterBean;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchMultiFilterBean;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.trackingdiary.ITrackingDiarySO;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.constant.sc.QTStatusConst;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryReqDTO;
 import my.ep.dto.pm.common.trackingdiary.TrackingDiaryResDTO;
 import my.ep.exception.EpException;
@@ -92,7 +97,6 @@ public class DpTrackingDiaryBackingBean extends
 
 	public List<SelectItem> searchStatusDesc() throws NamingException {
 		List<SelectItem> items = null;
-
 		try {
 			items = new ArrayList<SelectItem>();
 
@@ -100,8 +104,40 @@ public class DpTrackingDiaryBackingBean extends
 					"lbl.txt.select", ResourceBundleUtils.BUNDLE_COMMON_LABELS,
 					getFacesScopes().getUserLocale())));
 			
-			List<PmStatusDesc> statusDescs = StatusHelper.getInstance().getStatusDescList(
-					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase(), getManagedBean().getSearchDocumentType());
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			
+			SearchBean<PmStatusDesc> searchBean = new SearchBean<PmStatusDesc>();
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmStatus.moduleCode",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					ModuleCodeConst.SUPPLIER_SELECTION.toUpperCase()));
+			List<String> docTypeList = new ArrayList<String>();
+			List<Long> statusIdList = new ArrayList<Long>();
+			docTypeList.add(getManagedBean().getSearchDocumentType());
+			//docTypeList.add("FT");
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"pmStatus.docType",
+					SearchOperator.OPERATOR_IN.value(),
+					docTypeList));		
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"languageCode",
+					SearchOperator.OPERATOR_EQUALS.value(),
+					getFacesScopes().getUserLocale().getLanguage()));
+			
+			if(getManagedBean().getSearchDocumentType().
+					equalsIgnoreCase(ParameterConst.DOCTYPE_LETTER_OF_AWARD)) {
+				statusIdList.add(QTStatusConst.LOA_PENDING_CONTRACT_SIGNING);
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"pmStatus.statusId",
+						SearchOperator.OPERATOR_NOT_IN.value(),
+						statusIdList));
+			}
+			
+			reqDTO.setStatusDescSearchBean(searchBean);
+			StatusResDTO resDTO = getStatusSO().searchStatusDesc(reqDTO);
+			
+			List<PmStatusDesc> statusDescs = resDTO.getStatusDescList();
+			
 			for (PmStatusDesc statusDesc : statusDescs) {
 				items.add(new SelectItem(statusDesc.getPmStatus()
 						.getStatusId(), statusDesc.getStatusName()));
@@ -198,6 +234,15 @@ public class DpTrackingDiaryBackingBean extends
 	public void setSearchTrackingDiaryDataModel(
 			IPagingDataModel<PmTrackingDiary> searchTrackingDiaryDataModel) {
 		this.searchTrackingDiaryDataModel = searchTrackingDiaryDataModel;
+	}
+	
+	/**
+	 * Gets the status so.
+	 *
+	 * @return the status so
+	 */
+	private IStatusSO getStatusSO() {
+		return BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IStatusSO.class);
 	}
 
 }
