@@ -1903,15 +1903,15 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 	 * @return the big decimal
 	 */
 	public ScLoa  calcBondAmount(ScLoa scLoa){
+		
 		BigDecimal loaAmt  = BigDecimal.ZERO;
 		BigDecimal bondAmt  = BigDecimal.ZERO; 
 		double totalDuration = 0;
 		double loaAmtForBondPercentage = 0;
 		double bondPercentage =0;
 		if(scLoa.getLoaAmt() != null){
-			BigDecimal  lamt  = scLoa.getLoaAmt();
-			lamt =  lamt.setScale(4, BigDecimal.ROUND_HALF_EVEN);
-			double loaAmount =  lamt.doubleValue();
+			BigDecimal  overallCtAmount  = overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt());
+			double ctAmount =  overallCtAmount.doubleValue();
 
 			if(scLoa.getContractDuration() != null){
 				BigDecimal  duration  = scLoa.getContractDuration();
@@ -1922,7 +1922,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 				}
 
 				if(totalDuration >0){
-					loaAmtForBondPercentage = loaAmount/totalDuration;
+					loaAmtForBondPercentage = ctAmount/totalDuration;
 				}
 
 				if(loaAmtForBondPercentage >0){
@@ -1956,5 +1956,22 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		return scLoa;
 	}
 
+	/**
+	 * @param offerPrice
+	 * @param gstAmount
+	 * @return
+	 */
+	public BigDecimal overallCtAmount(BigDecimal offerPrice,
+			BigDecimal gstAmount) {
+
+		BigDecimal overallCtAmount = offerPrice;
+		if (gstAmount != null) {
+			overallCtAmount = overallCtAmount.add(gstAmount);
+		}
+		overallCtAmount.setScale(2, BigDecimal.ROUND_HALF_EVEN);
+		return overallCtAmount;
+
+	}
+	
 
 }
