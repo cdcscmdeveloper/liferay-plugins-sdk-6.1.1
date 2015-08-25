@@ -74,7 +74,7 @@ public class PhisIntegration {
 	
 	private static Logger log = BatchLogger.getLogger(PhisIntegration.class);
 	
-	public static void main(String[] args) throws IOException {
+//	public static void main(String[] args) throws IOException {
 //		PhisIntegration test = new PhisIntegration();
 //		test.createFilesforPHIS();
 //		test.masterDataMaterialInfoPHIS();
@@ -86,7 +86,7 @@ public class PhisIntegration {
 //		test.glAccount();
 		
 //		test.masterDataMaterialInfoPHIS();
-	}
+//	}
 	
 	IVotFundSO votFundSO = (IVotFundSO) BusinessDelegate.getInstance()
 			.getServiceObject(ModuleCodeConst.PROFILE_MANAGEMENT, IVotFundSO.class);
@@ -124,15 +124,6 @@ public class PhisIntegration {
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
-		/*SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "29-07-2015";
-		Date currentDate = new Date();
-		try {
-			currentDate = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-*/
 		reqDTO.setCreateDate(currentDate);
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 
@@ -394,16 +385,7 @@ public class PhisIntegration {
 	public void votFund() {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();		
-		/*Date currentDate = null;//new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-09-2014";
-		try {
-			currentDate = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
 		reqDTO.setCreatedDate(currentDate);
-		
 		
 		List<Long> listId = getMOHkumpPtjIds();
 		
@@ -512,14 +494,6 @@ public class PhisIntegration {
 
 		VotFundReqDTO reqDTO = new VotFundReqDTO();
 		
-		/*Date currentDate = null;//new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "20-09-2014";
-		try {
-			currentDate = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
 		reqDTO.setCreatedDate(currentDate);
 
 		VotFundResDTO resDTO = votFundSO.retrieveVotFundDanaByCreatedDate(reqDTO);
@@ -568,14 +542,6 @@ public class PhisIntegration {
 	public void programActivity() {
 
 		ProgramActivityReqDTO reqDTO = new ProgramActivityReqDTO();
-		/*Date currentDate = null;// new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "17-04-2014";
-		try {
-			currentDate = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
 		reqDTO.setCreatedDate(currentDate);
 		
 		List<Long> listId = getMOHkumpPtjIds();
@@ -636,15 +602,6 @@ public class PhisIntegration {
 
 	public void project() {		
 	
-		/*Date currentDate = null;//new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "01-01-2014";
-		try {
-			currentDate = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/	
-
 		ProjectSetiaReqDTO reqDTO = new ProjectSetiaReqDTO();
 		
 		reqDTO.setCreateDate(currentDate);
@@ -710,16 +667,6 @@ public class PhisIntegration {
 
 	public void glAccount() {
 
-		
-	/*	Date currentDate = null;//new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-		String dateInString = "31-03-2015";
-		try {
-			currentDate = sdf.parse(dateInString);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}*/
-		
 		GlAccountReqDTO reqDTO = new GlAccountReqDTO();
 		reqDTO.setCreatedDate(currentDate);
 		
@@ -781,17 +728,8 @@ public class PhisIntegration {
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
-//		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-//		String dateInString = "30-03-2015";
-//		Date date = null ;
-//		try {
-//			date = sdf.parse(dateInString);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
-
 		reqDTO.setCreateDate(currentDate);
-		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
+//		reqDTO.setCompanyName("PHARMANIAGA LOGISTICS SDN BHD");
 		CodificationResDTO resDTO = codificationSO.searchItemByCreateDate(reqDTO);
 		
 		List<MasterDataMaterialInfo> materilInfoList = null;
