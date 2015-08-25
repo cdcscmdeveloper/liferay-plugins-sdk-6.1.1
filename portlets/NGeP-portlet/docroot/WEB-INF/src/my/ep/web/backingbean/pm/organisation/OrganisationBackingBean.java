@@ -25,6 +25,7 @@ import my.ep.biz.service.pm.common.financialorg.IFinancialOrgSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.zone.IZoneSO;
+import my.ep.biz.service.sm.gst.ISupplierGstSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
@@ -46,8 +47,11 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.zone.ZoneResDTO;
+import my.ep.dto.sm.gst.SupplierGstReqDTO;
+import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
@@ -2037,9 +2041,12 @@ public class OrganisationBackingBean extends
 			//validate end date
 			if(gstSupplier.getGstEndDate() != null && gstSupplier.getGstEndDate().before(gstSupplier.getGstEffDate())){
 				throw new EpException(MessageConst.ERROR_775119);
-			}								
-		}else{
-			throw new EpException(MessageConst.ERROR_775120);	
+			}		
+//			
+//			//validate unique gst registration number
+//			if(!validateGstRegNo(gstSupplier.getGstRegNo())){
+//				throw new EpException(MessageConst.ERROR_775117);
+//			}
 		}
 	}
 
@@ -2082,4 +2089,21 @@ public class OrganisationBackingBean extends
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 
+//	public boolean validateGstRegNo(String gstRegNo) {
+//		ISupplierGstSO supplierGstSO = null;
+//		boolean valid = true;
+//		try{
+//			supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance()
+//					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);			
+//			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+//			reqDTO.setGstRegNo(gstRegNo);
+//			SupplierGstResDTO suppGstResDTO = supplierGstSO.retrieveGstInfoByGstRegNo(reqDTO);
+//			if(suppGstResDTO.getGstList() != null && !suppGstResDTO.getGstList().isEmpty()){
+//				valid = false;
+//			}
+//		}finally{
+//			supplierGstSO = null;
+//		}
+//		return valid;
+//	}
 }
