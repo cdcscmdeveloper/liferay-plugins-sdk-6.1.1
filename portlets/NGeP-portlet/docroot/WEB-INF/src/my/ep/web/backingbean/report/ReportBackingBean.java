@@ -4918,10 +4918,22 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 	}
 	
 	public void checkSMYearNMonthDefference() {
-		int fromyear = Integer.parseInt(this.getSmCreatedFromYear());
-		int toyear = Integer.parseInt(this.getSmCreatedToYear());
-		int fromMonth = Integer.parseInt(this.getSmFromMonth());
-		int toMonth = Integer.parseInt(this.getSmToMonth());
+		int fromyear= 0;
+		int toyear = 0;
+		int fromMonth= 0;
+		int toMonth= 0;
+		if ((this.getSmCreatedFromYear() != null) && (this.getSmCreatedFromYear() != ReportConst.EMPTY_VAL)) {
+			fromyear = Integer.parseInt(this.getSmCreatedFromYear());
+		}
+		if ((this.getSmCreatedToYear() != null) && (this.getSmCreatedToYear() != ReportConst.EMPTY_VAL)) {
+		    toyear = Integer.parseInt(this.getSmCreatedToYear());
+		}
+		if ((this.getSmFromMonth() != null) && (this.getSmFromMonth() != ReportConst.EMPTY_VAL)) {
+		    fromMonth = Integer.parseInt(this.getSmFromMonth());
+		}
+		if ((this.getSmToMonth() != null) && (this.getSmToMonth() != ReportConst.EMPTY_VAL)) {
+		    toMonth = Integer.parseInt(this.getSmToMonth());
+		}
 		if(fromyear==toyear){
 			if(fromMonth>toMonth){
 				throw new EpException(MessageConst.ERROR_REPORT_780014);
