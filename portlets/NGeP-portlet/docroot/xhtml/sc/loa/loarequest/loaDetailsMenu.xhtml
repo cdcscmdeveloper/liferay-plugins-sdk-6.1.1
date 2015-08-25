@@ -124,7 +124,7 @@
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
 					style=" margin-bottom:5px;width: 297px;" disabled="true" />
 			</td>
-			<td style="width: 15%;">
+			<td style="width: 16%;">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td>
@@ -281,7 +281,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="39%">
+			<td>
 				<p:selectOneRadio id="insWarranty"
 					value="#{lOADetailBackingBean.managedBean.scLoa.insWarrantyReq}"
 					required="true"
@@ -291,11 +291,11 @@
 				</p:selectOneRadio>
 				<p:message id="insWarrantyMsg" for="insWarranty" display="icon" />
 			</td>
-			<td width="20%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="20%">
+			<td width="22%">
 				<table>
 					<tr>
 						<td>
@@ -420,7 +420,7 @@
 						disabled="true" size="45" />
 				</c:if>
 			</td>
-			<td>
+			<td style="width: 16%">
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -428,7 +428,7 @@
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 232px;margin-bottom: 5px;"
+						style="width: 200px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
@@ -446,7 +446,7 @@
 				<c:if test="#{!isEditableStatus}">
 					<p:inputText 
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userName}"
-						disabled="true" size="33" />
+						disabled="true" size="27" />
 				</c:if>
 			</td>
 		</tr>
@@ -494,7 +494,7 @@
 					mindate="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
 					required="true"
 					label="#{lbl[lblexpDate]}"
-					size="33"
+					size="27"
 					disabled="true"	/>
 				<ac:iconTooltip value="#{lbl[lblexpDateTooltip]}" />
 			</td>
