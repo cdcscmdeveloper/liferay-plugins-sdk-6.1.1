@@ -1805,21 +1805,24 @@ public class AmendmentBackingBean extends ContractBaseBackingBean<AmendmentManag
 	
 	/**
 	 * The method used to retrieve the new amendment effective date.
-	 * This method perform the checking with contract extended history.
 	 * The new amendment effective date will not lesser than the previous
-	 * contract extended effective date.
+	 * amendment effective date.
 	 * 
 	 * @return amendment effective date.
 	 */
-	public Date retrieveNewEffDate() {
+	private Date retrieveNewEffDate() {
 		Date currentDate = DateUtils.getCurrentDateWithoutTime();
-		if (getManagedBean().getAmendHistoryList() != null && !getManagedBean().getAmendHistoryList().isEmpty()) {
-			if (getManagedBean().getContractVer().getCtContractValue().getExpDate().before(currentDate)) {
+		IContractAmendmentSO amendSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.CONTRACT_MANAGEMENT, IContractAmendmentSO.class);
+		ContractAmendmentResDTO resAmendDto = amendSO.getCtAmendmentByContractId(getManagedBean().getCtContract().getContractId());
+		//
+		if (resAmendDto.getAmendmentList() != null && !resAmendDto.getAmendmentList().isEmpty()) {
+			int index = resAmendDto.getAmendmentList().size() - 1;
+			CtAmendment ctAmendment = resAmendDto.getAmendmentList().get(index);
+			if (ctAmendment.getAmendmentEffDate().getTime() < currentDate.getTime()) {
 				return currentDate;
-			} else {				
-				int index = getManagedBean().getAmendHistoryList().size() - 1;
-				CtContractVer contractVer = getManagedBean().getAmendHistoryList().get(index);				
-				return DateUtils.addDays(contractVer.getCtAmendment().getAmendmentEffDate(), 1);
+			} else {	
+				return DateUtils.addDays(ctAmendment.getAmendmentEffDate(), 1);
 			}
 		} else {
 			return currentDate;
