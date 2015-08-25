@@ -993,6 +993,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PAYMENT_ADVICE)) {
 			reportName = ReportConst.FL_NGEP_PAYMENT_MATCH;
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)) {
+			paramMap.put(ReportConst.PARAM_RELIEF_ORDER_DOC_NO, docNo);
 			reportName = ReportConst.FL_NGEP_COGSTR;
 		}
 		
