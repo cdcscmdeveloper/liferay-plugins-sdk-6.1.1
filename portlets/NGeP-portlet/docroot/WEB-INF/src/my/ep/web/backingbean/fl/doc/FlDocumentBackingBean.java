@@ -992,6 +992,8 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reportName = ReportConst.FL_NGEP_DEBIT_NOTE;
 		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_PAYMENT_ADVICE)) {
 			reportName = ReportConst.FL_NGEP_PAYMENT_MATCH;
+		} else if(docType.equalsIgnoreCase(ParameterConst.DOCTYPE_RELIEF_ORDER)) {
+			reportName = ReportConst.FL_NGEP_COGSTR;
 		}
 		
 		if(reportName!=null) {
