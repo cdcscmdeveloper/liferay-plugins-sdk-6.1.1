@@ -4288,9 +4288,12 @@ public class LOIDetailBackingBean extends
 		attachment.setFileName("Negotiation_Location.pdf");
 		populateAttachmentDetails(attachment);
 		CommonUtils commonUtils = new CommonUtils();
+		SimpleDateFormat dateSDF = new SimpleDateFormat(
+				commonUtils
+						.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE));
 		VelocityContext context = new VelocityContext();
 		
-		context.put("commonUtils", commonUtils);
+		context.put("dateSDF", dateSDF);
 		context.put("loiList", getManagedBean().getLois());
 
 		DocumentGenerator.getInstance().generatePdfFromVelocity(
