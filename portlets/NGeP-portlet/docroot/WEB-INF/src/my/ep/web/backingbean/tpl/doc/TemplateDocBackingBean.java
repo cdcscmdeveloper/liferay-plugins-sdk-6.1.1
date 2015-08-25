@@ -34,6 +34,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
+import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
@@ -49,6 +50,7 @@ import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
 import my.ep.util.ResourceBundleUtils;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.format.AttachmentDateFormat;
@@ -365,6 +367,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			docSection.setChangedBy(1l);
 			docSection.setBrandNew(Boolean.TRUE);
 			docSection.setCreatedDate(date);
+			docSection.setSectionNumber("[New]");
 			TreeNode node = new DefaultTreeNode(docSection,	selectedNode.getParent());
 			getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
 			rePosition(selectedNode);
@@ -468,13 +471,23 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 					getManagedBean().getCtAgreementContent().setTplDocMaster(templateSO.getTemplateMaster(reqDTOS).getTplDocMaster());
 				}
 			}
+			
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, null,
+							MessageUtils.getMessage(MessageConst.INFO_770090,
+									MessageUtils.BUNDLE_COMMON_MESSAGES,
+									new FacesScopes().getUserLocale())));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		if(getManagedBean().getExternalPageUrl() == null) {
 			tempDocSearch();
 		}
-		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch?faces-redirect=true";
+		return (getManagedBean().getExternalPageUrl() != null) ? getManagedBean().getExternalPageUrl()+"?faces-rediret=true" : "templateDocSearch";
 	}
 
 	public String backAction() {
@@ -648,7 +661,7 @@ public class TemplateDocBackingBean extends BaseBackingBean<TemplateDocManagedBe
 			docSection.setCreatedDate(date);
 			TreeNode node = new DefaultTreeNode(docSection,selectedNode.getParent());
 			getManagedBean().getDocSectionMap().put((TplDocSection) node.getData(), node);
-		}
+					}
 		importRePosition(selectedNode, getManagedBean().getImportedSectionList().size());
 	}
 
