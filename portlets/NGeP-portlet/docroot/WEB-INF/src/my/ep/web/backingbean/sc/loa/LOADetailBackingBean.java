@@ -47,7 +47,6 @@ import my.ep.constant.MessageConst;
 import my.ep.constant.ModuleCodeConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
-import my.ep.constant.pm.RuleTypeConst;
 import my.ep.constant.sc.QTStatusConst;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.constant.tpl.TemplateSpecConst;
@@ -67,7 +66,6 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pm.general.settings.rule.RuleReqDTO;
-import my.ep.dto.pm.general.settings.rule.RuleResDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.sc.quationtender.AwardSupplierResDTO;
 import my.ep.dto.sc.quationtender.SuppFinalizationReqDTO;
@@ -319,7 +317,6 @@ public class LOADetailBackingBean extends
 	}
 	
 	
-
 	/**
 	 * Edits the supplier loa action.
 	 * page navigate to loa supplier page.
@@ -629,7 +626,9 @@ public class LOADetailBackingBean extends
 		}
 		
         //Supplier overall contract amount
-		calculateOverallAmount(scLoa.getGstAmt());
+		getManagedBean().setOverallContractAmt(
+				overallCtAmount(scLoa.getLoaAmt(), scLoa.getGstAmt()));
+		
 		
 		// Supplier Branch
 		getManagedBean().setSelectedSupplierBranchName(
@@ -695,27 +694,7 @@ public class LOADetailBackingBean extends
 		if (scLoa.getContractType().getParameterId() != null) {
 			contractTypeChanged();
 		}
-
-		// Contract Signer
-		PmUser contractSignerUser = scLoa.getContractSigner();
-		if (contractSignerUser == null) {
-			contractSignerUser = new PmUser();
-		}
-
-		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
-
-		UserReqDTO userReqDTO = new UserReqDTO();
-		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
-		if(scLoa.getLoaAmt() != null) {
-			userReqDTO.setApprovalLimit(scLoa.getLoaAmt());
-		}
-		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile().getOrgProfileId());
-		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
 		
-		getManagedBean().setContractSignerUser(contractSignerUser);
-		getManagedBean().setContractSignerList(userResDTO.getUserList());
-
 		// Approver
 		ScLoaApproval scLoaApproval = scLoa.getScLoaApproval();
 		PmUser approverUser = null;
@@ -1681,7 +1660,7 @@ public class LOADetailBackingBean extends
 	    String gstRegFlag = "false";
 		if(supplier != null && supplier.getGstRegisteredFlag()== DbValueConst.RECORD_STATUS_ACTIVE){
 			gstRegFlag = "true";
-			setGstInfoForDoc(context, scLoa, amountDF, myLocale);
+			setGstInfoForAgreementLetter(context, scLoa, amountDF, myLocale);
 		}
 		context.put("gstRegFlag", gstRegFlag);
 		
@@ -2021,14 +2000,15 @@ public class LOADetailBackingBean extends
 
 					scLoa.setSupplierBranch(supplierBranch.getBranchName());
 					scLoa.setSupplierAddress(supplierBranch.getSmAddress());
-					scLoa.setSupplierContact(supplierBranch.getSmPersonnel()
-							.getName());
+					
 					scLoa.setSupplierPhoneNo(supplierBranch.getPhoneNo());
 					scLoa.setSupplierFaxNo(supplierBranch.getFaxNo());
-					scLoa.setSupplierMobNo(supplierBranch.getSmPersonnel()
-							.getMobileNo());
-					scLoa.setSupplierEmail(supplierBranch.getSmPersonnel()
-							.getEmail());
+					SmPersonnel personnel = supplierBranch.getSmPersonnel();
+					if(personnel != null){
+						scLoa.setSupplierContact(personnel.getName());
+						scLoa.setSupplierMobNo(personnel.getMobileNo());
+						scLoa.setSupplierEmail(personnel.getEmail());
+					}
 					
 					// Get Gst info based on branch
 					Long supplierId = scLoa.getScLoiLoa().getSmSupplier().getSupplierId();
@@ -4596,15 +4576,17 @@ public class LOADetailBackingBean extends
 	 */
 	public void calculateOverallAmount(BigDecimal gstAmount) {
 		
-		BigDecimal overallContractAmt = getManagedBean().getScLoa().getLoaAmt();
-		if (gstAmount != null) {
-			overallContractAmt = overallContractAmt.add(gstAmount);
-		}
-		overallContractAmt = overallContractAmt.setScale(2,
-				BigDecimal.ROUND_HALF_EVEN);
+		getManagedBean().setOverallContractAmt(
+				overallCtAmount(getManagedBean().getScLoa().getLoaAmt(),gstAmount));
+						
+		if (null != getManagedBean().getContractSignerUser()
+				&& getManagedBean().getContractSignerUser().getUserId() != null) {
 
-		getManagedBean()
-				.setOverallContractAmt(overallContractAmt);
+			getManagedBean().getContractSignerUser().setUserId(null);
+			getManagedBean().getScLoa().setLoaSignerDesig(null);
+			RequestContext.getCurrentInstance().execute(
+					"gstSignerConfirmPopupWin.show()");
+		}
 	}
 	
 	public boolean isGSTRegActive() {
@@ -4741,7 +4723,7 @@ public class LOADetailBackingBean extends
 		}
 	}
 	
-	private void setGstInfoForDoc(VelocityContext context, ScLoa scLoa,
+	private void setGstInfoForAgreementLetter(VelocityContext context, ScLoa scLoa,
 			DecimalFormat amountDF, Locale myLocale) {
 
 		String gstRegNo = scLoa.getGstRegNo() != null ? scLoa.getGstRegNo(): "";
@@ -4765,8 +4747,8 @@ public class LOADetailBackingBean extends
 		context.put("offerPrice", offerPrice);
 		context.put("offerPriceWording", offerPriceWording);
 
-		String gstAmount = "";
-		String gstAmountWording = "";
+		String gstAmount = "T/B";
+		String gstAmountWording = "T/B";
 		String overallctAmt = "";
 		String overallctAmtWording = "";
 		BigDecimal gstAmt = scLoa.getGstAmt();
@@ -4815,8 +4797,8 @@ public class LOADetailBackingBean extends
 			scLoa.setGstRegNo(null);
 			scLoa.setGstDeclaredDate(null);
 			scLoa.setGstEffDate(null);
-			scLoa.setGstAmt(null);
 		}
+		scLoa.setGstAmt(null);
 	}
 	
 	public void tabChangeAction(int selectedTabIndex){
@@ -4853,6 +4835,33 @@ public class LOADetailBackingBean extends
 		finally{
 			documentSO = null;
 		}
+	}
+ 
+	/**
+	 * @param scLoa
+	 */
+	public void prepareSignerInfo() {
+		
+		ScLoa scLoa = getManagedBean().getScLoa();
+		// Contract Signer
+		PmUser contractSignerUser = scLoa.getContractSigner();
+		if (contractSignerUser == null) {
+			contractSignerUser = new PmUser();
+		}
+
+		IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
+				ModuleCodeConst.PROFILE_MANAGEMENT, IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+		userReqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+		if (scLoa.getLoaAmt() != null) {
+			userReqDTO.setApprovalLimit(overallCtAmount(scLoa.getLoaAmt(),
+					scLoa.getGstAmt()));
+		}
+		userReqDTO.setOrgProfileId(scLoa.getScLoiLoa().getPmOrgProfile()
+				.getOrgProfileId());
+		UserResDTO userResDTO = userSO.retrieveUserListByRole(userReqDTO);
+		getManagedBean().setContractSignerList(userResDTO.getUserList());
+		getManagedBean().setContractSignerUser(contractSignerUser);
 	}
 	
 }
