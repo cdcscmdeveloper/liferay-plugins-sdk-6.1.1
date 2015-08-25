@@ -51,7 +51,6 @@ import my.ep.dto.sm.gst.SupplierGstReqDTO;
 import my.ep.dto.sm.gst.SupplierGstResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.constant.DbValueConst;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmOrgValidity;
 import my.ep.persistence.entity.pm.authorization.PmProfileGroup;
@@ -2042,11 +2041,11 @@ public class OrganisationBackingBean extends
 			if(gstSupplier.getGstEndDate() != null && gstSupplier.getGstEndDate().before(gstSupplier.getGstEffDate())){
 				throw new EpException(MessageConst.ERROR_775119);
 			}		
-//			
-//			//validate unique gst registration number
-//			if(!validateGstRegNo(gstSupplier.getGstRegNo())){
-//				throw new EpException(MessageConst.ERROR_775117);
-//			}
+			
+			//validate unique gst registration number
+			if(!validateGstRegNo(gstSupplier)){
+				throw new EpException(MessageConst.ERROR_775117);
+			}
 		}
 	}
 
@@ -2089,21 +2088,23 @@ public class OrganisationBackingBean extends
 		return getFacesScopes().hasRoleUser(RoleCode.EP_ADMIN.value());
 	}
 
-//	public boolean validateGstRegNo(String gstRegNo) {
-//		ISupplierGstSO supplierGstSO = null;
-//		boolean valid = true;
-//		try{
-//			supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance()
-//					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);			
-//			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
-//			reqDTO.setGstRegNo(gstRegNo);
-//			SupplierGstResDTO suppGstResDTO = supplierGstSO.retrieveGstInfoByGstRegNo(reqDTO);
-//			if(suppGstResDTO.getGstList() != null && !suppGstResDTO.getGstList().isEmpty()){
-//				valid = false;
-//			}
-//		}finally{
-//			supplierGstSO = null;
-//		}
-//		return valid;
-//	}
+	public boolean validateGstRegNo(SmGstSupplier gstSupplier) {
+		ISupplierGstSO supplierGstSO = null;
+		boolean valid = true;
+		try{
+			Long supplierId = getManagedBean().getOrgProfile().getOrgProfileId();
+			supplierGstSO = (ISupplierGstSO) BusinessDelegate.getInstance()
+					.getServiceObject(ModuleCodeConst.SUPPLIER_MANAGEMENT, ISupplierGstSO.class);			
+			SupplierGstReqDTO reqDTO = new SupplierGstReqDTO();
+			reqDTO.setGstRegNo(gstSupplier.getGstRegNo());
+			reqDTO.setSupplierId(supplierId);
+			SupplierGstResDTO suppGstResDTO = supplierGstSO.retrieveGstInfoByGstRegNo(reqDTO);
+			if(suppGstResDTO.getGstList() != null && !suppGstResDTO.getGstList().isEmpty()){
+				valid = false;
+			}
+		}finally{
+			supplierGstSO = null;
+		}
+		return valid;
+	}
 }
