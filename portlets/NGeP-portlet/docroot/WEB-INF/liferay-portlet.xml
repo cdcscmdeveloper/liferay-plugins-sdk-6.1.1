@@ -1680,6 +1680,20 @@
 			<footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
 			<css-class-wrapper>sc-requestnote-search-portlet</css-class-wrapper>
 		</portlet>
+		
+		<portlet>
+		  <portlet-name>scMarketResearch</portlet-name>
+		  <icon>/icon.png</icon>
+		  <control-panel-entry-category>apps</control-panel-entry-category>
+		  <control-panel-entry-weight>1.5</control-panel-entry-weight>
+		  <instanceable>false</instanceable>
+		  <footer-portlet-css>/css/ep/ep.css</footer-portlet-css>
+		  <footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>market research-portlet</css-class-wrapper>
+	   </portlet>
+		
 		<portlet>
 			<portlet-name>pmRejectionReason</portlet-name>
 			<icon>/icon.png</icon>
