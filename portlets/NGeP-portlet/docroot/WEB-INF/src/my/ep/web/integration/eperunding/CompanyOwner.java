@@ -184,5 +184,22 @@ public class CompanyOwner {
 	public void setFaxNo(String faxNo) {
 		this.faxNo = faxNo;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof CompanyOwner)
+	    {
+	    	CompanyOwner temp = (CompanyOwner) obj;
+	        if(this.mOFNo.equalsIgnoreCase(temp.mOFNo)&& this.companyName.equalsIgnoreCase(temp.companyName)&& this.sSMNo.equalsIgnoreCase(temp.sSMNo))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.mOFNo.hashCode()+this.companyName.hashCode()+this.sSMNo.hashCode());        
+	}
 
 }

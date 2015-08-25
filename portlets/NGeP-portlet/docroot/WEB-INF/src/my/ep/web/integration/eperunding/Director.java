@@ -1,12 +1,13 @@
 package my.ep.web.integration.eperunding;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Director {
 
 	private String isBOD;
 	private String isCEO;
-	private String Name;
+	private String name;
 	private String newICNo;
 	private String passport;
 	private String isBumi;
@@ -14,6 +15,8 @@ public class Director {
 	private String race;
 	private String designation;
 	private BigDecimal workExperience;
+
+	private List<Qualification> qualificationList;
 
 	public String getIsBOD() {
 		return isBOD;
@@ -32,11 +35,11 @@ public class Director {
 	}
 
 	public String getName() {
-		return Name;
+		return name;
 	}
 
 	public void setName(String name) {
-		Name = name;
+		this.name = name;
 	}
 
 	public String getNewICNo() {
@@ -93,6 +96,31 @@ public class Director {
 
 	public void setWorkExperience(BigDecimal workExperience) {
 		this.workExperience = workExperience;
+	}
+
+	public List<Qualification> getQualificationList() {
+		return qualificationList;
+	}
+
+	public void setQualificationList(List<Qualification> qualificationList) {
+		this.qualificationList = qualificationList;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if(obj instanceof Director)
+	    {
+	    	Director temp = (Director) obj;
+	        if(this.name.equalsIgnoreCase(temp.name)&& this.newICNo.equalsIgnoreCase(temp.newICNo)&& this.passport.equalsIgnoreCase(temp.passport))
+	            return true;
+	    }
+	    return false;
+
+	}
+	@Override
+	public int hashCode() {
+
+	    return (this.name.hashCode()+this.newICNo.hashCode()+this.passport.hashCode());        
 	}
 
 }
