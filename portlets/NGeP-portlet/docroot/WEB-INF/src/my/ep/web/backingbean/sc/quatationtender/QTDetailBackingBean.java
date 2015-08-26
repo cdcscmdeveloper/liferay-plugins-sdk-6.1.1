@@ -3604,6 +3604,8 @@ public class QTDetailBackingBean extends
 		int activeIndex = this.getManagedBean().getActiveIndex();
 
 		int subTabIndex = this.getManagedBean().getSelectedTabIndex();
+		
+		String taskName = this.getManagedBean().getTaskName();
 
 		String zonelocationLevel = this.getManagedBean().getStateCodes();
 		String locationLevel = this.getManagedBean().getLocalLevelCode();
@@ -3747,6 +3749,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setStateCodes(zonelocationLevel);
 		this.getManagedBean().setLocalLevelCode(locationLevel);
 		this.getManagedBean().setTemplateSpecZoneDtls(specZoneDtls);
+		this.getManagedBean().setTaskName(taskName);
 	}
 
 	/**
