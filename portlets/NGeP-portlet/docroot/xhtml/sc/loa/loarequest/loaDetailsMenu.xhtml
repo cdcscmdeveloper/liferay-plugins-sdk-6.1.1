@@ -14,7 +14,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.ep.no']}" />
 			</td>
 			<td>
-				<p:inputText size="45"
+				<p:inputText size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.epNo}"
 					disabled="true" />
 			</td>
@@ -25,7 +25,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.mof.no']}" />
 			</td>
 			<td>
-				<p:inputText size="45"
+				<p:inputText size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.mofNo}"
 					disabled="true" />
 			</td>
@@ -35,7 +35,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.supplier.name']}" />
 			</td>
 			<td>
-				<p:inputText size="45"
+				<p:inputText size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.supplierName}"
 					disabled="true" />
 			</td>
@@ -46,7 +46,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.register.num']}" />
 			</td>
 			<td style="width: 36%;">
-				<p:inputText size="45"
+				<p:inputText size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstRegNo eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.gstRegNo}"
 					disabled="true" id="gstRegNoId"/> <ac:iconTooltip value="#{lbl['lbl.sc.gst.registartion.number.tooltip']}"/>
 			</td>
@@ -56,7 +56,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.effective.date']}" />
 			</td>
 			<td>
-				<p:inputText size="45"
+				<p:inputText size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstEffDate eq null ? lbl['lbl.txt.na']:lOADetailBackingBean.managedBean.scLoa.gstEffDate}"
 					disabled="true" id="gstEffDateId">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -68,7 +68,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.gst.declared.date']}" />
 			</td>
 			<td>
-				<p:inputText size="45"
+				<p:inputText size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate eq null ? lbl['lbl.txt.na'] : lOADetailBackingBean.managedBean.scLoa.gstDeclaredDate}"
 					disabled="true" id="gstDeclaredDateId">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
@@ -88,7 +88,7 @@
 							<td>
 								<p:selectOneMenu id="branch"
 									value="#{lOADetailBackingBean.managedBean.selectedSupplierBranchName}"
-									style="width: 306px;margin-bottom: 5px;"
+									style="width: 276px;margin-bottom: 5px;"
 									label="#{lbl['lbl.sc.branch']}">
 									<f:selectItem itemLabel="HQ" itemValue="#{null}" />
 									<f:selectItems
@@ -108,7 +108,7 @@
 					</table>
 				</c:if>
 				<c:if test="#{!isEditableStatus}">
-					<p:inputText size="45"
+					<p:inputText size="40"
 						value="#{lOADetailBackingBean.managedBean.scLoa.supplierBranch}"
 						disabled="true" />
 				</c:if>
@@ -122,9 +122,9 @@
 				<p:inputTextarea id="suppAddr" cols="50"
 					rows="5"
 					value="#{lOADetailBackingBean.getFullAddress(lOADetailBackingBean.managedBean.scLoa.supplierAddress)}"
-					style=" margin-bottom:5px;width: 297px;" disabled="true" />
+					style=" margin-bottom:5px;width: 266px;" disabled="true" />
 			</td>
-			<td style="width: 16%;">
+			<td style="width: 15%;">
 				<p:outputLabel value="#{lbl['lbl.sc.tel.no']}" />
 			</td>
 			<td>
@@ -158,7 +158,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.contact.person']}" />
 			</td>
 			<td>
-				<p:inputText id="suppContact" size="45"
+				<p:inputText id="suppContact" size="40"
 					value="#{lOADetailBackingBean.managedBean.scLoa.supplierContact}"
 					disabled="true" />
 			</td>
@@ -183,7 +183,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="45"
+				<p:inputText id="title" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.title}" size="40"
 					required="true"
 					label="#{lbl['lbl.sc.title']}"
 					disabled="#{!isEditableStatus}"
@@ -199,7 +199,7 @@
 			</td>
 				<td colspan="3"><p:inputText id="procurmentTypeCatId"
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.procurementTypeCatId)}"
-						size="45" label="#{lbl['lbl.sc.procurment.type.category']}"
+						size="40" label="#{lbl['lbl.sc.procurment.type.category']}"
 						disabled="true" /></td>
 			</tr>
 		
@@ -210,9 +210,9 @@
 			</td>
 			<td colspan="3">
 				<p:inputText disabled="#{isDocTypeQuotation || !isEditableStatus}"
-					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="38" />
+					value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fileNo}" size="33" />
 				<p:inputText id="fileExtNo" styleClass="ppNumericAlign" style="margin-left: 2px;width: 28px;"
-					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="5"
+					value="#{lOADetailBackingBean.managedBean.scLoa.fileExtNo}" size="6"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.file.extension.no']}"
 					maxlength="3"
@@ -225,13 +225,13 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.res.due.date']}" />
 			</td>
 			<td>
-				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.ackDueDate}" size="24" disabled="true">
+				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.ackDueDate}" size="21" disabled="true">
 					<f:convertDateTime pattern="#{CommonUtils.getDisplayDateTimeFormat(CommonConstants.DATE_FORMAT_TYPE_DATE)}" />
 				</p:inputText>	
 				<p:spacer width="8px" />
 				<p:inputText styleClass="ppNumericAlign"
 					value="#{!empty lOADetailBackingBean.managedBean.scLoa.ackDueDate ? DateUtils.getDaysDifference(DateUtils.getCurrentDateWithoutTime(), lOADetailBackingBean.managedBean.scLoa.ackDueDate) : ''}"
-					disabled="true" size="8" />
+					disabled="true" size="6" />
 				#{lbl['lbl.sc.days']}
 			</td>
 		</tr>
@@ -242,7 +242,7 @@
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
 					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmt}"
-					disabled="true" size="45">
+					disabled="true" size="40">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
@@ -254,7 +254,7 @@
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
 						value="#{lOADetailBackingBean.managedBean.scLoa.gstAmt}"
-						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="45" id="gstAmtId">
+						disabled="#{lOADetailBackingBean.isGSTRegActive() or !isPendingSubmissionStatus}" size="40" id="gstAmtId">
 						<f:convertNumber
 							pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 						<p:ajax event="blur"
@@ -270,14 +270,14 @@
 			<td>
 				<p:inputText styleClass="ppNumericAlign"
 					value="#{lOADetailBackingBean.managedBean.overallContractAmt}"
-					 size="45" id="ContractAmtId" readonly="true">
+					 size="40" id="ContractAmtId" readonly="true">
 					<f:convertNumber pattern="#{CommonUtils.getDisplayNumberFormat(CommonConstants.NUMBER_FORMAT_TYPE_AMOUNT)}" />
 				</p:inputText>
 			</td>
 		</tr>
 		<c:if test="#{isDocTypeQuotation}">
 		<tr>
-			<td width="21%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.ins.war']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
@@ -295,7 +295,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td width="22%">
+			<td width="28%">
 				<table>
 					<tr>
 						<td>
@@ -345,7 +345,7 @@
 				<c:if test="#{isEditableStatus and isDocTypeQuotation}">
 					<p:selectOneMenu id="contractType"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterId}"
-						style="width: 306px;margin-bottom: 5px;"
+						style="width: 275px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.type']}">
 						<f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" />
@@ -363,7 +363,7 @@
 				<c:if test="#{!isEditableStatus or !isDocTypeQuotation}">
 					<p:inputText 
 						value="#{lOADetailBackingBean.getParameterDesc(lOADetailBackingBean.managedBean.scLoa.contractType)}"
-						disabled="true" size="45" />
+						disabled="true" size="40" />
 				</c:if>
 			</td>
 		</tr>
@@ -377,7 +377,7 @@
 					<h:panelGroup id="contractAgencyPG">
 					<p:selectOneMenu id="contractAgencyProf"
 						value="#{lOADetailBackingBean.managedBean.scLoa.agencyId}"
-						style="width: 306px;margin-bottom: 5px;"
+						style="width: 275px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
 						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode == ParameterConst.contractTypeMinistry}">
@@ -396,7 +396,7 @@
 					
 					<p:selectOneMenu id="contractAgency"
 						value="#{lOADetailBackingBean.managedBean.selectedContractAgency}"
-						style="width: 306px;margin-bottom: 5px;"
+						style="width: 275px;margin-bottom: 5px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.agency']}"
 						rendered="#{lOADetailBackingBean.managedBean.scLoa.contractType.parameterCode != ParameterConst.contractTypeMinistry}">
@@ -417,18 +417,18 @@
 				<c:if test="#{!isEditableStatus}">
 					<p:inputText 
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAgency.orgName}"
-						disabled="true" size="45" />
+						disabled="true" size="40" />
 				</c:if>
 			</td>
-			<td style="width: 16%">
+			<td>
 				<p:outputLabel value="#{lbl['lbl.sc.loiloa.loa.cont.admin']}" />
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
-			<td>
+			<td style="width: 28%">
 				<c:if test="#{isEditableStatus}">
 					<p:selectOneMenu id="contractAdmin"
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractAdmin.userId}"
-						style="width: 200px;"
+						style="width: 185px;"
 						required="true"
 						label="#{lbl['lbl.sc.loiloa.loa.cont.admin']}">
 						
@@ -457,7 +457,7 @@
 			<td colspan="3">
 				<p:inputText styleClass="ppNumericAlign"
 					value="#{lOADetailBackingBean.managedBean.scLoa.contractDuration}"
-					disabled="true" size="45" />
+					disabled="true" size="40" />
 			</td>
 		</tr>
 		<ui:param name="lbleffDate" value="#{lOADetailBackingBean.managedBean.scLoa.scLoiLoa.fulfilmentTypeCode.parameterCode == ParameterConst.fulfilmentTypeOneOff ? 'lbl.sc.loiloa.loa.comp.eff.date' : 'lbl.sc.loiloa.loa.cont.eff.date'}" />
@@ -477,7 +477,8 @@
 					required="true"
 					readonlyInput="true"
 					label="#{lbl[lbleffDate]}"
-					size="41"
+					style="width: 234px;"
+					size="36"
 					disabled="#{!isEditableStatus}">
 					<p:ajax event="dateSelect" listener="#{lOADetailBackingBean.contractEffDateChanged()}" update="expdate" />
 				</p:calendar>
@@ -494,7 +495,7 @@
 					mindate="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
 					required="true"
 					label="#{lbl[lblexpDate]}"
-					size="27"
+					size="25"
 					disabled="true"	/>
 				<ac:iconTooltip value="#{lbl[lblexpDateTooltip]}" />
 			</td>
@@ -549,7 +550,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="witnessName" size="45"
+				<p:inputText id="witnessName" size="40"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.witnessName}"
 					required="true"
 					label="#{lbl['lbl.sc.loiloa.witness.full.name']}"
@@ -564,7 +565,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="identificationNo" size="45"
+				<p:inputText id="identificationNo" size="40"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.identificationNo}"
 					required="true"
 					label="#{lbl['lbl.sc.identification.no']}"
@@ -579,7 +580,7 @@
 				<p:outputLabel value="*" styleClass="mandatory" rendered="#{isEditableStatus}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="designation" size="45"
+				<p:inputText id="designation" size="40"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.designation}"
 					required="true"
 					maxlength="30"
@@ -597,7 +598,7 @@
 				<p:inputTextarea id="address"
 					cols="47" rows="5"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.address}"
-					style=" margin-bottom:5px;width: 297px;"
+					style=" margin-bottom:5px;width: 266px;"
 					required="true"
 					maxlength="200"
 					label="#{lbl['lbl.sc.address']}"
@@ -654,7 +655,7 @@
 				<p:outputLabel value="#{lbl['lbl.sc.email']}" />
 			</td>
 			<td colspan="3">
-				<p:inputText id="email" size="45" style=" margin-bottom:5px;"
+				<p:inputText id="email" size="40" style=" margin-bottom:5px;"
 					value="#{lOADetailBackingBean.managedBean.loaAgencyWitness.email}"
 					maxlength="80"
 					validator="#{webappBean.checkEmail}"
