@@ -42,6 +42,8 @@ public class ContractManagedBean extends BaseManagedBean {
 	private SmAddress smAddress;
 	private boolean directPurchase;
 	private boolean gstCheckingGUI;
+	private String branchInfoFilePath;
+	
 	/**
 	 * @return the fileDirectory
 	 */
@@ -205,6 +207,12 @@ public class ContractManagedBean extends BaseManagedBean {
 	public void setGstCheckingGUI(boolean gstCheckingGUI) {
 		this.gstCheckingGUI = gstCheckingGUI;
 	}
-	
-	
+
+	public String getBranchInfoFilePath() {
+		return branchInfoFilePath;
+	}
+
+	public void setBranchInfoFilePath(String branchInfoFilePath) {
+		this.branchInfoFilePath = branchInfoFilePath;
+	}	
 }
