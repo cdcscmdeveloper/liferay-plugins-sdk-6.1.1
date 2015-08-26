@@ -18,7 +18,10 @@
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.regtype']}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view" value="#{smUpdateGstInfoBackingBean.getParameterDesc(SupplierManagementConst.supplierBusinessType,smUpdateGstInfoBackingBean.managedBean.smSupplier.businessType)}" /></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mof.no']}" /></td>
-				<td><p:outputLabel styleClass="outputLabel-view" value="#{smUpdateGstInfoBackingBean.managedBean.mofAccount.mofNo}" /></td>
+				<td>
+					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.no.available']}" rendered="#{empty smUpdateGstInfoBackingBean.managedBean.mofAccount.mofNo}"/>
+					<p:outputLabel styleClass="outputLabel-view" value="#{smUpdateGstInfoBackingBean.managedBean.mofAccount.mofNo}" rendered="#{not empty smUpdateGstInfoBackingBean.managedBean.mofAccount.mofNo}"/>
+				</td>
 			</tr>
 		</table>
 		<br />
