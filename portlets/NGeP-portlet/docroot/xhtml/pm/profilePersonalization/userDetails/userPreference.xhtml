@@ -16,7 +16,7 @@
 				</th>
 				<td>	        
           			<p:selectOneMenu styleClass="ppDropDownWidthM" required="#{!empty param['disableValidation']}" id="somPreLanguage"
-          				label="#{lbl['lbl.pm.profiles.preferences.language']}"
+          				label="#{lbl['lbl.pm.profiles.preferences.language']}" valueChangeListener="#{profilePersonalizationBackingBean.languageChangeListener}"
           				value="#{profilePersonalizationBackingBean.managedBean.selectedUser.preferredLanguage}">
           				<!-- <f:selectItem itemLabel="#{lbl['lbl.txt.select']}" itemValue="#{null}" /> -->  
 	            		<f:selectItems value="#{profilePersonalizationBackingBean.getLanguageList()}" 
@@ -35,7 +35,7 @@
 					<p:outputLabel value="*" styleClass="mandatory" />
 				</th>
 				<td>
-					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" /> 
+					<p:selectBooleanCheckbox id="itPreEmail" value="#{profilePersonalizationBackingBean.managedBean.selectedUser.notifyByEmail}" valueChangeListener="#{profilePersonalizationBackingBean.notifyChangeListener}" /> 
 					<p:graphicImage id="giPreEmail" value="/css/images/design/tooltips.png" /> 
 					<p:tooltip for="giPreEmail" value="#{lbl['lbl.pm.profiles.preferences.nofificationemail.tooltip']}" showEffect="fade" hideEffect="fade" />
 					<p:message id="itPreEmailMsg" for="itPreEmail" display="icon" />
