@@ -74,6 +74,7 @@
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+							<p:ajax event="change" partialSubmit="true" process="@this" />
 						</p:selectOneRadio></td>
 				</tr>
 

@@ -79,6 +79,7 @@
 							value="#{specificationBackingBean.managedBean.scQtChecklist.scQtDoc.tplSpecMaster.itemOriginCode.parameterId}">
 							<f:selectItems
 								value="#{specificationBackingBean.getLocalGoodsRadioValues(ParameterTypeConst.itemOrigin)}" />
+							<p:ajax event="change" partialSubmit="true" process="@this" />
 						</p:selectOneRadio></td>
 				</tr>
 
@@ -91,23 +92,21 @@
 							value="#{lbl['lbl.sc.spec.item.weightage']}" /></td>
 					<td>
 						<table>
-						<tr>
-							<td>
-								<p:selectOneRadio
-									disabled="#{!specificationBackingBean.managedBean.scQt.techEvaluationReq or specificationBackingBean.managedBean.specItemWeightageRequired}"
-									value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
-									<f:selectItems
-										value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
-		
-		
-									<p:ajax event="change" partialSubmit="true" process="@this"
-										listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
-		
-								</p:selectOneRadio>
-							</td>
-							<td style="margin-top: -3px">
-								<ac:iconTooltip value="#{lbl['lbl.sc.spec.item.weightage.tooltip']}" /></td>
-						</tr>
+							<tr>
+								<td><p:selectOneRadio
+										disabled="#{!specificationBackingBean.managedBean.scQt.techEvaluationReq or specificationBackingBean.managedBean.specItemWeightageRequired}"
+										value="#{specificationBackingBean.managedBean.templateSpecBean.specMaster.weightageReq}">
+										<f:selectItems
+											value="#{specificationBackingBean.getRadioButtonCodeValues(ParameterTypeConst.itemWeightage)}" />
+
+
+										<p:ajax event="change" partialSubmit="true" process="@this"
+											listener="#{templateSpecBackingBean.updateItemWeightageReq(specificationBackingBean.managedBean.templateSpecBean)}" />
+
+									</p:selectOneRadio></td>
+								<td style="margin-top: -3px"><ac:iconTooltip
+										value="#{lbl['lbl.sc.spec.item.weightage.tooltip']}" /></td>
+							</tr>
 						</table>
 					</td>
 
