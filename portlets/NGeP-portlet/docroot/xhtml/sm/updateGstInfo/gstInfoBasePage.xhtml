@@ -32,23 +32,18 @@
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoHq.xhtml" />
 		<ui:include src="/xhtml/sm/shared/gstInformation/gstInfoBranches.xhtml" />
 		
-		<p:dialog id="confirmDeclareDialog" header="#{lbl['lbl.sm.softcert.admin.declaration']}"
-			widgetVar="confirmDeclareDialog" modal="true" width="300px" height="100px">
-			<table style="width: 100%">
-				<tr>
-					<td>
-						<h:outputText value="#{lbl['lbl.sm.gst.declare.confirm.msg']}" 
-							style="float: left;white-space: normal;" escape="false"/>
-					</td>
-				</tr>
-			</table>
+		<p:confirmDialog id="confirmDeclareDialog" closable="true"
+			message="#{lbl['lbl.sm.gst.declare.confirm.msg']}"
+			header="#{lbl['lbl.sm.softcert.admin.declaration']}" severity="alert"
+			widgetVar="confirmDeclareDialog">
+			
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.btn.yes']}" onclick="confirmDeclareDialog.hide();" 
 					action="#{smUpdateGstInfoBackingBean.declareGst}" update="@form"
 					onstart="blockWidget.show()" oncomplete="blockWidget.hide()" />
 				<p:commandButton value="#{lbl['lbl.btn.no']}" onclick="confirmDeclareDialog.hide();" />
 			</div>
-		</p:dialog>
+		</p:confirmDialog>
 		
 	</ui:define>
 		
