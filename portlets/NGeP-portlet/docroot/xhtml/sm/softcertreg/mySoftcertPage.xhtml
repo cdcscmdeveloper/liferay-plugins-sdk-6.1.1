@@ -39,15 +39,7 @@
 				<td></td>
 				<td></td>
 				<td><p:outputLabel styleClass="outputLabel-view-label" value="#{lbl['lbl.sm.mysoftcert.status']}" /></td>
-				<td>
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.ready.renewal']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '7'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.rejected']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '6'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.pending.request']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '4'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.processing']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '3'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.requested']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '2'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.issued']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '1'}" />
-					<p:outputLabel styleClass="outputLabel-view" value="#{lbl['lbl.sm.person.composition.notapplied']}" rendered="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg eq '0'}" />
-				</td>
+				<td><ac:smSoftcertStatus softcertFlg="#{softCertBackingBean.managedBean.loginUserPersonnelInfo.softcertFlg}" /></td>
 			</tr>
 		</table>
 		

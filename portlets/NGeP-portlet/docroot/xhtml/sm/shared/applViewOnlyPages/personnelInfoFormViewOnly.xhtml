@@ -317,13 +317,7 @@
 						</p:column>
 						<p:column
 							headerText="#{lbl['lbl.sm.person.composition.certStatus']}">
-							<h:outputText value="#{lbl['lbl.sm.person.composition.ready.renewal']}" rendered="#{person.softcertFlg eq '7'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.rejected']}" rendered="#{person.softcertFlg eq '6'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.pending.request']}" rendered="#{person.softcertFlg eq '4'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.processing']}" rendered="#{person.softcertFlg eq '3'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.requested']}" rendered="#{person.softcertFlg eq '2'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.issued']}" rendered="#{person.softcertFlg eq '1'}" />
-							<h:outputText value="#{lbl['lbl.sm.person.composition.notapplied']}" rendered="#{person.softcertFlg eq '0'}" />
+							<ac:smSoftcertStatus softcertFlg="#{person.softcertFlg}"  />
 						</p:column>
 						<p:column headerText="#{lbl['lbl.sm.person.composition.role']}">
 							<h:outputText value="#{person.roleName}" />
