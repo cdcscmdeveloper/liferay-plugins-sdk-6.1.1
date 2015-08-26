@@ -164,17 +164,4 @@
 			update="@form" oncomplete="hqUploadDialog.hide();" />
 	</p:dialog>
 	
-	<p:confirmDialog id="alertHq" closable="true"
-		message="#{lbl['lbl.sm.gst.seteffdate.to.first.of.mnth.msg']}"
-		header="#{lbl['lbl.sm.notification']}" severity="alert"
-		widgetVar="alertHq">
-		
-		<div align="right">
-			<p:commandButton id="okHqBtn" update="@form"
-				value="#{lbl['lbl.btn.ok']}" onclick="alertHq.hide()" 
-				onstart="blockWidget.show()" oncomplete="blockWidget.hide()"
-				action="#{smUpdateGstInfoBackingBean.resetHqEffectiveDate}" />
-		</div>
-	</p:confirmDialog>
-	
 </ui:composition>
