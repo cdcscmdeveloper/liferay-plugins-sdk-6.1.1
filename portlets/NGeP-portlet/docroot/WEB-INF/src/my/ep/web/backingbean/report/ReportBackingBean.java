@@ -114,7 +114,7 @@ public class ReportBackingBean extends
 	private boolean enableValue = false;
 	String parameterCodeType = new String();
 	private List<SelectItem> reportList = new ArrayList<SelectItem>();
-	private List<String> reportCategoryList = new ArrayList<String>();
+	private List<SelectItem> reportCategoryList = new ArrayList<SelectItem>();
 	private List<SelectItem> moduleList;
 	private List<SelectItem> regTypeList;
 	ReportsGenerateBean rptGenBean = new ReportsGenerateBean();
@@ -236,11 +236,13 @@ public class ReportBackingBean extends
 		this.zoneList = zoneList;
 	}
 
-	public List<String> getReportCategoryList() {
+	
+
+	public List<SelectItem> getReportCategoryList() {
 		return reportCategoryList;
 	}
 
-	public void setReportCategoryList(List<String> reportCategoryList) {
+	public void setReportCategoryList(List<SelectItem> reportCategoryList) {
 		this.reportCategoryList = reportCategoryList;
 	}
 
@@ -2774,8 +2776,10 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-			
-					List<Object[]> moduleLst = reportSO.retrieveModuleList("en",lngUserId);			
+					String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+				 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+					//String language = "ms";
+					List<Object[]> moduleLst = reportSO.retrieveModuleList(language,lngUserId);			
 					for (Object[] object : moduleLst) {
 						SelectItem selectItem = new SelectItem();						
 						selectItem.setValue(object[0].toString());
@@ -3381,27 +3385,30 @@ public class ReportBackingBean extends
 		rptGenBean = new ReportsGenerateBean();
 		this.setReportValue(null);		
 		this.setReportName(null);
-		setRoleCode(null);
-		
-		getManagedBean().setReportList(new ArrayList<SelectItem>());
-		
-		
+		setRoleCode(null);		
+		getManagedBean().setReportList(new ArrayList<SelectItem>());		
 		rptGenBean = new ReportsGenerateBean();
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
 		rptGenBean.setReportCategoryView(false);
 		this.setReportCategory(null);
 		this.setReportValue(null);
+		List<Object[]> reportModList = null;
+		String language = ResourceBundleUtils.getMessage("lbl.rpt.language", ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		//String language = "ms";
 		reportList = new ArrayList<SelectItem>();
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
-							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
-									IPMReportSO.class);
+							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ, IPMReportSO.class);
 					if((this.getModuleValue()!=null)&&(this.getModuleValue().equalsIgnoreCase("FL"))){
 						rptGenBean.setReportCategoryView(true);
-						retrieveSubModuleReportCategoryList();
+						retrieveSubModuleReportCategoryList(language);
 					}else{						
-						List<Object[]> reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
+						if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+							reportModList = reportSO.retrieveReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
+						}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+							reportModList = reportSO.retrieveMalayReportListByModuleNUserAuthorization(lngUserId,this.getModuleValue());
+						}
 						for (Object[] object : reportModList) {
 							SelectItem selectItem = new SelectItem();
 							selectItem.setLabel(object[0].toString());
@@ -3413,9 +3420,9 @@ public class ReportBackingBean extends
 				return reportList;	
 			}
 	
-	public List<String>  retrieveSubModuleReportCategoryList() {
+	public List<SelectItem>  retrieveSubModuleReportCategoryList(String language) {
 		reportList = new ArrayList<SelectItem>();	
-		reportCategoryList = new ArrayList<String>();	
+		reportCategoryList = new ArrayList<SelectItem>();	
 		this.setReportName(null);
 		setRoleCode(null);		
 		getManagedBean().setReportList(new ArrayList<SelectItem>());		
@@ -3425,17 +3432,21 @@ public class ReportBackingBean extends
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<String> reportCatList = reportSO.retrieveSubModuleReportCategoryList(this.getModuleValue(), lngUserId);
-					for (int i = 0; i < reportCatList.size(); i++) {
+					List<Object[]> reportCatList = reportSO.retrieveSubModuleReportCategoryList(language,this.getModuleValue(), lngUserId);
+					/*for (int i = 0; i < reportCatList.size(); i++) {
 						reportCategoryList.add(reportCatList.get(i));
+					}*/
+					for (Object[] object : reportCatList) {					
+						SelectItem selectItem = new SelectItem();
+						selectItem.setLabel(object[0].toString());
+						selectItem.setValue(object[1].toString());						
+						reportCategoryList.add(selectItem);
 					}
 				}
 				return reportCategoryList;	
 		}
-		public List<String>  retrieveSimpleQuoteNo() {
-			
-			simpleQuoteNoList = new ArrayList<String>();	
-					
+		public List<String>  retrieveSimpleQuoteNo() {			
+			simpleQuoteNoList = new ArrayList<String>();					
 			if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 						IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 								.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
@@ -3473,11 +3484,20 @@ public class ReportBackingBean extends
 		this.setReportName(ReportConst.EMPTY_VAL);
 		getManagedBean().setRptGenBean(rptGenBean);
 		resetReportForm();
+		String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+		//String language = "ms";
+		List<Object[]> reportModList = null;
 		if (null != new FacesScopes().getUserSessionBean().getUserId()) {			
 					IPMReportSO reportSO = EpEjbBusinessDelegate.getInstance()
 							.getServiceObject(ReportConst.RPT_MODULE_SER_OBJ,
 									IPMReportSO.class);
-					List<Object[]> reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
+					if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+						reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
+					}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+						reportModList = reportSO.retrieveMalayReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
+					}
+					//List<Object[]> reportModList = reportSO.retrieveReportListBySubModule(this.getModuleValue(),this.getReportCategory(),lngUserId);
 					for (Object[] object : reportModList) {
 						SelectItem selectItem = new SelectItem();
 						selectItem.setLabel(object[0].toString());
@@ -4569,15 +4589,27 @@ if (null != new FacesScopes().getUserSessionBean().getUserId()) {
 			reqDTO.setReportCode(getManagedBean().getReportValue());
 			PMReportResDTO rptResDTO = reportSO.retriveReportByrptId(reqDTO);
 			PMReport pmReport = rptResDTO.getPmReportDtls();
+			String language = ResourceBundleUtils.getMessage("lbl.rpt.language", 
+ 			ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
+			//String language = "ms";
 			if (null != pmReport) {
 				String label = ReportConst.EMPTY_VAL;
 				if ((null != pmReport.getSubModule())
 						&& (ReportConst.EMPTY_VAL != pmReport.getSubModule())) {
-					label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
-							+ pmReport.getSubModule();
+					/*label = pmReport.getReportTitle() + ReportConst.RPT_EIFON
+							+ pmReport.getSubModule();*/
+					if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+						label = pmReport.getReportTitle();
+					}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+						label = pmReport.getReportTitleMalay();
+					}					
 					this.setSubModule(pmReport.getSubModule());
 				} else {
-					label = pmReport.getReportTitle();
+					if((language!=null)&&(language.equalsIgnoreCase(ReportConst.ENG_LANG))){
+						label = pmReport.getReportTitle();
+					}else if((language!=null)&&(language.equalsIgnoreCase(ReportConst.MALAY_LANG))){
+						label = pmReport.getReportTitleMalay();
+					}
 				}
 				this.setReportName(label);
 				reportFileNameJSP = pmReport.getReportFilename();
