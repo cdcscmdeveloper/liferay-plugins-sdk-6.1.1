@@ -340,6 +340,8 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 			reqDTO.setSoftcertDocList(getUploadedSoftcertDocs());
 			reqDTO.setPortalBaseUrl(SmCommonUtil.getBasePortalUrl());
 			reqDTO.setSoftcertDocNo(getManagedBean().getSoftcertDocNo());
+			reqDTO.setFreeSofcertPersonnelList(getManagedBean()
+					.getSoftCertFreeList());
 
 			PersonnelResDTO resDTO = new PersonnelResDTO();
 			resDTO = SmServiceLookup.getPersonnelSO()
@@ -394,21 +396,18 @@ public class SoftCertBackingBean extends BaseBackingBean<SoftCertManagedBean> {
 	 */
 	public String getPersonnelSoftCertPrice(SmPersonnel smPersonnel) {
 		if (smPersonnel.isFreeSoftCert()) {
-			if(smPersonnel.getSoftcertFlg()==SupplierManagementConst.SOFT_CERT_REJECTED){
+			if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REJECTED) {
 				return "0.00 ("
-						+ SmCommonUtil
-								.getMessage("lbl.sm.softcert.rejectfree", null)
-						+ ")";
-			}else if(smPersonnel.getSoftcertFlg()==SupplierManagementConst.SOFT_CERT_REQ_FAILED){
+						+ SmCommonUtil.getMessage("lbl.sm.softcert.rejectfree",
+								null) + ")";
+			} else if (smPersonnel.getSoftcertFlg() == SupplierManagementConst.SOFT_CERT_REQ_FAILED) {
 				return "0.00 ("
-						+ SmCommonUtil
-								.getMessage("lbl.sm.softcert.failedfree", null)
-						+ ")";
-			}else{
+						+ SmCommonUtil.getMessage("lbl.sm.softcert.failedfree",
+								null) + ")";
+			} else {
 				return "0.00 ("
-						+ SmCommonUtil
-								.getMessage("lbl.sm.softcert.firstfree", null)
-						+ ")";
+						+ SmCommonUtil.getMessage("lbl.sm.softcert.firstfree",
+								null) + ")";
 			}
 		} else {
 			return SmRuleHelper.getInstance().getSoftCertFee()
