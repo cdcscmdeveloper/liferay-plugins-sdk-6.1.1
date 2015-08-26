@@ -1501,11 +1501,16 @@ public class LOADetailBackingBean extends
 		context.put("supplierEmail", supplierEmail);
 
 		String procurementMode = null;
+		String s1ors2 ="";
 		if (ParameterConst.DOCTYPE_PURCHASE_REQUEST.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
+			 s1ors2 = "tawaran pelawaan";
+			
 			procurementMode = SourcingConstants.PROCUREMENT_MODE_SIMPLE_QUOTE;
 		} else if (ParameterConst.DOCTYPE_QUOTATION.equals(scLoa.getScLoiLoa()
 				.getDocType())) {
+			s1ors2 = "tender/ sebut";
+			
 			if (scQt != null) {
 				if (ParameterConst.PROCUREMENT_MODE_QUOTATION.equals(scQt
 						.getProcurementMode().getParameterCode())) {
@@ -1515,6 +1520,8 @@ public class LOADetailBackingBean extends
 				}
 			}
 		}
+		
+		context.put("s1ors2", s1ors2); 
 
 		context.put("procurementMode", procurementMode); 
 		context.put("title", scLoiLoa.getTitle().replaceAll("&", "&#38;"));
