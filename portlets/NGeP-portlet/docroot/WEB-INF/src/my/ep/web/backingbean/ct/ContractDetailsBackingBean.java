@@ -3593,10 +3593,10 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
      */
 	public String getPortletTitle() {
 		String portletTitle = null;
-		if (isContractAdmin()) {
+		if (getFacesScopes().hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value())) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.ministry.contract.maintenance",
 				ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
-		} else if (isBPKCCA()) {
+		} else if (getFacesScopes().hasRoleUser(RoleCode.BPK_CCA.value())) {
 			portletTitle = ResourceBundleUtils.getMessage("lbl.ct.menu.central.contract.maintenance",
 					ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 		} else if (isSupplierRole()) {
