@@ -74,6 +74,18 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private List<TplDocSection> deletedList;
 	private List<TplDocSection> importedSectionList;
 	private Map<TplDocSection, TreeNode> docSectionMap;
+	
+	private TreeNode [] treenode;
+	
+	
+
+	public TreeNode[] getTreenode() {
+		return treenode;
+	}
+
+	public void setTreenode(TreeNode[] treenode) {
+		this.treenode = treenode;
+	}
 
 	private IPagingDataModel<TplDocMaster> docMasterDataModel = new DocMasterPagingDataModel();
 	
@@ -371,4 +383,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	public void setDocMasterDataModel(IPagingDataModel<TplDocMaster> docMasterDataModel) {
 		this.docMasterDataModel = docMasterDataModel;
 	}
+	
+	
+	
 }

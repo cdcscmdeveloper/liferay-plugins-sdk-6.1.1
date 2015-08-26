@@ -297,13 +297,12 @@
 				<tr><td><br></br></td></tr>
 				<tr>
 					<td colspan="7">
-						<p:treeTable id="impSectionList" value="#{templateDocBackingBean.managedBean.imptSectionTN}"
+						<p:treeTable id="impSectionList" value="#{templateDocBackingBean.managedBean.imptSectionTN}" selection="#{templateDocBackingBean.managedBean.treenode}" selectionMode="checkbox"
 							var="document">
+							<p:ajax event="select" listener="#{templateDocBackingBean.checkChild()}" update="impSectionList" />
 							<p:column style="width:150px">
 								<f:facet name="header">#{lbl['lbl.tpl.doc.section']}</f:facet>
-	            				<p:selectBooleanCheckbox value="#{templateDocBackingBean.uncheck}">
-	            					<p:ajax listener="#{templateDocBackingBean.checkRow(document)}" />
-	            				</p:selectBooleanCheckbox>
+								
 								<h:outputText value="#{document.sectionNumber}" />
 								<p:spacer width="5px" />
 								<h:outputText value="#{document.sectionName}" />
