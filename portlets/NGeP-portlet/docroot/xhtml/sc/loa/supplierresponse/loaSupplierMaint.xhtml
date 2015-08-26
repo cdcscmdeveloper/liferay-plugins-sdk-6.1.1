@@ -30,6 +30,7 @@
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.details']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(0)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="0" />
 					</p:menuitem>
+					
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.contents']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(1)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="1" />
 					</p:menuitem>
@@ -41,13 +42,15 @@
 					<p:menuitem value="#{lbl['lbl.sc.spec.ful.schedule']}" update="@form" disabled="#{!isFulfilmentTypeScheduled}" actionListener="#{lOADetailBackingBean.tabChangeAction(3)}">	
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="3" />
 					</p:menuitem>
-					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" disabled="#{!isDocTypeQuotation}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">
+					
+					<p:menuitem value="#{lbl['lbl.sc.loiloa.loa.perform.bond']}" update="@form" rendered="#{isDocTypeQuotation}" actionListener="#{lOADetailBackingBean.tabChangeAction(4)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="4" />
 					</p:menuitem>
 					
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.letter.of.acceptance']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(5)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="5" />
 					</p:menuitem>
+					
 					<p:menuitem value="#{lbl['lbl.sc.loiloa.integrity.pact']}" update="@form" actionListener="#{lOADetailBackingBean.tabChangeAction(6)}">
 						<f:setPropertyActionListener target="#{lOADetailBackingBean.managedBean.selectedTabIndex}" value="6" />
 					</p:menuitem>
