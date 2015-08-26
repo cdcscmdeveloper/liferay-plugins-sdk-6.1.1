@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
+import my.ep.biz.service.fl.itemsummary.IFlItemSummarySO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.country.ICountrySO;
@@ -55,6 +57,7 @@ import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.fl.itemsummary.FlItemSummaryReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -520,6 +523,11 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 
 		// adding request note delete list
 		if(BpmOutcomeConst.BPM_SUBMIT.equalsIgnoreCase(outcome) || BpmOutcomeConst.BPM_SAVE.equalsIgnoreCase(outcome)){
+			// validate procurement amount
+			if(isAction){
+				validateRN(requestNote, requestNoteDtls);
+			}
+
 			if(getManagedBean().getDeleteRequestNoteDtls() != null && getManagedBean().getDeleteRequestNoteDtls().size()>0){
 				requestNoteDtls.addAll(getManagedBean().getDeleteRequestNoteDtls());
 			}
@@ -554,6 +562,42 @@ public class RequestNoteBackingBean extends SourcingBaseBackingBean<RequestNoteM
 			}
 		} else{
 			requestNote.setWorkFlowStatuses(null);
+		}
+	}
+
+	private void validateRN(ScRequestNote requestNote,  List<ScRequestNoteDtl>	nonDeletedDtls){
+		boolean isShowMessage = getManagedBean().isExceededAmountAlerted();
+		// show message for first submission skip the message for second time submission
+
+		if(!isShowMessage){
+
+			for (ScRequestNoteDtl rnDtl : nonDeletedDtls) {
+				String pType = rnDtl.getProcurementType()
+						.getParameterCode();
+				if ((!pType.equals(ParameterConst.PROC_TYPE_G2G) && !pType
+						.equals(ParameterConst.PROC_TYPE_EMERGENCY))) {
+					// Check total procurement amount per ptj per item per year
+					FlItemSummaryReqDTO flReqDTO = new FlItemSummaryReqDTO();
+					if (rnDtl.getRequestItem().getCmItem() != null) {
+						Long itemId = rnDtl.getRequestItem().getCmItem()
+								.getItemId();
+						flReqDTO.setItemId(itemId);
+						flReqDTO.setYear(Calendar.getInstance().get(Calendar.YEAR));
+						flReqDTO.setOrgProfileId(requestNote.getPmOrgProfile()
+								.getOrgProfileId());
+						flReqDTO.setSupplierId(rnDtl.getScRequestSupplierItem().getSupplierId());
+						IFlItemSummarySO itemSummarySO = (IFlItemSummarySO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.ORDER_FULFILLMENT, IFlItemSummarySO.class);
+
+						BigDecimal totalAmt = itemSummarySO
+								.retrieveAccumulatedAmount(flReqDTO);
+						if (totalAmt.doubleValue() > 20000) {
+							getManagedBean().setExceededAmountAlerted(Boolean.TRUE);
+							throw new EpException(MessageConst.ERROR_760036,
+									new String[] { "RM20,000" });
+						}
+					}
+				}
+			}
 		}
 	}
 
