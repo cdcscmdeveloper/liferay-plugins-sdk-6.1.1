@@ -587,6 +587,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 			this.getManagedBean().setSelectedTabIndex(0);
 
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setTaskName(res.getTaskName());
 			if ((res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_INITIATION_PROCESS_NAME) 
 					|| res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CONTRACT_AMENDMENT_PROCESS_NAME)) 
 					&& res.getDocType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_UPDATE)) {
@@ -603,10 +604,12 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		    
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject(ModuleCodeConst.CONTRACT_MANAGEMENT,IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVerDtls(ctReqDTO);
-			setValidateContractField(resDTO);         
-			if(resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) && 
-					isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())){
-				    getManagedBean().setDisableGstAmount(true);
+			setValidateContractField(resDTO);
+			// If the GST Amount has been keyed in by user in sourcing,0
+			// the value must generate into Fulfilment Details and non-editable.
+			if(resDTO.getCtContractVer().getDocType().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_CREATION) 
+					&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount() == null){
+				getManagedBean().setDisableGstAmount(true);
 			}
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, 
@@ -1854,7 +1857,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 		trBB.getManagedBean().setExternalPageUrl(null);
 		trBB.setCtBB(new ContractBackingBean());	
 		trBB.getCtBB().getManagedBean().setCtContractVer(resDTO.getCtContractVer());
-		if (isContractWithGst(trBB.getManagedBean().getCtContract().getSmSupplier().getSupplierId(), trBB.getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+		if (isContractWithGst(trBB.getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 	    		|| (trBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
 	    		&& trBB.getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
 			trBB.getCtBB().getManagedBean().setGstCheckingGUI(true);
@@ -3874,7 +3877,7 @@ public class ContractDetailsBackingBean extends ContractBaseBackingBean<Contract
 	 *         false, if the contract is without gst
      */
 	public boolean contractWithGst(){
-		if (isContractWithGst(getManagedBean().getCtContract().getSmSupplier().getSupplierId(), getManagedBean().getContractVer().getCtContractValue().getSupplierBranchCode())
+		if (isContractWithGst(getManagedBean().getContractVer().getCtContractValue().getGstEffDate())
 	    		|| (getManagedBean().getContractVer().getCtContractAmount().getGstAmount() != null 
 	    		&& getManagedBean().getContractVer().getCtContractAmount().getGstAmount().doubleValue() != 0)) {
 	    	return true;
