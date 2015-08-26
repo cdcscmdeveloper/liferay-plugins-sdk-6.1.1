@@ -2359,7 +2359,8 @@ public class SpecificationBackingBean extends
 			specMaster.setItemOriginCode(localGoodsResDTO.getPmParameter());
 			setUserDetails(specMaster);
 			List<TplSpecQuestion> questionsList = new ArrayList<TplSpecQuestion>();
-			new TemplateSpecBackingBean().addQuestion(specMaster,
+			new TemplateSpecBackingBean().addQuestion(new TemplateSpecBean(),
+					specMaster,
 					questionsList, questionsList.size() - 1,
 					TemplateSpecConst.QUESTION_TYPE_ITEM);
 			TplSpecQuestion tplSpecQuestion = questionsList.get(0);
@@ -2393,7 +2394,8 @@ public class SpecificationBackingBean extends
 			if (null != panelItem.getCtPanelItemSpecs()
 					&& !panelItem.getCtPanelItemSpecs().isEmpty()) {
 				for (int i = 0; i < panelItem.getCtPanelItemSpecs().size(); i++) {
-					new TemplateSpecBackingBean().addQuestion(specMaster,
+					new TemplateSpecBackingBean().addQuestion(new TemplateSpecBean(),
+							specMaster,
 							questionsList, questionsList.size() - 1,
 							TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC);
 					CtPanelItemSpec itemSpec = panelItem.getCtPanelItemSpecs()
